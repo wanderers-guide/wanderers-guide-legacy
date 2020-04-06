@@ -23,6 +23,10 @@ const passportSetup = require('./config/passport-setup');
 const keys = require('./config/keys');
 const path = require('path');
 
+const fs = require('fs');
+const https = require('https');
+const http = require('http');
+
 const app = express();
 
 // Handlebars
@@ -92,11 +96,33 @@ app.use('/admin', adminRoutes);
 app.use('/', coreRoutes);
 app.use('*', errorRoutes); // 404 Route
 
-// Server Listen
-const PORT = process.env.PORT || 80;
-let server = app.listen(PORT, () => {
-    console.log('Apeiron running on port '+PORT);
-});
+// Server Setup
+
+let server = null;
+if (process.env.PRODUCTION == 'true'){
+  
+  const options = {
+    key: fs.readFileSync('/etc/letsencrypt/live/yourdomain.com/privkey.pem', 'utf8'),
+    cert: fs.readFileSync('/etc/letsencrypt/live/yourdomain.com/cert.pem', 'utf8')
+  };
+  
+  const httpsServer = https.createServer(options, app);
+
+  const PORT = process.env.PORT || 80;
+  server = httpsServer.listen(PORT, () => {
+    console.log('Apeiron running publicly on port '+PORT);
+  });
+
+} else {
+
+  const httpServer = http.createServer(app);
+
+  const PORT = process.env.PORT || 4828;
+  server = httpServer.listen(PORT, () => {
+    console.log('Apeiron running locally on port '+PORT);
+  });
+
+}
 
 // Socket IO
 const io = socket(server);
