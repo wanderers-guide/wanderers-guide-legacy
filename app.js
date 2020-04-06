@@ -93,9 +93,9 @@ app.use('/', coreRoutes);
 app.use('*', errorRoutes); // 404 Route
 
 // Server Listen
-const PORT = process.env.PORT || 4828;
+const PORT = process.env.PORT || 80;
 let server = app.listen(PORT, () => {
-    console.log('app now listening for requests on port '+PORT);
+    console.log('Apeiron running on port '+PORT);
 });
 
 // Socket IO

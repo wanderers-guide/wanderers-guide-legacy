@@ -4,7 +4,7 @@ const keys = require('../keys');
 module.exports =  new Sequelize(keys.backgroundDB.DbName, keys.cloudSQL.Username, keys.cloudSQL.Password, {
   host: keys.cloudSQL.Host,
   dialect: 'mysql',
-  operatorsAliases: false,
+  operatorsAliases: '0',
   dialectOptions: {
     socketPath: keys.cloudSQL.Instance,
   },

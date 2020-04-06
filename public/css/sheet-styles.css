@@ -131,6 +131,14 @@
     border-color: hsl(0, 0%, 10%);
 }
 
+.select::after {
+    border-color: hsl(0, 0%, 86%)!important;
+}
+
+.select:hover::after {
+    border-color: #3273dc!important;
+}
+
 .input::-webkit-input-placeholder, .select select::-webkit-input-placeholder, .textarea::-webkit-input-placeholder{
     color:rgba(219,219,219,.4);
 }
