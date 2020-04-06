@@ -1,0 +1,334 @@
+
+{{#section 'header'}}
+    <link rel="stylesheet" href="/css/sheet-styles.css">
+    <script src="/js/char-sheet.js"></script>
+    <script src="/js/sheet-stat-manager.js"></script>
+    <script src="/js/sheet-conditions-manager.js"></script>
+    <script src="/js/sheet-tabs.js"></script>
+    <script src="/js/sheet-quickview.js"></script>
+    <script src="/js/sheet-asc-processing.js"></script>
+    <script src="/js/sheet-calc-utils.js"></script>
+    <script src="/js/sheet-utils.js"></script>
+{{/section}}
+
+{{#section 'nav_home'}}
+    <li><a href="/">Home</a></li>
+{{/section}}
+
+{{#section 'nav_characters'}}
+    <li><a href="/profile/characters" class="active">Characters</a></li>
+{{/section}}
+
+{{#section 'nav_homebrew'}}
+    <li class="mx-lg-4 mx-md-3 my-md-0 my-2"><a href="/homebrew">Homebrew</a></li>
+{{/section}}
+
+{{#section 'nav_login'}}
+    <li class="mr-4"><a href="/auth/login">Login <i class="fas fa-sign-in-alt"></i></a></li>
+{{/section}}
+
+
+
+{{#section 'banner_nav'}}
+    <div class="banner_w3lspvt-2"></div>
+{{/section}}
+
+<section id="character-sheet-section" class="section text-center is-paddingless px-4 py-3">
+
+    <div class="tile is-ancestor is-vertical">
+        <div class="tile is-vertical m-2">
+            <div class="tile is-parent is-paddingless">
+                <div class="tile is-3">
+                    <div class="tile mb-4 mr-2">
+                        <div class="tile sheet-box pb-1">
+                            <div class="tile is-vertical is-7">
+                                <p id="character-name" class="is-size-5 has-text-light is-clipped"></p>
+                                <div class="tile is-child">
+                                    <p id="character-type" class="is-size-7 has-text-grey-light"></p>
+                                </div>
+                            </div>
+                            <div class="tile is-vertical is-5">
+                                <p id="character-level" class="is-size-6 has-text-grey-lighter"></p>
+                                <div class="tile is-child">
+                                    <p class="is-size-7 has-text-grey-light has-text-weight-semibold">Experience</p>
+                                    <div class="field px-4">
+                                        <p class="control">
+                                            <input id="exp-input" class="input is-small" type="number" value="">
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tile is-3">
+                    <div class="tile mx-4 mb-4 sheet-box">
+                        <div class="tile is-child px-2 pt-2">
+                            <p class="is-size-6"><strong class="has-text-grey-lighter">Hit Points</strong></p>
+                            <div class="columns is-centered">
+                                <div class="column is-narrow is-paddingless py-2">
+                                    <div id="char-current-health" class="cursor-clickable">
+                                    </div>
+                                </div>
+                                <div class="column is-narrow is-paddingless py-2">
+                                    <p class="is-size-5 text-center has-text-grey">/</p>
+                                </div>
+                                <div class="column is-narrow is-paddingless py-2" style="width: 70px;">
+                                    <p id="char-max-health" class="is-size-5 text-center has-text-light"></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tile is-child pt-3">
+                            <p class="is-size-7"><strong class="has-text-grey-light">Temp. HP</strong></p>
+                            <div class="columns is-centered">
+                                <div class="column is-narrow is-paddingless py-2">
+                                    <div id="char-temp-health" class="cursor-clickable">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tile is-3">
+                    <div class="tile ml-1 mr-4 mb-4 sheet-box">
+                        <div class="tile is-child" style="max-height: 90px; overflow-y: auto;">
+                            <div class="columns is-centered is-vcentered is-marginless">
+                                <div class="column is-paddingless"></div>
+                                <div class="column is-paddingless"><p class="is-size-6"><strong class="has-text-grey-lighter">Conditions</strong></p></div>
+                                <div class="column is-paddingless">
+                                    <a id="addNewConditionsButton" class="is-pulled-right is-size-6"><span class="icon is-medium has-text-info"><i class="fas fa-plus-circle"></i></span></a>
+                                </div>
+                            </div>
+                            <div id="conditionsContent" class="buttons is-centered"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tile is-1">
+                    <div class="tile pt-2 ml-2 mb-4 sheet-box">
+                        <div class="tile is-child">
+                            <p id="heroPointsTitle" class="is-size-7 cursor-clickable"><strong class="has-text-grey-lighter">Hero Points</strong></p>
+                            <div class="select">
+                                <select id="heroPointsSelect">
+                                    <option value="0">0</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tile is-2">
+                    <div class="tile ml-2 mt-2 mb-4">
+                        <div class="tile is-child">
+                            <div class="buttons is-centered">
+                                <a id="restButton" class="button is-info is-medium is-outlined">Rest</a>
+                                <a id="backToBuilderButton" class="button is-info has-text-white">
+                                    <span>Edit</span>
+                                    <span class="icon">
+                                        <i class="fas fa-cog"></i>
+                                    </span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tile is-parent is-paddingless">
+                <div class="tile is-3">
+                    <div class="tile my-2 mr-4">
+                        <div class="tile is-child is-paddingless sheet-box cursor-clickable">
+                            <p class="is-size-6 is-unselectable"><strong class="has-text-grey-lighter">Speed</strong></p>
+                            <p id="speedContent" class="is-size-5 has-text-grey-light pl-2"></p>
+                        </div>
+                    </div>
+                    <div class="tile m-2">    
+                        <div class="tile is-child is-paddingless sheet-box">
+                            <div id="perceptionBonusSection" class="cursor-clickable">
+                                <p class="is-size-6 is-unselectable"><strong class="has-text-grey-lighter">Perception</strong></p>
+                                <p id="perceptionBonusContent" class="is-size-5 has-text-grey-light pr-3"></p>
+                            </div>
+                            <hr class="has-background-grey-dark m-1">
+                            <p class="is-size-7 has-text-grey-light">Normal Vision</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="tile is-6">
+                    <div class="tile my-2 mx-4">
+                        <!-- Ability Scores -->
+                        <div class="tile sheet-box">
+                            <div id="strSection" class="tile is-child pt-2 is-paddingless cursor-clickable">
+                                <div class="has-text-weight-semibold is-size-7 is-unselectable">Strength</div>
+                                <div id="strMod" class="is-size-4 pr-3"></div>
+                                <span id="strScore" class="sheet-small-box is-size-7 has-text-grey-light"></span>
+                            </div>
+                            <div id="dexSection" class="tile is-child pt-2 is-paddingless cursor-clickable">
+                                <div class="has-text-weight-semibold is-size-7 is-unselectable">Dexterity</div>
+                                <div id="dexMod" class="is-size-4 pr-3"></div>
+                                <span id="dexScore" class="sheet-small-box is-size-7 has-text-grey-light"></span>
+                            </div>
+                            <div id="conSection" class="tile is-child pt-2 is-paddingless cursor-clickable">
+                                <div class="has-text-weight-semibold is-size-7 is-unselectable">Constitution</div>
+                                <div id="conMod" class="is-size-4 pr-3"></div>
+                                <span id="conScore" class="sheet-small-box is-size-7 has-text-grey-light"></span>
+                            </div>
+                            <div id="wisSection" class="tile is-child pt-2 is-paddingless cursor-clickable">
+                                <div class="has-text-weight-semibold is-size-7 is-unselectable">Wisdom</div>
+                                <div id="wisMod" class="is-size-4 pr-3"></div>
+                                <span id="wisScore" class="sheet-small-box is-size-7 has-text-grey-light"></span>
+                            </div>
+                            <div id="intSection" class="tile is-child pt-2 is-paddingless cursor-clickable">
+                                <div class="has-text-weight-semibold is-size-7 is-unselectable">Intelligence</div>
+                                <div id="intMod" class="is-size-4 pr-3"></div>
+                                <span id="intScore" class="sheet-small-box is-size-7 has-text-grey-light"></span>
+                            </div>
+                            <div id="chaSection" class="tile is-child pt-2 is-paddingless cursor-clickable">
+                                <div class="has-text-weight-semibold is-size-7 is-unselectable">Charisma</div>
+                                <div id="chaMod" class="is-size-4 pr-3"></div>
+                                <span id="chaScore" class="sheet-small-box is-size-7 has-text-grey-light"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tile is-3">
+                    <div class="tile is-vertical my-2 ml-2 sheet-box">
+                        <!-- Saving Throws -->
+                        <p class="is-size-6 has-text-centered has-text-grey-lighter">Saving Throws</p>
+                        <div class="tile is-centered is-paddingless">
+                            <div id="fortSection" class="tile is-child is-paddingless cursor-clickable">
+                                <p class="has-text-grey-light">Fortitude</p>
+                                <div id="fortSave" class="is-size-5 pr-2"></div>
+                            </div>
+                            <div id="reflexSection" class="tile is-child is-paddingless cursor-clickable">
+                                <p class="has-text-grey-light">Reflex</p>
+                                <div id="reflexSave" class="is-size-5 pr-2"></div>
+                            </div>
+                            <div id="willSection" class="tile is-child is-paddingless cursor-clickable">
+                                <p class="has-text-grey-light">Will</p>
+                                <div id="willSave" class="is-size-5 pr-2"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="tile m-2 pr-4">
+            <div class="tile is-parent is-vertical is-2 my-2 mr-4 is-paddingless">
+                <div class="tile is-paddingless p-3">
+                    <div id="acSection" class="tile is-child is-unselectable pt-4 background-ac has-tooltip-bottom" data-tooltip="">
+                        <p class="is-size-5 px-2"><strong class="has-text-grey-light">AC</strong></p>
+                        <p id="acNumber" class="is-size-4 has-text-grey-light"></p>
+                    </div>
+                    <div id="shieldSection" class="tile is-child background-shield pt-4 has-tooltip-bottom is-hidden" data-tooltip="">
+                        <p class="is-size-6"><strong class="has-text-grey-light">Shield</strong></p>
+                        <p id="shieldBonus" class="is-size-4 has-text-grey-light pr-2"></p>
+                    </div>
+                </div>
+                <div class="tile is-vertical sheet-box" style="height: 550px; max-height: 550px; overflow-y: auto;">
+                    <div class="tile is-paddingless">
+                        <div class="tile is-child">
+                            <p class="is-size-6"><strong class="has-text-grey-lighter">Attacks</strong></p>
+                            <p id="attacksContent"></p>
+                        </div>
+                    </div>
+                    <div class="tile is-paddingless">
+                        <div class="tile is-child">
+                            <p class="is-size-6"><strong class="has-text-grey-lighter">Defenses</strong></p>
+                            <p id="defensesContent"></p>
+                        </div>
+                    </div>
+                    <div class="tile is-paddingless">
+                        <div class="tile is-child p-2">
+                            <p class="is-size-6"><strong class="has-text-grey-lighter">Languages</strong></p>
+                            <p id="languagesContent" class="is-unselectable"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tile is-parent is-2 is-paddingless">
+                <div class="tile is-child">
+                    <nav id="skills" class="panel is-dark is-shadowless sheet-box use-custom-scrollbar my-2 mx-1" style="height: 700px; max-height: 700px;overflow-y: auto;">
+                    </nav>
+                </div>
+            </div>
+
+            <div class="tile is-parent is-8 is-paddingless">
+                <div class="tile is-child">
+                    <div class="sheet-box use-custom-scrollbar my-2 ml-4" style="height: 700px; max-height: 700px;overflow-y: auto;">
+                        <div class="tabs is-centered is-boxed is-medium is-marginless">
+                            <ul class="sheet-tabs">
+                                
+                                <li><a id="actionsTab">Actions</a></li>
+                                <li><a id="attacksTab">Weapons</a></li>
+                                <li><a id="spellsTab">Spells</a></li>
+                                <li><a id="inventoryTab">Inventory</a></li>
+                                <li><a id="featsTab">Feats</a></li>
+                                <li><a id="notesTab">Notes</a></li>
+                            </ul>
+                        </div>
+                        <div id="tabContent" class="mx-3 mb-3">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<div id="quickviewDefault" class="quickview">
+    <div class="quickview-header">
+        <p id="quickViewTitle" class="title is-size-5 has-text-grey-lighter"></p>
+        <a id="quickViewClose" class="delete"></a>
+    </div>
+    <div class="quickview-body use-custom-scrollbar">
+        <div id="quickViewContent" class="quickview-block p-2 px-3">
+        </div>
+    </div>
+</div>
+
+<div id="conditionsModalDefault" name="" class="modal">
+  <div id="conditionsModalBackground" class="modal-background"></div>
+  <div class="modal-card">
+    <div class="modal-card-head">
+      <p id="conditionsModalTitle" class="modal-card-title has-text-centered is-size-4 has-text-grey-lighter"></p>
+      <a id="conditionsModalRemoveButton" class="is-pulled-right is-size-6"><span class="icon is-medium has-text-danger"><i class="fas fa-minus-circle"></i></span></a>
+    </div>
+    <section class="modal-card-body">
+        <p id="conditionsModalSourceSection" class="has-text-centered"><strong class="has-text-grey-light">From: </strong><em id="conditionsModalSourceContent"></em></p>
+        <p id="conditionsModalContent"></p>
+    </section>
+    <div id="conditionsModalFooter" class="modal-card-foot buttons is-centered">
+            <button id="conditionsModalSubtractButton" class="button is-small is-info">
+                <span class="icon">
+                    <i class="fas fa-heading fa-minus"></i>
+                </span>
+            </button>
+            <button id="conditionsModalValueButton" class="button is-static has-background-grey-darker border-dark">
+                <p id="conditionsModalValue" class="has-text-grey-lighter"></p>
+            </button>
+            <button id="conditionsModalAddButton" class="button is-small is-info">
+                <span class="icon">
+                    <i class="fas fa-heading fa-plus"></i>
+                </span>
+            </button>
+    </div>
+  </div>
+  <button id="conditionsModalCloseButton" class="modal-close is-large" aria-label="close"></button>
+</div>
+
+<div id="conditionsSelectModalDefault" name="" class="modal">
+  <div id="conditionsSelectModalBackground" class="modal-background"></div>
+  <div class="modal-card">
+    <div class="modal-card-head">
+      <p id="conditionsSelectModalTitle" class="modal-card-title has-text-centered is-size-4 has-text-grey-lighter">Choose a Condition</p>
+      <button id="conditionsSelectModalCloseButton" class="delete" aria-label="close"></button>
+    </div>
+    <section class="modal-card-body is-paddingless p-2 is-clipped">
+        <div id="conditionsSelectModalContent" class="tile is-ancestor is-vertical"></div>
+    </section>
+    <div class="modal-card-foot">
+    </div>
+  </div>
+</div>
+

@@ -1,0 +1,46 @@
+
+{{#section 'header'}}
+      <!-- Profile -->
+	<link href="/css/profile.css" rel="stylesheet">
+{{/section}}
+
+{{#section 'nav_home'}}
+    <li><a href="/">Home</a></li>
+{{/section}}
+
+{{#section 'nav_characters'}}
+    <li><a href="/profile/characters">Characters</a></li>
+{{/section}}
+
+{{#section 'nav_homebrew'}}
+    <li class="mx-lg-4 mx-md-3 my-md-0 my-2"><a href="/homebrew">Homebrew</a></li>
+{{/section}}
+
+{{#section 'nav_login'}}
+    <li class="mr-4"><a href="/auth/login">Login <i class="fas fa-sign-in-alt"></i></a></li>
+{{/section}}
+
+
+
+{{#section 'banner_nav'}}
+    <div class="banner_w3lspvt-2"></div>
+{{/section}}
+
+<div class="profile-container">
+
+    <h1>Welcome to your profile, {{user.username}}</h1>
+
+    <img src="{{user.thumbnail}}" width="50" height="50" alt="Profile Image" />
+    <p>This is your profile thumbnail</p>
+    <p>User ID: #{{user.id}}</p>
+
+    {{#ifEqual user.isMember 1}}
+        <br>
+		<p><b>Fun Fact:</b> You're a Member!</p>
+	{{/ifEqual}}
+	{{#ifEqual user.isAdmin 1}}
+        <br>
+		<p><b>SUPER Fun Fact:</b> You're an Admin!</p>
+	{{/ifEqual}}
+
+</div>

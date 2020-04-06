@@ -1,0 +1,430 @@
+
+let socket = io();
+
+let choiceStruct = null;
+
+// ~~~~~~~~~~~~~~ // General - Run On Load // ~~~~~~~~~~~~~~ //
+$(function () {
+
+    $('.pageloader').addClass("is-active");
+
+    // Change page
+    $("#nextButton").click(function(){
+        nextPage();
+    });
+    
+    $("#prevButton").click(function(){
+        prevPage();
+    });
+
+    // On load get class details
+    socket.emit("requestClassDetails",
+        getCharIDFromURL());
+
+});
+
+
+// ~~~~~~~~~~~~~~ // Change Page // ~~~~~~~~~~~~~~ //
+
+function nextPage() {
+    // Hardcoded redirect
+    window.location.href = window.location.href.replace("page4", "page5");
+}
+
+function prevPage() {
+    // Hardcoded redirect
+    window.location.href = window.location.href.replace("page4", "page3");
+}
+
+// ~~~~~~~~~~~~~~ // Reload Page // ~~~~~~~~~~~~~~ //
+
+function reloadPage(){
+
+    $('#char-builder').find("*").off();
+    socket.emit("requestClassDetails",
+        getCharIDFromURL());
+
+}
+
+
+// ~~~~~~~~~~~~~~ // Process Class Info // ~~~~~~~~~~~~~~ //
+
+socket.on("returnClassDetails", function(classObject, inChoiceStruct){
+
+    choiceStruct = inChoiceStruct;
+
+    let classMap = objToMap(classObject);
+
+    $('#selectClass').change(function(event, triggerSave) {
+        let classID = $("#selectClass option:selected").val();
+        if(classID != "chooseDefault"){
+            if(triggerSave == null || triggerSave) {
+                displayCurrentClass(classMap.get(classID), true);
+            
+                $('#selectClassControlShell').addClass("is-loading");
+                socket.emit("requestClassChange",
+                    getCharIDFromURL(),
+                    classID);
+                
+            } else {
+                displayCurrentClass(classMap.get(classID), false);
+            }
+        } else {
+            $('.pageloader').removeClass("is-active");
+        }
+    });
+ 
+    $('#selectClass').trigger("change", [false]);
+
+});
+
+function displayCurrentClass(classStruct, saving) {
+
+    let abilityMap = objToMap(choiceStruct.AbilityObject);
+
+    let classDescription = $('#classDescription');
+    classDescription.html('<p>'+classStruct.Class.description+'</p>');
+
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Key Ability ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
+
+    let keyAbility = $('#keyAbility');
+    keyAbility.html('');
+    keyAbility.append('<p class="is-size-5">'+classStruct.Class.keyAbility+'</p>');
+
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Hit Points ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
+
+    let hitPoints = $('#hitPoints');
+    hitPoints.html('');
+    hitPoints.append('<p class="is-inline is-size-5">'+classStruct.Class.hitPoints+'</p>');
+
+
+
+    let savingProfArray = [];
+
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Perception ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
+    let profPerception = $('#profPerception');
+    profPerception.html('');
+    profPerception.append('<ul id="profPerceptionUL"></ul>');
+
+    let profPerceptionUL = $('#profPerceptionUL');
+    profPerceptionUL.append('<li id="profPerceptionLI"></li>');
+
+    let profPerceptionLI = $('#profPerceptionLI');
+    profPerceptionLI.append(profToWord(classStruct.Class.tPerception)+" in Perception");
+
+    savingProfArray.push({ For : "Perception", To : "Perception", Prof : classStruct.Class.tPerception });
+
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Skills ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
+    let profSkills = $('#profSkills');
+    profSkills.html('');
+    profSkills.append('<ul id="profSkillsUL"></ul>');
+    
+    let profSkillsUL = $('#profSkillsUL');
+
+    let tSkillsArray = classStruct.Class.tSkills.split(', ');
+    for(const tSkill of tSkillsArray){
+
+        let tSkillID = tSkill.replace(/ /g,'_');
+        profSkillsUL.append('<li id="profSkillsLI'+tSkillID+'"></li>');
+        let profSkillsLI = $('#profSkillsLI'+tSkillID);
+
+        if(tSkill.includes(' or ')){
+
+            let tSkillControlShellClass = tSkillID+'ControlShell';
+            let tSkillsOptionArray = tSkill.split(' or ');
+            profSkillsLI.append('Trained in <div class="select is-small '+tSkillControlShellClass+'"><select id="'+tSkillID+'"></select></div>');
+
+            let tSkillSelect = $('#'+tSkillID);
+
+            tSkillSelect.append('<option value="chooseDefault">Choose a Skill</option>');
+            tSkillSelect.append('<hr class="dropdown-divider"></hr>');
+
+            tSkillSelect.append('<option value="'+tSkillsOptionArray[0]+'">'+tSkillsOptionArray[0]+'</option>');
+            tSkillSelect.append('<option value="'+tSkillsOptionArray[1]+'">'+tSkillsOptionArray[1]+'</option>');
+
+            $('#'+tSkillID).change(function() {
+                let skillName = $(this).val();
+                if(skillName != "chooseDefault"){
+                    socket.emit("requestProficiencyChange",
+                        getCharIDFromURL(),
+                        {srcID : "Type-Class_Level-1_Code-Other"+tSkillID, isSkill : true},
+                        [{ For : "Skill", To : skillName, Prof : 'T' }]);
+                }
+            });
+
+        } else {
+
+            profSkillsLI.append("Trained in "+tSkill);
+            savingProfArray.push({ For : "Skill", To : tSkillID, Prof : 'T' });
+
+        }
+
+    }
+
+    profSkillsUL.append('<li id="profSkillsLIAdditionalTrained"></li>');
+    let profSkillsLIAddTrained = $('#profSkillsLIAdditionalTrained');
+
+    profSkillsLIAddTrained.append('Trained in <a class="has-text-link has-tooltip-bottom has-tooltip-multiline" data-tooltip="You will get to select training in an additional number of skills equal to '+classStruct.Class.tSkillsMore+' plus your Intelligence modifer in the Finalize step">'+classStruct.Class.tSkillsMore+'*</a> more skills');
+
+
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Saving Throws ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
+    let profSavingThrows = $('#profSavingThrows');
+    profSavingThrows.html('');
+    profSavingThrows.append('<ul id="profSavingThrowsUL"></ul>');
+
+    let profSavingThrowsUL = $('#profSavingThrowsUL');
+    profSavingThrowsUL.append('<li id="profSavingThrowsLIFort"></li>');
+    profSavingThrowsUL.append('<li id="profSavingThrowsLIReflex"></li>');
+    profSavingThrowsUL.append('<li id="profSavingThrowsLIWill"></li>');
+
+    let profSavingThrowsLIFort = $('#profSavingThrowsLIFort');
+    profSavingThrowsLIFort.append(profToWord(classStruct.Class.tFortitude)+" in Fortitude");
+
+    let profSavingThrowsLIReflex = $('#profSavingThrowsLIReflex');
+    profSavingThrowsLIReflex.append(profToWord(classStruct.Class.tReflex)+" in Reflex");
+
+    let profSavingThrowsLIWill = $('#profSavingThrowsLIWill');
+    profSavingThrowsLIWill.append(profToWord(classStruct.Class.tWill)+" in Will");
+
+    savingProfArray.push({ For : "Save", To : 'Fortitude', Prof : classStruct.Class.tFortitude });
+    savingProfArray.push({ For : "Save", To : 'Reflex', Prof : classStruct.Class.tReflex });
+    savingProfArray.push({ For : "Save", To : 'Will', Prof : classStruct.Class.tWill });
+
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Spells ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
+    let profSpells = $('#profSpells');
+    profSpells.html('');
+
+    let spellTradition = classStruct.Class.tSpellTradition;
+
+    profSpells.append('<ul id="profSpellsUL"></ul>');
+    let profSpellsUL = $('#profSpellsUL');
+
+    if(spellTradition != null){
+
+        profSpellsUL.append('<li id="profSpellsLIAttacks"></li>');
+        profSpellsUL.append('<li id="profSpellsLIDCs"></li>');
+
+        let profSpellsLIAttacks = $('#profSpellsLIAttacks');
+        profSpellsLIAttacks.append("Trained in "+spellTradition+" spell attacks");
+
+        let profSpellsLIDCs = $('#profSpellsLIDCs');
+        profSpellsLIDCs.append("Trained in "+spellTradition+" spell DCs");
+
+        savingProfArray.push({ For : "SpellAttack", To : 'ArcaneSpellAttacks', Prof : 'T' });
+        savingProfArray.push({ For : "SpellDC", To : 'ArcaneSpellDCs', Prof : 'T' });
+
+    } else {
+
+        profSpellsUL.append('<li class="is-italic has-text-weight-light">Non-Spellcasting</li>');
+
+    }
+
+
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Attacks ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
+    let profAttacks = $('#profAttacks');
+    profAttacks.html('');
+
+    profAttacks.append('<ul id="profAttacksUL"></ul>');
+    let profAttacksUL = $('#profAttacksUL');
+
+
+    let tWeaponsArray = classStruct.Class.tWeapons.split(', ');
+    for(const tWeapons of tWeaponsArray){
+
+        let sections = tWeapons.split(':');
+        let weapTraining = sections[0];
+        let weaponName = sections[1];
+        let weapID = weaponName.replace(/ /g,'_');
+
+        profAttacksUL.append('<li id="profAttacksLI'+weapID+'"></li>');
+        let profAttacksLI = $('#profAttacksLI'+weapID);
+
+        if(weaponName.slice(-1) == 's'){
+            // is plural
+            profAttacksLI.append(profToWord(weapTraining)+" in all "+weaponName);
+        } else {
+            // is singular
+            profAttacksLI.append(profToWord(weapTraining)+" in the "+weaponName);
+        }
+
+        savingProfArray.push({ For : "Attack", To : weapID, Prof : weapTraining });
+
+    }
+
+
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Defenses ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
+    let profDefenses = $('#profDefenses');
+    profDefenses.html('');
+
+    profDefenses.append('<ul id="profDefensesUL"></ul>');
+    let profDefensesUL = $('#profDefensesUL');
+
+
+    let tArmorArray = classStruct.Class.tArmor.split(', ');
+    for(const tArmor of tArmorArray){
+
+        let sections = tArmor.split(':');
+        let armorTraining = sections[0];
+        let armorName = sections[1];
+        let armorID = armorName.replace(/ /g,'_');
+
+        profDefensesUL.append('<li id="profDefensesLI'+armorID+'"></li>');
+        let profDefensesLI = $('#profDefensesLI'+armorID);
+
+        profDefensesLI.append(profToWord(armorTraining)+" in all "+armorName);
+
+        savingProfArray.push({ For : "Defense", To : armorID, Prof : armorTraining });
+
+    }
+
+    if(saving){
+        setTimeout(function() { 
+            socket.emit("requestProficiencyChange",
+                getCharIDFromURL(),
+                {srcID : 'Type-Class_Level-1_Code-None', isSkill : true},
+                savingProfArray);
+         }, 3000);
+    }
+
+
+    let classAbilities = $('#classAbilities');
+    classAbilities.html('');
+
+    for(const classAbility of classStruct.Abilities) {
+
+        if(classAbility.selectType != 'SELECT_OPTION' && classAbility.level <= choiceStruct.Level) {
+
+                    // accordions now contains an array of all Accordion instances
+                    var accordions = bulmaAccordion.attach();
+
+            let classAbilityID = "classAbility"+classAbility.id;
+            let classAbilityHeaderID = "classAbilityHeader"+classAbility.id;
+            let classAbilityContentID = "classAbilityContent"+classAbility.id;
+            let classAbilityCodeID = "classAbilityCode"+classAbility.id;
+
+            
+            classAbilities.append('<section class="accordions"><article id="'+classAbilityID+'" class="accordion is-dark classAbility"></article></section>');
+
+            let classAbilityInnerCard = $('#'+classAbilityID);
+            classAbilityInnerCard.append('<div id="'+classAbilityHeaderID+'" class="accordion-header toggle"><p class="is-size-4 has-text-light has-text-weight-semibold">'+classAbility.name+'</p><span class="has-text-weight-bold">'+abilityLevelDisplay(classAbility.level)+'</span></div>');
+
+            classAbilityInnerCard.append('<div class="accordion-body"><div id="'+classAbilityContentID+'" class="accordion-content"></div></div>');
+
+
+            let classAbilityContent = $('#'+classAbilityContentID);
+            let abilityDescription = processText(classAbility.description);
+            classAbilityContent.append('<div class="container px-5" id="classAbility'+classAbility.id+'"><div>'+abilityDescription+'</div></div>');
+
+            classAbilityContent.append('<div class="columns is-centered"><div id="'+classAbilityCodeID+'" class="column is-8"></div></div>');
+
+            if(classAbility.selectType === 'SELECTOR') {
+
+                let selectorID = 'classAbilSelection'+classAbility.id;
+                let descriptionID = 'classAbilSelection'+classAbility.id+'Description';
+                let abilityCodeID = 'classAbilSelection'+classAbility.id+'Code';
+
+                let classAbilitySelectorInnerHTML = '';
+
+                classAbilitySelectorInnerHTML += '<div class="field"><div class="select">';
+                classAbilitySelectorInnerHTML += '<select id="'+selectorID+'" class="classAbilSelection" name="'+classAbility.id+'">';
+
+                classAbilitySelectorInnerHTML += '<option value="chooseDefault">Choose a '+classAbility.name+'</option>';
+                classAbilitySelectorInnerHTML += '<hr class="dropdown-divider"></hr>';
+
+                for(const classSelectionOption of classStruct.Abilities) {
+                    if(classSelectionOption.selectType === 'SELECT_OPTION' && classSelectionOption.selectOptionFor === classAbility.id) {
+
+                        let selectOptionAbilityID = abilityMap.get(classAbility.id+"");
+                        if(selectOptionAbilityID == classSelectionOption.id) {
+                            classAbilitySelectorInnerHTML += '<option value="'+classSelectionOption.id+'" selected>'+classSelectionOption.name+'</option>';
+                        } else {
+                            classAbilitySelectorInnerHTML += '<option value="'+classSelectionOption.id+'">'+classSelectionOption.name+'</option>';
+                        }
+
+                    }
+                }
+
+                classAbilitySelectorInnerHTML += '</select>';
+                classAbilitySelectorInnerHTML += '</div></div>';
+
+                classAbilitySelectorInnerHTML += '<div class="columns is-centered"><div class="column is-8"><article class="message"><div class="message-body"><div id="'+descriptionID+'"></div><div id="'+abilityCodeID+'"></div></div></article></div></div>';
+
+                classAbilityContent.append(classAbilitySelectorInnerHTML);
+
+            }
+
+                    // accordions now contains an array of all Accordion instances
+                    var accordions2 = bulmaAccordion.attach();
+
+
+
+        }
+
+    }
+
+
+    let abilSelectors = $('.classAbilSelection');
+    for(const abilSelector of abilSelectors){
+
+        $(abilSelector).change(function(event, triggerSave){
+
+            let descriptionID = $(this).attr('id')+'Description';
+            let abilityCodeID = $(this).attr('id')+'Code';
+
+            if($(this).val() == "chooseDefault"){
+                // Display nothing
+                $('#'+descriptionID).html('');
+            } else {
+                
+                let classAbilityID = $(this).attr('name');
+                let classAbility = classStruct.Abilities.find(classAbility => {
+                    return classAbility.id == classAbilityID;
+                });
+
+                let chosenAbilityID = $(this).val();
+                let chosenClassAbility = classStruct.Abilities.find(classAbility => {
+                    return classAbility.id == chosenAbilityID;
+                });
+
+                $('#'+descriptionID).html(processText(chosenClassAbility.description));
+
+                // Save feats
+                if(triggerSave == null || triggerSave) {
+
+                    socket.emit("requestSelectAbilityChange",
+                        getCharIDFromURL(),
+                        'Type-Class_Level-'+classAbility.level+'_Code-Ability'+classAbility.id,
+                        [{ SelectorAbility : classAbilityID, SelectOptionAbility : chosenAbilityID }]);
+
+                }
+
+                processCode(
+                    chosenClassAbility.code,
+                    'Type-Class_Level-'+chosenClassAbility.level+'_Code-Ability'+chosenClassAbility.id,
+                    abilityCodeID);
+                
+            }
+
+        });
+
+    }
+
+    $('.classAbilSelection').trigger("change", [false]);
+
+
+
+    processCode_ClassAbilities(classStruct.Abilities);
+
+
+    $('.pageloader').removeClass("is-active");
+
+}
+
+
+socket.on("returnClassChange", function(){
+    $('#selectClassControlShell').removeClass("is-loading");
+});
+
+socket.on("returnSelectAbilityChange", function(){
+    console.log("Got here from the select abil change");
+});

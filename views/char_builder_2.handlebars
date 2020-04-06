@@ -1,0 +1,185 @@
+
+{{#section 'header'}}
+    <link rel="stylesheet" href="/css/char-builder.css">
+    <script type="text/javascript" src="/js/char-builder-2.js"></script>
+    <script type="text/javascript" src="/js/display-structs.js"></script>
+    <script type="text/javascript" src="/js/asc-processing.js"></script>
+    <script type="text/javascript" src="/js/utils.js"></script>
+{{/section}}
+
+{{#section 'nav_home'}}
+    <li><a href="/">Home</a></li>
+{{/section}}
+
+{{#section 'nav_characters'}}
+    <li><a href="/profile/characters" class="active">Characters</a></li>
+{{/section}}
+
+{{#section 'nav_homebrew'}}
+    <li class="mx-lg-4 mx-md-3 my-md-0 my-2"><a href="/homebrew">Homebrew</a></li>
+{{/section}}
+
+{{#section 'nav_login'}}
+    <li class="mr-4"><a href="/auth/login">Login <i class="fas fa-sign-in-alt"></i></a></li>
+{{/section}}
+
+
+
+{{#section 'banner_nav'}}
+    <div class="banner_w3lspvt-2"></div>
+{{/section}}
+
+<div class="pageloader is-black"><span class="title">Loading Builder</span></div>
+
+<div id="char-builder" class="container py-4 text-center">
+    
+    <div class="box">
+
+        <h1 class="title is-1 font-forum">Character Builder</h1>
+
+        <div class="steps">
+            <div class="step-item is-completed is-info">
+                <div class="step-marker">
+                <a href="page1?"><span class="has-text-white icon"><i class="fa fa-user-alt"></i></span></a>
+                </div>
+                <div class="step-details is-hidden-touch">
+                    <a href="page1?" class="button is-rounded is-inverted is-info"><p class="step-title">Basics</p></a>
+                </div>
+            </div>
+            <div class="step-item is-active is-info">
+                <div class="step-marker"><a href="page2?"><span class="">A</span></a></div>
+                <div class="step-details is-hidden-touch">
+                    <a href="page2?" class="button is-rounded is-inverted is-info"><p class="step-title">Ancestry</p></a>
+                </div>
+            </div>
+            <div class="step-item">
+                <div class="step-marker"><a href="page3?"><span class="has-text-white">B</span></a></div>
+                <div class="step-details is-hidden-touch">
+                    <a href="page3?" class="button is-rounded is-inverted is-info"><p class="step-title">Background</p></a>
+                </div>
+            </div>
+            <div class="step-item">
+                <div class="step-marker"><a href="page4?"><span class="has-text-white">C</span></a></div>
+                <div class="step-details is-hidden-touch">
+                    <a href="page4?" class="button is-rounded is-inverted is-info"><p class="step-title">Class</p></a>
+                </div>
+            </div>
+            <div class="step-item">
+                <div class="step-marker">
+                <a href="page5?"><span class="has-text-white icon"><i class="fa fa-flag"></i></span></a>
+                </div>
+                <div class="step-details is-hidden-touch">
+                    <a href="page5?" class="button is-rounded is-inverted is-info"><p class="step-title">Finalize</p></a>
+                </div>
+            </div>
+        </div>
+
+        <div class="field">
+            <div id="selectAncestryControlShell" class="select is-medium is-info">
+                <select id="selectAncestry">
+                    <option value="chooseDefault" name="chooseDefault">Choose an Ancestry</option>
+                    <hr class="dropdown-divider"></hr>
+                    {{#each allAncestries}}
+                    <option value="{{id}}" {{chooseSelection id ../character.ancestryID}}>{{name}}</option>
+                    {{/each}}
+                </select>
+            </div>
+        </div>
+
+        <article class="message is-info">
+            <div id="ancestryDescription" class="message-body"></div>
+        </article>
+
+    </div>
+
+    <div id="ancestryInfo" class="box">
+        <div class="tile is-ancestor is-vertical">
+            <div class="tile is-parent">
+                <div class="tile is-child">
+                    <p class="is-size-4 has-text-grey-darker has-text-weight-semibold">Hit Points</p>
+                    <div class="container">
+                        <p id="ancestryHitPoints" class="is-size-3"></p>
+                    </div>
+                </div>
+                <div class="tile is-child">
+                    <p class="is-size-4 has-text-grey-darker has-text-weight-semibold">Size</p>
+                    <div class="container">
+                        <p id="ancestrySize" class="is-size-3"></p>
+                    </div>
+                </div>
+                <div class="tile is-child">
+                    <p class="is-size-4 has-text-grey-darker has-text-weight-semibold">Speed</p>
+                    <div class="container">
+                        <p id="ancestrySpeed" class="is-size-3"></p>
+                    </div>
+                </div>
+            </div>
+            <div class="tile is-parent">
+                <div class="tile is-child">
+                    <p class="is-size-4 has-text-grey-darker has-text-weight-semibold">Languages</p>
+                    <div class="container">
+                        <p id="ancestryLanguages" class="is-size-4"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="ancestryBoostsAndFlaws" class="box">
+        <div class="tile is-ancestor is-vertical">
+            <div class="tile is-parent">
+                <div class="tile is-child">
+                    <p class="is-size-4 has-text-grey-darker has-text-weight-semibold">Boosts</p>
+                    <span id="boostsNonChoose" class="is-size-4"></span>
+                    <span class="select is-medium abilityBoostControlShell">
+                        <select id="selectBoost1" class="abilityBoost select-hide-if-empty"></select>
+                    </span>
+                    <span class="select is-medium abilityBoostControlShell">
+                        <select id="selectBoost2" class="abilityBoost select-hide-if-empty"></select>
+                    </span>
+                    <span class="select is-medium abilityBoostControlShell">
+                        <select id="selectBoost3" class="abilityBoost select-hide-if-empty"></select>
+                    </span>
+                </div>
+            </div>
+            <div class="tile is-parent">
+                <div class="tile is-child">
+                    <p class="is-size-4 has-text-grey-darker has-text-weight-semibold">Flaws</p>
+                    <span id="flawsNonChoose"></span>
+                    <span class="select is-medium abilityFlawControlShell">
+                        <select id="selectFlaw1" class="abilityFlaw select-hide-if-empty"></select>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="heritage-container" class="box">
+
+        <div class="field">
+            <div id="selectHeritageControlShell" class="select is-medium is-info">
+                <select id="selectHeritage">
+                </select>
+            </div>
+        </div>
+
+        <article class="message is-info">
+            <div id="heritageDescription" class="message-body"></div>
+        </article>
+
+    </div>
+
+    <div id="ancestryFeats" class="box">
+    </div>
+
+    <br>
+    <nav class="level is-mobile">
+        <div class="level-item has-text-centered">
+            <button class="button is-info" id="prevButton">Previous</button>
+        </div>
+        <div class="level-item has-text-centered">
+            <button class="button is-info" id="nextButton">Next</button>
+        </div>
+    </nav>
+
+</div>

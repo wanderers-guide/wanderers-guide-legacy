@@ -1,0 +1,52 @@
+
+{{#section 'nav_home'}}
+    <li><a href="/">Home</a></li>
+{{/section}}
+
+{{#section 'nav_characters'}}
+    <li><a href="/profile/characters">Characters</a></li>
+{{/section}}
+
+{{#section 'nav_homebrew'}}
+    <li class="mx-lg-4 mx-md-3 my-md-0 my-2"><a href="/homebrew">Homebrew</a></li>
+{{/section}}
+
+{{#section 'nav_login'}}
+    <li class="mr-4"><a href="/auth/login">Login <i class="fas fa-sign-in-alt"></i></a></li>
+{{/section}}
+
+
+
+{{#section 'banner_nav'}}
+    <div class="banner_w3lspvt-2"></div>
+{{/section}}
+
+<div class="container">
+    <h1>Ancestry Builder</h1>
+
+    <form action="/admin/create/item/general/add" method="POST">
+        <div class="input-group">
+            <label for="ancestryName">Name</label>
+            <input type="text" name="ancestryName" maxlength="45" required>
+        </div>
+        <div class="input-group">
+            <label for="ancestryHP">Hit Points</label>
+            <input type="number" name="ancestryHP" min="0" value="0" step="1" required>
+        </div>
+        <div class="input-group">
+            <label for="selectSize">Size</label>
+            <select name="ancestrySizeType">
+                {{#each sizeTypes}}
+                    <option value="{{this}}" {{chooseSelection ../selectedState}}>{{this}}</option>
+                {{/each}}
+            </select>
+        </div>
+        <div class="input-group">
+            <label for="ancestrySpeed">Speed</label>
+            <input type="number" name="ancestryHP" min="0" value="25" step="5" required>
+        </div>
+
+        <input type="submit" value="Create" class="btn btn-reverse">
+    </form>
+
+</div>

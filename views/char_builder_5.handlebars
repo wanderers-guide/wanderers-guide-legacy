@@ -1,0 +1,162 @@
+
+{{#section 'header'}}
+    <link rel="stylesheet" href="/css/char-builder.css">
+    <script type="text/javascript" src="/js/char-builder-5.js"></script>
+    <script type="text/javascript" src="/js/display-structs.js"></script>
+    <script type="text/javascript" src="/js/asc-processing.js"></script>
+    <script type="text/javascript" src="/js/utils.js"></script>
+{{/section}}
+
+{{#section 'nav_home'}}
+    <li><a href="/">Home</a></li>
+{{/section}}
+
+{{#section 'nav_characters'}}
+    <li><a href="/profile/characters" class="active">Characters</a></li>
+{{/section}}
+
+{{#section 'nav_homebrew'}}
+    <li class="mx-lg-4 mx-md-3 my-md-0 my-2"><a href="/homebrew">Homebrew</a></li>
+{{/section}}
+
+{{#section 'nav_login'}}
+    <li class="mr-4"><a href="/auth/login">Login <i class="fas fa-sign-in-alt"></i></a></li>
+{{/section}}
+
+
+
+{{#section 'banner_nav'}}
+    <div class="banner_w3lspvt-2"></div>
+{{/section}}
+
+
+<div class="pageloader is-black"><span class="title">Loading Builder</span></div>
+
+<div id="char-builder" class="container py-4 text-center">
+
+    <div class="box">
+
+        <h1 class="title is-1 font-forum">Character Builder</h1>
+
+        <div class="steps">
+            <div class="step-item is-completed is-info">
+                <div class="step-marker">
+                <a href="page1?"><span class="has-text-white icon"><i class="fa fa-user-alt"></i></span></a>
+                </div>
+                <div class="step-details is-hidden-touch">
+                    <a href="page1?" class="button is-rounded is-inverted is-info"><p class="step-title">Basics</p></a>
+                </div>
+            </div>
+            <div class="step-item is-completed is-info">
+                <div class="step-marker"><a href="page2?"><span class="has-text-white">A</span></a></div>
+                <div class="step-details is-hidden-touch">
+                    <a href="page2?" class="button is-rounded is-inverted is-info"><p class="step-title">Ancestry</p></a>
+                </div>
+            </div>
+            <div class="step-item is-completed is-info">
+                <div class="step-marker"><a href="page3?"><span class="has-text-white">B</span></a></div>
+                <div class="step-details is-hidden-touch">
+                    <a href="page3?" class="button is-rounded is-inverted is-info"><p class="step-title">Background</p></a>
+                </div>
+            </div>
+            <div class="step-item is-completed is-info">
+                <div class="step-marker"><a href="page4?"><span class="has-text-white">C</span></a></div>
+                <div class="step-details is-hidden-touch">
+                    <a href="page4?" class="button is-rounded is-inverted is-info"><p class="step-title">Class</p></a>
+                </div>
+            </div>
+            <div class="step-item is-active is-info">
+                <div class="step-marker">
+                <a href="page5?"><span class="icon"><i class="fa fa-flag"></i></span></a>
+                </div>
+                <div class="step-details is-hidden-touch">
+                    <a href="page5?" class="button is-rounded is-inverted is-info"><p class="step-title">Finalize</p></a>
+                </div>
+            </div>
+        </div>
+
+        <div>
+
+            <div class="container">
+                <p class="is-size-3 pb-3">Almost Done!</p>
+            </div>
+
+            <div class="columns is-centered">
+                <div class="column is-9-fullhd is-10-desktop is-12-tablet is-12-mobile">
+                    <div class="columns is-mobile is-multiline is-centered box is-paddingless p-2">
+                        <div class="column is-paddingless is-narrow ">
+                            <div>Strength</div>
+                            <div id="strMod" class="is-size-3 pr-3"></div>
+                            <span id="strScore" class="button is-rounded is-static"></span>
+                        </div>
+                        <div class="is-divider-vertical"></div>
+                        <div class="column is-paddingless is-narrow ">
+                            <div>Dexterity</div>
+                            <div id="dexMod" class="is-size-3 pr-3"></div>
+                            <span id="dexScore" class="button is-rounded is-static"></span>
+                        </div>
+                        <div class="is-divider-vertical"></div>
+                        <div class="column is-paddingless is-narrow ">
+                            <div>Constitution</div>
+                            <div id="conMod" class="is-size-3 pr-3"></div>
+                            <span id="conScore" class="button is-rounded is-static"></span>
+                        </div>
+                        <div class="is-divider-vertical"></div>
+                        <div class="column is-paddingless is-narrow ">
+                            <div>Wisdom</div>
+                            <div id="wisMod" class="is-size-3 pr-3"></div>
+                            <span id="wisScore" class="button is-rounded is-static"></span>
+                        </div>
+                        <div class="is-divider-vertical"></div>
+                        <div class="column is-paddingless is-narrow ">
+                            <div>Intelligence</div>
+                            <div id="intMod" class="is-size-3 pr-3"></div>
+                            <span id="intScore" class="button is-rounded is-static"></span>
+                        </div>
+                        <div class="is-divider-vertical"></div>
+                        <div class="column is-paddingless is-narrow ">
+                            <div>Charisma</div>
+                            <div id="chaMod" class="is-size-3 pr-3"></div>
+                            <span id="chaScore" class="button is-rounded is-static"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <p>You will now be able to select a number of additional languages to learn and skills to be Trained in based off of your final ability scores listed above, specifically Intelligence.</p>
+            <p class="help is-info is-italic">Make sure you come back here each time your Intelligence modifiers increases, you will be able to select another skill and language to learn!</p>
+
+        </div>
+
+    </div>
+
+    <div class="box">
+
+        <div class="columns">
+            <div class="column">
+                <div id="trainSkills">
+                    <p class="is-size-4">Additional Skill Training</p>
+                    <p class="help is-info is-italic">You become Trained in skills you pick.</p>
+                </div>
+            </div>
+            <div class="column">
+                <div id="learnLanguages">
+                    <p class="is-size-4">Additional Languages</p>
+                    <p class="help is-info is-italic">The languages you choose from is determined by your ancestry.</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <br>
+    <nav class="level is-mobile">
+        <div class="level-item has-text-centered">
+            <button class="button is-info" id="prevButton">Previous</button>
+        </div>
+        <div class="level-item has-text-centered">
+            <button class="button is-success" id="goToCharButton">View Character</button>
+        </div>
+    </nav>
+
+</div>

@@ -1,0 +1,117 @@
+
+/* Pathfinder 2e Icons */
+
+@font-face {
+    font-family: 'Pf-Icons';
+    src: url('/fonts/Pathfinder-Icons.ttf');
+}
+
+.pf-icon {
+    font-family: 'Pf-Icons';
+}
+
+
+/* Fonts from Local */
+
+@font-face {
+    font-family: 'Common';
+    src: url('/fonts/SpecialFonts/Common.ttf');
+}
+.font-common {
+    font-family: 'Common';
+}
+
+@font-face {
+    font-family: 'Barazhad';
+    src: url('/fonts/SpecialFonts/Barazhad.otf');
+}
+.font-barazhad {
+    font-family: 'Barazhad';
+}
+
+@font-face {
+    font-family: 'Dethek';
+    src: url('/fonts/SpecialFonts/Dethek.ttf');
+}
+.font-dethek {
+    font-family: 'Dethek';
+}
+
+@font-face {
+    font-family: 'Enochian';
+    src: url('/fonts/SpecialFonts/Enochian.otf');
+}
+.font-enochian {
+    font-family: 'Enochian';
+}
+
+@font-face {
+    font-family: 'Iokharic';
+    src: url('/fonts/SpecialFonts/Iokharic.otf');
+}
+.font-iokharic {
+    font-family: 'Iokharic';
+}
+
+@font-face {
+    font-family: 'Rellanic';
+    src: url('/fonts/SpecialFonts/Rellanic.otf');
+}
+.font-rellanic {
+    font-family: 'Rellanic';
+}
+
+@font-face {
+    font-family: 'Rlyehian';
+    src: url('/fonts/SpecialFonts/Rlyehian.ttf');
+}
+.font-aklo {
+    font-family: 'Rlyehian';
+}
+
+@font-face {
+    font-family: 'Gnomish';
+    src: url('/fonts/SpecialFonts/Gnomish.ttf');
+}
+.font-gnomish {
+    font-family: 'Gnomish';
+}
+
+@font-face {
+    font-family: 'Necril';
+    src: url('/fonts/SpecialFonts/Necril.ttf');
+}
+.font-necril {
+    font-family: 'Necril';
+}
+
+@font-face {
+    font-family: 'Druidic';
+    src: url('/fonts/SpecialFonts/Druidic.otf');
+}
+.font-druidic {
+    font-family: 'Druidic';
+}
+
+
+/* Fonts from Google */
+
+.font-bebas-neue {
+    font-family: 'Bebas Neue', cursive;
+}
+
+.font-girassol {
+    font-family: 'Girassol', cursive;
+}
+
+.font-comfortaa {
+    font-family: 'Comfortaa', cursive;
+}
+
+.font-forum {
+    font-family: 'Forum', cursive;
+}
+
+.font-noto-sans {
+    font-family: 'Noto Sans', sans-serif;
+}

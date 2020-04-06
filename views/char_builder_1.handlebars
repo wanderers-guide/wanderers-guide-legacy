@@ -1,0 +1,176 @@
+
+{{#section 'header'}}
+    <link rel="stylesheet" href="/css/char-builder.css">
+    <script type="text/javascript" src="/js/char-builder-1.js"></script>
+    <script type="text/javascript" src="/js/utils.js"></script>
+{{/section}}
+
+{{#section 'nav_home'}}
+    <li><a href="/">Home</a></li>
+{{/section}}
+
+{{#section 'nav_characters'}}
+    <li><a href="/profile/characters" class="active">Characters</a></li>
+{{/section}}
+
+{{#section 'nav_homebrew'}}
+    <li class="mx-lg-4 mx-md-3 my-md-0 my-2"><a href="/homebrew">Homebrew</a></li>
+{{/section}}
+
+{{#section 'nav_login'}}
+    <li class="mr-4"><a href="/auth/login">Login <i class="fas fa-sign-in-alt"></i></a></li>
+{{/section}}
+
+
+
+{{#section 'banner_nav'}}
+    <div class="banner_w3lspvt-2"></div>
+{{/section}}
+
+
+<div class="pageloader is-black"><span class="title">Loading Builder</span></div>
+
+<div id="char-builder" class="container py-4 text-center">
+
+    <div class="box">
+
+        <h1 class="title is-1 font-forum">Character Builder</h1>
+
+        <div class="steps">
+            <div class="step-item is-active is-info">
+                <div class="step-marker">
+                <a href="page1?"><span class="icon"><i class="fa fa-user-alt"></i></span></a>
+                </div>
+                <div class="step-details is-hidden-touch">
+                    <a href="page1?" class="button is-rounded is-inverted is-info"><p class="step-title">Basics</p></a>
+                </div>
+            </div>
+            <div class="step-item">
+                <div class="step-marker"><a href="page2?"><span class="has-text-white">A</span></a></div>
+                <div class="step-details is-hidden-touch">
+                    <a href="page2?" class="button is-rounded is-inverted is-info"><p class="step-title">Ancestry</p></a>
+                </div>
+            </div>
+            <div class="step-item">
+                <div class="step-marker"><a href="page3?"><span class="has-text-white">B</span></a></div>
+                <div class="step-details is-hidden-touch">
+                    <a href="page3?" class="button is-rounded is-inverted is-info"><p class="step-title">Background</p></a>
+                </div>
+            </div>
+            <div class="step-item">
+                <div class="step-marker"><a href="page4?"><span class="has-text-white">C</span></a></div>
+                <div class="step-details is-hidden-touch">
+                    <a href="page4?" class="button is-rounded is-inverted is-info"><p class="step-title">Class</p></a>
+                </div>
+            </div>
+            <div class="step-item">
+                <div class="step-marker">
+                <a href="page5?"><span class="has-text-white icon"><i class="fa fa-flag"></i></span></a>
+                </div>
+                <div class="step-details is-hidden-touch">
+                    <a href="page5?" class="button is-rounded is-inverted is-info"><p class="step-title">Finalize</p></a>
+                </div>
+            </div>
+        </div>
+
+        <div class="columns py-2">
+            <div class="column is-4 is-offset-4">
+
+                <div class="columns">
+                    <div class="column is-10">
+
+                        <div>
+                            <h5>Character Name</h5>
+                        </div>
+                        <div class="field">
+                            <div id="charNameControlShell" class="control has-icons-left has-icons-right">
+                                <input class="input" type="text" placeholder="Name" id="charName" maxlength="28" value="{{character.name}}" style="text-align:center;">
+                                <span class="icon is-small is-left">
+                                    <i class="fas fa-user"></i>
+                                </span>
+                                <span class="icon is-small is-right">
+                                    <i id="charNameSideIcon" class="fas fa-exclamation-triangle is-hidden"></i>
+                                </span>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    <div class="column">
+
+                        <div>
+                            <h5>Level</h5>
+                        </div>
+                        <div class="select">
+                            <select id="charLevel" name="charLevel">
+                                <option value="1" {{chooseSelection 1 character.level}}>1</option>
+                                <option value="2" {{chooseSelection 2 character.level}}>2</option>
+                                <option value="3" {{chooseSelection 3 character.level}}>3</option>
+                                <option value="4" {{chooseSelection 4 character.level}}>4</option>
+                                <option value="5" {{chooseSelection 5 character.level}}>5</option>
+                                <option value="6" {{chooseSelection 6 character.level}}>6</option>
+                                <option value="7" {{chooseSelection 7 character.level}}>7</option>
+                                <option value="8" {{chooseSelection 8 character.level}}>8</option>
+                                <option value="9" {{chooseSelection 9 character.level}}>9</option>
+                                <option value="10" {{chooseSelection 10 character.level}}>10</option>
+                                <option value="11" {{chooseSelection 11 character.level}}>11</option>
+                                <option value="12" {{chooseSelection 12 character.level}}>12</option>
+                                <option value="13" {{chooseSelection 13 character.level}}>13</option>
+                                <option value="14" {{chooseSelection 14 character.level}}>14</option>
+                                <option value="15" {{chooseSelection 15 character.level}}>15</option>
+                                <option value="16" {{chooseSelection 16 character.level}}>16</option>
+                                <option value="17" {{chooseSelection 17 character.level}}>17</option>
+                                <option value="18" {{chooseSelection 18 character.level}}>18</option>
+                                <option value="19" {{chooseSelection 19 character.level}}>19</option>
+                                <option value="20" {{chooseSelection 20 character.level}}>20</option>
+                            </select>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="box p-2">
+        <div>
+            <h4>Ability Scores</h4>
+            <p style="font-style: italic;">(usually just set to all 10's)</p>
+        </div>
+        <div class="d-flex justify-content-center pb-2">
+            <div class="p-1">
+                <h3>STR</h3>
+                <input class="input abilScoreSet" type="number" name="abilSTR" id="abilSTR" min="0" max="30" value="{{charAbilities.STR}}" >
+            </div>
+            <div class="p-1">
+                <h3>DEX</h3>
+                <input class="input abilScoreSet" type="number" name="abilDEX" id="abilDEX" min="0" max="30" value="{{charAbilities.DEX}}" >
+            </div>
+            <div class="p-1">
+                <h3>CON</h3>
+                <input class="input abilScoreSet" type="number" name="abilCON" id="abilCON" min="0" max="30" value="{{charAbilities.CON}}" >
+            </div>
+            <div class="p-1">
+                <h3>INT</h3>
+                <input class="input abilScoreSet" type="number" name="abilINT" id="abilINT" min="0" max="30" value="{{charAbilities.INT}}" >
+            </div>
+            <div class="p-1">
+                <h3>WIS</h3>
+                <input class="input abilScoreSet" type="number" name="abilWIS" id="abilWIS" min="0" max="30" value="{{charAbilities.WIS}}" >
+            </div>
+            <div class="p-1">
+                <h3>CHA</h3>
+                <input class="input abilScoreSet" type="number" name="abilCHA" id="abilCHA" min="0" max="30" value="{{charAbilities.CHA}}" >
+            </div>
+        </div>
+    </div>
+
+
+    <br>
+    <nav class="level is-mobile">
+        <div class="level-item has-text-centered">
+            <button class="button is-info" id="nextButton">Next</button>
+        </div>
+    </nav>
+
+</div>

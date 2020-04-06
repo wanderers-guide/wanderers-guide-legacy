@@ -1,0 +1,64 @@
+
+{{#section 'nav_home'}}
+    <li><a href="/">Home</a></li>
+{{/section}}
+
+{{#section 'nav_characters'}}
+    <li><a href="/profile/characters">Characters</a></li>
+{{/section}}
+
+{{#section 'nav_homebrew'}}
+    <li class="mx-lg-4 mx-md-3 my-md-0 my-2"><a href="/homebrew">Homebrew</a></li>
+{{/section}}
+
+{{#section 'nav_login'}}
+    <li class="mr-4"><a href="/auth/login">Login <i class="fas fa-sign-in-alt"></i></a></li>
+{{/section}}
+
+
+
+{{#section 'banner_nav'}}
+    <div class="banner_w3lspvt-2"></div>
+{{/section}}
+
+<div class="container">
+    <h1>General Item Builder</h1>
+
+    <form action="/admin/create/item/general/add" method="POST">
+        <div class="input-group">
+            <label for="itemName">Item Name</label>
+            <input type="text" name="itemName" maxlength="45" required>
+        </div>
+        <div class="input-group">
+            <label for="itemPrice">Item Price (in sp)</label>
+            <input type="number" name="itemPrice" min="0" value="0" step="0.1" required>
+        </div>
+        <div class="input-group">
+            <label for="itemBulk">Item Bulk</label>
+            <input type="number" name="itemBulk" min="0" value="0" step="0.1" required>
+        </div>
+        <div class="input-group">
+            <label for="selectHands">Hands Required</label>
+            <select name="itemHandsType">
+                {{#each itemHandsTypes}}
+                    <option value="{{this}}" {{chooseSelection ../selectedState}}>{{this}}</option>
+                {{/each}}
+            </select>
+        </div>
+        <div class="input-group">
+            <label for="selectItemType">Item Type</label>
+            <select name="itemType">
+                {{#each itemTypes}}
+                    <option value="{{this}}" {{chooseSelection ../selectedState}}>{{this}}</option>
+                {{/each}}
+            </select>
+        </div>
+        <div class="input-group">
+            <label for="itemDescription">Item Description</label>
+            <textarea name="itemDescription" rows="10" cols="30"></textarea>
+        </div>
+
+        <input type="submit" value="Create" class="btn btn-reverse">
+    </form>
+
+</div>

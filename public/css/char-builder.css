@@ -1,0 +1,56 @@
+
+.center-body {
+    background-image: url("../images/builder_background.png");
+}
+
+/* Selections */
+
+#selectedHeritageOption {
+    background-color: #f1f1f1;
+}
+
+#selectedAncestryOption {
+    background-color: #f1f1f1;
+}
+
+#selectClass {
+    display: flex;
+}
+
+.classOption {
+    margin: 10px;
+    text-align: center;
+    font-size: 30px;
+}
+
+.blendedInLine {
+    display: inline;
+}
+
+/* Builder A Link */
+
+.builder-step-icon-link {
+    color: inherit;
+}
+
+/* Title */
+.title, .subtitle {
+    text-align: center;
+}
+
+/* Abilities */
+
+.ability-block {
+    position:relative;
+}
+
+.abil-title {
+    font-size: xx-large;
+    font-family: 'Noto Sans', sans-serif;
+}
+
+/* Center Selected Option */
+
+select {
+    text-align-last:center;
+}

@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en-US">
+
+<head>
+	<title>{{title}}</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<!-- Bulma -->
+	<link rel="stylesheet" href="/css/bulma/bulma.min.css">
+	<link rel="stylesheet" href="/css/bulma/bulma-steps.min.css">
+	<script src="/js/bulma/bulma-steps.min.js"></script>
+	<link rel="stylesheet" href="/css/bulma/bulma-tooltip.min.css">
+	<link rel="stylesheet" href="/css/bulma/bulma-accordion.min.css">
+	<script src="/js/bulma/bulma-accordion.min.js"></script>
+	<link rel="stylesheet" href="/css/bulma/bulma-pageloader.min.css">
+	<link rel="stylesheet" href="/css/bulma/bulma-divider.min.css">
+	<link rel="stylesheet" href="/css/bulma/bulma-quickview.min.css">
+	<script src="/js/bulma/bulma-quickview.min.js"></script>
+	<link rel="stylesheet" href="/css/bulma/bulma-checkradio.min.css">
+	<link rel="stylesheet" href="/css/bulma/bulma-badge.min.css">
+	<link rel="stylesheet" href="/css/bulma/bulma-switch.min.css">
+	<link rel="stylesheet" href="/css/bulma/bulma-radio-checkbox.min.css">
+
+
+	<!-- Keywords -->
+	<meta name="keywords" content="!!!! Some keywords would go in here normally !!!!" />
+
+	<!-- Bootstrap-Core -->
+	<link rel="stylesheet" href="/css/bootstrap.css">
+	<link rel="stylesheet" href="/css/bootstrap-4-utilities.min.css">
+  	
+	<!-- Font-Awesome-Icons -->
+	<script defer src="https://use.fontawesome.com/releases/v5.12.1/js/all.js"></script>
+
+	<!-- General Style -->
+	<link rel="stylesheet" href="/css/style.css" type="text/css" media="all" />
+	<link rel="stylesheet" href="/css/fonts.css" type="text/css" media="all" />
+
+	<!-- Web-Fonts -->
+	<link href="https://fonts.googleapis.com/css?family=Nunito+Sans:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i&amp;subset=latin-ext,vietnamese"
+	 rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Roboto+Condensed:300,300i,400,400i,700,700i&amp;subset=cyrillic,cyrillic-ext,greek,greek-ext,latin-ext,vietnamese"
+	 rel="stylesheet">
+	 <link href="https://fonts.googleapis.com/css?family=Girassol&display=swap" rel="stylesheet">
+	 <link href="https://fonts.googleapis.com/css?family=Noto+Sans&display=swap" rel="stylesheet">
+	 <link href="https://fonts.googleapis.com/css?family=Comfortaa|Forum&display=swap" rel="stylesheet">
+	 <link href="https://fonts.googleapis.com/css?family=Bebas+Neue&display=swap" rel="stylesheet">
+
+	<!-- Socket IO -->
+	<script src="/socket.io/socket.io.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+
+	{{{_sections.header}}}
+
+</head>
+
+<body>
+
+	<div id="main-container">
+		
+		<!-- main banner -->
+		<div class="main-top" id="home">
+			<!-- header -->
+			<header>
+				<div class="container-fluid">
+					<div class="header d-md-flex justify-content-between align-items-center pt-1 pr-5">
+						<!-- logo -->
+						<div>
+							<a href="/"><img src="/images/logo.png" style="height:70px;" alt="Apeiron"></a>
+							<p class="is-inline has-text-grey-lighter is-size-5 font-bebas-neue">Alpha 0.8</p>
+						</div>
+
+						<!-- nav -->
+						<div class="nav_w3ls">
+							<nav>
+								<label for="drop" class="toggle">Menu</label>
+								<input type="checkbox" id="drop" />
+								<ul class="menu">
+									{{{_sections.nav_home}}}
+					
+									<li class="mx-lg-4 mx-md-3 my-md-0 my-2"><a href="/#about_apeiron">About Us</a></li>
+
+									{{#if user}}
+									{{{_sections.nav_characters}}}
+
+									{{{_sections.nav_homebrew}}}
+									{{/if}}
+									
+									{{#if user}}
+										<li class="mr-4">
+											<a href="#">
+												<object class="profile-header-icon" data="{{user.thumbnail}}" type="image/png">
+													<img class="profile-header-icon" src="/images/fb_profile_pic.png" alt="Profile Image">
+												</object>
+											</a>
+											<ul>
+												<li><a href="/profile" class="drop-text"><i class="fas fa-user-circle"></i> Account </a></li>
+												<li><a href="/upgrade" class="drop-text"><i class="fab fa-patreon"></i> Patreon </a></li>
+												{{#ifEqual user.isAdmin 1}}
+													<li><a href="/admin/panel" class="drop-text"><i class="fas fa-tools"></i> Admin Panel </a></li>
+												{{/ifEqual}}
+												<li><a href="/license" class="drop-text"><i class="fas fa-scroll"></i> License </a></li>
+												<li><a href="/auth/logout" class="drop-text"><i class="fas fa-sign-out-alt"></i> Logout </a></li>
+											</ul>
+										</li>
+									{{else}}
+										{{{_sections.nav_login}}}
+									{{/if}}
+								</ul>
+							</nav>
+						</div>
+						<!-- //nav -->
+					</div>
+				</div>
+			</header>
+			<!-- //header -->
+
+			{{{_sections.banner_nav}}}
+			
+		</div>
+
+		<div class="top-border"></div>
+
+		<div class="center-body">
+			{{{body}}}
+		</div>
+		
+		<footer id="apeiron-footer">
+			<!-- copyright -->
+			<div class="cpy-right text-center py-3">
+				<p>
+				© 2020 Apeiron Manager. All rights reserved
+				</p>
+			</div>
+		</footer>
+
+	</div>
+
+</body>
+
+</html>

@@ -1,0 +1,73 @@
+
+{{#section 'header'}}
+	<script src="/js/homePage.js"></script>
+    <style>
+		.banner_w3lspvt-1 {
+			background-image: url("{{background.artworkURL}}"), url('../images/fb_back.png');
+			opacity:0;
+		}
+	</style>
+{{/section}}
+
+{{#section 'nav_home'}}
+    <li><a href="/" class="active">Home</a></li>
+{{/section}}
+
+{{#section 'nav_characters'}}
+    <li><a href="/profile/characters">Characters</a></li>
+{{/section}}
+
+{{#section 'nav_homebrew'}}
+    <li class="mx-lg-4 mx-md-3 my-md-0 my-2"><a href="/homebrew">Homebrew</a></li>
+{{/section}}
+
+{{#section 'nav_login'}}
+    <li class="mr-4"><a href="/auth/login">Login <i class="fas fa-sign-in-alt"></i></a></li>
+{{/section}}
+
+<!-- banner -->
+<div class="banner_w3lspvt-1">
+	<div class="w3ls_banner_txt text-center">
+        {{#if user}}
+            <h3 class="w3ls_pvt-title text-wh text-uppercase">Create Your Character</h3>
+		    <p>
+                With endless possiblilities, build a unique hero <br> that you envision them to be!
+            </p>
+		    <a href="/profile/characters" style="max-width: 150px;" class="btn button-style mt-sm-3">Create</a>
+        {{else}}
+            <h3 class="w3ls_pvt-title text-wh text-uppercase">Need An Account?</h3>
+		    <p>
+                Apeiron offers you one of the best character managers <br> for Pathfinder Second Edition completely free.
+            </p>
+		    <a href="/auth/login" style="max-width: 150px;" class="btn button-style mt-sm-3">Register</a>
+        {{/if}}
+	</div>
+	<a class="banner-1-artist" rel="author" target="_blank" href="{{background.artistPage}}">&#128396; {{background.name}}</a>
+</div>
+
+<!-- about -->
+<div class="what py-5" id="about_apeiron">
+	<div class="container py-xl-5 py-lg-3">
+		<h3 class="title-w3 mb-2 text-bl text-center has-text-weight-bold has-text-grey-light">What is Apeiron?</h3>
+		<p class="mx-auto wstyles text-center mb-sm-5 mb-4">
+			Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+			eiusmod tempor incididunt ut labore et dolore
+			magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+			consequat.
+		</p>
+			
+		<h3 class="title-w2 mb-1 text-bl text-center has-text-weight-semibold has-text-grey-light">Pathfinder 2e and License</h3>
+		<p class="mx-auto wstyles text-center mb-sm-5 mb-3">
+			This website uses trademarks and/or copyrights owned by Paizo Inc., which are used under Paizo's Community Use Policy. We are expressly prohibited from charging you to use or access this content. This website is not published, endorsed, or specifically approved by Paizo Inc. For more information about Paizo's Community Use Policy, please visit paizo.com/communityuse. For more information about Paizo Inc. and Paizo products, please visit paizo.com.
+			<br>
+			Apeiron Character Manager is produced under the <a href="/license">Open Game License 1.0a</a>.
+			<br>
+			Pathfinder Second Edition contains an enormous amount of content, as such, there are a few features with ambiguous wording. In these cases, we try to follow the ruling of what the community generally agrees upon (we may also adjust the feature's wording to support this). If there is any doubt on how a mechanic or feature works, we highly recommend referring back to the source books. In addition, Apeiron Character Manager contains features which are not included in offical Pathfinder Second Edition source material. These features are included in cases where we believe such content was missing in the source material and will be replaced by offical content if it is made available in the future.
+		</p>
+
+		<h3 class="title-w2 mb-1 text-bl text-center has-text-weight-semibold has-text-grey-light">Artwork</h3>
+		<p class="mx-auto wstyles text-center mb-sm-5 mb-3">
+			All background artwork being showed above is not ours but we have been given permission of use by their artists. The artist's name is displayed in the bottom right corner which is a link back to the artist's website.
+		</p>
+	</div>
+</div>
