@@ -97,7 +97,6 @@ app.use('/', coreRoutes);
 app.use('*', errorRoutes); // 404 Route
 
 // Server Setup
-
 let server = null;
 if (process.env.PRODUCTION == 'true'){
   
@@ -105,24 +104,16 @@ if (process.env.PRODUCTION == 'true'){
     key: fs.readFileSync('/etc/letsencrypt/live/apeiron.app/privkey.pem', 'utf8'),
     cert: fs.readFileSync('/etc/letsencrypt/live/apeiron.app/cert.pem', 'utf8')
   };
-  
-  const httpsServer = https.createServer(options, app);
 
-  const PORT = process.env.PORT || 80;
-  server = httpsServer.listen(PORT, () => {
-    console.log('Apeiron running publicly on port '+PORT);
-  });
+  server = https.createServer(options, app).listen(80);
 
 } else {
 
-  const httpServer = http.createServer(app);
-
-  const PORT = process.env.PORT || 4828;
-  server = httpServer.listen(PORT, () => {
-    console.log('Apeiron running locally on port '+PORT);
-  });
+  server = http.createServer(app).listen(4828);
 
 }
+
+console.log(server);
 
 // Socket IO
 const io = socket(server);
@@ -461,4 +452,3 @@ io.on('connection', function(socket){
   });
 
 });
-
