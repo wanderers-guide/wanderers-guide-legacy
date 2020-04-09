@@ -354,15 +354,32 @@ function openQuickView(type, data) {
         if(isBroken){
             tagsInnerHTML += '<button class="button is-marginless mr-2 mb-1 is-small is-danger has-tooltip-bottom has-tooltip-multiline" data-tooltip="A broken object can’t be used for its normal function, nor does it grant bonuses - with the exception of armor. Broken armor still grants its item bonus to AC, but it also imparts a status penalty to AC depending on its category: -1 for broken light armor, -2 for broken medium armor, or -3 for broken heavy armor. A broken item still imposes penalties and limitations normally incurred by carrying, holding, or wearing it.">Broken</button>';
         }
+        if(isShoddy){
+            tagsInnerHTML += '<button class="button is-marginless mr-2 mb-1 is-small is-warning has-tooltip-bottom has-tooltip-multiline" data-tooltip="Improvised or of dubious make, shoddy items are never available for purchase except for in the most desperate of communities. When available, a shoddy item usually costs half the Price of a standard item, though you can never sell one in any case. Attacks and checks involving a shoddy item take a –2 item penalty. This penalty also applies to any DCs that a shoddy item applies to (such as AC, for shoddy armor). A shoddy suit of armor also worsens the armor’s check penalty by 2. A shoddy item’s Hit Points and Broken Threshold are each half that of a normal item of its type.">Shoddy</button>';
+        }
+
+        let itemSize = data.InvItem.size;
+        switch(itemSize) {
+            case 'TINY': tagsInnerHTML += '<button class="button is-marginless mr-2 mb-1 is-small is-link">Tiny</button>';
+                break;
+            case 'SMALL': tagsInnerHTML += '<button class="button is-marginless mr-2 mb-1 is-small is-link">Small</button>';
+                break;
+            case 'LARGE': tagsInnerHTML += '<button class="button is-marginless mr-2 mb-1 is-small is-link">Large</button>'; break;
+            case 'HUGE': tagsInnerHTML += '<button class="button is-marginless mr-2 mb-1 is-small is-link">Huge</button>'; break;
+            case 'GARGANTUAN': tagsInnerHTML += '<button class="button is-marginless mr-2 mb-1 is-small is-link">Gargantuan</button>';
+                break;
+            default: break;
+        }
+
         let rarity = data.Item.Item.rarity;
         switch(rarity) {
-        case 'UNCOMMON': tagsInnerHTML += '<button class="button is-marginless mr-2 mb-1 is-small is-primary">Uncommon</button>';
-            break;
-        case 'RARE': tagsInnerHTML += '<button class="button is-marginless mr-2 mb-1 is-small is-success">Rare</button>';
-            break;
-        case 'UNIQUE': tagsInnerHTML += '<button class="button is-marginless mr-2 mb-1 is-small is-danger">Unique</button>';
-            break;
-        default: break;
+            case 'UNCOMMON': tagsInnerHTML += '<button class="button is-marginless mr-2 mb-1 is-small is-primary">Uncommon</button>';
+                break;
+            case 'RARE': tagsInnerHTML += '<button class="button is-marginless mr-2 mb-1 is-small is-success">Rare</button>';
+                break;
+            case 'UNIQUE': tagsInnerHTML += '<button class="button is-marginless mr-2 mb-1 is-small is-danger">Unique</button>';
+                break;
+            default: break;
         }
         for(const tagStruct of data.Item.TagArray){
             tagsInnerHTML += '<button class="button is-marginless mr-2 mb-1 is-small is-info has-tooltip-bottom has-tooltip-multiline" data-tooltip="'+tagStruct.Tag.description+'">'+tagStruct.Tag.name+' '+tagStruct.TagDetails+'</button>';
@@ -508,14 +525,9 @@ function openQuickView(type, data) {
 
         }
 
-        let shoddyText = (isShoddy) ? "Yes" : "No";
-        qContent.append('<div class="columns is-centered is-marginless text-center"><div class="column is-6 is-paddingless"><p class="is-size-6"><strong>Size:</strong> '+capitalizeWord(data.InvItem.size)+'</p></div><div class="column is-6 is-paddingless"><p class="is-size-6"><strong>Shoddy:</strong> '+shoddyText+'</p></div></div>');
-
-        qContent.append('<hr class="m-2">');
-
-        qContent.append('<p class="has-text-centered is-size-6"><strong>Health</strong></p>');
-        qContent.append('<div class="field has-addons has-addons-centered"><p class="control"><input id="'+invItemHPInputID+'" class="input" type="number" min="0" max="'+data.InvItem.hitPoints+'" value="'+data.InvItem.currentHitPoints+'"></p><p class="control"><a class="button is-static has-text-grey-light has-background-grey-darkest border-darker">/</a><p class="control"><a class="button is-static has-text-grey-lighter has-background-grey-darker border-darker">'+data.InvItem.hitPoints+'</a></p></div>');
-        qContent.append('<div class="columns is-centered is-marginless text-center"><div class="column is-5 is-paddingless"><p class="is-size-6"><strong>Hardness:</strong> '+data.InvItem.hardness+'</p></div><div class="column is-7 is-paddingless"><p class="is-size-6"><strong>Broken Threshold:</strong> '+data.InvItem.brokenThreshold+'</p></div></div>');
+        qContent.append('<p class="has-text-centered is-size-7"><strong>Health</strong></p>');
+        qContent.append('<div class="field has-addons has-addons-centered"><p class="control"><input id="'+invItemHPInputID+'" class="input is-small" type="number" min="0" max="'+data.InvItem.hitPoints+'" value="'+data.InvItem.currentHitPoints+'"></p><p class="control"><a class="button is-static is-small has-text-grey-light has-background-grey-darkest border-darker">/</a><p class="control"><a class="button is-static is-small has-text-grey-lighter has-background-grey-darker border-darker">'+data.InvItem.hitPoints+'</a></p></div>');
+        qContent.append('<div class="columns is-centered is-marginless text-center"><div class="column is-5 is-paddingless"><p class="is-size-7"><strong>Hardness:</strong> '+data.InvItem.hardness+'</p></div><div class="column is-7 is-paddingless"><p class="is-size-7"><strong>Broken Threshold:</strong> '+data.InvItem.brokenThreshold+'</p></div></div>');
 
         if(data.Item.WeaponData != null){
 

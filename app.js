@@ -9,6 +9,8 @@ const bodyParser = require('body-parser');
 const cookieSession = require('cookie-session');
 const passport = require('passport');
 
+const favicon = require('serve-favicon');
+
 const authRoutes = require('./routes/auth-routes');
 const adminRoutes = require('./routes/admin-routes');
 const profileRoutes = require('./routes/profile-routes');
@@ -72,6 +74,8 @@ app.use(cookieSession({
 app.use(passport.initialize());
 app.use(passport.session());
 
+// Set FavIcon
+app.use(favicon('./public/images/favicon.ico'));
 
 // Databases
 const backgroundDB = require('./config/databases/background-database');
