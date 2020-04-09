@@ -105,15 +105,13 @@ if (process.env.PRODUCTION == 'true'){
     cert: fs.readFileSync('/etc/letsencrypt/live/apeiron.app/cert.pem', 'utf8')
   };
 
-  server = https.createServer(options, app).listen(80);
+  server = https.createServer(options, app).listen(443);
 
 } else {
 
-  server = http.createServer(app).listen(4828);
+  server = http.createServer(app).listen(80);
 
 }
-
-console.log(server);
 
 // Socket IO
 const io = socket(server);
