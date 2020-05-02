@@ -1,0 +1,105 @@
+
+{{#section 'header'}}
+    <script type="text/javascript" src="/js/character-list.js"></script>
+    <link rel="stylesheet" href="/css/character-list.css">
+{{/section}}
+
+{{#section 'nav_home'}}
+    <li><a href="/">Home</a></li>
+{{/section}}
+
+{{#section 'nav_characters'}}
+    <li><a href="/profile/characters" class="active">Characters</a></li>
+{{/section}}
+
+{{#section 'nav_homebrew'}}
+    <li class="mx-lg-4 mx-md-3 my-md-0 my-2"><a href="/homebrew">Homebrew</a></li>
+{{/section}}
+
+{{#section 'nav_login'}}
+    <li class="mr-4"><a href="/auth/login">Login <i class="fas fa-sign-in-alt"></i></a></li>
+{{/section}}
+
+
+
+{{#section 'banner_nav'}}
+    <div class="banner_w3lspvt-2"></div>
+{{/section}}
+
+<div class="container">
+
+    <div class="columns is-mobile is-centered is-vcentered pt-3 is-marginless">
+        <div class="column is-5 is-paddingless">
+            <h1 class="is-size-1 is-inline-block has-text-light">Characters</h1>
+            {{#ifEqual user.isMember 0}}
+                <span class="is-size-5 ml-3 has-tooltip-bottom has-tooltip-multiline has-text-grey-light" data-tooltip="Non-patrons can only have up to three characters at once. To get unlimited characters, support us and what we're doing on Patreon!">({{characters.length}}/{{characterLimit}})</span>
+            {{/ifEqual}}
+        </div>
+        <div class="column is-5 is-paddingless">
+            {{#if canMakeCharacter}}
+                <a class="is-size-3 is-pulled-right" href="/profile/characters/add"><span class="icon is-large has-text-info"><i class="fas fa-user-plus"></i></span></a>
+            {{else}}
+                <a class="is-size-3 is-pulled-right"><span class="icon is-large has-text-danger"><i class="fas fa-user-times"></i></span></a>
+            {{/if}}
+        </div>
+    </div>
+    <hr>
+
+
+    <div class="columns is-centered is-multiline mb-2">
+        {{#each characters}}
+            <div class="column is-4">
+                <div class="card character-card" name="{{id}}">
+                    <div class="card-content cursor-clickable pt-2">
+                        <p class="is-size-4 has-text-grey-lighter">{{name}}</p>
+                        <p class="is-size-7 pl-4"> Lvl {{level}} | {{heritageName}} {{className}}</p>
+                    </div>
+                    <div class="card-footer is-paddingless">
+                        <a class="card-footer-item character-card-edit has-text-grey-light">
+                            {{#if isPlayable}}
+                                <span class="is-size-6 pr-2">Edit</span>
+                                <span class="icon is-small">
+                                    <i class="fas fa-edit"></i>
+                                </span>
+                            {{else}}
+                                <span class="is-size-6 pr-1">Continue</span>
+                                <span class="icon is-small">
+                                    <i class="fas fa-wrench"></i>
+                                </span>
+                            {{/if}}
+                        </a>
+                        <a class="card-footer-item character-card-delete has-text-grey-light">
+                            <span class="is-size-6 pr-1">Delete</span>
+                            <span class="icon is-small">
+                                <i class="fas fa-trash"></i>
+                            </span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        {{else}}
+            <div class="column">
+                <p class="has-text-centered is-italic">You have no characters.</p>
+            </div>
+        {{/each}}
+    </div>
+
+</div>
+
+<div class="modal">
+    <div class="modal-background"></div>
+    <div class="modal-card">
+        <header class="modal-card-head">
+            <p class="modal-card-title is-size-4 has-text-light">Delete Character</p>
+            <button class="delete modal-card-close" aria-label="close"></button>
+        </header>
+        <section class="modal-card-body">
+            <p class="has-text-light has-text-centered">Are you sure you want to delete this character?</p>
+        </section>
+        <footer class="modal-card-foot is-paddingless p-3 field is-grouped is-grouped-centered">
+            <p class="control">
+                <a class="button is-danger is-outlined" id="delete-confirmation-btn">Delete</a>
+            </p>
+        </footer>
+    </div>
+</div>

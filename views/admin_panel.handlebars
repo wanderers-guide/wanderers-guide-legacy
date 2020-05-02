@@ -1,7 +1,6 @@
 
 {{#section 'header'}}
-      <!-- Profile -->
-	<link href="/css/profile.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/admin-builders.css">
 {{/section}}
 
 {{#section 'nav_home'}}
@@ -20,29 +19,22 @@
     <li class="mr-4"><a href="/auth/login">Login <i class="fas fa-sign-in-alt"></i></a></li>
 {{/section}}
 
-
-
 {{#section 'banner_nav'}}
     <div class="banner_w3lspvt-2"></div>
 {{/section}}
 
-<div class="profile-container">
 
-    <h1>Welcome to the Admin Panel.</h1>
-    
-    <br>
+<div class="container">
 
-    <form action="/admin/create/item/general">
-        <button type="submit">Create General Item</button>
-    </form>
+    <div class="pt-3">
+        <h1 class="is-size-1 has-text-light has-text-centered">Admin Panel</h1>
+    </div>
+    <hr>
 
-    <form action="/admin/create/item/weapon">
-        <button type="submit">Create Weapon</button>
-    </form>
-
-	{{#ifEqual user.isAdmin 1}}
-        <br>
-		<p><b>Fun Fact:</b> You're an Admin and thus can be here!</p>
-	{{/ifEqual}}
+    <div class="columns is-centered is-multiline mb-2">
+        <div class="column is-3">
+            <a class="button is-large is-dark" href="/admin/create/ancestry">Create Ancestry</a>
+        </div>
+    </div>
 
 </div>

@@ -30,47 +30,49 @@
 {{/section}}
 
 
-<div class="pageloader is-black"><span class="title">Loading Builder</span></div>
+<div class="pageloader">
+    <div class="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+</div>
 
 <div id="char-builder" class="container py-4 text-center">
 
     <div class="box">
 
-        <h1 class="title is-1 font-forum">Character Builder</h1>
+        <h1 class="title is-1 font-forum has-text-grey-light">Character Builder</h1>
 
         <div class="steps">
-            <div class="step-item is-completed is-info">
+            <div class="step-item is-completed is-link">
                 <div class="step-marker">
-                <a href="page1?"><span class="has-text-white icon"><i class="fa fa-user-alt"></i></span></a>
+                <a href="page1?"><span class="has-text-bck-color icon"><i class="fa fa-user-alt"></i></span></a>
                 </div>
                 <div class="step-details is-hidden-touch">
-                    <a href="page1?" class="button is-rounded is-inverted is-info"><p class="step-title">Basics</p></a>
+                    <a href="page1?" class="button is-rounded is-inverted is-link"><p class="step-title">Basics</p></a>
                 </div>
             </div>
-            <div class="step-item is-completed is-info">
-                <div class="step-marker"><a href="page2?"><span class="has-text-white">A</span></a></div>
+            <div class="step-item is-completed is-link">
+                <div class="step-marker"><a href="page2?"><span class="has-text-bck-color">A</span></a></div>
                 <div class="step-details is-hidden-touch">
-                    <a href="page2?" class="button is-rounded is-inverted is-info"><p class="step-title">Ancestry</p></a>
+                    <a href="page2?" class="button is-rounded is-inverted is-link"><p class="step-title">Ancestry</p></a>
                 </div>
             </div>
-            <div class="step-item is-completed is-info">
-                <div class="step-marker"><a href="page3?"><span class="has-text-white">B</span></a></div>
+            <div class="step-item is-completed is-link">
+                <div class="step-marker"><a href="page3?"><span class="has-text-bck-color">B</span></a></div>
                 <div class="step-details is-hidden-touch">
-                    <a href="page3?" class="button is-rounded is-inverted is-info"><p class="step-title">Background</p></a>
+                    <a href="page3?" class="button is-rounded is-inverted is-link"><p class="step-title">Background</p></a>
                 </div>
             </div>
-            <div class="step-item is-active is-info">
+            <div class="step-item is-active is-link">
                 <div class="step-marker"><a href="page4?"><span class="">C</span></a></div>
                 <div class="step-details is-hidden-touch">
-                    <a href="page4?" class="button is-rounded is-inverted is-info"><p class="step-title">Class</p></a>
+                    <a href="page4?" class="button is-rounded is-inverted is-link"><p class="step-title">Class</p></a>
                 </div>
             </div>
             <div class="step-item">
                 <div class="step-marker">
-                <a href="page5?"><span class="has-text-white icon"><i class="fa fa-flag"></i></span></a>
+                <a href="page5?"><span class="has-text-bck-color icon"><i class="fa fa-flag"></i></span></a>
                 </div>
                 <div class="step-details is-hidden-touch">
-                    <a href="page5?" class="button is-rounded is-inverted is-info"><p class="step-title">Finalize</p></a>
+                    <a href="page5?" class="button is-rounded is-inverted is-link"><p class="step-title">Finalize</p></a>
                 </div>
             </div>
         </div>
@@ -87,86 +89,98 @@
             </div>
         </div>
 
-        <article class="message is-info">
+        <article class="class-content message is-info">
             <div id="classDescription" class="message-body"></div>
         </article>
 
     </div>
 
-    <div id="classBroadInfo" class="box">
-        <div class="columns">
-            <div class="column">
-            </div>
-            <div class="column">
-                <div class="has-tooltip-bottom has-tooltip-multiline" data-tooltip="At 1st level, you gain an ability boost in the key ability for your class.">
-                    <p class="is-size-4 has-text-grey-darker has-text-weight-semibold">Key Ability</p>
-                    <div id="keyAbility" class="container">
-                    </div>
-                </div>
-            </div>
-            <div class="column">
-                <div class="has-tooltip-bottom has-tooltip-multiline" data-tooltip="Your maximum number of HP increases by this number plus your Constitution modifier at every level (including 1st).">
-                    <p class="is-size-4 has-text-grey-darker has-text-weight-semibold">Hit Points</p>
-                    <div id="hitPoints" class="container">
-                    </div>
-                </div>
-            </div>
-            <div class="column">
-            </div>
-        </div>
-    </div>
+    <div class="class-content">
 
-    <div id="classInfo" class="box">
-        <div class="tile is-ancestor">
-            <div class="tile is-parent is-4 is-vertical">
-                <div class="tile is-child">
-                    <p class="is-size-4 has-text-grey-darker has-text-weight-semibold">Perception</p>
-                    <div id="profPerception" class="container">
+        <div id="classBroadInfo" class="box">
+            <div class="columns">
+                <div class="column">
+                </div>
+                <div class="column">
+                    <div class="has-tooltip-bottom has-tooltip-multiline" data-tooltip="At 1st level, you gain an ability boost in the key ability for your class.">
+                        <p class="is-size-4 has-text-title has-text-weight-semibold">Key Ability</p>
+                        <div id="keyAbility" class="container">
+                        </div>
                     </div>
                 </div>
-                <div class="tile is-child">
-                    <p class="is-size-4 has-text-grey-darker has-text-weight-semibold">Skills</p>
-                    <div id="profSkills" class="container">
+                <div class="column">
+                    <div class="has-tooltip-bottom has-tooltip-multiline" data-tooltip="Your maximum number of HP increases by this number plus your Constitution modifier at every level (including 1st).">
+                        <p class="is-size-4 has-text-title has-text-weight-semibold">Hit Points</p>
+                        <div id="hitPoints" class="container">
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="tile is-parent is-4 is-vertical">
-                <div class="tile is-child">
-                    <p class="is-size-4 has-text-grey-darker has-text-weight-semibold">Saving Throws</p>
-                    <div id="profSavingThrows" class="container">
-                    </div>
-                </div>
-                <div class="tile is-child">
-                    <p class="is-size-4 has-text-grey-darker has-text-weight-semibold">Spells</p>
-                    <div id="profSpells" class="container">
-                    </div>
-                </div>
-            </div>
-            <div class="tile is-parent is-4 is-vertical">
-                <div class="tile is-child">
-                    <p class="is-size-4 has-text-grey-darker has-text-weight-semibold">Attacks</p>
-                    <div id="profAttacks" class="container">
-                    </div>
-                </div>
-                <div class="tile is-child">
-                    <p class="is-size-4 has-text-grey-darker has-text-weight-semibold">Defenses</p>
-                    <div id="profDefenses" class="container">
-                    </div>
+                <div class="column">
                 </div>
             </div>
         </div>
-    </div>
 
-    <div id="classAbilities">
+        <div id="classInfo" class="box">
+            <div class="tile is-ancestor">
+                <div class="tile is-parent is-4 is-vertical">
+                    <div class="tile is-child">
+                        <p class="is-size-4 has-text-title has-text-weight-semibold">Perception</p>
+                        <div id="profPerception" class="container">
+                        </div>
+                    </div>
+                    <div class="tile is-child">
+                        <p class="is-size-4 has-text-title has-text-weight-semibold">Skills</p>
+                        <div id="profSkills" class="container">
+                        </div>
+                    </div>
+                </div>
+                <div class="tile is-parent is-4 is-vertical">
+                    <div class="tile is-child">
+                        <p class="is-size-4 has-text-title has-text-weight-semibold">Saving Throws</p>
+                        <div id="profSavingThrows" class="container">
+                        </div>
+                    </div>
+                    <div class="tile is-child">
+                        <p class="is-size-4 has-text-title has-text-weight-semibold">Spells</p>
+                        <div id="profSpells" class="container">
+                        </div>
+                    </div>
+                </div>
+                <div class="tile is-parent is-4 is-vertical">
+                    <div class="tile is-child">
+                        <p class="is-size-4 has-text-title has-text-weight-semibold">Attacks</p>
+                        <div id="profAttacks" class="container">
+                        </div>
+                    </div>
+                    <div class="tile is-child">
+                        <p class="is-size-4 has-text-title has-text-weight-semibold">Defenses</p>
+                        <div id="profDefenses" class="container">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="classAbilities">
+        </div>
+
     </div>
 
     <br>
     <nav class="level is-mobile">
         <div class="level-item has-text-centered">
-            <button class="button is-info" id="prevButton">Previous</button>
+            <button class="button is-info is-rounded" id="prevButton">
+                <span class="icon">
+                    <i class="fas fa-arrow-left"></i>
+                </span>
+            </button>
         </div>
         <div class="level-item has-text-centered">
-            <button class="button is-info" id="nextButton">Next</button>
+            <button class="button is-info is-rounded" id="nextButton">
+                <span class="icon">
+                    <i class="fas fa-arrow-right"></i>
+                </span>
+            </button>
         </div>
     </nav>
 

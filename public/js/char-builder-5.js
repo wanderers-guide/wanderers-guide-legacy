@@ -7,13 +7,7 @@ $(function () {
     // Change page
     $("#prevButton").click(function(){
         prevPage();
-    });
-
-    // Go to Character
-    $("#goToCharButton").click(function(){
-        goToChar();
-    });
-    
+    });    
 
     socket.emit("requestFinalizeDetails",
         getCharIDFromURL());
@@ -30,14 +24,19 @@ function prevPage() {
 
 function goToChar() {
     // Hardcoded redirect
-    window.location.href = window.location.href.replace(
-        "builder/"+getCharIDFromURL()+"/page5?", getCharIDFromURL());
+    if(window.location.href.includes("/page5?")) {
+        window.location.href = window.location.href.replace(
+            "builder/"+getCharIDFromURL()+"/page5?", getCharIDFromURL());
+    } else {
+        window.location.href = window.location.href.replace(
+            "builder/"+getCharIDFromURL()+"/page5", getCharIDFromURL());
+    }
 }
 
 
 // ~~~~~~~~~~~~~~ // Processings // ~~~~~~~~~~~~~~ //
 
-socket.on("returnFinalizeDetails", function(abilObject, cClass, ancestLanguages){
+socket.on("returnFinalizeDetails", function(character, abilObject, cClass){
 
     let abilMap = objToMap(abilObject);
 
@@ -66,32 +65,88 @@ socket.on("returnFinalizeDetails", function(abilObject, cClass, ancestLanguages)
     $("#chaMod").html(signNumber(getMod(chaScore)));
 
 
-    let skillsSection = $('#trainSkills');
-    for (let i = 0; i < getMod(intScore)+cClass.tSkillsMore; i++) {
+    if(character.classID != null && character.ancestryID != null){
+        $(".finalize-content").removeClass("is-hidden");
+        
+        let skillsSection = $('#trainSkills');
+        for (let i = 0; i < getMod(intScore)+cClass.tSkillsMore; i++) {
 
-        let skillsSectionID = "skillSelection"+i;
-        
-        skillsSection.append('<div id="'+skillsSectionID+'"></div>');
-        
-        processCode(
-            'GIVE-SKILL-PROF=T',
-            'Type-Class_Level-1_Code-Other'+i,
-            skillsSectionID);
-        
+            let skillsSectionID = "skillSelection"+i;
+            
+            skillsSection.append('<div id="'+skillsSectionID+'"></div>');
+            
+            processCode(
+                'GIVE-SKILL-PROF=T',
+                'Type-Class_Level-1_Code-Other'+i,
+                skillsSectionID);
+            
+        }
+
+        let langsSection = $('#learnLanguages');
+        for (let i = 0; i < getMod(intScore); i++) {
+
+            let langSelectionID = "langSelection"+i;
+            
+            langsSection.append('<div id="'+langSelectionID+'"></div>');
+            
+            processCode(
+                'GIVE-LANG-BONUS-ONLY',
+                'Type-Ancestry_Level-1_Code-Other'+i,
+                langSelectionID);
+            
+        }
+
+    } else {
+
+        $("#missing-class-message").removeClass("is-hidden");
+        $(".finalize-content").addClass("is-hidden");
+
     }
 
-    let langsSection = $('#learnLanguages');
-    for (let i = 0; i < getMod(intScore); i++) {
+    if (character.name == null || character.ancestryID == null || character.heritageID == null || character.backgroundID == null || character.classID == null) {
 
-        let langSelectionID = "langSelection"+i;
-        
-        langsSection.append('<div id="'+langSelectionID+'"></div>');
-        
-        processCode(
-            'GIVE-LANG-BONUS-ONLY',
-            'Type-Ancestry_Level-1_Code-Other'+i,
-            langSelectionID);
-        
+        $("#goToCharButton").removeClass("is-success");
+        $("#goToCharButton").addClass("is-danger");
+        $("#goToCharButton").addClass("has-tooltip-bottom");
+
+        let infoNeeded = '';
+        if(character.name == null) {
+            infoNeeded += "- Name\n";
+            $("#basics-step").removeClass("is-link");
+            $("#basics-step").addClass("is-danger");
+        }
+        if(character.ancestryID == null) {
+            infoNeeded += "- Ancestry\n";
+            $("#ancestry-step").removeClass("is-link");
+            $("#ancestry-step").addClass("is-danger");
+        } else if (character.heritageID == null) {
+            infoNeeded += "- Heritage\n";
+            $("#ancestry-step").removeClass("is-link");
+            $("#ancestry-step").addClass("is-danger");
+        }
+        if(character.backgroundID == null) {
+            infoNeeded += "- Background\n";
+            $("#background-step").removeClass("is-link");
+            $("#background-step").addClass("is-danger");
+        }
+        if(character.classID == null) {
+            infoNeeded += "- Class\n";
+            $("#class-step").removeClass("is-link");
+            $("#class-step").addClass("is-danger");
+        }
+
+        $("#goToCharButton").attr("data-tooltip", "Character Incomplete\n"+infoNeeded);
+
+    } else {
+        // Go to Character Sheet
+        $("#goToCharButton").click(function(){
+            goToChar();
+        });
     }
+
+
+
+    // Turn off page loading
+    $('.pageloader').addClass("fadeout");
 
 });

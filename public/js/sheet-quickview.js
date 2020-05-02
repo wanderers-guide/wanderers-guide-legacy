@@ -18,6 +18,8 @@ $(function () {
 
 });
 
+let amalgamationBonusText = "This is an amalgamation of any additional bonuses you might have. This usually includes bonuses from feats, items, conditions, or any custom-set bonuses that you may have added manually.";
+
 function openQuickView(type, data) {
 
     $('#quickViewTitle').html('');
@@ -66,11 +68,24 @@ function openQuickView(type, data) {
         breakDownInnerHTML += ' + ';
 
         let amalgBonus = data.TotalBonus - (data.AbilMod + data.ProfNum);
-        breakDownInnerHTML += '<a class="has-text-link has-tooltip-bottom has-tooltip-multiline" data-tooltip="This is an amalgamation of any additional bonuses you might have. This usually includes bonuses from feats, items, conditions, or any custom-set bonuses that you may have added manually.">'+amalgBonus+'</a>';
+        breakDownInnerHTML += '<a class="has-text-link has-tooltip-bottom has-tooltip-multiline" data-tooltip="'+amalgamationBonusText+'">'+amalgBonus+'</a>';
 
         breakDownInnerHTML += '</p>';
 
         qContent.append(breakDownInnerHTML);
+
+        let conditionalStatMap = getConditionalStatMap('SKILL_'+data.SkillName);
+        if(conditionalStatMap != null){
+
+            qContent.append('<hr class="m-2">');
+
+            qContent.append('<p class="has-text-centered"><strong>Contitionals</strong></p>');
+            
+            for(const [condition, value] of conditionalStatMap.entries()){
+                qContent.append('<p class="has-text-centered">'+value+' '+condition+'</p>');
+            }
+
+        }
 
         return;
     }
@@ -258,7 +273,7 @@ function openQuickView(type, data) {
         breakDownInnerHTML += ' + ';
 
         let amalgBonus = data.TotalBonus - (data.AbilMod + data.ProfNum);
-        breakDownInnerHTML += '<a class="has-text-link has-tooltip-bottom has-tooltip-multiline" data-tooltip="This is an amalgamation of any additional bonuses you might have. This usually includes bonuses from feats, items, conditions, or any custom-set bonuses that you may have added manually.">'+amalgBonus+'</a>';
+        breakDownInnerHTML += '<a class="has-text-link has-tooltip-bottom has-tooltip-multiline" data-tooltip="'+amalgamationBonusText+'">'+amalgBonus+'</a>';
 
         breakDownInnerHTML += '</p>';
 
@@ -305,7 +320,7 @@ function openQuickView(type, data) {
         breakDownInnerHTML += ' + ';
 
         let amalgBonus = data.TotalBonus - (data.WisMod + data.ProfNum);
-        breakDownInnerHTML += '<a class="has-text-link has-tooltip-bottom has-tooltip-multiline" data-tooltip="This is an amalgamation of any additional bonuses you might have. This usually includes bonuses from feats, items, conditions, or any custom-set bonuses that you may have added manually.">'+amalgBonus+'</a>';
+        breakDownInnerHTML += '<a class="has-text-link has-tooltip-bottom has-tooltip-multiline" data-tooltip="'+amalgamationBonusText+'">'+amalgBonus+'</a>';
 
         breakDownInnerHTML += '</p>';
 
@@ -345,10 +360,13 @@ function openQuickView(type, data) {
         let invItemRemoveButtonID = 'invItemRemoveButton'+data.InvItem.id;
         let invItemCustomizeButtonID = 'invItemCustomizeButton'+data.InvItem.id;
 
-        data.InvItem.currentHitPoints = (data.InvItem.currentHitPoints > data.InvItem.hitPoints) ? data.InvItem.hitPoints : data.InvItem.currentHitPoints;
-
-        let isBroken = (data.InvItem.currentHitPoints <= data.InvItem.brokenThreshold);
         let isShoddy = (data.InvItem.isShoddy == 1);
+        let maxHP = (isShoddy) ? Math.floor(data.InvItem.hitPoints/2) : data.InvItem.hitPoints;
+        let brokenThreshold = (isShoddy) ? Math.floor(data.InvItem.brokenThreshold/2) : data.InvItem.brokenThreshold;
+
+        data.InvItem.currentHitPoints = (data.InvItem.currentHitPoints > maxHP) ? maxHP : data.InvItem.currentHitPoints;
+
+        let isBroken = (data.InvItem.currentHitPoints <= brokenThreshold);
 
         let tagsInnerHTML = '';
         if(isBroken){
@@ -400,15 +418,17 @@ function openQuickView(type, data) {
         bulk = getBulkFromNumber(bulk);
         qContent.append('<p class="is-size-6"><strong>Price:</strong> '+price+'</p>');
         qContent.append('<p class="is-size-6"><strong>Bulk:</strong> '+bulk+'</p>');
-        qContent.append('<p class="is-size-6"><strong>Hands:</strong> '+getHandsToString(data.Item.Item.hands)+'</p>');
+        if(data.Item.Item.hands != 'NONE'){
+            qContent.append('<p class="is-size-6"><strong>Hands:</strong> '+getHandsToString(data.Item.Item.hands)+'</p>');
+        }
 
         qContent.append('<hr class="m-2">');
 
         if(data.Item.WeaponData != null){
 
             if(data.Item.WeaponData.isMelee == 1){
-
-                let calcStruct = getAttackAndDamage(data.Item, data.Data.StrMod, data.Data.DexMod);
+                
+                let calcStruct = getAttackAndDamage(data.Item, data.InvItem, data.Data.StrMod, data.Data.DexMod);
     
                 qContent.append('<div class="tile text-center"><div class="tile is-child is-6"><strong>Attack Bonus</strong></div><div class="tile is-child is-6"><strong>Damage</strong></div></div>');
                 qContent.append('<div class="tile text-center"><div class="tile is-child is-6"><p class="pr-1">'+calcStruct.AttackBonus+'</p></div><div class="tile is-child is-6"><p>'+calcStruct.Damage+'</p></div></div>');
@@ -419,7 +439,7 @@ function openQuickView(type, data) {
             
             if(data.Item.WeaponData.isRanged == 1){
                 
-                let calcStruct = getAttackAndDamage(data.Item, data.Data.StrMod, data.Data.DexMod);
+                let calcStruct = getAttackAndDamage(data.Item, data.InvItem, data.Data.StrMod, data.Data.DexMod);
     
                 qContent.append('<div class="tile text-center"><div class="tile is-child is-6"><strong>Attack Bonus</strong></div><div class="tile is-child is-6"><strong>Damage</strong></div></div>');
                 qContent.append('<div class="tile text-center"><div class="tile is-child is-6"><p class="pr-1">'+calcStruct.AttackBonus+'</p></div><div class="tile is-child is-6"><p>'+calcStruct.Damage+'</p></div></div>');
@@ -440,13 +460,21 @@ function openQuickView(type, data) {
     
         if(data.Item.ArmorData != null){
             
+            // Apply Shoddy to Armor
+            let acBonus = data.Item.ArmorData.acBonus;
+            acBonus += (isShoddy) ? -2 : 0;
+
+            let armorCheckPenalty = data.Item.ArmorData.checkPenalty;
+            armorCheckPenalty += (isShoddy) ? -2 : 0;
+            //
+
             qContent.append('<div class="tile text-center"><div class="tile is-child is-6"><strong>AC Bonus</strong></div><div class="tile is-child is-6"><strong>Dex Cap</strong></div></div>');
-            qContent.append('<div class="tile text-center"><div class="tile is-child is-6"><p>'+signNumber(data.Item.ArmorData.acBonus)+'</p></div><div class="tile is-child is-6"><p>'+signNumber(data.Item.ArmorData.dexCap)+'</p></div></div>');
+            qContent.append('<div class="tile text-center"><div class="tile is-child is-6"><p>'+signNumber(acBonus)+'</p></div><div class="tile is-child is-6"><p>'+signNumber(data.Item.ArmorData.dexCap)+'</p></div></div>');
 
             qContent.append('<hr class="m-2">');
 
             let minStrength = (data.Item.ArmorData.minStrength == 0) ? '-' : data.Item.ArmorData.minStrength+'';
-            let checkPenalty = (data.Item.ArmorData.checkPenalty == 0) ? '-' : data.Item.ArmorData.checkPenalty+'';
+            let checkPenalty = (armorCheckPenalty == 0) ? '-' : armorCheckPenalty+'';
             let speedPenalty = (data.Item.ArmorData.speedPenalty == 0) ? '-' : data.Item.ArmorData.speedPenalty+' ft';
             qContent.append('<div class="tile text-center"><div class="tile is-child is-4"><strong>Strength</strong></div><div class="tile is-child is-4"><strong>Check Penalty</strong></div><div class="tile is-child is-4"><strong>Speed Penalty</strong></div></div>');
             qContent.append('<div class="tile text-center"><div class="tile is-child is-4"><p>'+minStrength+'</p></div><div class="tile is-child is-4"><p>'+checkPenalty+'</p></div><div class="tile is-child is-4"><p>'+speedPenalty+'</p></div></div>');
@@ -509,7 +537,7 @@ function openQuickView(type, data) {
             }
 
             let weapCategory = capitalizeWord(data.Item.WeaponData.category);
-            qContent.append('<div class="tile text-center"><div class="tile is-child is-6"><p class="is-size-6"><strong>Category:</strong> '+weapCategory+'</p></div><div class="tile is-child is-6"><p class="is-size-6"><strong>Group:</strong> '+weapGroup+'</p></div></div>');
+            qContent.append('<div class="tile is-child text-center"><p class="is-size-7"><strong>'+weapCategory+' Weapon - '+weapGroup+'</strong></p></div>');
 
             qContent.append('<hr class="m-2">');
 
@@ -517,45 +545,37 @@ function openQuickView(type, data) {
 
         if(data.Item.ArmorData != null){
 
+            let armorTypeAndGroupListing = '';
             let armorCategory = capitalizeWord(data.Item.ArmorData.category);
-            let armorGroup = (data.Item.ArmorData.armorType == 'N/A') ? '-' : capitalizeWord(data.Item.ArmorData.armorType);
-            qContent.append('<div class="tile text-center"><div class="tile is-child is-6"><p class="is-size-6"><strong>Category:</strong> '+armorCategory+'</p></div><div class="tile is-child is-6"><p class="is-size-6"><strong>Group:</strong> '+armorGroup+'</p></div></div>');
+            if(data.Item.ArmorData.armorType == 'N/A'){
+                armorTypeAndGroupListing = (armorCategory == 'Unarmored') ? armorCategory : armorCategory+' Armor';
+            } else {
+                let armorGroup = capitalizeWord(data.Item.ArmorData.armorType);
+                armorTypeAndGroupListing = (armorCategory == 'Unarmored') ? armorCategory+' - '+armorGroup : armorCategory+' Armor - '+armorGroup;
+            }
+            qContent.append('<div class="tile is-child text-center"><p class="is-size-7"><strong>'+armorTypeAndGroupListing+'</strong></p></div>');
 
             qContent.append('<hr class="m-2">');
 
         }
 
         qContent.append('<p class="has-text-centered is-size-7"><strong>Health</strong></p>');
-        qContent.append('<div class="field has-addons has-addons-centered"><p class="control"><input id="'+invItemHPInputID+'" class="input is-small" type="number" min="0" max="'+data.InvItem.hitPoints+'" value="'+data.InvItem.currentHitPoints+'"></p><p class="control"><a class="button is-static is-small has-text-grey-light has-background-grey-darkest border-darker">/</a><p class="control"><a class="button is-static is-small has-text-grey-lighter has-background-grey-darker border-darker">'+data.InvItem.hitPoints+'</a></p></div>');
-        qContent.append('<div class="columns is-centered is-marginless text-center"><div class="column is-5 is-paddingless"><p class="is-size-7"><strong>Hardness:</strong> '+data.InvItem.hardness+'</p></div><div class="column is-7 is-paddingless"><p class="is-size-7"><strong>Broken Threshold:</strong> '+data.InvItem.brokenThreshold+'</p></div></div>');
+        qContent.append('<div class="field has-addons has-addons-centered"><p class="control"><input id="'+invItemHPInputID+'" class="input is-small" type="number" min="0" max="'+maxHP+'" value="'+data.InvItem.currentHitPoints+'"></p><p class="control"><a class="button is-static is-small has-text-grey-light has-background-grey-darkest border-darker">/</a><p class="control"><a class="button is-static is-small has-text-grey-lighter has-background-grey-darker border-darker">'+maxHP+'</a></p></div>');
+        qContent.append('<div class="columns is-centered is-marginless text-center"><div class="column is-5 is-paddingless"><p class="is-size-7"><strong>Hardness:</strong> '+data.InvItem.hardness+'</p></div><div class="column is-7 is-paddingless"><p class="is-size-7"><strong>Broken Threshold:</strong> '+brokenThreshold+'</p></div></div>');
 
         if(data.Item.WeaponData != null){
 
             qContent.append('<hr class="m-2">');
 
-            let invItemAddFundamentalRuneSelectID = 'invItemAddFundamentalRuneSelect'+data.InvItem.id;
-            let invItemAddFundamentalRuneButtonID = 'invItemAddFundamentalRuneButton'+data.InvItem.id;
+            displayRunesForItem(qContent, data.InvItem, data.RuneDataStruct, true);
 
-            qContent.append('<div class="field has-addons has-addons-centered"><div class="control"><div class="select is-small is-success"><select id="'+invItemAddFundamentalRuneSelectID+'"></select></div></div><div class="control"><button id="'+invItemAddFundamentalRuneButtonID+'" type="submit" class="button is-small is-success is-rounded is-outlined">Add</button></div></div>');
+        }
 
-            $('#'+invItemAddFundamentalRuneSelectID).append('<option value="chooseDefault">Add Fundamental Rune</option>');
+        if(data.Item.ArmorData != null){
 
-            console.log(data);
-            for(let weaponRuneItem of data.RuneDataStruct.WeaponArray){
-                if(weaponRuneItem.RuneData.isFundamental == 1) {
-                    $('#'+invItemAddFundamentalRuneSelectID).append('<option value="'+weaponRuneItem.Item.id+'">'+weaponRuneItem.Item.name+'</option>');
-                }
-            }
+            qContent.append('<hr class="m-2">');
 
-            $('#'+invItemAddFundamentalRuneButtonID).click(function() {
-                let runeID = $('#'+invItemAddFundamentalRuneSelectID).val();
-                if(runeID != "chooseDefault"){
-                    $(this).addClass('is-loading');
-                    socket.emit("requestAddFundamentalRune",
-                        data.InvItem.id,
-                        runeID);
-                }
-            });
+            displayRunesForItem(qContent, data.InvItem, data.RuneDataStruct, false);
 
         }
 
@@ -628,7 +648,7 @@ function openQuickView(type, data) {
         $('#'+invItemHPInputID).blur(function() {
             let newHP = $(this).val();
             if(newHP != data.InvItem.currentHitPoints && newHP != ''){
-                if(newHP <= data.InvItem.hitPoints && newHP >= 0) {
+                if(newHP <= maxHP && newHP >= 0) {
                     $(this).removeClass('is-danger');
                     socket.emit("requestInvItemHPChange",
                         data.InvItem.id,

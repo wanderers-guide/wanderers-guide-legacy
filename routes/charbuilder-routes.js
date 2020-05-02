@@ -90,7 +90,6 @@ function goToBuilder(req, res, buildStageName, charID){
         }
 
     }).catch(err => {
-        console.err(err);
         res.status(404);
         res.render('404_error', { title: "404 Not Found - Apeiron", user: req.user });
     });

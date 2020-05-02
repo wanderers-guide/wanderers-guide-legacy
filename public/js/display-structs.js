@@ -43,19 +43,19 @@ function displayFeat(locationID, feat){
     let foundReq = false;
     if(feat.Feat.prerequisites != null){
       foundReq = true;
-      featInnerHTML += '<div><span><strong>Prerequisites: </strong></span><span>'+feat.Feat.prerequisites+'</span></div>';
+      featInnerHTML += '<div class="feat-attrib"><span><strong>Prerequisites: </strong></span><span>'+feat.Feat.prerequisites+'</span></div>';
     }
     if(feat.Feat.frequency != null){
       foundReq = true;
-      featInnerHTML += '<div><span><strong>Frequency: </strong></span><span>'+feat.Feat.frequency+'</span></div>';
+      featInnerHTML += '<div class="feat-attrib"><span><strong>Frequency: </strong></span><span>'+feat.Feat.frequency+'</span></div>';
     }
     if(feat.Feat.trigger != null){
       foundReq = true;
-      featInnerHTML += '<div><span><strong>Trigger: </strong></span><span>'+feat.Feat.trigger+'</span></div>';
+      featInnerHTML += '<div class="feat-attrib"><span><strong>Trigger: </strong></span><span>'+feat.Feat.trigger+'</span></div>';
     }
     if(feat.Feat.requirements != null){
       foundReq = true;
-      featInnerHTML += '<div><span><strong>Requirements: </strong></span><span>'+feat.Feat.requirements+'</span></div>';
+      featInnerHTML += '<div class="feat-attrib"><span><strong>Requirements: </strong></span><span>'+feat.Feat.requirements+'</span></div>';
     }
   
     if(foundReq){
@@ -65,7 +65,7 @@ function displayFeat(locationID, feat){
     featInnerHTML += '<div>'+processText(feat.Feat.description)+'</div>';
   
     if(feat.Feat.special != null){
-      featInnerHTML += '<div><span><strong>Special: </strong></span><span>'+feat.Feat.special+'</span></div>';
+      featInnerHTML += '<div class="feat-attrib"><span><strong>Special: </strong></span><span>'+feat.Feat.special+'</span></div>';
     }
   
     featInnerHTML += '<div id="'+locationID+'Code"></div>';

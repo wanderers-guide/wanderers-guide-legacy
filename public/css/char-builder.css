@@ -1,6 +1,128 @@
 
-.center-body {
-    background-image: url("../images/builder_background.png");
+/* Dark Mode Styling */
+.box {
+
+    box-shadow: 0 1px 3px rgba(0,0,0,0.5);
+    background: #282828;
+    border: 1px solid #282828;
+    color: #cccccc;
+    border-radius: 4px;
+
+}
+
+.input, .select select, .textarea, .button {
+    background-color: hsl(0, 0%, 21%);
+    border-color: hsl(0, 0%, 13%);
+    color: hsl(0, 0%, 82%);
+}
+
+.input:hover, .select select:hover, .textarea:hover, .button:hover {
+    border-color: hsl(0, 0%, 10%);
+}
+
+.select::after {
+    border-color: hsl(0, 0%, 82%)!important;
+}
+
+.select:hover::after {
+    border-color: #3273dc!important;
+}
+
+.input::-webkit-input-placeholder, .select select::-webkit-input-placeholder, .textarea::-webkit-input-placeholder{
+    color:rgba(219,219,219,.4);
+}
+
+.button.is-link.is-inverted {
+    background-color: #282828;
+    color: #3298dc;
+}
+
+.steps .step-item .step-marker {
+    background: #999;
+    color: #282828;
+    border-color: #282828;
+}
+
+.steps .step-item::before {
+    background: linear-gradient(to left,#999 50%,#999 50%);
+}
+
+.steps .step-item.is-link.is-active .step-marker {
+    background-color: #282828;
+}
+
+.has-text-bck-color {
+    color: #282828;
+}
+
+.has-text-title {
+    color: #999;
+}
+
+.has-text-value {
+    color: rgb(184, 184, 184);
+}
+
+.button.is-link.is-inverted:hover {
+    background-color: #282828;
+}
+
+.button.is-static {
+    background-color: hsl(0, 0%, 18%);
+    color: hsl(0, 0%, 68%);
+}
+
+.button:hover {
+    color: hsl(0, 0%, 82%);
+}
+
+.message.is-info {
+    background-color: #343638;
+}
+
+.message-header, .card-header {
+    background-color: hsl(0, 0%, 21%);
+    border-color: hsl(0, 0%, 13%);
+    color: hsl(0, 0%, 73%);
+}
+
+.message, .card {
+    background-color: hsl(0, 0%, 25%);
+    border-color: #282828;
+}
+
+.accordions .accordion .accordion-header {
+    background-color: hsl(0, 0%, 18%);
+    color: hsl(0, 0%, 73%);
+}
+
+.accordions .accordion .accordion-header+.accordion-body {
+    border-color: #282828;
+    background-color: hsl(210, 2%, 22%);
+    color: hsl(0, 0%, 80%);
+}
+
+a {
+    color: hsl(217, 71%, 53%);
+}
+a:hover {
+    color: hsl(217, 71%, 53%);
+}
+
+li {
+    color: hsl(0, 0%, 53%);
+}
+
+.feat-attrib, strong {
+    color: hsl(0, 0%, 68%);
+}
+
+hr {
+    border-color: hsl(0, 0%, 68%);
+}
+
+#ability-scores-box {
+    background-color: hsl(0, 0%, 18%);
 }
 
 /* Selections */

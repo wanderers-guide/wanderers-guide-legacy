@@ -1,4 +1,8 @@
 
+{{#section 'header'}}
+    <link rel="stylesheet" href="/css/admin-builders.css">
+{{/section}}
+
 {{#section 'nav_home'}}
     <li><a href="/">Home</a></li>
 {{/section}}
@@ -15,38 +19,141 @@
     <li class="mr-4"><a href="/auth/login">Login <i class="fas fa-sign-in-alt"></i></a></li>
 {{/section}}
 
-
-
 {{#section 'banner_nav'}}
     <div class="banner_w3lspvt-2"></div>
 {{/section}}
 
-<div class="container">
-    <h1>Ancestry Builder</h1>
 
-    <form action="/admin/create/item/general/add" method="POST">
-        <div class="input-group">
-            <label for="ancestryName">Name</label>
-            <input type="text" name="ancestryName" maxlength="45" required>
-        </div>
-        <div class="input-group">
-            <label for="ancestryHP">Hit Points</label>
-            <input type="number" name="ancestryHP" min="0" value="0" step="1" required>
-        </div>
-        <div class="input-group">
-            <label for="selectSize">Size</label>
-            <select name="ancestrySizeType">
-                {{#each sizeTypes}}
-                    <option value="{{this}}" {{chooseSelection ../selectedState}}>{{this}}</option>
-                {{/each}}
-            </select>
-        </div>
-        <div class="input-group">
-            <label for="ancestrySpeed">Speed</label>
-            <input type="number" name="ancestryHP" min="0" value="25" step="5" required>
+<div class="pt-3">
+    <h1 class="is-size-1 font-forum has-text-light has-text-centered">Ancestry Creation</h1>
+</div>
+
+<div class="columns is-mobile is-centered mt-2 mb-3">
+
+    <div class="box column is-8">
+
+        <div class="field">
+            <label class="label">Name</label>
+            <div class="control">
+                <input id="inputName" class="input" type="text" placeholder="e.g. Gnome">
+            </div>
         </div>
 
-        <input type="submit" value="Create" class="btn btn-reverse">
-    </form>
+        <div class="field">
+            <label class="label">Hit Points</label>
+            <div class="control">
+                <input id="inputHitPoints" class="input" type="number" value="8">
+            </div>
+        </div>
+
+        <div class="field">
+            <label class="label">Size</label>
+            <div class="control">
+                <div class="select">
+                    <select id="inputSize">
+                        <option value="TINY">Tiny</option>
+                        <option value="SMALL">Small</option>
+                        <option value="MEDIUM" selected>Medium</option>
+                        <option value="LARGE">Large</option>
+                        <option value="GARGANTUAN">Gargantuan</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="field">
+            <label class="label">Speed</label>
+            <div class="control">
+                <input id="inputSpeed" class="input" type="number" value="25" step="5">
+            </div>
+        </div>
+
+        <div class="field">
+            <label class="label">Description</label>
+            <div class="control">
+                <textarea id="inputDescription" class="textarea" placeholder="Always hungry for new experiences..."></textarea>
+            </div>
+        </div>
+
+        <div class="field">
+            <label class="label">Vision Type</label>
+            <div class="control">
+                <div class="select">
+                    <select id="inputVisionType">
+                        <option value="1" selected>Normal Vision</option>
+                        <option value="2">Low-Light Vision</option>
+                        <option value="3">Darkvision</option>
+                        <option value="4">Greater Darkvision</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="field">
+            <label class="label">Boosts</label>
+            <div class="control">
+                <div class="select is-multiple">
+                    <select id="inputBoosts" multiple size="7" class="use-invisible-scrollbar">
+                        <option value="Anything">Anything</option>
+                        <option value="Strength">Strength</option>
+                        <option value="Dexterity">Dexterity</option>
+                        <option value="Constitution">Constitution</option>
+                        <option value="Intelligence">Intelligence</option>
+                        <option value="Wisdom">Wisdom</option>
+                        <option value="Charisma">Charisma</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="field">
+            <label class="label">Flaws</label>
+            <div class="control">
+                <div class="select is-multiple">
+                    <select id="inputFlaws" multiple size="7" class="use-invisible-scrollbar">
+                        <option value="Anything">Anything</option>
+                        <option value="Strength">Strength</option>
+                        <option value="Dexterity">Dexterity</option>
+                        <option value="Constitution">Constitution</option>
+                        <option value="Intelligence">Intelligence</option>
+                        <option value="Wisdom">Wisdom</option>
+                        <option value="Charisma">Charisma</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="field">
+            <label class="label">Languages (known by default)</label>
+            <div class="control">
+                <div class="select is-multiple">
+                    <select id="inputLangs" multiple>
+                        {{#each languages}}
+                            <option value="{{id}}">{{name}}</option>
+                        {{/each}}
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="field">
+            <label class="label">Bonus Languages</label>
+            <div class="control">
+                <div class="select is-multiple">
+                    <select id="inputLangs" multiple>
+                        {{#each languages}}
+                            <option value="{{id}}">{{name}}</option>
+                        {{/each}}
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="field is-grouped">
+            <div class="control">
+                <button class="button is-link">Create</button>
+            </div>
+        </div>
+    </div>
 
 </div>

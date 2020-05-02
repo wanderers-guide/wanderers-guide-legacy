@@ -4,7 +4,8 @@ const Sequelize = require('sequelize');
 
 // create home route
 router.get('/', (req, res) => {
-    // get single random background
+    // Get single random background
+    // Test Singles: where: { id: 60 }
     Background.findOne({ order: [ [ Sequelize.fn('RAND') ] ] }).then((background) => {
         res.render('home', { title: "Apeiron - Pathfinder 2e Character Manager", user: req.user, background });
     });

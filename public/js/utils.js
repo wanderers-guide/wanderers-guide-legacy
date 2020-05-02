@@ -99,6 +99,24 @@ function numUpToProf(numUp){
   }
 }
 
+function profToNumUp(prof){
+  switch(prof) {
+    case "U":
+      return 0;
+    case "T":
+      return 1;
+    case "E":
+      return 2;
+    case "M":
+      return 3;
+    case "L":
+      return 4;
+    case "Up":
+      return 10;
+    default:
+      return -1;
+  }
+}
 
 function profToWord(prof){
   switch(prof) {

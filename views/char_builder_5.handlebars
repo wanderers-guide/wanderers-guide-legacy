@@ -30,60 +30,62 @@
 {{/section}}
 
 
-<div class="pageloader is-black"><span class="title">Loading Builder</span></div>
+<div class="pageloader">
+    <div class="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+</div>
 
 <div id="char-builder" class="container py-4 text-center">
 
     <div class="box">
 
-        <h1 class="title is-1 font-forum">Character Builder</h1>
+        <h1 class="title is-1 font-forum has-text-grey-light">Character Builder</h1>
 
         <div class="steps">
-            <div class="step-item is-completed is-info">
+            <div id="basics-step" class="step-item is-completed is-link">
                 <div class="step-marker">
-                <a href="page1?"><span class="has-text-white icon"><i class="fa fa-user-alt"></i></span></a>
+                <a href="page1?"><span class="has-text-bck-color icon"><i class="fa fa-user-alt"></i></span></a>
                 </div>
                 <div class="step-details is-hidden-touch">
-                    <a href="page1?" class="button is-rounded is-inverted is-info"><p class="step-title">Basics</p></a>
+                    <a href="page1?" class="button is-rounded is-inverted is-link"><p class="step-title">Basics</p></a>
                 </div>
             </div>
-            <div class="step-item is-completed is-info">
-                <div class="step-marker"><a href="page2?"><span class="has-text-white">A</span></a></div>
+            <div id="ancestry-step" class="step-item is-completed is-link">
+                <div class="step-marker"><a href="page2?"><span class="has-text-bck-color">A</span></a></div>
                 <div class="step-details is-hidden-touch">
-                    <a href="page2?" class="button is-rounded is-inverted is-info"><p class="step-title">Ancestry</p></a>
+                    <a href="page2?" class="button is-rounded is-inverted is-link"><p class="step-title">Ancestry</p></a>
                 </div>
             </div>
-            <div class="step-item is-completed is-info">
-                <div class="step-marker"><a href="page3?"><span class="has-text-white">B</span></a></div>
+            <div id="background-step" class="step-item is-completed is-link">
+                <div class="step-marker"><a href="page3?"><span class="has-text-bck-color">B</span></a></div>
                 <div class="step-details is-hidden-touch">
-                    <a href="page3?" class="button is-rounded is-inverted is-info"><p class="step-title">Background</p></a>
+                    <a href="page3?" class="button is-rounded is-inverted is-link"><p class="step-title">Background</p></a>
                 </div>
             </div>
-            <div class="step-item is-completed is-info">
-                <div class="step-marker"><a href="page4?"><span class="has-text-white">C</span></a></div>
+            <div id="class-step" class="step-item is-completed is-link">
+                <div class="step-marker"><a href="page4?"><span class="has-text-bck-color">C</span></a></div>
                 <div class="step-details is-hidden-touch">
-                    <a href="page4?" class="button is-rounded is-inverted is-info"><p class="step-title">Class</p></a>
+                    <a href="page4?" class="button is-rounded is-inverted is-link"><p class="step-title">Class</p></a>
                 </div>
             </div>
-            <div class="step-item is-active is-info">
+            <div class="step-item is-active is-link">
                 <div class="step-marker">
                 <a href="page5?"><span class="icon"><i class="fa fa-flag"></i></span></a>
                 </div>
                 <div class="step-details is-hidden-touch">
-                    <a href="page5?" class="button is-rounded is-inverted is-info"><p class="step-title">Finalize</p></a>
+                    <a href="page5?" class="button is-rounded is-inverted is-link"><p class="step-title">Finalize</p></a>
                 </div>
             </div>
         </div>
 
         <div>
 
-            <div class="container">
+            <div class="container finalize-content">
                 <p class="is-size-3 pb-3">Almost Done!</p>
             </div>
 
             <div class="columns is-centered">
                 <div class="column is-9-fullhd is-10-desktop is-12-tablet is-12-mobile">
-                    <div class="columns is-mobile is-multiline is-centered box is-paddingless p-2">
+                    <div id="ability-scores-box" class="columns is-mobile is-multiline is-centered box is-unselectable is-paddingless p-2">
                         <div class="column is-paddingless is-narrow ">
                             <div>Strength</div>
                             <div id="strMod" class="is-size-3 pr-3"></div>
@@ -123,14 +125,20 @@
                 </div>
             </div>
 
-            <p>You will now be able to select a number of additional languages to learn and skills to be Trained in based off of your final ability scores listed above, specifically Intelligence.</p>
-            <p class="help is-info is-italic">Make sure you come back here each time your Intelligence modifiers increases, you will be able to select another skill and language to learn!</p>
+            <div class="finalize-content">
+                <p>You will now be able to select a number of additional languages to learn and skills to be Trained in based off of your final ability scores listed above, specifically Intelligence.</p>
+                <p class="help is-info is-italic">Make sure you come back here each time your Intelligence modifiers increases, you will be able to select another skill and language to learn!</p>
+            </div>
 
         </div>
 
     </div>
 
-    <div class="box">
+    <div id="missing-class-message" class="box is-hidden">
+        <p class="is-size-5 is-italic">Must have an ancestry and class to gain additional skill training and languages.</p>
+    </div>
+
+    <div class="box finalize-content is-marginless">
 
         <div class="columns">
             <div class="column">
@@ -152,7 +160,11 @@
     <br>
     <nav class="level is-mobile">
         <div class="level-item has-text-centered">
-            <button class="button is-info" id="prevButton">Previous</button>
+            <button class="button is-info is-rounded" id="prevButton">
+                <span class="icon">
+                    <i class="fas fa-arrow-left"></i>
+                </span>
+            </button>
         </div>
         <div class="level-item has-text-centered">
             <button class="button is-success" id="goToCharButton">View Character</button>

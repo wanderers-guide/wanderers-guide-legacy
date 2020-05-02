@@ -4,10 +4,9 @@
 
 const router = require('express').Router();
 const Character = require('../models/contentDB/Character');
-const CharGathering = require('../js/CharGathering');
+const CharStateUtils = require('../js/CharStateUtils');
 
 const PATH = '/profile/characters/'; // <- Change this if routes are ever changed //
-
 router.get('*', (req, res) => {
 
     let charID = parseInt(req.originalUrl.substring(PATH.length));
@@ -19,14 +18,10 @@ router.get('*', (req, res) => {
 
         if(character.userID === req.user.id){
 
-            // If character is incomplete, display incomplete page. Else display CharSheet
-            if(character.name!=null && character.ancestryID!=null && character.heritageID!=null && character.backgroundID!=null && character.classID!=null) {
-
+            if(CharStateUtils.isPlayable(character)) {
                 goToCharSheet(character, req, res);
-
             } else {
-                res.status(206);
-                res.render('charsheet_incomplete', { title: "Incomplete Character - Apeiron", user: req.user, character });
+                res.redirect('/profile/characters/builder/'+character.id+'/page1');
             }
 
         } else {

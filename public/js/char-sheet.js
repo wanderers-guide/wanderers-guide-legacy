@@ -78,6 +78,9 @@ socket.on("returnCharacterSheetInfo", function(charInfo){
 
     loadCharSheet();
 
+    // Turn off page loading
+    $('.pageloader').addClass("fadeout");
+
 });
 
 function loadCharSheet(){
@@ -148,11 +151,14 @@ function loadCharSheet(){
     // Determine Bulk and Coins //
     determineBulkAndCoins(g_invStruct.InvItems, g_itemMap, getMod(getStatTotal('SCORE_STR')));
 
+    // Get STR score before conditions code runs (in the case of Enfeebled)
+    let strScore = getStatTotal('SCORE_STR');
+
     // Run Init Condition Code //
     runAllConditionsCode();
 
     // Determine Armor //
-    determineArmor(getMod(getStatTotal('SCORE_DEX')));
+    determineArmor(getMod(getStatTotal('SCORE_DEX')), strScore);
 
     // Display Conditions List //
     displayConditionsList();
@@ -308,87 +314,7 @@ function displayInformation() {
     //////////////////////////////////////////// Health ////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
-    let maxHealth = $('#char-max-health');
-    let maxHealthNum = getStatTotal('MAX_HEALTH');
-    maxHealthNum += (g_class.hitPoints+getStatTotal('MAX_HEALTH_BONUS_PER_LEVEL'))*g_character.level;
-    maxHealth.html(maxHealthNum);
-
-    let currentHealth = $('#char-current-health');
-    if(g_character.currentHealth == null){
-        g_character.currentHealth = maxHealthNum;
-    } else {
-        g_character.currentHealth = (g_character.currentHealth > maxHealthNum) ? maxHealthNum : g_character.currentHealth;
-    }
-
-    let bulmaTextColor = getBulmaTextColorFromCurrentHP(g_character.currentHealth, maxHealthNum);
-    currentHealth.html('<p class="is-size-5 is-unselectable text-center '+bulmaTextColor+'" style="width: 70px;">'+g_character.currentHealth+'</p>');
-
-    $(currentHealth).click(function(){
-        if(!$(this).hasClass('is-in-input-mode')) {
-
-            $(this).addClass('is-in-input-mode');
-            $(this).html('<input id="current-health-input" class="input" type="number" min="0" max="'+maxHealthNum+'" style="width: 70px;" value="'+g_character.currentHealth+'">');
-            $('#current-health-input').focus();
-
-            $('#current-health-input').blur(function(){
-                let currentHealthNum = $(this).val();
-                if(currentHealthNum == null || currentHealthNum > maxHealthNum || currentHealthNum < 0 || currentHealthNum == '') {
-                    $(this).addClass('is-danger');
-                } else {
-                    g_character.currentHealth = parseInt(currentHealthNum);
-                    let bulmaTextColor = getBulmaTextColorFromCurrentHP(g_character.currentHealth, maxHealthNum);
-                    $('#char-current-health').html('<p class="is-size-5 is-unselectable text-center '+bulmaTextColor+'" style="width: 70px;">'+g_character.currentHealth+'</p>');
-                    $('#char-current-health').removeClass('is-in-input-mode');
-                    socket.emit("requestCurrentHitPointsSave",
-                        getCharIDFromURL(),
-                        g_character.currentHealth);
-                }
-            });
-
-        }
-    });
-
-
-    let tempHealth = $('#char-temp-health');
-    
-    if(g_character.tempHealth == null){
-        g_character.tempHealth = 0;
-    }
-
-    if(g_character.tempHealth == 0){
-        tempHealth.html('<p class="is-size-5 is-unselectable text-center has-text-grey-lighter" style="width: 70px;">―</p>');
-    } else {
-        tempHealth.html('<p class="is-size-5 is-unselectable text-center has-text-info" style="width: 70px;">'+g_character.tempHealth+'</p>');
-    }
-
-    $(tempHealth).click(function(){
-        if(!$(this).hasClass('is-in-input-mode')) {
-
-            $(this).addClass('is-in-input-mode');
-            $(this).html('<input id="temp-health-input" class="input" type="number" min="0" max="999" style="width: 70px;" value="'+g_character.tempHealth+'">');
-            $('#temp-health-input').focus();
-
-            $('#temp-health-input').blur(function(){
-                let tempHealthNum = $(this).val();
-                if(tempHealthNum == null || tempHealthNum > 999 || tempHealthNum < 0) {
-                    $(this).addClass('is-danger');
-                } else {
-                    g_character.tempHealth = (tempHealthNum == '') ? 0 : parseInt(tempHealthNum);
-                    if(g_character.tempHealth == 0){
-                        tempHealth.html('<p class="is-size-5 is-unselectable text-center has-text-grey-lighter" style="width: 70px;">―</p>');
-                    } else {
-                        tempHealth.html('<p class="is-size-5 is-unselectable text-center has-text-info" style="width: 70px;">'+g_character.tempHealth+'</p>');
-                    }
-                    $('#char-temp-health').removeClass('is-in-input-mode');
-                    socket.emit("requestTempHitPointsSave",
-                        getCharIDFromURL(),
-                        g_character.tempHealth);
-                }
-            });
-
-        }
-    });
-    
+    initHealthAndTemp();
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////// Back to Builder ////////////////////////////////////////
@@ -568,7 +494,10 @@ function displayInformation() {
         let profNum = getProfNumber(skillData.NumUps, g_character.level);
 
         let totalBonus = getStatTotal('SKILL_'+skillName);
-        skills.append('<a id="'+skillButtonID+'" class="panel-block skillButton border-dark"><span class="panel-icon has-text-grey-lighter">'+signNumber(totalBonus)+'</span><span class="pl-3 has-text-grey-light">'+skillName+'</span></a>');
+
+        let conditionalStar = (hasConditionals('SKILL_'+skillName)) ? '<sup class="is-size-7 has-text-info">*</sup>' : '';
+
+        skills.append('<a id="'+skillButtonID+'" class="panel-block skillButton border-dark"><span class="panel-icon has-text-grey-lighter">'+signNumber(totalBonus)+conditionalStar+'</span><span class="pl-3 has-text-grey-light">'+skillName+'</span></a>');
 
         $('#'+skillButtonID).click(function(){
             openQuickView('skillView', {
@@ -732,16 +661,132 @@ function displayInformation() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////// Health ////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////
+
+function initHealthAndTemp() {
+
+    let maxHealth = $('#char-max-health');
+    let maxHealthNum = getStatTotal('MAX_HEALTH');
+    maxHealthNum += (g_class.hitPoints+getStatTotal('MAX_HEALTH_BONUS_PER_LEVEL'))*g_character.level;
+    maxHealth.html(maxHealthNum);
+
+    let currentHealth = $('#char-current-health');
+    if(g_character.currentHealth == null){
+        g_character.currentHealth = maxHealthNum;
+    } else {
+        g_character.currentHealth = (g_character.currentHealth > maxHealthNum) ? maxHealthNum : g_character.currentHealth;
+    }
+
+    let bulmaTextColor = getBulmaTextColorFromCurrentHP(g_character.currentHealth, maxHealthNum);
+    currentHealth.html('<p class="is-size-5 is-unselectable text-center '+bulmaTextColor+'" style="width: 70px;">'+g_character.currentHealth+'</p>');
+
+    $(currentHealth).click(function(){
+        if(!$(this).hasClass('is-in-input-mode')) {
+
+            $(this).addClass('is-in-input-mode');
+            $(this).html('<input id="current-health-input" class="input" type="number" min="0" max="'+maxHealthNum+'" style="width: 70px;" value="'+g_character.currentHealth+'">');
+            $('#current-health-input').focus();
+
+            $('#current-health-input').blur(function(){
+                healthConfirm(maxHealthNum);
+            });
+
+            // Press Enter Key
+            $('#current-health-input').on('keypress',function(e){
+                if(e.which == 13){
+                    healthConfirm(maxHealthNum);
+                }
+            });
+
+        }
+    });
+
+
+    let tempHealth = $('#char-temp-health');
+    
+    if(g_character.tempHealth == null){
+        g_character.tempHealth = 0;
+    }
+
+    if(g_character.tempHealth == 0){
+        tempHealth.html('<p class="is-size-5 is-unselectable text-center has-text-grey-lighter" style="width: 70px;">―</p>');
+    } else {
+        tempHealth.html('<p class="is-size-5 is-unselectable text-center has-text-info" style="width: 70px;">'+g_character.tempHealth+'</p>');
+    }
+
+    $(tempHealth).click(function(){
+        if(!$(this).hasClass('is-in-input-mode')) {
+
+            $(this).addClass('is-in-input-mode');
+            $(this).html('<input id="temp-health-input" class="input" type="number" min="0" max="999" style="width: 70px;" value="'+g_character.tempHealth+'">');
+            $('#temp-health-input').focus();
+
+            $('#temp-health-input').blur(function(){
+                tempHealthConfirm();
+            });
+
+            // Press Enter Key
+            $('#temp-health-input').on('keypress',function(e){
+                if(e.which == 13){
+                    tempHealthConfirm();
+                }
+            });
+
+        }
+    });
+
+}
+
+function healthConfirm(maxHealthNum){
+    let currentHealthNum = $('#current-health-input').val();
+    if(currentHealthNum == null || currentHealthNum > maxHealthNum || currentHealthNum < 0 || currentHealthNum == '') {
+        $('#current-health-input').addClass('is-danger');
+    } else {
+        g_character.currentHealth = parseInt(currentHealthNum);
+        let bulmaTextColor = getBulmaTextColorFromCurrentHP(g_character.currentHealth, maxHealthNum);
+        $('#char-current-health').html('<p class="is-size-5 is-unselectable text-center '+bulmaTextColor+'" style="width: 70px;">'+g_character.currentHealth+'</p>');
+        $('#char-current-health').removeClass('is-in-input-mode');
+        socket.emit("requestCurrentHitPointsSave",
+            getCharIDFromURL(),
+            g_character.currentHealth);
+    }
+}
+
+function tempHealthConfirm(){
+    let tempHealth = $('#char-temp-health');
+    let tempHealthNum = $('#temp-health-input').val();
+    if(tempHealthNum == null || tempHealthNum > 999 || tempHealthNum < 0) {
+        $('#temp-health-input').addClass('is-danger');
+    } else {
+        g_character.tempHealth = (tempHealthNum == '') ? 0 : parseInt(tempHealthNum);
+        if(g_character.tempHealth == 0){
+            tempHealth.html('<p class="is-size-5 is-unselectable text-center has-text-grey-lighter" style="width: 70px;">―</p>');
+        } else {
+            tempHealth.html('<p class="is-size-5 is-unselectable text-center has-text-info" style="width: 70px;">'+g_character.tempHealth+'</p>');
+        }
+        $('#char-temp-health').removeClass('is-in-input-mode');
+        socket.emit("requestTempHitPointsSave",
+            getCharIDFromURL(),
+            g_character.tempHealth);
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////// Armor and Shields ///////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
-function determineArmor(dexMod) {
+function determineArmor(dexMod, strScore) {
 
     let shieldStruct = findEquippedShield();
     if(shieldStruct != null){
+
+        // Halve maxHP if it's shoddy
+        let maxHP = (shieldStruct.InvItem.isShoddy == 1) ? Math.floor(shieldStruct.InvItem.hitPoints/2) : shieldStruct.InvItem.hitPoints;
+
         $('#shieldSection').removeClass('is-hidden');
         $('#shieldBonus').html('+'+shieldStruct.Item.ShieldData.acBonus);
-        $('#shieldSection').attr('data-tooltip', shieldStruct.InvItem.name+'\nHardness: '+shieldStruct.InvItem.hardness+'\nHealth: '+shieldStruct.InvItem.currentHitPoints+'/'+shieldStruct.InvItem.hitPoints);
+        $('#shieldSection').attr('data-tooltip', shieldStruct.InvItem.name+'\nHardness: '+shieldStruct.InvItem.hardness+'\nHealth: '+shieldStruct.InvItem.currentHitPoints+'/'+maxHP);
     } else {
         $('#shieldSection').addClass('is-hidden');
     }
@@ -754,7 +799,7 @@ function determineArmor(dexMod) {
         let profNumUps = null;
         let profBonus = null;
         if(profData != null){
-            profNumUps = profData.NumUps
+            profNumUps = profData.NumUps;
             profBonus = profData.Bonus;
         } else {
             profNumUps = 0;
@@ -764,8 +809,15 @@ function determineArmor(dexMod) {
         let profNumber = getProfNumber(profNumUps, g_character.level);
         dexMod = (dexMod > armorStruct.Item.ArmorData.dexCap) ? armorStruct.Item.ArmorData.dexCap : dexMod;
 
+        // Halve maxHP if it's shoddy
+        let maxHP = (armorStruct.InvItem.isShoddy == 1) ? Math.floor(armorStruct.InvItem.hitPoints/2) : armorStruct.InvItem.hitPoints;
+        // Reduce currentHP if it's over maxHP
+        armorStruct.InvItem.currentHitPoints = (armorStruct.InvItem.currentHitPoints > maxHP) ? maxHP : armorStruct.InvItem.currentHitPoints;
+        // Halve brokenThreshold if it's shoddy
+        let brokenThreshold = (armorStruct.InvItem.isShoddy == 1) ? Math.floor(armorStruct.InvItem.brokenThreshold/2) : armorStruct.InvItem.brokenThreshold;
+
         let brokenPenalty = 0;
-        let isBroken = (armorStruct.InvItem.currentHitPoints <= armorStruct.InvItem.brokenThreshold);
+        let isBroken = (armorStruct.InvItem.currentHitPoints <= brokenThreshold);
         if(isBroken){
             switch(armorStruct.Item.ArmorData.category){
                 case 'LIGHT': brokenPenalty = -1; break;
@@ -775,8 +827,68 @@ function determineArmor(dexMod) {
             }
         }
 
-        let totalAC = 10 + dexMod + profNumber + armorStruct.Item.ArmorData.acBonus + profBonus + brokenPenalty;
+        let shoddyPenalty = (armorStruct.InvItem.isShoddy == 1) ? -2 : 0;
 
+        let totalAC = 10 + dexMod + profNumber + armorStruct.Item.ArmorData.acBonus + profBonus + brokenPenalty + shoddyPenalty;
+
+        // Apply armor penalties to character...
+        let checkPenalty = armorStruct.Item.ArmorData.checkPenalty;
+        checkPenalty += (armorStruct.InvItem.isShoddy == 1) ? -2 : 0;
+        let speedPenalty = armorStruct.Item.ArmorData.speedPenalty;
+
+        if(strScore >= armorStruct.Item.ArmorData.minStrength) {
+
+            speedPenalty += 5;
+
+        } else {
+
+            applyArmorCheckPenaltyToSkill('Acrobatics', checkPenalty);
+            applyArmorCheckPenaltyToSkill('Athletics', checkPenalty);
+            applyArmorCheckPenaltyToSkill('Stealth', checkPenalty);
+            applyArmorCheckPenaltyToSkill('Thievery', checkPenalty);
+
+        }
+
+        if(speedPenalty < 0){
+            addStat('SPEED', 'ARMOR_PENALTY', speedPenalty);
+        }
+        
+        // Apply armor's rune effects to character...
+        if(armorStruct.InvItem.itemRuneData != null){
+
+            let armorRuneData = armorStruct.InvItem.itemRuneData;
+
+            if(isArmorPotencyOne(armorRuneData.fundPotencyRuneID)){
+                totalAC += 1;
+            } else if(isArmorPotencyTwo(armorRuneData.fundPotencyRuneID)){
+                totalAC += 2;
+            } else if(isArmorPotencyThree(armorRuneData.fundPotencyRuneID)){
+                totalAC += 3;
+            }
+
+            if(isResilient(armorRuneData.fundRuneID)){
+                addStat('SAVE_FORT', 'ITEM_BONUS', 1);
+                addStat('SAVE_WILL', 'ITEM_BONUS', 1);
+                addStat('SAVE_REFLEX', 'ITEM_BONUS', 1);
+            } else if(isGreaterResilient(armorRuneData.fundRuneID)){
+                addStat('SAVE_FORT', 'ITEM_BONUS', 2);
+                addStat('SAVE_WILL', 'ITEM_BONUS', 2);
+                addStat('SAVE_REFLEX', 'ITEM_BONUS', 2);
+            } else if(isMajorResilient(armorRuneData.fundRuneID)){
+                addStat('SAVE_FORT', 'ITEM_BONUS', 3);
+                addStat('SAVE_WILL', 'ITEM_BONUS', 3);
+                addStat('SAVE_REFLEX', 'ITEM_BONUS', 3);
+            }
+
+            runArmorPropertyRuneCode(armorRuneData.propRune1ID);
+            runArmorPropertyRuneCode(armorRuneData.propRune2ID);
+            runArmorPropertyRuneCode(armorRuneData.propRune3ID);
+            runArmorPropertyRuneCode(armorRuneData.propRune4ID);
+
+        }
+
+
+        // Final Product
         $('#acNumber').html(totalAC);
         $('#acSection').attr('data-tooltip', armorStruct.InvItem.name);
 
@@ -787,7 +899,7 @@ function determineArmor(dexMod) {
         let profNumUps = null;
         let profBonus = null;
         if(profData != null){
-            profNumUps = profData.NumUps
+            profNumUps = profData.NumUps;
             profBonus = profData.Bonus;
         } else {
             profNumUps = 0;
@@ -802,6 +914,29 @@ function determineArmor(dexMod) {
         $('#acSection').attr('data-tooltip', 'Wearing Nothing');
 
     }
+
+}
+
+function runArmorPropertyRuneCode(propertyRuneID){
+
+    if(propertyRuneID == null){ return; }
+
+    for(const [itemID, itemData] of g_itemMap.entries()){
+        if(itemData.RuneData != null && itemData.RuneData.id == propertyRuneID){
+            let propertyRuneCode = itemData.Item.code;
+            if(propertyRuneCode != null){
+                processSheetCode(propertyRuneCode, 'ARMOR_PROPERTY_RUNE', 'ITEM');
+            }
+            return;
+        }
+    }
+
+}
+
+function applyArmorCheckPenaltyToSkill(skillName, checkPenalty){
+
+    addStat('SKILL_'+skillName, 'ARMOR_PENALTY', checkPenalty);
+    addConditionalStat('SKILL_'+skillName, "penalty from armor is NOT applied to skill checks that have the attack trait", checkPenalty);
 
 }
 
@@ -822,7 +957,21 @@ function findEquippedShield() {
         if(invItem.id == g_equippedShieldInvItemID) {
             let item = g_itemMap.get(invItem.itemID+"");
             if(invItem.bagInvItemID == null && item.ShieldData != null){
-                return { Item : item, InvItem : invItem };
+
+                // Halve maxHP if it's shoddy
+                let maxHP = (invItem.isShoddy == 1) ? Math.floor(invItem.hitPoints/2) : invItem.hitPoints;
+                // Reduce currentHP if it's over maxHP
+                invItem.currentHitPoints = (invItem.currentHitPoints > maxHP) ? maxHP : invItem.currentHitPoints;
+                // Halve brokenThreshold if it's shoddy
+                let brokenThreshold = (invItem.isShoddy == 1) ? Math.floor(invItem.brokenThreshold/2) : invItem.brokenThreshold;
+                
+                if(invItem.currentHitPoints > brokenThreshold){
+                    return { Item : item, InvItem : invItem };
+                } else {
+                    g_equippedShieldInvItemID = null;
+                    return null;
+                }
+                
             }
         }
     }
@@ -945,6 +1094,12 @@ function determineBulkAndCoins(invItems, itemMap, strMod){
 socket.on("returnHeroPointsSave", function(){
 });
 
+socket.on("returnAddFundamentalRune", function(invItemID, invStruct){
+    $('#invItemAddFundamentalRuneButton'+invItemID).removeClass('is-loading');
+    g_invStruct = invStruct;
+    loadCharSheet();
+    $('#quickviewDefault').removeClass('is-active');
+});
 
 socket.on("returnAddItemToInv", function(itemID, invStruct){
     $('#addItemAddItem'+itemID).removeClass('is-loading');

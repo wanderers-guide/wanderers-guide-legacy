@@ -8,6 +8,9 @@ const InvItemRune = db.define('invItemRunes', {
   fundRuneID: {
     type: Sequelize.INTEGER,
   },
+  fundPotencyRuneID: {
+    type: Sequelize.INTEGER,
+  },
   propRune1ID: {
     type: Sequelize.INTEGER,
   },

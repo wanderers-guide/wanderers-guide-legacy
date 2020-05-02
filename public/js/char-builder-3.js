@@ -2,6 +2,7 @@
 let socket = io();
 
 let choiceStruct = null;
+let g_background = null;
 
 // ~~~~~~~~~~~~~~ // General - Run On Load // ~~~~~~~~~~~~~~ //
 $(function () {
@@ -45,23 +46,38 @@ socket.on("returnBackgroundDetails", function(backgrounds, inChoiceStruct){
     $('#selectBackground').change(function(event, triggerSave) {
         let backgroundID = $("#selectBackground option:selected").val();
 
-        for(const background of backgrounds){
-            if(backgroundID == background.id){
-
-                displayCurrentBackground(background);
-
-                // Save background
-                if(triggerSave == null || triggerSave) {
-                    $('#selectBackgroundControlShell').addClass("is-loading");
+        if(backgroundID != "chooseDefault"){
+            for(const background of backgrounds){
+                if(backgroundID == background.id){
+                    $('.background-content').removeClass("is-hidden");
     
-                    socket.emit("requestBackgroundChange",
-                        getCharIDFromURL(),
-                        backgroundID);
+                    // Save background
+                    if(triggerSave == null || triggerSave) {
+                        $('#selectBackgroundControlShell').addClass("is-loading");
+                        
+                        g_background = background;
+                        socket.emit("requestBackgroundChange",
+                            getCharIDFromURL(),
+                            backgroundID);
+                    } else {
+                        displayCurrentBackground(background);
+                    }
+    
+                    break;
+    
                 }
-
-                break;
-
             }
+        } else {
+            $('.background-content').addClass("is-hidden");
+
+            // Turn off page loading
+            $('.pageloader').addClass("fadeout");
+
+            // Delete background, set to null
+            g_background = null;
+            socket.emit("requestBackgroundChange",
+                getCharIDFromURL(),
+                null);
         }
 
     });
@@ -75,14 +91,26 @@ socket.on("returnBackgroundDetails", function(backgrounds, inChoiceStruct){
 
 });
 
+socket.on("returnBackgroundChange", function(choiceStruct){
+    $('#selectBackgroundControlShell').removeClass("is-loading");
+
+    if(g_background != null){
+        injectASCChoiceStruct(choiceStruct);
+        displayCurrentBackground(g_background);
+    }
+    
+});
+
 
 function displayCurrentBackground(background) {
+    g_background = null;
 
     let backgroundDescription = $('#backgroundDescription');
     backgroundDescription.html('<p>'+background.description+'</p>');
 
     // Boosts //
     $('#backBoostSection').html('');
+    console.log("SETTING BOOSTS TO:"+background.boostOne+" "+background.boostTwo);
     processCode(
         'GIVE-ABILITY-BOOST-SINGLE='+background.boostOne+', GIVE-ABILITY-BOOST-SINGLE='+background.boostTwo,
         'Type-Background_Level-1_Code-OtherAbilityBoost',
@@ -96,8 +124,7 @@ function displayCurrentBackground(background) {
         'Type-Background_Level-1_Code-None',
         'backgroundCodeOutput');
 
-}
+    // Turn off page loading
+    $('.pageloader').addClass("fadeout");
 
-socket.on("returnBackgroundChange", function(){
-    $('#selectBackgroundControlShell').removeClass("is-loading");
-});
+}

@@ -2,6 +2,7 @@
 let socket = io();
 
 let choiceStruct = null;
+let g_ancestry = null;
 
 // ~~~~~~~~~~~~~~ // General - Run On Load // ~~~~~~~~~~~~~~ //
 $(function () {
@@ -49,22 +50,34 @@ socket.on("returnAncestryAndChoices", function(ancestryObject, inChoiceStruct){
     // Ancestry Selection //
     $('#selectAncestry').change(function(event, triggerSave) {
         let ancestryID = $("#selectAncestry option:selected").val();
-
         if(ancestryID != "chooseDefault"){
+            $('.ancestry-content').removeClass("is-hidden");
     
             // Save ancestry
             if(triggerSave == null || triggerSave) {
                 $('#selectAncestryControlShell').addClass("is-loading");
     
+                g_ancestry = ancestryMap.get(ancestryID);
                 socket.emit("requestAncestryChange",
                     getCharIDFromURL(),
-                    { AncestryID : ancestryID, AncestryObject : ancestryObject });
+                    ancestryID);
                 
             } else {
                 displayCurrentAncestry(ancestryMap.get(ancestryID), false);
                 activateHideSelects();
             }
 
+        } else {
+            $('.ancestry-content').addClass("is-hidden");
+
+            // Turn off page loading
+            $('.pageloader').addClass("fadeout");
+
+            // Delete ancestry, set to null
+            g_ancestry = null;
+            socket.emit("requestAncestryChange",
+                getCharIDFromURL(),
+                null);
         }
 
     });
@@ -73,8 +86,7 @@ socket.on("returnAncestryAndChoices", function(ancestryObject, inChoiceStruct){
     $('#selectHeritage').change(function(event, triggerSave) {
         let heritageID = $(this).val();
         let ancestryID = $("#selectAncestry option:selected").val();
-
-        console.log(heritageID);
+        
         displayCurrentHeritage(ancestryMap.get(ancestryID), heritageID);
 
         if(ancestryID != "chooseDefault" && heritageID != "chooseDefault"){
@@ -88,6 +100,10 @@ socket.on("returnAncestryAndChoices", function(ancestryObject, inChoiceStruct){
                     heritageID);
             }
 
+        } else {
+            socket.emit("requestHeritageChange",
+                    getCharIDFromURL(),
+                    null);
         }
 
     });
@@ -101,8 +117,24 @@ socket.on("returnAncestryAndChoices", function(ancestryObject, inChoiceStruct){
 
 });
 
+socket.on("returnAncestryChange", function(inChoiceStruct){
+    $('#selectAncestryControlShell').removeClass("is-loading");
+    choiceStruct = inChoiceStruct;
+
+    if(g_ancestry != null){
+        displayCurrentAncestry(g_ancestry, true);
+        activateHideSelects();
+    }
+
+});
+
+socket.on("returnHeritageChange", function(){
+    $('#selectHeritageControlShell').removeClass("is-loading");
+});
+
 
 function displayCurrentAncestry(ancestryStruct, saving) {
+    g_ancestry = null;
 
     let charLevel = choiceStruct.Level;
     let charHeritage = choiceStruct.Heritage;
@@ -142,7 +174,7 @@ function displayCurrentAncestry(ancestryStruct, saving) {
         bonusLangs += bonusLang.name+", ";
     }
     bonusLangs = bonusLangs.substring(0, bonusLangs.length - 2);
-    ancestryLanguages.append('and <a class="has-text-link has-tooltip-bottom has-tooltip-multiline" data-tooltip="You will get to select an additional number of languages equal your Intelligence modifer in the Finalize step. The following are the options you will be able to choose from: '+bonusLangs+'">more*</a>');
+    ancestryLanguages.append('and <a class="has-text-info has-tooltip-bottom has-tooltip-multiline" data-tooltip="You will get to select an additional number of languages equal your Intelligence modifer in the Finalize step. The following are the options you will be able to choose from: '+bonusLangs+'">more*</a>');
 
     if(saving){
         socket.emit("requestLanguagesChange",
@@ -275,6 +307,9 @@ function displayCurrentAncestry(ancestryStruct, saving) {
     // Display current heritage
     $('#selectHeritage').trigger("change", [false]);
 
+    // Turn off page loading
+    $('.pageloader').addClass("fadeout");
+
 }
 
 
@@ -289,11 +324,13 @@ function displayCurrentHeritage(ancestryStruct, heritageID) {
     
         let heritageDescription = $('#heritageDescription');
         heritageDescription.html('<p>'+heritage.description+'</p>');
+        heritageDescription.removeClass('is-hidden');
 
     } else {
 
         let heritageDescription = $('#heritageDescription');
         heritageDescription.html('');
+        heritageDescription.addClass('is-hidden');
 
     }
 
@@ -401,7 +438,7 @@ function buildFeatStruct(featLevel) {
 
     let locationID = "descriptionFeat"+featLevel;
 
-    $('#ancestryFeats').append('<article class="message is-dark"><div class="message-header"><p class="is-size-4 has-text-light has-text-weight-semibold">Ancestry Feat</p><span class="has-text-weight-bold">Lvl '+featLevel+'</span></div><div class="message-body"><div class="columns is-centered"><div id="'+locationID+'" class="column is-paddingless is-8"></div></div></div></article>');
+    $('#ancestryFeats').append('<article class="message"><div class="message-header"><p class="is-size-4 has-text-grey-light has-text-weight-semibold">Ancestry Feat</p><span class="has-text-weight-bold">Lvl '+featLevel+'</span></div><div class="message-body"><div class="columns is-centered"><div id="'+locationID+'" class="column is-paddingless is-8"></div></div></div></article>');
 
 
     return { LocationID : locationID, Level : featLevel };
@@ -413,22 +450,3 @@ socket.on("returnAbilityBonusChange", function(){
     $('.abilityBoostControlShell').removeClass("is-loading");
 });
 
-
-socket.on("returnAncestryChange", function(inChoiceStruct, ancestryPacket){
-    $('#selectAncestryControlShell').removeClass("is-loading");
-    choiceStruct = inChoiceStruct;
-
-    let ancestryMap = objToMap(ancestryPacket.AncestryObject);
-
-    displayCurrentAncestry(ancestryMap.get(ancestryPacket.AncestryID), true);
-    activateHideSelects();
-
-});
-
-socket.on("returnHeritageChange", function(){
-    $('#selectHeritageControlShell').removeClass("is-loading");
-});
-
-socket.on("returnLanguagesChange", function(){
-    console.log("Saved langs");
-});

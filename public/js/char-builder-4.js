@@ -2,11 +2,10 @@
 let socket = io();
 
 let choiceStruct = null;
+let g_class = null;
 
 // ~~~~~~~~~~~~~~ // General - Run On Load // ~~~~~~~~~~~~~~ //
 $(function () {
-
-    $('.pageloader').addClass("is-active");
 
     // Change page
     $("#nextButton").click(function(){
@@ -58,10 +57,12 @@ socket.on("returnClassDetails", function(classObject, inChoiceStruct){
     $('#selectClass').change(function(event, triggerSave) {
         let classID = $("#selectClass option:selected").val();
         if(classID != "chooseDefault"){
+            $('.class-content').removeClass("is-hidden");
+
             if(triggerSave == null || triggerSave) {
-                displayCurrentClass(classMap.get(classID), true);
-            
                 $('#selectClassControlShell').addClass("is-loading");
+
+                g_class = classMap.get(classID);
                 socket.emit("requestClassChange",
                     getCharIDFromURL(),
                     classID);
@@ -69,12 +70,33 @@ socket.on("returnClassDetails", function(classObject, inChoiceStruct){
             } else {
                 displayCurrentClass(classMap.get(classID), false);
             }
+
         } else {
-            $('.pageloader').removeClass("is-active");
+            $('.class-content').addClass("is-hidden");
+
+            // Turn off page loading
+            $('.pageloader').addClass("fadeout");
+
+            // Delete class, set to null
+            g_class = null;
+            socket.emit("requestClassChange",
+                getCharIDFromURL(),
+                null);
         }
+
     });
  
     $('#selectClass').trigger("change", [false]);
+
+});
+
+socket.on("returnClassChange", function(inChoiceStruct){
+    $('#selectClassControlShell').removeClass("is-loading");
+    choiceStruct = inChoiceStruct;
+
+    if(g_class != null){
+        displayCurrentClass(g_class, true);
+    }
 
 });
 
@@ -151,6 +173,11 @@ function displayCurrentClass(classStruct, saving) {
                         [{ For : "Skill", To : skillName, Prof : 'T' }]);
                 }
             });
+
+            let tSkillChoice = choiceStruct.ProficiencyObject["Type-Class_Level-1_Code-Other"+tSkillID];
+            if(tSkillChoice != null && tSkillChoice[0] != null){
+                tSkillSelect.val(tSkillChoice[0].To);
+            }
 
         } else {
 
@@ -303,10 +330,10 @@ function displayCurrentClass(classStruct, saving) {
             let classAbilityCodeID = "classAbilityCode"+classAbility.id;
 
             
-            classAbilities.append('<section class="accordions"><article id="'+classAbilityID+'" class="accordion is-dark classAbility"></article></section>');
+            classAbilities.append('<section class="accordions"><article id="'+classAbilityID+'" class="accordion classAbility"></article></section>');
 
             let classAbilityInnerCard = $('#'+classAbilityID);
-            classAbilityInnerCard.append('<div id="'+classAbilityHeaderID+'" class="accordion-header toggle"><p class="is-size-4 has-text-light has-text-weight-semibold">'+classAbility.name+'</p><span class="has-text-weight-bold">'+abilityLevelDisplay(classAbility.level)+'</span></div>');
+            classAbilityInnerCard.append('<div id="'+classAbilityHeaderID+'" class="accordion-header toggle"><p class="is-size-4 has-text-weight-semibold">'+classAbility.name+'</p><span class="has-text-weight-bold">'+abilityLevelDisplay(classAbility.level)+'</span></div>');
 
             classAbilityInnerCard.append('<div class="accordion-body"><div id="'+classAbilityContentID+'" class="accordion-content"></div></div>');
 
@@ -415,15 +442,10 @@ function displayCurrentClass(classStruct, saving) {
 
     processCode_ClassAbilities(classStruct.Abilities);
 
-
-    $('.pageloader').removeClass("is-active");
+    // Turn off page loading
+    $('.pageloader').addClass("fadeout");
 
 }
-
-
-socket.on("returnClassChange", function(){
-    $('#selectClassControlShell').removeClass("is-loading");
-});
 
 socket.on("returnSelectAbilityChange", function(){
     console.log("Got here from the select abil change");

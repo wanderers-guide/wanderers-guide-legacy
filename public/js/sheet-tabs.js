@@ -199,12 +199,13 @@ function displayInventorySection(data){
     for(const [itemID, itemData] of g_itemMap.entries()){
         if(itemData.RuneData != null){
             if(itemData.RuneData.etchedType == 'WEAPON'){
-                weaponRuneArray.push(itemData);
+                weaponRuneArray[itemData.RuneData.id] = itemData;
             } else if(itemData.RuneData.etchedType == 'ARMOR'){
-                armorRuneArray.push(itemData);
+                armorRuneArray[itemData.RuneData.id] = itemData;
             }
         }
     }
+    
     let runeDataStruct = { WeaponArray : weaponRuneArray, ArmorArray : armorRuneArray };
 
     let inventorySearch = $('#inventorySearch');
@@ -287,7 +288,14 @@ function displayInventoryItem(invItem, openBagInvItemArray, runeDataStruct, data
     let invItemShoddyTagID = 'invItemShoddyTag'+invItem.id;
     let invItemBrokenTagID = 'invItemBrokenTag'+invItem.id;
 
-    invItem.currentHitPoints = (invItem.currentHitPoints > invItem.hitPoints) ? invItem.hitPoints : invItem.currentHitPoints;
+    // Halve maxHP if it's shoddy
+    let maxHP = (invItem.isShoddy == 1) ? Math.floor(invItem.hitPoints/2) : invItem.hitPoints;
+
+    // Halve brokenThreshold if it's shoddy
+    let brokenThreshold = (invItem.isShoddy == 1) ? Math.floor(invItem.brokenThreshold/2) : invItem.brokenThreshold;
+
+    // Reduce currentHP if it's over maxHP
+    invItem.currentHitPoints = (invItem.currentHitPoints > maxHP) ? maxHP : invItem.currentHitPoints;
 
     if(itemIsStorage) {
 
@@ -341,14 +349,22 @@ function displayInventoryItem(invItem, openBagInvItemArray, runeDataStruct, data
                 let baggedInvItemShoddyTagID = 'baggedInvItemShoddyTag'+baggedInvItem.id;
                 let baggedInvItemBrokenTagID = 'baggedInvItemBrokenTag'+baggedInvItem.id;
 
-                baggedInvItem.currentHitPoints = (baggedInvItem.currentHitPoints > baggedInvItem.hitPoints) ? baggedInvItem.hitPoints : baggedInvItem.currentHitPoints;
+
+                // Halve maxHP if it's shoddy
+                let baggedInvItemMaxHP = (baggedInvItem.isShoddy == 1) ? Math.floor(baggedInvItem.hitPoints/2) : baggedInvItem.hitPoints;
+
+                // Halve brokenThreshold if it's shoddy
+                let baggedInvItemBrokenThreshold = (baggedInvItem.isShoddy == 1) ? Math.floor(baggedInvItem.brokenThreshold/2) : baggedInvItem.brokenThreshold;
+
+                // Reduce currentHP if it's over maxHP
+                baggedInvItem.currentHitPoints = (baggedInvItem.currentHitPoints > baggedInvItemMaxHP) ? baggedInvItemMaxHP : baggedInvItem.currentHitPoints;
 
                 $('#'+invItemStorageSectionID).append('<div id="'+baggedInvItemSectionID+'" class="tile is-parent is-paddingless pt-1 px-2 cursor-clickable"><div id="'+baggedInvItemIndentID+'" class="tile is-child is-1"></div><div class="tile is-child is-5 border-bottom border-dark"><p id="'+baggedInvItemNameID+'" class="has-text-left pl-3 is-size-6 has-text-grey-light"></p></div><div id="'+baggedInvItemQtyID+'" class="tile is-child is-1 border-bottom border-dark"><p></p></div><div id="'+baggedInvItemBulkID+'" class="tile is-child is-1 border-bottom border-dark"><p></p></div><div id="'+baggedInvItemHealthID+'" class="tile is-child is-1 border-bottom border-dark"><p></p></div><div class="tile is-child is-3 border-bottom border-dark"><div class="tags is-centered"><span id="'+baggedInvItemShoddyTagID+'" class="tag is-warning">Shoddy</span><span id="'+baggedInvItemBrokenTagID+'" class="tag is-danger">Broken</span></div></div></div>');
 
                 $('#'+baggedInvItemNameID).html(baggedInvItem.name);
 
                 if(baggedItem.WeaponData != null){
-                    let calcStruct = getAttackAndDamage(baggedItem, data.StrMod, data.DexMod);
+                    let calcStruct = getAttackAndDamage(baggedItem, baggedInvItem, data.StrMod, data.DexMod);
                     $('#'+baggedInvItemNameID).append('<sup class="pl-2 has-text-weight-light">'+calcStruct.AttackBonus+'</sup><sup class="pl-3 has-text-weight-light has-text-grey">'+calcStruct.Damage+'</sup>');
                 }
 
@@ -362,10 +378,10 @@ function displayInventoryItem(invItem, openBagInvItemArray, runeDataStruct, data
                 bulk = getBulkFromNumber(bulk);
                 $('#'+baggedInvItemBulkID).html(bulk);
 
-                if(baggedInvItem.currentHitPoints == baggedInvItem.hitPoints) {
+                if(baggedInvItem.currentHitPoints == baggedInvItemMaxHP) {
                     $('#'+baggedInvItemHealthID).html('-');
                 } else {
-                    $('#'+baggedInvItemHealthID).html(baggedInvItem.currentHitPoints+'/'+baggedInvItem.hitPoints);
+                    $('#'+baggedInvItemHealthID).html(baggedInvItem.currentHitPoints+'/'+baggedInvItemMaxHP);
                 }
 
                 if(baggedInvItem.isShoddy == 0){
@@ -374,7 +390,7 @@ function displayInventoryItem(invItem, openBagInvItemArray, runeDataStruct, data
                     $('#'+baggedInvItemShoddyTagID).removeClass('is-hidden');
                 }
 
-                if(baggedInvItem.currentHitPoints > baggedInvItem.brokenThreshold){
+                if(baggedInvItem.currentHitPoints > baggedInvItemBrokenThreshold){
                     $('#'+baggedInvItemBrokenTagID).addClass('is-hidden');
                 } else {
                     $('#'+baggedInvItemBrokenTagID).removeClass('is-hidden');
@@ -439,7 +455,8 @@ function displayInventoryItem(invItem, openBagInvItemArray, runeDataStruct, data
     $('#'+invItemNameID).prepend(invItem.name);
 
     if(item.WeaponData != null){
-        let calcStruct = getAttackAndDamage(item, data.StrMod, data.DexMod);
+        console.log(invItem);
+        let calcStruct = getAttackAndDamage(item, invItem, data.StrMod, data.DexMod);
         $('#'+invItemNameID).append('<sup class="pl-2 has-text-weight-light">'+calcStruct.AttackBonus+'</sup><sup class="pl-3 has-text-weight-light has-text-grey">'+calcStruct.Damage+'</sup>');
     }
 
@@ -448,7 +465,7 @@ function displayInventoryItem(invItem, openBagInvItemArray, runeDataStruct, data
     }
 
     if(item.ShieldData != null){
-        let notBroken = (invItem.currentHitPoints > invItem.brokenThreshold);
+        let notBroken = (invItem.currentHitPoints > brokenThreshold);
         if(notBroken){
             $('#'+invItemNameID).append('<button name="'+invItem.id+'" class="equipShieldButton button is-small is-info is-rounded is-outlined mb-1 ml-3"><span class="icon is-small"><i class="fas fa-shield-alt"></i></span></button>');
         } else {
@@ -467,11 +484,11 @@ function displayInventoryItem(invItem, openBagInvItemArray, runeDataStruct, data
     bulk = getBulkFromNumber(bulk);
     if(item.StorageData != null && item.StorageData.ignoreSelfBulkIfWearing == 1){ bulk = '-'; }
     $('#'+invItemBulkID).html(bulk);
-    console.log(invItem);
-    if(invItem.currentHitPoints == invItem.hitPoints) {
+
+    if(invItem.currentHitPoints == maxHP) {
         $('#'+invItemHealthID).html('-');
     } else {
-        $('#'+invItemHealthID).html(invItem.currentHitPoints+'/'+invItem.hitPoints);
+        $('#'+invItemHealthID).html(invItem.currentHitPoints+'/'+maxHP);
     }
 
     if(invItem.isShoddy == 0){
@@ -480,7 +497,7 @@ function displayInventoryItem(invItem, openBagInvItemArray, runeDataStruct, data
         $('#'+invItemShoddyTagID).removeClass('is-hidden');
     }
 
-    if(invItem.currentHitPoints > invItem.brokenThreshold){
+    if(invItem.currentHitPoints > brokenThreshold){
         $('#'+invItemBrokenTagID).addClass('is-hidden');
     } else {
         $('#'+invItemBrokenTagID).removeClass('is-hidden');

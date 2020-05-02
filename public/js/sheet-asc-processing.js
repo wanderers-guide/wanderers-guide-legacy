@@ -4,13 +4,31 @@
 // ======================================================================================== //
 
 function processSheetText(text) {
+    return processSheetText(text, false, 'MEDIUM');
+}
+
+function processSheetText(text, isJustified, size) {
+
+    let _j = (isJustified) ? ' has-text-justified ' : '';
+    let _s = '';
+    switch(size) {
+        case 'SMALL':
+            _s = ' is-size-7 '; break;
+        case 'MEDIUM':
+            _s = ' is-size-6 '; break;
+        case 'LARGE':
+            _s = ' is-size-5 '; break;
+        default:
+            break;
+    }
+
 
     // Wrap in a paragraph
-    text = '<p class="p-1 pl-2">'+text+'</p>';
+    text = '<p class="p-1 pl-2 '+_j+_s+'">'+text+'</p>';
 
 
     // <n> -> Newline
-    text = text.replace(/<n>/g, '</p><p class="p-1 pl-2">'); // class="p-1">&nbsp;
+    text = text.replace(/<n>/g, '</p><p class="p-1 pl-2 '+_j+_s+'">'); // class="p-1">&nbsp;
 
     // page ### -> Core Rulebook Link
     let regexCoreRules = /page\s*(\d+)/g;
@@ -33,10 +51,10 @@ function processSheetText(text) {
     // |FAILURE:text|
     // |CRITICAL_FAILURE:text|
 
-    text = text.replace('|CRITICAL_SUCCESS','<p><strong class="pl-3">Critical Success: </strong>');
-    text = text.replace('|SUCCESS:','<p><strong class="pl-3">Success: </strong>');
-    text = text.replace('|FAILURE:','<p><strong class="pl-3">Failure: </strong>');
-    text = text.replace('|CRITICAL_FAILURE:','<p><strong class="pl-3">Critical Failure: </strong>');
+    text = text.replace('|CRITICAL_SUCCESS','<p class="'+_j+_s+'"><strong class="pl-3">Critical Success: </strong>');
+    text = text.replace('|SUCCESS:','<p class="'+_j+_s+'"><strong class="pl-3">Success: </strong>');
+    text = text.replace('|FAILURE:','<p class="'+_j+_s+'"><strong class="pl-3">Failure: </strong>');
+    text = text.replace('|CRITICAL_FAILURE:','<p class="'+_j+_s+'"><strong class="pl-3">Critical Failure: </strong>');
     text = text.replace(/\|/g,'</p>');
 
 

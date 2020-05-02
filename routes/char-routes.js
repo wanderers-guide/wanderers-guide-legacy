@@ -4,24 +4,57 @@
 
 const router = require('express').Router();
 const charbuilderRoutes = require('./charbuilder-routes');
+const chardeleteRoutes = require('./chardelete-routes');
 const charsheetRoutes = require('./charsheet-routes');
 
 const Character = require('../models/contentDB/Character');
 const CharData = require('../models/contentDB/CharData');
 
 const CharSaving = require('../js/CharSaving');
+const CharStateUtils = require('../js/CharStateUtils');
 
 const Class = require('../models/contentDB/Class');
 const Background = require('../models/contentDB/Background');
 const Ancestry = require('../models/contentDB/Ancestry');
+const Heritage = require('../models/contentDB/Heritage');
 const Inventory = require('../models/contentDB/Inventory');
 
 router.get('/', (req, res) => {
 
     Character.findAll({ where: { userID: req.user.id} })
     .then((characters) => {
+        Class.findAll()
+        .then((classes) => {
+            Heritage.findAll()
+            .then((heritages) => {
+                
+                console.log(characters);
 
-        res.render('characters', { title: "Your Characters - Apeiron", user: req.user, characters });
+                for(let character of characters){
+
+                    let cClass = classes.find(cClass => {
+                        return cClass.id == character.classID;
+                    });
+                    character.className = (cClass != null) ? cClass.name : "";
+
+                    let heritage = heritages.find(heritage => {
+                        return heritage.id == character.heritageID;
+                    });
+                    character.heritageName = (heritage != null) ? heritage.name : "";
+
+                    character.isPlayable = CharStateUtils.isPlayable(character);
+
+                }
+
+                res.render('character_list', {
+                    title: "Your Characters - Apeiron",
+                    user: req.user,
+                    characters,
+                    canMakeCharacter: CharStateUtils.canMakeCharacter(req.user, characters),
+                    characterLimit: CharStateUtils.getUserCharacterLimit()});
+
+            });
+        });
 
     }).catch((error) => {
         console.error(error);
@@ -33,28 +66,41 @@ router.get('/', (req, res) => {
 
 router.get('/add', (req, res) => {
 
-    Inventory.create({
-    }).then(inventory => {
-        CharSaving.addItemToInv(inventory.id, 23, 150)
-        .then( result => {
-            CharData.create({
-            }).then(charData => {
-                Character.create({
-                    name: "Unnamed Character",
-                    level: 1,
-                    userID: req.user.id,
-                    ancestryID: 1,
-                    heritageID: 1,
-                    inventoryID: inventory.id,
-                    dataID: charData.id
-                }).then(character => {
-                    res.redirect('/profile/characters/builder/'+character.id+'/page1');
-                }).catch(err => console.log(err));
+    Character.findAll({ where: { userID: req.user.id} })
+    .then((characters) => {
+
+        if(CharStateUtils.canMakeCharacter(req.user, characters)){
+
+            Inventory.create({
+            }).then(inventory => {
+                CharSaving.addItemToInv(inventory.id, 23, 150)
+                .then( result => {
+                    CharData.create({
+                    }).then(charData => {
+                        Character.create({
+                            name: "Unnamed Character",
+                            level: 1,
+                            userID: req.user.id,
+                            inventoryID: inventory.id,
+                            dataID: charData.id
+                        }).then(character => {
+                            res.redirect('/profile/characters/builder/'+character.id+'/page1');
+                        }).catch(err => console.log(err));
+                    });
+                });
             });
-        });
+
+        } else {
+            // Cannot make another character, goto 404 not found
+            res.status(404);
+            res.render('404_error', { title: "404 Not Found - Apeiron", user: req.user });
+        }
+
     });
     
 });
+
+router.use('/delete', chardeleteRoutes);
 
 router.use('/builder', charbuilderRoutes);
 

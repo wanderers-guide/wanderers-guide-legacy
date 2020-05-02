@@ -63,6 +63,10 @@ $(function () {
         deployAbilityScoreChange();
     });
 
+    
+    // Turn off page loading
+    $('.pageloader').addClass("fadeout");
+
 });
 
 function deployAbilityScoreChange(){

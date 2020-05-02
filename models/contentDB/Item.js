@@ -28,6 +28,9 @@ const Item = db.define('items', {
   craftRequirements: {
     type: Sequelize.STRING
   },
+  usage: {
+    type: Sequelize.STRING
+  },
   hands: {
     type: Sequelize.ENUM,
     values: ['NONE', 'ONE', 'ONE_PLUS', 'TWO']

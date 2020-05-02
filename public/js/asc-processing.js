@@ -37,7 +37,7 @@ function processCode_ClassAbilities(classAbilities){
 }
 
 socket.on("returnASCClassAbilities", function(choiceStruct, featObject, skillObject, classAbilities){
-    console.log("Setting choiceStruct, featMap, and skillmap to new ones before classAbilities...")
+    //console.log("Setting choiceStruct, featMap, and skillmap to new ones before classAbilities...");
     ascChoiceStruct = choiceStruct;
     ascFeatMap = objToMap(featObject);
     ascSkillMap = objToMap(skillObject);
@@ -58,7 +58,7 @@ function processCode_AncestryAbilities(ancestryFeatsLocs){
 }
 
 socket.on("returnASCAncestryFeats", function(choiceStruct, featObject, skillObject, ancestryFeatsLocs){
-    console.log("Setting choiceStruct, featMap, and skillmap to new ones before ancestryFeats...")
+    //console.log("Setting choiceStruct, featMap, and skillmap to new ones before ancestryFeats...");
     ascChoiceStruct = choiceStruct;
     ascFeatMap = objToMap(featObject);
     ascSkillMap = objToMap(skillObject);
@@ -73,21 +73,27 @@ socket.on("returnASCAncestryFeats", function(choiceStruct, featObject, skillObje
 /////////////
 
 socket.on("returnASCUpdateChoices", function(choiceStruct){
-    console.log("Updating choiceStruct...")
+    //console.log("Updating choiceStruct...");
     ascChoiceStruct = choiceStruct;
 });
 
 socket.on("returnASCUpdateSkills", function(skillObject){
     let skillMap = objToMap(skillObject);
-    console.log("Updating skillMap...")
+    //console.log("Updating skillMap...");
     ascSkillMap = skillMap;
 });
 
 socket.on("returnASCUpdateLangs", function(langObject){
     let langMap = objToMap(langObject);
-    console.log("Updating langMap...")
+    //console.log("Updating langMap...");
     ascLangMap = langMap;
 });
+
+/////////////
+
+function injectASCChoiceStruct(choiceStruct){
+    ascChoiceStruct = choiceStruct;
+}
 
 /////////////
 
@@ -98,21 +104,21 @@ function processCode(ascCode, srcID, locationID){
     }
 
     if(ascChoiceStruct == null){
-        console.log("Did not find valid choiceStruct :(");
+        //console.log("Did not find valid choiceStruct :(");
         socket.emit("requestASCChoices",
             getCharIDFromURL(),
             ascCode,
             srcID,
             locationID);
     } else {
-        console.log("> Found a valid choiceStruct!");
+        //console.log("> Found a valid choiceStruct!");
         codeDecompiling(ascCode, srcID, locationID);
     }
 
 }
 
 socket.on("returnASCChoices", function(ascCode, srcID, locationID, choiceStruct){
-    console.log("Setting choiceStruct new one...")
+    //console.log("Setting choiceStruct new one...");
     ascChoiceStruct = choiceStruct;
     codeDecompiling(ascCode, srcID, locationID);
 });
@@ -146,7 +152,6 @@ function codeDecompiling(ascCode, srcID, locationID){
         if(ascStatement.includes("GIVE-LORE")){ // GIVE-LORE=Sailing
             let loreName = ascStatement.split('=')[1];
             giveLore(srcID, loreName);
-            giveSkillIncreaseInSkill(srcID, loreName+" Lore");
             statementNum++;
             continue;
         }
@@ -175,7 +180,7 @@ function codeDecompiling(ascCode, srcID, locationID){
 //------------------------- Processing Langs -------------------------//
 function initLangProcessing(ascStatement, srcID, locationID, statementNum) {
     if(ascLangMap == null) {
-        console.log("Did not find valid langMap :(");
+        //console.log("Did not find valid langMap :(");
         socket.emit("requestASCLangs",
                 getCharIDFromURL(),
                 ascStatement,
@@ -183,14 +188,14 @@ function initLangProcessing(ascStatement, srcID, locationID, statementNum) {
                 locationID,
                 statementNum);
     } else {
-        console.log("> Found a valid langMap!");
+        //console.log("> Found a valid langMap!");
         processingLangs(ascStatement, srcID, locationID, statementNum);
     }
 }
 
 socket.on("returnASCLangs", function(ascStatement, srcID, locationID, statementNum, langObject){
     let langMap = objToMap(langObject);
-    console.log("Setting langMap to new one...")
+    //console.log("Setting langMap to new one...");
     ascLangMap = langMap;
     processingLangs(ascStatement, srcID, locationID, statementNum);
 });
@@ -213,7 +218,7 @@ function processingLangs(ascStatement, srcID, locationID, statementNum){
 //------------------------- Processing Skills -------------------------//
 function initSkillProcessing(ascStatement, srcID, locationID, statementNum) {
     if(ascSkillMap == null) {
-        console.log("Did not find valid skillMap :(");
+        //console.log("Did not find valid skillMap :(");
         socket.emit("requestASCSkills",
                 getCharIDFromURL(),
                 ascStatement,
@@ -221,14 +226,14 @@ function initSkillProcessing(ascStatement, srcID, locationID, statementNum) {
                 locationID,
                 statementNum);
     } else {
-        console.log("> Found a valid skillMap!");
+        //console.log("> Found a valid skillMap!");
         processingSkills(ascStatement, srcID, locationID, statementNum);
     }
 }
 
 socket.on("returnASCSkills", function(ascStatement, srcID, locationID, statementNum, skillObject){
     let skillMap = objToMap(skillObject);
-    console.log("Setting skillMap to new one...")
+    //console.log("Setting skillMap to new one...");
     ascSkillMap = skillMap;
     processingSkills(ascStatement, srcID, locationID, statementNum);
 });
@@ -237,7 +242,7 @@ function processingSkills(ascStatement, srcID, locationID, statementNum){
 
     if(ascStatement.includes("GIVE-SKILL-INCREASE-IN")){// GIVE-SKILL-INCREASE-IN=Arcana
         let skillName = ascStatement.split('=')[1];
-        giveSkillIncreaseInSkill(srcID, skillName);
+        giveSkillIncreaseInSkill(srcID, skillName, statementNum);
     }
     else if(ascStatement.includes("GIVE-SKILL-INCREASE")){// GIVE-SKILL-INCREASE
         giveSkillIncrease(srcID, locationID, statementNum);
@@ -245,7 +250,7 @@ function processingSkills(ascStatement, srcID, locationID, statementNum){
     else if(ascStatement.includes("GIVE-SKILL-PROF-IN")){// GIVE-SKILL-PROF-IN=Arcana:T
         let data = ascStatement.split('=')[1];
         let segments = data.split(':');
-        giveSkillProfInSkill(srcID, segments[0], segments[1]);
+        giveSkillProfInSkill(srcID, segments[0], segments[1], statementNum);
     }
     else if(ascStatement.includes("GIVE-SKILL-PROF")){// GIVE-SKILL-PROF=T
         let prof = ascStatement.split('=')[1];
@@ -257,7 +262,7 @@ function processingSkills(ascStatement, srcID, locationID, statementNum){
 //------------------------- Processing Feats -------------------------//
 function initFeatProcessing(ascStatement, srcID, locationID, statementNum){
     if(ascFeatMap == null) {
-        console.log("Did not find valid featMap :(");
+        //console.log("Did not find valid featMap :(");
         socket.emit("requestASCFeats",
                 getCharIDFromURL(),
                 ascStatement,
@@ -265,14 +270,14 @@ function initFeatProcessing(ascStatement, srcID, locationID, statementNum){
                 locationID,
                 statementNum);
     } else {
-        console.log("> Found a valid featMap!");
+        //console.log("> Found a valid featMap!");
         processingFeats(ascStatement, srcID, locationID, statementNum);
     }
 }
 
 socket.on("returnASCFeats", function(ascStatement, srcID, locationID, statementNum, featObject){
     let featMap = objToMap(featObject);
-    console.log("Setting featMap to new one...")
+    //console.log("Setting featMap to new one...");
     ascFeatMap = featMap;
     processingFeats(ascStatement, srcID, locationID, statementNum);
 });
@@ -365,7 +370,7 @@ function giveClassFeat(srcID, locationID, statementNum, featLevel){
 function displayFeatChoice(srcID, locationID, statementNum, selectionName, tagsArray, featLevel) {
 
     // TO-DO. If feat requires prereq, check feats that the char has from choiceMap
-
+    
     let selectFeatID = "selectFeat"+locationID+statementNum;
     let descriptionFeatID = "descriptionFeat"+locationID+statementNum;
     let selectFeatControlShellClass = selectFeatID+'ControlShell';
@@ -402,7 +407,6 @@ function displayFeatChoice(srcID, locationID, statementNum, selectionName, tagsA
     let featArray = objToMap(ascChoiceStruct.FeatObject).get(srcID);
     if(featArray != null && featArray[0] != null){
         $('#'+selectFeatID).val(featArray[0].id);
-        console.log("Set stored data to ID "+featArray[0].id);
         triggerChange = true;
     }
 
@@ -427,8 +431,7 @@ function displayFeatChoice(srcID, locationID, statementNum, selectionName, tagsA
 
                 let featID = $(this).val();
                 let feat = ascFeatMap.get(featID+"");
-                console.log(featID);
-                console.log(feat);
+
                 let featChoiceMap = objToMap(ascChoiceStruct.FeatObject);
 
                 if((checkDup == null || checkDup) 
@@ -502,7 +505,7 @@ function giveSkill(srcID, locationID, statementNum, profType){
 
     let selectIncreaseID = "selectIncrease"+locationID+statementNum;
     let selectIncreaseControlShellClass = selectIncreaseID+'ControlShell';
-    let increaseDescriptionID = "selectIncrease"+locationID+statementNum;
+    let increaseDescriptionID = "selectIncreaseDescription"+locationID+statementNum;
 
     $('#'+locationID).append('<div class="field"><div class="select '+selectIncreaseControlShellClass+'"><select id="'+selectIncreaseID+'" class="selectIncrease"></select></div></div>');
 
@@ -511,20 +514,21 @@ function giveSkill(srcID, locationID, statementNum, profType){
     $('#'+selectIncreaseID).append('<option value="chooseDefault">Choose a Skill</option>');
     $('#'+selectIncreaseID).append('<hr class="dropdown-divider"></hr>');
 
-    // Set saved prof choices to savedProfData
-    let profChoiceMap = objToMap(ascChoiceStruct.ProficiencyObject);
-    let profArray = profChoiceMap.get(srcID);
-    let savedProfData = null;
-    if(profArray != null && profArray[0] != null){
-        savedProfData = profArray[0];
+    // Set saved skill choices
+    let skillArray = objToMap(ascChoiceStruct.ProficiencyObject).get(srcID);
+    let savedSkillData = null;
+    if(skillArray != null && skillArray[0] != null){
+        savedSkillData = skillArray[0];
     }
 
     for(const [skillName, skillData] of ascSkillMap.entries()){
 
-        if(savedProfData != null && savedProfData.To == skillName) {
+        if(savedSkillData != null && savedSkillData.To == skillName) {
             $('#'+selectIncreaseID).append('<option value="'+skillName+'" selected>'+skillName+'</option>');
         } else {
-            $('#'+selectIncreaseID).append('<option value="'+skillName+'">'+skillName+'</option>');
+            if(skillData.NumUps < profToNumUp(profType)) {
+                $('#'+selectIncreaseID).append('<option value="'+skillName+'">'+skillName+'</option>');
+            }
         }
 
     }
@@ -552,9 +556,11 @@ function giveSkill(srcID, locationID, statementNum, profType){
                     let canSave = false;
 
                     if(profType == 'Up') {
-                        let numUps = ascSkillMap.get($('#'+selectIncreaseID).val()).NumUps;
+                        let skillName = $('#'+selectIncreaseID).val();
+                        let numUps = ascSkillMap.get(skillName).NumUps;
                         if(isAbleToSelectIncrease(numUps+1, ascChoiceStruct.Level)) {
-                            canSave= true;
+                            canSave = true;
+                            $('#'+increaseDescriptionID).html('');
                         } else {
                             $('.'+selectIncreaseControlShellClass).addClass("is-danger");
                             $('#'+increaseDescriptionID).html('<p class="help is-danger">You cannot increase the proficiency of this skill any further at your current level!</p>');
@@ -612,19 +618,19 @@ function isAbleToSelectIncrease(numUps, charLevel){
 
 //////////////////////////////// Skill Prof ///////////////////////////////////
 
-function giveSkillIncreaseInSkill(srcID, skillName){
-    giveInSkill(srcID, skillName, 'Up');
+function giveSkillIncreaseInSkill(srcID, skillName, statementNum){
+    giveInSkill(srcID, skillName, 'Up', statementNum);
 }
 
-function giveSkillProfInSkill(srcID, skillName, prof){
-    giveInSkill(srcID, skillName, prof);
+function giveSkillProfInSkill(srcID, skillName, prof, statementNum){
+    giveInSkill(srcID, skillName, prof, statementNum);
 }
 
-function giveInSkill(srcID, skillName, prof){
+function giveInSkill(srcID, skillName, prof, statementNum){
 
     socket.emit("requestProficiencyChange",
         getCharIDFromURL(),
-        {srcID : srcID, isSkill : true},
+        {srcID : srcID+statementNum, isSkill : true},
         [{ For : "Skill", To : skillName, Prof : prof }]);
 
 }
@@ -650,7 +656,7 @@ function giveFeatByID(srcID, featID, locationID, statementNum){
 
     socket.emit("requestFeatChange",
         getCharIDFromURL(),
-        {srcID : srcID, feat : feat, featID : featID, codeLocationID : locationID+"Code" },
+        {srcID : srcID, feat : feat, featID : featID, codeLocationID : descriptionFeatID+"Code" },
         null);
 
 }
@@ -660,8 +666,6 @@ function giveFeatByID(srcID, featID, locationID, statementNum){
 
 function giveLore(srcID, loreName){
 
-    console.log(srcID+" : "+loreName);
-
     socket.emit("requestLoreChange",
         getCharIDFromURL(),
         srcID,
@@ -670,7 +674,7 @@ function giveLore(srcID, loreName){
 }
 
 socket.on("returnLoreChange", function(){
-    console.log("Saved a lore");
+    //console.log("Saved a lore");
 });
 
 //////////////////////////////// Give Ability Boost - Single ///////////////////////////////////
@@ -693,14 +697,14 @@ function giveAbilityBoostSingle(srcID, selectionOptions, locationID, statementNu
         let selectionOptionsArray = selectionOptions.split(",");
         if(selectionOptionsArray.length < 8){
             let abilityTypes = [];
-            for(selectionOption of selectionOptionsArray){
+            for(let selectionOption of selectionOptionsArray){
                 let abilityType = lengthenAbilityType(selectionOption);
                 if(!abilityTypes.includes(abilityType)){
                     abilityTypes.push(abilityType);
                 }
             }
             if(abilityTypes.length != 0){
-                displayAbilityBoostSingle(srcID, locationID, statementNum, abilityTypes)
+                displayAbilityBoostSingle(srcID, locationID, statementNum, abilityTypes);
             } else {
                 console.error("Error: Attempted to produce an invalid ability boost! (2)");
             }

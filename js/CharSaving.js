@@ -7,6 +7,7 @@ const Ancestry = require('../models/contentDB/Ancestry');
 const Item = require('../models/contentDB/Item');
 const Inventory = require('../models/contentDB/Inventory');
 const InvItem = require('../models/contentDB/InvItem');
+const InvItemRune = require('../models/contentDB/InvItemRune');
 const CharCondition = require('../models/contentDB/CharCondition');
 
 const CharDataStoring = require('./CharDataStoring');
@@ -53,6 +54,10 @@ function clearDataOfHigherLevel(charID, level){
             });
         });
     });
+}
+
+function isPotencyRune(runeID){ // Fund Runes have hardcoded IDs
+    return runeID == 1 || runeID == 2 || runeID == 3 || runeID == 10 || runeID == 11 || runeID == 12;
 }
 
 module.exports = class CharSaving {
@@ -159,9 +164,73 @@ module.exports = class CharSaving {
         });
     }
 
+    static addPropRune(invItemID, propRuneID, propRuneSlot) {
+        let updateValues = new Object;
+        updateValues['propRune'+propRuneSlot+'ID'] = propRuneID;
+        return InvItemRune.update(updateValues, { where: { invItemID: invItemID} })
+        .then((result) => {
+            return;
+        });
+    }
+
+    static removePropRune(invItemID, propRuneSlot) {
+        let updateValues = new Object;
+        updateValues['propRune'+propRuneSlot+'ID'] = null;
+        return InvItemRune.update(updateValues, { where: { invItemID: invItemID} })
+        .then((result) => {
+            return;
+        });
+    }
+
     static addFundRune(invItemID, fundRuneID) {
-        console.log("Adding rune ("+fundRuneID+") to invItem ("+invItemID+")");
-        return;
+        if(isPotencyRune(fundRuneID)){
+            return InvItemRune.upsert({
+                invItemID: invItemID,
+                fundPotencyRuneID: fundRuneID
+            });
+        } else {
+            return InvItemRune.upsert({
+                invItemID: invItemID,
+                fundRuneID: fundRuneID
+            });
+        }
+    }
+
+    static removeFundRune(invItemID, fundRuneID) {
+
+        return InvItemRune.findOne({ where: { invItemID: invItemID} })
+        .then((invItemRune) => {
+
+            if(invItemRune.fundRuneID == fundRuneID){
+
+                let updateValues = {
+                    fundRuneID: null
+                };
+                return InvItemRune.update(updateValues, { where: { invItemID: invItemID} })
+                .then((result) => {
+                    return;
+                });
+
+            } else if(invItemRune.fundPotencyRuneID == fundRuneID){
+
+                let updateValues = {
+                    fundPotencyRuneID: null,
+                    propRune1ID: null,
+                    propRune2ID: null,
+                    propRune3ID: null,
+                    propRune4ID: null
+                };
+                return InvItemRune.update(updateValues, { where: { invItemID: invItemID} })
+                .then((result) => {
+                    return;
+                });
+
+            } else {
+                return;
+            }
+
+        });
+        
     }
 
     static updateInventory(invID, equippedArmorInvItemID, equippedShieldInvItemID) {
@@ -296,7 +365,7 @@ module.exports = class CharSaving {
 
         let charUpVals = {heritageID: heritageID };
         
-        return Character.update({heritageID: heritageID }, { where: { id: charID } })
+        return Character.update(charUpVals, { where: { id: charID } })
         .then((result) => {
             return;
         });
@@ -311,10 +380,12 @@ module.exports = class CharSaving {
         .then((character) => {
             return Ancestry.findOne({ where: { id: character.ancestryID} })
             .then((oldAncestry) => {
-                return CharDataStoring.removeCharTag(charID, oldAncestry.name).then((result) => {
+                let oldAncestryName = (oldAncestry != null) ? oldAncestry.name : '';
+                return CharDataStoring.removeCharTag(charID, oldAncestryName).then((result) => {
                     return Ancestry.findOne({ where: { id: ancestryID} })
                     .then((newAncestry) => {
-                        return CharDataStoring.addCharTag(charID, newAncestry.name).then((result) => {
+                        let newAncestryName = (newAncestry != null) ? newAncestry.name : '';
+                        return CharDataStoring.addCharTag(charID, newAncestryName).then((result) => {
                             return Character.update(charUpVals, { where: { id: charID } })
                             .then((result) => {
                                 return clearDataThatContains(charID, 'Type-Ancestry')

@@ -30,6 +30,7 @@ body button:hover {
 
 html {
     scroll-behavior: smooth;
+    overflow-y: auto;
 }
 
 body a:focus,
@@ -89,34 +90,9 @@ a:hover {
     outline: none
 }
 
-/* //Reset Code */
 
-/* colors code */
-.text-bl {
-    color: #343a40;
-}
+/* Header */
 
-.text-wh {
-    color: #fff;
-}
-
-.text-li {
-    color: #f8f9fa;
-}
-
-.bg-li {
-    background: #f8f9fa;
-}
-
-.let {
-    letter-spacing: 1px;
-}
-
-.theme-color {
-    color: #080808;
-}
-
-/* header */
 .main-top {
     color: #161616;
     position: relative;
@@ -146,11 +122,6 @@ header {
 }
 .background-shield {
     background: 50% transparent url("../images/shield_background.png") no-repeat;
-    background-size: contain;
-}
-
-.background-sheet-box {
-    background: 50% transparent url("../images/stats.svg") no-repeat;
     background-size: contain;
 }
 
@@ -200,6 +171,7 @@ body::-webkit-scrollbar {
     width: 0.3em;
 }
 body::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 6px rgba(0,0,0,0);
     -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0);
     border:1px #1d1d1d solid;
 }
@@ -212,11 +184,16 @@ body::-webkit-scrollbar-thumb {
     width: 0.3em;
 }
 .use-custom-scrollbar::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 6px rgba(0,0,0,0);
     -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0);
 }
 .use-custom-scrollbar::-webkit-scrollbar-thumb {
     background-color: #181818;
     outline: 1px solid #181818;
+}
+
+.use-invisible-scrollbar::-webkit-scrollbar {
+    width: 0em;
 }
 
 /* navigation */
@@ -262,7 +239,6 @@ nav ul {
 /* Positioning the navigation items inline */
 nav ul li {
     margin: 0px;
-    display: inline-block;
     float: left;
 }
 
@@ -327,17 +303,13 @@ nav ul ul li {
     float: none;
     display: list-item;
     position: relative;
-    margin-bottom: 10px;
+    margin: 3px;
     border-radius: 4px;
     transition: 0.5s all;
     -webkit-transition: 0.5s all;
     -moz-transition: 0.5s all;
     -o-transition: 0.5s all;
     -ms-transition: 0.5s all;
-}
-
-nav ul ul li:nth-child(4) {
-    margin-bottom: 5px;
 }
 
 nav ul ul li a {
@@ -351,17 +323,6 @@ nav ul ul ul li {
     position: relative;
     top: -60px;
     left: 170px;
-}
-
-
-/* Change ' +' in order to change the Dropdown symbol */
-li>a:only-child:after {
-    content: '';
-}
-
-a.reqe-button {
-    border: 2px solid rgba(255, 255, 255, 0.35);
-    border-radius: 4px;
 }
 
 /* Media Queries
@@ -748,7 +709,7 @@ p.wstyles {
 }
 
 .cpy-right p a {
-    color: #eee;
+    color: #a7a7a7;
 }
 
 /* banners */

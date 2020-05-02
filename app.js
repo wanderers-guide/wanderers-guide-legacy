@@ -122,8 +122,36 @@ const io = socket(server);
 
 io.on('connection', function(socket){
 
-  socket.on('requestAddFundamentalRune', function(invItemID, fundRuneID){
-    CharSaving.addFundRune(invItemID,fundRuneID);
+  socket.on('requestAddPropertyRune', function(invItemID, propRuneID, propRuneSlot, invID){
+    CharSaving.addPropRune(invItemID, propRuneID, propRuneSlot).then(() => {
+      CharGathering.getInventory(invID).then((invStruct) => {
+        socket.emit('returnInvItemUpdated', invStruct);
+      });
+    });
+  });
+
+  socket.on('requestRemovePropertyRune', function(invItemID, propRuneSlot, invID){
+    CharSaving.removePropRune(invItemID, propRuneSlot).then(() => {
+      CharGathering.getInventory(invID).then((invStruct) => {
+        socket.emit('returnInvItemUpdated', invStruct);
+      });
+    });
+  });
+
+  socket.on('requestAddFundamentalRune', function(invItemID, fundRuneID, invID){
+    CharSaving.addFundRune(invItemID, fundRuneID).then(() => {
+      CharGathering.getInventory(invID).then((invStruct) => {
+        socket.emit('returnAddFundamentalRune', invItemID, invStruct);
+      });
+    });
+  });
+
+  socket.on('requestRemoveFundamentalRune', function(invItemID, fundRuneID, invID){
+    CharSaving.removeFundRune(invItemID, fundRuneID).then(() => {
+      CharGathering.getInventory(invID).then((invStruct) => {
+        socket.emit('returnInvItemUpdated', invStruct);
+      });
+    });
   });
 
   socket.on('requestUpdateInventory', function(invID, equippedArmorInvItemID, equippedShieldInvItemID){
@@ -258,11 +286,9 @@ io.on('connection', function(socket){
 
   socket.on('requestFinalizeDetails', function(charID){
     CharGathering.getCharacter(charID).then((character) => {
-      CharGathering.getAncestryLanguages(character.ancestryID).then((ancestLanguages) => {
-        CharGathering.getClass(character.classID).then((cClass) => {
-          CharGathering.getAbilityScores(charID).then((abilObject) => {
-            socket.emit('returnFinalizeDetails', abilObject, cClass, ancestLanguages);
-          });
+      CharGathering.getClass(character.classID).then((cClass) => {
+        CharGathering.getAbilityScores(charID).then((abilObject) => {
+          socket.emit('returnFinalizeDetails', character, abilObject, cClass);
         });
       });
     });
@@ -297,10 +323,10 @@ io.on('connection', function(socket){
     });
   });
 
-  socket.on('requestAncestryChange', function(charID, ancestryPacket){
-    CharSaving.saveAncestry(charID, ancestryPacket.AncestryID).then((result) => {
+  socket.on('requestAncestryChange', function(charID, ancestryID){
+    CharSaving.saveAncestry(charID, ancestryID).then((result) => {
       CharGathering.getCharChoices(charID).then((choiceStruct) => {
-        socket.emit('returnAncestryChange', choiceStruct, ancestryPacket);
+        socket.emit('returnAncestryChange', choiceStruct);
       });
     });
   });
@@ -327,7 +353,9 @@ io.on('connection', function(socket){
 
   socket.on('requestBackgroundChange', function(charID, backgroundID){
     CharSaving.saveBackground(charID, backgroundID).then((result) => {
-      socket.emit('returnBackgroundChange');
+      CharGathering.getCharChoices(charID).then((choiceStruct) => {
+        socket.emit('returnBackgroundChange', choiceStruct);
+      });
     });
   });
 
@@ -343,7 +371,9 @@ io.on('connection', function(socket){
 
   socket.on('requestClassChange', function(charID, classID){
     CharSaving.saveClass(charID, classID).then((result) => {
-      socket.emit('returnClassChange');
+      CharGathering.getCharChoices(charID).then((choiceStruct) => {
+        socket.emit('returnClassChange', choiceStruct);
+      });
     });
   });
 
@@ -376,8 +406,7 @@ io.on('connection', function(socket){
   });
 
   socket.on('requestCharacterSheetInfo', function(charID){
-    CharGathering.getCharacterInfo(charID)
-    .then((charInfo) => {
+    CharGathering.getCharacterInfo(charID).then((charInfo) => {
       socket.emit('returnCharacterSheetInfo', charInfo);
     });
   });

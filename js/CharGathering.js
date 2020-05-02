@@ -241,6 +241,7 @@ module.exports = class CharGathering {
                                 id : invItemRune.id,
                                 invItemID : invItemRune.invItemID,
                                 fundRuneID : invItemRune.fundRuneID,
+                                fundPotencyRuneID : invItemRune.fundPotencyRuneID,
                                 propRune1ID : invItemRune.propRune1ID,
                                 propRune2ID : invItemRune.propRune2ID,
                                 propRune3ID : invItemRune.propRune3ID,
@@ -299,6 +300,7 @@ module.exports = class CharGathering {
                                 tempCount++;
 
                                 if(dataVal.For == "Skill"){
+                                    dataVal.To = dataVal.To.replace(/_/g," ");
                                     if(dataVal.To == skillData.SkillName) {
                                         numUps += getUpAmt(dataVal.Prof);
                                         totalBonus += getBonus(dataVal.Prof);

@@ -1,10 +1,11 @@
 /* Copyright (C) 2019, Apeiron, all rights reserved.
-    Made by Aaron Cassar.
+    By Aaron Cassar.
 */
 
 const router = require('express').Router();
 const Item = require('../models/contentDB/Item');
 const Weapon = require('../models/contentDB/Weapon');
+const Language = require('../models/contentDB/Language');
 
 const adminAuthCheck = (req, res, next) => {
     if(req.user.isAdmin == 1){
@@ -18,6 +19,20 @@ const adminAuthCheck = (req, res, next) => {
 router.get('/panel', adminAuthCheck, (req, res) => {
 
     res.render('admin_panel', {  title: "Admin Panel - Apeiron", user: req.user });
+
+});
+
+router.get('/create/ancestry', adminAuthCheck, (req, res) => {
+
+    Language.findAll().then((languages) => {
+
+        res.render('admin_builder_ancestry', {
+            title: "Ancestry Builder - Apeiron",
+            user: req.user,
+            languages
+        });
+
+    });
 
 });
 

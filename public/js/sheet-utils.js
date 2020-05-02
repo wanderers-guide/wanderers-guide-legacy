@@ -186,7 +186,7 @@ function dieTypeToNum(dieType){
 
 function getCoinToString(price) {
 
-  if(price == 0){return "Free";}
+  if(price == 0){return "0";}
 
   let priceObj = {Value: price};
   let cStr = ""; let sStr = ""; let gStr = ""; let pStr = "";

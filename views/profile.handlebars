@@ -1,9 +1,4 @@
 
-{{#section 'header'}}
-      <!-- Profile -->
-	<link href="/css/profile.css" rel="stylesheet">
-{{/section}}
-
 {{#section 'nav_home'}}
     <li><a href="/">Home</a></li>
 {{/section}}
@@ -26,21 +21,28 @@
     <div class="banner_w3lspvt-2"></div>
 {{/section}}
 
-<div class="profile-container">
 
-    <h1>Welcome to your profile, {{user.username}}</h1>
 
-    <img src="{{user.thumbnail}}" width="50" height="50" alt="Profile Image" />
-    <p>This is your profile thumbnail</p>
-    <p>User ID: #{{user.id}}</p>
-
-    {{#ifEqual user.isMember 1}}
-        <br>
-		<p><b>Fun Fact:</b> You're a Member!</p>
-	{{/ifEqual}}
-	{{#ifEqual user.isAdmin 1}}
-        <br>
-		<p><b>SUPER Fun Fact:</b> You're an Admin!</p>
-	{{/ifEqual}}
-
+<div class="columns is-centered is-mobile mt-5">
+    <div class="column is-2">
+        <figure class="image is-128x128 is-pulled-right">
+            <img class="is-rounded" src="{{user.thumbnail}}" alt="Profile Image">
+            <p class="has-text-centered is-size-7 pt-1">ID #{{user.id}}</p>
+        </figure>
+    </div>
+    <div class="column is-4">
+        <p class="is-size-3">{{user.username}}'s Profile</p>
+        {{#ifEqual user.isDeveloper 1}}
+            <p class="is-italic is-size-6 pl-4">Developer</p>
+        {{/ifEqual}}
+        {{#ifEqual user.isAdmin 1}}
+            <p class="is-italic is-size-6 pl-4">Admin</p>
+        {{/ifEqual}}
+        {{#ifEqual user.isMember 1}}
+            <p class="is-italic is-size-6 pl-4">Patron</p>
+        {{/ifEqual}}
+        {{#ifEqual user.isMember 0}}
+            <p class="is-italic is-size-6 pl-4">Non-Patron</p>
+        {{/ifEqual}}
+    </div>
 </div>
