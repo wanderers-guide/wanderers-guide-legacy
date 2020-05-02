@@ -1062,8 +1062,12 @@ function determineBulkAndCoins(invItems, itemMap, strMod){
     let cantMove = false;
 
     if(totalBulk > weightMax) {
+        addCondition(13, null, 'Exceeding the amount of Bulk you can even hold.');
         cantMove = true;
-    } else if(totalBulk > weightEncumbered){
+    } else {
+        removeCondition(13, false);
+    }
+    if(totalBulk > weightEncumbered){
         addCondition(1, null, 'Holding more Bulk than you can carry.');
         isEncumbered = true;
     } else {
