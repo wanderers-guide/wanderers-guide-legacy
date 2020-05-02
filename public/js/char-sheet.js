@@ -1066,12 +1066,14 @@ function determineBulkAndCoins(invItems, itemMap, strMod){
         cantMove = true;
     } else {
         removeCondition(13, false);
-    }
-    if(totalBulk > weightEncumbered){
-        addCondition(1, null, 'Holding more Bulk than you can carry.');
-        isEncumbered = true;
-    } else {
-        removeCondition(1, false);
+
+        if(totalBulk > weightEncumbered){
+            addCondition(1, null, 'Holding more Bulk than you can carry.');
+            isEncumbered = true;
+        } else {
+            removeCondition(1, false);
+        }
+        
     }
 
     g_bulkAndCoinsStruct = {
