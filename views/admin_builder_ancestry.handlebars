@@ -30,7 +30,7 @@
 
 <div class="columns is-mobile is-centered mt-2 mb-3">
 
-    <div class="box column is-8">
+    <div class="box column is-4 is-marginless mr-2">
 
         <div class="field">
             <label class="label">Name</label>
@@ -90,6 +90,36 @@
         </div>
 
         <div class="field">
+            <label class="label">Languages (known by default)</label>
+            <div class="control">
+                <div class="select is-multiple">
+                    <select id="inputLangs" multiple>
+                        {{#each languages}}
+                            <option value="{{id}}">{{name}}</option>
+                        {{/each}}
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="field">
+            <label class="label">Bonus Languages</label>
+            <div class="control">
+                <div class="select is-multiple">
+                    <select id="inputLangs" multiple>
+                        {{#each languages}}
+                            <option value="{{id}}">{{name}}</option>
+                        {{/each}}
+                    </select>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="box column is-4 is-marginless ml-2">
+
+        <div class="field">
             <label class="label">Boosts</label>
             <div class="control">
                 <div class="select is-multiple">
@@ -123,37 +153,12 @@
             </div>
         </div>
 
-        <div class="field">
-            <label class="label">Languages (known by default)</label>
-            <div class="control">
-                <div class="select is-multiple">
-                    <select id="inputLangs" multiple>
-                        {{#each languages}}
-                            <option value="{{id}}">{{name}}</option>
-                        {{/each}}
-                    </select>
-                </div>
-            </div>
-        </div>
-
-        <div class="field">
-            <label class="label">Bonus Languages</label>
-            <div class="control">
-                <div class="select is-multiple">
-                    <select id="inputLangs" multiple>
-                        {{#each languages}}
-                            <option value="{{id}}">{{name}}</option>
-                        {{/each}}
-                    </select>
-                </div>
-            </div>
-        </div>
-
-        <div class="field is-grouped">
-            <div class="control">
-                <button class="button is-link">Create</button>
-            </div>
-        </div>
     </div>
 
+</div>
+
+<div class="field is-grouped is-grouped-centered pb-2">
+    <div class="control">
+        <button class="button is-link">Create</button>
+    </div>
 </div>

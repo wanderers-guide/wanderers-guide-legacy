@@ -86,8 +86,13 @@
     color: hsl(0, 0%, 73%);
 }
 
-.message, .card {
+.message {
     background-color: hsl(0, 0%, 25%);
+    border-color: #282828;
+}
+
+.card {
+    background-color: hsl(0, 0%, 28%);
     border-color: #282828;
 }
 
