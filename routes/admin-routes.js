@@ -6,32 +6,40 @@ const router = require('express').Router();
 const Item = require('../models/contentDB/Item');
 const Weapon = require('../models/contentDB/Weapon');
 const Language = require('../models/contentDB/Language');
+const Tag = require('../models/contentDB/Tag');
 
 const adminAuthCheck = (req, res, next) => {
     if(req.user.isAdmin == 1){
         next();
     } else {
         res.status(404);
-        res.render('404_error', { user: req.user });
+        res.render('error/404_error', { user: req.user });
     }
 };
 
 router.get('/panel', adminAuthCheck, (req, res) => {
 
-    res.render('admin_panel', {  title: "Admin Panel - Apeiron", user: req.user });
+    res.render('admin/admin_panel', {  title: "Admin Panel - Apeiron", user: req.user });
 
 });
 
 router.get('/create/ancestry', adminAuthCheck, (req, res) => {
 
-    Language.findAll().then((languages) => {
+    Language.findAll({
+        order: [['name', 'ASC'],]
+    }).then((languages) => {
+        Tag.findAll({
+            order: [['name', 'ASC'],]
+        }).then((tags) => {
 
-        res.render('admin_builder_ancestry', {
-            title: "Ancestry Builder - Apeiron",
-            user: req.user,
-            languages
+            res.render('admin/admin_builder/builder_ancestry', {
+                title: "Ancestry Builder - Apeiron",
+                user: req.user,
+                languages,
+                tags
+            });
+
         });
-
     });
 
 });
@@ -41,7 +49,7 @@ router.get('/create/item/general', adminAuthCheck, (req, res) => {
     let itemHandsTypes = Item.rawAttributes.hands.values;
     let itemTypes = Item.rawAttributes.itemType.values;
 
-    res.render('admin_item_general_builder', {
+    res.render('admin/admin_builder/item_general_builder', {
         title: "Item General Builder - Apeiron",
         user: req.user, itemHandsTypes, itemTypes, 'selectedState': ''
     });
@@ -79,7 +87,7 @@ router.get('/create/item/weapon', adminAuthCheck, (req, res) => {
         let meleeWeaponTypes = Weapon.rawAttributes.meleeWeaponType.values;
         let rangedWeaponTypes = Weapon.rawAttributes.rangedWeaponType.values;
 
-        res.render('admin_item_weapon_builder', {
+        res.render('admin/admin_builder/item_weapon_builder', {
             title: "Item Weapon Builder - Apeiron",
             user: req.user, weaponHandsTypes, weaponProperties, dieTypes, damageTypes, damageSubTypes, meleeWeaponTypes, rangedWeaponTypes, 'selectedState': ''
         });

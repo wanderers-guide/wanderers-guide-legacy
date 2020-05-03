@@ -46,7 +46,7 @@ router.get('/', (req, res) => {
 
                 }
 
-                res.render('character_list', {
+                res.render('pages/character_list', {
                     title: "Your Characters - Apeiron",
                     user: req.user,
                     characters,
@@ -59,7 +59,7 @@ router.get('/', (req, res) => {
     }).catch((error) => {
         console.error(error);
         res.status(500);
-        res.render('500_error', { title: "500 Server Error - Apeiron", user: req.user });
+        res.render('error/500_error', { title: "500 Server Error - Apeiron", user: req.user });
     });
 
 });
@@ -93,7 +93,7 @@ router.get('/add', (req, res) => {
         } else {
             // Cannot make another character, goto 404 not found
             res.status(404);
-            res.render('404_error', { title: "404 Not Found - Apeiron", user: req.user });
+            res.render('error/404_error', { title: "404 Not Found - Apeiron", user: req.user });
         }
 
     });

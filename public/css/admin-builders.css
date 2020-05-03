@@ -28,6 +28,17 @@
     border-color: #3273dc!important;
 }
 
+.card {
+    background-color: hsl(0, 0%, 28%);
+    border-color: #282828;
+}
+
+.card-header {
+    background-color: hsl(0, 0%, 21%);
+    border-color: hsl(0, 0%, 13%);
+    color: hsl(0, 0%, 73%);
+}
+
 .input::-webkit-input-placeholder, .select select::-webkit-input-placeholder, .textarea::-webkit-input-placeholder{
     color:rgba(219,219,219,.4);
 }

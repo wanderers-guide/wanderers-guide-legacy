@@ -308,7 +308,7 @@ function displayCurrentClass(classStruct, saving) {
         setTimeout(function() { 
             socket.emit("requestProficiencyChange",
                 getCharIDFromURL(),
-                {srcID : 'Type-Class_Level-1_Code-None', isSkill : true},
+                {srcID : 'Type-Class_Level-1_Code-None', isSkill : false},
                 savingProfArray);
          }, 3000);
     }

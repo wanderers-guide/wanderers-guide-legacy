@@ -114,6 +114,7 @@ function loadCharSheet(){
     addStat('SCORE_CHA', 'BASE', g_abilMap.get("CHA"));
 
     let fortData = g_profMap.get("Fortitude");
+    console.log(g_profMap);
     addStat('SAVE_FORT', 'PROF_BONUS', fortData.NumUps);
     addStat('SAVE_FORT', 'USER_BONUS', fortData.Bonus);
     addStat('SAVE_FORT', 'MODIFIER', 'CON');
