@@ -3,9 +3,6 @@ require('dotenv').config();
 const express = require('express');
 const socket = require('socket.io');
 
-const redis = require('redis');
-const expressSession = require('express-session');
-
 const exphbs = require('express-handlebars');
 const bodyParser = require('body-parser');
 
@@ -74,16 +71,6 @@ app.use(cookieSession({
     keys: [keys.session.cookieKey]
 }));
 
-// Setup RedisStore thru ExpressSession
-let redisStore = require('connect-redis')(expressSession);
-let redisClient = redis.createClient();
-var sessionMiddleware = expressSession({
-  store: new redisStore({ client: redisClient }),
-  secret: keys.session.expressSecret,
-  resave: false,
-});
-app.use(sessionMiddleware);
-
 // Initialize Passport
 app.use(passport.initialize());
 app.use(passport.session());
@@ -134,14 +121,7 @@ if (process.env.PRODUCTION == 'true'){
 // Socket IO
 const io = socket(server);
 
-io.use((socket, next) => {
-  sessionMiddleware(socket.request, {}, next);
-});
-
 io.on('connection', function(socket){
-
-  console.log("Socket IO Connection");
-  console.log(socket.request.session);
 
   socket.on('requestAddPropertyRune', function(invItemID, propRuneID, propRuneSlot, invID){
     CharSaving.addPropRune(invItemID, propRuneID, propRuneSlot).then(() => {
@@ -185,8 +165,6 @@ io.on('connection', function(socket){
     CharSaving.addItemToInv(invID, itemID, quantity).then(() => {
       CharGathering.getInventory(invID).then((invStruct) => {
         socket.emit('returnAddItemToInv', itemID, invStruct);
-        console.log("Socket IO Connection");
-        console.log(socket.request.session);
       });
     });
   });
@@ -509,6 +487,8 @@ io.on('connection', function(socket){
   /* Admin Builder Packets */
 
   socket.on('requestAdminAddAncestry', function(){
+
+    
 
     socket.emit('returnAdminAddAncestry');
   });
