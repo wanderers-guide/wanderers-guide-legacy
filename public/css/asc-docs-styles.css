@@ -1,0 +1,18 @@
+
+p {
+    color: hsl(0, 0%, 71%);
+    font-size: 1rem;
+    text-align: justify;
+}
+
+strong {
+    color: hsl(0, 0%, 76%);
+    font-weight: 800;
+}
+
+.code-block {
+    padding: 0.8rem;
+    background-color: #272729;
+    font-family: 'Nanum Gothic Coding', monospace;
+    color: hsl(0, 0%, 71%);
+}

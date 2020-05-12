@@ -25,6 +25,7 @@ let g_equippedShieldInvItemID = null;
 let g_abilMap = null;
 let g_skillMap = null;
 let g_langMap = null;
+let g_senseMap = null;
 
 let g_featMap = null;
 let g_featChoiceMap = null;
@@ -63,6 +64,7 @@ socket.on("returnCharacterSheetInfo", function(charInfo){
     g_abilMap = objToMap(charInfo.AbilObject);
     g_skillMap = objToMap(charInfo.SkillObject);
     g_langMap = objToMap(charInfo.ChoicesStruct.LangObject);
+    g_senseMap = objToMap(charInfo.ChoicesStruct.SenseObject);
 
     g_profMap = objToMap(charInfo.ProfObject);
     g_weaponProfMap = objToMap(charInfo.WeaponProfObject);
@@ -438,6 +440,24 @@ function displayInformation() {
     ///////////////////////////////////////// Perception ///////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////
     
+    let visionSenseArray = [];
+    let additionalSenseArray = [];
+    let primaryVisionSense = null;
+    for(const [srcID, senseArray] of g_senseMap.entries()){
+        for(let sense of senseArray){
+            if(sense.isVisionType == 0){
+                additionalSenseArray.push(sense);
+            } else {
+                visionSenseArray.push(sense);
+                if(primaryVisionSense == null || sense.visionPrecedence > primaryVisionSense.visionPrecedence) {
+                    primaryVisionSense = sense;
+                }
+            }
+        }
+    }
+
+    $("#perceptionPrimaryVisionSense").html(primaryVisionSense.name);
+
     let perceptionBonusContent = $("#perceptionBonusContent");
     let perceptionBonus = getStatTotal('PERCEPTION');
     let perceptionBonusDisplayed = (hasConditionals('PERCEPTION')) 
@@ -452,7 +472,10 @@ function displayInformation() {
             ProfNum : perceptionProfNum,
             WisMod : getMod(g_abilMap.get("WIS")),
             TotalBonus : perceptionBonus,
-            CharLevel : g_character.level
+            CharLevel : g_character.level,
+            PrimaryVisionSense : primaryVisionSense,
+            VisionSenseArray : visionSenseArray,
+            AdditionalSenseArray : additionalSenseArray
         });
     });
 
@@ -498,7 +521,7 @@ function displayInformation() {
 
         let conditionalStar = (hasConditionals('SKILL_'+skillName)) ? '<sup class="is-size-7 has-text-info">*</sup>' : '';
 
-        skills.append('<a id="'+skillButtonID+'" class="panel-block skillButton border-dark"><span class="panel-icon has-text-grey-lighter">'+signNumber(totalBonus)+conditionalStar+'</span><span class="pl-3 has-text-grey-light">'+skillName+'</span></a>');
+        skills.append('<a id="'+skillButtonID+'" class="panel-block skillButton border-dark-lighter"><span class="panel-icon has-text-grey-lighter">'+signNumber(totalBonus)+conditionalStar+'</span><span class="pl-3 has-text-grey-light">'+skillName+'</span></a>');
 
         $('#'+skillButtonID).click(function(){
             openQuickView('skillView', {

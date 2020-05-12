@@ -22,6 +22,12 @@ const CharData = db.define('charDatas', {
   },
   dataLoreCategories: {
     type: Sequelize.TEXT
+  },
+  dataSpellLists: {
+    type: Sequelize.TEXT
+  },
+  dataSenses: {
+    type: Sequelize.TEXT
   }
 });
 

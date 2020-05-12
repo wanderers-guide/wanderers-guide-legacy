@@ -2,7 +2,9 @@
 let socket = io();
 
 let choiceStruct = null;
+
 let g_ancestry = null;
+let g_ancestryForHeritage = null;
 
 // ~~~~~~~~~~~~~~ // General - Run On Load // ~~~~~~~~~~~~~~ //
 $(function () {
@@ -47,8 +49,26 @@ socket.on("returnAncestryAndChoices", function(ancestryObject, inChoiceStruct){
     choiceStruct = inChoiceStruct;
     let ancestryMap = objToMap(ancestryObject);
 
+    // Populate Ancestry Selector
+    let selectAncestry = $('#selectAncestry');
+    selectAncestry.append('<option value="chooseDefault" name="chooseDefault">Choose an Ancestry</option>');
+    selectAncestry.append('<hr class="dropdown-divider"></hr>');
+    for(const [key, value] of ancestryMap.entries()){
+        let currentAncestryID = $('#selectAncestry').attr('name');
+        if(value.Ancestry.id == currentAncestryID){
+            if(value.Ancestry.isArchived == 0){
+                selectAncestry.append('<option value="'+value.Ancestry.id+'" selected>'+value.Ancestry.name+'</option>');
+            } else {
+                selectAncestry.append('<option value="'+value.Ancestry.id+'" selected>'+value.Ancestry.name+' (archived)</option>');
+            }
+        } else if(value.Ancestry.isArchived == 0){
+            selectAncestry.append('<option value="'+value.Ancestry.id+'">'+value.Ancestry.name+'</option>');
+        }
+    }
+    
+
     // Ancestry Selection //
-    $('#selectAncestry').change(function(event, triggerSave) {
+    selectAncestry.change(function(event, triggerSave) {
         let ancestryID = $("#selectAncestry option:selected").val();
         if(ancestryID != "chooseDefault"){
             $('.ancestry-content').removeClass("is-hidden");
@@ -70,9 +90,6 @@ socket.on("returnAncestryAndChoices", function(ancestryObject, inChoiceStruct){
         } else {
             $('.ancestry-content').addClass("is-hidden");
 
-            // Turn off page loading
-            $('.pageloader').addClass("fadeout");
-
             // Delete ancestry, set to null
             g_ancestry = null;
             socket.emit("requestAncestryChange",
@@ -86,8 +103,6 @@ socket.on("returnAncestryAndChoices", function(ancestryObject, inChoiceStruct){
     $('#selectHeritage').change(function(event, triggerSave) {
         let heritageID = $(this).val();
         let ancestryID = $("#selectAncestry option:selected").val();
-        
-        displayCurrentHeritage(ancestryMap.get(ancestryID), heritageID);
 
         if(ancestryID != "chooseDefault" && heritageID != "chooseDefault"){
 
@@ -95,15 +110,22 @@ socket.on("returnAncestryAndChoices", function(ancestryObject, inChoiceStruct){
             if(triggerSave == null || triggerSave) {
                 $('#selectHeritageControlShell').addClass("is-loading");
     
+                g_ancestryForHeritage = ancestryMap.get(ancestryID);
                 socket.emit("requestHeritageChange",
                     getCharIDFromURL(),
                     heritageID);
+                
+            } else {
+                displayCurrentHeritage(ancestryMap.get(ancestryID), heritageID);
             }
 
         } else {
+
+            g_ancestryForHeritage = null;
             socket.emit("requestHeritageChange",
                     getCharIDFromURL(),
                     null);
+            
         }
 
     });
@@ -124,12 +146,17 @@ socket.on("returnAncestryChange", function(inChoiceStruct){
     if(g_ancestry != null){
         displayCurrentAncestry(g_ancestry, true);
         activateHideSelects();
+    } else {
+        finishLoadingPage();
     }
 
 });
 
-socket.on("returnHeritageChange", function(){
+socket.on("returnHeritageChange", function(heritageID){
     $('#selectHeritageControlShell').removeClass("is-loading");
+
+    displayCurrentHeritage(g_ancestryForHeritage, heritageID);
+
 });
 
 
@@ -140,9 +167,17 @@ function displayCurrentAncestry(ancestryStruct, saving) {
     let charHeritage = choiceStruct.Heritage;
     let bonusChoiceMap = objToMap(choiceStruct.BonusObject);
 
+
+    if(ancestryStruct.Ancestry.isArchived == 1){
+        $('#isArchivedMessage').removeClass('is-hidden');
+    } else {
+        $('#isArchivedMessage').addClass('is-hidden');
+    }
+
+
     let ancestryDescription = $('#ancestryDescription');
 
-    ancestryDescription.html('<p>'+ancestryStruct.Ancestry.description+'</p>');
+    ancestryDescription.html(processText(ancestryStruct.Ancestry.description, false));
 
 
 
@@ -182,6 +217,31 @@ function displayCurrentAncestry(ancestryStruct, saving) {
             'Type-Ancestry_Level-1_Code-None',
             langIDArray);
     }
+
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Senses ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
+    let ancestrySenses = $('#ancestrySenses');
+    ancestrySenses.html('');
+    let senseIDArray = [];
+    if(ancestryStruct.VisionSense != null){
+        ancestrySenses.append('<a class="has-text-info has-tooltip-bottom has-tooltip-multiline" data-tooltip="'+ancestryStruct.VisionSense.description+'">'+ancestryStruct.VisionSense.name+'</a>');
+        senseIDArray.push(ancestryStruct.VisionSense.id);
+        if(ancestryStruct.AdditionalSense != null){
+            ancestrySenses.append(' and ');
+        }
+    }
+    if(ancestryStruct.AdditionalSense != null){
+        ancestrySenses.append('<a class="has-text-info has-tooltip-bottom has-tooltip-multiline" data-tooltip="'+ancestryStruct.AdditionalSense.description+'">'+ancestryStruct.AdditionalSense.name+'</a>');
+        senseIDArray.push(ancestryStruct.AdditionalSense.id);
+    }
+
+    if(saving){
+        socket.emit("requestSensesChange",
+            getCharIDFromURL(),
+            'Type-Ancestry_Level-1_Code-None',
+            senseIDArray);
+    }
+
+
 
     clearAbilityBoostsAndFlaws();
     let abilBonusArray = [];
@@ -307,30 +367,32 @@ function displayCurrentAncestry(ancestryStruct, saving) {
     // Display current heritage
     $('#selectHeritage').trigger("change", [false]);
 
-    // Turn off page loading
-    $('.pageloader').addClass("fadeout");
-
 }
-
-
 
 function displayCurrentHeritage(ancestryStruct, heritageID) {
 
-    if(heritageID != "chooseDefault"){
+    if(heritageID != "chooseDefault" && ancestryStruct != null){
         
         let heritage = ancestryStruct.Heritages.find(heritage => {
             return heritage.id == heritageID;
         });
     
         let heritageDescription = $('#heritageDescription');
-        heritageDescription.html('<p>'+heritage.description+'</p>');
+        heritageDescription.html(processText(heritage.description, false));
         heritageDescription.removeClass('is-hidden');
+
+        $('#heritageCodeOutput').html('');
+        processCode(
+            heritage.code,
+            'Type-Ancestry_Level-1_Code-OtherHeritage',
+            'heritageCodeOutput');
 
     } else {
 
         let heritageDescription = $('#heritageDescription');
         heritageDescription.html('');
         heritageDescription.addClass('is-hidden');
+        $('#heritageCodeOutput').html('');
 
     }
 
@@ -449,4 +511,10 @@ function buildFeatStruct(featLevel) {
 socket.on("returnAbilityBonusChange", function(){
     $('.abilityBoostControlShell').removeClass("is-loading");
 });
+
+
+function finishLoadingPage() {
+    // Turn off page loading
+    $('.pageloader').addClass("fadeout");
+}
 

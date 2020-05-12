@@ -1,0 +1,19 @@
+const Sequelize = require('sequelize');
+const db = require('../../config/databases/background-database');
+
+const HomeBackReport = db.define('homeBackReports', {
+  userID: {
+    type: Sequelize.INTEGER
+  },
+  backgroundID: {
+    type: Sequelize.INTEGER
+  },
+  email: {
+    type: Sequelize.STRING
+  },
+  message: {
+    type: Sequelize.STRING
+  }
+});
+
+module.exports = HomeBackReport;

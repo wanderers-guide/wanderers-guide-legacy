@@ -1,3 +1,6 @@
+
+let activeModalCharID = -1;
+
 // ~~~~~~~~~~~~~~ // Run on Load // ~~~~~~~~~~~~~~ //
 $(function () {
 
@@ -38,20 +41,25 @@ $(function () {
         cardDelete.click(function() {
             $('.modal').addClass('is-active');
             $('html').addClass('is-clipped');
+            activeModalCharID = characterID;
         });
 
         $('.modal-card-close').click(function() {
             $('.modal').removeClass('is-active');
             $('html').removeClass('is-clipped');
+            activeModalCharID = -1;
         });
         $('.modal-background').click(function() {
             $('.modal').removeClass('is-active');
             $('html').removeClass('is-clipped');
+            activeModalCharID = -1;
         });
-        $('#delete-confirmation-btn').click(function() {
-            window.location.href = '/profile/characters/delete/'+characterID;
-        });
-
+        
     }
+
+    $('#delete-confirmation-btn').click(function() {
+        window.location.href = '/profile/characters/delete/'+activeModalCharID;
+    });
+
 
 }); 

@@ -70,9 +70,6 @@ socket.on("returnBackgroundDetails", function(backgrounds, inChoiceStruct){
         } else {
             $('.background-content').addClass("is-hidden");
 
-            // Turn off page loading
-            $('.pageloader').addClass("fadeout");
-
             // Delete background, set to null
             g_background = null;
             socket.emit("requestBackgroundChange",
@@ -97,6 +94,8 @@ socket.on("returnBackgroundChange", function(choiceStruct){
     if(g_background != null){
         injectASCChoiceStruct(choiceStruct);
         displayCurrentBackground(g_background);
+    } else {
+        finishLoadingPage();
     }
     
 });
@@ -108,23 +107,23 @@ function displayCurrentBackground(background) {
     let backgroundDescription = $('#backgroundDescription');
     backgroundDescription.html('<p>'+background.description+'</p>');
 
-    // Boosts //
-    $('#backBoostSection').html('');
-    console.log("SETTING BOOSTS TO:"+background.boostOne+" "+background.boostTwo);
-    processCode(
-        'GIVE-ABILITY-BOOST-SINGLE='+background.boostOne+', GIVE-ABILITY-BOOST-SINGLE='+background.boostTwo,
-        'Type-Background_Level-1_Code-OtherAbilityBoost',
-        'backBoostSection');
-
-
-    // Code //
+    // Code - Run General Code before Boosts Code, it's more likely to be delaying //
     $('#backgroundCodeOutput').html('');
     processCode(
         background.code,
         'Type-Background_Level-1_Code-None',
         'backgroundCodeOutput');
 
+    // Boosts //
+    $('#backBoostSection').html('');
+    processCode(
+        'GIVE-ABILITY-BOOST-SINGLE='+background.boostOne+', GIVE-ABILITY-BOOST-SINGLE='+background.boostTwo,
+        'Type-Background_Level-1_Code-OtherAbilityBoost',
+        'backBoostSection');
+
+}
+
+function finishLoadingPage() {
     // Turn off page loading
     $('.pageloader').addClass("fadeout");
-
 }

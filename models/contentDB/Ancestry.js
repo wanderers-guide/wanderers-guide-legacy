@@ -18,8 +18,20 @@ const Ancestry = db.define('ancestries', {
   description: {
     type: Sequelize.TEXT
   },
-  visionTypeID: {
+  visionSenseID: {
     type: Sequelize.INTEGER
+  },
+  additionalSenseID: {
+    type: Sequelize.INTEGER
+  },
+  tagID: {
+    type: Sequelize.INTEGER
+  },
+  isArchived: {
+    type: Sequelize.INTEGER
+  },
+  version: {
+    type: Sequelize.STRING
   }
 });
 

@@ -6,8 +6,6 @@ const Sequelize = require('sequelize');
 router.get('/', (req, res) => {
     // Get single random background
     // Test Singles: where: { id: 60 }
-    
-    console.log(req.session);
 
     Background.findOne({ order: [ [ Sequelize.fn('RAND') ] ] }).then((background) => {
         res.render('pages/home', { title: "Apeiron - Pathfinder 2e Character Manager", user: req.user, background });
@@ -27,6 +25,11 @@ router.get('/upgrade', (req, res) => {
 // create license route
 router.get('/license', (req, res) => {
     res.render('pages/license', { title: "License - Apeiron", user: req.user });
+});
+
+// create license route
+router.get('/asc_docs', (req, res) => {
+    res.render('pages/asc_docs', { title: "ASC Docs - Apeiron", user: req.user });
 });
 
 module.exports = router;

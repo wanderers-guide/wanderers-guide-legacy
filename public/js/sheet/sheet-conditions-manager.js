@@ -265,7 +265,7 @@ function openConditionsModal(conditionID){
     }
 
     $('#conditionsModalTitle').html(conditionData.Condition.name);
-    $('#conditionsModalContent').html(processSheetText(conditionData.Condition.description));
+    $('#conditionsModalContent').html(processText(conditionData.Condition.description, true));
 
 
     $('#conditionsModalDefault').addClass('is-active');

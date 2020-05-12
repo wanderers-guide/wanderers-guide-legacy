@@ -3,7 +3,7 @@ const passport = require('passport');
 
 // auth login
 router.get('/login', (req, res) => {
-    res.render('pages/login', { user: req.user });
+    res.render('pages/login', { title: "Login - Apeiron", user: req.user });
 });
 
 // auth logout

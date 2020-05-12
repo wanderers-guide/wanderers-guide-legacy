@@ -1,13 +1,10 @@
 const Character = require('../models/contentDB/Character');
 const CharData = require('../models/contentDB/CharData');
 
-const Language = require('../models/contentDB/Language');
-const Feat = require('../models/contentDB/Feat');
-
 function mapToObj(strMap) {
     let obj = Object.create(null);
     for (let [k,v] of strMap) {
-      // We don’t escape the key '__proto__'
+      // Doesn't escape the key '__proto__'
       // which can cause problems on older engines
       obj[k] = v;
     }
@@ -20,74 +17,51 @@ module.exports = class CharDataStoring {
         return "GET_ALL";
     }
 
+    static getBasicDataNames(){
+        return ['dataLoreCategories','dataSpellLists','dataSenses','dataChosenFeats','dataLanguages'];
+    }
+    static getAllDataNames(){
+        let allDataNames = CharDataStoring.getBasicDataNames();
+        allDataNames.push('dataAbilityBonus','dataAbilityChoices','dataProficiencies');
+        return allDataNames;
+    }
+
     /*
     
-    charTags: "Human,Half-Elf,Elf"
-
-            
     SrcID: 'Type-(Class/Ancestry/Background/Other)_Level-#_Code-(Feat#/Ability#/Other#/None)'
 
+    --- Basic Datas ---
+    dataLoreCategories: "SrcID:Sailing,SrcID:Underwater Golfing,SrcID:Clubbing"
 
+    dataSpellLists: "SrcID:Primal,SrcID:Occult,SrcID:Divine,SrcID:Arcane,SrcID:34"
+
+    dataSenses: "SrcID:1,SrcID:0,SrcID:3,SrcID:4"
+
+    dataChosenFeats: "SrcID:1,SrcID:0,SrcID:3,SrcID:4"
+
+    dataLanguages: "SrcID:1,SrcID:0,SrcID:3,SrcID:4"
+
+    --- Special Datas ---
     dataAbilityBonus: "SrcID:DEX=5,SrcID:CHA=Boost,SrcID:WIS=Flaw" (ability=Bonus)
 
-    dataLanguages: (lang ID split by ',') "SrcID:1,SrcID:0,SrcID:3,SrcID:4"
+    dataAbilityChoices: "SrcID:3=6,SrcID:7=11" (selectorAbility=selectOptionAbility)
 
     dataProficiencies: "SrcID:Diplomacy=Up,SrcID:Society=4,SrcID:Skill~Diplomacy=2,SrcID:Skill~Perception=Up,
             SrcID:Skill~Sailing_Lore=Up,SrcID:Defense~Light_Armor=Up"
 
-    dataChosenFeats: (feat ID split by ',') "SrcID:1,SrcID:0,SrcID:3,SrcID:4"
-
-    dataAbilityChoices: "SrcID:3=6,SrcID:7=11" (selectorAbility=selectOptionAbility)
-
-    dataLoreCategories: "SrcID:Sailing,SrcID:Underwater Golfing,SrcID:Clubbing"
+    --- Char Tags ---
+    charTags: "Human,Half-Elf,Elf"
 
 
     */
 
-    // Lore Categories //
-
-    static addLore(charID, id, loreArray) {
-
+    // Basic Data //
+    static getBasicData(charID, srcID, dataName, dataModelForMap){
         return Character.findOne({ where: { id: charID} })
         .then((character) => {
-
             return CharData.findOne({ where: { id: character.dataID} })
             .then((charData) => {
-
-                let attrib = charData['dataLoreCategories'];
-
-                let arrayStr = attrib;
-                for(const lore of loreArray) {
-                    if(arrayStr == null || arrayStr == '') {
-                        arrayStr = id+":"+lore;
-                    } else {
-                        arrayStr = arrayStr+","+id+":"+lore;
-                    }
-                }
-
-                let dataUpVals = new Object;
-                dataUpVals['dataLoreCategories'] = arrayStr;
-
-                return CharData.update(dataUpVals, { where: { id: character.dataID } })
-                .then((result) => {
-                    return;
-                });
-
-            });
-
-        });
-
-    }
-
-    static getLore(charID, id) {
-
-        return Character.findOne({ where: { id: charID} })
-        .then((character) => {
-
-            return CharData.findOne({ where: { id: character.dataID} })
-            .then((charData) => {
-
-                let attrib = charData['dataLoreCategories'];
+                let attrib = charData[dataName];
 
                 if(attrib == null || attrib == '') {
                     return new Map();
@@ -95,111 +69,120 @@ module.exports = class CharDataStoring {
 
                 let sections = attrib.split(",");
 
-                let loreMap = new Map();
+                let dataMap = new Map();
 
                 for(const section of sections){
                     let subsec = section.split(":");
                     let dataSrc = subsec[0];
                     let data = subsec[1];
 
-                    if(id === "GET_ALL" || dataSrc === id){
-                        if(loreMap.has(dataSrc)){
-                            let dataArray = loreMap.get(dataSrc);
+                    if(srcID === "GET_ALL" || srcID === dataSrc){
+                        if(dataMap.has(dataSrc)){
+                            let dataArray = dataMap.get(dataSrc);
                             dataArray.push(data);
-                            loreMap.set(dataSrc, dataArray);
+                            dataMap.set(dataSrc, dataArray);
                         } else {
                             let dataArray = [];
                             dataArray.push(data);
-                            loreMap.set(dataSrc, dataArray);
+                            dataMap.set(dataSrc, dataArray);
                         }
                     }
 
                 }
 
-                return loreMap;
+                if(dataModelForMap != null) {
+                    // Find all dataModels from Data Array
+                    return dataModelForMap.findAll()
+                    .then((dataModelsArray) => {
+                        let modelMap = new Map();
+                        for(const [dataSrc, dataArray] of dataMap.entries()){
+                            for(const dataID of dataArray){
+                                let dataModel = dataModelsArray.find(dataModel => {
+                                    return dataModel.id == dataID;
+                                });
+                                if(modelMap.has(dataSrc)){
+                                    let modelDataArray = modelMap.get(dataSrc);
+                                    modelDataArray.push(dataModel);
+                                    modelMap.set(dataSrc, modelDataArray);
+                                } else {
+                                    let modelDataArray = [];
+                                    modelDataArray.push(dataModel);
+                                    modelMap.set(dataSrc, modelDataArray);
+                                }
+                            }
+                        }
+                        return mapToObj(modelMap);
+                    });
+                } else {
+                    return mapToObj(dataMap);
+                }
 
             });
 
         });
-
     }
 
-    static replaceLore(charID, id, loreArray) {
-
+    static replaceBasicData(charID, srcID, dataArray, dataName) {
         return Character.findOne({ where: { id: charID} })
         .then((character) => {
-
             return CharData.findOne({ where: { id: character.dataID} })
             .then((charData) => {
-
-                let attrib = charData['dataLoreCategories'];
+                let attrib = charData[dataName];
 
                 let arrayStr = "";
                 if(attrib != null){
-
                     let sections = attrib.split(",");
-
                     for(const section of sections){
                         let subsec = section.split(":");
                         let dataSrc = subsec[0];
     
-                        if(dataSrc != id){
+                        if(dataSrc != srcID){
                             if(arrayStr === "") {
                                 arrayStr = section;
                             } else {
-                                arrayStr = arrayStr+","+section;
+                                arrayStr += ","+section;
                             }
                         }
-    
                     }
-
                 }
 
-                for(const lore of loreArray) {
-                    if(lore != null){
+                for(const data of dataArray) {
+                    if(data != null){
                         if(arrayStr === "") {
-                            arrayStr = id+":"+lore;
+                            arrayStr = srcID+":"+data;
                         } else {
-                            arrayStr = arrayStr+","+id+":"+lore;
+                            arrayStr += ","+srcID+":"+data;
                         }
                     }
                 }
 
-                let dataUpVals = new Object;
-                dataUpVals['dataLoreCategories'] = arrayStr;
+                let dataUpVals = {};
+                dataUpVals[dataName] = arrayStr;
 
                 return CharData.update(dataUpVals, { where: { id: character.dataID } })
                 .then((result) => {
                     return;
                 });
-
             });
-
         });
-
     }
 
-    static deleteLore(charID, id, contains) {
-        // contains is true/false on whether the delete any records in which the id is present
+    static deleteBasicData(charID, srcID, contains, dataName) {
+        // contains is true/false on whether the delete any records in which the srcID is present
        return Character.findOne({ where: { id: charID} })
        .then((character) => {
-
            return CharData.findOne({ where: { id: character.dataID} })
            .then((charData) => {
-
-               let attrib = charData['dataLoreCategories'];
+               let attrib = charData[dataName];
 
                let arrayStr = "";
                if(attrib != null){
-
                    let sections = attrib.split(",");
-
                    for(const section of sections){
                        let subsec = section.split(":");
                        let dataSrc = subsec[0];
-   
                        if(contains) {
-                           if(!dataSrc.includes(id)){
+                           if(!dataSrc.includes(srcID)){
                                if(arrayStr === "") {
                                    arrayStr = section;
                                } else {
@@ -207,7 +190,7 @@ module.exports = class CharDataStoring {
                                }
                            }
                        } else {
-                           if(dataSrc != id){
+                           if(dataSrc != srcID){
                                if(arrayStr === "") {
                                    arrayStr = section;
                                } else {
@@ -215,59 +198,22 @@ module.exports = class CharDataStoring {
                                }
                            }
                        }
-   
                    }
-
                }
 
-               let dataUpVals = new Object;
-               dataUpVals['dataLoreCategories'] = arrayStr;
+               let dataUpVals = {};
+               dataUpVals[dataName] = arrayStr;
 
                return CharData.update(dataUpVals, { where: { id: character.dataID } })
                .then((result) => {
                    return;
                });
-
            });
-
        });
-
     }
+
 
     // Proficiencies // Struct = { For : "Skill", To : "Light_Armor", Prof : "5"}
-
-    static addProficiencies(charID, id, proficiencyArray) {
-
-        return Character.findOne({ where: { id: charID} })
-        .then((character) => {
-
-            return CharData.findOne({ where: { id: character.dataID} })
-            .then((charData) => {
-
-                let attrib = charData['dataProficiencies'];
-                
-                let arrayStr = attrib;
-                for(const proficiency of proficiencyArray) {
-                    if(arrayStr == null || arrayStr == '') {
-                        arrayStr = id+":"+proficiency.For+"~"+proficiency.To+"="+proficiency.Prof;
-                    } else {
-                        arrayStr = arrayStr+","+id+":"+proficiency.For+"~"+proficiency.To+"="+proficiency.Prof;
-                    }
-                }
-
-                let dataUpVals = new Object;
-                dataUpVals['dataProficiencies'] = arrayStr;
-
-                return CharData.update(dataUpVals, { where: { id: character.dataID } })
-                .then((result) => {
-                    return;
-                });
-
-            });
-
-        });
-
-    }
 
     static replaceProficiencies(charID, id, proficiencyArray) {
 
@@ -277,7 +223,7 @@ module.exports = class CharDataStoring {
             return CharData.findOne({ where: { id: character.dataID} })
             .then((charData) => {
 
-                let attrib = charData['dataProficiencies'];
+                let attrib = charData.dataProficiencies;
 
                 let arrayStr = "";
                 if(attrib != null){
@@ -300,18 +246,21 @@ module.exports = class CharDataStoring {
 
                 }
 
-                for(const proficiency of proficiencyArray) {
-                    if(proficiency != null){
-                        if(arrayStr === "") {
-                            arrayStr = id+":"+proficiency.For+"~"+proficiency.To+"="+proficiency.Prof;
-                        } else {
-                            arrayStr = arrayStr+","+id+":"+proficiency.For+"~"+proficiency.To+"="+proficiency.Prof;
+                if(proficiencyArray != null){
+                    for(const proficiency of proficiencyArray) {
+                        if(proficiency != null){
+                            if(arrayStr === "") {
+                                arrayStr = id+":"+proficiency.For+"~"+proficiency.To+"="+proficiency.Prof;
+                            } else {
+                                arrayStr = arrayStr+","+id+":"+proficiency.For+"~"+proficiency.To+"="+proficiency.Prof;
+                            }
                         }
                     }
                 }
 
-                let dataUpVals = new Object;
-                dataUpVals['dataProficiencies'] = arrayStr;
+                let dataUpVals = {
+                    dataProficiencies: arrayStr
+                };
 
                 return CharData.update(dataUpVals, { where: { id: character.dataID } })
                 .then((result) => {
@@ -332,7 +281,7 @@ module.exports = class CharDataStoring {
             return CharData.findOne({ where: { id: character.dataID} })
             .then((charData) => {
 
-                let attrib = charData['dataProficiencies'];
+                let attrib = charData.dataProficiencies;
 
                 let arrayStr = "";
                 if(attrib != null){
@@ -365,8 +314,9 @@ module.exports = class CharDataStoring {
 
                 }
 
-                let dataUpVals = new Object;
-                dataUpVals['dataProficiencies'] = arrayStr;
+                let dataUpVals = {
+                    dataProficiencies: arrayStr
+                };
 
                 return CharData.update(dataUpVals, { where: { id: character.dataID } })
                 .then((result) => {
@@ -387,7 +337,7 @@ module.exports = class CharDataStoring {
             return CharData.findOne({ where: { id: character.dataID} })
             .then((charData) => {
 
-                let attrib = charData['dataProficiencies'];
+                let attrib = charData.dataProficiencies;
 
                 if(attrib == null || attrib == '') {
                     return new Map();
@@ -444,19 +394,22 @@ module.exports = class CharDataStoring {
             return CharData.findOne({ where: { id: character.dataID} })
             .then((charData) => {
 
-                let attrib = charData['dataAbilityBonus'];
+                let attrib = charData.dataAbilityBonus;
                 
                 let arrayStr = attrib;
-                for(const abilityBonus of abilityBonusArray) {
-                    if(arrayStr == null || arrayStr == '') {
-                        arrayStr = id+":"+abilityBonus.Ability+"="+abilityBonus.Bonus;
-                    } else {
-                        arrayStr = arrayStr+","+id+":"+abilityBonus.Ability+"="+abilityBonus.Bonus;
+                if(abilityBonusArray != null){
+                    for(const abilityBonus of abilityBonusArray) {
+                        if(arrayStr == null || arrayStr == '') {
+                            arrayStr = id+":"+abilityBonus.Ability+"="+abilityBonus.Bonus;
+                        } else {
+                            arrayStr = arrayStr+","+id+":"+abilityBonus.Ability+"="+abilityBonus.Bonus;
+                        }
                     }
                 }
-
-                let dataUpVals = new Object;
-                dataUpVals['dataAbilityBonus'] = arrayStr;
+                
+                let dataUpVals = {
+                    dataAbilityBonus: arrayStr
+                };
 
                 return CharData.update(dataUpVals, { where: { id: character.dataID } })
                 .then((result) => {
@@ -477,7 +430,7 @@ module.exports = class CharDataStoring {
            return CharData.findOne({ where: { id: character.dataID} })
            .then((charData) => {
 
-               let attrib = charData['dataAbilityBonus'];
+               let attrib = charData.dataAbilityBonus;
 
                let arrayStr = "";
                if(attrib != null){
@@ -508,10 +461,11 @@ module.exports = class CharDataStoring {
    
                    }
 
-               }
+                }
 
-               let dataUpVals = new Object;
-               dataUpVals['dataAbilityBonus'] = arrayStr;
+                let dataUpVals = {
+                    dataAbilityBonus: arrayStr
+                };
 
                return CharData.update(dataUpVals, { where: { id: character.dataID } })
                .then((result) => {
@@ -532,7 +486,7 @@ module.exports = class CharDataStoring {
             return CharData.findOne({ where: { id: character.dataID} })
             .then((charData) => {
 
-                let attrib = charData['dataAbilityBonus'];
+                let attrib = charData.dataAbilityBonus;
 
                 let arrayStr = "";
                 if(attrib != null){
@@ -555,18 +509,21 @@ module.exports = class CharDataStoring {
 
                 }
 
-                for(const abilityBonus of abilityBonusArray) {
-                    if(abilityBonus != null){
-                        if(arrayStr === "") {
-                            arrayStr = id+":"+abilityBonus.Ability+"="+abilityBonus.Bonus;
-                        } else {
-                            arrayStr = arrayStr+","+id+":"+abilityBonus.Ability+"="+abilityBonus.Bonus;
+                if(abilityBonusArray != null){
+                    for(const abilityBonus of abilityBonusArray) {
+                        if(abilityBonus != null){
+                            if(arrayStr === "") {
+                                arrayStr = id+":"+abilityBonus.Ability+"="+abilityBonus.Bonus;
+                            } else {
+                                arrayStr = arrayStr+","+id+":"+abilityBonus.Ability+"="+abilityBonus.Bonus;
+                            }
                         }
                     }
                 }
 
-                let dataUpVals = new Object;
-                dataUpVals['dataAbilityBonus'] = arrayStr;
+                let dataUpVals = {
+                    dataAbilityBonus: arrayStr
+                };
 
                 return CharData.update(dataUpVals, { where: { id: character.dataID } })
                 .then((result) => {
@@ -587,7 +544,7 @@ module.exports = class CharDataStoring {
             return CharData.findOne({ where: { id: character.dataID} })
             .then((charData) => {
 
-                let attrib = charData['dataAbilityBonus'];
+                let attrib = charData.dataAbilityBonus;
 
                 if(attrib == null || attrib == '') {
                     return new Map();
@@ -629,584 +586,8 @@ module.exports = class CharDataStoring {
         });
 
     }
-    
-
-
-    // Language //
-
-    static addLanguages(charID, id, langIDArray) {
-
-        return Character.findOne({ where: { id: charID} })
-        .then((character) => {
-
-            return CharData.findOne({ where: { id: character.dataID} })
-            .then((charData) => {
-
-                let attrib = charData['dataLanguages'];
-
-                let arrayStr = attrib;
-                for(const langID of langIDArray) {
-                    if(arrayStr == null || arrayStr == '') {
-                        arrayStr = id+":"+langID;
-                    } else {
-                        arrayStr = arrayStr+","+id+":"+langID;
-                    }
-                }
-
-                let dataUpVals = new Object;
-                dataUpVals['dataLanguages'] = arrayStr;
-
-                return CharData.update(dataUpVals, { where: { id: character.dataID } })
-                .then((result) => {
-                    return;
-                });
-
-            });
-
-        });
-
-    }
-
-    static getLanguages(charID, id) {
-
-        return Character.findOne({ where: { id: charID} })
-        .then((character) => {
-
-            return CharData.findOne({ where: { id: character.dataID} })
-            .then((charData) => {
-
-                let attrib = charData['dataLanguages'];
-
-                if(attrib == null || attrib == '') {
-                    return mapToObj(new Map());
-                }
-
-                let sections = attrib.split(",");
-
-                let idMap = new Map();
-
-                for(const section of sections){
-                    let subsec = section.split(":");
-                    let dataSrc = subsec[0];
-                    let dataID = subsec[1];
-
-                    if(id === "GET_ALL" || dataSrc === id){
-                        if(idMap.has(dataSrc)){
-                            let dataIDArray = idMap.get(dataSrc);
-                            dataIDArray.push(dataID);
-                            idMap.set(dataSrc, dataIDArray);
-                        } else {
-                            let dataIDArray = [];
-                            dataIDArray.push(dataID);
-                            idMap.set(dataSrc, dataIDArray);
-                        }
-                    }
-
-                }
-
-                // Find all languages from ID Array
-                return Language.findAll()
-                .then((languages) => {
-
-                    let langMap = new Map();
-
-                    for(const [dataSrc, dataIDArray] of idMap.entries()){
-                        for(const dataID of dataIDArray){
-                            let language = languages.find(language => {
-                                return language.id == dataID;
-                            });
-                            if(langMap.has(dataSrc)){
-                                let langDataArray = langMap.get(dataSrc);
-                                langDataArray.push(language);
-                                langMap.set(dataSrc, langDataArray);
-                            } else {
-                                let langDataArray = [];
-                                langDataArray.push(language);
-                                langMap.set(dataSrc, langDataArray);
-                            }
-                        }
-                    }
-
-                    return mapToObj(langMap);
-
-                });
-
-            });
-
-        });
-
-    }
-
-    static replaceLanguages(charID, id, langIDArray) {
-
-        return Character.findOne({ where: { id: charID} })
-        .then((character) => {
-
-            return CharData.findOne({ where: { id: character.dataID} })
-            .then((charData) => {
-
-                let attrib = charData['dataLanguages'];
-
-                let arrayStr = "";
-                if(attrib != null){
-
-                    let sections = attrib.split(",");
-
-                    for(const section of sections){
-                        let subsec = section.split(":");
-                        let dataSrc = subsec[0];
-    
-                        if(dataSrc != id){
-                            if(arrayStr === "") {
-                                arrayStr = section;
-                            } else {
-                                arrayStr = arrayStr+","+section;
-                            }
-                        }
-    
-                    }
-
-                }
-
-                for(const langID of langIDArray) {
-                    if(langID != null){
-                        if(arrayStr === "") {
-                            arrayStr = id+":"+langID;
-                        } else {
-                            arrayStr = arrayStr+","+id+":"+langID;
-                        }
-                    }
-                }
-
-                let dataUpVals = new Object;
-                dataUpVals['dataLanguages'] = arrayStr;
-
-                return CharData.update(dataUpVals, { where: { id: character.dataID } })
-                .then((result) => {
-                    return;
-                });
-
-            });
-
-        });
-
-    }
-
-    static deleteLanguages(charID, id, contains) {
-        // contains is true/false on whether the delete any records in which the id is present
-       return Character.findOne({ where: { id: charID} })
-       .then((character) => {
-
-           return CharData.findOne({ where: { id: character.dataID} })
-           .then((charData) => {
-
-               let attrib = charData['dataLanguages'];
-
-               let arrayStr = "";
-               if(attrib != null){
-
-                   let sections = attrib.split(",");
-
-                   for(const section of sections){
-                       let subsec = section.split(":");
-                       let dataSrc = subsec[0];
-   
-                       if(contains) {
-                           if(!dataSrc.includes(id)){
-                               if(arrayStr === "") {
-                                   arrayStr = section;
-                               } else {
-                                   arrayStr = arrayStr+","+section;
-                               }
-                           }
-                       } else {
-                           if(dataSrc != id){
-                               if(arrayStr === "") {
-                                   arrayStr = section;
-                               } else {
-                                   arrayStr = arrayStr+","+section;
-                               }
-                           }
-                       }
-   
-                   }
-
-               }
-
-               let dataUpVals = new Object;
-               dataUpVals['dataLanguages'] = arrayStr;
-
-               return CharData.update(dataUpVals, { where: { id: character.dataID } })
-               .then((result) => {
-                   return;
-               });
-
-           });
-
-       });
-
-   }
-
-    // Feat //
-
-    static addFeats(charID, id, featIDArray) {
-
-        return Character.findOne({ where: { id: charID} })
-        .then((character) => {
-
-            return CharData.findOne({ where: { id: character.dataID} })
-            .then((charData) => {
-
-                let attrib = charData['dataChosenFeats'];
-
-                let arrayStr = attrib;
-                for(const featID of featIDArray) {
-                    if(arrayStr == null || arrayStr == '') {
-                        arrayStr = id+":"+featID;
-                    } else {
-                        arrayStr = arrayStr+","+id+":"+featID;
-                    }
-                }
-
-                let dataUpVals = new Object;
-                dataUpVals['dataChosenFeats'] = arrayStr;
-
-                return CharData.update(dataUpVals, { where: { id: character.dataID } })
-                .then((result) => {
-                    return;
-                });
-
-            });
-
-        });
-
-    }
-
-    static getFeats(charID, id) {
-
-        return Character.findOne({ where: { id: charID} })
-        .then((character) => {
-
-            return CharData.findOne({ where: { id: character.dataID} })
-            .then((charData) => {
-
-                let attrib = charData['dataChosenFeats'];
-
-                if(attrib == null || attrib == '') {
-                    return mapToObj(new Map());
-                }
-
-                let sections = attrib.split(",");
-
-                let idMap = new Map();
-
-                for(const section of sections){
-                    let subsec = section.split(":");
-                    let dataSrc = subsec[0];
-                    let dataID = subsec[1];
-
-                    if(id === "GET_ALL" || dataSrc === id){
-                        if(idMap.has(dataSrc)){
-                            let dataIDArray = idMap.get(dataSrc);
-                            dataIDArray.push(dataID);
-                            idMap.set(dataSrc, dataIDArray);
-                        } else {
-                            let dataIDArray = [];
-                            dataIDArray.push(dataID);
-                            idMap.set(dataSrc, dataIDArray);
-                        }
-                    }
-
-                }
-
-                // Find all feats from ID Array
-                return Feat.findAll()
-                .then((feats) => {
-
-                    let featMap = new Map();
-
-                    for(const [dataSrc, dataIDArray] of idMap.entries()){
-                        for(const dataID of dataIDArray){
-                            let feat = feats.find(feat => {
-                                return feat.id == dataID;
-                            });
-                            if(featMap.has(dataSrc)){
-                                let featDataArray = featMap.get(dataSrc);
-                                featDataArray.push(feat);
-                                featMap.set(dataSrc, featDataArray);
-                            } else {
-                                let featDataArray = [];
-                                featDataArray.push(feat);
-                                featMap.set(dataSrc, featDataArray);
-                            }
-                        }
-                    }
-
-                    return mapToObj(featMap);
-
-                });
-
-            });
-
-        });
-
-    }
-
-    static replaceFeats(charID, id, featIDArray) {
-
-        return Character.findOne({ where: { id: charID} })
-        .then((character) => {
-
-            return CharData.findOne({ where: { id: character.dataID} })
-            .then((charData) => {
-
-                let attrib = charData['dataChosenFeats'];
-
-                let arrayStr = "";
-                if(attrib != null){
-
-                    let sections = attrib.split(",");
-
-                    for(const section of sections){
-                        let subsec = section.split(":");
-                        let dataSrc = subsec[0];
-    
-                        if(dataSrc != id){
-                            if(arrayStr === "") {
-                                arrayStr = section;
-                            } else {
-                                arrayStr = arrayStr+","+section;
-                            }
-                        }
-    
-                    }
-
-                }
-
-                for(const featID of featIDArray) {
-                    if(featID != null){
-                        if(arrayStr === "") {
-                            arrayStr = id+":"+featID;
-                        } else {
-                            arrayStr = arrayStr+","+id+":"+featID;
-                        }
-                    }
-                }
-
-                let dataUpVals = new Object;
-                dataUpVals['dataChosenFeats'] = arrayStr;
-
-                return CharData.update(dataUpVals, { where: { id: character.dataID } })
-                .then((result) => {
-                    return;
-                });
-
-            });
-
-        });
-
-    }
-
-    static deleteFeats(charID, id, contains) {
-        // contains is true/false on whether the delete any records in which the id is present
-       return Character.findOne({ where: { id: charID} })
-       .then((character) => {
-
-           return CharData.findOne({ where: { id: character.dataID} })
-           .then((charData) => {
-
-               let attrib = charData['dataChosenFeats'];
-
-               let arrayStr = "";
-               if(attrib != null){
-
-                   let sections = attrib.split(",");
-
-                   for(const section of sections){
-                       let subsec = section.split(":");
-                       let dataSrc = subsec[0];
-   
-                       if(contains) {
-                           if(!dataSrc.includes(id)){
-                               if(arrayStr === "") {
-                                   arrayStr = section;
-                               } else {
-                                   arrayStr = arrayStr+","+section;
-                               }
-                           }
-                       } else {
-                           if(dataSrc != id){
-                               if(arrayStr === "") {
-                                   arrayStr = section;
-                               } else {
-                                   arrayStr = arrayStr+","+section;
-                               }
-                           }
-                       }
-   
-                   }
-
-               }
-
-               let dataUpVals = new Object;
-               dataUpVals['dataChosenFeats'] = arrayStr;
-
-               return CharData.update(dataUpVals, { where: { id: character.dataID } })
-               .then((result) => {
-                   return;
-               });
-
-           });
-
-       });
-
-   }
-
 
     // Ability Choice "C:3=6,C:7=11" (selectorAbility=selectOptionAbility)
-
-    static addAbilityChoice(charID, id, abilityChoiceArray) {
-
-        return Character.findOne({ where: { id: charID} })
-        .then((character) => {
-
-            return CharData.findOne({ where: { id: character.dataID} })
-            .then((charData) => {
-
-                let attrib = charData['dataAbilityChoices'];
-                
-                let arrayStr = attrib;
-                for(const abilityChoice of abilityChoiceArray) {
-                    if(arrayStr == null || arrayStr == '') {
-                        arrayStr = id+":"+abilityChoice.SelectorAbility+"="+abilityChoice.SelectOptionAbility;
-                    } else {
-                        arrayStr = arrayStr+","+id+":"+abilityChoice.SelectorAbility+"="+abilityChoice.SelectOptionAbility;
-                    }
-                }
-
-                let dataUpVals = new Object;
-                dataUpVals['dataAbilityChoices'] = arrayStr;
-
-                return CharData.update(dataUpVals, { where: { id: character.dataID } })
-                .then((result) => {
-                    return;
-                });
-
-            });
-
-        });
-
-    }
-
-    static deleteAbilityChoice(charID, id, contains) {
-        // contains is true/false on whether the delete any records in which the id is present
-       return Character.findOne({ where: { id: charID} })
-       .then((character) => {
-
-           return CharData.findOne({ where: { id: character.dataID} })
-           .then((charData) => {
-
-               let attrib = charData['dataAbilityChoices'];
-
-               let arrayStr = "";
-               if(attrib != null){
-
-                   let sections = attrib.split(",");
-
-                   for(const section of sections){
-                       let subsec = section.split(":");
-                       let dataSrc = subsec[0];
-   
-                       if(contains) {
-                           if(!dataSrc.includes(id)){
-                               if(arrayStr === "") {
-                                   arrayStr = section;
-                               } else {
-                                   arrayStr = arrayStr+","+section;
-                               }
-                           }
-                       } else {
-                           if(dataSrc != id){
-                               if(arrayStr === "") {
-                                   arrayStr = section;
-                               } else {
-                                   arrayStr = arrayStr+","+section;
-                               }
-                           }
-                       }
-   
-                   }
-
-               }
-
-               let dataUpVals = new Object;
-               dataUpVals['dataAbilityChoices'] = arrayStr;
-
-               return CharData.update(dataUpVals, { where: { id: character.dataID } })
-               .then((result) => {
-                   return;
-               });
-
-           });
-
-       });
-
-   }
-
-    static replaceAbilityChoice(charID, id, abilityChoiceArray) {
-
-        return Character.findOne({ where: { id: charID} })
-        .then((character) => {
-
-            return CharData.findOne({ where: { id: character.dataID} })
-            .then((charData) => {
-
-                let attrib = charData['dataAbilityChoices'];
-
-                let arrayStr = "";
-                if(attrib != null){
-
-                    let sections = attrib.split(",");
-
-                    for(const section of sections){
-                        let subsec = section.split(":");
-                        let dataSrc = subsec[0];
-    
-                        if(dataSrc != id){
-                            if(arrayStr === "") {
-                                arrayStr = section;
-                            } else {
-                                arrayStr = arrayStr+","+section;
-                            }
-                        }
-    
-                    }
-
-                }
-
-                for(const abilityChoice of abilityChoiceArray) {
-                    if(abilityChoice != null){
-                        if(arrayStr === "") {
-                            arrayStr = id+":"+abilityChoice.SelectorAbility+"="+abilityChoice.SelectOptionAbility;
-                        } else {
-                            arrayStr = arrayStr+","+id+":"+abilityChoice.SelectorAbility+"="+abilityChoice.SelectOptionAbility;
-                        }
-                    }
-                }
-
-                let dataUpVals = new Object;
-                dataUpVals['dataAbilityChoices'] = arrayStr;
-
-                return CharData.update(dataUpVals, { where: { id: character.dataID } })
-                .then((result) => {
-                    return;
-                });
-
-            });
-
-        });
-
-    }
 
     static getAbilityChoice(charID, id) {
 
@@ -1216,7 +597,7 @@ module.exports = class CharDataStoring {
             return CharData.findOne({ where: { id: character.dataID} })
             .then((charData) => {
 
-                let attrib = charData['dataAbilityChoices'];
+                let attrib = charData.dataAbilityChoices;
 
                 if(attrib == null || attrib == '') {
                     return mapToObj(new Map());
@@ -1262,6 +643,117 @@ module.exports = class CharDataStoring {
 
     }
 
+    static replaceAbilityChoice(charID, id, abilityChoiceArray) {
+
+        return Character.findOne({ where: { id: charID} })
+        .then((character) => {
+
+            return CharData.findOne({ where: { id: character.dataID} })
+            .then((charData) => {
+
+                let attrib = charData.dataAbilityChoices;
+
+                let arrayStr = "";
+                if(attrib != null){
+
+                    let sections = attrib.split(",");
+
+                    for(const section of sections){
+                        let subsec = section.split(":");
+                        let dataSrc = subsec[0];
+    
+                        if(dataSrc != id){
+                            if(arrayStr === "") {
+                                arrayStr = section;
+                            } else {
+                                arrayStr = arrayStr+","+section;
+                            }
+                        }
+    
+                    }
+
+                }
+
+                for(const abilityChoice of abilityChoiceArray) {
+                    if(abilityChoice != null){
+                        if(arrayStr === "") {
+                            arrayStr = id+":"+abilityChoice.SelectorAbility+"="+abilityChoice.SelectOptionAbility;
+                        } else {
+                            arrayStr = arrayStr+","+id+":"+abilityChoice.SelectorAbility+"="+abilityChoice.SelectOptionAbility;
+                        }
+                    }
+                }
+
+                let dataUpVals = {
+                    dataAbilityChoices: arrayStr
+                };
+
+                return CharData.update(dataUpVals, { where: { id: character.dataID } })
+                .then((result) => {
+                    return;
+                });
+
+            });
+
+        });
+
+    }
+
+    static deleteAbilityChoice(charID, id, contains) {
+        // contains is true/false on whether the delete any records in which the id is present
+        return Character.findOne({ where: { id: charID} })
+        .then((character) => {
+
+            return CharData.findOne({ where: { id: character.dataID} })
+            .then((charData) => {
+
+                let attrib = charData.dataAbilityChoices;
+
+                let arrayStr = "";
+                if(attrib != null){
+
+                    let sections = attrib.split(",");
+
+                    for(const section of sections){
+                        let subsec = section.split(":");
+                        let dataSrc = subsec[0];
+    
+                        if(contains) {
+                            if(!dataSrc.includes(id)){
+                                if(arrayStr === "") {
+                                    arrayStr = section;
+                                } else {
+                                    arrayStr = arrayStr+","+section;
+                                }
+                            }
+                        } else {
+                            if(dataSrc != id){
+                                if(arrayStr === "") {
+                                    arrayStr = section;
+                                } else {
+                                    arrayStr = arrayStr+","+section;
+                                }
+                            }
+                        }
+    
+                    }
+
+                }
+                
+                let dataUpVals = {
+                    dataAbilityChoices: arrayStr
+                };
+
+                return CharData.update(dataUpVals, { where: { id: character.dataID } })
+                .then((result) => {
+                    return;
+                });
+
+            });
+
+        });
+
+    }
 
 
     // Char Tags // charTags: "Human,Half-Elf,Elf"
@@ -1274,7 +766,7 @@ module.exports = class CharDataStoring {
             return CharData.findOne({ where: { id: character.dataID} })
             .then((charData) => {
 
-                let attrib = charData['charTags'];
+                let attrib = charData.charTags;
 
                 let arrayStr = attrib;
                 if(arrayStr == null || arrayStr == '') {
@@ -1283,8 +775,9 @@ module.exports = class CharDataStoring {
                     arrayStr = arrayStr+","+charTag;
                 }
 
-                let dataUpVals = new Object;
-                dataUpVals['charTags'] = arrayStr;
+                let dataUpVals = {
+                    charTags: arrayStr
+                };
 
                 return CharData.update(dataUpVals, { where: { id: character.dataID } })
                 .then((result) => {
@@ -1305,7 +798,7 @@ module.exports = class CharDataStoring {
             return CharData.findOne({ where: { id: character.dataID} })
             .then((charData) => {
 
-                let attrib = charData['charTags'];
+                let attrib = charData.charTags;
 
                 if(attrib == null || attrib == '') {
                     return [];
@@ -1327,7 +820,7 @@ module.exports = class CharDataStoring {
             return CharData.findOne({ where: { id: character.dataID} })
             .then((charData) => {
 
-                let attrib = charData['charTags'];
+                let attrib = charData.charTags;
 
                 if(attrib == null) {
                     return;
@@ -1347,9 +840,10 @@ module.exports = class CharDataStoring {
                     }
     
                 }
-
-                let dataUpVals = new Object;
-                dataUpVals['charTags'] = arrayStr;
+                
+                let dataUpVals = {
+                    charTags: arrayStr
+                };
 
                 return CharData.update(dataUpVals, { where: { id: character.dataID } })
                 .then((result) => {
@@ -1398,7 +892,7 @@ module.exports = class CharDataStoring {
                     }
                 }
 
-                let dataUpVals = new Object;
+                let dataUpVals = {};
                 dataUpVals[dataType] = arrayStr;
 
                 return CharData.update(dataUpVals, { where: { id: character.dataID } })

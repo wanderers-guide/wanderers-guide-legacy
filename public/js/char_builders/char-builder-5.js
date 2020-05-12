@@ -100,6 +100,7 @@ socket.on("returnFinalizeDetails", function(character, abilObject, cClass){
 
         $("#missing-class-message").removeClass("is-hidden");
         $(".finalize-content").addClass("is-hidden");
+        finishLoadingPage();
 
     }
 
@@ -144,9 +145,9 @@ socket.on("returnFinalizeDetails", function(character, abilObject, cClass){
         });
     }
 
+});
 
-
+function finishLoadingPage() {
     // Turn off page loading
     $('.pageloader').addClass("fadeout");
-
-});
+}

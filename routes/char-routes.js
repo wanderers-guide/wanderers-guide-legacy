@@ -27,32 +27,40 @@ router.get('/', (req, res) => {
         .then((classes) => {
             Heritage.findAll()
             .then((heritages) => {
-                
-                console.log(characters);
+                Ancestry.findAll()
+                .then((ancestries) => {
 
-                for(let character of characters){
+                    for(let character of characters){
+    
+                        let cClass = classes.find(cClass => {
+                            return cClass.id == character.classID;
+                        });
+                        character.className = (cClass != null) ? cClass.name : "";
+    
+                        let heritage = heritages.find(heritage => {
+                            return heritage.id == character.heritageID;
+                        });
+                        if(heritage != null) {
+                            character.heritageName = heritage.name;
+                        } else {
+                            let ancestry = ancestries.find(ancestry => {
+                                return ancestry.id == character.ancestryID;
+                            });
+                            character.heritageName = (ancestry != null) ? ancestry.name : "";
+                        }
+    
+                        character.isPlayable = CharStateUtils.isPlayable(character);
+    
+                    }
+    
+                    res.render('pages/character_list', {
+                        title: "Your Characters - Apeiron",
+                        user: req.user,
+                        characters,
+                        canMakeCharacter: CharStateUtils.canMakeCharacter(req.user, characters),
+                        characterLimit: CharStateUtils.getUserCharacterLimit()});
 
-                    let cClass = classes.find(cClass => {
-                        return cClass.id == character.classID;
-                    });
-                    character.className = (cClass != null) ? cClass.name : "";
-
-                    let heritage = heritages.find(heritage => {
-                        return heritage.id == character.heritageID;
-                    });
-                    character.heritageName = (heritage != null) ? heritage.name : "";
-
-                    character.isPlayable = CharStateUtils.isPlayable(character);
-
-                }
-
-                res.render('pages/character_list', {
-                    title: "Your Characters - Apeiron",
-                    user: req.user,
-                    characters,
-                    canMakeCharacter: CharStateUtils.canMakeCharacter(req.user, characters),
-                    characterLimit: CharStateUtils.getUserCharacterLimit()});
-
+                });
             });
         });
 

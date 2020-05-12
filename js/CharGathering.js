@@ -14,6 +14,7 @@ const Heritage = require('../models/contentDB/Heritage');
 const AncestryLanguage = require('../models/contentDB/AncestryLanguage');
 const AncestryBoost = require('../models/contentDB/AncestryBoost');
 const AncestryFlaw = require('../models/contentDB/AncestryFlaw');
+const SenseType = require('../models/contentDB/SenseType');
 const Condition = require('../models/contentDB/Condition');
 const CharCondition = require('../models/contentDB/CharCondition');
 const Item = require('../models/contentDB/Item');
@@ -37,6 +38,14 @@ function mapToObj(strMap) {
       obj[k] = v;
     }
     return obj;
+}
+
+function objToMap(obj) {
+    let strMap = new Map();
+    for (let k of Object.keys(obj)) {
+      strMap.set(k, obj[k]);
+    }
+    return strMap;
 }
 
 function getUpAmt(profType){
@@ -222,6 +231,13 @@ module.exports = class CharGathering {
         });
     }
 
+    static getInvIDFromInvItemID(invItemID){
+        return InvItem.findOne({ where: { id: invItemID } })
+        .then((invItem) => {
+            return invItem.invID;
+        });
+    }
+
     static getInventory(inventoryID){
         return Inventory.findOne({ where: { id: inventoryID} })
         .then((inventory) => {
@@ -267,9 +283,10 @@ module.exports = class CharGathering {
         .then((skills) => {
             return CharDataStoring.getProficiencies(charID, "GET_ALL")
             .then((proficiencyMap) => {
-                return CharDataStoring.getLore(charID, "GET_ALL")
-                .then((loreMap) => {
-
+                return CharDataStoring.getBasicData(charID, "GET_ALL", 'dataLoreCategories', null)
+                .then((loreObject) => {
+                    let loreMap = objToMap(loreObject);
+                    
                     let skillArray = [];
 
                     for(const skill of skills){
@@ -328,7 +345,7 @@ module.exports = class CharGathering {
         });
     }
 
-    static getAllAncestries() {
+    static getAllAncestries(includeTag) {
         return Ancestry.findAll()
         .then((ancestries) => {
             return Heritage.findAll()
@@ -341,61 +358,83 @@ module.exports = class CharGathering {
                         .then((ancestBoosts) => {
                             return AncestryFlaw.findAll()
                             .then((ancestFlaws) => {
-                                
+                                return Tag.findAll()
+                                .then((tags) => {
+                                    return SenseType.findAll()
+                                    .then((senseTypes) => {
 
-                                let ancestryMap = new Map();
+                                        let ancestryMap = new Map();
 
-                                for (const ancestry of ancestries) {
-                                    ancestryMap.set(ancestry.id, {Ancestry : ancestry, Heritages : [], Languages : [], BonusLanguages : [], Boosts : [], Flaws : []}); 
-                                }
+                                        for (const ancestry of ancestries) {
+                                            let tag = null;
+                                            if(includeTag){
+                                                tag = tags.find(tag => {
+                                                    return tag.id === ancestry.tagID;
+                                                });
+                                            }
+                                            let visionSense, additionalSense = null;
+                                            for(let senseType of senseTypes){
+                                                if(senseType.id === ancestry.visionSenseID){
+                                                    visionSense = senseType;
+                                                }
+                                                if(senseType.id === ancestry.additionalSenseID){
+                                                    additionalSense = senseType;
+                                                }
+                                            }
+                                            ancestryMap.set(ancestry.id, {Ancestry : ancestry, Heritages : [],
+                                                Languages : [], BonusLanguages : [], Boosts : [], Flaws : [],
+                                                Tag : tag, VisionSense : visionSense, AdditionalSense : additionalSense});
+                                        }
 
-                                for (const heritage of heritages) {
+                                        for (const heritage of heritages) {
 
-                                    let ancestryStruct = ancestryMap.get(heritage.ancestryID);
-                                    ancestryStruct.Heritages.push(heritage);
+                                            let ancestryStruct = ancestryMap.get(heritage.ancestryID);
+                                            ancestryStruct.Heritages.push(heritage);
 
-                                }
+                                        }
 
-                                for (const ancestLang of ancestLangs) {
+                                        for (const ancestLang of ancestLangs) {
 
-                                    if(ancestLang.isBonus === 1) {
+                                            if(ancestLang.isBonus === 1) {
 
-                                        let language = languages.find(language => {
-                                            return language.id === ancestLang.langID;
-                                        });
-                
-                                        let ancestryStruct = ancestryMap.get(ancestLang.ancestryID);
-                                        ancestryStruct.BonusLanguages.push(language);
+                                                let language = languages.find(language => {
+                                                    return language.id === ancestLang.langID;
+                                                });
+                        
+                                                let ancestryStruct = ancestryMap.get(ancestLang.ancestryID);
+                                                ancestryStruct.BonusLanguages.push(language);
 
-                                    } else {
+                                            } else {
 
-                                        let language = languages.find(language => {
-                                            return language.id === ancestLang.langID;
-                                        });
-                
-                                        let ancestryStruct = ancestryMap.get(ancestLang.ancestryID);
-                                        ancestryStruct.Languages.push(language);
+                                                let language = languages.find(language => {
+                                                    return language.id === ancestLang.langID;
+                                                });
+                        
+                                                let ancestryStruct = ancestryMap.get(ancestLang.ancestryID);
+                                                ancestryStruct.Languages.push(language);
 
-                                    }
+                                            }
 
-                                }
+                                        }
 
-                                for (const ancestBoost of ancestBoosts) {
+                                        for (const ancestBoost of ancestBoosts) {
 
-                                    let ancestryStruct = ancestryMap.get(ancestBoost.ancestryID);
-                                    ancestryStruct.Boosts.push(ancestBoost.boostedAbility);
+                                            let ancestryStruct = ancestryMap.get(ancestBoost.ancestryID);
+                                            ancestryStruct.Boosts.push(ancestBoost.boostedAbility);
 
-                                }
+                                        }
 
-                                for (const ancestFlaw of ancestFlaws) {
+                                        for (const ancestFlaw of ancestFlaws) {
 
-                                    let ancestryStruct = ancestryMap.get(ancestFlaw.ancestryID);
-                                    ancestryStruct.Flaws.push(ancestFlaw.flawedAbility);
+                                            let ancestryStruct = ancestryMap.get(ancestFlaw.ancestryID);
+                                            ancestryStruct.Flaws.push(ancestFlaw.flawedAbility);
 
-                                }
+                                        }
 
-                                return mapToObj(ancestryMap);
+                                        return mapToObj(ancestryMap);
 
+                                    });
+                                });
                             });
                         });
                     });
@@ -475,7 +514,7 @@ module.exports = class CharGathering {
                 .then((charTagsArray) => {
                     return Class.findOne({ where: { id: character.classID} })
                     .then((cClass) => {
-                        return CharDataStoring.getFeats(charID, "GET_ALL")
+                        return CharDataStoring.getBasicData(charID, "GET_ALL", 'dataChosenFeats', Feat)
                         .then((featObject) => {
                             return CharDataStoring.getAbilityBonus(charID, "GET_ALL")
                             .then((bonusMap) => {
@@ -483,23 +522,27 @@ module.exports = class CharGathering {
                                 .then((abilityObject) => {
                                     return CharDataStoring.getProficiencies(charID, "GET_ALL")
                                     .then((proficiencyMap) => {
-                                        return CharDataStoring.getLanguages(charID, "GET_ALL")
+                                        return CharDataStoring.getBasicData(charID, "GET_ALL", 'dataLanguages', Language)
                                         .then((langObject) => {
+                                            return CharDataStoring.getBasicData(charID, "GET_ALL", 'dataSenses', SenseType)
+                                            .then((senseObject) => {
 
-                                            let choiceStruct = {
-                                                Level : character.level,
-                                                Heritage : heritage,
-                                                Class : cClass,
-                                                CharTagsArray : charTagsArray,
-                                                FeatObject : featObject,
-                                                BonusObject : mapToObj(bonusMap),
-                                                AbilityObject : abilityObject,
-                                                ProficiencyObject : mapToObj(proficiencyMap),
-                                                LangObject : langObject
-                                            };
-                    
-                                            return choiceStruct;
+                                                let choiceStruct = {
+                                                    Level : character.level,
+                                                    Heritage : heritage,
+                                                    Class : cClass,
+                                                    CharTagsArray : charTagsArray,
+                                                    FeatObject : featObject,
+                                                    BonusObject : mapToObj(bonusMap),
+                                                    AbilityObject : abilityObject,
+                                                    ProficiencyObject : mapToObj(proficiencyMap),
+                                                    LangObject : langObject,
+                                                    SenseObject : senseObject
+                                                };
+                        
+                                                return choiceStruct;
 
+                                            });
                                         });
                                     });
                                 });
@@ -549,6 +592,20 @@ module.exports = class CharGathering {
         return AncestryLanguage.findAll({ where: { ancestryID: ancestryID} })
         .then((ancestLangs) => {
             return ancestLangs;
+        });
+    }
+
+    static getLanguageByName(langName) {
+        return Language.findOne({ where: { name: langName} })
+        .then((language) => {
+            return language;
+        });
+    }
+
+    static getFeatByName(featName) {
+        return Feat.findOne({ where: { name: featName} })
+        .then((feat) => {
+            return feat;
         });
     }
 

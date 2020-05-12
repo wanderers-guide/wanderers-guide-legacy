@@ -224,7 +224,7 @@ function openQuickView(type, data) {
         
         featContentInnerHTML += '<hr class="m-1">';
     
-        featContentInnerHTML += '<div>'+processSheetText(data.Feat.description)+'</div>';
+        featContentInnerHTML += '<div>'+processText(data.Feat.description, true)+'</div>';
     
         if(data.Feat.special != null){
             featContentInnerHTML += '<div><p><span><strong>Special: </strong></span><span>'+data.Feat.special+'</span></p></div>';
@@ -327,6 +327,7 @@ function openQuickView(type, data) {
 
         qContent.append(breakDownInnerHTML);
 
+        // Conditionals //
         let conditionalStatMap = getConditionalStatMap('PERCEPTION');
         if(conditionalStatMap != null){
 
@@ -338,6 +339,17 @@ function openQuickView(type, data) {
                 qContent.append('<p class="has-text-centered">'+value+' '+condition+'</p>');
             }
 
+        }
+
+        // Senses //
+        qContent.append('<hr class="m-2">');
+
+        qContent.append('<p class="has-text-centered is-size-5"><strong>Senses</strong></p>');
+
+        qContent.append('<p class="has-text-centered has-tooltip-bottom has-tooltip-multiline" data-tooltip="'+data.PrimaryVisionSense.description+'">'+data.PrimaryVisionSense.name+'</p>');
+
+        for(let additionalSense of data.AdditionalSenseArray) {
+            qContent.append('<p class="has-text-centered has-tooltip-bottom has-tooltip-multiline" data-tooltip="'+additionalSense.description+'">'+additionalSense.name+'</p>');
         }
 
         return;
@@ -513,7 +525,7 @@ function openQuickView(type, data) {
             qContent.append('<hr class="m-2">');
         }
 
-        qContent.append('<div><p>'+processSheetText(data.InvItem.description)+'</p></div>');
+        qContent.append('<div><p>'+processText(data.InvItem.description, true)+'</p></div>');
 
         qContent.append('<hr class="m-2">');
 
@@ -561,7 +573,7 @@ function openQuickView(type, data) {
         }
 
         qContent.append('<p class="has-text-centered is-size-7"><strong>Health</strong></p>');
-        qContent.append('<div class="field has-addons has-addons-centered"><p class="control"><input id="'+invItemHPInputID+'" class="input is-small" type="number" min="0" max="'+maxHP+'" value="'+data.InvItem.currentHitPoints+'"></p><p class="control"><a class="button is-static is-small has-text-grey-light has-background-grey-darkest border-darker">/</a><p class="control"><a class="button is-static is-small has-text-grey-lighter has-background-grey-darker border-darker">'+maxHP+'</a></p></div>');
+        qContent.append('<div class="field has-addons has-addons-centered"><p class="control"><input id="'+invItemHPInputID+'" class="input is-small" type="number" min="0" max="'+maxHP+'" value="'+data.InvItem.currentHitPoints+'"></p><p class="control"><a class="button is-static is-small has-text-grey-light has-background-grey-darkest border-darker">/</a><p class="control"><a class="button is-static is-small has-text-grey-lighter has-background-grey-darklike border-darker">'+maxHP+'</a></p></div>');
         qContent.append('<div class="columns is-centered is-marginless text-center"><div class="column is-5 is-paddingless"><p class="is-size-7"><strong>Hardness:</strong> '+data.InvItem.hardness+'</p></div><div class="column is-7 is-paddingless"><p class="is-size-7"><strong>Broken Threshold:</strong> '+brokenThreshold+'</p></div></div>');
 
         if(data.Item.WeaponData != null){
@@ -616,7 +628,6 @@ function openQuickView(type, data) {
         $('#'+invItemRemoveButtonID).click(function() {
             $(this).addClass('is-loading');
             socket.emit("requestRemoveItemFromInv",
-                data.InvItem.invID,
                 data.InvItem.id);
         });
 
@@ -637,8 +648,7 @@ function openQuickView(type, data) {
                         $(this).removeClass('is-danger');
                         socket.emit("requestInvItemQtyChange",
                             data.InvItem.id,
-                            newQty,
-                            data.InvItem.invID);
+                            newQty);
                     } else {
                         $(this).addClass('is-danger');
                     }
@@ -653,8 +663,7 @@ function openQuickView(type, data) {
                     $(this).removeClass('is-danger');
                     socket.emit("requestInvItemHPChange",
                         data.InvItem.id,
-                        newHP,
-                        data.InvItem.invID);
+                        newHP);
                 } else {
                     $(this).addClass('is-danger');
                 }
@@ -756,7 +765,6 @@ function openQuickView(type, data) {
             if(isValid){
                 socket.emit("requestCustomizeInvItem",
                     data.InvItem.id,
-                    data.InvItem.invID,
                     {
                         name: name,
                         price: price,
@@ -1039,7 +1047,7 @@ function displayAddItem(itemID, itemDataStruct, data){
         $('#'+addItemDetailsItemID).append('<hr class="m-2">');
     }
 
-    $('#'+addItemDetailsItemID).append('<p>'+processSheetText(itemDataStruct.Item.description)+'</p>');
+    $('#'+addItemDetailsItemID).append('<p>'+processText(itemDataStruct.Item.description, true)+'</p>');
 
 
     $('#'+addItemAddItemID).click(function(){

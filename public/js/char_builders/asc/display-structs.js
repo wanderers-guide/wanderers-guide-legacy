@@ -62,7 +62,7 @@ function displayFeat(locationID, feat){
       featInnerHTML += '<hr class="m-1">';
     }
   
-    featInnerHTML += '<div>'+processText(feat.Feat.description)+'</div>';
+    featInnerHTML += '<div>'+processText(feat.Feat.description, false)+'</div>';
   
     if(feat.Feat.special != null){
       featInnerHTML += '<div class="feat-attrib"><span><strong>Special: </strong></span><span>'+feat.Feat.special+'</span></div>';

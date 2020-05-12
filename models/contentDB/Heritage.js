@@ -10,6 +10,9 @@ const Heritage = db.define('heritages', {
   },
   description: {
     type: Sequelize.TEXT
+  },
+  code: {
+    type: Sequelize.TEXT
   }
 });
 

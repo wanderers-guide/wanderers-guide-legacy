@@ -74,9 +74,6 @@ socket.on("returnClassDetails", function(classObject, inChoiceStruct){
         } else {
             $('.class-content').addClass("is-hidden");
 
-            // Turn off page loading
-            $('.pageloader').addClass("fadeout");
-
             // Delete class, set to null
             g_class = null;
             socket.emit("requestClassChange",
@@ -96,6 +93,8 @@ socket.on("returnClassChange", function(inChoiceStruct){
 
     if(g_class != null){
         displayCurrentClass(g_class, true);
+    } else {
+        finishLoadingPage();
     }
 
 });
@@ -111,7 +110,49 @@ function displayCurrentClass(classStruct, saving) {
 
     let keyAbility = $('#keyAbility');
     keyAbility.html('');
-    keyAbility.append('<p class="is-size-5">'+classStruct.Class.keyAbility+'</p>');
+    
+    if(classStruct.Class.keyAbility.includes(' or ')) {
+
+        let keyAbilitySelectID = 'keyAbilitySelect';
+        let keyAbilityControlShellClass = 'keyAbilityControlShell';
+        let keyAbilityOptionArray = classStruct.Class.keyAbility.split(' or ');
+        keyAbility.append('<div class="select '+keyAbilityControlShellClass+'"><select id="'+keyAbilitySelectID+'"></select></div>');
+
+        let keyAbilitySelect = $('#'+keyAbilitySelectID);
+        keyAbilitySelect.append('<option value="chooseDefault">Choose an Ability</option>');
+        keyAbilitySelect.append('<hr class="dropdown-divider"></hr>');
+
+        keyAbilitySelect.append('<option value="'+keyAbilityOptionArray[0]+'">'+keyAbilityOptionArray[0]+'</option>');
+        keyAbilitySelect.append('<option value="'+keyAbilityOptionArray[1]+'">'+keyAbilityOptionArray[1]+'</option>');
+
+        $('#'+keyAbilitySelectID).change(function() {
+            let abilityName = $(this).val();
+            if(abilityName != "chooseDefault"){
+                socket.emit("requestAbilityBonusChange",
+                        getCharIDFromURL(),
+                        "Type-Class_Level-1_Code-OtherKeyAbility",
+                        [{ Ability : shortenAbilityType(abilityName), Bonus : "Boost" }]);
+            } else {
+                socket.emit("requestAbilityBonusChange",
+                        getCharIDFromURL(),
+                        "Type-Class_Level-1_Code-OtherKeyAbility",
+                        null);
+            }
+        });
+
+        let keyAbilityChoice = choiceStruct.BonusObject["Type-Class_Level-1_Code-OtherKeyAbility"];
+        if(keyAbilityChoice != null && keyAbilityChoice[0] != null){
+            keyAbilitySelect.val(lengthenAbilityType(keyAbilityChoice[0].Ability));
+        }
+
+    } else {
+        keyAbility.append('<p class="is-size-5">'+classStruct.Class.keyAbility+'</p>');
+        socket.emit("requestAbilityBonusChange",
+            getCharIDFromURL(),
+            "Type-Class_Level-1_Code-OtherKeyAbility",
+            [{ Ability : shortenAbilityType(classStruct.Class.keyAbility), Bonus : "Boost" }]);
+    }
+
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Hit Points ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 
@@ -171,6 +212,11 @@ function displayCurrentClass(classStruct, saving) {
                         getCharIDFromURL(),
                         {srcID : "Type-Class_Level-1_Code-Other"+tSkillID, isSkill : true},
                         [{ For : "Skill", To : skillName, Prof : 'T' }]);
+                } else {
+                    socket.emit("requestProficiencyChange",
+                        getCharIDFromURL(),
+                        {srcID : "Type-Class_Level-1_Code-Other"+tSkillID, isSkill : true},
+                        null);
                 }
             });
 
@@ -305,12 +351,10 @@ function displayCurrentClass(classStruct, saving) {
     }
 
     if(saving){
-        setTimeout(function() { 
-            socket.emit("requestProficiencyChange",
-                getCharIDFromURL(),
-                {srcID : 'Type-Class_Level-1_Code-None', isSkill : false},
-                savingProfArray);
-         }, 3000);
+        socket.emit("requestProficiencyChange",
+            getCharIDFromURL(),
+            {srcID : 'Type-Class_Level-1_Code-None', isSkill : false},
+            savingProfArray);
     }
 
 
@@ -339,7 +383,7 @@ function displayCurrentClass(classStruct, saving) {
 
 
             let classAbilityContent = $('#'+classAbilityContentID);
-            let abilityDescription = processText(classAbility.description);
+            let abilityDescription = processText(classAbility.description, false);
             classAbilityContent.append('<div class="container px-5" id="classAbility'+classAbility.id+'"><div>'+abilityDescription+'</div></div>');
 
             classAbilityContent.append('<div class="columns is-centered"><div id="'+classAbilityCodeID+'" class="column is-8"></div></div>');
@@ -374,7 +418,7 @@ function displayCurrentClass(classStruct, saving) {
                 classAbilitySelectorInnerHTML += '</select>';
                 classAbilitySelectorInnerHTML += '</div></div>';
 
-                classAbilitySelectorInnerHTML += '<div class="columns is-centered"><div class="column is-8"><article class="message"><div class="message-body"><div id="'+descriptionID+'"></div><div id="'+abilityCodeID+'"></div></div></article></div></div>';
+                classAbilitySelectorInnerHTML += '<div class="columns is-centered"><div class="column is-8"><article class="message is-info"><div class="message-body"><div id="'+descriptionID+'"></div><div id="'+abilityCodeID+'"></div></div></article></div></div>';
 
                 classAbilityContent.append(classAbilitySelectorInnerHTML);
 
@@ -413,7 +457,7 @@ function displayCurrentClass(classStruct, saving) {
                     return classAbility.id == chosenAbilityID;
                 });
 
-                $('#'+descriptionID).html(processText(chosenClassAbility.description));
+                $('#'+descriptionID).html(processText(chosenClassAbility.description, false));
 
                 // Save feats
                 if(triggerSave == null || triggerSave) {
@@ -442,11 +486,13 @@ function displayCurrentClass(classStruct, saving) {
 
     processCode_ClassAbilities(classStruct.Abilities);
 
-    // Turn off page loading
-    $('.pageloader').addClass("fadeout");
-
 }
 
 socket.on("returnSelectAbilityChange", function(){
     console.log("Got here from the select abil change");
 });
+
+function finishLoadingPage() {
+    // Turn off page loading
+    $('.pageloader').addClass("fadeout");
+}

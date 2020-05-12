@@ -40,11 +40,24 @@ const Feat = db.define('feats', {
   isDefault: { // If the action is given by default or not. Ex: Strike is default, AoO is not
     type: Sequelize.INTEGER
   },
+  skillID: { // If it is a skill action, what skill the action is for.
+    type: Sequelize.INTEGER
+  },
   minProf: { // Used for default actions that require a min prof to use: NULL, 'U', 'T', 'E', 'M', 'L'
     type: Sequelize.STRING
   },
   code: {
     type: Sequelize.TEXT
+  },
+  genericType: {
+    type: Sequelize.ENUM,
+    values: ['GENERAL-FEAT', 'SKILL-FEAT', 'BASIC-ACTION', 'SKILL-ACTION']
+  },
+  isArchived: {
+    type: Sequelize.INTEGER
+  },
+  version: {
+    type: Sequelize.STRING
   }
 });
 

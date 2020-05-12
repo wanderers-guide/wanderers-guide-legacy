@@ -2,6 +2,10 @@
 {{#section 'header'}}
     <link rel="stylesheet" href="/css/admin-builders.css">
     <script type="text/javascript" src="/js/admin_builders/builder-ancestry.js"></script>
+    {{#if ancestryID}}
+        <script type="text/javascript" src="/js/admin_builders/editor-ancestry.js"></script>
+        <script type="text/javascript" src="/js/admin_builders/editor-utils.js"></script>
+    {{/if}}
 {{/section}}
 
 {{#section 'nav_home'}}
@@ -26,7 +30,11 @@
 
 
 <div class="pt-3">
-    <h1 class="is-size-1 font-forum has-text-light has-text-centered">Ancestry Creation</h1>
+    {{#if ancestryID}}
+        <h1 class="is-size-1 has-text-light has-text-centered">Ancestry Editor</h1>
+    {{else}}
+        <h1 class="is-size-1 has-text-light has-text-centered">Ancestry Creation</h1>
+    {{/if}}
 </div>
 
 <div class="columns is-mobile is-centered mt-2 mb-3">
@@ -40,6 +48,13 @@
                     <label class="label">Name</label>
                     <div class="control">
                         <input id="inputName" class="input" type="text" placeholder="e.g. Gnome">
+                    </div>
+                </div>
+
+                <div class="tile is-child field">
+                    <label class="label">Version</label>
+                    <div class="control">
+                        <input id="inputVersion" class="input" type="text" placeholder="e.g. 1.0.0">
                     </div>
                 </div>
 
@@ -73,23 +88,33 @@
                 </div>
 
                 <div class="tile is-child field">
-                    <label class="label">Vision Type</label>
+                    <label class="label">Vision Sense</label>
                     <div class="control">
                         <div class="select">
-                            <select id="inputVisionType">
-                                <option value="1" selected>Normal Vision</option>
-                                <option value="2">Low-Light Vision</option>
-                                <option value="3">Darkvision</option>
-                                <option value="4">Greater Darkvision</option>
+                            <select id="inputVisionSense">
+                                {{#each senseTypes}}
+                                    {{#ifEqual isVisionType 1}}
+                                        <option value="{{id}}">{{name}}</option>
+                                    {{/ifEqual}}
+                                {{/each}}
                             </select>
                         </div>
                     </div>
                 </div>
 
                 <div class="tile is-child field">
-                    <label class="label">Description</label>
+                    <label class="label">Additional Sense</label>
                     <div class="control">
-                        <textarea id="inputDescription" class="textarea" placeholder="Always hungry for new experiences..."></textarea>
+                        <div class="select">
+                            <select id="inputAdditionalSense">
+                                <option value="">Choose a Sense</option>
+                                {{#each senseTypes}}
+                                    {{#ifEqual isVisionType 0}}
+                                        <option value="{{id}}">{{name}}</option>
+                                    {{/ifEqual}}
+                                {{/each}}
+                            </select>
+                        </div>
                     </div>
                 </div>
 
@@ -140,12 +165,12 @@
                             <div class="select is-multiple">
                                 <select id="inputLangs" multiple>
                                     {{#each languages}}
-                                        <option value="{{id}}">{{name}}</option>
+                                        <option value="{{id}}" name="{{name}}">{{name}}</option>
                                     {{/each}}
                                 </select>
                             </div>
                         </div>
-                        <p id="selectedLanguages"></p>
+                        <p id="selectedLanguages">- </p>
                     </div>
 
                     <div class="tile is-child field">
@@ -154,12 +179,30 @@
                             <div class="select is-multiple">
                                 <select id="inputBonusLangs" multiple>
                                     {{#each languages}}
-                                        <option value="{{id}}">{{name}}</option>
+                                        <option value="{{id}}" name="{{name}}">{{name}}</option>
                                     {{/each}}
                                 </select>
                             </div>
                         </div>
-                        <p id="selectedBonusLanguages"></p>
+                        <p id="selectedBonusLanguages">- </p>
+                    </div>
+
+                </div>
+
+                <div class="tile is-vertical">
+
+                    <div class="tile is-child field">
+                        <label class="label">Description</label>
+                        <div class="control">
+                            <textarea id="inputDescription" class="textarea" placeholder="Always hungry for new experiences..."></textarea>
+                        </div>
+                    </div>
+
+                    <div class="tile is-child field">
+                        <label class="label">Trait Description</label>
+                        <div class="control">
+                            <textarea id="inputTagDesc" class="textarea" placeholder="A creature with this trait is a member of the gnome ancestry..."></textarea>
+                        </div>
                     </div>
                 </div>
 
@@ -178,15 +221,13 @@
                     <div id="heritageLayout" class="card mb-2 ancestryHeritage is-hidden">
                         <div class="card-header">
                             <p class="card-header-title is-paddingless has-text-grey-lighter is-size-5">Heritage</p>
-                            <a class="card-header-icon is-paddingless" aria-label="more options">
-                                <span class="icon"><i class="fas fa-times" aria-hidden="true"></i></span>
-                            </a>
+                            <a class="card-header-icon is-paddingless mt-1 delete is-medium"></a>
                         </div>
                         <div class="card-content">
                             <div class="field">
                                 <label class="label">Name</label>
                                 <div class="control">
-                                    <input class="input inputHeritageName" type="text" placeholder="e.g. Wellspring Gnome">
+                                    <input class="input inputHeritageName" type="text" placeholder="e.g. Wellspring">
                                 </div>
                             </div>
                             <div class="field">
@@ -219,11 +260,7 @@
                     <div id="featLayout" class="card mb-2 ancestryFeat is-hidden">
                         <div class="card-header">
                             <p class="card-header-title is-paddingless has-text-grey-lighter is-size-5">Ancestry Feat</p>
-                            <a class="card-header-icon is-paddingless" aria-label="more options">
-                                <span class="icon">
-                                    <i class="fas fa-times" aria-hidden="true"></i>
-                                </span>
-                            </a>
+                            <a class="card-header-icon is-paddingless mt-1 delete is-medium"></a>
                         </div>
                         <div class="card-content">
                             <div class="field">
@@ -270,7 +307,7 @@
                                         <div class="select">
                                             <select class="inputFeatRarity">
                                                 <option value="COMMON">Common</option>
-                                                <option value="Uncommon">Uncommon</option>
+                                                <option value="UNCOMMON">Uncommon</option>
                                                 <option value="RARE">Rare</option>
                                                 <option value="UNIQUE">Unique</option>
                                             </select>
@@ -290,7 +327,7 @@
                                         </select>
                                     </div>
                                 </div>
-                                <p class="selectedTraits"></p>
+                                <p class="selectedTraits">- </p>
                             </div>
 
                             <div class="field">
@@ -362,6 +399,10 @@
 
 <div class="field is-grouped is-grouped-centered pb-2">
     <div class="control">
-        <button id="createAncestryButton" class="button is-success">Create</button>
+        {{#if ancestryID}}
+            <button id="updateAncestryButton" class="button is-success">Update</button>
+        {{else}}
+            <button id="createAncestryButton" class="button is-success">Create</button>
+        {{/if}}
     </div>
 </div>

@@ -3,23 +3,51 @@
 */
 
 const router = require('express').Router();
+const editAncestryRoutes = require('./edit-ancestry-routes');
+const editFeatActionRoutes = require('./edit-feat-action-routes');
+
+const Ancestry = require('../models/contentDB/Ancestry');
 const Item = require('../models/contentDB/Item');
 const Weapon = require('../models/contentDB/Weapon');
 const Language = require('../models/contentDB/Language');
 const Tag = require('../models/contentDB/Tag');
+const SenseType = require('../models/contentDB/SenseType');
+const Feat = require('../models/contentDB/Feat');
+const Skill = require('../models/contentDB/Skill');
 
 const adminAuthCheck = (req, res, next) => {
-    if(req.user.isAdmin == 1){
-        next();
+    if(!req.user){
+        res.redirect('/auth/login');
     } else {
-        res.status(404);
-        res.render('error/404_error', { user: req.user });
+        if(req.user.isAdmin == 1){
+            next();
+        } else {
+            res.status(404);
+            res.render('error/404_error', { user: req.user });
+        }
     }
 };
 
 router.get('/panel', adminAuthCheck, (req, res) => {
 
     res.render('admin/admin_panel', {  title: "Admin Panel - Apeiron", user: req.user });
+
+});
+
+// Ancestry Builder
+router.get('/manage/ancestry', adminAuthCheck, (req, res) => {
+
+    Ancestry.findAll({
+        order: [['name', 'ASC'],]
+    }).then((ancestries) => {
+
+        res.render('admin/admin_manager/manager_ancestry', {
+            title: "Ancestry Manager - Apeiron",
+            user: req.user,
+            ancestries
+        });
+
+    });
 
 });
 
@@ -31,18 +59,78 @@ router.get('/create/ancestry', adminAuthCheck, (req, res) => {
         Tag.findAll({
             order: [['name', 'ASC'],]
         }).then((tags) => {
+            SenseType.findAll()
+            .then((senseTypes) => {
+                
+                res.render('admin/admin_builder/builder_ancestry', {
+                    title: "Ancestry Builder - Apeiron",
+                    user: req.user,
+                    languages,
+                    tags,
+                    senseTypes
+                });
 
-            res.render('admin/admin_builder/builder_ancestry', {
-                title: "Ancestry Builder - Apeiron",
-                user: req.user,
-                languages,
-                tags
             });
-
         });
     });
 
 });
+
+router.use('/edit/ancestry', adminAuthCheck, editAncestryRoutes);
+
+
+// Feat-or-Action Builder
+router.get('/manage/feat-action', adminAuthCheck, (req, res) => {
+
+    Feat.findAll({
+        order: [['name', 'ASC'],]
+    }).then((feats) => {
+
+        res.render('admin/admin_manager/manager_feat-action', {
+            title: "Feat / Action Manager - Apeiron",
+            user: req.user,
+            feats
+        });
+
+    });
+
+});
+
+router.get('/create/feat-action', adminAuthCheck, (req, res) => {
+
+    Skill.findAll({
+        order: [['name', 'ASC'],]
+    }).then((skills) => {
+        Tag.findAll({
+            order: [['name', 'ASC'],]
+        }).then((tags) => {
+            res.render('admin/admin_builder/builder_feat-action', {
+                title: "Feat / Action Builder - Apeiron",
+                user: req.user,
+                skills,
+                tags
+            }); 
+        });
+    });
+
+});
+
+router.use('/edit/feat-action', adminAuthCheck, editFeatActionRoutes);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 router.get('/create/item/general', adminAuthCheck, (req, res) => {
 

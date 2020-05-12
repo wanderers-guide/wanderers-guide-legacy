@@ -13,21 +13,20 @@ const CharCondition = require('../models/contentDB/CharCondition');
 const CharDataStoring = require('./CharDataStoring');
 
 function clearDataThatContains(charID, containing){
-    return CharDataStoring.deleteProficiencies(charID, containing, true)
-    .then((result) => {
-        return CharDataStoring.deleteAbilityBonus(charID, containing, true)
+    let dataDeletePromises = [];
+    for(const basicDataName of CharDataStoring.getBasicDataNames()) {
+        let newPromise = CharDataStoring.deleteBasicData(charID, containing, true, basicDataName);
+        dataDeletePromises.push(newPromise);
+    }
+    return Promise.all(dataDeletePromises)
+    .then(function(result) {
+        return CharDataStoring.deleteProficiencies(charID, containing, true)
         .then((result) => {
-            return CharDataStoring.deleteFeats(charID, containing, true)
+            return CharDataStoring.deleteAbilityBonus(charID, containing, true)
             .then((result) => {
                 return CharDataStoring.deleteAbilityChoice(charID, containing, true)
                 .then((result) => {
-                    return CharDataStoring.deleteLanguages(charID, containing, true)
-                    .then((result) => {
-                        return CharDataStoring.deleteLore(charID, containing, true)
-                        .then((result) => {
-                            return;
-                        });
-                    });
+                    return;
                 });
             });
         });
@@ -35,24 +34,14 @@ function clearDataThatContains(charID, containing){
 }
 
 function clearDataOfHigherLevel(charID, level){
-    return CharDataStoring.deleteDataOfHigherLevel(charID, 'dataAbilityBonus', level)
-    .then((result) => {
-        return CharDataStoring.deleteDataOfHigherLevel(charID, 'dataLanguages', level)
-        .then((result) => {
-            return CharDataStoring.deleteDataOfHigherLevel(charID, 'dataProficiencies', level)
-            .then((result) => {
-                return CharDataStoring.deleteDataOfHigherLevel(charID, 'dataChosenFeats', level)
-                .then((result) => {
-                    return CharDataStoring.deleteDataOfHigherLevel(charID, 'dataAbilityChoices', level)
-                    .then((result) => {
-                        return CharDataStoring.deleteDataOfHigherLevel(charID, 'dataLoreCategories', level)
-                        .then((result) => {
-                            return;
-                        });
-                    });
-                });
-            });
-        });
+    let dataDataOfHigherLevelPromises = [];
+    for(const dataName of CharDataStoring.getAllDataNames()) {
+        let newPromise = CharDataStoring.deleteDataOfHigherLevel(charID, dataName, level);
+        dataDataOfHigherLevelPromises.push(newPromise);
+    }
+    return Promise.all(dataDataOfHigherLevelPromises)
+    .then(function(result) {
+        return;
     });
 }
 
@@ -142,11 +131,11 @@ module.exports = class CharSaving {
     }
 
     static updateConditionActiveForArray(charID, conditionIDArray, isActive) {
-        let promises = []
+        let promises = [];
         for(const conditionID of conditionIDArray) {
             var newPromise = CharSaving.updateConditionActive(charID, conditionID, isActive);
            promises.push(newPromise);
-        };
+        }
         return Promise.all(promises)
         .then(function(result) {
             return;
@@ -367,7 +356,10 @@ module.exports = class CharSaving {
         
         return Character.update(charUpVals, { where: { id: charID } })
         .then((result) => {
-            return;
+            return clearDataThatContains(charID, 'Code-OtherHeritage')
+            .then((result) => {
+                return;
+            });
         });
 
     }

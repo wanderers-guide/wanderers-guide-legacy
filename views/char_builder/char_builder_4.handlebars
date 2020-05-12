@@ -2,8 +2,20 @@
 {{#section 'header'}}
     <link rel="stylesheet" href="/css/char-builder.css">
     <script type="text/javascript" src="/js/char_builders/char-builder-4.js"></script>
-    <script type="text/javascript" src="/js/char_builders/display-structs.js"></script>
-    <script type="text/javascript" src="/js/char_builders/asc-processing.js"></script>
+
+    <script type="text/javascript" src="/js/asc-text-processing.js"></script>
+
+    <script type="text/javascript" src="/js/char_builders/asc/init-processing.js"></script>
+    <script type="text/javascript" src="/js/char_builders/asc/asc-boosts.js"></script>
+    <script type="text/javascript" src="/js/char_builders/asc/asc-feats.js"></script>
+    <script type="text/javascript" src="/js/char_builders/asc/asc-langs.js"></script>
+    <script type="text/javascript" src="/js/char_builders/asc/asc-lore.js"></script>
+    <script type="text/javascript" src="/js/char_builders/asc/asc-skills.js"></script>
+    <script type="text/javascript" src="/js/char_builders/asc/asc-profs.js"></script>
+    <script type="text/javascript" src="/js/char_builders/asc/asc-spells.js"></script>
+    <script type="text/javascript" src="/js/char_builders/asc/display-structs.js"></script>
+    <script type="text/javascript" src="/js/char_builders/asc/errorHandling.js"></script>
+
     <script type="text/javascript" src="/js/char_builders/utils.js"></script>
 {{/section}}
 
@@ -35,6 +47,12 @@
 </div>
 
 <div id="char-builder" class="container py-4 text-center">
+
+    <div id="errorDisplay" class="hero is-danger is-hidden">
+        <div class="hero-body is-paddingless py-3">
+            <div id="errorMessage" class="container"></div>
+        </div>
+    </div>
 
     <div class="box">
 

@@ -2,6 +2,11 @@
 {{#section 'header'}}
     <link rel="stylesheet" href="/css/char-builder.css">
     <script type="text/javascript" src="/js/char_builders/char-builder-1.js"></script>
+    
+    <script type="text/javascript" src="/js/asc-text-processing.js"></script>
+
+    <script type="text/javascript" src="/js/char_builders/asc/errorHandling.js"></script>
+
     <script type="text/javascript" src="/js/char_builders/utils.js"></script>
 {{/section}}
 
@@ -32,6 +37,12 @@
 </div>
 
 <div id="char-builder" class="container py-4 text-center">
+
+    <div id="errorDisplay" class="hero is-danger is-hidden">
+        <div class="hero-body is-paddingless py-3">
+            <div id="errorMessage" class="container"></div>
+        </div>
+    </div>
 
     <div class="box">
 

@@ -25,7 +25,7 @@ $(function () {
     // When character name changes, save name
     $("#charName").change(function(){
 
-        let validNameRegex = /^[A-Za-z0-9 ]+$/;
+        let validNameRegex = /^[A-Za-z0-9 ,]+$/;
         if(validNameRegex.test($(this).val())) {
             $(this).removeClass("is-danger");
             $("#charNameSideIcon").addClass("is-hidden");

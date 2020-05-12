@@ -6,7 +6,7 @@ $(function () {
 
     
     $("#inputLangs").change(function(){
-        let langNames = '';
+        let langNames = '- ';
         $(this).find(":selected").each(function(){
             langNames += $(this).text()+' ';
         });
@@ -14,7 +14,7 @@ $(function () {
     });
 
     $("#inputBonusLangs").change(function(){
-        let langNames = '';
+        let langNames = '- ';
         $(this).find(":selected").each(function(){
             langNames += $(this).text()+' ';
         });
@@ -91,7 +91,7 @@ $(function () {
 
         let inputFeatTags = $("#"+featID).find(".inputFeatTags");
         inputFeatTags.change(function(){
-            let tagNames = '';
+            let tagNames = '- ';
             $(this).find(":selected").each(function(){
                 tagNames += $(this).text()+' ';
             });
@@ -102,68 +102,105 @@ $(function () {
 
 
     $("#createAncestryButton").click(function(){
-
-        let ancestryName = $("#inputName").val();
-        let ancestryHitPoints = $("#inputHitPoints").val();
-        let ancestrySize = $("#inputSize").val();
-        let ancestrySpeed = $("#inputSpeed").val();
-        let ancestryVisionType = $("#inputVisionType").val();
-        let ancestryDescription = $("#inputDescription").val();
-        let ancestryBoostsArray = $("#inputBoosts").val();
-        let ancestryFlawsArray = $("#inputFlaws").val();
-        let ancestryLangsArray = $("#inputLangs").val();
-        let ancestryBonusLangsArray = $("#inputBonusLangs").val();
-
-        let ancestryHeritagesArray = [];
-        $(".ancestryHeritage").each(function(){
-            if($(this).is(":visible")) {
-                let heritageName = $(this).find(".inputHeritageName").val();
-                let heritageDesc = $(this).find(".inputHeritageDesc").val();
-                let heritageCode = $(this).find(".inputHeritageCode").val();
-                ancestryHeritagesArray.push({
-                    name: heritageName,
-                    description: heritageDesc,
-                    code: heritageCode
-                });
-            }
-        });
-
-        let ancestryFeatsArray = [];
-        $(".ancestryFeat").each(function(){
-            if($(this).is(":visible")) {
-                let featName = $(this).find(".inputFeatName").val();
-                let featLevel = $(this).find(".inputFeatLevel").val();
-                let featActions = $(this).find(".inputFeatActions").val();
-                let featRarity = $(this).find(".inputFeatRarity").val();
-                let featTagsArray = $(this).find(".inputFeatTags").val();
-                let featPrereq = $(this).find(".inputFeatPrereq").val();
-                let featReq = $(this).find(".inputFeatReq").val();
-                let featFreq = $(this).find(".inputFeatFreq").val();
-                let featTrigger = $(this).find(".inputFeatTrigger").val();
-                let featDesc = $(this).find(".inputFeatDesc").val();
-                let featSpecial = $(this).find(".inputFeatSpecial").val();
-                let featSelectMultiple = ($(this).find(".inputFeatSelectMultiple:checked").val() == '1') ? 1 : 0;
-                let featCode = $(this).find(".inputFeatCode").val();
-                ancestryFeatsArray.push({
-                    name: featName,
-                    actions: featActions,
-                    level: featLevel,
-                    rarity: featRarity,
-                    prerequisites: featPrereq,
-                    frequency: featFreq,
-                    trigger: featTrigger,
-                    requirements: featReq,
-                    description: featDesc,
-                    special: featSpecial,
-                    canSelectMultiple: featSelectMultiple,
-                    code: featCode,
-                    featTagsArray
-                });
-            }
-        });
-        
-        socket.emit("requestAdminAddAncestry");
-
+        finishAncestry(false);
     });
 
-}); 
+});
+
+function finishAncestry(isUpdate){
+
+    let ancestryName = $("#inputName").val();
+    let ancestryVersion = $("#inputVersion").val();
+    let ancestryHitPoints = $("#inputHitPoints").val();
+    let ancestrySize = $("#inputSize").val();
+    let ancestrySpeed = $("#inputSpeed").val();
+    let ancestryVisionSenseID = $("#inputVisionSense").val();
+    let ancestryAdditionalSenseID = $("#inputAdditionalSense").val();
+    let ancestryDescription = $("#inputDescription").val();
+    let ancestryBoostsArray = $("#inputBoosts").val();
+    let ancestryFlawsArray = $("#inputFlaws").val();
+    let ancestryLangsArray = $("#inputLangs").val();
+    let ancestryBonusLangsArray = $("#inputBonusLangs").val();
+    let ancestryTagDesc = $("#inputTagDesc").val();
+
+    let ancestryHeritagesArray = [];
+    $(".ancestryHeritage").each(function(){
+        if($(this).is(":visible")) {
+            let heritageName = $(this).find(".inputHeritageName").val();
+            let heritageDesc = $(this).find(".inputHeritageDesc").val();
+            let heritageCode = $(this).find(".inputHeritageCode").val();
+            ancestryHeritagesArray.push({
+                name: heritageName,
+                description: heritageDesc,
+                code: heritageCode
+            });
+        }
+    });
+
+    let ancestryFeatsArray = [];
+    $(".ancestryFeat").each(function(){
+        if($(this).is(":visible")) {
+            let featName = $(this).find(".inputFeatName").val();
+            let featLevel = $(this).find(".inputFeatLevel").val();
+            let featActions = $(this).find(".inputFeatActions").val();
+            let featRarity = $(this).find(".inputFeatRarity").val();
+            let featTagsArray = $(this).find(".inputFeatTags").val();
+            let featPrereq = $(this).find(".inputFeatPrereq").val();
+            let featReq = $(this).find(".inputFeatReq").val();
+            let featFreq = $(this).find(".inputFeatFreq").val();
+            let featTrigger = $(this).find(".inputFeatTrigger").val();
+            let featDesc = $(this).find(".inputFeatDesc").val();
+            let featSpecial = $(this).find(".inputFeatSpecial").val();
+            let featSelectMultiple = ($(this).find(".inputFeatSelectMultiple:checked").val() == '1') ? 1 : 0;
+            let featCode = $(this).find(".inputFeatCode").val();
+            ancestryFeatsArray.push({
+                name: featName,
+                actions: featActions,
+                level: featLevel,
+                rarity: featRarity,
+                prerequisites: featPrereq,
+                frequency: featFreq,
+                trigger: featTrigger,
+                requirements: featReq,
+                description: featDesc,
+                special: featSpecial,
+                canSelectMultiple: featSelectMultiple,
+                code: featCode,
+                featTagsArray
+            });
+        }
+    });
+    
+    let requestPacket = null;
+    let ancestryID = null;
+    if(isUpdate){
+        requestPacket = "requestAdminUpdateAncestry";
+        ancestryID = getAncestryEditorIDFromURL();
+    } else {
+        requestPacket = "requestAdminAddAncestry";
+    }
+
+    socket.emit(requestPacket,{
+        ancestryID,
+        ancestryName,
+        ancestryVersion,
+        ancestryHitPoints,
+        ancestrySize,
+        ancestrySpeed,
+        ancestryVisionSenseID,
+        ancestryAdditionalSenseID,
+        ancestryDescription,
+        ancestryBoostsArray,
+        ancestryFlawsArray,
+        ancestryLangsArray,
+        ancestryBonusLangsArray,
+        ancestryHeritagesArray,
+        ancestryFeatsArray,
+        ancestryTagDesc
+    });
+
+}
+
+socket.on("returnAdminCompleteAncestry", function() {
+    window.location.href = '/admin/manage/ancestry';
+});

@@ -157,8 +157,7 @@ function displayRunesForItem(qContent, invItem, runeDataStruct, isWeapon){
             $(this).addClass('is-loading');
             socket.emit("requestAddFundamentalRune",
                 invItem.id,
-                runeID,
-                invItem.invID);
+                runeID);
         }
     });
 
@@ -310,8 +309,7 @@ function addFundamentalRuneEntry(qContent, invItem, runeID, runeName, runeDescri
     $('#'+runeEntryDeleteID).click(function() {
         socket.emit("requestRemoveFundamentalRune",
             invItem.id,
-            runeID,
-            invItem.invID);
+            runeID);
     });
 
 }
@@ -354,7 +352,7 @@ function addPropertyRuneSelection(qContent, invItem, runeArray, propertyRuneSlot
         let runeItem = runeArray[existingPropRuneID].Item;
 
         let usageText = (runeItem.usage != null) ? '<p class="has-text-centered is-size-7"><strong>Usage: </strong>'+runeItem.usage+'</p>' : '';
-        qContent.append('<div class="columns is-marginless"><div class="column is-paddingless is-8 is-offset-2"><hr class="m-0">'+usageText+processSheetText(runeItem.description, true, 'SMALL')+'<hr class="m-1"></div></div>');
+        qContent.append('<div class="columns is-marginless"><div class="column is-paddingless is-8 is-offset-2"><hr class="m-0">'+usageText+processText(runeItem.description, true, true, 'SMALL')+'<hr class="m-1"></div></div>');
 
     }
     
@@ -364,13 +362,11 @@ function addPropertyRuneSelection(qContent, invItem, runeArray, propertyRuneSlot
             socket.emit("requestAddPropertyRune",
                 invItem.id,
                 propRuneID,
-                propertyRuneSlot,
-                invItem.invID);
+                propertyRuneSlot);
         } else if(existingPropRuneID != null){
             socket.emit("requestRemovePropertyRune",
                 invItem.id,
-                propertyRuneSlot,
-                invItem.invID);
+                propertyRuneSlot);
         }
     });
     

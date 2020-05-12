@@ -7,7 +7,7 @@
     <script src="/js/sheet/sheet-tabs.js"></script>
     <script src="/js/sheet/sheet-quickview.js"></script>
     <script src="/js/sheet/sheet-item-runes.js"></script>
-    <script src="/js/sheet/sheet-asc-processing.js"></script>
+    <script src="/js/asc-text-processing.js"></script>
     <script src="/js/sheet/sheet-calc-utils.js"></script>
     <script src="/js/sheet/sheet-utils.js"></script>
 {{/section}}
@@ -148,13 +148,13 @@
                         </div>
                     </div>
                     <div class="tile m-2">    
-                        <div class="tile is-child is-paddingless sheet-box">
-                            <div id="perceptionBonusSection" class="cursor-clickable">
-                                <p class="is-size-6 is-unselectable"><strong class="has-text-grey-lighter">Perception</strong></p>
-                                <p id="perceptionBonusContent" class="is-size-5 has-text-grey-light pr-3"></p>
+                        <div class="tile is-child is-paddingless sheet-box cursor-clickable" id="perceptionBonusSection">
+                            <p class="is-size-6 is-unselectable"><strong class="has-text-grey-lighter">Perception</strong></p>
+                            <p id="perceptionBonusContent" class="is-size-5 has-text-grey-light pr-3"></p>
+                            <div>
+                                <hr class="has-background-grey-dark m-1">
+                                <p id="perceptionPrimaryVisionSense" class="is-size-7 has-text-grey-light"></p>
                             </div>
-                            <hr class="has-background-grey-dark m-1">
-                            <p class="is-size-7 has-text-grey-light">Normal Vision</p>
                         </div>
                     </div>
                 </div>

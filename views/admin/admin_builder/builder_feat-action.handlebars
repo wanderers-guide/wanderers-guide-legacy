@@ -1,0 +1,241 @@
+
+{{#section 'header'}}
+    <link rel="stylesheet" href="/css/admin-builders.css">
+    <script type="text/javascript" src="/js/admin_builders/builder-feat-action.js"></script>
+    {{#if featID}}
+        <script type="text/javascript" src="/js/admin_builders/editor-feat-action.js"></script>
+        <script type="text/javascript" src="/js/admin_builders/editor-utils.js"></script>
+    {{/if}}
+{{/section}}
+
+{{#section 'nav_home'}}
+    <li><a href="/">Home</a></li>
+{{/section}}
+
+{{#section 'nav_characters'}}
+    <li><a href="/profile/characters">Characters</a></li>
+{{/section}}
+
+{{#section 'nav_homebrew'}}
+    <li class="mx-lg-4 mx-md-3 my-md-0 my-2"><a href="/homebrew">Homebrew</a></li>
+{{/section}}
+
+{{#section 'nav_login'}}
+    <li class="mr-4"><a href="/auth/login">Login <i class="fas fa-sign-in-alt"></i></a></li>
+{{/section}}
+
+{{#section 'banner_nav'}}
+    <div class="banner_w3lspvt-2"></div>
+{{/section}}
+
+
+<div class="pt-3">
+    {{#if featID}}
+        <h1 class="is-size-1 has-text-light has-text-centered">Feat / Action Editor</h1>
+    {{else}}
+        <h1 class="is-size-1 has-text-light has-text-centered">Feat / Action Creation</h1>
+    {{/if}}
+</div>
+
+<div class="columns is-mobile is-centered mt-2 mb-3">
+    <div class="column is-8 tile is-ancestor is-vertical">
+
+        <div class="tile">
+
+            <div class="tile is-parent is-vertical box is-marginless">
+
+                <div class="tile is-child">
+                    <div class="has-text-centered is-marginless">
+                        <p>Use this builder to create general feats, skill feats, basic actions, or skill actions.</p>
+                    </div>
+                    <div class="field is-grouped is-grouped-centered">
+                        <div class="control">
+                            <div class="select">
+                                <select id="inputBuilderType">
+                                    <option value="GENERAL-FEAT" selected>General Feat</option>
+                                    <option value="SKILL-FEAT">Skill Feat</option>
+                                    <option value="BASIC-ACTION">Basic Action</option>
+                                    <option value="SKILL-ACTION">Skill Action</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tile is-child field">
+                    <label class="label">Name</label>
+                    <div class="control">
+                        <input class="input" id="inputFeatName" type="text" placeholder="e.g. Grim Insight">
+                    </div>
+                </div>
+
+                <div class="tile is-child field">
+                    <label class="label">Version</label>
+                    <div class="control">
+                        <input id="inputFeatVersion" class="input" type="text" placeholder="e.g. 1.0">
+                    </div>
+                </div>
+
+                <div class="tile is-child columns">
+
+                    <div id="sectionSkill" class="column field">
+                        <label class="label">Skill</label>
+                        <div class="control">
+                            <div class="select">
+                                <select id="inputFeatSkill">
+                                    {{#each skills}}
+                                        <option value="{{id}}">{{name}}</option>
+                                    {{/each}}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="sectionMinProf" class="column field">
+                        <label class="label">Min. Proficiency</label>
+                        <div class="control">
+                            <div class="select">
+                                <select id="inputFeatMinProf">
+                                    <option value="U" selected>Untrained</option>
+                                    <option value="T">Trained</option>
+                                    <option value="E">Expert</option>
+                                    <option value="M">Master</option>
+                                    <option value="L">Legendary</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="sectionLevel" class="column field">
+                        <label class="label">Level</label>
+                        <div class="control">
+                            <div class="select">
+                                <select id="inputFeatLevel">
+                                    <option value="-1">Unselectable</option>
+                                    <option value="1" selected>1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="7">7</option>
+                                    <option value="11">11</option>
+                                    <option value="15">15</option>
+                                    <option value="19">19</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="column field">
+                        <label class="label">Actions</label>
+                        <div class="control">
+                            <div class="select">
+                                <select id="inputFeatActions" class="pf-icon">
+                                    <option value="NONE">None</option>
+                                    <option value="ACTION">[one-action]</option>
+                                    <option value="TWO_ACTIONS">[two-actions]</option>
+                                    <option value="THREE_ACTIONS">[three-actions]</option>
+                                    <option value="FREE_ACTION">[free-action]</option>
+                                    <option value="REACTION">[reaction]</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="column field">
+                        <label class="label">Rarity</label>
+                        <div class="control">
+                            <div class="select">
+                                <select id="inputFeatRarity">
+                                    <option value="COMMON">Common</option>
+                                    <option value="UNCOMMON">Uncommon</option>
+                                    <option value="RARE">Rare</option>
+                                    <option value="UNIQUE">Unique</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label class="label">Other Traits</label>
+                    <div class="control">
+                    <div class="select is-multiple">
+                            <select id="inputFeatTags" multiple>
+                                {{#each tags}}
+                                    <option value="{{id}}">{{name}}</option>
+                                {{/each}}
+                            </select>
+                        </div>
+                    </div>
+                    <p id="selectedTraits">- </p>
+                </div>
+
+                <div class="field">
+                    <label class="label">Prerequisites</label>
+                    <div class="control">
+                        <input class="input" id="inputFeatPrereq" type="text" maxlength="155" placeholder="e.g. umbral gnome heritage">
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label class="label">Requirements</label>
+                    <div class="control">
+                        <input class="input" id="inputFeatReq" type="text" maxlength="155">
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label class="label">Frequency</label>
+                    <div class="control">
+                        <input class="input" id="inputFeatFreq" type="text" maxlength="155">
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label class="label">Trigger</label>
+                    <div class="control">
+                        <input class="input" id="inputFeatTrigger" type="text" maxlength="155">
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label class="label">Description</label>
+                    <div class="control">
+                        <textarea class="textarea" id="inputFeatDesc" placeholder="Others’ attempts to scare you often grant you insights..."></textarea>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label class="label">Special</label>
+                    <div class="control">
+                        <input class="input" id="inputFeatSpecial" type="text" maxlength="155">
+                    </div>
+                </div>
+
+                <div id="sectionSelectMultiple" class="field pt-1">
+                     <label class="checkbox">
+                        <input type="checkbox" id="inputFeatSelectMultiple" value="1">
+                        <strong>Can Choose Multiple Times</strong>
+                    </label>
+                </div>
+
+                <div class="field">
+                    <label class="label">Code</label>
+                    <div class="control">
+                        <input class="input" id="inputFeatCode" type="text">
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="field is-grouped is-grouped-centered pb-2">
+    <div class="control">
+        {{#if featID}}
+            <button id="updateFeatButton" class="button is-success">Update</button>
+        {{else}}
+            <button id="createFeatButton" class="button is-success">Create</button>
+        {{/if}}
+    </div>
+</div>

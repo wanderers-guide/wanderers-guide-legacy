@@ -745,6 +745,14 @@ a.banner-1-artist {
     color: #fff;
 }
 
+.banner-1-image-report {
+    position: absolute;
+    bottom: 2%;
+    left: 1%;
+    font-size: 1em;
+    color: #fff;
+}
+
 /* page details */
 .breadcrumb li a {
     color: #fff;

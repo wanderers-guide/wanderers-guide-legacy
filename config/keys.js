@@ -20,7 +20,6 @@ module.exports = {
         DbName: process.env.CONTENT_DB_NAME,
     },
     session: {
-        cookieKey: process.env.SESSION_USER_COOKIE,
         expressSecret: process.env.EXPRESS_SESSION_SECRET
     }
 };

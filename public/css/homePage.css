@@ -1,0 +1,29 @@
+
+.modal-card-head {
+    background-color: #353535;
+    border-bottom-color: #282828;
+}
+.modal-card-body {
+    background-color: #414141;
+}
+.modal-card-foot {
+    background-color: #353535;
+    border-top-color: #282828;
+}
+.modal-background {
+    background-color: rgba(10,10,10,.26)
+}
+
+.input, .select select, .textarea, .button {
+    background-color: hsl(0, 0%, 21%);
+    border-color: hsl(0, 0%, 13%);
+    color: hsl(0, 0%, 82%);
+}
+
+.input:hover, .select select:hover, .textarea:hover, .button:hover {
+    border-color: hsl(0, 0%, 10%);
+}
+
+.input::-webkit-input-placeholder, .select select::-webkit-input-placeholder, .textarea::-webkit-input-placeholder{
+    color:rgba(219,219,219,.4);
+}
