@@ -83,6 +83,14 @@ module.exports = class CharSaving {
         });
     }
 
+    static saveDetails(charID, details) {
+        let updateValues = { details: details };
+        return Character.update(updateValues, { where: { id: charID } })
+        .then((result) => {
+            return;
+        });
+    }
+    
     static saveHeroPoints(charID, heroPoints) {
         let updateValues = { heroPoints: heroPoints };
         return Character.update(updateValues, { where: { id: charID } })

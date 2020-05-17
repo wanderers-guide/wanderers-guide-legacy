@@ -9,9 +9,6 @@ const TaggedItem = db.define('taggedItems', {
   tagID: {
     type: Sequelize.INTEGER,
     primaryKey: true
-  },
-  tagDetails: {
-    type: Sequelize.STRING
   }
 });
 

@@ -83,7 +83,7 @@ function runNextStatement(){
     let srcID = gCode_srcID;
     let locationID = gCode_locationID;
     let statementNum = gCode_stateNum;
-    console.log(ascStatement);
+    
     if(ascStatement != null){
         if(ascStatement == ''){ return false; }
         if(ascStatement.endsWith(',')){ ascStatement = ascStatement.slice(0, -1); }
@@ -123,7 +123,10 @@ function runNextStatement(){
             return false;
         }
 
-        displayError("Unknown statement (1): \'"+ascStatement+"\'");
+        // It could be a sheet statement,
+        if(!testSheetCode(ascStatement)){
+            displayError("Unknown statement (1): \'"+ascStatement+"\'");
+        }
         return false;
 
     } else {

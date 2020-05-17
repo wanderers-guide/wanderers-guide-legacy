@@ -8,6 +8,16 @@ const AdminUpdate = require('./AdminUpdate');
 const GeneralUtils = require('./GeneralUtils');
 const HomeBackReport = require('../models/backgroundDB/HomeBackReport');
 
+function mapToObj(strMap) {
+  let obj = Object.create(null);
+  for (let [k,v] of strMap) {
+    // We don’t escape the key '__proto__'
+    // which can cause problems on older engines
+    obj[k] = v;
+  }
+  return obj;
+}
+
 module.exports = class SocketConnections {
 
   static sheetGeneral(io) {
@@ -30,6 +40,16 @@ module.exports = class SocketConnections {
           if(ownsChar){
             CharSaving.saveNotes(charID, notes).then((result) => {
               socket.emit('returnNotesSave');
+            });
+          }
+        });
+      });
+
+      socket.on('requestDetailsSave', function(charID, details){
+        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+          if(ownsChar){
+            CharSaving.saveDetails(charID, details).then((result) => {
+              socket.emit('returnDetailsSave');
             });
           }
         });
@@ -295,6 +315,59 @@ module.exports = class SocketConnections {
 
   }
 
+
+  static sheetSpells(io) {
+
+    // Socket.IO Connections
+    io.on('connection', function(socket){
+
+      socket.on('requestSpellAddToSpellBook', function(charID, spellSRC, spellID){
+        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+          if(ownsChar){
+            CharSpells.addToSpellBook(charID, spellSRC, spellID).then((result) => {
+              CharSpells.getSpellBook(charID, spellSRC).then((spellBookStruct) => {
+                socket.emit('returnSpellBookUpdated', spellBookStruct);
+              });
+            });
+          }
+        });
+      });
+
+      socket.on('requestSpellRemoveFromSpellBook', function(charID, spellSRC, spellID){
+        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+          if(ownsChar){
+            CharSpells.removeFromSpellBook(charID, spellSRC, spellID).then((result) => {
+              CharSpells.getSpellBook(charID, spellSRC).then((spellBookStruct) => {
+                socket.emit('returnSpellBookUpdated', spellBookStruct);
+              });
+            });
+          }
+        });
+      });
+
+      socket.on('requestSpellBookUpdate', function(charID, spellSRC){
+        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+          if(ownsChar){
+            CharSpells.getSpellBook(charID, spellSRC).then((spellBookStruct) => {
+              socket.emit('returnSpellBookUpdated', spellBookStruct);
+            });
+          }
+        });
+      });
+
+      socket.on('requestSpellSlotUpdate', function(charID, updateSlotObject){
+        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+          if(ownsChar){
+            CharSpells.changeSpellSlot(charID, updateSlotObject).then((result) => {
+              socket.emit('returnSpellSlotUpdate');
+            });
+          }
+        });
+      });
+
+    });
+
+  }
   
 
   static builderBasics(io) {
@@ -557,6 +630,17 @@ module.exports = class SocketConnections {
         });
       });
 
+      socket.on('requestPhysicalFeaturesChange', function(charID, srcID, physicalFeatureIDArray){
+        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+          if(ownsChar){
+            CharDataStoring.replaceBasicData(charID, srcID, physicalFeatureIDArray, 'dataPhysicalFeatures')
+            .then((result) => {
+              socket.emit('returnPhysicalFeaturesChange');
+            });
+          }
+        });
+      });
+
     });
     
   }
@@ -619,33 +703,66 @@ module.exports = class SocketConnections {
         });
       });
 
-      socket.on('requestSpellListChangeSpell', function(charID, srcID, spellID){
+      // Give Spell Slots //
+      socket.on('requestSpellCastingChange', function(charID, srcID, spellSRC, spellcasting){
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
           if(ownsChar){
-            if(Number.isInteger(parseInt(spellID))){
-              CharDataStoring.replaceBasicData(charID, srcID, [spellID], 'dataSpellLists')
-              .then((result) => {
-                socket.emit('returnSpellListChangeTradition');
-              });
-            } else {
-              socket.emit('returnASCStatementFailure', 'Invalid Spell ID');
-            }
+            CharSpells.setSpellCasting(charID, srcID, spellSRC, spellcasting)
+            .then((spellSlots) => {
+              if(spellSlots != null){
+                socket.emit('returnSpellSlotChange');
+              } else {
+                socket.emit('returnASCStatementFailure', 'Invalid Spellcasting \"'+spellcasting+'\"');
+              }
+            });
           } else {
             socket.emit('returnASCStatementFailure', 'Incorrect Auth');
           }
         });
       });
-    
-      socket.on('requestSpellListChangeTradition', function(charID, srcID, spellList){
+
+      socket.on('requestSpellSlotChange', function(charID, srcID, spellSRC, spellSlot){
+        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+          if(ownsChar){
+            CharSpells.setSpellSlot(charID, srcID, spellSRC, spellSlot)
+            .then((spellSlot) => {
+              if(spellSlots != null){
+                socket.emit('returnSpellSlotChange');
+              } else {
+                socket.emit('returnASCStatementFailure', 'Invalid Spell Slot \"'+spellSlot+'\"');
+              }
+            });
+          } else {
+            socket.emit('returnASCStatementFailure', 'Incorrect Auth');
+          }
+        });
+      });
+
+      // Set Key Ability for Spell SRC //
+      socket.on('requestKeySpellAbilityChange', function(charID, srcID, spellSRC, abilityScore){
+        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+          if(ownsChar){
+            CharDataStoring.replaceBasicData(charID, srcID, [spellSRC+"="+abilityScore], 'dataSpellKeyAbilities')
+            .then((result) => {
+              socket.emit('returnKeySpellAbilityChange');
+            });
+          } else {
+            socket.emit('returnASCStatementFailure', 'Incorrect Auth');
+          }
+        });
+      });
+
+      // Set Tradition for Spell SRC //
+      socket.on('requestSpellTraditionChange', function(charID, srcID, spellSRC, spellList){
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
           if(ownsChar){
             if(spellList == 'OCCULT' || spellList == 'ARCANE' || spellList == 'DIVINE' || spellList == 'PRIMAL') {
-              CharDataStoring.replaceBasicData(charID, srcID, [spellList], 'dataSpellLists')
+              CharDataStoring.replaceBasicData(charID, srcID, [spellSRC+"="+spellList], 'dataSpellLists')
               .then((result) => {
-                socket.emit('returnSpellListChangeTradition');
+                socket.emit('returnSpellListChange');
               });
             } else {
-              socket.emit('returnASCStatementFailure', 'Invalid Spell Tradition');
+              socket.emit('returnASCStatementFailure', 'Invalid Spell Tradition \"'+spellList+'\"');
             }
           } else {
             socket.emit('returnASCStatementFailure', 'Incorrect Auth');
@@ -885,8 +1002,99 @@ module.exports = class SocketConnections {
         });
       });
 
-    });
+      ////
+
+      socket.on('requestAdminAddItem', function(data){
+        AuthCheck.isAdmin(socket).then((isAdmin) => {
+          if(isAdmin){
+            AdminUpdate.addItem(data).then((result) => {
+              socket.emit('returnAdminCompleteItem');
+            });
+          }
+        });
+      });
+
+      socket.on('requestAdminUpdateItem', function(data){
+        AuthCheck.isAdmin(socket).then((isAdmin) => {
+          if(isAdmin){
+            if(data != null && data.itemID != null) {
+              AdminUpdate.archiveItem(data.itemID, true).then((result) => {
+                AdminUpdate.addItem(data).then((result) => {
+                  socket.emit('returnAdminCompleteItem');
+                });
+              });
+            }
+          }
+        });
+      });
     
+      socket.on('requestAdminRemoveItem', function(itemID){
+        AuthCheck.isAdmin(socket).then((isAdmin) => {
+          if(isAdmin){
+            AdminUpdate.deleteItem(itemID).then((result) => {
+              socket.emit('returnAdminRemoveItem');
+            });
+          }
+        });
+      });
+
+      socket.on('requestAdminItemDetails', function(){
+        AuthCheck.isAdmin(socket).then((isAdmin) => {
+          if(isAdmin){
+            CharGathering.getAllItems().then((itemMap) => {
+              socket.emit('returnAdminItemDetails', mapToObj(itemMap));
+            });
+          }
+        });
+      });
+
+      ////
+
+      socket.on('requestAdminAddSpell', function(data){
+        AuthCheck.isAdmin(socket).then((isAdmin) => {
+          if(isAdmin){
+            AdminUpdate.addSpell(data).then((result) => {
+              socket.emit('returnAdminCompleteSpell');
+            });
+          }
+        });
+      });
+
+      socket.on('requestAdminUpdateSpell', function(data){
+        AuthCheck.isAdmin(socket).then((isAdmin) => {
+          if(isAdmin){
+            if(data != null && data.spellID != null) {
+              AdminUpdate.archiveSpell(data.spellID, true).then((result) => {
+                AdminUpdate.addSpell(data).then((result) => {
+                  socket.emit('returnAdminCompleteSpell');
+                });
+              });
+            }
+          }
+        });
+      });
+    
+      socket.on('requestAdminRemoveSpell', function(spellID){
+        AuthCheck.isAdmin(socket).then((isAdmin) => {
+          if(isAdmin){
+            AdminUpdate.deleteSpell(spellID).then((result) => {
+              socket.emit('returnAdminRemoveSpell');
+            });
+          }
+        });
+      });
+
+      socket.on('requestAdminSpellDetails', function(){
+        AuthCheck.isAdmin(socket).then((isAdmin) => {
+          if(isAdmin){
+            CharGathering.getAllSpells().then((spellMap) => {
+              socket.emit('returnAdminSpellDetails', mapToObj(spellMap));
+            });
+          }
+        });
+      });
+
+    });
   }
 
 };

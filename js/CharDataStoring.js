@@ -11,6 +11,18 @@ function mapToObj(strMap) {
     return obj;
 }
 
+function getSectionSeparator(){
+    return ',,,';
+}
+
+function getSourceSeparator(){
+    return ':::';
+}
+
+function getEqualitySeparator(){
+    return '===';
+}
+
 module.exports = class CharDataStoring {
 
     static getAllID(){
@@ -18,7 +30,8 @@ module.exports = class CharDataStoring {
     }
 
     static getBasicDataNames(){
-        return ['dataLoreCategories','dataSpellLists','dataSenses','dataChosenFeats','dataLanguages'];
+        return ['dataLoreCategories','dataSpellLists','dataSenses','dataChosenFeats','dataLanguages',
+         'dataPhysicalFeatures', 'dataSpecializations', 'dataSpellSlots', 'dataSpellKeyAbilities'];
     }
     static getAllDataNames(){
         let allDataNames = CharDataStoring.getBasicDataNames();
@@ -33,13 +46,21 @@ module.exports = class CharDataStoring {
     --- Basic Datas ---
     dataLoreCategories: "SrcID:Sailing,SrcID:Underwater Golfing,SrcID:Clubbing"
 
-    dataSpellLists: "SrcID:Primal,SrcID:Occult,SrcID:Divine,SrcID:Arcane,SrcID:34"
+    dataSpellLists: "SrcID:SPELL-SRC=Primal,SrcID:SPELL-SRC=Occult"
+
+    dataSpellSlots: "SrcID:SPELL-SRC={JSON_DATA}"
+
+    dataSpellKeyAbilities: "SrcID:SPELL-SRC=INT,SrcID:SPELL-SRC=WIS"
 
     dataSenses: "SrcID:1,SrcID:0,SrcID:3,SrcID:4"
 
     dataChosenFeats: "SrcID:1,SrcID:0,SrcID:3,SrcID:4"
 
     dataLanguages: "SrcID:1,SrcID:0,SrcID:3,SrcID:4"
+
+    dataSpecializations: "SrcID:Brawling,SrcID:Simple_Weapons"
+
+    dataPhysicalFeatures: "SrcID:1,SrcID:5"
 
     --- Special Datas ---
     dataAbilityBonus: "SrcID:DEX=5,SrcID:CHA=Boost,SrcID:WIS=Flaw" (ability=Bonus)
@@ -67,12 +88,12 @@ module.exports = class CharDataStoring {
                     return new Map();
                 }
 
-                let sections = attrib.split(",");
+                let sections = attrib.split(getSectionSeparator());
 
                 let dataMap = new Map();
 
                 for(const section of sections){
-                    let subsec = section.split(":");
+                    let subsec = section.split(getSourceSeparator());
                     let dataSrc = subsec[0];
                     let data = subsec[1];
 
@@ -131,16 +152,16 @@ module.exports = class CharDataStoring {
 
                 let arrayStr = "";
                 if(attrib != null){
-                    let sections = attrib.split(",");
+                    let sections = attrib.split(getSectionSeparator());
                     for(const section of sections){
-                        let subsec = section.split(":");
+                        let subsec = section.split(getSourceSeparator());
                         let dataSrc = subsec[0];
     
                         if(dataSrc != srcID){
                             if(arrayStr === "") {
                                 arrayStr = section;
                             } else {
-                                arrayStr += ","+section;
+                                arrayStr += getSectionSeparator()+section;
                             }
                         }
                     }
@@ -149,9 +170,9 @@ module.exports = class CharDataStoring {
                 for(const data of dataArray) {
                     if(data != null){
                         if(arrayStr === "") {
-                            arrayStr = srcID+":"+data;
+                            arrayStr = srcID+getSourceSeparator()+data;
                         } else {
-                            arrayStr += ","+srcID+":"+data;
+                            arrayStr += getSectionSeparator()+srcID+getSourceSeparator()+data;
                         }
                     }
                 }
@@ -177,16 +198,16 @@ module.exports = class CharDataStoring {
 
                let arrayStr = "";
                if(attrib != null){
-                   let sections = attrib.split(",");
+                   let sections = attrib.split(getSectionSeparator());
                    for(const section of sections){
-                       let subsec = section.split(":");
+                       let subsec = section.split(getSourceSeparator());
                        let dataSrc = subsec[0];
                        if(contains) {
                            if(!dataSrc.includes(srcID)){
                                if(arrayStr === "") {
                                    arrayStr = section;
                                } else {
-                                   arrayStr = arrayStr+","+section;
+                                   arrayStr += getSectionSeparator()+section;
                                }
                            }
                        } else {
@@ -194,7 +215,7 @@ module.exports = class CharDataStoring {
                                if(arrayStr === "") {
                                    arrayStr = section;
                                } else {
-                                   arrayStr = arrayStr+","+section;
+                                   arrayStr += getSectionSeparator()+section;
                                }
                            }
                        }
@@ -228,17 +249,17 @@ module.exports = class CharDataStoring {
                 let arrayStr = "";
                 if(attrib != null){
 
-                    let sections = attrib.split(",");
+                    let sections = attrib.split(getSectionSeparator());
 
                     for(const section of sections){
-                        let subsec = section.split(":");
+                        let subsec = section.split(getSourceSeparator());
                         let dataSrc = subsec[0];
     
                         if(dataSrc != id){
                             if(arrayStr === "") {
                                 arrayStr = section;
                             } else {
-                                arrayStr = arrayStr+","+section;
+                                arrayStr += getSectionSeparator()+section;
                             }
                         }
     
@@ -250,9 +271,9 @@ module.exports = class CharDataStoring {
                     for(const proficiency of proficiencyArray) {
                         if(proficiency != null){
                             if(arrayStr === "") {
-                                arrayStr = id+":"+proficiency.For+"~"+proficiency.To+"="+proficiency.Prof;
+                                arrayStr = id+getSourceSeparator()+proficiency.For+"~"+proficiency.To+getEqualitySeparator()+proficiency.Prof;
                             } else {
-                                arrayStr = arrayStr+","+id+":"+proficiency.For+"~"+proficiency.To+"="+proficiency.Prof;
+                                arrayStr += getSectionSeparator()+id+getSourceSeparator()+proficiency.For+"~"+proficiency.To+getEqualitySeparator()+proficiency.Prof;
                             }
                         }
                     }
@@ -286,10 +307,10 @@ module.exports = class CharDataStoring {
                 let arrayStr = "";
                 if(attrib != null){
 
-                    let sections = attrib.split(",");
+                    let sections = attrib.split(getSectionSeparator());
 
                     for(const section of sections){
-                        let subsec = section.split(":");
+                        let subsec = section.split(getSourceSeparator());
                         let dataSrc = subsec[0];
     
                         if(contains) {
@@ -297,7 +318,7 @@ module.exports = class CharDataStoring {
                                 if(arrayStr === "") {
                                     arrayStr = section;
                                 } else {
-                                    arrayStr = arrayStr+","+section;
+                                    arrayStr += getSectionSeparator()+section;
                                 }
                             }
                         } else {
@@ -305,7 +326,7 @@ module.exports = class CharDataStoring {
                                 if(arrayStr === "") {
                                     arrayStr = section;
                                 } else {
-                                    arrayStr = arrayStr+","+section;
+                                    arrayStr += getSectionSeparator()+section;
                                 }
                             }
                         }
@@ -343,18 +364,18 @@ module.exports = class CharDataStoring {
                     return new Map();
                 }
 
-                let sections = attrib.split(",");
+                let sections = attrib.split(getSectionSeparator());
 
                 let dataMap = new Map();
 
                 for(const section of sections){
-                    let subsec = section.split(":");
+                    let subsec = section.split(getSourceSeparator());
                     let dataSrc = subsec[0];
                     let data = subsec[1];
 
                     if(id === "GET_ALL" || dataSrc === id){
 
-                        let subdata = data.split("=");
+                        let subdata = data.split(getEqualitySeparator());
                         let frontdata = subdata[0];
                         let subfrontdata = frontdata.split("~");
                         let forData = subfrontdata[0];
@@ -400,9 +421,9 @@ module.exports = class CharDataStoring {
                 if(abilityBonusArray != null){
                     for(const abilityBonus of abilityBonusArray) {
                         if(arrayStr == null || arrayStr == '') {
-                            arrayStr = id+":"+abilityBonus.Ability+"="+abilityBonus.Bonus;
+                            arrayStr = id+getSourceSeparator()+abilityBonus.Ability+getEqualitySeparator()+abilityBonus.Bonus;
                         } else {
-                            arrayStr = arrayStr+","+id+":"+abilityBonus.Ability+"="+abilityBonus.Bonus;
+                            arrayStr += getSectionSeparator()+id+getSourceSeparator()+abilityBonus.Ability+getEqualitySeparator()+abilityBonus.Bonus;
                         }
                     }
                 }
@@ -435,10 +456,10 @@ module.exports = class CharDataStoring {
                let arrayStr = "";
                if(attrib != null){
 
-                   let sections = attrib.split(",");
+                   let sections = attrib.split(getSectionSeparator());
 
                    for(const section of sections){
-                       let subsec = section.split(":");
+                       let subsec = section.split(getSourceSeparator());
                        let dataSrc = subsec[0];
    
                        if(contains) {
@@ -446,7 +467,7 @@ module.exports = class CharDataStoring {
                                if(arrayStr === "") {
                                    arrayStr = section;
                                } else {
-                                   arrayStr = arrayStr+","+section;
+                                   arrayStr += getSectionSeparator()+section;
                                }
                            }
                        } else {
@@ -454,7 +475,7 @@ module.exports = class CharDataStoring {
                                if(arrayStr === "") {
                                    arrayStr = section;
                                } else {
-                                   arrayStr = arrayStr+","+section;
+                                   arrayStr += getSectionSeparator()+section;
                                }
                            }
                        }
@@ -491,17 +512,17 @@ module.exports = class CharDataStoring {
                 let arrayStr = "";
                 if(attrib != null){
 
-                    let sections = attrib.split(",");
+                    let sections = attrib.split(getSectionSeparator());
 
                     for(const section of sections){
-                        let subsec = section.split(":");
+                        let subsec = section.split(getSourceSeparator());
                         let dataSrc = subsec[0];
     
                         if(dataSrc != id){
                             if(arrayStr === "") {
                                 arrayStr = section;
                             } else {
-                                arrayStr = arrayStr+","+section;
+                                arrayStr += getSectionSeparator()+section;
                             }
                         }
     
@@ -513,9 +534,9 @@ module.exports = class CharDataStoring {
                     for(const abilityBonus of abilityBonusArray) {
                         if(abilityBonus != null){
                             if(arrayStr === "") {
-                                arrayStr = id+":"+abilityBonus.Ability+"="+abilityBonus.Bonus;
+                                arrayStr = id+getSourceSeparator()+abilityBonus.Ability+getEqualitySeparator()+abilityBonus.Bonus;
                             } else {
-                                arrayStr = arrayStr+","+id+":"+abilityBonus.Ability+"="+abilityBonus.Bonus;
+                                arrayStr += getSectionSeparator()+id+getSourceSeparator()+abilityBonus.Ability+getEqualitySeparator()+abilityBonus.Bonus;
                             }
                         }
                     }
@@ -550,18 +571,18 @@ module.exports = class CharDataStoring {
                     return new Map();
                 }
 
-                let sections = attrib.split(",");
+                let sections = attrib.split(getSectionSeparator());
 
                 let dataMap = new Map();
 
                 for(const section of sections){
-                    let subsec = section.split(":");
+                    let subsec = section.split(getSourceSeparator());
                     let dataSrc = subsec[0];
                     let data = subsec[1];
 
                     if(id === "GET_ALL" || dataSrc === id){
 
-                        let subdata = data.split("=");
+                        let subdata = data.split(getEqualitySeparator());
                         let ability = subdata[0];
                         let bonus = subdata[1];
 
@@ -603,18 +624,18 @@ module.exports = class CharDataStoring {
                     return mapToObj(new Map());
                 }
 
-                let sections = attrib.split(",");
+                let sections = attrib.split(getSectionSeparator());
 
                 let dataMap = new Map();
 
                 for(const section of sections){
-                    let subsec = section.split(":");
+                    let subsec = section.split(getSourceSeparator());
                     let dataSrc = subsec[0];
                     let data = subsec[1];
 
                     if(id === "GET_ALL" || dataSrc === id){
 
-                        let subdata = data.split("=");
+                        let subdata = data.split(getEqualitySeparator());
                         let selectorAbility = subdata[0];
                         let selectOptionAbility = subdata[1];
 
@@ -656,17 +677,17 @@ module.exports = class CharDataStoring {
                 let arrayStr = "";
                 if(attrib != null){
 
-                    let sections = attrib.split(",");
+                    let sections = attrib.split(getSectionSeparator());
 
                     for(const section of sections){
-                        let subsec = section.split(":");
+                        let subsec = section.split(getSourceSeparator());
                         let dataSrc = subsec[0];
     
                         if(dataSrc != id){
                             if(arrayStr === "") {
                                 arrayStr = section;
                             } else {
-                                arrayStr = arrayStr+","+section;
+                                arrayStr += getSectionSeparator()+section;
                             }
                         }
     
@@ -677,9 +698,9 @@ module.exports = class CharDataStoring {
                 for(const abilityChoice of abilityChoiceArray) {
                     if(abilityChoice != null){
                         if(arrayStr === "") {
-                            arrayStr = id+":"+abilityChoice.SelectorAbility+"="+abilityChoice.SelectOptionAbility;
+                            arrayStr = id+getSourceSeparator()+abilityChoice.SelectorAbility+getEqualitySeparator()+abilityChoice.SelectOptionAbility;
                         } else {
-                            arrayStr = arrayStr+","+id+":"+abilityChoice.SelectorAbility+"="+abilityChoice.SelectOptionAbility;
+                            arrayStr += getSectionSeparator()+id+getSourceSeparator()+abilityChoice.SelectorAbility+getEqualitySeparator()+abilityChoice.SelectOptionAbility;
                         }
                     }
                 }
@@ -712,10 +733,10 @@ module.exports = class CharDataStoring {
                 let arrayStr = "";
                 if(attrib != null){
 
-                    let sections = attrib.split(",");
+                    let sections = attrib.split(getSectionSeparator());
 
                     for(const section of sections){
-                        let subsec = section.split(":");
+                        let subsec = section.split(getSourceSeparator());
                         let dataSrc = subsec[0];
     
                         if(contains) {
@@ -723,7 +744,7 @@ module.exports = class CharDataStoring {
                                 if(arrayStr === "") {
                                     arrayStr = section;
                                 } else {
-                                    arrayStr = arrayStr+","+section;
+                                    arrayStr += getSectionSeparator()+section;
                                 }
                             }
                         } else {
@@ -731,7 +752,7 @@ module.exports = class CharDataStoring {
                                 if(arrayStr === "") {
                                     arrayStr = section;
                                 } else {
-                                    arrayStr = arrayStr+","+section;
+                                    arrayStr += getSectionSeparator()+section;
                                 }
                             }
                         }
@@ -772,7 +793,7 @@ module.exports = class CharDataStoring {
                 if(arrayStr == null || arrayStr == '') {
                     arrayStr = charTag;
                 } else {
-                    arrayStr = arrayStr+","+charTag;
+                    arrayStr += getSectionSeparator()+charTag;
                 }
 
                 let dataUpVals = {
@@ -804,7 +825,7 @@ module.exports = class CharDataStoring {
                     return [];
                 }
 
-                return attrib.split(",");
+                return attrib.split(getSectionSeparator());
 
             });
 
@@ -826,7 +847,7 @@ module.exports = class CharDataStoring {
                     return;
                 }
 
-                let sections = attrib.split(",");
+                let sections = attrib.split(getSectionSeparator());
 
                 let arrayStr = '';
                 for(const section of sections){
@@ -835,7 +856,7 @@ module.exports = class CharDataStoring {
                         if(arrayStr === "") {
                             arrayStr = section;
                         } else {
-                            arrayStr = arrayStr+","+section;
+                            arrayStr += getSectionSeparator()+section;
                         }
                     }
     
@@ -871,10 +892,10 @@ module.exports = class CharDataStoring {
                let arrayStr = "";
                if(attrib != null && attrib != ''){
 
-                    let sections = attrib.split(",");
+                    let sections = attrib.split(getSectionSeparator());
 
                     for(const section of sections){
-                       let subsec = section.split(":");
+                       let subsec = section.split(getSourceSeparator());
                        let dataSrc = subsec[0];
    
                         // Ex of Data: 'Type-Class_Level-4_Code-None'
@@ -886,7 +907,7 @@ module.exports = class CharDataStoring {
                             if(arrayStr === "") {
                                 arrayStr = section;
                             } else {
-                                arrayStr = arrayStr+","+section;
+                                arrayStr += getSectionSeparator()+section;
                             }
                         }
                     }

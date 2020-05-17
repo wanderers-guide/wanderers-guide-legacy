@@ -14,6 +14,7 @@
     <script type="text/javascript" src="/js/char_builders/asc/asc-profs.js"></script>
     <script type="text/javascript" src="/js/char_builders/asc/asc-spells.js"></script>
     <script type="text/javascript" src="/js/char_builders/asc/display-structs.js"></script>
+    <script type="text/javascript" src="/js/sheet/sheet-asc-processing.js"></script>
     <script type="text/javascript" src="/js/char_builders/asc/errorHandling.js"></script>
 
     <script type="text/javascript" src="/js/char_builders/utils.js"></script>
@@ -118,7 +119,7 @@
 
     <div class="ancestry-content">
 
-        <div id="ancestryInfo" class="box">
+        <div id="ancestryInfo" class="box is-marginless">
             <div class="tile is-ancestor is-vertical">
                 <div class="tile is-parent">
                     <div class="tile is-child">
@@ -153,11 +154,22 @@
                             <p id="ancestrySenses" class="is-size-5 has-text-value"></p>
                         </div>
                     </div>
+                    <div id="sectionPhysicalFeatures" class="tile is-child">
+                        <p class="is-size-4 has-text-title has-text-weight-semibold">Physical Features</p>
+                        <div class="container">
+                            <p id="ancestryPhysicalFeatures" class="is-size-5 has-text-value"></p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <div id="ancestryBoostsAndFlaws" class="box">
+        <div class="columns is-centered is-marginless">
+            <div id="physicalFeatureOneCodeOutput" class="column is-half-tablet"></div>
+            <div id="physicalFeatureTwoCodeOutput" class="column is-half-tablet"></div>
+        </div>
+
+        <div id="ancestryBoostsAndFlaws" class="box mt-4">
             <div class="tile is-ancestor is-vertical">
                 <div class="tile is-parent">
                     <div class="tile is-child">

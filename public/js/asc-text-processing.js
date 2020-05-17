@@ -18,6 +18,7 @@ function processText(text, isSheet) {
 }
 
 function processText(text, isSheet, isJustified, size) {
+    if(text == null) {return text;}
 
     let _j = (isJustified) ? ' has-text-justified ' : '';
     let _s = '';
@@ -32,21 +33,19 @@ function processText(text, isSheet, isJustified, size) {
             break;
     }
 
-
     // Wrap in a paragraph
     text = '<p class="p-1 pl-2 '+_j+_s+'">'+text+'</p>';
 
-
     // <n> -> Newline
-    text = text.replace(/<n>/g, '</p><p class="p-1 pl-2 '+_j+_s+'">'); // class="p-1">&nbsp;
+    text = text.replace(/<n>/g, '</p><p class="p-1 pl-2 '+_j+_s+'">');
 
-    // page ### -> Core Rulebook Link
-    let regexCoreRules = /page\s*(\d+)/g;
-    text = text.replace(regexCoreRules, '<a href="https://paizo.com/products/btq01zp3?Pathfinder-Core-Rulebook" target="_blank">page $1</a>');
+    // > Some Text Here: Other Text
+    let regexNonBulletList = /\~(.*?)\:/g;
+    text = text.replace(regexNonBulletList, '</p><p class="pl-2 pr-1 negative-indent '+_j+_s+'"><strong>$1</strong>');
 
-    // Pathfinder Bestiary ### -> Bestiary Link
-    let regexBestiary = /Pathfinder Bestiary\s*(\d+)/g;
-    text = text.replace(regexBestiary, '<a href="https://paizo.com/products/btq01zp4?Pathfinder-Bestiary" target="_blank">Pathfinder Bestiary $1</a>');
+    // * Some Text Here: Other Text
+    let regexBulletList = /\*(.*?)\:/g;
+    text = text.replace(regexBulletList, '</p><p class="pl-2 pr-1 negative-indent '+_j+_s+'">&#x2022;<strong>$1</strong>');
 
     // Website Link - URL
     let regexURL = /\[(.*?)\]/g;
@@ -60,18 +59,34 @@ function processText(text, isSheet, isJustified, size) {
         text = text.replace(regexSheetVariables, handleSheetVariables);
     }
 
+    // FREE-ACTION
+    // REACTION
+    // ONE-ACTION
+    // TWO-ACTIONS
+    // THREE-ACTIONS
+    text = text.replace('FREE-ACTION', '<span class="pf-icon">[free-action]</span>');
+    text = text.replace('REACTION', '<span class="pf-icon">[reaction]</span>');
+    text = text.replace('ONE-ACTION', '<span class="pf-icon">[one-action]</span>');
+    text = text.replace('TWO-ACTIONS', '<span class="pf-icon">[two-actions]</span>');
+    text = text.replace('THREE-ACTIONS', '<span class="pf-icon">[two-actions]</span>');
 
-    // |CRITICAL_SUCCESS:text|
-    // |SUCCESS:text|
-    // |FAILURE:text|
-    // |CRITICAL_FAILURE:text|
 
-    text = text.replace('|CRITICAL_SUCCESS:','<p class="'+_j+_s+'"><strong class="pl-3">Critical Success: </strong>');
-    text = text.replace('|SUCCESS:','<p class="'+_j+_s+'"><strong class="pl-3">Success: </strong>');
-    text = text.replace('|FAILURE:','<p class="'+_j+_s+'"><strong class="pl-3">Failure: </strong>');
-    text = text.replace('|CRITICAL_FAILURE:','<p class="'+_j+_s+'"><strong class="pl-3">Critical Failure: </strong>');
-    text = text.replace(/\|/g,'</p>');
+    // Critical Success:text
+    // Success:text
+    // Failure:text
+    // Critical Failure:text
+    text = text.replace('Critical Success:','</p><p class="pl-2 pr-1 negative-indent '+_j+_s+'"><strong>Critical Success</strong>');
+    text = text.replace('Success:','</p><p class="pl-2 pr-1 negative-indent '+_j+_s+'"><strong>Success</strong>');
+    text = text.replace('Failure:','</p><p class="pl-2 pr-1 negative-indent '+_j+_s+'"><strong>Failure</strong>');
+    text = text.replace('Critical Failure:','</p><p class="pl-2 pr-1 negative-indent '+_j+_s+'"><strong>Critical Failure</strong>');
 
+    // page ### -> Core Rulebook Link
+    let regexCoreRules = /page\s*(\d+)/g;
+    text = text.replace(regexCoreRules, '<a href="https://paizo.com/products/btq01zp3?Pathfinder-Core-Rulebook" target="_blank">page $1</a>');
+
+    // Pathfinder Bestiary ### -> Bestiary Link
+    let regexBestiary = /Pathfinder Bestiary\s*(\d+)/g;
+    text = text.replace(regexBestiary, '<a href="https://paizo.com/products/btq01zp4?Pathfinder-Bestiary" target="_blank">Pathfinder Bestiary $1</a>');
 
     return text;
 

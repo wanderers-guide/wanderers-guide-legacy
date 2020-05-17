@@ -1,9 +1,9 @@
 
 {{#section 'header'}}
     <link rel="stylesheet" href="/css/admin-builders.css">
-    <script type="text/javascript" src="/js/admin_builders/builder-feat-action.js"></script>
+    <script type="text/javascript" src="/js/admin_builders/feat-action/builder-feat-action.js"></script>
     {{#if featID}}
-        <script type="text/javascript" src="/js/admin_builders/editor-feat-action.js"></script>
+        <script type="text/javascript" src="/js/admin_builders/feat-action/editor-feat-action.js"></script>
         <script type="text/javascript" src="/js/admin_builders/editor-utils.js"></script>
     {{/if}}
 {{/section}}
@@ -155,7 +155,7 @@
                     </div>
                 </div>
 
-                <div class="field">
+                <div class="tile is-child field">
                     <label class="label">Other Traits</label>
                     <div class="control">
                     <div class="select is-multiple">
@@ -169,56 +169,56 @@
                     <p id="selectedTraits">- </p>
                 </div>
 
-                <div class="field">
+                <div class="tile is-child field">
                     <label class="label">Prerequisites</label>
                     <div class="control">
                         <input class="input" id="inputFeatPrereq" type="text" maxlength="155" placeholder="e.g. umbral gnome heritage">
                     </div>
                 </div>
 
-                <div class="field">
+                <div class="tile is-child field">
                     <label class="label">Requirements</label>
                     <div class="control">
                         <input class="input" id="inputFeatReq" type="text" maxlength="155">
                     </div>
                 </div>
 
-                <div class="field">
+                <div class="tile is-child field">
                     <label class="label">Frequency</label>
                     <div class="control">
                         <input class="input" id="inputFeatFreq" type="text" maxlength="155">
                     </div>
                 </div>
 
-                <div class="field">
+                <div class="tile is-child field">
                     <label class="label">Trigger</label>
                     <div class="control">
                         <input class="input" id="inputFeatTrigger" type="text" maxlength="155">
                     </div>
                 </div>
 
-                <div class="field">
+                <div class="tile is-child field">
                     <label class="label">Description</label>
                     <div class="control">
                         <textarea class="textarea" id="inputFeatDesc" placeholder="Others’ attempts to scare you often grant you insights..."></textarea>
                     </div>
                 </div>
 
-                <div class="field">
+                <div class="tile is-child field">
                     <label class="label">Special</label>
                     <div class="control">
                         <input class="input" id="inputFeatSpecial" type="text" maxlength="155">
                     </div>
                 </div>
 
-                <div id="sectionSelectMultiple" class="field pt-1">
+                <div id="sectionSelectMultiple" class="tile is-child field pt-1">
                      <label class="checkbox">
                         <input type="checkbox" id="inputFeatSelectMultiple" value="1">
                         <strong>Can Choose Multiple Times</strong>
                     </label>
                 </div>
 
-                <div class="field">
+                <div class="tile is-child field">
                     <label class="label">Code</label>
                     <div class="control">
                         <input class="input" id="inputFeatCode" type="text">

@@ -5,6 +5,8 @@ const ClassAbility = require('../models/contentDB/ClassAbility');
 const Feat = require('../models/contentDB/Feat');
 const FeatTag = require('../models/contentDB/FeatTag');
 const Tag = require('../models/contentDB/Tag');
+const Spell = require('../models/contentDB/Spell');
+const TaggedSpell = require('../models/contentDB/TaggedSpell');
 const Skill = require('../models/contentDB/Skill');
 const Background = require('../models/contentDB/Background');
 const Inventory = require('../models/contentDB/Inventory');
@@ -15,6 +17,7 @@ const AncestryLanguage = require('../models/contentDB/AncestryLanguage');
 const AncestryBoost = require('../models/contentDB/AncestryBoost');
 const AncestryFlaw = require('../models/contentDB/AncestryFlaw');
 const SenseType = require('../models/contentDB/SenseType');
+const PhysicalFeature = require('../models/contentDB/PhysicalFeature');
 const Condition = require('../models/contentDB/Condition');
 const CharCondition = require('../models/contentDB/CharCondition');
 const Item = require('../models/contentDB/Item');
@@ -29,6 +32,7 @@ const Shield = require('../models/contentDB/Shield');
 const ItemRune = require('../models/contentDB/ItemRune');
 
 const CharDataStoring = require('./CharDataStoring');
+const CharSpells = require('./CharSpells');
 
 function mapToObj(strMap) {
     let obj = Object.create(null);
@@ -119,7 +123,9 @@ module.exports = class CharGathering {
 
 
     static getAllFeats() {
-        return Feat.findAll()
+        return Feat.findAll({
+            order: [['level', 'ASC'],]
+        })
         .then((feats) => {
             return FeatTag.findAll()
             .then((featTags) => {
@@ -144,6 +150,40 @@ module.exports = class CharGathering {
                     }
 
                     return mapToObj(featMap);
+    
+                });
+            });
+        });
+    }
+
+    static getAllSpells() {
+        return Spell.findAll({
+            order: [['level', 'ASC'],['name', 'ASC'],]
+        })
+        .then((spells) => {
+            return TaggedSpell.findAll()
+            .then((taggedSpells) => {
+                return Tag.findAll()
+                .then((tags) => {
+    
+                    let spellMap = new Map();
+
+                    for (const spell of spells) {
+                        spellMap.set(spell.id, {Spell : spell, Tags : []});
+                    }
+
+                    for (const taggedSpell of taggedSpells) {
+
+                        let tag = tags.find(tag => {
+                            return tag.id === taggedSpell.tagID;
+                        });
+
+                        let spellStruct = spellMap.get(taggedSpell.spellID);
+                        spellStruct.Tags.push(tag);
+
+                    }
+
+                    return spellMap;
     
                 });
             });
@@ -181,8 +221,7 @@ module.exports = class CharGathering {
                                                     });
             
                                                     tagArray.push({
-                                                        Tag : tag,
-                                                        TagDetails : taggedItem.tagDetails
+                                                        Tag : tag
                                                     });
 
                                                 }
@@ -362,77 +401,88 @@ module.exports = class CharGathering {
                                 .then((tags) => {
                                     return SenseType.findAll()
                                     .then((senseTypes) => {
+                                        return PhysicalFeature.findAll()
+                                        .then((physicalFeatures) => {
 
-                                        let ancestryMap = new Map();
+                                            let ancestryMap = new Map();
 
-                                        for (const ancestry of ancestries) {
-                                            let tag = null;
-                                            if(includeTag){
-                                                tag = tags.find(tag => {
-                                                    return tag.id === ancestry.tagID;
-                                                });
-                                            }
-                                            let visionSense, additionalSense = null;
-                                            for(let senseType of senseTypes){
-                                                if(senseType.id === ancestry.visionSenseID){
-                                                    visionSense = senseType;
+                                            for (const ancestry of ancestries) {
+                                                let tag = null;
+                                                if(includeTag){
+                                                    tag = tags.find(tag => {
+                                                        return tag.id === ancestry.tagID;
+                                                    });
                                                 }
-                                                if(senseType.id === ancestry.additionalSenseID){
-                                                    additionalSense = senseType;
+                                                let visionSense, additionalSense = null;
+                                                for(let senseType of senseTypes){
+                                                    if(senseType.id === ancestry.visionSenseID){
+                                                        visionSense = senseType;
+                                                    } else if(senseType.id === ancestry.additionalSenseID){
+                                                        additionalSense = senseType;
+                                                    }
                                                 }
+                                                let physicalFeatureOne, physicalFeatureTwo = null;
+                                                for(let physicalFeature of physicalFeatures){
+                                                    if(physicalFeature.id === ancestry.physicalFeatureOneID){
+                                                        physicalFeatureOne = physicalFeature;
+                                                    } else if(physicalFeature.id === ancestry.physicalFeatureTwoID){
+                                                        physicalFeatureTwo = physicalFeature;
+                                                    }
+                                                }
+                                                ancestryMap.set(ancestry.id, {Ancestry : ancestry, Heritages : [],
+                                                    Languages : [], BonusLanguages : [], Boosts : [], Flaws : [],
+                                                    Tag : tag, VisionSense : visionSense, AdditionalSense : additionalSense,
+                                                    PhysicalFeatureOne: physicalFeatureOne, PhysicalFeatureTwo: 
+                                                    physicalFeatureTwo});
                                             }
-                                            ancestryMap.set(ancestry.id, {Ancestry : ancestry, Heritages : [],
-                                                Languages : [], BonusLanguages : [], Boosts : [], Flaws : [],
-                                                Tag : tag, VisionSense : visionSense, AdditionalSense : additionalSense});
-                                        }
 
-                                        for (const heritage of heritages) {
+                                            for (const heritage of heritages) {
 
-                                            let ancestryStruct = ancestryMap.get(heritage.ancestryID);
-                                            ancestryStruct.Heritages.push(heritage);
-
-                                        }
-
-                                        for (const ancestLang of ancestLangs) {
-
-                                            if(ancestLang.isBonus === 1) {
-
-                                                let language = languages.find(language => {
-                                                    return language.id === ancestLang.langID;
-                                                });
-                        
-                                                let ancestryStruct = ancestryMap.get(ancestLang.ancestryID);
-                                                ancestryStruct.BonusLanguages.push(language);
-
-                                            } else {
-
-                                                let language = languages.find(language => {
-                                                    return language.id === ancestLang.langID;
-                                                });
-                        
-                                                let ancestryStruct = ancestryMap.get(ancestLang.ancestryID);
-                                                ancestryStruct.Languages.push(language);
+                                                let ancestryStruct = ancestryMap.get(heritage.ancestryID);
+                                                ancestryStruct.Heritages.push(heritage);
 
                                             }
 
-                                        }
+                                            for (const ancestLang of ancestLangs) {
 
-                                        for (const ancestBoost of ancestBoosts) {
+                                                if(ancestLang.isBonus === 1) {
 
-                                            let ancestryStruct = ancestryMap.get(ancestBoost.ancestryID);
-                                            ancestryStruct.Boosts.push(ancestBoost.boostedAbility);
+                                                    let language = languages.find(language => {
+                                                        return language.id === ancestLang.langID;
+                                                    });
+                            
+                                                    let ancestryStruct = ancestryMap.get(ancestLang.ancestryID);
+                                                    ancestryStruct.BonusLanguages.push(language);
 
-                                        }
+                                                } else {
 
-                                        for (const ancestFlaw of ancestFlaws) {
+                                                    let language = languages.find(language => {
+                                                        return language.id === ancestLang.langID;
+                                                    });
+                            
+                                                    let ancestryStruct = ancestryMap.get(ancestLang.ancestryID);
+                                                    ancestryStruct.Languages.push(language);
 
-                                            let ancestryStruct = ancestryMap.get(ancestFlaw.ancestryID);
-                                            ancestryStruct.Flaws.push(ancestFlaw.flawedAbility);
+                                                }
 
-                                        }
+                                            }
 
-                                        return mapToObj(ancestryMap);
+                                            for (const ancestBoost of ancestBoosts) {
 
+                                                let ancestryStruct = ancestryMap.get(ancestBoost.ancestryID);
+                                                ancestryStruct.Boosts.push(ancestBoost.boostedAbility);
+
+                                            }
+
+                                            for (const ancestFlaw of ancestFlaws) {
+
+                                                let ancestryStruct = ancestryMap.get(ancestFlaw.ancestryID);
+                                                ancestryStruct.Flaws.push(ancestFlaw.flawedAbility);
+
+                                            }
+
+                                            return mapToObj(ancestryMap);
+                                        });
                                     });
                                 });
                             });
@@ -502,6 +552,25 @@ module.exports = class CharGathering {
             return backgrounds;
         });
     }
+
+
+    static getSpellData(charID){
+        return CharSpells.getSpellSlots(charID)
+        .then((spellSlotsMap) => {
+            let spellBookPromises = [];
+            for(const [spellSRC, spellSlotArray] of spellSlotsMap.entries()){
+                let newPromise = CharSpells.getSpellBook(charID, spellSRC);
+                spellBookPromises.push(newPromise);
+            }
+            return Promise.all(spellBookPromises)
+            .then(function(spellBookArray) {
+                return {
+                    SpellSlotObject: mapToObj(spellSlotsMap),
+                    SpellBookArray: spellBookArray,
+                };
+            });
+        });
+    }
     
 
     static getCharChoices(charID) {
@@ -526,22 +595,29 @@ module.exports = class CharGathering {
                                         .then((langObject) => {
                                             return CharDataStoring.getBasicData(charID, "GET_ALL", 'dataSenses', SenseType)
                                             .then((senseObject) => {
+                                                return CharDataStoring.getBasicData(charID, "GET_ALL", 'dataPhysicalFeatures', PhysicalFeature)
+                                                .then((physicalFeatureObject) => {
+                                                    return CharGathering.getSpellData(charID)
+                                                    .then((spellDataStruct) => {
 
-                                                let choiceStruct = {
-                                                    Level : character.level,
-                                                    Heritage : heritage,
-                                                    Class : cClass,
-                                                    CharTagsArray : charTagsArray,
-                                                    FeatObject : featObject,
-                                                    BonusObject : mapToObj(bonusMap),
-                                                    AbilityObject : abilityObject,
-                                                    ProficiencyObject : mapToObj(proficiencyMap),
-                                                    LangObject : langObject,
-                                                    SenseObject : senseObject
-                                                };
-                        
-                                                return choiceStruct;
-
+                                                        let choiceStruct = {
+                                                            Level : character.level,
+                                                            Heritage : heritage,
+                                                            Class : cClass,
+                                                            CharTagsArray : charTagsArray,
+                                                            FeatObject : featObject,
+                                                            BonusObject : mapToObj(bonusMap),
+                                                            AbilityObject : abilityObject,
+                                                            ProficiencyObject : mapToObj(proficiencyMap),
+                                                            LangObject : langObject,
+                                                            SenseObject : senseObject,
+                                                            PhysicalFeatureObject : physicalFeatureObject,
+                                                            SpellDataStruct: spellDataStruct,
+                                                        };
+                                
+                                                        return choiceStruct;
+                                                    });
+                                                });
                                             });
                                         });
                                     });
@@ -857,44 +933,48 @@ module.exports = class CharGathering {
                                     .then((skillObject) => {
                                         return CharGathering.getCharChoices(charID)
                                         .then( (choicesStruct) => {
-                                            return CharGathering.getAllFeats()
-                                            .then( (featObject) => {
-                                                return CharGathering.getAllItems()
-                                                .then( (itemMap) => {
-                                                    return CharGathering.getAllConditions(charID)
-                                                    .then( (conditionsObject) => {
-                                                        return Condition.findAll()
-                                                        .then((allConditions) => {
-                                                            return CharGathering.getFinalProfs(charID)
-                                                            .then( (profMap) => {
-                                                                return CharGathering.getInventory(character.inventoryID)
-                                                                .then( (invStruct) => {
-                                                                    
-                                                                    let weaponProfMap = CharGathering.gatherWeaponProfs(profMap, itemMap);
-                                                                    let armorProfMap = CharGathering.gatherArmorProfs(profMap, itemMap);
-                                                                    
-                                                                    let charInfo = {
-                                                                        Character : character,
-                                                                        Class : cClass,
-                                                                        Background : background,
-                                                                        Ancestry : ancestry,
-                                                                        Heritage : heritage,
-                                                                        Inventory : inventory,
-                                                                        AbilObject : abilObject,
-                                                                        SkillObject : skillObject,
-                                                                        FeatObject : featObject,
-                                                                        ProfObject : mapToObj(profMap),
-                                                                        ChoicesStruct : choicesStruct,
-                                                                        InvStruct : invStruct,
-                                                                        ItemObject : mapToObj(itemMap),
-                                                                        ConditionsObject : conditionsObject,
-                                                                        WeaponProfObject : mapToObj(weaponProfMap),
-                                                                        ArmorProfObject : mapToObj(armorProfMap),
-                                                                        AllConditions : allConditions
-                                                                    };
-                                            
-                                                                    return charInfo;
+                                            return CharGathering.getAllSpells()
+                                            .then( (spellMap) => {
+                                                return CharGathering.getAllFeats()
+                                                .then( (featObject) => {
+                                                    return CharGathering.getAllItems()
+                                                    .then( (itemMap) => {
+                                                        return CharGathering.getAllConditions(charID)
+                                                        .then( (conditionsObject) => {
+                                                            return Condition.findAll()
+                                                            .then((allConditions) => {
+                                                                return CharGathering.getFinalProfs(charID)
+                                                                .then( (profMap) => {
+                                                                    return CharGathering.getInventory(character.inventoryID)
+                                                                    .then( (invStruct) => {
+                                                                        
+                                                                        let weaponProfMap = CharGathering.gatherWeaponProfs(profMap, itemMap);
+                                                                        let armorProfMap = CharGathering.gatherArmorProfs(profMap, itemMap);
+                                                                        
+                                                                        let charInfo = {
+                                                                            Character : character,
+                                                                            Class : cClass,
+                                                                            Background : background,
+                                                                            Ancestry : ancestry,
+                                                                            Heritage : heritage,
+                                                                            Inventory : inventory,
+                                                                            AbilObject : abilObject,
+                                                                            SkillObject : skillObject,
+                                                                            FeatObject : featObject,
+                                                                            ProfObject : mapToObj(profMap),
+                                                                            SpellObject : mapToObj(spellMap),
+                                                                            ChoicesStruct : choicesStruct,
+                                                                            InvStruct : invStruct,
+                                                                            ItemObject : mapToObj(itemMap),
+                                                                            ConditionsObject : conditionsObject,
+                                                                            WeaponProfObject : mapToObj(weaponProfMap),
+                                                                            ArmorProfObject : mapToObj(armorProfMap),
+                                                                            AllConditions : allConditions
+                                                                        };
+                                                
+                                                                        return charInfo;
 
+                                                                    });
                                                                 });
                                                             });
                                                         });

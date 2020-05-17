@@ -62,6 +62,16 @@ const Item = db.define('items', {
   },
   code: {
     type: Sequelize.TEXT
+  },
+  itemStructType: {
+    type: Sequelize.ENUM,
+    values: ['GENERAL', 'WEAPON', 'ARMOR', 'SHIELD', 'STORAGE', 'RUNE']
+  },
+  isArchived: {
+    type: Sequelize.INTEGER
+  },
+  version: {
+    type: Sequelize.STRING
   }
 });
 

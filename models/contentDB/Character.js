@@ -41,9 +41,12 @@ const Character = db.define('characters', {
   notes: {
     type: Sequelize.TEXT
   },
+  details: {
+    type: Sequelize.TEXT
+  },
   dataID: {
     type: Sequelize.INTEGER
-  },
+  }
 });
 
 module.exports = Character;

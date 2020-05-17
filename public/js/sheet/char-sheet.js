@@ -5,6 +5,7 @@ let g_character = null;
 let g_class = null;
 let g_ancestry = null;
 let g_heritage = null;
+let g_background = null;
 let g_charTagsArray = null;
 
 let g_itemMap = null;
@@ -29,6 +30,10 @@ let g_senseMap = null;
 
 let g_featMap = null;
 let g_featChoiceMap = null;
+
+let g_spellMap = null;
+let g_spellSlotsMap = null;
+let g_spellBookArray = null;
 
 let g_inventoryTabScroll = null;
 let g_selectedTabID = 'inventoryTab';
@@ -65,6 +70,7 @@ socket.on("returnCharacterSheetInfo", function(charInfo){
     g_skillMap = objToMap(charInfo.SkillObject);
     g_langMap = objToMap(charInfo.ChoicesStruct.LangObject);
     g_senseMap = objToMap(charInfo.ChoicesStruct.SenseObject);
+    g_physicalFeatureMap = objToMap(charInfo.ChoicesStruct.PhysicalFeatureObject);
 
     g_profMap = objToMap(charInfo.ProfObject);
     g_weaponProfMap = objToMap(charInfo.WeaponProfObject);
@@ -73,10 +79,25 @@ socket.on("returnCharacterSheetInfo", function(charInfo){
     g_featMap = objToMap(charInfo.FeatObject);
     g_featChoiceMap = objToMap(charInfo.ChoicesStruct.FeatObject);
 
+    g_spellMap = objToMap(charInfo.SpellObject);
+    g_spellMap = new Map([...g_spellMap.entries()].sort(
+        function(a, b) {
+            if (a[1].Spell.level === b[1].Spell.level) {
+                // Name is only important when levels are the same
+                return a[1].Spell.name > b[1].Spell.name ? 1 : -1;
+            }
+            return a[1].Spell.level - b[1].Spell.level;
+        })
+    );
+
+    g_spellSlotsMap = objToMap(charInfo.ChoicesStruct.SpellDataStruct.SpellSlotObject);
+    g_spellBookArray = charInfo.ChoicesStruct.SpellDataStruct.SpellBookArray;
+
     g_charTagsArray = charInfo.ChoicesStruct.CharTagsArray;
     g_class = charInfo.ChoicesStruct.Class;
     g_ancestry = charInfo.Ancestry;
     g_heritage = charInfo.Heritage;
+    g_background = charInfo.Background;
 
     loadCharSheet();
 
@@ -142,6 +163,49 @@ function loadCharSheet(){
     addStat('PERCEPTION', 'USER_BONUS', perceptionData.Bonus);
     addStat('PERCEPTION', 'MODIFIER', 'WIS');
 
+    // Spell Attacks and DCs
+    let arcaneSpellAttack = g_profMap.get("ArcaneSpellAttacks");
+    if(arcaneSpellAttack != null){
+        addStat('ARCANE_SPELL_ATTACK', 'PROF_BONUS', arcaneSpellAttack.NumUps);
+        addStat('ARCANE_SPELL_ATTACK', 'USER_BONUS', arcaneSpellAttack.Bonus);
+    }
+    let occultSpellAttack = g_profMap.get("OccultSpellAttacks");
+    if(occultSpellAttack != null){
+        addStat('OCCULT_SPELL_ATTACK', 'PROF_BONUS', occultSpellAttack.NumUps);
+        addStat('OCCULT_SPELL_ATTACK', 'USER_BONUS', occultSpellAttack.Bonus);
+    }
+    let primalSpellAttack = g_profMap.get("PrimalSpellAttacks");
+    if(primalSpellAttack != null){
+        addStat('PRIMAL_SPELL_ATTACK', 'PROF_BONUS', primalSpellAttack.NumUps);
+        addStat('PRIMAL_SPELL_ATTACK', 'USER_BONUS', primalSpellAttack.Bonus);
+    }
+    let divineSpellAttack = g_profMap.get("DivineSpellAttacks");
+    if(divineSpellAttack != null){
+        addStat('DIVINE_SPELL_ATTACK', 'PROF_BONUS', divineSpellAttack.NumUps);
+        addStat('DIVINE_SPELL_ATTACK', 'USER_BONUS', divineSpellAttack.Bonus);
+    }
+    
+    let arcaneSpellDC = g_profMap.get("ArcaneSpellDCs");
+    if(arcaneSpellDC != null){
+        addStat('ARCANE_SPELL_DC', 'PROF_BONUS', arcaneSpellDC.NumUps);
+        addStat('ARCANE_SPELL_DC', 'USER_BONUS', arcaneSpellDC.Bonus);
+    }
+    let occultSpellDC = g_profMap.get("OccultSpellDCs");
+    if(occultSpellDC != null){
+        addStat('OCCULT_SPELL_DC', 'PROF_BONUS', occultSpellDC.NumUps);
+        addStat('OCCULT_SPELL_DC', 'USER_BONUS', occultSpellDC.Bonus);
+    }
+    let primalSpellDC = g_profMap.get("PrimalSpellDCs");
+    if(primalSpellDC != null){
+        addStat('PRIMAL_SPELL_DC', 'PROF_BONUS', primalSpellDC.NumUps);
+        addStat('PRIMAL_SPELL_DC', 'USER_BONUS', primalSpellDC.Bonus);
+    }
+    let divineSpellDC = g_profMap.get("DivineSpellDCs");
+    if(divineSpellDC != null){
+        addStat('DIVINE_SPELL_DC', 'PROF_BONUS', divineSpellDC.NumUps);
+        addStat('DIVINE_SPELL_DC', 'USER_BONUS', divineSpellDC.Bonus);
+    }
+
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 
     // Apply Items Code //
@@ -159,6 +223,9 @@ function loadCharSheet(){
 
     // Run Init Condition Code //
     runAllConditionsCode();
+
+    // Run Feats and Abilities Code //
+    runAllFeatsAndAbilitiesCode();
 
     // Determine Armor //
     determineArmor(getMod(getStatTotal('SCORE_DEX')), strScore);
@@ -479,6 +546,15 @@ function displayInformation() {
         });
     });
 
+    $("#perceptionBonusSection").mouseenter(function(){
+        $(this).addClass('has-background-grey-darker');
+        $("#perceptionBonusDivider").addClass('hr-highlighted');
+    });
+    $("#perceptionBonusSection").mouseleave(function(){
+        $(this).removeClass('has-background-grey-darker');
+        $("#perceptionBonusDivider").removeClass('hr-highlighted');
+    });
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////// Attacks and Defenses /////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -604,6 +680,21 @@ function displayInformation() {
     });
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////// Weapons Tab //////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    $('#weaponsTab').click(function(event, preventQuickviewClose){
+        if(preventQuickviewClose){
+            event.stopImmediatePropagation();
+        }
+        changeTab('weaponsTab', {
+            StrMod : getMod(getStatTotal('SCORE_STR')),
+            DexMod : getMod(getStatTotal('SCORE_DEX')),
+            Size : g_ancestry.size,
+        });
+    });
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////// Spells Tab //////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -612,7 +703,16 @@ function displayInformation() {
             event.stopImmediatePropagation();
         }
         changeTab('spellsTab', {
-            
+            ArcaneSpellAttack : getStatTotal('ARCANE_SPELL_ATTACK'),
+            OccultSpellAttack : getStatTotal('OCCULT_SPELL_ATTACK'),
+            PrimalSpellAttack : getStatTotal('PRIMAL_SPELL_ATTACK'),
+            DivineSpellAttack : getStatTotal('DIVINE_SPELL_ATTACK'),
+            ArcaneSpellDC : getStatTotal('ARCANE_SPELL_DC'),
+            OccultSpellDC : getStatTotal('OCCULT_SPELL_DC'),
+            PrimalSpellDC : getStatTotal('PRIMAL_SPELL_DC'),
+            DivineSpellDC : getStatTotal('DIVINE_SPELL_DC'),
+            SpellSlotsMap : g_spellSlotsMap,
+            SpellMap : g_spellMap,
         });
     });
 
@@ -632,18 +732,22 @@ function displayInformation() {
     });
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
-    ////////////////////////////////////////// Feats Tab ///////////////////////////////////////////
+    ///////////////////////////////////////// Details Tab //////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
-    $('#featsTab').click(function(event, preventQuickviewClose){
+    $('#detailsTab').click(function(event, preventQuickviewClose){
         if(preventQuickviewClose){
             event.stopImmediatePropagation();
         }
-        changeTab('featsTab', {
+        changeTab('detailsTab', {
             FeatMap : g_featMap,
             FeatChoiceMap : g_featChoiceMap,
+            AbilityMap : g_abilMap,
             AncestryTagsArray : g_charTagsArray,
-            ClassName : g_class.name
+            ClassName : g_class.name,
+            Character : g_character,
+            Heritage : g_heritage,
+            Background : g_background,
         });
     });
 
@@ -949,7 +1053,7 @@ function runArmorPropertyRuneCode(propertyRuneID){
         if(itemData.RuneData != null && itemData.RuneData.id == propertyRuneID){
             let propertyRuneCode = itemData.Item.code;
             if(propertyRuneCode != null){
-                processSheetCode(propertyRuneCode, 'ARMOR_PROPERTY_RUNE', 'ITEM');
+                processSheetCode(propertyRuneCode, 'ARMOR_PROPERTY_RUNE');
             }
             return;
         }
@@ -1000,6 +1104,28 @@ function findEquippedShield() {
         }
     }
     return null;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////// Rune Data Struct //////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////
+
+function generateRuneDataStruct(){
+
+    let weaponRuneArray = [];
+    let armorRuneArray = [];
+    for(const [itemID, itemData] of g_itemMap.entries()){
+        if(itemData.RuneData != null){
+            if(itemData.RuneData.etchedType == 'WEAPON'){
+                weaponRuneArray[itemData.RuneData.id] = itemData;
+            } else if(itemData.RuneData.etchedType == 'ARMOR'){
+                armorRuneArray[itemData.RuneData.id] = itemData;
+            }
+        }
+    }
+
+    return { WeaponArray : weaponRuneArray, ArmorArray : armorRuneArray };
+
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1118,6 +1244,21 @@ function determineBulkAndCoins(invItems, itemMap, strMod){
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////// Feats and Abilities Code ///////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////
+
+function runAllFeatsAndAbilitiesCode() {
+    
+    for(const [dataSrc, dataFeatArray] of g_featChoiceMap.entries()){
+        for(const feat of dataFeatArray){
+            processSheetCode(feat.code, feat.name);
+        }
+    }
+    console.log(g_statManagerMap);
+
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////// Socket Returns ////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -1156,3 +1297,17 @@ socket.on("returnInvItemUpdated", function(invStruct){
     loadCharSheet();
     $('#quickviewDefault').removeClass('is-active');
 });
+
+// Spellbook
+socket.on("returnSpellBookUpdated", function(spellBookStruct){
+    for (let i = 0; i < g_spellBookArray.length; i++) {
+        let spellBook = g_spellBookArray[i];
+        if(spellBook.SpellSRC === spellBookStruct.SpellSRC){
+            g_spellBookArray[i] = spellBookStruct;
+        }
+    }
+    console.log(spellBookStruct);
+    console.log(g_spellBookArray);
+    $('#quickviewDefault').removeClass('is-active');
+});
+

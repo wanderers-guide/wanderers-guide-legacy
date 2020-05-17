@@ -17,10 +17,14 @@ let g_conditionalStatManagerMap = null;
         'CIRCUM_BONUS' -> Number
         'STATUS_BONUS' -> Number
         'ITEM_BONUS' -> Number
+        'OTHER-(SRC-NAME)_BONUS' -> Number
+
+        'USER_PENALTY' -> Number
         'CIRCUM_PENALTY' -> Number
         'STATUS_PENALTY' -> Number
         'ITEM_PENALTY' -> Number
-        'OTHER_PENALTY' -> Number
+        'OTHER-(SRC-NAME)_PENALTY' -> Number
+
         'MODIFIER' -> 'STR'/'DEX'/'CON'/'INT'/'WIS'/'CHA'
 
 */

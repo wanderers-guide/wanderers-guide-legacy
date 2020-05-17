@@ -201,7 +201,7 @@ function runConditionCode(conditionID){
         if(conditionCode != null){
             conditionCode = conditionCode.replace(/CONDITION_VALUE_TIMES_TWO/g, conditionData.Value*2);
             conditionCode = conditionCode.replace(/CONDITION_VALUE/g, conditionData.Value);
-            processSheetCode(conditionCode, conditionData.Condition.name, 'STATUS');
+            processSheetCode(conditionCode, conditionData.Condition.name);
         }
 
     }

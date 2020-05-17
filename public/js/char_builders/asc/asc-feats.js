@@ -126,9 +126,28 @@ function displayFeatChoice(srcID, locationID, statementNum, selectionName, tagsA
     $('#'+selectFeatID).append('<option value="chooseDefault">'+selectionName+'</option>');
     $('#'+selectFeatID).append('<hr class="dropdown-divider"></hr>');
 
+    let triggerChange = false;
+    // Set saved feat choices
+    let featArray = objToMap(ascChoiceStruct.FeatObject).get(srcID);
+    let selectedFeat = null;
+    if(featArray != null && featArray[0] != null){
+        selectedFeat = featArray[0];
+        triggerChange = true;
+    }
+
     let prevLevel = 1;
     for(const featStruct of ascFeatMap){
         let feat = featStruct[1];
+        if(feat.Feat.level < 1){ continue; }
+
+        let featName = feat.Feat.name;
+        if(feat.Feat.isArchived === 1){
+            if(selectedFeat != null && selectedFeat.id == feat.Feat.id){
+                featName += ' - Archived';
+            } else {
+                continue;
+            }
+        }
 
         let tag = feat.Tags.find(tag => {
             return tagsArray.includes(tag.name);
@@ -136,7 +155,7 @@ function displayFeatChoice(srcID, locationID, statementNum, selectionName, tagsA
 
         if(feat.Feat.level <= featLevel && feat.Tags.includes(tag)){
 
-            $('#'+selectFeatID).append('<option value="'+feat.Feat.id+'">('+feat.Feat.level+') '+feat.Feat.name+'</option>');
+            $('#'+selectFeatID).append('<option value="'+feat.Feat.id+'">('+feat.Feat.level+') '+featName+'</option>');
 
             if(feat.Feat.level > prevLevel){
                 $('#'+selectFeatID).append('<hr class="dropdown-divider"></hr>');
@@ -147,20 +166,19 @@ function displayFeatChoice(srcID, locationID, statementNum, selectionName, tagsA
 
     }
 
-    let triggerChange = false;
-
-    // Set saved feat choices
-    let featArray = objToMap(ascChoiceStruct.FeatObject).get(srcID);
-    if(featArray != null && featArray[0] != null){
-        $('#'+selectFeatID).val(featArray[0].id);
-        triggerChange = true;
+    if(selectedFeat != null){
+        $('#'+selectFeatID).val(selectedFeat.id);
     }
 
     // On feat choice change
     $('#'+selectFeatID).change(function(event, triggerSave, checkDup) {
 
         if(!($(this).is(":hidden"))) {
-            if($(this).val() == "chooseDefault"){
+
+            let featID = $(this).val();
+            let feat = ascFeatMap.get(featID+"");
+
+            if($(this).val() == "chooseDefault" || feat == null){
 
                 // Display nothing
                 $('#'+descriptionFeatID).html('');
@@ -175,14 +193,17 @@ function displayFeatChoice(srcID, locationID, statementNum, selectionName, tagsA
 
             } else {
 
-                let featID = $(this).val();
-                let feat = ascFeatMap.get(featID+"");
-
                 let featChoiceMap = objToMap(ascChoiceStruct.FeatObject);
 
-                if((checkDup == null || checkDup) 
-                    && feat.Feat.canSelectMultiple == 0 
-                    && hasDuplicateFeat(featChoiceMap, $(this).val())){
+                let canSelectFeat = true;
+                if((checkDup == null || checkDup) && feat.Feat.canSelectMultiple == 0 && hasDuplicateFeat(featChoiceMap, $(this).val())){
+                    canSelectFeat = false;
+                }
+                if(selectedFeat != null && selectedFeat.id == feat.Feat.id) {
+                    canSelectFeat = true;
+                }
+
+                if(!canSelectFeat){
                     
                     $('.'+selectFeatControlShellClass).addClass("is-danger");
 
@@ -191,7 +212,7 @@ function displayFeatChoice(srcID, locationID, statementNum, selectionName, tagsA
 
                 } else {
                     $('.'+selectFeatControlShellClass).removeClass("is-danger");
-                
+
                     // Display feat
                     displayFeat(descriptionFeatID, feat);
 
@@ -249,9 +270,11 @@ function giveFeatByName(srcID, featName, locationID, statementNum){
 
     let featEntry = null;
     ascFeatMap.forEach(function(value, key, map){
-        if(value.Feat.name.toLowerCase() === featName.toLowerCase()){
-            featEntry = value;
-            return;
+        if(value.Feat.isArchived === 0) {
+            if(value.Feat.name.toLowerCase() === featName.toLowerCase()){
+                featEntry = value;
+                return;
+            }
         }
     });
     if(featEntry == null){

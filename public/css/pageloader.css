@@ -2,7 +2,7 @@
 .fadeout {
     visibility: hidden;
     opacity: 0;
-    transition: visibility 0s 1s, opacity 0.3s linear;
+    transition: visibility 0s 0.5s, opacity 0.3s linear;
 }
 
 .pageloader {

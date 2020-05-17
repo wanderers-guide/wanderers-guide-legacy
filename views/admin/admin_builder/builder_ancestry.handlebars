@@ -1,9 +1,9 @@
 
 {{#section 'header'}}
     <link rel="stylesheet" href="/css/admin-builders.css">
-    <script type="text/javascript" src="/js/admin_builders/builder-ancestry.js"></script>
+    <script type="text/javascript" src="/js/admin_builders/ancestry/builder-ancestry.js"></script>
     {{#if ancestryID}}
-        <script type="text/javascript" src="/js/admin_builders/editor-ancestry.js"></script>
+        <script type="text/javascript" src="/js/admin_builders/ancestry/editor-ancestry.js"></script>
         <script type="text/javascript" src="/js/admin_builders/editor-utils.js"></script>
     {{/if}}
 {{/section}}
@@ -112,6 +112,34 @@
                                     {{#ifEqual isVisionType 0}}
                                         <option value="{{id}}">{{name}}</option>
                                     {{/ifEqual}}
+                                {{/each}}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tile is-child field">
+                    <label class="label">Physical Feature</label>
+                    <div class="control">
+                        <div class="select">
+                            <select id="inputPhysicalFeatureOne">
+                                <option value="">Choose a Feature</option>
+                                {{#each physicalFeatures}}
+                                    <option value="{{id}}">{{name}}</option>
+                                {{/each}}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tile is-child field">
+                    <label class="label">Physical Feature</label>
+                    <div class="control">
+                        <div class="select">
+                            <select id="inputPhysicalFeatureTwo">
+                                <option value="">Choose a Feature</option>
+                                {{#each physicalFeatures}}
+                                    <option value="{{id}}">{{name}}</option>
                                 {{/each}}
                             </select>
                         </div>
@@ -280,6 +308,7 @@
                                                 <option value="5">5</option>
                                                 <option value="9">9</option>
                                                 <option value="13">13</option>
+                                                <option value="17">17</option>
                                             </select>
                                         </div>
                                     </div>

@@ -194,7 +194,7 @@ function displayCurrentAncestry(ancestryStruct, saving) {
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Speed ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
     let ancestrySpeed = $('#ancestrySpeed');
     ancestrySpeed.html('');
-    ancestrySpeed.append(ancestryStruct.Ancestry.speed+" feet");
+    ancestrySpeed.append(ancestryStruct.Ancestry.speed+" ft");
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Languages ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
     let ancestryLanguages = $('#ancestryLanguages');
@@ -241,7 +241,55 @@ function displayCurrentAncestry(ancestryStruct, saving) {
             senseIDArray);
     }
 
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Physical Features ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
+    
+    $('#physicalFeatureOneCodeOutput').addClass('is-hidden');
+    $('#physicalFeatureTwoCodeOutput').addClass('is-hidden');
+    if(ancestryStruct.PhysicalFeatureOne != null || ancestryStruct.PhysicalFeatureTwo != null) {
+        $('#sectionPhysicalFeatures').removeClass('is-hidden');
 
+        let ancestryPhysicalFeatures = $('#ancestryPhysicalFeatures');
+        ancestryPhysicalFeatures.html('');
+        let physicalFeatureIDArray = [];
+        if(ancestryStruct.PhysicalFeatureOne != null){
+            ancestryPhysicalFeatures.append('<a class="has-text-info has-tooltip-bottom has-tooltip-multiline" data-tooltip="'+ancestryStruct.PhysicalFeatureOne.description+'">'+ancestryStruct.PhysicalFeatureOne.name+'</a>');
+            physicalFeatureIDArray.push(ancestryStruct.PhysicalFeatureOne.id);
+            if(ancestryStruct.PhysicalFeatureTwo != null){
+                ancestryPhysicalFeatures.append(' and ');
+            }
+            processCode(
+                ancestryStruct.PhysicalFeatureOne.code,
+                'Type-Ancestry_Level-1_Code-OtherPhysicalFeatureOne',
+                'physicalFeatureOneCodeOutput');
+            if(ancestryStruct.PhysicalFeatureOne.code != null){
+                $('#physicalFeatureOneCodeOutput').removeClass('is-hidden');
+            }
+        }
+
+        if(ancestryStruct.PhysicalFeatureTwo != null){
+            ancestryPhysicalFeatures.append('<a class="has-text-info has-tooltip-bottom has-tooltip-multiline" data-tooltip="'+ancestryStruct.PhysicalFeatureTwo.description+'">'+ancestryStruct.PhysicalFeatureTwo.name+'</a>');
+            physicalFeatureIDArray.push(ancestryStruct.PhysicalFeatureTwo.id);
+            processCode(
+                ancestryStruct.PhysicalFeatureTwo.code,
+                'Type-Ancestry_Level-1_Code-OtherPhysicalFeatureTwo',
+                'physicalFeatureTwoCodeOutput');
+            if(ancestryStruct.PhysicalFeatureTwo.code != null){
+                $('#physicalFeatureTwoCodeOutput').removeClass('is-hidden');
+            }
+        }
+    
+        if(saving){
+            socket.emit("requestPhysicalFeaturesChange",
+                getCharIDFromURL(),
+                'Type-Ancestry_Level-1_Code-None',
+                physicalFeatureIDArray);
+        }
+
+    } else {
+        $('#sectionPhysicalFeatures').addClass('is-hidden');
+    }
+
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 
     clearAbilityBoostsAndFlaws();
     let abilBonusArray = [];

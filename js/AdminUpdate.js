@@ -8,8 +8,25 @@ const Tag = require('../models/contentDB/Tag');
 const Heritage = require('../models/contentDB/Heritage');
 const Feat = require('../models/contentDB/Feat');
 const FeatTag = require('../models/contentDB/FeatTag');
+const Item = require('../models/contentDB/Item');
+const TaggedItem = require('../models/contentDB/TaggedItem');
+const Storage = require('../models/contentDB/Storage');
+const Weapon = require('../models/contentDB/Weapon');
+const Armor = require('../models/contentDB/Armor');
+const Shield = require('../models/contentDB/Shield');
+const ItemRune = require('../models/contentDB/ItemRune');
+const Spell = require('../models/contentDB/Spell');
+const TaggedSpell = require('../models/contentDB/TaggedSpell');
 
 const CharSaving = require('./CharSaving');
+
+function becomeNegative(number){
+    if(number > 0){
+        return -1*number;
+    } else {
+        return number;
+    }
+}
 
 module.exports = class AdminUpdate {
 
@@ -22,6 +39,8 @@ module.exports = class AdminUpdate {
             ancestrySpeed,
             ancestryVisionSenseID,
             ancestryAdditionalSenseID,
+            ancestryPhysicalFeatureOneID,
+            ancestryPhysicalFeatureTwoID,
             ancestryDescription,
             ancestryBoostsArray,
             ancestryFlawsArray,
@@ -33,6 +52,7 @@ module.exports = class AdminUpdate {
         */
         for(let d in data) { if(data[d] === ''){ data[d] = null; } }
         if(data.ancestryDescription == null){ data.ancestryDescription = 'No Description'; }
+        if(data.ancestryVersion == null){ data.ancestryVersion = '1.0'; }
         if(data.ancestryTagDesc == null){ data.ancestryTagDesc = 'No Description'; }
         return Tag.create({ // Create Ancestry Tag
             name: data.ancestryName,
@@ -47,6 +67,8 @@ module.exports = class AdminUpdate {
                 description: data.ancestryDescription,
                 visionSenseID: data.ancestryVisionSenseID,
                 additionalSenseID: data.ancestryAdditionalSenseID,
+                physicalFeatureOneID: data.ancestryPhysicalFeatureOneID,
+                physicalFeatureTwoID: data.ancestryPhysicalFeatureTwoID,
                 tagID: ancestryTag.id
             }).then(ancestry => {
                 let ancestryBoostsPromises = []; // Create Ancestry Boosts
@@ -172,7 +194,7 @@ module.exports = class AdminUpdate {
                                         return Promise.all(ancestryFeatsPromises)
                                         .then(function(result) {
                                             return Tag.destroy({ // Delete Tag (which will cascade to FeatTags)
-                                                where: { name: ancestry.tagID }
+                                                where: { id: ancestry.tagID }
                                             }).then((result) => {
                                                 return Ancestry.destroy({ // Finally, delete Ancestry
                                                     where: { id: ancestry.id }
@@ -196,7 +218,26 @@ module.exports = class AdminUpdate {
         let updateValues = { isArchived: archived };
         return Ancestry.update(updateValues, { where: { id: ancestryID } })
         .then((result) => {
-            return;
+            return Ancestry.findOne({where: { id: ancestryID}})
+            .then((ancestry) => {
+                return Tag.update(updateValues, { where: { id: ancestry.tagID } })
+                .then((result) => {
+                    return FeatTag.findAll({where: { tagID: ancestry.tagID }})
+                    .then((featTags) => {
+                        let ancestryFeatsPromises = [];
+                        for(const featTag of featTags) {
+                            let newPromise = Feat.update(updateValues, {
+                                where: { id: featTag.featID }
+                            });
+                            ancestryFeatsPromises.push(newPromise);
+                        }
+                        return Promise.all(ancestryFeatsPromises)
+                        .then(function(result) {
+                            return;
+                        });
+                    });
+                });
+            });
         });
     }
 
@@ -260,6 +301,9 @@ module.exports = class AdminUpdate {
             data.isDefault = 1;
         } else if(data.builderType == "SKILL-ACTION"){
             data.isDefault = 1;
+        } else {
+            console.error("Invalid BuilderType for Feat Creation: '"+data.builderType+"'!");
+            return;
         }
         return AdminUpdate.addFeatPreparedData({
             name: data.featName,
@@ -310,6 +354,7 @@ module.exports = class AdminUpdate {
         */
         for(let d in data) { if(data[d] === ''){ data[d] = null; } }
         if(data.description == null){ data.description = 'No Description'; }
+        if(data.version == null){ data.version = '1.0'; }
         if(data.level == null){ data.level = -1; }
         return Feat.create({
             name: data.name,
@@ -360,6 +405,307 @@ module.exports = class AdminUpdate {
         let archived = (isArchived) ? 1 : 0;
         let updateValues = { isArchived: archived };
         return Feat.update(updateValues, { where: { id: featID } })
+        .then((result) => {
+            return;
+        });
+    }
+
+
+    static addItem(data){
+        /* Data:
+            itemID,
+            builderType,
+            itemName,
+            itemVersion,
+            itemPrice,
+            itemLevel,
+            itemCategory,
+            itemRarity,
+            itemTagsArray,
+            itemUsage,
+            itemDesc,
+            itemCraftReq,
+            itemCode,
+            itemBulk,
+            itemSize,
+            itemHands,
+            itemIsShoddy,
+            itemHasQuantity,
+            itemQuantity,
+            itemHitPoints,
+            itemBrokenThreshold,
+            itemHardness,
+            itemWeaponData,
+            itemArmorData,
+            itemShieldData,
+            itemStorageData,
+            itemRuneData
+        */
+
+        data.hidden = 0;
+        data.isArchived = 0;
+        if(data.builderType == "GENERAL"){
+            //
+        } else if(data.builderType == "STORAGE"){
+            data.itemHasQuantity = 0;
+            data.itemQuantity = 1;
+        } else if(data.builderType == "WEAPON"){
+            //
+        } else if(data.builderType == "ARMOR"){
+            data.itemHasQuantity = 0;
+            data.itemQuantity = 1;
+            data.itemHands = 'NONE';
+        } else if(data.builderType == "SHIELD"){
+            data.itemHasQuantity = 0;
+            data.itemQuantity = 1;
+            data.itemHands = 'NONE';
+        } else if(data.builderType == "RUNE"){
+            data.itemName += ' Runestone';
+            data.itemPrice += 300; // 3gp for the cost of the runestone
+            data.itemBulk = 0.1;
+            data.itemSize = 'MEDIUM';
+            data.itemHands = 'ONE';
+            data.itemIsShoddy = 0;
+            data.itemHasQuantity = 0;
+            data.itemQuantity = 1;
+            data.itemHitPoints = 16;
+            data.itemBrokenThreshold = 8;
+            data.itemHardness = 4;
+        } else {
+            console.error("Invalid BuilderType for Item Creation: '"+data.builderType+"'!");
+            return;
+        }
+
+        for(let d in data) { if(data[d] === ''){ data[d] = null; } }
+        if(data.itemDesc == null){ data.itemDesc = 'No Description'; }
+        if(data.itemVersion == null){ data.itemVersion = '1.0'; }
+        return Item.create({ // Create Item
+            name: data.itemName,
+            version: data.itemVersion,
+            price: data.itemPrice,
+            bulk: data.itemBulk,
+            level: data.itemLevel,
+            rarity: data.itemRarity,
+            description: data.itemDesc,
+            itemType: data.itemCategory,
+            hands: data.itemHands,
+            size: data.itemSize,
+            craftRequirements: data.itemCraftReq,
+            usage: data.itemUsage,
+            isShoddy: data.itemIsShoddy,
+            hasQuantity: data.itemHasQuantity,
+            quantity: data.itemQuantity,
+            hitPoints: data.itemHitPoints,
+            brokenThreshold: data.itemBrokenThreshold,
+            hardness: data.itemHardness,
+            hidden: data.hidden,
+            code: data.itemCode,
+            itemStructType: data.builderType,
+            isArchived: data.isArchived,
+        }).then(item => {
+            let itemTagsPromises = []; // Create Item Tags
+            if(data.itemTagsArray != null){
+                for(const tagID of data.itemTagsArray) {
+                    let newPromise = TaggedItem.create({
+                        itemID: item.id,
+                        tagID: tagID
+                    });
+                    itemTagsPromises.push(newPromise);
+                }
+            }
+            return Promise.all(itemTagsPromises)
+            .then(function(result) {
+                if(data.builderType == "STORAGE"){
+                    if(data.itemStorageData != null){
+                        return Storage.create({
+                            itemID: item.id,
+                            maxBulkStorage: data.itemStorageData.maxBulkStorage,
+                            bulkIgnored: data.itemStorageData.bulkIgnored,
+                            ignoreSelfBulkIfWearing: data.itemStorageData.ignoreSelfBulkIfWearing
+                        }).then(storage => {
+                            return item;
+                        });
+                    } else {
+                        return item;
+                    }
+                } else if(data.builderType == "WEAPON"){
+                    if(data.itemWeaponData != null){
+                        return Weapon.create({
+                            itemID: item.id,
+                            diceNum: 1,
+                            dieType: data.itemWeaponData.dieType,
+                            damageType: data.itemWeaponData.damageType,
+                            category: data.itemWeaponData.weaponCategory,
+                            isMelee: data.itemWeaponData.isMelee,
+                            meleeWeaponType: data.itemWeaponData.meleeWeaponType,
+                            isRanged: data.itemWeaponData.isRanged,
+                            rangedWeaponType: data.itemWeaponData.rangedWeaponType,
+                            rangedRange: data.itemWeaponData.range,
+                            rangedReload: data.itemWeaponData.reload
+                        }).then(weapon => {
+                            return item;
+                        });
+                    } else {
+                        return item;
+                    }
+                } else if(data.builderType == "ARMOR"){
+                    if(data.itemArmorData != null){
+                        let cPenalty = becomeNegative(data.itemArmorData.checkPenalty);
+                        let sPenalty = becomeNegative(data.itemArmorData.speedPenalty);
+                        return Armor.create({
+                            itemID: item.id,
+                            acBonus: data.itemArmorData.acBonus,
+                            dexCap: data.itemArmorData.dexCap,
+                            checkPenalty: cPenalty,
+                            speedPenalty: sPenalty,
+                            minStrength: data.itemArmorData.minStrength,
+                            armorType: data.itemArmorData.type,
+                            category: data.itemArmorData.category
+                        }).then(armor => {
+                            return item;
+                        });
+                    } else {
+                        return item;
+                    }
+                } else if(data.builderType == "SHIELD"){
+                    if(data.itemShieldData != null){
+                        let sPenalty = becomeNegative(data.itemShieldData.speedPenalty);
+                        return Shield.create({
+                            itemID: item.id,
+                            acBonus: data.itemShieldData.acBonus,
+                            speedPenalty: sPenalty
+                        }).then(shield => {
+                            return item;
+                        });
+                    } else {
+                        return item;
+                    }
+                } else if(data.builderType == "RUNE"){
+                    if(data.itemRuneData != null){
+                        let fundamental = (data.itemRuneData.runeType === 'FUNDAMENTAL') ? 1 : 0;
+                        return ItemRune.create({
+                            itemID: item.id,
+                            isFundamental: fundamental,
+                            etchedType: data.itemRuneData.etchedType
+                        }).then(rune => {
+                            return item;
+                        });
+                    } else {
+                        return item;
+                    }
+                } else {
+                    return item;
+                }
+            });
+        });
+    }
+
+    static deleteItem(itemID) {
+        return Item.destroy({ // Delete Item (which will cascade into cleaning up (deleting) everything else)
+            where: { id: itemID }
+        }).then((result) => {
+            return;
+        });
+    }
+
+    static archiveItem(itemID, isArchived){
+        let archived = (isArchived) ? 1 : 0;
+        let updateValues = { isArchived: archived };
+        return Item.update(updateValues, { where: { id: itemID } })
+        .then((result) => {
+            return;
+        });
+    }
+
+
+
+    static addSpell(data){
+        /* Data:
+            spellID,
+            spellName,
+            spellVersion,
+            spellLevel,
+            spellRarity,
+            spellTraditions,
+            spellCasting,
+            spellComponents,
+            spellCost,
+            spellTrigger,
+            spellRequirements,
+            spellTagsArray,
+            spellRange,
+            spellArea,
+            spellTargets,
+            spellSavingThrow,
+            spellDuration,
+            spellDesc,
+            spellHeightenedOneVal,
+            spellHeightenedOneText,
+            spellHeightenedTwoVal,
+            spellHeightenedTwoText,
+            spellHeightenedThreeVal,
+            spellHeightenedThreeText
+        */
+
+        data.isArchived = 0;
+
+        for(let d in data) { if(data[d] === ''){ data[d] = null; } }
+        if(data.spellDesc == null){ data.spellDesc = 'No Description'; }
+        if(data.spellVersion == null){ data.spellVersion = '1.0'; }
+        return Spell.create({ // Create Spell
+            name: data.spellName,
+            version: data.spellVersion,
+            level: data.spellLevel,
+            rarity: data.spellRarity,
+            description: data.spellDesc,
+            traditions: JSON.stringify(data.spellTraditions),
+            cast: data.spellCasting,
+            castingComponents: JSON.stringify(data.spellComponents),
+            cost: data.spellCost,
+            trigger: data.spellTrigger,
+            requirements: data.spellRequirements,
+            range: data.spellRange,
+            area: data.spellArea,
+            targets: data.spellTargets,
+            savingThrow: data.spellSavingThrow,
+            duration: data.spellDuration,
+            heightenedOneVal: data.spellHeightenedOneVal,
+            heightenedOneText: data.spellHeightenedOneText,
+            heightenedTwoVal: data.spellHeightenedTwoVal,
+            heightenedTwoText: data.spellHeightenedTwoText,
+            heightenedThreeVal: data.spellHeightenedThreeVal,
+            heightenedThreeText: data.spellHeightenedThreeText,
+            isArchived: data.isArchived,
+        }).then(spell => {
+            let spellTagsPromises = []; // Create Spell Tags
+            if(data.spellTagsArray != null){
+                for(const tagID of data.spellTagsArray) {
+                    let newPromise = TaggedSpell.create({
+                        spellID: spell.id,
+                        tagID: tagID
+                    });
+                    spellTagsPromises.push(newPromise);
+                }
+            }
+            return Promise.all(spellTagsPromises)
+            .then(function(result) {
+                return spell;
+            });
+        });
+    }
+
+    static deleteSpell(spellID) {
+        return Spell.destroy({ // Delete Spell (which will cascade into cleaning up (deleting) everything else)
+            where: { id: spellID }
+        }).then((result) => {
+            return;
+        });
+    }
+
+    static archiveSpell(spellID, isArchived){
+        let archived = (isArchived) ? 1 : 0;
+        let updateValues = { isArchived: archived };
+        return Spell.update(updateValues, { where: { id: spellID } })
         .then((result) => {
             return;
         });

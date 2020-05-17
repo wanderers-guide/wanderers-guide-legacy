@@ -84,7 +84,7 @@
                     Supported resources include:
                 </p>
                 <p class="is-size-7 pb-1 pl-4">
-                    ['paizo.com', '2e.aonprd.com', 'pf2.easytool.es', 'pathfinder2.dragonlash.com', 'pf2srd.com', 'pf2.d20pfsrd.com', 'youtube.com']
+                    'paizo.com', '2e.aonprd.com', 'pf2.easytool.es', 'pathfinder2.dragonlash.com', 'pf2srd.com', 'pf2.d20pfsrd.com', 'youtube.com'
                 </p>
                 <p class="pl-2">
                     <strong>As show below, [https://paizo.com/pathfinder] becomes an icon link:</strong>
@@ -94,32 +94,119 @@
                 </div>
             </div>
             <div class="mt-4">
+                <h1 class="title is-size-4 has-text-grey-lighter is-marginless mb-1 pl-3">Actions</h1>
+                <p>
+                    Displaying actions is super easy. Just write the action codename and it will generate that action icon.
+                </p>
+                <div class="code-block">
+                    <p class="pl-2">
+                    Free Action: FREE-ACTION.
+                    </p>
+                    <p class="pl-2">
+                    Reaction: REACTION.
+                    </p>
+                    <p class="pl-2">
+                    One Action: ONE-ACTION.
+                    </p>
+                    <p class="pl-2">
+                    Two Actions: TWO-ACTIONS.
+                    </p>
+                    <p class="pl-2">
+                    Three Actions: THREE-ACTIONS.
+                    </p>
+                </div>
+                <p class="pl-4">Becomes...</p>
+                <div class="code-block">
+                    <div class="text-processing">
+                        Free Action: FREE-ACTION.
+                    </div>
+                    <div class="text-processing">
+                        Reaction: REACTION.
+                    </div>
+                    <div class="text-processing">
+                        One Action: ONE-ACTION.
+                    </div>
+                    <div class="text-processing">
+                        Two Actions: TWO-ACTIONS.
+                    </div>
+                    <div class="text-processing">
+                        Three Actions: THREE-ACTIONS.
+                    </div>
+                </div>
+            </div>
+            <div class="mt-4">
                 <h1 class="title is-size-4 has-text-grey-lighter is-marginless mb-1 pl-3">Tiers of Success</h1>
                 <p>
                     Some simple formating for tiers of success can be very useful for actions, feats, and spells in homebrew content.
                 </p>
                 <div class="code-block">
                     <p class="pl-2">
-                    Attempt an Intimidation check against that target’s Will DC.
+                    Attempt an Intimidation check against that target's Will DC.
                     </p>
                     <p class="pl-2">
-                        |CRITICAL_SUCCESS:The target becomes frightened 2.|
+                        Critical Success: The target becomes frightened 2.
                     </p>
                     <p class="pl-2">
-                        |SUCCESS:The target becomes frightened 1.|
+                        Success: The target becomes frightened 1.
                     </p>
                     <p class="pl-2">
-                        |FAILURE:They're not really scared of you...|
+                        Failure: They're not really scared of you...
                     </p>
                     <p class="pl-2">
-                        |CRITICAL_FAILURE:They think you're weak, whoops.|
+                        Critical Failure: They think you're weak, whoops.
                     </p>
                 </div>
                 <p class="pl-4">Becomes...</p>
                 <div class="code-block text-processing">
-                    Attempt an Intimidation check against that target’s Will DC. |CRITICAL_SUCCESS:The target becomes frightened 2.| |SUCCESS:The target becomes frightened 1.| |FAILURE:They're not really scared of you...| |CRITICAL_FAILURE:They think you're weak, whoops.|
+                    Attempt an Intimidation check against that target’s Will DC. Critical Success: The target becomes frightened 2. Success: The target becomes frightened 1. Failure: They're not really scared of you... Critical Failure: They think you're weak, whoops.
                 </div>
                 <p class="pl-4">You do not need to include all four tiers of success. It will format whatever tiers you give it.</p>
+            </div>
+            <div class="mt-4">
+                <h1 class="title is-size-4 has-text-grey-lighter is-marginless mb-1 pl-3">Bullet Lists</h1>
+                <p>
+                    There are times when it's best to organize information using bullet points. Having a '*' followed by some text then a ':' will separate the inner text, making it bold and creating a bullet point.
+                </p>
+                <div class="code-block">
+                    <p class="pl-2">
+                    The effect depends on whether the target is living or undead.
+                    </p>
+                    <p class="pl-2">
+                        * Living Creature: The spell deals negative damage equal to 1d4 plus your spellcasting modifier. The target attempts a basic Fortitude save, but is also enfeebled 1 for 1 round on a critical failure.
+                    </p>
+                    <p class="pl-2">
+                        * Undead Creature: The target is flat-footed for 1 round on a failed Fortitude save. On a critical failure, the target is also fleeing for 1 round unless it succeeds at a Will save.
+                    </p>
+                </div>
+                <p class="pl-4">Becomes...</p>
+                <div class="code-block text-processing">
+                    The effect depends on whether the target is living or undead.
+                    * Living Creature: The spell deals negative damage equal to 1d4 plus your spellcasting modifier. The target attempts a basic Fortitude save, but is also enfeebled 1 for 1 round on a critical failure.
+                    * Undead Creature: The target is flat-footed for 1 round on a failed Fortitude save. On a critical failure, the target is also fleeing for 1 round unless it succeeds at a Will save.
+                </div>
+            </div>
+            <div class="mt-4">
+                <h1 class="title is-size-4 has-text-grey-lighter is-marginless mb-1 pl-3">Non-Bullet Lists</h1>
+                <p>
+                    There are times when it's best to organize information using bullet points. Having a '~' followed by some text then a ':' will separate the inner text and make it bold.
+                </p>
+                <div class="code-block">
+                    <p class="pl-2">
+                    The effect depends on whether the target is living or undead.
+                    </p>
+                    <p class="pl-2">
+                        ~ Living Creature: The spell deals negative damage equal to 1d4 plus your spellcasting modifier. The target attempts a basic Fortitude save, but is also enfeebled 1 for 1 round on a critical failure.
+                    </p>
+                    <p class="pl-2">
+                        ~ Undead Creature: The target is flat-footed for 1 round on a failed Fortitude save. On a critical failure, the target is also fleeing for 1 round unless it succeeds at a Will save.
+                    </p>
+                </div>
+                <p class="pl-4">Becomes...</p>
+                <div class="code-block text-processing">
+                    The effect depends on whether the target is living or undead.
+                    ~ Living Creature: The spell deals negative damage equal to 1d4 plus your spellcasting modifier. The target attempts a basic Fortitude save, but is also enfeebled 1 for 1 round on a critical failure.
+                    ~ Undead Creature: The target is flat-footed for 1 round on a failed Fortitude save. On a critical failure, the target is also fleeing for 1 round unless it succeeds at a Will save.
+                </div>
             </div>
         </div>
         <div class="column is-paddingless mb-4">
@@ -316,28 +403,28 @@
             <div class="mt-4">
                 <h1 class="title is-size-4 has-text-grey-lighter is-marginless mb-1 pl-3">Proficiencies</h1>
                 <p class="pl-2 py-1">
-                    <strong>Skills:</strong> ['Acrobatics', 'Arcana', 'Athletics', 'Crafting', 'Deception', 'Diplomacy', 'Intimidation', 'Medicine', 'Nature', 'Occultism', 'Performance', 'Religion', 'Society', 'Stealth', 'Survival', 'Thievery']
+                    <strong>Skills:</strong> 'Acrobatics', 'Arcana', 'Athletics', 'Crafting', 'Deception', 'Diplomacy', 'Intimidation', 'Medicine', 'Nature', 'Occultism', 'Performance', 'Religion', 'Society', 'Stealth', 'Survival', 'Thievery'
                 </p>
                 <p class="pl-2 py-1">
                     <strong>Lore:</strong> 'X_Lore' where X is the name of the lore. (Example: 'Warfare_Lore')
                 </p>
                 <p class="pl-2 py-1">
-                    <strong>Attacks:</strong> ['Simple_Weapons', 'Martial_Weapons', 'Advanced_Weapons', 'Unarmed_Attacks']
+                    <strong>Attacks:</strong> 'Simple_Weapons', 'Martial_Weapons', 'Advanced_Weapons', 'Unarmed_Attacks'
                 </p>
                 <p class="pl-2 py-1">
-                    <strong>Defenses:</strong> ['Light_Armor', 'Medium_Armor', 'Heavy_Armor', 'Unarmored_Defense']
+                    <strong>Defenses:</strong> 'Light_Armor', 'Medium_Armor', 'Heavy_Armor', 'Unarmored_Defense'
                 </p>
                 <p class="pl-2 py-1">
-                    <strong>Saving Throws:</strong> ['Fortitude', 'Reflex', 'Will']
+                    <strong>Saving Throws:</strong> 'Fortitude', 'Reflex', 'Will'
                 </p>
                 <p class="pl-2 py-1">
                     <strong>Perception:</strong> 'Perception'
                 </p>
                 <p class="pl-2 py-1">
-                    <strong>Spell Attacks:</strong> ['ArcaneSpellAttacks', 'OccultSpellAttacks', 'PrimalSpellAttacks', 'DivineSpellAttacks']
+                    <strong>Spell Attacks:</strong> 'ArcaneSpellAttacks', 'OccultSpellAttacks', 'PrimalSpellAttacks', 'DivineSpellAttacks'
                 </p>
                 <p class="pl-2 py-1">
-                    <strong>Spell DCs:</strong> ['ArcaneSpellDCs', 'OccultSpellDCs', 'PrimalSpellDCs', 'DivineSpellDCs']
+                    <strong>Spell DCs:</strong> 'ArcaneSpellDCs', 'OccultSpellDCs', 'PrimalSpellDCs', 'DivineSpellDCs'
                 </p>
                 <p>
                     Use the following code statements to give a character a proficiency.

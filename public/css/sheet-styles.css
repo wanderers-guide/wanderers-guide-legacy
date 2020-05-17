@@ -62,7 +62,7 @@
 }
 
 .has-background-black-like {
-    background-color: hsl(0, 0%, 13%)!important;
+    background-color: hsl(0, 0%, 12%)!important;
 }
 
 .has-background-grey-darkest {
@@ -81,8 +81,8 @@
     border-color: #202020!important;
 }
 
-.border-darkerer {
-    border-color: #191919!important;
+.border-additems {
+    border-color: hsl(0, 0%, 19%)!important;
 }
 
 .modal-card-head {
@@ -130,7 +130,7 @@
 }
 
 .input, .select select, .textarea {
-    background-color: hsl(0, 0%, 19%);
+    background-color: hsl(0, 0%, 18%);
     border-color: hsl(0, 0%, 13%);
     color: hsl(0, 0%, 86%);
 }
@@ -164,6 +164,13 @@ strong {
 }
 
 hr {
-    border-color: #363636;
+    border-color: #363636!important;
 }
 
+.hr-highlighted {
+    border-color: #444444!important;
+}
+
+.hr-light {
+    border-color: #838383!important;
+}

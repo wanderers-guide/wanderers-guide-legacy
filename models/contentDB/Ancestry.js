@@ -24,6 +24,12 @@ const Ancestry = db.define('ancestries', {
   additionalSenseID: {
     type: Sequelize.INTEGER
   },
+  physicalFeatureOneID: {
+    type: Sequelize.INTEGER
+  },
+  physicalFeatureTwoID: {
+    type: Sequelize.INTEGER
+  },
   tagID: {
     type: Sequelize.INTEGER
   },

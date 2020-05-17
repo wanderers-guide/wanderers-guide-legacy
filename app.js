@@ -132,6 +132,7 @@ io.setMaxListeners(15);
 SocketConnections.sheetItems(io);
 SocketConnections.sheetConditions(io);
 SocketConnections.sheetGeneral(io);
+SocketConnections.sheetSpells(io);
 
 SocketConnections.builderBasics(io);
 SocketConnections.builderAncestry(io);

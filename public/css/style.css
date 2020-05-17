@@ -166,6 +166,12 @@ body {
     position: relative;
 }
 
+/* Indent all but first line of paragraph */
+.negative-indent {
+    margin-left: 20px;
+    text-indent: -20px;
+}
+
 /* Scrollbar */
 body::-webkit-scrollbar {
     width: 0.3em;

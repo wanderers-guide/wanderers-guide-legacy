@@ -16,6 +16,15 @@ $(function () {
         }
     });
 
+    // So clicking the manage spells modal will auto-close the quickview
+    $('#manageSpellsModalDefault').click(function(){
+        if($('#quickviewDefault').hasClass('quickview-auto-close-protection')){
+            $('#quickviewDefault').removeClass('quickview-auto-close-protection');
+        } else {
+            $('#quickviewDefault').removeClass('is-active');
+        }
+    });
+
 });
 
 let amalgamationBonusText = "This is an amalgamation of any additional bonuses you might have. This usually includes bonuses from feats, items, conditions, or any custom-set bonuses that you may have added manually.";
@@ -27,6 +36,228 @@ function openQuickView(type, data) {
 
     $('#quickviewDefault').addClass('quickview-auto-close-protection');
     $('#quickviewDefault').addClass('is-active');
+
+    if(type == 'addSpellView'){
+
+        $('#quickViewTitle').html("Spell List");
+        let qContent = $('#quickViewContent');
+
+        qContent.append('<div class="tabs is-small is-centered is-marginless mb-1"><ul class="category-tabs"><li><a id="spellTraditionArcane">Arcane</a></li><li><a id="spellTraditionDivine">Divine</a></li><li><a id="spellTraditionOccult">Occult</a></li><li><a id="spellTraditionPrimal">Primal</a></li></ul></div>');
+
+        qContent.append('<div class="mb-3"><p class="control has-icons-left"><input id="traditionSpellsSearch" class="input" type="text" placeholder="Search Spells in Tradition"><span class="icon is-left"><i class="fas fa-search" aria-hidden="true"></i></span></p></div>');
+
+        qContent.append('<div id="traitionSpellListSection" class="tile is-ancestor is-vertical"></div>');
+
+        $('#spellTraditionArcane').click(function(){
+            changeSpellTraditionTab('spellTraditionArcane', 'arcane', data);
+        });
+
+        $('#spellTraditionDivine').click(function(){
+            changeSpellTraditionTab('spellTraditionDivine', 'divine', data);
+        });
+
+        $('#spellTraditionOccult').click(function(){
+            changeSpellTraditionTab('spellTraditionOccult', 'occult', data);
+        });
+
+        $('#spellTraditionPrimal').click(function(){
+            changeSpellTraditionTab('spellTraditionPrimal', 'primal', data);
+        });
+
+        let spellList = data.SpellBook.SpellList.toUpperCase();
+        if(spellList === 'ARCANE'){
+            $('#spellTraditionArcane').click();
+        } else if(spellList === 'DIVINE'){
+            $('#spellTraditionDivine').click();
+        } else if(spellList === 'OCCULT'){
+            $('#spellTraditionOccult').click();
+        } else if(spellList === 'PRIMAL'){
+            $('#spellTraditionPrimal').click();
+        }
+
+        return;
+    }
+
+    if(type == 'spellView'){
+
+        let spellDataStruct = data.SpellDataStruct;
+        let spellID = spellDataStruct.Spell.id;
+        let spellName = spellDataStruct.Spell.name;
+
+        $('#quickViewTitle').html(spellName);
+        let qContent = $('#quickViewContent');
+
+        if(true){
+
+            
+            //qContent.append('<hr class="m-2">');
+
+        }
+
+        let rarity = spellDataStruct.Spell.rarity;
+        let tagsInnerHTML = '';
+        switch(rarity) {
+        case 'UNCOMMON': tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-small is-primary">Uncommon</button>';
+            break;
+        case 'RARE': tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-small is-success">Rare</button>';
+            break;
+        case 'UNIQUE': tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-small is-danger">Unique</button>';
+            break;
+        default: break;
+        }
+        for(const tag of spellDataStruct.Tags){
+            tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-small is-info has-tooltip-bottom has-tooltip-multiline" data-tooltip="'+tag.description+'">'+tag.name+'</button>';
+        }
+
+        if(tagsInnerHTML != ''){
+            qContent.append('<div class="buttons is-marginless is-centered">'+tagsInnerHTML+'</div>');
+            qContent.append('<hr class="mb-2 mt-1">');
+        }
+
+        // Traditions
+        let traditionsString = '';
+        let spellTraditions = JSON.parse(spellDataStruct.Spell.traditions);
+        for(let tradition of spellTraditions){
+            traditionsString += tradition+', ';
+        }
+        traditionsString = traditionsString.slice(0, -2);// Trim off that last ', '
+        qContent.append('<div class="tile"><div class="tile is-child"><p class="text-left"><strong>Traditions</strong> '+traditionsString+'</p></div></div>');
+
+        // Cast
+        let castActions = null;
+        let wrapComponents = false;
+        switch(spellDataStruct.Spell.cast) {
+            case 'FREE_ACTION': castActions = '<span class="pf-icon">[free-action]</span>'; break;
+            case 'REACTION': castActions = '<span class="pf-icon">[reaction]</span>'; break;
+            case 'ACTION': castActions = '<span class="pf-icon">[one-action]</span>'; break;
+            case 'TWO_ACTIONS': castActions = '<span class="pf-icon">[two-actions]</span>'; break;
+            case 'THREE_ACTIONS': castActions = '<span class="pf-icon">[three-actions]</span>'; break;
+            case 'ONE_TO_THREE_ACTIONS': castActions = '<span class="pf-icon">[one-action]</span><span> to </span><span class="pf-icon">[three-actions]</span>'; break;
+            case 'ONE_TO_TWO_ACTIONS': castActions = '<span class="pf-icon">[one-action]</span><span> to </span><span class="pf-icon">[two-actions]</span>'; break;
+            case 'TWO_TO_THREE_ACTIONS': castActions = '<span class="pf-icon">[two-actions]</span><span> to </span><span class="pf-icon">[three-actions]</span>'; break;
+            case 'ONE_MINUTE': castActions = '<span>1 minute</span>'; wrapComponents = true; break;
+            case 'FIVE_MINUTES': castActions = '<span>5 minutes</span>'; wrapComponents = true; break;
+            case 'TEN_MINUTES': castActions = '<span>10 minutes</span>'; wrapComponents = true; break;
+            case 'ONE_HOUR': castActions = '<span>1 hour</span>'; wrapComponents = true; break;
+            case 'EIGHT_HOURS': castActions = '<span>8 hours</span>'; wrapComponents = true; break;
+            case 'ONE_DAY': castActions = '<span>24 hours</span>'; wrapComponents = true; break;
+            default: break;
+        }
+
+        let componentsString = '';
+        let spellComponents = JSON.parse(spellDataStruct.Spell.castingComponents);
+        for(let components of spellComponents){
+            componentsString += components+', ';
+        }
+        componentsString = componentsString.slice(0, -2);// Trim off that last ', '
+        if(wrapComponents && componentsString != ''){
+            componentsString = '('+componentsString+')';
+        }
+
+        qContent.append('<div class="tile"><div class="tile is-child"><p class="text-left"><strong>Cast</strong> '+castActions+' '+componentsString+'</p></div></div>');
+
+        // Cost // Trigger // Requirements // 
+        let ctrString = '';
+
+        let spellCost = '';
+        if(spellDataStruct.Spell.cost != null){
+            spellCost = '<strong>Cost</strong> '+spellDataStruct.Spell.cost+'; ';
+        }
+        ctrString += spellCost;
+
+        let spellTrigger = '';
+        if(spellDataStruct.Spell.trigger != null){
+            spellTrigger = '<strong>Trigger</strong> '+spellDataStruct.Spell.trigger+'; ';
+        }
+        ctrString += spellTrigger;
+
+        let spellRequirements = '';
+        if(spellDataStruct.Spell.requirements != null){
+            spellRequirements = '<strong>Requirements</strong> '+spellDataStruct.Spell.requirements+'; ';
+        }
+        ctrString += spellRequirements;
+        ctrString = ctrString.slice(0, -2);// Trim off that last '; '
+
+        qContent.append('<div class="tile"><div class="tile is-child"><p class="text-left negative-indent">'+ctrString+'</p></div></div>');
+
+
+        // Range // Area // Targets //
+        let ratString = '';
+
+        let spellRange = '';
+        if(spellDataStruct.Spell.range != null){
+            spellRange = '<strong>Range</strong> '+spellDataStruct.Spell.range+'; ';
+        }
+        ratString += spellRange;
+
+        let spellArea = '';
+        if(spellDataStruct.Spell.area != null){
+            spellArea = '<strong>Area</strong> '+spellDataStruct.Spell.area+'; ';
+        }
+        ratString += spellArea;
+
+        let spellTargets = '';
+        if(spellDataStruct.Spell.targets != null){
+            spellTargets = '<strong>Targets</strong> '+spellDataStruct.Spell.targets+'; ';
+        }
+        ratString += spellTargets;
+        ratString = ratString.slice(0, -2);// Trim off that last '; '
+
+        qContent.append('<div class="tile"><div class="tile is-child"><p class="text-left negative-indent">'+ratString+'</p></div></div>');
+
+        // Saving Throw // Duration //
+        let sdString = '';
+
+        let savingThrowType = null;
+        switch(spellDataStruct.Spell.cast) {
+            case 'FORT': savingThrowType = 'Fortitude'; break;
+            case 'REFLEX': savingThrowType = 'Reflex'; break;
+            case 'WILL': savingThrowType = 'Will'; break;
+            case 'BASIC_FORT': savingThrowType = 'basic Fortitude'; break;
+            case 'BASIC_REFLEX': savingThrowType = 'basic Reflex'; break;
+            case 'BASIC_WILL': savingThrowType = 'basic Will'; break;
+            default: break;
+        }
+        if(savingThrowType != null){
+            sdString += '<strong>Saving Throw</strong> '+savingThrowType+'; ';
+        }
+
+        let spellDuration = '';
+        if(spellDataStruct.Spell.duration != null){
+            spellDuration = '<strong>Duration</strong> '+spellDataStruct.Spell.duration+'; ';
+        }
+        sdString += spellDuration;
+        sdString = sdString.slice(0, -2);// Trim off that last '; '
+
+        qContent.append('<div class="tile"><div class="tile is-child"><p class="text-left negative-indent">'+sdString+'</p></div></div>');
+
+        qContent.append('<hr class="m-2">');
+
+        qContent.append(processText(spellDataStruct.Spell.description, true, true, 'MEDIUM'));
+
+        if(spellDataStruct.Spell.heightenedOneVal != null || spellDataStruct.Spell.heightenedTwoVal != null || spellDataStruct.Spell.heightenedThreeVal != null) {
+
+            qContent.append('<hr class="m-2">');
+
+            if(spellDataStruct.Spell.heightenedOneVal != null){
+                let hText = '<strong>Heightened ('+getHeightenedTextFromCodeName(spellDataStruct.Spell.heightenedOneVal)+')</strong> '+spellDataStruct.Spell.heightenedOneText;
+                qContent.append('<div class="negative-indent">'+processText(hText, true, true, 'MEDIUM')+'</div>');
+            }
+
+            if(spellDataStruct.Spell.heightenedTwoVal != null){
+                let hText = '<strong>Heightened ('+getHeightenedTextFromCodeName(spellDataStruct.Spell.heightenedTwoVal)+')</strong> '+spellDataStruct.Spell.heightenedTwoText;
+                qContent.append('<div class="negative-indent">'+processText(hText, true, true, 'MEDIUM')+'</div>');
+            }
+
+            if(spellDataStruct.Spell.heightenedThreeVal != null){
+                let hText = '<strong>Heightened ('+getHeightenedTextFromCodeName(spellDataStruct.Spell.heightenedThreeVal)+')</strong> '+spellDataStruct.Spell.heightenedThreeText;
+                qContent.append('<div class="negative-indent">'+processText(hText, true, true, 'MEDIUM')+'</div>');
+            }
+
+        }
+
+        return;
+    }
 
     if(type == 'skillView'){
 
@@ -62,7 +293,7 @@ function openQuickView(type, data) {
             } else if(profName == "Legendary"){
                 extraBonus = 8;
             }
-            breakDownInnerHTML += '<a class="has-text-link has-tooltip-bottom has-tooltip-multiline" data-tooltip="This is your proficiency bonus. Because you are '+profName+' in '+data.SkillName+', your proficiency bonus is is equal to your level ('+data.CharLevel+') plus '+extraBonus+'.">'+data.ProfNum+'</a>';
+            breakDownInnerHTML += '<a class="has-text-link has-tooltip-bottom has-tooltip-multiline" data-tooltip="This is your proficiency bonus. Because you are '+profName+' in '+data.SkillName+', your proficiency bonus is equal to your level ('+data.CharLevel+') plus '+extraBonus+'.">'+data.ProfNum+'</a>';
         }
 
         breakDownInnerHTML += ' + ';
@@ -193,16 +424,16 @@ function openQuickView(type, data) {
 
         let featTagsInnerHTML = '<div class="columns is-centered is-marginless"><div class="column is-10 is-paddingless"><div class="buttons is-marginless is-centered">';
         switch(data.Feat.rarity) {
-        case 'UNCOMMON': featTagsInnerHTML += '<button class="button is-marginless mr-2 mb-1 is-small is-primary">Uncommon</button>';
+        case 'UNCOMMON': featTagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-small is-primary">Uncommon</button>';
             break;
-        case 'RARE': featTagsInnerHTML += '<button class="button is-marginless mr-2 mb-1 is-small is-success">Rare</button>';
+        case 'RARE': featTagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-small is-success">Rare</button>';
             break;
-        case 'UNIQUE': featTagsInnerHTML += '<button class="button is-marginless mr-2 mb-1 is-small is-danger">Unique</button>';
+        case 'UNIQUE': featTagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-small is-danger">Unique</button>';
             break;
         default: break;
         }
         for(const tag of data.Tags){
-            featTagsInnerHTML += '<button class="button is-marginless mr-2 mb-1 is-small is-info has-tooltip-bottom has-tooltip-multiline" data-tooltip="'+tag.description+'">'+tag.name+'</button>';
+            featTagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-small is-info has-tooltip-bottom has-tooltip-multiline" data-tooltip="'+tag.description+'">'+tag.name+'</button>';
         }
         featTagsInnerHTML += '</div></div></div>';
 
@@ -268,7 +499,7 @@ function openQuickView(type, data) {
             } else if(profName == "Legendary"){
                 extraBonus = 8;
             }
-            breakDownInnerHTML += '<a class="has-text-link has-tooltip-bottom has-tooltip-multiline" data-tooltip="This is your proficiency bonus. Because you are '+profName+' in '+data.ProfData.Name+' saving throws, your proficiency bonus is is equal to your level ('+data.CharLevel+') plus '+extraBonus+'.">'+data.ProfNum+'</a>';
+            breakDownInnerHTML += '<a class="has-text-link has-tooltip-bottom has-tooltip-multiline" data-tooltip="This is your proficiency bonus. Because you are '+profName+' in '+data.ProfData.Name+' saving throws, your proficiency bonus is equal to your level ('+data.CharLevel+') plus '+extraBonus+'.">'+data.ProfNum+'</a>';
         }
 
         breakDownInnerHTML += ' + ';
@@ -315,7 +546,7 @@ function openQuickView(type, data) {
             } else if(profName == "Legendary"){
                 extraBonus = 8;
             }
-            breakDownInnerHTML += '<a class="has-text-link has-tooltip-bottom has-tooltip-multiline" data-tooltip="This is your proficiency bonus. Because you are '+profName+' in Perception, your proficiency bonus is is equal to your level ('+data.CharLevel+') plus '+extraBonus+'.">'+data.ProfNum+'</a>';
+            breakDownInnerHTML += '<a class="has-text-link has-tooltip-bottom has-tooltip-multiline" data-tooltip="This is your proficiency bonus. Because you are '+profName+' in Perception, your proficiency bonus is equal to your level ('+data.CharLevel+') plus '+extraBonus+'.">'+data.ProfNum+'</a>';
         }
 
         breakDownInnerHTML += ' + ';
@@ -357,6 +588,8 @@ function openQuickView(type, data) {
 
     if(type == 'invItemView'){
 
+        let viewOnly = (data.InvItem.viewOnly != null) ? true : false;
+
         let invItemName = data.InvItem.name;
         if(data.InvItem.name != data.Item.Item.name){
             invItemName += '<p class="is-inline pl-1 is-size-7 is-italic"> ( '+data.Item.Item.name+' )</p>';
@@ -383,41 +616,41 @@ function openQuickView(type, data) {
 
         let tagsInnerHTML = '';
         if(isBroken){
-            tagsInnerHTML += '<button class="button is-marginless mr-2 mb-1 is-small is-danger has-tooltip-bottom has-tooltip-multiline" data-tooltip="A broken object can’t be used for its normal function, nor does it grant bonuses - with the exception of armor. Broken armor still grants its item bonus to AC, but it also imparts a status penalty to AC depending on its category: -1 for broken light armor, -2 for broken medium armor, or -3 for broken heavy armor. A broken item still imposes penalties and limitations normally incurred by carrying, holding, or wearing it.">Broken</button>';
+            tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-small is-danger has-tooltip-bottom has-tooltip-multiline" data-tooltip="A broken object can’t be used for its normal function, nor does it grant bonuses - with the exception of armor. Broken armor still grants its item bonus to AC, but it also imparts a status penalty to AC depending on its category: -1 for broken light armor, -2 for broken medium armor, or -3 for broken heavy armor. A broken item still imposes penalties and limitations normally incurred by carrying, holding, or wearing it.">Broken</button>';
         }
         if(isShoddy){
-            tagsInnerHTML += '<button class="button is-marginless mr-2 mb-1 is-small is-warning has-tooltip-bottom has-tooltip-multiline" data-tooltip="Improvised or of dubious make, shoddy items are never available for purchase except for in the most desperate of communities. When available, a shoddy item usually costs half the Price of a standard item, though you can never sell one in any case. Attacks and checks involving a shoddy item take a –2 item penalty. This penalty also applies to any DCs that a shoddy item applies to (such as AC, for shoddy armor). A shoddy suit of armor also worsens the armor’s check penalty by 2. A shoddy item’s Hit Points and Broken Threshold are each half that of a normal item of its type.">Shoddy</button>';
+            tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-small is-warning has-tooltip-bottom has-tooltip-multiline" data-tooltip="Improvised or of dubious make, shoddy items are never available for purchase except for in the most desperate of communities. When available, a shoddy item usually costs half the Price of a standard item, though you can never sell one in any case. Attacks and checks involving a shoddy item take a –2 item penalty. This penalty also applies to any DCs that a shoddy item applies to (such as AC, for shoddy armor). A shoddy suit of armor also worsens the armor’s check penalty by 2. A shoddy item’s Hit Points and Broken Threshold are each half that of a normal item of its type.">Shoddy</button>';
         }
 
         let itemSize = data.InvItem.size;
         switch(itemSize) {
-            case 'TINY': tagsInnerHTML += '<button class="button is-marginless mr-2 mb-1 is-small is-link">Tiny</button>';
+            case 'TINY': tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-small is-link">Tiny</button>';
                 break;
-            case 'SMALL': tagsInnerHTML += '<button class="button is-marginless mr-2 mb-1 is-small is-link">Small</button>';
+            case 'SMALL': tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-small is-link">Small</button>';
                 break;
-            case 'LARGE': tagsInnerHTML += '<button class="button is-marginless mr-2 mb-1 is-small is-link">Large</button>'; break;
-            case 'HUGE': tagsInnerHTML += '<button class="button is-marginless mr-2 mb-1 is-small is-link">Huge</button>'; break;
-            case 'GARGANTUAN': tagsInnerHTML += '<button class="button is-marginless mr-2 mb-1 is-small is-link">Gargantuan</button>';
+            case 'LARGE': tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-small is-link">Large</button>'; break;
+            case 'HUGE': tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-small is-link">Huge</button>'; break;
+            case 'GARGANTUAN': tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-small is-link">Gargantuan</button>';
                 break;
             default: break;
         }
 
         let rarity = data.Item.Item.rarity;
         switch(rarity) {
-            case 'UNCOMMON': tagsInnerHTML += '<button class="button is-marginless mr-2 mb-1 is-small is-primary">Uncommon</button>';
+            case 'UNCOMMON': tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-small is-primary">Uncommon</button>';
                 break;
-            case 'RARE': tagsInnerHTML += '<button class="button is-marginless mr-2 mb-1 is-small is-success">Rare</button>';
+            case 'RARE': tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-small is-success">Rare</button>';
                 break;
-            case 'UNIQUE': tagsInnerHTML += '<button class="button is-marginless mr-2 mb-1 is-small is-danger">Unique</button>';
+            case 'UNIQUE': tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-small is-danger">Unique</button>';
                 break;
             default: break;
         }
         for(const tagStruct of data.Item.TagArray){
-            tagsInnerHTML += '<button class="button is-marginless mr-2 mb-1 is-small is-info has-tooltip-bottom has-tooltip-multiline" data-tooltip="'+tagStruct.Tag.description+'">'+tagStruct.Tag.name+' '+tagStruct.TagDetails+'</button>';
+            tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-small is-info has-tooltip-bottom has-tooltip-multiline" data-tooltip="'+tagStruct.Tag.description+'">'+tagStruct.Tag.name+'</button>';
         }
 
         if(tagsInnerHTML != ''){
-            qContent.append('<div class="columns is-centered is-marginless"><div class="column is-8 is-paddingless"><div class="buttons is-marginless is-centered">'+tagsInnerHTML+'</div></div></div>');
+            qContent.append('<div class="buttons is-marginless is-centered">'+tagsInnerHTML+'</div>');
             qContent.append('<hr class="mb-2 mt-1">');
         }
 
@@ -525,14 +758,30 @@ function openQuickView(type, data) {
             qContent.append('<hr class="m-2">');
         }
 
-        qContent.append('<div><p>'+processText(data.InvItem.description, true)+'</p></div>');
+        qContent.append('<div>'+processText(data.InvItem.description, true)+'</div>');
 
         qContent.append('<hr class="m-2">');
 
-        if(data.Item.Item.hasQuantity == 1){
+        // Item Quantity
+        if(!viewOnly && data.Item.Item.hasQuantity == 1){
             qContent.append('<div class="field has-addons has-addons-centered"><p class="control"><a class="button is-static has-text-grey-lighter has-background-grey-darkest border-darker">Quantity</a></p><p class="control"><input id="'+invItemQtyInputID+'" class="input" type="number" min="1" max="9999999" value="'+data.InvItem.quantity+'"></p></div>');
+
+            $('#'+invItemQtyInputID).blur(function() {
+                let newQty = $(this).val();
+                if(newQty != data.InvItem.quantity && newQty != ''){
+                    if(newQty <= 9999999 && newQty >= 1) {
+                        $(this).removeClass('is-danger');
+                        socket.emit("requestInvItemQtyChange",
+                            data.InvItem.id,
+                            newQty);
+                    } else {
+                        $(this).addClass('is-danger');
+                    }
+                }
+            });
         }
 
+        // Weapon and Armor Category
         if(data.Item.WeaponData != null){
 
             let weapGroup = null;
@@ -550,7 +799,13 @@ function openQuickView(type, data) {
             }
 
             let weapCategory = capitalizeWord(data.Item.WeaponData.category);
-            qContent.append('<div class="tile is-child text-center"><p class="is-size-7"><strong>'+weapCategory+' Weapon - '+weapGroup+'</strong></p></div>');
+            let weapOrAttack = (weapCategory === 'Unarmed') ? 'Attack' : 'Weapon';
+
+            if(weapGroup != null){
+                qContent.append('<div class="tile is-child text-center"><p class="is-size-7"><strong>'+weapCategory+' '+weapOrAttack+' - '+weapGroup+'</strong></p></div>');
+            } else {
+                qContent.append('<div class="tile is-child text-center"><p class="is-size-7"><strong>'+weapCategory+' '+weapOrAttack+'</strong></p></div>');
+            }
 
             qContent.append('<hr class="m-2">');
 
@@ -572,83 +827,39 @@ function openQuickView(type, data) {
 
         }
 
-        qContent.append('<p class="has-text-centered is-size-7"><strong>Health</strong></p>');
-        qContent.append('<div class="field has-addons has-addons-centered"><p class="control"><input id="'+invItemHPInputID+'" class="input is-small" type="number" min="0" max="'+maxHP+'" value="'+data.InvItem.currentHitPoints+'"></p><p class="control"><a class="button is-static is-small has-text-grey-light has-background-grey-darkest border-darker">/</a><p class="control"><a class="button is-static is-small has-text-grey-lighter has-background-grey-darklike border-darker">'+maxHP+'</a></p></div>');
-        qContent.append('<div class="columns is-centered is-marginless text-center"><div class="column is-5 is-paddingless"><p class="is-size-7"><strong>Hardness:</strong> '+data.InvItem.hardness+'</p></div><div class="column is-7 is-paddingless"><p class="is-size-7"><strong>Broken Threshold:</strong> '+brokenThreshold+'</p></div></div>');
+        // Item Runes
+        if(!viewOnly){ // In ViewOnly mode you cannot view weapon runes
+            if(data.Item.WeaponData != null){
 
-        if(data.Item.WeaponData != null){
-
-            qContent.append('<hr class="m-2">');
-
-            displayRunesForItem(qContent, data.InvItem, data.RuneDataStruct, true);
-
-        }
-
-        if(data.Item.ArmorData != null){
-
-            qContent.append('<hr class="m-2">');
-
-            displayRunesForItem(qContent, data.InvItem, data.RuneDataStruct, false);
-
-        }
-
-        qContent.append('<hr class="mt-2 mb-3">');
-
-        if(data.ItemIsStorage && !data.ItemIsStorageAndEmpty) {
-
-        } else {
-
-            qContent.append('<div class="field has-addons has-addons-centered"><div class="control"><div class="select is-small is-link"><select id="'+invItemMoveSelectID+'"></select></div></div><div class="control"><button id="'+invItemMoveButtonID+'" type="submit" class="button is-small is-link is-rounded is-outlined">Move</button></div></div>');
+                displayRunesForItem(qContent, data.InvItem, data.RuneDataStruct, true);
     
-            $('#'+invItemMoveSelectID).append('<option value="Unstored">Unstored</option>');
-            for(const bagInvItem of data.OpenBagInvItemArray){
-                if(data.InvItem.id != bagInvItem.id) {
-                    if(data.InvItem.bagInvItemID == bagInvItem.id){
-                        $('#'+invItemMoveSelectID).append('<option value="'+bagInvItem.id+'" selected>'+bagInvItem.name+'</option>');
-                    } else {
-                        $('#'+invItemMoveSelectID).append('<option value="'+bagInvItem.id+'">'+bagInvItem.name+'</option>');
-                    }
-                }
+                qContent.append('<hr class="m-2">');
+    
             }
     
-            $('#'+invItemMoveButtonID).click(function() {
-                let bagItemID = $('#'+invItemMoveSelectID).val();
-                if(bagItemID == 'Unstored') { bagItemID = null; }
-                $(this).addClass('is-loading');
-                socket.emit("requestInvItemMoveBag",
-                    data.InvItem.id,
-                    bagItemID,
-                    data.InvItem.invID);
-            });
-
+            if(data.Item.ArmorData != null){
+    
+                displayRunesForItem(qContent, data.InvItem, data.RuneDataStruct, false);
+    
+                qContent.append('<hr class="m-2">');
+    
+            }
         }
 
-        qContent.append('<div class="buttons is-centered is-marginless"><a id="'+invItemCustomizeButtonID+'" class="button is-small is-primary is-rounded is-outlined">Customize</a><a id="'+invItemRemoveButtonID+'" class="button is-small is-danger is-rounded is-outlined">Remove</a></div>');
-
-        $('#'+invItemRemoveButtonID).click(function() {
-            $(this).addClass('is-loading');
-            socket.emit("requestRemoveItemFromInv",
-                data.InvItem.id);
-        });
-
-        $('#'+invItemCustomizeButtonID).click(function() {
-            openQuickView('customizeItem', {
-                Item: data.Item,
-                InvItem: data.InvItem,
-                PrevType : type,
-                PrevData : data
-            });
-        });
-
-        if(data.Item.Item.hasQuantity == 1){
-            $('#'+invItemQtyInputID).blur(function() {
-                let newQty = $(this).val();
-                if(newQty != data.InvItem.quantity && newQty != ''){
-                    if(newQty <= 9999999 && newQty >= 1) {
+        // Health, Hardness, and Broken Threshold
+        if(!viewOnly) {
+            qContent.append('<p class="has-text-centered is-size-7"><strong>Health</strong></p>');
+            qContent.append('<div class="field has-addons has-addons-centered"><p class="control"><input id="'+invItemHPInputID+'" class="input is-small" type="number" min="0" max="'+maxHP+'" value="'+data.InvItem.currentHitPoints+'"></p><p class="control"><a class="button is-static is-small has-text-grey-light has-background-grey-darkest border-darker">/</a><p class="control"><a class="button is-static is-small has-text-grey-lighter has-background-grey-darklike border-darker">'+maxHP+'</a></p></div>');
+            qContent.append('<div class="columns is-centered is-marginless text-center"><div class="column is-5 is-paddingless"><p class="is-size-7"><strong>Hardness:</strong> '+data.InvItem.hardness+'</p></div><div class="column is-7 is-paddingless"><p class="is-size-7"><strong>Broken Threshold:</strong> '+brokenThreshold+'</p></div></div>');
+    
+            $('#'+invItemHPInputID).blur(function() {
+                let newHP = $(this).val();
+                if(newHP != data.InvItem.currentHitPoints && newHP != ''){
+                    if(newHP <= maxHP && newHP >= 0) {
                         $(this).removeClass('is-danger');
-                        socket.emit("requestInvItemQtyChange",
+                        socket.emit("requestInvItemHPChange",
                             data.InvItem.id,
-                            newQty);
+                            newHP);
                     } else {
                         $(this).addClass('is-danger');
                     }
@@ -656,19 +867,58 @@ function openQuickView(type, data) {
             });
         }
 
-        $('#'+invItemHPInputID).blur(function() {
-            let newHP = $(this).val();
-            if(newHP != data.InvItem.currentHitPoints && newHP != ''){
-                if(newHP <= maxHP && newHP >= 0) {
-                    $(this).removeClass('is-danger');
-                    socket.emit("requestInvItemHPChange",
-                        data.InvItem.id,
-                        newHP);
+        // Move, Customize, and Remove Item
+        if(!viewOnly) {
+            qContent.append('<hr class="mt-2 mb-3">');
+            if(data.InvData != null){
+                if(data.InvData.ItemIsStorage && !data.InvData.ItemIsStorageAndEmpty) {
+
                 } else {
-                    $(this).addClass('is-danger');
+
+                    qContent.append('<div class="field has-addons has-addons-centered"><div class="control"><div class="select is-small is-link"><select id="'+invItemMoveSelectID+'"></select></div></div><div class="control"><button id="'+invItemMoveButtonID+'" type="submit" class="button is-small is-link is-rounded is-outlined">Move</button></div></div>');
+            
+                    $('#'+invItemMoveSelectID).append('<option value="Unstored">Unstored</option>');
+                    for(const bagInvItem of data.InvData.OpenBagInvItemArray){
+                        if(data.InvItem.id != bagInvItem.id) {
+                            if(data.InvItem.bagInvItemID == bagInvItem.id){
+                                $('#'+invItemMoveSelectID).append('<option value="'+bagInvItem.id+'" selected>'+bagInvItem.name+'</option>');
+                            } else {
+                                $('#'+invItemMoveSelectID).append('<option value="'+bagInvItem.id+'">'+bagInvItem.name+'</option>');
+                            }
+                        }
+                    }
+            
+                    $('#'+invItemMoveButtonID).click(function() {
+                        let bagItemID = $('#'+invItemMoveSelectID).val();
+                        if(bagItemID == 'Unstored') { bagItemID = null; }
+                        $(this).addClass('is-loading');
+                        socket.emit("requestInvItemMoveBag",
+                            data.InvItem.id,
+                            bagItemID,
+                            data.InvItem.invID);
+                    });
+
                 }
+
+                qContent.append('<div class="buttons is-centered is-marginless"><a id="'+invItemCustomizeButtonID+'" class="button is-small is-primary is-rounded is-outlined">Customize</a><a id="'+invItemRemoveButtonID+'" class="button is-small is-danger is-rounded is-outlined">Remove</a></div>');
+
+                $('#'+invItemRemoveButtonID).click(function() {
+                    $(this).addClass('is-loading');
+                    socket.emit("requestRemoveItemFromInv",
+                        data.InvItem.id);
+                });
+
+                $('#'+invItemCustomizeButtonID).click(function() {
+                    openQuickView('customizeItem', {
+                        Item: data.Item,
+                        InvItem: data.InvItem,
+                        PrevType : type,
+                        PrevData : data
+                    });
+                });
             }
-        });
+
+        }
 
         return;
     }
@@ -789,9 +1039,11 @@ function openQuickView(type, data) {
         $('#quickViewTitle').html("Add Items");
         let qContent = $('#quickViewContent');
 
-        qContent.append('<div><p class="control has-icons-left"><input id="allItemSearch" class="input" type="text" placeholder="Search Items in Category"><span class="icon is-left"><i class="fas fa-search" aria-hidden="true"></i></span></p></div>');
+        qContent.append('<div class="tabs is-small is-centered is-marginless mb-1"><ul class="category-tabs"><li><a id="itemTabAll">All</a></li><li><a id="itemTabGeneral">General</a></li><li><a id="itemTabCombat">Combat</a></li><li><a id="itemTabStorage">Storage</a></li><li><a id="itemTabCurrency">Currency</a></li></ul></div>');
 
-        qContent.append('<div class="tabs is-small is-centered"><ul class="category-tabs"><li><a id="itemTabAll">All</a></li><li><a id="itemTabGeneral">General</a></li><li><a id="itemTabCombat">Combat</a></li><li><a id="itemTabStorage">Storage</a></li><li><a id="itemTabCurrency">Currency</a></li></ul></div><div id="addItemListSection" class="tile is-ancestor is-vertical"></div>');
+        qContent.append('<div class="mb-3"><p class="control has-icons-left"><input id="allItemSearch" class="input" type="text" placeholder="Search Items in Category"><span class="icon is-left"><i class="fas fa-search" aria-hidden="true"></i></span></p></div>');
+
+        qContent.append('<div id="addItemListSection" class="tile is-ancestor is-vertical"></div>');
 
         $('#itemTabAll').click(function(){
             changeItemCategoryTab('itemTabAll', data);
@@ -832,14 +1084,16 @@ function changeItemCategoryTab(type, data){
     $('#itemTabStorage').parent().removeClass("is-active");
     $('#itemTabCurrency').parent().removeClass("is-active");
 
-    $('#allItemSearch').off('change');
-
     let allItemSearch = $('#allItemSearch');
     let allItemSearchInput = null;
     if(allItemSearch.val() != ''){
         allItemSearchInput = allItemSearch.val().toLowerCase();
+        allItemSearch.addClass('is-info');
+    } else {
+        allItemSearch.removeClass('is-info');
     }
 
+    $('#allItemSearch').off('change');
     $('#allItemSearch').change(function(){
         changeItemCategoryTab(type, data);
     });
@@ -889,7 +1143,7 @@ function changeItemCategoryTab(type, data){
 
 function displayAddItem(itemID, itemDataStruct, data){
 
-    if(itemDataStruct.Item.hidden == 1){
+    if(itemDataStruct.Item.hidden == 1 || itemDataStruct.Item.isArchived == 1){
         return;
     }
 
@@ -906,21 +1160,21 @@ function displayAddItem(itemID, itemDataStruct, data){
         itemName += ' ('+itemDataStruct.Item.quantity+')';
     }
 
-    $('#addItemListSection').append('<div class="tile is-parent is-paddingless border-bottom border-top border-darkerer has-background-black-like cursor-clickable"><div class="tile is-child is-7 '+addItemViewItemClass+'"><p id="'+addItemNameID+'" class="has-text-left mt-1 pl-3 has-text-grey-lighter">'+itemName+'</p></div><div class="tile is-child is-2"><p class="has-text-centered is-size-7 mt-2">'+itemLevel+'</p></div><div class="tile is-child"><button id="'+addItemAddItemID+'" class="button my-1 is-small is-success is-rounded">Add</button></div><div class="tile is-child is-1 '+addItemViewItemClass+'"><span class="icon has-text-grey mt-2"><i id="'+addItemChevronItemID+'" class="fas fa-chevron-down"></i></span></div></div><div id="'+addItemDetailsItemID+'" class="tile is-parent is-vertical is-paddingless border-bottom border-darkerer is-hidden p-2 text-center"></div>');
+    $('#addItemListSection').append('<div class="tile is-parent is-paddingless border-bottom border-additems has-background-black-like cursor-clickable"><div class="tile is-child is-7 '+addItemViewItemClass+'"><p id="'+addItemNameID+'" class="has-text-left mt-1 pl-3 has-text-grey-lighter">'+itemName+'</p></div><div class="tile is-child is-2"><p class="has-text-centered is-size-7 mt-2">'+itemLevel+'</p></div><div class="tile is-child"><button id="'+addItemAddItemID+'" class="button my-1 is-small is-success is-rounded">Add</button></div><div class="tile is-child is-1 '+addItemViewItemClass+'"><span class="icon has-text-grey mt-2"><i id="'+addItemChevronItemID+'" class="fas fa-chevron-down"></i></span></div></div><div id="'+addItemDetailsItemID+'" class="tile is-parent is-vertical is-paddingless border-bottom border-additems is-hidden p-2 text-center"></div>');
 
     let rarity = itemDataStruct.Item.rarity;
     let tagsInnerHTML = '';
     switch(rarity) {
-      case 'UNCOMMON': tagsInnerHTML += '<button class="button is-marginless mr-2 mb-1 is-small is-primary">Uncommon</button>';
+      case 'UNCOMMON': tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-small is-primary">Uncommon</button>';
         break;
-      case 'RARE': tagsInnerHTML += '<button class="button is-marginless mr-2 mb-1 is-small is-success">Rare</button>';
+      case 'RARE': tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-small is-success">Rare</button>';
         break;
-      case 'UNIQUE': tagsInnerHTML += '<button class="button is-marginless mr-2 mb-1 is-small is-danger">Unique</button>';
+      case 'UNIQUE': tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-small is-danger">Unique</button>';
         break;
       default: break;
     }
     for(const tagStruct of itemDataStruct.TagArray){
-        tagsInnerHTML += '<button class="button is-marginless mr-2 mb-1 is-small is-info has-tooltip-bottom has-tooltip-multiline" data-tooltip="'+tagStruct.Tag.description+'">'+tagStruct.Tag.name+' '+tagStruct.TagDetails+'</button>';
+        tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-small is-info has-tooltip-bottom has-tooltip-multiline" data-tooltip="'+tagStruct.Tag.description+'">'+tagStruct.Tag.name+'</button>';
     }
 
     if(tagsInnerHTML != ''){
@@ -1047,7 +1301,7 @@ function displayAddItem(itemID, itemDataStruct, data){
         $('#'+addItemDetailsItemID).append('<hr class="m-2">');
     }
 
-    $('#'+addItemDetailsItemID).append('<p>'+processText(itemDataStruct.Item.description, true)+'</p>');
+    $('#'+addItemDetailsItemID).append(processText(itemDataStruct.Item.description, true));
 
 
     $('#'+addItemAddItemID).click(function(){
@@ -1063,12 +1317,269 @@ function displayAddItem(itemID, itemDataStruct, data){
             $('#'+addItemDetailsItemID).addClass('is-hidden');
             $('#'+addItemChevronItemID).removeClass('fa-chevron-up');
             $('#'+addItemChevronItemID).addClass('fa-chevron-down');
-            $('#'+addItemNameID).removeClass('has-text-weight-bold')
+            $('#'+addItemNameID).removeClass('has-text-weight-bold');
         } else {
             $('#'+addItemDetailsItemID).removeClass('is-hidden');
             $('#'+addItemChevronItemID).removeClass('fa-chevron-down');
             $('#'+addItemChevronItemID).addClass('fa-chevron-up');
-            $('#'+addItemNameID).addClass('has-text-weight-bold')
+            $('#'+addItemNameID).addClass('has-text-weight-bold');
+        }
+    });
+
+}
+
+
+
+
+function changeSpellTraditionTab(type, traditionName, data){
+
+    $('#traitionSpellListSection').html('');
+
+    $('#spellTraditionArcane').parent().removeClass("is-active");
+    $('#spellTraditionDivine').parent().removeClass("is-active");
+    $('#spellTraditionOccult').parent().removeClass("is-active");
+    $('#spellTraditionPrimal').parent().removeClass("is-active");
+    $('#'+type).parent().addClass("is-active");
+
+    let traditionSpellsSearch = $('#traditionSpellsSearch');
+    let traditionSpellsSearchInput = null;
+    if(traditionSpellsSearch.val() != ''){
+        traditionSpellsSearchInput = traditionSpellsSearch.val().toLowerCase();
+        traditionSpellsSearch.addClass('is-info');
+    } else {
+        traditionSpellsSearch.removeClass('is-info');
+    }
+
+    $('#traditionSpellsSearch').off('change');
+    $('#traditionSpellsSearch').change(function(){
+        changeSpellTraditionTab(type, traditionName, data);
+    });
+
+    for(const [spellID, spellDataStruct] of data.Data.SpellMap.entries()){
+
+        let willDisplay = false;
+
+        let spellTraditions = JSON.parse(spellDataStruct.Spell.traditions);
+        if(spellTraditions.includes(traditionName)){
+            willDisplay = true;
+        }
+
+
+        if(traditionSpellsSearchInput != null){
+            let spellName = spellDataStruct.Spell.name.toLowerCase();
+            if(!spellName.includes(traditionSpellsSearchInput)){
+                willDisplay = false;
+            }
+        }
+
+        if(willDisplay){
+            displayAddSpell(spellDataStruct, data);
+        }
+
+    }
+}
+
+function displayAddSpell(spellDataStruct, data){
+
+    if(spellDataStruct.Spell.isArchived == 1){
+        return;
+    }
+
+    let spellID = spellDataStruct.Spell.id;
+    let spellLevel = (spellDataStruct.Spell.level == 0) ? "Cantrip" : "Lvl "+spellDataStruct.Spell.level;
+    let spellName = spellDataStruct.Spell.name;
+
+    let spellTradViewClass = 'addSpellFromTraditionViewSpell'+spellID;
+    let spellTradAddSpellID = 'addSpellFromTraditionAddSpell'+spellID;
+    let spellTradChevronSpellID = 'addSpellFromTraditionChevronSpellID'+spellID;
+    let spellTradNameID = 'addSpellFromTraditionName'+spellID;
+    let spellTradDetailsSpellID = 'addSpellFromTraditionDetailsSpell'+spellID;
+
+    $('#traitionSpellListSection').append('<div class="tile is-parent is-paddingless border-bottom border-additems has-background-black-like cursor-clickable"><div class="tile is-child is-7 '+spellTradViewClass+'"><p id="'+spellTradNameID+'" class="has-text-left mt-1 pl-3 has-text-grey-lighter">'+spellName+'</p></div><div class="tile is-child is-2"><p class="has-text-centered is-size-7 mt-2">'+spellLevel+'</p></div><div class="tile is-child"><button id="'+spellTradAddSpellID+'" class="button my-1 is-small is-success is-rounded">Select</button></div><div class="tile is-child is-1 '+spellTradViewClass+'"><span class="icon has-text-grey mt-2"><i id="'+spellTradChevronSpellID+'" class="fas fa-chevron-down"></i></span></div></div><div id="'+spellTradDetailsSpellID+'" class="tile is-parent is-vertical is-paddingless border-bottom border-additems is-hidden p-2 text-center"></div>');
+
+    let spellDetails = $('#'+spellTradDetailsSpellID);
+
+    let rarity = spellDataStruct.Spell.rarity;
+    let tagsInnerHTML = '';
+    switch(rarity) {
+      case 'UNCOMMON': tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-small is-primary">Uncommon</button>';
+        break;
+      case 'RARE': tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-small is-success">Rare</button>';
+        break;
+      case 'UNIQUE': tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-small is-danger">Unique</button>';
+        break;
+      default: break;
+    }
+    for(const tag of spellDataStruct.Tags){
+        tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-small is-info has-tooltip-bottom has-tooltip-multiline" data-tooltip="'+tag.description+'">'+tag.name+'</button>';
+    }
+
+    if(tagsInnerHTML != ''){
+        spellDetails.append('<div class="buttons is-marginless is-centered">'+tagsInnerHTML+'</div>');
+        spellDetails.append('<hr class="mb-2 mt-1">');
+    }
+
+    // Traditions
+    let traditionsString = '';
+    let spellTraditions = JSON.parse(spellDataStruct.Spell.traditions);
+    for(let tradition of spellTraditions){
+        traditionsString += tradition+', ';
+    }
+    traditionsString = traditionsString.slice(0, -2);// Trim off that last ', '
+    spellDetails.append('<div class="tile"><div class="tile is-child"><p class="text-left"><strong>Traditions</strong> '+traditionsString+'</p></div></div>');
+
+    // Cast
+    let castActions = null;
+    let wrapComponents = false;
+    switch(spellDataStruct.Spell.cast) {
+        case 'FREE_ACTION': castActions = '<span class="pf-icon">[free-action]</span>'; break;
+        case 'REACTION': castActions = '<span class="pf-icon">[reaction]</span>'; break;
+        case 'ACTION': castActions = '<span class="pf-icon">[one-action]</span>'; break;
+        case 'TWO_ACTIONS': castActions = '<span class="pf-icon">[two-actions]</span>'; break;
+        case 'THREE_ACTIONS': castActions = '<span class="pf-icon">[three-actions]</span>'; break;
+        case 'ONE_TO_THREE_ACTIONS': castActions = '<span class="pf-icon">[one-action]</span><span> to </span><span class="pf-icon">[three-actions]</span>'; break;
+        case 'ONE_TO_TWO_ACTIONS': castActions = '<span class="pf-icon">[one-action]</span><span> to </span><span class="pf-icon">[two-actions]</span>'; break;
+        case 'TWO_TO_THREE_ACTIONS': castActions = '<span class="pf-icon">[two-actions]</span><span> to </span><span class="pf-icon">[three-actions]</span>'; break;
+        case 'ONE_MINUTE': castActions = '<span>1 minute</span>'; wrapComponents = true; break;
+        case 'FIVE_MINUTES': castActions = '<span>5 minutes</span>'; wrapComponents = true; break;
+        case 'TEN_MINUTES': castActions = '<span>10 minutes</span>'; wrapComponents = true; break;
+        case 'ONE_HOUR': castActions = '<span>1 hour</span>'; wrapComponents = true; break;
+        case 'EIGHT_HOURS': castActions = '<span>8 hours</span>'; wrapComponents = true; break;
+        case 'ONE_DAY': castActions = '<span>24 hours</span>'; wrapComponents = true; break;
+        default: break;
+    }
+
+    let componentsString = '';
+    let spellComponents = JSON.parse(spellDataStruct.Spell.castingComponents);
+    for(let components of spellComponents){
+        componentsString += components+', ';
+    }
+    componentsString = componentsString.slice(0, -2);// Trim off that last ', '
+    if(wrapComponents && componentsString != ''){
+        componentsString = '('+componentsString+')';
+    }
+
+    spellDetails.append('<div class="tile"><div class="tile is-child"><p class="text-left"><strong>Cast</strong> '+castActions+' '+componentsString+'</p></div></div>');
+
+    // Cost // Trigger // Requirements // 
+    let ctrString = '';
+
+    let spellCost = '';
+    if(spellDataStruct.Spell.cost != null){
+        spellCost = '<strong>Cost</strong> '+spellDataStruct.Spell.cost+'; ';
+    }
+    ctrString += spellCost;
+
+    let spellTrigger = '';
+    if(spellDataStruct.Spell.trigger != null){
+        spellTrigger = '<strong>Trigger</strong> '+spellDataStruct.Spell.trigger+'; ';
+    }
+    ctrString += spellTrigger;
+
+    let spellRequirements = '';
+    if(spellDataStruct.Spell.requirements != null){
+        spellRequirements = '<strong>Requirements</strong> '+spellDataStruct.Spell.requirements+'; ';
+    }
+    ctrString += spellRequirements;
+    ctrString = ctrString.slice(0, -2);// Trim off that last '; '
+
+    spellDetails.append('<div class="tile"><div class="tile is-child"><p class="text-left negative-indent">'+ctrString+'</p></div></div>');
+
+
+    // Range // Area // Targets //
+    let ratString = '';
+
+    let spellRange = '';
+    if(spellDataStruct.Spell.range != null){
+        spellRange = '<strong>Range</strong> '+spellDataStruct.Spell.range+'; ';
+    }
+    ratString += spellRange;
+
+    let spellArea = '';
+    if(spellDataStruct.Spell.area != null){
+        spellArea = '<strong>Area</strong> '+spellDataStruct.Spell.area+'; ';
+    }
+    ratString += spellArea;
+
+    let spellTargets = '';
+    if(spellDataStruct.Spell.targets != null){
+        spellTargets = '<strong>Targets</strong> '+spellDataStruct.Spell.targets+'; ';
+    }
+    ratString += spellTargets;
+    ratString = ratString.slice(0, -2);// Trim off that last '; '
+
+    spellDetails.append('<div class="tile"><div class="tile is-child"><p class="text-left negative-indent">'+ratString+'</p></div></div>');
+
+    // Saving Throw // Duration //
+    let sdString = '';
+
+    let savingThrowType = null;
+    switch(spellDataStruct.Spell.cast) {
+        case 'FORT': savingThrowType = 'Fortitude'; break;
+        case 'REFLEX': savingThrowType = 'Reflex'; break;
+        case 'WILL': savingThrowType = 'Will'; break;
+        case 'BASIC_FORT': savingThrowType = 'basic Fortitude'; break;
+        case 'BASIC_REFLEX': savingThrowType = 'basic Reflex'; break;
+        case 'BASIC_WILL': savingThrowType = 'basic Will'; break;
+        default: break;
+    }
+    if(savingThrowType != null){
+        sdString += '<strong>Saving Throw</strong> '+savingThrowType+'; ';
+    }
+
+    let spellDuration = '';
+    if(spellDataStruct.Spell.duration != null){
+        spellDuration = '<strong>Duration</strong> '+spellDataStruct.Spell.duration+'; ';
+    }
+    sdString += spellDuration;
+    sdString = sdString.slice(0, -2);// Trim off that last '; '
+
+    spellDetails.append('<div class="tile"><div class="tile is-child"><p class="text-left negative-indent">'+sdString+'</p></div></div>');
+
+    spellDetails.append('<hr class="m-2">');
+
+    spellDetails.append(processText(spellDataStruct.Spell.description, true, true, 'MEDIUM'));
+
+    if(spellDataStruct.Spell.heightenedOneVal != null || spellDataStruct.Spell.heightenedTwoVal != null || spellDataStruct.Spell.heightenedThreeVal != null) {
+
+        spellDetails.append('<hr class="m-2">');
+
+        if(spellDataStruct.Spell.heightenedOneVal != null){
+            let hText = '<strong>Heightened ('+getHeightenedTextFromCodeName(spellDataStruct.Spell.heightenedOneVal)+')</strong> '+spellDataStruct.Spell.heightenedOneText;
+            spellDetails.append('<div class="negative-indent">'+processText(hText, true, true, 'MEDIUM')+'</div>');
+        }
+
+        if(spellDataStruct.Spell.heightenedTwoVal != null){
+            let hText = '<strong>Heightened ('+getHeightenedTextFromCodeName(spellDataStruct.Spell.heightenedTwoVal)+')</strong> '+spellDataStruct.Spell.heightenedTwoText;
+            spellDetails.append('<div class="negative-indent">'+processText(hText, true, true, 'MEDIUM')+'</div>');
+        }
+
+        if(spellDataStruct.Spell.heightenedThreeVal != null){
+            let hText = '<strong>Heightened ('+getHeightenedTextFromCodeName(spellDataStruct.Spell.heightenedThreeVal)+')</strong> '+spellDataStruct.Spell.heightenedThreeText;
+            spellDetails.append('<div class="negative-indent">'+processText(hText, true, true, 'MEDIUM')+'</div>');
+        }
+
+    }
+
+    $('#'+spellTradAddSpellID).click(function(){
+        $(this).addClass('is-loading');
+        socket.emit("requestSpellAddToSpellBook",
+            getCharIDFromURL(),
+            data.SpellBook.SpellSRC,
+            spellDataStruct.Spell.id);
+    });
+
+    $('.'+spellTradViewClass).click(function(){
+        if($('#'+spellTradDetailsSpellID).is(":visible")){
+            $('#'+spellTradDetailsSpellID).addClass('is-hidden');
+            $('#'+spellTradChevronSpellID).removeClass('fa-chevron-up');
+            $('#'+spellTradChevronSpellID).addClass('fa-chevron-down');
+            $('#'+spellTradNameID).removeClass('has-text-weight-bold');
+        } else {
+            $('#'+spellTradDetailsSpellID).removeClass('is-hidden');
+            $('#'+spellTradChevronSpellID).removeClass('fa-chevron-down');
+            $('#'+spellTradChevronSpellID).addClass('fa-chevron-up');
+            $('#'+spellTradNameID).addClass('has-text-weight-bold');
         }
     });
 

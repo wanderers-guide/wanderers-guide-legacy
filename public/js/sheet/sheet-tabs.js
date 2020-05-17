@@ -13,9 +13,10 @@ function changeTab(type, data) {
     $('#tabContent').html('');
 
     $('#actionsTab').parent().removeClass("is-active");
+    $('#weaponsTab').parent().removeClass("is-active");
     $('#spellsTab').parent().removeClass("is-active");
     $('#inventoryTab').parent().removeClass("is-active");
-    $('#featsTab').parent().removeClass("is-active");
+    $('#detailsTab').parent().removeClass("is-active");
     $('#notesTab').parent().removeClass("is-active");
 
     $('#'+type).parent().addClass("is-active");
@@ -25,7 +26,7 @@ function changeTab(type, data) {
 
         $('#tabContent').append('<div class="tabs is-centered is-marginless"><ul class="action-tabs"><li><a id="actionTabEncounter">Encounter</a></li><li><a id="actionTabExploration">Exploration</a></li><li><a id="actionTabDowntime">Downtime</a></li></ul></div>');
 
-        let filterInnerHTML = '<div class="columns is-marginless"><div class="column is-4"><p id="stateNumberOfActions" class="is-size-7 has-text-left">3 Actions per Turn</p></div><div class="column is-1"><p class="is-size-6 has-text-grey-lighter">Filter</p></div>';
+        let filterInnerHTML = '<div class="columns is-mobile is-marginless"><div class="column is-4"><p id="stateNumberOfActions" class="is-size-7 has-text-left">3 Actions per Turn</p></div><div class="column is-1"><p class="is-size-6 has-text-grey-lighter">Filter</p></div>';
         filterInnerHTML += '<div class="column is-2"><div class="select is-small"><select id="actionFilterSelectBySkill"><option value="chooseDefault">By Skill</option>';
 
         for(const [skillName, skillData] of data.SkillMap.entries()){
@@ -34,7 +35,7 @@ function changeTab(type, data) {
 
         filterInnerHTML += '</select></div></div><div class="column is-2"><div class="select is-small"><select id="actionFilterSelectByAction"><option value="chooseDefault">By Action</option><option value="OneAction" class="pf-icon">[one-action]</option><option value="TwoActions" class="pf-icon">[two-actions]</option><option value="ThreeActions" class="pf-icon">[three-actions]</option><option value="FreeAction" class="pf-icon">[free-action]</option><option value="Reaction" class="pf-icon">[reaction]</option></select></div></div></div>';
 
-        filterInnerHTML += '<div class="mb-4"><p class="control has-icons-left"><input id="actionFilterSearch" class="input" type="text" placeholder="Search"><span class="icon is-left"><i class="fas fa-search" aria-hidden="true"></i></span></p></div>';
+        filterInnerHTML += '<div class="mb-2"><p class="control has-icons-left"><input id="actionFilterSearch" class="input" type="text" placeholder="Search"><span class="icon is-left"><i class="fas fa-search" aria-hidden="true"></i></span></p></div>';
 
         $('#tabContent').append(filterInnerHTML);
 
@@ -55,18 +56,116 @@ function changeTab(type, data) {
 
         $('#actionTabEncounter').click();
 
+    } else if(type == 'weaponsTab'){
+
+        let runeDataStruct = generateRuneDataStruct();
+
+        let addWeaponEntry = function(weaponEntryID, item, invItem, runeDataStruct, data) {
+            let weaponListEntryID = 'weaponListEntry'+weaponEntryID;
+
+            let calcStruct = getAttackAndDamage(item, invItem, data.StrMod, data.DexMod);
+            let weaponRange = '-';
+            let weaponReload = '-';
+            if(item.WeaponData.isRanged == 1){
+                weaponReload = item.WeaponData.rangedReload;
+                if(weaponReload == 0){ weaponReload = '-'; }
+                weaponRange = item.WeaponData.rangedRange+" ft";
+            }
+            $('#tabContent').append('<div id="'+weaponListEntryID+'" class="columns is-mobile pt-1 is-marginless"><div class="column is-paddingless is-4 border-bottom border-dark-lighter cursor-clickable"><p class="pl-3 has-text-left has-text-grey-light">'+invItem.name+'</p></div><div class="column is-paddingless is-1 border-bottom border-dark-lighter cursor-clickable"><p class="has-text-grey-light">'+calcStruct.AttackBonus+'</p></div><div class="column is-paddingless is-2 border-bottom border-dark-lighter cursor-clickable"><p class="has-text-grey-light">'+calcStruct.Damage+'</p></div><div class="column is-paddingless is-1 border-bottom border-dark-lighter cursor-clickable"></div><div class="column is-paddingless is-1 border-bottom border-dark-lighter cursor-clickable"><p class="has-text-grey-light">'+weaponRange+'</p></div><div class="column is-paddingless is-2 border-bottom border-dark-lighter cursor-clickable"><p class="has-text-grey-light">'+weaponReload+'</p></div><div class="column is-paddingless is-1 border-bottom border-dark-lighter cursor-clickable"></div></div>');
+
+            $('#'+weaponListEntryID).click(function(){
+                openQuickView('invItemView', {
+                    InvItem : invItem,
+                    Item : item,
+                    RuneDataStruct : runeDataStruct,
+                    InvData : null,
+                    Data : data // Same contents in data object as inventory tab uses
+                });
+            });
+
+            $('#'+weaponListEntryID).mouseenter(function(){
+                $(this).addClass('has-background-grey-darker');
+            });
+            $('#'+weaponListEntryID).mouseleave(function(){
+                $(this).removeClass('has-background-grey-darker');
+            });
+        };
+
+        $('#tabContent').append('<div class="columns is-mobile pt-1 is-marginless"><div class="column is-paddingless is-4"><p class="pl-3 has-text-left"><strong class="has-text-grey-light">Name</strong></p></div><div class="column is-paddingless is-1"><p class=""><strong class="has-text-grey-light">Attack</strong></p></div><div class="column is-paddingless is-2"><p class=""><strong class="has-text-grey-light">Damage</strong></p></div><div class="column is-paddingless is-1"></div><div class="column is-paddingless is-1"><p class=""><strong class="has-text-grey-light">Range</strong></p></div><div class="column is-paddingless is-2"><p class=""><strong class="has-text-grey-light">Reload</strong></p></div><div class="column is-paddingless is-1"></div></div><div class="is-divider hr-light is-marginless"></div>');
+
+        // Physical Features to Unarmed Attacks
+        let phyFeatWeaponMap = new Map();
+        phyFeatWeaponMap.set(0, 56); // <- Fist, Hardcoded
+
+        for(const [srcID, physicalFeatureArray] of g_physicalFeatureMap.entries()){
+            for(let physicalFeature of physicalFeatureArray){
+                if(physicalFeature.overrides == null){
+                    if(!phyFeatWeaponMap.has(physicalFeature.id)) {
+                        phyFeatWeaponMap.set(physicalFeature.id, physicalFeature.itemWeaponID);
+                    }
+                } else {
+                    phyFeatWeaponMap.set(physicalFeature.overrides, physicalFeature.itemWeaponID);
+                }
+            }
+        }
+
+        let weaponEntryID = 0;
+        for(const [pfWeaponID, itemWeaponID] of phyFeatWeaponMap.entries()){
+            weaponEntryID++;
+            let pwItem = g_itemMap.get(itemWeaponID+"");
+            let pwInvItem = pwItem.Item;
+            pwInvItem.currentHitPoints = pwInvItem.hitPoints;
+            pwInvItem.viewOnly = true;
+            addWeaponEntry(weaponEntryID, pwItem, pwInvItem, runeDataStruct, data);
+        }
+
+        for(const invItem of g_invStruct.InvItems){
+            let item = g_itemMap.get(invItem.itemID+"");
+            if(item.WeaponData != null){
+                weaponEntryID++;
+                addWeaponEntry(weaponEntryID, item, invItem, runeDataStruct, data);
+            }
+        }
+
     } else if(type == 'spellsTab'){
 
+        $('#tabContent').append('<div class="columns is-mobile is-marginless"><div class="column is-9 is-paddingless py-3"><p class="control has-icons-left"><input id="spellsSearch" class="input" type="text" placeholder="Search Spells"><span class="icon is-left"><i class="fas fa-search" aria-hidden="true"></i></span></p></div><div class="column is-3 is-paddingless py-3 px-2"><button id="manageSpellsBtn" class="button is-info is-rounded">Manage Spells</button></div></div><div id="spellsContent" class="use-custom-scrollbar"></div>');
 
+        $('#manageSpellsBtn').click(function(){
+            openManageSpellsModal(data);
+        });
+
+        /*
+        console.log(data.SpellSlotsMap);
+        for(const [level, slotArray] of data.SpellSlotsMap.entries()){
+
+            let sectionName = (level == 0) ? 'Cantrips' : 'Level '+level;
+            $('#spellsContent').append('<p class="is-size-5 has-text-grey-light has-text-weight-bold text-left pl-5">'+sectionName+'</p>');
+            $('#spellsContent').append('<hr class="hr-light" style="margin-top:-0.5em; margin-bottom:0em;">');
+            $('#spellsContent').append('<div class="columns is-mobile pt-1 is-marginless"><div class="column is-6"><p class="has-text-left pl-3"><strong class="has-text-grey-light">Name</strong></p></div><div class="column is-1"><p class="pr-3"><strong class="has-text-grey-light">Cast</strong></p></div><div class="column is-1"><p class="pr-3"><strong class="has-text-grey-light">Range</strong></p></div><div class="column is-1"><p class="pr-3"><strong class="has-text-grey-light">Health</strong></p></div><div class="column is-3"><p class="pr-4"><strong class="has-text-grey-light">Tags</strong></p></div></div>');
+
+            let spellsInnerHTML = '';
+            for(let slot of slotArray){
+                let spellSlotID = 'spellSlot'+slot.slotID;
+                if(slot.spell != null) {
+                    
+                } else {
+                    $('#spellsContent').append('<div class="columns is-mobile pt-1 is-marginless"><div class="column is-6"><p class="has-text-left pl-3"><strong class="has-text-grey-light">Empty</strong></p></div><div class="column is-1"><p class="pr-3"><strong class="has-text-grey-light">Qty</strong></p></div><div class="column is-1"><p class="pr-3"><strong class="has-text-grey-light">Bulk</strong></p></div><div class="column is-1"><p class="pr-3"><strong class="has-text-grey-light">Health</strong></p></div><div class="column is-3"><p class="pr-4"><strong class="has-text-grey-light">Tags</strong></p></div></div>');
+                }
+                
+            }
+
+        }
+        */
 
     } else if(type == 'inventoryTab'){
 
-        // Determine Armor
+        // Update armor and shield within the sheet
         determineArmor(data.DexMod);
 
-        $('#tabContent').append('<div class="columns pt-1 is-marginless"><div class="column is-inline-flex is-paddingless pt-2 px-3"><p class="is-size-6 pr-3"><strong class="has-text-grey-lighter">Total Bulk</strong></p><p id="bulkTotal" class="is-size-6 has-text-left">'+g_bulkAndCoinsStruct.TotalBulk+' / '+g_bulkAndCoinsStruct.WeightEncumbered+'</p><p id="bulkMax" class="is-size-7 pl-2 has-text-left">(Limit '+g_bulkAndCoinsStruct.WeightMax+')</p></div><div class="column is-paddingless pt-2 px-3"><div class="is-inline-flex is-pulled-right"><p id="coinsMessage" class="is-size-6"><strong class="has-text-grey-lighter">Total Coins</strong></p><div id="coinsCopperSection" class="is-inline-flex" data-tooltip="Copper"><figure class="image is-16x16 is-marginless mt-1 ml-3 mr-1"><img src="/images/copper_coin.png"></figure><p>'+g_bulkAndCoinsStruct.CopperCoins+'</p></div><div id="coinsSilverSection" class="is-inline-flex" data-tooltip="Silver"><figure class="image is-16x16 is-marginless mt-1 ml-3 mr-1"><img src="/images/silver_coin.png"></figure><p>'+g_bulkAndCoinsStruct.SilverCoins+'</p></div><div id="coinsGoldSection" class="is-inline-flex" data-tooltip="Gold"><figure class="image is-16x16 is-marginless mt-1 ml-3 mr-1"><img src="/images/gold_coin.png"></figure><p>'+g_bulkAndCoinsStruct.GoldCoins+'</p></div><div id="coinsPlatinumSection" class="is-inline-flex" data-tooltip="Platinum"><figure class="image is-16x16 is-marginless mt-1 ml-3 mr-1"><img src="/images/platinum_coin.png"></figure><p>'+g_bulkAndCoinsStruct.PlatinumCoins+'</p></div></div></div></div>');
+        $('#tabContent').append('<div class="columns is-mobile pt-1 is-marginless"><div class="column is-inline-flex is-paddingless pt-2 px-3"><p class="is-size-6 pr-3"><strong class="has-text-grey-lighter">Total Bulk</strong></p><p id="bulkTotal" class="is-size-6 has-text-left">'+g_bulkAndCoinsStruct.TotalBulk+' / '+g_bulkAndCoinsStruct.WeightEncumbered+'</p><p id="bulkMax" class="is-size-7 pl-2 has-text-left">(Limit '+g_bulkAndCoinsStruct.WeightMax+')</p></div><div class="column is-paddingless pt-2 px-3"><div class="is-inline-flex is-pulled-right"><p id="coinsMessage" class="is-size-6"><strong class="has-text-grey-lighter">Total Coins</strong></p><div id="coinsCopperSection" class="is-inline-flex" data-tooltip="Copper"><figure class="image is-16x16 is-marginless mt-1 ml-3 mr-1"><img src="/images/copper_coin.png"></figure><p>'+g_bulkAndCoinsStruct.CopperCoins+'</p></div><div id="coinsSilverSection" class="is-inline-flex" data-tooltip="Silver"><figure class="image is-16x16 is-marginless mt-1 ml-3 mr-1"><img src="/images/silver_coin.png"></figure><p>'+g_bulkAndCoinsStruct.SilverCoins+'</p></div><div id="coinsGoldSection" class="is-inline-flex" data-tooltip="Gold"><figure class="image is-16x16 is-marginless mt-1 ml-3 mr-1"><img src="/images/gold_coin.png"></figure><p>'+g_bulkAndCoinsStruct.GoldCoins+'</p></div><div id="coinsPlatinumSection" class="is-inline-flex" data-tooltip="Platinum"><figure class="image is-16x16 is-marginless mt-1 ml-3 mr-1"><img src="/images/platinum_coin.png"></figure><p>'+g_bulkAndCoinsStruct.PlatinumCoins+'</p></div></div></div></div>');
 
-        $('#tabContent').append('<div class="columns is-marginless"><div class="column is-10"><p class="control has-icons-left"><input id="inventorySearch" class="input" type="text" placeholder="Search Inventory"><span class="icon is-left"><i class="fas fa-search" aria-hidden="true"></i></span></p></div><div class="column"><button id="invAddItems" class="button is-info is-rounded">Add Items</button></div></div><div class="tile is-ancestor is-vertical"><div class="tile is-parent is-paddingless pt-1 px-2"><div class="tile is-child is-6"><p class="has-text-left pl-3"><strong class="has-text-grey-light">Name</strong></p></div><div class="tile is-child is-1"><p class="pr-3"><strong class="has-text-grey-light">Qty</strong></p></div><div class="tile is-child is-1"><p class="pr-3"><strong class="has-text-grey-light">Bulk</strong></p></div><div class="tile is-child is-1"><p class="pr-3"><strong class="has-text-grey-light">Health</strong></p></div><div class="tile is-child is-3"><p class="pr-4"><strong class="has-text-grey-light">Tags</strong></p></div></div><div class="is-divider border-secondary is-marginless"></div><div id="inventoryContent" class="use-custom-scrollbar"></div></div>');
+        $('#tabContent').append('<div class="columns is-mobile is-marginless"><div class="column is-10"><p class="control has-icons-left"><input id="inventorySearch" class="input" type="text" placeholder="Search Inventory"><span class="icon is-left"><i class="fas fa-search" aria-hidden="true"></i></span></p></div><div class="column"><button id="invAddItems" class="button is-info is-rounded">Add Items</button></div></div><div class="tile is-ancestor is-vertical"><div class="tile is-parent is-paddingless pt-1 px-2"><div class="tile is-child is-6"><p class="has-text-left pl-3"><strong class="has-text-grey-light">Name</strong></p></div><div class="tile is-child is-1"><p class="pr-3"><strong class="has-text-grey-light">Qty</strong></p></div><div class="tile is-child is-1"><p class="pr-3"><strong class="has-text-grey-light">Bulk</strong></p></div><div class="tile is-child is-1"><p class="pr-3"><strong class="has-text-grey-light">Health</strong></p></div><div class="tile is-child is-3"><p class="pr-4"><strong class="has-text-grey-light">Tags</strong></p></div></div><div class="is-divider hr-light is-marginless"></div><div id="inventoryContent" class="use-custom-scrollbar"></div></div>');
 
         if(g_bulkAndCoinsStruct.CantMove) {
             $('#bulkTotal').addClass('has-text-black');
@@ -123,37 +222,32 @@ function changeTab(type, data) {
         });
 
 
-    } else if(type == 'featsTab'){
+    } else if(type == 'detailsTab'){
 
-        
-        $('#tabContent').append('<div class="tabs is-centered"><ul><li><a id="featTabAll">All</a></li><li><a id="featTabGeneral">General</a></li><li><a id="featTabClass">Class</a></li><li><a id="featTabAncestry">Ancestry</a></li></ul></div>');
+        $('#tabContent').append('<div class="tabs is-centered is-marginless"><ul><li><a id="detailsTabFeats">Feats</a></li><li><a id="detailsTabAbilities">Abilities</a></li><li><a id="detailsTabDescription">Description</a></li></ul></div>');
 
-        $('#tabContent').append('<div id="featTabContent"></div>');
+        $('#tabContent').append('<div id="detailsTabContent"></div>');
 
-        $('#featTabAll').click(function(){
-            changeFeatTab('featTabAll', data);
+        $('#detailsTabFeats').click(function(){
+            changeDetailsTab('detailsTabFeats', data);
         });
 
-        $('#featTabGeneral').click(function(){
-            changeFeatTab('featTabGeneral', data);
+        $('#detailsTabAbilities').click(function(){
+            changeDetailsTab('detailsTabAbilities', data);
         });
 
-        $('#featTabClass').click(function(){
-            changeFeatTab('featTabClass', data);
+        $('#detailsTabDescription').click(function(){
+            changeDetailsTab('detailsTabDescription', data);
         });
 
-        $('#featTabAncestry').click(function(){
-            changeFeatTab('featTabAncestry', data);
-        });
-
-        $('#featTabAll').click();
+        $('#detailsTabFeats').click();
 
     } else if(type == 'notesTab'){
 
         let notesAreaID = "notesArea";
         let notesAreaControlShellID = "notesAreaControlShell";
 
-        $('#tabContent').html('<div id="'+notesAreaControlShellID+'" class="control mt-3"><textarea id="'+notesAreaID+'" class="textarea has-fixed-size use-custom-scrollbar" rows="24" spellcheck="false" placeholder="Feel free to write notes here about your character, backstory, or anything else you\'d like!"></textarea></div>');
+        $('#tabContent').html('<div id="'+notesAreaControlShellID+'" class="control mt-3"><textarea id="'+notesAreaID+'" class="textarea has-fixed-size use-custom-scrollbar" rows="24" spellcheck="false" placeholder="Feel free to write notes here about your character, campaign, or anything else you\'d like!"></textarea></div>');
 
         $("#"+notesAreaID).val(data.Character.notes);
 
@@ -194,24 +288,15 @@ function displayInventorySection(data){
         }
     }
 
-    let weaponRuneArray = [];
-    let armorRuneArray = [];
-    for(const [itemID, itemData] of g_itemMap.entries()){
-        if(itemData.RuneData != null){
-            if(itemData.RuneData.etchedType == 'WEAPON'){
-                weaponRuneArray[itemData.RuneData.id] = itemData;
-            } else if(itemData.RuneData.etchedType == 'ARMOR'){
-                armorRuneArray[itemData.RuneData.id] = itemData;
-            }
-        }
-    }
-    
-    let runeDataStruct = { WeaponArray : weaponRuneArray, ArmorArray : armorRuneArray };
+    let runeDataStruct = generateRuneDataStruct();
 
     let inventorySearch = $('#inventorySearch');
     let invSearchInput = null;
     if(inventorySearch.val() != ''){
         invSearchInput = inventorySearch.val().toLowerCase();
+        inventorySearch.addClass('is-info');
+    } else {
+        inventorySearch.removeClass('is-info');
     }
 
     $('#inventorySearch').change(function(){
@@ -303,7 +388,7 @@ function displayInventoryItem(invItem, openBagInvItemArray, runeDataStruct, data
         let invItemStorageSectionID = 'invItemStorageSection'+invItem.id;
         let invItemStorageBulkAmountID = 'invItemStorageBulkAmount'+invItem.id;
 
-        $('#inventoryContent').append('<div id="'+invItemSectionID+'" class="tile is-parent is-paddingless pt-1 px-2 border-bottom border-dark-lighter cursor-clickable"><div class="tile is-child is-6"><p id="'+invItemNameID+'" class="has-text-left pl-3 is-size-6 has-text-grey-lighter"><a id="'+invItemStorageViewButtonID+'" class="button is-small is-info is-rounded is-outlined mb-1 ml-3">Open</a></p></div><div id="'+invItemQtyID+'" class="tile is-child is-1"><p></p></div><div id="'+invItemBulkID+'" class="tile is-child is-1"><p></p></div><div id="'+invItemHealthID+'" class="tile is-child is-1"><p></p></div><div class="tile is-child is-3"><div class="tags is-centered"><span id="'+invItemShoddyTagID+'" class="tag is-warning">Shoddy</span><span id="'+invItemBrokenTagID+'" class="tag is-danger">Broken</span></div></div></div>');
+        $('#inventoryContent').append('<div id="'+invItemSectionID+'" class="tile is-parent is-paddingless pt-1 px-2 border-bottom border-dark-lighter cursor-clickable"><div class="tile is-child is-6"><p id="'+invItemNameID+'" class="has-text-left pl-3 is-size-6 has-text-grey-light"><a id="'+invItemStorageViewButtonID+'" class="button is-small is-info is-rounded is-outlined mb-1 ml-3">Open</a></p></div><div id="'+invItemQtyID+'" class="tile is-child is-1"><p></p></div><div id="'+invItemBulkID+'" class="tile is-child is-1"><p></p></div><div id="'+invItemHealthID+'" class="tile is-child is-1"><p></p></div><div class="tile is-child is-3"><div class="tags is-centered"><span id="'+invItemShoddyTagID+'" class="tag is-warning">Shoddy</span><span id="'+invItemBrokenTagID+'" class="tag is-danger">Broken</span></div></div></div>');
 
         $('#inventoryContent').append('<div id="'+invItemStorageSectionID+'" class="tile is-vertical is-hidden"></div>');
 
@@ -400,10 +485,12 @@ function displayInventoryItem(invItem, openBagInvItemArray, runeDataStruct, data
                     openQuickView('invItemView', {
                         InvItem : baggedInvItem,
                         Item : baggedItem,
-                        OpenBagInvItemArray : openBagInvItemArray,
                         RuneDataStruct : runeDataStruct,
-                        ItemIsStorage : baggedItemIsStorage,
-                        ItemIsStorageAndEmpty : true,
+                        InvData : {
+                            OpenBagInvItemArray : openBagInvItemArray,
+                            ItemIsStorage : baggedItemIsStorage,
+                            ItemIsStorageAndEmpty : true
+                        },
                         Data : data
                     });
                 });
@@ -507,10 +594,12 @@ function displayInventoryItem(invItem, openBagInvItemArray, runeDataStruct, data
         openQuickView('invItemView', {
             InvItem : invItem,
             Item : item,
-            OpenBagInvItemArray : openBagInvItemArray,
             RuneDataStruct : runeDataStruct,
-            ItemIsStorage : itemIsStorage,
-            ItemIsStorageAndEmpty : itemIsStorageAndEmpty,
+            InvData : {
+                OpenBagInvItemArray : openBagInvItemArray,
+                ItemIsStorage : itemIsStorage,
+                ItemIsStorageAndEmpty : itemIsStorageAndEmpty
+            },
             Data : data
         });
     });
@@ -621,9 +710,9 @@ function changeActionTab(type, data){
 
     let actionFilterSearch = $('#actionFilterSearch');
     if(actionFilterSearch.val() == ""){
-        actionFilterSearch.parent().removeClass('is-info');
+        actionFilterSearch.removeClass('is-info');
     } else {
-        actionFilterSearch.parent().addClass('is-info');
+        actionFilterSearch.addClass('is-info');
     }
 
     $('#actionFilterSelectByAction').change(function(){
@@ -757,15 +846,14 @@ function displayAction(featStruct, actionCount) {
     }
     actionTagsInnerHTML += '</div>';
 
+    
+    $('#actionTabContent').append('<div id="'+actionID+'" class="columns is-mobile border-bottom border-dark-lighter cursor-clickable is-marginless mx-2">'+actionActionInnerHTML+'<div class="column is-paddingless p-1"><p class="text-left pl-2">'+actionNameInnerHTML+'</p></div><div class="column is-paddingless p-1"><p class="">'+actionTagsInnerHTML+'</p></div></div>');
 
-    $('#actionTabContent').append('<div id="'+actionID+'" class="columns border cursor-clickable">'+actionActionInnerHTML+'<div class="column is-paddingless p-1"><p class="has-text-left pl-2">'+actionNameInnerHTML+'</p></div><div class="column is-paddingless p-1"><p class="">'+actionTagsInnerHTML+'</p></div></div>');
-
-    if(actionCount != 0){
-        $('#'+actionID).addClass('border-top-0');
+    if(actionCount == 0){
+        $('#'+actionID).addClass('border-top');
     }
                 
     $('#'+actionID).click(function(){
-        console.log("GOT HERRRREEEEEE");
 
         let actionNameHTML = '<span>'+featStruct.Feat.name+'</span>';
         switch(featStruct.Feat.actions) {
@@ -784,53 +872,155 @@ function displayAction(featStruct, actionCount) {
         });
     });
 
+    $('#'+actionID).mouseenter(function(){
+        $(this).addClass('has-background-grey-darker');
+    });
+    $('#'+actionID).mouseleave(function(){
+        $(this).removeClass('has-background-grey-darker');
+    });
+
 }
 
 
 
-// Feat Tabs //
-function changeFeatTab(type, data){
+// Details Tabs //
+function changeDetailsTab(type, data){
 
-    $('#featTabContent').html('');
+    $('#detailsTabContent').html('');
 
-    $('#featTabAll').parent().removeClass("is-active");
-    $('#featTabGeneral').parent().removeClass("is-active");
-    $('#featTabClass').parent().removeClass("is-active");
-    $('#featTabAncestry').parent().removeClass("is-active");
+    $('#detailsTabFeats').parent().removeClass("is-active");
+    $('#detailsTabAbilities').parent().removeClass("is-active");
+    $('#detailsTabDescription').parent().removeClass("is-active");
 
     $('#'+type).parent().addClass("is-active");
 
     switch(type) {
-        case 'featTabAll': featSort(data, ['AnyTag']); break;
-        case 'featTabGeneral': featSort(data, ['General']); break;
-        case 'featTabClass': featSort(data, [data.ClassName]); break;
-        case 'featTabAncestry': featSort(data, data.AncestryTagsArray); break;
+        case 'detailsTabFeats': displayFeatsSection(data); break;
+        case 'detailsTabAbilities': displayAbilitiesSection(data); break;
+        case 'detailsTabDescription': displayDescriptionSection(data); break;
         default: break;
     }
 
 }
 
-// Feat Sorting //
-function featSort(data, sortingTagNameArray){
+
+function displayFeatsSection(data) {
+
+    $('#detailsTabContent').append('<div class="columns is-mobile is-marginless"><div class="column is-10"><p class="control has-icons-left"><input id="featsSearch" class="input" type="text" placeholder="Search Feats"><span class="icon is-left"><i class="fas fa-search" aria-hidden="true"></i></span></p></div><div class="column"><div class="select"><select id="featsFilterByType"><option value="All">All</option><option value="Class">Class</option><option value="Ancestry">Ancestry</option><option value="Other">Other</option></select></div></div></div><div id="featsContent" class="use-custom-scrollbar"></div>');
+    displayFeatContent(data);
+
+}
+
+function displayFeatContent(data){
+
+    $('#featsFilterByType').off('change');
+    $('#featsSearch').off('change');
+
+    $('#featsContent').html('');
+
+    let featsFilterByType = $('#featsFilterByType');
+    if(featsFilterByType.val() == "All"){
+        featsFilterByType.parent().removeClass('is-info');
+    } else {
+        featsFilterByType.parent().addClass('is-info');
+    }
+
+    let featsSearch = $('#featsSearch');
+    let featsSearchValue = (featsSearch.val() === "") ? null : featsSearch.val();
+    if(featsSearchValue == null){
+        featsSearch.removeClass('is-info');
+    } else {
+        featsSearch.addClass('is-info');
+    }
+
+    $('#featsFilterByType').change(function(){
+        displayFeatContent(data);
+    });
+
+    $('#featsSearch').change(function(){
+        displayFeatContent(data);
+    });
+
+    let selectedFeatFilter = $('#featsFilterByType').val();
+    if(selectedFeatFilter === "All"){
+        displayClassFeats(data, featsSearchValue);
+        displayAncestryFeats(data, featsSearchValue);
+        displayOtherFeats(data, featsSearchValue);
+    } else if(selectedFeatFilter === "Class"){
+        displayClassFeats(data, featsSearchValue);
+    } else if(selectedFeatFilter === "Ancestry"){
+        displayAncestryFeats(data, featsSearchValue);
+    } else if(selectedFeatFilter === "Other"){
+        displayOtherFeats(data, featsSearchValue);
+    }
+
+}
+
+function displayClassFeats(data, featsSearchValue){
+    $('#featsContent').append('<p class="is-size-5 has-text-grey-light has-text-weight-bold text-left pl-5">Class</p>');
+    $('#featsContent').append('<hr class="hr-light" style="margin-top:-0.5em; margin-bottom:0em;">');
+    featDisplayByType(data, [data.ClassName], featsSearchValue);
+}
+
+function displayAncestryFeats(data, featsSearchValue){
+    $('#featsContent').append('<p class="is-size-5 has-text-grey-light has-text-weight-bold text-left pl-5">Ancestry</p>');
+    $('#featsContent').append('<hr class="hr-light" style="margin-top:-0.5em; margin-bottom:0em;">');
+    featDisplayByType(data, data.AncestryTagsArray, featsSearchValue);
+}
+
+function displayOtherFeats(data, featsSearchValue){
+    $('#featsContent').append('<p class="is-size-5 has-text-grey-light has-text-weight-bold text-left pl-5">General / Skill</p>');
+    $('#featsContent').append('<hr class="hr-light" style="margin-top:-0.5em; margin-bottom:0em;">');
+    featDisplayByType(data, null, featsSearchValue);
+}
+
+function featDisplayByType(data, sortingTagNameArray, featsSearchValue){
 
     let featCount = 0;
     for(const [dataSrc, dataFeatArray] of data.FeatChoiceMap.entries()){
         for(const feat of dataFeatArray){
                 
             let featTags = data.FeatMap.get(feat.id+"").Tags;
-            if(sortingTagNameArray[0] == "AnyTag"){
-                displayFeat(feat, featTags, featCount);
+            if(sortingTagNameArray == null){
+                // Is Other, display if feat is NOT ancestry or class
+                let sortingTagNameArray = data.AncestryTagsArray;
+                sortingTagNameArray.push(data.ClassName);
+                let tag = featTags.find(tag => {
+                    return sortingTagNameArray.includes(tag.name);
+                });
+                if(tag == null){
+                    filterFeatsThroughSearch(feat, featTags, featCount, featsSearchValue);
+                }
             } else {
                 let tag = featTags.find(tag => {
                     return sortingTagNameArray.includes(tag.name);
                 });
                 if(tag != null){
-                    displayFeat(feat, featTags, featCount);
+                    filterFeatsThroughSearch(feat, featTags, featCount, featsSearchValue);
                 }
             }
-
             featCount++;
         }
+    }
+
+}
+
+function filterFeatsThroughSearch(feat, featTags, featCount, featsSearchValue){
+
+    let willDisplay = false;
+    if(featsSearchValue != null){
+        let featName = feat.name.toLowerCase();
+        if(!featName.includes(featsSearchValue)){
+            willDisplay = false;
+        } else {
+            willDisplay = true;
+        }
+    } else {
+        willDisplay = true;
+    }
+
+    if(willDisplay) {
+        displayFeat(feat, featTags, featCount);
     }
 
 }
@@ -865,11 +1055,7 @@ function displayFeat(feat, featTags, featCount){
     featTagsInnerHTML += '</div>';
 
 
-    $('#featTabContent').append('<div id="'+featID+'" class="columns border cursor-clickable"><div class="column is-paddingless p-1 pl-3"><p class="has-text-left">'+featNameInnerHTML+'</p></div><div class="column is-paddingless p-1"><p class="">'+featTagsInnerHTML+'</p></div></div>');
-
-    if(featCount != 0){
-        $('#'+featID).addClass('border-top-0');
-    }
+    $('#featsContent').append('<div id="'+featID+'" class="columns is-mobile border-bottom border-dark-lighter cursor-clickable is-marginless mx-2"><div class="column is-paddingless p-1 pl-3"><p class="text-left">'+featNameInnerHTML+'</p></div><div class="column is-paddingless p-1"><p class="">'+featTagsInnerHTML+'</p></div></div>');
                 
     $('#'+featID).click(function(){
         openQuickView('featView', {
@@ -879,4 +1065,58 @@ function displayFeat(feat, featTags, featCount){
         });
     });
 
+    $('#'+featID).mouseenter(function(){
+        $(this).addClass('has-background-grey-darker');
+    });
+    $('#'+featID).mouseleave(function(){
+        $(this).removeClass('has-background-grey-darker');
+    });
+
 }
+
+function displayAbilitiesSection(data){
+
+}
+
+function displayDescriptionSection(data){
+    $('#detailsTabContent').append('<div id="descriptionContent" class="use-custom-scrollbar" style="height: 570px; max-height: 570px; overflow-y: auto;"></div>');
+
+    $('#descriptionContent').append('<p class="is-size-5 has-text-grey-light has-text-weight-bold text-left pl-5">Background - '+data.Background.name+'</p>');
+    $('#descriptionContent').append('<hr class="hr-light" style="margin-top:-0.5em; margin-bottom:0em;">');
+
+    $('#descriptionContent').append('<div class="mx-3">'+processText(data.Background.description, true, true, 'SMALL')+'</div>');
+
+    $('#descriptionContent').append('<p class="is-size-5 has-text-grey-light has-text-weight-bold text-left pl-5">Heritage - '+data.Heritage.name+' </p>');
+    $('#descriptionContent').append('<hr class="hr-light" style="margin-top:-0.5em; margin-bottom:0em;">');
+
+    $('#descriptionContent').append('<div class="mx-3">'+processText(data.Heritage.description, true, true, 'SMALL')+'</div>');
+
+    $('#descriptionContent').append('<p class="is-size-5 has-text-grey-light has-text-weight-bold text-left pl-5">Information</p>');
+    $('#descriptionContent').append('<hr class="hr-light" style="margin-top:-0.5em; margin-bottom:0em;">');
+
+    let charHistoryAreaID = "charHistoryArea";
+    let charHistoryAreaControlShellID = "charHistoryAreaControlShell";
+
+    $('#descriptionContent').append('<div id="'+charHistoryAreaControlShellID+'" class="control mt-1"><textarea id="'+charHistoryAreaID+'" class="textarea has-fixed-size use-custom-scrollbar" rows="10" spellcheck="false" placeholder="Use this area to keep information about your character\'s backstory, appearance, or really anything!"></textarea></div>');
+
+    $("#"+charHistoryAreaID).val(data.Character.details);
+
+    $("#"+charHistoryAreaID).blur(function(){
+        if(data.Character.details != $(this).val()) {
+
+            $("#"+charHistoryAreaControlShellID).addClass("is-loading");
+
+            socket.emit("requestDetailsSave",
+                getCharIDFromURL(),
+                $(this).val());
+                
+            data.Character.details = $(this).val();
+
+        }
+    });
+
+}
+
+socket.on("returnDetailsSave", function(){
+    $("#charHistoryAreaControlShell").removeClass("is-loading");
+});

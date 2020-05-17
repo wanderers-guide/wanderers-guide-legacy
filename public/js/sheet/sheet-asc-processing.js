@@ -3,13 +3,24 @@
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Apeiron Styling Code ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 // ======================================================================================== //
 
-function processSheetCode(ascCode, sourceName, sourceType){
+function testSheetCode(ascCode){
+    return processSheetCode(ascCode, 'TEST', true);
+}
+
+function processSheetCode(ascCode, sourceName){
+    return processSheetCode(ascCode, sourceName, false);
+}
+
+function processSheetCode(ascCode, sourceName, isTest){
+    if(ascCode == null) {return false;}
 
     let ascStatements = ascCode.split(", ");
 
+    let success = true;
     for(const ascStatement of ascStatements) {
 
         if(ascStatement.includes("GIVE-CONDITION")){ // GIVE-CONDITION=Clumsy:1 OR GIVE-CONDITION=Clumsy
+            if(isTest) {continue;}
 
             let conditionName = ascStatement.split('=')[1];
             let conditionValue = 1;
@@ -26,6 +37,7 @@ function processSheetCode(ascCode, sourceName, sourceType){
         }
 
         if(ascStatement.includes("CONDITIONAL-INCREASE-")){
+            if(isTest) {continue;}
             // Ex. CONDITIONAL-INCREASE-PERCEPTION=2~status penalty to checks for initiative
 
             let adjustmentData = (ascStatement.split('-')[2]).split('=');
@@ -39,6 +51,7 @@ function processSheetCode(ascCode, sourceName, sourceType){
         }
 
         if(ascStatement.includes("CONDITIONAL-DECREASE-")){
+            if(isTest) {continue;}
             // Ex. CONDITIONAL-DECREASE-PERCEPTION=2~status penalty to checks for initiative
 
             let adjustmentData = (ascStatement.split('-')[2]).split('=');
@@ -51,26 +64,51 @@ function processSheetCode(ascCode, sourceName, sourceType){
             continue;
         }
 
-        if(ascStatement.includes("INCREASE-")){ // INCREASE-X=5 (Ex. INCREASE-SCORE_STR=2, INCREASE-SPEED=10)
+        if(ascStatement.includes("INCREASE-")){
+            if(isTest) {continue;}
+            // INCREASE-X=5 (Ex. INCREASE-SCORE_STR=2, INCREASE-SPEED=10-STATUS)
 
-            let adjustmentData = (ascStatement.split('-')[1]).split('=');
+            let adjValData = ascStatement.split('-');
+            let adjustmentData = adjValData[1].split('=');
             let adjustmentTowards = adjustmentData[0];
+
             let adjustmentNum = parseInt(adjustmentData[1]);
-            addStat(adjustmentTowards, sourceType+'_BONUS', adjustmentNum);
+            let adjustmentSource = 'OTHER-'+sourceName;
+            if(adjValData[2] != null) {
+                adjustmentSource = adjValData[2];
+            }
+
+            addStat(adjustmentTowards, adjustmentSource+'_BONUS', adjustmentNum);
 
             continue;
         }
 
-        if(ascStatement.includes("DECREASE-")){ // DECREASE-X=5 (Ex. DECREASE-SCORE_STR=2, DECREASE-SPEED=10)
+        if(ascStatement.includes("DECREASE-")){
+            if(isTest) {continue;}
+            // DECREASE-X=5 (Ex. DECREASE-SCORE_STR=2, DECREASE-SPEED=10-STATUS)
 
-            let adjustmentData = (ascStatement.split('-')[1]).split('=');
+            let adjValData = ascStatement.split('-');
+            let adjustmentData = adjValData[1].split('=');
             let adjustmentTowards = adjustmentData[0];
+
             let adjustmentNum = parseInt(adjustmentData[1]);
-            addStat(adjustmentTowards, sourceType+'_PENALTY', -1*adjustmentNum);
+            let adjustmentSource = 'OTHER-'+sourceName;
+            if(adjValData[2] != null) {
+                adjustmentSource = adjValData[2];
+            }
+
+            addStat(adjustmentTowards, adjustmentSource+'_PENALTY', -1*adjustmentNum);
 
             continue;
         }
+
+        // Could not identify asc statement
+        success = false;
+
+        // IF(*){*}?
 
     }
+
+    return success;
 
 }

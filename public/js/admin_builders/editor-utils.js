@@ -9,6 +9,16 @@ function getFeatEditorIDFromURL(){
   return parseInt(spl1[1]);
 }
 
+function getItemEditorIDFromURL(){
+  let spl1 = window.location.pathname.split("item/");
+  return parseInt(spl1[1]);
+}
+
+function getSpellEditorIDFromURL(){
+  let spl1 = window.location.pathname.split("spell/");
+  return parseInt(spl1[1]);
+}
+
 function objToMap(obj) {
     let strMap = new Map();
     for (let k of Object.keys(obj)) {

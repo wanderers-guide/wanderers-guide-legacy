@@ -12,6 +12,7 @@ function objToMap(obj) {
 }
 
 function capitalizeWord(word){
+    if(word == null){ return null;}
     return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
 }
   
@@ -182,11 +183,30 @@ function dieTypeToNum(dieType){
   }
 }
 
+function getHeightenedTextFromCodeName(codeName){
+  switch(codeName) {
+    case "PLUS_ONE": return "+1";
+    case "PLUS_TWO": return "+2";
+    case "PLUS_THREE": return "+3";
+    case "PLUS_FOUR": return "+4";
+    case "LEVEL_2": return "2nd";
+    case "LEVEL_3": return "3rd";
+    case "LEVEL_4": return "4th";
+    case "LEVEL_5": return "5th";
+    case "LEVEL_6": return "6th";
+    case "LEVEL_7": return "7th";
+    case "LEVEL_8": return "8th";
+    case "LEVEL_9": return "9th";
+    case "LEVEL_10": return "10th";
+    default: return codeName;
+  }
+}
+
 ///////
 
 function getCoinToString(price) {
 
-  if(price == 0){return "0";}
+  if(price == 0){return "-";}
 
   let priceObj = {Value: price};
   let cStr = ""; let sStr = ""; let gStr = ""; let pStr = "";

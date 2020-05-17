@@ -24,6 +24,8 @@ socket.on("returnAdminAncestryDetails", function(ancestryObject, featsObject){
     $("#inputSpeed").val(ancestry.Ancestry.speed);
     $("#inputVisionSense").val(ancestry.Ancestry.visionSenseID);
     $("#inputAdditionalSense").val(ancestry.Ancestry.additionalSenseID);
+    $("#inputPhysicalFeatureOne").val(ancestry.Ancestry.physicalFeatureOneID);
+    $("#inputPhysicalFeatureTwo").val(ancestry.Ancestry.physicalFeatureTwoID);
     $("#inputDescription").val(ancestry.Ancestry.description);
     $("#inputTagDesc").val(ancestry.Tag.description);
 

@@ -5,13 +5,16 @@
 const router = require('express').Router();
 const editAncestryRoutes = require('./edit-ancestry-routes');
 const editFeatActionRoutes = require('./edit-feat-action-routes');
+const editItemRoutes = require('./edit-item-routes');
+const editSpellRoutes = require('./edit-spell-routes');
 
 const Ancestry = require('../models/contentDB/Ancestry');
 const Item = require('../models/contentDB/Item');
-const Weapon = require('../models/contentDB/Weapon');
+const Spell = require('../models/contentDB/Spell');
 const Language = require('../models/contentDB/Language');
 const Tag = require('../models/contentDB/Tag');
 const SenseType = require('../models/contentDB/SenseType');
+const PhysicalFeature = require('../models/contentDB/PhysicalFeature');
 const Feat = require('../models/contentDB/Feat');
 const Skill = require('../models/contentDB/Skill');
 
@@ -57,19 +60,24 @@ router.get('/create/ancestry', adminAuthCheck, (req, res) => {
         order: [['name', 'ASC'],]
     }).then((languages) => {
         Tag.findAll({
+            where: { isArchived: 0 },
             order: [['name', 'ASC'],]
         }).then((tags) => {
             SenseType.findAll()
             .then((senseTypes) => {
-                
-                res.render('admin/admin_builder/builder_ancestry', {
-                    title: "Ancestry Builder - Apeiron",
-                    user: req.user,
-                    languages,
-                    tags,
-                    senseTypes
-                });
+                PhysicalFeature.findAll()
+                .then((physicalFeatures) => {
 
+                    res.render('admin/admin_builder/builder_ancestry', {
+                        title: "Ancestry Builder - Apeiron",
+                        user: req.user,
+                        languages,
+                        tags,
+                        senseTypes,
+                        physicalFeatures
+                    });
+
+                });
             });
         });
     });
@@ -102,6 +110,7 @@ router.get('/create/feat-action', adminAuthCheck, (req, res) => {
         order: [['name', 'ASC'],]
     }).then((skills) => {
         Tag.findAll({
+            where: { isArchived: 0 },
             order: [['name', 'ASC'],]
         }).then((tags) => {
             res.render('admin/admin_builder/builder_feat-action', {
@@ -118,119 +127,73 @@ router.get('/create/feat-action', adminAuthCheck, (req, res) => {
 router.use('/edit/feat-action', adminAuthCheck, editFeatActionRoutes);
 
 
+// Item Builder
+router.get('/manage/item', adminAuthCheck, (req, res) => {
 
+    Item.findAll({
+        order: [['name', 'ASC'],]
+    }).then((items) => {
 
-
-
-
-
-
-
-
-
-
-
-
-
-router.get('/create/item/general', adminAuthCheck, (req, res) => {
-
-    let itemHandsTypes = Item.rawAttributes.hands.values;
-    let itemTypes = Item.rawAttributes.itemType.values;
-
-    res.render('admin/admin_builder/item_general_builder', {
-        title: "Item General Builder - Apeiron",
-        user: req.user, itemHandsTypes, itemTypes, 'selectedState': ''
-    });
-
-});
-
-router.post('/create/item/general/add', adminAuthCheck, (req, res) => {
-
-    let { itemName, itemPrice, itemBulk, itemHandsType, itemDescription, itemType } = req.body;
-
-    Item.create({
-        name: itemName,
-        price: itemPrice,
-        bulk: itemBulk,
-        hands: itemHandsType,
-        description: itemDescription,
-        itemType: itemType,
-        quality: 'NORMAL',
-        size: 'MEDIUM'
-    }).then(item => {
-        res.redirect('/admin/panel');
-    });
-});
-
-
-
-router.get('/create/item/weapon', adminAuthCheck, (req, res) => {
-
-    WeaponProperties.findAll().then((weaponProperties) => {
-
-        let weaponHandsTypes = Item.rawAttributes.hands.values;
-        let dieTypes = Weapon.rawAttributes.damageDieType.values;
-        let damageTypes = Weapon.rawAttributes.damageType.values;
-        let damageSubTypes = Weapon.rawAttributes.damageSubType.values;
-        let meleeWeaponTypes = Weapon.rawAttributes.meleeWeaponType.values;
-        let rangedWeaponTypes = Weapon.rawAttributes.rangedWeaponType.values;
-
-        res.render('admin/admin_builder/item_weapon_builder', {
-            title: "Item Weapon Builder - Apeiron",
-            user: req.user, weaponHandsTypes, weaponProperties, dieTypes, damageTypes, damageSubTypes, meleeWeaponTypes, rangedWeaponTypes, 'selectedState': ''
+        res.render('admin/admin_manager/manager_item', {
+            title: "Item Manager - Apeiron",
+            user: req.user,
+            items
         });
 
     });
 
 });
 
-router.post('/create/item/weapon/add', adminAuthCheck, (req, res) => {
+router.get('/create/item', adminAuthCheck, (req, res) => {
 
-    let { weaponName, weaponPrice, weaponBulk, weaponHandsType, weaponPropertyIDs, numDice, dieType, damageType, damageSubType, meleeWeaponType, rangedWeaponType, rangedRange, rangedReload, weaponDescription } = req.body;
+    Tag.findAll({
+        where: { isArchived: 0 },
+        order: [['name', 'ASC'],]
+    }).then((tags) => {
+        res.render('admin/admin_builder/builder_item', {
+            title: "Item Builder - Apeiron",
+            user: req.user,
+            tags
+        }); 
+    });
 
-    let isMelee = meleeWeaponType == 'N/A' ? 0 : 1;
-    let isRanged = rangedWeaponType == 'N/A' ? 0 : 1;
+});
 
-    Item.create({
-        name: weaponName,
-        price: weaponPrice,
-        bulk: weaponBulk,
-        hands: weaponHandsType,
-        description: weaponDescription,
-        itemType: 'WEAPON',
-        quality: 'NORMAL',
-        size: 'MEDIUM'
-    }).then(item => {
-        Weapon.create({
-            itemID: item.id,
-            damageDiceNum: numDice,
-            damageDieType: dieType,
-            damageType: damageType,
-            damageSubType: damageSubType,
-            isMelee: isMelee,
-            meleeWeaponType: meleeWeaponType,
-            isRanged: isRanged,
-            rangedWeaponType: rangedWeaponType,
-            rangedRange: rangedRange,
-            rangedReload: rangedReload
-        }).then(weapon => {
-            if(weaponPropertyIDs != null){
-                let promises = [];
-                for (const wPropID of weaponPropertyIDs) {
-                    let newPromise = WeapPropApplied.create({
-                        weapID: weapon.id,
-                        propID: wPropID
-                    });
-                    promises.push(newPromise);
-                }
-                Promise.all(promises).then((wPropIDs) => {
-                    res.redirect('/admin/panel');
-                });
-            } else {
-                res.redirect('/admin/panel');
-            }
+router.use('/edit/item', adminAuthCheck, editItemRoutes);
+
+
+// Spell Builder
+router.get('/manage/spell', adminAuthCheck, (req, res) => {
+
+    Spell.findAll({
+        order: [['name', 'ASC'],]
+    }).then((spells) => {
+
+        res.render('admin/admin_manager/manager_spell', {
+            title: "Spell Manager - Apeiron",
+            user: req.user,
+            spells
+        });
+
+    });
+
+});
+
+router.get('/create/spell', adminAuthCheck, (req, res) => {
+
+    Tag.findAll({
+        where: { isArchived: 0 },
+        order: [['name', 'ASC'],]
+    }).then((tags) => {
+        res.render('admin/admin_builder/builder_spell', {
+            title: "Spell Builder - Apeiron",
+            user: req.user,
+            tags
         });
     });
+
 });
+
+router.use('/edit/spell', adminAuthCheck, editSpellRoutes);
 
 module.exports = router;

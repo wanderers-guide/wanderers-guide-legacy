@@ -26,16 +26,16 @@ function displayFeat(locationID, feat){
   
     featInnerHTML += '<div class="card-content has-text-left pt-1"><div class="buttons is-marginless">';
     switch(feat.Feat.rarity) {
-      case 'UNCOMMON': featInnerHTML += '<button class="button is-marginless mr-2 is-small is-primary">Uncommon</button>';
+      case 'UNCOMMON': featInnerHTML += '<button class="button is-marginless mr-2 mb-1 is-small is-primary">Uncommon</button>';
         break;
-      case 'RARE': featInnerHTML += '<button class="button is-marginless mr-2 is-small is-success">Rare</button>';
+      case 'RARE': featInnerHTML += '<button class="button is-marginless mr-2 mb-1 is-small is-success">Rare</button>';
         break;
-      case 'UNIQUE': featInnerHTML += '<button class="button is-marginless mr-2 is-small is-danger">Unique</button>';
+      case 'UNIQUE': featInnerHTML += '<button class="button is-marginless mr-2 mb-1 is-small is-danger">Unique</button>';
         break;
       default: break;
     }
     for(const tag of feat.Tags){
-      featInnerHTML += '<button class="button is-marginless mr-2 is-small is-info has-tooltip-bottom has-tooltip-multiline" data-tooltip="'+tag.description+'">'+tag.name+'</button>';
+      featInnerHTML += '<button class="button is-marginless mr-2 mb-1 is-small is-info has-tooltip-bottom has-tooltip-multiline" data-tooltip="'+tag.description+'">'+tag.name+'</button>';
     }
   
     featInnerHTML += '</div>';

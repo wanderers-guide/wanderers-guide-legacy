@@ -26,7 +26,19 @@ const CharData = db.define('charDatas', {
   dataSpellLists: {
     type: Sequelize.TEXT
   },
+  dataSpellSlots: {
+    type: Sequelize.TEXT
+  },
+  dataSpellKeyAbilities: {
+    type: Sequelize.TEXT
+  },
   dataSenses: {
+    type: Sequelize.TEXT
+  },
+  dataPhysicalFeatures: {
+    type: Sequelize.TEXT
+  },
+  dataSpecializations: {
     type: Sequelize.TEXT
   }
 });

@@ -116,6 +116,8 @@ function finishAncestry(isUpdate){
     let ancestrySpeed = $("#inputSpeed").val();
     let ancestryVisionSenseID = $("#inputVisionSense").val();
     let ancestryAdditionalSenseID = $("#inputAdditionalSense").val();
+    let ancestryPhysicalFeatureOneID = $("#inputPhysicalFeatureOne").val();
+    let ancestryPhysicalFeatureTwoID = $("#inputPhysicalFeatureTwo").val();
     let ancestryDescription = $("#inputDescription").val();
     let ancestryBoostsArray = $("#inputBoosts").val();
     let ancestryFlawsArray = $("#inputFlaws").val();
@@ -189,6 +191,8 @@ function finishAncestry(isUpdate){
         ancestrySpeed,
         ancestryVisionSenseID,
         ancestryAdditionalSenseID,
+        ancestryPhysicalFeatureOneID,
+        ancestryPhysicalFeatureTwoID,
         ancestryDescription,
         ancestryBoostsArray,
         ancestryFlawsArray,

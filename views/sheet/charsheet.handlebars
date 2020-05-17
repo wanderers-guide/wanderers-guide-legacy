@@ -4,9 +4,11 @@
     <script src="/js/sheet/char-sheet.js"></script>
     <script src="/js/sheet/sheet-stat-manager.js"></script>
     <script src="/js/sheet/sheet-conditions-manager.js"></script>
+    <script src="/js/sheet/sheet-manage-spells.js"></script>
     <script src="/js/sheet/sheet-tabs.js"></script>
     <script src="/js/sheet/sheet-quickview.js"></script>
     <script src="/js/sheet/sheet-item-runes.js"></script>
+    <script src="/js/sheet/sheet-asc-processing.js"></script>
     <script src="/js/asc-text-processing.js"></script>
     <script src="/js/sheet/sheet-calc-utils.js"></script>
     <script src="/js/sheet/sheet-utils.js"></script>
@@ -147,12 +149,12 @@
                             <p id="speedContent" class="is-size-5 has-text-grey-light pl-2"></p>
                         </div>
                     </div>
-                    <div class="tile m-2">    
+                    <div class="tile m-2">
                         <div class="tile is-child is-paddingless sheet-box cursor-clickable" id="perceptionBonusSection">
                             <p class="is-size-6 is-unselectable"><strong class="has-text-grey-lighter">Perception</strong></p>
                             <p id="perceptionBonusContent" class="is-size-5 has-text-grey-light pr-3"></p>
-                            <div>
-                                <hr class="has-background-grey-dark m-1">
+                            <div id="perceptionBonusBottom">
+                                <hr id="perceptionBonusDivider" class="m-1">
                                 <p id="perceptionPrimaryVisionSense" class="is-size-7 has-text-grey-light"></p>
                             </div>
                         </div>
@@ -262,12 +264,11 @@
                     <div class="sheet-box use-custom-scrollbar my-2 ml-4" style="height: 700px; max-height: 700px;overflow-y: auto;">
                         <div class="tabs is-centered is-boxed is-medium is-marginless">
                             <ul class="sheet-tabs">
-                                
                                 <li><a id="actionsTab">Actions</a></li>
-                                <li><a id="attacksTab">Weapons</a></li>
-                                <li><a id="spellsTab">Spells</a></li>
+                                <li><a id="weaponsTab">Weapons</a></li>
+                                <li><a id="spellsTab" class="">Spells</a></li>
                                 <li><a id="inventoryTab">Inventory</a></li>
-                                <li><a id="featsTab">Feats</a></li>
+                                <li><a id="detailsTab">Details</a></li>
                                 <li><a id="notesTab">Notes</a></li>
                             </ul>
                         </div>
@@ -287,7 +288,7 @@
         <a id="quickViewClose" class="delete"></a>
     </div>
     <div class="quickview-body use-custom-scrollbar">
-        <div id="quickViewContent" class="quickview-block p-2 px-3">
+        <div id="quickViewContent" class="quickview-block pt-1 pb-3 px-3">
         </div>
     </div>
 </div>
@@ -297,7 +298,7 @@
   <div class="modal-card">
     <div class="modal-card-head">
       <p id="conditionsModalTitle" class="modal-card-title has-text-centered is-size-4 has-text-grey-lighter"></p>
-      <a id="conditionsModalRemoveButton" class="is-pulled-right is-size-6"><span class="icon is-medium has-text-danger"><i class="fas fa-minus-circle"></i></span></a>
+      <a id="conditionsModalRemoveButton" class="is-pulled-right is-size-6"><span class="icon is-medium has-text-danger"><i class="fas fa-times-circle"></i></span></a>
     </div>
     <section class="modal-card-body">
         <p id="conditionsModalSourceSection" class="has-text-centered"><strong class="has-text-grey-light">From: </strong><em id="conditionsModalSourceContent"></em></p>
@@ -331,6 +332,46 @@
     </div>
     <section class="modal-card-body is-paddingless use-invisible-scrollbar p-2">
         <div id="conditionsSelectModalContent" class="tile is-ancestor is-vertical"></div>
+    </section>
+    <div class="modal-card-foot">
+    </div>
+  </div>
+</div>
+
+
+<div id="manageSpellsModalDefault" name="" class="modal sheet-box" style="z-index:30;">
+  <div id="manageSpellsModalBackground" class="modal-background"></div>
+  <div class="modal-card" style="width: 90%; height: 90%;">
+    <div class="modal-card-head">
+      <p id="manageSpellsModalTitle" class="modal-card-title has-text-centered is-size-4 has-text-grey-lighter">Manage Spells</p>
+      <button id="manageSpellsModalCloseButton" class="delete" aria-label="close"></button>
+    </div>
+    <section class="modal-card-body is-paddingless use-invisible-scrollbar px-2">
+        <div class="tabs is-boxed is-small is-marginless">
+            <ul id="manageSpellsTabs" class="sheet-tabs">
+            </ul>
+        </div>
+        <div class="columns is-mobile pt-3">
+            <div class="column is-3 has-background-black-ter">
+                <div class="tile is-ancestor is-vertical">
+                    <div class="tile is-parent is-paddingless">
+                        <div class="tile is-child is-10">
+                            <p class="is-size-5 has-text-centered">Spellbook</p>
+                        </div>
+                        <div class="tile is-child is-2">
+                            <span id="manageSpellsOpenSpellListsBtn" class="icon is-medium has-text-info cursor-clickable">
+                                <i class="fas fa-lg fa-plus"></i>
+                            </span>
+                        </div>
+                    </div>
+                    <div id="manageSpellsSpellBook" class="tile is-parent is-vertical">
+                    </div>
+                </div>
+            </div>
+            <div id="manageSpellsSlots" class="column is-9">
+
+            </div>
+        </div>
     </section>
     <div class="modal-card-foot">
     </div>
