@@ -109,13 +109,16 @@ function displayCurrentBackground(background) {
 
     // Code - Run General Code before Boosts Code, it's more likely to be delaying //
     $('#backgroundCodeOutput').html('');
+    let srcID = 'Type-Background_Level-1_Code-None';
+    processClear(srcID);
     processCode(
         background.code,
-        'Type-Background_Level-1_Code-None',
+        srcID,
         'backgroundCodeOutput');
 
     // Boosts //
     $('#backBoostSection').html('');
+    // No need for a process clear because it will be going to AbilityBoost data every time.
     processCode(
         'GIVE-ABILITY-BOOST-SINGLE='+background.boostOne+', GIVE-ABILITY-BOOST-SINGLE='+background.boostTwo,
         'Type-Background_Level-1_Code-OtherAbilityBoost',

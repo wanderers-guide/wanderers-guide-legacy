@@ -702,18 +702,7 @@ function displayInformation() {
         if(preventQuickviewClose){
             event.stopImmediatePropagation();
         }
-        changeTab('spellsTab', {
-            ArcaneSpellAttack : getStatTotal('ARCANE_SPELL_ATTACK'),
-            OccultSpellAttack : getStatTotal('OCCULT_SPELL_ATTACK'),
-            PrimalSpellAttack : getStatTotal('PRIMAL_SPELL_ATTACK'),
-            DivineSpellAttack : getStatTotal('DIVINE_SPELL_ATTACK'),
-            ArcaneSpellDC : getStatTotal('ARCANE_SPELL_DC'),
-            OccultSpellDC : getStatTotal('OCCULT_SPELL_DC'),
-            PrimalSpellDC : getStatTotal('PRIMAL_SPELL_DC'),
-            DivineSpellDC : getStatTotal('DIVINE_SPELL_DC'),
-            SpellSlotsMap : g_spellSlotsMap,
-            SpellMap : g_spellMap,
-        });
+        changeTab('spellsTab', null);
     });
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1295,19 +1284,6 @@ socket.on("returnInvItemMoveBag", function(invItemID, invStruct){
 socket.on("returnInvItemUpdated", function(invStruct){
     g_invStruct = invStruct;
     loadCharSheet();
-    $('#quickviewDefault').removeClass('is-active');
-});
-
-// Spellbook
-socket.on("returnSpellBookUpdated", function(spellBookStruct){
-    for (let i = 0; i < g_spellBookArray.length; i++) {
-        let spellBook = g_spellBookArray[i];
-        if(spellBook.SpellSRC === spellBookStruct.SpellSRC){
-            g_spellBookArray[i] = spellBookStruct;
-        }
-    }
-    console.log(spellBookStruct);
-    console.log(g_spellBookArray);
     $('#quickviewDefault').removeClass('is-active');
 });
 

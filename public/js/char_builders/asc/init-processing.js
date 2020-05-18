@@ -9,6 +9,21 @@ let gCode_statements, gCode_srcID, gCode_locationID, gCode_stateNum = null;
 let ascChoiceStruct, ascSkillMap, ascFeatMap, ascLangMap = null;
 //                  //
 
+function processClear(srcID){
+
+    processCode(
+        'CLEARING_DATA',
+        srcID,
+        'CLEARING_DATA'
+    );
+
+    socket.emit("requestASCProcessClear", getCharIDFromURL(), srcID);
+
+}
+socket.on("returnASCProcessClear", function(){
+    statementComplete();
+});
+
 function processCode(ascCode, srcID, locationID){
 
     if(ascCode == null || ascCode == ''){
@@ -123,6 +138,11 @@ function runNextStatement(){
             return false;
         }
 
+        // Wait for clear to complete.
+        if(ascStatement === 'CLEARING_DATA'){
+            return false;
+        }
+
         // It could be a sheet statement,
         if(!testSheetCode(ascStatement)){
             displayError("Unknown statement (1): \'"+ascStatement+"\'");
@@ -184,9 +204,11 @@ socket.on("returnASCClassAbilities", function(choiceStruct, featObject, skillObj
     ascFeatMap = objToMap(featObject);
     ascSkillMap = objToMap(skillObject);
     for(const classAbility of classAbilities) {
+        let srcID = 'Type-Class_Level-'+classAbility.level+'_Code-Ability'+classAbility.id;
+        processClear(srcID);
         processCode(
             classAbility.code,
-            'Type-Class_Level-'+classAbility.level+'_Code-Ability'+classAbility.id,
+            srcID,
             'classAbilityCode'+classAbility.id);
     }
 });
@@ -205,6 +227,7 @@ socket.on("returnASCAncestryFeats", function(choiceStruct, featObject, skillObje
     ascFeatMap = objToMap(featObject);
     ascSkillMap = objToMap(skillObject);
     for(const ancestryFeatsLoc of ancestryFeatsLocs) {
+        // No need for a process clear because it will be going to Feats data every time.
         processCode(
             'GIVE-ANCESTRY-FEAT='+ancestryFeatsLoc.Level,
             'Type-Ancestry_Level-'+ancestryFeatsLoc.Level+'_Code-None',

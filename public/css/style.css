@@ -112,7 +112,11 @@ header {
 /* Cursors */
 
 .cursor-clickable {
-    cursor: pointer;
+    cursor: pointer!important;
+}
+
+.cursor-nonclickable {
+    cursor: default!important;
 }
 
 /* Backgrounds */

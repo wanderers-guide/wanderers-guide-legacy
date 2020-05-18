@@ -51,6 +51,13 @@ function isPotencyRune(runeID){ // Fund Runes have hardcoded IDs
 
 module.exports = class CharSaving {
 
+    static clearDataOfSrc(charID, srcID){
+        return clearDataThatContains(charID, srcID)
+        .then((result) => {
+            return;
+        });
+    }
+
     static saveExp(charID, newExp) {
         let updateValues = { experience: newExp };
         return Character.update(updateValues, { where: { id: charID } })

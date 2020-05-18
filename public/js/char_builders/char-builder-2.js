@@ -257,9 +257,11 @@ function displayCurrentAncestry(ancestryStruct, saving) {
             if(ancestryStruct.PhysicalFeatureTwo != null){
                 ancestryPhysicalFeatures.append(' and ');
             }
+            let srcID = 'Type-Ancestry_Level-1_Code-OtherPhysicalFeatureOne';
+            processClear(srcID);
             processCode(
                 ancestryStruct.PhysicalFeatureOne.code,
-                'Type-Ancestry_Level-1_Code-OtherPhysicalFeatureOne',
+                srcID,
                 'physicalFeatureOneCodeOutput');
             if(ancestryStruct.PhysicalFeatureOne.code != null){
                 $('#physicalFeatureOneCodeOutput').removeClass('is-hidden');
@@ -269,9 +271,12 @@ function displayCurrentAncestry(ancestryStruct, saving) {
         if(ancestryStruct.PhysicalFeatureTwo != null){
             ancestryPhysicalFeatures.append('<a class="has-text-info has-tooltip-bottom has-tooltip-multiline" data-tooltip="'+ancestryStruct.PhysicalFeatureTwo.description+'">'+ancestryStruct.PhysicalFeatureTwo.name+'</a>');
             physicalFeatureIDArray.push(ancestryStruct.PhysicalFeatureTwo.id);
+
+            let srcID = 'Type-Ancestry_Level-1_Code-OtherPhysicalFeatureTwo';
+            processClear(srcID);
             processCode(
                 ancestryStruct.PhysicalFeatureTwo.code,
-                'Type-Ancestry_Level-1_Code-OtherPhysicalFeatureTwo',
+                srcID,
                 'physicalFeatureTwoCodeOutput');
             if(ancestryStruct.PhysicalFeatureTwo.code != null){
                 $('#physicalFeatureTwoCodeOutput').removeClass('is-hidden');
@@ -430,9 +435,11 @@ function displayCurrentHeritage(ancestryStruct, heritageID) {
         heritageDescription.removeClass('is-hidden');
 
         $('#heritageCodeOutput').html('');
+        let srcID = 'Type-Ancestry_Level-1_Code-OtherHeritage';
+        processClear(srcID);
         processCode(
             heritage.code,
-            'Type-Ancestry_Level-1_Code-OtherHeritage',
+            srcID,
             'heritageCodeOutput');
 
     } else {

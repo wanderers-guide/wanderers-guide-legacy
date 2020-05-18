@@ -2,16 +2,39 @@
 {{#section 'header'}}
     <link rel="stylesheet" href="/css/sheet-styles.css">
     <script src="/js/sheet/char-sheet.js"></script>
-    <script src="/js/sheet/sheet-stat-manager.js"></script>
-    <script src="/js/sheet/sheet-conditions-manager.js"></script>
-    <script src="/js/sheet/sheet-manage-spells.js"></script>
-    <script src="/js/sheet/sheet-tabs.js"></script>
-    <script src="/js/sheet/sheet-quickview.js"></script>
-    <script src="/js/sheet/sheet-item-runes.js"></script>
-    <script src="/js/sheet/sheet-asc-processing.js"></script>
+
+    <script src="/js/sheet/tabs/_tabs.js"></script>
+    <script src="/js/sheet/tabs/actions-tab.js"></script>
+    <script src="/js/sheet/tabs/details-tab.js"></script>
+    <script src="/js/sheet/tabs/inventory-tab.js"></script>
+    <script src="/js/sheet/tabs/notes-tab.js"></script>
+    <script src="/js/sheet/tabs/spells-tab.js"></script>
+    <script src="/js/sheet/tabs/weapons-tab.js"></script>
+
+    <script src="/js/sheet/quickviews/_quickviews.js"></script>
+    <script src="/js/sheet/quickviews/ability-score-view.js"></script>
+    <script src="/js/sheet/quickviews/add-item-view.js"></script>
+    <script src="/js/sheet/quickviews/add-spell-view.js"></script>
+    <script src="/js/sheet/quickviews/customize-item-view.js"></script>
+    <script src="/js/sheet/quickviews/feat-view.js"></script>
+    <script src="/js/sheet/quickviews/hero-points-view.js"></script>
+    <script src="/js/sheet/quickviews/inv-item-view.js"></script>
+    <script src="/js/sheet/quickviews/language-view.js"></script>
+    <script src="/js/sheet/quickviews/perception-view.js"></script>
+    <script src="/js/sheet/quickviews/saving-throw-view.js"></script>
+    <script src="/js/sheet/quickviews/skill-view.js"></script>
+    <script src="/js/sheet/quickviews/spell-view.js"></script>
+
+    <script src="/js/sheet/general/stat-manager.js"></script>
+    <script src="/js/sheet/general/conditions-manager.js"></script>
+    <script src="/js/sheet/general/manage-spells.js"></script>
+    <script src="/js/sheet/general/item-runes.js"></script>
+
+    <script src="/js/sheet/asc-processing.js"></script>
     <script src="/js/asc-text-processing.js"></script>
-    <script src="/js/sheet/sheet-calc-utils.js"></script>
-    <script src="/js/sheet/sheet-utils.js"></script>
+
+    <script src="/js/sheet/utils/calc-utils.js"></script>
+    <script src="/js/sheet/utils/utils.js"></script>
 {{/section}}
 
 {{#section 'nav_home'}}
@@ -339,37 +362,42 @@
 </div>
 
 
-<div id="manageSpellsModalDefault" name="" class="modal sheet-box" style="z-index:30;">
+<div id="manageSpellsModalDefault" name="" class="modal" style="z-index:30;">
   <div id="manageSpellsModalBackground" class="modal-background"></div>
   <div class="modal-card" style="width: 90%; height: 90%;">
     <div class="modal-card-head">
       <p id="manageSpellsModalTitle" class="modal-card-title has-text-centered is-size-4 has-text-grey-lighter">Manage Spells</p>
       <button id="manageSpellsModalCloseButton" class="delete" aria-label="close"></button>
     </div>
-    <section class="modal-card-body is-paddingless use-invisible-scrollbar px-2">
+    <section class="modal-card-body is-paddingless px-2 use-invisible-scrollbar">
         <div class="tabs is-boxed is-small is-marginless">
             <ul id="manageSpellsTabs" class="sheet-tabs">
             </ul>
         </div>
-        <div class="columns is-mobile pt-3">
-            <div class="column is-3 has-background-black-ter">
-                <div class="tile is-ancestor is-vertical">
-                    <div class="tile is-parent is-paddingless">
-                        <div class="tile is-child is-10">
+        <div class="tile is-ancestor">
+            <div class="tile is-parent">
+                <div class="tile is-child is-3">
+                    <div class="columns is-marginless has-background-black-like">
+                        <div class="column is-10 is-paddingless">
                             <p class="is-size-5 has-text-centered">Spellbook</p>
                         </div>
-                        <div class="tile is-child is-2">
-                            <span id="manageSpellsOpenSpellListsBtn" class="icon is-medium has-text-info cursor-clickable">
+                        <div class="column is-2 is-paddingless">
+                            <span id="manageSpellsOpenSpellListsBtn" class="icon is-medium has-text-info pt-2 cursor-clickable">
                                 <i class="fas fa-lg fa-plus"></i>
                             </span>
                         </div>
                     </div>
-                    <div id="manageSpellsSpellBook" class="tile is-parent is-vertical">
+                    <div class="border-top border-bottom border-dark-lighter">
+                        <p class="control has-icons-left">
+                            <input id="manageSpellsSpellBookSearch" class="input" type="text" placeholder="Search">
+                            <span class="icon is-left"><i class="fas fa-search" aria-hidden="true"></i></span>
+                        </p>
+                    </div>
+                    <div id="manageSpellsSpellBook" class="use-custom-scrollbar" style="height: 500px; max-height: 500px; overflow-y: auto;">
                     </div>
                 </div>
-            </div>
-            <div id="manageSpellsSlots" class="column is-9">
-
+                <div id="manageSpellsSlots" class="tile is-child is-9">
+                </div>
             </div>
         </div>
     </section>

@@ -873,6 +873,16 @@ module.exports = class SocketConnections {
         });
       });
 
+      socket.on('requestASCProcessClear', function(charID, srcID){
+        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+          if(ownsChar){
+            CharSaving.clearDataOfSrc(charID, srcID).then((result) => {
+              socket.emit('returnASCProcessClear');
+            });
+          }
+        });
+      });
+
     });
     
   }

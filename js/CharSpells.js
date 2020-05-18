@@ -220,7 +220,9 @@ module.exports = class CharSpells {
             spellID: spellID,
         }).then(spellBookSpell => {
             return spellBookSpell;
-        });
+        }).catch(function(err) {
+            return null;
+        }); 
     }
 
     static getSpellBook(charID, spellSRC){

@@ -174,3 +174,15 @@ hr {
 .hr-light {
     border-color: #838383!important;
 }
+
+.is-filled-spell-slot {
+    background-color: hsl(0, 0%, 21%)!important;
+    color: #cccccc!important;
+    border-color: hsl(210, 3%, 23%)!important;
+}
+
+.is-empty-spell-slot {
+    background-color: hsl(0, 0%, 35%)!important;
+    color: #dddddd!important;
+    border-color: hsl(210, 3%, 23%)!important;
+}

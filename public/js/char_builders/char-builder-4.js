@@ -464,14 +464,16 @@ function displayCurrentClass(classStruct, saving) {
 
                     socket.emit("requestSelectAbilityChange",
                         getCharIDFromURL(),
-                        'Type-Class_Level-'+classAbility.level+'_Code-Ability'+classAbility.id,
+                        'Type-Class_Level-'+classAbility.level+'_Code-Processor'+abilityCodeID,
                         [{ SelectorAbility : classAbilityID, SelectOptionAbility : chosenAbilityID }]);
 
                 }
 
+                let srcID = 'Type-Class_Level-'+chosenClassAbility.level+'_Code-Processor'+abilityCodeID;
+                processClear(srcID);
                 processCode(
                     chosenClassAbility.code,
-                    'Type-Class_Level-'+chosenClassAbility.level+'_Code-Ability'+chosenClassAbility.id,
+                    srcID,
                     abilityCodeID);
                 
             }

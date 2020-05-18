@@ -256,9 +256,12 @@ socket.on("returnFeatChange", function(featChangePacket, selectFeatControlShellC
         let srcSections = featChangePacket.srcID.split('_');
         srcType = srcSections[0].split('-')[1];
         srcLevel = srcSections[1].split('-')[1];
+
+        let srcID = 'Type-'+srcType+'_Level-'+srcLevel+'_Code-Processor'+featChangePacket.codeLocationID;
+        processClear(srcID);
         processCode(
             featChangePacket.feat.Feat.code,
-            'Type-'+srcType+'_Level-'+srcLevel+'_Code-Feat'+featChangePacket.featID,
+            srcID,
             featChangePacket.codeLocationID);
     }
 

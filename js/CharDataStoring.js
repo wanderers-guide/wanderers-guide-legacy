@@ -41,7 +41,7 @@ module.exports = class CharDataStoring {
 
     /*
     
-    SrcID: 'Type-(Class/Ancestry/Background/Other)_Level-#_Code-(Feat#/Ability#/Other#/None)'
+    SrcID: 'Type-(Class/Ancestry/Background/Other)_Level-#_Code-(Processor#/Feat#/Ability#/Other#/None)'
 
     --- Basic Datas ---
     dataLoreCategories: "SrcID:Sailing,SrcID:Underwater Golfing,SrcID:Clubbing"
