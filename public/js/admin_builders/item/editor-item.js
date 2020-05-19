@@ -95,6 +95,7 @@ socket.on("returnAdminItemDetails", function(itemObject){
     $("#inputBuilderType").trigger("change");
 
     $("#updateButton").click(function(){
+        $(this).unbind();
         finishItem(true);
     });
 

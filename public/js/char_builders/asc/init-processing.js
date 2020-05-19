@@ -11,21 +11,33 @@ let ascChoiceStruct, ascSkillMap, ascFeatMap, ascLangMap = null;
 
 function processClear(srcID){
 
-    processCode(
-        'CLEARING_DATA',
-        srcID,
-        'CLEARING_DATA'
-    );
+    console.log('Starting process clear...');
 
-    socket.emit("requestASCProcessClear", getCharIDFromURL(), srcID);
+    //  To prevent an issue with process clearing and code queues where
+    //  the process clear would be complete before it can gather the ASC choices.
+    //   -> There could still be an issue here, where the first process clear on a
+    //      page load never actually goes through.
+    if(ascChoiceStruct != null){
+
+        processCode(
+            'CLEARING_DATA',
+            srcID,
+            'CLEARING_DATA'
+        );
+
+        socket.emit("requestASCProcessClear", getCharIDFromURL(), srcID);
+    } else {
+        console.log('Process clear canceled.');
+    }
 
 }
 socket.on("returnASCProcessClear", function(){
+    console.log('PROCESS CLEAR COMPLETED');
     statementComplete();
 });
 
 function processCode(ascCode, srcID, locationID){
-
+    
     if(ascCode == null || ascCode == ''){
         return;
     }
@@ -47,6 +59,7 @@ function processCode(ascCode, srcID, locationID){
 socket.on("returnASCChoices", function(ascCode, srcID, locationID, choiceStruct){
     //console.log("Setting choiceStruct new one...");
     ascChoiceStruct = choiceStruct;
+    
     codeDecompiling(ascCode, srcID, locationID);
 });
 
@@ -146,6 +159,9 @@ function runNextStatement(){
         // It could be a sheet statement,
         if(!testSheetCode(ascStatement)){
             displayError("Unknown statement (1): \'"+ascStatement+"\'");
+        } else{
+            console.log("Skipping '"+ascStatement+"' because it's a sheet statement.");
+            statementComplete();
         }
         return false;
 
@@ -203,12 +219,12 @@ socket.on("returnASCClassAbilities", function(choiceStruct, featObject, skillObj
     ascChoiceStruct = choiceStruct;
     ascFeatMap = objToMap(featObject);
     ascSkillMap = objToMap(skillObject);
+
+    processClear('Type-ClassAbility');
     for(const classAbility of classAbilities) {
-        let srcID = 'Type-Class_Level-'+classAbility.level+'_Code-Ability'+classAbility.id;
-        processClear(srcID);
         processCode(
             classAbility.code,
-            srcID,
+            'Type-ClassAbility_Level-'+classAbility.level+'_Code-Ability'+classAbility.id,
             'classAbilityCode'+classAbility.id);
     }
 });

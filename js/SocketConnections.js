@@ -1104,6 +1104,55 @@ module.exports = class SocketConnections {
         });
       });
 
+      ////
+
+      socket.on('requestAdminAddClass', function(data){
+        AuthCheck.isAdmin(socket).then((isAdmin) => {
+          if(isAdmin){
+            AdminUpdate.addClass(data).then((result) => {
+              socket.emit('returnAdminCompleteClass');
+            });
+          }
+        });
+      });
+
+      socket.on('requestAdminUpdateClass', function(data){
+        AuthCheck.isAdmin(socket).then((isAdmin) => {
+          if(isAdmin){
+            if(data != null && data.classID != null) {
+              AdminUpdate.archiveClass(data.classID, true).then((result) => {
+                AdminUpdate.addClass(data).then((result) => {
+                  socket.emit('returnAdminCompleteClass');
+                });
+              });
+            }
+          }
+        });
+      });
+    
+      socket.on('requestAdminRemoveClass', function(classID){
+        AuthCheck.isAdmin(socket).then((isAdmin) => {
+          if(isAdmin){
+            AdminUpdate.deleteClass(classID).then((result) => {
+              socket.emit('returnAdminRemoveClass');
+            });
+          }
+        });
+      });
+
+      socket.on('requestAdminClassDetails', function(){
+        AuthCheck.isAdmin(socket).then((isAdmin) => {
+          if(isAdmin){
+            CharGathering.getAllClasses().then((classObject) => {
+              CharGathering.getAllFeats().then((featsObject) => {
+                socket.emit('returnAdminClassDetails', classObject, featsObject);
+              });
+            });
+          }
+        });
+      });
+
+
     });
   }
 

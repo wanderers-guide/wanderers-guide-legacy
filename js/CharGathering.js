@@ -597,26 +597,23 @@ module.exports = class CharGathering {
                                             .then((senseObject) => {
                                                 return CharDataStoring.getBasicData(charID, "GET_ALL", 'dataPhysicalFeatures', PhysicalFeature)
                                                 .then((physicalFeatureObject) => {
-                                                    return CharGathering.getSpellData(charID)
-                                                    .then((spellDataStruct) => {
+                                                    
+                                                    let choiceStruct = {
+                                                        Level : character.level,
+                                                        Heritage : heritage,
+                                                        Class : cClass,
+                                                        CharTagsArray : charTagsArray,
+                                                        FeatObject : featObject,
+                                                        BonusObject : mapToObj(bonusMap),
+                                                        AbilityObject : abilityObject,
+                                                        ProficiencyObject : mapToObj(proficiencyMap),
+                                                        LangObject : langObject,
+                                                        SenseObject : senseObject,
+                                                        PhysicalFeatureObject : physicalFeatureObject,
+                                                    };
+                            
+                                                    return choiceStruct;
 
-                                                        let choiceStruct = {
-                                                            Level : character.level,
-                                                            Heritage : heritage,
-                                                            Class : cClass,
-                                                            CharTagsArray : charTagsArray,
-                                                            FeatObject : featObject,
-                                                            BonusObject : mapToObj(bonusMap),
-                                                            AbilityObject : abilityObject,
-                                                            ProficiencyObject : mapToObj(proficiencyMap),
-                                                            LangObject : langObject,
-                                                            SenseObject : senseObject,
-                                                            PhysicalFeatureObject : physicalFeatureObject,
-                                                            SpellDataStruct: spellDataStruct,
-                                                        };
-                                
-                                                        return choiceStruct;
-                                                    });
                                                 });
                                             });
                                         });
@@ -933,47 +930,51 @@ module.exports = class CharGathering {
                                     .then((skillObject) => {
                                         return CharGathering.getCharChoices(charID)
                                         .then( (choicesStruct) => {
-                                            return CharGathering.getAllSpells()
-                                            .then( (spellMap) => {
-                                                return CharGathering.getAllFeats()
-                                                .then( (featObject) => {
-                                                    return CharGathering.getAllItems()
-                                                    .then( (itemMap) => {
-                                                        return CharGathering.getAllConditions(charID)
-                                                        .then( (conditionsObject) => {
-                                                            return Condition.findAll()
-                                                            .then((allConditions) => {
-                                                                return CharGathering.getFinalProfs(charID)
-                                                                .then( (profMap) => {
-                                                                    return CharGathering.getInventory(character.inventoryID)
-                                                                    .then( (invStruct) => {
-                                                                        
-                                                                        let weaponProfMap = CharGathering.gatherWeaponProfs(profMap, itemMap);
-                                                                        let armorProfMap = CharGathering.gatherArmorProfs(profMap, itemMap);
-                                                                        
-                                                                        let charInfo = {
-                                                                            Character : character,
-                                                                            Class : cClass,
-                                                                            Background : background,
-                                                                            Ancestry : ancestry,
-                                                                            Heritage : heritage,
-                                                                            Inventory : inventory,
-                                                                            AbilObject : abilObject,
-                                                                            SkillObject : skillObject,
-                                                                            FeatObject : featObject,
-                                                                            ProfObject : mapToObj(profMap),
-                                                                            SpellObject : mapToObj(spellMap),
-                                                                            ChoicesStruct : choicesStruct,
-                                                                            InvStruct : invStruct,
-                                                                            ItemObject : mapToObj(itemMap),
-                                                                            ConditionsObject : conditionsObject,
-                                                                            WeaponProfObject : mapToObj(weaponProfMap),
-                                                                            ArmorProfObject : mapToObj(armorProfMap),
-                                                                            AllConditions : allConditions
-                                                                        };
-                                                
-                                                                        return charInfo;
+                                            return CharGathering.getSpellData(charID)
+                                            .then((spellDataStruct) => {
+                                                return CharGathering.getAllSpells()
+                                                .then((spellMap) => {
+                                                    return CharGathering.getAllFeats()
+                                                    .then( (featObject) => {
+                                                        return CharGathering.getAllItems()
+                                                        .then( (itemMap) => {
+                                                            return CharGathering.getAllConditions(charID)
+                                                            .then( (conditionsObject) => {
+                                                                return Condition.findAll()
+                                                                .then((allConditions) => {
+                                                                    return CharGathering.getFinalProfs(charID)
+                                                                    .then( (profMap) => {
+                                                                        return CharGathering.getInventory(character.inventoryID)
+                                                                        .then( (invStruct) => {
+                                                                            
+                                                                            let weaponProfMap = CharGathering.gatherWeaponProfs(profMap, itemMap);
+                                                                            let armorProfMap = CharGathering.gatherArmorProfs(profMap, itemMap);
+                                                                            
+                                                                            let charInfo = {
+                                                                                Character : character,
+                                                                                Class : cClass,
+                                                                                Background : background,
+                                                                                Ancestry : ancestry,
+                                                                                Heritage : heritage,
+                                                                                Inventory : inventory,
+                                                                                AbilObject : abilObject,
+                                                                                SkillObject : skillObject,
+                                                                                FeatObject : featObject,
+                                                                                ProfObject : mapToObj(profMap),
+                                                                                SpellObject : mapToObj(spellMap),
+                                                                                ChoicesStruct : choicesStruct,
+                                                                                SpellDataStruct: spellDataStruct,
+                                                                                InvStruct : invStruct,
+                                                                                ItemObject : mapToObj(itemMap),
+                                                                                ConditionsObject : conditionsObject,
+                                                                                WeaponProfObject : mapToObj(weaponProfMap),
+                                                                                ArmorProfObject : mapToObj(armorProfMap),
+                                                                                AllConditions : allConditions
+                                                                            };
+                                                    
+                                                                            return charInfo;
 
+                                                                        });
                                                                     });
                                                                 });
                                                             });

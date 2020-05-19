@@ -43,6 +43,7 @@ $(function () {
 
 
     $("#createFeatButton").click(function(){
+        $(this).unbind();
         finishFeat(false);
     });
 

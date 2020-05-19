@@ -1,4 +1,6 @@
 
+const IS_DEBUG = true;
+
 let errorMessages = [];
 
 function displayError(message){

@@ -51,13 +51,32 @@ function reloadPage(){
 socket.on("returnClassDetails", function(classObject, inChoiceStruct){
 
     choiceStruct = inChoiceStruct;
-
     let classMap = objToMap(classObject);
 
+    // Populate Class Selector
+    let selectClass = $('#selectClass');
+    selectClass.append('<option value="chooseDefault" name="chooseDefault">Choose a Class</option>');
+    selectClass.append('<hr class="dropdown-divider"></hr>');
+    for(const [key, value] of classMap.entries()){
+        let currentClassID = $('#selectClass').attr('name');
+        if(value.Class.id == currentClassID){
+            if(value.Class.isArchived == 0){
+                selectClass.append('<option value="'+value.Class.id+'" selected>'+value.Class.name+'</option>');
+            } else {
+                selectClass.append('<option value="'+value.Class.id+'" selected>'+value.Class.name+' (archived)</option>');
+            }
+        } else if(value.Class.isArchived == 0){
+            selectClass.append('<option value="'+value.Class.id+'">'+value.Class.name+'</option>');
+        }
+    }
+
+
+    // Class Selection //
     $('#selectClass').change(function(event, triggerSave) {
         let classID = $("#selectClass option:selected").val();
         if(classID != "chooseDefault"){
             $('.class-content').removeClass("is-hidden");
+            $('#selectClassControlShell').removeClass("is-info");
 
             if(triggerSave == null || triggerSave) {
                 $('#selectClassControlShell').addClass("is-loading");
@@ -73,6 +92,7 @@ socket.on("returnClassDetails", function(classObject, inChoiceStruct){
 
         } else {
             $('.class-content').addClass("is-hidden");
+            $('#selectClassControlShell').addClass("is-info");
 
             // Delete class, set to null
             g_class = null;
@@ -103,6 +123,12 @@ function displayCurrentClass(classStruct, saving) {
 
     let abilityMap = objToMap(choiceStruct.AbilityObject);
 
+    if(classStruct.Class.isArchived == 1){
+        $('#isArchivedMessage').removeClass('is-hidden');
+    } else {
+        $('#isArchivedMessage').addClass('is-hidden');
+    }
+
     let classDescription = $('#classDescription');
     classDescription.html('<p>'+classStruct.Class.description+'</p>');
 
@@ -128,11 +154,13 @@ function displayCurrentClass(classStruct, saving) {
         $('#'+keyAbilitySelectID).change(function() {
             let abilityName = $(this).val();
             if(abilityName != "chooseDefault"){
+                $('.'+keyAbilityControlShellClass).removeClass("is-info");
                 socket.emit("requestAbilityBonusChange",
                         getCharIDFromURL(),
                         "Type-Class_Level-1_Code-OtherKeyAbility",
                         [{ Ability : shortenAbilityType(abilityName), Bonus : "Boost" }]);
             } else {
+                $('.'+keyAbilityControlShellClass).addClass("is-info");
                 socket.emit("requestAbilityBonusChange",
                         getCharIDFromURL(),
                         "Type-Class_Level-1_Code-OtherKeyAbility",
@@ -143,6 +171,12 @@ function displayCurrentClass(classStruct, saving) {
         let keyAbilityChoice = choiceStruct.BonusObject["Type-Class_Level-1_Code-OtherKeyAbility"];
         if(keyAbilityChoice != null && keyAbilityChoice[0] != null){
             keyAbilitySelect.val(lengthenAbilityType(keyAbilityChoice[0].Ability));
+        }
+
+        if(keyAbilitySelect.val() != "chooseDefault"){
+            $('.'+keyAbilityControlShellClass).removeClass("is-info");
+        } else {
+            $('.'+keyAbilityControlShellClass).addClass("is-info");
         }
 
     } else {
@@ -208,11 +242,13 @@ function displayCurrentClass(classStruct, saving) {
             $('#'+tSkillID).change(function() {
                 let skillName = $(this).val();
                 if(skillName != "chooseDefault"){
+                    $('.'+tSkillControlShellClass).removeClass("is-info");
                     socket.emit("requestProficiencyChange",
                         getCharIDFromURL(),
                         {srcID : "Type-Class_Level-1_Code-Other"+tSkillID, isSkill : true},
                         [{ For : "Skill", To : skillName, Prof : 'T' }]);
                 } else {
+                    $('.'+tSkillControlShellClass).addClass("is-info");
                     socket.emit("requestProficiencyChange",
                         getCharIDFromURL(),
                         {srcID : "Type-Class_Level-1_Code-Other"+tSkillID, isSkill : true},
@@ -223,6 +259,12 @@ function displayCurrentClass(classStruct, saving) {
             let tSkillChoice = choiceStruct.ProficiencyObject["Type-Class_Level-1_Code-Other"+tSkillID];
             if(tSkillChoice != null && tSkillChoice[0] != null){
                 tSkillSelect.val(tSkillChoice[0].To);
+            }
+
+            if(tSkillSelect.val() != "chooseDefault"){
+                $('.'+tSkillControlShellClass).removeClass("is-info");
+            } else {
+                $('.'+tSkillControlShellClass).addClass("is-info");
             }
 
         } else {
@@ -263,35 +305,6 @@ function displayCurrentClass(classStruct, saving) {
     savingProfArray.push({ For : "Save", To : 'Reflex', Prof : classStruct.Class.tReflex });
     savingProfArray.push({ For : "Save", To : 'Will', Prof : classStruct.Class.tWill });
 
-    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Spells ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
-    let profSpells = $('#profSpells');
-    profSpells.html('');
-
-    let spellTradition = classStruct.Class.tSpellTradition;
-
-    profSpells.append('<ul id="profSpellsUL"></ul>');
-    let profSpellsUL = $('#profSpellsUL');
-
-    if(spellTradition != null){
-
-        profSpellsUL.append('<li id="profSpellsLIAttacks"></li>');
-        profSpellsUL.append('<li id="profSpellsLIDCs"></li>');
-
-        let profSpellsLIAttacks = $('#profSpellsLIAttacks');
-        profSpellsLIAttacks.append("Trained in "+spellTradition+" spell attacks");
-
-        let profSpellsLIDCs = $('#profSpellsLIDCs');
-        profSpellsLIDCs.append("Trained in "+spellTradition+" spell DCs");
-
-        savingProfArray.push({ For : "SpellAttack", To : 'ArcaneSpellAttacks', Prof : 'T' });
-        savingProfArray.push({ For : "SpellDC", To : 'ArcaneSpellDCs', Prof : 'T' });
-
-    } else {
-
-        profSpellsUL.append('<li class="is-italic has-text-weight-light">Non-Spellcasting</li>');
-
-    }
-
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Attacks ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
     let profAttacks = $('#profAttacks');
@@ -301,10 +314,10 @@ function displayCurrentClass(classStruct, saving) {
     let profAttacksUL = $('#profAttacksUL');
 
 
-    let tWeaponsArray = classStruct.Class.tWeapons.split(', ');
+    let tWeaponsArray = classStruct.Class.tWeapons.split(',,, ');
     for(const tWeapons of tWeaponsArray){
 
-        let sections = tWeapons.split(':');
+        let sections = tWeapons.split(':::');
         let weapTraining = sections[0];
         let weaponName = sections[1];
         let weapID = weaponName.replace(/ /g,'_');
@@ -312,7 +325,7 @@ function displayCurrentClass(classStruct, saving) {
         profAttacksUL.append('<li id="profAttacksLI'+weapID+'"></li>');
         let profAttacksLI = $('#profAttacksLI'+weapID);
 
-        if(weaponName.slice(-1) == 's'){
+        if(weaponName.slice(-1) === 's'){
             // is plural
             profAttacksLI.append(profToWord(weapTraining)+" in all "+weaponName);
         } else {
@@ -333,10 +346,10 @@ function displayCurrentClass(classStruct, saving) {
     let profDefensesUL = $('#profDefensesUL');
 
 
-    let tArmorArray = classStruct.Class.tArmor.split(', ');
+    let tArmorArray = classStruct.Class.tArmor.split(',,, ');
     for(const tArmor of tArmorArray){
 
-        let sections = tArmor.split(':');
+        let sections = tArmor.split(':::');
         let armorTraining = sections[0];
         let armorName = sections[1];
         let armorID = armorName.replace(/ /g,'_');
@@ -469,7 +482,7 @@ function displayCurrentClass(classStruct, saving) {
 
                 }
 
-                let srcID = 'Type-Class_Level-'+chosenClassAbility.level+'_Code-Processor'+abilityCodeID;
+                let srcID = 'Type-ClassAbility_Level-'+chosenClassAbility.level+'_Code-Processor'+abilityCodeID;
                 processClear(srcID);
                 processCode(
                     chosenClassAbility.code,

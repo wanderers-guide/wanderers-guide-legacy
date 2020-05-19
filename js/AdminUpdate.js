@@ -1,5 +1,7 @@
 
 const Character = require('../models/contentDB/Character');
+const Class = require('../models/contentDB/Class');
+const ClassAbility = require('../models/contentDB/ClassAbility');
 const Ancestry = require('../models/contentDB/Ancestry');
 const AncestryBoost = require('../models/contentDB/AncestryBoost');
 const AncestryFlaw = require('../models/contentDB/AncestryFlaw');
@@ -29,6 +31,192 @@ function becomeNegative(number){
 }
 
 module.exports = class AdminUpdate {
+
+    static addClass(data) {
+        /* Data:
+            classID,
+            className,
+            classVersion,
+            classHitPoints,
+            classKeyAbility,
+            classPerception,
+            classSkills,
+            classSkillsMore,
+            classFortitude,
+            classReflex,
+            classWill,
+            classWeapons,
+            classArmor,
+            classDescription,
+            classAbilitiesArray,
+            classFeatsArray
+        */
+        for(let d in data) { if(data[d] === ''){ data[d] = null; } }
+        if(data.classDescription == null){ data.classDescription = 'No Description'; }
+        if(data.classVersion == null){ data.classVersion = '1.0'; }
+        let tagDesc = 'This indicates content from the '+data.className.toLowerCase()+' class.';
+        return Tag.create({ // Create Class Tag
+            name: data.className,
+            description: tagDesc
+        }).then(classTag => {
+            return Class.create({ // Create Class
+                name: data.className,
+                version: data.classVersion,
+                hitPoints: data.classHitPoints,
+                keyAbility: data.classKeyAbility,
+                description: data.classDescription,
+                tPerception: data.classPerception,
+                tFortitude: data.classFortitude,
+                tReflex: data.classReflex,
+                tWill: data.classWill,
+                tSkills: data.classSkills,
+                tSkillsMore: data.classSkillsMore,
+                tWeapons: data.classWeapons,
+                tArmor: data.classArmor,
+                tagID: classTag.id
+            }).then(cClass => {
+                let classFeatPromises = []; // Create Class Feats
+                if(data.classFeatsArray != null){
+                    for(const classFeat of data.classFeatsArray) {
+                        if(!classFeat.featTagsArray.includes(classTag.id)){
+                            classFeat.featTagsArray.push(classTag.id);
+                        }
+                        classFeat.isDefault = 0;
+                        classFeat.skillID = null;
+                        classFeat.minProf = null;
+                        classFeat.genericType = null;
+                        classFeat.isArchived = 0;
+                        classFeat.version = null;
+                        let newPromise = AdminUpdate.addFeatPreparedData(classFeat);
+                        classFeatPromises.push(newPromise);
+                    }
+                }
+                return Promise.all(classFeatPromises)
+                .then(function(result) {
+                    let classAbilitiesPromises = []; // Create Class Abilities
+                    if(data.classAbilitiesArray != null) {
+                        for(const classAbility of data.classAbilitiesArray) {
+                            let newPromise =  AdminUpdate.addClassAbility(cClass.id, classAbility);
+                            classAbilitiesPromises.push(newPromise);
+                        }
+                    }
+                    return Promise.all(classAbilitiesPromises)
+                    .then(function(result) {
+                        return cClass;
+                    });
+                });
+            });
+        });
+
+    }
+
+    static addClassAbility(classID, classAbility){
+        let selectType = 'NONE';
+        if(classAbility.options != null && classAbility.options.length > 0){
+            selectType = 'SELECTOR';
+        }
+        return ClassAbility.create({
+            classID: classID,
+            name: classAbility.name,
+            level: classAbility.level,
+            description: classAbility.description,
+            code: classAbility.code,
+            selectType: selectType,
+            selectOptionFor: null,
+        }).then(classAbilityModel => {
+            let classAbilityOptionsPromises = [];
+            if(classAbility.options.length > 0){
+                for(let classAbilityOption of classAbility.options){
+                    let newPromise =  ClassAbility.create({
+                        classID: classID,
+                        name: classAbilityOption.name,
+                        level: classAbility.level,
+                        description: classAbilityOption.description,
+                        code: classAbilityOption.code,
+                        selectType: 'SELECT_OPTION',
+                        selectOptionFor: classAbilityModel.id,
+                    });
+                    classAbilityOptionsPromises.push(newPromise);
+                }
+            }
+            return Promise.all(classAbilityOptionsPromises)
+            .then(function(result) {
+                return classAbilityModel;
+            });
+        });
+
+    }
+
+    static deleteClass(classID){
+        if(classID == null) {return;}
+        return Class.findOne({where: { id: classID}})
+        .then((cClass) => {
+            // Clear Class Details for every Character that had this Class
+            return Character.findAll({where: { classID: cClass.id }})
+            .then((charactersWithClass) => {
+                let characterClassClearPromises = [];
+                for(const charWithClass of charactersWithClass) {
+                    let newPromise = CharSaving.saveClass(charWithClass.id, null);
+                    characterClassClearPromises.push(newPromise);
+                }
+                return Promise.all(characterClassClearPromises)
+                .then(function(result) {
+                    return FeatTag.findAll({where: { tagID: cClass.tagID }})
+                    .then((featTags) => {
+                        let classFeatsPromises = []; // Delete Class Feats
+                        for(const featTag of featTags) {
+                            let newPromise = Feat.destroy({
+                                where: { id: featTag.featID }
+                            });
+                            classFeatsPromises.push(newPromise);
+                        }
+                        return Promise.all(classFeatsPromises)
+                        .then(function(result) {
+                            return Tag.destroy({ // Delete Tag (which will cascade to FeatTags)
+                                where: { id: cClass.tagID }
+                            }).then((result) => {
+                                return Class.destroy({ // Finally, delete Class
+                                    where: { id: cClass.id }
+                                }).then((result) => {
+                                    return;
+                                });
+                            });
+                        });
+                    });
+                });
+            });
+        });
+    }
+
+    static archiveClass(classID, isArchived){
+        let archived = (isArchived) ? 1 : 0;
+        let updateValues = { isArchived: archived };
+        return Class.update(updateValues, { where: { id: classID } })
+        .then((result) => {
+            return Class.findOne({where: { id: classID }})
+            .then((cClass) => {
+                return Tag.update(updateValues, { where: { id: cClass.tagID } })
+                .then((result) => {
+                    return FeatTag.findAll({where: { tagID: cClass.tagID }})
+                    .then((featTags) => {
+                        let classFeatsPromises = [];
+                        for(const featTag of featTags) {
+                            let newPromise = Feat.update(updateValues, {
+                                where: { id: featTag.featID }
+                            });
+                            classFeatsPromises.push(newPromise);
+                        }
+                        return Promise.all(classFeatsPromises)
+                        .then(function(result) {
+                            return;
+                        });
+                    });
+                });
+            });
+        });
+    }
+
+
 
     static addAncestry(data) {
         /* Data:
@@ -199,7 +387,7 @@ module.exports = class AdminUpdate {
                                                 return Ancestry.destroy({ // Finally, delete Ancestry
                                                     where: { id: ancestry.id }
                                                 }).then((result) => {
-                                                    return true;
+                                                    return;
                                                 });
                                             });
                                         });

@@ -6,8 +6,12 @@ function openSpellQuickview(data){
     let spellName = spellDataStruct.Spell.name;
 
     if(data.SheetData != null){
-        let spellLevel = (spellDataStruct.Spell.level == 0) ? "Cantrip" : "Lvl "+data.SheetData.Slot.slotLevel;
+        let spellLevel = (spellDataStruct.Spell.level === 0) ? "Cantrip" : "Lvl "+data.SheetData.Slot.slotLevel;
         spellName += '<sup class="is-inline ml-2 is-size-7 is-italic">'+spellLevel+'</sup>';
+    }
+
+    if(spellDataStruct.Spell.isArchived === 1){
+        spellName += '<em class="pl-1">(archived)</em>';
     }
 
     $('#quickViewTitle').html(spellName);

@@ -31,19 +31,19 @@ socket.on("returnAdminAncestryDetails", function(ancestryObject, featsObject){
 
     // Ancestry Boosts and Flaws
     for(let boost of ancestry.Boosts){
-        $('#inputBoosts option[value='+boost+']').attr('selected','selected');
+        $('#inputBoosts option[value="'+boost+'"]').attr('selected','selected');
     }
     for(let flaw of ancestry.Flaws){
-        $('#inputFlaws option[value='+flaw+']').attr('selected','selected');
+        $('#inputFlaws option[value="'+flaw+'"]').attr('selected','selected');
     }
 
     // Ancestry Langs
     for(let lang of ancestry.Languages){
-        $('#inputLangs option[name='+lang.name+']').attr('selected','selected');
+        $('#inputLangs option[name="'+lang.name+'"]').attr('selected','selected');
     }
     $('#inputLangs').trigger("change");
     for(let bonusLang of ancestry.BonusLanguages){
-        $('#inputBonusLangs option[name='+bonusLang.name+']').attr('selected','selected');
+        $('#inputBonusLangs option[name="'+bonusLang.name+'"]').attr('selected','selected');
     }
     $('#inputBonusLangs').trigger("change");
 
@@ -119,6 +119,7 @@ socket.on("returnAdminAncestryDetails", function(ancestryObject, featsObject){
 
 
     $("#updateAncestryButton").click(function(){
+        $(this).unbind();
         finishAncestry(true);
     });
 

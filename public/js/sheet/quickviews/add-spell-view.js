@@ -95,7 +95,7 @@ function changeSpellTraditionTab(type, traditionName, data){
 
 function displayAddSpell(spellDataStruct, data){
 
-    if(spellDataStruct.Spell.isArchived == 1){
+    if(spellDataStruct.Spell.isArchived === 1){
         return;
     }
 

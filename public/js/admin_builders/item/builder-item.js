@@ -126,6 +126,7 @@ $(function () {
 
 
     $("#createButton").click(function(){
+        $(this).unbind();
         finishItem(false);
     });
 

@@ -15,6 +15,7 @@ $(function () {
 
 
     $("#createButton").click(function(){
+        $(this).unbind();
         finishSpell(false);
     });
 

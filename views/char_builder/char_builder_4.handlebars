@@ -97,16 +97,20 @@
         </div>
 
         <div class="field">
-            <div id="selectClassControlShell" class="select is-medium is-info">
-                <select id="selectClass">
-                    <option value="chooseDefault" name="chooseDefault">Choose a Class</option>
-                    <hr class="dropdown-divider"></hr>
-                    {{#each allClasses}}
-                    <option value="{{id}}" name="{{name}}" {{chooseSelection id ../character.classID}}>{{name}}</option>
-                    {{/each}}
+            <div id="selectClassControlShell" class="select is-medium">
+                <select id="selectClass" name="{{character.classID}}">
                 </select>
             </div>
         </div>
+
+        <article id="isArchivedMessage" class="message is-hidden">
+            <div class="message-header is-block text-center">
+                <p class="has-text-grey-lighter font-noto-sans is-size-5 has-text-weight-bold">Archived Class</p>
+            </div>
+            <div class="message-body has-text-grey-light font-noto-sans">
+                This class has been archived, likely because there is a new version available. Archived versions may eventually be removed so we highly recommend updating your character to the newest version when available.
+            </div>
+        </article>
 
         <article class="class-content message is-info">
             <div id="classDescription" class="message-body"></div>
@@ -121,7 +125,7 @@
                 <div class="column">
                 </div>
                 <div class="column">
-                    <div class="has-tooltip-bottom has-tooltip-multiline" data-tooltip="At 1st level, you gain an ability boost in the key ability for your class.">
+                    <div class="has-tooltip-bottom has-tooltip-multiline" data-tooltip="At 1st level, you gain an ability boost in the key ability of your class.">
                         <p class="is-size-4 has-text-title has-text-weight-semibold">Key Ability</p>
                         <div id="keyAbility" class="container">
                         </div>
@@ -157,11 +161,6 @@
                     <div class="tile is-child">
                         <p class="is-size-4 has-text-title has-text-weight-semibold">Saving Throws</p>
                         <div id="profSavingThrows" class="container">
-                        </div>
-                    </div>
-                    <div class="tile is-child">
-                        <p class="is-size-4 has-text-title has-text-weight-semibold">Spells</p>
-                        <div id="profSpells" class="container">
                         </div>
                     </div>
                 </div>

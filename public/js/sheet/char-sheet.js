@@ -89,9 +89,9 @@ socket.on("returnCharacterSheetInfo", function(charInfo){
             return a[1].Spell.level - b[1].Spell.level;
         })
     );
-
-    g_spellSlotsMap = objToMap(charInfo.ChoicesStruct.SpellDataStruct.SpellSlotObject);
-    g_spellBookArray = charInfo.ChoicesStruct.SpellDataStruct.SpellBookArray;
+    
+    g_spellSlotsMap = objToMap(charInfo.SpellDataStruct.SpellSlotObject);
+    g_spellBookArray = charInfo.SpellDataStruct.SpellBookArray;
 
     g_charTagsArray = charInfo.ChoicesStruct.CharTagsArray;
     g_class = charInfo.ChoicesStruct.Class;

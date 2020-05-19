@@ -3,11 +3,13 @@
 */
 
 const router = require('express').Router();
+const editClassRoutes = require('./edit-class-routes');
 const editAncestryRoutes = require('./edit-ancestry-routes');
 const editFeatActionRoutes = require('./edit-feat-action-routes');
 const editItemRoutes = require('./edit-item-routes');
 const editSpellRoutes = require('./edit-spell-routes');
 
+const Class = require('../models/contentDB/Class');
 const Ancestry = require('../models/contentDB/Ancestry');
 const Item = require('../models/contentDB/Item');
 const Spell = require('../models/contentDB/Spell');
@@ -36,6 +38,46 @@ router.get('/panel', adminAuthCheck, (req, res) => {
     res.render('admin/admin_panel', {  title: "Admin Panel - Apeiron", user: req.user });
 
 });
+
+// Class Builder
+router.get('/manage/class', adminAuthCheck, (req, res) => {
+
+    Class.findAll({
+        order: [['name', 'ASC'],]
+    }).then((classes) => {
+
+        res.render('admin/admin_manager/manager_class', {
+            title: "Class Manager - Apeiron",
+            user: req.user,
+            classes
+        });
+
+    });
+
+});
+
+router.get('/create/class', adminAuthCheck, (req, res) => {
+
+    Tag.findAll({
+        where: { isArchived: 0 },
+        order: [['name', 'ASC'],]
+    }).then((tags) => {
+        Item.findAll({
+            where: { isArchived: 0, hidden: 0, itemStructType: 'WEAPON' },
+            order: [['name', 'ASC'],]
+        }).then((weaponItems) => {
+            res.render('admin/admin_builder/builder_class', {
+                title: "Class Builder - Apeiron",
+                user: req.user,
+                tags,
+                weaponItems,
+            });
+        });
+    });
+
+});
+
+router.use('/edit/class', adminAuthCheck, editClassRoutes);
 
 // Ancestry Builder
 router.get('/manage/ancestry', adminAuthCheck, (req, res) => {

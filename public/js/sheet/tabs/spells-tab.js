@@ -58,7 +58,7 @@ function changeSpellsTab(type){
 // Core Spells //
 function displaySpellsCore() {
 
-    $('#spellsTabContent').append('<div class="columns is-mobile is-marginless"><div class="column is-9"><p class="control has-icons-left"><input id="spellsSearch" class="input" type="text" placeholder="Search Spells"><span class="icon is-left"><i class="fas fa-search" aria-hidden="true"></i></span></p></div><div class="column is-3"><button id="manageSpellsBtn" class="button is-info is-rounded">Manage Spells</button></div></div><div id="spellsCoreContent" class="use-custom-scrollbar" style="height: 555px; max-height: 555px; overflow-y: auto;"></div>');
+    $('#spellsTabContent').append('<div class="columns is-mobile is-marginless"><div class="column is-9"><p class="control has-icons-left"><input id="spellsSearch" class="input" type="text" placeholder="Search Spells"><span class="icon is-left"><i class="fas fa-search" aria-hidden="true"></i></span></p></div><div class="column is-3"><button id="manageSpellsBtn" class="button is-info is-rounded">Manage Spells</button></div></div><div id="spellsCoreContent" class="use-custom-scrollbar" style="height: 535px; max-height: 535px; overflow-y: auto;"></div>');
         
     prepDisplayOfSpellsAndSlots();
 
@@ -179,6 +179,10 @@ function displaySpellsInLevel(level, slotArray, data, spellsSearchInput) {
             
             // Name //
             let spellName = (slot.used) ? '<s class="has-text-grey-light">-'+spellDataStruct.Spell.name+'-</s>' : '<strong class="has-text-grey-light">'+spellDataStruct.Spell.name+'</strong>';
+
+            if(spellDataStruct.Spell.isArchived === 1){
+                spellName += '<em class="pl-1">(archived)</em>';
+            }
             
             // Cast Actions //
             let spellCast = null;
@@ -214,7 +218,7 @@ function displaySpellsInLevel(level, slotArray, data, spellsSearchInput) {
             });
 
         } else {
-            $('#spellsCoreContent').append('<div id="'+spellSlotID+'" class="columns is-mobile is-marginless"><div class="column is-5 is-paddingless"><p class="has-text-left pl-3"><em class="has-text-grey-light">Empty Spell Slot</em></p></div><div class="column is-1 is-paddingless"><p class="text-center has-text-grey-light">-</p></div><div class="column is-1 is-paddingless"><p class="text-center has-text-grey-light">-</p></div><div class="column is-5 is-paddingless"><p class="text-center has-text-grey-light">-</p></div></div>');
+            $('#spellsCoreContent').append('<div id="'+spellSlotID+'" class="columns is-mobile is-marginless"><div class="column is-5 is-paddingless"><p class="has-text-left pl-4 has-text-grey-light">-</p></div><div class="column is-1 is-paddingless"><p class="text-center has-text-grey-light">-</p></div><div class="column is-1 is-paddingless"><p class="text-center has-text-grey-light">-</p></div><div class="column is-5 is-paddingless"><p class="text-center has-text-grey-light">-</p></div></div>');
         }
 
         $('#'+spellSlotID).mouseenter(function(){

@@ -1,4 +1,9 @@
 
+function getClassEditorIDFromURL(){
+  let spl1 = window.location.pathname.split("class/");
+  return parseInt(spl1[1]);
+}
+
 function getAncestryEditorIDFromURL(){
     let spl1 = window.location.pathname.split("ancestry/");
     return parseInt(spl1[1]);

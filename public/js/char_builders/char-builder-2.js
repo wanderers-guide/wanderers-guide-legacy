@@ -72,6 +72,7 @@ socket.on("returnAncestryAndChoices", function(ancestryObject, inChoiceStruct){
         let ancestryID = $("#selectAncestry option:selected").val();
         if(ancestryID != "chooseDefault"){
             $('.ancestry-content').removeClass("is-hidden");
+            $('#selectAncestryControlShell').removeClass("is-info");
     
             // Save ancestry
             if(triggerSave == null || triggerSave) {
@@ -89,6 +90,7 @@ socket.on("returnAncestryAndChoices", function(ancestryObject, inChoiceStruct){
 
         } else {
             $('.ancestry-content').addClass("is-hidden");
+            $('#selectAncestryControlShell').addClass("is-info");
 
             // Delete ancestry, set to null
             g_ancestry = null;
@@ -105,6 +107,7 @@ socket.on("returnAncestryAndChoices", function(ancestryObject, inChoiceStruct){
         let ancestryID = $("#selectAncestry option:selected").val();
 
         if(ancestryID != "chooseDefault" && heritageID != "chooseDefault"){
+            $('#selectHeritageControlShell').removeClass("is-info");
 
             // Save heritage
             if(triggerSave == null || triggerSave) {
@@ -120,6 +123,7 @@ socket.on("returnAncestryAndChoices", function(ancestryObject, inChoiceStruct){
             }
 
         } else {
+            $('#selectHeritageControlShell').removeClass("is-info");
 
             g_ancestryForHeritage = null;
             socket.emit("requestHeritageChange",

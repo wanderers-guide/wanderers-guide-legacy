@@ -102,6 +102,7 @@ $(function () {
 
 
     $("#createAncestryButton").click(function(){
+        $(this).unbind();
         finishAncestry(false);
     });
 

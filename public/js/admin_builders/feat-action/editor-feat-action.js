@@ -48,6 +48,7 @@ socket.on("returnAdminFeatDetails", function(featsObject){
 
 
     $("#updateFeatButton").click(function(){
+        $(this).unbind();
         finishFeat(true);
     });
 

@@ -132,10 +132,15 @@ function displaySpellBook(spellBook, data) {
         if(!willDisplay){continue;}
         // Display Spell in SpellBook //
 
+        let spellName = spellDataStruct.Spell.name;
+        if(spellDataStruct.Spell.isArchived === 1){
+            spellName += '<em class="pl-1">(archived)</em>';
+        }
+
         let spellBookListingID = "spellBookListing"+spellListingCount;
         let spellLevel = (spellDataStruct.Spell.level == 0) ? "Cantrip" : "Lvl "+spellDataStruct.Spell.level;
 
-        $('#manageSpellsSpellBook').append('<div id="'+spellBookListingID+'" class="border-bottom border-dark-lighter cursor-clickable has-background-black-ter" name="'+spellDataStruct.Spell.id+'" style="z-index: 40; border-radius: 5px;"><span class="is-size-6 has-text-grey-light ml-3 mr-1">'+spellDataStruct.Spell.name+'</span><span class="is-size-7 has-text-grey-light is-pulled-right ml-1 mr-3">('+spellLevel+')</span></div>');
+        $('#manageSpellsSpellBook').append('<div id="'+spellBookListingID+'" class="border-bottom border-dark-lighter cursor-clickable has-background-black-ter" name="'+spellDataStruct.Spell.id+'" style="z-index: 40; border-radius: 5px;"><span class="is-size-6 has-text-grey-light ml-3 mr-1">'+spellName+'</span><span class="is-size-7 has-text-grey-light is-pulled-right ml-1 mr-3">('+spellLevel+')</span></div>');
         
         $('#'+spellBookListingID).click(function(){
             openQuickView('spellView', {

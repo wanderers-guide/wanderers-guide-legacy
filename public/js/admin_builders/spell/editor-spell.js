@@ -56,6 +56,7 @@ socket.on("returnAdminSpellDetails", function(spellObject){
     $("#inputTags").trigger("change");
 
     $("#updateButton").click(function(){
+        $(this).unbind();
         finishSpell(true);
     });
 

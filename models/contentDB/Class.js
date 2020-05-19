@@ -38,9 +38,15 @@ const Class = db.define('classes', {
   tArmor: {
     type: Sequelize.STRING
   },
-  tSpellTradition: {
-    type: Sequelize.STRING
+  tagID: {
+    type: Sequelize.INTEGER
   },
+  isArchived: {
+    type: Sequelize.INTEGER
+  },
+  version: {
+    type: Sequelize.STRING
+  }
 });
 
 module.exports = Class;
