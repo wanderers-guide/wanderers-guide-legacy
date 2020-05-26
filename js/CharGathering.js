@@ -712,13 +712,17 @@ module.exports = class CharGathering {
             where: { id: classID },
             raw: true,
         }).then((cClass) => {
-            return ClassAbility.findAll({
-                order: [['level', 'ASC'],['name', 'ASC'],],
-                where: { classID: cClass.id },
-                raw: true,
-            }).then((classAbilities) => {
-                return {Class : cClass, Abilities : classAbilities};
-            });
+            if(cClass != null){
+                return ClassAbility.findAll({
+                    order: [['level', 'ASC'],['name', 'ASC'],],
+                    where: { classID: cClass.id },
+                    raw: true,
+                }).then((classAbilities) => {
+                    return {Class : cClass, Abilities : classAbilities};
+                });
+            } else {
+                return {Class : null, Abilities: null};
+            }
         });
     }
 
