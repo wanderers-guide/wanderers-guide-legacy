@@ -49,6 +49,9 @@ const Feat = db.define('feats', {
   code: {
     type: Sequelize.TEXT
   },
+  isCore: {
+    type: Sequelize.INTEGER
+  },
   genericType: {
     type: Sequelize.ENUM,
     values: ['GENERAL-FEAT', 'SKILL-FEAT', 'BASIC-ACTION', 'SKILL-ACTION']

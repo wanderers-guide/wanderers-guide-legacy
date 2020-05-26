@@ -3,7 +3,7 @@ const Character = require('../models/contentDB/Character');
 const Spell = require('../models/contentDB/Spell');
 const SpellBookSpell = require('../models/contentDB/SpellBookSpell');
 
-const CharDataStoring = require('./CharDataStoring');
+const CharDataMapping = require('./CharDataMapping');
 
 // Hardcoded Spell Slots for Casting Type
 function getSpellSlots(spellcasting){
@@ -177,22 +177,15 @@ function objToMap(obj) {
     return strMap;
 }
 
-function hashCode(str) {
-    return str.split('').reduce((prevHash, currVal) =>
-      (((prevHash << 5) - prevHash) + currVal.charCodeAt(0))|0, 0);
-}
-
 function getRandomSID() {
     return Math.floor(Math.random() * Number.MAX_SAFE_INTEGER);
 }
 
-function getKeyAbilityFromSpellSRC(spellKeyAbilitiesDataMap, spellSRC){
+function getKeyAbilityFromSpellSRC(spellKeyAbilityDataArray, spellSRC){
     spellSRC = spellSRC+"=";
-    for(const [srcID, spellKeyAbilitiesDataArray] of spellKeyAbilitiesDataMap.entries()){
-        for(const spellKeyAbilitiesData of spellKeyAbilitiesDataArray){
-            if(spellKeyAbilitiesData.includes(spellSRC)){
-                return spellKeyAbilitiesData.replace(spellSRC, '');
-            }
+    for(const spellKeyAbilityData of spellKeyAbilityDataArray){
+        if(spellKeyAbilityData.value.includes(spellSRC)){
+            return spellKeyAbilityData.value.replace(spellSRC, '');
         }
     }
     return 'CHA';
@@ -200,12 +193,13 @@ function getKeyAbilityFromSpellSRC(spellKeyAbilitiesDataMap, spellSRC){
 
 module.exports = class CharSpells {
 
-    static removeFromSpellBook(charID, spellSRC, spellID){
+    static removeFromSpellBook(charID, spellSRC, spellID, spellLevel){
         return SpellBookSpell.destroy({ // Delete SpellBookSpell
             where: {
                 charID: charID,
                 spellSRC: spellSRC,
                 spellID: spellID,
+                spellLevel: spellLevel,
             },
             limit: 1,
         }).then((result) => {
@@ -213,11 +207,12 @@ module.exports = class CharSpells {
         });
     }
 
-    static addToSpellBook(charID, spellSRC, spellID){
+    static addToSpellBook(charID, spellSRC, spellID, spellLevel){
         return SpellBookSpell.create({ // Create SpellBookSpell
             spellSRC: spellSRC,
             charID: charID,
             spellID: spellID,
+            spellLevel: spellLevel,
         }).then(spellBookSpell => {
             return spellBookSpell;
         }).catch(function(err) {
@@ -234,57 +229,98 @@ module.exports = class CharSpells {
         }).then((spellBookSpells) => {
             return CharSpells.getSpellList(charID, spellSRC)
             .then((spellList) => {
-                let spellBookArray = [];
-                for(let spellBookSpell of spellBookSpells){
-                    spellBookArray.push(spellBookSpell.spellID);
-                }
-                return {SpellSRC: spellSRC, SpellBook: spellBookArray, SpellList: spellList};
+                return CharSpells.getSpellCastingType(charID, spellSRC)
+                .then((spellCastingType) => {
+                    return CharDataMapping.getDataAll(charID, 'spellKeyAbilities', null)
+                    .then((spellKeyAbilityDataArray) => {
+                        let keyAbility = getKeyAbilityFromSpellSRC(spellKeyAbilityDataArray, spellSRC);
+                        let spellBookArray = [];
+                        for(let spellBookSpell of spellBookSpells){
+                            spellBookArray.push({SpellID: spellBookSpell.spellID, SpellLevel: spellBookSpell.spellLevel});
+                        }
+                        return {
+                            SpellSRC: spellSRC,
+                            SpellBook: spellBookArray,
+                            SpellList: spellList,
+                            SpellCastingType: spellCastingType,
+                            SpellKeyAbility: keyAbility,
+                        };
+                    });
+                });
             });
         });
     }
 
     static getSpellList(charID, spellSRC) {
-        return CharDataStoring.getBasicData(charID, "GET_ALL", 'dataSpellLists', null)
-        .then((spellListsData) => {
-            let spellListsDataMap = objToMap(spellListsData);
-            for(const [srcID, spellListsDataArray] of spellListsDataMap.entries()){
-                for(const spellListsData of spellListsDataArray){
-                    let spellListsDataParts = spellListsData.split('=');
-                    if(spellSRC === spellListsDataParts[0]){
-                        return spellListsDataParts[1];
-                    }
+        return CharDataMapping.getDataAll(charID, 'spellLists', null)
+        .then((spellListDataArray) => {
+            for(const spellListData of spellListDataArray){
+                let spellListsDataParts = spellListData.value.split('=');
+                if(spellSRC === spellListsDataParts[0]){
+                    return spellListsDataParts[1];
                 }
             }
             return 'Arcane';
         });
     }
 
+    static getSpellCastingType(charID, spellSRC) {
+        return CharDataMapping.getDataAll(charID, 'spellCastingType', null)
+        .then((spellCTypeDataArray) => {
+            for(const spellCTypeData of spellCTypeDataArray){
+                let spellCTypeDataParts = spellCTypeData.value.split('=');
+                if(spellSRC === spellCTypeDataParts[0]){
+                    return spellCTypeDataParts[1];
+                }
+            }
+            return 'PREPARED-LIST';
+        });
+    }
+
+    static getFocusSpells(charID) {
+        return CharDataMapping.getDataAll(charID, 'focusSpell', null)
+        .then((focusSpellDataArray) => {
+            let focusSpellMap = new Map();
+            for(let focusSpellData of focusSpellDataArray){
+                let focusSpellDataParts = focusSpellData.value.split('=');
+                let focusSpellArray = [];
+                if(focusSpellMap.has(focusSpellDataParts[0])){
+                    focusSpellArray = focusSpellMap.get(focusSpellDataParts[0]);
+                }
+                focusSpellData.SpellID = focusSpellDataParts[1];
+                focusSpellData.Used = focusSpellDataParts[2];
+                focusSpellArray.push(focusSpellData);
+                focusSpellMap.set(focusSpellDataParts[0], focusSpellArray);
+            }
+            return focusSpellMap;
+        });
+    }
+
     // Used to actually add a set of spell slots to character data
-    static setSpellCasting(charID, srcID, spellSRC, spellcasting){
+    static setSpellCasting(charID, srcStruct, spellSRC, spellcasting){
         spellcasting = spellcasting.toUpperCase();
         let spellSlots = getSpellSlots(spellcasting);
-        return CharDataStoring.replaceBasicData(charID, srcID, [spellSRC+"="+JSON.stringify(spellSlots)], 'dataSpellSlots')
+        return CharDataMapping.setData(charID, 'spellSlots', srcStruct, spellSRC+"="+JSON.stringify(spellSlots))
         .then((result) => {
           return spellSlots;
         });
     }
 
     // Used to actually add a spell slot to character data
-    static setSpellSlot(charID, srcID, spellSRC, slotLevel){
+    static setSpellSlot(charID, srcStruct, spellSRC, slotLevel){
         let rowName = levelToRowName(slotLevel);
         if(rowName == null) {return null;}
         let spellSlot = {};
-        spellSlot[rowName] = [{slotID: hashCode(srcID), used: false, spellID: null, level_lock: -1}];
-        return CharDataStoring.replaceBasicData(charID, srcID, [spellSRC+"="+JSON.stringify(spellSlot)], 'dataSpellSlots')
+        spellSlot[rowName] = [{slotID: getRandomSID(), used: false, spellID: null, level_lock: -1}];
+        return CharDataMapping.setData(charID, 'spellSlots', srcStruct, spellSRC+"="+JSON.stringify(spellSlot))
         .then((result) => {
           return spellSlot;
         });
     }
 
     static changeSpellSlot(charID, updateSlotObject){
-        return CharDataStoring.getBasicData(charID, "GET_ALL", 'dataSpellSlots', null)
-        .then((spellSlotsData) => {
-            let spellSlotsDataMap = objToMap(spellSlotsData);
+        return CharDataMapping.getDataAll(charID, 'spellSlots', null)
+        .then((spellSlotDataArray) => {
 
             // Build outline of Spell Slot object data
             let spellSlotEntry = {
@@ -301,73 +337,66 @@ module.exports = class CharSpells {
 
             // Update the spell slot data
             let updateSpellSlotsPromises = [];
-            for(const [srcID, spellSlotsDataArray] of spellSlotsDataMap.entries()){
-                let slotNewDataArray = [];
-                for(const spellSlotsData of spellSlotsDataArray){
-                    slotNewDataArray.push(spellSlotsData.replace(re, updatedSpellSlotJSON));
+            for(const spellSlotData of spellSlotDataArray){
+                let newSpellSlotDataValue = spellSlotData.value.replace(re, updatedSpellSlotJSON);
+                if(newSpellSlotDataValue != spellSlotData.value) {
+                    let srcStruct = {
+                        sourceType: spellSlotData.sourceType,
+                        sourceLevel: spellSlotData.sourceLevel,
+                        sourceCode: spellSlotData.sourceCode,
+                        sourceCodeSNum: spellSlotData.sourceCodeSNum,
+                    };
+                    let newPromise = CharDataMapping.setData(charID, 'spellSlots', srcStruct, newSpellSlotDataValue);
+                    updateSpellSlotsPromises.push(newPromise);
                 }
-                let newPromise = CharDataStoring.replaceBasicData(charID, srcID, slotNewDataArray, 'dataSpellSlots');
-                updateSpellSlotsPromises.push(newPromise);
             }
             return Promise.all(updateSpellSlotsPromises)
             .then(function(result) {
                 return;
             });
+
         });
     }
 
     static getSpellSlots(charID){
         return Character.findOne({ where: { id: charID} })
         .then((character) => {
-            return CharDataStoring.getBasicData(charID, "GET_ALL", 'dataSpellSlots', null)
-            .then((spellSlotsData) => {
-                let spellSlotsDataMap = objToMap(spellSlotsData);
-                return CharDataStoring.getBasicData(charID, "GET_ALL", 'dataSpellKeyAbilities', null)
-                .then((spellKeyAbilitiesData) => {
-                    let spellKeyAbilitiesDataMap = objToMap(spellKeyAbilitiesData);
+            return CharDataMapping.getDataAll(charID, 'spellSlots', null)
+            .then((spellSlotDataArray) => {
+                let spellSlotsMap = new Map();
+                for(const spellSlotData of spellSlotDataArray){
 
-                    let spellSlotsMap = new Map();
-                    let loopCount = 0;
-                    for(const [srcID, spellSlotsDataArray] of spellSlotsDataMap.entries()){
-                        for(const spellSlotsData of spellSlotsDataArray){
+                    let spellSlotsDataParts = spellSlotData.value.split('=');
+                    let spellSRC = spellSlotsDataParts[0];
+                    
+                        
+                    let spellSlots = JSON.parse(spellSlotsDataParts[1]);
+                    for(let [levelRowName, slotsArray] of Object.entries(spellSlots)) {
+                        let slotLevel = rowNameToLevel(levelRowName);
+                        for(const slotData of slotsArray){
+                            if(slotData.level_lock <= character.level) {
 
-                            let spellSlotsDataParts = spellSlotsData.split('=');
-                            let spellSRC = spellSlotsDataParts[0];
-                            let keyAbility = getKeyAbilityFromSpellSRC(spellKeyAbilitiesDataMap, spellSRC);
-                                
-                            let spellSlots = JSON.parse(spellSlotsDataParts[1]);
-                            for(let [levelRowName, slotsArray] of Object.entries(spellSlots)) {
-                                let slotLevel = rowNameToLevel(levelRowName);
-                                for(const slotData of slotsArray){
-                                    if(slotData.level_lock <= character.level) {
-
-                                        let spellSlotArray = [];
-                                        if(spellSlotsMap.has(spellSRC)){
-                                            spellSlotArray = spellSlotsMap.get(spellSRC);
-                                        }
-
-                                        spellSlotArray.push({
-                                            slotID: slotData.slotID,
-                                            slotLevel: slotLevel,
-                                            keyAbility: keyAbility,
-                                            used: slotData.used,
-                                            spellID: slotData.spellID,
-                                            level_lock: slotData.level_lock,
-                                        });
-
-                                        spellSlotsMap.set(spellSRC, spellSlotArray);
-                                            
-                                        loopCount++;
-
-                                    }
+                                let spellSlotArray = [];
+                                if(spellSlotsMap.has(spellSRC)){
+                                    spellSlotArray = spellSlotsMap.get(spellSRC);
                                 }
-                            }
 
+                                spellSlotArray.push({
+                                    slotID: slotData.slotID,
+                                    slotLevel: slotLevel,
+                                    used: slotData.used,
+                                    spellID: slotData.spellID,
+                                    level_lock: slotData.level_lock,
+                                });
+
+                                spellSlotsMap.set(spellSRC, spellSlotArray);
+
+                            }
                         }
                     }
-                    console.log("SPELL SLOT LOOP COUNT: "+loopCount+" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~!");
-                    return spellSlotsMap;
-                });
+
+                }
+                return spellSlotsMap;
             });
         });
     }

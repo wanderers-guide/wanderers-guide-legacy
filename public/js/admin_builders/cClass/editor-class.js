@@ -72,7 +72,7 @@ socket.on("returnAdminClassDetails", function(classObject, featsObject){
 
     let classAbilCount = 0;
     $(".classFeature").each(function(){
-        if($(this).is(":visible")) {
+        if(!$(this).hasClass("isLayout")) {
             let classAbil = cClass.Abilities[classAbilCount];
             classAbilCount++;
             while (classAbil.selectType === 'SELECT_OPTION') {
@@ -84,6 +84,8 @@ socket.on("returnAdminClassDetails", function(classObject, featsObject){
             $(this).find(".inputClassFeatureLevel").val(classAbil.level);
             $(this).find(".inputClassFeatureDesc").val(classAbil.description);
             $(this).find(".inputClassFeatureCode").val(classAbil.code);
+            let displayInSheet = (classAbil.displayInSheet == 1) ? true : false;
+            $(this).find(".inputClassFeatureDisplayInSheet").prop('checked', displayInSheet);
 
             // Minimize Class Ability
             $(this).find(".card-header").trigger("click");
@@ -96,10 +98,8 @@ socket.on("returnAdminClassDetails", function(classObject, featsObject){
 
                 let classAbilOptionsArray = [];
                 for(let classAbilOption of cClass.Abilities){
-                    console.log(classAbilOption.selectOptionFor+" "+classAbil.id);
                     if(classAbilOption.selectType === 'SELECT_OPTION' && classAbilOption.selectOptionFor === classAbil.id){
                         classAbilOptionsArray.push(classAbilOption);
-                        console.log('GOT HERE');
                         $(this).find(".classFeatureAddOptionButton").trigger("click");
                     }
                 }

@@ -24,7 +24,7 @@ const adminAuthCheck = (req, res, next) => {
     if(!req.user){
         res.redirect('/auth/login');
     } else {
-        if(req.user.isAdmin == 1){
+        if(req.user.isAdmin === 1){
             next();
         } else {
             res.status(404);
@@ -59,7 +59,7 @@ router.get('/manage/class', adminAuthCheck, (req, res) => {
 router.get('/create/class', adminAuthCheck, (req, res) => {
 
     Tag.findAll({
-        where: { isArchived: 0 },
+        where: { isArchived: 0, isHidden: 0 },
         order: [['name', 'ASC'],]
     }).then((tags) => {
         Item.findAll({
@@ -102,7 +102,7 @@ router.get('/create/ancestry', adminAuthCheck, (req, res) => {
         order: [['name', 'ASC'],]
     }).then((languages) => {
         Tag.findAll({
-            where: { isArchived: 0 },
+            where: { isArchived: 0, isHidden: 0 },
             order: [['name', 'ASC'],]
         }).then((tags) => {
             SenseType.findAll()
@@ -152,7 +152,7 @@ router.get('/create/feat-action', adminAuthCheck, (req, res) => {
         order: [['name', 'ASC'],]
     }).then((skills) => {
         Tag.findAll({
-            where: { isArchived: 0 },
+            where: { isArchived: 0, isHidden: 0 },
             order: [['name', 'ASC'],]
         }).then((tags) => {
             res.render('admin/admin_builder/builder_feat-action', {
@@ -189,7 +189,7 @@ router.get('/manage/item', adminAuthCheck, (req, res) => {
 router.get('/create/item', adminAuthCheck, (req, res) => {
 
     Tag.findAll({
-        where: { isArchived: 0 },
+        where: { isArchived: 0, isHidden: 0 },
         order: [['name', 'ASC'],]
     }).then((tags) => {
         res.render('admin/admin_builder/builder_item', {
@@ -224,7 +224,7 @@ router.get('/manage/spell', adminAuthCheck, (req, res) => {
 router.get('/create/spell', adminAuthCheck, (req, res) => {
 
     Tag.findAll({
-        where: { isArchived: 0 },
+        where: { isArchived: 0, isHidden: 0 },
         order: [['name', 'ASC'],]
     }).then((tags) => {
         res.render('admin/admin_builder/builder_spell', {

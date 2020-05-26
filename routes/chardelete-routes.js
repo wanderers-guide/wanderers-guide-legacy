@@ -4,7 +4,6 @@
 
 const router = require('express').Router();
 const Character = require('../models/contentDB/Character');
-const CharData = require('../models/contentDB/CharData');
 const Inventory = require('../models/contentDB/Inventory');
 
 const PATH = '/profile/characters/delete/'; // <- Change this if routes are ever changed //
@@ -25,14 +24,10 @@ router.get('*', (req, res) => {
             Inventory.destroy({
                 where: { id: character.inventoryID }
             }).then((result) => {
-                CharData.destroy({
-                    where: { id: character.dataID }
+                Character.destroy({
+                    where: { id: character.id }
                 }).then((result) => {
-                    Character.destroy({
-                        where: { id: character.id }
-                    }).then((result) => {
-                        res.redirect('/profile/characters');
-                    });
+                    res.redirect('/profile/characters');
                 });
             });
 

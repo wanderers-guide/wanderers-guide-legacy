@@ -3,8 +3,6 @@
     <link rel="stylesheet" href="/css/char-builder.css">
     <script type="text/javascript" src="/js/char_builders/char-builder-5.js"></script>
 
-    <script type="text/javascript" src="/js/asc-text-processing.js"></script>
-
     <script type="text/javascript" src="/js/char_builders/asc/init-processing.js"></script>
     <script type="text/javascript" src="/js/char_builders/asc/asc-boosts.js"></script>
     <script type="text/javascript" src="/js/char_builders/asc/asc-feats.js"></script>
@@ -13,9 +11,14 @@
     <script type="text/javascript" src="/js/char_builders/asc/asc-skills.js"></script>
     <script type="text/javascript" src="/js/char_builders/asc/asc-profs.js"></script>
     <script type="text/javascript" src="/js/char_builders/asc/asc-spells.js"></script>
+    <script type="text/javascript" src="/js/char_builders/asc/asc-spells-innate.js"></script>
+    <script type="text/javascript" src="/js/char_builders/asc/asc-resistances.js"></script>
     <script type="text/javascript" src="/js/char_builders/asc/display-structs.js"></script>
-    <script type="text/javascript" src="/js/sheet/asc-processing.js"></script>
-    <script type="text/javascript" src="/js/char_builders/asc/errorHandling.js"></script>
+    
+    <script type="text/javascript" src="/js/asc/text-processing.js"></script>
+    <script type="text/javascript" src="/js/asc/expression-processing.js"></script>
+    <script type="text/javascript" src="/js/asc/statement-processing.js"></script>
+    <script type="text/javascript" src="/js/asc/errorHandling.js"></script>
 
     <script type="text/javascript" src="/js/char_builders/utils.js"></script>
 {{/section}}
@@ -102,50 +105,53 @@
                 <p class="is-size-3 pb-3">Almost Done!</p>
             </div>
 
-            <div class="columns is-centered">
-                <div class="column is-9-fullhd is-10-desktop is-12-tablet is-12-mobile">
+            <div class="columns is-mobile is-centered">
+                <div class="column is-narrow">
                     <div id="ability-scores-box" class="columns is-mobile is-multiline is-centered box is-unselectable is-paddingless p-2">
+                        <div class="mx-2"></div>
                         <div class="column is-paddingless is-narrow ">
                             <div>Strength</div>
                             <div id="strMod" class="is-size-3 pr-3"></div>
                             <span id="strScore" class="button is-rounded is-static"></span>
                         </div>
-                        <div class="is-divider-vertical"></div>
+                        <div class="mx-4"></div>
                         <div class="column is-paddingless is-narrow ">
                             <div>Dexterity</div>
                             <div id="dexMod" class="is-size-3 pr-3"></div>
                             <span id="dexScore" class="button is-rounded is-static"></span>
                         </div>
-                        <div class="is-divider-vertical"></div>
+                        <div class="mx-4"></div>
                         <div class="column is-paddingless is-narrow ">
                             <div>Constitution</div>
                             <div id="conMod" class="is-size-3 pr-3"></div>
                             <span id="conScore" class="button is-rounded is-static"></span>
                         </div>
-                        <div class="is-divider-vertical"></div>
+                        <div class="mx-4"></div>
                         <div class="column is-paddingless is-narrow ">
                             <div>Wisdom</div>
                             <div id="wisMod" class="is-size-3 pr-3"></div>
                             <span id="wisScore" class="button is-rounded is-static"></span>
                         </div>
-                        <div class="is-divider-vertical"></div>
+                        <div class="mx-4"></div>
                         <div class="column is-paddingless is-narrow ">
                             <div>Intelligence</div>
                             <div id="intMod" class="is-size-3 pr-3"></div>
                             <span id="intScore" class="button is-rounded is-static"></span>
                         </div>
-                        <div class="is-divider-vertical"></div>
+                        <div class="mx-4"></div>
                         <div class="column is-paddingless is-narrow ">
                             <div>Charisma</div>
                             <div id="chaMod" class="is-size-3 pr-3"></div>
                             <span id="chaScore" class="button is-rounded is-static"></span>
                         </div>
+                        <div class="mx-2"></div>
                     </div>
                 </div>
             </div>
 
             <div class="finalize-content">
-                <p>You will now be able to select a number of additional languages to learn and skills to be Trained in based off of your final ability scores listed above, specifically Intelligence.</p>
+                <p>You can now select a number of additional languages to learn and skills to be trained in</p>
+                <p>based off of your final ability scores listed above, specifically Intelligence.</p>
                 <p class="help is-info is-italic">Make sure you come back here each time your Intelligence modifiers increases, you will be able to select another skill and language to learn!</p>
             </div>
 
@@ -163,7 +169,7 @@
             <div class="column">
                 <div id="trainSkills">
                     <p class="is-size-4">Additional Skill Training</p>
-                    <p class="help is-info is-italic is-marginless">You become Trained in skills you pick.</p>
+                    <p class="help is-info is-italic is-marginless">You become trained in skills you pick.</p>
                 </div>
             </div>
             <div class="column">

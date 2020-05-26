@@ -22,8 +22,6 @@ router.get('*', (req, res) => {
     let charID = parseInt(splitData[0]);
     let buildPage = splitData[1];
 
-    console.log(extraData+" "+charID+" "+buildPage);
-
     if(buildPage != null) {
 
         if(buildPage === "page1" || buildPage === "page1?") {

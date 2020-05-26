@@ -56,6 +56,9 @@
 	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 	<script src="/js/jQuery/jquery.ui.touch-punch.min.js"></script>
 
+	<!-- Mobile View Message -->
+	<script type="text/javascript" src="/js/mobile-view.js"></script>
+
 	{{{_sections.header}}}
 
 </head>
@@ -63,14 +66,14 @@
 <body>
 
 	<div id="main-container">
-		
+
 		<div class="main-top" id="home">
 			<header>
 				<div class="container-fluid">
 					<div class="header d-md-flex justify-content-between align-items-center pt-1 pr-5">
 						<div>
 							<a href="/"><img src="/images/logo.png" style="height:70px;" alt="Apeiron"></a>
-							<p class="is-inline has-text-grey-lighter is-size-5 font-bebas-neue">Alpha 0.8</p>
+							<p class="is-inline has-text-grey-lighter is-size-5 font-bebas-neue">Alpha 0.9.0</p>
 						</div>
 
 						<div class="nav_w3ls">
@@ -121,13 +124,14 @@
 
 		<div class="top-border"></div>
 
+		<div id="mobile-warning-message"></div>
 		<div class="center-body">
 			{{{body}}}
 		</div>
 		
 		<footer id="apeiron-footer">
 			<div class="cpy-right text-center py-3">
-				<p>
+				<p class="text-center">
 				© 2020 Apeiron Character Manager. <a href="/license">Licenses and Policies</a>
 				</p>
 			</div>

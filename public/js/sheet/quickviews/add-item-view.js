@@ -1,8 +1,18 @@
 
 function openAddItemQuickview(data) {
 
-    $('#quickViewTitle').html("Add Items");
+    $('#quickViewTitle').html('Add Items');
+    $('#quickViewTitleRight').html('<button id="createCustomItemBtn" class="button is-very-small is-success is-outlined is-rounded is-pulled-right mr-1">Create Item</button>');
     let qContent = $('#quickViewContent');
+
+    $('#createCustomItemBtn').click(function(){
+        $(this).addClass('is-loading');
+        socket.emit("requestAddItemToInv",
+            data.InvID,
+            62, // Hardcoded New Item ID
+            1);
+        $(this).blur();
+    });
 
     qContent.append('<div class="tabs is-small is-centered is-marginless mb-1"><ul class="category-tabs"><li><a id="itemTabAll">All</a></li><li><a id="itemTabGeneral">General</a></li><li><a id="itemTabCombat">Combat</a></li><li><a id="itemTabStorage">Storage</a></li><li><a id="itemTabCurrency">Currency</a></li></ul></div>');
 
@@ -124,21 +134,21 @@ function displayAddItem(itemID, itemDataStruct, data){
         itemName += ' ('+itemDataStruct.Item.quantity+')';
     }
 
-    $('#addItemListSection').append('<div class="tile is-parent is-paddingless border-bottom border-additems has-background-black-like cursor-clickable"><div class="tile is-child is-7 '+addItemViewItemClass+'"><p id="'+addItemNameID+'" class="has-text-left mt-1 pl-3 has-text-grey-lighter">'+itemName+'</p></div><div class="tile is-child is-2"><p class="has-text-centered is-size-7 mt-2">'+itemLevel+'</p></div><div class="tile is-child"><button id="'+addItemAddItemID+'" class="button my-1 is-small is-success is-rounded">Add</button></div><div class="tile is-child is-1 '+addItemViewItemClass+'"><span class="icon has-text-grey mt-2"><i id="'+addItemChevronItemID+'" class="fas fa-chevron-down"></i></span></div></div><div id="'+addItemDetailsItemID+'" class="tile is-parent is-vertical is-paddingless border-bottom border-additems is-hidden p-2 text-center"></div>');
+    $('#addItemListSection').append('<div class="tile is-parent is-paddingless border-bottom border-additems has-background-black-like cursor-clickable"><div class="tile is-child is-7 '+addItemViewItemClass+'"><p id="'+addItemNameID+'" class="has-text-left mt-1 pl-3 has-text-grey-lighter">'+itemName+'</p></div><div class="tile is-child is-2"><p class="has-text-centered is-size-7 mt-2">'+itemLevel+'</p></div><div class="tile is-child"><button id="'+addItemAddItemID+'" class="button my-1 is-small is-success is-outlined is-rounded">Add</button></div><div class="tile is-child is-1 '+addItemViewItemClass+'"><span class="icon has-text-grey mt-2"><i id="'+addItemChevronItemID+'" class="fas fa-chevron-down"></i></span></div></div><div id="'+addItemDetailsItemID+'" class="tile is-parent is-vertical is-paddingless border-bottom border-additems is-hidden p-2 text-center"></div>');
 
     let rarity = itemDataStruct.Item.rarity;
     let tagsInnerHTML = '';
     switch(rarity) {
-      case 'UNCOMMON': tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-small is-primary">Uncommon</button>';
+      case 'UNCOMMON': tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-very-small is-primary">Uncommon</button>';
         break;
-      case 'RARE': tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-small is-success">Rare</button>';
+      case 'RARE': tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-very-small is-success">Rare</button>';
         break;
-      case 'UNIQUE': tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-small is-danger">Unique</button>';
+      case 'UNIQUE': tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-very-small is-danger">Unique</button>';
         break;
       default: break;
     }
     for(const tagStruct of itemDataStruct.TagArray){
-        tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-small is-info has-tooltip-bottom has-tooltip-multiline" data-tooltip="'+tagStruct.Tag.description+'">'+tagStruct.Tag.name+'</button>';
+        tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-very-small is-info has-tooltip-bottom has-tooltip-multiline" data-tooltip="'+tagStruct.Tag.description+'">'+tagStruct.Tag.name+'</button>';
     }
 
     if(tagsInnerHTML != ''){
@@ -274,6 +284,7 @@ function displayAddItem(itemID, itemDataStruct, data){
             data.InvID,
             itemID,
             itemDataStruct.Item.quantity);
+        $(this).blur();
     });
 
     $('.'+addItemViewItemClass).click(function(){

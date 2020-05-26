@@ -14,6 +14,14 @@ function objToMap(obj) {
     return strMap;
 }
 
+function cloneObj(obj){
+  return JSON.parse(JSON.stringify(obj));
+}
+
+function hasSameSrc(dataStruct, srcStruct){
+  return (dataStruct.sourceType === srcStruct.sourceType && dataStruct.sourceLevel === srcStruct.sourceLevel && dataStruct.sourceCode === srcStruct.sourceCode && dataStruct.sourceCodeSNum === srcStruct.sourceCodeSNum);
+}
+
 function capitalizeWord(word){
   return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
 }
@@ -111,7 +119,7 @@ function profToNumUp(prof){
       return 3;
     case "L":
       return 4;
-    case "Up":
+    case "UP":
       return 10;
     default:
       return -1;
@@ -155,23 +163,19 @@ function hasDuplicateSelected(selectOptions) {
   return (new Set(optionValArray)).size !== optionValArray.length;
 }
 
-function hasDuplicateFeat(featChoiceMap, featID){
-  for(const [dataSrc, featDataArray] of featChoiceMap.entries()){
-    for(const feat of featDataArray){
-        if(feat.id == featID) {
-            return true;
-        }
+function hasDuplicateFeat(featArray, featID){
+  for(const feat of featArray){
+    if(feat.value.id == featID) {
+      return true;
     }
   }
   return false;
 }
 
-function hasDuplicateLang(langChoiceMap, langID){
-  for(const [dataSrc, langDataArray] of langChoiceMap.entries()){
-    for(const lang of langDataArray){
-        if(lang.id == langID) {
-            return true;
-        }
+function hasDuplicateLang(langArray, langID){
+  for(const lang of langArray){
+    if(lang.value.id == langID) {
+      return true;
     }
   }
   return false;

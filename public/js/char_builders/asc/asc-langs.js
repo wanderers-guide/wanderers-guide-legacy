@@ -1,38 +1,37 @@
 
 //------------------------- Processing Langs -------------------------//
-function initLangProcessing(ascStatement, srcID, locationID, statementNum) {
+function initLangProcessing(ascStatement, srcStruct, locationID) {
     if(ascLangMap == null) {
         //console.log("Did not find valid langMap :(");
         socket.emit("requestASCLangs",
                 getCharIDFromURL(),
                 ascStatement,
-                srcID,
-                locationID,
-                statementNum);
+                srcStruct,
+                locationID);
     } else {
         //console.log("> Found a valid langMap!");
-        processingLangs(ascStatement, srcID, locationID, statementNum);
+        processingLangs(ascStatement, srcStruct, locationID);
     }
 }
 
-socket.on("returnASCLangs", function(ascStatement, srcID, locationID, statementNum, langObject){
+socket.on("returnASCLangs", function(ascStatement, srcStruct, locationID, langObject){
     let langMap = objToMap(langObject);
     //console.log("Setting langMap to new one...");
     ascLangMap = langMap;
-    processingLangs(ascStatement, srcID, locationID, statementNum);
+    processingLangs(ascStatement, srcStruct, locationID);
 });
 
-function processingLangs(ascStatement, srcID, locationID, statementNum){
+function processingLangs(ascStatement, srcStruct, locationID){
 
     if(ascStatement.includes("GIVE-LANG-NAME")){ // GIVE-LANG-NAME=Elven
         let langName = ascStatement.split('=')[1];
-        giveLangByName(srcID, langName);
+        giveLangByName(srcStruct, langName);
     }
     else if(ascStatement.includes("GIVE-LANG-BONUS-ONLY")){// GIVE-LANG-BONUS-ONLY
-        giveLang(srcID, locationID, statementNum, true);
+        giveLang(srcStruct, locationID, true);
     }
     else if(ascStatement.includes("GIVE-LANG")){// GIVE-LANG
-        giveLang(srcID, locationID, statementNum, false);
+        giveLang(srcStruct, locationID, false);
     } else {
         displayError("Unknown statement (2): \'"+ascStatement+"\'");
         statementComplete();
@@ -42,9 +41,9 @@ function processingLangs(ascStatement, srcID, locationID, statementNum){
 
 //////////////////////////////// Give Lang ///////////////////////////////////
 
-function giveLang(srcID, locationID, statementNum, bonusOnly){
+function giveLang(srcStruct, locationID, bonusOnly){
 
-    let selectLangID = "selectLang"+locationID+statementNum;
+    let selectLangID = "selectLang"+locationID+srcStruct.sourceCodeSNum;
     let selectLangControlShellClass = selectLangID+'ControlShell';
     let langDescriptionID = selectLangID+"Description";
 
@@ -56,12 +55,13 @@ function giveLang(srcID, locationID, statementNum, bonusOnly){
     $('#'+selectLangID).append('<hr class="dropdown-divider"></hr>');
 
     // Set saved prof choices to savedProfData
-    let langChoiceMap = objToMap(ascChoiceStruct.LangObject);
-    let langArray = langChoiceMap.get(srcID);
-    let savedLang = null;
-    if(langArray != null && langArray[0] != null){
-        savedLang = langArray[0];
-    }
+    let langArray = ascChoiceStruct.LangArray;
+
+    let lang = langArray.find(lang => {
+        return hasSameSrc(lang, srcStruct);
+    });
+
+    let savedLang = lang;
 
     for(const [langID, langData] of ascLangMap.entries()){
         
@@ -99,10 +99,10 @@ function giveLang(srcID, locationID, statementNum, bonusOnly){
                 $('.'+selectLangControlShellClass).removeClass("is-danger");
                 $('.'+selectLangControlShellClass).addClass("is-info");
 
-                socket.emit("requestLanguagesChange",
+                socket.emit("requestLanguageChange",
                     getCharIDFromURL(),
-                    srcID,
-                    [null]);
+                    srcStruct,
+                    null);
 
             } else {
 
@@ -114,16 +114,16 @@ function giveLang(srcID, locationID, statementNum, bonusOnly){
                 // Save lang
                 if(triggerSave == null || triggerSave) {
 
-                    let langChoiceMap = objToMap(ascChoiceStruct.LangObject);
-                    if(!hasDuplicateLang(langChoiceMap, langID)) {
+                    let langArray = ascChoiceStruct.LangArray;
+                    if(!hasDuplicateLang(langArray, langID)) {
                         $('.'+selectLangControlShellClass).removeClass("is-danger");
 
                         $('#'+langDescriptionID).html('');
 
-                        socket.emit("requestLanguagesChange",
+                        socket.emit("requestLanguageChange",
                             getCharIDFromURL(),
-                            srcID,
-                            [langID]);
+                            srcStruct,
+                            langID);
 
                     } else {
                         $('.'+selectLangControlShellClass).addClass("is-danger");
@@ -140,6 +140,8 @@ function giveLang(srcID, locationID, statementNum, bonusOnly){
                 
             }
 
+            $(this).blur();
+
         }
 
     });
@@ -150,21 +152,21 @@ function giveLang(srcID, locationID, statementNum, bonusOnly){
 
 }
 
-socket.on("returnLanguagesChange", function(){
+socket.on("returnLanguageChange", function(){
     socket.emit("requestASCUpdateLangs", getCharIDFromURL());
 });
 
 //////////////////////////////// Give Lang (by Lang Name) ///////////////////////////////////
 
-function giveLangByName(srcID, langName){
+function giveLangByName(srcStruct, langName){
 
-    socket.emit("requestLanguagesChangeByName",
+    socket.emit("requestLanguageChangeByName",
         getCharIDFromURL(),
-        srcID,
+        srcStruct,
         langName);
 
 }
 
-socket.on("returnLanguagesChangeByName", function(){
+socket.on("returnLanguageChangeByName", function(){
     statementComplete();
 });

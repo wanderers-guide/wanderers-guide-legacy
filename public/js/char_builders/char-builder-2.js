@@ -19,9 +19,6 @@ $(function () {
     });
 
 
-    boostSingleSelection();
-
-
     // On load get all ancestries and feats
     socket.emit("requestAncestryAndChoices",
         getCharIDFromURL());
@@ -85,7 +82,6 @@ socket.on("returnAncestryAndChoices", function(ancestryObject, inChoiceStruct){
                 
             } else {
                 displayCurrentAncestry(ancestryMap.get(ancestryID), false);
-                activateHideSelects();
             }
 
         } else {
@@ -123,7 +119,7 @@ socket.on("returnAncestryAndChoices", function(ancestryObject, inChoiceStruct){
             }
 
         } else {
-            $('#selectHeritageControlShell').removeClass("is-info");
+            $('#selectHeritageControlShell').addClass("is-info");
 
             g_ancestryForHeritage = null;
             socket.emit("requestHeritageChange",
@@ -138,9 +134,6 @@ socket.on("returnAncestryAndChoices", function(ancestryObject, inChoiceStruct){
     // Display current ancestry
     $('#selectAncestry').trigger("change", [false]);
 
-    // Activate boostSingleSelection() triggers
-    $('.abilityBoost').trigger("change", [false]);
-
 });
 
 socket.on("returnAncestryChange", function(inChoiceStruct){
@@ -148,8 +141,8 @@ socket.on("returnAncestryChange", function(inChoiceStruct){
     choiceStruct = inChoiceStruct;
 
     if(g_ancestry != null){
+        injectASCChoiceStruct(choiceStruct);
         displayCurrentAncestry(g_ancestry, true);
-        activateHideSelects();
     } else {
         finishLoadingPage();
     }
@@ -166,10 +159,10 @@ socket.on("returnHeritageChange", function(heritageID){
 
 function displayCurrentAncestry(ancestryStruct, saving) {
     g_ancestry = null;
+    $('#selectAncestry').blur();
 
     let charLevel = choiceStruct.Level;
     let charHeritage = choiceStruct.Heritage;
-    let bonusChoiceMap = objToMap(choiceStruct.BonusObject);
 
 
     if(ancestryStruct.Ancestry.isArchived == 1){
@@ -216,10 +209,20 @@ function displayCurrentAncestry(ancestryStruct, saving) {
     ancestryLanguages.append('and <a class="has-text-info has-tooltip-bottom has-tooltip-multiline" data-tooltip="You will get to select an additional number of languages equal your Intelligence modifer in the Finalize step. The following are the options you will be able to choose from: '+bonusLangs+'">more*</a>');
 
     if(saving){
-        socket.emit("requestLanguagesChange",
-            getCharIDFromURL(),
-            'Type-Ancestry_Level-1_Code-None',
-            langIDArray);
+        let langCount = 0;
+        for(let langID of langIDArray){
+            let srcStruct = {
+                sourceType: 'ancestry',
+                sourceLevel: 1,
+                sourceCode: 'inits-'+langCount,
+                sourceCodeSNum: '0',
+            };
+            socket.emit("requestLanguageChange",
+                getCharIDFromURL(),
+                srcStruct,
+                langID);
+            langCount++;
+        }
     }
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Senses ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
@@ -239,16 +242,28 @@ function displayCurrentAncestry(ancestryStruct, saving) {
     }
 
     if(saving){
-        socket.emit("requestSensesChange",
-            getCharIDFromURL(),
-            'Type-Ancestry_Level-1_Code-None',
-            senseIDArray);
+        let senseCount = 0;
+        for(let senseID of senseIDArray){
+            let srcStruct = {
+                sourceType: 'ancestry',
+                sourceLevel: 1,
+                sourceCode: 'inits-'+senseCount,
+                sourceCodeSNum: '0',
+            };
+            socket.emit("requestSensesChange",
+                getCharIDFromURL(),
+                srcStruct,
+                senseID);
+            senseCount++;
+        }
     }
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Physical Features ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
     
     $('#physicalFeatureOneCodeOutput').addClass('is-hidden');
     $('#physicalFeatureTwoCodeOutput').addClass('is-hidden');
+
+
     if(ancestryStruct.PhysicalFeatureOne != null || ancestryStruct.PhysicalFeatureTwo != null) {
         $('#sectionPhysicalFeatures').removeClass('is-hidden');
 
@@ -261,11 +276,16 @@ function displayCurrentAncestry(ancestryStruct, saving) {
             if(ancestryStruct.PhysicalFeatureTwo != null){
                 ancestryPhysicalFeatures.append(' and ');
             }
-            let srcID = 'Type-Ancestry_Level-1_Code-OtherPhysicalFeatureOne';
-            processClear(srcID);
+
+            let srcStruct = {
+                sourceType: 'ancestry',
+                sourceLevel: 1,
+                sourceCode: 'inits-phyFeat-1',
+                sourceCodeSNum: '0',
+            };
             processCode(
                 ancestryStruct.PhysicalFeatureOne.code,
-                srcID,
+                srcStruct,
                 'physicalFeatureOneCodeOutput');
             if(ancestryStruct.PhysicalFeatureOne.code != null){
                 $('#physicalFeatureOneCodeOutput').removeClass('is-hidden');
@@ -276,11 +296,15 @@ function displayCurrentAncestry(ancestryStruct, saving) {
             ancestryPhysicalFeatures.append('<a class="has-text-info has-tooltip-bottom has-tooltip-multiline" data-tooltip="'+ancestryStruct.PhysicalFeatureTwo.description+'">'+ancestryStruct.PhysicalFeatureTwo.name+'</a>');
             physicalFeatureIDArray.push(ancestryStruct.PhysicalFeatureTwo.id);
 
-            let srcID = 'Type-Ancestry_Level-1_Code-OtherPhysicalFeatureTwo';
-            processClear(srcID);
+            let srcStruct = {
+                sourceType: 'ancestry',
+                sourceLevel: 1,
+                sourceCode: 'inits-phyFeat-2',
+                sourceCodeSNum: '0',
+            };
             processCode(
                 ancestryStruct.PhysicalFeatureTwo.code,
-                srcID,
+                srcStruct,
                 'physicalFeatureTwoCodeOutput');
             if(ancestryStruct.PhysicalFeatureTwo.code != null){
                 $('#physicalFeatureTwoCodeOutput').removeClass('is-hidden');
@@ -288,10 +312,20 @@ function displayCurrentAncestry(ancestryStruct, saving) {
         }
     
         if(saving){
-            socket.emit("requestPhysicalFeaturesChange",
-                getCharIDFromURL(),
-                'Type-Ancestry_Level-1_Code-None',
-                physicalFeatureIDArray);
+            let phyFeatCount = 0;
+            for(let physicalFeatureID of physicalFeatureIDArray){
+                let srcStruct = {
+                    sourceType: 'ancestry',
+                    sourceLevel: 1,
+                    sourceCode: 'inits-'+phyFeatCount,
+                    sourceCodeSNum: '0',
+                };
+                socket.emit("requestPhysicalFeaturesChange",
+                    getCharIDFromURL(),
+                    srcStruct,
+                    physicalFeatureID);
+                phyFeatCount++;
+            }
         }
 
     } else {
@@ -300,54 +334,65 @@ function displayCurrentAncestry(ancestryStruct, saving) {
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 
-    clearAbilityBoostsAndFlaws();
-    let abilBonusArray = [];
-
     // Boosts //
 
-    let boostNum = 0;
+    let boostChooseCount = 0;
     let boostNonChooseList = [];
     for(const boost of ancestryStruct.Boosts) {
         if(boost == "Anything") {
-            boostNum++;
-
-            let selectBoost = $('#selectBoost'+boostNum);
-            selectBoost.html('');
-
-            selectBoost.append('<option value="chooseDefault">Choose an Ability</option>');
-            selectBoost.append('<hr class="dropdown-divider"></hr>');
-            for(const abilityType of getAllAbilityTypes()){
-                selectBoost.append('<option value="'+abilityType+'">'+abilityType+'</option>');
-            }
-            
+            boostChooseCount++;
         } else {
             boostNonChooseList.push(boost);
         }
     }
     let boostsNonChoose = $('#boostsNonChoose');
     let boostsNonChooseInnerHTML = '';
+    let boostNonChooseCount = 0;
     for(const boostNonChoose of boostNonChooseList) {
         boostsNonChooseInnerHTML += ' <span class="button is-medium">'+boostNonChoose+'</span>';
         $(".abilityBoost option[value='"+boostNonChoose+"']").remove();
-        abilBonusArray.push({ Ability : shortenAbilityType(boostNonChoose), Bonus : "Boost"});
+
+        if(saving){
+            socket.emit("requestAbilityBonusChange",
+                getCharIDFromURL(),
+                {sourceType: 'ancestry', sourceLevel: 1, sourceCode: 'boost-nonChoose-'+boostNonChooseCount, sourceCodeSNum: '0'},
+                {Ability : shortenAbilityType(boostNonChoose), Bonus : "Boost"});
+        }
+        boostNonChooseCount++;
+
     }
     boostsNonChoose.html(boostsNonChooseInnerHTML);
 
+
+    let boostChooseString = '';
+    for(let ability of getAllAbilityTypes()){
+        console.log(boostNonChooseList);
+        console.log(ability);
+        if(!boostNonChooseList.includes(ability)){
+            boostChooseString += shortenAbilityType(ability)+',';
+        }
+    }
+
+    $('#boostsChoose').html('');
+    for(let i = 0; i < boostChooseCount; i++) {
+        let srcStruct = {
+            sourceType: 'ancestry',
+            sourceLevel: 1,
+            sourceCode: 'boost-choose',
+            sourceCodeSNum: i+'',
+        };
+        processCode(
+            'GIVE-ABILITY-BOOST-SINGLE='+boostChooseString,
+            srcStruct,
+            'boostsChoose');
+    }
+
+
+
     // Flaws //
-    let flawNum = 0;
     let flawNonChooseList = [];
     for(const flaw of ancestryStruct.Flaws) {
         if(flaw == "Anything") {
-            flawNum++;
-
-            let selectFlaw = $('#selectFlaw'+flawNum);
-            selectFlaw.html('');
-
-            selectFlaw.append('<option value="chooseDefault">Choose an Ability Flaw</option>');
-            selectFlaw.append('<hr class="dropdown-divider"></hr>');
-            for(const abilityType of getAllAbilityTypes()){
-                selectFlaw.append('<option value="'+abilityType+'">'+abilityType+'</option>');
-            }
             
         } else {
             flawNonChooseList.push(flaw);
@@ -355,50 +400,22 @@ function displayCurrentAncestry(ancestryStruct, saving) {
     }
     let flawsNonChoose = $('#flawsNonChoose');
     let flawsNonChooseInnerHTML = '';
+    let flawNonChooseCount = 0;
     for(const flawNonChoose of flawNonChooseList) {
         flawsNonChooseInnerHTML += ' <span class="button is-medium">'+flawNonChoose+'</span>';
         $(".abilityBoost option[value='"+flawNonChoose+"']").remove();
-        abilBonusArray.push({ Ability : shortenAbilityType(flawNonChoose), Bonus : "Flaw"});
+
+        if(saving){
+            socket.emit("requestAbilityBonusChange",
+                getCharIDFromURL(),
+                {sourceType: 'ancestry', sourceLevel: 1, sourceCode: 'flaw-nonChoose-'+flawNonChooseCount, sourceCodeSNum: '0',},
+                {Ability : shortenAbilityType(flawNonChoose), Bonus : "Flaw"});
+        }
+        flawNonChooseCount++;
     }
     flawsNonChoose.html(flawsNonChooseInnerHTML);
 
 
-    if(saving){
-        socket.emit("requestAbilityBonusChange",
-            getCharIDFromURL(),
-            'Type-Ancestry_Level-1_Code-Other0',
-            abilBonusArray);
-    }
-
-
-    // Set saved bonus choices
-    if(bonusChoiceMap.get('Type-Ancestry_Level-1_Code-None') != null){
-        let savedBoostNum = 0;
-        let savedFlawNum = 0;
-        for(const bonus of bonusChoiceMap.get('Type-Ancestry_Level-1_Code-None')){
-            if(bonus.Bonus == "Boost"){
-                savedBoostNum++;
-    
-                let selectBoostID = '#selectBoost'+savedBoostNum;
-                let longAbilityType = lengthenAbilityType(bonus.Ability);
-        
-                $(selectBoostID).val(longAbilityType);
-                if ($(selectBoostID).val() != longAbilityType){
-                    $(selectBoostID).val($(selectBoostID+" option:first").val());
-                }
-            } else if(bonus.Bonus == "Flaw"){
-                savedFlawNum++;
-
-                let selectFlawID = '#selectFlaw'+savedFlawNum;
-                let longAbilityType = lengthenAbilityType(bonus.Ability);
-        
-                $(selectFlawID).val(longAbilityType);
-                if ($(selectFlawID).val() != longAbilityType){
-                    $(selectFlawID).val($(selectFlawID+" option:first").val());
-                }
-            }
-        }
-    }
 
 
     // Heritage
@@ -427,6 +444,8 @@ function displayCurrentAncestry(ancestryStruct, saving) {
 }
 
 function displayCurrentHeritage(ancestryStruct, heritageID) {
+    $('#selectHeritage').blur();
+
 
     if(heritageID != "chooseDefault" && ancestryStruct != null){
         
@@ -439,11 +458,16 @@ function displayCurrentHeritage(ancestryStruct, heritageID) {
         heritageDescription.removeClass('is-hidden');
 
         $('#heritageCodeOutput').html('');
-        let srcID = 'Type-Ancestry_Level-1_Code-OtherHeritage';
-        processClear(srcID);
+
+        let srcStruct = {
+            sourceType: 'ancestry',
+            sourceLevel: 1,
+            sourceCode: 'heritage',
+            sourceCodeSNum: '0',
+        };
         processCode(
             heritage.code,
-            srcID,
+            srcStruct,
             'heritageCodeOutput');
 
     } else {
@@ -453,72 +477,6 @@ function displayCurrentHeritage(ancestryStruct, heritageID) {
         heritageDescription.addClass('is-hidden');
         $('#heritageCodeOutput').html('');
 
-    }
-
-}
-
-function clearAbilityBoostsAndFlaws(){
-
-    for(const abilityBoost of $('.abilityBoost')){
-        $(abilityBoost).html('');
-    }
-
-    for(const abilityFlaw of $('.abilityFlaw')){
-        $(abilityFlaw).html('');
-    }
-
-}
-
-function boostSingleSelection(){
-
-    let abilityBoosts = $('.abilityBoost');
-    for(const abilityBoost of abilityBoosts){
-
-        $(abilityBoost).change(function(event, triggerSave){
-
-            if(hasDuplicateSelected($('.abilityBoost'))){
-                $('.abilityBoostControlShell').addClass("is-danger");
-            } else {
-                $('.abilityBoostControlShell').removeClass("is-danger");
-
-                // Save boosts
-                if(triggerSave == null || triggerSave) {
-                    $('.abilityBoostControlShell').addClass("is-loading");
-
-                    let boostArray = [];
-                    $(".abilityBoost").each(function() {
-                        if(!($(this).is(":hidden")) && $(this).val() != "chooseDefault"){
-                            boostArray.push(
-                                { Ability : shortenAbilityType($(this).val()), Bonus : "Boost" });
-                        }
-                    });
-
-                    socket.emit("requestAbilityBonusChange",
-                        getCharIDFromURL(),
-                        'Type-Ancestry_Level-1_Code-None',
-                        boostArray);
-                }
-
-            }
-
-        });
-
-    }
-
-}
-
-
-
-function activateHideSelects(){
-
-    // Activate "select-hide-if-empty"
-    let hideSelects = $('.select-hide-if-empty');
-    for(const hideSelect of hideSelects) {
-        if(hideSelect.options.length <= 0){
-            $(hideSelect).parent().hide();
-        } else {
-            $(hideSelect).parent().show();
-        }
     }
 
 }
@@ -565,11 +523,6 @@ function buildFeatStruct(featLevel) {
     return { LocationID : locationID, Level : featLevel };
 
 }
-
-
-socket.on("returnAbilityBonusChange", function(){
-    $('.abilityBoostControlShell').removeClass("is-loading");
-});
 
 
 function finishLoadingPage() {

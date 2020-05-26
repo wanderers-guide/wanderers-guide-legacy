@@ -3,16 +3,12 @@
 $(function () {
 
     let quickviews = bulmaQuickview.attach();
-    
-    $('#quickViewClose').click(function(){
-        $('#quickviewDefault').removeClass('is-active');
-    });
 
     $('#character-sheet-section').click(function(){
         if($('#quickviewDefault').hasClass('quickview-auto-close-protection')){
             $('#quickviewDefault').removeClass('quickview-auto-close-protection');
         } else {
-            $('#quickviewDefault').removeClass('is-active');
+            closeQuickView();
         }
     });
 
@@ -21,19 +17,31 @@ $(function () {
         if($('#quickviewDefault').hasClass('quickview-auto-close-protection')){
             $('#quickviewDefault').removeClass('quickview-auto-close-protection');
         } else {
-            $('#quickviewDefault').removeClass('is-active');
+            closeQuickView();
         }
     });
 
 });
 
+let g_QViewLastType = null;
+let g_QViewLastData = null;
+
 function openQuickView(type, data) {
 
     $('#quickViewTitle').html('');
+    $('#quickViewTitleRight').html('');
     $('#quickViewContent').html('');
+    $('#quickViewContent').scrollTop(0);
+
+    $('#quickViewTitleClose').html('<a id="quickViewClose" class="delete"></a>');
+    $('#quickViewClose').click(function(){
+        closeQuickView();
+    });
 
     $('#quickviewDefault').addClass('quickview-auto-close-protection');
     $('#quickviewDefault').addClass('is-active');
+    g_QViewLastType = type;
+    g_QViewLastData = data;
 
     if(type == 'addSpellView'){
         openAddSpellQuickview(data);
@@ -59,7 +67,30 @@ function openQuickView(type, data) {
         openCustomizeItemQuickview(data);
     } else if(type == 'addItemView'){
         openAddItemQuickview(data);
+    } else if(type == 'itemView'){
+        openItemQuickview(data);
+    } else if(type == 'abilityView'){
+        openAbilityQuickview(data);
+    }else if(type == 'resistView'){
+        openResistancesQuickview(data);
     }
 
 }
 
+function closeQuickView() {
+    $('#quickviewDefault').removeClass('is-active');
+    g_QViewLastData = null;
+}
+
+
+
+function addBackFunctionality(quickViewData){
+
+    if(quickViewData._prevBackData != null){
+        $('#quickViewTitleClose').html('<span id="quickViewBack" class="icon has-text-light cursor-clickable" style="font-size:0.8em;"><i class="fas fa-arrow-left"></i></i></span>');
+        $('#quickViewBack').click(function(){
+            openQuickView(quickViewData._prevBackData.Type, quickViewData._prevBackData.Data);
+        });
+    }
+
+}

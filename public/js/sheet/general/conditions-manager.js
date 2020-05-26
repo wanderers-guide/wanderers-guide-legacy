@@ -19,13 +19,13 @@ function getConditionFromID(conditionID){
 
 
 function addCondition(conditionID, value, sourceText){
-    console.log('Adding condition w/ ID:');
-    console.log(conditionID);
+    //console.log('Adding condition w/ ID:');
+    //console.log(conditionID);
     let existingCondition = g_conditionsMap.get(conditionID+'');
     if(existingCondition != null){
         if(!existingCondition.IsActive){
             if(sourceText != null){ // Sourced Condition
-                console.log('-> Making Active '+existingCondition.SourceText+" "+sourceText);
+                //console.log('-> Making Active '+existingCondition.SourceText+" "+sourceText);
                 setTimeout(function(){
                     socket.emit("requestUpdateConditionActive",
                         getCharIDFromURL(),
@@ -35,7 +35,7 @@ function addCondition(conditionID, value, sourceText){
                 }, 100);
                 existingCondition.IsActive = true;
             } else { // User Input Condition
-                console.log('-> Making Active via SourceSwitch '+conditionID);
+                //console.log('-> Making Active via SourceSwitch '+conditionID);
                 existingCondition.Value = value;
                 existingCondition.SourceText = sourceText;
                 existingCondition.IsActive = true;
@@ -54,7 +54,7 @@ function addCondition(conditionID, value, sourceText){
             }
         } else {
             if(sourceText != null){ // Sourced Condition
-                console.log('-> Overriding User Condition with Sourced '+conditionID);
+                //console.log('-> Overriding User Condition with Sourced '+conditionID);
                 existingCondition.Value = value;
                 existingCondition.SourceText = sourceText;
                 socket.emit("requestRemoveCondition",
@@ -72,7 +72,7 @@ function addCondition(conditionID, value, sourceText){
             }
         }
     } else {
-        console.log('-> Adding New Record');
+        //console.log('-> Adding New Record');
         setTimeout(function(){
             let reloadCharSheet = (sourceText == null);
             socket.emit("requestAddCondition",
@@ -92,12 +92,12 @@ function addCondition(conditionID, value, sourceText){
 }
 
 function removeCondition(conditionID, deleteRecord){
-    console.log('Removing condition w/ ID:');
-    console.log(conditionID);
+    //console.log('Removing condition w/ ID:');
+    //console.log(conditionID);
     let existingCondition = g_conditionsMap.get(conditionID+'');
     if(existingCondition != null){
         if(deleteRecord) {
-            console.log('-> Removing Record');
+            //console.log('-> Removing Record');
             socket.emit("requestRemoveCondition",
                 getCharIDFromURL(),
                 conditionID,
@@ -106,7 +106,7 @@ function removeCondition(conditionID, deleteRecord){
         } else {
             if(existingCondition.IsActive){
                 if(existingCondition.SourceText != null){
-                    console.log('-> Making Inactive');
+                    //console.log('-> Making Inactive');
                     socket.emit("requestUpdateConditionActive",
                         getCharIDFromURL(),
                         conditionID,
@@ -165,7 +165,7 @@ function displayConditionsList(){
 
     let conditionFound = false;
     for(const [conditionID, conditionData] of g_conditionsMap.entries()){
-        console.log(conditionID+" is "+conditionData.IsActive);
+        //console.log(conditionID+" is "+conditionData.IsActive);
         if(conditionData.IsActive){
             conditionFound = true;
             let conditionLinkID = 'conditionLink'+conditionID;
@@ -184,9 +184,8 @@ function displayConditionsList(){
 }
 
 function runAllConditionsCode(){
-    console.log(g_conditionsMap);
     for(const [conditionID, conditionData] of g_conditionsMap.entries()){
-        console.log("Running Code From Char Sheet Load > "+conditionID+":"+conditionData.IsActive);
+        //console.log("Running Code From Char Sheet Load > "+conditionID+":"+conditionData.IsActive);
         if(conditionData.IsActive){
             runConditionCode(conditionID);
         }
@@ -216,7 +215,7 @@ function resetConditionsMap(){
             conditionData.IsActive = false;
         }
     }
-    console.log('Making '+conditionIDArray.length+' Records Inactive');
+    //console.log('Making '+conditionIDArray.length+' Records Inactive');
     if(conditionIDArray.length > 0){
         socket.emit("requestUpdateConditionActiveForArray",
             getCharIDFromURL(),
@@ -230,8 +229,6 @@ function resetConditionsMap(){
 function openConditionsModal(conditionID){
 
     let conditionData = g_conditionsMap.get(conditionID+'');
-
-    console.log(g_conditionsMap);
 
     if(conditionData.Value != null){
         $('#conditionsModalFooter').addClass('buttons'); 

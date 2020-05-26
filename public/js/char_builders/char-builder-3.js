@@ -46,29 +46,29 @@ socket.on("returnBackgroundDetails", function(backgrounds, inChoiceStruct){
     $('#selectBackground').change(function(event, triggerSave) {
         let backgroundID = $("#selectBackground option:selected").val();
 
-        if(backgroundID != "chooseDefault"){
-            for(const background of backgrounds){
-                if(backgroundID == background.id){
-                    $('.background-content').removeClass("is-hidden");
-    
-                    // Save background
-                    if(triggerSave == null || triggerSave) {
-                        $('#selectBackgroundControlShell').addClass("is-loading");
-                        
-                        g_background = background;
-                        socket.emit("requestBackgroundChange",
-                            getCharIDFromURL(),
-                            backgroundID);
-                    } else {
-                        displayCurrentBackground(background);
-                    }
-    
-                    break;
-    
-                }
+        let background = backgrounds.find(background => {
+            return background.id == backgroundID;
+        });
+
+        if(backgroundID != "chooseDefault" && background != null){
+            $('.background-content').removeClass("is-hidden");
+            $('#selectBackgroundControlShell').removeClass("is-info");
+
+            // Save background
+            if(triggerSave == null || triggerSave) {
+                $('#selectBackgroundControlShell').addClass("is-loading");
+                
+                g_background = background;
+                socket.emit("requestBackgroundChange",
+                    getCharIDFromURL(),
+                    backgroundID);
+            } else {
+                displayCurrentBackground(background);
             }
+
         } else {
             $('.background-content').addClass("is-hidden");
+            $('#selectBackgroundControlShell').addClass("is-info");
 
             // Delete background, set to null
             g_background = null;
@@ -103,25 +103,37 @@ socket.on("returnBackgroundChange", function(choiceStruct){
 
 function displayCurrentBackground(background) {
     g_background = null;
+    $('#selectBackground').blur();
+    
 
     let backgroundDescription = $('#backgroundDescription');
     backgroundDescription.html('<p>'+background.description+'</p>');
 
     // Code - Run General Code before Boosts Code, it's more likely to be delaying //
     $('#backgroundCodeOutput').html('');
-    let srcID = 'Type-Background_Level-1_Code-None';
-    processClear(srcID);
+    let srcStruct = {
+        sourceType: 'background',
+        sourceLevel: 1,
+        sourceCode: 'background',
+        sourceCodeSNum: '0',
+    };
     processCode(
         background.code,
-        srcID,
+        srcStruct,
         'backgroundCodeOutput');
 
     // Boosts //
     $('#backBoostSection').html('');
     // No need for a process clear because it will be going to AbilityBoost data every time.
+    let boostSrcStruct = {
+        sourceType: 'background',
+        sourceLevel: 1,
+        sourceCode: 'boost-choose',
+        sourceCodeSNum: '0',
+    };
     processCode(
         'GIVE-ABILITY-BOOST-SINGLE='+background.boostOne+', GIVE-ABILITY-BOOST-SINGLE='+background.boostTwo,
-        'Type-Background_Level-1_Code-OtherAbilityBoost',
+        boostSrcStruct,
         'backBoostSection');
 
 }

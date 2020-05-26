@@ -90,6 +90,13 @@ a:hover {
     outline: none
 }
 
+/* Style External Links */
+.external-link,
+.external-link:focus,
+.external-link:hover {
+    color: currentColor;
+    text-decoration: underline;
+}
 
 /* Header */
 
@@ -107,6 +114,22 @@ header {
     position: absolute;
     width: 100%;
     z-index: 9;
+}
+
+/* More Bolds */
+.has-text-weight-very-bold {
+    font-weight: 900;
+}
+
+/* Bulma Extensions */
+.button.is-very-small {
+    font-size: 0.6rem!important;
+}
+.is-underlined {
+    text-decoration: underline;
+}
+.is-size-8 {
+    font-size: 0.5rem!important;
 }
 
 /* Cursors */
@@ -191,7 +214,7 @@ body::-webkit-scrollbar-thumb {
 }
 
 .use-custom-scrollbar::-webkit-scrollbar {
-    width: 0.3em;
+    width: 0.35em;
 }
 .use-custom-scrollbar::-webkit-scrollbar-track {
     box-shadow: inset 0 0 6px rgba(0,0,0,0);
@@ -375,7 +398,7 @@ nav ul ul ul li {
 
     /* Styling the toggle lable */
     .toggle {
-        display: block;
+        display: none;
         padding: 8px 14px;
         font-size: 15px;
         text-decoration: none;

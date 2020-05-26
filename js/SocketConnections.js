@@ -2,7 +2,8 @@
 const CharGathering = require('./CharGathering');
 const CharSaving = require('./CharSaving');
 const CharSpells = require('./CharSpells');
-const CharDataStoring = require('./CharDataStoring');
+const CharDataMapping = require('./CharDataMapping');
+const CharDataMappingExt = require('./CharDataMappingExt');
 const AuthCheck = require('./AuthCheck');
 const AdminUpdate = require('./AdminUpdate');
 const GeneralUtils = require('./GeneralUtils');
@@ -321,10 +322,10 @@ module.exports = class SocketConnections {
     // Socket.IO Connections
     io.on('connection', function(socket){
 
-      socket.on('requestSpellAddToSpellBook', function(charID, spellSRC, spellID){
+      socket.on('requestSpellAddToSpellBook', function(charID, spellSRC, spellID, spellLevel){
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
           if(ownsChar){
-            CharSpells.addToSpellBook(charID, spellSRC, spellID).then((result) => {
+            CharSpells.addToSpellBook(charID, spellSRC, spellID, spellLevel).then((result) => {
               CharSpells.getSpellBook(charID, spellSRC).then((spellBookStruct) => {
                 socket.emit('returnSpellBookUpdated', spellBookStruct);
               });
@@ -333,10 +334,10 @@ module.exports = class SocketConnections {
         });
       });
 
-      socket.on('requestSpellRemoveFromSpellBook', function(charID, spellSRC, spellID){
+      socket.on('requestSpellRemoveFromSpellBook', function(charID, spellSRC, spellID, spellLevel){
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
           if(ownsChar){
-            CharSpells.removeFromSpellBook(charID, spellSRC, spellID).then((result) => {
+            CharSpells.removeFromSpellBook(charID, spellSRC, spellID, spellLevel).then((result) => {
               CharSpells.getSpellBook(charID, spellSRC).then((spellBookStruct) => {
                 socket.emit('returnSpellBookUpdated', spellBookStruct);
               });
@@ -360,6 +361,29 @@ module.exports = class SocketConnections {
           if(ownsChar){
             CharSpells.changeSpellSlot(charID, updateSlotObject).then((result) => {
               socket.emit('returnSpellSlotUpdate');
+            });
+          }
+        });
+      });
+
+      socket.on('requestInnateSpellCastingUpdate', function(innateSpell, timesCast){
+        if(innateSpell != null) {
+          AuthCheck.ownsCharacter(socket, innateSpell.charID).then((ownsChar) => {
+            if(ownsChar){
+              CharSaving.saveInnateSpellCastings(innateSpell, timesCast).then((result) => {
+                socket.emit('returnInnateSpellCastingUpdate');
+              });
+            }
+          });
+        }
+      });
+
+      socket.on('requestFocusSpellCastingUpdate', function(charID, srcStruct, spellSRC, spellID, used){
+        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+          if(ownsChar){
+            CharDataMapping.setData(charID, 'focusSpell', srcStruct, spellSRC+"="+spellID+"="+used)
+            .then((result) => {
+              socket.emit('returnFocusSpellCastingUpdate');
             });
           }
         });
@@ -534,9 +558,9 @@ module.exports = class SocketConnections {
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
           if(ownsChar){
             CharGathering.getCharacter(charID).then((character) => {
-              CharGathering.getClass(character.classID).then((cClass) => {
+              CharGathering.getClass(character.classID).then((classDetails) => {
                 CharGathering.getAbilityScores(charID).then((abilObject) => {
-                  socket.emit('returnFinalizeDetails', character, abilObject, cClass);
+                  socket.emit('returnFinalizeDetails', character, abilObject, classDetails.Class);
                 });
               });
             });
@@ -552,47 +576,58 @@ module.exports = class SocketConnections {
 
     // Socket.IO Connections
     io.on('connection', function(socket){
-    
-      socket.on('requestAbilityBoostChange', function(charID, srcID, abilityBonusArray, selectBoostControlShellClass){
-        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
-          if(ownsChar){
-            CharDataStoring.replaceAbilityBonus(charID, srcID, abilityBonusArray)
-            .then((result) => {
-              socket.emit('returnAbilityBoostChange', selectBoostControlShellClass);
-            });
-          }
-        });
-      });
 
-      socket.on('requestAbilityBonusChange', function(charID, srcID, abilityBonusArray){
+      socket.on('requestAbilityBonusChange', function(charID, srcStruct, abilityBonusStruct){
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
           if(ownsChar){
-            CharDataStoring.replaceAbilityBonus(charID, srcID, abilityBonusArray)
-            .then((result) => {
-              socket.emit('returnAbilityBonusChange');
-            });
+            if(abilityBonusStruct === null){
+              CharDataMapping.deleteData(charID, 'abilityBonus', srcStruct)
+              .then((result) => {
+                socket.emit('returnAbilityBonusChange');
+              });
+            } else {
+              CharDataMappingExt.setDataAbilityBonus(charID, srcStruct, abilityBonusStruct.Ability, abilityBonusStruct.Bonus)
+              .then((result) => {
+                socket.emit('returnAbilityBonusChange');
+              });
+            }
           }
         });
       });
     
-      socket.on('requestSelectAbilityChange', function(charID, srcID, abilChangeArray){
+      socket.on('requestClassChoiceChange', function(charID, srcStruct, classChoiceStruct){
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
           if(ownsChar){
-            CharDataStoring.replaceAbilityChoice(charID, srcID, abilChangeArray)
-            .then((result) => {
-              socket.emit('returnSelectAbilityChange');
-            });
+            if(classChoiceStruct === null){
+              CharDataMapping.deleteData(charID, 'classChoice', srcStruct)
+              .then((result) => {
+                socket.emit('returnClassChoiceChange');
+              });
+            } else {
+              CharDataMappingExt.setDataClassChoice(charID, srcStruct, classChoiceStruct.SelectorID, classChoiceStruct.OptionID)
+              .then((result) => {
+                socket.emit('returnClassChoiceChange');
+              });
+            }
           }
         });
       });
     
-      socket.on('requestProficiencyChange', function(charID, profChangePacket, profArray){
+      socket.on('requestProficiencyChange', function(charID, profChangePacket, profStruct){
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
           if(ownsChar){
-            CharDataStoring.replaceProficiencies(charID, profChangePacket.srcID, profArray)
-            .then((result) => {
-              socket.emit('returnProficiencyChange', profChangePacket);
-            });
+            let srcStruct = profChangePacket.srcStruct;
+            if(profStruct === null){
+              CharDataMapping.deleteData(charID, 'proficiencies', srcStruct)
+              .then((result) => {
+                socket.emit('returnProficiencyChange', profChangePacket);
+              });
+            } else {
+              CharDataMappingExt.setDataProficiencies(charID, srcStruct, profStruct.For, profStruct.To, profStruct.Prof)
+              .then((result) => {
+                socket.emit('returnProficiencyChange', profChangePacket);
+              });
+            }
           }
         });
       });
@@ -600,43 +635,72 @@ module.exports = class SocketConnections {
       socket.on('requestFeatChange', function(charID, featChangePacket, selectFeatControlShellClass){
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
           if(ownsChar){
-            CharDataStoring.replaceBasicData(charID, featChangePacket.srcID, [featChangePacket.featID], 'dataChosenFeats')
-            .then((result) => {
-              socket.emit('returnFeatChange', featChangePacket, selectFeatControlShellClass);
-            });
+            let srcStruct = featChangePacket.srcStruct;
+            if(featChangePacket.featID === null){
+              CharDataMapping.deleteData(charID, 'chosenFeats', srcStruct)
+              .then((result) => {
+                socket.emit('returnFeatChange', featChangePacket, selectFeatControlShellClass);
+              });
+            } else {
+              CharDataMapping.setData(charID, 'chosenFeats', srcStruct, featChangePacket.featID)
+              .then((result) => {
+                socket.emit('returnFeatChange', featChangePacket, selectFeatControlShellClass);
+              });
+            }
           }
         });
       });
     
-      socket.on('requestLanguagesChange', function(charID, srcID, langIDArray){
+      socket.on('requestLanguageChange', function(charID, srcStruct, langID){
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
           if(ownsChar){
-            CharDataStoring.replaceBasicData(charID, srcID, langIDArray, 'dataLanguages')
-            .then((result) => {
-              socket.emit('returnLanguagesChange');
-            });
+            if(langID === null){
+              CharDataMapping.deleteData(charID, 'languages', srcStruct)
+              .then((result) => {
+                socket.emit('returnLanguageChange');
+              });
+            } else {
+              CharDataMapping.setData(charID, 'languages', srcStruct, langID)
+              .then((result) => {
+                socket.emit('returnLanguageChange');
+              });
+            }
           }
         });
       });
 
-      socket.on('requestSensesChange', function(charID, srcID, senseIDArray){
+      socket.on('requestSensesChange', function(charID, srcStruct, senseID){
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
           if(ownsChar){
-            CharDataStoring.replaceBasicData(charID, srcID, senseIDArray, 'dataSenses')
-            .then((result) => {
-              socket.emit('returnSensesChange');
-            });
+            if(senseID === null){
+              CharDataMapping.deleteData(charID, 'senses', srcStruct)
+              .then((result) => {
+                socket.emit('returnSensesChange');
+              });
+            } else {
+              CharDataMapping.setData(charID, 'senses', srcStruct, senseID)
+              .then((result) => {
+                socket.emit('returnSensesChange');
+              });
+            }
           }
         });
       });
 
-      socket.on('requestPhysicalFeaturesChange', function(charID, srcID, physicalFeatureIDArray){
+      socket.on('requestPhysicalFeaturesChange', function(charID, srcStruct, physicalFeatureID){
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
           if(ownsChar){
-            CharDataStoring.replaceBasicData(charID, srcID, physicalFeatureIDArray, 'dataPhysicalFeatures')
-            .then((result) => {
-              socket.emit('returnPhysicalFeaturesChange');
-            });
+            if(physicalFeatureID === null){
+              CharDataMapping.deleteData(charID, 'phyFeats', srcStruct)
+              .then((result) => {
+                socket.emit('returnPhysicalFeaturesChange');
+              });
+            } else {
+              CharDataMapping.setData(charID, 'phyFeats', srcStruct, physicalFeatureID)
+              .then((result) => {
+                socket.emit('returnPhysicalFeaturesChange');
+              });
+            }
           }
         });
       });
@@ -650,13 +714,20 @@ module.exports = class SocketConnections {
     // Socket.IO Connections
     io.on('connection', function(socket){
 
-      socket.on('requestLoreChange', function(charID, srcID, loreName){
+      socket.on('requestLoreChange', function(charID, srcStruct, loreName){
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
           if(ownsChar){
-            CharDataStoring.replaceBasicData(charID, srcID, [loreName], 'dataLoreCategories')
-            .then((result) => {
-              socket.emit('returnLoreChange');
-            });
+            if(loreName === null){
+              CharDataMapping.deleteData(charID, 'loreCategories', srcStruct)
+              .then((result) => {
+                socket.emit('returnLoreChange');
+              });
+            } else {
+              CharDataMapping.setData(charID, 'loreCategories', srcStruct, loreName)
+              .then((result) => {
+                socket.emit('returnLoreChange');
+              });
+            }
           } else {
             socket.emit('returnASCStatementFailure', 'Incorrect Auth');
           }
@@ -669,7 +740,8 @@ module.exports = class SocketConnections {
             CharGathering.getFeatByName(featChangePacket.featName)
             .then((feat) => {
               if(feat != null){
-                CharDataStoring.replaceBasicData(charID, featChangePacket.srcID, [feat.id], 'dataChosenFeats')
+                let srcStruct = featChangePacket.srcStruct;
+                CharDataMapping.setData(charID, 'chosenFeats', srcStruct, feat.id)
                 .then((result) => {
                   socket.emit('returnFeatChange', featChangePacket, null);
                 });
@@ -683,15 +755,15 @@ module.exports = class SocketConnections {
         });
       });
 
-      socket.on('requestLanguagesChangeByName', function(charID, srcID, langName){
+      socket.on('requestLanguageChangeByName', function(charID, srcStruct, langName){
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
           if(ownsChar){
             CharGathering.getLanguageByName(langName)
             .then((language) => {
               if(language != null){
-                CharDataStoring.replaceBasicData(charID, srcID, [language.id], 'dataLanguages')
+                CharDataMapping.setData(charID, 'languages', srcStruct, language.id)
                 .then((result) => {
-                  socket.emit('returnLanguagesChangeByName');
+                  socket.emit('returnLanguageChangeByName');
                 });
               } else {
                 socket.emit('returnASCStatementFailure', 'Cannot find language \"'+langName+'\"');
@@ -704,10 +776,10 @@ module.exports = class SocketConnections {
       });
 
       // Give Spell Slots //
-      socket.on('requestSpellCastingChange', function(charID, srcID, spellSRC, spellcasting){
+      socket.on('requestSpellCastingSlotChange', function(charID, srcStruct, spellSRC, spellcasting){
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
           if(ownsChar){
-            CharSpells.setSpellCasting(charID, srcID, spellSRC, spellcasting)
+            CharSpells.setSpellCasting(charID, srcStruct, spellSRC, spellcasting)
             .then((spellSlots) => {
               if(spellSlots != null){
                 socket.emit('returnSpellSlotChange');
@@ -721,10 +793,10 @@ module.exports = class SocketConnections {
         });
       });
 
-      socket.on('requestSpellSlotChange', function(charID, srcID, spellSRC, spellSlot){
+      socket.on('requestSpellSlotChange', function(charID, srcStruct, spellSRC, spellSlot){
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
           if(ownsChar){
-            CharSpells.setSpellSlot(charID, srcID, spellSRC, spellSlot)
+            CharSpells.setSpellSlot(charID, srcStruct, spellSRC, spellSlot)
             .then((spellSlot) => {
               if(spellSlots != null){
                 socket.emit('returnSpellSlotChange');
@@ -739,10 +811,10 @@ module.exports = class SocketConnections {
       });
 
       // Set Key Ability for Spell SRC //
-      socket.on('requestKeySpellAbilityChange', function(charID, srcID, spellSRC, abilityScore){
+      socket.on('requestKeySpellAbilityChange', function(charID, srcStruct, spellSRC, abilityScore){
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
           if(ownsChar){
-            CharDataStoring.replaceBasicData(charID, srcID, [spellSRC+"="+abilityScore], 'dataSpellKeyAbilities')
+            CharDataMapping.setData(charID, 'spellKeyAbilities', srcStruct, spellSRC+"="+abilityScore)
             .then((result) => {
               socket.emit('returnKeySpellAbilityChange');
             });
@@ -752,12 +824,26 @@ module.exports = class SocketConnections {
         });
       });
 
+      // Set Spellcasting Type for Spell SRC //
+      socket.on('requestSpellCastingTypeChange', function(charID, srcStruct, spellSRC, castingType){
+        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+          if(ownsChar){
+            CharDataMapping.setData(charID, 'spellCastingType', srcStruct, spellSRC+"="+castingType)
+            .then((result) => {
+              socket.emit('returnSpellCastingTypeChange');
+            });
+          } else {
+            socket.emit('returnASCStatementFailure', 'Incorrect Auth');
+          }
+        });
+      });
+
       // Set Tradition for Spell SRC //
-      socket.on('requestSpellTraditionChange', function(charID, srcID, spellSRC, spellList){
+      socket.on('requestSpellTraditionChange', function(charID, srcStruct, spellSRC, spellList){
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
           if(ownsChar){
             if(spellList == 'OCCULT' || spellList == 'ARCANE' || spellList == 'DIVINE' || spellList == 'PRIMAL') {
-              CharDataStoring.replaceBasicData(charID, srcID, [spellSRC+"="+spellList], 'dataSpellLists')
+              CharDataMapping.setData(charID, 'spellLists', srcStruct, spellSRC+"="+spellList)
               .then((result) => {
                 socket.emit('returnSpellListChange');
               });
@@ -770,6 +856,102 @@ module.exports = class SocketConnections {
         });
       });
 
+      // Innate Spell //
+      socket.on('requestInnateSpellChange', function(charID, srcStruct, spellName, spellLevel, spellTradition, timesPerDay){
+        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+          if(ownsChar){
+            if(spellTradition == 'OCCULT' || spellTradition == 'ARCANE' || spellTradition == 'DIVINE' || spellTradition == 'PRIMAL') {
+              let tPd = parseInt(timesPerDay);
+              let sLevel = parseInt(spellLevel);
+              if(!isNaN(tPd) && !isNaN(sLevel)) {
+                CharGathering.getSpellByName(spellName)
+                .then((spell) => {
+                  if(spell != null){
+                    if(spell.level <= sLevel) {
+                      CharDataMappingExt.setDataInnateSpell(charID, srcStruct, spell.id, sLevel, spellTradition, tPd)
+                      .then((result) => {
+                        socket.emit('returnInnateSpellChange');
+                      });
+                    } else {
+                      socket.emit('returnASCStatementFailure', 'Spell level cannot be lower than minimum spell level!');
+                    }
+                  } else {
+                    socket.emit('returnASCStatementFailure', 'Invalid Spell \"'+spellName+'\"');
+                  }
+                });
+              } else {
+                socket.emit('returnASCStatementFailure', 'Invalid Parameters \"'+timesPerDay+'\" and \"'+spellLevel+'\"');
+              }
+            } else {
+              socket.emit('returnASCStatementFailure', 'Invalid Spell Tradition \"'+spellTradition+'\"');
+            }
+          } else {
+            socket.emit('returnASCStatementFailure', 'Incorrect Auth');
+          }
+        });
+      });
+
+      // Focus Spell //
+      socket.on('requestFocusSpellChange', function(charID, srcStruct, spellSRC, spellName){
+        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+          if(ownsChar){
+            CharGathering.getSpellByName(spellName)
+            .then((spell) => {
+              if(spell != null){
+                if(spell.isFocusSpell === 1){
+                  CharDataMapping.setData(charID, 'focusSpell', srcStruct, spellSRC+"="+spell.id+"=0")
+                  .then((result) => {
+                    socket.emit('returnFocusSpellChange');
+                  });
+                } else {
+                  socket.emit('returnASCStatementFailure', '\"'+spellName+'\" is not a focus spell!');
+                }
+              } else {
+                socket.emit('returnASCStatementFailure', 'Invalid Spell \"'+spellName+'\"');
+              }
+            });
+          } else {
+            socket.emit('returnASCStatementFailure', 'Incorrect Auth');
+          }
+        });
+      });
+
+      // Resistances //
+      socket.on('requestResistanceChange', function(charID, srcStruct, resistType, resistAmount){
+        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+          if(ownsChar){
+            if(resistAmount === 'HALF_LEVEL' || resistAmount === 'LEVEL' || !isNaN(parseInt(resistAmount))){
+              CharDataMappingExt.setDataResistance(charID, srcStruct, resistType, resistAmount)
+              .then((result) => {
+                socket.emit('returnResistanceChange');
+              });
+            } else {
+              socket.emit('returnASCStatementFailure', "Invalid Resistance Amount '"+resistAmount+"'!");
+            }
+          } else {
+            socket.emit('returnASCStatementFailure', 'Incorrect Auth');
+          }
+        });
+      });
+
+      socket.on('requestVulnerabilityChange', function(charID, srcStruct, vulnerableType, vulnerableAmount){
+        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+          if(ownsChar){
+            if(vulnerableAmount === 'HALF_LEVEL' || vulnerableAmount === 'LEVEL' || !isNaN(parseInt(vulnerableAmount))){
+              CharDataMappingExt.setDataVulnerability(charID, srcStruct, vulnerableType, vulnerableAmount)
+              .then((result) => {
+                socket.emit('returnVulnerabilityChange');
+              });
+            } else {
+              socket.emit('returnASCStatementFailure', "Invalid Vulnerability Amount '"+vulnerableAmount+"'!");
+            }
+          } else {
+            socket.emit('returnASCStatementFailure', 'Incorrect Auth');
+          }
+        });
+      });
+      
+
     });
 
   }
@@ -779,45 +961,41 @@ module.exports = class SocketConnections {
     // Socket.IO Connections
     io.on('connection', function(socket){
 
-      socket.on('requestASCChoices', function(charID, ascCode, srcID, locationID){
+      socket.on('requestASCChoices', function(charID, ascCode, srcStruct, locationID){
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
           if(ownsChar){
             CharGathering.getCharChoices(charID).then((choiceStruct) => {
-              socket.emit('returnASCChoices', ascCode, srcID, locationID,
-              choiceStruct);
+              socket.emit('returnASCChoices', ascCode, srcStruct, locationID, choiceStruct);
             });
           }
         });
       });
     
-      socket.on('requestASCFeats', function(charID, ascStatement, srcID, locationID, statementNum){
+      socket.on('requestASCFeats', function(charID, ascStatement, srcStruct, locationID){
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
           if(ownsChar){
             CharGathering.getAllFeats().then((featsObject) => {
-              socket.emit('returnASCFeats', ascStatement, srcID, locationID, 
-                    statementNum, featsObject);
+              socket.emit('returnASCFeats', ascStatement, srcStruct, locationID, featsObject);
             });
           }
         });
       });
     
-      socket.on('requestASCSkills', function(charID, ascStatement, srcID, locationID, statementNum){
+      socket.on('requestASCSkills', function(charID, ascStatement, srcStruct, locationID){
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
           if(ownsChar){
             CharGathering.getAllSkills(charID).then((skillsObject) => {
-              socket.emit('returnASCSkills', ascStatement, srcID, locationID, 
-                    statementNum, skillsObject);
+              socket.emit('returnASCSkills', ascStatement, srcStruct, locationID, skillsObject);
             });
           }
         });
       });
     
-      socket.on('requestASCLangs', function(charID, ascStatement, srcID, locationID, statementNum){
+      socket.on('requestASCLangs', function(charID, ascStatement, srcStruct, locationID){
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
           if(ownsChar){
             CharGathering.getAllLanguages(charID).then((langsObject) => {
-              socket.emit('returnASCLangs', ascStatement, srcID, locationID, 
-                    statementNum, langsObject);
+              socket.emit('returnASCLangs', ascStatement, srcStruct, locationID, langsObject);
             });
           }
         });
@@ -873,12 +1051,20 @@ module.exports = class SocketConnections {
         });
       });
 
-      socket.on('requestASCProcessClear', function(charID, srcID){
+      socket.on('requestASCAbilityBonusChange', function(charID, srcStruct, abilityBonusStruct, selectBoostControlShellClass){
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
           if(ownsChar){
-            CharSaving.clearDataOfSrc(charID, srcID).then((result) => {
-              socket.emit('returnASCProcessClear');
-            });
+            if(abilityBonusStruct === null){
+              CharDataMapping.deleteData(charID, 'abilityBonus', srcStruct)
+              .then((result) => {
+                socket.emit('returnASCAbilityBonusChange', selectBoostControlShellClass);
+              });
+            } else {
+              CharDataMappingExt.setDataAbilityBonus(charID, srcStruct, abilityBonusStruct.Ability, abilityBonusStruct.Bonus)
+              .then((result) => {
+                socket.emit('returnASCAbilityBonusChange', selectBoostControlShellClass);
+              });
+            }
           }
         });
       });

@@ -56,7 +56,14 @@
                     <div class="control">
                         <input id="inputVersion" class="input" type="text" placeholder="e.g. 1.0">
                     </div>
-                </div>                
+                </div>
+
+                <div class="tile is-child field pt-1 pl-2">
+                     <label class="checkbox">
+                        <input type="checkbox" id="inputIsFocusSpell" value="1">
+                        <strong>Focus Spell</strong>
+                    </label>
+                </div>
 
                 <div class="tile is-child columns">
 
@@ -186,21 +193,21 @@
                 <div class="tile is-child field">
                     <label class="label">Range</label>
                     <div class="control">
-                        <input class="input" id="inputRange" type="text" maxlength="40" placeholder="">
+                        <input class="input" id="inputRange" type="text" maxlength="80" placeholder="">
                     </div>
                 </div>
 
                 <div class="tile is-child field">
                     <label class="label">Area</label>
                     <div class="control">
-                        <input class="input" id="inputArea" type="text" maxlength="40" placeholder="">
+                        <input class="input" id="inputArea" type="text" maxlength="80" placeholder="">
                     </div>
                 </div>
 
                 <div class="tile is-child field">
                     <label class="label">Targets</label>
                     <div class="control">
-                        <input class="input" id="inputTargets" type="text" maxlength="40" placeholder="">
+                        <input class="input" id="inputTargets" type="text" maxlength="80" placeholder="">
                     </div>
                 </div>
 
@@ -229,7 +236,10 @@
                 </div>
 
                 <div class="tile is-child field">
-                    <label class="label">Description</label>
+                    <label class="label">
+                        Description
+                        <a href="/asc_docs/#description_fields" target="_blank"><span class="icon is-small has-text-info has-tooltip-bottom" data-tooltip="ASC Docs"><i class="fas fa-book"></i></span></a>
+                    </label>
                     <div class="control">
                         <textarea class="textarea" id="inputDesc" placeholder="The target’s form appears blurry..."></textarea>
                     </div>

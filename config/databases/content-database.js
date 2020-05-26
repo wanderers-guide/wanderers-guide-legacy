@@ -5,6 +5,7 @@ module.exports =  new Sequelize(keys.contentDB.DbName, keys.cloudSQL.Username, k
   host: keys.cloudSQL.Host,
   dialect: 'mysql',
   operatorsAliases: '0',
+  logging: false,
   dialectOptions: {
     socketPath: keys.cloudSQL.Instance,
   },

@@ -1,8 +1,8 @@
 
 {{#section 'header'}}
     <link rel="stylesheet" href="/css/asc-docs-styles.css">
-    <script src="/js/asc-docs.js"></script>
-    <script src="/js/asc-text-processing.js"></script>
+    <script src="/js/asc/docs-page.js"></script>
+    <script src="/js/asc/text-processing.js"></script>
 {{/section}}
 
 {{#section 'nav_home'}}
@@ -27,74 +27,145 @@
     <div class="banner_w3lspvt-2"></div>
 {{/section}}
 
-<div class="tile is-ancestor">
+
+<div id="doc_nav_shell">
+    <div id="docs_nav" class="ml-2 mt-2">
+        <aside class="menu">
+            <p class="menu-label">
+                <a href="/asc_docs/#asc_docs">ASC Documentation</a>
+            </p>
+            <ul class="menu-list">
+                <li><a href="/asc_docs/#usage">Usage</a></li>
+            </ul>
+            <p class="menu-label">
+                <a href="/asc_docs/#description_fields">Description Fields</a>
+            </p>
+            <ul class="menu-list">
+                <li><a href="/asc_docs/#typography">Typography</a></li>
+                <li><a href="/asc_docs/#links">Links</a></li>
+                <li><a href="/asc_docs/#actions">Actions</a></li>
+                <li><a href="/asc_docs/#tiers_of_success">Tiers of Success</a></li>
+                <li><a href="/asc_docs/#bullet_lists">Bullet Lists</a></li>
+                <li><a href="/asc_docs/#non_bullet_lists">Non-Bullet Lists</a></li>
+            </ul>
+            <p class="menu-label">
+                <a href="/asc_docs/#code_fields">Code Fields</a>
+            </p>
+            <ul class="menu-list">
+                <li><a href="/asc_docs/#code_boosts">Boosts</a></li>
+                <li><a href="/asc_docs/#code_feats">Feats</a></li>
+                <li><a href="/asc_docs/#code_languages">Languages</a></li>
+                <li><a href="/asc_docs/#code_lore">Lore</a></li>
+                <li><a href="/asc_docs/#code_proficiencies">Proficiencies</a></li>
+                <li><a href="/asc_docs/#code_skills">Skills</a></li>
+                <li><a href="/asc_docs/#code_spell_lists">Spell Lists</a></li>
+            </ul>
+        </aside>
+    </div>
+</div>
+
+<div id="docs_content" class="tile is-ancestor mb-3">
     <div class="tile is-parent is-2"></div>
     <div class="tile is-parent is-vertical is-8">
-        <div class="tile is-child">
-            <h1 class="title is-size-1 has-text-grey-lighter has-text-centered">ASC Docs</h1>
-            <p class="subtitle is-size-6 has-text-grey-light has-text-centered is-italic">Apeiron Styling Code (ASC), is used to format text in Apeiron as well implement features for homebrew content.</p>
+        <div id="asc_docs" class="tile is-child">
+            <h1 class="main-title is-size-2 is-family-code has-text-centered">ASC Documentation</h1>
+            <p class="subtitle is-size-6 has-text-grey-light has-text-centered is-italic">Apeiron Styling Code (ASC), is used to format text in Apeiron and implement features for homebrew content.</p>
         </div>
-        <div class="tile is-child">
-            <h1 class="title is-size-4 has-text-grey-lighter is-marginless mb-1 pl-3">Usage</h1>
+        <div id="usage" class="tile is-child isHideable">
+            <h1 class="title is-size-4 is-marginless mb-1 pl-3">Usage</h1>
             <p>
                 ASC has two different forms, one is for description fields and the other is for code fields. Whenever something has an text area that is description for something, generally you can use ASC inside of it. Examples of this being: ancestry descriptions, heirtage descriptions, feat descriptions, and item descriptions. When making homebrew content, you will see that there are often fields that are labeled "Code" - these are code fields which is where you can input ASC to implement features. In addition, with these two different forms of ASC, some features are designed for the character sheet and others are designed for the character builder.
             </p>
         </div>
-        <div class="column is-paddingless mb-4">
-            <h1 class="title is-size-3 has-text-grey-lighter has-text-centered is-marginless mb-2">Description Fields</h1>
-            <div>
-                <h1 class="title is-size-4 has-text-grey-lighter is-marginless mb-1 pl-3">Basics</h1>
+        <div id="description_fields" class="column is-paddingless">
+            <div class="isHideable">
+                <h1 class="main-title is-family-code is-size-3 has-text-centered is-marginless mb-2">Description Fields</h1>
+                <h1 class="title is-size-4 is-marginless mb-1 pl-3">Basics</h1>
                 <p>
-                    This is where the styling part of ASC comes into play. The following is numberous relatively small styling systems you can apply to your text.
+                    This is where the styling part of ASC comes into play. The following is numberous, relatively small styling systems you can apply to your text.
                 </p>
             </div>
-            <div class="mt-4">
-                <h1 class="title is-size-4 has-text-grey-lighter is-marginless mb-1 pl-3">Core Rulebook Link</h1>
-                <p>
-                    Stating the word "page" followed by some numbers will generate a link to where you can purchase the Pathfinder 2e Core Rulebook.
-                </p>
-                <p class="pl-2">
-                    <strong>As show below, page 456 becomes a link:</strong>
-                </p>
-                <div class="text-processing">
-                    Hi! This is sample text, you should refer to page 456.
+            <div id="typography" class="mt-4 isHideable">
+                <h1 class="title is-size-4 is-marginless mb-1 pl-3">Typography</h1>
+                <div class="ml-4">
+                    <div class="columns mb-3">
+                        <div class="column is-6">
+                            <div class="columns is-mobile is-marginless">
+                                <div class="column is-paddingless"><strong class="pl-2">You Type:</strong></div>
+                                <div class="column is-paddingless"><strong class="pl-3">You See:</strong></div>
+                            </div>
+                            <div class="columns table-row-a is-mobile is-marginless">
+                                <div class="column"><p>__italics__</p></div>
+                                <div class="column text-processing">__italics__</div>
+                            </div>
+                            <div class="columns table-row-b is-mobile is-marginless">
+                                <div class="column is-mobile"><p>**bold**</p></div>
+                                <div class="column text-processing">**bold**</div>
+                            </div>
+                            <div class="columns table-row-a is-mobile is-marginless">
+                                <div class="column is-mobile"><p>***big bold***</p></div>
+                                <div class="column text-processing">***big bold***</div>
+                            </div>
+                            <div class="columns table-row-b is-mobile is-marginless">
+                                <div class="column"><p>~~strikethrough~~</p></div>
+                                <div class="column text-processing">~~strikethrough~~</div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="mt-4">
-                <h1 class="title is-size-4 has-text-grey-lighter is-marginless mb-1 pl-3">Bestiary Link</h1>
-                <p>
-                    Stating the words "Pathfinder Bestiary" followed by some numbers will generate a link to where you can purchase the Pathfinder 2e Bestiary.
-                </p>
-                <p class="pl-2">
-                    <strong>As show below, Pathfinder Bestiary 302 becomes a link:</strong>
-                </p>
-                <div class="text-processing">
-                    Hi! This is sample text, you should refer to Pathfinder Bestiary 302.
+            <div id="links" class="mt-4 isHideable">
+                <h1 class="title is-size-4 is-marginless mb-1 pl-3">Links</h1>
+                <div class="ml-4">
+                    <div class="mt-1">
+                        <h1 class="small-title is-size-4 is-marginless mb-1 pl-3">Core Rulebook</h1>
+                        <p>
+                            Stating the word "page" followed by some page number will generate a link to where you can purchase the Pathfinder 2e Core Rulebook.
+                        </p>
+                        <p class="pl-2">
+                            <strong>As show below, page 456 becomes a link:</strong>
+                        </p>
+                        <div class="text-processing">
+                            Hi! This is sample text, you should refer to page 456.
+                        </div>
+                    </div>
+                    <div class="mt-1">
+                        <h1 class="small-title is-size-4 is-marginless mb-1 pl-3">Bestiary</h1>
+                        <p>
+                            Stating the words "Pathfinder Bestiary" followed by some page number will generate a link to where you can purchase the Pathfinder 2e Bestiary.
+                        </p>
+                        <p class="pl-2">
+                            <strong>As show below, Pathfinder Bestiary 302 becomes a link:</strong>
+                        </p>
+                        <div class="text-processing">
+                            Hi! This is sample text, you should refer to Pathfinder Bestiary 302.
+                        </div>
+                    </div>
+                    <div class="mt-1">
+                        <h1 class="small-title is-size-4 is-marginless mb-1 pl-3">External</h1>
+                        <p>
+                            URLs to popular community resources can be turned into icons that function as links.
+                        </p>
+                        <p>
+                            Any URL from a supported community resource surrounded in brackets will become and icon link.
+                        </p>
+                        <p>
+                            Supported resources include:
+                        </p>
+                        <p class="is-size-7 pb-1 pl-4">
+                            'paizo.com', '2e.aonprd.com', 'pf2.easytool.es', 'pathfinder2.dragonlash.com', 'pf2srd.com', 'pf2.d20pfsrd.com', 'youtube.com'
+                        </p>
+                        <p class="pl-2">
+                            <strong>As show below, [https://paizo.com/pathfinder] becomes an icon link:</strong>
+                        </p>
+                        <div class="text-processing">
+                            Hi! This is sample text, check out Pathfinder at [https://paizo.com/pathfinder]!
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="mt-4">
-                <h1 class="title is-size-4 has-text-grey-lighter is-marginless mb-1 pl-3">External Links</h1>
-                <p>
-                    URLs to popular community resources can be turned into icons that function as links.
-                </p>
-                <p>
-                    Any URL from a supported community resource surrounded in brackets will become and icon link.
-                </p>
-                <p>
-                    Supported resources include:
-                </p>
-                <p class="is-size-7 pb-1 pl-4">
-                    'paizo.com', '2e.aonprd.com', 'pf2.easytool.es', 'pathfinder2.dragonlash.com', 'pf2srd.com', 'pf2.d20pfsrd.com', 'youtube.com'
-                </p>
-                <p class="pl-2">
-                    <strong>As show below, [https://paizo.com/pathfinder] becomes an icon link:</strong>
-                </p>
-                <div class="text-processing">
-                    Hi! This is sample text, check out Pathfinder at [https://paizo.com/pathfinder]!
-                </div>
-            </div>
-            <div class="mt-4">
-                <h1 class="title is-size-4 has-text-grey-lighter is-marginless mb-1 pl-3">Actions</h1>
+            <div id="actions" class="mt-4 isHideable">
+                <h1 class="title is-size-4 is-marginless mb-1 pl-3">Actions</h1>
                 <p>
                     Displaying actions is super easy. Just write the action codename and it will generate that action icon.
                 </p>
@@ -134,8 +205,8 @@
                     </div>
                 </div>
             </div>
-            <div class="mt-4">
-                <h1 class="title is-size-4 has-text-grey-lighter is-marginless mb-1 pl-3">Tiers of Success</h1>
+            <div id="tiers_of_success" class="mt-4 isHideable">
+                <h1 class="title is-size-4 is-marginless mb-1 pl-3">Tiers of Success</h1>
                 <p>
                     Some simple formating for tiers of success can be very useful for actions, feats, and spells in homebrew content.
                 </p>
@@ -162,8 +233,8 @@
                 </div>
                 <p class="pl-4">You do not need to include all four tiers of success. It will format whatever tiers you give it.</p>
             </div>
-            <div class="mt-4">
-                <h1 class="title is-size-4 has-text-grey-lighter is-marginless mb-1 pl-3">Bullet Lists</h1>
+            <div id="bullet_lists" class="mt-4 isHideable">
+                <h1 class="title is-size-4 is-marginless mb-1 pl-3">Bullet Lists</h1>
                 <p>
                     There are times when it's best to organize information using bullet points. Having a '*' followed by some text then a ':' will separate the inner text, making it bold and creating a bullet point.
                 </p>
@@ -185,8 +256,8 @@
                     * Undead Creature: The target is flat-footed for 1 round on a failed Fortitude save. On a critical failure, the target is also fleeing for 1 round unless it succeeds at a Will save.
                 </div>
             </div>
-            <div class="mt-4">
-                <h1 class="title is-size-4 has-text-grey-lighter is-marginless mb-1 pl-3">Non-Bullet Lists</h1>
+            <div id="non_bullet_lists" class="mt-4 isHideable">
+                <h1 class="title is-size-4 is-marginless mb-1 pl-3">Non-Bullet Lists</h1>
                 <p>
                     There are times when it's best to organize information using bullet points. Having a '~' followed by some text then a ':' will separate the inner text and make it bold.
                 </p>
@@ -209,12 +280,15 @@
                 </div>
             </div>
         </div>
-        <div class="column is-paddingless mb-4">
-            <h1 class="title is-size-3 has-text-grey-lighter has-text-centered is-marginless mb-2">Code Fields</h1>
-            <div>
-                <h1 class="title is-size-4 has-text-grey-lighter is-marginless mb-1 pl-3">Basics</h1>
+        <div id="code_fields" class="column is-paddingless">         
+            <div class="isHideable">
+                <h1 class="main-title is-size-3 is-family-code has-text-centered is-marginless mb-2">Code Fields</h1>
+                <h1 class="title is-size-4 is-marginless mb-1 pl-3">Basics</h1>
                 <p>
-                    Use a series of code statements to implement features for homebrew content. Split these statements up by having a ", " in between them. Code statements currently have a very strict syntax, as such, most of this documentation will be a series of examples.
+                    Use a series of code statements to implement features for homebrew content. Split these statements up by having a ", " in between them. For each code field, you can only have up to nine statements - <em>although you will likely never need to reach this limit</em>.
+                </p>
+                <p>
+                    Code statements currently have a very strict syntax, as such, most of this documentation will be a series of examples.
                 </p>
                 <p>
                     <strong>Example:</strong>
@@ -223,8 +297,8 @@
                     GIVE-PROF-INCREASE-IN=Perception, GIVE-SKILL-FEAT=3
                 </div>
             </div>
-            <div class="mt-4">
-                <h1 class="title is-size-4 has-text-grey-lighter is-marginless mb-1 pl-3">Boosts</h1>
+            <div id="code_boosts" class="mt-4 isHideable">
+                <h1 class="title is-size-4 is-marginless mb-1 pl-3">Boosts</h1>
                 <p>
                     Use the following code statements to give a character ability boosts. Ability boosts are special in that a character cannot select the same ability score as any other ABILITY-BOOST statement in the same code field.
                 </p>
@@ -287,8 +361,8 @@
                     </div>
                 </div>
             </div>
-            <div class="mt-4">
-                <h1 class="title is-size-4 has-text-grey-lighter is-marginless mb-1 pl-3">Feats</h1>
+            <div id="code_feats" class="mt-4 isHideable">
+                <h1 class="title is-size-4 is-marginless mb-1 pl-3">Feats</h1>
                 <p>
                     Use the following code statements to give a character feats.
                 </p>
@@ -336,8 +410,8 @@
                     </p>
                 </div>
             </div>
-            <div class="mt-4">
-                <h1 class="title is-size-4 has-text-grey-lighter is-marginless mb-1 pl-3">Languages</h1>
+            <div id="code_languages" class="mt-4 isHideable">
+                <h1 class="title is-size-4 is-marginless mb-1 pl-3">Languages</h1>
                 <p>
                     Use the following code statements to give a character a langauge.
                 </p>
@@ -369,8 +443,8 @@
                     </p>
                 </div>
             </div>
-            <div class="mt-4">
-                <h1 class="title is-size-4 has-text-grey-lighter is-marginless mb-1 pl-3">Lore</h1>
+            <div id="code_lore" class="mt-4 isHideable">
+                <h1 class="title is-size-4 is-marginless mb-1 pl-3">Lore</h1>
                 <p>
                     Use the following code statements to give a character a lore skill.
                 </p>
@@ -400,8 +474,8 @@
                     </div>
                 </div>
             </div>
-            <div class="mt-4">
-                <h1 class="title is-size-4 has-text-grey-lighter is-marginless mb-1 pl-3">Proficiencies</h1>
+            <div id="code_proficiencies" class="mt-4 isHideable">
+                <h1 class="title is-size-4 is-marginless mb-1 pl-3">Proficiencies</h1>
                 <p class="pl-2 py-1">
                     <strong>Skills:</strong> 'Acrobatics', 'Arcana', 'Athletics', 'Crafting', 'Deception', 'Diplomacy', 'Intimidation', 'Medicine', 'Nature', 'Occultism', 'Performance', 'Religion', 'Society', 'Stealth', 'Survival', 'Thievery'
                 </p>
@@ -455,8 +529,8 @@
                     </p>
                 </div>
             </div>
-            <div class="mt-4">
-                <h1 class="title is-size-4 has-text-grey-lighter is-marginless mb-1 pl-3">Skills</h1>
+            <div id="code_skills" class="mt-4 isHideable">
+                <h1 class="title is-size-4 is-marginless mb-1 pl-3">Skills</h1>
                 <p>
                     Use the following code statements to give a character a proficiency in a skill of their choice.
                 </p>
@@ -492,8 +566,8 @@
                     </p>
                 </div>
             </div>
-            <div class="mt-4">
-                <h1 class="title is-size-4 has-text-grey-lighter is-marginless mb-1 pl-3">Spell Lists</h1>
+            <div id="code_spell_lists" class="mt-4 isHideable">
+                <h1 class="title is-size-4 is-marginless mb-1 pl-3">Spell Lists</h1>
                 <p>
                     Use the following code statements to add spells to a character's spell list.
                 </p>

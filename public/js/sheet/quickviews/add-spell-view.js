@@ -2,7 +2,7 @@
 
 function openAddSpellQuickview(data){
 
-    $('#quickViewTitle').html("Spell List");
+    $('#quickViewTitle').html("Tradition Spell List");
     let qContent = $('#quickViewContent');
 
     qContent.append('<div class="tabs is-small is-centered is-marginless mb-1"><ul class="category-tabs"><li><a id="spellTraditionArcane">Arcane</a></li><li><a id="spellTraditionDivine">Divine</a></li><li><a id="spellTraditionOccult">Occult</a></li><li><a id="spellTraditionPrimal">Primal</a></li></ul></div>');
@@ -98,6 +98,9 @@ function displayAddSpell(spellDataStruct, data){
     if(spellDataStruct.Spell.isArchived === 1){
         return;
     }
+    if(spellDataStruct.Spell.isFocusSpell === 1){
+        return;
+    }
 
     let spellID = spellDataStruct.Spell.id;
     let spellLevel = (spellDataStruct.Spell.level == 0) ? "Cantrip" : "Lvl "+spellDataStruct.Spell.level;
@@ -117,16 +120,16 @@ function displayAddSpell(spellDataStruct, data){
     let rarity = spellDataStruct.Spell.rarity;
     let tagsInnerHTML = '';
     switch(rarity) {
-      case 'UNCOMMON': tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-small is-primary">Uncommon</button>';
+      case 'UNCOMMON': tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-very-small is-primary">Uncommon</button>';
         break;
-      case 'RARE': tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-small is-success">Rare</button>';
+      case 'RARE': tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-very-small is-success">Rare</button>';
         break;
-      case 'UNIQUE': tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-small is-danger">Unique</button>';
+      case 'UNIQUE': tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-very-small is-danger">Unique</button>';
         break;
       default: break;
     }
     for(const tag of spellDataStruct.Tags){
-        tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-small is-info has-tooltip-bottom has-tooltip-multiline" data-tooltip="'+tag.description+'">'+tag.name+'</button>';
+        tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-very-small is-info has-tooltip-bottom has-tooltip-multiline" data-tooltip="'+tag.description+'">'+tag.name+'</button>';
     }
 
     if(tagsInnerHTML != ''){
@@ -276,22 +279,56 @@ function displayAddSpell(spellDataStruct, data){
 
     }
 
-    if(data.SpellBook.SpellBook.includes(spellDataStruct.Spell.id)) {
-        $('#'+spellTradAddSpellBtnWrapperID).html('<button class="button my-1 is-small is-primary is-rounded">Added</button>');
-    } else {
-        $('#'+spellTradAddSpellBtnWrapperID).html('<button id="'+spellTradAddSpellID+'" class="button my-1 is-small is-success is-rounded">Add</button>');
-    }
+    
+    if(data.SpellBook.SpellCastingType === 'SPONTANEOUS-REPERTOIRE' && spellDataStruct.Spell.level != 0) {
 
-    $('#'+spellTradAddSpellID).click(function(){
-        prev_spellSRC = data.SpellBook.SpellSRC;
-        prev_spellData = data.Data;
-        socket.emit("requestSpellAddToSpellBook",
-            getCharIDFromURL(),
-            data.SpellBook.SpellSRC,
-            spellDataStruct.Spell.id);
-        data.SpellBook.SpellBook.push(spellDataStruct.Spell.id);
-        $('#'+spellTradAddSpellBtnWrapperID).html('<button class="button my-1 is-small is-primary is-rounded">Added</button>');
-    });
+        let spellAddSelectHTML = '<div class="select my-1 is-small is-success"><select id="'+spellTradAddSpellID+'">';
+        spellAddSelectHTML += '<option value="chooseDefault">Add</option>';
+        for (let i = spellDataStruct.Spell.level; i < 11; i++) {
+            spellAddSelectHTML += '<option value="'+i+'">'+rankLevel(i)+'</option>';
+        }
+        spellAddSelectHTML += '</select></div>';
+        $('#'+spellTradAddSpellBtnWrapperID).html(spellAddSelectHTML);
+
+        $('#'+spellTradAddSpellID).click(function(){
+            let spellLevel = $("#"+spellTradAddSpellID+" option:selected").val();
+            if(spellLevel != 'chooseDefault') {
+                prev_spellSRC = data.SpellBook.SpellSRC;
+                prev_spellData = data.Data;
+                socket.emit("requestSpellAddToSpellBook",
+                    getCharIDFromURL(),
+                    data.SpellBook.SpellSRC,
+                    spellDataStruct.Spell.id,
+                    spellLevel);
+                data.SpellBook.SpellBook.push({SpellID: spellDataStruct.Spell.id, SpellLevel: spellLevel});
+                $("#"+spellTradAddSpellID).val('chooseDefault');
+            }
+        });
+
+    } else {
+
+        let spellData = data.SpellBook.SpellBook.find(spellData => {
+            return spellData.SpellID == spellDataStruct.Spell.id;
+        });
+        if(spellData != null) {
+            $('#'+spellTradAddSpellBtnWrapperID).html('<button class="button my-1 is-small is-primary is-rounded">Added</button>');
+        } else {
+            $('#'+spellTradAddSpellBtnWrapperID).html('<button id="'+spellTradAddSpellID+'" class="button my-1 is-small is-success is-rounded">Add</button>');
+        }
+    
+        $('#'+spellTradAddSpellID).click(function(){
+            prev_spellSRC = data.SpellBook.SpellSRC;
+            prev_spellData = data.Data;
+            socket.emit("requestSpellAddToSpellBook",
+                getCharIDFromURL(),
+                data.SpellBook.SpellSRC,
+                spellDataStruct.Spell.id,
+                spellDataStruct.Spell.level);
+            data.SpellBook.SpellBook.push({SpellID: spellDataStruct.Spell.id, SpellLevel: spellDataStruct.Spell.level});
+            $('#'+spellTradAddSpellBtnWrapperID).html('<button class="button my-1 is-small is-primary is-rounded">Added</button>');
+        });
+
+    }
 
     $('.'+spellTradViewClass).click(function(){
         if($('#'+spellTradDetailsSpellID).is(":visible")){

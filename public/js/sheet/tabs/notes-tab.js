@@ -26,4 +26,5 @@ function openNotesTab(data) {
 
 socket.on("returnNotesSave", function(){
     $("#notesAreaControlShell").removeClass("is-loading");
+    $('#notesArea').blur();
 });

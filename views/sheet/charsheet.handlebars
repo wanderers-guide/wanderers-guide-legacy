@@ -24,16 +24,22 @@
     <script src="/js/sheet/quickviews/saving-throw-view.js"></script>
     <script src="/js/sheet/quickviews/skill-view.js"></script>
     <script src="/js/sheet/quickviews/spell-view.js"></script>
+    <script src="/js/sheet/quickviews/item-view.js"></script>
+    <script src="/js/sheet/quickviews/ability-view.js"></script>
+    <script src="/js/sheet/quickviews/resist-view.js"></script>
 
     <script src="/js/sheet/general/stat-manager.js"></script>
     <script src="/js/sheet/general/conditions-manager.js"></script>
     <script src="/js/sheet/general/manage-spells.js"></script>
     <script src="/js/sheet/general/item-runes.js"></script>
-
-    <script src="/js/sheet/asc-processing.js"></script>
-    <script src="/js/asc-text-processing.js"></script>
+    
+    <script type="text/javascript" src="/js/asc/text-processing.js"></script>
+    <script type="text/javascript" src="/js/asc/expression-processing.js"></script>
+    <script type="text/javascript" src="/js/asc/statement-processing.js"></script>
+    <script type="text/javascript" src="/js/asc/errorHandling.js"></script>
 
     <script src="/js/sheet/utils/calc-utils.js"></script>
+    <script src="/js/sheet/utils/struct-utils.js"></script>
     <script src="/js/sheet/utils/utils.js"></script>
 {{/section}}
 
@@ -65,6 +71,12 @@
 
 <section id="character-sheet-section" class="section text-center is-paddingless px-4 py-3">
 
+    <div id="errorDisplay" class="hero is-danger is-hidden">
+        <div class="hero-body is-paddingless py-3">
+            <div id="errorMessage" class="container"></div>
+        </div>
+    </div>
+
     <div class="tile is-ancestor is-vertical">
         <div class="tile is-vertical m-2">
             <div class="tile is-parent is-paddingless">
@@ -92,29 +104,36 @@
                     </div>
                 </div>
                 <div class="tile is-3">
-                    <div class="tile mx-4 mb-4 sheet-box">
-                        <div class="tile is-child px-2 pt-2">
-                            <p class="is-size-6"><strong class="has-text-grey-lighter">Hit Points</strong></p>
-                            <div class="columns is-centered">
-                                <div class="column is-narrow is-paddingless py-2">
-                                    <div id="char-current-health" class="cursor-clickable">
+                    <div class="tile is-vertical mx-4 mb-4 sheet-box">
+                        <div class="tile pb-1">
+                            <div class="tile is-child px-2 pt-2">
+                                <p class="is-size-6"><strong class="has-text-grey-lighter">Hit Points</strong></p>
+                                <div class="columns is-centered">
+                                    <div class="column is-narrow is-paddingless py-2">
+                                        <div id="char-current-health" class="cursor-clickable">
+                                        </div>
+                                    </div>
+                                    <div class="column is-narrow is-paddingless py-2">
+                                        <p class="is-size-5 text-center has-text-grey">/</p>
+                                    </div>
+                                    <div class="column is-narrow is-paddingless py-2" style="width: 70px;">
+                                        <p id="char-max-health" class="is-size-5 text-center has-text-light"></p>
                                     </div>
                                 </div>
-                                <div class="column is-narrow is-paddingless py-2">
-                                    <p class="is-size-5 text-center has-text-grey">/</p>
-                                </div>
-                                <div class="column is-narrow is-paddingless py-2" style="width: 70px;">
-                                    <p id="char-max-health" class="is-size-5 text-center has-text-light"></p>
+                            </div>
+                            <div class="tile is-child pt-3">
+                                <p class="is-size-7"><strong class="has-text-grey-light">Temp. HP</strong></p>
+                                <div class="columns is-centered">
+                                    <div class="column is-narrow is-paddingless py-2">
+                                        <div id="char-temp-health" class="cursor-clickable">
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="tile is-child pt-3">
-                            <p class="is-size-7"><strong class="has-text-grey-light">Temp. HP</strong></p>
-                            <div class="columns is-centered">
-                                <div class="column is-narrow is-paddingless py-2">
-                                    <div id="char-temp-health" class="cursor-clickable">
-                                    </div>
-                                </div>
+                        <div class="tile">
+                            <div id="resistAndVulnerContent" class="tile is-child cursor-clickable">
+                                <p id="resistAndVulnerText" class="text-center"></p>
                             </div>
                         </div>
                     </div>
@@ -246,12 +265,12 @@
             <div class="tile is-parent is-vertical is-2 my-2 mr-4 is-paddingless">
                 <div class="tile is-paddingless p-3">
                     <div id="acSection" class="tile is-child is-unselectable pt-4 background-ac has-tooltip-bottom" data-tooltip="">
-                        <p class="is-size-5 px-2"><strong class="has-text-grey-light">AC</strong></p>
-                        <p id="acNumber" class="is-size-4 has-text-grey-light"></p>
+                        <p id="acText" class="px-2"><strong class="has-text-grey-light">AC</strong></p>
+                        <p id="acNumber" class="has-text-grey-light"></p>
                     </div>
                     <div id="shieldSection" class="tile is-child background-shield pt-4 has-tooltip-bottom is-hidden" data-tooltip="">
-                        <p class="is-size-6"><strong class="has-text-grey-light">Shield</strong></p>
-                        <p id="shieldBonus" class="is-size-4 has-text-grey-light pr-2"></p>
+                        <p id="shieldText" class=""><strong class="has-text-grey-light">Shield</strong></p>
+                        <p id="shieldBonus" class="has-text-grey-light pr-2"></p>
                     </div>
                 </div>
                 <div class="tile is-vertical sheet-box" style="height: 550px; max-height: 550px; overflow-y: auto;">
@@ -265,6 +284,12 @@
                         <div class="tile is-child">
                             <p class="is-size-6"><strong class="has-text-grey-lighter">Defenses</strong></p>
                             <p id="defensesContent"></p>
+                        </div>
+                    </div>
+                    <div id="spellsContentSection" class="tile is-paddingless">
+                        <div class="tile is-child">
+                            <p class="is-size-6"><strong class="has-text-grey-lighter">Spells</strong></p>
+                            <p id="spellsContent"></p>
                         </div>
                     </div>
                     <div class="tile is-paddingless">
@@ -289,7 +314,7 @@
                             <ul class="sheet-tabs">
                                 <li><a id="actionsTab">Actions</a></li>
                                 <li><a id="weaponsTab">Weapons</a></li>
-                                <li><a id="spellsTab" class="">Spells</a></li>
+                                <li><a id="spellsTab">Spells</a></li>
                                 <li><a id="inventoryTab">Inventory</a></li>
                                 <li><a id="detailsTab">Details</a></li>
                                 <li><a id="notesTab">Notes</a></li>
@@ -308,7 +333,10 @@
 <div id="quickviewDefault" class="quickview">
     <div class="quickview-header">
         <p id="quickViewTitle" class="title is-size-5 has-text-grey-lighter"></p>
-        <a id="quickViewClose" class="delete"></a>
+        <div class="is-inline-flex">
+            <p id="quickViewTitleRight"></p>
+            <p id="quickViewTitleClose"></p>
+        </div>
     </div>
     <div class="quickview-body use-custom-scrollbar">
         <div id="quickViewContent" class="quickview-block pt-1 pb-3 px-3">
@@ -321,7 +349,7 @@
   <div class="modal-card">
     <div class="modal-card-head">
       <p id="conditionsModalTitle" class="modal-card-title has-text-centered is-size-4 has-text-grey-lighter"></p>
-      <a id="conditionsModalRemoveButton" class="is-pulled-right is-size-6"><span class="icon is-medium has-text-danger"><i class="fas fa-times-circle"></i></span></a>
+      <a id="conditionsModalRemoveButton" class="is-pulled-right is-size-6"><span class="icon is-medium has-text-danger"><i class="fas fa-minus-circle"></i></span></a>
     </div>
     <section class="modal-card-body">
         <p id="conditionsModalSourceSection" class="has-text-centered"><strong class="has-text-grey-light">From: </strong><em id="conditionsModalSourceContent"></em></p>
@@ -366,20 +394,19 @@
   <div id="manageSpellsModalBackground" class="modal-background"></div>
   <div class="modal-card" style="width: 90%; height: 90%;">
     <div class="modal-card-head">
-      <p id="manageSpellsModalTitle" class="modal-card-title has-text-centered is-size-4 has-text-grey-lighter">Manage Spells</p>
+      <p id="manageSpellsModalTitle" class="modal-card-title has-text-centered is-size-4 has-text-grey-lighter">Manage Spells<span class="icon is-size-6 has-text-info has-tooltip-multiline has-tooltip-bottom" data-tooltip="For prepared spellcasters, drag spells from your spell list over to the appropriate slots to prepare them."><i class="far fa-question-circle"></i></span></p>
       <button id="manageSpellsModalCloseButton" class="delete" aria-label="close"></button>
     </div>
     <section class="modal-card-body is-paddingless px-2 use-invisible-scrollbar">
         <div class="tabs is-boxed is-small is-marginless">
-            <ul id="manageSpellsTabs" class="sheet-tabs">
+            <ul id="manageSpellsTabs" class="sheet-tabs has-text-grey-lighter">
             </ul>
         </div>
         <div class="tile is-ancestor">
             <div class="tile is-parent">
                 <div class="tile is-child is-3">
                     <div class="columns is-marginless has-background-black-like">
-                        <div class="column is-10 is-paddingless">
-                            <p class="is-size-5 has-text-centered">Spellbook</p>
+                        <div id="manageSpellsListName" class="column is-10 is-paddingless">
                         </div>
                         <div class="column is-2 is-paddingless">
                             <span id="manageSpellsOpenSpellListsBtn" class="icon is-medium has-text-info pt-2 cursor-clickable">
@@ -396,7 +423,9 @@
                     <div id="manageSpellsSpellBook" class="use-custom-scrollbar" style="height: 500px; max-height: 500px; overflow-y: auto;">
                     </div>
                 </div>
-                <div id="manageSpellsSlots" class="tile is-child is-9">
+                <div class="tile is-child is-9">
+                    <div id="manageSpellsSlots" class="use-custom-scrollbar" style="height: 610px; max-height: 610px; overflow-y: auto;">
+                    </div>
                 </div>
             </div>
         </div>

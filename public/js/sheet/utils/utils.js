@@ -11,6 +11,10 @@ function objToMap(obj) {
     return strMap;
 }
 
+function cloneObj(obj){
+  return JSON.parse(JSON.stringify(obj));
+}
+
 function capitalizeWord(word){
     if(word == null){ return null;}
     return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
@@ -41,6 +45,19 @@ function getBulmaTextColorFromCurrentHP(currentHP, maxHP) {
     return "has-text-warning";
   } else {
     return "has-text-danger";
+  }
+}
+
+function rankLevel(level){
+  switch(level) {
+    case 1:
+      return "1st";
+    case 2:
+      return "2nd";
+    case 3:
+      return "3rd";
+    default:
+      return level+"th";
   }
 }
 
@@ -82,6 +99,26 @@ function shortenAbilityType(longType) {
     }
   }
 
+
+function profToNumUp(prof){
+  switch(prof) {
+    case "U":
+      return 0;
+    case "T":
+      return 1;
+    case "E":
+      return 2;
+    case "M":
+      return 3;
+    case "L":
+      return 4;
+    case "UP":
+      return 10;
+    default:
+      return -1;
+  }
+}
+  
 function getProfLetterFromNumUps(numUps) {
     switch(numUps) {
         case 0:

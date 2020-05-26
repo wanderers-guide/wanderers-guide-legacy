@@ -4,19 +4,21 @@ function openActionsTab(data) {
     $('#tabContent').append('<div class="tabs is-centered is-marginless"><ul class="action-tabs"><li><a id="actionTabEncounter">Encounter</a></li><li><a id="actionTabExploration">Exploration</a></li><li><a id="actionTabDowntime">Downtime</a></li></ul></div>');
 
     let filterInnerHTML = '<div class="columns is-mobile is-marginless"><div class="column is-4"><p id="stateNumberOfActions" class="is-size-7 has-text-left">3 Actions per Turn</p></div><div class="column is-1"><p class="is-size-6 has-text-grey-lighter">Filter</p></div>';
-    filterInnerHTML += '<div class="column is-2"><div class="select is-small"><select id="actionFilterSelectBySkill"><option value="chooseDefault">By Skill</option>';
+    filterInnerHTML += '<div class="column is-2"><div class="select is-small"><select id="actionFilterSelectBySkill"><option value="core">Core</option>';
 
+    filterInnerHTML += '<option value="others">Others</option>';
+    filterInnerHTML += '<option value="all">All</option>';
     for(const [skillName, skillData] of data.SkillMap.entries()){
-        filterInnerHTML += '<option value="'+skillData.Skill.name+'">'+skillData.Skill.name+'</option>';
+        filterInnerHTML += '<option value="'+skillData.Skill.id+'">Skill - '+skillData.Skill.name+'</option>';
     }
 
     filterInnerHTML += '</select></div></div><div class="column is-2"><div class="select is-small"><select id="actionFilterSelectByAction"><option value="chooseDefault">By Action</option><option value="OneAction" class="pf-icon">[one-action]</option><option value="TwoActions" class="pf-icon">[two-actions]</option><option value="ThreeActions" class="pf-icon">[three-actions]</option><option value="FreeAction" class="pf-icon">[free-action]</option><option value="Reaction" class="pf-icon">[reaction]</option></select></div></div></div>';
 
-    filterInnerHTML += '<div class="mb-2"><p class="control has-icons-left"><input id="actionFilterSearch" class="input" type="text" placeholder="Search"><span class="icon is-left"><i class="fas fa-search" aria-hidden="true"></i></span></p></div>';
+    filterInnerHTML += '<div class="mb-1"><p class="control has-icons-left"><input id="actionFilterSearch" class="input" type="text" placeholder="Search"><span class="icon is-left"><i class="fas fa-search" aria-hidden="true"></i></span></p></div>';
 
     $('#tabContent').append(filterInnerHTML);
 
-    $('#tabContent').append('<div id="actionTabContent"></div>');
+    $('#tabContent').append('<div id="actionTabContent" class="use-custom-scrollbar" style="height: 480px; max-height: 480px; overflow-y: auto;"></div>');
 
 
     $('#actionTabEncounter').click(function(){
@@ -66,19 +68,19 @@ function changeActionTab(type, data){
         actionFilterSelectByAction.parent().addClass('is-info');
         actionFilterSelectByAction.addClass('pf-icon');
     }
+    actionFilterSelectByAction.blur();
 
     let actionFilterSelectBySkill = $('#actionFilterSelectBySkill');
-    if(actionFilterSelectBySkill.val() == "chooseDefault"){
-        actionFilterSelectBySkill.parent().removeClass('is-info');
-    } else {
-        actionFilterSelectBySkill.parent().addClass('is-info');
-    }
+    actionFilterSelectBySkill.parent().addClass('is-info');
+    actionFilterSelectBySkill.blur();
 
     let actionFilterSearch = $('#actionFilterSearch');
     if(actionFilterSearch.val() == ""){
         actionFilterSearch.removeClass('is-info');
     } else {
         actionFilterSearch.addClass('is-info');
+        actionFilterSelectByAction.parent().removeClass('is-info');
+        actionFilterSelectBySkill.parent().removeClass('is-info');
     }
 
     $('#actionFilterSelectByAction').change(function(){
@@ -115,50 +117,64 @@ function filterActionArray(data, featStructArray){
 
     let actionCount = 0;
     for(const featStruct of featStructArray){
+        if(featStruct.Feat.isArchived === 1){continue;}
 
         let willDisplay = true;
 
-        let actionFilterSelectByAction = $('#actionFilterSelectByAction');
-        if(actionFilterSelectByAction.val() != "chooseDefault" && actionFilterSelectByAction.is(":visible")){
-            if(actionFilterSelectByAction.val() == "OneAction"){
-                if(featStruct.Feat.actions != 'ACTION'){
-                    willDisplay = false;
-                }
-            } else if(actionFilterSelectByAction.val() == "OneAction"){
-                if(featStruct.Feat.actions != 'ACTION'){
-                    willDisplay = false;
-                }
-            } else if(actionFilterSelectByAction.val() == "TwoActions"){
-                if(featStruct.Feat.actions != 'TWO_ACTIONS'){
-                    willDisplay = false;
-                }
-            } else if(actionFilterSelectByAction.val() == "ThreeActions"){
-                if(featStruct.Feat.actions != 'THREE_ACTIONS'){
-                    willDisplay = false;
-                }
-            } else if(actionFilterSelectByAction.val() == "FreeAction"){
-                if(featStruct.Feat.actions != 'FREE_ACTION'){
-                    willDisplay = false;
-                }
-            } else if(actionFilterSelectByAction.val() == "Reaction"){
-                if(featStruct.Feat.actions != 'REACTION'){
-                    willDisplay = false;
-                }
-            }
-        }
-
-        let actionFilterSelectBySkill = $('#actionFilterSelectBySkill');
-        if(actionFilterSelectBySkill.val() != "chooseDefault"){
-            let skillName = actionFilterSelectBySkill.val();
-            let skillTag = featStruct.Tags.find(tag => {
-                return tag.name == skillName;
-            });
-            if(skillTag == null){
-                willDisplay = false;
-            }
-        }
-
         let actionFilterSearch = $('#actionFilterSearch');
+        if(actionFilterSearch.val() == ''){
+
+            let actionFilterSelectByAction = $('#actionFilterSelectByAction');
+            if(actionFilterSelectByAction.val() != "chooseDefault" && actionFilterSelectByAction.is(":visible")){
+                if(actionFilterSelectByAction.val() == "OneAction"){
+                    if(featStruct.Feat.actions != 'ACTION'){
+                        willDisplay = false;
+                    }
+                } else if(actionFilterSelectByAction.val() == "OneAction"){
+                    if(featStruct.Feat.actions != 'ACTION'){
+                        willDisplay = false;
+                    }
+                } else if(actionFilterSelectByAction.val() == "TwoActions"){
+                    if(featStruct.Feat.actions != 'TWO_ACTIONS'){
+                        willDisplay = false;
+                    }
+                } else if(actionFilterSelectByAction.val() == "ThreeActions"){
+                    if(featStruct.Feat.actions != 'THREE_ACTIONS'){
+                        willDisplay = false;
+                    }
+                } else if(actionFilterSelectByAction.val() == "FreeAction"){
+                    if(featStruct.Feat.actions != 'FREE_ACTION'){
+                        willDisplay = false;
+                    }
+                } else if(actionFilterSelectByAction.val() == "Reaction"){
+                    if(featStruct.Feat.actions != 'REACTION'){
+                        willDisplay = false;
+                    }
+                }
+            }
+
+            let actionFilterSelectBySkill = $('#actionFilterSelectBySkill');
+            if(actionFilterSelectBySkill.val() != "chooseDefault"){
+                let filterVal = actionFilterSelectBySkill.val();
+                if(filterVal === 'core') {
+                    if(featStruct.Feat.isCore !== 1){
+                        willDisplay = false;
+                    }
+                } else if(filterVal === 'others') {
+                    if(featStruct.Feat.isCore === 1 || featStruct.Feat.skillID != null){
+                        willDisplay = false;
+                    }
+                } else if(filterVal === 'all') {
+
+                } else {
+                    if(featStruct.Feat.skillID != filterVal){
+                        willDisplay = false;
+                    }
+                }
+            }
+
+        }
+
         if(actionFilterSearch.val() != ''){
             let actionSearchInput = actionFilterSearch.val().toLowerCase();
             let featName = featStruct.Feat.name.toLowerCase();
@@ -173,7 +189,7 @@ function filterActionArray(data, featStructArray){
         }
 
         if(willDisplay){
-            displayAction(featStruct, actionCount);
+            displayAction(featStruct, actionCount, data.SkillMap);
         }
 
         actionCount++;
@@ -181,7 +197,7 @@ function filterActionArray(data, featStructArray){
 
 }
 
-function displayAction(featStruct, actionCount) {
+function displayAction(featStruct, actionCount, skillMap) {
 
     let actionID = 'actionLink'+featStruct.Feat.id+"C"+actionCount;
                 
@@ -199,42 +215,40 @@ function displayAction(featStruct, actionCount) {
 
     let actionTagsInnerHTML = '<div class="buttons is-marginless is-right">';
     switch(featStruct.Feat.rarity) {
-        case 'UNCOMMON': actionTagsInnerHTML += '<button class="button is-marginless mr-2 my-1 is-small is-primary">Uncommon</button>';
+        case 'UNCOMMON': actionTagsInnerHTML += '<button class="button is-marginless mr-2 my-1 is-very-small is-primary">Uncommon</button>';
             break;
-        case 'RARE': actionTagsInnerHTML += '<button class="button is-marginless mr-2 my-1 is-small is-success">Rare</button>';
+        case 'RARE': actionTagsInnerHTML += '<button class="button is-marginless mr-2 my-1 is-very-small is-success">Rare</button>';
             break;
-        case 'UNIQUE': actionTagsInnerHTML += '<button class="button is-marginless mr-2 my-1 is-small is-danger">Unique</button>';
+        case 'UNIQUE': actionTagsInnerHTML += '<button class="button is-marginless mr-2 my-1 is-very-small is-danger">Unique</button>';
             break;
         default: break;
     }
+    if(featStruct.Feat.skillID != null){
+        let skill = null;
+        for(const [skillName, skillData] of skillMap.entries()){
+            if(skillData.Skill.id == featStruct.Feat.skillID) {
+                skill = skillData.Skill;
+                break;
+            }
+        }
+        actionTagsInnerHTML += '<button class="button is-marginless mr-2 my-1 is-very-small is-info">'+skill.name+'</button>';
+    }
     for(const tag of featStruct.Tags){
-        actionTagsInnerHTML += '<button class="button is-marginless mr-2 my-1 is-small is-info">'+tag.name+'</button>';
+        actionTagsInnerHTML += '<button class="button is-marginless mr-2 my-1 is-very-small is-info">'+tag.name+'</button>';
     }
     actionTagsInnerHTML += '</div>';
 
     
-    $('#actionTabContent').append('<div id="'+actionID+'" class="columns is-mobile border-bottom border-dark-lighter cursor-clickable is-marginless mx-2">'+actionActionInnerHTML+'<div class="column is-paddingless p-1"><p class="text-left pl-2">'+actionNameInnerHTML+'</p></div><div class="column is-paddingless p-1"><p class="">'+actionTagsInnerHTML+'</p></div></div>');
+    $('#actionTabContent').append('<div id="'+actionID+'" class="columns is-mobile border-bottom border-dark-lighter cursor-clickable is-marginless mx-2">'+actionActionInnerHTML+'<div class="column is-paddingless"><p class="text-left pl-2">'+actionNameInnerHTML+'</p></div><div class="column is-paddingless"><p class="pt-1">'+actionTagsInnerHTML+'</p></div></div>');
 
     if(actionCount == 0){
         $('#'+actionID).addClass('border-top');
     }
                 
     $('#'+actionID).click(function(){
-
-        let actionNameHTML = '<span>'+featStruct.Feat.name+'</span>';
-        switch(featStruct.Feat.actions) {
-            case 'FREE_ACTION': actionNameHTML += '<span class="px-2 pf-icon">[free-action]</span>'; break;
-            case 'REACTION': actionNameHTML += '<span class="px-2 pf-icon">[reaction]</span>'; break;
-            case 'ACTION': actionNameHTML += '<span class="px-2 pf-icon">[one-action]</span>'; break;
-            case 'TWO_ACTIONS': actionNameHTML += '<span class="px-2 pf-icon">[two-actions]</span>'; break;
-            case 'THREE_ACTIONS': actionNameHTML += '<span class="px-2 pf-icon">[three-actions]</span>'; break;
-            default: break;
-        }
-
         openQuickView('featView', {
             Feat : featStruct.Feat,
-            Tags : featStruct.Tags,
-            FeatNameHTML : actionNameHTML,
+            Tags : featStruct.Tags
         });
     });
 

@@ -26,7 +26,7 @@ router.get('*', (req, res) => {
 
         } else {
             // When a user attempts to view a character sheet that isn't theirs, give them 404
-            console.log("User attempted to view and character that isn't theirs");
+            console.log("AUTH FAILURE - User attempted to view a character that isn't theirs!");
             res.status(404);
             res.render('error/404_error', { title: "404 Not Found - Apeiron", user: req.user });
         }

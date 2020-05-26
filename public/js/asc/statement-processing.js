@@ -13,11 +13,16 @@ function processSheetCode(ascCode, sourceName){
 
 function processSheetCode(ascCode, sourceName, isTest){
     if(ascCode == null) {return false;}
-
+    
+    ascCode = ascCode.toUpperCase();
     let ascStatements = ascCode.split(", ");
 
     let success = true;
-    for(const ascStatement of ascStatements) {
+    for(const ascStatementRaw of ascStatements) {
+        // Test/Check Statement for Expressions //
+        let ascStatement = testExpr(ascStatementRaw);
+        if(ascStatement === null) {continue;}
+        //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
 
         if(ascStatement.includes("GIVE-CONDITION")){ // GIVE-CONDITION=Clumsy:1 OR GIVE-CONDITION=Clumsy
             if(isTest) {continue;}
@@ -104,8 +109,6 @@ function processSheetCode(ascCode, sourceName, isTest){
 
         // Could not identify asc statement
         success = false;
-
-        // IF(*){*}?
 
     }
 

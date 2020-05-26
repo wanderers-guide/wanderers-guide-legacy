@@ -9,54 +9,18 @@ const Inventory = require('../models/contentDB/Inventory');
 const InvItem = require('../models/contentDB/InvItem');
 const InvItemRune = require('../models/contentDB/InvItemRune');
 const CharCondition = require('../models/contentDB/CharCondition');
+const InnateSpellCasting = require('../models/contentDB/InnateSpellCasting');
 
-const CharDataStoring = require('./CharDataStoring');
+const CharDataMapping = require('./CharDataMapping');
+const CharDataMappingExt = require('./CharDataMappingExt');
 
-function clearDataThatContains(charID, containing){
-    let dataDeletePromises = [];
-    for(const basicDataName of CharDataStoring.getBasicDataNames()) {
-        let newPromise = CharDataStoring.deleteBasicData(charID, containing, true, basicDataName);
-        dataDeletePromises.push(newPromise);
-    }
-    return Promise.all(dataDeletePromises)
-    .then(function(result) {
-        return CharDataStoring.deleteProficiencies(charID, containing, true)
-        .then((result) => {
-            return CharDataStoring.deleteAbilityBonus(charID, containing, true)
-            .then((result) => {
-                return CharDataStoring.deleteAbilityChoice(charID, containing, true)
-                .then((result) => {
-                    return;
-                });
-            });
-        });
-    });
-}
+const CharTags = require('./CharTags');
 
-function clearDataOfHigherLevel(charID, level){
-    let dataDataOfHigherLevelPromises = [];
-    for(const dataName of CharDataStoring.getAllDataNames()) {
-        let newPromise = CharDataStoring.deleteDataOfHigherLevel(charID, dataName, level);
-        dataDataOfHigherLevelPromises.push(newPromise);
-    }
-    return Promise.all(dataDataOfHigherLevelPromises)
-    .then(function(result) {
-        return;
-    });
-}
-
-function isPotencyRune(runeID){ // Fund Runes have hardcoded IDs
+function isPotencyRune(runeID){ // Fund Runes have Hardcoded IDs
     return runeID == 1 || runeID == 2 || runeID == 3 || runeID == 10 || runeID == 11 || runeID == 12;
 }
 
 module.exports = class CharSaving {
-
-    static clearDataOfSrc(charID, srcID){
-        return clearDataThatContains(charID, srcID)
-        .then((result) => {
-            return;
-        });
-    }
 
     static saveExp(charID, newExp) {
         let updateValues = { experience: newExp };
@@ -264,7 +228,8 @@ module.exports = class CharSaving {
                 currentHitPoints: chosenItem.hitPoints,
                 hitPoints: chosenItem.hitPoints,
                 brokenThreshold: chosenItem.brokenThreshold,
-                hardness: chosenItem.hardness
+                hardness: chosenItem.hardness,
+                code: chosenItem.code,
             });
         });
     }
@@ -300,11 +265,40 @@ module.exports = class CharSaving {
         });
     }
 
-    static saveInvItemCustomize(invItemID, updateValues) {
+    static saveInvItemCustomize(invItemID, inUpdateValues) {
+        let updateValues = {
+            name: inUpdateValues.name,
+            price: inUpdateValues.price,
+            bulk: inUpdateValues.bulk,
+            description: inUpdateValues.description,
+            size: inUpdateValues.size,
+            isShoddy: inUpdateValues.isShoddy,
+            hitPoints: inUpdateValues.hitPoints,
+            brokenThreshold: inUpdateValues.brokenThreshold,
+            hardness: inUpdateValues.hardness,
+            code: inUpdateValues.code,
+        };
         return InvItem.update(updateValues, { where: { id: invItemID } })
         .then((result) => {
             return;
         });
+    }
+
+    static saveInnateSpellCastings(innateSpell, timesCastStr) {
+
+        let timesCast = parseInt(timesCastStr);
+        if(!isNaN(timesCast) && timesCast >= 0 && timesCast <= innateSpell.TimesPerDay) {
+
+            let castingID = innateSpell.charID+':'+innateSpell.source+':'+innateSpell.sourceType+':'+innateSpell.sourceLevel+':'+innateSpell.sourceCode+':'+innateSpell.sourceCodeSNum+':'+innateSpell.SpellID+':'+innateSpell.SpellLevel+':'+innateSpell.SpellTradition+':'+innateSpell.TimesPerDay;
+            let charUpVals = { timesCast: timesCast };
+            
+            return InnateSpellCasting.update(charUpVals, { where: { innateSpellID: castingID } })
+            .then((result) => {
+                return;
+            });
+
+        }
+
     }
 
     static saveName(charID, name) {
@@ -334,7 +328,7 @@ module.exports = class CharSaving {
             .then((result) => {
                 
                 if(oldLevel > newLevel){
-                    return clearDataOfHigherLevel(charID, newLevel)
+                    return CharDataMapping.deleteDataByGreaterThanSourceLevel(charID, newLevel)
                     .then((result) => {
                         return;
                     });
@@ -349,16 +343,22 @@ module.exports = class CharSaving {
 
     static saveAbilityScores(charID, abilSTR, abilDEX, abilCON, abilINT, abilWIS, abilCHA) {
 
-        let abilityBonusArray = [
-            { Ability : "STR", Bonus : abilSTR-10},
-            { Ability : "DEX", Bonus : abilDEX-10},
-            { Ability : "CON", Bonus : abilCON-10},
-            { Ability : "INT", Bonus : abilINT-10},
-            { Ability : "WIS", Bonus : abilWIS-10},
-            { Ability : "CHA", Bonus : abilCHA-10}
-        ];
+        let JSONBonusArray = JSON.stringify([
+            abilSTR-10,
+            abilDEX-10,
+            abilCON-10,
+            abilINT-10,
+            abilWIS-10,
+            abilCHA-10,
+        ]);
 
-        return CharDataStoring.replaceAbilityBonus(charID, 'Type-Other_Level-1_Code-None', abilityBonusArray)
+        let srcStruct = {
+            sourceType: 'other',
+            sourceLevel: 1,
+            sourceCode: 'none',
+            sourceCodeSNum: '0',
+        };
+        return CharDataMappingExt.setDataAbilityBonus(charID, srcStruct, 'ALL', JSONBonusArray)
         .then((result) => {
             return;
         });
@@ -371,7 +371,7 @@ module.exports = class CharSaving {
         
         return Character.update(charUpVals, { where: { id: charID } })
         .then((result) => {
-            return clearDataThatContains(charID, 'Code-OtherHeritage')
+            return CharDataMapping.deleteDataBySourceCode(charID, 'heritage')
             .then((result) => {
                 return;
             });
@@ -388,14 +388,14 @@ module.exports = class CharSaving {
             return Ancestry.findOne({ where: { id: character.ancestryID} })
             .then((oldAncestry) => {
                 let oldAncestryName = (oldAncestry != null) ? oldAncestry.name : '';
-                return CharDataStoring.removeCharTag(charID, oldAncestryName).then((result) => {
+                return CharTags.removeTag(charID, oldAncestryName).then((result) => {
                     return Ancestry.findOne({ where: { id: ancestryID} })
                     .then((newAncestry) => {
                         let newAncestryName = (newAncestry != null) ? newAncestry.name : '';
-                        return CharDataStoring.addCharTag(charID, newAncestryName).then((result) => {
+                        return CharTags.addTag(charID, newAncestryName).then((result) => {
                             return Character.update(charUpVals, { where: { id: charID } })
                             .then((result) => {
-                                return clearDataThatContains(charID, 'Type-Ancestry')
+                                return CharDataMapping.deleteDataBySourceType(charID, 'ancestry')
                                 .then((result) => {
                                     return Character.update({heritageID: null }, { where: { id: charID } })
                                     .then((result) => {
@@ -417,7 +417,7 @@ module.exports = class CharSaving {
         
         return Character.update(charUpVals, { where: { id: charID } })
         .then((result) => {
-            return clearDataThatContains(charID, 'Type-Background')
+            return CharDataMapping.deleteDataBySourceType(charID, 'background')
             .then((result) => {
                 return;
             });
@@ -432,7 +432,7 @@ module.exports = class CharSaving {
 
         return Character.update(charUpVals, { where: { id: charID } })
         .then((result) => {
-            return clearDataThatContains(charID, 'Type-Class')
+            return CharDataMapping.deleteDataBySourceType(charID, 'class')
             .then((result) => {
                 return;
             });

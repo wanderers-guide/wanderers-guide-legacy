@@ -52,12 +52,13 @@ module.exports = class AdminUpdate {
             classFeatsArray
         */
         for(let d in data) { if(data[d] === ''){ data[d] = null; } }
-        if(data.classDescription == null){ data.classDescription = 'No Description'; }
+        if(data.classDescription == null){ data.classDescription = '__No Description__'; }
         if(data.classVersion == null){ data.classVersion = '1.0'; }
         let tagDesc = 'This indicates content from the '+data.className.toLowerCase()+' class.';
         return Tag.create({ // Create Class Tag
             name: data.className,
-            description: tagDesc
+            description: tagDesc,
+            isHidden: 1,
         }).then(classTag => {
             return Class.create({ // Create Class
                 name: data.className,
@@ -123,6 +124,7 @@ module.exports = class AdminUpdate {
             code: classAbility.code,
             selectType: selectType,
             selectOptionFor: null,
+            displayInSheet: classAbility.displayInSheet,
         }).then(classAbilityModel => {
             let classAbilityOptionsPromises = [];
             if(classAbility.options.length > 0){
@@ -239,12 +241,13 @@ module.exports = class AdminUpdate {
             ancestryTagDesc
         */
         for(let d in data) { if(data[d] === ''){ data[d] = null; } }
-        if(data.ancestryDescription == null){ data.ancestryDescription = 'No Description'; }
+        if(data.ancestryDescription == null){ data.ancestryDescription = '__No Description__'; }
         if(data.ancestryVersion == null){ data.ancestryVersion = '1.0'; }
-        if(data.ancestryTagDesc == null){ data.ancestryTagDesc = 'No Description'; }
+        let tagDesc = 'This indicates content from the '+data.ancestryName.toLowerCase()+' ancestry.';
         return Tag.create({ // Create Ancestry Tag
             name: data.ancestryName,
-            description: data.ancestryTagDesc
+            description: tagDesc,
+            isHidden: 1,
         }).then(ancestryTag => {
             return Ancestry.create({ // Create Ancestry
                 name: data.ancestryName,
@@ -437,7 +440,7 @@ module.exports = class AdminUpdate {
             code
         */
         for(let d in data) { if(data[d] === ''){ data[d] = null; } }
-        if(data.description == null){ data.description = 'No Description'; }
+        if(data.description == null){ data.description = '__No Description__'; }
         return Heritage.create({
             name: data.name,
             ancestryID: ancestryID,
@@ -541,7 +544,7 @@ module.exports = class AdminUpdate {
             version
         */
         for(let d in data) { if(data[d] === ''){ data[d] = null; } }
-        if(data.description == null){ data.description = 'No Description'; }
+        if(data.description == null){ data.description = '__No Description__'; }
         if(data.version == null){ data.version = '1.0'; }
         if(data.level == null){ data.level = -1; }
         return Feat.create({
@@ -665,7 +668,7 @@ module.exports = class AdminUpdate {
         }
 
         for(let d in data) { if(data[d] === ''){ data[d] = null; } }
-        if(data.itemDesc == null){ data.itemDesc = 'No Description'; }
+        if(data.itemDesc == null){ data.itemDesc = '__No Description__'; }
         if(data.itemVersion == null){ data.itemVersion = '1.0'; }
         return Item.create({ // Create Item
             name: data.itemName,
@@ -812,6 +815,7 @@ module.exports = class AdminUpdate {
             spellID,
             spellName,
             spellVersion,
+            spellIsFocus,
             spellLevel,
             spellRarity,
             spellTraditions,
@@ -838,7 +842,7 @@ module.exports = class AdminUpdate {
         data.isArchived = 0;
 
         for(let d in data) { if(data[d] === ''){ data[d] = null; } }
-        if(data.spellDesc == null){ data.spellDesc = 'No Description'; }
+        if(data.spellDesc == null){ data.spellDesc = '__No Description__'; }
         if(data.spellVersion == null){ data.spellVersion = '1.0'; }
         return Spell.create({ // Create Spell
             name: data.spellName,
@@ -863,10 +867,17 @@ module.exports = class AdminUpdate {
             heightenedTwoText: data.spellHeightenedTwoText,
             heightenedThreeVal: data.spellHeightenedThreeVal,
             heightenedThreeText: data.spellHeightenedThreeText,
+            isFocusSpell: data.spellIsFocus,
             isArchived: data.isArchived,
         }).then(spell => {
             let spellTagsPromises = []; // Create Spell Tags
             if(data.spellTagsArray != null){
+                if(spell.level === 0) {
+                    let cantripTagID = 123; // Hardcoded Cantrip tag ID
+                    if(!data.spellTagsArray.includes(cantripTagID)){
+                        data.spellTagsArray.push(cantripTagID);
+                    }
+                }
                 for(const tagID of data.spellTagsArray) {
                     let newPromise = TaggedSpell.create({
                         spellID: spell.id,

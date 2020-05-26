@@ -36,6 +36,9 @@ socket.on("returnAdminSpellDetails", function(spellObject){
     $("#inputHeightenedThreeVal").val(spell.Spell.heightenedThreeVal);
     $("#inputHeightenedThreeText").val(spell.Spell.heightenedThreeText);  
 
+    let isFocusSpell = (spell.Spell.isFocusSpell == 1) ? true : false;
+    $("#inputIsFocusSpell").prop('checked', isFocusSpell);
+
     if(spell.Spell.traditions != null){
         let traditionsArray = JSON.parse(spell.Spell.traditions);
         for(let tradition of traditionsArray){

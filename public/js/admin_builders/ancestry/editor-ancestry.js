@@ -27,7 +27,6 @@ socket.on("returnAdminAncestryDetails", function(ancestryObject, featsObject){
     $("#inputPhysicalFeatureOne").val(ancestry.Ancestry.physicalFeatureOneID);
     $("#inputPhysicalFeatureTwo").val(ancestry.Ancestry.physicalFeatureTwoID);
     $("#inputDescription").val(ancestry.Ancestry.description);
-    $("#inputTagDesc").val(ancestry.Tag.description);
 
     // Ancestry Boosts and Flaws
     for(let boost of ancestry.Boosts){

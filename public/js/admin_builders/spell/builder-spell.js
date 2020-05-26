@@ -25,6 +25,7 @@ function finishSpell(isUpdate){
 
     let spellName = $("#inputName").val();
     let spellVersion = $("#inputVersion").val();
+    let spellIsFocus = ($("#inputIsFocusSpell:checked").val() == '1') ? 1 : 0;
     let spellLevel = $("#inputLevel").val();
     let spellRarity = $("#inputRarity").val();
     let spellTraditions = $("#inputTraditions").val();
@@ -60,6 +61,7 @@ function finishSpell(isUpdate){
         spellID,
         spellName,
         spellVersion,
+        spellIsFocus,
         spellLevel,
         spellRarity,
         spellTraditions,

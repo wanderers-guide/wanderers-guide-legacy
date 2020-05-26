@@ -3,8 +3,6 @@
     <link rel="stylesheet" href="/css/char-builder.css">
     <script type="text/javascript" src="/js/char_builders/char-builder-2.js"></script>
 
-    <script type="text/javascript" src="/js/asc-text-processing.js"></script>
-
     <script type="text/javascript" src="/js/char_builders/asc/init-processing.js"></script>
     <script type="text/javascript" src="/js/char_builders/asc/asc-boosts.js"></script>
     <script type="text/javascript" src="/js/char_builders/asc/asc-feats.js"></script>
@@ -13,9 +11,14 @@
     <script type="text/javascript" src="/js/char_builders/asc/asc-skills.js"></script>
     <script type="text/javascript" src="/js/char_builders/asc/asc-profs.js"></script>
     <script type="text/javascript" src="/js/char_builders/asc/asc-spells.js"></script>
+    <script type="text/javascript" src="/js/char_builders/asc/asc-spells-innate.js"></script>
+    <script type="text/javascript" src="/js/char_builders/asc/asc-resistances.js"></script>
     <script type="text/javascript" src="/js/char_builders/asc/display-structs.js"></script>
-    <script type="text/javascript" src="/js/sheet/asc-processing.js"></script>
-    <script type="text/javascript" src="/js/char_builders/asc/errorHandling.js"></script>
+
+    <script type="text/javascript" src="/js/asc/text-processing.js"></script>
+    <script type="text/javascript" src="/js/asc/expression-processing.js"></script>
+    <script type="text/javascript" src="/js/asc/statement-processing.js"></script>
+    <script type="text/javascript" src="/js/asc/errorHandling.js"></script>
 
     <script type="text/javascript" src="/js/char_builders/utils.js"></script>
 {{/section}}
@@ -175,24 +178,13 @@
                     <div class="tile is-child">
                         <p class="is-size-4 has-text-title has-text-weight-semibold">Boosts</p>
                         <span id="boostsNonChoose" class="is-size-4"></span>
-                        <span class="select is-medium abilityBoostControlShell">
-                            <select id="selectBoost1" class="abilityBoost select-hide-if-empty"></select>
-                        </span>
-                        <span class="select is-medium abilityBoostControlShell">
-                            <select id="selectBoost2" class="abilityBoost select-hide-if-empty"></select>
-                        </span>
-                        <span class="select is-medium abilityBoostControlShell">
-                            <select id="selectBoost3" class="abilityBoost select-hide-if-empty"></select>
-                        </span>
+                        <span id="boostsChoose"></span>
                     </div>
                 </div>
                 <div class="tile is-parent">
                     <div class="tile is-child">
                         <p class="is-size-4 has-text-title has-text-weight-semibold">Flaws</p>
                         <span id="flawsNonChoose"></span>
-                        <span class="select is-medium abilityFlawControlShell">
-                            <select id="selectFlaw1" class="abilityFlaw select-hide-if-empty"></select>
-                        </span>
                     </div>
                 </div>
             </div>

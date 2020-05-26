@@ -8,7 +8,6 @@ const chardeleteRoutes = require('./chardelete-routes');
 const charsheetRoutes = require('./charsheet-routes');
 
 const Character = require('../models/contentDB/Character');
-const CharData = require('../models/contentDB/CharData');
 
 const CharSaving = require('../js/CharSaving');
 const CharStateUtils = require('../js/CharStateUtils');
@@ -81,20 +80,16 @@ router.get('/add', (req, res) => {
 
             Inventory.create({
             }).then(inventory => {
-                CharSaving.addItemToInv(inventory.id, 23, 150)
+                CharSaving.addItemToInv(inventory.id, 23, 150) // Give starting 150 silver
                 .then( result => {
-                    CharData.create({
-                    }).then(charData => {
-                        Character.create({
-                            name: "Unnamed Character",
-                            level: 1,
-                            userID: req.user.id,
-                            inventoryID: inventory.id,
-                            dataID: charData.id
-                        }).then(character => {
-                            res.redirect('/profile/characters/builder/'+character.id+'/page1');
-                        }).catch(err => console.log(err));
-                    });
+                    Character.create({
+                        name: "Unnamed Character",
+                        level: 1,
+                        userID: req.user.id,
+                        inventoryID: inventory.id,
+                    }).then(character => {
+                        res.redirect('/profile/characters/builder/'+character.id+'/page1');
+                    }).catch(err => console.log(err));
                 });
             });
 

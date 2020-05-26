@@ -10,7 +10,10 @@ const SpellBookSpell = db.define('spellBookSpells', {
   },
   spellID: {
     type: Sequelize.INTEGER
-  }
+  },
+  spellLevel: {
+    type: Sequelize.INTEGER
+  },
 });
 
 module.exports = SpellBookSpell;

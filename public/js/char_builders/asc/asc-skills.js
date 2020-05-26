@@ -1,35 +1,34 @@
 
 //------------------------- Processing Skills -------------------------//
-function initSkillProcessing(ascStatement, srcID, locationID, statementNum) {
+function initSkillProcessing(ascStatement, srcStruct, locationID) {
     if(ascSkillMap == null) {
         //console.log("Did not find valid skillMap :(");
         socket.emit("requestASCSkills",
                 getCharIDFromURL(),
                 ascStatement,
-                srcID,
-                locationID,
-                statementNum);
+                srcStruct,
+                locationID);
     } else {
         //console.log("> Found a valid skillMap!");
-        processingSkills(ascStatement, srcID, locationID, statementNum);
+        processingSkills(ascStatement, srcStruct, locationID);
     }
 }
 
-socket.on("returnASCSkills", function(ascStatement, srcID, locationID, statementNum, skillObject){
+socket.on("returnASCSkills", function(ascStatement, srcStruct, locationID, skillObject){
     let skillMap = objToMap(skillObject);
     //console.log("Setting skillMap to new one...");
     ascSkillMap = skillMap;
-    processingSkills(ascStatement, srcID, locationID, statementNum);
+    processingSkills(ascStatement, srcStruct, locationID);
 });
 
-function processingSkills(ascStatement, srcID, locationID, statementNum){
+function processingSkills(ascStatement, srcStruct, locationID){
 
     if(ascStatement.includes("GIVE-SKILL-INCREASE")){// GIVE-SKILL-INCREASE
-        giveSkillIncrease(srcID, locationID, statementNum);
+        giveSkillIncrease(srcStruct, locationID);
     }
     else if(ascStatement.includes("GIVE-SKILL")){// GIVE-SKILL=T
         let prof = ascStatement.split('=')[1];
-        giveSkillProf(srcID, locationID, statementNum, prof);
+        giveSkillProf(srcStruct, locationID, prof);
     } else {
         displayError("Unknown statement (2): \'"+ascStatement+"\'");
         statementComplete();
@@ -39,19 +38,19 @@ function processingSkills(ascStatement, srcID, locationID, statementNum){
 
 //////////////////////////////// Skill Increase ///////////////////////////////////
 
-function giveSkillIncrease(srcID, locationID, statementNum){
-    giveSkill(srcID, locationID, statementNum, 'Up');
+function giveSkillIncrease(srcStruct, locationID){
+    giveSkill(srcStruct, locationID, 'UP');
 }
 
-function giveSkillProf(srcID, locationID, statementNum, prof){
-    giveSkill(srcID, locationID, statementNum, prof);
+function giveSkillProf(srcStruct, locationID, prof){
+    giveSkill(srcStruct, locationID, prof);
 }
 
-function giveSkill(srcID, locationID, statementNum, profType){
+function giveSkill(srcStruct, locationID, profType){
 
-    let selectIncreaseID = "selectIncrease"+locationID+statementNum;
+    let selectIncreaseID = "selectIncrease"+locationID+srcStruct.sourceCodeSNum;
     let selectIncreaseControlShellClass = selectIncreaseID+'ControlShell';
-    let increaseDescriptionID = "selectIncreaseDescription"+locationID+statementNum;
+    let increaseDescriptionID = "selectIncreaseDescription"+locationID+srcStruct.sourceCodeSNum;
 
     $('#'+locationID).append('<div class="field"><div class="select '+selectIncreaseControlShellClass+'"><select id="'+selectIncreaseID+'" class="selectIncrease"></select></div></div>');
 
@@ -61,11 +60,11 @@ function giveSkill(srcID, locationID, statementNum, profType){
     $('#'+selectIncreaseID).append('<hr class="dropdown-divider"></hr>');
 
     // Set saved skill choices
-    let skillArray = objToMap(ascChoiceStruct.ProficiencyObject).get(srcID);
-    let savedSkillData = null;
-    if(skillArray != null && skillArray[0] != null){
-        savedSkillData = skillArray[0];
-    }
+    let profArray = ascChoiceStruct.ProfArray;
+
+    let savedSkillData = profArray.find(prof => {
+        return hasSameSrc(prof, srcStruct);
+    });
 
     for(const [skillName, skillData] of ascSkillMap.entries()){
 
@@ -91,17 +90,19 @@ function giveSkill(srcID, locationID, statementNum, profType){
 
                 socket.emit("requestProficiencyChange",
                     getCharIDFromURL(),
-                    {srcID : srcID, isSkill : true},
-                    [null]);
+                    {srcStruct, isSkill : true},
+                    null);
 
             } else {
+
+                $('.'+selectIncreaseControlShellClass).removeClass("is-info");
 
                 // Save increase
                 if(triggerSave == null || triggerSave) {
                 
                     let canSave = false;
 
-                    if(profType == 'Up') {
+                    if(profType === 'UP') {
                         let skillName = $('#'+selectIncreaseID).val();
                         let numUps = ascSkillMap.get(skillName).NumUps;
                         if(isAbleToSelectIncrease(numUps+1, ascChoiceStruct.Level)) {
@@ -122,8 +123,8 @@ function giveSkill(srcID, locationID, statementNum, profType){
 
                         socket.emit("requestProficiencyChange",
                             getCharIDFromURL(),
-                            {srcID : srcID, isSkill : true},
-                            [{ For : "Skill", To : skillName, Prof : profType }]);
+                            {srcStruct, isSkill : true},
+                            { For : "Skill", To : skillName, Prof : profType });
                     }
                 
                 } else {
@@ -141,6 +142,8 @@ function giveSkill(srcID, locationID, statementNum, profType){
                 }
                 
             }
+
+            $(this).blur();
 
         }
 

@@ -2,7 +2,7 @@
 let socket = io();
 
 let g_character = null;
-let g_class = null;
+let g_classDetails = null;
 let g_ancestry = null;
 let g_heritage = null;
 let g_background = null;
@@ -25,15 +25,19 @@ let g_equippedShieldInvItemID = null;
 
 let g_abilMap = null;
 let g_skillMap = null;
-let g_langMap = null;
-let g_senseMap = null;
+let g_langArray = null;
+let g_senseArray = null;
+let g_phyFeatArray = null;
 
 let g_featMap = null;
-let g_featChoiceMap = null;
+let g_featChoiceArray = null;
 
 let g_spellMap = null;
 let g_spellSlotsMap = null;
 let g_spellBookArray = null;
+let g_innateSpellArray = null;
+
+let g_resistAndVulners = null;
 
 let g_inventoryTabScroll = null;
 let g_selectedTabID = 'inventoryTab';
@@ -68,16 +72,16 @@ socket.on("returnCharacterSheetInfo", function(charInfo){
 
     g_abilMap = objToMap(charInfo.AbilObject);
     g_skillMap = objToMap(charInfo.SkillObject);
-    g_langMap = objToMap(charInfo.ChoicesStruct.LangObject);
-    g_senseMap = objToMap(charInfo.ChoicesStruct.SenseObject);
-    g_physicalFeatureMap = objToMap(charInfo.ChoicesStruct.PhysicalFeatureObject);
+    g_langArray = charInfo.ChoicesStruct.LangArray;
+    g_senseArray = charInfo.ChoicesStruct.SenseArray;
+    g_phyFeatArray = charInfo.ChoicesStruct.PhyFeatArray;
 
     g_profMap = objToMap(charInfo.ProfObject);
     g_weaponProfMap = objToMap(charInfo.WeaponProfObject);
     g_armorProfMap = objToMap(charInfo.ArmorProfObject);
 
     g_featMap = objToMap(charInfo.FeatObject);
-    g_featChoiceMap = objToMap(charInfo.ChoicesStruct.FeatObject);
+    g_featChoiceArray = charInfo.ChoicesStruct.FeatArray;
 
     g_spellMap = objToMap(charInfo.SpellObject);
     g_spellMap = new Map([...g_spellMap.entries()].sort(
@@ -93,11 +97,36 @@ socket.on("returnCharacterSheetInfo", function(charInfo){
     g_spellSlotsMap = objToMap(charInfo.SpellDataStruct.SpellSlotObject);
     g_spellBookArray = charInfo.SpellDataStruct.SpellBookArray;
 
+    g_focusSpellMap = objToMap(charInfo.SpellDataStruct.FocusSpellObject);
+    /*g_focusSpellMap = new Map([...g_focusSpellMap.entries()].sort(
+        function(a, b) {
+            let aStruct = g_spellMap.get(a[1].SpellID+"");
+            let bStruct = g_spellMap.get(b[1].SpellID+"");
+            if (aStruct.Spell.level === bStruct.Spell.level) {
+                // Name is only important when levels are the same
+                return aStruct.Spell.name > bStruct.Spell.name ? 1 : -1;
+            }
+            return aStruct.Spell.level - bStruct.Spell.level;
+        })
+    );*/
+
+    g_innateSpellArray = charInfo.SpellDataStruct.InnateSpellArray;
+    g_innateSpellArray = g_innateSpellArray.sort(
+        function(a, b) {
+            return a.SpellLevel - b.SpellLevel;
+        }
+    );
+
     g_charTagsArray = charInfo.ChoicesStruct.CharTagsArray;
-    g_class = charInfo.ChoicesStruct.Class;
+    g_classDetails = charInfo.ChoicesStruct.ClassDetails;
     g_ancestry = charInfo.Ancestry;
     g_heritage = charInfo.Heritage;
     g_background = charInfo.Background;
+
+    g_resistAndVulners = charInfo.ResistAndVulners;
+
+
+    initExpressionProcessor(g_character.level, objToMap(charInfo.ProfObject));
 
     loadCharSheet();
 
@@ -122,6 +151,14 @@ function loadCharSheet(){
     // Reset Conditions Map (sets all temp data to inactive) //
     resetConditionsMap();
 
+    // Hide Spells Tab //
+    if(g_spellSlotsMap.size === 0 && g_focusSpellMap.size === 0 && g_innateSpellArray.length === 0){
+        $('#spellsTab').addClass('is-hidden');
+    } else {
+        $('#spellsTab').removeClass('is-hidden');
+    }
+
+
     // ~~~~~~~~~~~~~~~~~~~~~~~ Adding Stats To Map ~~~~~~~~~~~~~~~~~~~~~~~ //
 
     addStat('SPEED', 'BASE', g_ancestry.speed);
@@ -137,7 +174,7 @@ function loadCharSheet(){
     addStat('SCORE_CHA', 'BASE', g_abilMap.get("CHA"));
 
     let fortData = g_profMap.get("Fortitude");
-    console.log(g_profMap);
+    
     addStat('SAVE_FORT', 'PROF_BONUS', fortData.NumUps);
     addStat('SAVE_FORT', 'USER_BONUS', fortData.Bonus);
     addStat('SAVE_FORT', 'MODIFIER', 'CON');
@@ -358,7 +395,7 @@ function displayInformation() {
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
     $('#character-name').html(g_character.name);
-    $('#character-type').html(g_heritage.name+" "+g_class.name);
+    $('#character-type').html(g_heritage.name+" "+g_classDetails.Class.name);
     $('#character-level').html("Lvl "+g_character.level);
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -385,6 +422,40 @@ function displayInformation() {
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
     initHealthAndTemp();
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////// Resist and Vulners //////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    let resistAndVulnerText = '';
+    if(g_resistAndVulners.Resistances.length != 0){
+        resistAndVulnerText += 'Resistances';
+        if(g_resistAndVulners.Vulnerabilities.length != 0){
+            resistAndVulnerText += ' | ';
+        }
+    }
+    if(g_resistAndVulners.Vulnerabilities.length != 0){
+        resistAndVulnerText += 'Weaknesses';
+    }
+
+    if(resistAndVulnerText != ''){
+        $('#resistAndVulnerContent').removeClass('is-hidden');
+        $('#resistAndVulnerText').html(resistAndVulnerText);
+        $('#resistAndVulnerContent').click(function(){
+            openQuickView('resistView',{
+                ResistAndVulners: g_resistAndVulners,
+                CharLevel : g_character.level,
+            });
+        });
+        $("#resistAndVulnerContent").mouseenter(function(){
+            $(this).addClass('has-background-grey-darker');
+        });
+        $("#resistAndVulnerContent").mouseleave(function(){
+            $(this).removeClass('has-background-grey-darker');
+        });
+    } else {
+        $('#resistAndVulnerContent').addClass('is-hidden');
+    }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////// Back to Builder ////////////////////////////////////////
@@ -510,15 +581,13 @@ function displayInformation() {
     let visionSenseArray = [];
     let additionalSenseArray = [];
     let primaryVisionSense = null;
-    for(const [srcID, senseArray] of g_senseMap.entries()){
-        for(let sense of senseArray){
-            if(sense.isVisionType == 0){
-                additionalSenseArray.push(sense);
-            } else {
-                visionSenseArray.push(sense);
-                if(primaryVisionSense == null || sense.visionPrecedence > primaryVisionSense.visionPrecedence) {
-                    primaryVisionSense = sense;
-                }
+    for(const sense of g_senseArray){
+        if(sense.value.isVisionType == 0){
+            additionalSenseArray.push(sense.value);
+        } else {
+            visionSenseArray.push(sense.value);
+            if(primaryVisionSense == null || sense.value.visionPrecedence > primaryVisionSense.visionPrecedence) {
+                primaryVisionSense = sense.value;
             }
         }
     }
@@ -561,24 +630,127 @@ function displayInformation() {
 
     let attacks = $("#attacksContent");
     attacks.html('');
+
+    let profSimpleWeapons = g_profMap.get("Simple_Weapons");
+    if(profSimpleWeapons != null){
+        let profWord = getProfNameFromNumUps(profSimpleWeapons.NumUps);
+        attacks.append('<div><span class="is-size-7 is-italic">'+profWord+' - </span><span class="is-size-7 has-text-weight-bold">Simple Weapons</span></div>');
+    }
+    let profMartialWeapons = g_profMap.get("Martial_Weapons");
+    if(profMartialWeapons != null){
+        let profWord = getProfNameFromNumUps(profMartialWeapons.NumUps);
+        attacks.append('<div><span class="is-size-7 is-italic">'+profWord+' - </span><span class="is-size-7 has-text-weight-bold">Martial Weapons</span></div>');
+    }
+    let profAdvancedWeapons = g_profMap.get("Advanced_Weapons");
+    if(profAdvancedWeapons != null){
+        let profWord = getProfNameFromNumUps(profAdvancedWeapons.NumUps);
+        attacks.append('<div><span class="is-size-7 is-italic">'+profWord+' - </span><span class="is-size-7 has-text-weight-bold">Advanced Weapons</span></div>');
+    }
+    let profUnarmedAttacks = g_profMap.get("Unarmed_Attacks");
+    if(profUnarmedAttacks != null){
+        let profWord = getProfNameFromNumUps(profUnarmedAttacks.NumUps);
+        attacks.append('<div><span class="is-size-7 is-italic">'+profWord+' - </span><span class="is-size-7 has-text-weight-bold">Unarmed Attacks</span></div>');
+    }
     for(const [profName, profData] of g_profMap.entries()){
-        if(profData.For == "Attack"){
+        if(profData.For == "Attack" && profName != "Simple_Weapons" && profName != "Martial_Weapons" && profName != "Advanced_Weapons" && profName != "Unarmed_Attacks"){
             let dProfName = profName.replace(/_/g,' ');
             let profWord = getProfNameFromNumUps(profData.NumUps);
             attacks.append('<div><span class="is-size-7 is-italic">'+profWord+' - </span><span class="is-size-7 has-text-weight-bold">'+dProfName+'</span></div>');
         }
     }
 
+
     let defenses = $("#defensesContent");
     defenses.html('');
+
+    let profLightArmor = g_profMap.get("Light_Armor");
+    if(profLightArmor != null){
+        let profWord = getProfNameFromNumUps(profLightArmor.NumUps);
+        defenses.append('<div><span class="is-size-7 is-italic">'+profWord+' - </span><span class="is-size-7 has-text-weight-bold">Light Armor</span></div>');
+    }
+    let profMediumArmor = g_profMap.get("Medium_Armor");
+    if(profMediumArmor != null){
+        let profWord = getProfNameFromNumUps(profMediumArmor.NumUps);
+        defenses.append('<div><span class="is-size-7 is-italic">'+profWord+' - </span><span class="is-size-7 has-text-weight-bold">Medium Armor</span></div>');
+    }
+    let profHeavyArmor = g_profMap.get("Heavy_Armor");
+    if(profHeavyArmor != null){
+        let profWord = getProfNameFromNumUps(profHeavyArmor.NumUps);
+        defenses.append('<div><span class="is-size-7 is-italic">'+profWord+' - </span><span class="is-size-7 has-text-weight-bold">Medium Armor</span></div>');
+    }
+    let profUnarmoredDefense = g_profMap.get("Unarmored_Defense");
+    if(profUnarmoredDefense != null){
+        let profWord = getProfNameFromNumUps(profUnarmoredDefense.NumUps);
+        defenses.append('<div><span class="is-size-7 is-italic">'+profWord+' - </span><span class="is-size-7 has-text-weight-bold">Unarmored Defense</span></div>');
+    }
     for(const [profName, profData] of g_profMap.entries()){
-        if(profData.For == "Defense"){
+        if(profData.For == "Defense" && profName != "Light_Armor" && profName != "Medium_Armor" && profName != "Heavy_Armor" && profName != "Unarmored_Defense"){
             let dProfName = profName.replace(/_/g,' ');
             let profWord = getProfNameFromNumUps(profData.NumUps);
             defenses.append('<div><span class="is-size-7 is-italic">'+profWord+' - </span><span class="is-size-7 has-text-weight-bold">'+dProfName+'</span></div>');
         }
     }
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////// Spells ////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    let spells = $("#spellsContent");
+    spells.html('');
+
+    let arcaneSpellAttack = g_profMap.get("ArcaneSpellAttacks");
+    if(arcaneSpellAttack != null){
+        let profWord = getProfNameFromNumUps(arcaneSpellAttack.NumUps);
+        spells.append('<div><span class="is-size-7 is-italic">'+profWord+' - </span><span class="is-size-7 has-text-weight-bold">Arcane Attacks</span></div>');
+    }
+
+    let arcaneSpellDC = g_profMap.get("ArcaneSpellDCs");
+    if(arcaneSpellDC != null){
+        let profWord = getProfNameFromNumUps(arcaneSpellDC.NumUps);
+        spells.append('<div><span class="is-size-7 is-italic">'+profWord+' - </span><span class="is-size-7 has-text-weight-bold">Arcane DCs</span></div>');
+    }
+
+    let divineSpellAttack = g_profMap.get("DivineSpellAttacks");
+    if(divineSpellAttack != null){
+        let profWord = getProfNameFromNumUps(divineSpellAttack.NumUps);
+        spells.append('<div><span class="is-size-7 is-italic">'+profWord+' - </span><span class="is-size-7 has-text-weight-bold">Divine Attacks</span></div>');
+    }
+
+    let divineSpellDC = g_profMap.get("DivineSpellDCs");
+    if(divineSpellDC != null){
+        let profWord = getProfNameFromNumUps(divineSpellDC.NumUps);
+        spells.append('<div><span class="is-size-7 is-italic">'+profWord+' - </span><span class="is-size-7 has-text-weight-bold">Divine DCs</span></div>');
+    }
+
+    let occultSpellAttack = g_profMap.get("OccultSpellAttacks");
+    if(occultSpellAttack != null){
+        let profWord = getProfNameFromNumUps(occultSpellAttack.NumUps);
+        spells.append('<div><span class="is-size-7 is-italic">'+profWord+' - </span><span class="is-size-7 has-text-weight-bold">Occult Attacks</span></div>');
+    }
+
+    let occultSpellDC = g_profMap.get("OccultSpellDCs");
+    if(occultSpellDC != null){
+        let profWord = getProfNameFromNumUps(occultSpellDC.NumUps);
+        spells.append('<div><span class="is-size-7 is-italic">'+profWord+' - </span><span class="is-size-7 has-text-weight-bold">Occult DCs</span></div>');
+    }
+
+    let primalSpellAttack = g_profMap.get("PrimalSpellAttacks");
+    if(primalSpellAttack != null){
+        let profWord = getProfNameFromNumUps(primalSpellAttack.NumUps);
+        spells.append('<div><span class="is-size-7 is-italic">'+profWord+' - </span><span class="is-size-7 has-text-weight-bold">Primal Attacks</span></div>');
+    }
+
+    let primalSpellDC = g_profMap.get("PrimalSpellDCs");
+    if(primalSpellDC != null){
+        let profWord = getProfNameFromNumUps(primalSpellDC.NumUps);
+        spells.append('<div><span class="is-size-7 is-italic">'+profWord+' - </span><span class="is-size-7 has-text-weight-bold">Primal DCs</span></div>');
+    }
+
+    if(spells.html() == ''){
+        $('#spellsContentSection').addClass('is-hidden');
+    } else {
+        $('#spellsContentSection').removeClass('is-hidden');
+    }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //////////////////////////////////////////// Skills ////////////////////////////////////////////
@@ -622,25 +794,24 @@ function displayInformation() {
     let explorationFeatStructArray = [];
     let downtimeFeatStructArray = [];
 
-    for(const [dataSrc, dataFeatArray] of g_featChoiceMap.entries()){
-        for(const feat of dataFeatArray){
+    for(const feat of g_featChoiceArray){
+        let featStruct = g_featMap.get(feat.value.id+"");
 
-            let featStruct = g_featMap.get(feat.id+"");
+        // Hardcoded Exploration and Downtime Tag IDs
+        let explorationTag = featStruct.Tags.find(tag => {
+            return tag.id === 15;
+        });
+        let downtimeTag = featStruct.Tags.find(tag => {
+            return tag.id === 218;
+        });
 
-            let explorationTag = featStruct.Tags.find(tag => {
-                return tag.name == 'Exploration';
-            });
-            let downtimeTag = featStruct.Tags.find(tag => {
-                return tag.name == 'Downtime';
-            });
-
-            if(explorationTag != null){
-                explorationFeatStructArray.push(featStruct);
-            } else if(downtimeTag != null){
-                downtimeFeatStructArray.push(featStruct);
-            } else if(feat.actions != 'NONE'){
-                encounterFeatStructArray.push(featStruct);
-            }
+        featStruct.Feat.isCore = 1;
+        if(explorationTag != null){
+            explorationFeatStructArray.push(featStruct);
+        } else if(downtimeTag != null){
+            downtimeFeatStructArray.push(featStruct);
+        } else if(feat.value.actions != 'NONE'){
+            encounterFeatStructArray.push(featStruct);
         }
     }
 
@@ -648,16 +819,19 @@ function displayInformation() {
 
         if(featStruct.Feat.isDefault == 1){
 
+            // Hardcoded Exploration and Downtime Tag IDs
             let explorationTag = featStruct.Tags.find(tag => {
-                return tag.name == 'Exploration';
+                return tag.id === 15;
             });
             let downtimeTag = featStruct.Tags.find(tag => {
-                return tag.name == 'Downtime';
+                return tag.id === 218;
             });
     
             if(explorationTag != null){
+                featStruct.Feat.isCore = 1;
                 explorationFeatStructArray.push(featStruct);
             } else if(downtimeTag != null){
+                featStruct.Feat.isCore = 1;
                 downtimeFeatStructArray.push(featStruct);
             } else if(featStruct.Feat.actions != 'NONE'){
                 encounterFeatStructArray.push(featStruct);
@@ -665,13 +839,30 @@ function displayInformation() {
         }
     }
 
+
+    encounterFeatStructArray = encounterFeatStructArray.sort(
+        function(a, b) {
+            return (a.Feat.name > b.Feat.name) ? 1 : -1;
+        }
+    );
+    explorationFeatStructArray = explorationFeatStructArray.sort(
+        function(a, b) {
+            return (a.Feat.name > b.Feat.name) ? 1 : -1;
+        }
+    );
+    downtimeFeatStructArray = downtimeFeatStructArray.sort(
+        function(a, b) {
+            return (a.Feat.name > b.Feat.name) ? 1 : -1;
+        }
+    );
+
     $('#actionsTab').click(function(event, preventQuickviewClose){
         if(preventQuickviewClose){
             event.stopImmediatePropagation();
         }
         changeTab('actionsTab', {
             FeatMap : g_featMap,
-            FeatChoiceMap : g_featChoiceMap,
+            FeatChoiceArray : g_featChoiceArray,
             SkillMap : g_skillMap,
             EncounterFeatStructArray : encounterFeatStructArray,
             ExplorationFeatStructArray : explorationFeatStructArray,
@@ -730,13 +921,15 @@ function displayInformation() {
         }
         changeTab('detailsTab', {
             FeatMap : g_featMap,
-            FeatChoiceMap : g_featChoiceMap,
+            FeatChoiceArray : g_featChoiceArray,
             AbilityMap : g_abilMap,
             AncestryTagsArray : g_charTagsArray,
-            ClassName : g_class.name,
             Character : g_character,
             Heritage : g_heritage,
             Background : g_background,
+            PhyFeats : g_phyFeatArray,
+            ClassDetails : g_classDetails,
+            Ancestry : g_ancestry,
         });
     });
 
@@ -760,18 +953,16 @@ function displayInformation() {
     let languagesContent = $('#languagesContent');
     languagesContent.html('');
     let langCount = 0;
-    for(const [dataSrc, dataLangArray] of g_langMap.entries()){
-        for(const language of dataLangArray){
-            if(langCount != 0){languagesContent.append(', ');}
-            langCount++;
-            let langID = 'langLink'+language.id+"C"+langCount;
-            languagesContent.append('<a id="'+langID+'" class="is-size-6">'+language.name+'</a>');
-            $('#'+langID).click(function(){
-                openQuickView('languageView', {
-                    Language : language
-                });
+    for(const lang of g_langArray){
+        if(langCount != 0){languagesContent.append(', ');}
+        langCount++;
+        let langID = 'langLink'+lang.value.id+"C"+langCount;
+        languagesContent.append('<a id="'+langID+'" class="is-size-6">'+lang.value.name+'</a>');
+        $('#'+langID).click(function(){
+            openQuickView('languageView', {
+                Language : lang.value
             });
-        }
+        });
     }
 
 
@@ -785,7 +976,7 @@ function initHealthAndTemp() {
 
     let maxHealth = $('#char-max-health');
     let maxHealthNum = getStatTotal('MAX_HEALTH');
-    maxHealthNum += (g_class.hitPoints+getStatTotal('MAX_HEALTH_BONUS_PER_LEVEL'))*g_character.level;
+    maxHealthNum += (g_classDetails.Class.hitPoints+getStatTotal('MAX_HEALTH_BONUS_PER_LEVEL'))*g_character.level;
     maxHealth.html(maxHealthNum);
 
     let currentHealth = $('#char-current-health');
@@ -1123,8 +1314,6 @@ function generateRuneDataStruct(){
 
 function determineBulkAndCoins(invItems, itemMap, strMod){
 
-    console.log(invItems);
-
     let bagBulkMap = new Map();
     let totalBulk = 0;
 
@@ -1238,12 +1427,23 @@ function determineBulkAndCoins(invItems, itemMap, strMod){
 
 function runAllFeatsAndAbilitiesCode() {
     
-    for(const [dataSrc, dataFeatArray] of g_featChoiceMap.entries()){
-        for(const feat of dataFeatArray){
-            processSheetCode(feat.code, feat.name);
+    for(const feat of g_featChoiceArray){
+        processSheetCode(feat.value.code, feat.value.name);
+    }
+
+    for(const [featID, featStruct] of g_featMap.entries()){
+        if(featStruct.Feat.isDefault == 1){
+            processSheetCode(featStruct.Feat.code, featStruct.Feat.name);
         }
     }
-    console.log(g_statManagerMap);
+
+    for(let classAbil of g_classDetails.Abilities){
+        processSheetCode(classAbil.code, classAbil.name);
+    }
+
+    for(let phyFeat of g_phyFeatArray){
+        processSheetCode(phyFeat.value.code, phyFeat.value.name);
+    }
 
 }
 
@@ -1258,11 +1458,12 @@ socket.on("returnAddFundamentalRune", function(invItemID, invStruct){
     $('#invItemAddFundamentalRuneButton'+invItemID).removeClass('is-loading');
     g_invStruct = invStruct;
     loadCharSheet();
-    $('#quickviewDefault').removeClass('is-active');
+    closeQuickView();
 });
 
 socket.on("returnAddItemToInv", function(itemID, invStruct){
     $('#addItemAddItem'+itemID).removeClass('is-loading');
+    $('#createCustomItemBtn').removeClass('is-loading');
     g_invStruct = invStruct;
     loadCharSheet();
 });
@@ -1271,19 +1472,19 @@ socket.on("returnRemoveItemFromInv", function(invItemID, invStruct){
     $('#invItemRemoveButton'+invItemID).removeClass('is-loading');
     g_invStruct = invStruct;
     loadCharSheet();
-    $('#quickviewDefault').removeClass('is-active');
+    closeQuickView();
 });
 
 socket.on("returnInvItemMoveBag", function(invItemID, invStruct){
     $('#invItemMoveSelect'+invItemID).removeClass('is-loading');
     g_invStruct = invStruct;
     loadCharSheet();
-    $('#quickviewDefault').removeClass('is-active');
+    closeQuickView();
 });
 
 socket.on("returnInvItemUpdated", function(invStruct){
     g_invStruct = invStruct;
     loadCharSheet();
-    $('#quickviewDefault').removeClass('is-active');
+    closeQuickView();
 });
 

@@ -1,12 +1,46 @@
 
 function openSpellQuickview(data){
+    addBackFunctionality(data);
 
     let spellDataStruct = data.SpellDataStruct;
     let spellID = spellDataStruct.Spell.id;
     let spellName = spellDataStruct.Spell.name;
 
+    let sheetSpellType = null;
     if(data.SheetData != null){
-        let spellLevel = (spellDataStruct.Spell.level === 0) ? "Cantrip" : "Lvl "+data.SheetData.Slot.slotLevel;
+        if(data.SheetData.Slot != null) {
+            sheetSpellType = 'CORE';
+        } else if(data.SheetData.InnateSpell != null){
+            sheetSpellType = 'INNATE';
+        } else if(data.SheetData.FocusSpell != null){
+            sheetSpellType = 'FOCUS';
+        }
+    }
+
+    if(data.SheetData != null){
+        let spellLevel = (spellDataStruct.Spell.level === 0) ? "Cantrip" : "Lvl "+spellDataStruct.Spell.level;
+        let spellHeightened = null;
+        if(sheetSpellType === 'CORE'){
+            spellHeightened = data.SheetData.Slot.slotLevel;
+        } else if(sheetSpellType === 'INNATE'){
+            spellHeightened = data.SheetData.InnateSpell.SpellLevel;
+        } else if(sheetSpellType === 'FOCUS'){
+            let focusHeightened = Math.ceil(g_character.level/2);
+            spellHeightened = (focusHeightened > spellDataStruct.Spell.level) ? focusHeightened : spellDataStruct.Spell.level;
+        }
+        if(spellDataStruct.Spell.level === 0) {
+            let cantripHeightened = Math.ceil(g_character.level/2);
+            spellHeightened = (spellHeightened > cantripHeightened) ? spellHeightened : cantripHeightened;
+        }
+        if(spellHeightened === null || spellDataStruct.Spell.level == spellHeightened) {
+            spellName += '<sup class="is-inline ml-2 is-size-7 is-italic">'+spellLevel+'</sup>';
+        } else {
+            spellName += '<sup class="is-inline ml-2 is-size-7 is-italic">'+spellLevel+'<span class="icon" style="font-size: 0.8em;"><i class="fas fa-caret-right"></i></span>'+spellHeightened+'</sup>';
+        }
+    }
+
+    if(data.SRCTabData != null){
+        let spellLevel = (data.SRCTabData.SpellLevel === 0) ? "Cantrip" : "Lvl "+data.SRCTabData.SpellLevel;
         spellName += '<sup class="is-inline ml-2 is-size-7 is-italic">'+spellLevel+'</sup>';
     }
 
@@ -29,8 +63,9 @@ function openSpellQuickview(data){
             socket.emit("requestSpellRemoveFromSpellBook",
                 getCharIDFromURL(),
                 data.SRCTabData.SpellSRC,
-                spellID);
-            $('#quickviewDefault').removeClass('is-active');
+                spellID,
+                data.SRCTabData.SpellLevel);
+            closeQuickView();
         });
     }
 
@@ -42,97 +77,150 @@ function openSpellQuickview(data){
 
         $('#spellClearSpellSlotBtn').click(function(){
             updateSpellSlot(null, data.SpellSlotData.Slot, data.SpellSlotData.SpellSRC, data.SpellSlotData.Data);
-            $('#quickviewDefault').removeClass('is-active');
+            closeQuickView();
         });
     }
 
     if(data.SheetData != null){ // View and Cast from Sheet //
-        
-        let spellBook = g_spellBookArray.find(spellBook => {
-            return spellBook.SpellSRC === data.SheetData.Slot.SpellSRC;
-        });
+
+        let spellTradition = null;
+        let spellKeyAbility = null;
+        let spellSRC = null;
+        let spellUsed = null;
+        if(sheetSpellType === 'CORE') {
+            let spellBook = g_spellBookArray.find(spellBook => {
+                return spellBook.SpellSRC === data.SheetData.Slot.SpellSRC;
+            });
+            spellTradition = spellBook.SpellList;
+            spellSRC = spellBook.SpellSRC;
+            spellKeyAbility = spellBook.SpellKeyAbility;
+            spellUsed = data.SheetData.Slot.used;
+        } else if(sheetSpellType === 'FOCUS') {
+            let spellBook = g_spellBookArray.find(spellBook => {
+                return spellBook.SpellSRC === data.SheetData.FocusSpell.SpellSRC;
+            });
+            spellTradition = spellBook.SpellList;
+            spellSRC = spellBook.SpellSRC;
+            spellKeyAbility = spellBook.SpellKeyAbility;
+            spellUsed = !g_focusOpenPoint;
+        } else if(sheetSpellType === 'INNATE') {
+            spellTradition = data.SheetData.InnateSpell.SpellTradition;
+            spellKeyAbility = data.SheetData.InnateSpell.KeyAbility;
+        }
+
+        $('#quickViewTitleRight').html('<span class="pr-2">'+capitalizeWord(spellTradition)+'</span>');
 
         let spellAttack, spellDC = 0;
-        if(spellBook.SpellList === 'ARCANE'){
+        if(spellTradition === 'ARCANE'){
             spellAttack = data.SheetData.Data.ArcaneSpellAttack;
             spellDC = data.SheetData.Data.ArcaneSpellDC;
-        } else if(spellBook.SpellList === 'DIVINE'){
+        } else if(spellTradition === 'DIVINE'){
             spellAttack = data.SheetData.Data.DivineSpellAttack;
             spellDC = data.SheetData.Data.DivineSpellDC;
-        } else if(spellBook.SpellList === 'OCCULT'){
+        } else if(spellTradition === 'OCCULT'){
             spellAttack = data.SheetData.Data.OccultSpellAttack;
             spellDC = data.SheetData.Data.OccultSpellDC;
-        } else if(spellBook.SpellList === 'ARCANE'){
+        } else if(spellTradition === 'PRIMAL'){
             spellAttack = data.SheetData.Data.PrimalSpellAttack;
             spellDC = data.SheetData.Data.PrimalSpellDC;
         }
 
-        let abilityMod = getMod(getStatTotal('SCORE_'+data.SheetData.Slot.keyAbility));
+        /*
+            "You're always trained in spell attack rolls and spell DCs
+            for your innate spells, even if you aren't otherwise trained
+            in spell attack rolls or spell DCs. If your proficiency in
+            spell attack rolls or spell DCs is expert or better, apply
+            that proficiency to your innate spells, too."
+        */
+        if(sheetSpellType === 'INNATE'){
+            let trainingProf = getProfNumber(1, g_character.level);
+            spellAttack = (trainingProf > spellAttack) ? trainingProf : spellAttack;
+            spellDC = (trainingProf > spellDC) ? trainingProf : spellDC;
+        }
+
+        let abilityMod = getMod(getStatTotal('SCORE_'+spellKeyAbility));
         spellAttack += abilityMod;
         spellDC += abilityMod;
 
         spellAttack = signNumber(spellAttack);
         spellDC += 10;
 
-        if(data.SheetData.Slot.used){
-            qContent.append('<button id="spellUnCastSpellBtn" class="button is-small is-info is-rounded is-outlined is-fullwidth mb-2"><span>Recover</span></button>');
-        } else {
-            qContent.append('<button id="spellCastSpellBtn" class="button is-small is-info is-rounded is-fullwidth mb-2"><span>Cast Spell</span></button>');
+        if(sheetSpellType === 'CORE' || sheetSpellType === 'FOCUS') {
+            if(spellUsed){
+                qContent.append('<button id="spellUnCastSpellBtn" class="button is-small is-info is-rounded is-outlined is-fullwidth mb-2"><span>Recover</span></button>');
+            } else {
+                qContent.append('<button id="spellCastSpellBtn" class="button is-small is-info is-rounded is-fullwidth mb-2"><span>Cast Spell</span></button>');
+            }
         }
 
-        qContent.append('<div class="tile text-center"><div class="tile is-child is-6"><strong>Attack</strong></div><div class="tile is-child is-6"><strong>DC</strong></div></div>');
-        qContent.append('<div class="tile text-center"><div class="tile is-child is-6"><p class="pr-1">'+spellAttack+'</p></div><div class="tile is-child is-6"><p>'+spellDC+'</p></div></div>');
+        qContent.append('<div class="columns is-mobile is-marginless text-center"><div class="column is-paddingless is-6"><strong>Attack</strong></div><div class="column is-paddingless is-6"><strong>DC</strong></div></div>');
+        qContent.append('<div class="columns is-mobile is-marginless text-center"><div class="column is-paddingless is-6"><p class="pr-1">'+spellAttack+'</p></div><div class="column is-paddingless is-6"><p>'+spellDC+'</p></div></div>');
 
         qContent.append('<hr class="m-2">');
 
-        $('#spellCastSpellBtn').click(function(){
-            if(spellDataStruct.Spell.level == 0) {
-                $('#quickviewDefault').removeClass('is-active');
-            } else {
-                data.SheetData.Slot.used = true;
+        if(sheetSpellType === 'CORE') {
+            $('#spellCastSpellBtn').click(function(){
+                if(spellDataStruct.Spell.level == 0) {
+                    closeQuickView();
+                } else {
+                    data.SheetData.Slot.used = true;
+                    socket.emit("requestSpellSlotUpdate",
+                        getCharIDFromURL(),
+                        data.SheetData.Slot);
+                    let spellSlotsArray = g_spellSlotsMap.get(spellSRC);
+                    if(spellSlotsArray != null){
+                        spellSlotsArray = updateSlotUsed(spellSlotsArray, data.SheetData.Slot.slotID, true);
+                    }
+                    g_spellSlotsMap.set(spellSRC, spellSlotsArray);
+                    closeQuickView();
+                    prepDisplayOfSpellsAndSlots();
+                }
+            });
+    
+            $('#spellUnCastSpellBtn').click(function(){
+                data.SheetData.Slot.used = false;
                 socket.emit("requestSpellSlotUpdate",
                     getCharIDFromURL(),
                     data.SheetData.Slot);
-                let spellSlotsArray = g_spellSlotsMap.get(spellBook.SpellSRC);
+                let spellSlotsArray = g_spellSlotsMap.get(spellSRC);
                 if(spellSlotsArray != null){
-                    spellSlotsArray = updateSlotUsed(spellSlotsArray, data.SheetData.Slot.slotID, true);
+                    spellSlotsArray = updateSlotUsed(spellSlotsArray, data.SheetData.Slot.slotID, false);
                 }
-                g_spellSlotsMap.set(spellBook.SpellSRC, spellSlotsArray);
-                $('#quickviewDefault').removeClass('is-active');
+                g_spellSlotsMap.set(spellSRC, spellSlotsArray);
+                closeQuickView();
                 prepDisplayOfSpellsAndSlots();
-            }
-        });
+            });
+        }
 
-        $('#spellUnCastSpellBtn').click(function(){
-            data.SheetData.Slot.used = false;
-            socket.emit("requestSpellSlotUpdate",
-                getCharIDFromURL(),
-                data.SheetData.Slot);
-            let spellSlotsArray = g_spellSlotsMap.get(spellBook.SpellSRC);
-            if(spellSlotsArray != null){
-                spellSlotsArray = updateSlotUsed(spellSlotsArray, data.SheetData.Slot.slotID, false);
-            }
-            g_spellSlotsMap.set(spellBook.SpellSRC, spellSlotsArray);
-            $('#quickviewDefault').removeClass('is-active');
-            prepDisplayOfSpellsAndSlots();
-        });
-
+        if(sheetSpellType === 'FOCUS') {
+            $('#spellCastSpellBtn').click(function(){
+                if(spellDataStruct.Spell.level != 0) {
+                    displayFocusCastingsSet('ADD');
+                }
+                closeQuickView();
+            });
+    
+            $('#spellUnCastSpellBtn').click(function(){
+                displayFocusCastingsSet('REMOVE');
+                closeQuickView();
+            });
+        }
 
     }
 
     let rarity = spellDataStruct.Spell.rarity;
     let tagsInnerHTML = '';
     switch(rarity) {
-    case 'UNCOMMON': tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-small is-primary">Uncommon</button>';
+    case 'UNCOMMON': tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-very-small is-primary">Uncommon</button>';
         break;
-    case 'RARE': tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-small is-success">Rare</button>';
+    case 'RARE': tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-very-small is-success">Rare</button>';
         break;
-    case 'UNIQUE': tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-small is-danger">Unique</button>';
+    case 'UNIQUE': tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-very-small is-danger">Unique</button>';
         break;
     default: break;
     }
     for(const tag of spellDataStruct.Tags){
-        tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-small is-info has-tooltip-bottom has-tooltip-multiline" data-tooltip="'+tag.description+'">'+tag.name+'</button>';
+        tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-very-small is-info has-tooltip-bottom has-tooltip-multiline" data-tooltip="'+tag.description+'">'+tag.name+'</button>';
     }
 
     if(tagsInnerHTML != ''){

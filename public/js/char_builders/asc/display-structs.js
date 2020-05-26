@@ -3,9 +3,8 @@ function displayFeat(locationID, feat){
 
     $('#'+locationID).html('');
     
-    let featInnerHTML = '<br>';
-  
-    featInnerHTML += '<div class="card"><div class="card-header level is-shadowless is-marginless"><div class="level-left is-size-4">';
+    let featInnerHTML = '';
+    featInnerHTML += '<div class="card mt-2"><div class="card-header level is-shadowless is-marginless"><div class="level-left is-size-4">';
   
     featInnerHTML += '<span>'+feat.Feat.name+'</span>';
   
@@ -26,16 +25,16 @@ function displayFeat(locationID, feat){
   
     featInnerHTML += '<div class="card-content has-text-left pt-1"><div class="buttons is-marginless">';
     switch(feat.Feat.rarity) {
-      case 'UNCOMMON': featInnerHTML += '<button class="button is-marginless mr-2 mb-1 is-small is-primary">Uncommon</button>';
+      case 'UNCOMMON': featInnerHTML += '<button class="button is-marginless mr-2 mb-1 is-very-small is-primary">Uncommon</button>';
         break;
-      case 'RARE': featInnerHTML += '<button class="button is-marginless mr-2 mb-1 is-small is-success">Rare</button>';
+      case 'RARE': featInnerHTML += '<button class="button is-marginless mr-2 mb-1 is-very-small is-success">Rare</button>';
         break;
-      case 'UNIQUE': featInnerHTML += '<button class="button is-marginless mr-2 mb-1 is-small is-danger">Unique</button>';
+      case 'UNIQUE': featInnerHTML += '<button class="button is-marginless mr-2 mb-1 is-very-small is-danger">Unique</button>';
         break;
       default: break;
     }
     for(const tag of feat.Tags){
-      featInnerHTML += '<button class="button is-marginless mr-2 mb-1 is-small is-info has-tooltip-bottom has-tooltip-multiline" data-tooltip="'+tag.description+'">'+tag.name+'</button>';
+      featInnerHTML += '<button class="button is-marginless mr-2 mb-1 is-very-small is-info has-tooltip-bottom has-tooltip-multiline" data-tooltip="'+tag.description+'">'+tag.name+'</button>';
     }
   
     featInnerHTML += '</div>';
@@ -62,7 +61,7 @@ function displayFeat(locationID, feat){
       featInnerHTML += '<hr class="m-1">';
     }
   
-    featInnerHTML += '<div>'+processText(feat.Feat.description, false)+'</div>';
+    featInnerHTML += '<div>'+processText(feat.Feat.description, false, true, 'MEDIUM')+'</div>';
   
     if(feat.Feat.special != null){
       featInnerHTML += '<div class="feat-attrib"><span><strong>Special: </strong></span><span>'+feat.Feat.special+'</span></div>';

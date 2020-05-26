@@ -86,8 +86,7 @@ socket.on("returnAdminItemDetails", function(itemObject){
         $("#inputName").val(itemName);
         $("#inputPrice").val(itemPrice);
     }
-
-    console.log(item);
+    
     for(let tag of item.TagArray){
         $("#inputTags").find('option[value='+tag.Tag.id+']').attr('selected','selected');
     }

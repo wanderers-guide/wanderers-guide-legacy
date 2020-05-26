@@ -19,7 +19,7 @@ router.get('*', (req, res) => {
         order: [['name', 'ASC'],]
     }).then((languages) => {
         Tag.findAll({
-            where: { isArchived: 0 },
+            where: { isArchived: 0, isHidden: 0 },
             order: [['name', 'ASC'],]
         }).then((tags) => {
             SenseType.findAll()

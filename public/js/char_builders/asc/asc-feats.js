@@ -1,50 +1,79 @@
 
 //------------------------- Processing Feats -------------------------//
-function initFeatProcessing(ascStatement, srcID, locationID, statementNum){
+function initFeatProcessing(ascStatement, srcStruct, locationID){
     if(ascFeatMap == null) {
         //console.log("Did not find valid featMap :(");
         socket.emit("requestASCFeats",
                 getCharIDFromURL(),
                 ascStatement,
-                srcID,
-                locationID,
-                statementNum);
+                srcStruct,
+                locationID);
     } else {
         //console.log("> Found a valid featMap!");
-        processingFeats(ascStatement, srcID, locationID, statementNum);
+        processingFeats(ascStatement, srcStruct, locationID);
     }
 }
 
-socket.on("returnASCFeats", function(ascStatement, srcID, locationID, statementNum, featObject){
+socket.on("returnASCFeats", function(ascStatement, srcStruct, locationID, featObject){
     let featMap = objToMap(featObject);
+    featMap = new Map([...featMap.entries()].sort(
+        function(a, b) {
+            if (a[1].Feat.level === b[1].Feat.level) {
+                // Name is only important when levels are the same
+                return a[1].Feat.name > b[1].Feat.name ? 1 : -1;
+            }
+            return b[1].Feat.level - a[1].Feat.level;
+        })
+    );
     //console.log("Setting featMap to new one...");
     ascFeatMap = featMap;
-    processingFeats(ascStatement, srcID, locationID, statementNum);
+    processingFeats(ascStatement, srcStruct, locationID);
 });
 
-function processingFeats(ascStatement, srcID, locationID, statementNum){
+function processingFeats(ascStatement, srcStruct, locationID){
     
-    if(ascStatement.includes("GIVE-GENERAL-FEAT")){ // GIVE-GENERAL-FEAT=3
-        let level = parseInt(ascStatement.split('=')[1]);
-        giveGeneralFeat(srcID, locationID, statementNum, level);
+    if(ascStatement.includes("GIVE-GENERAL-FEAT")){ // GIVE-GENERAL-FEAT=3[metamagic]
+        let value = ascStatement.split('=')[1];
+        let optionals = value.match(/^\d+?\[(\S+?)\]$/);
+        if(optionals != null){
+            optionals = optionals[1].split(',');
+        }
+        let level = parseInt(value);
+        giveGeneralFeat(srcStruct, locationID, level, optionals);
     }
-    else if(ascStatement.includes("GIVE-ANCESTRY-FEAT")){ // GIVE-ANCESTRY-FEAT=3
-        let level = parseInt(ascStatement.split('=')[1]);
-        giveAncestryFeat(srcID, locationID, statementNum, level,
-            ascChoiceStruct.CharTagsArray);
+    else if(ascStatement.includes("GIVE-ANCESTRY-FEAT")){ // GIVE-ANCESTRY-FEAT=3[metamagic]
+        let value = ascStatement.split('=')[1];
+        let optionals = value.match(/^\d+?\[(\S+?)\]$/);
+        if(optionals != null){
+            optionals = optionals[1].split(',');
+        }
+        let level = parseInt(value);
+        giveAncestryFeat(srcStruct, locationID, level,
+            ascChoiceStruct.CharTagsArray, optionals);
     }
-    else if(ascStatement.includes("GIVE-CLASS-FEAT")){ // GIVE-CLASS-FEAT=3
-        let level = parseInt(ascStatement.split('=')[1]);
-        giveClassFeat(srcID, locationID, statementNum, level);
+    else if(ascStatement.includes("GIVE-CLASS-FEAT")){ // GIVE-CLASS-FEAT=3[metamagic]
+        let value = ascStatement.split('=')[1];
+        let optionals = value.match(/^\d+?\[(\S+?)\]$/);
+        if(optionals != null){
+            optionals = optionals[1].split(',');
+        }
+        let level = parseInt(value);
+        giveClassFeat(srcStruct, locationID, level,
+            ascChoiceStruct.ClassDetails.Class.name, optionals);
     }
-    else if(ascStatement.includes("GIVE-SKILL-FEAT")){ // GIVE-SKILL-FEAT=3
-        let level = parseInt(ascStatement.split('=')[1]);
-        giveSkillFeat(srcID, locationID, statementNum, level);
+    else if(ascStatement.includes("GIVE-SKILL-FEAT")){ // GIVE-SKILL-FEAT=3[metamagic]
+        let value = ascStatement.split('=')[1];
+        let optionals = value.match(/^\d+?\[(\S+?)\]$/);
+        if(optionals != null){
+            optionals = optionals[1].split(',');
+        }
+        let level = parseInt(value);
+        giveSkillFeat(srcStruct, locationID, level, optionals);
     } 
     else if(ascStatement.includes("GIVE-FEAT-NAME")){ // GIVE-FEAT-NAME=Ancestral_Paragon
         let featName = ascStatement.split('=')[1];
         featName = featName.replace(/_/g," ");
-        giveFeatByName(srcID, featName, locationID, statementNum);
+        giveFeatByName(srcStruct, featName, locationID);
     } else {
         displayError("Unknown statement (2): \'"+ascStatement+"\'");
         statementComplete();
@@ -55,87 +84,93 @@ function processingFeats(ascStatement, srcID, locationID, statementNum){
 
 ////////////////////////////////// Choose Feats /////////////////////////////////////////////
 
-function giveGeneralFeat(srcID, locationID, statementNum, featLevel){
+function giveGeneralFeat(srcStruct, locationID, featLevel, optionalTags){
 
     displayFeatChoice(
-        srcID,
+        srcStruct,
         locationID,
-        statementNum,
         "Choose a General Feat",
         ["General"],
-        featLevel
+        featLevel,
+        optionalTags
     );
 
 }
 
-function giveSkillFeat(srcID, locationID, statementNum, featLevel){
+function giveSkillFeat(srcStruct, locationID, featLevel, optionalTags){
 
     displayFeatChoice(
-        srcID,
+        srcStruct,
         locationID,
-        statementNum,
         "Choose a Skill Feat",
         ["Skill"],
-        featLevel
+        featLevel,
+        optionalTags
     );
 
 }
 
-function giveAncestryFeat(srcID, locationID, statementNum, featLevel, charTagsArray){
+function giveAncestryFeat(srcStruct, locationID, featLevel, charTagsArray, optionalTags){
 
     displayFeatChoice(
-        srcID,
+        srcStruct,
         locationID,
-        statementNum,
         "Choose an Ancestry Feat",
         charTagsArray,
-        featLevel
+        featLevel,
+        optionalTags
     );
 
 }
 
-function giveClassFeat(srcID, locationID, statementNum, featLevel){
+function giveClassFeat(srcStruct, locationID, featLevel, className, optionalTags){
 
-    let className = $('#selectClass option:selected').attr("name");
-
-    if(className != "chooseDefault"){
-        displayFeatChoice(
-            srcID,
-            locationID,
-            statementNum,
-            "Choose a Class Feat",
-            [className],
-            featLevel
-        );
-    } else {
-        statementComplete();
-    }
+    displayFeatChoice(
+        srcStruct,
+        locationID,
+        "Choose a Class Feat",
+        [className],
+        featLevel,
+        optionalTags
+    );
 
 }
 
-function displayFeatChoice(srcID, locationID, statementNum, selectionName, tagsArray, featLevel) {
+function displayFeatChoice(srcStruct, locationID, selectionName, tagsArray, featLevel, optionalTags) {
 
     // TO-DO. If feat requires prereq, check feats that the char has from choiceMap
     
-    let selectFeatID = "selectFeat"+locationID+statementNum;
-    let descriptionFeatID = "descriptionFeat"+locationID+statementNum;
+    let selectFeatID = "selectFeat"+locationID+srcStruct.sourceCodeSNum;
+    let descriptionFeatID = "descriptionFeat"+locationID+srcStruct.sourceCodeSNum;
     let selectFeatControlShellClass = selectFeatID+'ControlShell';
 
     $('#'+locationID).append('<div class="field"><div class="select '+selectFeatControlShellClass+'"><select id="'+selectFeatID+'" class="selectFeat"></select></div><div id="'+descriptionFeatID+'"></div></div>');
 
     $('#'+selectFeatID).append('<option value="chooseDefault">'+selectionName+'</option>');
-    $('#'+selectFeatID).append('<hr class="dropdown-divider"></hr>');
 
     let triggerChange = false;
     // Set saved feat choices
-    let featArray = objToMap(ascChoiceStruct.FeatObject).get(srcID);
+
+    let featArray = ascChoiceStruct.FeatArray;
+    
+    let featData = featArray.find(featData => {
+        return hasSameSrc(featData, srcStruct);
+    });
+
     let selectedFeat = null;
-    if(featArray != null && featArray[0] != null){
-        selectedFeat = featArray[0];
+    if(featData != null){
+        selectedFeat = featData.value;
         triggerChange = true;
     }
 
-    let prevLevel = 1;
+    // Make optional tags lowercase
+    if(optionalTags != null){
+        for (let i = 0; i < optionalTags.length; i++) {
+            optionalTags[i] = optionalTags[i].toLowerCase();
+        }
+    }
+
+    let prevLevel = 100;
     for(const featStruct of ascFeatMap){
         let feat = featStruct[1];
         if(feat.Feat.level < 1){ continue; }
@@ -149,17 +184,31 @@ function displayFeatChoice(srcID, locationID, statementNum, selectionName, tagsA
             }
         }
 
-        let tag = feat.Tags.find(tag => {
-            return tagsArray.includes(tag.name);
-        });
+        let hasCorrectTags = false;
+        let sameOpsTagsArray = [];
+        for(let featTag of feat.Tags){
+            if(tagsArray.includes(featTag.name)){
+                hasCorrectTags = true;
+            }
+            if(optionalTags != null){
+                let featTagNameLower = featTag.name.toLowerCase();
+                if(optionalTags.includes(featTagNameLower)){
+                    sameOpsTagsArray.push(featTagNameLower);
+                }
+            }
+        }
+        if(optionalTags != null){
+            hasCorrectTags = (optionalTags.sort().join(',') === sameOpsTagsArray.sort().join(','));
+        }
 
-        if(feat.Feat.level <= featLevel && feat.Tags.includes(tag)){
+        if(feat.Feat.level <= featLevel && hasCorrectTags){
+
+            if(feat.Feat.level < prevLevel){
+                $('#'+selectFeatID).append('<hr class="dropdown-divider"></hr>');
+            }
 
             $('#'+selectFeatID).append('<option value="'+feat.Feat.id+'">('+feat.Feat.level+') '+featName+'</option>');
 
-            if(feat.Feat.level > prevLevel){
-                $('#'+selectFeatID).append('<hr class="dropdown-divider"></hr>');
-            }
             prevLevel = feat.Feat.level;
 
         }
@@ -168,6 +217,10 @@ function displayFeatChoice(srcID, locationID, statementNum, selectionName, tagsA
 
     if(selectedFeat != null){
         $('#'+selectFeatID).val(selectedFeat.id);
+        if ($('#'+selectFeatID).val() != selectedFeat.id){
+            $('#'+selectFeatID).val($("#"+selectFeatID+" option:first").val());
+            $('#'+selectFeatID).parent().addClass("is-info");
+        }
     }
 
     // On feat choice change
@@ -179,24 +232,24 @@ function displayFeatChoice(srcID, locationID, statementNum, selectionName, tagsA
             let feat = ascFeatMap.get(featID+"");
 
             if($(this).val() == "chooseDefault" || feat == null){
+                $('.'+selectFeatControlShellClass).addClass("is-info");
+                $('.'+selectFeatControlShellClass).removeClass("is-danger");
 
                 // Display nothing
                 $('#'+descriptionFeatID).html('');
 
-                $('.'+selectFeatControlShellClass).removeClass("is-danger");
-                $('.'+selectFeatControlShellClass).addClass("is-info");
-
                 socket.emit("requestFeatChange",
                     getCharIDFromURL(),
-                    {srcID : srcID, feat : null, featID : null, codeLocationID : descriptionFeatID+"Code" },
+                    {srcStruct, feat : null, featID : null, codeLocationID : descriptionFeatID+"Code" },
                     selectFeatControlShellClass);
 
             } else {
+                $('.'+selectFeatControlShellClass).removeClass("is-info");
 
-                let featChoiceMap = objToMap(ascChoiceStruct.FeatObject);
+                let featArray = ascChoiceStruct.FeatArray;
 
                 let canSelectFeat = true;
-                if((checkDup == null || checkDup) && feat.Feat.canSelectMultiple == 0 && hasDuplicateFeat(featChoiceMap, $(this).val())){
+                if((checkDup == null || checkDup) && feat.Feat.canSelectMultiple == 0 && hasDuplicateFeat(featArray, $(this).val())){
                     canSelectFeat = false;
                 }
                 if(selectedFeat != null && selectedFeat.id == feat.Feat.id) {
@@ -219,10 +272,9 @@ function displayFeatChoice(srcID, locationID, statementNum, selectionName, tagsA
                     // Save feats
                     if(triggerSave == null || triggerSave) {
                         $('.'+selectFeatControlShellClass).addClass("is-loading");
-
                         socket.emit("requestFeatChange",
                             getCharIDFromURL(),
-                            {srcID : srcID, feat : feat, featID : featID, codeLocationID : descriptionFeatID+"Code" },
+                            {srcStruct, feat, featID, codeLocationID : descriptionFeatID+"Code" },
                             selectFeatControlShellClass);
                     }
                 
@@ -242,6 +294,7 @@ socket.on("returnFeatChange", function(featChangePacket, selectFeatControlShellC
     
     if(selectFeatControlShellClass != null) {
         $('.'+selectFeatControlShellClass).removeClass("is-loading");
+        $('.'+selectFeatControlShellClass+'>select').blur();
     }
 
     if(featChangePacket.isStatement != null && featChangePacket.isStatement){
@@ -250,18 +303,11 @@ socket.on("returnFeatChange", function(featChangePacket, selectFeatControlShellC
 
     socket.emit("requestASCUpdateChoices", getCharIDFromURL());
 
+    // Clear previous code and run new code
     if(featChangePacket.feat != null){
-        // Process chosen feats code
-        let srcType, srcLevel = null;
-        let srcSections = featChangePacket.srcID.split('_');
-        srcType = srcSections[0].split('-')[1];
-        srcLevel = srcSections[1].split('-')[1];
-
-        let srcID = 'Type-'+srcType+'_Level-'+srcLevel+'_Code-Processor'+featChangePacket.codeLocationID;
-        processClear(srcID);
         processCode(
             featChangePacket.feat.Feat.code,
-            srcID,
+            featChangePacket.srcStruct,
             featChangePacket.codeLocationID);
     }
 
@@ -269,7 +315,7 @@ socket.on("returnFeatChange", function(featChangePacket, selectFeatControlShellC
 
 //////////////////////////////// Give Feat (by Name) ///////////////////////////////////
 
-function giveFeatByName(srcID, featName, locationID, statementNum){
+function giveFeatByName(srcStruct, featName, locationID){
 
     let featEntry = null;
     ascFeatMap.forEach(function(value, key, map){
@@ -286,14 +332,14 @@ function giveFeatByName(srcID, featName, locationID, statementNum){
         return;
     }
 
-    let descriptionFeatID = "descriptionFeat"+locationID+statementNum;
+    let descriptionFeatID = "descriptionFeat"+locationID+srcStruct.sourceCodeSNum;
     $('#'+locationID).append('<div id="'+descriptionFeatID+'"></div>');
 
     displayFeat(descriptionFeatID, featEntry);
 
     socket.emit("requestFeatChangeByName",
         getCharIDFromURL(),
-        {srcID : srcID, feat : featEntry, featName : featName,
+        {srcStruct, feat : featEntry, featName : featName,
             codeLocationID : descriptionFeatID+"Code", isStatement : true });
 
 }

@@ -155,7 +155,8 @@
                         <label class="label">Boosts</label>
                         <div class="control">
                             <div class="select is-multiple">
-                                <select id="inputBoosts" multiple size="7" class="use-invisible-scrollbar">
+                                <select id="inputBoosts" multiple size="8" class="use-invisible-scrollbar">
+                                    <option value="Anything">Free</option>
                                     <option value="Anything">Free</option>
                                     <option value="Strength">Strength</option>
                                     <option value="Dexterity">Dexterity</option>
@@ -172,8 +173,7 @@
                         <label class="label">Flaws</label>
                         <div class="control">
                             <div class="select is-multiple">
-                                <select id="inputFlaws" multiple size="7" class="use-invisible-scrollbar">
-                                    <option value="Anything">Free</option>
+                                <select id="inputFlaws" multiple size="6" class="use-invisible-scrollbar">
                                     <option value="Strength">Strength</option>
                                     <option value="Dexterity">Dexterity</option>
                                     <option value="Constitution">Constitution</option>
@@ -220,18 +220,15 @@
                 <div class="tile is-vertical">
 
                     <div class="tile is-child field">
-                        <label class="label">Description</label>
+                        <label class="label">
+                            Description
+                            <a href="/asc_docs/#description_fields" target="_blank"><span class="icon is-small has-text-info has-tooltip-bottom" data-tooltip="ASC Docs"><i class="fas fa-book"></i></span></a>
+                        </label>
                         <div class="control">
                             <textarea id="inputDescription" class="textarea" placeholder="Always hungry for new experiences..."></textarea>
                         </div>
                     </div>
-
-                    <div class="tile is-child field">
-                        <label class="label">Trait Description</label>
-                        <div class="control">
-                            <textarea id="inputTagDesc" class="textarea" placeholder="A creature with this trait is a member of the gnome ancestry..."></textarea>
-                        </div>
-                    </div>
+                    
                 </div>
 
             </div>
@@ -259,7 +256,10 @@
                                 </div>
                             </div>
                             <div class="field">
-                                <label class="label">Description</label>
+                                <label class="label">
+                                    Description
+                                    <a href="/asc_docs/#description_fields" target="_blank"><span class="icon is-small has-text-info has-tooltip-bottom" data-tooltip="ASC Docs"><i class="fas fa-book"></i></span></a>
+                                </label>
                                 <div class="control">
                                     <textarea class="textarea inputHeritageDesc" placeholder="Some other source of magic has a greater hold..."></textarea>
                                 </div>
@@ -388,7 +388,10 @@
                             </div>
 
                             <div class="field">
-                                <label class="label">Description</label>
+                                <label class="label">
+                                    Description
+                                    <a href="/asc_docs/#description_fields" target="_blank"><span class="icon is-small has-text-info has-tooltip-bottom" data-tooltip="ASC Docs"><i class="fas fa-book"></i></span></a>
+                                </label>
                                 <div class="control">
                                     <textarea class="textarea inputFeatDesc" placeholder="Others’ attempts to scare you often grant you insights..."></textarea>
                                 </div>

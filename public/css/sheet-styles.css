@@ -23,19 +23,48 @@
 @media screen and (min-width:937px){
     
     #inventoryContent {
-        height: 483px;
-        max-height: 483px;
+        height: 495px;
+        max-height: 495px;
         overflow-y: scroll;
+    }
+
+    #acText {
+        margin-top: 0.5em;
+        font-size: 1rem;
+    }
+    #acNumber {
+        font-size: 1.25rem;
+    }
+    #shieldText {
+        margin-top: 0.5em;
+        font-size: 0.75rem;
+    }
+    #shieldBonus {
+        font-size: 1.25rem;
     }
 
 }
 
 @media screen and (min-width:1280px){
 
+    #acText {
+        margin-top: 0;
+        font-size: 1.25rem;
+    }
+    #acNumber {
+        font-size: 1.5rem;
+    }
+    #shieldText {
+        margin-top: 0;
+        font-size: 1rem;
+    }
+    #shieldBonus {
+        font-size: 1.5rem;
+    }
+
 }
 
 @media screen and (min-width:1472px){
-
 }
 
 .sheet-box {
@@ -59,6 +88,10 @@
     color: #cccccc;
     border-radius: 43%;
 
+}
+
+.has-text-grey-kinda-light {
+    color: hsl(0, 0%, 60%)!important;
 }
 
 .has-background-black-like {
@@ -113,20 +146,32 @@
 }
 
 .action-tabs li:hover {
-    color: #3273dc;
+    color: #3298dc;
 }
 .action-tabs a:hover {
-    border-bottom-color: #3273dc;
+    border-bottom-color: #3298dc;
+}
+
+.details-tabs li:hover {
+    color: #3298dc;
+}
+.details-tabs a:hover {
+    border-bottom-color: #3298dc;
 }
 
 .category-tabs li {
     color: #dbdbdb;
 }
 .category-tabs li:hover {
-    color: #3273dc;
+    color: #3298dc;
 }
 .category-tabs a:hover {
-    border-bottom-color: #3273dc;
+    border-bottom-color: #3298dc;
+}
+
+.tabs:not(.is-boxed) li.is-active a {
+    border-bottom-color: #3298dc;
+    color: #3298dc;
 }
 
 .input, .select select, .textarea {
@@ -172,7 +217,7 @@ hr {
 }
 
 .hr-light {
-    border-color: #838383!important;
+    border-color: #5a5a5a!important;
 }
 
 .is-filled-spell-slot {
@@ -185,4 +230,8 @@ hr {
     background-color: hsl(0, 0%, 35%)!important;
     color: #dddddd!important;
     border-color: hsl(210, 3%, 23%)!important;
+}
+
+.has-empty-slot-background {
+    background-color: hsl(0, 0%, 14%);
 }

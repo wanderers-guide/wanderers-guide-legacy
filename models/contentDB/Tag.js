@@ -8,6 +8,9 @@ const Tag = db.define('tags', {
   description: {
     type: Sequelize.TEXT
   },
+  isHidden: {
+    type: Sequelize.INTEGER
+  },
   isArchived: {
     type: Sequelize.INTEGER
   }

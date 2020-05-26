@@ -6,6 +6,7 @@ const Feat = require('../models/contentDB/Feat');
 const FeatTag = require('../models/contentDB/FeatTag');
 const Tag = require('../models/contentDB/Tag');
 const Spell = require('../models/contentDB/Spell');
+const InnateSpellCasting = require('../models/contentDB/InnateSpellCasting');
 const TaggedSpell = require('../models/contentDB/TaggedSpell');
 const Skill = require('../models/contentDB/Skill');
 const Background = require('../models/contentDB/Background');
@@ -31,8 +32,11 @@ const Storage = require('../models/contentDB/Storage');
 const Shield = require('../models/contentDB/Shield');
 const ItemRune = require('../models/contentDB/ItemRune');
 
-const CharDataStoring = require('./CharDataStoring');
+const CharDataMapping = require('./CharDataMapping');
+const CharDataMappingExt = require('./CharDataMappingExt');
+
 const CharSpells = require('./CharSpells');
+const CharTags = require('./CharTags');
 
 function mapToObj(strMap) {
     let obj = Object.create(null);
@@ -52,11 +56,16 @@ function objToMap(obj) {
     return strMap;
 }
 
+function hashCode(str) {
+    return str.split('').reduce((prevHash, currVal) =>
+      (((prevHash << 5) - prevHash) + currVal.charCodeAt(0))|0, 0);
+}
+
 function getUpAmt(profType){
-    if(profType == "Up"){
+    if(profType == "UP"){
         return 1;
     }
-    if(profType == "Down"){
+    if(profType == "DOWN"){
         return -1;
     }
     return 0;
@@ -93,12 +102,20 @@ function findItemDataByName(itemMap, itemName){
     return null;
 }
 
+function getInnateSpellCastingID(innateSpell){
+    return innateSpell.charID+':'+innateSpell.source+':'+innateSpell.sourceType+':'+innateSpell.sourceLevel+':'+innateSpell.sourceCode+':'+innateSpell.sourceCodeSNum+':'+innateSpell.SpellID+':'+innateSpell.SpellLevel+':'+innateSpell.SpellTradition+':'+innateSpell.TimesPerDay;
+}
+
 module.exports = class CharGathering {
 
     static getAllClasses() {
-        return Class.findAll()
+        return Class.findAll({
+            order: [['name', 'ASC'],]
+        })
         .then((classes) => {
-            return ClassAbility.findAll()
+            return ClassAbility.findAll({
+                order: [['level', 'ASC'],['name', 'ASC'],]
+            })
             .then((allClassAbilities) => {
                 
                 let classMap = new Map();
@@ -123,9 +140,7 @@ module.exports = class CharGathering {
 
 
     static getAllFeats() {
-        return Feat.findAll({
-            order: [['level', 'ASC'],]
-        })
+        return Feat.findAll()
         .then((feats) => {
             return FeatTag.findAll()
             .then((featTags) => {
@@ -320,11 +335,10 @@ module.exports = class CharGathering {
     static getAllSkills(charID) {
         return Skill.findAll()
         .then((skills) => {
-            return CharDataStoring.getProficiencies(charID, "GET_ALL")
-            .then((proficiencyMap) => {
-                return CharDataStoring.getBasicData(charID, "GET_ALL", 'dataLoreCategories', null)
-                .then((loreObject) => {
-                    let loreMap = objToMap(loreObject);
+            return CharDataMappingExt.getDataAllProficiencies(charID)
+            .then((profDataArray) => {
+                return CharDataMapping.getDataAll(charID, 'loreCategories', null)
+                .then((loreDataArray) => {
                     
                     let skillArray = [];
 
@@ -338,10 +352,8 @@ module.exports = class CharGathering {
                         return skill.name === "Lore";
                     });
 
-                    for(const [dataSrc, dataValArray] of loreMap.entries()){
-                        for(const dataVal of dataValArray){
-                            skillArray.push({ SkillName : dataVal+" Lore", Skill : loreSkill });
-                        }
+                    for(const loreData of loreDataArray) {
+                        skillArray.push({ SkillName : loreData.value+" Lore", Skill : loreSkill });
                     }
 
                     let skillMap = new Map();
@@ -351,19 +363,19 @@ module.exports = class CharGathering {
                         let bestProf = 'U';
                         let numUps = 0;
                         let totalBonus = 0;
-                        for(const [dataSrc, dataValArray] of proficiencyMap.entries()){
-                            for(const dataVal of dataValArray){
-                                tempCount++;
+                        for(const profData of profDataArray){
+                            tempCount++;
 
-                                if(dataVal.For == "Skill"){
-                                    dataVal.To = dataVal.To.replace(/_/g," ");
-                                    if(dataVal.To == skillData.SkillName) {
-                                        numUps += getUpAmt(dataVal.Prof);
-                                        totalBonus += getBonus(dataVal.Prof);
-                                        bestProf = getBetterProf(bestProf, dataVal.Prof);
-                                    }
+                            if(profData.For == "Skill"){
+                                let tempSkillName = skillData.SkillName.toUpperCase();
+                                tempSkillName = tempSkillName.replace(/_|\s+/g,"");
+                                let tempProfTo = profData.To.toUpperCase();
+                                tempProfTo = tempProfTo.replace(/_|\s+/g,"");
+                                if(tempProfTo === tempSkillName) {
+                                    numUps += getUpAmt(profData.Prof);
+                                    totalBonus += getBonus(profData.Prof);
+                                    bestProf = getBetterProf(bestProf, profData.Prof);
                                 }
-
                             }
                         }
 
@@ -374,8 +386,7 @@ module.exports = class CharGathering {
                         });
                     }
 
-                    console.log("Did "+tempCount+" comparisons.");
-                    console.log(skillMap);
+                    console.log("SkillMap: Did "+tempCount+" comparisons.");
 
                     return mapToObj(skillMap);
 
@@ -553,21 +564,71 @@ module.exports = class CharGathering {
         });
     }
 
+    static getResistancesAndVulnerabilities(charID) {
+        return CharDataMappingExt.getDataAllResistance(charID)
+        .then((resistancesDataArray) => {
+            return CharDataMappingExt.getDataAllVulnerability(charID)
+            .then((vulnerabilitiesDataArray) => {
+                return {Resistances: resistancesDataArray, Vulnerabilities: vulnerabilitiesDataArray};
+            });
+        });
+    }
+
 
     static getSpellData(charID){
         return CharSpells.getSpellSlots(charID)
         .then((spellSlotsMap) => {
-            let spellBookPromises = [];
+
+            let spellBookSlotPromises = [];
             for(const [spellSRC, spellSlotArray] of spellSlotsMap.entries()){
                 let newPromise = CharSpells.getSpellBook(charID, spellSRC);
-                spellBookPromises.push(newPromise);
+                spellBookSlotPromises.push(newPromise);
             }
-            return Promise.all(spellBookPromises)
-            .then(function(spellBookArray) {
-                return {
-                    SpellSlotObject: mapToObj(spellSlotsMap),
-                    SpellBookArray: spellBookArray,
-                };
+            return Promise.all(spellBookSlotPromises)
+            .then(function(spellBookSlotArray) {
+
+                return CharSpells.getFocusSpells(charID)
+                .then((focusSpellMap) => {
+                    let spellBookFocusPromises = [];
+                    for(const [spellSRC, focusSpellDataArray] of focusSpellMap.entries()){
+                        let newPromise = CharSpells.getSpellBook(charID, spellSRC);
+                        spellBookFocusPromises.push(newPromise);
+                    }
+                    return Promise.all(spellBookFocusPromises)
+                    .then(function(spellBookFocusArray) {
+                        let spellBookArray = spellBookSlotArray
+                            .concat(spellBookFocusArray.filter((entry) => spellBookSlotArray.indexOf(entry) < 0));
+
+                        return CharDataMappingExt.getDataAllInnateSpell(charID)
+                        .then((innateSpellArray) => {
+                            let innateSpellPromises = [];
+                            for(const innateSpell of innateSpellArray){
+                                let innateSpellCastingsID = getInnateSpellCastingID(innateSpell);
+                                let newPromise = InnateSpellCasting.findOrCreate({where: {innateSpellID: innateSpellCastingsID}, defaults: {timesCast: 0}, raw: true});
+                                innateSpellPromises.push(newPromise);
+                            }
+
+                            return Promise.all(innateSpellPromises)
+                            .then(function(innateSpellCastings) {
+                                for(let innateSpell of innateSpellArray){
+                                    let innateSpellCastingsID = getInnateSpellCastingID(innateSpell);
+                                    let innateSpellData = innateSpellCastings.find(innateSpellData => {
+                                        return innateSpellData[0].innateSpellID === innateSpellCastingsID;
+                                    });
+                                    innateSpell.TimesCast = innateSpellData[0].timesCast;
+                                    innateSpell.TimesPerDay = parseInt(innateSpell.TimesPerDay);
+                                    innateSpell.SpellLevel = parseInt(innateSpell.SpellLevel);
+                                }
+                                return {
+                                    SpellSlotObject: mapToObj(spellSlotsMap),
+                                    SpellBookArray: spellBookArray,
+                                    InnateSpellArray: innateSpellArray,
+                                    FocusSpellObject: mapToObj(focusSpellMap),
+                                };
+                            });
+                        });
+                    });
+                });
             });
         });
     }
@@ -579,41 +640,44 @@ module.exports = class CharGathering {
         .then((character) => {
             return Heritage.findOne({ where: { id: character.heritageID} })
             .then((heritage) => {
-                return CharDataStoring.getCharTags(charID)
+                return CharTags.getTags(charID)
                 .then((charTagsArray) => {
-                    return Class.findOne({ where: { id: character.classID} })
-                    .then((cClass) => {
-                        return CharDataStoring.getBasicData(charID, "GET_ALL", 'dataChosenFeats', Feat)
-                        .then((featObject) => {
-                            return CharDataStoring.getAbilityBonus(charID, "GET_ALL")
-                            .then((bonusMap) => {
-                                return CharDataStoring.getAbilityChoice(charID, "GET_ALL")
-                                .then((abilityObject) => {
-                                    return CharDataStoring.getProficiencies(charID, "GET_ALL")
-                                    .then((proficiencyMap) => {
-                                        return CharDataStoring.getBasicData(charID, "GET_ALL", 'dataLanguages', Language)
-                                        .then((langObject) => {
-                                            return CharDataStoring.getBasicData(charID, "GET_ALL", 'dataSenses', SenseType)
-                                            .then((senseObject) => {
-                                                return CharDataStoring.getBasicData(charID, "GET_ALL", 'dataPhysicalFeatures', PhysicalFeature)
-                                                .then((physicalFeatureObject) => {
+                    return CharGathering.getClass(character.classID)
+                    .then((classDetails) => {
+                        return CharDataMapping.getDataAll(charID, 'chosenFeats', Feat)
+                        .then((featDataArray) => {
+                            return CharDataMappingExt.getDataAllAbilityBonus(charID)
+                            .then((bonusDataArray) => {
+                                return CharDataMappingExt.getDataAllClassChoice(charID)
+                                .then((choiceDataArray) => {
+                                    return CharDataMappingExt.getDataAllProficiencies(charID)
+                                    .then((profDataArray) => {
+                                        return CharDataMapping.getDataAll(charID, 'languages', Language)
+                                        .then((langDataArray) => {
+                                            return CharDataMapping.getDataAll(charID, 'senses', SenseType)
+                                            .then((senseDataArray) => {
+                                                return CharDataMapping.getDataAll(charID, 'phyFeats', PhysicalFeature)
+                                                .then((phyFeatDataArray) => {
+                                                    return CharGathering.getFinalProfs(charID)
+                                                    .then( (profMap) => {
                                                     
-                                                    let choiceStruct = {
-                                                        Level : character.level,
-                                                        Heritage : heritage,
-                                                        Class : cClass,
-                                                        CharTagsArray : charTagsArray,
-                                                        FeatObject : featObject,
-                                                        BonusObject : mapToObj(bonusMap),
-                                                        AbilityObject : abilityObject,
-                                                        ProficiencyObject : mapToObj(proficiencyMap),
-                                                        LangObject : langObject,
-                                                        SenseObject : senseObject,
-                                                        PhysicalFeatureObject : physicalFeatureObject,
-                                                    };
-                            
-                                                    return choiceStruct;
-
+                                                        let choiceStruct = {
+                                                            Level : character.level,
+                                                            Heritage : heritage,
+                                                            ClassDetails : classDetails,
+                                                            CharTagsArray : charTagsArray,
+                                                            FeatArray : featDataArray,
+                                                            BonusArray : bonusDataArray,
+                                                            ChoiceArray : choiceDataArray,
+                                                            ProfArray : profDataArray,
+                                                            LangArray : langDataArray,
+                                                            SenseArray : senseDataArray,
+                                                            PhyFeatArray : phyFeatDataArray,
+                                                            FinalProfObject : mapToObj(profMap),
+                                                        };
+                                
+                                                        return choiceStruct;
+                                                    });
                                                 });
                                             });
                                         });
@@ -644,9 +708,17 @@ module.exports = class CharGathering {
     }
 
     static getClass(classID) {
-        return Class.findOne({ where: { id: classID} })
-        .then((cClass) => {
-            return cClass;
+        return Class.findOne({
+            where: { id: classID },
+            raw: true,
+        }).then((cClass) => {
+            return ClassAbility.findAll({
+                order: [['level', 'ASC'],['name', 'ASC'],],
+                where: { classID: cClass.id },
+                raw: true,
+            }).then((classAbilities) => {
+                return {Class : cClass, Abilities : classAbilities};
+            });
         });
     }
 
@@ -682,10 +754,20 @@ module.exports = class CharGathering {
         });
     }
 
+    static getSpellByName(spellName) {
+        return Spell.findOne({ where: { name: spellName} })
+        .then((spell) => {
+            return spell;
+        });
+    }
+
+
+    
+
     static getAbilityScores(charID) {
 
-        return CharDataStoring.getAbilityBonus(charID, 'GET_ALL')
-        .then((bonusMap) => {
+        return CharDataMappingExt.getDataAllAbilityBonus(charID)
+            .then((bonusDataArray) => {
 
             let abilMap = new Map();
             abilMap.set("STR", 10);
@@ -696,27 +778,24 @@ module.exports = class CharGathering {
             abilMap.set("CHA", 10);
 
             let boostMap = new Map();
-
-            for(const [dataSrc, dataValArray] of bonusMap.entries()){
-                for(const dataVal of dataValArray){
-                    if(dataVal.Bonus == "Boost") {
-                        let boostNums = boostMap.get(dataVal.Ability);
-                        if(boostNums == null){
-                            boostMap.set(dataVal.Ability, 1);
-                        } else {
-                            boostMap.set(dataVal.Ability, boostNums+1);
-                        }
-                    } else if(dataVal.Bonus == "Flaw") {
-                        let boostNums = boostMap.get(dataVal.Ability);
-                        if(boostNums == null){
-                            boostMap.set(dataVal.Ability, -1);
-                        } else {
-                            boostMap.set(dataVal.Ability, boostNums-1);
-                        }
+            for(const bonusData of bonusDataArray){
+                if(bonusData.Bonus == "Boost") {
+                    let boostNums = boostMap.get(bonusData.Ability);
+                    if(boostNums == null){
+                        boostMap.set(bonusData.Ability, 1);
                     } else {
-                        let abilBonus = abilMap.get(dataVal.Ability);
-                        abilMap.set(dataVal.Ability, abilBonus+parseInt(dataVal.Bonus));
+                        boostMap.set(bonusData.Ability, boostNums+1);
                     }
+                } else if(bonusData.Bonus == "Flaw") {
+                    let boostNums = boostMap.get(bonusData.Ability);
+                    if(boostNums == null){
+                        boostMap.set(bonusData.Ability, -1);
+                    } else {
+                        boostMap.set(bonusData.Ability, boostNums-1);
+                    }
+                } else {
+                    let abilBonus = abilMap.get(bonusData.Ability);
+                    abilMap.set(bonusData.Ability, abilBonus+parseInt(bonusData.Bonus));
                 }
             }
 
@@ -730,7 +809,7 @@ module.exports = class CharGathering {
                     }
                 }
                 if(boostNums < 0) {
-                    abilityScore = abilityScore+boostNums*2
+                    abilityScore = abilityScore+boostNums*2;
                 }
                 abilMap.set(ability, abilityScore);
             }
@@ -744,43 +823,39 @@ module.exports = class CharGathering {
     
 
     static getFinalProfs(charID) {
-        return CharDataStoring.getProficiencies(charID, "GET_ALL")
-        .then((proficiencyMap) => {
+        return CharDataMappingExt.getDataAllProficiencies(charID)
+        .then((profDataArray) => {
             let newProfMap = new Map();
-            for(const [dataSrc, dataValArray] of proficiencyMap.entries()){
-                for(const dataVal of dataValArray){
+            for(const profData of profDataArray){
+                let profMapValue = newProfMap.get(profData.To);
+                if(profMapValue != null){
 
-                    let profMapValue = newProfMap.get(dataVal.To);
-                    if(profMapValue != null){
+                    newProfMap.set(profData.To, {
+                        BestProf : getBetterProf(profMapValue.BestProf, profData.Prof),
+                        NumIncreases : profMapValue.NumIncreases+getUpAmt(profData.Prof),
+                        Bonus : profMapValue.Bonus+getBonus(profData.Prof),
+                        For : profMapValue.For
+                    });
 
-                        newProfMap.set(dataVal.To, {
-                            BestProf : getBetterProf(profMapValue.BestProf, dataVal.Prof),
-                            NumIncreases : profMapValue.NumIncreases+getUpAmt(dataVal.Prof),
-                            Bonus : profMapValue.Bonus+getBonus(dataVal.Prof),
-                            For : profMapValue.For
-                        });
+                } else {
 
-                    } else {
-
-                        newProfMap.set(dataVal.To, {
-                            BestProf : getBetterProf('U', dataVal.Prof),
-                            NumIncreases : getUpAmt(dataVal.Prof),
-                            Bonus : getBonus(dataVal.Prof),
-                            For : dataVal.For
-                        });
-
-                    }
+                    newProfMap.set(profData.To, {
+                        BestProf : getBetterProf('U', profData.Prof),
+                        NumIncreases : getUpAmt(profData.Prof),
+                        Bonus : getBonus(profData.Prof),
+                        For : profData.For
+                    });
 
                 }
             }
 
-            for(const [profName, profData] of newProfMap.entries()){
+            for(const [profName, profMapData] of newProfMap.entries()){
 
                 newProfMap.set(profName, {
                     Name : profName,
-                    NumUps : profTypeToNumber(profData.BestProf)+profData.NumIncreases,
-                    Bonus : profData.Bonus,
-                    For : profData.For
+                    NumUps : profTypeToNumber(profMapData.BestProf)+profMapData.NumIncreases,
+                    Bonus : profMapData.Bonus,
+                    For : profMapData.For
                 });
                         
             }
@@ -914,45 +989,44 @@ module.exports = class CharGathering {
 
         return Character.findOne({ where: { id: charID } })
         .then((character) => {
-            return Class.findOne({ where: { id: character.classID} })
-            .then((cClass) => {
-                return Background.findOne({ where: { id: character.backgroundID} })
-                .then((background) => {
-                    return Ancestry.findOne({ where: { id: character.ancestryID} })
-                    .then((ancestry) => {
-                        return Heritage.findOne({ where: { id: character.heritageID} })
-                        .then((heritage) => {
-                            return Inventory.findOne({ where: { id: character.inventoryID} })
-                            .then((inventory) => {
-                                return CharGathering.getAbilityScores(charID)
-                                .then((abilObject) => {
-                                    return CharGathering.getAllSkills(charID)
-                                    .then((skillObject) => {
-                                        return CharGathering.getCharChoices(charID)
-                                        .then( (choicesStruct) => {
-                                            return CharGathering.getSpellData(charID)
-                                            .then((spellDataStruct) => {
-                                                return CharGathering.getAllSpells()
-                                                .then((spellMap) => {
-                                                    return CharGathering.getAllFeats()
-                                                    .then( (featObject) => {
-                                                        return CharGathering.getAllItems()
-                                                        .then( (itemMap) => {
-                                                            return CharGathering.getAllConditions(charID)
-                                                            .then( (conditionsObject) => {
-                                                                return Condition.findAll()
-                                                                .then((allConditions) => {
-                                                                    return CharGathering.getFinalProfs(charID)
-                                                                    .then( (profMap) => {
-                                                                        return CharGathering.getInventory(character.inventoryID)
-                                                                        .then( (invStruct) => {
-                                                                            
+            return Background.findOne({ where: { id: character.backgroundID} })
+            .then((background) => {
+                return Ancestry.findOne({ where: { id: character.ancestryID} })
+                .then((ancestry) => {
+                    return Heritage.findOne({ where: { id: character.heritageID} })
+                    .then((heritage) => {
+                        return Inventory.findOne({ where: { id: character.inventoryID} })
+                        .then((inventory) => {
+                            return CharGathering.getAbilityScores(charID)
+                            .then((abilObject) => {
+                                return CharGathering.getAllSkills(charID)
+                                .then((skillObject) => {
+                                    return CharGathering.getCharChoices(charID)
+                                    .then( (choicesStruct) => {
+                                        return CharGathering.getSpellData(charID)
+                                        .then((spellDataStruct) => {
+                                            return CharGathering.getAllSpells()
+                                            .then((spellMap) => {
+                                                return CharGathering.getAllFeats()
+                                                .then( (featObject) => {
+                                                    return CharGathering.getAllItems()
+                                                    .then( (itemMap) => {
+                                                        return CharGathering.getAllConditions(charID)
+                                                        .then( (conditionsObject) => {
+                                                            return Condition.findAll()
+                                                            .then((allConditions) => {
+                                                                return CharGathering.getFinalProfs(charID)
+                                                                .then( (profMap) => {
+                                                                    return CharGathering.getInventory(character.inventoryID)
+                                                                    .then( (invStruct) => {
+                                                                        return CharGathering.getResistancesAndVulnerabilities(charID)
+                                                                        .then( (resistAndVulnerStruct) => {
+                                                                        
                                                                             let weaponProfMap = CharGathering.gatherWeaponProfs(profMap, itemMap);
                                                                             let armorProfMap = CharGathering.gatherArmorProfs(profMap, itemMap);
                                                                             
                                                                             let charInfo = {
                                                                                 Character : character,
-                                                                                Class : cClass,
                                                                                 Background : background,
                                                                                 Ancestry : ancestry,
                                                                                 Heritage : heritage,
@@ -969,11 +1043,12 @@ module.exports = class CharGathering {
                                                                                 ConditionsObject : conditionsObject,
                                                                                 WeaponProfObject : mapToObj(weaponProfMap),
                                                                                 ArmorProfObject : mapToObj(armorProfMap),
-                                                                                AllConditions : allConditions
+                                                                                AllConditions : allConditions,
+                                                                                ResistAndVulners : resistAndVulnerStruct,
                                                                             };
-                                                    
+                                                
                                                                             return charInfo;
-
+                                                                            
                                                                         });
                                                                     });
                                                                 });
@@ -1004,21 +1079,25 @@ module.exports = class CharGathering {
                 .then((charAncestry) => {
                     return Heritage.findOne({ where: { id: character.heritageID} })
                     .then((charHeritage) => {
-                        return CharDataStoring.getAbilityBonus(character.id, 
-                            'Type-Other_Level-1_Code-None')
-                        .then((bonusMap) => {
+                        let srcStruct = {
+                            sourceType: 'other',
+                            sourceLevel: 1,
+                            sourceCode: 'none',
+                            sourceCodeSNum: '0',
+                        };
+                        return CharDataMappingExt.getDataSingleAbilityBonus(character.id, srcStruct)
+                        .then((bonusData) => {
 
-                            let bonusArray = bonusMap.get('Type-Other_Level-1_Code-None');
                             let charAbilities = null;
-                            console.log(bonusMap);
-                            if(bonusMap != null && bonusArray != null && bonusArray.length == 6) {
+                            if(bonusData != null) {
+                                let bonusArray = JSON.parse(bonusData.Bonus);
                                 charAbilities = {
-                                    STR : 10 + parseInt(bonusArray[0].Bonus),
-                                    DEX : 10 + parseInt(bonusArray[1].Bonus),
-                                    CON : 10 + parseInt(bonusArray[2].Bonus),
-                                    INT : 10 + parseInt(bonusArray[3].Bonus),
-                                    WIS : 10 + parseInt(bonusArray[4].Bonus),
-                                    CHA : 10 + parseInt(bonusArray[5].Bonus),
+                                    STR : 10 + parseInt(bonusArray[0]),
+                                    DEX : 10 + parseInt(bonusArray[1]),
+                                    CON : 10 + parseInt(bonusArray[2]),
+                                    INT : 10 + parseInt(bonusArray[3]),
+                                    WIS : 10 + parseInt(bonusArray[4]),
+                                    CHA : 10 + parseInt(bonusArray[5]),
                                 };
                             } else {
                                 charAbilities = {

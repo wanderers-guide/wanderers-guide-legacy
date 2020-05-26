@@ -48,6 +48,7 @@ $(function () {
         let newClassAbility = $("#classFeatureLayout").clone();
         newClassAbility.attr('id', classAbilityID);
         newClassAbility.removeClass('is-hidden');
+        newClassAbility.removeClass('isLayout');
         newClassAbility.appendTo("#classFeatureContent");
 
         let cardHeader = $("#"+classAbilityID).find(".card-header");
@@ -98,9 +99,11 @@ $(function () {
                     let newClassAbilityOption = $("#classFeatureLayout").clone();
                     newClassAbilityOption.attr('id', classAbilityOptionID);
                     newClassAbilityOption.removeClass('is-hidden');
+                    newClassAbilityOption.removeClass('isLayout');
                     newClassAbilityOption.removeClass('classFeature');
                     newClassAbilityOption.addClass('classFeatureOption');
                     newClassAbilityOption.find(".classFeatureLevelSection").remove();
+                    newClassAbilityOption.find(".classFeatureDisplayInSheetSection").remove();
                     newClassAbilityOption.find(".classFeatureIsSelectorSection").remove();
                     newClassAbilityOption.find(".classFeatureSelectionOptions").remove();
                     newClassAbilityOption.find(".card-header-title").html('Option');
@@ -208,6 +211,7 @@ function finishClass(isUpdate){
     let classWeaponsTrainedArray = $("#inputWeaponsTrained").val();
     let classWeaponsExpertArray = $("#inputWeaponsExpert").val();
     let classWeapons = '';
+
     for(let classWeaponsTrained of classWeaponsTrainedArray) {
         classWeapons += 'T:::'+classWeaponsTrained+',,, ';
     }
@@ -215,6 +219,7 @@ function finishClass(isUpdate){
         classWeapons += 'E:::'+classWeaponsExpert+',,, ';
     }
     classWeapons = classWeapons.slice(0, -4); // Trim off that last ',,, '
+
 
     let classArmorTrainedArray = $("#inputArmorTrained").val();
     let classArmor = '';
@@ -228,14 +233,15 @@ function finishClass(isUpdate){
 
     let classAbilitiesArray = [];
     $(".classFeature").each(function(){
-        if($(this).is(":visible")) {
+        if(!$(this).hasClass("isLayout")) {
             let classFeatureName = $(this).find(".inputClassFeatureName").val();
             let classFeatureLevel = $(this).find(".inputClassFeatureLevel").val();
             let classFeatureDesc = $(this).find(".inputClassFeatureDesc").val();
             let classFeatureCode = $(this).find(".inputClassFeatureCode").val();
+            let classFeatureDisplayInSheet = ($(this).find(".inputClassFeatureDisplayInSheet:checked").val() == '1') ? 1 : 0;
             
             let classFeatureOptions = [];
-            if($(this).find(".classFeatureSelectionOptions").is(":visible")){
+            if(!$(this).find(".classFeatureSelectionOptions").hasClass("isLayout")){
                 $(this).find(".classFeatureOption").each(function(){
                     classFeatureOptions.push({
                         name: $(this).find(".inputClassFeatureName").val(),
@@ -250,6 +256,7 @@ function finishClass(isUpdate){
                 level: classFeatureLevel,
                 description: classFeatureDesc,
                 code: classFeatureCode,
+                displayInSheet: classFeatureDisplayInSheet,
                 options: classFeatureOptions,
             });
         }
@@ -297,7 +304,8 @@ function finishClass(isUpdate){
     } else {
         requestPacket = "requestAdminAddClass";
     }
-
+    
+    
     socket.emit(requestPacket,{
         classID,
         className,

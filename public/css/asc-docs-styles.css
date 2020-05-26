@@ -1,4 +1,43 @@
 
+/* Side Nav */
+#main-container {
+    overflow: visible!important;
+}
+#docs_nav {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
+}
+#doc_nav_shell {
+    position: absolute;
+    height:100%;
+}
+
+.menu-label a {
+    color: hsl(0, 0%, 61%)!important;
+}
+
+.menu-list a {
+    color: hsl(0, 0%, 79%)!important;
+}
+.menu-list a:hover {
+    color: hsl(0, 0%, 19%)!important;
+}
+
+/* Hide docs nav for iPads and smaller */
+@media only screen 
+and (max-device-width : 1024px) {
+    #doc_nav_shell {
+        visibility: hidden;
+    }
+    #docs_content {
+        margin-left: 5%;
+        margin-right: 5%;
+    }
+}
+
+
+/* Other Styles */
 p {
     color: hsl(0, 0%, 71%);
     font-size: 1rem;
@@ -15,4 +54,28 @@ strong {
     background-color: #272729;
     font-family: 'Nanum Gothic Coding', monospace;
     color: hsl(0, 0%, 71%);
+}
+
+.main-title {
+    color: hsl(0, 0%, 85%);
+    font-weight: 700;
+}
+
+.title {
+    font-family: monospace;
+    color: hsl(0, 0%, 75%);
+    text-decoration: underline;
+}
+
+.small-title {
+    font-family: monospace;
+    color: hsl(0, 0%, 75%);
+}
+
+.table-row-a {
+    background-color: hsl(240, 2%, 17%);
+}
+
+.table-row-b {
+    background-color: hsl(240, 2%, 15%);
 }

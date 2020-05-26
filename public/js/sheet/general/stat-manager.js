@@ -81,9 +81,10 @@ function getStatMap(statName){
 
 function getStatTotal(statName){
     statName = statName.replace(/\s/g, "_").toUpperCase();
-    let total = 0;
+    let total = null;
     let statDataMap = g_statManagerMap.get(statName);
     if(statDataMap != null){
+        total = 0;
         for(const [source, value] of statDataMap.entries()){
             if(source === 'PROF_BONUS'){
                 total += getProfNumber(value, g_character.level);

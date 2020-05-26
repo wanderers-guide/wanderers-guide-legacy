@@ -112,6 +112,7 @@ socket.on("returnClassChange", function(inChoiceStruct){
     choiceStruct = inChoiceStruct;
 
     if(g_class != null){
+        injectASCChoiceStruct(choiceStruct);
         displayCurrentClass(g_class, true);
     } else {
         finishLoadingPage();
@@ -120,8 +121,10 @@ socket.on("returnClassChange", function(inChoiceStruct){
 });
 
 function displayCurrentClass(classStruct, saving) {
+    g_class = null;
+    $('#selectClass').blur();
 
-    let abilityMap = objToMap(choiceStruct.AbilityObject);
+    let choiceArray = choiceStruct.ChoiceArray;
 
     if(classStruct.Class.isArchived == 1){
         $('#isArchivedMessage').removeClass('is-hidden');
@@ -130,7 +133,7 @@ function displayCurrentClass(classStruct, saving) {
     }
 
     let classDescription = $('#classDescription');
-    classDescription.html('<p>'+classStruct.Class.description+'</p>');
+    classDescription.html(processText(classStruct.Class.description, false));
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Key Ability ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 
@@ -156,21 +159,31 @@ function displayCurrentClass(classStruct, saving) {
             if(abilityName != "chooseDefault"){
                 $('.'+keyAbilityControlShellClass).removeClass("is-info");
                 socket.emit("requestAbilityBonusChange",
-                        getCharIDFromURL(),
-                        "Type-Class_Level-1_Code-OtherKeyAbility",
-                        [{ Ability : shortenAbilityType(abilityName), Bonus : "Boost" }]);
+                    getCharIDFromURL(),
+                    {sourceType: 'class', sourceLevel: 1, sourceCode: 'keyAbility', sourceCodeSNum: '0'},
+                    {Ability : shortenAbilityType(abilityName), Bonus : "Boost"});
             } else {
                 $('.'+keyAbilityControlShellClass).addClass("is-info");
                 socket.emit("requestAbilityBonusChange",
-                        getCharIDFromURL(),
-                        "Type-Class_Level-1_Code-OtherKeyAbility",
-                        null);
+                    getCharIDFromURL(),
+                    {sourceType: 'class', sourceLevel: 1, sourceCode: 'keyAbility', sourceCodeSNum: '0'},
+                    null);
             }
+            $(this).blur();
         });
 
-        let keyAbilityChoice = choiceStruct.BonusObject["Type-Class_Level-1_Code-OtherKeyAbility"];
-        if(keyAbilityChoice != null && keyAbilityChoice[0] != null){
-            keyAbilitySelect.val(lengthenAbilityType(keyAbilityChoice[0].Ability));
+        let keyAbilitySrcStruct = {
+            sourceType: 'class',
+            sourceLevel: 1,
+            sourceCode: 'keyAbility',
+            sourceCodeSNum: '0'
+        };
+        let bonusArray = choiceStruct.BonusArray;
+        let keyAbilityChoice = bonusArray.find(bonus => {
+            return hasSameSrc(bonus, keyAbilitySrcStruct);
+        });
+        if(keyAbilityChoice != null){
+            keyAbilitySelect.val(lengthenAbilityType(keyAbilityChoice.Ability));
         }
 
         if(keyAbilitySelect.val() != "chooseDefault"){
@@ -183,8 +196,8 @@ function displayCurrentClass(classStruct, saving) {
         keyAbility.append('<p class="is-size-5">'+classStruct.Class.keyAbility+'</p>');
         socket.emit("requestAbilityBonusChange",
             getCharIDFromURL(),
-            "Type-Class_Level-1_Code-OtherKeyAbility",
-            [{ Ability : shortenAbilityType(classStruct.Class.keyAbility), Bonus : "Boost" }]);
+            {sourceType: 'class', sourceLevel: 1, sourceCode: 'keyAbility', sourceCodeSNum: '0'},
+            {Ability : shortenAbilityType(classStruct.Class.keyAbility), Bonus : "Boost"});
     }
 
 
@@ -241,24 +254,42 @@ function displayCurrentClass(classStruct, saving) {
 
             $('#'+tSkillID).change(function() {
                 let skillName = $(this).val();
+
+                let srcStruct = {
+                    sourceType: 'class',
+                    sourceLevel: 1,
+                    sourceCode: 'inits-misc-'+tSkillID,
+                    sourceCodeSNum: '0',
+                };
+
                 if(skillName != "chooseDefault"){
                     $('.'+tSkillControlShellClass).removeClass("is-info");
                     socket.emit("requestProficiencyChange",
                         getCharIDFromURL(),
-                        {srcID : "Type-Class_Level-1_Code-Other"+tSkillID, isSkill : true},
-                        [{ For : "Skill", To : skillName, Prof : 'T' }]);
+                        {srcStruct, isSkill : true},
+                        { For : "Skill", To : skillName, Prof : 'T' });
                 } else {
                     $('.'+tSkillControlShellClass).addClass("is-info");
                     socket.emit("requestProficiencyChange",
                         getCharIDFromURL(),
-                        {srcID : "Type-Class_Level-1_Code-Other"+tSkillID, isSkill : true},
+                        {srcStruct, isSkill : true},
                         null);
                 }
+                $(this).blur();
             });
 
-            let tSkillChoice = choiceStruct.ProficiencyObject["Type-Class_Level-1_Code-Other"+tSkillID];
-            if(tSkillChoice != null && tSkillChoice[0] != null){
-                tSkillSelect.val(tSkillChoice[0].To);
+            let tSkillSrcStruct = {
+                sourceType: 'class',
+                sourceLevel: 1,
+                sourceCode: 'inits-misc-'+tSkillID,
+                sourceCodeSNum: '0',
+            };
+            let profArray = choiceStruct.ProfArray;
+            let tSkillChoice = profArray.find(bonus => {
+                return hasSameSrc(bonus, tSkillSrcStruct);
+            });
+            if(tSkillChoice != null){
+                tSkillSelect.val(tSkillChoice.To);
             }
 
             if(tSkillSelect.val() != "chooseDefault"){
@@ -316,7 +347,7 @@ function displayCurrentClass(classStruct, saving) {
 
     let tWeaponsArray = classStruct.Class.tWeapons.split(',,, ');
     for(const tWeapons of tWeaponsArray){
-
+        
         let sections = tWeapons.split(':::');
         let weapTraining = sections[0];
         let weaponName = sections[1];
@@ -364,10 +395,20 @@ function displayCurrentClass(classStruct, saving) {
     }
 
     if(saving){
-        socket.emit("requestProficiencyChange",
-            getCharIDFromURL(),
-            {srcID : 'Type-Class_Level-1_Code-None', isSkill : false},
-            savingProfArray);
+        let savingProfCount = 0;
+        for(let savingProf of savingProfArray){
+            let srcStruct = {
+                sourceType: 'class',
+                sourceLevel: 1,
+                sourceCode: 'inits-'+savingProfCount,
+                sourceCodeSNum: '0',
+            };
+            socket.emit("requestProficiencyChange",
+                getCharIDFromURL(),
+                {srcStruct, isSkill : false},
+                savingProf);
+            savingProfCount++;
+        }
     }
 
 
@@ -415,11 +456,13 @@ function displayCurrentClass(classStruct, saving) {
                 classAbilitySelectorInnerHTML += '<option value="chooseDefault">Choose a '+classAbility.name+'</option>';
                 classAbilitySelectorInnerHTML += '<hr class="dropdown-divider"></hr>';
 
+                let choice = choiceArray.find(choice => {
+                    return choice.SelectorID == classAbility.id;
+                });
                 for(const classSelectionOption of classStruct.Abilities) {
                     if(classSelectionOption.selectType === 'SELECT_OPTION' && classSelectionOption.selectOptionFor === classAbility.id) {
 
-                        let selectOptionAbilityID = abilityMap.get(classAbility.id+"");
-                        if(selectOptionAbilityID == classSelectionOption.id) {
+                        if(choice != null && choice.OptionID == classSelectionOption.id) {
                             classAbilitySelectorInnerHTML += '<option value="'+classSelectionOption.id+'" selected>'+classSelectionOption.name+'</option>';
                         } else {
                             classAbilitySelectorInnerHTML += '<option value="'+classSelectionOption.id+'">'+classSelectionOption.name+'</option>';
@@ -454,16 +497,34 @@ function displayCurrentClass(classStruct, saving) {
 
             let descriptionID = $(this).attr('id')+'Description';
             let abilityCodeID = $(this).attr('id')+'Code';
+            $('#'+descriptionID).html('');
+            $('#'+abilityCodeID).html('');
+
+            let classAbilityID = $(this).attr('name');
+            let classAbility = classStruct.Abilities.find(classAbility => {
+                return classAbility.id == classAbilityID;
+            });
+
+            let srcStruct = {
+                sourceType: 'class',
+                sourceLevel: classAbility.level,
+                sourceCode: 'classAbility-'+classAbilityID,
+                sourceCodeSNum: '0',
+            };
 
             if($(this).val() == "chooseDefault"){
-                // Display nothing
-                $('#'+descriptionID).html('');
-            } else {
+                $(this).parent().addClass("is-info");
                 
-                let classAbilityID = $(this).attr('name');
-                let classAbility = classStruct.Abilities.find(classAbility => {
-                    return classAbility.id == classAbilityID;
-                });
+                // Save ability choice
+                if(triggerSave == null || triggerSave) {
+                    socket.emit("requestClassChoiceChange",
+                        getCharIDFromURL(),
+                        srcStruct,
+                        null);
+                }
+
+            } else {
+                $(this).parent().removeClass("is-info");
 
                 let chosenAbilityID = $(this).val();
                 let chosenClassAbility = classStruct.Abilities.find(classAbility => {
@@ -472,25 +533,22 @@ function displayCurrentClass(classStruct, saving) {
 
                 $('#'+descriptionID).html(processText(chosenClassAbility.description, false));
 
-                // Save feats
+                // Save ability choice
                 if(triggerSave == null || triggerSave) {
-
-                    socket.emit("requestSelectAbilityChange",
+                    socket.emit("requestClassChoiceChange",
                         getCharIDFromURL(),
-                        'Type-Class_Level-'+classAbility.level+'_Code-Processor'+abilityCodeID,
-                        [{ SelectorAbility : classAbilityID, SelectOptionAbility : chosenAbilityID }]);
-
+                        srcStruct,
+                        { SelectorID : classAbilityID, OptionID : chosenAbilityID });
                 }
 
-                let srcID = 'Type-ClassAbility_Level-'+chosenClassAbility.level+'_Code-Processor'+abilityCodeID;
-                processClear(srcID);
+                // Run ability choice code
                 processCode(
                     chosenClassAbility.code,
-                    srcID,
+                    srcStruct,
                     abilityCodeID);
                 
             }
-
+            $(this).blur();
         });
 
     }
@@ -503,8 +561,8 @@ function displayCurrentClass(classStruct, saving) {
 
 }
 
-socket.on("returnSelectAbilityChange", function(){
-    console.log("Got here from the select abil change");
+socket.on("returnClassChoiceChange", function(){
+    
 });
 
 function finishLoadingPage() {

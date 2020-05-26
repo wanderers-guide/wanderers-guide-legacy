@@ -113,10 +113,10 @@
     color: hsl(0, 0%, 80%);
 }
 
-a {
+.step-marker a {
     color: hsl(217, 71%, 53%);
 }
-a:hover {
+.step-marker a:hover {
     color: hsl(217, 71%, 53%);
 }
 

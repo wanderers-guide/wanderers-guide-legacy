@@ -95,6 +95,7 @@ function displayInventorySection(data){
     } else {
         inventorySearch.removeClass('is-info');
     }
+    inventorySearch.blur();
 
     $('#inventorySearch').change(function(){
         displayInventorySection(data);
@@ -185,7 +186,7 @@ function displayInventoryItem(invItem, openBagInvItemArray, runeDataStruct, data
         let invItemStorageSectionID = 'invItemStorageSection'+invItem.id;
         let invItemStorageBulkAmountID = 'invItemStorageBulkAmount'+invItem.id;
 
-        $('#inventoryContent').append('<div id="'+invItemSectionID+'" class="tile is-parent is-paddingless pt-1 px-2 border-bottom border-dark-lighter cursor-clickable"><div class="tile is-child is-6"><p id="'+invItemNameID+'" class="has-text-left pl-3 is-size-6 has-text-grey-light"><a id="'+invItemStorageViewButtonID+'" class="button is-small is-info is-rounded is-outlined mb-1 ml-3">Open</a></p></div><div id="'+invItemQtyID+'" class="tile is-child is-1"><p></p></div><div id="'+invItemBulkID+'" class="tile is-child is-1"><p></p></div><div id="'+invItemHealthID+'" class="tile is-child is-1"><p></p></div><div class="tile is-child is-3"><div class="tags is-centered"><span id="'+invItemShoddyTagID+'" class="tag is-warning">Shoddy</span><span id="'+invItemBrokenTagID+'" class="tag is-danger">Broken</span></div></div></div>');
+        $('#inventoryContent').append('<div id="'+invItemSectionID+'" class="tile is-parent is-paddingless pt-1 px-2 border-bottom border-dark-lighter cursor-clickable"><div class="tile is-child is-6"><p id="'+invItemNameID+'" class="has-text-left pl-3 is-size-6 has-text-grey-light"><a id="'+invItemStorageViewButtonID+'" class="button is-very-small is-info is-rounded is-outlined mb-1 ml-3">Open</a></p></div><div id="'+invItemQtyID+'" class="tile is-child is-1"><p></p></div><div id="'+invItemBulkID+'" class="tile is-child is-1"><p></p></div><div id="'+invItemHealthID+'" class="tile is-child is-1"><p></p></div><div class="tile is-child is-3"><div class="tags is-centered"><span id="'+invItemShoddyTagID+'" class="tag is-warning">Shoddy</span><span id="'+invItemBrokenTagID+'" class="tag is-danger">Broken</span></div></div></div>');
 
         $('#inventoryContent').append('<div id="'+invItemStorageSectionID+'" class="tile is-vertical is-hidden"></div>');
 
@@ -339,21 +340,20 @@ function displayInventoryItem(invItem, openBagInvItemArray, runeDataStruct, data
     $('#'+invItemNameID).prepend(invItem.name);
 
     if(item.WeaponData != null){
-        console.log(invItem);
         let calcStruct = getAttackAndDamage(item, invItem, data.StrMod, data.DexMod);
         $('#'+invItemNameID).append('<sup class="pl-2 has-text-weight-light">'+calcStruct.AttackBonus+'</sup><sup class="pl-3 has-text-weight-light has-text-grey">'+calcStruct.Damage+'</sup>');
     }
 
     if(item.ArmorData != null){
-        $('#'+invItemNameID).append('<button name="'+invItem.id+'" class="equipArmorButton button is-small is-info is-rounded is-outlined mb-1 ml-3"><span class="icon is-small"><i class="fas fa-tshirt"></i></span></button>');
+        $('#'+invItemNameID).append('<button name="'+invItem.id+'" class="equipArmorButton button is-very-small is-info is-rounded is-outlined mb-1 ml-3"><span class="icon is-small"><i class="fas fa-tshirt"></i></span></button>');
     }
 
     if(item.ShieldData != null){
         let notBroken = (invItem.currentHitPoints > brokenThreshold);
         if(notBroken){
-            $('#'+invItemNameID).append('<button name="'+invItem.id+'" class="equipShieldButton button is-small is-info is-rounded is-outlined mb-1 ml-3"><span class="icon is-small"><i class="fas fa-shield-alt"></i></span></button>');
+            $('#'+invItemNameID).append('<button name="'+invItem.id+'" class="equipShieldButton button is-very-small is-info is-rounded is-outlined mb-1 ml-3"><span class="icon is-small"><i class="fas fa-shield-alt"></i></span></button>');
         } else {
-            $('#'+invItemNameID).append('<button class="button is-small is-danger is-rounded mb-1 ml-3"><span class="icon is-small"><i class="fas fa-shield-alt"></i></span></button>');
+            $('#'+invItemNameID).append('<button class="button is-very-small is-danger is-rounded mb-1 ml-3"><span class="icon is-small"><i class="fas fa-shield-alt"></i></span></button>');
         }
     }
 
@@ -436,7 +436,6 @@ function handleArmorEquip(invID){
 function handleShieldEquip(invID){
     $('.equipShieldButton').each(function(i, obj) {
         let invItemID = $(this).attr('name');
-        console.log("Got here "+g_equippedShieldInvItemID+" "+invItemID);
         if(g_equippedShieldInvItemID == invItemID) {
             $(this).removeClass('is-outlined');
             $(this).click(function(event){

@@ -67,6 +67,9 @@ const Spell = db.define('spells', {
   heightenedThreeText: {
     type: Sequelize.TEXT
   },
+  isFocusSpell: {
+    type: Sequelize.INTEGER
+  },
   isArchived: {
     type: Sequelize.INTEGER
   },

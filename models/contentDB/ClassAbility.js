@@ -23,7 +23,10 @@ const ClassAbility = db.define('classAbilities', {
   },
   selectOptionFor: {
     type: Sequelize.INTEGER
-  }
+  },
+  displayInSheet: {
+    type: Sequelize.INTEGER
+  },
 });
 
 module.exports = ClassAbility;

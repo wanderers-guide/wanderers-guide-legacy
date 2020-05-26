@@ -76,9 +76,15 @@ socket.on("returnFinalizeDetails", function(character, abilObject, cClass){
             skillsSection.append('<div id="'+skillsSectionID+'"></div>');
             
             // No need for a process clear because it will be going to Prof data every time.
+            let srcStruct = {
+                sourceType: 'class',
+                sourceLevel: 1,
+                sourceCode: 'inits-bonus-'+i,
+                sourceCodeSNum: '0',
+            };
             processCode(
                 'GIVE-SKILL-PROF=T',
-                'Type-Class_Level-1_Code-Other'+i,
+                srcStruct,
                 skillsSectionID);
             
         }
@@ -91,9 +97,15 @@ socket.on("returnFinalizeDetails", function(character, abilObject, cClass){
             langsSection.append('<div id="'+langSelectionID+'"></div>');
             
             // No need for a process clear because it will be going to Languages data every time.
+            let srcStruct = {
+                sourceType: 'class',
+                sourceLevel: 1,
+                sourceCode: 'inits-bonus-'+i,
+                sourceCodeSNum: '0',
+            };
             processCode(
                 'GIVE-LANG-BONUS-ONLY',
-                'Type-Ancestry_Level-1_Code-Other'+i,
+                srcStruct,
                 langSelectionID);
             
         }

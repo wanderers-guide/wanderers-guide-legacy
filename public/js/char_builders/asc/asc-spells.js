@@ -1,23 +1,31 @@
 
 //------------------------- Processing Spells ------------------------//
-function processingSpells(ascStatement, srcID, locationID, statementNum){
+function processingSpells(ascStatement, srcStruct, locationID){
 
-    if(ascStatement.includes("GIVE-SPELL-SLOTS")){// GIVE-SPELL-SLOTS=Three-Quarters/Full:Bard
+    if(ascStatement.includes("SET-SPELL-SLOTS")){// SET-SPELL-SLOTS=Bard:Three-Quarters/Full
         let data = ascStatement.split('=')[1];
         let segments = data.split(':');
-        giveSpellCasting(srcID, statementNum, segments[0], segments[1]);
-    } else if(ascStatement.includes("GIVE-SPELL-SLOT")){// GIVE-SPELL-SLOT=10:Bard
+        giveSpellCasting(srcStruct, segments[0], segments[1]);
+    } else if(ascStatement.includes("GIVE-SPELL-SLOT")){// GIVE-SPELL-SLOT=Bard:10
         let data = ascStatement.split('=')[1];
         let segments = data.split(':');
-        giveSpellSlot(srcID, statementNum, segments[0], segments[1]);
+        giveSpellSlot(srcStruct, segments[0], segments[1]);
+    } else if(ascStatement.includes("GIVE-FOCUS-SPELL")){// GIVE-FOCUS-SPELL=Bard:Meld_Into_Stone
+        let data = ascStatement.split('=')[1];
+        let segments = data.split(':');
+        giveFocusSpell(srcStruct, segments[0], segments[1]);
     } else if(ascStatement.includes("SET-SPELL-KEY-ABILITY")){// SET-SPELL-KEY-ABILITY=Bard:INT
         let data = ascStatement.split('=')[1]; //                 Will default to CHA if nothing is set
         let segments = data.split(':');
-        setSpellKeyAbility(srcID, statementNum, segments[0], segments[1]);
-    } else if(ascStatement.includes("SET-SPELL-LIST")){// SET-SPELL-LIST=Wizard:Primal/Divine/Occult/Arcane
+        setSpellKeyAbility(srcStruct, segments[0], segments[1]);
+    } else if(ascStatement.includes("SET-SPELL-CASTING-TYPE")){
+        let data = ascStatement.split('=')[1]; //                 Will default to PREPARED-LIST
+        let segments = data.split(':');// SET-SPELL-CASTING-TYPE=Bard:PREPARED-LIST/PREPARED-BOOK/SPONTANEOUS-REPERTOIRE
+        setSpellCastingType(srcStruct, segments[0], segments[1]);
+    } else if(ascStatement.includes("SET-SPELL-TRADITION")){// SET-SPELL-TRADITION=Wizard:Primal/Divine/Occult/Arcane
         let data = ascStatement.split('=')[1];
         let segments = data.split(':');
-        giveSpellList(srcID, statementNum, segments[0], segments[1]);
+        giveSpellList(srcStruct, segments[0], segments[1]);
     } else {
         displayError("Unknown statement (2): \'"+ascStatement+"\'");
         statementComplete();
@@ -26,20 +34,19 @@ function processingSpells(ascStatement, srcID, locationID, statementNum){
 }
 
 
-//////////////////////////////// Give Spell Slots ///////////////////////////////////
-function giveSpellCasting(srcID, statementNum, spellcasting, spellSRC){
-    console.log('GOT HEREEE '+spellSRC+" "+spellcasting);
-    socket.emit("requestSpellCastingChange",
+//////////////////////////////// Set Spell Slots ///////////////////////////////////
+function giveSpellCasting(srcStruct, spellSRC, spellcasting){
+    socket.emit("requestSpellCastingSlotChange",
         getCharIDFromURL(),
-        srcID+statementNum,
+        srcStruct,
         spellSRC,
         spellcasting);
 }
 
-function giveSpellSlot(srcID, statementNum, spellSlot, spellSRC){
+function giveSpellSlot(srcStruct, spellSRC, spellSlot){
     socket.emit("requestSpellSlotChange",
         getCharIDFromURL(),
-        srcID+statementNum,
+        srcStruct,
         spellSRC,
         spellSlot);
 }
@@ -49,11 +56,11 @@ socket.on("returnSpellSlotChange", function(){
 });
 
 //////////////////////////////// Set Key Ability ///////////////////////////////////
-function setSpellKeyAbility(srcID, statementNum, spellSRC, abilityScore){
+function setSpellKeyAbility(srcStruct, spellSRC, abilityScore){
     if(getAllAbilityTypes().includes(lengthenAbilityType(abilityScore))){
         socket.emit("requestKeySpellAbilityChange",
             getCharIDFromURL(),
-            srcID+statementNum,
+            srcStruct,
             spellSRC,
             abilityScore);
     } else {
@@ -67,14 +74,13 @@ socket.on("returnKeySpellAbilityChange", function(){
 });
 
 //////////////////////////////// Give Spell List ///////////////////////////////////
-function giveSpellList(srcID, statementNum, spellSRC, spellList){
-    let spellLiUp = spellList.toUpperCase();
-    if(spellLiUp == 'OCCULT' || spellLiUp == 'ARCANE' || spellLiUp == 'DIVINE' || spellLiUp == 'PRIMAL') {
+function giveSpellList(srcStruct, spellSRC, spellList){
+    if(spellList === 'OCCULT' || spellList === 'ARCANE' || spellList === 'DIVINE' || spellList === 'PRIMAL') {
         socket.emit("requestSpellTraditionChange",
             getCharIDFromURL(),
-            srcID+statementNum,
+            srcStruct,
             spellSRC,
-            spellLiUp);
+            spellList);
     } else {
         displayError("Unknown Spell Tradition: \'"+spellList+"\'");
         statementComplete();
@@ -82,5 +88,37 @@ function giveSpellList(srcID, statementNum, spellSRC, spellList){
 }
 
 socket.on("returnSpellListChange", function(){
+    statementComplete();
+});
+
+//////////////////////////////// Set Casting Type ///////////////////////////////////
+function setSpellCastingType(srcStruct, spellSRC, castingType){
+    if(castingType === 'PREPARED-LIST' || castingType === 'PREPARED-BOOK' || castingType === 'SPONTANEOUS-REPERTOIRE') {
+        socket.emit("requestSpellCastingTypeChange",
+            getCharIDFromURL(),
+            srcStruct,
+            spellSRC,
+            castingType);
+    } else {
+        displayError("Unknown Spellcasting Type: \'"+castingType+"\'");
+        statementComplete();
+    }
+}
+
+socket.on("returnSpellCastingTypeChange", function(){
+    statementComplete();
+});
+
+//////////////////////////////// Give Focus Spell ///////////////////////////////////
+function giveFocusSpell(srcStruct, spellSRC, spellName){
+    spellName = spellName.replace(/_/g," ");
+    socket.emit("requestFocusSpellChange",
+        getCharIDFromURL(),
+        srcStruct,
+        spellSRC,
+        spellName);
+}
+
+socket.on("returnFocusSpellChange", function(){
     statementComplete();
 });
