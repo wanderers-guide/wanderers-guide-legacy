@@ -38,9 +38,6 @@ const Character = db.define('characters', {
   inventoryID: {
     type: Sequelize.INTEGER
   },
-  charTags: {
-    type: Sequelize.STRING
-  },
   notes: {
     type: Sequelize.TEXT
   },

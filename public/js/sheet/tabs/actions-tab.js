@@ -84,10 +84,12 @@ function changeActionTab(type, data){
     }
 
     $('#actionFilterSelectByAction').change(function(){
+        actionFilterSearch.val('');
         changeActionTab(type, data);
     });
 
     $('#actionFilterSelectBySkill').change(function(){
+        actionFilterSearch.val('');
         changeActionTab(type, data);
     });
 

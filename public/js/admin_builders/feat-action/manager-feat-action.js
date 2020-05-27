@@ -6,34 +6,35 @@ let activeModalFeatID = -1;
 // ~~~~~~~~~~~~~~ // Run on Load // ~~~~~~~~~~~~~~ //
 $(function () {
 
-    let featCards = $('.feat-card');
-    for(const featCard of featCards){
+    let entries = $('.entryListing');
+    for(const entry of entries){
 
-        let featID = $(featCard).attr('name');
-        let cardEdit = $(featCard).find('.feat-card-edit');
-        let cardDelete = $(featCard).find('.feat-card-delete');
+        let featID = $(entry).attr('name');
+        let cardEdit = $(entry).find('.entry-update');
+        let cardDelete = $(entry).find('.entry-delete');
 
         cardEdit.mouseenter(function(){
-            $(this).addClass('card-footer-hover');
+            $(this).addClass('entry-footer-hover');
         });
         cardEdit.mouseleave(function(){
-            $(this).removeClass('card-footer-hover');
+            $(this).removeClass('entry-footer-hover');
         });
         cardEdit.click(function() {
             window.location.href = '/admin/edit/feat-action/'+featID;
         });
 
         cardDelete.mouseenter(function(){
-            $(this).addClass('card-footer-hover');
+            $(this).addClass('entry-footer-hover');
         });
         cardDelete.mouseleave(function(){
-            $(this).removeClass('card-footer-hover');
+            $(this).removeClass('entry-footer-hover');
         });
         cardDelete.click(function() {
             $('.modal').addClass('is-active');
             $('html').addClass('is-clipped');
             activeModalFeatID = featID;
         });
+        
 
         $('.modal-card-close').click(function() {
             $('.modal').removeClass('is-active');

@@ -39,33 +39,31 @@
     <hr>
 
 
-    <div class="columns is-centered is-multiline mb-2">
+    <div class="columns mx-5 is-centered is-multiline mb-2 use-custom-scrollbar" style="height: 600px; max-height: 600px; overflow-y: auto;">
         {{#each feats}}
             {{#if genericType}}
-                <div class="column is-4">
-                    <div class="card feat-card" name="{{id}}">
-                        <div class="card-content pt-2 pb-2 text-center">
-                            <span class="is-size-4 has-text-grey-lighter">{{name}}</span>
-                            <span class="is-size-5 has-text-grey-light"> - {{version}}</span>
+                <div class="column is-12 entryListing border-bottom border-dark" name="{{id}}">
+                    <div class="columns">
+                        <div class="column is-paddingless p-1 pl-2 is-8 entry-main">
+                            <span class="is-size-5 has-text-grey-lighter">{{name}}</span>
+                            <span class="is-size-6 has-text-grey-light"> - {{version}}</span>
                             {{#ifEqual isArchived 1}}
                                 <span class="icon is-medium has-text-grey-light is-pulled-right">
                                     <i class="fas fa-lg fa-archive"></i>
                                 </span>
                             {{/ifEqual}}
                         </div>
-                        <div class="card-footer is-paddingless">
-                            <a class="card-footer-item feat-card-edit has-text-grey-light">
-                                <span class="is-size-6 pr-2">Update</span>
-                                <span class="icon is-small">
-                                    <i class="fas fa-edit"></i>
-                                </span>
-                            </a>
-                            <a class="card-footer-item feat-card-delete has-text-grey-light">
-                                <span class="is-size-6 pr-1">Delete</span>
-                                <span class="icon is-small">
-                                    <i class="fas fa-trash"></i>
-                                </span>
-                            </a>
+                        <div class="column is-paddingless p-1 pt-2 is-2 entry-update cursor-clickable text-center has-text-grey-light">
+                            <span class="is-size-6 pr-2">Update</span>
+                            <span class="icon is-small">
+                                <i class="fas fa-edit"></i>
+                            </span>
+                        </div>
+                        <div class="column is-paddingless p-1 pt-2 is-2 entry-delete cursor-clickable text-center has-text-grey-light">
+                            <span class="is-size-6 pr-1">Delete</span>
+                            <span class="icon is-small">
+                                <i class="fas fa-trash"></i>
+                            </span>
                         </div>
                     </div>
                 </div>
@@ -78,6 +76,7 @@
     </div>
 
 </div>
+
 
 <div class="modal">
     <div class="modal-background"></div>

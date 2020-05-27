@@ -381,29 +381,26 @@ module.exports = class CharSaving {
 
     static saveAncestry(charID, ancestryID) {
 
-        let charUpVals = {ancestryID: ancestryID };
+        let srcStruct = {
+            sourceType: 'ancestry',
+            sourceLevel: 1,
+            sourceCode: 'defaultTag',
+            sourceCodeSNum: '0',
+        };
+        let charUpVals = {
+            ancestryID: ancestryID,
+            heritageID: null
+        };
 
-        return Character.findOne({ where: { id: charID} })
-        .then((character) => {
-            return Ancestry.findOne({ where: { id: character.ancestryID} })
-            .then((oldAncestry) => {
-                let oldAncestryName = (oldAncestry != null) ? oldAncestry.name : '';
-                return CharTags.removeTag(charID, oldAncestryName).then((result) => {
-                    return Ancestry.findOne({ where: { id: ancestryID} })
-                    .then((newAncestry) => {
-                        let newAncestryName = (newAncestry != null) ? newAncestry.name : '';
-                        return CharTags.addTag(charID, newAncestryName).then((result) => {
-                            return Character.update(charUpVals, { where: { id: charID } })
-                            .then((result) => {
-                                return CharDataMapping.deleteDataBySourceType(charID, 'ancestry')
-                                .then((result) => {
-                                    return Character.update({heritageID: null }, { where: { id: charID } })
-                                    .then((result) => {
-                                        return;
-                                    });
-                                });
-                            });
-                        });
+        return CharDataMapping.deleteDataBySourceType(charID, 'ancestry')
+        .then((result) => {
+            return Character.update(charUpVals, { where: { id: charID } })
+            .then((result) => {
+                return Ancestry.findOne({ where: { id: ancestryID} })
+                .then((newAncestry) => {
+                    let newAncestryName = (newAncestry != null) ? newAncestry.name : '';
+                    return CharTags.setTag(charID, srcStruct, newAncestryName).then((result) => {
+                        return;
                     });
                 });
             });
