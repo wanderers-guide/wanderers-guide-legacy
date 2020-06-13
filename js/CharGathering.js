@@ -551,6 +551,7 @@ module.exports = class CharGathering {
                     });
                     conditionMap.set(charCondition.conditionID, {
                         Condition : condition,
+                        EntryID : charCondition.id,
                         Value : charCondition.value,
                         SourceText : charCondition.sourceText,
                         ParentID : charCondition.parentID,

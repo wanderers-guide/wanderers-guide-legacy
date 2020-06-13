@@ -20,7 +20,7 @@ function getConditionFromID(conditionID){
 function hasCondition(checkingConditionID){
     for(const [conditionID, conditionData] of g_conditionsMap.entries()){
         if(conditionID == checkingConditionID) {
-            return conditionData.IsActive;
+            return true;
         }
     }
     return false;
@@ -28,135 +28,78 @@ function hasCondition(checkingConditionID){
 
 function getCondition(checkingConditionID){
     for(const [conditionID, conditionData] of g_conditionsMap.entries()){
-        if(conditionID == checkingConditionID && conditionData.IsActive) {
+        if(conditionID == checkingConditionID) {
             return conditionData;
         }
     }
     return null;
 }
 
-let g_conditionsLoadingCount = 0;
+function getCurrentConditionIDFromName(name){
+    for(const [conditionID, conditionData] of g_conditionsMap.entries()){
+        if(conditionData.Condition.name.toLowerCase() == name.toLowerCase()){
+            return conditionData.EntryID;
+        }
+    }
+    return null;
+}
 
-function addCondition(conditionID, value, sourceText){
-    g_conditionsLoadingCount++;
-    //console.log("Increasing to: "+g_conditionsLoadingCount);
-    console.log('Adding condition w/ ID: '+conditionID);
+function getCurrentConditionIDFromSourceText(sourceText){
+    for(const [conditionID, conditionData] of g_conditionsMap.entries()){
+        if(conditionData.SourceText == sourceText){
+            return conditionData.EntryID;
+        }
+    }
+    return null;
+}
+
+function addCondition(conditionID, value, sourceText, parentID = null){
     let existingCondition = g_conditionsMap.get(conditionID+'');
     if(existingCondition != null){
-        if(!existingCondition.IsActive){
-            if(sourceText != null){ // Sourced Condition
-                console.log('-> Making Active '+existingCondition.SourceText+" "+sourceText);
-                setTimeout(function(){
-                    socket.emit("requestUpdateConditionActive",
-                        getCharIDFromURL(),
-                        conditionID,
-                        true,
-                        sourceText,
-                        false);
-                }, 100);
-                existingCondition.IsActive = true;
-                existingCondition.SourceText = sourceText;
-            } else { // User Input Condition
-                console.log('-> Making Active via SourceSwitch '+conditionID);
-                existingCondition.Value = value;
-                existingCondition.SourceText = sourceText;
-                existingCondition.IsActive = true;
-                socket.emit("requestRemoveCondition",
-                    getCharIDFromURL(),
-                    conditionID,
-                    false,
-                    {conditionID, value, sourceText, reloadSheet: true});
-            }
-        } else {
-            if(sourceText != null){ // Sourced Condition
-                console.log('-> Overriding User Condition with Sourced '+conditionID);
-                existingCondition.Value = value;
-                existingCondition.SourceText = sourceText;
-                socket.emit("requestRemoveCondition",
-                    getCharIDFromURL(),
-                    conditionID,
-                    false,
-                    {conditionID, value, sourceText, reloadSheet: false});
-            } else {
-                g_conditionsLoadingCount--;
-                //console.log("Decreasing to: "+g_conditionsLoadingCount);
-            }
-        }
-    } else {
-        console.log('-> Adding New Record');
-        let reloadCharSheet = (sourceText == null);
-        setTimeout(function(){
-            socket.emit("requestAddCondition",
+        if((existingCondition.SourceText == null && sourceText != null) || (existingCondition.Value != value)){
+            // Replace unsourced with sourced condition OR update condition value
+            socket.emit("requestConditionChange",
                 getCharIDFromURL(),
                 conditionID,
                 value,
                 sourceText,
-                reloadCharSheet);
-        }, 100);
-        g_conditionsMap.set(conditionID+'', {
-            Condition : getConditionFromID(conditionID),
-            Value : value,
-            SourceText : sourceText,
-            IsActive : true
-        });
-    }
-}
-
-function removeCondition(conditionID, deleteRecord){
-    g_conditionsLoadingCount++;
-    //console.log("Increasing to: "+g_conditionsLoadingCount);
-    console.log('Removing condition w/ ID: '+conditionID);
-    let existingCondition = g_conditionsMap.get(conditionID+'');
-    if(existingCondition != null){
-        if(deleteRecord) {
-            //console.log('-> Removing Record');
-            socket.emit("requestRemoveCondition",
-                getCharIDFromURL(),
-                conditionID,
-                true);
-            g_conditionsMap.delete(conditionID+"");
+                parentID);
         } else {
-            if(existingCondition.IsActive){
-                if(existingCondition.SourceText != null){
-                    console.log('-> Making Inactive');
-                    socket.emit("requestUpdateConditionActive",
-                        getCharIDFromURL(),
-                        conditionID,
-                        false,
-                        false);
-                    existingCondition.IsActive = false;
-                } else {
-                    g_conditionsLoadingCount--;
-                    //console.log("Decreasing to: "+g_conditionsLoadingCount);
-                }
-            } else {
-                g_conditionsLoadingCount--;
-                //console.log("Decreasing to: "+g_conditionsLoadingCount);
-            }
+            return;
         }
     } else {
-        g_conditionsLoadingCount--;
-        //console.log("Decreasing to: "+g_conditionsLoadingCount);
+        socket.emit("requestConditionChange",
+            getCharIDFromURL(),
+            conditionID,
+            value,
+            sourceText,
+            parentID);
+    }
+
+}
+
+function removeCondition(conditionID, onlyWithSourceText = null){
+    if(onlyWithSourceText != null){
+        let conditionEntryID = getCurrentConditionIDFromSourceText(onlyWithSourceText);
+        if(conditionEntryID != null){
+            socket.emit("requestConditionRemove",
+                getCharIDFromURL(),
+                conditionID);
+        }
+    } else {
+        socket.emit("requestConditionRemove",
+            getCharIDFromURL(),
+            conditionID);
     }
 }
 
-socket.on("returnUpdateConditionsMap", function(reloadCharSheet, addStruct){
-    if(addStruct != null){
-        setTimeout(function(){
-            socket.emit("requestAddCondition",
-                getCharIDFromURL(),
-                addStruct.conditionID,
-                addStruct.value,
-                addStruct.sourceText,
-                addStruct.reloadSheet);
-        }, 500);
-    } else {
-        g_conditionsLoadingCount--;
-        //console.log("Decreasing to: "+g_conditionsLoadingCount);
-        if(reloadCharSheet){
-            loadCharSheet();
-        }
+socket.on("returnUpdateConditionsMap", function(conditionsObject, reloadSheet){
+    g_conditionsMap = objToMap(conditionsObject);
+
+    if(reloadSheet){
+        loadCharSheet();
     }
+
 });
 
 // ~~~~~~~~~~~~~~ // Run on Load // ~~~~~~~~~~~~~~ //
@@ -197,16 +140,13 @@ function displayConditionsList(){
 
     let conditionFound = false;
     for(const [conditionID, conditionData] of g_conditionsMap.entries()){
-        //console.log(conditionID+" is "+conditionData.IsActive);
-        if(conditionData.IsActive){
-            conditionFound = true;
-            let conditionLinkID = 'conditionLink'+conditionID;
-            let conditionValueHTML = (conditionData.Value != null) ? 'data-badge="'+conditionData.Value+'"' : '';
-            $('#conditionsContent').append('<button id="'+conditionLinkID+'" class="button is-small is-danger is-outlined has-badge-rounded has-badge-danger" '+conditionValueHTML+'>'+conditionData.Condition.name+'</button>');
-            $('#'+conditionLinkID).click(function(){
-                openConditionsModal(conditionID);
-            });
-        }
+        conditionFound = true;
+        let conditionLinkID = 'conditionLink'+conditionID;
+        let conditionValueHTML = (conditionData.Value != null) ? 'data-badge="'+conditionData.Value+'"' : '';
+        $('#conditionsContent').append('<button id="'+conditionLinkID+'" class="button is-very-small is-danger is-outlined has-badge-rounded has-badge-danger" '+conditionValueHTML+'>'+conditionData.Condition.name+'</button>');
+        $('#'+conditionLinkID).click(function(){
+            openConditionsModal(conditionID);
+        });
     }
 
     if(!conditionFound){
@@ -217,10 +157,7 @@ function displayConditionsList(){
 
 function runAllConditionsCode(){
     for(const [conditionID, conditionData] of g_conditionsMap.entries()){
-        //console.log("Running Code From Char Sheet Load > "+conditionID+":"+conditionData.IsActive);
-        if(conditionData.IsActive){
-            runConditionCode(conditionID);
-        }
+        runConditionCode(conditionID);
     }
 }
 
@@ -236,25 +173,6 @@ function runConditionCode(conditionID){
         }
 
     }
-}
-
-function resetConditionsMap(){
-
-    let conditionIDArray = [];
-    for(const [conditionID, conditionData] of g_conditionsMap.entries()){
-        if(conditionData.SourceText != null && conditionData.IsActive){
-            conditionIDArray.push(conditionID);
-            conditionData.IsActive = false;
-        }
-    }
-    //console.log('Making '+conditionIDArray.length+' Records Inactive');
-    if(conditionIDArray.length > 0){
-        socket.emit("requestUpdateConditionActiveForArray",
-            getCharIDFromURL(),
-            conditionIDArray,
-            false);
-    }
-
 }
 
 function openConditionsModal(conditionID){
@@ -286,7 +204,7 @@ function openConditionsModal(conditionID){
 
         $('#conditionsModalRemoveButton').off('click');
         $('#conditionsModalRemoveButton').click(function(){
-            removeCondition(conditionID, true);
+            removeCondition(conditionID);
             closeConditionsModal();
         });
 
@@ -314,12 +232,12 @@ function closeConditionsModal(){
     if(conditionData != null && conditionData.Value != null){
         let value = parseInt($('#conditionsModalValue').html());
         if(conditionData.Value != value){
-            socket.emit("requestUpdateConditionValue",
+            socket.emit("requestConditionChange",
                 getCharIDFromURL(),
                 conditionID,
                 value,
-                true);
-            conditionData.Value = value;
+                conditionData.SourceText,
+                conditionData.ParentID);
         }
     }
 
@@ -351,7 +269,7 @@ function openSelectConditionsModal() {
         let conditionSectionID = 'conditionSection'+condition.id;
         let conditionData = g_conditionsMap.get(condition.id+"");
 
-        if(conditionData != null && conditionData.IsActive) {
+        if(conditionData != null) {
 
             $('#conditionsSelectModalContent').append('<div id="'+conditionSectionID+'" class="tile is-parent is-paddingless has-background-black-ter cursor-clickable"><div class="tile is-child"><p class="has-text-centered is-size-5 border-bottom border-dark">'+condition.name+'</p></div></div>');
             

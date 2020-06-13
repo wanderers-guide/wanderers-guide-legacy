@@ -35,7 +35,8 @@ function processSheetCode(ascCode, sourceName, isTest){
             }
 
             let conditionID = getConditionFromName(conditionName).id;
-            addCondition(conditionID+'', conditionValue, sourceName);
+            let conditionParentID = getCurrentConditionIDFromName(sourceName);
+            addCondition(conditionID+'', conditionValue, sourceName, conditionParentID);
 
             continue;
         }

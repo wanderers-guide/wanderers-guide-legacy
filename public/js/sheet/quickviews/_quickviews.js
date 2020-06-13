@@ -4,7 +4,15 @@ $(function () {
 
     let quickviews = bulmaQuickview.attach();
 
-    $('#main-container').click(function(){
+    $('#character-sheet-section').click(function(){
+        if($('#quickviewDefault').hasClass('quickview-auto-close-protection')){
+            $('#quickviewDefault').removeClass('quickview-auto-close-protection');
+        } else {
+            closeQuickView();
+        }
+    });
+
+    $('#main-top').click(function(){
         if($('#quickviewDefault').hasClass('quickview-auto-close-protection')){
             $('#quickviewDefault').removeClass('quickview-auto-close-protection');
         } else {

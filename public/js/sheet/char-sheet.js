@@ -189,9 +189,6 @@ function loadCharSheet(){
     // Init Stats (set to new Map) //
     initStats();
 
-    // Reset Conditions Map (sets all temp data to inactive) //
-    resetConditionsMap();
-
     // Hide Spells Tab //
     if(g_spellSlotsMap.size === 0 && g_focusSpellMap.size === 0 && g_innateSpellArray.length === 0){
         $('#spellsTab').addClass('is-hidden');
@@ -303,33 +300,8 @@ function loadCharSheet(){
     // Get STR score before conditions code runs (in the case of Enfeebled)
     g_preConditions_strScore = getStatTotal('SCORE_STR');
 
-    // Run Init Condition Code //
-    runLoadingOrderConditions();
-
-}
-
-function runLoadingOrderConditions(){
-
-    let conditionsLoading = setInterval(() => {
-
-        if(g_conditionsLoadingState === 'READY'){
-            runAllConditionsCode();
-        }
-    
-        if(g_conditionsLoadingCount != 0) {
-            g_conditionsLoadingState = 'WAITING';
-            console.log('Loading Conditions Code... '+g_conditionsLoadingCount);
-        } else {
-            g_conditionsLoadingState = 'COMPLETE';
-            clearInterval(conditionsLoading);
-            runLoadingOrderPostConditions();
-        }
-
-    }, 10);
-
-}
-
-function runLoadingOrderPostConditions(){
+    // Run All Conditions Code //
+    runAllConditionsCode();
 
     // Run Feats and Abilities Code //
     runAllFeatsAndAbilitiesCode();
@@ -1083,15 +1055,22 @@ function initHealthAndTemp() {
     let maxHealth = $('#char-max-health');
     let maxHealthNum = getStatTotal('MAX_HEALTH');
     maxHealthNum += (g_classDetails.Class.hitPoints+getStatTotal('MAX_HEALTH_BONUS_PER_LEVEL'))*g_character.level;
-    maxHealth.html(maxHealthNum);
 
-    let currentHealth = $('#char-current-health');
-    if(g_character.currentHealth == null){
-        g_character.currentHealth = maxHealthNum;
-    } else {
-        g_character.currentHealth = (g_character.currentHealth > maxHealthNum) ? maxHealthNum : g_character.currentHealth;
+    // Drained Condition Reduces HP and MaxHP - Only Reduces MaxHP
+    let drainedCondition = getCondition(10); // Hardcoded ID - Drained
+    if(drainedCondition != null){
+        maxHealthNum -= drainedCondition.Value * g_character.level;
+        if(maxHealthNum < 0){ maxHealthNum = 0; }
     }
 
+    maxHealth.html(maxHealthNum);
+
+    if(g_character.currentHealth == null){
+        g_character.currentHealth = maxHealthNum;
+    }
+    g_character.currentHealth = (g_character.currentHealth > maxHealthNum) ? maxHealthNum : g_character.currentHealth;
+
+    let currentHealth = $('#char-current-health');
     let bulmaTextColor = getBulmaTextColorFromCurrentHP(g_character.currentHealth, maxHealthNum);
     currentHealth.html('<p class="is-size-5 is-unselectable text-center '+bulmaTextColor+'" style="width: 70px;">'+g_character.currentHealth+'</p>');
 
@@ -1157,13 +1136,39 @@ function healthConfirm(maxHealthNum){
     if(currentHealthNum == null || currentHealthNum > maxHealthNum || currentHealthNum < 0 || currentHealthNum == '') {
         $('#current-health-input').addClass('is-danger');
     } else {
-        g_character.currentHealth = parseInt(currentHealthNum);
+        let newCurrentHealth = parseInt(currentHealthNum);
+        
+        if(g_character.currentHealth === 0 && newCurrentHealth > 0){
+            removeCondition(11); // Hardcoded ID - Remove Dying Condition
+            let woundedCondition = getCondition(35); // Hardcoded ID - Wounded
+            if(woundedCondition != null){
+                let woundedValue = woundedCondition.Value + 1;
+                addCondition(35,
+                    woundedValue,
+                    woundedCondition.SourceText,
+                    woundedCondition.ParentID);
+            } else {
+                addCondition(35, 1, null);
+            }
+        }
+
+        g_character.currentHealth = newCurrentHealth;
         let bulmaTextColor = getBulmaTextColorFromCurrentHP(g_character.currentHealth, maxHealthNum);
         $('#char-current-health').html('<p class="is-size-5 is-unselectable text-center '+bulmaTextColor+'" style="width: 70px;">'+g_character.currentHealth+'</p>');
         $('#char-current-health').removeClass('is-in-input-mode');
         socket.emit("requestCurrentHitPointsSave",
             getCharIDFromURL(),
             g_character.currentHealth);
+
+        if(g_character.currentHealth === 0){
+            let dyingValue = 1;
+            let woundedCondition = getCondition(35); // Hardcoded ID - Wounded
+            if(woundedCondition != null){
+                dyingValue += woundedCondition.Value;
+            }
+            addCondition(11, dyingValue, null); // Hardcoded ID - Add Dying Condition
+        }
+
     }
 }
 
@@ -1244,7 +1249,6 @@ function determineArmor(dexMod, strScore) {
         let shoddyPenalty = (armorStruct.InvItem.isShoddy == 1) ? -2 : 0;
 
         let totalAC = 10 + dexMod + profNumber + armorStruct.Item.ArmorData.acBonus + profBonus + brokenPenalty + shoddyPenalty;
-        console.log(g_statManagerMap);
         totalAC += getStatTotal('AC');
 
         // Apply armor penalties to character...
@@ -1515,17 +1519,19 @@ function determineBulkAndCoins(invItems, itemMap, strMod){
     let isEncumbered = false;
     let cantMove = false;
 
-    if(totalBulk > weightMax) {
-        addCondition(13, null, 'Exceeding the amount of Bulk you can even hold.');
+    let encumberedSrcText = 'Exceeding the amount of Bulk you can even hold.';
+    if(totalBulk > weightMax) { // Hardcoded Condition IDs
+        addCondition(13, null, encumberedSrcText);
         cantMove = true;
     } else {
-        removeCondition(13, false);
+        removeCondition(13, encumberedSrcText);
 
+        let immobilizedSrcText = 'Holding more Bulk than you can carry.';
         if(totalBulk > weightEncumbered){
-            addCondition(1, null, 'Holding more Bulk than you can carry.');
+            addCondition(1, null, immobilizedSrcText);
             isEncumbered = true;
         } else {
-            removeCondition(1, false);
+            removeCondition(1, immobilizedSrcText);
         }
         
     }
@@ -1651,6 +1657,37 @@ function takeRest(){
             socket.emit("requestSpellSlotUpdate",
                 getCharIDFromURL(),
                 slot);
+        }
+    }
+
+    // Remove Fatigued Condition
+    removeCondition(15); // Hardcoded ID - Fatigued
+
+    // Decrease Drained Condition
+    let drainedCondition = getCondition(10); // Hardcoded ID - Drained
+    if(drainedCondition != null){
+        let drainedValue = drainedCondition.Value - 1;
+        if(drainedValue > 0){
+            addCondition(10,
+                drainedValue,
+                drainedCondition.SourceText,
+                drainedCondition.ParentID);
+        } else {
+            removeCondition(10);
+        }
+    }
+
+    // Decrease Doomed Condition
+    let doomedCondition = getCondition(9); // Hardcoded ID - Doomed
+    if(doomedCondition != null){
+        let doomedValue = doomedCondition.Value - 1;
+        if(doomedValue > 0){
+            addCondition(9,
+                doomedValue,
+                doomedCondition.SourceText,
+                doomedCondition.ParentID);
+        } else {
+            removeCondition(9);
         }
     }
 

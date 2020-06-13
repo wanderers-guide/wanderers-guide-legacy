@@ -70,58 +70,14 @@ module.exports = class CharSaving {
         });
     }
 
-    static addCondition(charID, conditionID, value, sourceText, parentID) {
-        return CharCondition.create({
+    static replaceCondition(charID, conditionID, value, sourceText, parentID) {
+        return CharCondition.upsert({
             charID: charID,
             conditionID: conditionID,
             value: value,
             sourceText : sourceText,
             parentID : parentID,
         }).then((result) => {
-            return;
-        }).catch((error) => {
-            console.error(error);
-            return;
-        });
-    }
-
-    static updateConditionValue(charID, conditionID, newValue) {
-        let updateValues = { value: newValue };
-        return CharCondition.update(updateValues, {
-            where: {
-                charID: charID,
-                conditionID: conditionID
-            }
-        }).then((result) => {
-            return;
-        });
-    }
-
-    static updateConditionActive(charID, conditionID, isActive, newSrcText) {
-        let updateValues = null;
-        if(newSrcText != null){
-            updateValues = { isActive: (isActive) ? 1 : 0, sourceText: newSrcText };
-        } else {
-            updateValues = { isActive: (isActive) ? 1 : 0 };
-        }
-        return CharCondition.update(updateValues, {
-            where: {
-                charID: charID,
-                conditionID: conditionID
-            }
-        }).then((result) => {
-            return;
-        });
-    }
-
-    static updateConditionActiveForArray(charID, conditionIDArray, isActive) {
-        let promises = [];
-        for(const conditionID of conditionIDArray) {
-            var newPromise = CharSaving.updateConditionActive(charID, conditionID, isActive, null);
-           promises.push(newPromise);
-        }
-        return Promise.all(promises)
-        .then(function(result) {
             return;
         });
     }
@@ -133,7 +89,7 @@ module.exports = class CharSaving {
                 conditionID: conditionID
             }
         }).then((result) => {
-            return;
+            return result != 0;
         });
     }
 

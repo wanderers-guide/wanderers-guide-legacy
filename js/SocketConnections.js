@@ -290,50 +290,27 @@ module.exports = class SocketConnections {
     // Socket.IO Connections
     io.on('connection', function(socket){
 
-      socket.on('requestAddCondition', function(charID, conditionID, value, sourceText, reloadCharSheet){
+      socket.on('requestConditionChange', function(charID, conditionID, value, sourceText, parentID){
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
           if(ownsChar){
-            CharSaving.addCondition(charID, conditionID, value, sourceText).then((result) => {
-              socket.emit('returnUpdateConditionsMap', reloadCharSheet, null);
+            CharSaving.replaceCondition(charID, conditionID, value, sourceText, parentID).then((result) => {
+              CharGathering.getAllConditions(charID)
+              .then((conditionsObject) => {
+                socket.emit('returnUpdateConditionsMap', conditionsObject, true);
+              });
             });
           }
         });
       });
-    
-      socket.on('requestUpdateConditionValue', function(charID, conditionID, newValue, reloadCharSheet){
+
+      socket.on('requestConditionRemove', function(charID, conditionID){
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
           if(ownsChar){
-            CharSaving.updateConditionValue(charID, conditionID, newValue).then((result) => {
-              socket.emit('returnUpdateConditionsMap', reloadCharSheet, null);
-            });
-          }
-        });
-      });
-    
-      socket.on('requestUpdateConditionActive', function(charID, conditionID, isActive, newSrcText, reloadCharSheet){
-        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
-          if(ownsChar){
-            CharSaving.updateConditionActive(charID, conditionID, isActive, newSrcText).then((result) => {
-              socket.emit('returnUpdateConditionsMap', reloadCharSheet, null);
-            });
-          }
-        });
-      });
-    
-      socket.on('requestUpdateConditionActiveForArray', function(charID, conditionIDArray, isActive){
-        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
-          if(ownsChar){
-            CharSaving.updateConditionActiveForArray(charID, conditionIDArray, isActive).then((result) => {
-            });
-          }
-        });
-      });
-    
-      socket.on('requestRemoveCondition', function(charID, conditionID, reloadCharSheet, addStruct){
-        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
-          if(ownsChar){
-            CharSaving.removeCondition(charID, conditionID).then((result) => {
-              socket.emit('returnUpdateConditionsMap', reloadCharSheet, addStruct);
+            CharSaving.removeCondition(charID, conditionID).then((didRemove) => {
+              CharGathering.getAllConditions(charID)
+              .then((conditionsObject) => {
+                socket.emit('returnUpdateConditionsMap', conditionsObject, didRemove);
+              });
             });
           }
         });
