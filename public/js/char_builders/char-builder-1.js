@@ -122,6 +122,7 @@ socket.on("returnNameChange", function() {
 });
 
 socket.on("returnLevelChange", function() {
+    $("#charLevel").blur();
 });
 
 socket.on("returnAbilityScoreChange", function() {

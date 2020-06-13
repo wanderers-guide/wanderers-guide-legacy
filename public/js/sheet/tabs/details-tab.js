@@ -23,6 +23,7 @@ function openDetailsTab(data){
 
 // Details Tabs //
 function changeDetailsTab(type, data){
+    if(!g_selectedSubTabLock) {g_selectedSubTabID = type;}
 
     $('#detailsTabContent').html('');
 
@@ -181,21 +182,21 @@ function displayFeat(feat, featTags, featCount){
 
     let featTagsInnerHTML = '<div class="buttons is-marginless is-right">';
     switch(feat.rarity) {
-        case 'UNCOMMON': featTagsInnerHTML += '<button class="button is-marginless mr-2 is-very-small is-primary">Uncommon</button>';
+        case 'UNCOMMON': featTagsInnerHTML += '<button class="button is-marginless mr-2 my-1 is-very-small is-primary">Uncommon</button>';
             break;
-        case 'RARE': featTagsInnerHTML += '<button class="button is-marginless mr-2 is-very-small is-success">Rare</button>';
+        case 'RARE': featTagsInnerHTML += '<button class="button is-marginless mr-2 my-1 is-very-small is-success">Rare</button>';
             break;
-        case 'UNIQUE': featTagsInnerHTML += '<button class="button is-marginless mr-2 is-very-small is-danger">Unique</button>';
+        case 'UNIQUE': featTagsInnerHTML += '<button class="button is-marginless mr-2 my-1 is-very-small is-danger">Unique</button>';
             break;
         default: break;
     }
     for(const tag of featTags){
-        featTagsInnerHTML += '<button class="button is-marginless mr-2 is-very-small is-info">'+tag.name+'</button>';
+        featTagsInnerHTML += '<button class="button is-marginless mr-2 my-1 is-very-small is-info">'+tag.name+'</button>';
     }
     featTagsInnerHTML += '</div>';
 
 
-    $('#featsContent').append('<div id="'+featID+'" class="columns is-mobile border-bottom border-dark-lighter cursor-clickable is-marginless mx-2"><div class="column is-paddingless p-1 pl-3"><p class="text-left">'+featNameInnerHTML+'</p></div><div class="column is-paddingless p-1"><p class="pt-1">'+featTagsInnerHTML+'</p></div></div>');
+    $('#featsContent').append('<div id="'+featID+'" class="columns is-mobile border-bottom border-dark-lighter cursor-clickable is-marginless mx-2"><div class="column is-paddingless pl-3"><p class="text-left pt-1">'+featNameInnerHTML+'</p></div><div class="column is-paddingless"><p class="">'+featTagsInnerHTML+'</p></div></div>');
     
     $('#'+featID).click(function(){
         openQuickView('featView', {
@@ -273,12 +274,10 @@ function displayAbilitiesContent(data){
 function displayClassAbilities(data, abilitiesSearchValue){
     $('#abilitiesContent').append('<p class="is-size-5 has-text-grey-light has-text-weight-bold text-left pl-5">Class</p>');
     $('#abilitiesContent').append('<hr class="hr-light" style="margin-top:-0.5em; margin-bottom:0em;">');
-    
-    console.log(data);
 
     let abilCount = 0;
     for(let classAbil of data.ClassDetails.Abilities){
-        if(classAbil.displayInSheet === 0){ continue; }
+        if(classAbil.displayInSheet === 0 || classAbil.level > g_character.level){ continue; }
         filterAbilitiesThroughSearch(classAbil, 'Class'+abilCount, abilitiesSearchValue);
         abilCount++;
     }
@@ -338,7 +337,7 @@ function displayAbility(ability, abilIdentifier){
     let abilityNameInnerHTML = '<span>'+ability.name+'</span>';
     let abilityLevelInnerHTML = '<span>Level '+ability.level+'</span>';
 
-    $('#abilitiesContent').append('<div id="'+abilityID+'" class="columns is-mobile border-bottom border-dark-lighter cursor-clickable is-marginless mx-2"><div class="column is-paddingless p-1 pl-3"><p class="text-left">'+abilityNameInnerHTML+'</p></div><div class="column is-paddingless p-1"><p class="pt-1">'+abilityLevelInnerHTML+'</p></div></div>');
+    $('#abilitiesContent').append('<div id="'+abilityID+'" class="columns is-mobile border-bottom border-dark-lighter cursor-clickable is-marginless mx-2"><div class="column is-paddingless pl-3"><p class="text-left pt-1">'+abilityNameInnerHTML+'</p></div><div class="column is-paddingless"><p class="pt-1">'+abilityLevelInnerHTML+'</p></div></div>');
     
     $('#'+abilityID).click(function(){
         openQuickView('abilityView', {
@@ -361,17 +360,17 @@ function displayAbility(ability, abilIdentifier){
 function displayDescriptionSection(data){
     $('#detailsTabContent').append('<div id="descriptionContent" class="use-custom-scrollbar" style="height: 570px; max-height: 570px; overflow-y: auto;"></div>');
 
-    $('#descriptionContent').append('<p class="is-size-5 has-text-grey-light has-text-weight-bold text-left pl-5">Background - '+data.Background.name+'</p>');
+    $('#descriptionContent').append('<p class="is-size-5 has-text-grey-light has-text-weight-bold text-left pl-5 pt-2">Background - '+data.Background.name+'</p>');
     $('#descriptionContent').append('<hr class="hr-light" style="margin-top:-0.5em; margin-bottom:0em;">');
 
     $('#descriptionContent').append('<div class="mx-3">'+processText(data.Background.description, true, true, 'SMALL')+'</div>');
 
-    $('#descriptionContent').append('<p class="is-size-5 has-text-grey-light has-text-weight-bold text-left pl-5">Heritage - '+data.Heritage.name+' </p>');
+    $('#descriptionContent').append('<p class="is-size-5 has-text-grey-light has-text-weight-bold text-left pl-5 pt-2">Heritage - '+data.Heritage.name+' </p>');
     $('#descriptionContent').append('<hr class="hr-light" style="margin-top:-0.5em; margin-bottom:0em;">');
 
     $('#descriptionContent').append('<div class="mx-3">'+processText(data.Heritage.description, true, true, 'SMALL')+'</div>');
 
-    $('#descriptionContent').append('<p class="is-size-5 has-text-grey-light has-text-weight-bold text-left pl-5">Information</p>');
+    $('#descriptionContent').append('<p class="is-size-5 has-text-grey-light has-text-weight-bold text-left pl-5 pt-2">Information</p>');
     $('#descriptionContent').append('<hr class="hr-light" style="margin-top:-0.5em; margin-bottom:0em;">');
 
     let charHistoryAreaID = "charHistoryArea";
@@ -399,5 +398,4 @@ function displayDescriptionSection(data){
 
 socket.on("returnDetailsSave", function(){
     $("#charHistoryAreaControlShell").removeClass("is-loading");
-    $('#charHistoryArea').blur();
 });

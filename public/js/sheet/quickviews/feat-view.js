@@ -19,7 +19,7 @@ function openFeatQuickview(data) {
     $('#quickViewTitle').html(featNameInnerHTML);
     let qContent = $('#quickViewContent');
 
-    let featTagsInnerHTML = '<div class="columns is-centered is-marginless"><div class="column is-10 is-paddingless"><div class="buttons is-marginless is-centered">';
+    let featTagsInnerHTML = '<div class="columns is-centered is-marginless"><div class="column is-9 is-paddingless"><div class="buttons is-marginless is-centered">';
     switch(data.Feat.rarity) {
     case 'UNCOMMON': featTagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-very-small is-primary">Uncommon</button>';
         break;
@@ -39,6 +39,12 @@ function openFeatQuickview(data) {
         }
         featTagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-very-small is-info has-tooltip-bottom has-tooltip-multiline" data-tooltip="An action with this trait is categorized under the '+skill.name+' skill. It usually requires a certain proficiency in the skill to perform.">'+skill.name+'</button>';
     }
+
+    data.Tags = data.Tags.sort(
+        function(a, b) {
+            return a.name > b.name ? 1 : -1;
+        }
+    );
     for(const tag of data.Tags){
         featTagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-very-small is-info has-tooltip-bottom has-tooltip-multiline" data-tooltip="'+tag.description+'">'+tag.name+'</button>';
     }
@@ -52,6 +58,9 @@ function openFeatQuickview(data) {
     }
     if(data.Feat.frequency != null){
         featContentInnerHTML += '<div><p class="negative-indent"><span><strong>Frequency: </strong></span><span>'+data.Feat.frequency+'</span></p></div>';
+    }
+    if(data.Feat.cost != null){
+        featContentInnerHTML += '<div><p class="negative-indent"><span><strong>Cost: </strong></span><span>'+data.Feat.cost+'</span></p></div>';
     }
     if(data.Feat.trigger != null){
         featContentInnerHTML += '<div><p class="negative-indent"><span><strong>Trigger: </strong></span><span>'+data.Feat.trigger+'</span></p></div>';
@@ -69,5 +78,18 @@ function openFeatQuickview(data) {
     }
 
     qContent.append(featContentInnerHTML);
+
+    // Notes Field
+    let featChoice = g_featChoiceArray.find(feat => {
+        if(feat != null && feat.value != null){
+            if(feat.value.id === data.Feat.id) {
+                return true;
+            }
+        }
+        return false;
+    });
+    if(featChoice != null){
+        displayNotesField(qContent, featChoice.sourceCode);
+    }
 
 }

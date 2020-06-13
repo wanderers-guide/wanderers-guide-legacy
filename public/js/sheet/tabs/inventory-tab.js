@@ -95,7 +95,6 @@ function displayInventorySection(data){
     } else {
         inventorySearch.removeClass('is-info');
     }
-    inventorySearch.blur();
 
     $('#inventorySearch').change(function(){
         displayInventorySection(data);
@@ -112,7 +111,7 @@ function displayInventorySection(data){
 
         if(invSearchInput == 'weapons'){
             let item = g_itemMap.get(invItem.itemID+"");
-            if(item.WeaponData != null){
+            if(item.Item.itemType == 'WEAPON'){
                 willDisplay = true;
             } else {
                 willDisplay = false;
@@ -120,14 +119,15 @@ function displayInventorySection(data){
 
         } else if(invSearchInput == 'armor'){
             let item = g_itemMap.get(invItem.itemID+"");
-            if(item.ArmorData != null){
+            if(item.Item.itemType == 'ARMOR'){
                 willDisplay = true;
             } else {
                 willDisplay = false;
             }
 
-        } else if(invSearchInput == 'coins' || invSearchInput == 'money'){
-            if(invItem.itemID == 22 || invItem.itemID == 23 || invItem.itemID == 24 || invItem.itemID == 25){
+        } else if(invSearchInput == 'coins' || invSearchInput == 'money' || invSearchInput == 'currency'){
+            let item = g_itemMap.get(invItem.itemID+"");
+            if(item.Item.itemType == 'CURRENCY'){
                 willDisplay = true;
             } else {
                 willDisplay = false;

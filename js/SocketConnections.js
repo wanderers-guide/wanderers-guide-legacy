@@ -2,6 +2,7 @@
 const CharGathering = require('./CharGathering');
 const CharSaving = require('./CharSaving');
 const CharSpells = require('./CharSpells');
+const CharTags = require('./CharTags');
 const CharDataMapping = require('./CharDataMapping');
 const CharDataMappingExt = require('./CharDataMappingExt');
 const AuthCheck = require('./AuthCheck');
@@ -51,6 +52,17 @@ module.exports = class SocketConnections {
           if(ownsChar){
             CharSaving.saveDetails(charID, details).then((result) => {
               socket.emit('returnDetailsSave');
+            });
+          }
+        });
+      });
+
+      socket.on('requestNotesFieldSave', function(charID, notesData, notesFieldControlShellID){
+        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+          if(ownsChar){
+            CharDataMapping.setData(charID, 'notesField', notesData, notesData.value)
+            .then((result) => {
+              socket.emit('returnNotesFieldSave', notesFieldControlShellID);
             });
           }
         });
@@ -174,9 +186,11 @@ module.exports = class SocketConnections {
       socket.on('requestAddItemToInv', function(invID, itemID, quantity){
         AuthCheck.ownsInv(socket, invID).then((ownsInv) => {
           if(ownsInv){
-            CharSaving.addItemToInv(invID, itemID, quantity).then(() => {
+            CharSaving.addItemToInv(invID, itemID, quantity).then((invItem) => {
               CharGathering.getInventory(invID).then((invStruct) => {
-                socket.emit('returnAddItemToInv', itemID, invStruct);
+                CharGathering.getItem(itemID).then((item) => {
+                  socket.emit('returnAddItemToInv', item, invItem, invStruct);
+                });
               });
             });
           }
@@ -238,7 +252,21 @@ module.exports = class SocketConnections {
           }
         });
       });
-    
+
+      socket.on('requestInvItemInvestChange', function(invItemID, isInvested){
+        AuthCheck.ownsInvItem(socket, invItemID).then((ownsItem) => {
+          if(ownsItem){
+            CharGathering.getInvIDFromInvItemID(invItemID).then((invID) => {
+              CharSaving.saveInvItemInvest(invItemID, isInvested).then(() => {
+                CharGathering.getInventory(invID).then((invStruct) => {
+                  socket.emit('returnInvItemUpdated', invStruct);
+                });
+              });
+            });
+          }
+        });
+      });
+
       socket.on('requestCustomizeInvItem', function(invItemID, updateValues){
         AuthCheck.ownsInvItem(socket, invItemID).then((ownsItem) => {
           if(ownsItem){
@@ -266,7 +294,7 @@ module.exports = class SocketConnections {
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
           if(ownsChar){
             CharSaving.addCondition(charID, conditionID, value, sourceText).then((result) => {
-              socket.emit('returnUpdateConditionsMap', reloadCharSheet);
+              socket.emit('returnUpdateConditionsMap', reloadCharSheet, null);
             });
           }
         });
@@ -276,37 +304,36 @@ module.exports = class SocketConnections {
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
           if(ownsChar){
             CharSaving.updateConditionValue(charID, conditionID, newValue).then((result) => {
-              socket.emit('returnUpdateConditionsMap', reloadCharSheet);
+              socket.emit('returnUpdateConditionsMap', reloadCharSheet, null);
             });
           }
         });
       });
     
-      socket.on('requestUpdateConditionActive', function(charID, conditionID, isActive, reloadCharSheet){
+      socket.on('requestUpdateConditionActive', function(charID, conditionID, isActive, newSrcText, reloadCharSheet){
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
           if(ownsChar){
-            CharSaving.updateConditionActive(charID, conditionID, isActive).then((result) => {
-              socket.emit('returnUpdateConditionsMap', reloadCharSheet);
+            CharSaving.updateConditionActive(charID, conditionID, isActive, newSrcText).then((result) => {
+              socket.emit('returnUpdateConditionsMap', reloadCharSheet, null);
             });
           }
         });
       });
     
-      socket.on('requestUpdateConditionActiveForArray', function(charID, conditionIDArray, isActive, reloadCharSheet){
+      socket.on('requestUpdateConditionActiveForArray', function(charID, conditionIDArray, isActive){
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
           if(ownsChar){
             CharSaving.updateConditionActiveForArray(charID, conditionIDArray, isActive).then((result) => {
-              socket.emit('returnUpdateConditionsMap', reloadCharSheet);
             });
           }
         });
       });
     
-      socket.on('requestRemoveCondition', function(charID, conditionID, reloadCharSheet){
+      socket.on('requestRemoveCondition', function(charID, conditionID, reloadCharSheet, addStruct){
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
           if(ownsChar){
             CharSaving.removeCondition(charID, conditionID).then((result) => {
-              socket.emit('returnUpdateConditionsMap', reloadCharSheet);
+              socket.emit('returnUpdateConditionsMap', reloadCharSheet, addStruct);
             });
           }
         });
@@ -580,7 +607,7 @@ module.exports = class SocketConnections {
       socket.on('requestAbilityBonusChange', function(charID, srcStruct, abilityBonusStruct){
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
           if(ownsChar){
-            if(abilityBonusStruct === null){
+            if(abilityBonusStruct == null){
               CharDataMapping.deleteData(charID, 'abilityBonus', srcStruct)
               .then((result) => {
                 socket.emit('returnAbilityBonusChange');
@@ -598,7 +625,7 @@ module.exports = class SocketConnections {
       socket.on('requestClassChoiceChange', function(charID, srcStruct, classChoiceStruct){
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
           if(ownsChar){
-            if(classChoiceStruct === null){
+            if(classChoiceStruct == null){
               CharDataMapping.deleteData(charID, 'classChoice', srcStruct)
               .then((result) => {
                 socket.emit('returnClassChoiceChange');
@@ -617,7 +644,7 @@ module.exports = class SocketConnections {
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
           if(ownsChar){
             let srcStruct = profChangePacket.srcStruct;
-            if(profStruct === null){
+            if(profStruct == null){
               CharDataMapping.deleteData(charID, 'proficiencies', srcStruct)
               .then((result) => {
                 socket.emit('returnProficiencyChange', profChangePacket);
@@ -636,7 +663,7 @@ module.exports = class SocketConnections {
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
           if(ownsChar){
             let srcStruct = featChangePacket.srcStruct;
-            if(featChangePacket.featID === null){
+            if(featChangePacket.featID == null){
               CharDataMapping.deleteData(charID, 'chosenFeats', srcStruct)
               .then((result) => {
                 socket.emit('returnFeatChange', featChangePacket, selectFeatControlShellClass);
@@ -654,7 +681,7 @@ module.exports = class SocketConnections {
       socket.on('requestLanguageChange', function(charID, srcStruct, langID){
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
           if(ownsChar){
-            if(langID === null){
+            if(langID == null){
               CharDataMapping.deleteData(charID, 'languages', srcStruct)
               .then((result) => {
                 socket.emit('returnLanguageChange');
@@ -672,7 +699,7 @@ module.exports = class SocketConnections {
       socket.on('requestSensesChange', function(charID, srcStruct, senseID){
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
           if(ownsChar){
-            if(senseID === null){
+            if(senseID == null){
               CharDataMapping.deleteData(charID, 'senses', srcStruct)
               .then((result) => {
                 socket.emit('returnSensesChange');
@@ -690,7 +717,7 @@ module.exports = class SocketConnections {
       socket.on('requestPhysicalFeaturesChange', function(charID, srcStruct, physicalFeatureID){
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
           if(ownsChar){
-            if(physicalFeatureID === null){
+            if(physicalFeatureID == null){
               CharDataMapping.deleteData(charID, 'phyFeats', srcStruct)
               .then((result) => {
                 socket.emit('returnPhysicalFeaturesChange');
@@ -699,6 +726,50 @@ module.exports = class SocketConnections {
               CharDataMapping.setData(charID, 'phyFeats', srcStruct, physicalFeatureID)
               .then((result) => {
                 socket.emit('returnPhysicalFeaturesChange');
+              });
+            }
+          }
+        });
+      });
+
+      socket.on('requestDomainChange', function(charID, srcStruct, domain){
+        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+          if(ownsChar){
+            if(domain == null || domain.Domain == null){
+              CharDataMapping.deleteData(charID, 'domains', srcStruct)
+              .then((result) => {
+                socket.emit('returnDomainChange');
+              });
+            } else {
+              CharDataMapping.setData(charID, 'domains', srcStruct, domain.Domain.id)
+              .then((result) => {
+                CharDataMapping.setData(charID, 'focusSpell', srcStruct, 
+                    domain.SpellSRC+"="+domain.Domain.initialSpellID+"=0")
+                .then((result) => {
+                  socket.emit('returnDomainChange');
+                });
+              });
+            }
+          }
+        });
+      });
+
+      socket.on('requestDomainAdvancementChange', function(charID, srcStruct, domain){
+        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+          if(ownsChar){
+            if(domain == null || domain.Domain == null){
+              CharDataMapping.deleteData(charID, 'advancedDomains', srcStruct)
+              .then((result) => {
+                socket.emit('returnDomainAdvancementChange');
+              });
+            } else {
+              CharDataMapping.setData(charID, 'advancedDomains', srcStruct, domain.Domain.id)
+              .then((result) => {
+                CharDataMapping.setData(charID, 'focusSpell', srcStruct, 
+                    domain.SpellSRC+"="+domain.Domain.advancedSpellID+"=0")
+                .then((result) => {
+                  socket.emit('returnDomainAdvancementChange');
+                });
               });
             }
           }
@@ -717,7 +788,7 @@ module.exports = class SocketConnections {
       socket.on('requestLoreChange', function(charID, srcStruct, loreName){
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
           if(ownsChar){
-            if(loreName === null){
+            if(loreName == null){
               CharDataMapping.deleteData(charID, 'loreCategories', srcStruct)
               .then((result) => {
                 socket.emit('returnLoreChange');
@@ -728,6 +799,80 @@ module.exports = class SocketConnections {
                 socket.emit('returnLoreChange');
               });
             }
+          } else {
+            socket.emit('returnASCStatementFailure', 'Incorrect Auth');
+          }
+        });
+      });
+
+      socket.on('requestWeaponSpecializationChange', function(charID, srcStruct, type){
+        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+          if(ownsChar){
+            if(type === 1 || type === 2 || type === 3) {
+              CharDataMapping.setData(charID, 'weaponSpecialization', srcStruct, type)
+              .then((result) => {
+                socket.emit('returnWeaponSpecializationChange');
+              });
+            } else {
+              socket.emit('returnASCStatementFailure', 'Invalid weapon specialization type \"'+type+'\"');
+            }
+          } else {
+            socket.emit('returnASCStatementFailure', 'Incorrect Auth');
+          }
+        });
+      });
+
+      socket.on('requestArmorSpecializationChange', function(charID, srcStruct, weapName){
+        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+          if(ownsChar){
+            CharDataMapping.setData(charID, 'armorSpecialization', srcStruct, weapName)
+            .then((result) => {
+              socket.emit('returnArmorSpecializationChange');
+            });
+          } else {
+            socket.emit('returnASCStatementFailure', 'Incorrect Auth');
+          }
+        });
+      });
+
+      socket.on('requestWeaponCriticalSpecializationChange', function(charID, srcStruct, weapName){
+        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+          if(ownsChar){
+            CharDataMapping.setData(charID, 'weaponCriticalSpecialization', srcStruct, weapName)
+            .then((result) => {
+              socket.emit('returnWeaponCriticalSpecializationChange');
+            });
+          } else {
+            socket.emit('returnASCStatementFailure', 'Incorrect Auth');
+          }
+        });
+      });
+
+      socket.on('requestSpeedChange', function(charID, srcStruct, speedType, speedAmt){
+        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+          if(ownsChar){
+            let amount = parseInt(speedAmt);
+            if(!isNaN(amount)) {
+              CharDataMappingExt.setDataOtherSpeed(charID, srcStruct, speedType, amount)
+              .then((result) => {
+                socket.emit('returnSpeedChange');
+              });
+            } else {
+              socket.emit('returnASCStatementFailure', 'Invalid Speed Amount \"'+speedAmt+'\"');
+            }
+          } else {
+            socket.emit('returnASCStatementFailure', 'Incorrect Auth');
+          }
+        });
+      });
+
+      socket.on('requestCharTagChange', function(charID, srcStruct, charTag){
+        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+          if(ownsChar){
+            CharTags.setTag(charID, srcStruct, charTag)
+            .then((result) => {
+              socket.emit('returnCharTagChange');
+            });
           } else {
             socket.emit('returnASCStatementFailure', 'Incorrect Auth');
           }
@@ -771,6 +916,42 @@ module.exports = class SocketConnections {
             });
           } else {
             socket.emit('returnASCStatementFailure', 'Incorrect Auth');
+          }
+        });
+      });
+
+      socket.on('requestSensesChangeByName', function(charID, srcStruct, senseName){
+        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+          if(ownsChar){
+            CharGathering.getSenseTypeByName(senseName)
+            .then((senseType) => {
+              if(senseType != null){
+                CharDataMapping.setData(charID, 'senses', srcStruct, senseType.id)
+                .then((result) => {
+                  socket.emit('returnSensesChangeByName');
+                });
+              } else {
+                socket.emit('returnASCStatementFailure', 'Cannot find sense \"'+senseName+'\"');
+              }
+            });
+          }
+        });
+      });
+
+      socket.on('requestPhysicalFeaturesChangeByName', function(charID, srcStruct, physicalFeatureName){
+        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+          if(ownsChar){
+            CharGathering.gePhyFeatByName(physicalFeatureName)
+            .then((physicalFeature) => {
+              if(physicalFeature != null){
+                CharDataMapping.setData(charID, 'phyFeats', srcStruct, physicalFeature.id)
+                .then((result) => {
+                  socket.emit('returnPhysicalFeaturesChangeByName');
+                });
+              } else {
+                socket.emit('returnASCStatementFailure', 'Cannot find physical feature \"'+physicalFeatureName+'\"');
+              }
+            });
           }
         });
       });
@@ -950,6 +1131,26 @@ module.exports = class SocketConnections {
           }
         });
       });
+
+      socket.on('requestNotesFieldChange', function(charID, srcStruct, placeholderText){
+        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+          if(ownsChar){
+            CharDataMapping.getDataSingle(charID, 'notesField', srcStruct)
+            .then((notesData) => {
+              if(notesData == null) {
+                CharDataMapping.setData(charID, 'notesField', srcStruct, placeholderText+",,,")
+                .then((result) => {
+                  socket.emit('returnNotesFieldChange');
+                });
+              } else {
+                socket.emit('returnNotesFieldChange');
+              }
+            });
+          } else {
+            socket.emit('returnASCStatementFailure', 'Incorrect Auth');
+          }
+        });
+      });
       
 
     });
@@ -1000,6 +1201,16 @@ module.exports = class SocketConnections {
           }
         });
       });
+
+      socket.on('requestASCSpells', function(charID, ascStatement, srcStruct, locationID){
+        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+          if(ownsChar){
+            CharGathering.getAllSpells().then((spellMap) => {
+              socket.emit('returnASCSpells', ascStatement, srcStruct, locationID, mapToObj(spellMap));
+            });
+          }
+        });
+      });
     
       socket.on('requestASCClassAbilities', function(charID, classAbilities){
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
@@ -1031,12 +1242,24 @@ module.exports = class SocketConnections {
         });
       });
     
-      socket.on('requestASCUpdateChoices', function(charID){
+      socket.on('requestASCUpdateChoices', function(charID, updateType){
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
           if(ownsChar){
-            CharGathering.getCharChoices(charID).then((choiceStruct) => {
-              socket.emit('returnASCUpdateChoices', choiceStruct);
-            });
+            if(updateType == 'ABILITY-BOOSTS'){
+              CharGathering.getChoicesAbilityBonus(charID).then((bonusDataArray) => {
+                socket.emit('returnASCUpdateChoices', 'ABILITY-BOOSTS', bonusDataArray);
+              });
+            } else if(updateType == 'FEATS'){
+              CharGathering.getChoicesFeats(charID).then((featDataArray) => {
+                socket.emit('returnASCUpdateChoices', 'FEATS', featDataArray);
+              });
+            } else if(updateType == 'DOMAINS'){
+              CharGathering.getChoicesDomains(charID).then((domainDataArray) => {
+                socket.emit('returnASCUpdateChoices', 'DOMAINS', domainDataArray);
+              });
+            } else {
+              socket.emit('returnASCUpdateChoices', null, null);
+            }
           }
         });
       });
@@ -1054,7 +1277,7 @@ module.exports = class SocketConnections {
       socket.on('requestASCAbilityBonusChange', function(charID, srcStruct, abilityBonusStruct, selectBoostControlShellClass){
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
           if(ownsChar){
-            if(abilityBonusStruct === null){
+            if(abilityBonusStruct == null){
               CharDataMapping.deleteData(charID, 'abilityBonus', srcStruct)
               .then((result) => {
                 socket.emit('returnASCAbilityBonusChange', selectBoostControlShellClass);
@@ -1069,6 +1292,30 @@ module.exports = class SocketConnections {
         });
       });
 
+      socket.on('requestASCInnateSpellChange', function(charID, srcStruct, innateSpellStruct, selectControlShellClass){
+        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+          if(ownsChar){
+            if(innateSpellStruct == null){
+              CharDataMapping.deleteData(charID, 'innateSpell', srcStruct)
+              .then((result) => {
+                socket.emit('returnASCInnateSpellChange', selectControlShellClass);
+              });
+            } else {
+              CharGathering.getSpellByName(innateSpellStruct.name)
+              .then((spell) => {
+                if(spell != null){
+                  CharDataMappingExt.setDataInnateSpell(charID, srcStruct, spell.id, innateSpellStruct.level, innateSpellStruct.tradition, innateSpellStruct.tPd)
+                  .then((result) => {
+                    socket.emit('returnASCInnateSpellChange', selectControlShellClass);
+                  });
+                }
+              });
+            }
+          }
+        });
+      });
+
+      
     });
     
   }

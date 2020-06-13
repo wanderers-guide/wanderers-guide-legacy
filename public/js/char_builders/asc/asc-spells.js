@@ -2,7 +2,7 @@
 //------------------------- Processing Spells ------------------------//
 function processingSpells(ascStatement, srcStruct, locationID){
 
-    if(ascStatement.includes("SET-SPELL-SLOTS")){// SET-SPELL-SLOTS=Bard:Three-Quarters/Full
+    if(ascStatement.includes("SET-SPELL-SLOTS")){// SET-SPELL-SLOTS=Bard:Three-Quarters/Full/Single-Set
         let data = ascStatement.split('=')[1];
         let segments = data.split(':');
         giveSpellCasting(srcStruct, segments[0], segments[1]);
@@ -27,7 +27,7 @@ function processingSpells(ascStatement, srcStruct, locationID){
         let segments = data.split(':');
         giveSpellList(srcStruct, segments[0], segments[1]);
     } else {
-        displayError("Unknown statement (2): \'"+ascStatement+"\'");
+        displayError("Unknown statement (2-Spell): \'"+ascStatement+"\'");
         statementComplete();
     }
 
@@ -112,6 +112,7 @@ socket.on("returnSpellCastingTypeChange", function(){
 //////////////////////////////// Give Focus Spell ///////////////////////////////////
 function giveFocusSpell(srcStruct, spellSRC, spellName){
     spellName = spellName.replace(/_/g," ");
+    spellName = spellName.replace(/’/g,"'");
     socket.emit("requestFocusSpellChange",
         getCharIDFromURL(),
         srcStruct,

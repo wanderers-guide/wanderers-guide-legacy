@@ -48,6 +48,10 @@ function displayFeat(locationID, feat){
       foundReq = true;
       featInnerHTML += '<div class="feat-attrib"><span><strong>Frequency: </strong></span><span>'+feat.Feat.frequency+'</span></div>';
     }
+    if(feat.Feat.cost != null){
+      foundReq = true;
+      featInnerHTML += '<div class="feat-attrib"><span><strong>Cost: </strong></span><span>'+feat.Feat.cost+'</span></div>';
+    }
     if(feat.Feat.trigger != null){
       foundReq = true;
       featInnerHTML += '<div class="feat-attrib"><span><strong>Trigger: </strong></span><span>'+feat.Feat.trigger+'</span></div>';
@@ -72,5 +76,14 @@ function displayFeat(locationID, feat){
     featInnerHTML += '</div></div>';
   
     $('#'+locationID).html(featInnerHTML);
+  
+  }
+
+
+  function displaySpell(locationID, spell){
+
+    $('#'+locationID).html('');
+
+    // TODO: Display spell
   
   }

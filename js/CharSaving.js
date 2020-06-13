@@ -70,13 +70,13 @@ module.exports = class CharSaving {
         });
     }
 
-    static addCondition(charID, conditionID, value, sourceText) {
+    static addCondition(charID, conditionID, value, sourceText, parentID) {
         return CharCondition.create({
             charID: charID,
             conditionID: conditionID,
             value: value,
             sourceText : sourceText,
-            isActive : 1
+            parentID : parentID,
         }).then((result) => {
             return;
         }).catch((error) => {
@@ -97,8 +97,13 @@ module.exports = class CharSaving {
         });
     }
 
-    static updateConditionActive(charID, conditionID, isActive) {
-        let updateValues = { isActive: (isActive) ? 1 : 0 };
+    static updateConditionActive(charID, conditionID, isActive, newSrcText) {
+        let updateValues = null;
+        if(newSrcText != null){
+            updateValues = { isActive: (isActive) ? 1 : 0, sourceText: newSrcText };
+        } else {
+            updateValues = { isActive: (isActive) ? 1 : 0 };
+        }
         return CharCondition.update(updateValues, {
             where: {
                 charID: charID,
@@ -112,7 +117,7 @@ module.exports = class CharSaving {
     static updateConditionActiveForArray(charID, conditionIDArray, isActive) {
         let promises = [];
         for(const conditionID of conditionIDArray) {
-            var newPromise = CharSaving.updateConditionActive(charID, conditionID, isActive);
+            var newPromise = CharSaving.updateConditionActive(charID, conditionID, isActive, null);
            promises.push(newPromise);
         }
         return Promise.all(promises)
@@ -230,6 +235,8 @@ module.exports = class CharSaving {
                 brokenThreshold: chosenItem.brokenThreshold,
                 hardness: chosenItem.hardness,
                 code: chosenItem.code,
+            }).then((invItem) => {
+                return invItem;
             });
         });
     }
@@ -251,6 +258,14 @@ module.exports = class CharSaving {
 
     static saveInvItemQty(invItemID, newQty) {
         let updateValues = { quantity: newQty };
+        return InvItem.update(updateValues, { where: { id: invItemID } })
+        .then((result) => {
+            return;
+        });
+    }
+
+    static saveInvItemInvest(invItemID, isInvested) {
+        let updateValues = { isInvested: isInvested };
         return InvItem.update(updateValues, { where: { id: invItemID } })
         .then((result) => {
             return;
@@ -356,7 +371,7 @@ module.exports = class CharSaving {
             sourceType: 'other',
             sourceLevel: 1,
             sourceCode: 'none',
-            sourceCodeSNum: '0',
+            sourceCodeSNum: 'a',
         };
         return CharDataMappingExt.setDataAbilityBonus(charID, srcStruct, 'ALL', JSONBonusArray)
         .then((result) => {
@@ -385,7 +400,7 @@ module.exports = class CharSaving {
             sourceType: 'ancestry',
             sourceLevel: 1,
             sourceCode: 'defaultTag',
-            sourceCodeSNum: '0',
+            sourceCodeSNum: 'a',
         };
         let charUpVals = {
             ancestryID: ancestryID,

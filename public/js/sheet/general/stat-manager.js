@@ -35,18 +35,25 @@ function initStats(){
 }
 
 function addStat(statName, source, value){
+    addStatAndSrc(statName, source, value, 'CORE');
+}
+
+function addStatAndSrc(statName, source, value, statSrc){
     statName = statName.replace(/\s/g, "_").toUpperCase();
     let statDataMap = g_statManagerMap.get(statName);
     if(statDataMap != null){
-        let existingValue = statDataMap.get(source);
-        if(existingValue != null){
-            value = (value > existingValue) ? value : existingValue;
+        let existingData = statDataMap.get(source);
+        if(existingData != null){
+            if(existingData.Value > value) {
+                value = existingData.Value;
+                statSrc = existingData.Src;
+            }
         }
-        statDataMap.set(source, value);
+        statDataMap.set(source, {Value: value, Src: statSrc});
         g_statManagerMap.set(statName, statDataMap);
     } else {
         statDataMap = new Map();
-        statDataMap.set(source, value);
+        statDataMap.set(source, {Value: value, Src: statSrc});
         g_statManagerMap.set(statName, statDataMap);
     }
 }
@@ -68,7 +75,7 @@ function getStat(statName, source){
     statName = statName.replace(/\s/g, "_").toUpperCase();
     let statDataMap = g_statManagerMap.get(statName);
     if(statDataMap != null){
-        return statDataMap.get(source);
+        return statDataMap.get(source).Value;
     } else {
         return null;
     }
@@ -85,17 +92,38 @@ function getStatTotal(statName){
     let statDataMap = g_statManagerMap.get(statName);
     if(statDataMap != null){
         total = 0;
-        for(const [source, value] of statDataMap.entries()){
+        for(const [source, valueData] of statDataMap.entries()){
             if(source === 'PROF_BONUS'){
-                total += getProfNumber(value, g_character.level);
+                total += getProfNumber(valueData.Value, g_character.level);
             } else if(source === 'MODIFIER') {
-                total += getModOfValue(value);
+                total += getModOfValue(valueData.Value);
             } else {
-                total += value;
+                total += valueData.Value;
             }
         }
     }
     return total;
+}
+
+function getStatExtraBonuses(statName){
+    statName = statName.replace(/\s/g, "_").toUpperCase();
+    let extraBonuses = null;
+    let statDataMap = g_statManagerMap.get(statName);
+    if(statDataMap != null){
+        extraBonuses = [];
+        for(const [source, valueData] of statDataMap.entries()){
+            if(source != 'PROF_BONUS' && source != 'MODIFIER' && source != 'BASE' && valueData.Value != 0){
+                let cleanedSource = source.replace(/_/g, " ").toLowerCase();
+                let statSource = (valueData.Src == 'CORE') ? null : capitalizeWord(valueData.Src);
+                if(statSource != null) {
+                    extraBonuses.push(signNumber(valueData.Value)+' '+cleanedSource+' from '+statSource);
+                } else {
+                    extraBonuses.push(signNumber(valueData.Value)+' '+cleanedSource);
+                }
+            }
+        }
+    }
+    return extraBonuses;
 }
 
 function getModOfValue(valueModName){
@@ -114,7 +142,7 @@ function getModOfValue(valueModName){
         case 'CHA':
             return getMod(getStatTotal('SCORE_CHA'));
         default:
-            return 0;
+            return null;
     }
 }
 

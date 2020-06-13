@@ -75,7 +75,7 @@ function processingFeats(ascStatement, srcStruct, locationID){
         featName = featName.replace(/_/g," ");
         giveFeatByName(srcStruct, featName, locationID);
     } else {
-        displayError("Unknown statement (2): \'"+ascStatement+"\'");
+        displayError("Unknown statement (2-Feat): \'"+ascStatement+"\'");
         statementComplete();
     }
 
@@ -301,7 +301,8 @@ socket.on("returnFeatChange", function(featChangePacket, selectFeatControlShellC
         statementComplete();
     }
 
-    socket.emit("requestASCUpdateChoices", getCharIDFromURL());
+    selectorUpdated();
+    socket.emit("requestASCUpdateChoices", getCharIDFromURL(), 'FEATS');
 
     // Clear previous code and run new code
     if(featChangePacket.feat != null){
@@ -316,11 +317,12 @@ socket.on("returnFeatChange", function(featChangePacket, selectFeatControlShellC
 //////////////////////////////// Give Feat (by Name) ///////////////////////////////////
 
 function giveFeatByName(srcStruct, featName, locationID){
-
+    featName = featName.replace(/_/g," ");
+    featName = featName.replace(/’/g,"'");
     let featEntry = null;
     ascFeatMap.forEach(function(value, key, map){
         if(value.Feat.isArchived === 0) {
-            if(value.Feat.name.toLowerCase() === featName.toLowerCase()){
+            if(value.Feat.name.toUpperCase() === featName){
                 featEntry = value;
                 return;
             }

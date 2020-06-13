@@ -63,6 +63,8 @@ function openItemQuickview(data) {
 
     }
 
+    // Item Specializations
+    displayCriticalSpecialization(qContent, itemDataStruct);
 
     let price = getCoinToString(itemDataStruct.Item.price);
     if(itemDataStruct.Item.quantity > 1){

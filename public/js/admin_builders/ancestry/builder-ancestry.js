@@ -150,6 +150,7 @@ function finishAncestry(isUpdate){
             let featPrereq = $(this).find(".inputFeatPrereq").val();
             let featReq = $(this).find(".inputFeatReq").val();
             let featFreq = $(this).find(".inputFeatFreq").val();
+            let featCost = $(this).find(".inputFeatCost").val();
             let featTrigger = $(this).find(".inputFeatTrigger").val();
             let featDesc = $(this).find(".inputFeatDesc").val();
             let featSpecial = $(this).find(".inputFeatSpecial").val();
@@ -162,6 +163,7 @@ function finishAncestry(isUpdate){
                 rarity: featRarity,
                 prerequisites: featPrereq,
                 frequency: featFreq,
+                cost: featCost,
                 trigger: featTrigger,
                 requirements: featReq,
                 description: featDesc,

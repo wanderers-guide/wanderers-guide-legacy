@@ -52,6 +52,7 @@ module.exports = class AdminUpdate {
             classFeatsArray
         */
         for(let d in data) { if(data[d] === ''){ data[d] = null; } }
+        data.className = data.className.replace(/’/g,"'");
         if(data.classDescription == null){ data.classDescription = '__No Description__'; }
         if(data.classVersion == null){ data.classVersion = '1.0'; }
         let tagDesc = 'This indicates content from the '+data.className.toLowerCase()+' class.';
@@ -241,6 +242,7 @@ module.exports = class AdminUpdate {
             ancestryTagDesc
         */
         for(let d in data) { if(data[d] === ''){ data[d] = null; } }
+        data.ancestryName = data.ancestryName.replace(/’/g,"'");
         if(data.ancestryDescription == null){ data.ancestryDescription = '__No Description__'; }
         if(data.ancestryVersion == null){ data.ancestryVersion = '1.0'; }
         let tagDesc = 'This indicates content from the '+data.ancestryName.toLowerCase()+' ancestry.';
@@ -440,6 +442,7 @@ module.exports = class AdminUpdate {
             code
         */
         for(let d in data) { if(data[d] === ''){ data[d] = null; } }
+        data.name = data.name.replace(/’/g,"'");
         if(data.description == null){ data.description = '__No Description__'; }
         return Heritage.create({
             name: data.name,
@@ -465,6 +468,7 @@ module.exports = class AdminUpdate {
             featPrereq,
             featReq,
             featFreq,
+            featCost,
             featTrigger,
             featDesc,
             featSpecial,
@@ -502,6 +506,7 @@ module.exports = class AdminUpdate {
             level: data.featLevel,
             rarity: data.featRarity,
             prerequisites: data.featPrereq,
+            cost: data.featCost,
             frequency: data.featFreq,
             trigger: data.featTrigger,
             requirements: data.featReq,
@@ -528,6 +533,7 @@ module.exports = class AdminUpdate {
             level,
             rarity,
             prerequisites,
+            cost,
             frequency,
             trigger,
             requirements,
@@ -544,6 +550,7 @@ module.exports = class AdminUpdate {
             version
         */
         for(let d in data) { if(data[d] === ''){ data[d] = null; } }
+        data.name = data.name.replace(/’/g,"'");
         if(data.description == null){ data.description = '__No Description__'; }
         if(data.version == null){ data.version = '1.0'; }
         if(data.level == null){ data.level = -1; }
@@ -553,6 +560,7 @@ module.exports = class AdminUpdate {
             level: data.level,
             rarity: data.rarity,
             prerequisites: data.prerequisites,
+            cost: data.cost,
             frequency: data.frequency,
             trigger: data.trigger,
             requirements: data.requirements,
@@ -652,7 +660,7 @@ module.exports = class AdminUpdate {
             data.itemHands = 'NONE';
         } else if(data.builderType == "RUNE"){
             data.itemName += ' Runestone';
-            data.itemPrice += 300; // 3gp for the cost of the runestone
+            data.itemPrice = parseInt(data.itemPrice)+300; // 3gp for the cost of the runestone
             data.itemBulk = 0.1;
             data.itemSize = 'MEDIUM';
             data.itemHands = 'ONE';
@@ -668,6 +676,7 @@ module.exports = class AdminUpdate {
         }
 
         for(let d in data) { if(data[d] === ''){ data[d] = null; } }
+        data.itemName = data.itemName.replace(/’/g,"'");
         if(data.itemDesc == null){ data.itemDesc = '__No Description__'; }
         if(data.itemVersion == null){ data.itemVersion = '1.0'; }
         return Item.create({ // Create Item
@@ -836,12 +845,15 @@ module.exports = class AdminUpdate {
             spellHeightenedTwoVal,
             spellHeightenedTwoText,
             spellHeightenedThreeVal,
-            spellHeightenedThreeText
+            spellHeightenedThreeText,
+            spellHeightenedFourVal,
+            spellHeightenedFourText,
         */
 
         data.isArchived = 0;
 
         for(let d in data) { if(data[d] === ''){ data[d] = null; } }
+        data.spellName = data.spellName.replace(/’/g,"'");
         if(data.spellDesc == null){ data.spellDesc = '__No Description__'; }
         if(data.spellVersion == null){ data.spellVersion = '1.0'; }
         return Spell.create({ // Create Spell
@@ -867,12 +879,14 @@ module.exports = class AdminUpdate {
             heightenedTwoText: data.spellHeightenedTwoText,
             heightenedThreeVal: data.spellHeightenedThreeVal,
             heightenedThreeText: data.spellHeightenedThreeText,
+            heightenedFourVal: data.spellHeightenedFourVal,
+            heightenedFourText: data.spellHeightenedFourText,
             isFocusSpell: data.spellIsFocus,
             isArchived: data.isArchived,
         }).then(spell => {
             let spellTagsPromises = []; // Create Spell Tags
             if(data.spellTagsArray != null){
-                if(spell.level === 0) {
+                if(spell.level == 0) {
                     let cantripTagID = 123; // Hardcoded Cantrip tag ID
                     if(!data.spellTagsArray.includes(cantripTagID)){
                         data.spellTagsArray.push(cantripTagID);

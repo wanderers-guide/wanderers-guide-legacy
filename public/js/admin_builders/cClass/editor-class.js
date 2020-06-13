@@ -133,6 +133,16 @@ socket.on("returnAdminClassDetails", function(classObject, featsObject){
         }
     }
 
+    classFeats = classFeats.sort(
+        function(a, b) {
+            if (a.Feat.level === b.Feat.level) {
+                // Name is only important when levels are the same
+                return a.Feat.name > b.Feat.name ? 1 : -1;
+            }
+            return a.Feat.level - b.Feat.level;
+        }
+    );
+
     let classFeatCount = 0;
     $(".classFeat").each(function(){
         if($(this).is(":visible")) {
@@ -146,6 +156,7 @@ socket.on("returnAdminClassDetails", function(classObject, featsObject){
             $(this).find(".inputFeatPrereq").val(feat.Feat.prerequisites);
             $(this).find(".inputFeatReq").val(feat.Feat.requirements);
             $(this).find(".inputFeatFreq").val(feat.Feat.frequency);
+            $(this).find(".inputFeatCost").val(feat.Feat.cost);
             $(this).find(".inputFeatTrigger").val(feat.Feat.trigger);
             $(this).find(".inputFeatDesc").val(feat.Feat.description);
             $(this).find(".inputFeatSpecial").val(feat.Feat.special);

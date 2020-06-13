@@ -74,7 +74,7 @@ p {
     font-size: 15px;
     letter-spacing: 1px;
     line-height: 1.9;
-    color: #999;
+    color: rgb(172, 172, 172);
     font-family: 'Nunito Sans', sans-serif;
 }
 
@@ -121,7 +121,7 @@ header {
     font-weight: 900;
 }
 
-/* Bulma Extensions */
+/* Bulma Expansions */
 .button.is-very-small {
     font-size: 0.6rem!important;
 }
@@ -130,6 +130,9 @@ header {
 }
 .is-size-8 {
     font-size: 0.5rem!important;
+}
+.is-size-6-5 {
+    font-size: 1.1rem!important;
 }
 
 /* Cursors */

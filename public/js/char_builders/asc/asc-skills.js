@@ -30,7 +30,7 @@ function processingSkills(ascStatement, srcStruct, locationID){
         let prof = ascStatement.split('=')[1];
         giveSkillProf(srcStruct, locationID, prof);
     } else {
-        displayError("Unknown statement (2): \'"+ascStatement+"\'");
+        displayError("Unknown statement (2-Skill): \'"+ascStatement+"\'");
         statementComplete();
     }
 
@@ -170,6 +170,7 @@ function isAbleToSelectIncrease(numUps, charLevel){
 socket.on("returnProficiencyChange", function(profChangePacket){
 
     if(profChangePacket.isSkill){
+        selectorUpdated();
         socket.emit("requestASCUpdateSkills", getCharIDFromURL());
     }
     if(profChangePacket.isStatement != null && profChangePacket.isStatement){

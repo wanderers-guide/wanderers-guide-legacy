@@ -115,7 +115,7 @@ function displayCurrentBackground(background) {
         sourceType: 'background',
         sourceLevel: 1,
         sourceCode: 'background',
-        sourceCodeSNum: '0',
+        sourceCodeSNum: 'a',
     };
     processCode(
         background.code,
@@ -129,7 +129,7 @@ function displayCurrentBackground(background) {
         sourceType: 'background',
         sourceLevel: 1,
         sourceCode: 'boost-choose',
-        sourceCodeSNum: '0',
+        sourceCodeSNum: 'a',
     };
     processCode(
         'GIVE-ABILITY-BOOST-SINGLE='+background.boostOne+', GIVE-ABILITY-BOOST-SINGLE='+background.boostTwo,
@@ -141,4 +141,8 @@ function displayCurrentBackground(background) {
 function finishLoadingPage() {
     // Turn off page loading
     $('.pageloader').addClass("fadeout");
+}
+
+function selectorUpdated() {
+
 }

@@ -37,11 +37,24 @@ function openPerceptionQuickview(data) {
     breakDownInnerHTML += ' + ';
 
     let amalgBonus = data.TotalBonus - (data.WisMod + data.ProfNum);
-    breakDownInnerHTML += '<a class="has-text-link has-tooltip-bottom has-tooltip-multiline" data-tooltip="'+amalgamationBonusText+'">'+amalgBonus+'</a>';
+    breakDownInnerHTML += '<a id="amalgBonusNum" class="has-text-link has-tooltip-bottom">'+amalgBonus+'</a>';
 
     breakDownInnerHTML += '</p>';
 
     qContent.append(breakDownInnerHTML);
+
+    let amalgBonuses = getStatExtraBonuses('PERCEPTION');
+    if(amalgBonuses != null && amalgBonuses.length > 0){
+        $('#amalgBonusNum').removeClass('has-tooltip-multiline');
+        let amalgTooltipText = 'Additional adjustments:';
+        for(let amalgExtra of amalgBonuses){
+            amalgTooltipText += '\n'+amalgExtra;
+        }
+        $('#amalgBonusNum').attr('data-tooltip', amalgTooltipText);
+    } else {
+        $('#amalgBonusNum').addClass('has-tooltip-multiline');
+        $('#amalgBonusNum').attr('data-tooltip', amalgamationBonusText);
+    }
 
     // Conditionals //
     let conditionalStatMap = getConditionalStatMap('PERCEPTION');
@@ -52,7 +65,11 @@ function openPerceptionQuickview(data) {
         qContent.append('<p class="has-text-centered"><strong>Contitionals</strong></p>');
         
         for(const [condition, value] of conditionalStatMap.entries()){
-            qContent.append('<p class="has-text-centered">'+value+' '+condition+'</p>');
+            if(value == null){
+                qContent.append('<p class="has-text-centered">'+condition+'</p>');
+            } else {
+                qContent.append('<p class="has-text-centered">'+value+' '+condition+'</p>');
+            }
         }
 
     }

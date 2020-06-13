@@ -215,7 +215,7 @@ function displayCurrentAncestry(ancestryStruct, saving) {
                 sourceType: 'ancestry',
                 sourceLevel: 1,
                 sourceCode: 'inits-'+langCount,
-                sourceCodeSNum: '0',
+                sourceCodeSNum: 'a',
             };
             socket.emit("requestLanguageChange",
                 getCharIDFromURL(),
@@ -248,7 +248,7 @@ function displayCurrentAncestry(ancestryStruct, saving) {
                 sourceType: 'ancestry',
                 sourceLevel: 1,
                 sourceCode: 'inits-'+senseCount,
-                sourceCodeSNum: '0',
+                sourceCodeSNum: 'a',
             };
             socket.emit("requestSensesChange",
                 getCharIDFromURL(),
@@ -281,7 +281,7 @@ function displayCurrentAncestry(ancestryStruct, saving) {
                 sourceType: 'ancestry',
                 sourceLevel: 1,
                 sourceCode: 'inits-phyFeat-1',
-                sourceCodeSNum: '0',
+                sourceCodeSNum: 'a',
             };
             processCode(
                 ancestryStruct.PhysicalFeatureOne.code,
@@ -300,7 +300,7 @@ function displayCurrentAncestry(ancestryStruct, saving) {
                 sourceType: 'ancestry',
                 sourceLevel: 1,
                 sourceCode: 'inits-phyFeat-2',
-                sourceCodeSNum: '0',
+                sourceCodeSNum: 'a',
             };
             processCode(
                 ancestryStruct.PhysicalFeatureTwo.code,
@@ -318,7 +318,7 @@ function displayCurrentAncestry(ancestryStruct, saving) {
                     sourceType: 'ancestry',
                     sourceLevel: 1,
                     sourceCode: 'inits-'+phyFeatCount,
-                    sourceCodeSNum: '0',
+                    sourceCodeSNum: 'a',
                 };
                 socket.emit("requestPhysicalFeaturesChange",
                     getCharIDFromURL(),
@@ -355,7 +355,7 @@ function displayCurrentAncestry(ancestryStruct, saving) {
         if(saving){
             socket.emit("requestAbilityBonusChange",
                 getCharIDFromURL(),
-                {sourceType: 'ancestry', sourceLevel: 1, sourceCode: 'boost-nonChoose-'+boostNonChooseCount, sourceCodeSNum: '0'},
+                {sourceType: 'ancestry', sourceLevel: 1, sourceCode: 'boost-nonChoose-'+boostNonChooseCount, sourceCodeSNum: 'a'},
                 {Ability : shortenAbilityType(boostNonChoose), Bonus : "Boost"});
         }
         boostNonChooseCount++;
@@ -374,19 +374,22 @@ function displayCurrentAncestry(ancestryStruct, saving) {
     }
 
     $('#boostsChoose').html('');
+    let srcStruct = {
+        sourceType: 'ancestry',
+        sourceLevel: 1,
+        sourceCode: 'boost-choose',
+        sourceCodeSNum: 'a',
+    };
+    let boostChooseCodeStr = '';
     for(let i = 0; i < boostChooseCount; i++) {
-        let srcStruct = {
-            sourceType: 'ancestry',
-            sourceLevel: 1,
-            sourceCode: 'boost-choose',
-            sourceCodeSNum: i+'',
-        };
+        boostChooseCodeStr += 'GIVE-ABILITY-BOOST-SINGLE='+boostChooseString+', ';
+    }
+    if(boostChooseCodeStr != ''){
         processCode(
-            'GIVE-ABILITY-BOOST-SINGLE='+boostChooseString,
+            boostChooseCodeStr,
             srcStruct,
             'boostsChoose');
     }
-
 
 
     // Flaws //
@@ -408,7 +411,7 @@ function displayCurrentAncestry(ancestryStruct, saving) {
         if(saving){
             socket.emit("requestAbilityBonusChange",
                 getCharIDFromURL(),
-                {sourceType: 'ancestry', sourceLevel: 1, sourceCode: 'flaw-nonChoose-'+flawNonChooseCount, sourceCodeSNum: '0',},
+                {sourceType: 'ancestry', sourceLevel: 1, sourceCode: 'flaw-nonChoose-'+flawNonChooseCount, sourceCodeSNum: 'a',},
                 {Ability : shortenAbilityType(flawNonChoose), Bonus : "Flaw"});
         }
         flawNonChooseCount++;
@@ -463,7 +466,7 @@ function displayCurrentHeritage(ancestryStruct, heritageID) {
             sourceType: 'ancestry',
             sourceLevel: 1,
             sourceCode: 'heritage',
-            sourceCodeSNum: '0',
+            sourceCodeSNum: 'a',
         };
         processCode(
             heritage.code,
@@ -530,3 +533,6 @@ function finishLoadingPage() {
     $('.pageloader').addClass("fadeout");
 }
 
+function selectorUpdated() {
+
+}

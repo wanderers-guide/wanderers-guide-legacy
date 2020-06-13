@@ -33,7 +33,7 @@ function processingLangs(ascStatement, srcStruct, locationID){
     else if(ascStatement.includes("GIVE-LANG")){// GIVE-LANG
         giveLang(srcStruct, locationID, false);
     } else {
-        displayError("Unknown statement (2): \'"+ascStatement+"\'");
+        displayError("Unknown statement (2-Lang): \'"+ascStatement+"\'");
         statementComplete();
     }
 
@@ -153,6 +153,7 @@ function giveLang(srcStruct, locationID, bonusOnly){
 }
 
 socket.on("returnLanguageChange", function(){
+    selectorUpdated();
     socket.emit("requestASCUpdateLangs", getCharIDFromURL());
 });
 

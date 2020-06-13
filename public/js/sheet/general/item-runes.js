@@ -348,8 +348,10 @@ function addPropertyRuneSelection(qContent, invItem, runeArray, propertyRuneSlot
     }
 
     if(existingPropRuneID != null){
-
-        let runeItem = runeArray[existingPropRuneID].Item;
+        
+        let runeItem = runeArray.find(itemDataStruct => {
+            return itemDataStruct.RuneData.id == existingPropRuneID;
+        }).Item;
 
         let usageText = (runeItem.usage != null) ? '<p class="has-text-centered is-size-7"><strong>Usage: </strong>'+runeItem.usage+'</p>' : '';
         qContent.append('<div class="columns is-marginless"><div class="column is-paddingless is-8 is-offset-2"><hr class="m-0">'+usageText+processText(runeItem.description, true, true, 'SMALL')+'<hr class="m-1"></div></div>');

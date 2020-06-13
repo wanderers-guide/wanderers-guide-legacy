@@ -32,7 +32,8 @@ function openSpellQuickview(data){
             let cantripHeightened = Math.ceil(g_character.level/2);
             spellHeightened = (spellHeightened > cantripHeightened) ? spellHeightened : cantripHeightened;
         }
-        if(spellHeightened === null || spellDataStruct.Spell.level == spellHeightened) {
+        if(spellHeightened === null || spellDataStruct.Spell.level == spellHeightened || 
+                (spellDataStruct.Spell.level === 0 && spellHeightened == 1)) {
             spellName += '<sup class="is-inline ml-2 is-size-7 is-italic">'+spellLevel+'</sup>';
         } else {
             spellName += '<sup class="is-inline ml-2 is-size-7 is-italic">'+spellLevel+'<span class="icon" style="font-size: 0.8em;"><i class="fas fa-caret-right"></i></span>'+spellHeightened+'</sup>';
@@ -81,10 +82,10 @@ function openSpellQuickview(data){
         });
     }
 
+    let spellTradition = null;
+    let spellKeyAbility = null;
     if(data.SheetData != null){ // View and Cast from Sheet //
 
-        let spellTradition = null;
-        let spellKeyAbility = null;
         let spellSRC = null;
         let spellUsed = null;
         if(sheetSpellType === 'CORE') {
@@ -138,7 +139,7 @@ function openSpellQuickview(data){
             spellDC = (trainingProf > spellDC) ? trainingProf : spellDC;
         }
 
-        let abilityMod = getMod(getStatTotal('SCORE_'+spellKeyAbility));
+        let abilityMod = getModOfValue(spellKeyAbility);
         spellAttack += abilityMod;
         spellDC += abilityMod;
 
@@ -219,6 +220,12 @@ function openSpellQuickview(data){
         break;
     default: break;
     }
+
+    spellDataStruct.Tags = spellDataStruct.Tags.sort(
+        function(a, b) {
+            return a.name > b.name ? 1 : -1;
+        }
+    );
     for(const tag of spellDataStruct.Tags){
         tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-very-small is-info has-tooltip-bottom has-tooltip-multiline" data-tooltip="'+tag.description+'">'+tag.name+'</button>';
     }
@@ -349,7 +356,11 @@ function openSpellQuickview(data){
 
     qContent.append('<hr class="m-2">');
 
-    qContent.append(processText(spellDataStruct.Spell.description, true, true, 'MEDIUM'));
+    let spellDescription = spellDataStruct.Spell.description;
+    if(spellKeyAbility != null){
+        spellDescription = spellViewTextProcessor(spellDescription, spellKeyAbility);
+    }
+    qContent.append(processText(spellDescription, true, true, 'MEDIUM'));
 
     if(spellDataStruct.Spell.heightenedOneVal != null || spellDataStruct.Spell.heightenedTwoVal != null || spellDataStruct.Spell.heightenedThreeVal != null) {
 
@@ -357,19 +368,46 @@ function openSpellQuickview(data){
 
         if(spellDataStruct.Spell.heightenedOneVal != null){
             let hText = '<strong>Heightened ('+getHeightenedTextFromCodeName(spellDataStruct.Spell.heightenedOneVal)+')</strong> '+spellDataStruct.Spell.heightenedOneText;
+            if(spellKeyAbility != null){
+                hText = spellViewTextProcessor(hText, spellKeyAbility);
+            }
             qContent.append('<div class="negative-indent">'+processText(hText, true, true, 'MEDIUM')+'</div>');
         }
 
         if(spellDataStruct.Spell.heightenedTwoVal != null){
             let hText = '<strong>Heightened ('+getHeightenedTextFromCodeName(spellDataStruct.Spell.heightenedTwoVal)+')</strong> '+spellDataStruct.Spell.heightenedTwoText;
+            if(spellKeyAbility != null){
+                hText = spellViewTextProcessor(hText, spellKeyAbility);
+            }
             qContent.append('<div class="negative-indent">'+processText(hText, true, true, 'MEDIUM')+'</div>');
         }
 
         if(spellDataStruct.Spell.heightenedThreeVal != null){
             let hText = '<strong>Heightened ('+getHeightenedTextFromCodeName(spellDataStruct.Spell.heightenedThreeVal)+')</strong> '+spellDataStruct.Spell.heightenedThreeText;
+            if(spellKeyAbility != null){
+                hText = spellViewTextProcessor(hText, spellKeyAbility);
+            }
+            qContent.append('<div class="negative-indent">'+processText(hText, true, true, 'MEDIUM')+'</div>');
+        }
+
+        if(spellDataStruct.Spell.heightenedFourVal != null){
+            let hText = '<strong>Heightened ('+getHeightenedTextFromCodeName(spellDataStruct.Spell.heightenedFourVal)+')</strong> '+spellDataStruct.Spell.heightenedFourText;
+            if(spellKeyAbility != null){
+                hText = spellViewTextProcessor(hText, spellKeyAbility);
+            }
             qContent.append('<div class="negative-indent">'+processText(hText, true, true, 'MEDIUM')+'</div>');
         }
 
     }
 
 }
+
+
+function spellViewTextProcessor(text, spellKeyAbility){
+
+    text = text.replace('your spellcasting ability modifier', '{'+spellKeyAbility+'_MOD|'+lengthenAbilityType(spellKeyAbility)+' Modifier}');
+
+    return text;
+}
+
+// {SPELLCASTING_MOD}

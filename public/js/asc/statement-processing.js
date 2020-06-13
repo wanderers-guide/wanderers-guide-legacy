@@ -14,7 +14,6 @@ function processSheetCode(ascCode, sourceName){
 function processSheetCode(ascCode, sourceName, isTest){
     if(ascCode == null) {return false;}
     
-    ascCode = ascCode.toUpperCase();
     let ascStatements = ascCode.split(", ");
 
     let success = true;
@@ -24,11 +23,11 @@ function processSheetCode(ascCode, sourceName, isTest){
         if(ascStatement === null) {continue;}
         //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
 
-        if(ascStatement.includes("GIVE-CONDITION")){ // GIVE-CONDITION=Clumsy:1 OR GIVE-CONDITION=Clumsy
+        if(ascStatement.toUpperCase().includes("GIVE-CONDITION")){ // GIVE-CONDITION=Clumsy:1 OR GIVE-CONDITION=Clumsy
             if(isTest) {continue;}
 
             let conditionName = ascStatement.split('=')[1];
-            let conditionValue = 1;
+            let conditionValue = null;
             if(ascStatement.includes(":")){
                 let conditionNameData = conditionName.split(":");
                 conditionName = conditionNameData[0];
@@ -41,7 +40,7 @@ function processSheetCode(ascCode, sourceName, isTest){
             continue;
         }
 
-        if(ascStatement.includes("CONDITIONAL-INCREASE-")){
+        if(ascStatement.toUpperCase().includes("CONDITIONAL-INCREASE-")){
             if(isTest) {continue;}
             // Ex. CONDITIONAL-INCREASE-PERCEPTION=2~status penalty to checks for initiative
 
@@ -55,7 +54,7 @@ function processSheetCode(ascCode, sourceName, isTest){
             continue;
         }
 
-        if(ascStatement.includes("CONDITIONAL-DECREASE-")){
+        if(ascStatement.toUpperCase().includes("CONDITIONAL-DECREASE-")){
             if(isTest) {continue;}
             // Ex. CONDITIONAL-DECREASE-PERCEPTION=2~status penalty to checks for initiative
 
@@ -69,7 +68,19 @@ function processSheetCode(ascCode, sourceName, isTest){
             continue;
         }
 
-        if(ascStatement.includes("INCREASE-")){
+        if(ascStatement.toUpperCase().includes("CONDITIONAL-")){
+            if(isTest) {continue;}
+            // Ex. CONDITIONAL-SAVE_FORT=When you roll a success, you get a critical success instead.
+
+            let adjustmentData = (ascStatement.split('-')[1]).split('=');
+            let adjustmentTowards = adjustmentData[0];
+            let adjustmentInfo = adjustmentData[1];
+            addConditionalStat(adjustmentTowards, adjustmentInfo, null);
+
+            continue;
+        }
+
+        if(ascStatement.toUpperCase().includes("INCREASE-")){
             if(isTest) {continue;}
             // INCREASE-X=5 (Ex. INCREASE-SCORE_STR=2, INCREASE-SPEED=10-STATUS)
 
@@ -83,12 +94,12 @@ function processSheetCode(ascCode, sourceName, isTest){
                 adjustmentSource = adjValData[2];
             }
 
-            addStat(adjustmentTowards, adjustmentSource+'_BONUS', adjustmentNum);
+            addStatAndSrc(adjustmentTowards, adjustmentSource+'_BONUS', adjustmentNum, sourceName);
 
             continue;
         }
 
-        if(ascStatement.includes("DECREASE-")){
+        if(ascStatement.toUpperCase().includes("DECREASE-")){
             if(isTest) {continue;}
             // DECREASE-X=5 (Ex. DECREASE-SCORE_STR=2, DECREASE-SPEED=10-STATUS)
 
@@ -102,7 +113,7 @@ function processSheetCode(ascCode, sourceName, isTest){
                 adjustmentSource = adjValData[2];
             }
 
-            addStat(adjustmentTowards, adjustmentSource+'_PENALTY', -1*adjustmentNum);
+            addStatAndSrc(adjustmentTowards, adjustmentSource+'_PENALTY', -1*adjustmentNum, sourceName);
 
             continue;
         }

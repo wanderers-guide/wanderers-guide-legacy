@@ -163,6 +163,27 @@ module.exports = class CharDataMappingExt {
             return dataArray;
         });
     }
+
+
+    static setDataOtherSpeed(charID, srcStruct, speedType, speedAmount){
+        let value = speedType+getSeparator()+speedAmount;
+        return CharDataMapping.setData(charID, 'otherSpeeds', srcStruct, value)
+        .then((result) => {
+            return;
+        });
+    }
+
+    static getDataAllOtherSpeed(charID){
+        return CharDataMapping.getDataAll(charID, 'otherSpeeds', null)
+        .then((dataArray) => {
+            for(let data of dataArray){
+                let vParts = data.value.split(getSeparator());
+                data.Type = vParts[0];
+                data.Amount = vParts[1];
+            }
+            return dataArray;
+        });
+    }
     
 
 };

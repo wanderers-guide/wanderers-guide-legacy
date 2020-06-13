@@ -50,6 +50,7 @@ function openSpellTab(data) {
 
 // Spells Tabs //
 function changeSpellsTab(type){
+    if(!g_selectedSubTabLock) {g_selectedSubTabID = type;}
 
     $('#spellsTabContent').html('');
 
@@ -157,7 +158,7 @@ function displaySpellsAndSlots(spellSlotMap, data){
             }
         }
     }
-    for(const [level, slotArray] of spellSlotMap){
+    for(const [level, slotArray] of spellSlotMap.entries()){
         displaySpellsInLevelSpontaneous(level, slotArray, data, spellsSearchInput);
     }
 
@@ -176,7 +177,7 @@ function displaySpellsAndSlots(spellSlotMap, data){
             }
         }
     }
-    for(const [level, slotArray] of spellSlotMap){
+    for(const [level, slotArray] of spellSlotMap.entries()){
         displaySpellsInLevelPrepared(level, slotArray, data, spellsSearchInput);
     }
 
@@ -524,7 +525,7 @@ function displaySpellsFocus() {
                     $('#spellsFocusContent').append('<p class="text-left pl-5 pr-3"><span class="has-text-grey-kinda-light has-text-weight-bold is-size-5">'+sectionName+'</span><span id="focusPointsCastingSet" class="is-unselectable cursor-clickable"></span></p>');
                     isFirstLevel = false;
                 } else {
-                    $('#spellsFocusContent').append('<p class="is-size-5 has-text-grey-light has-text-weight-bold text-left pl-5">'+sectionName+'</p>');
+                    $('#spellsFocusContent').append('<p class="is-size-5 has-text-grey-light has-text-weight-bold text-left pl-5 pt-2">'+sectionName+'</p>');
                 }
                 $('#spellsFocusContent').append('<hr class="hr-highlighted" style="margin-top:-0.5em; margin-bottom:0em;">');
                 $('#spellsFocusContent').append('<div class="columns is-mobile pt-1 is-marginless"><div class="column is-5 is-paddingless"><p class="has-text-left pl-3"><strong class="has-text-grey-light"><u>Name</u></strong></p></div><div class="column is-1 is-paddingless"><p class="text-center"><strong class="has-text-grey-light"><u>Cast</u></strong></p></div><div class="column is-1 is-paddingless"><p class="text-center"><strong class="has-text-grey-light"><u>Range</u></strong></p></div><div class="column is-5 is-paddingless"><p class="text-center"><strong class="has-text-grey-light"><u>Traits</u></strong></p></div></div>');
@@ -701,13 +702,19 @@ function displaySpellsInnate() {
 
     $('#spellsTabContent').append('<div id="spellsInnateContent" class="use-custom-scrollbar" style="height: 595px; max-height: 595px; overflow-y: auto;"></div>');
 
+    let isFirstLevel = true;
     let prevLevel = -100;
     for (let spellIndex = 0; spellIndex < innateSpellArray.length; spellIndex++) {
         let innateSpell = innateSpellArray[spellIndex];
 
         if(innateSpell.SpellLevel > prevLevel){
             let sectionName = (innateSpell.SpellLevel == 0) ? 'Cantrips' : 'Level '+innateSpell.SpellLevel;
-            $('#spellsInnateContent').append('<p class="is-size-5 has-text-grey-light has-text-weight-bold text-left pl-5">'+sectionName+'</p>');
+            if(isFirstLevel){
+                $('#spellsInnateContent').append('<p class="is-size-5 has-text-grey-light has-text-weight-bold text-left pl-5">'+sectionName+'</p>');
+                isFirstLevel = false;
+            } else {
+                $('#spellsInnateContent').append('<p class="is-size-5 has-text-grey-light has-text-weight-bold text-left pl-5 pt-2">'+sectionName+'</p>');
+            }
             $('#spellsInnateContent').append('<hr class="hr-highlighted" style="margin-top:-0.5em; margin-bottom:0em;">');
             $('#spellsInnateContent').append('<div class="columns is-mobile pt-1 is-marginless"><div class="column is-4 is-paddingless"><p class="has-text-left pl-3"><strong class="has-text-grey-light"><u>Name</u></strong></p></div><div class="column is-2 is-paddingless"><p class="text-center has-tooltip-bottom" data-tooltip="Casts per Day"><strong class="has-text-grey-light"><u>Castings</u></strong></p></div><div class="column is-1 is-paddingless"><p class="text-center"><strong class="has-text-grey-light"><u>Cast</u></strong></p></div><div class="column is-1 is-paddingless"><p class="text-center"><strong class="has-text-grey-light"><u>Range</u></strong></p></div><div class="column is-4 is-paddingless"><p class="text-center"><strong class="has-text-grey-light"><u>Traits</u></strong></p></div></div>');
         }

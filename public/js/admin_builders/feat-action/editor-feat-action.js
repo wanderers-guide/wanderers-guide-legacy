@@ -29,6 +29,7 @@ socket.on("returnAdminFeatDetails", function(featsObject){
     $("#inputFeatPrereq").val(feat.Feat.prerequisites);
     $("#inputFeatReq").val(feat.Feat.requirements);
     $("#inputFeatFreq").val(feat.Feat.frequency);
+    $("#inputFeatCost").val(feat.Feat.cost);
     $("#inputFeatTrigger").val(feat.Feat.trigger);
     $("#inputFeatDesc").val(feat.Feat.description);
     $("#inputFeatSpecial").val(feat.Feat.special);

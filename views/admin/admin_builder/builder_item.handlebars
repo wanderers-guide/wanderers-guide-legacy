@@ -217,6 +217,7 @@
                                     <option value="d4">d4</option>
                                     <option value="d6" selected>d6</option>
                                     <option value="d8">d8</option>
+                                    <option value="d10">d10</option>
                                     <option value="d12">d12</option>
                                     <option value="d20">d20</option>
                                 </select>
@@ -261,11 +262,13 @@
                             <div class="select">
                                 <select id="inputMeleeWeaponType">
                                     <option value="AXE" selected>Axe</option>
+                                    <option value="BOMB">Bomb</option>
                                     <option value="BRAWLING">Brawling</option>
                                     <option value="CLUB">Club</option>
                                     <option value="FLAIL">Flail</option>
                                     <option value="HAMMER">Hammer</option>
                                     <option value="KNIFE">Knife</option>
+                                    <option value="PICK">Pick</option>
                                     <option value="POLEARM">Polearm</option>
                                     <option value="SHIELD">Shield</option>
                                     <option value="SPEAR">Spear</option>
@@ -480,7 +483,7 @@
                 <div class="tile is-child field">
                     <label class="label">
                         Description
-                        <a href="/asc_docs/#description_fields" target="_blank"><span class="icon is-small has-text-info has-tooltip-bottom" data-tooltip="ASC Docs"><i class="fas fa-book"></i></span></a>
+                        <a href="/asc_docs/#description_fields" target="_blank"><span class="icon is-small has-text-info has-tooltip-top" data-tooltip="ASC Docs"><i class="fas fa-book"></i></span></a>
                     </label>
                     <div class="control">
                         <textarea class="textarea" id="inputDesc" placeholder="This item is the starter kit for an adventurer..."></textarea>
@@ -518,24 +521,25 @@
                 </div>
 
                 <div id="sectionHealth" class="tile is-child columns">
+
                     <div class="column field">
-                        <label class="label">Hit Points</label>
+                        <label class="label"> <strong class="has-tooltip-bottom" data-tooltip="Page 577 has a Table of Material Stats">Hardness</strong></label>
+                        <div class="control">
+                            <input id="inputHardness" class="input" type="number" value="1">
+                        </div>
+                    </div>
+
+                    <div class="column field">
+                        <label class="label"><strong class="has-tooltip-bottom" data-tooltip="Page 577 has a Table of Material Stats">Hit Points</strong></label>
                         <div class="control">
                             <input id="inputHitPoints" class="input" type="number" value="4">
                         </div>
                     </div>
 
                     <div class="column field">
-                        <label class="label">Broken Threshold</label>
+                        <label class="label"><strong class="has-tooltip-bottom" data-tooltip="Page 577 has a Table of Material Stats">Broken Threshold</strong></label>
                         <div class="control">
                             <input id="inputBrokenThreshold" class="input" type="number" value="2">
-                        </div>
-                    </div>
-
-                    <div class="column field">
-                        <label class="label">Hardness</label>
-                        <div class="control">
-                            <input id="inputHardness" class="input" type="number" value="1">
                         </div>
                     </div>
 
@@ -544,10 +548,10 @@
                 <div class="tile is-child field">
                     <label class="label">
                         Code
-                        <a href="/asc_docs/#code_fields" target="_blank"><span class="icon is-small has-text-info has-tooltip-bottom" data-tooltip="ASC Docs"><i class="fas fa-book"></i></span></a>
+                        <a href="/asc_docs/#code_fields" target="_blank"><span class="icon is-small has-text-info has-tooltip-top" data-tooltip="ASC Docs"><i class="fas fa-book"></i></span></a>
                     </label>
                     <div class="control">
-                        <input class="input" id="inputCode" type="text">
+                        <input class="input nanum-coding" id="inputCode" type="text">
                     </div>
                 </div>
 

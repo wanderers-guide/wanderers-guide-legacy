@@ -19,6 +19,11 @@ function capitalizeWord(word){
     if(word == null){ return null;}
     return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
 }
+
+function capitalizeWords(str){
+  if(str == null){ return null;}
+  return str.toLowerCase().replace(/(?:^|\s|["'([{])+\S/g, match => match.toUpperCase());
+}
   
 function signNumber(number) {
     return number < 0 ? `${number}` : `+${number}`;

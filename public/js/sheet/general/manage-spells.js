@@ -17,8 +17,9 @@ function openManageSpellsModal(data){
 
     $('#manageSpellsTabs').html('');
     for(let spellBook of g_spellBookArray) {
+        if(spellBook.IsFocus) {continue;}
         let spellSRCTabID = 'spellSRCTab'+spellBook.SpellSRC.replace(/\s/g, "_");
-        $('#manageSpellsTabs').append('<li id="'+spellSRCTabID+'" class="spellSRCTabs"><a>'+spellBook.SpellSRC+'</a></li>');
+        $('#manageSpellsTabs').append('<li id="'+spellSRCTabID+'" class="spellSRCTabs"><a>'+capitalizeWord(spellBook.SpellSRC)+'</a></li>');
 
         $('#'+spellSRCTabID).click(function(){
             $('.spellSRCTabs').removeClass('is-active');
@@ -66,7 +67,7 @@ socket.on("returnSpellBookUpdated", function(spellBookStruct){
 
 
 function openSpellSRCTab(spellSRC, data){
-
+    
     let spellBook = g_spellBookArray.find(spellBook => {
         return spellBook.SpellSRC === spellSRC;
     });

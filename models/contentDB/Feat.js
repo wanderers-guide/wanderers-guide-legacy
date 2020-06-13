@@ -22,6 +22,9 @@ const Feat = db.define('feats', {
   frequency: {
     type: Sequelize.STRING
   },
+  cost: {
+    type: Sequelize.STRING
+  },
   trigger: {
     type: Sequelize.STRING
   },

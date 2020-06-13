@@ -181,3 +181,36 @@ function hasDuplicateLang(langArray, langID){
   return false;
 }
 
+
+// ASC statement maximum: 26
+function charIncrease(char){
+  switch(char) {
+    case 'a': return 'b';
+    case 'b': return 'c';
+    case 'c': return 'd';
+    case 'd': return 'e';
+    case 'e': return 'f';
+    case 'f': return 'g';
+    case 'g': return 'h';
+    case 'h': return 'i';
+    case 'i': return 'j';
+    case 'j': return 'k';
+    case 'k': return 'l';
+    case 'l': return 'm';
+    case 'm': return 'n';
+    case 'n': return 'o';
+    case 'o': return 'p';
+    case 'p': return 'q';
+    case 'q': return 'r';
+    case 'r': return 's';
+    case 's': return 't';
+    case 't': return 'u';
+    case 'u': return 'v';
+    case 'v': return 'w';
+    case 'w': return 'x';
+    case 'x': return 'y';
+    case 'y': return 'z';
+    case 'z': return null;
+    default: return null;
+  }
+}

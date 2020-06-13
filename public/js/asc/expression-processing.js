@@ -32,8 +32,22 @@ g_profConversionMap.set('OCCULTSPELLDC', {Name: 'OccultSpellDCs', Category: 'Spe
 g_profConversionMap.set('PRIMALSPELLDC', {Name: 'PrimalSpellDCs', Category: 'SpellDC'});
 g_profConversionMap.set('DIVINESPELLDC', {Name: 'DivineSpellDCs', Category: 'SpellDC'});
 
-
-
+g_profConversionMap.set('ACROBATICS', {Name: 'Acrobatics', Category: 'Skill'});
+g_profConversionMap.set('ARCANA', {Name: 'Arcana', Category: 'Skill'});
+g_profConversionMap.set('ATHLETICS', {Name: 'Athletics', Category: 'Skill'});
+g_profConversionMap.set('CRAFTING', {Name: 'Crafting', Category: 'Skill'});
+g_profConversionMap.set('DECEPTION', {Name: 'Deception', Category: 'Skill'});
+g_profConversionMap.set('DIPLOMACY', {Name: 'Diplomacy', Category: 'Skill'});
+g_profConversionMap.set('INTIMIDATION', {Name: 'Intimidation', Category: 'Skill'});
+g_profConversionMap.set('MEDICINE', {Name: 'Medicine', Category: 'Skill'});
+g_profConversionMap.set('NATURE', {Name: 'Nature', Category: 'Skill'});
+g_profConversionMap.set('OCCULTISM', {Name: 'Occultism', Category: 'Skill'});
+g_profConversionMap.set('PERFORMANCE', {Name: 'Performance', Category: 'Skill'});
+g_profConversionMap.set('RELIGION', {Name: 'Religion', Category: 'Skill'});
+g_profConversionMap.set('SOCIETY', {Name: 'Society', Category: 'Skill'});
+g_profConversionMap.set('STEALTH', {Name: 'Stealth', Category: 'Skill'});
+g_profConversionMap.set('SURVIVAL', {Name: 'Survival', Category: 'Skill'});
+g_profConversionMap.set('THIEVERY', {Name: 'Thievery', Category: 'Skill'});
 
 let hasInit = false;
 let g_expr_level, g_expr_profMap = null;

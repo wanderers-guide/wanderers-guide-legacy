@@ -275,7 +275,7 @@ function displayAddItem(itemID, itemDataStruct, data){
         $('#'+addItemDetailsItemID).append('<hr class="m-2">');
     }
 
-    $('#'+addItemDetailsItemID).append(processText(itemDataStruct.Item.description, true));
+    $('#'+addItemDetailsItemID).append(processText(itemDataStruct.Item.description, true, true, 'MEDIUM'));
 
 
     $('#'+addItemAddItemID).click(function(){

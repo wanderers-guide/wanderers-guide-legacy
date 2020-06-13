@@ -38,10 +38,42 @@ function openSavingThrowQuickview(data) {
     breakDownInnerHTML += ' + ';
 
     let amalgBonus = data.TotalBonus - (data.AbilMod + data.ProfNum);
-    breakDownInnerHTML += '<a class="has-text-link has-tooltip-bottom has-tooltip-multiline" data-tooltip="'+amalgamationBonusText+'">'+amalgBonus+'</a>';
+    breakDownInnerHTML += '<a id="amalgBonusNum" class="has-text-link has-tooltip-bottom">'+amalgBonus+'</a>';
 
     breakDownInnerHTML += '</p>';
 
     qContent.append(breakDownInnerHTML);
+
+    let saveDataName = (data.ProfData.Name == 'Fortitude') ? 'SAVE_Fort' : 'SAVE_'+data.ProfData.Name;
+
+    let amalgBonuses = getStatExtraBonuses(saveDataName);
+    if(amalgBonuses != null && amalgBonuses.length > 0){
+        $('#amalgBonusNum').removeClass('has-tooltip-multiline');
+        let amalgTooltipText = 'Additional adjustments:';
+        for(let amalgExtra of amalgBonuses){
+            amalgTooltipText += '\n'+amalgExtra;
+        }
+        $('#amalgBonusNum').attr('data-tooltip', amalgTooltipText);
+    } else {
+        $('#amalgBonusNum').addClass('has-tooltip-multiline');
+        $('#amalgBonusNum').attr('data-tooltip', amalgamationBonusText);
+    }
+
+    let conditionalStatMap = getConditionalStatMap(saveDataName);
+    if(conditionalStatMap != null){
+
+        qContent.append('<hr class="m-2">');
+
+        qContent.append('<p class="has-text-centered"><strong>Contitionals</strong></p>');
+        
+        for(const [condition, value] of conditionalStatMap.entries()){
+            if(value == null){
+                qContent.append('<p class="has-text-centered">'+condition+'</p>');
+            } else {
+                qContent.append('<p class="has-text-centered">'+value+' '+condition+'</p>');
+            }
+        }
+
+    }
 
 }

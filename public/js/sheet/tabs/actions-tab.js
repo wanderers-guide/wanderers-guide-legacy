@@ -3,10 +3,20 @@ function openActionsTab(data) {
 
     $('#tabContent').append('<div class="tabs is-centered is-marginless"><ul class="action-tabs"><li><a id="actionTabEncounter">Encounter</a></li><li><a id="actionTabExploration">Exploration</a></li><li><a id="actionTabDowntime">Downtime</a></li></ul></div>');
 
-    let filterInnerHTML = '<div class="columns is-mobile is-marginless"><div class="column is-4"><p id="stateNumberOfActions" class="is-size-7 has-text-left">3 Actions per Turn</p></div><div class="column is-1"><p class="is-size-6 has-text-grey-lighter">Filter</p></div>';
+    let actionsCount = 3;
+    if(hasCondition(26)) { // Hardcoded - Quickened condition ID
+        actionsCount++;
+    }
+    let slowedCondition = getCondition(29); // Hardcoded - Slowed condition ID
+    if(slowedCondition != null){
+        actionsCount -= slowedCondition.Value;
+    }
+    actionsCount = (actionsCount < 0) ? 0 : actionsCount;
+
+    let filterInnerHTML = '<div class="columns is-mobile is-marginless"><div class="column is-4"><p id="stateNumberOfActions" class="is-size-7 has-text-left">'+actionsCount+' Actions per Turn</p></div><div class="column is-1"><p class="is-size-6 has-text-grey-lighter">Filter</p></div>';
     filterInnerHTML += '<div class="column is-2"><div class="select is-small"><select id="actionFilterSelectBySkill"><option value="core">Core</option>';
 
-    filterInnerHTML += '<option value="others">Others</option>';
+    filterInnerHTML += '<option value="others">Miscellaneous</option>';
     filterInnerHTML += '<option value="all">All</option>';
     for(const [skillName, skillData] of data.SkillMap.entries()){
         filterInnerHTML += '<option value="'+skillData.Skill.id+'">Skill - '+skillData.Skill.name+'</option>';
@@ -45,6 +55,7 @@ function openActionsTab(data) {
 
 // Action Tabs //
 function changeActionTab(type, data){
+    if(!g_selectedSubTabLock) {g_selectedSubTabID = type;}
 
     $('#actionFilterSelectByAction').off('change');
     $('#actionFilterSelectBySkill').off('change');
@@ -235,13 +246,19 @@ function displayAction(featStruct, actionCount, skillMap) {
         }
         actionTagsInnerHTML += '<button class="button is-marginless mr-2 my-1 is-very-small is-info">'+skill.name+'</button>';
     }
+
+    featStruct.Tags = featStruct.Tags.sort(
+        function(a, b) {
+            return a.name > b.name ? 1 : -1;
+        }
+    );
     for(const tag of featStruct.Tags){
         actionTagsInnerHTML += '<button class="button is-marginless mr-2 my-1 is-very-small is-info">'+tag.name+'</button>';
     }
     actionTagsInnerHTML += '</div>';
 
     
-    $('#actionTabContent').append('<div id="'+actionID+'" class="columns is-mobile border-bottom border-dark-lighter cursor-clickable is-marginless mx-2">'+actionActionInnerHTML+'<div class="column is-paddingless"><p class="text-left pl-2">'+actionNameInnerHTML+'</p></div><div class="column is-paddingless"><p class="pt-1">'+actionTagsInnerHTML+'</p></div></div>');
+    $('#actionTabContent').append('<div id="'+actionID+'" class="columns is-mobile border-bottom border-dark-lighter cursor-clickable is-marginless mx-2">'+actionActionInnerHTML+'<div class="column is-paddingless"><p class="text-left pl-2 pt-1">'+actionNameInnerHTML+'</p></div><div class="column is-paddingless"><p class="pt-1">'+actionTagsInnerHTML+'</p></div></div>');
 
     if(actionCount == 0){
         $('#'+actionID).addClass('border-top');

@@ -11,7 +11,7 @@ function processingAbilityBoosts(ascStatement, srcStruct, locationID){
         let numberOfBoosts = ascStatement.split('=')[1];
         giveAbilityBoostMultiple(srcStruct, numberOfBoosts, locationID);
     } else {
-        displayError("Unknown statement (2): \'"+ascStatement+"\'");
+        displayError("Unknown statement (2-Boost): \'"+ascStatement+"\'");
         statementComplete();
     }
 
@@ -24,9 +24,13 @@ function giveAbilityBoostMultiple(srcStruct, numberOfBoosts, locationID) {
     if(numberOfBoosts > 6){
         displayError("Attempted to create more than 6 ability boosts!");
     } else {
+        let multiBoostCodeStr = '';
         for (let i = 0; i < numberOfBoosts; i++) {
+            multiBoostCodeStr += 'GIVE-ABILITY-BOOST-SINGLE=ALL, ';
+        }
+        if(multiBoostCodeStr != ''){
             processCode(
-                'GIVE-ABILITY-BOOST-SINGLE=ALL',
+                multiBoostCodeStr,
                 srcStruct,
                 locationID);
         }
@@ -68,11 +72,12 @@ function giveAbilityBoostSingle(srcStruct, selectionOptions, locationID){
 
 function displayAbilityBoostSingle(srcStruct, locationID, abilityTypes){
 
+    console.log("selectBoost"+locationID+srcStruct.sourceCodeSNum);
     let selectBoostID = "selectBoost"+locationID+srcStruct.sourceCodeSNum;
     let selectBoostSet = "selectBoostSet"+locationID;
     let selectBoostControlShellClass = selectBoostSet+'ControlShell';
 
-    $('#'+locationID).append('<span class="select pb-1 px-1 is-medium '+selectBoostControlShellClass+'"><select id="'+selectBoostID+'" class="'+selectBoostSet+'"></select></span>');
+    $('#'+locationID).append('<span class="select mb-1 mx-1 is-medium '+selectBoostControlShellClass+'"><select id="'+selectBoostID+'" class="'+selectBoostSet+'"></select></span>');
 
     let selectBoost = $('#'+selectBoostID);
     selectBoost.append('<option value="chooseDefault">Choose an Ability</option>');
@@ -133,5 +138,6 @@ function displayAbilityBoostSingle(srcStruct, locationID, abilityTypes){
 socket.on("returnASCAbilityBonusChange", function(selectBoostControlShellClass){
     $('.'+selectBoostControlShellClass).removeClass("is-loading");
     $('.'+selectBoostControlShellClass+'>select').blur();
-    socket.emit("requestASCUpdateChoices", getCharIDFromURL());
+    selectorUpdated();
+    socket.emit("requestASCUpdateChoices", getCharIDFromURL(), 'ABILITY-BOOSTS');
 });

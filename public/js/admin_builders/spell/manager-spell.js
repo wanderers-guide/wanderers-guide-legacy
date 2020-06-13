@@ -6,28 +6,28 @@ let activeModalSpellID = -1;
 // ~~~~~~~~~~~~~~ // Run on Load // ~~~~~~~~~~~~~~ //
 $(function () {
 
-    let spellCards = $('.spell-card');
-    for(const spellCard of spellCards){
+    let entries = $('.entryListing');
+    for(const entry of entries){
 
-        let spellID = $(spellCard).attr('name');
-        let cardEdit = $(spellCard).find('.spell-card-edit');
-        let cardDelete = $(spellCard).find('.spell-card-delete');
+        let spellID = $(entry).attr('name');
+        let cardEdit = $(entry).find('.entry-update');
+        let cardDelete = $(entry).find('.entry-delete');
 
         cardEdit.mouseenter(function(){
-            $(this).addClass('card-footer-hover');
+            $(this).addClass('entry-footer-hover');
         });
         cardEdit.mouseleave(function(){
-            $(this).removeClass('card-footer-hover');
+            $(this).removeClass('entry-footer-hover');
         });
         cardEdit.click(function() {
             window.location.href = '/admin/edit/spell/'+spellID;
         });
 
         cardDelete.mouseenter(function(){
-            $(this).addClass('card-footer-hover');
+            $(this).addClass('entry-footer-hover');
         });
         cardDelete.mouseleave(function(){
-            $(this).removeClass('card-footer-hover');
+            $(this).removeClass('entry-footer-hover');
         });
         cardDelete.click(function() {
             $('.modal').addClass('is-active');

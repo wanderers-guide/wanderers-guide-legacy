@@ -95,6 +95,7 @@ socket.on("returnAdminAncestryDetails", function(ancestryObject, featsObject){
             $(this).find(".inputFeatPrereq").val(feat.Feat.prerequisites);
             $(this).find(".inputFeatReq").val(feat.Feat.requirements);
             $(this).find(".inputFeatFreq").val(feat.Feat.frequency);
+            $(this).find(".inputFeatCost").val(feat.Feat.cost);
             $(this).find(".inputFeatTrigger").val(feat.Feat.trigger);
             $(this).find(".inputFeatDesc").val(feat.Feat.description);
             $(this).find(".inputFeatSpecial").val(feat.Feat.special);

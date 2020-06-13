@@ -10,7 +10,7 @@ function processingProf(ascStatement, srcStruct, locationID){
         let segments = data.split(':');
         giveProf(srcStruct, segments[0], segments[1]);
     } else {
-        displayError("Unknown statement (2): \'"+ascStatement+"\'");
+        displayError("Unknown statement (2-Prof): \'"+ascStatement+"\'");
         statementComplete();
     }
 
@@ -29,24 +29,46 @@ function giveProf(srcStruct, profName, prof){
 function giveInProf(srcStruct, profName, prof){
 
     profName = profName.replace(/_|\s+/g,"");
-
-    let isSkill = false;
-    let profCategory = null;
     let profProperName = null;
-    let profData = g_profConversionMap.get(profName);
+    let profCategory = null;
 
-    if(profData != null){
-        profProperName = profData.Name;
-        profCategory = profData.Category;
-    } else {
-        isSkill = true;
-        profProperName = profName;
+    if(profName.startsWith('LORE~')){
+        profName = profName.replace(/LORE\~/g,'');
+        profProperName = profName+'_LORE';
         profCategory = 'Skill';
     }
 
-    socket.emit("requestProficiencyChange",
-        getCharIDFromURL(),
-        {srcStruct, isSkill : isSkill, isStatement : true},
-        { For : profCategory, To : profProperName, Prof : prof });
+    if(profName.startsWith('WEAPON~')){
+        profName = profName.replace(/WEAPON\~/g,'');
+        profProperName = profName;
+        profCategory = 'Attack';
+    }
+
+    if(profName.startsWith('ARMOR~')){
+        profName = profName.replace(/ARMOR\~/g,'');
+        profProperName = profName;
+        profCategory = 'Defense';
+    }
+
+    let profData = g_profConversionMap.get(profName);
+    if(profData != null){
+        profProperName = profData.Name;
+        profCategory = profData.Category;
+    }
+
+    let isSkill = false;
+    if(profCategory === 'Skill'){
+        isSkill = true;
+    }
+
+    if(profProperName != null && profCategory != null){
+        socket.emit("requestProficiencyChange",
+            getCharIDFromURL(),
+            {srcStruct, isSkill : isSkill, isStatement : true},
+            { For : profCategory, To : profProperName, Prof : prof });
+    } else {
+        displayError("Unknown proficiency: \'"+profName+"\'");
+        statementComplete();
+    }
 
 }

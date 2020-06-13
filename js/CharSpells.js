@@ -11,121 +11,155 @@ function getSpellSlots(spellcasting){
     if(spellcasting === 'THREE-QUARTERS'){
         return {
             cantrip: [
-                {slotID: SID+1, used: false, spellID: null, level_lock: 1},
-                {slotID: SID+2, used: false, spellID: null, level_lock: 1},
-                {slotID: SID+3, used: false, spellID: null, level_lock: 1},
-                {slotID: SID+4, used: false, spellID: null, level_lock: 1},
-                {slotID: SID+5, used: false, spellID: null, level_lock: 1},
+                {slotID: SID+1, used: false, spellID: null, type: '', level_lock: 1},
+                {slotID: SID+2, used: false, spellID: null, type: '', level_lock: 1},
+                {slotID: SID+3, used: false, spellID: null, type: '', level_lock: 1},
+                {slotID: SID+4, used: false, spellID: null, type: '', level_lock: 1},
+                {slotID: SID+5, used: false, spellID: null, type: '', level_lock: 1},
             ],
             firstLevel: [
-                {slotID: SID+6, used: false, spellID: null, level_lock: 1},
-                {slotID: SID+7, used: false, spellID: null, level_lock: 1},
-                {slotID: SID+8, used: false, spellID: null, level_lock: 2},
+                {slotID: SID+6, used: false, spellID: null, type: '', level_lock: 1},
+                {slotID: SID+7, used: false, spellID: null, type: '', level_lock: 1},
+                {slotID: SID+8, used: false, spellID: null, type: '', level_lock: 2},
             ],
             secondLevel: [
-                {slotID: SID+9, used: false, spellID: null, level_lock: 3},
-                {slotID: SID+10, used: false, spellID: null, level_lock: 3},
-                {slotID: SID+11, used: false, spellID: null, level_lock: 4},
+                {slotID: SID+9, used: false, spellID: null, type: '', level_lock: 3},
+                {slotID: SID+10, used: false, spellID: null, type: '', level_lock: 3},
+                {slotID: SID+11, used: false, spellID: null, type: '', level_lock: 4},
             ],
             thirdLevel: [
-                {slotID: SID+12, used: false, spellID: null, level_lock: 5},
-                {slotID: SID+13, used: false, spellID: null, level_lock: 5},
-                {slotID: SID+14, used: false, spellID: null, level_lock: 6},
+                {slotID: SID+12, used: false, spellID: null, type: '', level_lock: 5},
+                {slotID: SID+13, used: false, spellID: null, type: '', level_lock: 5},
+                {slotID: SID+14, used: false, spellID: null, type: '', level_lock: 6},
             ],
             fourthLevel: [
-                {slotID: SID+15, used: false, spellID: null, level_lock: 7},
-                {slotID: SID+16, used: false, spellID: null, level_lock: 7},
-                {slotID: SID+17, used: false, spellID: null, level_lock: 8},
+                {slotID: SID+15, used: false, spellID: null, type: '', level_lock: 7},
+                {slotID: SID+16, used: false, spellID: null, type: '', level_lock: 7},
+                {slotID: SID+17, used: false, spellID: null, type: '', level_lock: 8},
             ],
             fifthLevel: [
-                {slotID: SID+18, used: false, spellID: null, level_lock: 9},
-                {slotID: SID+19, used: false, spellID: null, level_lock: 9},
-                {slotID: SID+20, used: false, spellID: null, level_lock: 10},
+                {slotID: SID+18, used: false, spellID: null, type: '', level_lock: 9},
+                {slotID: SID+19, used: false, spellID: null, type: '', level_lock: 9},
+                {slotID: SID+20, used: false, spellID: null, type: '', level_lock: 10},
             ],
             sixthLevel: [
-                {slotID: SID+21, used: false, spellID: null, level_lock: 11},
-                {slotID: SID+22, used: false, spellID: null, level_lock: 11},
-                {slotID: SID+23, used: false, spellID: null, level_lock: 12},
+                {slotID: SID+21, used: false, spellID: null, type: '', level_lock: 11},
+                {slotID: SID+22, used: false, spellID: null, type: '', level_lock: 11},
+                {slotID: SID+23, used: false, spellID: null, type: '', level_lock: 12},
             ],
             seventhLevel: [
-                {slotID: SID+24, used: false, spellID: null, level_lock: 13},
-                {slotID: SID+25, used: false, spellID: null, level_lock: 13},
-                {slotID: SID+26, used: false, spellID: null, level_lock: 14},
+                {slotID: SID+24, used: false, spellID: null, type: '', level_lock: 13},
+                {slotID: SID+25, used: false, spellID: null, type: '', level_lock: 13},
+                {slotID: SID+26, used: false, spellID: null, type: '', level_lock: 14},
             ],
             eighthLevel: [
-                {slotID: SID+27, used: false, spellID: null, level_lock: 15},
-                {slotID: SID+28, used: false, spellID: null, level_lock: 15},
-                {slotID: SID+29, used: false, spellID: null, level_lock: 16},
+                {slotID: SID+27, used: false, spellID: null, type: '', level_lock: 15},
+                {slotID: SID+28, used: false, spellID: null, type: '', level_lock: 15},
+                {slotID: SID+29, used: false, spellID: null, type: '', level_lock: 16},
             ],
             ninthLevel: [
-                {slotID: SID+30, used: false, spellID: null, level_lock: 17},
-                {slotID: SID+31, used: false, spellID: null, level_lock: 17},
-                {slotID: SID+32, used: false, spellID: null, level_lock: 18},
+                {slotID: SID+30, used: false, spellID: null, type: '', level_lock: 17},
+                {slotID: SID+31, used: false, spellID: null, type: '', level_lock: 17},
+                {slotID: SID+32, used: false, spellID: null, type: '', level_lock: 18},
             ],
             tenthLevel: []
         };
     } else if(spellcasting === 'FULL'){
         return {
             cantrip: [
-                {slotID: SID+1, used: false, spellID: null, level_lock: 1},
-                {slotID: SID+2, used: false, spellID: null, level_lock: 1},
-                {slotID: SID+3, used: false, spellID: null, level_lock: 1},
-                {slotID: SID+4, used: false, spellID: null, level_lock: 1},
-                {slotID: SID+5, used: false, spellID: null, level_lock: 1},
+                {slotID: SID+1, used: false, spellID: null, type: '', level_lock: 1},
+                {slotID: SID+2, used: false, spellID: null, type: '', level_lock: 1},
+                {slotID: SID+3, used: false, spellID: null, type: '', level_lock: 1},
+                {slotID: SID+4, used: false, spellID: null, type: '', level_lock: 1},
+                {slotID: SID+5, used: false, spellID: null, type: '', level_lock: 1},
             ],
             firstLevel: [
-                {slotID: SID+6, used: false, spellID: null, level_lock: 1},
-                {slotID: SID+7, used: false, spellID: null, level_lock: 1},
-                {slotID: SID+8, used: false, spellID: null, level_lock: 1},
-                {slotID: SID+9, used: false, spellID: null, level_lock: 2},
+                {slotID: SID+6, used: false, spellID: null, type: '', level_lock: 1},
+                {slotID: SID+7, used: false, spellID: null, type: '', level_lock: 1},
+                {slotID: SID+8, used: false, spellID: null, type: '', level_lock: 1},
+                {slotID: SID+9, used: false, spellID: null, type: '', level_lock: 2},
             ],
             secondLevel: [
-                {slotID: SID+10, used: false, spellID: null, level_lock: 3},
-                {slotID: SID+11, used: false, spellID: null, level_lock: 3},
-                {slotID: SID+12, used: false, spellID: null, level_lock: 3},
-                {slotID: SID+13, used: false, spellID: null, level_lock: 4},
+                {slotID: SID+10, used: false, spellID: null, type: '', level_lock: 3},
+                {slotID: SID+11, used: false, spellID: null, type: '', level_lock: 3},
+                {slotID: SID+12, used: false, spellID: null, type: '', level_lock: 3},
+                {slotID: SID+13, used: false, spellID: null, type: '', level_lock: 4},
             ],
             thirdLevel: [
-                {slotID: SID+14, used: false, spellID: null, level_lock: 5},
-                {slotID: SID+15, used: false, spellID: null, level_lock: 5},
-                {slotID: SID+16, used: false, spellID: null, level_lock: 5},
-                {slotID: SID+17, used: false, spellID: null, level_lock: 6},
+                {slotID: SID+14, used: false, spellID: null, type: '', level_lock: 5},
+                {slotID: SID+15, used: false, spellID: null, type: '', level_lock: 5},
+                {slotID: SID+16, used: false, spellID: null, type: '', level_lock: 5},
+                {slotID: SID+17, used: false, spellID: null, type: '', level_lock: 6},
             ],
             fourthLevel: [
-                {slotID: SID+18, used: false, spellID: null, level_lock: 7},
-                {slotID: SID+19, used: false, spellID: null, level_lock: 7},
-                {slotID: SID+20, used: false, spellID: null, level_lock: 7},
-                {slotID: SID+21, used: false, spellID: null, level_lock: 8},
+                {slotID: SID+18, used: false, spellID: null, type: '', level_lock: 7},
+                {slotID: SID+19, used: false, spellID: null, type: '', level_lock: 7},
+                {slotID: SID+20, used: false, spellID: null, type: '', level_lock: 7},
+                {slotID: SID+21, used: false, spellID: null, type: '', level_lock: 8},
             ],
             fifthLevel: [
-                {slotID: SID+22, used: false, spellID: null, level_lock: 9},
-                {slotID: SID+23, used: false, spellID: null, level_lock: 9},
-                {slotID: SID+24, used: false, spellID: null, level_lock: 9},
-                {slotID: SID+25, used: false, spellID: null, level_lock: 10},
+                {slotID: SID+22, used: false, spellID: null, type: '', level_lock: 9},
+                {slotID: SID+23, used: false, spellID: null, type: '', level_lock: 9},
+                {slotID: SID+24, used: false, spellID: null, type: '', level_lock: 9},
+                {slotID: SID+25, used: false, spellID: null, type: '', level_lock: 10},
             ],
             sixthLevel: [
-                {slotID: SID+26, used: false, spellID: null, level_lock: 11},
-                {slotID: SID+27, used: false, spellID: null, level_lock: 11},
-                {slotID: SID+28, used: false, spellID: null, level_lock: 11},
-                {slotID: SID+29, used: false, spellID: null, level_lock: 12},
+                {slotID: SID+26, used: false, spellID: null, type: '', level_lock: 11},
+                {slotID: SID+27, used: false, spellID: null, type: '', level_lock: 11},
+                {slotID: SID+28, used: false, spellID: null, type: '', level_lock: 11},
+                {slotID: SID+29, used: false, spellID: null, type: '', level_lock: 12},
             ],
             seventhLevel: [
-                {slotID: SID+30, used: false, spellID: null, level_lock: 13},
-                {slotID: SID+31, used: false, spellID: null, level_lock: 13},
-                {slotID: SID+32, used: false, spellID: null, level_lock: 13},
-                {slotID: SID+33, used: false, spellID: null, level_lock: 14},
+                {slotID: SID+30, used: false, spellID: null, type: '', level_lock: 13},
+                {slotID: SID+31, used: false, spellID: null, type: '', level_lock: 13},
+                {slotID: SID+32, used: false, spellID: null, type: '', level_lock: 13},
+                {slotID: SID+33, used: false, spellID: null, type: '', level_lock: 14},
             ],
             eighthLevel: [
-                {slotID: SID+34, used: false, spellID: null, level_lock: 15},
-                {slotID: SID+35, used: false, spellID: null, level_lock: 15},
-                {slotID: SID+36, used: false, spellID: null, level_lock: 15},
-                {slotID: SID+37, used: false, spellID: null, level_lock: 16},
+                {slotID: SID+34, used: false, spellID: null, type: '', level_lock: 15},
+                {slotID: SID+35, used: false, spellID: null, type: '', level_lock: 15},
+                {slotID: SID+36, used: false, spellID: null, type: '', level_lock: 15},
+                {slotID: SID+37, used: false, spellID: null, type: '', level_lock: 16},
             ],
             ninthLevel: [
-                {slotID: SID+38, used: false, spellID: null, level_lock: 17},
-                {slotID: SID+39, used: false, spellID: null, level_lock: 17},
-                {slotID: SID+40, used: false, spellID: null, level_lock: 17},
-                {slotID: SID+41, used: false, spellID: null, level_lock: 18},
+                {slotID: SID+38, used: false, spellID: null, type: '', level_lock: 17},
+                {slotID: SID+39, used: false, spellID: null, type: '', level_lock: 17},
+                {slotID: SID+40, used: false, spellID: null, type: '', level_lock: 17},
+                {slotID: SID+41, used: false, spellID: null, type: '', level_lock: 18},
+            ],
+            tenthLevel: []
+        };
+    } else if(spellcasting === 'SINGLE-SET'){
+        return {
+            cantrip: [
+                {slotID: SID+1, used: false, spellID: null, type: '', level_lock: 1},
+            ],
+            firstLevel: [
+                {slotID: SID+2, used: false, spellID: null, type: '', level_lock: 1},
+            ],
+            secondLevel: [
+                {slotID: SID+3, used: false, spellID: null, type: '', level_lock: 3},
+            ],
+            thirdLevel: [
+                {slotID: SID+4, used: false, spellID: null, type: '', level_lock: 5},
+            ],
+            fourthLevel: [
+                {slotID: SID+5, used: false, spellID: null, type: '', level_lock: 7},
+            ],
+            fifthLevel: [
+                {slotID: SID+6, used: false, spellID: null, type: '', level_lock: 9},
+            ],
+            sixthLevel: [
+                {slotID: SID+7, used: false, spellID: null, type: '', level_lock: 11},
+            ],
+            seventhLevel: [
+                {slotID: SID+8, used: false, spellID: null, type: '', level_lock: 13},
+            ],
+            eighthLevel: [
+                {slotID: SID+9, used: false, spellID: null, type: '', level_lock: 15},
+            ],
+            ninthLevel: [
+                {slotID: SID+10, used: false, spellID: null, type: '', level_lock: 17},
             ],
             tenthLevel: []
         };
@@ -167,14 +201,6 @@ function rowNameToLevel(rowName){
         case 'tenthLevel': return 10;
         default: return null;
     }
-}
-
-function objToMap(obj) {
-    let strMap = new Map();
-    for (let k of Object.keys(obj)) {
-      strMap.set(k, obj[k]);
-    }
-    return strMap;
 }
 
 function getRandomSID() {
@@ -220,7 +246,7 @@ module.exports = class CharSpells {
         }); 
     }
 
-    static getSpellBook(charID, spellSRC){
+    static getSpellBook(charID, spellSRC, isFocus){
         return SpellBookSpell.findAll({
             where: {
                 charID: charID,
@@ -244,6 +270,7 @@ module.exports = class CharSpells {
                             SpellList: spellList,
                             SpellCastingType: spellCastingType,
                             SpellKeyAbility: keyAbility,
+                            IsFocus: isFocus,
                         };
                     });
                 });
@@ -311,7 +338,7 @@ module.exports = class CharSpells {
         let rowName = levelToRowName(slotLevel);
         if(rowName == null) {return null;}
         let spellSlot = {};
-        spellSlot[rowName] = [{slotID: getRandomSID(), used: false, spellID: null, level_lock: -1}];
+        spellSlot[rowName] = [{slotID: getRandomSID(), used: false, spellID: null, type: '', level_lock: -1}];
         return CharDataMapping.setData(charID, 'spellSlots', srcStruct, spellSRC+"="+JSON.stringify(spellSlot))
         .then((result) => {
           return spellSlot;
@@ -327,6 +354,7 @@ module.exports = class CharSpells {
                 slotID: updateSlotObject.slotID,
                 used: updateSlotObject.used,
                 spellID: updateSlotObject.spellID,
+                type: updateSlotObject.type,
                 level_lock: updateSlotObject.level_lock,
             };
             let updatedSpellSlotJSON = JSON.stringify(spellSlotEntry);
@@ -368,7 +396,6 @@ module.exports = class CharSpells {
 
                     let spellSlotsDataParts = spellSlotData.value.split('=');
                     let spellSRC = spellSlotsDataParts[0];
-                    
                         
                     let spellSlots = JSON.parse(spellSlotsDataParts[1]);
                     for(let [levelRowName, slotsArray] of Object.entries(spellSlots)) {
@@ -386,6 +413,7 @@ module.exports = class CharSpells {
                                     slotLevel: slotLevel,
                                     used: slotData.used,
                                     spellID: slotData.spellID,
+                                    type: slotData.type,
                                     level_lock: slotData.level_lock,
                                 });
 

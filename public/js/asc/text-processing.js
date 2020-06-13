@@ -36,6 +36,10 @@ function processText(text, isSheet, isJustified, size) {
     // Wrap in a paragraph
     text = '<p class="p-1 pl-2 '+_j+_s+'">'+text+'</p>';
 
+    // ---- - Makes horizontal divider
+    text = text.replace(/\n\-\-\-\-/g, '<hr class="m-1">');
+    text = text.replace(/\-\-\-\-/g, '<hr class="m-1">');
+
     // \n -> Newline
     text = text.replace(/\n/g, '</p><p class="p-1 pl-2 '+_j+_s+'">');
 
@@ -53,11 +57,11 @@ function processText(text, isSheet, isJustified, size) {
 
     // ~ Some Text Here: Other Text
     let regexNonBulletList = /\~(.+?)\:/g;
-    text = text.replace(regexNonBulletList, '</p><p class="pl-2 pr-1 negative-indent '+_j+_s+'"><strong>$1</strong>');
+    text = text.replace(regexNonBulletList, '</p><p class="pl-2 pr-1 negative-indent has-text-left '+_s+'"><strong>$1</strong>');
 
     // * Some Text Here: Other Text
     let regexBulletList = /\*(.+?)\:/g;
-    text = text.replace(regexBulletList, '</p><p class="pl-2 pr-1 negative-indent '+_j+_s+'">&#x2022;<strong>$1</strong>');
+    text = text.replace(regexBulletList, '</p><p class="pl-2 pr-1 negative-indent has-text-left '+_s+'">&#x2022;<strong>$1</strong>');
 
     // Website Link - [URL]
     let regexURL = /\[(.+?)\]/g;
@@ -73,7 +77,7 @@ function processText(text, isSheet, isJustified, size) {
     }
 
     // (Feat: Striking | Strike)
-    let regexFeatLinkExt = /\((Feat|Ability|Action|Activity):\s*(.+?)\s*\|\s*(.+?)\s*\)/ig;
+    let regexFeatLinkExt = /\((Feat|Ability|Action|Activity):\s*([^(:]+?)\s*\|\s*(.+?)\s*\)/ig;
     if(isSheet) {
         text = text.replace(regexFeatLinkExt, handleFeatLinkExt);
     } else {
@@ -81,7 +85,7 @@ function processText(text, isSheet, isJustified, size) {
     }
 
     // (Feat: Strike)
-    let regexFeatLink = /\((Feat|Ability|Action|Activity):\s*(.+?)\s*\)/ig;
+    let regexFeatLink = /\((Feat|Ability|Action|Activity):\s*([^(:]+?)\s*\)/ig;
     if(isSheet) {
         text = text.replace(regexFeatLink, handleFeatLink);
     } else {
@@ -89,7 +93,7 @@ function processText(text, isSheet, isJustified, size) {
     }
 
     // (Item: Striking | Strike)
-    let regexItemLinkExt = /\((Item):\s*(.+?)\s*\|\s*(.+?)\s*\)/ig;
+    let regexItemLinkExt = /\((Item):\s*(.+?)\s*\|\s*([^(:]+?)\s*\)/ig;
     if(isSheet) {
         text = text.replace(regexItemLinkExt, handleItemLinkExt);
     } else {
@@ -97,7 +101,7 @@ function processText(text, isSheet, isJustified, size) {
     }
 
     // (Item: Strike)
-    let regexItemLink = /\((Item):\s*(.+?)\s*\)/ig;
+    let regexItemLink = /\((Item):\s*([^(:]+?)\s*\)/ig;
     if(isSheet) {
         text = text.replace(regexItemLink, handleItemLink);
     } else {
@@ -105,7 +109,7 @@ function processText(text, isSheet, isJustified, size) {
     }
 
     // (Spell: Striking | Strike)
-    let regexSpellLinkExt = /\((Spell):\s*(.+?)\s*\|\s*(.+?)\s*\)/ig;
+    let regexSpellLinkExt = /\((Spell):\s*([^(:]+?)\s*\|\s*(.+?)\s*\)/ig;
     if(isSheet) {
         text = text.replace(regexSpellLinkExt, handleSpellLinkExt);
     } else {
@@ -113,7 +117,7 @@ function processText(text, isSheet, isJustified, size) {
     }
 
     // (Spell: Strike)
-    let regexSpellLink = /\((Spell):\s*(.+?)\s*\)/ig;
+    let regexSpellLink = /\((Spell):\s*([^(:]+?)\s*\)/ig;
     if(isSheet) {
         text = text.replace(regexSpellLink, handleSpellLink);
     } else {
@@ -130,17 +134,17 @@ function processText(text, isSheet, isJustified, size) {
     text = text.replace('REACTION', '<span class="pf-icon">[reaction]</span>');
     text = text.replace('ONE-ACTION', '<span class="pf-icon">[one-action]</span>');
     text = text.replace('TWO-ACTIONS', '<span class="pf-icon">[two-actions]</span>');
-    text = text.replace('THREE-ACTIONS', '<span class="pf-icon">[two-actions]</span>');
+    text = text.replace('THREE-ACTIONS', '<span class="pf-icon">[three-actions]</span>');
 
 
     // Critical Success:text
     // Success:text
     // Failure:text
     // Critical Failure:text
-    text = text.replace('Critical Success:','</p><p class="pl-2 pr-1 negative-indent '+_j+_s+'"><strong>Critical Success</strong>');
-    text = text.replace('Success:','</p><p class="pl-2 pr-1 negative-indent '+_j+_s+'"><strong>Success</strong>');
-    text = text.replace('Critical Failure:','</p><p class="pl-2 pr-1 negative-indent '+_j+_s+'"><strong>Critical Failure</strong>');
-    text = text.replace('Failure:','</p><p class="pl-2 pr-1 negative-indent '+_j+_s+'"><strong>Failure</strong>');
+    text = text.replace('Critical Success:','</p><p class="pl-2 pr-1 negative-indent has-text-left '+_s+'"><strong>Critical Success</strong>');
+    text = text.replace('Success:','</p><p class="pl-2 pr-1 negative-indent has-text-left '+_s+'"><strong>Success</strong>');
+    text = text.replace('Critical Failure:','</p><p class="pl-2 pr-1 negative-indent has-text-left '+_s+'"><strong>Critical Failure</strong>');
+    text = text.replace('Failure:','</p><p class="pl-2 pr-1 negative-indent has-text-left '+_s+'"><strong>Failure</strong>');
 
     // page ### -> Core Rulebook Link
     let regexCoreRules = /page\s+(\d+)/g;
@@ -282,6 +286,9 @@ function acquireSheetVariable(variableName){
         if(variableName.slice(-3) === "_DC") {
             variableName = variableName.slice(0, -3);
             return signNumber(getStatTotal(variableName)+10);
+        } else if(variableName.slice(-4) === "_MOD") {
+            variableName = variableName.slice(0, -4);
+            return signNumber(getModOfValue(variableName));
         } else {
             return signNumber(getStatTotal(variableName));
         }
@@ -289,6 +296,9 @@ function acquireSheetVariable(variableName){
         if(variableName.slice(-3) === "_DC") {
             variableName = variableName.slice(0, -3);
             return getStatTotal(variableName)+10;
+        } else if(variableName.slice(-4) === "_MOD") {
+            variableName = variableName.slice(0, -4);
+            return getModOfValue(variableName);
         } else {
             return getStatTotal(variableName);
         }

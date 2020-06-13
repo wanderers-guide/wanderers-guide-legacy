@@ -80,7 +80,7 @@ socket.on("returnFinalizeDetails", function(character, abilObject, cClass){
                 sourceType: 'class',
                 sourceLevel: 1,
                 sourceCode: 'inits-bonus-'+i,
-                sourceCodeSNum: '0',
+                sourceCodeSNum: 'a',
             };
             processCode(
                 'GIVE-SKILL-PROF=T',
@@ -101,7 +101,7 @@ socket.on("returnFinalizeDetails", function(character, abilObject, cClass){
                 sourceType: 'class',
                 sourceLevel: 1,
                 sourceCode: 'inits-bonus-'+i,
-                sourceCodeSNum: '0',
+                sourceCodeSNum: 'a',
             };
             processCode(
                 'GIVE-LANG-BONUS-ONLY',
@@ -164,4 +164,8 @@ socket.on("returnFinalizeDetails", function(character, abilObject, cClass){
 function finishLoadingPage() {
     // Turn off page loading
     $('.pageloader').addClass("fadeout");
+}
+
+function selectorUpdated() {
+
 }

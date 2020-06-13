@@ -1,5 +1,5 @@
 
-let amalgamationBonusText = "This is an amalgamation of any additional bonuses you might have. This usually includes bonuses from feats, items, conditions, or any custom-set bonuses that you may have added manually.";
+let amalgamationBonusText = "This is an amalgamation of any additional bonuses or penalties you might have. This includes adjustments from feats, items, conditions, or those you may have added manually.";
 
 function openSkillQuickview(data) {
 
@@ -12,7 +12,7 @@ function openSkillQuickview(data) {
     qContent.append('<p><strong>Proficiency:</strong> '+profName+'</p>');
     qContent.append('<p><strong>Ability Score:</strong> '+abilityScoreName+'</p>');
     qContent.append('<hr class="m-2">');
-    qContent.append('<p>'+data.Skill.description+'</p>');
+    qContent.append(processText(data.Skill.description, true, true, 'MEDIUM'));
     qContent.append('<hr class="m-2">');
     qContent.append('<p class="has-text-centered"><strong>Bonus Breakdown</strong></p>');
 
@@ -41,11 +41,24 @@ function openSkillQuickview(data) {
     breakDownInnerHTML += ' + ';
 
     let amalgBonus = data.TotalBonus - (data.AbilMod + data.ProfNum);
-    breakDownInnerHTML += '<a class="has-text-link has-tooltip-bottom has-tooltip-multiline" data-tooltip="'+amalgamationBonusText+'">'+amalgBonus+'</a>';
+    breakDownInnerHTML += '<a id="amalgBonusNum" class="has-text-link has-tooltip-bottom">'+amalgBonus+'</a>';
 
     breakDownInnerHTML += '</p>';
 
     qContent.append(breakDownInnerHTML);
+
+    let amalgBonuses = getStatExtraBonuses('SKILL_'+data.SkillName);
+    if(amalgBonuses != null && amalgBonuses.length > 0){
+        $('#amalgBonusNum').removeClass('has-tooltip-multiline');
+        let amalgTooltipText = 'Additional adjustments:';
+        for(let amalgExtra of amalgBonuses){
+            amalgTooltipText += '\n'+amalgExtra;
+        }
+        $('#amalgBonusNum').attr('data-tooltip', amalgTooltipText);
+    } else {
+        $('#amalgBonusNum').addClass('has-tooltip-multiline');
+        $('#amalgBonusNum').attr('data-tooltip', amalgamationBonusText);
+    }
 
     let conditionalStatMap = getConditionalStatMap('SKILL_'+data.SkillName);
     if(conditionalStatMap != null){
@@ -55,7 +68,11 @@ function openSkillQuickview(data) {
         qContent.append('<p class="has-text-centered"><strong>Contitionals</strong></p>');
         
         for(const [condition, value] of conditionalStatMap.entries()){
-            qContent.append('<p class="has-text-centered">'+value+' '+condition+'</p>');
+            if(value == null){
+                qContent.append('<p class="has-text-centered">'+condition+'</p>');
+            } else {
+                qContent.append('<p class="has-text-centered">'+value+' '+condition+'</p>');
+            }
         }
 
     }

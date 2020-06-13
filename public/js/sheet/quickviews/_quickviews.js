@@ -4,7 +4,7 @@ $(function () {
 
     let quickviews = bulmaQuickview.attach();
 
-    $('#character-sheet-section').click(function(){
+    $('#main-container').click(function(){
         if($('#quickviewDefault').hasClass('quickview-auto-close-protection')){
             $('#quickviewDefault').removeClass('quickview-auto-close-protection');
         } else {
@@ -61,6 +61,8 @@ function openQuickView(type, data) {
         openSavingThrowQuickview(data);
     } else if(type == 'perceptionView'){
         openPerceptionQuickview(data);
+    } else if(type == 'speedView'){
+        openSpeedQuickview(data);
     } else if(type == 'invItemView'){
         openInvItemQuickview(data);
     } else if(type == 'customizeItem'){
@@ -71,7 +73,7 @@ function openQuickView(type, data) {
         openItemQuickview(data);
     } else if(type == 'abilityView'){
         openAbilityQuickview(data);
-    }else if(type == 'resistView'){
+    } else if(type == 'resistView'){
         openResistancesQuickview(data);
     }
 

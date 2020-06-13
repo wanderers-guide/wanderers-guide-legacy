@@ -14,6 +14,7 @@ module.exports = class CharDataMapping {
             - inits-misc-#
             - ancestryFeat-#
             - classAbility-#
+            - classAbilitySelector-#
             - boost-choose
             - boost-nonChoose-#
             - flaw-nonChoose-#

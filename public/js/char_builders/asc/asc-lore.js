@@ -6,7 +6,7 @@ function processingLore(ascStatement, srcStruct, locationID){
         let loreName = ascStatement.split('=')[1];
         giveLore(srcStruct, loreName);
     } else {
-        displayError("Unknown statement (2): \'"+ascStatement+"\'");
+        displayError("Unknown statement (2-Lore): \'"+ascStatement+"\'");
         statementComplete();
     }
 

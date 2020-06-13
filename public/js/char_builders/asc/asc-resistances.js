@@ -11,7 +11,7 @@ function processingResistances(ascStatement, srcStruct, locationID){
         let segments = data.split(':');
         giveVulnerability(srcStruct, segments[0], segments[1]);
     } else {
-        displayError("Unknown statement (2): \'"+ascStatement+"\'");
+        displayError("Unknown statement (2-Resist/Weak): \'"+ascStatement+"\'");
         statementComplete();
     }
 

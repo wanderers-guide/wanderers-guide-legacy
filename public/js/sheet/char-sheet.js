@@ -13,6 +13,8 @@ let g_invStruct = null;
 let g_bulkAndCoinsStruct = null;
 let g_openBagsSet = new Set();
 
+let g_otherSpeeds = null;
+
 let g_conditionsMap = null;
 let g_allConditions = null;
 
@@ -39,8 +41,20 @@ let g_innateSpellArray = null;
 
 let g_resistAndVulners = null;
 
+let g_specializationStruct = null;
+
+let g_notesFields = null;
+
+let currentInvests = null;
+let maxInvests = null;
+
 let g_inventoryTabScroll = null;
 let g_selectedTabID = 'inventoryTab';
+let g_selectedSubTabID = null;
+let g_selectedSubTabLock = false;
+
+let g_conditionsLoadingState = null;
+let g_preConditions_strScore = null;
 
 
 
@@ -60,6 +74,20 @@ $(function () {
 socket.on("returnCharacterSheetInfo", function(charInfo){
 
     g_itemMap = objToMap(charInfo.ItemObject);
+    g_itemMap = new Map([...g_itemMap.entries()].sort(
+        function(a, b) {
+            if(a[1].Item.itemType == 'CURRENCY'){
+                return 1;
+            }
+
+            if (a[1].Item.level === b[1].Item.level) {
+                // Name is only important when levels are the same
+                return a[1].Item.name > b[1].Item.name ? 1 : -1;
+            }
+            return a[1].Item.level - b[1].Item.level;
+        })
+    );
+
     g_invStruct = charInfo.InvStruct;
 
     g_equippedArmorInvItemID = g_invStruct.Inventory.equippedArmorInvItemID;
@@ -67,8 +95,15 @@ socket.on("returnCharacterSheetInfo", function(charInfo){
 
     g_character = charInfo.Character;
 
+    g_otherSpeeds = charInfo.OtherSpeeds;
+
     g_conditionsMap = objToMap(charInfo.ConditionsObject);
     g_allConditions = charInfo.AllConditions;
+    g_allConditions = g_allConditions.sort(
+        function(a, b) {
+            return a.name > b.name ? 1 : -1;
+        }
+    );
 
     g_abilMap = objToMap(charInfo.AbilObject);
     g_skillMap = objToMap(charInfo.SkillObject);
@@ -118,13 +153,19 @@ socket.on("returnCharacterSheetInfo", function(charInfo){
     );
 
     g_charTagsArray = charInfo.ChoicesStruct.CharTagsArray;
+    
     g_classDetails = charInfo.ChoicesStruct.ClassDetails;
+    g_classDetails.AbilityChoices = charInfo.ChoicesStruct.ChoiceArray;
+
     g_ancestry = charInfo.Ancestry;
     g_heritage = charInfo.Heritage;
     g_background = charInfo.Background;
 
     g_resistAndVulners = charInfo.ResistAndVulners;
 
+    g_specializationStruct = charInfo.SpecializeStruct;
+
+    g_notesFields = charInfo.NotesFields;
 
     initExpressionProcessor(g_character.level, objToMap(charInfo.ProfObject));
 
@@ -158,10 +199,15 @@ function loadCharSheet(){
         $('#spellsTab').removeClass('is-hidden');
     }
 
+    // Set Conditions Loading State to Default //
+    g_conditionsLoadingState = 'READY';
 
     // ~~~~~~~~~~~~~~~~~~~~~~~ Adding Stats To Map ~~~~~~~~~~~~~~~~~~~~~~~ //
 
     addStat('SPEED', 'BASE', g_ancestry.speed);
+    for(const otherSpeed of g_otherSpeeds){
+        addStat('SPEED_'+otherSpeed.Type, 'BASE', parseInt(otherSpeed.Amount));
+    }
 
     addStat('MAX_HEALTH', 'ANCESTRY', g_ancestry.hitPoints);
     addStat('MAX_HEALTH_BONUS_PER_LEVEL', 'MODIFIER', 'CON');
@@ -245,27 +291,54 @@ function loadCharSheet(){
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 
-    // Apply Items Code //
-
-    // Apply Feats Code //
-
     // Display Ability Scores //
     displayAbilityScores();
+
+    // Display Health and Temp //
+    initHealthAndTemp();
 
     // Determine Bulk and Coins //
     determineBulkAndCoins(g_invStruct.InvItems, g_itemMap, getMod(getStatTotal('SCORE_STR')));
 
     // Get STR score before conditions code runs (in the case of Enfeebled)
-    let strScore = getStatTotal('SCORE_STR');
+    g_preConditions_strScore = getStatTotal('SCORE_STR');
 
     // Run Init Condition Code //
-    runAllConditionsCode();
+    runLoadingOrderConditions();
+
+}
+
+function runLoadingOrderConditions(){
+
+    let conditionsLoading = setInterval(() => {
+
+        if(g_conditionsLoadingState === 'READY'){
+            runAllConditionsCode();
+        }
+    
+        if(g_conditionsLoadingCount != 0) {
+            g_conditionsLoadingState = 'WAITING';
+            console.log('Loading Conditions Code... '+g_conditionsLoadingCount);
+        } else {
+            g_conditionsLoadingState = 'COMPLETE';
+            clearInterval(conditionsLoading);
+            runLoadingOrderPostConditions();
+        }
+
+    }, 10);
+
+}
+
+function runLoadingOrderPostConditions(){
 
     // Run Feats and Abilities Code //
     runAllFeatsAndAbilitiesCode();
 
+    // Determine Invested Items and Run Code //
+    determineInvestitures();
+
     // Determine Armor //
-    determineArmor(getMod(getStatTotal('SCORE_DEX')), strScore);
+    determineArmor(getMod(getStatTotal('SCORE_DEX')), g_preConditions_strScore);
 
     // Display Conditions List //
     displayConditionsList();
@@ -274,7 +347,12 @@ function loadCharSheet(){
     displayInformation();
 
     // Set To Previous Tab //
+    g_selectedSubTabLock = true;
     $('#'+g_selectedTabID).trigger("click", [true]);
+    if(g_selectedSubTabID != null){
+        $('#'+g_selectedSubTabID).trigger("click");
+    }
+    g_selectedSubTabLock = false;
 
 }
 
@@ -418,12 +496,6 @@ function displayInformation() {
     });
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
-    //////////////////////////////////////////// Health ////////////////////////////////////////////
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-
-    initHealthAndTemp();
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////// Resist and Vulners //////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -458,16 +530,6 @@ function displayInformation() {
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
-    /////////////////////////////////////// Back to Builder ////////////////////////////////////////
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-
-    $("#backToBuilderButton").click(function(){
-        // Hardcoded redirect
-        window.location.href = window.location.href.replace(
-            "/"+getCharIDFromURL(), "/builder/"+getCharIDFromURL()+"/page1?");
-    });
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////// Conditions ///////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -491,11 +553,29 @@ function displayInformation() {
     });
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////// Back to Builder ////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    $("#backToBuilderButton").click(function(){
+        // Hardcoded redirect
+        window.location.href = window.location.href.replace(
+            "/"+getCharIDFromURL(), "/builder/"+getCharIDFromURL()+"/page1?");
+    });
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////// Take Rest ///////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    $("#restButton").click(function(){
+        takeRest();
+    });
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
     //////////////////////////////////////////// Saves /////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
     let fortBonus = getStatTotal('SAVE_FORT');
-    $("#fortSave").html(signNumber(fortBonus));
+    let fortBonusContent = $("#fortSave");
+    let fortBonusDisplayed = (hasConditionals('SAVE_FORT')) ? signNumber(fortBonus)+'<sup class="is-size-5 has-text-info">*</sup>' : signNumber(fortBonus);
+    fortBonusContent.html(fortBonusDisplayed);
 
     let fortData = g_profMap.get("Fortitude");
     let fortProfNum = getProfNumber(fortData.NumUps, g_character.level);
@@ -517,9 +597,10 @@ function displayInformation() {
         $(this).removeClass('has-background-grey-darker');
     });
 
-
     let reflexBonus = getStatTotal('SAVE_REFLEX');
-    $("#reflexSave").html(signNumber(reflexBonus));
+    let reflexBonusContent = $("#reflexSave");
+    let reflexBonusDisplayed = (hasConditionals('SAVE_REFLEX')) ? signNumber(reflexBonus)+'<sup class="is-size-5 has-text-info">*</sup>' : signNumber(reflexBonus);
+    reflexBonusContent.html(reflexBonusDisplayed);
 
     let reflexData = g_profMap.get("Reflex");
     let reflexProfNum = getProfNumber(reflexData.NumUps, g_character.level);
@@ -541,9 +622,10 @@ function displayInformation() {
         $(this).removeClass('has-background-grey-darker');
     });
 
-
     let willBonus = getStatTotal('SAVE_WILL');
-    $("#willSave").html(signNumber(willBonus));
+    let willBonusContent = $("#willSave");
+    let willBonusDisplayed = (hasConditionals('SAVE_WILL')) ? signNumber(willBonus)+'<sup class="is-size-5 has-text-info">*</sup>' : signNumber(willBonus);
+    willBonusContent.html(willBonusDisplayed);
 
     let willData = g_profMap.get("Will");
     let willProfNum = getProfNumber(willData.NumUps, g_character.level);
@@ -573,6 +655,26 @@ function displayInformation() {
     let speedNum = getStatTotal('SPEED');
     speedNum = (speedNum > 5) ? speedNum : 5;
     speedContent.html(speedNum+' ft');
+
+    $("#speedSection").click(function(){
+        openQuickView('speedView', {
+        });
+    });
+
+    if(g_otherSpeeds.length != 0){
+        $("#speedBottom").removeClass('is-hidden');
+    } else {
+        $("#speedBottom").addClass('is-hidden');
+    }
+
+    $("#speedSection").mouseenter(function(){
+        $(this).addClass('has-background-grey-darker');
+        $("#speedDivider").addClass('hr-highlighted');
+    });
+    $("#speedSection").mouseleave(function(){
+        $(this).removeClass('has-background-grey-darker');
+        $("#speedDivider").removeClass('hr-highlighted');
+    });
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////// Perception ///////////////////////////////////////////
@@ -655,7 +757,7 @@ function displayInformation() {
         if(profData.For == "Attack" && profName != "Simple_Weapons" && profName != "Martial_Weapons" && profName != "Advanced_Weapons" && profName != "Unarmed_Attacks"){
             let dProfName = profName.replace(/_/g,' ');
             let profWord = getProfNameFromNumUps(profData.NumUps);
-            attacks.append('<div><span class="is-size-7 is-italic">'+profWord+' - </span><span class="is-size-7 has-text-weight-bold">'+dProfName+'</span></div>');
+            attacks.append('<div><span class="is-size-7 is-italic">'+profWord+' - </span><span class="is-size-7 has-text-weight-bold">'+capitalizeWords(dProfName)+'</span></div>');
         }
     }
 
@@ -687,7 +789,7 @@ function displayInformation() {
         if(profData.For == "Defense" && profName != "Light_Armor" && profName != "Medium_Armor" && profName != "Heavy_Armor" && profName != "Unarmored_Defense"){
             let dProfName = profName.replace(/_/g,' ');
             let profWord = getProfNameFromNumUps(profData.NumUps);
-            defenses.append('<div><span class="is-size-7 is-italic">'+profWord+' - </span><span class="is-size-7 has-text-weight-bold">'+dProfName+'</span></div>');
+            defenses.append('<div><span class="is-size-7 is-italic">'+profWord+' - </span><span class="is-size-7 has-text-weight-bold">'+capitalizeWords(dProfName)+'</span></div>');
         }
     }
 
@@ -758,6 +860,7 @@ function displayInformation() {
 
     let skills = $("#skills");
     skills.html('<p class="is-size-5"><strong class="has-text-grey-lighter">Skills</strong></p><hr class="border-secondary is-marginless">');
+    let hasFascinatedCondition = hasCondition(14); // Hardcoded - Fascinated condition decreases all skills by -2
     for(const [skillName, skillData] of g_skillMap.entries()){
 
         let skillButtonID = ("skillButton"+skillName).replace(/ /g,'_');
@@ -766,6 +869,9 @@ function displayInformation() {
         let profNum = getProfNumber(skillData.NumUps, g_character.level);
 
         let totalBonus = getStatTotal('SKILL_'+skillName);
+        if(hasFascinatedCondition){
+            totalBonus -= 2;
+        }
 
         let conditionalStar = (hasConditionals('SKILL_'+skillName)) ? '<sup class="is-size-7 has-text-info">*</sup>' : '';
 
@@ -1138,6 +1244,8 @@ function determineArmor(dexMod, strScore) {
         let shoddyPenalty = (armorStruct.InvItem.isShoddy == 1) ? -2 : 0;
 
         let totalAC = 10 + dexMod + profNumber + armorStruct.Item.ArmorData.acBonus + profBonus + brokenPenalty + shoddyPenalty;
+        console.log(g_statManagerMap);
+        totalAC += getStatTotal('AC');
 
         // Apply armor penalties to character...
         let checkPenalty = armorStruct.Item.ArmorData.checkPenalty;
@@ -1158,7 +1266,7 @@ function determineArmor(dexMod, strScore) {
         }
 
         if(speedPenalty < 0){
-            addStat('SPEED', 'ARMOR_PENALTY', speedPenalty);
+            addStat('SPEED', 'PENALTY (ARMOR)', speedPenalty);
         }
         
         // Apply armor's rune effects to character...
@@ -1243,7 +1351,7 @@ function runArmorPropertyRuneCode(propertyRuneID){
 
 function applyArmorCheckPenaltyToSkill(skillName, checkPenalty){
 
-    addStat('SKILL_'+skillName, 'ARMOR_PENALTY', checkPenalty);
+    addStat('SKILL_'+skillName, 'PENALTY (ARMOR)', checkPenalty);
     addConditionalStat('SKILL_'+skillName, "penalty from armor is NOT applied to skill checks that have the attack trait", checkPenalty);
 
 }
@@ -1303,6 +1411,24 @@ function generateRuneDataStruct(){
             }
         }
     }
+    weaponRuneArray = weaponRuneArray.sort(
+        function(a, b) {
+            if(a.RuneData.isFundamental == 1 && b.RuneData.isFundamental == 1){
+                return a.Item.id - b.Item.id;
+            } else {
+                return a.Item.name > b.Item.name ? 1 : -1;
+            }
+        }
+    );
+    armorRuneArray = armorRuneArray.sort(
+        function(a, b) {
+            if(a.RuneData.isFundamental == 1 && b.RuneData.isFundamental == 1){
+                return a.Item.id - b.Item.id;
+            } else {
+                return a.Item.name > b.Item.name ? 1 : -1;
+            }
+        }
+    );
 
     return { WeaponArray : weaponRuneArray, ArmorArray : armorRuneArray };
 
@@ -1422,13 +1548,43 @@ function determineBulkAndCoins(invItems, itemMap, strMod){
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////// Determine Investitures ////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////
+function determineInvestitures(){
+
+    let incredibleInvest = g_featChoiceArray.find(feat => {
+        return feat.value.id == 700; // Hardcoded Incredible Invest Feat ID
+    });
+
+    if(incredibleInvest != null){
+        maxInvests = 12;
+    } else {
+        maxInvests = 10;
+    }
+
+    currentInvests = 0;
+    for(const invItem of g_invStruct.InvItems){
+        if(invItem.isInvested == 1) {
+            currentInvests++;
+
+            console.log(invItem.code);
+            processSheetCode(invItem.code, invItem.name);
+
+        }
+    }
+
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////// Feats and Abilities Code ///////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
 function runAllFeatsAndAbilitiesCode() {
     
     for(const feat of g_featChoiceArray){
-        processSheetCode(feat.value.code, feat.value.name);
+        if(feat != null && feat.value != null){
+            processSheetCode(feat.value.code, feat.value.name);
+        }
     }
 
     for(const [featID, featStruct] of g_featMap.entries()){
@@ -1444,7 +1600,62 @@ function runAllFeatsAndAbilitiesCode() {
     for(let phyFeat of g_phyFeatArray){
         processSheetCode(phyFeat.value.code, phyFeat.value.name);
     }
+    
+    processSheetCode(g_heritage.code, g_heritage.name+' Heritage');
+    processSheetCode(g_background.code, g_background.name+' Background');
 
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////// Rest /////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////
+
+function takeRest(){
+
+    // Regen Health
+    let conMod = getModOfValue('CON');
+    if(1 > conMod){ conMod = 1; }
+    let regenAmount = g_character.level*conMod;
+    g_character.currentHealth += regenAmount;
+
+    socket.emit("requestCurrentHitPointsSave",
+        getCharIDFromURL(),
+        g_character.currentHealth);
+
+
+    // Reset Innate Spells
+    for(let innateSpell of g_innateSpellArray){
+        innateSpell.TimesCast = 0;
+        socket.emit("requestInnateSpellCastingUpdate",
+            innateSpell,
+            0);
+    }
+
+    // Reset Focus Spells
+    for(const [spellSRC, focusSpellArray] of g_focusSpellMap.entries()){
+        for(let focusSpellData of focusSpellArray){
+            focusSpellData.Used = 0;
+            socket.emit("requestFocusSpellCastingUpdate",
+                getCharIDFromURL(),
+                focusSpellData,
+                spellSRC,
+                focusSpellData.SpellID,
+                focusSpellData.Used);
+        }
+    }
+
+    // Reset Spell Slots
+    for(const [level, slotArray] of g_spellSlotsMap.entries()){
+        for(let slot of slotArray){
+            slot.used = false;
+            socket.emit("requestSpellSlotUpdate",
+                getCharIDFromURL(),
+                slot);
+        }
+    }
+
+    loadCharSheet();
+    
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1461,10 +1672,11 @@ socket.on("returnAddFundamentalRune", function(invItemID, invStruct){
     closeQuickView();
 });
 
-socket.on("returnAddItemToInv", function(itemID, invStruct){
-    $('#addItemAddItem'+itemID).removeClass('is-loading');
+socket.on("returnAddItemToInv", function(item, invItem, invStruct){
+    $('#addItemAddItem'+item.id).removeClass('is-loading');
     $('#createCustomItemBtn').removeClass('is-loading');
     g_invStruct = invStruct;
+    processDefaultItemRuneSheetCode(item.code, invItem.id);
     loadCharSheet();
 });
 

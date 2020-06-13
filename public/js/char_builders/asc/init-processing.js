@@ -6,7 +6,7 @@
 let codeQueue = [];
 let runningCodeQueue = false;
 let gCode_statements, gCode_srcStruct, gCode_locationID;
-let ascChoiceStruct, ascSkillMap, ascFeatMap, ascLangMap = null;
+let ascChoiceStruct, ascSkillMap, ascFeatMap, ascLangMap, ascSpellMap = null;
 //                  //
 
 function processCode(ascCode, srcStruct, locationID){
@@ -61,7 +61,7 @@ function shiftCodeQueue(){
         gCode_statements = code.ascCode.split(", ");
         gCode_locationID = code.locationID;
 
-        code.srcStruct.sourceCodeSNum = '1'+code.srcStruct.sourceCodeSNum;
+        code.srcStruct.sourceCodeSNum = 'a'+code.srcStruct.sourceCodeSNum;
         gCode_srcStruct = code.srcStruct;
         
         let stateReturn = runNextStatement();
@@ -85,14 +85,14 @@ function statementComplete(){
     console.log(gCode_srcStruct.sourceCodeSNum);
     // Up ticks the first digit in the sourceCodeSNum string.
     let sourceCodeSNum = gCode_srcStruct.sourceCodeSNum;
-    let firstNumber = parseInt(sourceCodeSNum[0]); // Get first number
-    sourceCodeSNum = sourceCodeSNum.substr(1); // Remove first number
-    firstNumber++;
-    if(firstNumber > 9){
-        displayError("Attempted to run more than 9 ASC statements in a single code block!");
+    let firstChar = sourceCodeSNum[0]; // Get first char
+    sourceCodeSNum = sourceCodeSNum.substr(1); // Remove first char
+    firstChar = charIncrease(firstChar);
+    if(firstChar == null){
+        displayError("Attempted to run more ASC statements than maximum!");
         return;
     }
-    sourceCodeSNum = firstNumber+sourceCodeSNum;
+    sourceCodeSNum = firstChar+sourceCodeSNum;
     gCode_srcStruct.sourceCodeSNum = sourceCodeSNum;
     console.log(gCode_srcStruct.sourceCodeSNum);
     
@@ -129,48 +129,83 @@ function runNextStatement(){
         if(ascStatement === null) {return 'SKIP'; }
         //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
         
-        if(ascStatement.includes("FEAT")){
+        if(ascStatement.includes("-CHAR-TRAIT")){
+            processingCharTags(ascStatement, srcStruct, locationID);
+            return 'WAIT';
+        }
+
+        if(ascStatement.includes("-PHYSICAL-FEATURE")){
+            processingPhysicalFeatures(ascStatement, srcStruct, locationID);
+            return 'WAIT';
+        }
+
+        if(ascStatement.includes("-SENSE")){
+            processingSenses(ascStatement, srcStruct, locationID);
+            return 'WAIT';
+        }
+
+        if(ascStatement.includes("-FEAT")){
             initFeatProcessing(ascStatement, srcStruct, locationID);
             return 'WAIT';
         }
 
-        if(ascStatement.includes("SKILL")){
+        if(ascStatement.includes("-SKILL")){
             initSkillProcessing(ascStatement, srcStruct, locationID);
             return 'WAIT';
         }
 
-        if(ascStatement.includes("LANG")){
+        if(ascStatement.includes("-LANG")){
             initLangProcessing(ascStatement, srcStruct, locationID);
             return 'WAIT';
         }
 
-        if(ascStatement.includes("ABILITY-BOOST")){
+        if(ascStatement.includes("-ABILITY-BOOST")){
             processingAbilityBoosts(ascStatement, srcStruct, locationID);
             return 'WAIT';
         }
 
-        if(ascStatement.includes("PROF")){
+        if(ascStatement.includes("-PROF")){
             processingProf(ascStatement, srcStruct, locationID);
             return 'WAIT';
         }
 
-        if(ascStatement.includes("INNATE")){
-            processingInnateSpells(ascStatement, srcStruct, locationID);
+        if(ascStatement.includes("-INNATE")){
+            initInnateSpellProcessing(ascStatement, srcStruct, locationID);
             return 'WAIT';
         }
 
-        if(ascStatement.includes("SPELL")){
+        if(ascStatement.includes("-SPELL")){
             processingSpells(ascStatement, srcStruct, locationID);
             return 'WAIT';
         }
 
-        if(ascStatement.includes("LORE")){
+        if(ascStatement.includes("-LORE")){
             processingLore(ascStatement, srcStruct, locationID);
             return 'WAIT';
         }
 
-        if(ascStatement.includes("RESISTANCE") || ascStatement.includes("WEAKNESS")){
+        if(ascStatement.includes("-RESISTANCE") || ascStatement.includes("-WEAKNESS")){
             processingResistances(ascStatement, srcStruct, locationID);
+            return 'WAIT';
+        }
+
+        if(ascStatement.includes("-DOMAIN")){
+            processingDomains(ascStatement, srcStruct, locationID);
+            return 'WAIT';
+        }
+
+        if(ascStatement.includes("-SPECIALIZATION")){
+            processingSpecializations(ascStatement, srcStruct, locationID);
+            return 'WAIT';
+        }
+
+        if(ascStatement.includes("-NOTES")){
+            processingNotes(ascStatement, srcStruct, locationID);
+            return 'WAIT';
+        }
+
+        if(ascStatement.includes("-SPEED")){
+            processingSpeeds(ascStatement, srcStruct, locationID);
             return 'WAIT';
         }
 
@@ -200,10 +235,21 @@ socket.on("returnASCStatementFailure", function(details){
 
 /////////////
 
-socket.on("returnASCUpdateChoices", function(choiceStruct){
-    //console.log("Updating choiceStruct...");
-    ascChoiceStruct = choiceStruct;
-    updateExpressionProcessor(choiceStruct.Level, choiceStruct.FinalProfObject);
+socket.on("returnASCUpdateChoices", function(updateType, updateData){
+    //console.log("Updating choiceStruct part...");
+
+    if(updateType == 'ABILITY-BOOSTS'){
+        ascChoiceStruct.BonusArray = updateData;
+    } else if(updateType == 'FEATS'){
+        ascChoiceStruct.FeatArray = updateData;
+    } else if(updateType == 'DOMAINS'){
+        ascChoiceStruct.DomainArray = updateData;
+    } else {
+        displayError("Failed to update correct charChoice data!");
+        console.error('Failed to update correct charChoice data!');
+    }
+    
+    updateExpressionProcessor(ascChoiceStruct.Level, ascChoiceStruct.FinalProfObject);
 });
 
 socket.on("returnASCUpdateSkills", function(skillObject){
@@ -251,18 +297,19 @@ socket.on("returnASCClassAbilities", function(choiceStruct, featObject, skillObj
     );
     ascFeatMap = featMap;
     
-    
     for(const classAbility of classAbilities) {
-        let srcStruct = {
-            sourceType: 'class',
-            sourceLevel: classAbility.level,
-            sourceCode: 'classAbility-'+classAbility.id,
-            sourceCodeSNum: '0',
-        };
-        processCode(
-            classAbility.code,
-            srcStruct,
-            'classAbilityCode'+classAbility.id);
+        if(classAbility.selectType != 'SELECT_OPTION' && classAbility.level <= choiceStruct.Level) {
+            let srcStruct = {
+                sourceType: 'class',
+                sourceLevel: classAbility.level,
+                sourceCode: 'classAbility-'+classAbility.id,
+                sourceCodeSNum: 'a',
+            };
+            processCode(
+                classAbility.code,
+                srcStruct,
+                'classAbilityCode'+classAbility.id);
+        }
     }
 });
 
@@ -299,7 +346,7 @@ socket.on("returnASCAncestryFeats", function(choiceStruct, featObject, skillObje
             sourceType: 'ancestry',
             sourceLevel: ancestryFeatsLoc.Level,
             sourceCode: 'ancestryFeat-'+ancestryFeatCount,
-            sourceCodeSNum: '0',
+            sourceCodeSNum: 'a',
         };
         processCode(
             'GIVE-ANCESTRY-FEAT='+ancestryFeatsLoc.Level,

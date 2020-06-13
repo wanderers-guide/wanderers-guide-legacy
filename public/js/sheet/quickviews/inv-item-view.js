@@ -4,7 +4,7 @@ function openInvItemQuickview(data) {
     let viewOnly = (data.InvItem.viewOnly != null) ? true : false;
 
     let invItemName = data.InvItem.name;
-    if(data.InvItem.name != data.Item.Item.name){
+    if(data.InvItem.name != data.Item.Item.name && data.Item.Item.id != 62){ // Hardcoded New Item ID
         invItemName += '<p class="is-inline pl-1 is-size-7 is-italic"> ( '+data.Item.Item.name+' )</p>';
     }
     $('#quickViewTitle').html(invItemName);
@@ -26,6 +26,7 @@ function openInvItemQuickview(data) {
     data.InvItem.currentHitPoints = (data.InvItem.currentHitPoints > maxHP) ? maxHP : data.InvItem.currentHitPoints;
 
     let isBroken = (data.InvItem.currentHitPoints <= brokenThreshold);
+    let isInvestable = false;
 
     let tagsInnerHTML = '';
     if(isBroken){
@@ -60,11 +61,36 @@ function openInvItemQuickview(data) {
     }
     for(const tagStruct of data.Item.TagArray){
         tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-very-small is-info has-tooltip-bottom has-tooltip-multiline" data-tooltip="'+tagStruct.Tag.description+'">'+tagStruct.Tag.name+'</button>';
+        if(tagStruct.Tag.id === 235){ // Hardcoded Invested Tag ID
+            if(maxInvests > currentInvests || (maxInvests == currentInvests && data.InvItem.isInvested == 1)) {
+                $('#quickViewTitleRight').html('<span class="pr-2"><span id="investedIconButton" class="button is-very-small is-info is-rounded has-tooltip-left" data-tooltip="Invest ('+currentInvests+'/'+maxInvests+')"><span class="icon is-small"><i class="fas fa-lg fa-hat-wizard"></i></span></span></span>');
+            } else {
+                $('#quickViewTitleRight').html('<span class="pr-2"><span class="button is-very-small is-info is-outlined is-rounded has-tooltip-left" data-tooltip="Invest ('+currentInvests+'/'+maxInvests+')" disabled><span class="icon is-small"><i class="fas fa-lg fa-hat-wizard"></i></span></span></span>');
+            }
+            isInvestable = true;
+        }
     }
 
     if(tagsInnerHTML != ''){
         qContent.append('<div class="buttons is-marginless is-centered">'+tagsInnerHTML+'</div>');
         qContent.append('<hr class="mb-2 mt-1">');
+    }
+
+    if(isInvestable){
+
+        if(data.InvItem.isInvested == 1) {
+            $('#investedIconButton').removeClass('is-outlined');
+        } else {
+            $('#investedIconButton').addClass('is-outlined');
+        }
+
+        $('#investedIconButton').click(function() {
+            let isInvested = (data.InvItem.isInvested == 1) ? 0 : 1;
+            socket.emit("requestInvItemInvestChange",
+                data.InvItem.id,
+                isInvested);
+        });
+
     }
 
     let price = getConvertedPriceForSize(data.InvItem.size, data.InvItem.price);
@@ -239,6 +265,9 @@ function openInvItemQuickview(data) {
         qContent.append('<hr class="m-2">');
 
     }
+
+    // Item Specializations
+    displayCriticalSpecialization(qContent, data.Item);
 
     // Item Runes
     if(!viewOnly){ // In ViewOnly mode you cannot view weapon runes

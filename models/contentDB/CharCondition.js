@@ -14,7 +14,7 @@ const CharCondition = db.define('charConditions', {
   sourceText: {
     type: Sequelize.STRING
   },
-  isActive: {
+  parentID: {
     type: Sequelize.INTEGER
   },
 });

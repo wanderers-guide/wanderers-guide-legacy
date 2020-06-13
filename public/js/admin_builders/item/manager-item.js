@@ -6,28 +6,28 @@ let activeModalItemID = -1;
 // ~~~~~~~~~~~~~~ // Run on Load // ~~~~~~~~~~~~~~ //
 $(function () {
 
-    let itemCards = $('.item-card');
-    for(const itemCard of itemCards){
+    let entries = $('.entryListing');
+    for(const entry of entries){
 
-        let itemID = $(itemCard).attr('name');
-        let cardEdit = $(itemCard).find('.item-card-edit');
-        let cardDelete = $(itemCard).find('.item-card-delete');
+        let itemID = $(entry).attr('name');
+        let cardEdit = $(entry).find('.entry-update');
+        let cardDelete = $(entry).find('.entry-delete');
 
         cardEdit.mouseenter(function(){
-            $(this).addClass('card-footer-hover');
+            $(this).addClass('entry-footer-hover');
         });
         cardEdit.mouseleave(function(){
-            $(this).removeClass('card-footer-hover');
+            $(this).removeClass('entry-footer-hover');
         });
         cardEdit.click(function() {
             window.location.href = '/admin/edit/item/'+itemID;
         });
 
         cardDelete.mouseenter(function(){
-            $(this).addClass('card-footer-hover');
+            $(this).addClass('entry-footer-hover');
         });
         cardDelete.mouseleave(function(){
-            $(this).removeClass('card-footer-hover');
+            $(this).removeClass('entry-footer-hover');
         });
         cardDelete.click(function() {
             $('.modal').addClass('is-active');

@@ -35,6 +35,8 @@ socket.on("returnAdminSpellDetails", function(spellObject){
     $("#inputHeightenedTwoText").val(spell.Spell.heightenedTwoText);
     $("#inputHeightenedThreeVal").val(spell.Spell.heightenedThreeVal);
     $("#inputHeightenedThreeText").val(spell.Spell.heightenedThreeText);  
+    $("#inputHeightenedFourVal").val(spell.Spell.heightenedFourVal);
+    $("#inputHeightenedFourText").val(spell.Spell.heightenedFourText);
 
     let isFocusSpell = (spell.Spell.isFocusSpell == 1) ? true : false;
     $("#inputIsFocusSpell").prop('checked', isFocusSpell);

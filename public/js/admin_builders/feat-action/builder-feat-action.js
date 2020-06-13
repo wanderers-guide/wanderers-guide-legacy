@@ -63,6 +63,7 @@ function finishFeat(isUpdate){
     let featPrereq = $("#inputFeatPrereq").val();
     let featReq = $("#inputFeatReq").val();
     let featFreq = $("#inputFeatFreq").val();
+    let featCost = $("#inputFeatCost").val();
     let featTrigger = $("#inputFeatTrigger").val();
     let featDesc = $("#inputFeatDesc").val();
     let featSpecial = $("#inputFeatSpecial").val();
@@ -95,6 +96,7 @@ function finishFeat(isUpdate){
         featPrereq,
         featReq,
         featFreq,
+        featCost,
         featTrigger,
         featDesc,
         featSpecial,

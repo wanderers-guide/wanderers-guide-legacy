@@ -160,13 +160,13 @@ function displayCurrentClass(classStruct, saving) {
                 $('.'+keyAbilityControlShellClass).removeClass("is-info");
                 socket.emit("requestAbilityBonusChange",
                     getCharIDFromURL(),
-                    {sourceType: 'class', sourceLevel: 1, sourceCode: 'keyAbility', sourceCodeSNum: '0'},
+                    {sourceType: 'class', sourceLevel: 1, sourceCode: 'keyAbility', sourceCodeSNum: 'a'},
                     {Ability : shortenAbilityType(abilityName), Bonus : "Boost"});
             } else {
                 $('.'+keyAbilityControlShellClass).addClass("is-info");
                 socket.emit("requestAbilityBonusChange",
                     getCharIDFromURL(),
-                    {sourceType: 'class', sourceLevel: 1, sourceCode: 'keyAbility', sourceCodeSNum: '0'},
+                    {sourceType: 'class', sourceLevel: 1, sourceCode: 'keyAbility', sourceCodeSNum: 'a'},
                     null);
             }
             $(this).blur();
@@ -176,7 +176,7 @@ function displayCurrentClass(classStruct, saving) {
             sourceType: 'class',
             sourceLevel: 1,
             sourceCode: 'keyAbility',
-            sourceCodeSNum: '0'
+            sourceCodeSNum: 'a'
         };
         let bonusArray = choiceStruct.BonusArray;
         let keyAbilityChoice = bonusArray.find(bonus => {
@@ -196,7 +196,7 @@ function displayCurrentClass(classStruct, saving) {
         keyAbility.append('<p class="is-size-5">'+classStruct.Class.keyAbility+'</p>');
         socket.emit("requestAbilityBonusChange",
             getCharIDFromURL(),
-            {sourceType: 'class', sourceLevel: 1, sourceCode: 'keyAbility', sourceCodeSNum: '0'},
+            {sourceType: 'class', sourceLevel: 1, sourceCode: 'keyAbility', sourceCodeSNum: 'a'},
             {Ability : shortenAbilityType(classStruct.Class.keyAbility), Bonus : "Boost"});
     }
 
@@ -259,7 +259,7 @@ function displayCurrentClass(classStruct, saving) {
                     sourceType: 'class',
                     sourceLevel: 1,
                     sourceCode: 'inits-misc-'+tSkillID,
-                    sourceCodeSNum: '0',
+                    sourceCodeSNum: 'a',
                 };
 
                 if(skillName != "chooseDefault"){
@@ -282,7 +282,7 @@ function displayCurrentClass(classStruct, saving) {
                 sourceType: 'class',
                 sourceLevel: 1,
                 sourceCode: 'inits-misc-'+tSkillID,
-                sourceCodeSNum: '0',
+                sourceCodeSNum: 'a',
             };
             let profArray = choiceStruct.ProfArray;
             let tSkillChoice = profArray.find(bonus => {
@@ -401,7 +401,7 @@ function displayCurrentClass(classStruct, saving) {
                 sourceType: 'class',
                 sourceLevel: 1,
                 sourceCode: 'inits-'+savingProfCount,
-                sourceCodeSNum: '0',
+                sourceCodeSNum: 'a',
             };
             socket.emit("requestProficiencyChange",
                 getCharIDFromURL(),
@@ -431,16 +431,16 @@ function displayCurrentClass(classStruct, saving) {
             classAbilities.append('<section class="accordions"><article id="'+classAbilityID+'" class="accordion classAbility"></article></section>');
 
             let classAbilityInnerCard = $('#'+classAbilityID);
-            classAbilityInnerCard.append('<div id="'+classAbilityHeaderID+'" class="accordion-header toggle"><p class="is-size-4 has-text-weight-semibold">'+classAbility.name+'</p><span class="has-text-weight-bold">'+abilityLevelDisplay(classAbility.level)+'</span></div>');
+            classAbilityInnerCard.append('<div id="'+classAbilityHeaderID+'" class="accordion-header toggle"><p class="is-size-4 has-text-weight-semibold">'+classAbility.name+'<span class="classAbilityUnselectedOption"></span></p><span class="has-text-weight-bold">'+abilityLevelDisplay(classAbility.level)+'</span></div>');
 
             classAbilityInnerCard.append('<div class="accordion-body"><div id="'+classAbilityContentID+'" class="accordion-content"></div></div>');
 
 
             let classAbilityContent = $('#'+classAbilityContentID);
             let abilityDescription = processText(classAbility.description, false);
-            classAbilityContent.append('<div class="container px-5" id="classAbility'+classAbility.id+'"><div>'+abilityDescription+'</div></div>');
+            classAbilityContent.append('<div class="container px-5" id="classAbility'+classAbility.id+'"><div class="mx-5">'+abilityDescription+'</div></div>');
 
-            classAbilityContent.append('<div class="columns is-centered"><div id="'+classAbilityCodeID+'" class="column is-8"></div></div>');
+            classAbilityContent.append('<div class="columns is-mobile is-centered"><div id="'+classAbilityCodeID+'" class="column is-mobile is-11"></div></div>');
 
             if(classAbility.selectType === 'SELECTOR') {
 
@@ -474,7 +474,7 @@ function displayCurrentClass(classStruct, saving) {
                 classAbilitySelectorInnerHTML += '</select>';
                 classAbilitySelectorInnerHTML += '</div></div>';
 
-                classAbilitySelectorInnerHTML += '<div class="columns is-centered"><div class="column is-8"><article class="message is-info"><div class="message-body"><div id="'+descriptionID+'"></div><div id="'+abilityCodeID+'"></div></div></article></div></div>';
+                classAbilitySelectorInnerHTML += '<div class="columns is-centered"><div class="column is-mobile is-11"><article class="message is-info"><div class="message-body"><div id="'+descriptionID+'"></div><div id="'+abilityCodeID+'"></div></div></article></div></div>';
 
                 classAbilityContent.append(classAbilitySelectorInnerHTML);
 
@@ -508,8 +508,8 @@ function displayCurrentClass(classStruct, saving) {
             let srcStruct = {
                 sourceType: 'class',
                 sourceLevel: classAbility.level,
-                sourceCode: 'classAbility-'+classAbilityID,
-                sourceCodeSNum: '0',
+                sourceCode: 'classAbilitySelector-'+classAbilityID,
+                sourceCodeSNum: 'a',
             };
 
             if($(this).val() == "chooseDefault"){
@@ -549,6 +549,7 @@ function displayCurrentClass(classStruct, saving) {
                 
             }
             $(this).blur();
+            selectorUpdated();
         });
 
     }
@@ -559,6 +560,7 @@ function displayCurrentClass(classStruct, saving) {
 
     processCode_ClassAbilities(classStruct.Abilities);
 
+
 }
 
 socket.on("returnClassChoiceChange", function(){
@@ -568,4 +570,16 @@ socket.on("returnClassChoiceChange", function(){
 function finishLoadingPage() {
     // Turn off page loading
     $('.pageloader').addClass("fadeout");
+}
+
+function selectorUpdated() {
+
+    $('.classAbility').each(function() {
+        if($(this).find('.select.is-info').length !== 0){
+            $(this).find('.classAbilityUnselectedOption').html('<span class="icon is-small has-text-info pl-3"><i class="fas fa-xs fa-circle"></i></span>');
+        } else {
+            $(this).find('.classAbilityUnselectedOption').html('');
+        }
+    });
+    
 }

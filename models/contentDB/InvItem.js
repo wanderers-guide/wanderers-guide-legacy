@@ -45,6 +45,9 @@ const InvItem = db.define('invItems', {
   code: {
     type: Sequelize.STRING
   },
+  isInvested: {
+    type: Sequelize.INTEGER
+  },
   bagInvItemID: {
     type: Sequelize.INTEGER
   },
