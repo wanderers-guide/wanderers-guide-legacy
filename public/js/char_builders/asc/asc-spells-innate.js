@@ -35,11 +35,11 @@ function processingInnateSpells(ascStatement, srcStruct, locationID){
 
     if(ascStatement.includes("GIVE-INNATE-SPELL")){// GIVE-INNATE-SPELL=3:divine:1
         let data = ascStatement.split('=')[1]; // Set cast times per day to 0 to cast an unlimited number
-        let segments = data.split(':');// For cantrips just do: GIVE-INNATE-SPELL=Daze:0:divine:0
+        let segments = data.split(':');// For cantrips just do: GIVE-INNATE-SPELL=0:divine:0
         giveInnateSpell(srcStruct, locationID, segments[0], segments[1], segments[2], segments[3]);
     } else if(ascStatement.includes("GIVE-INNATE-SPELL-NAME")){// GIVE-INNATE-SPELL-NAME=Meld_Into_Stone:3:divine:1
         let data = ascStatement.split('=')[1]; // Set cast times per day to 0 to cast an unlimited number
-        let segments = data.split(':');// For cantrips just do: GIVE-INNATE-SPELL=Daze:0:divine:0
+        let segments = data.split(':');// For cantrips just do: GIVE-INNATE-SPELL-NAME=Daze:0:divine:0
         giveInnateSpellByName(srcStruct, segments[0], segments[1], segments[2], segments[3]);
     } else {
         displayError("Unknown statement (2-SpellInnate): \'"+ascStatement+"\'");

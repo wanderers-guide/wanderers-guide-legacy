@@ -563,8 +563,10 @@ module.exports = class SocketConnections {
           if(ownsChar){
             CharGathering.getCharacter(charID).then((character) => {
               CharGathering.getClass(character.classID).then((classDetails) => {
-                CharGathering.getAbilityScores(charID).then((abilObject) => {
-                  socket.emit('returnFinalizeDetails', character, abilObject, classDetails.Class);
+                CharGathering.getAncestry(character.ancestryID).then((ancestry) => {
+                  CharGathering.getAbilityScores(charID).then((abilObject) => {
+                    socket.emit('returnFinalizeDetails', character, abilObject, classDetails.Class, ancestry);
+                  });
                 });
               });
             });

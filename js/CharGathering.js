@@ -404,7 +404,9 @@ module.exports = class CharGathering {
     static getAllAncestries(includeTag) {
         return Ancestry.findAll()
         .then((ancestries) => {
-            return Heritage.findAll()
+            return Heritage.findAll({
+                order: [['name', 'ASC'],]
+            })
             .then((heritages) => {
                 return Language.findAll()
                 .then((languages) => {

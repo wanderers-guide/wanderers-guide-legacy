@@ -58,8 +58,8 @@ function processingFeats(ascStatement, srcStruct, locationID){
             optionals = optionals[1].split(',');
         }
         let level = parseInt(value);
-        giveClassFeat(srcStruct, locationID, level,
-            ascChoiceStruct.ClassDetails.Class.name, optionals);
+        let className = (ascChoiceStruct.ClassDetails.Class != null) ? ascChoiceStruct.ClassDetails.Class.name : null;
+        giveClassFeat(srcStruct, locationID, level, className, optionals);
     }
     else if(ascStatement.includes("GIVE-SKILL-FEAT")){ // GIVE-SKILL-FEAT=3[metamagic]
         let value = ascStatement.split('=')[1];

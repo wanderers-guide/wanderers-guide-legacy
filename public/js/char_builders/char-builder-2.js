@@ -202,6 +202,11 @@ function displayCurrentAncestry(ancestryStruct, saving) {
         langIDArray.push(language.id);
     }
     let bonusLangs = '';
+    ancestryStruct.BonusLanguages = ancestryStruct.BonusLanguages.sort(
+        function(a, b) {
+            return a.name > b.name ? 1 : -1;
+        }
+    );
     for(const bonusLang of ancestryStruct.BonusLanguages) {
         bonusLangs += bonusLang.name+", ";
     }
@@ -418,7 +423,11 @@ function displayCurrentAncestry(ancestryStruct, saving) {
     }
     flawsNonChoose.html(flawsNonChooseInnerHTML);
 
-
+    if(flawNonChooseList.length == 0){
+        $('#flawsSection').addClass('is-hidden');
+    } else {
+        $('#flawsSection').removeClass('is-hidden');
+    }
 
 
     // Heritage

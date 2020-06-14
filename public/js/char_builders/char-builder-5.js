@@ -36,7 +36,7 @@ function goToChar() {
 
 // ~~~~~~~~~~~~~~ // Processings // ~~~~~~~~~~~~~~ //
 
-socket.on("returnFinalizeDetails", function(character, abilObject, cClass){
+socket.on("returnFinalizeDetails", function(character, abilObject, cClass, ancestry){
 
     let abilMap = objToMap(abilObject);
 
@@ -75,7 +75,6 @@ socket.on("returnFinalizeDetails", function(character, abilObject, cClass){
             
             skillsSection.append('<div id="'+skillsSectionID+'"></div>');
             
-            // No need for a process clear because it will be going to Prof data every time.
             let srcStruct = {
                 sourceType: 'class',
                 sourceLevel: 1,
@@ -90,13 +89,14 @@ socket.on("returnFinalizeDetails", function(character, abilObject, cClass){
         }
 
         let langsSection = $('#learnLanguages');
-        for (let i = 0; i < getMod(intScore); i++) {
+        let additionalLangs = getMod(intScore);
+        if(ancestry.name == 'Human'){ additionalLangs++; } // Hardcoded - ancestry named Human gains +1 langs. 
+        for (let i = 0; i < additionalLangs; i++) {
 
             let langSelectionID = "langSelection"+i;
             
             langsSection.append('<div id="'+langSelectionID+'"></div>');
             
-            // No need for a process clear because it will be going to Languages data every time.
             let srcStruct = {
                 sourceType: 'class',
                 sourceLevel: 1,
