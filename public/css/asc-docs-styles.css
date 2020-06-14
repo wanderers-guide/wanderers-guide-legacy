@@ -18,6 +18,8 @@
 }
 
 .menu-list a {
+    padding-top: 2px;
+    padding-bottom: 1px;
     color: hsl(0, 0%, 79%)!important;
 }
 .menu-list a:hover {

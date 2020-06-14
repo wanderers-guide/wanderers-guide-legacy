@@ -58,7 +58,15 @@
                 <li><a href="/asc_docs/#code_lore">Lore</a></li>
                 <li><a href="/asc_docs/#code_proficiencies">Proficiencies</a></li>
                 <li><a href="/asc_docs/#code_skills">Skills</a></li>
-                <li><a href="/asc_docs/#code_spell_lists">Spell Lists</a></li>
+                <li><a href="/asc_docs/#code_spells">Spells</a></li>
+                <li><a href="/asc_docs/#code_domains">Domains</a></li>
+                <li><a href="/asc_docs/#code_resist_and_weak">Resist / Weaks</a></li>
+                <li><a href="/asc_docs/#code_speeds">Other Speeds</a></li>
+                <li><a href="/asc_docs/#code_senses">Senses</a></li>
+                <li><a href="/asc_docs/#code_phy_feats">Physical Features</a></li>
+                <li><a href="/asc_docs/#code_specializations">Specializations</a></li>
+                <li><a href="/asc_docs/#code_char_traits">Character Traits</a></li>
+                <li><a href="/asc_docs/#code_notes_field">Notes Field</a></li>
             </ul>
         </aside>
     </div>
@@ -480,9 +488,6 @@
                     <strong>Skills:</strong> 'Acrobatics', 'Arcana', 'Athletics', 'Crafting', 'Deception', 'Diplomacy', 'Intimidation', 'Medicine', 'Nature', 'Occultism', 'Performance', 'Religion', 'Society', 'Stealth', 'Survival', 'Thievery'
                 </p>
                 <p class="pl-2 py-1">
-                    <strong>Lore:</strong> 'X_Lore' where X is the name of the lore. (Example: 'Warfare_Lore')
-                </p>
-                <p class="pl-2 py-1">
                     <strong>Attacks:</strong> 'Simple_Weapons', 'Martial_Weapons', 'Advanced_Weapons', 'Unarmed_Attacks'
                 </p>
                 <p class="pl-2 py-1">
@@ -500,6 +505,20 @@
                 <p class="pl-2 py-1">
                     <strong>Spell DCs:</strong> 'ArcaneSpellDCs', 'OccultSpellDCs', 'PrimalSpellDCs', 'DivineSpellDCs'
                 </p>
+                <div class="pl-3 py-2">
+                    <p class="">
+                        <strong>By Name:</strong>
+                    </p>
+                    <p class="pl-2">
+                        LORE~Name
+                    </p>
+                    <p class="pl-2">
+                        WEAPON~Name
+                    </p>
+                    <p class="pl-2">
+                        ARMOR~Name
+                    </p>
+                </div>
                 <p>
                     Use the following code statements to give a character a proficiency.
                 </p>
@@ -520,6 +539,20 @@
                     </div>
                     <p class="pl-3">
                         - Sets the character's base proficiency in Light Armor to Master.
+                    </p>
+                    <p class="pl-3">
+                        - Note: Any proficiency increases will stack on top of the base proficiency.
+                    </p>
+                    <p class="pl-3">
+                        (U = Untrained, T = Trained, E = Expert, M = Master, L = Legendary)
+                    </p>
+                </div>
+                <div class="py-2">
+                    <div class="code-block">
+                        GIVE-PROF-IN=WEAPON~Sickle:E
+                    </div>
+                    <p class="pl-3">
+                        - Sets the character's base proficiency with the Sickle to Expert.
                     </p>
                     <p class="pl-3">
                         - Note: Any proficiency increases will stack on top of the base proficiency.
@@ -566,31 +599,268 @@
                     </p>
                 </div>
             </div>
-            <div id="code_spell_lists" class="mt-4 isHideable">
-                <h1 class="title is-size-4 is-marginless mb-1 pl-3">Spell Lists</h1>
+            <div id="code_spells" class="mt-4 isHideable">
+                <h1 class="title is-size-4 is-marginless mb-1 pl-3">Spells</h1>
                 <p>
-                    Use the following code statements to add spells to a character's spell list.
+                    Use the following code statements to give a character spells and spellcasting. With many of the statements it may require a spellcasting source, this can be any name you'd like but it should be consistant - it will be the unique identifier for that instance of spellcasting. If you're creating homebrew for a class, the spellcasting source should likely be the name of the class.
                 </p>
                 <div class="py-2">
                     <div class="code-block">
-                        GIVE-SPELL-LIST-SPELL=Divine_Wrath
+                        SET-SPELL-CASTING-TYPE=Bard:SPONTANEOUS-REPERTOIRE
                     </div>
                     <p class="pl-3">
-                        - Adds the spell, Divine Wrath, to the character's spell list.
+                        - Sets the Bard spellcasting source to use a repertoire - making them a spontaneous caster.
                     </p>
                     <p class="pl-3">
-                        - Use an underscore in the place of spaces for names.
+                        - Options are: Prepared-List, Prepared-Book, and Spontaneous-Repertoire.
                     </p>
                 </div>
                 <div class="py-2">
                     <div class="code-block">
-                        GIVE-SPELL-LIST=Primal
+                        SET-SPELL-TRADITION=Wizard:ARCANE
                     </div>
                     <p class="pl-3">
-                        - Adds the entire Primal spell list to the character's spell list.
+                        - Sets the Wizard spellcasting source to use the Arcane tradition spell list.
                     </p>
                     <p class="pl-3">
                         - Options are: Arcane, Divine, Occult, and Primal.
+                    </p>
+                </div>
+                <div class="py-2">
+                    <div class="code-block">
+                        SET-SPELL-KEY-ABILITY=Druid:WIS
+                    </div>
+                    <p class="pl-3">
+                        - Sets the Druid spellcasting source to use Wisdom as their key spellcasting ability.
+                    </p>
+                    <p class="pl-3">
+                        - Options are: STR, DEX, CON, INT, WIS, and CHA.
+                    </p>
+                </div>
+                <div class="py-2">
+                    <div class="code-block">
+                        SET-SPELL-SLOTS=Bard:THREE-QUARTERS
+                    </div>
+                    <p class="pl-3">
+                        - Sets the Bard spellcasting source to have three-quarters spellcasting slots (that being what most spellcasters have: 5 cantrips and 2 to 3 spell slots per spell level).
+                    </p>
+                    <p class="pl-3">
+                        - Options are: Three-Quarters, Full, and Single-Set.
+                    </p>
+                </div>
+                <div class="py-2">
+                    <div class="code-block">
+                        GIVE-SPELL-SLOT=Bard:10
+                    </div>
+                    <p class="pl-3">
+                        - Gives the character a 10th level spell slot for the Bard spellcasting source.
+                    </p>
+                    <p class="pl-3">
+                        - Options are: 0 - 10.
+                    </p>
+                </div>
+                <h1 class="title is-size-5 is-marginless mt-2 mb-1 pl-3">Focus Spells</h1>
+                <div class="py-2">
+                    <div class="code-block">
+                        GIVE-FOCUS-SPELL=Cleric:Meld into Stone
+                    </div>
+                    <p class="pl-3">
+                        - Gives the character Meld into Stone as a focus spells using the Cleric spellcasting source.
+                    </p>
+                </div>
+                <h1 class="title is-size-5 is-marginless mt-2 mb-1 pl-3">Innate Spells</h1>
+                <div class="py-2">
+                    <div class="code-block">
+                        GIVE-INNATE-SPELL=5:DIVINE:2
+                    </div>
+                    <p class="pl-3">
+                        - Generates a selector, listing only 5th level spells within the Divine tradition spell list. The chosen spell can be cast twice per day.
+                    </p>
+                    <p class="pl-3">
+                        - Options for tradition is: Arcane, Divine, Occult, and Primal.
+                    </p>
+                </div>
+                <div class="py-2">
+                    <div class="code-block">
+                        GIVE-INNATE-SPELL-NAME=Meld into Stone:3:DIVINE:1
+                    </div>
+                    <p class="pl-3">
+                        - Gives the character Meld into Stone as an innate divine spell, cast at 3rd level, and can only be cast once per day.
+                    </p>
+                    <p class="pl-3">
+                        - Options for tradition is: Arcane, Divine, Occult, and Primal.
+                    </p>
+                </div>
+                <div class="py-2">
+                    <div class="code-block">
+                        GIVE-INNATE-SPELL=Daze:0:ARCANE:0
+                    </div>
+                    <p class="pl-3">
+                        - Gives the character Daze as an innate arcane cantrip, can be cast any number of times per day.
+                    </p>
+                    <p class="pl-3">
+                        - Options for tradition is: Arcane, Divine, Occult, and Primal.
+                    </p>
+                </div>
+            </div>
+            <div id="code_domains" class="mt-4 isHideable">
+                <h1 class="title is-size-4 is-marginless mb-1 pl-3">Domains</h1>
+                <p>
+                    Use the following code statements to give or advance a character's domain.
+                </p>
+                <div class="py-2">
+                    <div class="code-block">
+                        GIVE-DOMAIN=Cleric
+                    </div>
+                    <p class="pl-3">
+                        - Generates a domain selector, using Cleric as the spellcasting source.
+                    </p>
+                </div>
+                <div class="py-2">
+                    <div class="code-block">
+                        GIVE-DOMAIN-ADVANCEMENT=Cleric
+                    </div>
+                    <p class="pl-3">
+                        - Generates a domain advancement selector, listing all the characters's current domains and using Cleric as the spellcasting source.
+                    </p>
+                </div>
+            </div>
+            <div id="code_resist_and_weak" class="mt-4 isHideable">
+                <h1 class="title is-size-4 is-marginless mb-1 pl-3">Resistances and Weaknesses</h1>
+                <p>
+                    Use the following code statements to give a character a resistance or weakness.
+                </p>
+                <p>
+                    For the value either put a number, "Half_Level", or "Level".
+                </p>
+                <div class="py-2">
+                    <div class="code-block">
+                        GIVE-RESISTANCE=Negative:Half_Level
+                    </div>
+                    <p class="pl-3">
+                        - Gives the character a resistance to negative damage equal to half their level.
+                    </p>
+                </div>
+                <div class="py-2">
+                    <div class="code-block">
+                        GIVE-WEAKNESS=Cold:2
+                    </div>
+                    <p class="pl-3">
+                        - Gives the character a weakness of 2 to cold damage.
+                    </p>
+                </div>
+            </div>
+            <div id="code_speeds" class="mt-4 isHideable">
+                <h1 class="title is-size-4 is-marginless mb-1 pl-3">Other Speeds</h1>
+                <p>
+                    Use the following code statement to give a character other types of speeds.
+                </p>
+                <div class="py-2">
+                    <div class="code-block">
+                        GIVE-SPEED=Swim:15
+                    </div>
+                    <p class="pl-3">
+                        - Gives the character a swim speed of 15 feet.
+                    </p>
+                </div>
+            </div>
+            <div id="code_senses" class="mt-4 isHideable">
+                <h1 class="title is-size-4 is-marginless mb-1 pl-3">Senses</h1>
+                <p>
+                    Use the following code statement to give a character a sense.
+                </p>
+                <div class="py-2">
+                    <div class="code-block">
+                        GIVE-SENSE-NAME=Darkvision
+                    </div>
+                    <p class="pl-3">
+                        - Gives the character darkvision.
+                    </p>
+                </div>
+            </div>
+            <div id="code_phy_feats" class="mt-4 isHideable">
+                <h1 class="title is-size-4 is-marginless mb-1 pl-3">Physical Features</h1>
+                <p>
+                    Use the following code statement to give a character a physical feature.
+                </p>
+                <div class="py-2">
+                    <div class="code-block">
+                        GIVE-PHYSICAL-FEATURE-NAME=Blunt Snout
+                    </div>
+                    <p class="pl-3">
+                        - Gives the character a physical feature with the name "Blunt Snout".
+                    </p>
+                </div>
+            </div>
+            <div id="code_specializations" class="mt-4 isHideable">
+                <h1 class="title is-size-4 is-marginless mb-1 pl-3">Specializations</h1>
+                <p>
+                    Use the following code statements to give a character a specialization.
+                </p>
+                <div class="py-2">
+                    <div class="code-block">
+                        GIVE-WEAPON-SPECIALIZATION
+                    </div>
+                    <p class="pl-3">
+                        - Gives the character weapon specialization.
+                    </p>
+                </div>
+                <div class="py-2">
+                    <div class="code-block">
+                        GIVE-GREATER-WEAPON-SPECIALIZATION
+                    </div>
+                    <p class="pl-3">
+                        - Gives the character greater weapon specialization.
+                    </p>
+                </div>
+                <div class="py-2">
+                    <div class="code-block">
+                        GIVE-ARMOR-SPECIALIZATION=Light_Armor
+                    </div>
+                    <p class="pl-3">
+                        - Gives the character armor specialization in all light armor.
+                    </p>
+                    <p class="pl-3">
+                        - Options are any of the defenses proficiency options (see Proficiencies) and can give by armor name or by trait (Ex: GIVE-ARMOR-SPECIALIZATION=ARMOR~Leather).
+                    </p>
+                </div>
+                <div class="py-2">
+                    <div class="code-block">
+                        GIVE-WEAPON-CRITICAL-SPECIALIZATION=Simple_Weapons
+                    </div>
+                    <p class="pl-3">
+                        - Gives the character critical specialization in all simple weapons.
+                    </p>
+                    <p class="pl-3">
+                        - Options are any of the attacks proficiency options (see Proficiencies) and can give by weapon name or by trait (Ex: GIVE-WEAPON-CRITICAL-SPECIALIZATION=TRAIT~Dwarf).
+                    </p>
+                </div>
+            </div>
+            <div id="code_char_traits" class="mt-4 isHideable">
+                <h1 class="title is-size-4 is-marginless mb-1 pl-3">Character Traits</h1>
+                <p>
+                    Use the following code statement to add a trait to a character.
+                </p>
+                <div class="py-2">
+                    <div class="code-block">
+                        GIVE-CHAR-TRAIT-NAME=Fey
+                    </div>
+                    <p class="pl-3">
+                        - Adds the Fey trait to the character.
+                    </p>
+                </div>
+            </div>
+            <div id="code_notes_field" class="mt-4 isHideable">
+                <h1 class="title is-size-4 is-marginless mb-1 pl-3">Notes Field</h1>
+                <p>
+                    Sometimes a feat or class ability might need an area where the user can write some notes specific to that feature. In such a case, use the follow code statement to generate a notes field in the character sheet for that feature.
+                </p>
+                <div class="py-2">
+                    <div class="code-block">
+                        GIVE-NOTES-FIELD=Use this area to keep information about your diety.
+                    </div>
+                    <p class="pl-3">
+                        - Generates a notes field in the character sheet with the given placeholder text.
                     </p>
                 </div>
             </div>
