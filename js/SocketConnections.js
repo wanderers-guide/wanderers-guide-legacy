@@ -37,6 +37,16 @@ module.exports = class SocketConnections {
         });
       });
 
+      socket.on('requestFinalProfs', function(charID){
+        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+          if(ownsChar){
+            CharGathering.getFinalProfs(charID).then((profMap) => {
+              socket.emit('returnFinalProfs', mapToObj(profMap));
+            });
+          }
+        });
+      });
+
       socket.on('requestNotesSave', function(charID, notes){
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
           if(ownsChar){

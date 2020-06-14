@@ -1,5 +1,6 @@
 
 function openCustomizeItemQuickview(data) {
+    addBackFunctionality(data);
 
     $('#quickViewTitle').html("Customize Item");
     let qContent = $('#quickViewContent');
@@ -20,9 +21,9 @@ function openCustomizeItemQuickview(data) {
     qContent.append('<hr class="m-2 mb-4">');
 
     data.InvItem.code = (data.InvItem.code == null) ? '' : data.InvItem.code;
-    qContent.append('<div class="field is-horizontal"><div class="field-label is-normal"><label class="label">Code <a href="/asc_docs/#code_fields" target="_blank"><span class="icon is-small has-text-info has-tooltip-top" data-tooltip="ASC Docs"><i class="fas fa-book"></i></span></a></label></div><div class="field-body"><div class="field"><div class="control"><input id="customizeItemCode" class="input nanum-coding" type="text" maxlength="32" value="'+data.InvItem.code+'"></div></div></div></div>');
+    qContent.append('<div class="field is-horizontal"><div class="field-label is-normal"><label class="label">Code <a href="/asc_docs/#code_fields" target="_blank"><span class="icon is-small has-text-info has-tooltip-top" data-tooltip="ASC Docs"><i class="fas fa-book"></i></span></a></label></div><div class="field-body"><div class="field"><div class="control"><textarea id="customizeItemCode" class="textarea nanum-coding use-custom-scrollbar" rows="1" spellcheck="false" maxlength="990" value="'+data.InvItem.code+'"></textarea></div></div></div></div>');
 
-    qContent.append('<div class="buttons is-centered pt-2"><button id="customizeItemSaveButton" class="button is-link">Save Changes</button></div>');
+    qContent.append('<div class="buttons is-centered pt-2"><button id="customizeItemSaveButton" class="button is-link">Save</button></div>');
 
 
     $('#customizeItemSize').val(data.InvItem.size);

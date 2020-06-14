@@ -353,7 +353,8 @@ function openInvItemQuickview(data) {
             $('#'+invItemCustomizeButtonID).click(function() {
                 openQuickView('customizeItem', {
                     Item: data.Item,
-                    InvItem: data.InvItem
+                    InvItem: data.InvItem,
+                    _prevBackData: {Type: g_QViewLastType, Data: g_QViewLastData},
                 });
             });
         }

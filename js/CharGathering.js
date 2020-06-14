@@ -94,15 +94,6 @@ function getBetterProf(prof1, prof2){
     return (profNumber1 > profNumber2) ? prof1 : prof2;
 }
 
-function findItemDataByName(itemMap, itemName){
-    for(const [itemID, itemData] of itemMap.entries()){
-        if(itemData.Item.name.toLowerCase() == itemName){
-            return itemData;
-        }
-    }
-    return null;
-}
-
 function getInnateSpellCastingID(innateSpell){
     return innateSpell.charID+':'+innateSpell.source+':'+innateSpell.sourceType+':'+innateSpell.sourceLevel+':'+innateSpell.sourceCode+':'+innateSpell.sourceCodeSNum+':'+innateSpell.SpellID+':'+innateSpell.SpellLevel+':'+innateSpell.SpellTradition+':'+innateSpell.TimesPerDay;
 }
@@ -956,26 +947,44 @@ module.exports = class CharGathering {
         .then((profDataArray) => {
             let newProfMap = new Map();
             for(const profData of profDataArray){
-                let profMapValue = newProfMap.get(profData.To);
-                if(profMapValue != null){
 
-                    newProfMap.set(profData.To, {
-                        BestProf : getBetterProf(profMapValue.BestProf, profData.Prof),
-                        NumIncreases : profMapValue.NumIncreases+getUpAmt(profData.Prof),
-                        Bonus : profMapValue.Bonus+getBonus(profData.Prof),
-                        For : profMapValue.For
-                    });
-
-                } else {
-
+                if(profData.sourceType === 'user-set') { // Hardcoded User-Set Data
+                    let originalData = profData; // Override prof with User-Set prof
+                    originalData.UserOverride = true;
                     newProfMap.set(profData.To, {
                         BestProf : getBetterProf('U', profData.Prof),
                         NumIncreases : getUpAmt(profData.Prof),
                         Bonus : getBonus(profData.Prof),
-                        For : profData.For
+                        For : profData.For,
+                        OriginalData : originalData,
                     });
+                } else {
+
+                    let profMapValue = newProfMap.get(profData.To);
+                    if(profMapValue != null){
+
+                        newProfMap.set(profData.To, {
+                            BestProf : getBetterProf(profMapValue.BestProf, profData.Prof),
+                            NumIncreases : profMapValue.NumIncreases+getUpAmt(profData.Prof),
+                            Bonus : profMapValue.Bonus+getBonus(profData.Prof),
+                            For : profMapValue.For,
+                            OriginalData : profData,
+                        });
+
+                    } else {
+
+                        newProfMap.set(profData.To, {
+                            BestProf : getBetterProf('U', profData.Prof),
+                            NumIncreases : getUpAmt(profData.Prof),
+                            Bonus : getBonus(profData.Prof),
+                            For : profData.For,
+                            OriginalData : profData,
+                        });
+
+                    }
 
                 }
+
             }
 
             for(const [profName, profMapData] of newProfMap.entries()){
@@ -984,134 +993,14 @@ module.exports = class CharGathering {
                     Name : profName,
                     NumUps : profTypeToNumber(profMapData.BestProf)+profMapData.NumIncreases,
                     Bonus : profMapData.Bonus,
-                    For : profMapData.For
+                    For : profMapData.For,
+                    OriginalData : profMapData.OriginalData,
                 });
                         
             }
 
             return newProfMap;
         });
-    }
-
-    static gatherWeaponProfs(profMap, itemMap){
-
-        let weaponProfMap = new Map(); // Key: ItemID Value: { NumUps, Bonus }
-
-        for(const [profName, profData] of profMap.entries()){
-            if(profData.For == "Attack"){
-
-                if(profName == 'Simple_Weapons'){
-                    for(const [itemID, itemData] of itemMap.entries()){
-                        if(itemData.WeaponData != null && itemData.WeaponData.category == "SIMPLE"){
-                            weaponProfMap.set(itemID, {
-                                NumUps : profData.NumUps,
-                                Bonus : profData.Bonus
-                            });
-                        }
-                    }
-                } else if(profName == 'Martial_Weapons'){
-                    for(const [itemID, itemData] of itemMap.entries()){
-                        if(itemData.WeaponData != null && itemData.WeaponData.category == "MARTIAL"){
-                            weaponProfMap.set(itemID, {
-                                NumUps : profData.NumUps,
-                                Bonus : profData.Bonus
-                            });
-                        }
-                    }
-                } else if(profName == 'Advanced_Weapons'){
-                    for(const [itemID, itemData] of itemMap.entries()){
-                        if(itemData.WeaponData != null && itemData.WeaponData.category == "ADVANCED"){
-                            weaponProfMap.set(itemID, {
-                                NumUps : profData.NumUps,
-                                Bonus : profData.Bonus
-                            });
-                        }
-                    }
-                } else if(profName == 'Unarmed_Attacks'){
-                    for(const [itemID, itemData] of itemMap.entries()){
-                        if(itemData.WeaponData != null && itemData.WeaponData.category == "UNARMED"){
-                            weaponProfMap.set(itemID, {
-                                NumUps : profData.NumUps,
-                                Bonus : profData.Bonus
-                            });
-                        }
-                    }
-                } else {
-                    let dProfName = profName.toLowerCase().replace(/_/g,' ');
-                    let itemData = findItemDataByName(itemMap, dProfName);
-                    if(itemData != null){
-                        weaponProfMap.set(itemData.Item.id, {
-                            NumUps : profData.NumUps,
-                            Bonus : profData.Bonus
-                        });
-                    }
-                }
-
-            }
-        }
-
-        return weaponProfMap;
-    }
-
-
-    static gatherArmorProfs(profMap, itemMap){
-
-        let armorProfMap = new Map(); // Key: ItemID Value: { NumUps, Bonus }
-
-        for(const [profName, profData] of profMap.entries()){
-            if(profData.For == "Defense"){
-
-                if(profName == 'Light_Armor'){
-                    for(const [itemID, itemData] of itemMap.entries()){
-                        if(itemData.ArmorData != null && itemData.ArmorData.category == "LIGHT"){
-                            armorProfMap.set(itemID, {
-                                NumUps : profData.NumUps,
-                                Bonus : profData.Bonus
-                            });
-                        }
-                    }
-                } else if(profName == 'Medium_Armor'){
-                    for(const [itemID, itemData] of itemMap.entries()){
-                        if(itemData.ArmorData != null && itemData.ArmorData.category == "MEDIUM"){
-                            armorProfMap.set(itemID, {
-                                NumUps : profData.NumUps,
-                                Bonus : profData.Bonus
-                            });
-                        }
-                    }
-                } else if(profName == 'Heavy_Armor'){
-                    for(const [itemID, itemData] of itemMap.entries()){
-                        if(itemData.ArmorData != null && itemData.ArmorData.category == "HEAVY"){
-                            armorProfMap.set(itemID, {
-                                NumUps : profData.NumUps,
-                                Bonus : profData.Bonus
-                            });
-                        }
-                    }
-                } else if(profName == 'Unarmored_Defense'){
-                    for(const [itemID, itemData] of itemMap.entries()){
-                        if(itemData.ArmorData != null && itemData.ArmorData.category == "UNARMORED"){
-                            armorProfMap.set(itemID, {
-                                NumUps : profData.NumUps,
-                                Bonus : profData.Bonus
-                            });
-                        }
-                    }
-                } else {
-                    let dProfName = profName.toLowerCase().replace(/_/g,' ');
-                    let itemData = findItemDataByName(itemMap, dProfName);
-                    if(itemData != null){
-                        armorProfMap.set(itemData.Item.id, {
-                            NumUps : profData.NumUps,
-                            Bonus : profData.Bonus
-                        });
-                    }
-                }
-
-            }
-        }
-
-        return armorProfMap;
     }
 
     static getCharacterInfo(charID){
@@ -1144,49 +1033,41 @@ module.exports = class CharGathering {
                                                         .then( (conditionsObject) => {
                                                             return Condition.findAll()
                                                             .then((allConditions) => {
-                                                                return CharGathering.getFinalProfs(charID)
-                                                                .then( (profMap) => {
-                                                                    return CharGathering.getInventory(character.inventoryID)
-                                                                    .then( (invStruct) => {
-                                                                        return CharGathering.getResistancesAndVulnerabilities(charID)
-                                                                        .then( (resistAndVulnerStruct) => {
-                                                                            return CharGathering.getSpecializations(charID)
-                                                                            .then( (specializeStruct) => {
-                                                                                return CharGathering.getNotesFields(charID)
-                                                                                .then( (notesDataArray) => {
-                                                                                    return CharGathering.getOtherSpeeds(charID)
-                                                                                    .then( (speedsDataArray) => {
-
-                                                                                        let weaponProfMap = CharGathering.gatherWeaponProfs(profMap, itemMap);
-                                                                                        let armorProfMap = CharGathering.gatherArmorProfs(profMap, itemMap);
-                                                                                        
-                                                                                        let charInfo = {
-                                                                                            Character : character,
-                                                                                            Background : background,
-                                                                                            Ancestry : ancestry,
-                                                                                            Heritage : heritage,
-                                                                                            Inventory : inventory,
-                                                                                            AbilObject : abilObject,
-                                                                                            SkillObject : skillObject,
-                                                                                            FeatObject : featObject,
-                                                                                            ProfObject : mapToObj(profMap),
-                                                                                            SpellObject : mapToObj(spellMap),
-                                                                                            ChoicesStruct : choicesStruct,
-                                                                                            SpellDataStruct: spellDataStruct,
-                                                                                            InvStruct : invStruct,
-                                                                                            ItemObject : mapToObj(itemMap),
-                                                                                            ConditionsObject : conditionsObject,
-                                                                                            WeaponProfObject : mapToObj(weaponProfMap),
-                                                                                            ArmorProfObject : mapToObj(armorProfMap),
-                                                                                            AllConditions : allConditions,
-                                                                                            ResistAndVulners : resistAndVulnerStruct,
-                                                                                            SpecializeStruct : specializeStruct,
-                                                                                            NotesFields : notesDataArray,
-                                                                                            OtherSpeeds : speedsDataArray,
-                                                                                        };
-                                                            
-                                                                                        return charInfo;
-                                                                                    });
+                                                                return CharGathering.getInventory(character.inventoryID)
+                                                                .then( (invStruct) => {
+                                                                    return CharGathering.getResistancesAndVulnerabilities(charID)
+                                                                    .then( (resistAndVulnerStruct) => {
+                                                                        return CharGathering.getSpecializations(charID)
+                                                                        .then( (specializeStruct) => {
+                                                                            return CharGathering.getNotesFields(charID)
+                                                                            .then( (notesDataArray) => {
+                                                                                return CharGathering.getOtherSpeeds(charID)
+                                                                                .then( (speedsDataArray) => {
+                                                                                    
+                                                                                    let charInfo = {
+                                                                                        Character : character,
+                                                                                        Background : background,
+                                                                                        Ancestry : ancestry,
+                                                                                        Heritage : heritage,
+                                                                                        Inventory : inventory,
+                                                                                        AbilObject : abilObject,
+                                                                                        SkillObject : skillObject,
+                                                                                        FeatObject : featObject,
+                                                                                        ProfObject : choicesStruct.FinalProfObject,
+                                                                                        SpellObject : mapToObj(spellMap),
+                                                                                        ChoicesStruct : choicesStruct,
+                                                                                        SpellDataStruct: spellDataStruct,
+                                                                                        InvStruct : invStruct,
+                                                                                        ItemObject : mapToObj(itemMap),
+                                                                                        ConditionsObject : conditionsObject,
+                                                                                        AllConditions : allConditions,
+                                                                                        ResistAndVulners : resistAndVulnerStruct,
+                                                                                        SpecializeStruct : specializeStruct,
+                                                                                        NotesFields : notesDataArray,
+                                                                                        OtherSpeeds : speedsDataArray,
+                                                                                    };
+                                                        
+                                                                                    return charInfo;
                                                                                 });
                                                                             });
                                                                         });

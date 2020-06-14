@@ -46,8 +46,10 @@ function openQuickView(type, data) {
         closeQuickView();
     });
 
-    $('#quickviewDefault').addClass('quickview-auto-close-protection');
-    $('#quickviewDefault').addClass('is-active');
+    if(data._prevBackData == null){
+        $('#quickviewDefault').addClass('quickview-auto-close-protection');
+        $('#quickviewDefault').addClass('is-active');
+    }
     g_QViewLastType = type;
     g_QViewLastData = data;
 
@@ -83,6 +85,10 @@ function openQuickView(type, data) {
         openAbilityQuickview(data);
     } else if(type == 'resistView'){
         openResistancesQuickview(data);
+    } else if(type == 'otherProfsView'){
+        openOtherProfsQuickview(data);
+    } else if(type == 'customizeProfView'){
+        openCustomizeProfQuickview(data);
     }
 
 }

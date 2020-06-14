@@ -112,8 +112,8 @@ socket.on("returnCharacterSheetInfo", function(charInfo){
     g_phyFeatArray = charInfo.ChoicesStruct.PhyFeatArray;
 
     g_profMap = objToMap(charInfo.ProfObject);
-    g_weaponProfMap = objToMap(charInfo.WeaponProfObject);
-    g_armorProfMap = objToMap(charInfo.ArmorProfObject);
+    g_weaponProfMap = buildWeaponProfMap();
+    g_armorProfMap = buildArmorProfMap();
 
     g_featMap = objToMap(charInfo.FeatObject);
     g_featChoiceArray = charInfo.ChoicesStruct.FeatArray;
@@ -702,34 +702,41 @@ function displayInformation() {
     ///////////////////////////////////// Attacks and Defenses /////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
+    let otherProfsNum = 0;
+
     let attacks = $("#attacksContent");
     attacks.html('');
 
     let profSimpleWeapons = g_profMap.get("Simple_Weapons");
     if(profSimpleWeapons != null){
         let profWord = getProfNameFromNumUps(profSimpleWeapons.NumUps);
-        attacks.append('<div><span class="is-size-7 is-italic">'+profWord+' - </span><span class="is-size-7 has-text-weight-bold">Simple Weapons</span></div>');
+        otherProfsNum++;
+        otherProfBuild(attacks, profWord, 'Simple Weapons', otherProfsNum, profSimpleWeapons);
     }
     let profMartialWeapons = g_profMap.get("Martial_Weapons");
     if(profMartialWeapons != null){
         let profWord = getProfNameFromNumUps(profMartialWeapons.NumUps);
-        attacks.append('<div><span class="is-size-7 is-italic">'+profWord+' - </span><span class="is-size-7 has-text-weight-bold">Martial Weapons</span></div>');
+        otherProfsNum++;
+        otherProfBuild(attacks, profWord, 'Martial Weapons', otherProfsNum, profMartialWeapons);
     }
     let profAdvancedWeapons = g_profMap.get("Advanced_Weapons");
     if(profAdvancedWeapons != null){
         let profWord = getProfNameFromNumUps(profAdvancedWeapons.NumUps);
-        attacks.append('<div><span class="is-size-7 is-italic">'+profWord+' - </span><span class="is-size-7 has-text-weight-bold">Advanced Weapons</span></div>');
+        otherProfsNum++;
+        otherProfBuild(attacks, profWord, 'Advanced Weapons', otherProfsNum, profAdvancedWeapons);
     }
     let profUnarmedAttacks = g_profMap.get("Unarmed_Attacks");
     if(profUnarmedAttacks != null){
         let profWord = getProfNameFromNumUps(profUnarmedAttacks.NumUps);
-        attacks.append('<div><span class="is-size-7 is-italic">'+profWord+' - </span><span class="is-size-7 has-text-weight-bold">Unarmed Attacks</span></div>');
+        otherProfsNum++;
+        otherProfBuild(attacks, profWord, 'Unarmed Attacks', otherProfsNum, profUnarmedAttacks);
     }
     for(const [profName, profData] of g_profMap.entries()){
         if(profData.For == "Attack" && profName != "Simple_Weapons" && profName != "Martial_Weapons" && profName != "Advanced_Weapons" && profName != "Unarmed_Attacks"){
             let dProfName = profName.replace(/_/g,' ');
             let profWord = getProfNameFromNumUps(profData.NumUps);
-            attacks.append('<div><span class="is-size-7 is-italic">'+profWord+' - </span><span class="is-size-7 has-text-weight-bold">'+capitalizeWords(dProfName)+'</span></div>');
+            otherProfsNum++;
+            otherProfBuild(attacks, profWord, capitalizeWords(dProfName), otherProfsNum, profData);
         }
     }
 
@@ -740,28 +747,33 @@ function displayInformation() {
     let profLightArmor = g_profMap.get("Light_Armor");
     if(profLightArmor != null){
         let profWord = getProfNameFromNumUps(profLightArmor.NumUps);
-        defenses.append('<div><span class="is-size-7 is-italic">'+profWord+' - </span><span class="is-size-7 has-text-weight-bold">Light Armor</span></div>');
+        otherProfsNum++;
+        otherProfBuild(defenses, profWord, 'Light Armor', otherProfsNum, profLightArmor);
     }
     let profMediumArmor = g_profMap.get("Medium_Armor");
     if(profMediumArmor != null){
         let profWord = getProfNameFromNumUps(profMediumArmor.NumUps);
-        defenses.append('<div><span class="is-size-7 is-italic">'+profWord+' - </span><span class="is-size-7 has-text-weight-bold">Medium Armor</span></div>');
+        otherProfsNum++;
+        otherProfBuild(defenses, profWord, 'Medium Armor', otherProfsNum, profMediumArmor);
     }
     let profHeavyArmor = g_profMap.get("Heavy_Armor");
     if(profHeavyArmor != null){
         let profWord = getProfNameFromNumUps(profHeavyArmor.NumUps);
-        defenses.append('<div><span class="is-size-7 is-italic">'+profWord+' - </span><span class="is-size-7 has-text-weight-bold">Medium Armor</span></div>');
+        otherProfsNum++;
+        otherProfBuild(defenses, profWord, 'Heavy Armor', otherProfsNum, profHeavyArmor);
     }
     let profUnarmoredDefense = g_profMap.get("Unarmored_Defense");
     if(profUnarmoredDefense != null){
         let profWord = getProfNameFromNumUps(profUnarmoredDefense.NumUps);
-        defenses.append('<div><span class="is-size-7 is-italic">'+profWord+' - </span><span class="is-size-7 has-text-weight-bold">Unarmored Defense</span></div>');
+        otherProfsNum++;
+        otherProfBuild(defenses, profWord, 'Unarmored Defense', otherProfsNum, profUnarmoredDefense);
     }
     for(const [profName, profData] of g_profMap.entries()){
         if(profData.For == "Defense" && profName != "Light_Armor" && profName != "Medium_Armor" && profName != "Heavy_Armor" && profName != "Unarmored_Defense"){
             let dProfName = profName.replace(/_/g,' ');
             let profWord = getProfNameFromNumUps(profData.NumUps);
-            defenses.append('<div><span class="is-size-7 is-italic">'+profWord+' - </span><span class="is-size-7 has-text-weight-bold">'+capitalizeWords(dProfName)+'</span></div>');
+            otherProfsNum++;
+            otherProfBuild(defenses, profWord, capitalizeWords(dProfName), otherProfsNum, profData);
         }
     }
 
@@ -775,49 +787,57 @@ function displayInformation() {
     let arcaneSpellAttack = g_profMap.get("ArcaneSpellAttacks");
     if(arcaneSpellAttack != null){
         let profWord = getProfNameFromNumUps(arcaneSpellAttack.NumUps);
-        spells.append('<div><span class="is-size-7 is-italic">'+profWord+' - </span><span class="is-size-7 has-text-weight-bold">Arcane Attacks</span></div>');
+        otherProfsNum++;
+        otherProfBuild(spells, profWord, 'Arcane Attacks', otherProfsNum, arcaneSpellAttack);
     }
 
     let arcaneSpellDC = g_profMap.get("ArcaneSpellDCs");
     if(arcaneSpellDC != null){
         let profWord = getProfNameFromNumUps(arcaneSpellDC.NumUps);
-        spells.append('<div><span class="is-size-7 is-italic">'+profWord+' - </span><span class="is-size-7 has-text-weight-bold">Arcane DCs</span></div>');
+        otherProfsNum++;
+        otherProfBuild(spells, profWord, 'Arcane DCs', otherProfsNum, arcaneSpellDC);
     }
 
     let divineSpellAttack = g_profMap.get("DivineSpellAttacks");
     if(divineSpellAttack != null){
         let profWord = getProfNameFromNumUps(divineSpellAttack.NumUps);
-        spells.append('<div><span class="is-size-7 is-italic">'+profWord+' - </span><span class="is-size-7 has-text-weight-bold">Divine Attacks</span></div>');
+        otherProfsNum++;
+        otherProfBuild(spells, profWord, 'Divine Attacks', otherProfsNum, divineSpellAttack);
     }
 
     let divineSpellDC = g_profMap.get("DivineSpellDCs");
     if(divineSpellDC != null){
         let profWord = getProfNameFromNumUps(divineSpellDC.NumUps);
-        spells.append('<div><span class="is-size-7 is-italic">'+profWord+' - </span><span class="is-size-7 has-text-weight-bold">Divine DCs</span></div>');
+        otherProfsNum++;
+        otherProfBuild(spells, profWord, 'Divine DCs', otherProfsNum, divineSpellDC);
     }
 
     let occultSpellAttack = g_profMap.get("OccultSpellAttacks");
     if(occultSpellAttack != null){
         let profWord = getProfNameFromNumUps(occultSpellAttack.NumUps);
-        spells.append('<div><span class="is-size-7 is-italic">'+profWord+' - </span><span class="is-size-7 has-text-weight-bold">Occult Attacks</span></div>');
+        otherProfsNum++;
+        otherProfBuild(spells, profWord, 'Occult Attacks', otherProfsNum, occultSpellAttack);
     }
 
     let occultSpellDC = g_profMap.get("OccultSpellDCs");
     if(occultSpellDC != null){
         let profWord = getProfNameFromNumUps(occultSpellDC.NumUps);
-        spells.append('<div><span class="is-size-7 is-italic">'+profWord+' - </span><span class="is-size-7 has-text-weight-bold">Occult DCs</span></div>');
+        otherProfsNum++;
+        otherProfBuild(spells, profWord, 'Occult DCs', otherProfsNum, occultSpellDC);
     }
 
     let primalSpellAttack = g_profMap.get("PrimalSpellAttacks");
     if(primalSpellAttack != null){
         let profWord = getProfNameFromNumUps(primalSpellAttack.NumUps);
-        spells.append('<div><span class="is-size-7 is-italic">'+profWord+' - </span><span class="is-size-7 has-text-weight-bold">Primal Attacks</span></div>');
+        otherProfsNum++;
+        otherProfBuild(spells, profWord, 'Primal Attacks', otherProfsNum, primalSpellAttack);
     }
 
     let primalSpellDC = g_profMap.get("PrimalSpellDCs");
     if(primalSpellDC != null){
         let profWord = getProfNameFromNumUps(primalSpellDC.NumUps);
-        spells.append('<div><span class="is-size-7 is-italic">'+profWord+' - </span><span class="is-size-7 has-text-weight-bold">Primal DCs</span></div>');
+        otherProfsNum++;
+        otherProfBuild(spells, profWord, 'Primal DCs', otherProfsNum, primalSpellDC);
     }
 
     if(spells.html() == ''){
@@ -1613,6 +1633,29 @@ function runAllFeatsAndAbilitiesCode() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////// Other Profs //////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////
+
+function otherProfBuild(content, prof, name, otherProfsNum, profData){
+
+    if(profData.OriginalData.UserOverride != null && profData.OriginalData.UserOverride){
+        prof = '<span class="is-underlined">'+prof+'</span>';
+    } else {
+        prof = '<span>'+prof+'</span>';
+    }
+
+    content.append('<div id="otherProf'+otherProfsNum+'" class="cursor-clickable"><span class="is-size-7 is-italic">'+prof+' - </span><span class="is-size-7 has-text-weight-bold">'+name+'</span></div>');
+
+    $("#otherProf"+otherProfsNum).click(function(){
+        openQuickView('otherProfsView', {
+            ProfData : profData,
+            Name : name,
+        });
+    });
+
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////// Rest /////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -1699,7 +1742,20 @@ function takeRest(){
 //////////////////////////////////////// Socket Returns ////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
+socket.on("returnFinalProfs", function(profObject){
+    g_profMap = objToMap(profObject);
+    g_weaponProfMap = buildWeaponProfMap();
+    g_armorProfMap = buildArmorProfMap();
+    loadCharSheet();
+    closeQuickView();
+});
+
 socket.on("returnHeroPointsSave", function(){
+});
+
+socket.on("returnProficiencyChange", function(profChangePacket){
+    socket.emit("requestFinalProfs",
+        getCharIDFromURL());
 });
 
 socket.on("returnAddFundamentalRune", function(invItemID, invStruct){

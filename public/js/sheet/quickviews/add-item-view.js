@@ -3,8 +3,6 @@ function openAddItemQuickview(data) {
 
     $('#quickViewTitle').html('Add Items');
     $('#quickViewTitleRight').html('<button id="createCustomItemBtn" class="button is-very-small is-success is-outlined is-rounded is-pulled-right mr-1">Create Item</button>');
-    let qContent = $('#quickViewContent');
-
     $('#createCustomItemBtn').click(function(){
         $(this).addClass('is-loading');
         socket.emit("requestAddItemToInv",
@@ -13,6 +11,8 @@ function openAddItemQuickview(data) {
             1);
         $(this).blur();
     });
+
+    let qContent = $('#quickViewContent');
 
     qContent.append('<div class="tabs is-small is-centered is-marginless mb-1"><ul class="category-tabs"><li><a id="itemTabAll">All</a></li><li><a id="itemTabGeneral">General</a></li><li><a id="itemTabCombat">Combat</a></li><li><a id="itemTabStorage">Storage</a></li><li><a id="itemTabCurrency">Currency</a></li></ul></div>');
 
