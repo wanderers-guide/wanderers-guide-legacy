@@ -58,7 +58,7 @@ function shiftCodeQueue(){
     console.log("Starting Code Queue:");
     console.log(code);
     if(code != null){
-        gCode_statements = code.ascCode.split(", ");
+        gCode_statements = code.ascCode.split(/\n/);
         gCode_locationID = code.locationID;
 
         code.srcStruct.sourceCodeSNum = 'a'+code.srcStruct.sourceCodeSNum;

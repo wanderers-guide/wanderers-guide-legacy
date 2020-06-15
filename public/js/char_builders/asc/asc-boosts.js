@@ -26,7 +26,7 @@ function giveAbilityBoostMultiple(srcStruct, numberOfBoosts, locationID) {
     } else {
         let multiBoostCodeStr = '';
         for (let i = 0; i < numberOfBoosts; i++) {
-            multiBoostCodeStr += 'GIVE-ABILITY-BOOST-SINGLE=ALL, ';
+            multiBoostCodeStr += 'GIVE-ABILITY-BOOST-SINGLE=ALL\n';
         }
         if(multiBoostCodeStr != ''){
             processCode(

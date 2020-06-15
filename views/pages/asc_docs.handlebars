@@ -293,7 +293,7 @@
                 <h1 class="main-title is-size-3 is-family-code has-text-centered is-marginless mb-2">Code Fields</h1>
                 <h1 class="title is-size-4 is-marginless mb-1 pl-3">Basics</h1>
                 <p>
-                    Use a series of code statements to implement features for homebrew content. Split these statements up by having a ", " in between them.
+                    Use a series of code statements to implement features for homebrew content. Split these statements up with a newline for each statement.
                 </p>
                 <p>
                     Code statements currently have a very strict syntax, as such, most of this documentation will be a series of examples.
@@ -302,7 +302,9 @@
                     <strong>Example:</strong>
                 </p>
                 <div class="code-block">
-                    GIVE-PROF-INCREASE-IN=Perception, GIVE-SKILL-FEAT=3
+                    GIVE-PROF-INCREASE-IN=Perception
+                    <br/>
+                    GIVE-SKILL-FEAT=3
                 </div>
             </div>
             <div id="code_boosts" class="mt-4 isHideable">
@@ -351,7 +353,9 @@
                         You can implement something like this using the following code:
                     </p>
                     <div class="code-block">
-                        GIVE-ABILITY-BOOST-SINGLE=STR,CON, GIVE-ABILITY-BOOST-SINGLE=ALL
+                        GIVE-ABILITY-BOOST-SINGLE=STR,CON
+                        <br/>
+                        GIVE-ABILITY-BOOST-SINGLE=ALL
                     </div>
                 </div>
                 <div class="pt-4 pb-2">
@@ -475,7 +479,9 @@
                         You can implement something like this using the following code:
                     </p>
                     <div class="code-block">
-                        GIVE-LORE=Warfare, GIVE-PROF-IN=LORE~Warfare:T
+                        GIVE-LORE=Warfare
+                        <br/>
+                        GIVE-PROF-IN=LORE~Warfare:T
                     </div>
                 </div>
             </div>

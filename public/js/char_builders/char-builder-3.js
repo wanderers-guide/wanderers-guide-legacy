@@ -132,7 +132,7 @@ function displayCurrentBackground(background) {
         sourceCodeSNum: 'a',
     };
     processCode(
-        'GIVE-ABILITY-BOOST-SINGLE='+background.boostOne+', GIVE-ABILITY-BOOST-SINGLE='+background.boostTwo,
+        'GIVE-ABILITY-BOOST-SINGLE='+background.boostOne+'\n GIVE-ABILITY-BOOST-SINGLE='+background.boostTwo,
         boostSrcStruct,
         'backBoostSection');
 

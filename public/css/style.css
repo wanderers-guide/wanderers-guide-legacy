@@ -227,6 +227,9 @@ body::-webkit-scrollbar-thumb {
     background-color: #181818;
     outline: 1px solid #181818;
 }
+.use-custom-scrollbar::-webkit-scrollbar-corner {
+    background-color: #181818;
+}
 
 .use-invisible-scrollbar::-webkit-scrollbar {
     width: 0em;

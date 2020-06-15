@@ -387,7 +387,7 @@ function displayCurrentAncestry(ancestryStruct, saving) {
     };
     let boostChooseCodeStr = '';
     for(let i = 0; i < boostChooseCount; i++) {
-        boostChooseCodeStr += 'GIVE-ABILITY-BOOST-SINGLE='+boostChooseString+', ';
+        boostChooseCodeStr += 'GIVE-ABILITY-BOOST-SINGLE='+boostChooseString+'\n';
     }
     if(boostChooseCodeStr != ''){
         processCode(

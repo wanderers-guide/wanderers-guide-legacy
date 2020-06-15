@@ -14,7 +14,7 @@ function processSheetCode(ascCode, sourceName){
 function processSheetCode(ascCode, sourceName, isTest){
     if(ascCode == null) {return false;}
     
-    let ascStatements = ascCode.split(", ");
+    let ascStatements = ascCode.split(/\n/);
 
     let success = true;
     for(const ascStatementRaw of ascStatements) {

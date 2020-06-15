@@ -1620,7 +1620,25 @@ function runAllFeatsAndAbilitiesCode() {
     }
 
     for(let classAbil of g_classDetails.Abilities){
-        processSheetCode(classAbil.code, classAbil.name);
+        if(classAbil.displayInSheet === 1 && classAbil.level <= g_character.level) {
+            processSheetCode(classAbil.code, classAbil.name);
+
+            if(classAbil.selectType == "SELECTOR"){
+                for(let classAbilChoice of g_classDetails.AbilityChoices){
+                    if(classAbilChoice.SelectorID == classAbil.id){
+
+                        let abilityOption = g_classDetails.Abilities.find(ability => {
+                            return ability.id == classAbilChoice.OptionID;
+                        });
+                        processSheetCode(abilityOption.code, abilityOption.name);
+
+                        break;
+
+                    }
+                }
+            }
+
+        }
     }
 
     for(let phyFeat of g_phyFeatArray){

@@ -4,7 +4,7 @@ function processDefaultItemRuneSheetCode(ascCode, invItemID){
     if(ascCode == null) {return false;}
     
     ascCode = ascCode.toUpperCase();
-    let ascStatements = ascCode.split(", ");
+    let ascStatements = ascCode.split(/\n/);
 
     let runeData = generateRuneDataStruct();
 

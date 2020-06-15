@@ -29,8 +29,18 @@ socket.on("returnAdminAncestryDetails", function(ancestryObject, featsObject){
     $("#inputDescription").val(ancestry.Ancestry.description);
 
     // Ancestry Boosts and Flaws
+    let firstFreeSelected = false;
     for(let boost of ancestry.Boosts){
-        $('#inputBoosts option[value="'+boost+'"]').attr('selected','selected');
+        if(boost == 'Anything'){
+            if(firstFreeSelected){
+                $('#boostOptionAnything2').attr('selected','selected');
+            } else {
+                $('#boostOptionAnything1').attr('selected','selected');
+                firstFreeSelected = true;
+            }
+        } else {
+            $('#inputBoosts option[value="'+boost+'"]').attr('selected','selected');
+        }
     }
     for(let flaw of ancestry.Flaws){
         $('#inputFlaws option[value="'+flaw+'"]').attr('selected','selected');
