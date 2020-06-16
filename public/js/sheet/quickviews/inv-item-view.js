@@ -113,7 +113,7 @@ function openInvItemQuickview(data) {
 
         if(data.Item.WeaponData.isMelee == 1){
             
-            let calcStruct = getAttackAndDamage(data.Item, data.InvItem, data.Data.StrMod, data.Data.DexMod);
+            let calcStruct = getAttackAndDamage(data.Item, data.InvItem);
 
             qContent.append('<div class="tile text-center"><div class="tile is-child is-6"><strong>Attack Bonus</strong></div><div class="tile is-child is-6"><strong>Damage</strong></div></div>');
             qContent.append('<div class="tile text-center"><div class="tile is-child is-6"><p class="pr-1">'+calcStruct.AttackBonus+'</p></div><div class="tile is-child is-6"><p>'+calcStruct.Damage+'</p></div></div>');
@@ -124,7 +124,7 @@ function openInvItemQuickview(data) {
         
         if(data.Item.WeaponData.isRanged == 1){
             
-            let calcStruct = getAttackAndDamage(data.Item, data.InvItem, data.Data.StrMod, data.Data.DexMod);
+            let calcStruct = getAttackAndDamage(data.Item, data.InvItem);
 
             qContent.append('<div class="tile text-center"><div class="tile is-child is-6"><strong>Attack Bonus</strong></div><div class="tile is-child is-6"><strong>Damage</strong></div></div>');
             qContent.append('<div class="tile text-center"><div class="tile is-child is-6"><p class="pr-1">'+calcStruct.AttackBonus+'</p></div><div class="tile is-child is-6"><p>'+calcStruct.Damage+'</p></div></div>');

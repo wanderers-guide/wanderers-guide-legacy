@@ -89,6 +89,8 @@ function openQuickView(type, data) {
         openOtherProfsQuickview(data);
     } else if(type == 'customizeProfView'){
         openCustomizeProfQuickview(data);
+    } else if(type == 'addProfView'){
+        openAddProfQuickview(data);
     }
 
 }

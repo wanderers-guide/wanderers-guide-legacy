@@ -72,7 +72,7 @@ function getUpAmt(profType){
     return 0;
 }
 
-function getBonus(profBonus){
+function getUserBonus(profBonus){
     let numBonus = parseInt(profBonus);
     return (isNaN(numBonus) ? 0 : numBonus);
 }
@@ -359,7 +359,6 @@ module.exports = class CharGathering {
                     for(const skillData of skillArray){
                         let bestProf = 'U';
                         let numUps = 0;
-                        let totalBonus = 0;
                         for(const profData of profDataArray){
                             tempCount++;
 
@@ -370,15 +369,14 @@ module.exports = class CharGathering {
                                 tempProfTo = tempProfTo.replace(/_|\s+/g,"");
                                 if(tempProfTo === tempSkillName) {
                                     numUps += getUpAmt(profData.Prof);
-                                    totalBonus += getBonus(profData.Prof);
                                     bestProf = getBetterProf(bestProf, profData.Prof);
                                 }
                             }
                         }
 
                         skillMap.set(skillData.SkillName, {
+                            Name : skillData.SkillName,
                             NumUps : profTypeToNumber(bestProf)+numUps,
-                            Bonus : totalBonus,
                             Skill : skillData.Skill
                         });
                     }
@@ -948,26 +946,38 @@ module.exports = class CharGathering {
             let newProfMap = new Map();
             for(const profData of profDataArray){
 
+                let userAdded = false;
+                if(profData.sourceType === 'user-added') {
+                    userAdded = true;
+                }
+
                 if(profData.sourceType === 'user-set') { // Hardcoded User-Set Data
-                    let originalData = profData; // Override prof with User-Set prof
-                    originalData.UserOverride = true;
-                    newProfMap.set(profData.To, {
-                        BestProf : getBetterProf('U', profData.Prof),
-                        NumIncreases : getUpAmt(profData.Prof),
-                        Bonus : getBonus(profData.Prof),
-                        For : profData.For,
-                        OriginalData : originalData,
-                    });
-                } else {
+
+                    let userBonus = getUserBonus(profData.Prof);
+                    let profOverride = (userBonus == 0);
 
                     let profMapValue = newProfMap.get(profData.To);
                     if(profMapValue != null){
 
+                        let bestProf = getBetterProf(profMapValue.BestProf, profData.Prof);
+                        let numIncreases = profMapValue.NumIncreases+getUpAmt(profData.Prof);
+                        if(profMapValue.UserProfOverride){
+                            bestProf = profMapValue.BestProf;
+                            numIncreases = profMapValue.NumIncreases;
+                        }
+                        if(profOverride){
+                            bestProf = getBetterProf('U', profData.Prof);
+                            numIncreases = getUpAmt(profData.Prof);
+                        }
+
+                        let userBonus = getUserBonus(profData.Prof);
                         newProfMap.set(profData.To, {
-                            BestProf : getBetterProf(profMapValue.BestProf, profData.Prof),
-                            NumIncreases : profMapValue.NumIncreases+getUpAmt(profData.Prof),
-                            Bonus : profMapValue.Bonus+getBonus(profData.Prof),
+                            BestProf : bestProf,
+                            NumIncreases : numIncreases,
                             For : profMapValue.For,
+                            UserBonus : ((profMapValue.UserBonus > userBonus) ? profMapValue.UserBonus : userBonus),
+                            UserProfOverride : profOverride,
+                            UserAdded : (userAdded || profMapValue.UserAdded),
                             OriginalData : profData,
                         });
 
@@ -976,8 +986,47 @@ module.exports = class CharGathering {
                         newProfMap.set(profData.To, {
                             BestProf : getBetterProf('U', profData.Prof),
                             NumIncreases : getUpAmt(profData.Prof),
-                            Bonus : getBonus(profData.Prof),
                             For : profData.For,
+                            UserBonus : userBonus,
+                            UserProfOverride : profOverride,
+                            UserAdded : userAdded,
+                            OriginalData : profData,
+                        });
+
+                    }
+
+                } else {
+
+                    let profMapValue = newProfMap.get(profData.To);
+                    if(profMapValue != null){
+
+                        let bestProf = getBetterProf(profMapValue.BestProf, profData.Prof);
+                        let numIncreases = profMapValue.NumIncreases+getUpAmt(profData.Prof);
+                        if(profMapValue.UserProfOverride){
+                            bestProf = profMapValue.BestProf;
+                            numIncreases = profMapValue.NumIncreases;
+                        }
+
+                        let userBonus = getUserBonus(profData.Prof);
+                        newProfMap.set(profData.To, {
+                            BestProf : bestProf,
+                            NumIncreases : numIncreases,
+                            For : profMapValue.For,
+                            UserBonus : ((profMapValue.UserBonus > userBonus) ? profMapValue.UserBonus : userBonus),
+                            UserProfOverride : false,
+                            UserAdded : (userAdded || profMapValue.UserAdded),
+                            OriginalData : profData,
+                        });
+
+                    } else {
+
+                        newProfMap.set(profData.To, {
+                            BestProf : getBetterProf('U', profData.Prof),
+                            NumIncreases : getUpAmt(profData.Prof),
+                            For : profData.For,
+                            UserBonus : 0,
+                            UserProfOverride : false,
+                            UserAdded : userAdded,
                             OriginalData : profData,
                         });
 
@@ -988,12 +1037,14 @@ module.exports = class CharGathering {
             }
 
             for(const [profName, profMapData] of newProfMap.entries()){
-
+                
                 newProfMap.set(profName, {
                     Name : profName,
                     NumUps : profTypeToNumber(profMapData.BestProf)+profMapData.NumIncreases,
-                    Bonus : profMapData.Bonus,
                     For : profMapData.For,
+                    UserBonus : profMapData.UserBonus,
+                    UserProfOverride : profMapData.UserProfOverride,
+                    UserAdded : profMapData.UserAdded,
                     OriginalData : profMapData.OriginalData,
                 });
                         

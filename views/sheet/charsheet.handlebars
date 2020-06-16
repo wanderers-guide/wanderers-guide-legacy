@@ -30,6 +30,7 @@
     <script src="/js/sheet/quickviews/speed-view.js"></script>
     <script src="/js/sheet/quickviews/other-profs-view.js"></script>
     <script src="/js/sheet/quickviews/customize-prof-view.js"></script>
+    <script src="/js/sheet/quickviews/add-prof-view.js"></script>
 
     <script src="/js/sheet/general/stat-manager.js"></script>
     <script src="/js/sheet/general/conditions-manager.js"></script>
@@ -152,7 +153,7 @@
                                 <div class="column is-paddingless"></div>
                                 <div class="column is-paddingless"><p class="is-size-6"><strong class="has-text-grey-lighter">Conditions</strong></p></div>
                                 <div class="column is-paddingless">
-                                    <a id="addNewConditionsButton" class="is-pulled-right is-size-6"><span class="icon is-medium has-text-info"><i class="fas fa-plus-circle"></i></span></a>
+                                    <a id="addNewConditionsButton" class="is-pulled-right is-size-6"><span class="icon has-text-info"><i class="fas fa-plus-circle"></i></span></a>
                                 </div>
                             </div>
                             <div id="conditionsContent" class="buttons is-centered mx-1"></div>
@@ -287,7 +288,7 @@
                 <div class="tile is-vertical sheet-box" style="height: 550px; max-height: 550px; overflow-y: auto;">
                     <div class="tile is-paddingless">
                         <div class="tile is-child">
-                            <p class="is-size-6"><strong class="has-text-grey-lighter">Attacks</strong></p>
+                            <p class="is-size-6"><strong class="has-text-grey-lighter pl-4">Attacks</strong><a id="addNewProfButton" class="is-pulled-right is-size-6"><span class="icon has-text-info"><i class="fas fa-plus-circle"></i></span></a></p>
                             <p id="attacksContent"></p>
                         </div>
                     </div>

@@ -247,7 +247,7 @@ function displayInventoryItem(invItem, openBagInvItemArray, runeDataStruct, data
                 $('#'+baggedInvItemNameID).html(baggedInvItem.name);
 
                 if(baggedItem.WeaponData != null){
-                    let calcStruct = getAttackAndDamage(baggedItem, baggedInvItem, data.StrMod, data.DexMod);
+                    let calcStruct = getAttackAndDamage(baggedItem, baggedInvItem);
                     $('#'+baggedInvItemNameID).append('<sup class="pl-2 has-text-weight-light">'+calcStruct.AttackBonus+'</sup><sup class="pl-3 has-text-weight-light has-text-grey">'+calcStruct.Damage+'</sup>');
                 }
 
@@ -340,7 +340,7 @@ function displayInventoryItem(invItem, openBagInvItemArray, runeDataStruct, data
     $('#'+invItemNameID).prepend(invItem.name);
 
     if(item.WeaponData != null){
-        let calcStruct = getAttackAndDamage(item, invItem, data.StrMod, data.DexMod);
+        let calcStruct = getAttackAndDamage(item, invItem);
         $('#'+invItemNameID).append('<sup class="pl-2 has-text-weight-light">'+calcStruct.AttackBonus+'</sup><sup class="pl-3 has-text-weight-light has-text-grey">'+calcStruct.Damage+'</sup>');
     }
 

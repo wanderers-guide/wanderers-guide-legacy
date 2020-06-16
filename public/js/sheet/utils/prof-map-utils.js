@@ -10,7 +10,7 @@ function findItemDataByName(itemMap, itemName){
 
 function buildWeaponProfMap(){
 
-    let weaponProfMap = new Map(); // Key: ItemID Value: { NumUps, Bonus }
+    let weaponProfMap = new Map(); // Key: ItemID Value: { NumUps, UserBonus }
 
     for(const [profName, profData] of g_profMap.entries()){
         if(profData.For == "Attack"){
@@ -18,36 +18,36 @@ function buildWeaponProfMap(){
             if(profName == 'Simple_Weapons'){
                 for(const [itemID, itemData] of g_itemMap.entries()){
                     if(itemData.WeaponData != null && itemData.WeaponData.category == "SIMPLE"){
-                        weaponProfMap.set(itemID, {
+                        weaponProfMap.set(parseInt(itemID), {
                             NumUps : profData.NumUps,
-                            Bonus : profData.Bonus
+                            UserBonus : profData.UserBonus
                         });
                     }
                 }
             } else if(profName == 'Martial_Weapons'){
                 for(const [itemID, itemData] of g_itemMap.entries()){
                     if(itemData.WeaponData != null && itemData.WeaponData.category == "MARTIAL"){
-                        weaponProfMap.set(itemID, {
+                        weaponProfMap.set(parseInt(itemID), {
                             NumUps : profData.NumUps,
-                            Bonus : profData.Bonus
+                            UserBonus : profData.UserBonus
                         });
                     }
                 }
             } else if(profName == 'Advanced_Weapons'){
                 for(const [itemID, itemData] of g_itemMap.entries()){
                     if(itemData.WeaponData != null && itemData.WeaponData.category == "ADVANCED"){
-                        weaponProfMap.set(itemID, {
+                        weaponProfMap.set(parseInt(itemID), {
                             NumUps : profData.NumUps,
-                            Bonus : profData.Bonus
+                            UserBonus : profData.UserBonus
                         });
                     }
                 }
             } else if(profName == 'Unarmed_Attacks'){
                 for(const [itemID, itemData] of g_itemMap.entries()){
                     if(itemData.WeaponData != null && itemData.WeaponData.category == "UNARMED"){
-                        weaponProfMap.set(itemID, {
+                        weaponProfMap.set(parseInt(itemID), {
                             NumUps : profData.NumUps,
-                            Bonus : profData.Bonus
+                            UserBonus : profData.UserBonus
                         });
                     }
                 }
@@ -57,7 +57,7 @@ function buildWeaponProfMap(){
                 if(itemData != null){
                     weaponProfMap.set(itemData.Item.id, {
                         NumUps : profData.NumUps,
-                        Bonus : profData.Bonus
+                        UserBonus : profData.UserBonus
                     });
                 }
             }
@@ -71,7 +71,7 @@ function buildWeaponProfMap(){
 
 function buildArmorProfMap(){
 
-    let armorProfMap = new Map(); // Key: ItemID Value: { NumUps, Bonus }
+    let armorProfMap = new Map(); // Key: ItemID Value: { NumUps, UserBonus }
 
     for(const [profName, profData] of g_profMap.entries()){
         if(profData.For == "Defense"){
@@ -79,36 +79,36 @@ function buildArmorProfMap(){
             if(profName == 'Light_Armor'){
                 for(const [itemID, itemData] of g_itemMap.entries()){
                     if(itemData.ArmorData != null && itemData.ArmorData.category == "LIGHT"){
-                        armorProfMap.set(itemID, {
+                        armorProfMap.set(parseInt(itemID), {
                             NumUps : profData.NumUps,
-                            Bonus : profData.Bonus
+                            UserBonus : profData.UserBonus
                         });
                     }
                 }
             } else if(profName == 'Medium_Armor'){
                 for(const [itemID, itemData] of g_itemMap.entries()){
                     if(itemData.ArmorData != null && itemData.ArmorData.category == "MEDIUM"){
-                        armorProfMap.set(itemID, {
+                        armorProfMap.set(parseInt(itemID), {
                             NumUps : profData.NumUps,
-                            Bonus : profData.Bonus
+                            UserBonus : profData.UserBonus
                         });
                     }
                 }
             } else if(profName == 'Heavy_Armor'){
                 for(const [itemID, itemData] of g_itemMap.entries()){
                     if(itemData.ArmorData != null && itemData.ArmorData.category == "HEAVY"){
-                        armorProfMap.set(itemID, {
+                        armorProfMap.set(parseInt(itemID), {
                             NumUps : profData.NumUps,
-                            Bonus : profData.Bonus
+                            UserBonus : profData.UserBonus
                         });
                     }
                 }
             } else if(profName == 'Unarmored_Defense'){
                 for(const [itemID, itemData] of g_itemMap.entries()){
                     if(itemData.ArmorData != null && itemData.ArmorData.category == "UNARMORED"){
-                        armorProfMap.set(itemID, {
+                        armorProfMap.set(parseInt(itemID), {
                             NumUps : profData.NumUps,
-                            Bonus : profData.Bonus
+                            UserBonus : profData.UserBonus
                         });
                     }
                 }
@@ -118,7 +118,7 @@ function buildArmorProfMap(){
                 if(itemData != null){
                     armorProfMap.set(itemData.Item.id, {
                         NumUps : profData.NumUps,
-                        Bonus : profData.Bonus
+                        UserBonus : profData.UserBonus
                     });
                 }
             }

@@ -55,6 +55,7 @@ let g_selectedSubTabLock = false;
 
 let g_conditionsLoadingState = null;
 let g_preConditions_strScore = null;
+let g_preConditions_dexScore = null;
 
 
 
@@ -219,71 +220,76 @@ function loadCharSheet(){
     let fortData = g_profMap.get("Fortitude");
     
     addStat('SAVE_FORT', 'PROF_BONUS', fortData.NumUps);
-    addStat('SAVE_FORT', 'USER_BONUS', fortData.Bonus);
+    addStat('SAVE_FORT', 'USER_BONUS', fortData.UserBonus);
     addStat('SAVE_FORT', 'MODIFIER', 'CON');
     
     let reflexData = g_profMap.get("Reflex");
     addStat('SAVE_REFLEX', 'PROF_BONUS', reflexData.NumUps);
-    addStat('SAVE_REFLEX', 'USER_BONUS', reflexData.Bonus);
+    addStat('SAVE_REFLEX', 'USER_BONUS', reflexData.UserBonus);
     addStat('SAVE_REFLEX', 'MODIFIER', 'DEX');
 
     let willData = g_profMap.get("Will");
     addStat('SAVE_WILL', 'PROF_BONUS', willData.NumUps);
-    addStat('SAVE_WILL', 'USER_BONUS', willData.Bonus);
+    addStat('SAVE_WILL', 'USER_BONUS', willData.UserBonus);
     addStat('SAVE_WILL', 'MODIFIER', 'WIS');
 
     for(const [skillName, skillData] of g_skillMap.entries()){
-        addStat('SKILL_'+skillName, 'PROF_BONUS', skillData.NumUps);
-        addStat('SKILL_'+skillName, 'USER_BONUS', skillData.Bonus);
+        let profData = g_profMap.get(skillName);
+        if(profData != null){
+            addStat('SKILL_'+skillName, 'PROF_BONUS', profData.NumUps);
+            addStat('SKILL_'+skillName, 'USER_BONUS', profData.UserBonus);
+        } else {
+            addStat('SKILL_'+skillName, 'PROF_BONUS', skillData.NumUps);
+        }
         addStat('SKILL_'+skillName, 'MODIFIER', skillData.Skill.ability);
     }
 
     let perceptionData = g_profMap.get("Perception");
     addStat('PERCEPTION', 'PROF_BONUS', perceptionData.NumUps);
-    addStat('PERCEPTION', 'USER_BONUS', perceptionData.Bonus);
+    addStat('PERCEPTION', 'USER_BONUS', perceptionData.UserBonus);
     addStat('PERCEPTION', 'MODIFIER', 'WIS');
 
     // Spell Attacks and DCs
     let arcaneSpellAttack = g_profMap.get("ArcaneSpellAttacks");
     if(arcaneSpellAttack != null){
         addStat('ARCANE_SPELL_ATTACK', 'PROF_BONUS', arcaneSpellAttack.NumUps);
-        addStat('ARCANE_SPELL_ATTACK', 'USER_BONUS', arcaneSpellAttack.Bonus);
+        addStat('ARCANE_SPELL_ATTACK', 'USER_BONUS', arcaneSpellAttack.UserBonus);
     }
     let occultSpellAttack = g_profMap.get("OccultSpellAttacks");
     if(occultSpellAttack != null){
         addStat('OCCULT_SPELL_ATTACK', 'PROF_BONUS', occultSpellAttack.NumUps);
-        addStat('OCCULT_SPELL_ATTACK', 'USER_BONUS', occultSpellAttack.Bonus);
+        addStat('OCCULT_SPELL_ATTACK', 'USER_BONUS', occultSpellAttack.UserBonus);
     }
     let primalSpellAttack = g_profMap.get("PrimalSpellAttacks");
     if(primalSpellAttack != null){
         addStat('PRIMAL_SPELL_ATTACK', 'PROF_BONUS', primalSpellAttack.NumUps);
-        addStat('PRIMAL_SPELL_ATTACK', 'USER_BONUS', primalSpellAttack.Bonus);
+        addStat('PRIMAL_SPELL_ATTACK', 'USER_BONUS', primalSpellAttack.UserBonus);
     }
     let divineSpellAttack = g_profMap.get("DivineSpellAttacks");
     if(divineSpellAttack != null){
         addStat('DIVINE_SPELL_ATTACK', 'PROF_BONUS', divineSpellAttack.NumUps);
-        addStat('DIVINE_SPELL_ATTACK', 'USER_BONUS', divineSpellAttack.Bonus);
+        addStat('DIVINE_SPELL_ATTACK', 'USER_BONUS', divineSpellAttack.UserBonus);
     }
     
     let arcaneSpellDC = g_profMap.get("ArcaneSpellDCs");
     if(arcaneSpellDC != null){
         addStat('ARCANE_SPELL_DC', 'PROF_BONUS', arcaneSpellDC.NumUps);
-        addStat('ARCANE_SPELL_DC', 'USER_BONUS', arcaneSpellDC.Bonus);
+        addStat('ARCANE_SPELL_DC', 'USER_BONUS', arcaneSpellDC.UserBonus);
     }
     let occultSpellDC = g_profMap.get("OccultSpellDCs");
     if(occultSpellDC != null){
         addStat('OCCULT_SPELL_DC', 'PROF_BONUS', occultSpellDC.NumUps);
-        addStat('OCCULT_SPELL_DC', 'USER_BONUS', occultSpellDC.Bonus);
+        addStat('OCCULT_SPELL_DC', 'USER_BONUS', occultSpellDC.UserBonus);
     }
     let primalSpellDC = g_profMap.get("PrimalSpellDCs");
     if(primalSpellDC != null){
         addStat('PRIMAL_SPELL_DC', 'PROF_BONUS', primalSpellDC.NumUps);
-        addStat('PRIMAL_SPELL_DC', 'USER_BONUS', primalSpellDC.Bonus);
+        addStat('PRIMAL_SPELL_DC', 'USER_BONUS', primalSpellDC.UserBonus);
     }
     let divineSpellDC = g_profMap.get("DivineSpellDCs");
     if(divineSpellDC != null){
         addStat('DIVINE_SPELL_DC', 'PROF_BONUS', divineSpellDC.NumUps);
-        addStat('DIVINE_SPELL_DC', 'USER_BONUS', divineSpellDC.Bonus);
+        addStat('DIVINE_SPELL_DC', 'USER_BONUS', divineSpellDC.UserBonus);
     }
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
@@ -297,8 +303,9 @@ function loadCharSheet(){
     // Determine Bulk and Coins //
     determineBulkAndCoins(g_invStruct.InvItems, g_itemMap, getMod(getStatTotal('SCORE_STR')));
 
-    // Get STR score before conditions code runs (in the case of Enfeebled)
+    // Get STR and DEX score before conditions code runs (in the case of Enfeebled)
     g_preConditions_strScore = getStatTotal('SCORE_STR');
+    g_preConditions_dexScore = getStatTotal('SCORE_DEX');
 
     // Run All Conditions Code //
     runAllConditionsCode();
@@ -702,6 +709,11 @@ function displayInformation() {
     ///////////////////////////////////// Attacks and Defenses /////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
+    $("#addNewProfButton").click(function(){
+        openQuickView('addProfView', {
+        });
+    });
+
     let otherProfsNum = 0;
 
     let attacks = $("#attacksContent");
@@ -854,11 +866,13 @@ function displayInformation() {
     skills.html('<p class="is-size-5"><strong class="has-text-grey-lighter">Skills</strong></p><hr class="border-secondary is-marginless">');
     let hasFascinatedCondition = hasCondition(14); // Hardcoded - Fascinated condition decreases all skills by -2
     for(const [skillName, skillData] of g_skillMap.entries()){
+        let profData = g_profMap.get(skillName);
+        if(profData == null){ profData = skillData; }
 
         let skillButtonID = ("skillButton"+skillName).replace(/ /g,'_');
 
         let abilMod = getMod(g_abilMap.get(skillData.Skill.ability));
-        let profNum = getProfNumber(skillData.NumUps, g_character.level);
+        let profNum = getProfNumber(profData.NumUps, g_character.level);
 
         let totalBonus = getStatTotal('SKILL_'+skillName);
         if(hasFascinatedCondition){
@@ -873,7 +887,7 @@ function displayInformation() {
             openQuickView('skillView', {
                 Skill : skillData.Skill,
                 SkillName : skillName,
-                SkillData : skillData,
+                ProfData : profData,
                 AbilMod : abilMod,
                 ProfNum : profNum,
                 TotalBonus : totalBonus,
@@ -1233,13 +1247,13 @@ function determineArmor(dexMod, strScore) {
     let armorStruct = findEquippedArmor();
     if(armorStruct != null){
 
-        let profData = g_armorProfMap.get(armorStruct.Item.Item.id+"");
+        let profData = g_armorProfMap.get(armorStruct.Item.Item.id);
 
         let profNumUps = null;
         let profBonus = null;
         if(profData != null){
             profNumUps = profData.NumUps;
-            profBonus = profData.Bonus;
+            profBonus = profData.UserBonus;
         } else {
             profNumUps = 0;
             profBonus = 0;
@@ -1334,13 +1348,13 @@ function determineArmor(dexMod, strScore) {
 
     } else {
 
-        let profData = g_armorProfMap.get("31"); // No Armor Hidden Item ID
+        let profData = g_armorProfMap.get(31); // No Armor Hidden Item ID
 
         let profNumUps = null;
         let profBonus = null;
         if(profData != null){
             profNumUps = profData.NumUps;
-            profBonus = profData.Bonus;
+            profBonus = profData.UserBonus;
         } else {
             profNumUps = 0;
             profBonus = 0;
@@ -1620,7 +1634,7 @@ function runAllFeatsAndAbilitiesCode() {
     }
 
     for(let classAbil of g_classDetails.Abilities){
-        if(classAbil.displayInSheet === 1 && classAbil.level <= g_character.level) {
+        if(classAbil.selectType != 'SELECT_OPTION' && classAbil.level <= g_character.level) {
             processSheetCode(classAbil.code, classAbil.name);
 
             if(classAbil.selectType == "SELECTOR"){
@@ -1656,7 +1670,7 @@ function runAllFeatsAndAbilitiesCode() {
 
 function otherProfBuild(content, prof, name, otherProfsNum, profData){
 
-    if(profData.OriginalData.UserOverride != null && profData.OriginalData.UserOverride){
+    if(profData.UserAdded){
         prof = '<span class="is-underlined">'+prof+'</span>';
     } else {
         prof = '<span>'+prof+'</span>';
@@ -1760,8 +1774,9 @@ function takeRest(){
 //////////////////////////////////////// Socket Returns ////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
-socket.on("returnFinalProfs", function(profObject){
+socket.on("returnFinalProfs", function(profObject, skillObject){
     g_profMap = objToMap(profObject);
+    g_skillMap = objToMap(skillObject);
     g_weaponProfMap = buildWeaponProfMap();
     g_armorProfMap = buildArmorProfMap();
     loadCharSheet();

@@ -79,17 +79,36 @@ router.get('/add', (req, res) => {
         if(CharStateUtils.canMakeCharacter(req.user, characters)){
 
             Inventory.create({
-            }).then(inventory => {
-                CharSaving.addItemToInv(inventory.id, 23, 150) // Give starting 150 silver
-                .then( result => {
-                    Character.create({
-                        name: "Unnamed Character",
-                        level: 1,
-                        userID: req.user.id,
-                        inventoryID: inventory.id,
-                    }).then(character => {
-                        res.redirect('/profile/characters/builder/'+character.id+'/page1');
-                    }).catch(err => console.log(err));
+            }).then(inventory => { // -- Hardcoded Item IDs for Small Pouch and Silver
+                CharSaving.addItemToInv(inventory.id, 84, 1) // Give Small Pouch
+                .then(pouchInvItem => {
+                    CharSaving.saveInvItemCustomize(pouchInvItem.id, {
+                        name: 'Coin Pouch',
+                        price: 0,
+                        bulk: pouchInvItem.bulk,
+                        description: 'A worthless, small pouch used to hold coins.',
+                        size: pouchInvItem.size,
+                        isShoddy: pouchInvItem.isShoddy,
+                        hitPoints: pouchInvItem.hitPoints,
+                        brokenThreshold: pouchInvItem.brokenThreshold,
+                        hardness: pouchInvItem.hardness,
+                        code: pouchInvItem.code,
+                    }).then(result => {
+                        CharSaving.addItemToInv(inventory.id, 23, 150) // Give starting 150 silver
+                        .then(silverInvItem => {
+                            CharSaving.saveInvItemToNewBag(silverInvItem.id, pouchInvItem.id) // Put silver in pouch
+                            .then(result => {
+                                Character.create({
+                                    name: "Unnamed Character",
+                                    level: 1,
+                                    userID: req.user.id,
+                                    inventoryID: inventory.id,
+                                }).then(character => {
+                                    res.redirect('/profile/characters/builder/'+character.id+'/page1');
+                                }).catch(err => console.log(err));
+                            });
+                        });
+                    });
                 });
             });
 

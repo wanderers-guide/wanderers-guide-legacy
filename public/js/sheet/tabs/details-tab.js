@@ -277,7 +277,7 @@ function displayClassAbilities(data, abilitiesSearchValue){
 
     let abilCount = 0;
     for(let classAbil of data.ClassDetails.Abilities){
-        if(classAbil.displayInSheet === 0 || classAbil.level > g_character.level){ continue; }
+        if(classAbil.displayInSheet === 0 || classAbil.selectType == 'SELECT_OPTION' || classAbil.level > g_character.level){ continue; }
         filterAbilitiesThroughSearch(classAbil, 'Class'+abilCount, abilitiesSearchValue);
         abilCount++;
     }

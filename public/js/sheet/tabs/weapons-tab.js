@@ -6,7 +6,7 @@ function openWeaponsTab(data) {
     let addWeaponEntry = function(weaponEntryID, item, invItem, runeDataStruct, data) {
         let weaponListEntryID = 'weaponListEntry'+weaponEntryID;
 
-        let calcStruct = getAttackAndDamage(item, invItem, data.StrMod, data.DexMod);
+        let calcStruct = getAttackAndDamage(item, invItem);
         let weaponRange = '-';
         let weaponReload = '-';
         if(item.WeaponData.isRanged == 1){

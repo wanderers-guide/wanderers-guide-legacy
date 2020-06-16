@@ -2,11 +2,28 @@
 function openPerceptionQuickview(data) {
 
     $('#quickViewTitle').html(data.ProfData.Name);
+    $('#quickViewTitleRight').html('<button id="customizeProfBtn" class="button is-very-small is-success is-outlined is-rounded is-pulled-right mr-1">Customize</button>');
+    $('#customizeProfBtn').click(function(){
+        openQuickView('customizeProfView', {
+            ProfData : data.ProfData,
+            _prevBackData: {Type: g_QViewLastType, Data: g_QViewLastData},
+        });
+    });
+
     let qContent = $('#quickViewContent');
 
     let profName = getProfNameFromNumUps(data.ProfData.NumUps);
+    if(data.ProfData.UserProfOverride){
+        qContent.append('<p><strong>Proficiency:</strong> '+profName+' <span class="is-inline pl-1 is-size-7 is-italic"> ( Override )</span></p>');
+    } else {
+        qContent.append('<p><strong>Proficiency:</strong> '+profName+'</p>');
+    }
+    
+    let userBonus = data.ProfData.UserBonus;
+    if(userBonus != 0){
+        qContent.append('<p><strong>Extra Bonus:</strong> '+signNumber(userBonus)+'</p>');
+    }
 
-    qContent.append('<p><strong>Proficiency:</strong> '+profName+'</p>');
     qContent.append('<hr class="m-2">');
     qContent.append('<p>Perception measures your character’s ability to notice hidden objects or unusual situations, and it usually determines how quickly the character springs into action in combat.</p>');
     qContent.append('<hr class="m-2">');

@@ -41,7 +41,9 @@ module.exports = class SocketConnections {
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
           if(ownsChar){
             CharGathering.getFinalProfs(charID).then((profMap) => {
-              socket.emit('returnFinalProfs', mapToObj(profMap));
+              CharGathering.getAllSkills(charID).then((skillObject) => {
+                socket.emit('returnFinalProfs', mapToObj(profMap), skillObject);
+              });
             });
           }
         });

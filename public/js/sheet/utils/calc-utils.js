@@ -1,7 +1,11 @@
 
 
-function getAttackAndDamage(itemData, invItem, strMod, dexMod){
-    
+function getAttackAndDamage(itemData, invItem){
+
+    let strMod = getMod(getStatTotal('SCORE_STR'));
+    let dexMod = getMod(getStatTotal('SCORE_DEX'));
+    let pre_strMod = getMod(g_preConditions_strScore);
+    let pre_dexMod = getMod(g_preConditions_dexScore);
     let itemRuneData = invItem.itemRuneData;
 
     if(itemData.WeaponData.isMelee == 1){
@@ -14,19 +18,19 @@ function getAttackAndDamage(itemData, invItem, strMod, dexMod){
             abilMod = (dexMod > abilMod) ? dexMod : abilMod;
         }
     
-        let profData = g_weaponProfMap.get(itemData.Item.id+"");
+        let profData = g_weaponProfMap.get(itemData.Item.id);
     
         let profNumUps = null;
         let profBonus = null;
         if(profData != null){
             profNumUps = profData.NumUps;
-            profBonus = profData.Bonus;
+            profBonus = profData.UserBonus;
         } else {
             profNumUps = 0;
             profBonus = 0;
         }
 
-        let dmgStrBonus = (strMod == 0) ? '' : signNumber(strMod);
+        let dmgStrBonus = (pre_strMod == 0) ? '' : signNumber(pre_strMod);
 
         let potencyRuneBonus = 0;
         if(itemRuneData != null){
@@ -79,7 +83,7 @@ function getAttackAndDamage(itemData, invItem, strMod, dexMod){
         let weapSpecial = (weapSpecialBonus != 0) ? signNumber(weapSpecialBonus) : '';
 
         let damage = '';
-        let maxDamage = diceNum*dieTypeToNum(itemData.WeaponData.dieType)+strMod+weapSpecialBonus;
+        let maxDamage = diceNum*dieTypeToNum(itemData.WeaponData.dieType)+pre_strMod+weapSpecialBonus;
         if(maxDamage > 1) {
             damage = diceNum+""+itemData.WeaponData.dieType+dmgStrBonus+weapSpecial+" "+itemData.WeaponData.damageType;
         } else {
@@ -94,17 +98,17 @@ function getAttackAndDamage(itemData, invItem, strMod, dexMod){
             return tag.Tag.id == 47; // Hardcoded Thrown Tag ID
         });
         let dmgStrBonus = '';
-        if(thrownTag != null && strMod != 0){
-            dmgStrBonus = signNumber(strMod);
+        if(thrownTag != null && pre_strMod != 0){
+            dmgStrBonus = signNumber(pre_strMod);
         }
 
-        let profData = g_weaponProfMap.get(itemData.Item.id+"");
+        let profData = g_weaponProfMap.get(itemData.Item.id);
         
         let profNumUps = null;
         let profBonus = null;
         if(profData != null){
             profNumUps = profData.NumUps;
-            profBonus = profData.Bonus;
+            profBonus = profData.UserBonus;
         } else {
             profNumUps = 0;
             profBonus = 0;
@@ -161,7 +165,7 @@ function getAttackAndDamage(itemData, invItem, strMod, dexMod){
         let weapSpecial = (weapSpecialBonus != 0) ? signNumber(weapSpecialBonus) : '';
 
         let damage = '';
-        let maxDamage = diceNum*dieTypeToNum(itemData.WeaponData.dieType)+strMod+weapSpecialBonus;
+        let maxDamage = diceNum*dieTypeToNum(itemData.WeaponData.dieType)+pre_strMod+weapSpecialBonus;
         if(maxDamage > 1) {
             damage = diceNum+""+itemData.WeaponData.dieType+dmgStrBonus+weapSpecial+" "+itemData.WeaponData.damageType;
         } else {
