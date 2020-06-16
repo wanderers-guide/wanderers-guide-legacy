@@ -121,7 +121,7 @@ function expHasLevel(expression, statement, elseStatement){
 function expHasHeritage(expression, statement, elseStatement){
     let heritageName = expression.split('=')[1].toUpperCase();
     let currentHeritageName = g_expr_heritage.name.toUpperCase();
-    if(heritageName === currentHeritageName){
+    if(currentHeritageName.startsWith(heritageName)){
         return statement;
     } else {
         return elseStatement;
