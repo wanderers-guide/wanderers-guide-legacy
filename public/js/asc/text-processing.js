@@ -257,7 +257,7 @@ function handleLink(match, innerTextURL) {
         return website.Website == websiteName;
     });
     if(foundWebsite != null){
-        return '<a href="'+urlObj.href+'" target="_blank" rel="external" class="has-tooltip-top" data-tooltip="'+foundWebsite.Title+' Link"><img width="16" height="16" src="http://www.google.com/s2/favicons?domain='+foundWebsite.Website+'"></img></a>';
+        return '<a href="'+urlObj.href+'" target="_blank" rel="external" class="has-tooltip-top" data-tooltip="'+foundWebsite.Title+' Link"><img width="16" height="16" src="https://www.google.com/s2/favicons?domain='+foundWebsite.Website+'"></img></a>';
     } else {
         return '['+innerTextURL+']';
     }
