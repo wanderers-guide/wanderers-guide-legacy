@@ -11,6 +11,7 @@ function findItemDataByName(itemMap, itemName){
 function hasFamiliarityReduceProf(itemData){
     for(let weaponFamiliarity of g_weaponFamiliaritiesArray){
         let traitName = weaponFamiliarity.value+' - ITEM';
+        
         let tag = itemData.TagArray.find(tag => {
             return tag.Tag.name.toUpperCase() == traitName;
         });

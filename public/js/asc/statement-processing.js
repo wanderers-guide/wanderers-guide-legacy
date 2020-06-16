@@ -43,7 +43,7 @@ function processSheetCode(ascCode, sourceName, isTest){
 
         if(ascStatement.toUpperCase().includes("CONDITIONAL-INCREASE-")){
             if(isTest) {continue;}
-            // Ex. CONDITIONAL-INCREASE-PERCEPTION=2~status penalty to checks for initiative
+            // Ex. CONDITIONAL-INCREASE-PERCEPTION=2~status bonus to checks for initiative
 
             let adjustmentData = (ascStatement.split('-')[2]).split('=');
             let adjustmentTowards = adjustmentData[0];

@@ -16,12 +16,12 @@ function hasWeaponCriticalSpecialization(item){
     for(const weapCriticalData of g_specializationStruct.WeapCriticals){
         if(weapCriticalData.value.startsWith('TRAIT~')){
             let traitName = weapCriticalData.value.replace(/TRAIT\~/g,'');
+            traitName = traitName+' - ITEM';
 
-            let tagStruct = item.TagArray.find(tagStruct => {
-                return traitName == tagStruct.Tag.name.toUpperCase();
+            let tag = item.TagArray.find(tag => {
+                return tag.Tag.name.toUpperCase() == traitName;
             });
-
-            if(tagStruct != null){
+            if(tag != null){
                 return true;
             }
     

@@ -241,13 +241,14 @@ function loadCharSheet(){
 
     for(const [skillName, skillData] of g_skillMap.entries()){
         let profData = g_profMap.get(skillName);
+        let skillCodeName = skillName.replace(/\s/g,'_');
         if(profData != null){
-            addStat('SKILL_'+skillName, 'PROF_BONUS', profData.NumUps);
-            addStat('SKILL_'+skillName, 'USER_BONUS', profData.UserBonus);
+            addStat('SKILL_'+skillCodeName, 'PROF_BONUS', profData.NumUps);
+            addStat('SKILL_'+skillCodeName, 'USER_BONUS', profData.UserBonus);
         } else {
-            addStat('SKILL_'+skillName, 'PROF_BONUS', skillData.NumUps);
+            addStat('SKILL_'+skillCodeName, 'PROF_BONUS', skillData.NumUps);
         }
-        addStat('SKILL_'+skillName, 'MODIFIER', skillData.Skill.ability);
+        addStat('SKILL_'+skillCodeName, 'MODIFIER', skillData.Skill.ability);
     }
 
     let perceptionData = g_profMap.get("Perception");
