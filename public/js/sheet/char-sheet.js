@@ -42,6 +42,7 @@ let g_innateSpellArray = null;
 let g_resistAndVulners = null;
 
 let g_specializationStruct = null;
+let g_weaponFamiliaritiesArray = null;
 
 let g_notesFields = null;
 
@@ -112,6 +113,9 @@ socket.on("returnCharacterSheetInfo", function(charInfo){
     g_senseArray = charInfo.ChoicesStruct.SenseArray;
     g_phyFeatArray = charInfo.ChoicesStruct.PhyFeatArray;
 
+    g_specializationStruct = charInfo.SpecializeStruct;
+    g_weaponFamiliaritiesArray = charInfo.WeaponFamiliarities;
+
     g_profMap = objToMap(charInfo.ProfObject);
     g_weaponProfMap = buildWeaponProfMap();
     g_armorProfMap = buildArmorProfMap();
@@ -163,8 +167,6 @@ socket.on("returnCharacterSheetInfo", function(charInfo){
     g_background = charInfo.Background;
 
     g_resistAndVulners = charInfo.ResistAndVulners;
-
-    g_specializationStruct = charInfo.SpecializeStruct;
 
     g_notesFields = charInfo.NotesFields;
 

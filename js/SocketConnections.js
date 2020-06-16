@@ -796,6 +796,19 @@ module.exports = class SocketConnections {
         });
       });
 
+      socket.on('requestWeaponFamiliarityChange', function(charID, srcStruct, trait){
+        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+          if(ownsChar){
+            CharDataMapping.setData(charID, 'weaponFamiliarity', srcStruct, trait)
+            .then((result) => {
+              socket.emit('returnWeaponFamiliarityChange');
+            });
+          } else {
+            socket.emit('returnASCStatementFailure', 'Incorrect Auth');
+          }
+        });
+      });
+
       socket.on('requestWeaponSpecializationChange', function(charID, srcStruct, type){
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
           if(ownsChar){

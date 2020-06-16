@@ -1,11 +1,24 @@
 
 function findItemDataByName(itemMap, itemName){
     for(const [itemID, itemData] of itemMap.entries()){
-        if(itemData.Item.name.toLowerCase() == itemName){
+        if(itemData.Item.name.toUpperCase() == itemName){
             return itemData;
         }
     }
     return null;
+}
+
+function hasFamiliarityReduceProf(itemData){
+    for(let weaponFamiliarity of g_weaponFamiliaritiesArray){
+        let traitName = weaponFamiliarity.value+' - ITEM';
+        let tag = itemData.TagArray.find(tag => {
+            return tag.Tag.name.toUpperCase() == traitName;
+        });
+        if(tag != null){
+            return true;
+        }
+    }
+    return false;
 }
 
 function buildWeaponProfMap(){
@@ -27,8 +40,19 @@ function buildWeaponProfMap(){
             } else if(profName == 'Martial_Weapons'){
                 for(const [itemID, itemData] of g_itemMap.entries()){
                     if(itemData.WeaponData != null && itemData.WeaponData.category == "MARTIAL"){
+
+                        let numUps = profData.NumUps;
+                        if(hasFamiliarityReduceProf(itemData)){
+                            let reducedProfData = g_profMap.get('Simple_Weapons');
+                            if(reducedProfData != null){
+                                numUps = reducedProfData.NumUps;
+                            } else {
+                                numUps = 0;
+                            }
+                        }
+
                         weaponProfMap.set(parseInt(itemID), {
-                            NumUps : profData.NumUps,
+                            NumUps : numUps,
                             UserBonus : profData.UserBonus
                         });
                     }
@@ -36,8 +60,19 @@ function buildWeaponProfMap(){
             } else if(profName == 'Advanced_Weapons'){
                 for(const [itemID, itemData] of g_itemMap.entries()){
                     if(itemData.WeaponData != null && itemData.WeaponData.category == "ADVANCED"){
+
+                        let numUps = profData.NumUps;
+                        if(hasFamiliarityReduceProf(itemData)){
+                            let reducedProfData = g_profMap.get('Martial_Weapons');
+                            if(reducedProfData != null){
+                                numUps = reducedProfData.NumUps;
+                            } else {
+                                numUps = 0;
+                            }
+                        }
+
                         weaponProfMap.set(parseInt(itemID), {
-                            NumUps : profData.NumUps,
+                            NumUps : numUps,
                             UserBonus : profData.UserBonus
                         });
                     }
@@ -52,11 +87,30 @@ function buildWeaponProfMap(){
                     }
                 }
             } else {
-                let dProfName = profName.toLowerCase().replace(/_/g,' ');
+                let dProfName = profName.toUpperCase().replace(/_/g,' ');
                 let itemData = findItemDataByName(g_itemMap, dProfName);
-                if(itemData != null){
+                if(itemData != null && itemData.WeaponData != null){
+
+                    let numUps = profData.NumUps;
+                    if(hasFamiliarityReduceProf(itemData)){
+                        let reducedProfData = null;
+                        if(itemData.WeaponData.category == "MARTIAL"){
+                            reducedProfData = g_profMap.get('Simple_Weapons');
+                        } else if (itemData.WeaponData.category == "ADVANCED"){
+                            reducedProfData = g_profMap.get('Martial_Weapons');
+                        } else {
+                            reducedProfData = profData;
+                        }
+
+                        if(reducedProfData != null){
+                            numUps = reducedProfData.NumUps;
+                        } else {
+                            numUps = 0;
+                        }
+                    }
+
                     weaponProfMap.set(itemData.Item.id, {
-                        NumUps : profData.NumUps,
+                        NumUps : numUps,
                         UserBonus : profData.UserBonus
                     });
                 }
@@ -113,7 +167,7 @@ function buildArmorProfMap(){
                     }
                 }
             } else {
-                let dProfName = profName.toLowerCase().replace(/_/g,' ');
+                let dProfName = profName.toUpperCase().replace(/_/g,' ');
                 let itemData = findItemDataByName(g_itemMap, dProfName);
                 if(itemData != null){
                     armorProfMap.set(itemData.Item.id, {

@@ -98,7 +98,7 @@ function testExpr(ascCode){
         return expHasHeritage(expression, statement, elseStatement);
     }
 
-    if(expression.includes('HAS-PROF')){ // HAS-PROF=Arcana:T
+    if(expression.includes('HAS-PROF')){ // HAS-PROF=Arcana:T // Prof is that or better. If you're master, you're trained.
         return expHasProf(expression, statement, elseStatement);
     }
 
@@ -145,11 +145,11 @@ function expHasProf(expression, statement, elseStatement){
         if(profData == null){
             let tempSkillName = profMapData.Name.toUpperCase();
             tempSkillName = tempSkillName.replace(/_|\s+/g,"");
-            if(tempSkillName === profName && profMapData.NumUps === numUps) {
+            if(tempSkillName === profName && profMapData.NumUps >= numUps) {
                 return statement;
             }
         } else {
-            if(profMapData.Name === profData.Name && profMapData.NumUps === numUps){
+            if(profMapData.Name === profData.Name && profMapData.NumUps >= numUps){
                 return statement;
             }
         }

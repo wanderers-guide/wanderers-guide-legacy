@@ -203,6 +203,11 @@ function runNextStatement(){
             return 'WAIT';
         }
 
+        if(ascStatement.includes("-FAMILIARITY")){
+            processingFamiliarities(ascStatement, srcStruct, locationID);
+            return 'WAIT';
+        }
+
         if(ascStatement.includes("-NOTES")){
             processingNotes(ascStatement, srcStruct, locationID);
             return 'WAIT';
