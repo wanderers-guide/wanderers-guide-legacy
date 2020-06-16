@@ -35,7 +35,11 @@ function processCode(ascCode, srcStruct, locationID){
 socket.on("returnASCChoices", function(ascCode, srcStruct, locationID, choiceStruct){
     //console.log("Setting choiceStruct new one...");
     ascChoiceStruct = choiceStruct;
-    initExpressionProcessor(choiceStruct.Level, choiceStruct.FinalProfObject);
+    initExpressionProcessor({
+        Level : choiceStruct.Level,
+        FinalProfObject : choiceStruct.FinalProfObject,
+        Heritage : choiceStruct.Heritage,
+    });
     
     codeDecompiling(ascCode, srcStruct, locationID);
 });
@@ -249,7 +253,11 @@ socket.on("returnASCUpdateChoices", function(updateType, updateData){
         console.error('Failed to update correct charChoice data!');
     }
     
-    updateExpressionProcessor(ascChoiceStruct.Level, ascChoiceStruct.FinalProfObject);
+    updateExpressionProcessor({
+        Level : ascChoiceStruct.Level,
+        FinalProfObject : ascChoiceStruct.FinalProfObject,
+        Heritage : ascChoiceStruct.Heritage,
+    });
 });
 
 socket.on("returnASCUpdateSkills", function(skillObject){
@@ -268,7 +276,11 @@ socket.on("returnASCUpdateLangs", function(langObject){
 
 function injectASCChoiceStruct(choiceStruct){
     ascChoiceStruct = choiceStruct;
-    updateExpressionProcessor(choiceStruct.Level, choiceStruct.FinalProfObject);
+    updateExpressionProcessor({
+        Level : choiceStruct.Level,
+        FinalProfObject : choiceStruct.FinalProfObject,
+        Heritage : choiceStruct.Heritage,
+    });
 }
 
 //////////////
@@ -282,7 +294,11 @@ function processCode_ClassAbilities(classAbilities){
 socket.on("returnASCClassAbilities", function(choiceStruct, featObject, skillObject, classAbilities){
     //console.log("Setting choiceStruct, featMap, and skillmap to new ones before classAbilities...");
     ascChoiceStruct = choiceStruct;
-    updateExpressionProcessor(choiceStruct.Level, choiceStruct.FinalProfObject);
+    updateExpressionProcessor({
+        Level : choiceStruct.Level,
+        FinalProfObject : choiceStruct.FinalProfObject,
+        Heritage : choiceStruct.Heritage,
+    });
     ascSkillMap = objToMap(skillObject);
 
     let featMap = objToMap(featObject);
@@ -324,7 +340,11 @@ function processCode_AncestryAbilities(ancestryFeatsLocs){
 socket.on("returnASCAncestryFeats", function(choiceStruct, featObject, skillObject, ancestryFeatsLocs){
     //console.log("Setting choiceStruct, featMap, and skillmap to new ones before ancestryFeats...");
     ascChoiceStruct = choiceStruct;
-    updateExpressionProcessor(choiceStruct.Level, choiceStruct.FinalProfObject);
+    updateExpressionProcessor({
+        Level : choiceStruct.Level,
+        FinalProfObject : choiceStruct.FinalProfObject,
+        Heritage : choiceStruct.Heritage,
+    });
     ascSkillMap = objToMap(skillObject);
 
     let featMap = objToMap(featObject);

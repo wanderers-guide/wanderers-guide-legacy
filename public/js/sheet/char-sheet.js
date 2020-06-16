@@ -168,7 +168,11 @@ socket.on("returnCharacterSheetInfo", function(charInfo){
 
     g_notesFields = charInfo.NotesFields;
 
-    initExpressionProcessor(g_character.level, objToMap(charInfo.ProfObject));
+    initExpressionProcessor({
+        Level : g_character.level,
+        FinalProfObject : charInfo.ProfObject,
+        Heritage : charInfo.Heritage,
+    });
 
     loadCharSheet();
 

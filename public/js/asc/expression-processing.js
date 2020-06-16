@@ -50,18 +50,19 @@ g_profConversionMap.set('SURVIVAL', {Name: 'Survival', Category: 'Skill'});
 g_profConversionMap.set('THIEVERY', {Name: 'Thievery', Category: 'Skill'});
 
 let hasInit = false;
-let g_expr_level, g_expr_profMap = null;
+let g_expr_level, g_expr_profMap, g_expr_heritage = null;
 
-function initExpressionProcessor(level, finalProfObject){
+function initExpressionProcessor(expDataStruct){
 
-    g_expr_level = level;
-    g_expr_profMap = objToMap(finalProfObject);
+    g_expr_level = expDataStruct.Level;
+    g_expr_profMap = objToMap(expDataStruct.FinalProfObject);
+    g_expr_heritage = expDataStruct.Heritage;
     hasInit = true;
 
 }
 
-function updateExpressionProcessor(level, finalProfObject){
-    initExpressionProcessor(level, finalProfObject);
+function updateExpressionProcessor(expDataStruct){
+    initExpressionProcessor(expDataStruct);
 }
 
 
@@ -71,35 +72,63 @@ function testExpr(ascCode){
         return null;
     }
 
-    // IF(*){*}
-    let rMatch = ascCode.match(/^\s*IF\s*\((.*?)\)\s*\{(.+?)\}\s*$/);
-    if(rMatch == null) { return ascCode; }
-    let expression = rMatch[1];
-    let statement = rMatch[2];
+    // IF(*){*} or IF(*){*}ELSE{*}
+    let rMatchIf = ascCode.match(/^\s*IF\s*\((.*?)\)\s*\{(.*?)\}\s*$/);
+    let rMatchIfElse = ascCode.match(/^\s*IF\s*\((.*?)\)\s*\{(.*?)\}\s*ELSE\s*\{(.*?)\}\s*$/);
+    if(rMatchIf == null && rMatchIfElse == null) { return ascCode; }
+
+    let expression;
+    let statement;
+    let elseStatement;
+    if(rMatchIfElse != null){
+        expression = rMatchIfElse[1];
+        statement = rMatchIfElse[2];
+        elseStatement = rMatchIfElse[3];
+    } else if(rMatchIf != null){
+        expression = rMatchIf[1];
+        statement = rMatchIf[2];
+        elseStatement = null;
+    }
 
     if(expression.includes('HAS-LEVEL')){ // HAS-LEVEL=13
-        return expHasLevel(expression, statement);
+        return expHasLevel(expression, statement, elseStatement);
+    }
+
+    if(expression.includes('HAS-HERITAGE')){ // HAS-HERITAGE=Treedweller
+        return expHasHeritage(expression, statement, elseStatement);
     }
 
     if(expression.includes('HAS-PROF')){ // HAS-PROF=Arcana:T
-        return expHasProf(expression, statement);
+        return expHasProf(expression, statement, elseStatement);
     }
 
     displayError("Unknown expression: \'"+expression+"\'");
     return null;
 }
 
-
-function expHasLevel(expression, statement){
+function expHasLevel(expression, statement, elseStatement){
     let level = parseInt(expression.split('=')[1]);
-    if(!isNaN(level) && g_expr_level >= level ){
-        return statement;
+    if(!isNaN(level)){
+        if(g_expr_level >= level){
+            return statement;
+        } else {
+            return elseStatement;
+        }
     }
     return null;
 }
 
+function expHasHeritage(expression, statement, elseStatement){
+    let heritageName = expression.split('=')[1].toUpperCase();
+    let currentHeritageName = g_expr_heritage.name.toUpperCase();
+    if(heritageName === currentHeritageName){
+        return statement;
+    } else {
+        return elseStatement;
+    }
+}
 
-function expHasProf(expression, statement){
+function expHasProf(expression, statement, elseStatement){
     let data = expression.split('=')[1];
     let segments = data.split(':');
 
@@ -126,6 +155,6 @@ function expHasProf(expression, statement){
         }
     }
     
-    return null;
+    return elseStatement;
 }
 
