@@ -55,9 +55,15 @@ function goToBuilder(req, res, buildStageName, charID){
 
         if(character.userID === req.user.id){
 
-            Class.findAll().then((allClasses) => {
-                Background.findAll().then((allBackgrounds) => {
-                    Ancestry.findAll().then((allAncestries) => {
+            Class.findAll({
+                order: [['name', 'ASC'],]
+            }).then((allClasses) => {
+                Background.findAll({
+                    order: [['name', 'ASC'],]
+                }).then((allBackgrounds) => {
+                    Ancestry.findAll({
+                        order: [['name', 'ASC'],]
+                    }).then((allAncestries) => {
 
                         CharGathering.getAllCharacterBuilderInfo(character).then((cInfo) => {
 

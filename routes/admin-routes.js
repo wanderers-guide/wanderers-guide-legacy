@@ -204,7 +204,7 @@ router.use('/edit/feat-action', adminAuthCheck, editFeatActionRoutes);
 router.get('/manage/item', adminAuthCheck, (req, res) => {
 
     Item.findAll({
-        order: [['name', 'ASC'],]
+        order: [['level', 'ASC'],['name', 'ASC'],],
     }).then((items) => {
 
         res.render('admin/admin_manager/manager_item', {
@@ -239,7 +239,7 @@ router.use('/edit/item', adminAuthCheck, editItemRoutes);
 router.get('/manage/spell', adminAuthCheck, (req, res) => {
 
     Spell.findAll({
-        order: [['name', 'ASC'],]
+        order: [['level', 'ASC'],['name', 'ASC'],],
     }).then((spells) => {
 
         res.render('admin/admin_manager/manager_spell', {
