@@ -9,6 +9,10 @@ function processingProf(ascStatement, srcStruct, locationID){
         let data = ascStatement.split('=')[1];
         let segments = data.split(':');
         giveProf(srcStruct, segments[0], segments[1]);
+    } else if(ascStatement.includes("GIVE-PROF-SKILL-OR-SELECT-OTHER-IN")){// GIVE-PROF-SKILL-OR-SELECT-OTHER-IN=Arcana:T
+        let data = ascStatement.split('=')[1];
+        let segments = data.split(':');
+        giveProfSkillOrSelect(srcStruct, segments[0], segments[1], locationID);
     } else {
         displayError("Unknown statement (2-Prof): \'"+ascStatement+"\'");
         statementComplete();
@@ -24,6 +28,59 @@ function giveProfIncrease(srcStruct, profName){
 
 function giveProf(srcStruct, profName, prof){
     giveInProf(srcStruct, profName, prof);
+}
+
+function giveProfSkillOrSelect(srcStruct, profName, prof, locationID){
+
+    profName = profName.replace(/_|\s+/g,"");
+    let profProperName = null;
+    let profCategory = null;
+
+    let profData = g_profConversionMap.get(profName);
+    if(profData != null){
+        profProperName = profData.Name;
+        profCategory = profData.Category;
+    }
+
+    let numUps = profToNumUp(prof);
+    if(numUps === -1){
+        displayError("Not a proficiency type: \'"+prof+"\'");
+        statementComplete();
+        return;
+    }
+
+    if(profCategory === 'Skill'){
+        
+        let profMap = objToMap(ascChoiceStruct.FinalProfObject);
+        for(const [profMapName, profMapData] of profMap.entries()){
+            let tempSkillName = profMapData.Name.toUpperCase();
+            tempSkillName = tempSkillName.replace(/_|\s+/g,"");
+            if(profName === tempSkillName && profMapData.NumUps >= numUps){
+
+                if(!hasSameSrc(srcStruct, profMapData.OriginalData)){
+                    processCode(
+                        'GIVE-SKILL='+prof,
+                        srcStruct,
+                        locationID);
+                    statementComplete();
+                    return;
+                }
+
+            }
+        }
+
+        socket.emit("requestProficiencyChange",
+            getCharIDFromURL(),
+            {srcStruct, isSkill : true, isStatement : true},
+            { For : profCategory, To : profProperName, Prof : prof });
+        return;
+
+    } else {
+        displayError("Not a skill: \'"+profName+"\'");
+        statementComplete();
+        return;
+    }
+
 }
 
 function giveInProf(srcStruct, profName, prof){

@@ -92,6 +92,16 @@ socket.on("returnAdminAncestryDetails", function(ancestryObject, featsObject){
         }
     }
 
+    ancestryFeats = ancestryFeats.sort(
+        function(a, b) {
+            if (a.Feat.level === b.Feat.level) {
+                // Name is only important when levels are the same
+                return a.Feat.name > b.Feat.name ? 1 : -1;
+            }
+            return a.Feat.level - b.Feat.level;
+        }
+    );
+
     let ancestryFeatCount = 0;
     $(".ancestryFeat").each(function(){
         if($(this).is(":visible")) {

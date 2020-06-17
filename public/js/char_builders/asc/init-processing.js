@@ -159,6 +159,11 @@ function runNextStatement(){
             return 'WAIT';
         }
 
+        if(ascStatement.includes("-PROF")){
+            processingProf(ascStatement, srcStruct, locationID);
+            return 'WAIT';
+        }
+
         if(ascStatement.includes("-SKILL")){
             initSkillProcessing(ascStatement, srcStruct, locationID);
             return 'WAIT';
@@ -171,11 +176,6 @@ function runNextStatement(){
 
         if(ascStatement.includes("-ABILITY-BOOST")){
             processingAbilityBoosts(ascStatement, srcStruct, locationID);
-            return 'WAIT';
-        }
-
-        if(ascStatement.includes("-PROF")){
-            processingProf(ascStatement, srcStruct, locationID);
             return 'WAIT';
         }
 

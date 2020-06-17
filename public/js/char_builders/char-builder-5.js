@@ -82,7 +82,7 @@ socket.on("returnFinalizeDetails", function(character, abilObject, cClass, ances
                 sourceCodeSNum: 'a',
             };
             processCode(
-                'GIVE-SKILL-PROF=T',
+                'GIVE-SKILL=T',
                 srcStruct,
                 skillsSectionID);
             
