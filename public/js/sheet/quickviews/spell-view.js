@@ -367,7 +367,13 @@ function openSpellQuickview(data){
         qContent.append('<hr class="m-2">');
 
         if(spellDataStruct.Spell.heightenedOneVal != null){
-            let hText = '<strong>Heightened ('+getHeightenedTextFromCodeName(spellDataStruct.Spell.heightenedOneVal)+')</strong> '+spellDataStruct.Spell.heightenedOneText;
+            let heightenedTextName = getHeightenedTextFromCodeName(spellDataStruct.Spell.heightenedOneVal);
+            let hText;
+            if(heightenedTextName === "CUSTOM"){
+                hText = spellDataStruct.Spell.heightenedOneText;
+            } else {
+                hText = '<strong>Heightened ('+heightenedTextName+')</strong> '+spellDataStruct.Spell.heightenedOneText;
+            }
             if(spellKeyAbility != null){
                 hText = spellViewTextProcessor(hText, spellKeyAbility);
             }

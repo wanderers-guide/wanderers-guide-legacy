@@ -263,7 +263,13 @@ function displayAddSpell(spellDataStruct, data){
         spellDetails.append('<hr class="m-2">');
 
         if(spellDataStruct.Spell.heightenedOneVal != null){
-            let hText = '<strong>Heightened ('+getHeightenedTextFromCodeName(spellDataStruct.Spell.heightenedOneVal)+')</strong> '+spellDataStruct.Spell.heightenedOneText;
+            let heightenedTextName = getHeightenedTextFromCodeName(spellDataStruct.Spell.heightenedOneVal);
+            let hText;
+            if(heightenedTextName === "CUSTOM"){
+                hText = spellDataStruct.Spell.heightenedOneText;
+            } else {
+                hText = '<strong>Heightened ('+heightenedTextName+')</strong> '+spellDataStruct.Spell.heightenedOneText;
+            }
             spellDetails.append('<div class="negative-indent">'+processText(hText, true, true, 'MEDIUM')+'</div>');
         }
 

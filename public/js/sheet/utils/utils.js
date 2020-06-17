@@ -240,7 +240,7 @@ function getHeightenedTextFromCodeName(codeName){
     case "LEVEL_8": return "8th";
     case "LEVEL_9": return "9th";
     case "LEVEL_10": return "10th";
-    case "CUSTOM": return "Custom";
+    case "CUSTOM": return "CUSTOM";
     default: return codeName;
   }
 }
