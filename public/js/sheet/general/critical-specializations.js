@@ -50,11 +50,11 @@ function hasArmorSpecialization(item){
     for(const armorCriticalData of g_specializationStruct.ArmorSpecial){
         if(armorCriticalData.value.startsWith('TRAIT~')){
             let traitName = armorCriticalData.value.replace(/TRAIT\~/g,'');
+            traitName = traitName+' - ITEM';
 
             let tagStruct = item.TagArray.find(tagStruct => {
                 return traitName == tagStruct.Tag.name.toUpperCase();
             });
-
             if(tagStruct != null){
                 return true;
             }

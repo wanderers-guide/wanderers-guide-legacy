@@ -304,9 +304,6 @@ function loadCharSheet(){
     // Display Ability Scores //
     displayAbilityScores();
 
-    // Display Health and Temp //
-    initHealthAndTemp();
-
     // Determine Bulk and Coins //
     determineBulkAndCoins(g_invStruct.InvItems, g_itemMap, getMod(getStatTotal('SCORE_STR')));
 
@@ -319,6 +316,9 @@ function loadCharSheet(){
 
     // Run Feats and Abilities Code //
     runAllFeatsAndAbilitiesCode();
+
+    // Display Health and Temp //
+    initHealthAndTemp();
 
     // Determine Invested Items and Run Code //
     determineInvestitures();
@@ -1096,14 +1096,8 @@ function initHealthAndTemp() {
     let maxHealth = $('#char-max-health');
     let maxHealthNum = getStatTotal('MAX_HEALTH');
     maxHealthNum += (g_classDetails.Class.hitPoints+getStatTotal('MAX_HEALTH_BONUS_PER_LEVEL'))*g_character.level;
-
-    // Drained Condition Reduces HP and MaxHP - Only Reduces MaxHP
-    let drainedCondition = getCondition(10); // Hardcoded ID - Drained
-    if(drainedCondition != null){
-        maxHealthNum -= drainedCondition.Value * g_character.level;
-        if(maxHealthNum < 0){ maxHealthNum = 0; }
-    }
-
+    
+    if(maxHealthNum < 0){ maxHealthNum = 0; }
     maxHealth.html(maxHealthNum);
 
     if(g_character.currentHealth == null){

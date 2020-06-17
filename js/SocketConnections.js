@@ -856,7 +856,7 @@ module.exports = class SocketConnections {
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
           if(ownsChar){
             let amount = parseInt(speedAmt);
-            if(!isNaN(amount)) {
+            if(!isNaN(amount) || speedAmt === 'LAND_SPEED') {
               CharDataMappingExt.setDataOtherSpeed(charID, srcStruct, speedType, amount)
               .then((result) => {
                 socket.emit('returnSpeedChange');

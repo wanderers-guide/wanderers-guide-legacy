@@ -133,6 +133,12 @@ function runNextStatement(){
         if(ascStatement === null) {return 'SKIP'; }
         //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
         
+        // It could be a sheet statement,
+        if(testSheetCode(ascStatement)){
+            console.log("Skipping '"+ascStatement+"' because it's a sheet statement.");
+            return 'SKIP';
+        }
+
         if(ascStatement.includes("-CHAR-TRAIT")){
             processingCharTags(ascStatement, srcStruct, locationID);
             return 'WAIT';
@@ -218,13 +224,8 @@ function runNextStatement(){
             return 'WAIT';
         }
 
-        // It could be a sheet statement,
-        if(!testSheetCode(ascStatement)){
-            displayError("Unknown statement (1): \'"+ascStatement+"\'");
-        } else{
-            console.log("Skipping '"+ascStatement+"' because it's a sheet statement.");
-        }
-        return 'SKIP';
+        displayError("Unknown statement (1): \'"+ascStatement+"\'");
+        return 'END';
 
     } else {
         return 'END';

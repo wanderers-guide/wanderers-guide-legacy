@@ -75,15 +75,14 @@ function getStat(statName, source){
     statName = statName.replace(/\s/g, "_").toUpperCase();
     let statDataMap = g_statManagerMap.get(statName);
     if(statDataMap != null){
-        return statDataMap.get(source).Value;
+        let value = statDataMap.get(source).Value;
+        if(value === 'LAND_SPEED'){
+            value = getStatTotal('SPEED');
+        }
+        return value;
     } else {
         return null;
     }
-}
-
-function getStatMap(statName){
-    statName = statName.replace(/\s/g, "_").toUpperCase();
-    return g_statManagerMap.get(statName);
 }
 
 function getStatTotal(statName){
@@ -92,13 +91,17 @@ function getStatTotal(statName){
     let statDataMap = g_statManagerMap.get(statName);
     if(statDataMap != null){
         total = 0;
-        for(const [source, valueData] of statDataMap.entries()){
+        for(let [source, valueData] of statDataMap){
+            let value = valueData.Value;
+            if(value === 'LAND_SPEED'){
+                value = getStatTotal('SPEED');
+            }
             if(source === 'PROF_BONUS'){
-                total += getProfNumber(valueData.Value, g_character.level);
+                total += getProfNumber(value, g_character.level);
             } else if(source === 'MODIFIER') {
-                total += getModOfValue(valueData.Value);
+                total += getModOfValue(value);
             } else {
-                total += valueData.Value;
+                total += value;
             }
         }
     }
@@ -124,6 +127,11 @@ function getStatExtraBonuses(statName){
         }
     }
     return extraBonuses;
+}
+
+function getStatMap(statName){
+    statName = statName.replace(/\s/g, "_").toUpperCase();
+    return g_statManagerMap.get(statName);
 }
 
 function getModOfValue(valueModName){
