@@ -4,8 +4,8 @@
     overflow: visible!important;
 }
 .page_change_button {
-    position: -webkit-sticky;
-    position: sticky;
+    position: -webkit-sticky!important;
+    position: sticky!important;
     top: 50%;
     z-index: 10;
 }
