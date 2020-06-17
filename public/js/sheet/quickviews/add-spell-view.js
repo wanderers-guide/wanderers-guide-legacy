@@ -266,7 +266,7 @@ function displayAddSpell(spellDataStruct, data){
             let heightenedTextName = getHeightenedTextFromCodeName(spellDataStruct.Spell.heightenedOneVal);
             let hText;
             if(heightenedTextName === "CUSTOM"){
-                hText = spellDataStruct.Spell.heightenedOneText;
+                hText = '<strong>Heightened</strong> '+spellDataStruct.Spell.heightenedOneText;
             } else {
                 hText = '<strong>Heightened ('+heightenedTextName+')</strong> '+spellDataStruct.Spell.heightenedOneText;
             }
