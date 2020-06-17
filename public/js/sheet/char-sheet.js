@@ -459,7 +459,13 @@ function displayInformation() {
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
     $('#character-name').html(g_character.name);
-    $('#character-type').html(g_heritage.name+" "+g_classDetails.Class.name);
+    let heritageAndAncestryName = '';
+    if(g_heritage == null){
+        heritageAndAncestryName = g_ancestry.name;
+    } else {
+        heritageAndAncestryName = g_heritage.name;
+    }
+    $('#character-type').html(heritageAndAncestryName+" "+g_classDetails.Class.name);
     $('#character-level').html("Lvl "+g_character.level);
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1660,7 +1666,9 @@ function runAllFeatsAndAbilitiesCode() {
         processSheetCode(phyFeat.value.code, phyFeat.value.name);
     }
     
-    processSheetCode(g_heritage.code, g_heritage.name+' Heritage');
+    if(g_heritage != null){
+        processSheetCode(g_heritage.code, g_heritage.name+' Heritage');
+    }
     processSheetCode(g_background.code, g_background.name+' Background');
 
 }

@@ -2,6 +2,7 @@
 const Character = require('../models/contentDB/Character');
 const Class = require('../models/contentDB/Class');
 const ClassAbility = require('../models/contentDB/ClassAbility');
+const Background = require('../models/contentDB/Background');
 const Ancestry = require('../models/contentDB/Ancestry');
 const AncestryBoost = require('../models/contentDB/AncestryBoost');
 const AncestryFlaw = require('../models/contentDB/AncestryFlaw');
@@ -31,6 +32,66 @@ function becomeNegative(number){
 }
 
 module.exports = class AdminUpdate {
+
+    static addBackground(data) {
+        /* Data:
+            backgroundID,
+            backgroundName,
+            backgroundVersion,
+            backgroundDescription,
+            backgroundBoosts,
+            backgroundCode,
+        */
+        for(let d in data) { if(data[d] === ''){ data[d] = null; } }
+        data.backgroundName = data.backgroundName.replace(/’/g,"'");
+        if(data.backgroundDescription == null){ data.backgroundDescription = '__No Description__'; }
+        if(data.backgroundVersion == null){ data.backgroundVersion = '1.0'; }
+        return Background.create({ // Create Background
+            name: data.backgroundName,
+            version: data.backgroundVersion,
+            description: data.backgroundDescription,
+            boostOne: data.backgroundBoosts,
+            boostTwo: 'ALL',
+            code: data.backgroundCode,
+        }).then(background => {
+            return background;
+        });
+
+    }
+
+    static deleteBackground(backgroundID){
+        if(backgroundID == null) {return;}
+        return Background.findOne({where: { id: backgroundID}})
+        .then((background) => {
+            // Clear Background Details for every Character that had this Background
+            return Character.findAll({where: { backgroundID: background.id }})
+            .then((charactersWithBackground) => {
+                let characterBackgroundClearPromises = [];
+                for(const charWithBackground of charactersWithBackground) {
+                    let newPromise = CharSaving.saveBackground(charWithBackground.id, null);
+                    characterBackgroundClearPromises.push(newPromise);
+                }
+                return Promise.all(characterBackgroundClearPromises)
+                .then(function(result) {
+                    return Background.destroy({ // Finally, delete Background
+                        where: { id: background.id }
+                    }).then((result) => {
+                        return;
+                    });
+                });
+            });
+        });
+    }
+
+    static archiveBackground(backgroundID, isArchived){
+        let archived = (isArchived) ? 1 : 0;
+        let updateValues = { isArchived: archived };
+        return Background.update(updateValues, { where: { id: backgroundID } })
+        .then((result) => {
+            return;
+        });
+    }
+
 
     static addClass(data) {
         /* Data:

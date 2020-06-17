@@ -4,12 +4,14 @@
 
 const router = require('express').Router();
 const editClassRoutes = require('./edit-class-routes');
+const editBackgroundRoutes = require('./edit-background-routes');
 const editAncestryRoutes = require('./edit-ancestry-routes');
 const editFeatActionRoutes = require('./edit-feat-action-routes');
 const editItemRoutes = require('./edit-item-routes');
 const editSpellRoutes = require('./edit-spell-routes');
 
 const Class = require('../models/contentDB/Class');
+const Background = require('../models/contentDB/Background');
 const Ancestry = require('../models/contentDB/Ancestry');
 const Item = require('../models/contentDB/Item');
 const Spell = require('../models/contentDB/Spell');
@@ -127,6 +129,35 @@ router.get('/create/ancestry', adminAuthCheck, (req, res) => {
 });
 
 router.use('/edit/ancestry', adminAuthCheck, editAncestryRoutes);
+
+
+// Background Builder
+router.get('/manage/background', adminAuthCheck, (req, res) => {
+
+    Background.findAll({
+        order: [['name', 'ASC'],]
+    }).then((backgrounds) => {
+
+        res.render('admin/admin_manager/manager_background', {
+            title: "Background Manager - Apeiron",
+            user: req.user,
+            backgrounds
+        });
+
+    });
+
+});
+
+router.get('/create/background', adminAuthCheck, (req, res) => {
+
+    res.render('admin/admin_builder/builder_background', {
+        title: "Background Builder - Apeiron",
+        user: req.user,
+    });
+
+});
+
+router.use('/edit/background', adminAuthCheck, editBackgroundRoutes);
 
 
 // Feat-or-Action Builder

@@ -464,10 +464,10 @@
                 </div>
                 <div class="py-2">
                     <div class="code-block">
-                        IF (HAS-PROF=Stealth:T) {GIVE-SKILL=T} ELSE {GIVE-PROF-IN=Stealth:T}
+                        IF (HAS-PROF=Stealth:T) {GIVE-SPEED=Swim:15} ELSE {GIVE-LANG-NAME=Elven}
                     </div>
                     <p class="pl-3">
-                        - If the character is Trained or better in Stealth, the first statement will execute (which will generate a skill selector, making the character Trained in the skill they choose). If the character is not Trained in Stealth, the second statement will execute (which will make the character Trained in Stealth).
+                        - If the character is Trained or better in Stealth, the first statement will execute (which will give the character a swim speed of 15 feet). If the character is not Trained in Stealth, the second statement will execute (which will give the character the Elven language).
                     </p>
                 </div>
             </div>
@@ -1010,7 +1010,7 @@
                         - Gives the character armor specialization in all light armor.
                     </p>
                     <p class="pl-3">
-                        - Options are any of the defenses proficiency options (see Proficiencies) and can give by armor name or by trait (Ex: GIVE-ARMOR-SPECIALIZATION=ARMOR~Leather).
+                        - Options are any of the defenses proficiency options (see Proficiencies) and can give by armor name, trait, or group (Ex: GIVE-ARMOR-SPECIALIZATION=NAME~Leather).
                     </p>
                 </div>
                 <div class="py-2">
@@ -1021,7 +1021,7 @@
                         - Gives the character critical specialization in all simple weapons.
                     </p>
                     <p class="pl-3">
-                        - Options are any of the attacks proficiency options (see Proficiencies) and can give by weapon name or by trait (Ex: GIVE-WEAPON-CRITICAL-SPECIALIZATION=TRAIT~Dwarf).
+                        - Options are any of the attacks proficiency options (see Proficiencies) and can give by weapon name, trait, or group (Ex: GIVE-WEAPON-CRITICAL-SPECIALIZATION=TRAIT~Dwarf).
                     </p>
                 </div>
             </div>

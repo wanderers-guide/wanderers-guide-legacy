@@ -57,6 +57,7 @@ socket.on("returnArmorSpecializationChange", function(){
 //////////////////////////////// Give Critical Specialization ///////////////////////////////////
 // GIVE-WEAPON-CRITICAL-SPECIALIZATION=TRAIT~Dwarf
 // GIVE-WEAPON-CRITICAL-SPECIALIZATION=WEAPON~Spear
+// GIVE-WEAPON-CRITICAL-SPECIALIZATION=GROUP~Polearm
 // GIVE-WEAPON-CRITICAL-SPECIALIZATION=Simple_Weapons
 
 

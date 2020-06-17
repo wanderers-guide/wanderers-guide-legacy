@@ -118,7 +118,7 @@ socket.on("returnFinalizeDetails", function(character, abilObject, cClass, ances
 
     }
 
-    if (character.name == null || character.ancestryID == null || character.heritageID == null || character.backgroundID == null || character.classID == null) {
+    if (character.name == null || character.ancestryID == null || character.backgroundID == null || character.classID == null) {
 
         $("#goToCharButton").removeClass("is-success");
         $("#goToCharButton").addClass("is-danger");
@@ -132,10 +132,6 @@ socket.on("returnFinalizeDetails", function(character, abilObject, cClass, ances
         }
         if(character.ancestryID == null) {
             infoNeeded += "- Ancestry\n";
-            $("#ancestry-step").removeClass("is-link");
-            $("#ancestry-step").addClass("is-danger");
-        } else if (character.heritageID == null) {
-            infoNeeded += "- Heritage\n";
             $("#ancestry-step").removeClass("is-link");
             $("#ancestry-step").addClass("is-danger");
         }

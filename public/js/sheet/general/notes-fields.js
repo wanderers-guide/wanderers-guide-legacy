@@ -1,7 +1,7 @@
 
-function displayNotesField(qContent, sourceCode){
+function displayNotesField(qContent, srcStruct, rows=4){
 
-    let notesData = getNotesData(sourceCode);
+    let notesData = getNotesData(srcStruct);
     if(notesData == null){return;}
 
     let notesDataSections = notesData.value.split(',,,');
@@ -10,7 +10,7 @@ function displayNotesField(qContent, sourceCode){
 
     let notesFieldID = notesData.charID+'-'+notesData.source+'-'+notesData.sourceType+'-'+notesData.sourceLevel+'-'+notesData.sourceCode+'-'+notesData.sourceCodeSNum;
     let notesFieldControlShellID = notesFieldID+'ControlShell';
-    qContent.append('<div id="'+notesFieldControlShellID+'" class="control mt-1 mx-1"><textarea id="'+notesFieldID+'" class="textarea use-custom-scrollbar" rows="4" spellcheck="false" maxlength="3000" placeholder="'+placeholderText+'">'+notesText+'</textarea></div>');
+    qContent.append('<div id="'+notesFieldControlShellID+'" class="control mt-1 mx-1"><textarea id="'+notesFieldID+'" class="textarea use-custom-scrollbar" rows="'+rows+'" spellcheck="false" maxlength="3000" placeholder="'+placeholderText+'">'+notesText+'</textarea></div>');
 
     $("#"+notesFieldID).blur(function(){
         let notesDataValue = placeholderText+',,,'+$(this).val();
@@ -30,10 +30,14 @@ function displayNotesField(qContent, sourceCode){
 
 }
 
-function getNotesData(sourceCode){
+function getNotesData(srcStruct){
     for(let notesData of g_notesFields) {
-        if(sourceCode == notesData.sourceCode){
-            return notesData;
+        // Checks if the note field statement's parent is the input srcStruct
+        if(srcStruct.sourceCode === notesData.sourceCode){
+            let sNum = notesData.sourceCodeSNum.substr(1); // Remove first char
+            if(srcStruct.sourceCodeSNum === sNum) {
+                return notesData;
+            }
         }
     }
     return null;

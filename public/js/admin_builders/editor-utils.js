@@ -9,6 +9,11 @@ function getAncestryEditorIDFromURL(){
     return parseInt(spl1[1]);
 }
 
+function getBackgroundEditorIDFromURL(){
+  let spl1 = window.location.pathname.split("background/");
+  return parseInt(spl1[1]);
+}
+
 function getFeatEditorIDFromURL(){
   let spl1 = window.location.pathname.split("feat-action/");
   return parseInt(spl1[1]);

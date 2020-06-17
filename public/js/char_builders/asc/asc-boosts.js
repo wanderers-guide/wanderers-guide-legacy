@@ -71,9 +71,8 @@ function giveAbilityBoostSingle(srcStruct, selectionOptions, locationID){
 }
 
 function displayAbilityBoostSingle(srcStruct, locationID, abilityTypes){
-
-    console.log("selectBoost"+locationID+srcStruct.sourceCodeSNum);
-    let selectBoostID = "selectBoost"+locationID+srcStruct.sourceCodeSNum;
+    
+    let selectBoostID = "selectBoost"+locationID+"-"+srcStruct.sourceCodeSNum;
     let selectBoostSet = "selectBoostSet"+locationID;
     let selectBoostControlShellClass = selectBoostSet+'ControlShell';
 

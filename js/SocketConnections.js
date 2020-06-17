@@ -1136,7 +1136,7 @@ module.exports = class SocketConnections {
         });
       });
 
-      socket.on('requestNotesFieldChange', function(charID, srcStruct, placeholderText){
+      socket.on('requestNotesFieldChange', function(charID, srcStruct, placeholderText, locationID){
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
           if(ownsChar){
             CharDataMapping.getDataSingle(charID, 'notesField', srcStruct)
@@ -1144,10 +1144,10 @@ module.exports = class SocketConnections {
               if(notesData == null) {
                 CharDataMapping.setData(charID, 'notesField', srcStruct, placeholderText+",,,")
                 .then((result) => {
-                  socket.emit('returnNotesFieldChange');
+                  socket.emit('returnNotesFieldChange', notesData, srcStruct, placeholderText, locationID);
                 });
               } else {
-                socket.emit('returnNotesFieldChange');
+                socket.emit('returnNotesFieldChange', notesData, srcStruct, placeholderText, locationID);
               }
             });
           } else {
@@ -1589,6 +1589,52 @@ module.exports = class SocketConnections {
         });
       });
 
+      ////
+
+      socket.on('requestAdminAddBackground', function(data){
+        AuthCheck.isAdmin(socket).then((isAdmin) => {
+          if(isAdmin){
+            AdminUpdate.addBackground(data).then((result) => {
+              socket.emit('returnAdminCompleteBackground');
+            });
+          }
+        });
+      });
+
+      socket.on('requestAdminUpdateBackground', function(data){
+        AuthCheck.isAdmin(socket).then((isAdmin) => {
+          if(isAdmin){
+            if(data != null && data.backgroundID != null) {
+              AdminUpdate.archiveBackground(data.backgroundID, true).then((result) => {
+                AdminUpdate.addBackground(data).then((result) => {
+                  socket.emit('returnAdminCompleteBackground');
+                });
+              });
+            }
+          }
+        });
+      });
+    
+      socket.on('requestAdminRemoveBackground', function(backgroundID){
+        AuthCheck.isAdmin(socket).then((isAdmin) => {
+          if(isAdmin){
+            AdminUpdate.deleteBackground(backgroundID).then((result) => {
+              socket.emit('returnAdminRemoveBackground');
+            });
+          }
+        });
+      });
+
+      socket.on('requestAdminBackgroundDetails', function(){
+        AuthCheck.isAdmin(socket).then((isAdmin) => {
+          if(isAdmin){
+            CharGathering.getAllBackgrounds().then((backgrounds) => {
+              socket.emit('returnAdminBackgroundDetails', backgrounds);
+            });
+          }
+        });
+      });
+      
 
     });
   }

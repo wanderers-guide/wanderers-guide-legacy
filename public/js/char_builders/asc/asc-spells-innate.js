@@ -71,8 +71,8 @@ function giveInnateSpell(srcStruct, locationID, spellLevel, spellTradition, time
 function displayInnateSpellChoice(srcStruct, locationID, spellLevel, spellTradition, timesPerDay){
 
     let selectionName = (spellLevel == 0) ? 'Choose a Cantrip' : 'Choose a Level '+spellLevel+' Spell';
-    let selectSpellID = "selectInnateSpell"+locationID+srcStruct.sourceCodeSNum;
-    let descriptionSpellID = "descriptionInnateSpell"+locationID+srcStruct.sourceCodeSNum;
+    let selectSpellID = "selectInnateSpell"+locationID+"-"+srcStruct.sourceCodeSNum;
+    let descriptionSpellID = "descriptionInnateSpell"+locationID+"-"+srcStruct.sourceCodeSNum;
     let selectSpellControlShellClass = selectSpellID+'ControlShell';
 
     $('#'+locationID).append('<div class="field"><div class="select '+selectSpellControlShellClass+'"><select id="'+selectSpellID+'" class="selectFeat"></select></div><div id="'+descriptionSpellID+'"></div></div>');

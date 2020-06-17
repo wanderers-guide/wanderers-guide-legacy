@@ -89,7 +89,7 @@ function openFeatQuickview(data) {
         return false;
     });
     if(featChoice != null){
-        displayNotesField(qContent, featChoice.sourceCode);
+        displayNotesField(qContent, featChoice);
     }
 
 }

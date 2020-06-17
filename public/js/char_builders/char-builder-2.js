@@ -173,7 +173,6 @@ function displayCurrentAncestry(ancestryStruct, saving) {
 
 
     let ancestryDescription = $('#ancestryDescription');
-
     ancestryDescription.html(processText(ancestryStruct.Ancestry.description, false));
 
 
@@ -529,7 +528,7 @@ function buildFeatStruct(featLevel) {
 
     let locationID = "descriptionFeat"+featLevel;
 
-    $('#ancestryFeats').append('<article class="message"><div class="message-header"><p class="is-size-4 has-text-grey-light has-text-weight-semibold">Ancestry Feat</p><span class="has-text-weight-bold">Lvl '+featLevel+'</span></div><div class="message-body"><div class="columns is-centered"><div id="'+locationID+'" class="column is-paddingless is-8"></div></div></div></article>');
+    $('#ancestryFeats').append('<article class="message"><div class="message-header py-1"><p class="is-size-4 has-text-grey-light has-text-weight-semibold">Ancestry Feat</p><span class="has-text-weight-bold">Lvl '+featLevel+'</span></div><div class="message-body"><div class="columns is-centered"><div id="'+locationID+'" class="column is-paddingless is-8"></div></div></div></article>');
 
 
     return { LocationID : locationID, Level : featLevel };

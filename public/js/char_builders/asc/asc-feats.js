@@ -140,8 +140,8 @@ function displayFeatChoice(srcStruct, locationID, selectionName, tagsArray, feat
 
     // TO-DO. If feat requires prereq, check feats that the char has from choiceMap
     
-    let selectFeatID = "selectFeat"+locationID+srcStruct.sourceCodeSNum;
-    let descriptionFeatID = "descriptionFeat"+locationID+srcStruct.sourceCodeSNum;
+    let selectFeatID = "selectFeat"+locationID+"-"+srcStruct.sourceCodeSNum;
+    let descriptionFeatID = "descriptionFeat"+locationID+"-"+srcStruct.sourceCodeSNum;
     let selectFeatControlShellClass = selectFeatID+'ControlShell';
 
     $('#'+locationID).append('<div class="field"><div class="select '+selectFeatControlShellClass+'"><select id="'+selectFeatID+'" class="selectFeat"></select></div><div id="'+descriptionFeatID+'"></div></div>');
@@ -334,7 +334,7 @@ function giveFeatByName(srcStruct, featName, locationID){
         return;
     }
 
-    let descriptionFeatID = "descriptionFeat"+locationID+srcStruct.sourceCodeSNum;
+    let descriptionFeatID = "descriptionFeat"+locationID+"-"+srcStruct.sourceCodeSNum;
     $('#'+locationID).append('<div id="'+descriptionFeatID+'"></div>');
 
     displayFeat(descriptionFeatID, featEntry);

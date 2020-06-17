@@ -48,9 +48,9 @@ function giveSkillProf(srcStruct, locationID, prof){
 
 function giveSkill(srcStruct, locationID, profType){
 
-    let selectIncreaseID = "selectIncrease"+locationID+srcStruct.sourceCodeSNum;
+    let selectIncreaseID = "selectIncrease"+locationID+"-"+srcStruct.sourceCodeSNum;
     let selectIncreaseControlShellClass = selectIncreaseID+'ControlShell';
-    let increaseDescriptionID = "selectIncreaseDescription"+locationID+srcStruct.sourceCodeSNum;
+    let increaseDescriptionID = "selectIncreaseDescription"+locationID+"-"+srcStruct.sourceCodeSNum;
 
     $('#'+locationID).append('<div class="field"><div class="select '+selectIncreaseControlShellClass+'"><select id="'+selectIncreaseID+'" class="selectIncrease"></select></div></div>');
 

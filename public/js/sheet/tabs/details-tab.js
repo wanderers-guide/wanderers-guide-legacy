@@ -365,10 +365,30 @@ function displayDescriptionSection(data){
 
     $('#descriptionContent').append('<div class="mx-3">'+processText(data.Background.description, true, true, 'SMALL')+'</div>');
 
-    $('#descriptionContent').append('<p class="is-size-5 has-text-grey-light has-text-weight-bold text-left pl-5 pt-2">Heritage - '+data.Heritage.name+' </p>');
-    $('#descriptionContent').append('<hr class="hr-light" style="margin-top:-0.5em; margin-bottom:0em;">');
+    let srcStructBackground = { // Hardcoded - same srcStruct as in char-builder-3.js
+        sourceType: 'background',
+        sourceLevel: 1,
+        sourceCode: 'background',
+        sourceCodeSNum: 'a',
+    };
+    displayNotesField($('#descriptionContent'), srcStructBackground, 2);
 
-    $('#descriptionContent').append('<div class="mx-3">'+processText(data.Heritage.description, true, true, 'SMALL')+'</div>');
+    if(data.Heritage != null){
+
+        $('#descriptionContent').append('<p class="is-size-5 has-text-grey-light has-text-weight-bold text-left pl-5 pt-2">Heritage - '+data.Heritage.name+' </p>');
+        $('#descriptionContent').append('<hr class="hr-light" style="margin-top:-0.5em; margin-bottom:0em;">');
+    
+        $('#descriptionContent').append('<div class="mx-3">'+processText(data.Heritage.description, true, true, 'SMALL')+'</div>');
+    
+        let srcStructHeritage = { // Hardcoded - same srcStruct as in char-builder-2.js
+            sourceType: 'ancestry',
+            sourceLevel: 1,
+            sourceCode: 'heritage',
+            sourceCodeSNum: 'a',
+        };
+        displayNotesField($('#descriptionContent'), srcStructHeritage, 2);
+
+    }
 
     $('#descriptionContent').append('<p class="is-size-5 has-text-grey-light has-text-weight-bold text-left pl-5 pt-2">Information</p>');
     $('#descriptionContent').append('<hr class="hr-light" style="margin-top:-0.5em; margin-bottom:0em;">');
@@ -376,7 +396,7 @@ function displayDescriptionSection(data){
     let charHistoryAreaID = "charHistoryArea";
     let charHistoryAreaControlShellID = "charHistoryAreaControlShell";
 
-    $('#descriptionContent').append('<div id="'+charHistoryAreaControlShellID+'" class="control mt-1 mx-1"><textarea id="'+charHistoryAreaID+'" class="textarea has-fixed-size use-custom-scrollbar" rows="10" spellcheck="false" placeholder="Use this area to keep information about your character\'s backstory, appearance, or really anything!"></textarea></div>');
+    $('#descriptionContent').append('<div id="'+charHistoryAreaControlShellID+'" class="control mt-1 mx-1"><textarea id="'+charHistoryAreaID+'" class="textarea has-fixed-size use-custom-scrollbar" rows="8" spellcheck="false" placeholder="Use this area to keep information about your character\'s backstory, appearance, or really anything!"></textarea></div>');
 
     $("#"+charHistoryAreaID).val(data.Character.details);
 

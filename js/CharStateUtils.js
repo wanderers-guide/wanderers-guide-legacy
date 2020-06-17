@@ -6,11 +6,7 @@ function getUserCharacterLimit(){
 module.exports = class CharStateUtils {
 
     static isPlayable(character) {
-        return character.name != null
-            && character.ancestryID != null
-            && character.heritageID != null
-            && character.backgroundID != null
-            && character.classID != null;
+        return character.name != null && character.ancestryID != null && character.backgroundID != null && character.classID != null;
     }
 
     static canMakeCharacter(user, characters) {

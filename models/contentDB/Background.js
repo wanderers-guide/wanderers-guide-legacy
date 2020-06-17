@@ -16,6 +16,12 @@ const Background = db.define('backgrounds', {
   },
   code: {
     type: Sequelize.TEXT
+  },
+  isArchived: {
+    type: Sequelize.INTEGER
+  },
+  version: {
+    type: Sequelize.STRING
   }
 });
 

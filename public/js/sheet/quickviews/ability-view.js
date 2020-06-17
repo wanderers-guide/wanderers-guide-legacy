@@ -6,7 +6,7 @@ function openAbilityQuickview(data) {
     $('#quickViewTitleRight').html('<span class="pr-2">Level '+data.Ability.level+'</span>');
     let qContent = $('#quickViewContent');
 
-    qContent.append('<div>'+processText(data.Ability.description, true)+'</div>');
+    qContent.append('<div>'+processText(data.Ability.description, true, true, 'MEDIUM')+'</div>');
 
     if(data.Ability.selectType == "SELECTOR"){
         for(let classAbilChoice of g_classDetails.AbilityChoices){
@@ -22,9 +22,13 @@ function openAbilityQuickview(data) {
 
                  $('#'+abilityOptionCardID).append(processText(abilityOption.description, true));
 
-                // Hardcoded 'classAbilitySelector' sourceCode title name
-                let sourceCode = 'classAbilitySelector-'+abilityOption.selectOptionFor;
-                displayNotesField($('#'+abilityOptionCardID), sourceCode);
+                let srcStruct = { // Hardcoded 'classAbilitySelector' sourceCode title name
+                    sourceType: null,
+                    sourceLevel: null,
+                    sourceCode: 'classAbilitySelector-'+abilityOption.selectOptionFor,
+                    sourceCodeSNum: 'a',
+                };
+                displayNotesField($('#'+abilityOptionCardID), srcStruct);
 
                 break;
 
@@ -32,8 +36,13 @@ function openAbilityQuickview(data) {
         }
     }
 
-    // Hardcoded 'classAbility' sourceCode title name
-    let sourceCode = 'classAbility-'+data.Ability.id;
-    displayNotesField(qContent, sourceCode);
+    
+    let srcStruct = { // Hardcoded 'classAbility' sourceCode title name
+        sourceType: null,
+        sourceLevel: null,
+        sourceCode: 'classAbility-'+data.Ability.id,
+        sourceCodeSNum: 'a',
+    };
+    displayNotesField(qContent, srcStruct);
 
 }

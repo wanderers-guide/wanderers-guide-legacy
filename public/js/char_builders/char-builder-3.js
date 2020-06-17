@@ -42,8 +42,25 @@ socket.on("returnBackgroundDetails", function(backgrounds, inChoiceStruct){
 
     choiceStruct = inChoiceStruct;
 
+    // Populate Background Selector
+    let selectBackground = $('#selectBackground');
+    selectBackground.append('<option value="chooseDefault" name="chooseDefault">Choose a Background</option>');
+    selectBackground.append('<hr class="dropdown-divider"></hr>');
+    for(const background of backgrounds){
+        let currentBackgroundID = $('#selectBackground').attr('name');
+        if(background.id == currentBackgroundID){
+            if(background.isArchived == 0){
+                selectBackground.append('<option value="'+background.id+'" selected>'+background.name+'</option>');
+            } else {
+                selectBackground.append('<option value="'+background.id+'" selected>'+background.name+' (archived)</option>');
+            }
+        } else if(background.isArchived == 0){
+            selectBackground.append('<option value="'+background.id+'">'+background.name+'</option>');
+        }
+    }
+
     // Background Selection //
-    $('#selectBackground').change(function(event, triggerSave) {
+    selectBackground.change(function(event, triggerSave) {
         let backgroundID = $("#selectBackground option:selected").val();
 
         let background = backgrounds.find(background => {
@@ -105,6 +122,11 @@ function displayCurrentBackground(background) {
     g_background = null;
     $('#selectBackground').blur();
     
+    if(background.isArchived == 1){
+        $('#isArchivedMessage').removeClass('is-hidden');
+    } else {
+        $('#isArchivedMessage').addClass('is-hidden');
+    }
 
     let backgroundDescription = $('#backgroundDescription');
     backgroundDescription.html('<p>'+background.description+'</p>');

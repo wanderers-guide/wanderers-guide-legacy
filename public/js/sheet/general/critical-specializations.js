@@ -25,11 +25,26 @@ function hasWeaponCriticalSpecialization(item){
                 return true;
             }
     
-        } else if(weapCriticalData.value.startsWith('WEAPON~')){
-            let weapName = weapCriticalData.value.replace(/WEAPON\~/g,'');
+        } else if(weapCriticalData.value.startsWith('NAME~')){
+            let weapName = weapCriticalData.value.replace(/NAME\~/g,'');
             
             if(weapName == itemName){
                 return true;
+            }
+    
+        } else if(weapCriticalData.value.startsWith('GROUP~')){
+            let groupName = weapCriticalData.value.replace(/GROUP\~/g,'');
+            
+            if(item.WeaponData.isMelee === 1){
+                if(groupName === item.WeaponData.meleeWeaponType.toUpperCase()){
+                    return true;
+                }
+            }
+
+            if(item.WeaponData.isRanged === 1){
+                if(groupName === item.WeaponData.rangedWeaponType.toUpperCase()){
+                    return true;
+                }
             }
     
         } else {
@@ -59,10 +74,17 @@ function hasArmorSpecialization(item){
                 return true;
             }
     
-        } else if(armorCriticalData.value.startsWith('ARMOR~')){
-            let armorName = armorCriticalData.value.replace(/ARMOR\~/g,'');
+        } else if(armorCriticalData.value.startsWith('NAME~')){
+            let armorName = armorCriticalData.value.replace(/NAME\~/g,'');
             
             if(armorName == itemName){
+                return true;
+            }
+    
+        } else if(armorCriticalData.value.startsWith('GROUP~')){
+            let groupName = armorCriticalData.value.replace(/GROUP\~/g,'');
+            
+            if(groupName === item.ArmorData.armorType.toUpperCase()){
                 return true;
             }
     

@@ -43,7 +43,7 @@ function processingLangs(ascStatement, srcStruct, locationID){
 
 function giveLang(srcStruct, locationID, bonusOnly){
 
-    let selectLangID = "selectLang"+locationID+srcStruct.sourceCodeSNum;
+    let selectLangID = "selectLang"+locationID+"-"+srcStruct.sourceCodeSNum;
     let selectLangControlShellClass = selectLangID+'ControlShell';
     let langDescriptionID = selectLangID+"Description";
 

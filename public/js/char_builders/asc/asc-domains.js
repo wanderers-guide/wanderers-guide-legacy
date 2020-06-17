@@ -19,9 +19,9 @@ function processingDomains(ascStatement, srcStruct, locationID){
 
 function giveDomain(srcStruct, locationID, spellSRC){
 
-    let selectID = "selectDomain"+locationID+srcStruct.sourceCodeSNum;
+    let selectID = "selectDomain"+locationID+"-"+srcStruct.sourceCodeSNum;
     let selectControlShellClass = selectID+'ControlShell';
-    let descriptionID = "selectDomainDescription"+locationID+srcStruct.sourceCodeSNum;
+    let descriptionID = "selectDomainDescription"+locationID+"-"+srcStruct.sourceCodeSNum;
 
     $('#'+locationID).append('<div class="field mt-1"><div class="select '+selectControlShellClass+'"><select id="'+selectID+'"></select></div></div>');
 
@@ -104,9 +104,9 @@ socket.on("returnDomainChange", function(){
 
 function giveDomainAdvancement(srcStruct, locationID, spellSRC){
 
-    let selectID = "selectDomainAdvancement"+locationID+srcStruct.sourceCodeSNum;
+    let selectID = "selectDomainAdvancement"+locationID+"-"+srcStruct.sourceCodeSNum;
     let selectControlShellClass = selectID+'ControlShell';
-    let descriptionID = "selectDomainAdvancementDescription"+locationID+srcStruct.sourceCodeSNum;
+    let descriptionID = "selectDomainAdvancementDescription"+locationID+"-"+srcStruct.sourceCodeSNum;
 
     $('#'+locationID).append('<div class="field mt-1"><div class="select '+selectControlShellClass+'"><select id="'+selectID+'"></select></div></div>');
 
