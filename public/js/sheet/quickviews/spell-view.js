@@ -411,6 +411,7 @@ function openSpellQuickview(data){
 
 function spellViewTextProcessor(text, spellKeyAbility){
 
+    text = text.replace('equal to your spellcasting ability modifier', '{'+spellKeyAbility+'_MOD|'+lengthenAbilityType(spellKeyAbility)+' Modifier}');
     text = text.replace('your spellcasting ability modifier', '{'+spellKeyAbility+'_MOD|'+lengthenAbilityType(spellKeyAbility)+' Modifier}');
 
     return text;

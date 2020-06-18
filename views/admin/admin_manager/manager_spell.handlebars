@@ -36,12 +36,41 @@
             <a class="is-size-3 is-pulled-right" href="/admin/create/spell"><span class="icon is-large has-text-info"><i class="fas fa-plus"></i></span></a>
         </div>
     </div>
-    <hr>
+    
+    <hr class="m-2">
 
+    <div class="columns is-mobile is-marginless pl-5 pb-2">
+        <div class="column is-10">
+            <p class="control has-icons-left">
+                <input id="spellsSearch" class="input" type="text" placeholder="Search Spells">
+                <span class="icon is-left">
+                    <i class="fas fa-search" aria-hidden="true"></i>
+                </span>
+            </p>
+        </div>
+        <div class="column">
+            <div class="select">
+                <select id="spellsFilterByLevel">
+                    <option value="All">All</option>
+                    <option value="0">Cantrip</option>
+                    <option value="1">1st</option>
+                    <option value="2">2nd</option>
+                    <option value="3">3rd</option>
+                    <option value="4">4th</option>
+                    <option value="5">5th</option>
+                    <option value="6">6th</option>
+                    <option value="7">7th</option>
+                    <option value="8">8th</option>
+                    <option value="9">9th</option>
+                    <option value="10">10th</option>
+                </select>
+            </div>
+        </div>
+    </div>
 
     <div class="columns mx-5 is-centered is-multiline mb-2 use-custom-scrollbar" style="height: 600px; max-height: 600px; overflow-y: auto;">
         {{#each spells}}
-            <div class="column is-12 entryListing border-bottom border-dark" name="{{id}}">
+            <div class="column is-12 entryListing border-bottom border-dark" name="{{id}}" data-entry-name="{{name}}" data-entry-level="{{level}}">
                 <div class="columns">
                     <div class="column is-paddingless p-1 pl-2 is-8 entry-main">
                         <sup class="is-size-7 has-text-grey">{{level}}: </sup>

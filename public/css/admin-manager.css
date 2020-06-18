@@ -51,3 +51,30 @@ hr {
 .modal-background {
     background-color: rgba(10,10,10,.26)
 }
+
+
+.input, .select select, .textarea {
+    background-color: hsl(0, 0%, 18%);
+    border-color: hsl(0, 0%, 13%);
+    color: hsl(0, 0%, 86%);
+}
+
+.input:hover, .select select:hover, .textarea:hover {
+    border-color: hsl(0, 0%, 10%);
+}
+
+.select::after {
+    border-color: hsl(0, 0%, 86%)!important;
+}
+
+.select:hover::after {
+    border-color: #3273dc!important;
+}
+
+.input::-webkit-input-placeholder, .select select::-webkit-input-placeholder, .textarea::-webkit-input-placeholder{
+    color:rgba(219,219,219,.4);
+}
+
+.control.has-icons-left .icon, .control.has-icons-right .icon {
+    color:rgba(219,219,219,.4);
+}
