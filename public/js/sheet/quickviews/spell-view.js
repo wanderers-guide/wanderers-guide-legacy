@@ -1,4 +1,6 @@
 
+const g_tagStringLengthMax = 620; // Hardcoded - Tag String Length Max
+
 function openSpellQuickview(data){
     addBackFunctionality(data);
 
@@ -212,11 +214,11 @@ function openSpellQuickview(data){
     let rarity = spellDataStruct.Spell.rarity;
     let tagsInnerHTML = '';
     switch(rarity) {
-    case 'UNCOMMON': tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-very-small is-primary">Uncommon</button>';
+    case 'UNCOMMON': tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-1 mb-1 is-very-small is-primary">Uncommon</button>';
         break;
-    case 'RARE': tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-very-small is-success">Rare</button>';
+    case 'RARE': tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-1 mb-1 is-very-small is-success">Rare</button>';
         break;
-    case 'UNIQUE': tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-very-small is-danger">Unique</button>';
+    case 'UNIQUE': tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-1 mb-1 is-very-small is-danger">Unique</button>';
         break;
     default: break;
     }
@@ -227,13 +229,28 @@ function openSpellQuickview(data){
         }
     );
     for(const tag of spellDataStruct.Tags){
-        tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-very-small is-info has-tooltip-bottom has-tooltip-multiline" data-tooltip="'+tag.description+'">'+tag.name+'</button>';
+        let tagDescription = tag.description;
+        if(tagDescription.length > g_tagStringLengthMax){
+            tagDescription = tagDescription.substring(0, g_tagStringLengthMax);
+            tagDescription += '...';
+        }
+        tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-1 mb-1 is-very-small is-info has-tooltip-bottom has-tooltip-multiline tagButton" data-tooltip="'+tagDescription+'">'+tag.name+'</button>';
     }
 
     if(tagsInnerHTML != ''){
         qContent.append('<div class="buttons is-marginless is-centered">'+tagsInnerHTML+'</div>');
         qContent.append('<hr class="mb-2 mt-1">');
     }
+
+    $('.tagButton').click(function(){
+        let tagName = $(this).text();
+        let tagArray = spellDataStruct.Tags;
+        openQuickView('tagView', {
+            TagName : tagName,
+            TagArray : tagArray,
+            _prevBackData: {Type: g_QViewLastType, Data: g_QViewLastData},
+        });
+    });
 
     // Traditions
     if(data.SheetData == null){
@@ -332,7 +349,7 @@ function openSpellQuickview(data){
     let sdString = '';
 
     let savingThrowType = null;
-    switch(spellDataStruct.Spell.cast) {
+    switch(spellDataStruct.Spell.savingThrow) {
         case 'FORT': savingThrowType = 'Fortitude'; break;
         case 'REFLEX': savingThrowType = 'Reflex'; break;
         case 'WILL': savingThrowType = 'Will'; break;

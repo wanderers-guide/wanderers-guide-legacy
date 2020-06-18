@@ -41,6 +41,11 @@ function prevPage() {
 socket.on("returnBackgroundDetails", function(backgrounds, inChoiceStruct){
 
     choiceStruct = inChoiceStruct;
+    backgrounds = backgrounds.sort(
+        function(a, b) {
+            return a.name > b.name ? 1 : -1;
+        }
+    );
 
     // Populate Background Selector
     let selectBackground = $('#selectBackground');

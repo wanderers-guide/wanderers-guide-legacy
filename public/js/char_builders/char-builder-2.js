@@ -45,6 +45,11 @@ socket.on("returnAncestryAndChoices", function(ancestryObject, inChoiceStruct){
 
     choiceStruct = inChoiceStruct;
     let ancestryMap = objToMap(ancestryObject);
+    ancestryMap = new Map([...ancestryMap.entries()].sort(
+        function(a, b) {
+            return a[1].Ancestry.name > b[1].Ancestry.name ? 1 : -1;
+        })
+    );
 
     // Populate Ancestry Selector
     let selectAncestry = $('#selectAncestry');

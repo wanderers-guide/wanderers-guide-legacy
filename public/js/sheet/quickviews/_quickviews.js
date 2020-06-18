@@ -91,6 +91,8 @@ function openQuickView(type, data) {
         openCustomizeProfQuickview(data);
     } else if(type == 'addProfView'){
         openAddProfQuickview(data);
+    } else if(type == 'tagView'){
+        openTagQuickview(data);
     }
 
 }

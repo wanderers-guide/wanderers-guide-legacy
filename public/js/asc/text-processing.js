@@ -130,11 +130,11 @@ function processText(text, isSheet, isJustified, size) {
     // ONE-ACTION
     // TWO-ACTIONS
     // THREE-ACTIONS
-    text = text.replace('FREE-ACTION', '<span class="pf-icon">[free-action]</span>');
-    text = text.replace('REACTION', '<span class="pf-icon">[reaction]</span>');
-    text = text.replace('ONE-ACTION', '<span class="pf-icon">[one-action]</span>');
-    text = text.replace('TWO-ACTIONS', '<span class="pf-icon">[two-actions]</span>');
-    text = text.replace('THREE-ACTIONS', '<span class="pf-icon">[three-actions]</span>');
+    text = text.replace(/FREE-ACTION/g, '<span class="pf-icon">[free-action]</span>');
+    text = text.replace(/REACTION/g, '<span class="pf-icon">[reaction]</span>');
+    text = text.replace(/ONE-ACTION/g, '<span class="pf-icon">[one-action]</span>');
+    text = text.replace(/TWO-ACTIONS/g, '<span class="pf-icon">[two-actions]</span>');
+    text = text.replace(/THREE-ACTIONS/g, '<span class="pf-icon">[three-actions]</span>');
 
 
     // Critical Success:text

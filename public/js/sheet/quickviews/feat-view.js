@@ -46,11 +46,26 @@ function openFeatQuickview(data) {
         }
     );
     for(const tag of data.Tags){
-        featTagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-very-small is-info has-tooltip-bottom has-tooltip-multiline" data-tooltip="'+tag.description+'">'+tag.name+'</button>';
+        let tagDescription = tag.description;
+        if(tagDescription.length > g_tagStringLengthMax){
+            tagDescription = tagDescription.substring(0, g_tagStringLengthMax);
+            tagDescription += '...';
+        }
+        featTagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-very-small is-info has-tooltip-bottom has-tooltip-multiline tagButton" data-tooltip="'+tagDescription+'">'+tag.name+'</button>';
     }
     featTagsInnerHTML += '</div></div></div>';
 
     qContent.append(featTagsInnerHTML);
+
+    $('.tagButton').click(function(){
+        let tagName = $(this).text();
+        let tagArray = data.Tags;
+        openQuickView('tagView', {
+            TagName : tagName,
+            TagArray : tagArray,
+            _prevBackData: {Type: g_QViewLastType, Data: g_QViewLastData},
+        });
+    });
 
     let featContentInnerHTML = '';
     if(data.Feat.prerequisites != null){

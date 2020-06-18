@@ -148,7 +148,12 @@ function displayAddItem(itemID, itemDataStruct, data){
       default: break;
     }
     for(const tagStruct of itemDataStruct.TagArray){
-        tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-very-small is-info has-tooltip-bottom has-tooltip-multiline" data-tooltip="'+tagStruct.Tag.description+'">'+tagStruct.Tag.name+'</button>';
+        let tagDescription = tagStruct.Tag.description;
+        if(tagDescription.length > g_tagStringLengthMax){
+            tagDescription = tagDescription.substring(0, g_tagStringLengthMax);
+            tagDescription += '...';
+        }
+        tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-very-small is-info has-tooltip-bottom has-tooltip-multiline tagButton" data-tooltip="'+tagDescription+'">'+tagStruct.Tag.name+'</button>';
     }
 
     if(tagsInnerHTML != ''){
@@ -156,6 +161,15 @@ function displayAddItem(itemID, itemDataStruct, data){
         $('#'+addItemDetailsItemID).append('<hr class="mb-2 mt-1">');
     }
 
+    $('.tagButton').click(function(){
+        let tagName = $(this).text();
+        let tagArray = itemDataStruct.TagArray;
+        openQuickView('tagView', {
+            TagName : tagName,
+            TagArray : tagArray,
+            _prevBackData: {Type: g_QViewLastType, Data: g_QViewLastData},
+        });
+    });
 
     if(itemDataStruct.WeaponData != null){
 

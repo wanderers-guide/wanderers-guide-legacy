@@ -60,7 +60,12 @@ function openInvItemQuickview(data) {
         default: break;
     }
     for(const tagStruct of data.Item.TagArray){
-        tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-very-small is-info has-tooltip-bottom has-tooltip-multiline" data-tooltip="'+tagStruct.Tag.description+'">'+tagStruct.Tag.name+'</button>';
+        let tagDescription = tagStruct.Tag.description;
+        if(tagDescription.length > g_tagStringLengthMax){
+            tagDescription = tagDescription.substring(0, g_tagStringLengthMax);
+            tagDescription += '...';
+        }
+        tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-very-small is-info has-tooltip-bottom has-tooltip-multiline tagButton" data-tooltip="'+tagDescription+'">'+tagStruct.Tag.name+'</button>';
         if(tagStruct.Tag.id === 235){ // Hardcoded Invested Tag ID
             if(maxInvests > currentInvests || (maxInvests == currentInvests && data.InvItem.isInvested == 1)) {
                 $('#quickViewTitleRight').html('<span class="pr-2"><span id="investedIconButton" class="button is-very-small is-info is-rounded has-tooltip-left" data-tooltip="Invest ('+currentInvests+'/'+maxInvests+')"><span class="icon is-small"><i class="fas fa-lg fa-hat-wizard"></i></span></span></span>');
@@ -75,6 +80,16 @@ function openInvItemQuickview(data) {
         qContent.append('<div class="buttons is-marginless is-centered">'+tagsInnerHTML+'</div>');
         qContent.append('<hr class="mb-2 mt-1">');
     }
+
+    $('.tagButton').click(function(){
+        let tagName = $(this).text();
+        let tagArray = data.Item.TagArray;
+        openQuickView('tagView', {
+            TagName : tagName,
+            TagArray : tagArray,
+            _prevBackData: {Type: g_QViewLastType, Data: g_QViewLastData},
+        });
+    });
 
     if(isInvestable){
 

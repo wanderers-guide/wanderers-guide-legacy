@@ -106,9 +106,7 @@ function capitalizeWord(word){
 module.exports = class CharGathering {
 
     static getAllClasses() {
-        return Class.findAll({
-            order: [['name', 'ASC'],]
-        })
+        return Class.findAll()
         .then((classes) => {
             return ClassAbility.findAll({
                 order: [['level', 'ASC'],['name', 'ASC'],]
