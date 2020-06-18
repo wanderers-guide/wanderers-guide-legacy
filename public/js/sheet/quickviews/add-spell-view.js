@@ -109,20 +109,11 @@ function changeSpellTraditionTab(type, traditionName, data){
 
     }
 
-    $(window).off('scroll');
-    $(window).scroll(function() {
-        if($(window).scrollTop() == $(document).height() - $(window).height()) {
-               // ajax call get data from server and append to the div
-        }
-    });
-
 
     $('.spellEntryPart').click(function(){
 
         let spellID = $(this).parent().attr('data-spell-id');
-        console.log(data.Data.SpellMap);
         let spellDataStruct = data.Data.SpellMap.get(spellID+"");
-        console.log(spellDataStruct);
 
         let spellTradChevronSpellID = 'addSpellFromTraditionChevronSpellID'+spellID;
         let spellTradNameID = 'addSpellFromTraditionName'+spellID;
@@ -162,7 +153,7 @@ function displayAddSpell(spellDataStruct, data){
     let spellTradNameID = 'addSpellFromTraditionName'+spellID;
     let spellTradDetailsSpellID = 'addSpellFromTraditionDetailsSpell'+spellID;
 
-    $('#traitionSpellListSection').append('<div class="tile is-parent is-paddingless border-bottom border-additems has-background-black-like cursor-clickable spellEntry" data-spell-id="'+spellID+'"><div class="tile is-child is-9 spellEntryPart"><p id="'+spellTradNameID+'" class="has-text-left mt-1 pl-3 has-text-grey-lighter">'+spellName+'</p></div><div id="'+spellTradAddSpellBtnWrapperID+'" class="tile is-child"></div><div class="tile is-child is-1 spellEntryPart"><span class="icon has-text-grey mt-2"><i id="'+spellTradChevronSpellID+'" class="fas fa-chevron-down"></i></span></div></div><div id="'+spellTradDetailsSpellID+'"></div>');
+    $('#traitionSpellListSection').append('<div class="tile is-parent is-paddingless border-bottom border-additems has-background-black-like cursor-clickable" data-spell-id="'+spellID+'"><div class="tile is-child is-9 spellEntryPart"><p id="'+spellTradNameID+'" class="has-text-left mt-1 pl-3 has-text-grey-lighter">'+spellName+'</p></div><div id="'+spellTradAddSpellBtnWrapperID+'" class="tile is-child"></div><div class="tile is-child is-1 spellEntryPart"><span class="icon has-text-grey mt-2"><i id="'+spellTradChevronSpellID+'" class="fas fa-chevron-down"></i></span></div></div><div id="'+spellTradDetailsSpellID+'"></div>');
 
     
     if(data.SpellBook.SpellCastingType === 'SPONTANEOUS-REPERTOIRE' && spellDataStruct.Spell.level != 0) {

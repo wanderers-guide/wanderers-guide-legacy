@@ -876,7 +876,7 @@ function displayInformation() {
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
     let skills = $("#skills");
-    skills.html('<p class="is-size-5"><strong class="has-text-grey-lighter">Skills</strong></p><hr class="border-secondary is-marginless">');
+    skills.html('');
     let hasFascinatedCondition = hasCondition(14); // Hardcoded - Fascinated condition decreases all skills by -2
     for(const [skillName, skillData] of g_skillMap.entries()){
         let profData = g_profMap.get(skillName);
