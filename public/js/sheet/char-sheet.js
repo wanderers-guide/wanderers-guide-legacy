@@ -1565,6 +1565,12 @@ function determineBulkAndCoins(invItems, itemMap, strMod){
     let weightEncumbered = 5+strMod;
     let weightMax = 10+strMod;
 
+    let bulkLimitBonus = getStatTotal('BULK_LIMIT');
+    if(bulkLimitBonus != null){
+        weightEncumbered += bulkLimitBonus;
+        weightMax += bulkLimitBonus;
+    }
+
     let isEncumbered = false;
     let cantMove = false;
 
@@ -1607,14 +1613,11 @@ function determineBulkAndCoins(invItems, itemMap, strMod){
 ////////////////////////////////////////////////////////////////////////////////////////////////
 function determineInvestitures(){
 
-    let incredibleInvest = g_featChoiceArray.find(feat => {
-        return feat.value.id == 700; // Hardcoded Incredible Invest Feat ID
-    });
+    maxInvests = 10;
 
-    if(incredibleInvest != null){
-        maxInvests = 12;
-    } else {
-        maxInvests = 10;
+    let investLimitBonus = getStatTotal('INVEST_LIMIT');
+    if(investLimitBonus != null){
+        maxInvests += investLimitBonus;
     }
 
     currentInvests = 0;
