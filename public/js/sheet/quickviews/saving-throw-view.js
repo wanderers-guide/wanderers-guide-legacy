@@ -37,7 +37,11 @@ function openSavingThrowQuickview(data) {
     breakDownInnerHTML += ' + ';
 
     if(profName == "Untrained") {
-        breakDownInnerHTML += '<a class="has-text-link has-tooltip-bottom has-tooltip-multiline" data-tooltip="This is your proficiency bonus. Because you are '+profName+' in '+data.ProfData.Name+' saving throws, your proficiency bonus is 0.">'+data.ProfNum+'</a>';
+        let untrainedProfBonus = 0;
+        if(gOption_hasProfWithoutLevel){
+            untrainedProfBonus = -2;
+        }
+        breakDownInnerHTML += '<a class="has-text-link has-tooltip-bottom has-tooltip-multiline" data-tooltip="This is your proficiency bonus. Because you are '+profName+' in '+data.ProfData.Name+', your proficiency bonus is '+signNumber(untrainedProfBonus)+'.">'+data.ProfNum+'</a>';
     } else {
         let extraBonus = 0;
         if(profName == "Trained"){
@@ -49,7 +53,12 @@ function openSavingThrowQuickview(data) {
         } else if(profName == "Legendary"){
             extraBonus = 8;
         }
-        breakDownInnerHTML += '<a class="has-text-link has-tooltip-bottom has-tooltip-multiline" data-tooltip="This is your proficiency bonus. Because you are '+profName+' in '+data.ProfData.Name+' saving throws, your proficiency bonus is equal to your level ('+data.CharLevel+') plus '+extraBonus+'.">'+data.ProfNum+'</a>';
+
+        if(gOption_hasProfWithoutLevel){
+            breakDownInnerHTML += '<a class="has-text-link has-tooltip-bottom has-tooltip-multiline" data-tooltip="This is your proficiency bonus. Because you are '+profName+' in '+data.ProfData.Name+', your proficiency bonus is '+signNumber(extraBonus)+'.">'+data.ProfNum+'</a>';
+        } else {
+            breakDownInnerHTML += '<a class="has-text-link has-tooltip-bottom has-tooltip-multiline" data-tooltip="This is your proficiency bonus. Because you are '+profName+' in '+data.ProfData.Name+', your proficiency bonus is equal to your level ('+data.CharLevel+') plus '+extraBonus+'.">'+data.ProfNum+'</a>';
+        }
     }
 
     breakDownInnerHTML += ' + ';

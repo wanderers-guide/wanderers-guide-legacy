@@ -46,7 +46,13 @@ const Character = db.define('characters', {
   },
   dataID: {
     type: Sequelize.INTEGER
-  }
+  },
+  optionAutoHeightenSpells: { // Character Options
+    type: Sequelize.INTEGER
+  },
+  optionProfWithoutLevel: {
+    type: Sequelize.INTEGER
+  },
 });
 
 module.exports = Character;

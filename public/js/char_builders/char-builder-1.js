@@ -8,19 +8,23 @@ $(function () {
     $("#nextButton").click(function(){
         nextPage();
     });
-    /*
-    $("#prevButton").click(function(){
-        prevPage();
-    });
-    */
     
+    // On load get basic character info
+    socket.emit("requestCharacterDetails",
+        getCharIDFromURL());
 
-    // When character level changes, save level
-    $("#charLevel").change(function(){
-        socket.emit("requestLevelChange",
-            getCharIDFromURL(),
-            $(this).val());
-    });
+});
+
+// ~~~~~~~~~~~~~~ // Change Page // ~~~~~~~~~~~~~~ //
+
+function nextPage() {
+    // Hardcoded redirect
+    window.location.href = window.location.href.replace("page1", "page2");
+}
+
+// ~~~~~~~~~~~~~~ // Processings // ~~~~~~~~~~~~~~ //
+
+socket.on("returnCharacterDetails", function(character){
 
     // When character name changes, save name
     $("#charName").change(function(){
@@ -42,6 +46,12 @@ $(function () {
 
     });
 
+    // When character level changes, save level
+    $("#charLevel").change(function(){
+        socket.emit("requestLevelChange",
+            getCharIDFromURL(),
+            $(this).val());
+    });
 
     // When ability score changes, save them all
     $("#abilSTR").blur(function(){
@@ -63,7 +73,8 @@ $(function () {
         deployAbilityScoreChange();
     });
 
-    
+    handleCharacterOptions(character);
+
     // Turn off page loading
     $('.pageloader').addClass("fadeout");
 
@@ -81,10 +92,7 @@ function deployAbilityScoreChange(){
     const MAX_VAL = 30;
     const MIN_VAL = 0;
 
-    if(strVal <= MAX_VAL && dexVal <= MAX_VAL && conVal <= MAX_VAL 
-        && intVal <= MAX_VAL && wisVal <= MAX_VAL && chaVal <= MAX_VAL
-        && strVal >= MIN_VAL && dexVal >= MIN_VAL && conVal >= MIN_VAL
-        && intVal >= MIN_VAL && wisVal >= MIN_VAL && chaVal >= MIN_VAL) {
+    if(strVal <= MAX_VAL && dexVal <= MAX_VAL && conVal <= MAX_VAL && intVal <= MAX_VAL && wisVal <= MAX_VAL && chaVal <= MAX_VAL && strVal >= MIN_VAL && dexVal >= MIN_VAL && conVal >= MIN_VAL && intVal >= MIN_VAL && wisVal >= MIN_VAL && chaVal >= MIN_VAL) {
         
         $('.abilScoreSet').removeClass("is-danger");
 
@@ -102,18 +110,28 @@ function deployAbilityScoreChange(){
     }
 }
 
-// ~~~~~~~~~~~~~~ // Change Page // ~~~~~~~~~~~~~~ //
+function handleCharacterOptions(character) {
 
-function nextPage() {
-    // Hardcoded redirect
-    window.location.href = window.location.href.replace("page1", "page2");
+    $("#optionAutoHeightenSpells").change(function(){
+        let optionTypeValue = (this.checked) ? 1 : 0;
+        socket.emit("requestCharacterOptionChange", 
+            getCharIDFromURL(), 
+            'optionAutoHeightenSpells',
+            optionTypeValue);
+    });
+    $("#optionAutoHeightenSpells").prop('checked', (character.optionAutoHeightenSpells === 1));
+
+    $("#optionProficiencyWithoutLevel").change(function(){
+        let optionTypeValue = (this.checked) ? 1 : 0;
+        socket.emit("requestCharacterOptionChange", 
+            getCharIDFromURL(), 
+            'optionProfWithoutLevel',
+            optionTypeValue);
+    });
+    $("#optionProficiencyWithoutLevel").prop('checked', (character.optionProfWithoutLevel === 1));
+    
 }
-/*
-function prevPage() {
-    // Hardcoded redirect
-    window.location.href = window.location.href.replace("page1", "page0");
-}
-*/
+
 
 // ~~~~~~~~~~~~~~ // Processings // ~~~~~~~~~~~~~~ //
 
@@ -126,4 +144,8 @@ socket.on("returnLevelChange", function() {
 });
 
 socket.on("returnAbilityScoreChange", function() {
+});
+
+socket.on("returnCharacterOptionChange", function() {
+    $(".optionSwitch").blur();
 });

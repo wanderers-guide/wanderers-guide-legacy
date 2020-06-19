@@ -415,6 +415,16 @@ module.exports = class SocketConnections {
     // Socket.IO Connections
     io.on('connection', function(socket){
 
+      socket.on('requestCharacterDetails', function(charID){
+        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+          if(ownsChar){
+            CharGathering.getCharacter(charID).then((character) => {
+              socket.emit('returnCharacterDetails', character);
+            });
+          }
+        });
+      });
+
       socket.on('requestNameChange', function(charID, name){
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
           if(ownsChar){
@@ -449,7 +459,15 @@ module.exports = class SocketConnections {
         });
       });
 
-      
+      socket.on('requestCharacterOptionChange', function(charID, optionName, value){
+        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+          if(ownsChar){
+            CharSaving.saveCharacterOption(charID, optionName, value).then((result) => {
+              socket.emit('returnCharacterOptionChange');
+            });
+          }
+        });
+      });
 
     });
     

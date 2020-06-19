@@ -136,11 +136,9 @@ header {
 }
 
 /* Cursors */
-
 .cursor-clickable {
     cursor: pointer!important;
 }
-
 .cursor-nonclickable {
     cursor: default!important;
 }

@@ -312,6 +312,30 @@ module.exports = class CharSaving {
 
     }
 
+    static saveCharacterOption(charID, optionName, value) {
+
+        let charUpVals = null;
+        if(optionName === 'optionAutoHeightenSpells'){
+            charUpVals = {
+                optionAutoHeightenSpells: value
+            };
+        } else if(optionName === 'optionProfWithoutLevel'){
+            charUpVals = {
+                optionProfWithoutLevel: value
+            };
+        }
+
+        if(charUpVals != null){
+            return Character.update(charUpVals, { where: { id: charID } })
+            .then((result) => {
+                return;
+            });
+        } else {
+            return Promise.resolve();
+        }
+
+    }
+
     static saveAbilityScores(charID, abilSTR, abilDEX, abilCON, abilINT, abilWIS, abilCHA) {
 
         let JSONBonusArray = JSON.stringify([

@@ -1,6 +1,11 @@
 
 let socket = io();
 
+/* Character Options */
+let gOption_hasAutoHeightenSpells = false;
+let gOption_hasProfWithoutLevel = false;
+/* ~~~~~~~~~~~~~~~~~ */
+
 let g_character = null;
 let g_classDetails = null;
 let g_ancestry = null;
@@ -59,7 +64,6 @@ let g_preConditions_strScore = null;
 let g_preConditions_dexScore = null;
 
 
-
 // ~~~~~~~~~~~~~~ // Run on Load // ~~~~~~~~~~~~~~ //
 $(function () {
 
@@ -96,6 +100,10 @@ socket.on("returnCharacterSheetInfo", function(charInfo){
     g_equippedShieldInvItemID = g_invStruct.Inventory.equippedShieldInvItemID;
 
     g_character = charInfo.Character;
+
+    /* Character Options */
+    gOption_hasAutoHeightenSpells = (g_character.optionAutoHeightenSpells === 1);
+    gOption_hasProfWithoutLevel = (g_character.optionProfWithoutLevel === 1);
 
     g_otherSpeeds = charInfo.OtherSpeeds;
 

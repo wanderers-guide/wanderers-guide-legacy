@@ -222,11 +222,11 @@ function displaySpellDetails(spellDataStruct, spellTradDetailsSpellID){
     let rarity = spellDataStruct.Spell.rarity;
     let tagsInnerHTML = '';
     switch(rarity) {
-      case 'UNCOMMON': tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-1 mb-1 is-very-small is-primary">Uncommon</button>';
+      case 'UNCOMMON': tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-very-small is-primary">Uncommon</button>';
         break;
-      case 'RARE': tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-1 mb-1 is-very-small is-success">Rare</button>';
+      case 'RARE': tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-very-small is-success">Rare</button>';
         break;
-      case 'UNIQUE': tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-1 mb-1 is-very-small is-danger">Unique</button>';
+      case 'UNIQUE': tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-very-small is-danger">Unique</button>';
         break;
       default: break;
     }
@@ -236,7 +236,7 @@ function displaySpellDetails(spellDataStruct, spellTradDetailsSpellID){
             tagDescription = tagDescription.substring(0, g_tagStringLengthMax);
             tagDescription += '...';
         }
-        tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-1 mb-1 is-very-small is-info has-tooltip-bottom has-tooltip-multiline tagButton" data-tooltip="'+tagDescription+'">'+tag.name+'</button>';
+        tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-very-small is-info has-tooltip-bottom has-tooltip-multiline tagButton" data-tooltip="'+tagDescription+'">'+tag.name+'</button>';
     }
 
     if(tagsInnerHTML != ''){
@@ -397,6 +397,11 @@ function displaySpellDetails(spellDataStruct, spellTradDetailsSpellID){
 
         if(spellDataStruct.Spell.heightenedThreeVal != null){
             let hText = '<strong>Heightened ('+getHeightenedTextFromCodeName(spellDataStruct.Spell.heightenedThreeVal)+')</strong> '+spellDataStruct.Spell.heightenedThreeText;
+            spellDetails.append('<div class="negative-indent">'+processText(hText, true, true, 'MEDIUM')+'</div>');
+        }
+
+        if(spellDataStruct.Spell.heightenedFourVal != null){
+            let hText = '<strong>Heightened ('+getHeightenedTextFromCodeName(spellDataStruct.Spell.heightenedFourVal)+')</strong> '+spellDataStruct.Spell.heightenedFourText;
             spellDetails.append('<div class="negative-indent">'+processText(hText, true, true, 'MEDIUM')+'</div>');
         }
 

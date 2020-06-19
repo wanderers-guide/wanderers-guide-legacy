@@ -7,6 +7,7 @@ function openSpellQuickview(data){
     let spellDataStruct = data.SpellDataStruct;
     let spellID = spellDataStruct.Spell.id;
     let spellName = spellDataStruct.Spell.name;
+    let spellHeightenLevel = null;
 
     let sheetSpellType = null;
     if(data.SheetData != null){
@@ -37,8 +38,10 @@ function openSpellQuickview(data){
         if(spellHeightened === null || spellDataStruct.Spell.level == spellHeightened || 
                 (spellDataStruct.Spell.level === 0 && spellHeightened == 1)) {
             spellName += '<sup class="is-inline ml-2 is-size-7 is-italic">'+spellLevel+'</sup>';
+            spellHeightenLevel = -1;
         } else {
             spellName += '<sup class="is-inline ml-2 is-size-7 is-italic">'+spellLevel+'<span class="icon" style="font-size: 0.8em;"><i class="fas fa-caret-right"></i></span>'+spellHeightened+'</sup>';
+            spellHeightenLevel = spellHeightened;
         }
     }
 
@@ -214,11 +217,11 @@ function openSpellQuickview(data){
     let rarity = spellDataStruct.Spell.rarity;
     let tagsInnerHTML = '';
     switch(rarity) {
-    case 'UNCOMMON': tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-1 mb-1 is-very-small is-primary">Uncommon</button>';
+    case 'UNCOMMON': tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-very-small is-primary">Uncommon</button>';
         break;
-    case 'RARE': tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-1 mb-1 is-very-small is-success">Rare</button>';
+    case 'RARE': tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-very-small is-success">Rare</button>';
         break;
-    case 'UNIQUE': tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-1 mb-1 is-very-small is-danger">Unique</button>';
+    case 'UNIQUE': tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-very-small is-danger">Unique</button>';
         break;
     default: break;
     }
@@ -234,7 +237,7 @@ function openSpellQuickview(data){
             tagDescription = tagDescription.substring(0, g_tagStringLengthMax);
             tagDescription += '...';
         }
-        tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-1 mb-1 is-very-small is-info has-tooltip-bottom has-tooltip-multiline tagButton" data-tooltip="'+tagDescription+'">'+tag.name+'</button>';
+        tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-very-small is-info has-tooltip-bottom has-tooltip-multiline tagButton" data-tooltip="'+tagDescription+'">'+tag.name+'</button>';
     }
 
     if(tagsInnerHTML != ''){
@@ -381,44 +384,77 @@ function openSpellQuickview(data){
 
     if(spellDataStruct.Spell.heightenedOneVal != null || spellDataStruct.Spell.heightenedTwoVal != null || spellDataStruct.Spell.heightenedThreeVal != null) {
 
-        qContent.append('<hr class="m-2">');
+        if(!gOption_hasAutoHeightenSpells || spellHeightenLevel == null){
 
-        if(spellDataStruct.Spell.heightenedOneVal != null){
-            let heightenedTextName = getHeightenedTextFromCodeName(spellDataStruct.Spell.heightenedOneVal);
-            let hText;
-            if(heightenedTextName === "CUSTOM"){
-                hText = '<strong>Heightened</strong> '+spellDataStruct.Spell.heightenedOneText;
-            } else {
-                hText = '<strong>Heightened ('+heightenedTextName+')</strong> '+spellDataStruct.Spell.heightenedOneText;
-            }
-            if(spellKeyAbility != null){
-                hText = spellViewTextProcessor(hText, spellKeyAbility);
-            }
-            qContent.append('<div class="negative-indent">'+processText(hText, true, true, 'MEDIUM')+'</div>');
-        }
+            qContent.append('<hr class="m-2">');
 
-        if(spellDataStruct.Spell.heightenedTwoVal != null){
-            let hText = '<strong>Heightened ('+getHeightenedTextFromCodeName(spellDataStruct.Spell.heightenedTwoVal)+')</strong> '+spellDataStruct.Spell.heightenedTwoText;
-            if(spellKeyAbility != null){
-                hText = spellViewTextProcessor(hText, spellKeyAbility);
+            if(spellDataStruct.Spell.heightenedOneVal != null){
+                let heightenedTextName = getHeightenedTextFromCodeName(spellDataStruct.Spell.heightenedOneVal);
+                let hText;
+                if(heightenedTextName === "CUSTOM"){
+                    hText = '<strong>Heightened</strong> '+spellDataStruct.Spell.heightenedOneText;
+                } else {
+                    hText = '<strong>Heightened ('+heightenedTextName+')</strong> '+spellDataStruct.Spell.heightenedOneText;
+                }
+                if(spellKeyAbility != null){
+                    hText = spellViewTextProcessor(hText, spellKeyAbility);
+                }
+                qContent.append('<div class="negative-indent">'+processText(hText, true, true, 'MEDIUM')+'</div>');
             }
-            qContent.append('<div class="negative-indent">'+processText(hText, true, true, 'MEDIUM')+'</div>');
-        }
+    
+            if(spellDataStruct.Spell.heightenedTwoVal != null){
+                let hText = '<strong>Heightened ('+getHeightenedTextFromCodeName(spellDataStruct.Spell.heightenedTwoVal)+')</strong> '+spellDataStruct.Spell.heightenedTwoText;
+                if(spellKeyAbility != null){
+                    hText = spellViewTextProcessor(hText, spellKeyAbility);
+                }
+                qContent.append('<div class="negative-indent">'+processText(hText, true, true, 'MEDIUM')+'</div>');
+            }
+    
+            if(spellDataStruct.Spell.heightenedThreeVal != null){
+                let hText = '<strong>Heightened ('+getHeightenedTextFromCodeName(spellDataStruct.Spell.heightenedThreeVal)+')</strong> '+spellDataStruct.Spell.heightenedThreeText;
+                if(spellKeyAbility != null){
+                    hText = spellViewTextProcessor(hText, spellKeyAbility);
+                }
+                qContent.append('<div class="negative-indent">'+processText(hText, true, true, 'MEDIUM')+'</div>');
+            }
+    
+            if(spellDataStruct.Spell.heightenedFourVal != null){
+                let hText = '<strong>Heightened ('+getHeightenedTextFromCodeName(spellDataStruct.Spell.heightenedFourVal)+')</strong> '+spellDataStruct.Spell.heightenedFourText;
+                if(spellKeyAbility != null){
+                    hText = spellViewTextProcessor(hText, spellKeyAbility);
+                }
+                qContent.append('<div class="negative-indent">'+processText(hText, true, true, 'MEDIUM')+'</div>');
+            }
 
-        if(spellDataStruct.Spell.heightenedThreeVal != null){
-            let hText = '<strong>Heightened ('+getHeightenedTextFromCodeName(spellDataStruct.Spell.heightenedThreeVal)+')</strong> '+spellDataStruct.Spell.heightenedThreeText;
-            if(spellKeyAbility != null){
-                hText = spellViewTextProcessor(hText, spellKeyAbility);
-            }
-            qContent.append('<div class="negative-indent">'+processText(hText, true, true, 'MEDIUM')+'</div>');
-        }
+        } else {
+            if(spellHeightenLevel != -1){
 
-        if(spellDataStruct.Spell.heightenedFourVal != null){
-            let hText = '<strong>Heightened ('+getHeightenedTextFromCodeName(spellDataStruct.Spell.heightenedFourVal)+')</strong> '+spellDataStruct.Spell.heightenedFourText;
-            if(spellKeyAbility != null){
-                hText = spellViewTextProcessor(hText, spellKeyAbility);
+                let qContentToAdd = '<hr class="m-2">';
+
+                let hText = '<div><p><strong>Heightened</strong></p></div>';
+
+                let heightenedOneCount = getHeightenedCount(spellDataStruct.Spell.level, spellHeightenLevel, spellDataStruct.Spell.heightenedOneVal);
+                hText += getAutoHeightenedSpellText(heightenedOneCount, spellDataStruct.Spell.heightenedOneText);
+
+                let heightenedTwoCount = getHeightenedCount(spellDataStruct.Spell.level, spellHeightenLevel, spellDataStruct.Spell.heightenedTwoVal);
+                hText += getAutoHeightenedSpellText(heightenedTwoCount, spellDataStruct.Spell.heightenedTwoText);
+
+                let heightenedThreeCount = getHeightenedCount(spellDataStruct.Spell.level, spellHeightenLevel, spellDataStruct.Spell.heightenedThreeVal);
+                hText += getAutoHeightenedSpellText(heightenedThreeCount, spellDataStruct.Spell.heightenedThreeText);
+
+                let heightenedFourCount = getHeightenedCount(spellDataStruct.Spell.level, spellHeightenLevel, spellDataStruct.Spell.heightenedFourVal);
+                hText += getAutoHeightenedSpellText(heightenedFourCount, spellDataStruct.Spell.heightenedFourText);
+
+                if(spellKeyAbility != null){
+                    hText = spellViewTextProcessor(hText, spellKeyAbility);
+                }
+                qContentToAdd += '<div class="negative-indent">'+processText(hText, true, true, 'MEDIUM')+'</div>';
+
+                if(heightenedOneCount > 0 || heightenedTwoCount > 0 || heightenedThreeCount > 0 || heightenedFourCount > 0){
+                    qContent.append(qContentToAdd);
+                }
+
             }
-            qContent.append('<div class="negative-indent">'+processText(hText, true, true, 'MEDIUM')+'</div>');
         }
 
     }
@@ -434,4 +470,36 @@ function spellViewTextProcessor(text, spellKeyAbility){
     return text;
 }
 
-// {SPELLCASTING_MOD}
+let g_tempAutoHeightenCount = null;
+function getAutoHeightenedSpellText(hCount, hText){
+    if(hCount <= 0){ return ''; }
+    g_tempAutoHeightenCount = hCount;
+
+    let text = hText;
+    text = text.replace(/by (\d+)d(\d+)([ .]|$)/g, handleSpellAutoHeightenedIncrease);
+    text = text.replace(/by (\d+)d(\d+)\+(\d+)([ .]|$)/g, handleSpellAutoHeightenedIncreaseBonus);        
+
+    if(text === hText){
+        text = '';
+        for (let i = 0; i < hCount; i++) {
+            text += '~ : '+hText;
+        }
+    } else {
+        text = '~ : '+text;
+    }
+
+    g_tempAutoHeightenCount = null;
+    return text;
+
+}
+
+function handleSpellAutoHeightenedIncrease(match, dieAmount, dieType, endingChar){
+    dieAmount = dieAmount*g_tempAutoHeightenCount;
+    return 'by '+dieAmount+'d'+dieType+''+endingChar;
+}
+
+function handleSpellAutoHeightenedIncreaseBonus(match, dieAmount, dieType, bonusAmount, endingChar){
+    dieAmount = dieAmount*g_tempAutoHeightenCount;
+    bonusAmount = bonusAmount*g_tempAutoHeightenCount;
+    return 'by '+dieAmount+'d'+dieType+'+'+bonusAmount+''+endingChar;
+}
