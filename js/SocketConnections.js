@@ -72,7 +72,7 @@ module.exports = class SocketConnections {
       socket.on('requestNotesFieldSave', function(charID, notesData, notesFieldControlShellID){
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
           if(ownsChar){
-            CharDataMapping.setData(charID, 'notesField', notesData, notesData.value)
+            CharSaving.saveNoteField(charID, notesData, notesData.placeholderText, notesData.text)
             .then((result) => {
               socket.emit('returnNotesFieldSave', notesFieldControlShellID);
             });
@@ -1160,12 +1160,15 @@ module.exports = class SocketConnections {
             CharDataMapping.getDataSingle(charID, 'notesField', srcStruct)
             .then((notesData) => {
               if(notesData == null) {
-                CharDataMapping.setData(charID, 'notesField', srcStruct, placeholderText+",,,")
-                .then((result) => {
-                  socket.emit('returnNotesFieldChange', notesData, srcStruct, placeholderText, locationID);
+                CharSaving.saveNoteField(charID, srcStruct, placeholderText, null)
+                .then((newNotesData) => {
+                  socket.emit('returnNotesFieldChange', newNotesData, locationID);
                 });
               } else {
-                socket.emit('returnNotesFieldChange', notesData, srcStruct, placeholderText, locationID);
+                CharGathering.getNoteField(charID, notesData)
+                .then((newNotesData) => {
+                  socket.emit('returnNotesFieldChange', newNotesData, locationID);
+                });
               }
             });
           } else {

@@ -25,32 +25,22 @@ function giveNotesField(srcStruct, placeholderText, locationID){
 
 }
 
-socket.on("returnNotesFieldChange", function(notesDataValue, srcStruct, placeholderText, locationID){
+socket.on("returnNotesFieldChange", function(notesData, locationID){
     statementComplete();
 
-    let notesData = srcStruct;
-    notesData.value = notesDataValue;
-    let notesText;
-    if(notesDataValue != null){
-        let notesDataSections = notesDataValue.split(',,,');
-        placeholderText = notesDataSections[0];
-        notesText = notesDataSections[1];
-    } else {
-        notesData.value = placeholderText+',,,';
-        notesText = '';
-    }
+    let placeholderText = notesData.placeholderText;
+    let notesText = notesData.text;
 
-    let notesFieldID = getCharIDFromURL()+'-'+srcStruct.source+'-'+srcStruct.sourceType+'-'+srcStruct.sourceLevel+'-'+srcStruct.sourceCode+'-'+srcStruct.sourceCodeSNum;
+    let notesFieldID = getCharIDFromURL()+'-'+notesData.source+'-'+notesData.sourceType+'-'+notesData.sourceLevel+'-'+notesData.sourceCode+'-'+notesData.sourceCodeSNum;
     let notesFieldControlShellID = notesFieldID+'ControlShell';
     $('#'+locationID).append('<div id="'+notesFieldControlShellID+'" class="control mt-1 mx-5 px-5"><textarea id="'+notesFieldID+'" class="textarea use-custom-scrollbar" rows="2" spellcheck="false" maxlength="3000" placeholder="'+placeholderText+'">'+notesText+'</textarea></div>');
 
     $("#"+notesFieldID).blur(function(){
-        let notesDataNewValue = placeholderText+',,,'+$(this).val();
-        if(notesData.value != notesDataNewValue) {
+        if(notesData.text != $(this).val()) {
 
             $("#"+notesFieldControlShellID).addClass("is-loading");
             
-            notesData.value = notesDataNewValue;
+            notesData.text = $(this).val();
 
             socket.emit("requestNotesFieldSave",
                 getCharIDFromURL(),

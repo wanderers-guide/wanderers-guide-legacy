@@ -11,6 +11,7 @@ const InnateSpellCasting = require('../models/contentDB/InnateSpellCasting');
 const TaggedSpell = require('../models/contentDB/TaggedSpell');
 const Skill = require('../models/contentDB/Skill');
 const Background = require('../models/contentDB/Background');
+const NoteField = require('../models/contentDB/NoteField');
 const Inventory = require('../models/contentDB/Inventory');
 const Language = require('../models/contentDB/Language');
 const Ancestry = require('../models/contentDB/Ancestry');
@@ -55,6 +56,11 @@ function objToMap(obj) {
       strMap.set(k, obj[k]);
     }
     return strMap;
+}
+
+function srcStructToCode(charID, source, srcStruct) {
+    if(srcStruct == null){ return -1; }
+    return hashCode(charID+'-'+source+'-'+srcStruct.sourceType+'-'+srcStruct.sourceLevel+'-'+srcStruct.sourceCode+'-'+srcStruct.sourceCodeSNum);
 }
 
 function hashCode(str) {
@@ -584,10 +590,38 @@ module.exports = class CharGathering {
         });
     }
 
-    static getNotesFields(charID) {
+    static getNoteFields(charID) {
         return CharDataMapping.getDataAll(charID, 'notesField', null)
         .then((notesDataArray) => {
-            return notesDataArray;
+            return NoteField.findAll({ where: { charID: charID } })
+            .then(function(noteFields) {
+
+                for(let notesData of notesDataArray){
+                    let noteFieldID = srcStructToCode(charID, 'notesField', notesData);
+                    let noteField = noteFields.find(noteField => {
+                        return noteField.id == noteFieldID;
+                    });
+                    if(noteField != null){
+                        notesData.text = noteField.text;
+                        notesData.placeholderText = noteField.placeholderText;
+                    }
+                }
+
+                return notesDataArray;
+
+            });
+        });
+    }
+
+    static getNoteField(charID, notesData) {
+        let noteFieldID = srcStructToCode(charID, 'notesField', notesData);
+        return NoteField.findOne({ where: { id: noteFieldID, charID: charID } })
+        .then(function(noteField) {
+            if(noteField != null){
+                notesData.text = noteField.text;
+                notesData.placeholderText = noteField.placeholderText;
+            }
+            return notesData;
         });
     }
 
@@ -1095,7 +1129,7 @@ module.exports = class CharGathering {
                                                                     .then( (resistAndVulnerStruct) => {
                                                                         return CharGathering.getSpecializations(charID)
                                                                         .then( (specializeStruct) => {
-                                                                            return CharGathering.getNotesFields(charID)
+                                                                            return CharGathering.getNoteFields(charID)
                                                                             .then( (notesDataArray) => {
                                                                                 return CharGathering.getOtherSpeeds(charID)
                                                                                 .then( (speedsDataArray) => {

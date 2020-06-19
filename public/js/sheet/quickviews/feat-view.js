@@ -95,16 +95,8 @@ function openFeatQuickview(data) {
     qContent.append(featContentInnerHTML);
 
     // Notes Field
-    let featChoice = g_featChoiceArray.find(feat => {
-        if(feat != null && feat.value != null){
-            if(feat.value.id === data.Feat.id) {
-                return true;
-            }
-        }
-        return false;
-    });
-    if(featChoice != null){
-        displayNotesField(qContent, featChoice);
+    if(data.SrcStruct != null){
+        displayNotesField(qContent, data.SrcStruct);
     }
 
 }

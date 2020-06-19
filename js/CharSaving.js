@@ -4,6 +4,7 @@ const Op = Sequelize.Op;
 
 const Character = require('../models/contentDB/Character');
 const Ancestry = require('../models/contentDB/Ancestry');
+const NoteField = require('../models/contentDB/NoteField');
 const Item = require('../models/contentDB/Item');
 const Inventory = require('../models/contentDB/Inventory');
 const InvItem = require('../models/contentDB/InvItem');
@@ -15,6 +16,16 @@ const CharDataMapping = require('./CharDataMapping');
 const CharDataMappingExt = require('./CharDataMappingExt');
 
 const CharTags = require('./CharTags');
+
+function srcStructToCode(charID, source, srcStruct) {
+    if(srcStruct == null){ return -1; }
+    return hashCode(charID+'-'+source+'-'+srcStruct.sourceType+'-'+srcStruct.sourceLevel+'-'+srcStruct.sourceCode+'-'+srcStruct.sourceCodeSNum);
+}
+
+function hashCode(str) {
+    return str.split('').reduce((prevHash, currVal) =>
+      (((prevHash << 5) - prevHash) + currVal.charCodeAt(0))|0, 0);
+}
 
 function isPotencyRune(runeID){ // Fund Runes have Hardcoded IDs
     return runeID == 1 || runeID == 2 || runeID == 3 || runeID == 10 || runeID == 11 || runeID == 12;
@@ -334,6 +345,37 @@ module.exports = class CharSaving {
             return Promise.resolve();
         }
 
+    }
+
+    static saveNoteField(charID, srcStruct, placeholderText, text) {
+        let noteFieldID = srcStructToCode(charID, 'notesField', srcStruct);
+        let upsertVals;
+        if(text == null){
+            upsertVals = {
+                id: noteFieldID,
+                charID: charID,
+                placeholderText: placeholderText,
+            };
+        } else {
+            upsertVals = {
+                id: noteFieldID,
+                charID: charID,
+                placeholderText: placeholderText,
+                text: text,
+            };
+        }
+        return NoteField.upsert(upsertVals).then((result) => {
+            return NoteField.findOne({ where: { id: noteFieldID} })
+            .then((noteField) => {
+                return CharDataMapping.setData(charID, 'notesField', srcStruct, 'StoredNoteField')
+                .then((result) => {
+                    srcStruct.value = 'StoredNoteField';
+                    srcStruct.placeholderText = noteField.placeholderText;
+                    srcStruct.text = noteField.text;
+                    return srcStruct;
+                });
+            });
+        });
     }
 
     static saveAbilityScores(charID, abilSTR, abilDEX, abilCON, abilINT, abilWIS, abilCHA) {

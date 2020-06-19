@@ -127,14 +127,14 @@ function featDisplayByType(data, sortingTagNameArray, featsSearchValue){
                 return sortingTagNameArray.includes(tag.name);
             });
             if(tag == null){
-                filterFeatsThroughSearch(feat.value, featTags, featCount, featsSearchValue);
+                filterFeatsThroughSearch(feat, featTags, featCount, featsSearchValue);
             }
         } else {
             let tag = featTags.find(tag => {
                 return sortingTagNameArray.includes(tag.name);
             });
             if(tag != null){
-                filterFeatsThroughSearch(feat.value, featTags, featCount, featsSearchValue);
+                filterFeatsThroughSearch(feat, featTags, featCount, featsSearchValue);
             }
         }
         featCount++;
@@ -142,11 +142,11 @@ function featDisplayByType(data, sortingTagNameArray, featsSearchValue){
 
 }
 
-function filterFeatsThroughSearch(feat, featTags, featCount, featsSearchValue){
+function filterFeatsThroughSearch(featData, featTags, featCount, featsSearchValue){
 
     let willDisplay = false;
     if(featsSearchValue != null){
-        let featName = feat.name.toLowerCase();
+        let featName = featData.value.name.toLowerCase();
         if(!featName.includes(featsSearchValue)){
             willDisplay = false;
         } else {
@@ -157,13 +157,14 @@ function filterFeatsThroughSearch(feat, featTags, featCount, featsSearchValue){
     }
 
     if(willDisplay) {
-        displayFeat(feat, featTags, featCount);
+        displayFeat(featData, featTags, featCount);
     }
 
 }
 
-function displayFeat(feat, featTags, featCount){
+function displayFeat(featData, featTags, featCount){
 
+    let feat = featData.value;
     let featID = 'featDetailsEntry'+feat.id+"C"+featCount;
 
     let featNameInnerHTML = '<span>'+feat.name+'</span>';
@@ -201,7 +202,8 @@ function displayFeat(feat, featTags, featCount){
     $('#'+featID).click(function(){
         openQuickView('featView', {
             Feat : feat,
-            Tags : featTags
+            Tags : featTags,
+            SrcStruct : featData,
         });
     });
 
