@@ -437,7 +437,7 @@
                 </p>
                 <div class="py-2">
                     <div class="code-block">
-                        IF (HAS-LEVEL=13) {GIVE-PROF-IN=Perception:M}
+                        IF (HAS-LEVEL>=13) {GIVE-PROF-IN=Perception:M}
                     </div>
                     <p class="pl-3">
                         - If the character is level 13 or greater, the statement inside the brackets will execute (which will make the character Master in Perception).
@@ -445,29 +445,41 @@
                     <p class="pl-3">
                         - Any number between 0 and 20 for the level.
                     </p>
+                    <p class="pl-3">
+                        Boolean Operators: '==', '!=', '>=', or '<='
+                    </p>
                 </div>
                 <div class="py-2">
                     <div class="code-block">
-                        IF (HAS-HERITAGE=Treedweller) {GIVE-SPEED=Climb:15}
+                        IF (HAS-HERITAGE==Treedweller) {GIVE-SPEED=Climb:15}
                     </div>
                     <p class="pl-3">
                         - If the character has the Treedweller heritage, the statement inside the brackets will execute (which will give the character a climb speed of 15 feet).
                     </p>
-                </div>
-                <div class="py-2">
-                    <div class="code-block">
-                        IF (HAS-PROF=Arcana:T) {GIVE-PROF-IN=Society:E}
-                    </div>
                     <p class="pl-3">
-                        - If the character is Trained or better in Arcana, the statement inside the brackets will execute (which will make the character Expert in Society).
+                        Boolean Operators: '==' or '!='
                     </p>
                 </div>
                 <div class="py-2">
                     <div class="code-block">
-                        IF (HAS-PROF=Stealth:T) {GIVE-SPEED=Swim:15} ELSE {GIVE-LANG-NAME=Elven}
+                        IF (HAS-PROF==Arcana:T) {GIVE-PROF-IN=Society:E}
+                    </div>
+                    <p class="pl-3">
+                        - If the character is Trained in Arcana, the statement inside the brackets will execute (which will make the character Expert in Society).
+                    </p>
+                    <p class="pl-3">
+                        Boolean Operators: '==', '!=', '>=', or '<='
+                    </p>
+                </div>
+                <div class="py-2">
+                    <div class="code-block">
+                        IF (HAS-PROF>=Stealth:T) {GIVE-SPEED=Swim:15} ELSE {GIVE-LANG-NAME=Elven}
                     </div>
                     <p class="pl-3">
                         - If the character is Trained or better in Stealth, the first statement will execute (which will give the character a swim speed of 15 feet). If the character is not Trained in Stealth, the second statement will execute (which will give the character the Elven language).
+                    </p>
+                    <p class="pl-3">
+                        Boolean Operators: '==', '!=', '>=', or '<='
                     </p>
                 </div>
             </div>

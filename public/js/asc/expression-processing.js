@@ -90,15 +90,15 @@ function testExpr(ascCode){
         elseStatement = null;
     }
 
-    if(expression.includes('HAS-LEVEL')){ // HAS-LEVEL=13
+    if(expression.includes('HAS-LEVEL')){ // HAS-LEVEL==13
         return expHasLevel(expression, statement, elseStatement);
     }
 
-    if(expression.includes('HAS-HERITAGE')){ // HAS-HERITAGE=Treedweller
+    if(expression.includes('HAS-HERITAGE')){ // HAS-HERITAGE==Treedweller
         return expHasHeritage(expression, statement, elseStatement);
     }
 
-    if(expression.includes('HAS-PROF')){ // HAS-PROF=Arcana:T // Prof is that or better. If you're master, you're trained.
+    if(expression.includes('HAS-PROF')){ // HAS-PROF==Arcana:T // Prof is that or better. If you're master, you're trained.
         return expHasProf(expression, statement, elseStatement);
     }
 
@@ -107,29 +107,85 @@ function testExpr(ascCode){
 }
 
 function expHasLevel(expression, statement, elseStatement){
-    let level = parseInt(expression.split('=')[1]);
-    if(!isNaN(level)){
-        if(g_expr_level >= level){
-            return statement;
-        } else {
-            return elseStatement;
+    if(expression.includes('==')){
+        let level = parseInt(expression.split('==')[1]);
+        if(!isNaN(level)){
+            if(g_expr_level == level){
+                return statement;
+            } else {
+                return elseStatement;
+            }
+        }
+    } else if(expression.includes('>=')){
+        let level = parseInt(expression.split('>=')[1]);
+        if(!isNaN(level)){
+            if(g_expr_level >= level){
+                return statement;
+            } else {
+                return elseStatement;
+            }
+        }
+    } else if(expression.includes('<=')){
+        let level = parseInt(expression.split('<=')[1]);
+        if(!isNaN(level)){
+            if(g_expr_level <= level){
+                return statement;
+            } else {
+                return elseStatement;
+            }
+        }
+    } else if(expression.includes('!=')){
+        let level = parseInt(expression.split('!=')[1]);
+        if(!isNaN(level)){
+            if(g_expr_level != level){
+                return statement;
+            } else {
+                return elseStatement;
+            }
         }
     }
     return null;
 }
 
 function expHasHeritage(expression, statement, elseStatement){
-    let heritageName = expression.split('=')[1].toUpperCase();
-    let currentHeritageName = g_expr_heritage.name.toUpperCase();
-    if(currentHeritageName.startsWith(heritageName)){
-        return statement;
-    } else {
-        return elseStatement;
+    if(expression.includes('==')){
+        let heritageName = expression.split('==')[1].toUpperCase();
+        let currentHeritageName = g_expr_heritage.name.toUpperCase();
+        if(currentHeritageName.startsWith(heritageName)){
+            return statement;
+        } else {
+            return elseStatement;
+        }
+    } else if(expression.includes('!=')){
+        let heritageName = expression.split('!=')[1].toUpperCase();
+        let currentHeritageName = g_expr_heritage.name.toUpperCase();
+        if(!currentHeritageName.startsWith(heritageName)){
+            return statement;
+        } else {
+            return elseStatement;
+        }
     }
 }
 
 function expHasProf(expression, statement, elseStatement){
-    let data = expression.split('=')[1];
+    let data;
+    let boolOp;
+    if(expression.includes('==')){
+        data = expression.split('==')[1];
+        boolOp = 'EQUALS';
+    } else if(expression.includes('>=')){
+        data = expression.split('>=')[1];
+        boolOp = 'GREATER-EQUALS';
+    } else if(expression.includes('<=')){
+        data = expression.split('<=')[1];
+        boolOp = 'LESSER-EQUALS';
+    } else if(expression.includes('!=')){
+        data = expression.split('!=')[1];
+        boolOp = 'NOT-EQUALS';
+    } else {
+        return null;
+    }
+
     let segments = data.split(':');
 
     let profName = segments[0];
@@ -145,16 +201,26 @@ function expHasProf(expression, statement, elseStatement){
         if(profData == null){
             let tempSkillName = profMapData.Name.toUpperCase();
             tempSkillName = tempSkillName.replace(/_|\s+/g,"");
-            if(tempSkillName === profName && profMapData.NumUps >= numUps) {
+            if(tempSkillName === profName && expHasProfNumUpsCompare(profMapData.NumUps, boolOp, numUps)) {
                 return statement;
             }
         } else {
-            if(profMapData.Name === profData.Name && profMapData.NumUps >= numUps){
+            if(profMapData.Name === profData.Name && expHasProfNumUpsCompare(profMapData.NumUps, boolOp, numUps)){
                 return statement;
             }
         }
     }
     
     return elseStatement;
+}
+
+function expHasProfNumUpsCompare(numUpsOne, boolOp, numUpsTwo){
+    switch(boolOp) {
+        case 'EQUALS': return numUpsOne == numUpsTwo;
+        case 'NOT-EQUALS': return numUpsOne != numUpsTwo;
+        case 'GREATER-EQUALS': return numUpsOne >= numUpsTwo;
+        case 'LESSER-EQUALS': return numUpsOne <= numUpsTwo;
+        default: return false;
+    }
 }
 
