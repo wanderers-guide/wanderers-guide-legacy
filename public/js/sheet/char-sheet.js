@@ -13,6 +13,8 @@ let g_heritage = null;
 let g_background = null;
 let g_charTagsArray = null;
 
+let g_allTags = null;
+
 let g_itemMap = null;
 let g_invStruct = null;
 let g_bulkAndCoinsStruct = null;
@@ -166,6 +168,8 @@ socket.on("returnCharacterSheetInfo", function(charInfo){
     );
 
     g_charTagsArray = charInfo.ChoicesStruct.CharTagsArray;
+
+    g_allTags = charInfo.AllTags;
     
     g_classDetails = charInfo.ChoicesStruct.ClassDetails;
     g_classDetails.AbilityChoices = charInfo.ChoicesStruct.ChoiceArray;

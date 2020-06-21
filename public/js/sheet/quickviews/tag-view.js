@@ -13,9 +13,6 @@ function openTagQuickview(data) {
         }
     });
 
-    console.log(data.TagArray);
-    console.log(tag);
-
     if(tag != null){
 
         let tagDescription;

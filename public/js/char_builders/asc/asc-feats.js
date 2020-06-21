@@ -78,6 +78,11 @@ function processingFeats(ascStatement, srcStruct, locationID){
         let featName = ascStatement.split('=')[1];
         featName = featName.replace(/_/g," ");
         giveFeatByName(srcStruct, featName, locationID);
+    }
+    else if(ascStatement.includes("HIDE-FEAT-NAME")){ // HIDE-FEAT-NAME=Ancestral_Paragon
+        let featName = ascStatement.split('=')[1];
+        featName = featName.replace(/_/g," ");
+        hideFeatByName(srcStruct, featName);
     } else {
         displayError("Unknown statement (2-Feat): \'"+ascStatement+"\'");
         statementComplete();
@@ -349,3 +354,18 @@ function giveFeatByName(srcStruct, featName, locationID){
             codeLocationID : descriptionFeatID+"Code", isStatement : true });
 
 }
+
+//////////////////////////////// Hide Feat (by Name) ///////////////////////////////////
+
+function hideFeatByName(srcStruct, featName){
+
+    socket.emit("requestFeatHideByName",
+        getCharIDFromURL(),
+        srcStruct,
+        featName);
+
+}
+
+socket.on("returnFeatHideByName", function(){
+    statementComplete();
+});

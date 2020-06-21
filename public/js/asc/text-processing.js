@@ -124,6 +124,22 @@ function processText(text, isSheet, isJustified, size) {
         text = text.replace(regexSpellLink, '$2');
     }
 
+    // (Trait: Infusing | Infused)
+    let regexTraitLinkExt = /\((Trait):\s*([^(:]+?)\s*\|\s*(.+?)\s*\)/ig;
+    if(isSheet) {
+        text = text.replace(regexTraitLinkExt, handleTraitLinkExt);
+    } else {
+        text = text.replace(regexTraitLinkExt, '$2');
+    }
+
+    // (Trait: Infused)
+    let regexTraitLink = /\((Trait):\s*([^(:]+?)\s*\)/ig;
+    if(isSheet) {
+        text = text.replace(regexTraitLink, handleTraitLink);
+    } else {
+        text = text.replace(regexTraitLink, '$2');
+    }
+
 
     // FREE-ACTION
     // REACTION
@@ -239,6 +255,28 @@ function handleSpellLinkExt(match, linkName, innerTextDisplay, innerTextName) {
         }
     }
     return '<span class="has-text-danger">Unknown Spell</span>';
+}
+
+
+function handleTraitLink(match, linkName, innerTextName) {
+    return handleTraitLinkExt(match, linkName, innerTextName, innerTextName);
+}
+
+function handleTraitLinkExt(match, linkName, innerTextDisplay, innerTextName) {
+    innerTextName = innerTextName.toUpperCase();
+    let traitLinkClass = 'itemTextLink'+innerTextName;
+    let traitLinkText = '<span class="'+traitLinkClass+' has-text-info cursor-clickable">'+innerTextDisplay+'</span>';
+    setTimeout(function() {
+        $('.'+traitLinkClass).off('click');
+        $('.'+traitLinkClass).click(function(){
+            openQuickView('tagView', {
+                TagName : innerTextName,
+                TagArray : g_allTags,
+                _prevBackData: {Type: g_QViewLastType, Data: g_QViewLastData},
+            });
+        });
+    }, 100);
+    return traitLinkText;
 }
 
 /////

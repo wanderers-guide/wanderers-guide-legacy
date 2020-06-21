@@ -6,7 +6,7 @@ g_profConversionMap.set('MEDIUMARMOR', {Name: 'Medium_Armor', Category: 'Defense
 g_profConversionMap.set('HEAVYARMOR', {Name: 'Heavy_Armor', Category: 'Defense'});
 g_profConversionMap.set('UNARMOREDDEFENSE', {Name: 'Unarmored_Defense', Category: 'Defense'});
 
-g_profConversionMap.set('SINGLEWEAPONS', {Name: 'Simple_Weapons', Category: 'Attack'});
+g_profConversionMap.set('SIMPLEWEAPONS', {Name: 'Simple_Weapons', Category: 'Attack'});
 g_profConversionMap.set('MARTIALWEAPONS', {Name: 'Martial_Weapons', Category: 'Attack'});
 g_profConversionMap.set('ADVANCEDWEAPONS', {Name: 'Advanced_Weapons', Category: 'Attack'});
 g_profConversionMap.set('UNARMEDATTACKS', {Name: 'Unarmed_Attacks', Category: 'Attack'});

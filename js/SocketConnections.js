@@ -922,6 +922,19 @@ module.exports = class SocketConnections {
         });
       });
 
+      socket.on('requestFeatHideByName', function(charID, srcStruct, featName){
+        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+          if(ownsChar){
+            CharDataMapping.setData(charID, 'hiddenFeats', srcStruct, featName)
+            .then((result) => {
+              socket.emit('returnFeatHideByName');
+            });
+          } else {
+            socket.emit('returnASCStatementFailure', 'Incorrect Auth');
+          }
+        });
+      });
+
       socket.on('requestLanguageChangeByName', function(charID, srcStruct, langName){
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
           if(ownsChar){

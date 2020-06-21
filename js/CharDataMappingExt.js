@@ -184,6 +184,18 @@ module.exports = class CharDataMappingExt {
             return dataArray;
         });
     }
+
+
+    static getDataAllHiddenFeats(charID){
+        return CharDataMapping.getDataAll(charID, 'hiddenFeats', null)
+        .then((dataArray) => {
+            let featNameArray = [];
+            for(let data of dataArray){
+                featNameArray.push(data.value);
+            }
+            return featNameArray;
+        });
+    }
     
 
 };

@@ -151,6 +151,7 @@ module.exports = class CharGathering {
                     let featMap = new Map();
 
                     for (const feat of feats) {
+                        
                         featMap.set(feat.id, {Feat : feat, Tags : []});
                     }
 
@@ -584,6 +585,13 @@ module.exports = class CharGathering {
         return Domain.findAll()
         .then((domains) => {
             return domains;
+        });
+    }
+
+    static getAllTags() {
+        return Tag.findAll({raw: true})
+        .then((tags) => {
+            return tags;
         });
     }
 
@@ -1127,62 +1135,66 @@ module.exports = class CharGathering {
                     .then((heritage) => {
                         return Inventory.findOne({ where: { id: character.inventoryID} })
                         .then((inventory) => {
-                            return CharGathering.getAbilityScores(charID)
-                            .then((abilObject) => {
-                                return CharGathering.getAllSkills(charID)
-                                .then((skillObject) => {
-                                    return CharGathering.getCharChoices(charID)
-                                    .then( (choicesStruct) => {
-                                        return CharGathering.getSpellData(charID)
-                                        .then((spellDataStruct) => {
-                                            return CharGathering.getAllSpells()
-                                            .then((spellMap) => {
-                                                return CharGathering.getAllFeats()
-                                                .then( (featObject) => {
-                                                    return CharGathering.getAllItems()
-                                                    .then( (itemMap) => {
-                                                        return CharGathering.getAllConditions(charID)
-                                                        .then( (conditionsObject) => {
-                                                            return Condition.findAll()
-                                                            .then((allConditions) => {
-                                                                return CharGathering.getInventory(character.inventoryID)
-                                                                .then( (invStruct) => {
-                                                                    return CharGathering.getResistancesAndVulnerabilities(charID)
-                                                                    .then( (resistAndVulnerStruct) => {
-                                                                        return CharGathering.getSpecializations(charID)
-                                                                        .then( (specializeStruct) => {
-                                                                            return CharGathering.getNoteFields(charID)
-                                                                            .then( (notesDataArray) => {
-                                                                                return CharGathering.getOtherSpeeds(charID)
-                                                                                .then( (speedsDataArray) => {
-                                                                                    return CharGathering.getWeaponFamiliarities(charID)
-                                                                                    .then( (familiaritiesDataArray) => {
-                                                                                    
-                                                                                        let charInfo = {
-                                                                                            Character : character,
-                                                                                            Background : background,
-                                                                                            Ancestry : ancestry,
-                                                                                            Heritage : heritage,
-                                                                                            Inventory : inventory,
-                                                                                            AbilObject : abilObject,
-                                                                                            SkillObject : skillObject,
-                                                                                            FeatObject : featObject,
-                                                                                            ProfObject : choicesStruct.FinalProfObject,
-                                                                                            SpellObject : mapToObj(spellMap),
-                                                                                            ChoicesStruct : choicesStruct,
-                                                                                            SpellDataStruct: spellDataStruct,
-                                                                                            InvStruct : invStruct,
-                                                                                            ItemObject : mapToObj(itemMap),
-                                                                                            ConditionsObject : conditionsObject,
-                                                                                            AllConditions : allConditions,
-                                                                                            ResistAndVulners : resistAndVulnerStruct,
-                                                                                            SpecializeStruct : specializeStruct,
-                                                                                            WeaponFamiliarities : familiaritiesDataArray,
-                                                                                            NotesFields : notesDataArray,
-                                                                                            OtherSpeeds : speedsDataArray,
-                                                                                        };
-                                                        
-                                                                                        return charInfo;
+                            return CharGathering.getAllTags()
+                            .then( (tags) => {
+                                return CharGathering.getAbilityScores(charID)
+                                .then((abilObject) => {
+                                    return CharGathering.getAllSkills(charID)
+                                    .then((skillObject) => {
+                                        return CharGathering.getCharChoices(charID)
+                                        .then( (choicesStruct) => {
+                                            return CharGathering.getSpellData(charID)
+                                            .then((spellDataStruct) => {
+                                                return CharGathering.getAllSpells()
+                                                .then((spellMap) => {
+                                                    return CharGathering.getAllFeats()
+                                                    .then( (featObject) => {
+                                                        return CharGathering.getAllItems()
+                                                        .then( (itemMap) => {
+                                                            return CharGathering.getAllConditions(charID)
+                                                            .then( (conditionsObject) => {
+                                                                return Condition.findAll()
+                                                                .then((allConditions) => {
+                                                                    return CharGathering.getInventory(character.inventoryID)
+                                                                    .then( (invStruct) => {
+                                                                        return CharGathering.getResistancesAndVulnerabilities(charID)
+                                                                        .then( (resistAndVulnerStruct) => {
+                                                                            return CharGathering.getSpecializations(charID)
+                                                                            .then( (specializeStruct) => {
+                                                                                return CharGathering.getNoteFields(charID)
+                                                                                .then( (notesDataArray) => {
+                                                                                    return CharGathering.getOtherSpeeds(charID)
+                                                                                    .then( (speedsDataArray) => {
+                                                                                        return CharGathering.getWeaponFamiliarities(charID)
+                                                                                        .then( (familiaritiesDataArray) => {
+                                                                                        
+                                                                                            let charInfo = {
+                                                                                                Character : character,
+                                                                                                Background : background,
+                                                                                                Ancestry : ancestry,
+                                                                                                Heritage : heritage,
+                                                                                                Inventory : inventory,
+                                                                                                AbilObject : abilObject,
+                                                                                                SkillObject : skillObject,
+                                                                                                FeatObject : featObject,
+                                                                                                ProfObject : choicesStruct.FinalProfObject,
+                                                                                                SpellObject : mapToObj(spellMap),
+                                                                                                ChoicesStruct : choicesStruct,
+                                                                                                SpellDataStruct: spellDataStruct,
+                                                                                                InvStruct : invStruct,
+                                                                                                ItemObject : mapToObj(itemMap),
+                                                                                                ConditionsObject : conditionsObject,
+                                                                                                AllConditions : allConditions,
+                                                                                                ResistAndVulners : resistAndVulnerStruct,
+                                                                                                SpecializeStruct : specializeStruct,
+                                                                                                WeaponFamiliarities : familiaritiesDataArray,
+                                                                                                NotesFields : notesDataArray,
+                                                                                                OtherSpeeds : speedsDataArray,
+                                                                                                AllTags : tags,
+                                                                                            };
+                                                            
+                                                                                            return charInfo;
+                                                                                        });
                                                                                     });
                                                                                 });
                                                                             });
