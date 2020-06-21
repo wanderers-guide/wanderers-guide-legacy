@@ -592,7 +592,7 @@ module.exports = class SocketConnections {
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
           if(ownsChar){
             CharGathering.getCharacter(charID).then((character) => {
-              CharGathering.getClass(character.classID).then((classDetails) => {
+              CharGathering.getClass(charID, character.classID).then((classDetails) => {
                 CharGathering.getAncestry(character.ancestryID).then((ancestry) => {
                   CharGathering.getAbilityScores(charID).then((abilObject) => {
                     socket.emit('returnFinalizeDetails', character, abilObject, classDetails.Class, ancestry);
@@ -1336,6 +1336,19 @@ module.exports = class SocketConnections {
                 }
               });
             }
+          }
+        });
+      });
+
+      socket.on('requestASCCharTagChange', function(charID, srcStruct, charTag, selectControlShellClass){
+        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+          if(ownsChar){
+            CharTags.setTag(charID, srcStruct, charTag)
+            .then((result) => {
+              socket.emit('returnASCCharTagChange', selectControlShellClass);
+            });
+          } else {
+            socket.emit('returnASCStatementFailure', 'Incorrect Auth');
           }
         });
       });

@@ -399,6 +399,10 @@ function displayCurrentClass(classStruct, saving) {
 
     }
 
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Class DC ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
+    savingProfArray.push({ For : "Class_DC", To : "Class_DC", Prof : "T" });
+
+
     if(saving){
         let savingProfCount = 0;
         for(let savingProf of savingProfArray){

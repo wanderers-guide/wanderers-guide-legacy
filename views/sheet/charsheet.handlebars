@@ -17,6 +17,7 @@
     <script src="/js/sheet/quickviews/add-spell-view.js"></script>
     <script src="/js/sheet/quickviews/customize-item-view.js"></script>
     <script src="/js/sheet/quickviews/feat-view.js"></script>
+    <script src="/js/sheet/quickviews/class-dc-view.js"></script>
     <script src="/js/sheet/quickviews/hero-points-view.js"></script>
     <script src="/js/sheet/quickviews/inv-item-view.js"></script>
     <script src="/js/sheet/quickviews/language-view.js"></script>
@@ -161,9 +162,13 @@
                         </div>
                     </div>
                 </div>
-                <div class="tile is-1">
-                    <div class="tile pt-2 ml-2 mb-4 sheet-box">
-                        <div class="tile is-child">
+                <div class="tile is-2">
+                    <div class="tile ml-2 mb-4 sheet-box">
+                        <div class="tile is-child pt-2 is-paddingless cursor-clickable" id="classDCSection">
+                            <p class="is-size-6 is-unselectable"><strong class="has-text-grey-lighter">Class DC</strong></p>
+                            <p id="classDCContent" class="is-size-5 has-text-grey-light pl-2"></p>
+                        </div>
+                        <div class="tile is-child pt-2">
                             <p id="heroPointsTitle" class="is-size-7 cursor-clickable"><strong class="has-text-grey-lighter">Hero Points</strong></p>
                             <div class="select">
                                 <select id="heroPointsSelect">
@@ -176,18 +181,16 @@
                         </div>
                     </div>
                 </div>
-                <div class="tile is-2">
+                <div class="tile is-1">
                     <div class="tile ml-2 mt-2 mb-4">
                         <div class="tile is-child">
-                            <div class="buttons is-centered">
-                                <a id="restButton" class="button is-info is-medium is-outlined">Rest</a>
-                                <a id="backToBuilderButton" class="button is-info is-rounded has-text-white">
+                                <a id="backToBuilderButton" class="button is-info is-rounded is-small has-text-white mb-2">
                                     <span>Edit</span>
                                     <span class="icon">
                                         <i class="fas fa-cog"></i>
                                     </span>
                                 </a>
-                            </div>
+                                <a id="restButton" class="button is-info is-outlined">Rest</a>
                         </div>
                     </div>
                 </div>
@@ -286,29 +289,31 @@
                         <p id="shieldBonus" class="has-text-grey-light pr-2"></p>
                     </div>
                 </div>
-                <div class="tile is-vertical sheet-box" style="height: 550px; max-height: 550px; overflow-y: auto;">
-                    <div class="tile is-paddingless">
-                        <div class="tile is-child">
-                            <p class="is-size-6"><strong class="has-text-grey-lighter pl-4">Attacks</strong><a id="addNewProfButton" class="is-pulled-right is-size-6"><span class="icon has-text-info"><i class="fas fa-plus-circle"></i></span></a></p>
-                            <p id="attacksContent"></p>
+                <div class="tile is-vertical sheet-box">
+                    <div class="use-custom-scrollbar" style="height: 550px; max-height: 550px; overflow-y: auto;">
+                        <div class="tile is-paddingless">
+                            <div class="tile is-child">
+                                <p class="is-size-6"><strong class="has-text-grey-lighter pl-4">Attacks</strong><a id="addNewProfButton" class="is-pulled-right is-size-6"><span class="icon has-text-info"><i class="fas fa-plus-circle"></i></span></a></p>
+                                <p id="attacksContent"></p>
+                            </div>
                         </div>
-                    </div>
-                    <div class="tile is-paddingless">
-                        <div class="tile is-child">
-                            <p class="is-size-6"><strong class="has-text-grey-lighter">Defenses</strong></p>
-                            <p id="defensesContent"></p>
+                        <div class="tile is-paddingless">
+                            <div class="tile is-child">
+                                <p class="is-size-6"><strong class="has-text-grey-lighter">Defenses</strong></p>
+                                <p id="defensesContent"></p>
+                            </div>
                         </div>
-                    </div>
-                    <div id="spellsContentSection" class="tile is-paddingless">
-                        <div class="tile is-child">
-                            <p class="is-size-6"><strong class="has-text-grey-lighter">Spells</strong></p>
-                            <p id="spellsContent"></p>
+                        <div id="spellsContentSection" class="tile is-paddingless">
+                            <div class="tile is-child">
+                                <p class="is-size-6"><strong class="has-text-grey-lighter">Spells</strong></p>
+                                <p id="spellsContent"></p>
+                            </div>
                         </div>
-                    </div>
-                    <div class="tile is-paddingless">
-                        <div class="tile is-child p-2">
-                            <p class="is-size-6"><strong class="has-text-grey-lighter">Languages</strong></p>
-                            <p id="languagesContent" class="is-unselectable"></p>
+                        <div class="tile is-paddingless">
+                            <div class="tile is-child p-2">
+                                <p class="is-size-6"><strong class="has-text-grey-lighter">Languages</strong></p>
+                                <p id="languagesContent" class="is-unselectable"></p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -318,7 +323,7 @@
                     <nav class="panel is-dark is-shadowless sheet-box my-2 mx-1">
                         <p class="is-size-5"><strong class="has-text-grey-lighter">Skills</strong></p>
                         <hr class="border-secondary is-marginless">
-                        <div id="skills" class="use-custom-scrollbar" style="height: 660px; max-height: 660px;overflow-y: auto;">
+                        <div id="skills" class="use-custom-scrollbar" style="height: 660px; max-height: 660px; overflow-y: auto;">
 
                         </div>
                     </nav>

@@ -105,7 +105,11 @@ function displayClassFeats(data, featsSearchValue){
 function displayAncestryFeats(data, featsSearchValue){
     $('#featsContent').append('<p class="is-size-5 has-text-grey-light has-text-weight-bold text-left pl-5">Ancestry</p>');
     $('#featsContent').append('<hr class="hr-light" style="margin-top:-0.5em; margin-bottom:0em;">');
-    featDisplayByType(data, data.AncestryTagsArray, featsSearchValue);
+    let charTagsArray = [];
+    for(let dataTag of data.AncestryTagsArray){
+        charTagsArray.push(dataTag.value);
+    }
+    featDisplayByType(data, charTagsArray, featsSearchValue);
 }
 
 function displayOtherFeats(data, featsSearchValue){

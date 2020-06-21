@@ -93,6 +93,8 @@ function openQuickView(type, data) {
         openAddProfQuickview(data);
     } else if(type == 'tagView'){
         openTagQuickview(data);
+    } else if(type == 'classDCView'){
+        openClassDCQuickview(data);
     }
 
 }

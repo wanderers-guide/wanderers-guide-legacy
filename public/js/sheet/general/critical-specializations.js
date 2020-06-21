@@ -47,6 +47,17 @@ function hasWeaponCriticalSpecialization(item){
                 }
             }
     
+        } else if(weapCriticalData.value.startsWith('PROF~')){
+            let profNumUps = profToNumUp(weapCriticalData.value.replace(/PROF\~/g,''));
+
+            let profData = g_weaponProfMap.get(item.id);
+            if(profData != null){
+                let itemProfNumUps = profData.NumUps;
+                if(itemProfNumUps >= profNumUps){
+                    return true;
+                }
+            }
+    
         } else {
     
             if(weapCriticalData.value.includes(itemCategory)){
@@ -86,6 +97,17 @@ function hasArmorSpecialization(item){
             
             if(groupName === item.ArmorData.armorType.toUpperCase()){
                 return true;
+            }
+    
+        } else if(armorCriticalData.value.startsWith('PROF~')){
+            let profNumUps = profToNumUp(armorCriticalData.value.replace(/PROF\~/g,''));
+
+            let profData = g_armorProfMap.get(item.id);
+            if(profData != null){
+                let itemProfNumUps = profData.NumUps;
+                if(itemProfNumUps >= profNumUps){
+                    return true;
+                }
             }
     
         } else {

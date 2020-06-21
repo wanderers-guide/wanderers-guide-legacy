@@ -6,19 +6,22 @@ module.exports = class CharTags {
     static getTags(charID) {
         return CharDataMapping.getDataAll(charID, 'charTag', null)
         .then((dataArray) => {
-            let charTagsArray = [];
-            for(let data of dataArray){
-                charTagsArray.push(data.value);
-            }
-            return charTagsArray;
+            return dataArray;
         });
     }
 
     static setTag(charID, srcStruct, charTag) {
-        return CharDataMapping.setData(charID, 'charTag', srcStruct, charTag)
-        .then((result) => {
-            return;
-        });
+        if(charTag != null){
+            return CharDataMapping.setData(charID, 'charTag', srcStruct, charTag)
+            .then((result) => {
+                return;
+            });
+        } else {
+            return CharDataMapping.deleteData(charID, 'charTag', srcStruct)
+            .then((result) => {
+                return;
+            });
+        }
     }
 
 };

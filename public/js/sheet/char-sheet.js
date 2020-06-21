@@ -179,9 +179,7 @@ socket.on("returnCharacterSheetInfo", function(charInfo){
     g_notesFields = charInfo.NotesFields;
 
     initExpressionProcessor({
-        Level : g_character.level,
-        FinalProfObject : charInfo.ProfObject,
-        Heritage : charInfo.Heritage,
+        ChoiceStruct : charInfo.ChoicesStruct,
     });
 
     loadCharSheet();
@@ -223,6 +221,11 @@ function loadCharSheet(){
 
     addStat('MAX_HEALTH', 'ANCESTRY', g_ancestry.hitPoints);
     addStat('MAX_HEALTH_BONUS_PER_LEVEL', 'MODIFIER', 'CON');
+
+    let classDCData = g_profMap.get("Class_DC");
+    addStat('CLASS_DC', 'PROF_BONUS', classDCData.NumUps);
+    addStat('CLASS_DC', 'USER_BONUS', classDCData.UserBonus);
+    addStat('CLASS_DC', 'MODIFIER', g_classDetails.KeyAbility);
 
     addStat('SCORE_STR', 'BASE', g_abilMap.get("STR"));
     addStat('SCORE_DEX', 'BASE', g_abilMap.get("DEX"));
@@ -312,9 +315,6 @@ function loadCharSheet(){
     // Display Ability Scores //
     displayAbilityScores();
 
-    // Determine Bulk and Coins //
-    determineBulkAndCoins(g_invStruct.InvItems, g_itemMap, getMod(getStatTotal('SCORE_STR')));
-
     // Get STR and DEX score before conditions code runs (in the case of Enfeebled)
     g_preConditions_strScore = getStatTotal('SCORE_STR');
     g_preConditions_dexScore = getStatTotal('SCORE_DEX');
@@ -324,6 +324,9 @@ function loadCharSheet(){
 
     // Run Feats and Abilities Code //
     runAllFeatsAndAbilitiesCode();
+
+    // Determine Bulk and Coins //
+    determineBulkAndCoins(g_invStruct.InvItems, g_itemMap);
 
     // Display Health and Temp //
     initHealthAndTemp();
@@ -535,6 +538,36 @@ function displayInformation() {
 
     $('#addNewConditionsButton').click(function(){
         openSelectConditionsModal();
+    });
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////// Class DC ///////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    let classDCContent = $("#classDCContent");
+
+    let classDC = getStatTotal('CLASS_DC')+10;
+    let classDCBonusDisplayed = (hasConditionals('CLASS_DC')) 
+            ? classDC+'<sup class="is-size-5 has-text-info">*</sup>' : classDC;
+    classDCContent.html(classDCBonusDisplayed);
+
+    let classDCData = g_profMap.get("Class_DC");
+    let classDCProfNum = getProfNumber(classDCData.NumUps, g_character.level);
+    $("#classDCSection").click(function(){
+        openQuickView('classDCView', {
+            ProfData : classDCData,
+            ProfNum : classDCProfNum,
+            KeyMod : getModOfValue(g_classDetails.KeyAbility),
+            TotalDC : classDC,
+            CharLevel : g_character.level,
+        });
+    });
+
+    $("#classDCSection").mouseenter(function(){
+        $(this).addClass('has-background-grey-darker');
+    });
+    $("#classDCSection").mouseleave(function(){
+        $(this).removeClass('has-background-grey-darker');
     });
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -886,6 +919,10 @@ function displayInformation() {
     let skills = $("#skills");
     skills.html('');
     let hasFascinatedCondition = hasCondition(14); // Hardcoded - Fascinated condition decreases all skills by -2
+    let untrainedImprovisation = g_featChoiceArray.find(feat => {
+        return feat.value.id == 2270; // Hardcoded Untrained Improvisation Feat ID	
+    });
+    let hasUntrainedImprovisationFeat = (untrainedImprovisation != null);
     for(const [skillName, skillData] of g_skillMap.entries()){
         let profData = g_profMap.get(skillName);
         if(profData == null){ profData = skillData; }
@@ -895,10 +932,22 @@ function displayInformation() {
         let abilMod = getMod(g_abilMap.get(skillData.Skill.ability));
         let profNum = getProfNumber(profData.NumUps, g_character.level);
 
-        let totalBonus = getStatTotal('SKILL_'+skillName);
-        if(hasFascinatedCondition){
-            totalBonus -= 2;
+        if(hasUntrainedImprovisationFeat){
+            if(profData.NumUps === 0){
+                if(g_character.level < 7){
+                    let profBonus = Math.floor(g_character.level/2);
+                    addStat('SKILL_'+skillName, 'PROFICIENCY_BONUS', profBonus, 'Untrained Improvisation');
+                } else {
+                    addStat('SKILL_'+skillName, 'PROFICIENCY_BONUS', g_character.level, 'Untrained Improvisation');
+                }
+            }
         }
+
+        if(hasFascinatedCondition){
+            addStatAndSrc('SKILL_'+skillName, 'STATUS_PENALTY', -2, 'Fascinated');
+        }
+
+        let totalBonus = getStatTotal('SKILL_'+skillName);
 
         let conditionalStar = (hasConditionals('SKILL_'+skillName)) ? '<sup class="is-size-7 has-text-info">*</sup>' : '';
 
@@ -1491,7 +1540,7 @@ function generateRuneDataStruct(){
 /////////////////////////////////// Determine Bulk And Coins ///////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
-function determineBulkAndCoins(invItems, itemMap, strMod){
+function determineBulkAndCoins(invItems, itemMap){
 
     let bagBulkMap = new Map();
     let totalBulk = 0;
@@ -1562,9 +1611,10 @@ function determineBulkAndCoins(invItems, itemMap, strMod){
 
     totalBulk = round(totalBulk, 0);
 
+    let strMod = getMod(g_preConditions_strScore);
     let weightEncumbered = 5+strMod;
     let weightMax = 10+strMod;
-
+    
     let bulkLimitBonus = getStatTotal('BULK_LIMIT');
     if(bulkLimitBonus != null){
         weightEncumbered += bulkLimitBonus;
@@ -1624,8 +1674,7 @@ function determineInvestitures(){
     for(const invItem of g_invStruct.InvItems){
         if(invItem.isInvested == 1) {
             currentInvests++;
-
-            console.log(invItem.code);
+            
             processSheetCode(invItem.code, invItem.name);
 
         }

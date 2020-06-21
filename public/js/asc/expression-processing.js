@@ -17,6 +17,8 @@ g_profConversionMap.set('WILL', {Name: 'Will', Category: 'Save'});
 
 g_profConversionMap.set('PERCEPTION', {Name: 'Perception', Category: 'Perception'});
 
+g_profConversionMap.set('CLASSDC', {Name: 'Class_DC', Category: 'Class_DC'});
+
 g_profConversionMap.set('ARCANESPELLATTACKS', {Name: 'ArcaneSpellAttacks', Category: 'SpellAttack'});
 g_profConversionMap.set('OCCULTSPELLATTACKS', {Name: 'OccultSpellAttacks', Category: 'SpellAttack'});
 g_profConversionMap.set('PRIMALSPELLATTACKS', {Name: 'PrimalSpellAttacks', Category: 'SpellAttack'});
@@ -50,13 +52,34 @@ g_profConversionMap.set('SURVIVAL', {Name: 'Survival', Category: 'Skill'});
 g_profConversionMap.set('THIEVERY', {Name: 'Thievery', Category: 'Skill'});
 
 let hasInit = false;
-let g_expr_level, g_expr_profMap, g_expr_heritage = null;
+let g_expr_level, g_expr_profMap, g_expr_heritage, g_expr_classAbilityArray = null;
 
 function initExpressionProcessor(expDataStruct){
 
-    g_expr_level = expDataStruct.Level;
-    g_expr_profMap = objToMap(expDataStruct.FinalProfObject);
-    g_expr_heritage = expDataStruct.Heritage;
+    g_expr_level = expDataStruct.ChoiceStruct.Level;
+    g_expr_profMap = objToMap(expDataStruct.ChoiceStruct.FinalProfObject);
+    g_expr_heritage = expDataStruct.ChoiceStruct.Heritage;
+
+    if(expDataStruct.ChoiceStruct.ClassDetails != null){
+        g_expr_classAbilityArray = [];
+        if(expDataStruct.ChoiceStruct.ClassDetails.Abilities != null){
+            for(let classAbility of expDataStruct.ChoiceStruct.ClassDetails.Abilities){
+                if(classAbility.level <= g_expr_level) {
+                    if(classAbility.selectType != 'SELECT_OPTION'){
+                        g_expr_classAbilityArray.push(classAbility.name.toUpperCase());
+                    } else {
+                        let choiceData = expDataStruct.ChoiceStruct.ChoiceArray.find(choiceData => {
+                            return classAbility.id == choiceData.OptionID;
+                        });
+                        if(choiceData != null){
+                            g_expr_classAbilityArray.push(classAbility.name.toUpperCase());
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     hasInit = true;
 
 }
@@ -96,6 +119,10 @@ function testExpr(ascCode){
 
     if(expression.includes('HAS-HERITAGE')){ // HAS-HERITAGE==Treedweller
         return expHasHeritage(expression, statement, elseStatement);
+    }
+
+    if(expression.includes('HAS-CLASS-ABILITY')){ // HAS-CLASS-ABILITY==Cloistered Cleric
+        return expHasClassAbility(expression, statement, elseStatement);
     }
 
     if(expression.includes('HAS-PROF')){ // HAS-PROF==Arcana:T // Prof is that or better. If you're master, you're trained.
@@ -148,6 +175,7 @@ function expHasLevel(expression, statement, elseStatement){
 }
 
 function expHasHeritage(expression, statement, elseStatement){
+    if(g_expr_heritage == null) { return elseStatement; }
     if(expression.includes('==')){
         let heritageName = expression.split('==')[1].toUpperCase();
         let currentHeritageName = g_expr_heritage.name.toUpperCase();
@@ -160,6 +188,26 @@ function expHasHeritage(expression, statement, elseStatement){
         let heritageName = expression.split('!=')[1].toUpperCase();
         let currentHeritageName = g_expr_heritage.name.toUpperCase();
         if(!currentHeritageName.startsWith(heritageName)){
+            return statement;
+        } else {
+            return elseStatement;
+        }
+    }
+}
+
+function expHasClassAbility(expression, statement, elseStatement){
+    if(expression.includes('==')){
+        let classAbilityName = expression.split('==')[1].toUpperCase();
+        classAbilityName = classAbilityName.replace(/_/g," ");
+        if(g_expr_classAbilityArray.includes(classAbilityName)){
+            return statement;
+        } else {
+            return elseStatement;
+        }
+    } else if(expression.includes('!=')){
+        let classAbilityName = expression.split('==')[1].toUpperCase();
+        classAbilityName = classAbilityName.replace(/_/g," ");
+        if(!g_expr_classAbilityArray.includes(classAbilityName)){
             return statement;
         } else {
             return elseStatement;

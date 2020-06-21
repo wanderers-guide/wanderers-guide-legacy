@@ -48,8 +48,12 @@ function processingFeats(ascStatement, srcStruct, locationID){
             optionals = optionals[1].split(',');
         }
         let level = parseInt(value);
+        let charTagsArray = [];
+        for(let dataTag of ascChoiceStruct.CharTagsArray){
+            charTagsArray.push(dataTag.value);
+        }
         giveAncestryFeat(srcStruct, locationID, level,
-            ascChoiceStruct.CharTagsArray, optionals);
+            charTagsArray, optionals);
     }
     else if(ascStatement.includes("GIVE-CLASS-FEAT")){ // GIVE-CLASS-FEAT=3[metamagic]
         let value = ascStatement.split('=')[1];

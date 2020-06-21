@@ -119,7 +119,7 @@ function displayInnateSpellChoice(srcStruct, locationID, spellLevel, spellTradit
         }
     }
 
-    // On feat choice change
+    // On spell choice change
     $('#'+selectSpellID).change(function(event, triggerSave) {
 
         if(!($(this).is(":hidden"))) {

@@ -68,7 +68,7 @@ function displayFeat(locationID, feat){
     featInnerHTML += '<div>'+processText(feat.Feat.description, false, true, 'MEDIUM')+'</div>';
   
     if(feat.Feat.special != null){
-      featInnerHTML += '<div class="feat-attrib"><span><strong>Special: </strong></span><span>'+feat.Feat.special+'</span></div>';
+      featInnerHTML += '<div class="feat-attrib"><span><strong>Special: </strong></span><span class="has-text-justified">'+feat.Feat.special+'</span></div>';
     }
   
     featInnerHTML += '<div id="'+locationID+'Code"></div>';

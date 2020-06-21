@@ -357,6 +357,12 @@
                 </div>
                 <div class="pl-3 py-2">
                     <p class="">
+                        <strong>Class DC:</strong>
+                    </p>
+                    <p class="pl-2">'CLASS_DC'</p>
+                </div>
+                <div class="pl-3 py-2">
+                    <p class="">
                         <strong>Spell Attacks:</strong>
                     </p>
                     <p class="pl-2">'ARCANE_SPELL_ATTACK'</p>
@@ -373,12 +379,13 @@
                     <p class="pl-2">'PRIMAL_SPELL_DC'</p>
                     <p class="pl-2">'DIVINE_SPELL_DC'</p>
                 </div>
-                <div class="py-2">
-                    <div class="code-block">
-                        INCREASE-SKILL_SURVIVAL=5-STATUS
-                    </div>
-                    <p class="pl-3">
-                        - Gives the character a +5 status bonus to Survival. 
+                <div class="pl-3 py-2">
+                    <p class="">
+                        <strong>Speed:</strong>
+                    </p>
+                    <p class="pl-2">'SPEED'</p>
+                    <p class="pl-2">
+                        For other Speeds add 'SPEED_' and then the name of the speed in all capitals: 'SPEED_CLIMB'
                     </p>
                 </div>
                 <div class="pl-3 py-2">
@@ -392,6 +399,14 @@
                         <strong>Investiture:</strong>
                     </p>
                     <p class="pl-2">'INVEST_LIMIT'</p>
+                </div>
+                <div class="py-2">
+                    <div class="code-block">
+                        INCREASE-SKILL_SURVIVAL=5-STATUS
+                    </div>
+                    <p class="pl-3">
+                        - Gives the character a +5 status bonus to Survival. 
+                    </p>
                 </div>
                 <div class="py-2">
                     <div class="code-block">
@@ -449,16 +464,13 @@
                 </p>
                 <div class="py-2">
                     <div class="code-block">
-                        IF (HAS-LEVEL>=13) {GIVE-PROF-IN=Perception:M}
+                        IF (HAS-CLASS-ABILITY==Cloistered Cleric) {GIVE_LANG}
                     </div>
                     <p class="pl-3">
-                        - If the character is level 13 or greater, the statement inside the brackets will execute (which will make the character Master in Perception).
+                        - If the character has the Cloistered Cleric class ability, the statement inside the brackets will execute (which will generate a language selector for the character).
                     </p>
                     <p class="pl-3">
-                        - Any number between 0 and 20 for the level.
-                    </p>
-                    <p class="pl-3">
-                        Boolean Operators: '==', '!=', '>=', or '<='
+                        Boolean Operators: '==' or '!='
                     </p>
                 </div>
                 <div class="py-2">
@@ -470,6 +482,20 @@
                     </p>
                     <p class="pl-3">
                         Boolean Operators: '==' or '!='
+                    </p>
+                </div>
+                <div class="py-2">
+                    <div class="code-block">
+                        IF (HAS-LEVEL>=13) {GIVE-PROF-IN=Perception:M}
+                    </div>
+                    <p class="pl-3">
+                        - If the character is level 13 or greater, the statement inside the brackets will execute (which will make the character Master in Perception).
+                    </p>
+                    <p class="pl-3">
+                        - Any number between 0 and 20 for the level.
+                    </p>
+                    <p class="pl-3">
+                        Boolean Operators: '==', '!=', '>=', or '<='
                     </p>
                 </div>
                 <div class="py-2">
@@ -689,6 +715,9 @@
                 </p>
                 <p class="pl-2 py-1">
                     <strong>Perception:</strong> 'Perception'
+                </p>
+                <p class="pl-2 py-1">
+                    <strong>Class DC:</strong> 'Class_DC'
                 </p>
                 <p class="pl-2 py-1">
                     <strong>Spell Attacks:</strong> 'ArcaneSpellAttacks', 'OccultSpellAttacks', 'PrimalSpellAttacks', 'DivineSpellAttacks'
@@ -1034,7 +1063,7 @@
                         - Gives the character armor specialization in all light armor.
                     </p>
                     <p class="pl-3">
-                        - Options are any of the defenses proficiency options (see Proficiencies) and can give by armor name, trait, or group (Ex: GIVE-ARMOR-SPECIALIZATION=NAME~Leather).
+                        - Options are any of the defenses proficiency options (see Proficiencies) and can give by armor name, trait, prof, or group (Ex: GIVE-ARMOR-SPECIALIZATION=PROF~E).
                     </p>
                 </div>
                 <div class="py-2">
@@ -1045,7 +1074,7 @@
                         - Gives the character critical specialization in all simple weapons.
                     </p>
                     <p class="pl-3">
-                        - Options are any of the attacks proficiency options (see Proficiencies) and can give by weapon name, trait, or group (Ex: GIVE-WEAPON-CRITICAL-SPECIALIZATION=TRAIT~Dwarf).
+                        - Options are any of the attacks proficiency options (see Proficiencies) and can give by weapon name, trait, prof, or group (Ex: GIVE-WEAPON-CRITICAL-SPECIALIZATION=TRAIT~Dwarf).
                     </p>
                 </div>
             </div>
@@ -1060,6 +1089,14 @@
                     </div>
                     <p class="pl-3">
                         - Adds the Fey trait to the character.
+                    </p>
+                </div>
+                <div class="py-2">
+                    <div class="code-block">
+                        GIVE-CHAR-TRAIT
+                    </div>
+                    <p class="pl-3">
+                        - Generates a character trait selector, listing all ancestry traits as options.
                     </p>
                 </div>
             </div>

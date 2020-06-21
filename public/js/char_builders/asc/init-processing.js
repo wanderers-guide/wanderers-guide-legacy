@@ -36,9 +36,7 @@ socket.on("returnASCChoices", function(ascCode, srcStruct, locationID, choiceStr
     //console.log("Setting choiceStruct new one...");
     ascChoiceStruct = choiceStruct;
     initExpressionProcessor({
-        Level : choiceStruct.Level,
-        FinalProfObject : choiceStruct.FinalProfObject,
-        Heritage : choiceStruct.Heritage,
+        ChoiceStruct : choiceStruct,
     });
     
     codeDecompiling(ascCode, srcStruct, locationID);
@@ -260,9 +258,7 @@ socket.on("returnASCUpdateChoices", function(updateType, updateData){
     }
     
     updateExpressionProcessor({
-        Level : ascChoiceStruct.Level,
-        FinalProfObject : ascChoiceStruct.FinalProfObject,
-        Heritage : ascChoiceStruct.Heritage,
+        ChoiceStruct : ascChoiceStruct,
     });
 });
 
@@ -283,9 +279,7 @@ socket.on("returnASCUpdateLangs", function(langObject){
 function injectASCChoiceStruct(choiceStruct){
     ascChoiceStruct = choiceStruct;
     updateExpressionProcessor({
-        Level : choiceStruct.Level,
-        FinalProfObject : choiceStruct.FinalProfObject,
-        Heritage : choiceStruct.Heritage,
+        ChoiceStruct : choiceStruct,
     });
 }
 
@@ -301,9 +295,7 @@ socket.on("returnASCClassAbilities", function(choiceStruct, featObject, skillObj
     //console.log("Setting choiceStruct, featMap, and skillmap to new ones before classAbilities...");
     ascChoiceStruct = choiceStruct;
     updateExpressionProcessor({
-        Level : choiceStruct.Level,
-        FinalProfObject : choiceStruct.FinalProfObject,
-        Heritage : choiceStruct.Heritage,
+        ChoiceStruct : choiceStruct,
     });
     ascSkillMap = objToMap(skillObject);
 
@@ -347,9 +339,7 @@ socket.on("returnASCAncestryFeats", function(choiceStruct, featObject, skillObje
     //console.log("Setting choiceStruct, featMap, and skillmap to new ones before ancestryFeats...");
     ascChoiceStruct = choiceStruct;
     updateExpressionProcessor({
-        Level : choiceStruct.Level,
-        FinalProfObject : choiceStruct.FinalProfObject,
-        Heritage : choiceStruct.Heritage,
+        ChoiceStruct : choiceStruct,
     });
     ascSkillMap = objToMap(skillObject);
 
