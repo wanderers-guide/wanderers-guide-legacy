@@ -61,7 +61,6 @@ let g_selectedTabID = 'inventoryTab';
 let g_selectedSubTabID = null;
 let g_selectedSubTabLock = false;
 
-let g_conditionsLoadingState = null;
 let g_preConditions_strScore = null;
 let g_preConditions_dexScore = null;
 
@@ -212,9 +211,6 @@ function loadCharSheet(){
     } else {
         $('#spellsTab').removeClass('is-hidden');
     }
-
-    // Set Conditions Loading State to Default //
-    g_conditionsLoadingState = 'READY';
 
     // ~~~~~~~~~~~~~~~~~~~~~~~ Adding Stats To Map ~~~~~~~~~~~~~~~~~~~~~~~ //
 

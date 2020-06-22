@@ -31,7 +31,7 @@ function openClassDCQuickview(data) {
 
     let breakDownInnerHTML = '<p class="has-text-centered">'+data.TotalDC+' = ';
 
-    breakDownInnerHTML += '<a class="has-text-link has-tooltip-bottom has-tooltip-multiline" data-tooltip="This is your key ability modifier from your class. It is added when determining your Class DC.">'+data.KeyMod+'</a>';
+    breakDownInnerHTML += '<a class="has-text-link has-tooltip-bottom has-tooltip-multiline" data-tooltip="This is your key ability modifier from your class. It is added when determining your class DC.">'+data.KeyMod+'</a>';
 
     breakDownInnerHTML += ' + ';
     
@@ -40,7 +40,7 @@ function openClassDCQuickview(data) {
         if(gOption_hasProfWithoutLevel){
             untrainedProfBonus = -2;
         }
-        breakDownInnerHTML += '<a class="has-text-link has-tooltip-bottom has-tooltip-multiline" data-tooltip="This is your proficiency bonus. Because you are '+profName+' in your Class DC, your proficiency bonus is '+signNumber(untrainedProfBonus)+'.">'+data.ProfNum+'</a>';
+        breakDownInnerHTML += '<a class="has-text-link has-tooltip-bottom has-tooltip-multiline" data-tooltip="This is your proficiency bonus. Because you are '+profName+' in your class DC, your proficiency bonus is '+signNumber(untrainedProfBonus)+'.">'+data.ProfNum+'</a>';
     } else {
         let extraBonus = 0;
         if(profName == "Trained"){
@@ -54,9 +54,9 @@ function openClassDCQuickview(data) {
         }
 
         if(gOption_hasProfWithoutLevel){
-            breakDownInnerHTML += '<a class="has-text-link has-tooltip-bottom has-tooltip-multiline" data-tooltip="This is your proficiency bonus. Because you are '+profName+' in your Class DC, your proficiency bonus is '+signNumber(extraBonus)+'.">'+data.ProfNum+'</a>';
+            breakDownInnerHTML += '<a class="has-text-link has-tooltip-bottom has-tooltip-multiline" data-tooltip="This is your proficiency bonus. Because you are '+profName+' in your class DC, your proficiency bonus is '+signNumber(extraBonus)+'.">'+data.ProfNum+'</a>';
         } else {
-            breakDownInnerHTML += '<a class="has-text-link has-tooltip-bottom has-tooltip-multiline" data-tooltip="This is your proficiency bonus. Because you are '+profName+' in your Class DC, your proficiency bonus is equal to your level ('+data.CharLevel+') plus '+extraBonus+'.">'+data.ProfNum+'</a>';
+            breakDownInnerHTML += '<a class="has-text-link has-tooltip-bottom has-tooltip-multiline" data-tooltip="This is your proficiency bonus. Because you are '+profName+' in your class DC, your proficiency bonus is equal to your level ('+data.CharLevel+') plus '+extraBonus+'.">'+data.ProfNum+'</a>';
         }
     }
 

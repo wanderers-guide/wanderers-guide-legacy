@@ -2,14 +2,14 @@
 function openTagQuickview(data) {
     addBackFunctionality(data);
 
-    $('#quickViewTitle').html('Trait - '+data.TagName);
+    $('#quickViewTitle').html('Trait - '+capitalizeFirstLetterOfWord(data.TagName));
     let qContent = $('#quickViewContent');
 
     let tag = data.TagArray.find(tag => {
         if(tag.name != null){
-            return tag.name === data.TagName;
+            return tag.name.toUpperCase() === data.TagName.toUpperCase();
         } else {
-            return tag.Tag.name === data.TagName;
+            return tag.Tag.name.toUpperCase() === data.TagName.toUpperCase();
         }
     });
 

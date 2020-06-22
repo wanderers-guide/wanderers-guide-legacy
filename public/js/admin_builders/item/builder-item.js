@@ -23,7 +23,7 @@ $(function () {
             $("#sectionIsShoddy").removeClass('is-hidden');
             $("#sectionQuantity").removeClass('is-hidden');
             $("#sectionHealth").removeClass('is-hidden');
-            $("#inputCategory").val("GENERAL");
+            $("#inputCategory").val("OTHER");
         } else if(builderType == "STORAGE"){
             $("#sectionWeapon").addClass('is-hidden');
             $("#sectionWeaponMelee").addClass('is-hidden');
@@ -91,7 +91,7 @@ $(function () {
             $("#sectionIsShoddy").removeClass('is-hidden');
             $("#sectionQuantity").addClass('is-hidden');
             $("#sectionHealth").removeClass('is-hidden');
-            $("#inputCategory").val("ARMOR");
+            $("#inputCategory").val("SHIELD");
         } else if(builderType == "RUNE"){
             $("#sectionWeapon").addClass('is-hidden');
             $("#sectionWeaponMelee").addClass('is-hidden');

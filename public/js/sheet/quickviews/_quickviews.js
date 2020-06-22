@@ -95,6 +95,8 @@ function openQuickView(type, data) {
         openTagQuickview(data);
     } else if(type == 'classDCView'){
         openClassDCQuickview(data);
+    } else if(type == 'conditionView'){
+        openConditionQuickview(data);
     }
 
 }

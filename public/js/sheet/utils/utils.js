@@ -20,6 +20,11 @@ function capitalizeWord(word){
     return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
 }
 
+function capitalizeFirstLetterOfWord(word){
+  if(word == null){ return null;}
+  return word.charAt(0).toUpperCase() + word.slice(1);
+}
+
 function capitalizeWords(str){
   if(str == null){ return null;}
   return str.toLowerCase().replace(/(?:^|\s|["'([{])+\S/g, match => match.toUpperCase());

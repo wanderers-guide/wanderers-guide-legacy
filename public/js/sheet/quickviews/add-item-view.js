@@ -14,33 +14,48 @@ function openAddItemQuickview(data) {
 
     let qContent = $('#quickViewContent');
 
-    qContent.append('<div class="tabs is-small is-centered is-marginless mb-1"><ul class="category-tabs"><li><a id="itemTabAll">All</a></li><li><a id="itemTabGeneral">General</a></li><li><a id="itemTabCombat">Combat</a></li><li><a id="itemTabStorage">Storage</a></li><li><a id="itemTabCurrency">Currency</a></li></ul></div>');
+    qContent.append('<div class="tabs is-small is-centered is-marginless mb-1"><ul class="category-tabs"><li><a id="itemTabAll">All</a></li><li><a id="itemTabGeneral">General</a></li><li><a id="itemTabMagical">Magical</a></li><li><a id="itemTabAlchemical">Alchemical</a></li><li><a id="itemTabCurrency">Currency</a></li></ul></div>');
 
-    qContent.append('<div class="columns is-mobile is-marginless mb-3"><div class="column is-9 pr-1"><p class="control has-icons-left"><input id="allItemSearch" class="input" type="text" placeholder="Search Items in Category"><span class="icon is-left"><i class="fas fa-search" aria-hidden="true"></i></span></p></div><div class="column mt-1"><div class="select is-small is-info"><select id="allItemsFilterByLevel"><option value="0">Basic</option><option value="1">Lvl 1</option><option value="2">Lvl 2</option><option value="3">Lvl 3</option><option value="4">Lvl 4</option><option value="5">Lvl 5</option><option value="6">Lvl 6</option><option value="7">Lvl 7</option><option value="8">Lvl 8</option><option value="9">Lvl 9</option><option value="10">Lvl 10</option><option value="11">Lvl 11</option><option value="12">Lvl 12</option><option value="13">Lvl 13</option><option value="14">Lvl 14</option><option value="15">Lvl 15</option><option value="16">Lvl 16</option><option value="17">Lvl 17</option><option value="18">Lvl 18</option><option value="19">Lvl 19</option><option value="20">Lvl 20</option><option value="21">Lvl 21</option><option value="22">Lvl 22</option><option value="23">Lvl 23</option><option value="24">Lvl 24</option><option value="25">Lvl 25</option></select></div></div></div>');
+    qContent.append('<div class="columns is-mobile is-marginless mb-3"><div class="column py-1 pr-1"><p class="control has-icons-left"><input id="allItemSearch" class="input" type="text"><span class="icon is-left"><i class="fas fa-search" aria-hidden="true"></i></span></p></div><div class="column is-3 py-1 mt-1"><div class="select is-small is-info"><select id="allItemsFilterBySubcategory"></select></div></div></div>');
 
     qContent.append('<div id="addItemListSection" class="tile is-ancestor is-vertical"></div>');
 
     $('#itemTabAll').click(function(){
+        $('#allItemsFilterBySubcategory').parent().parent().addClass('is-hidden');
+        $('#allItemsFilterBySubcategory').html('');
+        $('#allItemSearch').attr('placeholder', 'Search All Items');
         changeItemCategoryTab('itemTabAll', data);
     });
 
     $('#itemTabGeneral').click(function(){
+        $('#allItemsFilterBySubcategory').parent().parent().removeClass('is-hidden');
+        $('#allItemsFilterBySubcategory').html('<option value="ALL">All</option><option value="STORAGE">Storage</option><option value="TOOL">Tool</option><option value="INSTRUMENT">Instrument</option><option value="WEAPON">Weapon</option><option value="ARMOR">Armor</option><option value="SHIELD">Shield</option><option value="AMMUNITION">Ammunition</option><option value="SNARE">Snare</option><option value="KIT">Kit</option><option value="INGREDIENT">Ingredient</option><option value="OTHER">Other</option>');
+        $('#allItemSearch').attr('placeholder', 'Search General Items');
         changeItemCategoryTab('itemTabGeneral', data);
     });
 
-    $('#itemTabCombat').click(function(){
-        changeItemCategoryTab('itemTabCombat', data);
+    $('#itemTabMagical').click(function(){
+        $('#allItemsFilterBySubcategory').parent().parent().removeClass('is-hidden');
+        $('#allItemsFilterBySubcategory').html('<option value="ALL">All</option><option value="RUNE">Runestone</option><option value="STAFF">Staff</option><option value="WAND">Wand</option><option value="TALISMAN">Talisman</option><option value="POTION">Potion</option><option value="OIL">Oil</option><option value="SCROLL">Scroll</option><option value="WEAPON">Weapon</option><option value="ARMOR">Armor</option><option value="SHIELD">Shield</option><option value="AMMUNITION">Ammunition</option><option value="STORAGE">Storage</option><option value="STRUCTURE">Structure</option><option value="COMPANION">Companion</option><option value="OTHER">Other</option>');
+        $('#allItemSearch').attr('placeholder', 'Search Magical Items');
+        changeItemCategoryTab('itemTabMagical', data);
     });
 
-    $('#itemTabStorage').click(function(){
-        changeItemCategoryTab('itemTabStorage', data);
+    $('#itemTabAlchemical').click(function(){
+        $('#allItemsFilterBySubcategory').parent().parent().removeClass('is-hidden');
+        $('#allItemsFilterBySubcategory').html('<option value="ALL">All</option><option value="TOOL">Tool</option><option value="BOMB">Bomb</option><option value="ELIXIR">Elixir</option><option value="POISON">Poison</option><option value="INGREDIENT">Ingredient</option><option value="OTHER">Other</option>');
+        $('#allItemSearch').attr('placeholder', 'Search Alchemical Items');
+        changeItemCategoryTab('itemTabAlchemical', data);
     });
 
     $('#itemTabCurrency').click(function(){
+        $('#allItemsFilterBySubcategory').parent().parent().addClass('is-hidden');
+        $('#allItemsFilterBySubcategory').html('<option value="ALL">All</option>');
+        $('#allItemSearch').attr('placeholder', 'Search Currency');
         changeItemCategoryTab('itemTabCurrency', data);
     });
 
-    $('#itemTabAll').click();
+    $('#itemTabGeneral').click();
 
 }
 
@@ -54,30 +69,32 @@ function changeItemCategoryTab(type, data){
 
     $('#itemTabAll').parent().removeClass("is-active");
     $('#itemTabGeneral').parent().removeClass("is-active");
-    $('#itemTabCombat').parent().removeClass("is-active");
-    $('#itemTabStorage').parent().removeClass("is-active");
+    $('#itemTabMagical').parent().removeClass("is-active");
+    $('#itemTabAlchemical').parent().removeClass("is-active");
     $('#itemTabCurrency').parent().removeClass("is-active");
     $('#'+type).parent().addClass("is-active");
 
     let allItemSearch = $('#allItemSearch');
     let allItemSearchInput = null;
     if(allItemSearch.val() != ''){
-        allItemSearchInput = allItemSearch.val().toLowerCase();
+        allItemSearchInput = allItemSearch.val().toUpperCase();
         allItemSearch.addClass('is-info');
     } else {
         allItemSearch.removeClass('is-info');
-        allItemSearch.blur();
+        if(type != 'itemTabAll') {
+            allItemSearch.blur();
+        }
     }
 
-    let allItemsFilterByLevelValue = $('#allItemsFilterByLevel').val();
+    let allItemsFilterBySubcategoryValue = $('#allItemsFilterBySubcategory').val();
 
     $('#allItemSearch').off('change');
     $('#allItemSearch').change(function(){
         changeItemCategoryTab(type, data);
     });
 
-    $('#allItemsFilterByLevel').off('change');
-    $('#allItemsFilterByLevel').change(function(){
+    $('#allItemsFilterBySubcategory').off('change');
+    $('#allItemsFilterBySubcategory').change(function(){
         changeItemCategoryTab(type, data);
     });
 
@@ -85,39 +102,61 @@ function changeItemCategoryTab(type, data){
 
         let willDisplay = false;
 
-        let itemType = itemDataStruct.Item.itemType;
         if(type == 'itemTabAll') {
-            willDisplay = true;
+            willDisplay = (allItemSearchInput != null);
         } else if(type == 'itemTabGeneral') {
-            if(itemType == 'GENERAL' || itemType == 'KIT' || itemType == 'INGREDIENT' || itemType == 'OTHER' || itemType == 'TOOL' || itemType == 'INSTRUMENT') {
-                willDisplay = true;
-            }
-        } else if(type == 'itemTabCombat') {
-            if(itemType == 'WEAPON' || itemType == 'ARMOR') {
-                willDisplay = true;
-            }
-        } else if(type == 'itemTabStorage') {
-            if(itemType == 'STORAGE') {
-                willDisplay = true;
-            }
+            let magical = itemDataStruct.TagArray.find(tag => {
+                return tag.Tag.id === 41; // Hardcoded - Magical Trait ID 41
+            });
+            let alchemical = itemDataStruct.TagArray.find(tag => {
+                return tag.Tag.id === 399; // Hardcoded - Alchemical Trait ID 399
+            });
+            willDisplay = (magical == null && alchemical == null && itemDataStruct.Item.itemType != 'CURRENCY');
+        } else if(type == 'itemTabMagical') {
+            let magical = itemDataStruct.TagArray.find(tag => {
+                return tag.Tag.id === 41; // Hardcoded - Magical Trait ID 41
+            });
+            willDisplay = (magical != null);
+        } else if(type == 'itemTabAlchemical') {
+            let alchemical = itemDataStruct.TagArray.find(tag => {
+                return tag.Tag.id === 399; // Hardcoded - Alchemical Trait ID 399
+            });
+            willDisplay = (alchemical != null);
         } else if(type == 'itemTabCurrency') {
-            if(itemType == 'CURRENCY') {
+            if(itemDataStruct.Item.itemType == 'CURRENCY') {
                 willDisplay = true;
             }
         }
         
         if(allItemSearchInput != null){
-            $('#allItemsFilterByLevel').parent().removeClass('is-info');
-
-            let itemName = itemDataStruct.Item.name.toLowerCase();
+            $('#allItemsFilterBySubcategory').parent().removeClass('is-info');
+            
+            let itemName = itemDataStruct.Item.name.toUpperCase();
             if(!itemName.includes(allItemSearchInput)){
                 willDisplay = false;
             }
-        } else {
-            $('#allItemsFilterByLevel').parent().addClass('is-info');
 
-            if(itemDataStruct.Item.level != allItemsFilterByLevelValue){
-                willDisplay = false;
+        } else {
+            $('#allItemsFilterBySubcategory').parent().addClass('is-info');
+
+            if(allItemsFilterBySubcategoryValue == 'ALL'){
+                $('#allItemsFilterBySubcategory').parent().removeClass('is-info');
+            } else if(allItemsFilterBySubcategoryValue == 'OTHER'){
+                let foundItemType = false;
+                if(itemDataStruct.Item.itemType != 'OTHER') {
+                    $("#allItemsFilterBySubcategory option").each(function() {
+                        if(itemDataStruct.Item.itemType === $(this).val()){
+                            foundItemType = true;
+                        }
+                    });
+                }
+                if(foundItemType){
+                    willDisplay = false;
+                }
+            } else {
+                if(itemDataStruct.Item.itemType !== allItemsFilterBySubcategoryValue){
+                    willDisplay = false;
+                }
             }
 
         }

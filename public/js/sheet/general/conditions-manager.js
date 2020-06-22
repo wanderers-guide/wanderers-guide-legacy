@@ -211,7 +211,7 @@ function openConditionsModal(conditionID){
     }
 
     $('#conditionsModalTitle').html(conditionData.Condition.name);
-    $('#conditionsModalContent').html(processText(conditionData.Condition.description, true));
+    $('#conditionsModalContent').html(processText(conditionData.Condition.description, true, true, 'MEDIUM', false));
 
 
     $('#conditionsModalDefault').addClass('is-active');

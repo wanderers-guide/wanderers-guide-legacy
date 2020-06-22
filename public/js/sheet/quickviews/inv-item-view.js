@@ -116,10 +116,10 @@ function openInvItemQuickview(data) {
 
     let bulk = getConvertedBulkForSize(data.InvItem.size, data.InvItem.bulk);
     bulk = getBulkFromNumber(bulk);
-    qContent.append('<p class="is-size-6"><strong>Price:</strong> '+price+'</p>');
-    qContent.append('<p class="is-size-6"><strong>Bulk:</strong> '+bulk+'</p>');
+    qContent.append('<p class="is-size-6 has-text-left px-3"><strong>Price:</strong> '+price+'</p>');
+    qContent.append('<p class="is-size-6 has-text-left px-3"><strong>Bulk:</strong> '+bulk+'</p>');
     if(data.Item.Item.hands != 'NONE'){
-        qContent.append('<p class="is-size-6"><strong>Hands:</strong> '+getHandsToString(data.Item.Item.hands)+'</p>');
+        qContent.append('<p class="is-size-6 has-text-left px-3"><strong>Hands:</strong> '+getHandsToString(data.Item.Item.hands)+'</p>');
     }
 
     qContent.append('<hr class="m-2">');
@@ -212,7 +212,7 @@ function openInvItemQuickview(data) {
         qContent.append('<hr class="m-2">');
     }
 
-    qContent.append('<div>'+processText(data.InvItem.description, true, true, 'MEDIUM')+'</div>');
+    qContent.append('<div class="px-2">'+processText(data.InvItem.description, true, true, 'MEDIUM')+'</div>');
 
     qContent.append('<hr class="m-2">');
 

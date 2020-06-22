@@ -13,10 +13,8 @@ let supportedWebLinks = [
     {Website: 'paizo.com', Title: 'Paizo'},
 ];
 
-function processText(text, isSheet, isJustified, size) {
+function processText(text, isSheet, isJustified = false, size = 'MEDIUM', indexConditions = true) {
     if(text == null) {return text;}
-    if(isJustified == null){ isJustified = false; }
-    if(size == null){ size = 'MEDIUM'; }
 
     let _j = (isJustified) ? ' has-text-justified ' : '';
     let _s = '';
@@ -93,7 +91,7 @@ function processText(text, isSheet, isJustified, size) {
     }
 
     // (Item: Striking | Strike)
-    let regexItemLinkExt = /\((Item):\s*(.+?)\s*\|\s*([^(:]+?)\s*\)/ig;
+    let regexItemLinkExt = /\((Item):\s*([^(:]+?)\s*\|\s*(.+?)\s*\)/ig;
     if(isSheet) {
         text = text.replace(regexItemLinkExt, handleItemLinkExt);
     } else {
@@ -140,6 +138,10 @@ function processText(text, isSheet, isJustified, size) {
         text = text.replace(regexTraitLink, '$2');
     }
 
+    // Conditions Search and Replace
+    if(isSheet && indexConditions) {
+        text = handleIndexConditions(text);
+    }
 
     // FREE-ACTION
     // REACTION
@@ -263,7 +265,6 @@ function handleTraitLink(match, linkName, innerTextName) {
 }
 
 function handleTraitLinkExt(match, linkName, innerTextDisplay, innerTextName) {
-    innerTextName = innerTextName.toUpperCase();
     let traitLinkClass = 'itemTextLink'+innerTextName;
     let traitLinkText = '<span class="'+traitLinkClass+' has-text-info cursor-clickable">'+innerTextDisplay+'</span>';
     setTimeout(function() {
@@ -277,6 +278,30 @@ function handleTraitLinkExt(match, linkName, innerTextDisplay, innerTextName) {
         });
     }, 100);
     return traitLinkText;
+}
+
+/////
+
+function handleIndexConditions(text){
+
+    for(const condition of g_allConditions){
+        let conditionName = condition.name.toLowerCase();
+        let conditionLinkClass = 'conditionTextLink'+conditionName.replace(/ /g,'-');
+        let conditionLinkText = '<span class="'+conditionLinkClass+' is-underlined-info cursor-clickable">'+conditionName+'</span>';
+        let conditionNameRegex = new RegExp(conditionName, "g");
+        text = text.replace(conditionNameRegex, conditionLinkText);
+        setTimeout(function() {
+            $('.'+conditionLinkClass).off('click');
+            $('.'+conditionLinkClass).click(function(){
+                openQuickView('conditionView', {
+                    Condition : condition,
+                    _prevBackData: {Type: g_QViewLastType, Data: g_QViewLastData},
+                });
+            });
+        }, 100);
+    }
+
+    return text;
 }
 
 /////
