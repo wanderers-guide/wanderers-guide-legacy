@@ -125,7 +125,10 @@ function featDisplayByType(data, sortingTagNameArray, featsSearchValue){
         let featTags = data.FeatMap.get(feat.value.id+"").Tags;
         if(sortingTagNameArray == null){
             // Is Other, display if feat is NOT ancestry or class
-            let sortingTagNameArray = cloneObj(data.AncestryTagsArray);
+            let sortingTagNameArray = [];
+            for(let dataTag of data.AncestryTagsArray){
+                sortingTagNameArray.push(dataTag.value);
+            }
             sortingTagNameArray.push(data.ClassDetails.Class.name);
             let tag = featTags.find(tag => {
                 return sortingTagNameArray.includes(tag.name);

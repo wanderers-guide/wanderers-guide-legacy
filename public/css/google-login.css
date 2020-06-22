@@ -1,8 +1,9 @@
 
 .login-container {
-    margin: 0 auto;
     text-align:center;
-    padding: 5%;
+    margin-top: 30vh;
+    background-color:rgba(0, 0, 0, 0.43);
+    border-radius: 13px;
 }
 
 .google-button {

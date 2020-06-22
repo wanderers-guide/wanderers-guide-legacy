@@ -10,7 +10,7 @@ $(function () {
 
 function checkViewportSize(){
 
-    if(window.location.pathname != '/') {
+    if(window.location.pathname != '/' && window.location.pathname != '/auth/login') {
 
         const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
 
