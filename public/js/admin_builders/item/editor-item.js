@@ -20,15 +20,17 @@ socket.on("returnAdminItemDetails", function(itemObject){
     $("#inputVersion").val(item.Item.version);
     $("#inputPrice").val(item.Item.price);
     $("#inputLevel").val(item.Item.level);
-    $("#inputCategory").val(item.Item.itemType);
     $("#inputRarity").val(item.Item.rarity);
     $("#inputUsage").val(item.Item.usage);
     $("#inputDesc").val(item.Item.description);
     $("#inputCraftReq").val(item.Item.craftRequirements);
     $("#inputCode").val(item.Item.code);
 
+    $("#inputContentSource").val(item.Item.contentSrc);
+
     $("#inputBulk").val(item.Item.bulk);
     $("#inputSize").val(item.Item.size);
+    $("#inputMaterial").val(item.Item.materialType);
     $("#inputHands").val(item.Item.hands);
     let isShoddy = (item.Item.isShoddy == 1) ? true : false;
     $("#inputIsShoddy").prop('checked', isShoddy);
@@ -92,6 +94,7 @@ socket.on("returnAdminItemDetails", function(itemObject){
     }
     $("#inputTags").trigger("change");
     $("#inputBuilderType").trigger("change");
+    $("#inputCategory").val(item.Item.itemType);
 
     $("#updateButton").click(function(){
         $(this).unbind();

@@ -53,7 +53,7 @@ function closeManageSpellsModal(){
 socket.on("returnSpellBookUpdated", function(spellBookStruct){
     for (let i = 0; i < g_spellBookArray.length; i++) {
         let spellBook = g_spellBookArray[i];
-        if(spellBook.SpellSRC === spellBookStruct.SpellSRC){
+        if(spellBook.SpellSRC === spellBookStruct.SpellSRC && !spellBook.IsFocus){
             g_spellBookArray[i] = spellBookStruct;
         }
     }
@@ -213,17 +213,64 @@ function displaySpellSlotsSpontaneous(spellSRC, data) {
         if(level != 0) {
             
             for(let slot of sortedSlotArray){
-                if(slot.used) {
-                    $('#'+spellSlotsButtonsID).append('<span class="icon is-medium has-text-info mx-2 has-tooltip-bottom" data-tooltip="Consumed Slot"><i class="fas fa-2x fa-square"></i></span>');
-                } else {
-                    $('#'+spellSlotsButtonsID).append('<span class="icon is-medium has-text-info mx-2 has-tooltip-bottom" data-tooltip="Available Slot"><i class="far fa-2x fa-square"></i></span>');
+                let spellManagerSlotID = 'spellManagerSlot'+slot.slotID;
+
+                let typeColor = getSpellTypeColor(slot.type);
+
+                let bulmaColor;
+                switch(typeColor){
+                    case 'RED': bulmaColor = 'has-text-danger'; break;
+                    case 'GREEN': bulmaColor = 'has-text-success'; break;
+                    case 'BLUE': bulmaColor = 'has-text-link'; break;
+                    case 'MULTIPLE': bulmaColor = 'has-text-warning'; break;
+                    case 'NONE': bulmaColor = 'has-text-info'; break;
+                    default: bulmaColor = ''; break;
                 }
+
+                if(slot.used) {
+                    $('#'+spellSlotsButtonsID).append('<span id="'+spellManagerSlotID+'" class="icon is-medium '+bulmaColor+' mx-2 has-tooltip-bottom" data-tooltip="Consumed Slot"><i class="fas fa-2x fa-square"></i></span>');
+                } else {
+                    $('#'+spellSlotsButtonsID).append('<span id="'+spellManagerSlotID+'" class="icon is-medium '+bulmaColor+' mx-2 has-tooltip-bottom" data-tooltip="Available Slot"><i class="far fa-2x fa-square"></i></span>');
+                }
+
+                $('#'+spellManagerSlotID).click(function(){
+                    openQuickView('spellEmptyView', {
+                        ViewType: 2,
+                        SpellSlotData: {Slot: slot, SpellSRC: spellSRC, Data: data},
+                    });
+                });
+
             }
-            $('#'+spellSlotsButtonsID).append('<p class="is-size-5 is-italic">'+sortedSlotArray.length+' Spell Slots</p>');
+            if(sortedSlotArray.length == 1){
+                $('#'+spellSlotsButtonsID).append('<p class="is-size-5 is-italic">'+sortedSlotArray.length+' Spell Slot</p>');
+            } else {
+                $('#'+spellSlotsButtonsID).append('<p class="is-size-5 is-italic">'+sortedSlotArray.length+' Spell Slots</p>');
+            }
 
         } else {
             for(let slot of sortedSlotArray){
-                $('#'+spellSlotsButtonsID).append('<span class="icon is-medium has-text-info mx-2"><i class="fas fa-2x fa-dot-circle"></i></span>');
+                let spellManagerSlotID = 'spellManagerCantripSlot'+slot.slotID;
+
+                let typeColor = getSpellTypeColor(slot.type);
+
+                let bulmaColor;
+                switch(typeColor){
+                    case 'RED': bulmaColor = 'has-text-danger'; break;
+                    case 'GREEN': bulmaColor = 'has-text-success'; break;
+                    case 'BLUE': bulmaColor = 'has-text-link'; break;
+                    case 'MULTIPLE': bulmaColor = 'has-text-warning'; break;
+                    case 'NONE': bulmaColor = 'has-text-info'; break;
+                    default: bulmaColor = ''; break;
+                }
+
+                $('#'+spellSlotsButtonsID).append('<span id="'+spellManagerSlotID+'" class="icon is-medium cursor-clickable '+bulmaColor+' mx-2"><i class="fas fa-2x fa-dot-circle"></i></span>');
+
+                $('#'+spellManagerSlotID).click(function(){
+                    openQuickView('spellEmptyView', {
+                        ViewType: 2,
+                        SpellSlotData: {Slot: slot, SpellSRC: spellSRC, Data: data},
+                    });
+                });
             }
             $('#'+spellSlotsButtonsID).append('<p class="is-size-5 is-italic">'+sortedSlotArray.length+' Cantrips</p>');
         }
@@ -332,8 +379,22 @@ function displaySpellSlotsPrepared(spellSRC, data) {
         for(let slot of slotArray){
             let spellManagerSlotID = 'spellManagerSlot'+slot.slotID;
             let spellDataStruct = data.SpellMap.get(slot.spellID+"");
+
+            let typeColor = getSpellTypeColor(slot.type);
+
             if(spellDataStruct != null) {
-                $('#'+spellSlotsButtonsID).append('<p id="'+spellManagerSlotID+'" class="button is-filled-spell-slot">'+spellDataStruct.Spell.name+'</p>');
+
+                let bulmaColor;
+                switch(typeColor){
+                    case 'RED': bulmaColor = 'is-filled-red-spell-slot'; break;
+                    case 'GREEN': bulmaColor = 'is-filled-green-spell-slot'; break;
+                    case 'BLUE': bulmaColor = 'is-filled-blue-spell-slot'; break;
+                    case 'MULTIPLE': bulmaColor = 'is-filled-multiple-spell-slot'; break;
+                    case 'NONE': bulmaColor = 'is-filled-spell-slot'; break;
+                    default: bulmaColor = ''; break;
+                }
+
+                $('#'+spellSlotsButtonsID).append('<p id="'+spellManagerSlotID+'" class="button '+bulmaColor+'">'+spellDataStruct.Spell.name+'</p>');
 
                 $('#'+spellManagerSlotID).click(function(){
                     openQuickView('spellView', {
@@ -343,7 +404,26 @@ function displaySpellSlotsPrepared(spellSRC, data) {
                 });
 
             } else {
-                $('#'+spellSlotsButtonsID).append('<a id="'+spellManagerSlotID+'" class="button is-static is-empty-spell-slot">Empty</a>');
+
+                let bulmaColor;
+                switch(typeColor){
+                    case 'RED': bulmaColor = 'is-empty-red-spell-slot'; break;
+                    case 'GREEN': bulmaColor = 'is-empty-green-spell-slot'; break;
+                    case 'BLUE': bulmaColor = 'is-empty-blue-spell-slot'; break;
+                    case 'MULTIPLE': bulmaColor = 'is-empty-multiple-spell-slot'; break;
+                    case 'NONE': bulmaColor = 'is-empty-spell-slot'; break;
+                    default: bulmaColor = ''; break;
+                }
+
+                $('#'+spellSlotsButtonsID).append('<a id="'+spellManagerSlotID+'" class="button '+bulmaColor+'">Empty</a>');
+
+                $('#'+spellManagerSlotID).click(function(){
+                    openQuickView('spellEmptyView', {
+                        ViewType: 1,
+                        SpellSlotData: {Slot: slot, SpellSRC: spellSRC, Data: data},
+                    });
+                });
+
             }
 
             $("#"+spellManagerSlotID).droppable({
@@ -424,4 +504,59 @@ function removeAllNullSpells(spellBook) {
         }
     }
     return spellBook;
+}
+
+
+// Spell Color-Types //
+
+function getSpellTypeStruct(typeData){
+    let isRedType, isGreenType, isBlueType;
+    if(typeData == ''){
+        isRedType = false;
+        isGreenType = false;
+        isBlueType = false;
+    } else {
+        let slotTypeDataSections = typeData.split(',');
+        isRedType = (slotTypeDataSections[0] == 'R:1');
+        isGreenType = (slotTypeDataSections[1] == 'G:1');
+        isBlueType = (slotTypeDataSections[2] == 'B:1');
+    }
+    return {Red: isRedType, Green: isGreenType, Blue: isBlueType};
+}
+
+function getSpellTypeData(typeStruct){
+    let redPart = (typeStruct.Red) ? 'R:1' : 'R:0';
+    let greenPart = (typeStruct.Green) ? 'G:1' : 'G:0';
+    let bluePart = (typeStruct.Blue) ? 'B:1' : 'B:0';
+    return redPart+','+greenPart+','+bluePart;
+}
+
+function getSpellTypeColor(typeData) {
+    let typeStruct = getSpellTypeStruct(typeData);
+    let colorType;
+    if(typeStruct.Red){
+        if(colorType == null){
+            colorType = 'RED';
+        } else {
+            colorType = 'MULTIPLE';
+        }
+    }
+    if(typeStruct.Green){
+        if(colorType == null){
+            colorType = 'GREEN';
+        } else {
+            colorType = 'MULTIPLE';
+        }
+    }
+    if(typeStruct.Blue){
+        if(colorType == null){
+            colorType = 'BLUE';
+        } else {
+            colorType = 'MULTIPLE';
+        }
+    }
+    if(colorType == null){
+        colorType = 'NONE';
+    }
+    return colorType;
 }

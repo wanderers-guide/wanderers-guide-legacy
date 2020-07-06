@@ -40,7 +40,9 @@ socket.on("returnAdminClassDetails", function(classObject, featsObject){
     $("#inputFortitude").val(cClass.Class.tFortitude);
     $("#inputReflex").val(cClass.Class.tReflex);
     $("#inputWill").val(cClass.Class.tWill);
+    $("#inputClassDC").val(cClass.Class.tClassDC);
     $("#inputDescription").val(cClass.Class.description);
+    $("#inputContentSource").val(cClass.Class.contentSrc);
 
     let classWeaponsArray = cClass.Class.tWeapons.split(',,, ');
     for(let classWeapon of classWeaponsArray) {

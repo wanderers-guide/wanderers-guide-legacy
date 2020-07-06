@@ -38,12 +38,16 @@ function openSpellTab(data) {
         $('#spellsTabs').addClass('is-hidden');
     }
 
-    if(g_spellSlotsMap.size != 0){
-        $('#spellsTabCore').click();
-    } else if(g_focusSpellMap.size != 0){
-        $('#spellsTabFocus').click();
+    if(g_selectedSpellSubTabID == null){
+        if(g_spellSlotsMap.size != 0){
+            $('#spellsTabCore').click();
+        } else if(g_focusSpellMap.size != 0){
+            $('#spellsTabFocus').click();
+        } else {
+            $('#spellsTabInnate').click();
+        }
     } else {
-        $('#spellsTabInnate').click();
+        $('#'+g_selectedSpellSubTabID).click();
     }
 
 }
@@ -51,6 +55,7 @@ function openSpellTab(data) {
 // Spells Tabs //
 function changeSpellsTab(type){
     if(!g_selectedSubTabLock) {g_selectedSubTabID = type;}
+    g_selectedSpellSubTabID = type;
 
     $('#spellsTabContent').html('');
 
@@ -181,6 +186,7 @@ function displaySpellsAndSlots(spellSlotMap, data){
         displaySpellsInLevelPrepared(level, slotArray, data, spellsSearchInput);
     }
 
+    // Distinguish prepared spells from spontaneous if the character has both
     if(g_hasCastingPrepared && g_hasCastingSpontaneous){
         $('.castingTypeTitle').removeClass('is-hidden');
     }
@@ -291,7 +297,7 @@ function displaySpellsInLevelPrepared(level, slotArray, data, spellsSearchInput)
 
         $('#'+spellListSectionID).append('<p class="is-size-5 has-text-grey-kinda-light has-text-weight-bold text-left pl-5">'+sectionName+'</p>');
         $('#'+spellListSectionID).append('<hr class="hr-highlighted" style="margin-top:-0.5em; margin-bottom:0em;">');
-        $('#'+spellListSectionID).append('<div class="columns is-mobile pt-1 is-marginless"><div class="column is-5 is-paddingless"><p class="has-text-left pl-3"><strong class="has-text-grey-light"><u>Name</u></strong></p></div><div class="column is-1 is-paddingless"><p class="text-center"><strong class="has-text-grey-light"><u>Cast</u></strong></p></div><div class="column is-1 is-paddingless"><p class="text-center"><strong class="has-text-grey-light"><u>Range</u></strong></p></div><div class="column is-5 is-paddingless"><p class="text-center"><strong class="has-text-grey-light"><u>Traits</u></strong></p></div></div>');
+        $('#'+spellListSectionID).append('<div class="columns is-mobile pt-1 is-marginless"><div class="column is-5 is-paddingless"><p class="has-text-left pl-3"><strong class="has-text-grey-kinda-light"><u>Name</u></strong></p></div><div class="column is-1 is-paddingless"><p class="text-center"><strong class="has-text-grey-kinda-light"><u>Cast</u></strong></p></div><div class="column is-1 is-paddingless"><p class="text-center"><strong class="has-text-grey-kinda-light"><u>Range</u></strong></p></div><div class="column is-5 is-paddingless"><p class="text-center"><strong class="has-text-grey-kinda-light"><u>Traits</u></strong></p></div></div>');
     }
 
 }
@@ -316,20 +322,22 @@ function displaySpellsInLevelSpontaneous(level, slotArray, data, spellsSearchInp
         }
     );
 
+    let hasSlotsAtLevel = (filteredSlotArray.length > 0);
+
     let sectionName = (level == 0) ? 'Cantrips' : 'Level '+level;
     let spellListSectionID = 'spontaneousSpellTabListSectionByLevel'+level;
     $('#spellsCoreContent').append('<div id="'+spellListSectionID+'"></div>');
 
     let spellBookArray = [];
     for(let spellBook of g_spellBookArray){
-        if(spellBook.SpellCastingType === 'SPONTANEOUS-REPERTOIRE') {
+        if(spellBook.SpellCastingType === 'SPONTANEOUS-REPERTOIRE' && !spellBook.IsFocus) {
             spellBookArray.push(spellBook);
         }
     }
 
     let spellListingSponClass = 'spellSponListingClass'+level;
     let spellListingCount = 0;
-    let didDisplayALevel = false;
+    let didDisplaySpellAtLevel = false;
     for(let spellBookData of spellBookArray) {
         for(let spellData of spellBookData.SpellBook){
             if(spellData.SpellLevel != level){continue;}
@@ -351,8 +359,7 @@ function displaySpellsInLevelSpontaneous(level, slotArray, data, spellsSearchInp
                 }
             }
             if(!willDisplay){continue;}
-            didDisplayALevel = true;
-
+            didDisplaySpellAtLevel = true;
 
             /// Display Spell Listing ///
             if(spellDataStruct != null) {
@@ -420,14 +427,24 @@ function displaySpellsInLevelSpontaneous(level, slotArray, data, spellsSearchInp
 
         }
     }
+    if(!didDisplaySpellAtLevel){
+        let spellSponListingID = 'spellSponListingNoSpellsL'+level;
+        $('#spellsCoreContent').append('<div id="'+spellSponListingID+'" class="'+spellListingSponClass+' columns is-mobile is-marginless"><div class="column is-5 is-paddingless"><p class="has-text-left pl-4 has-text-grey-light">-</p></div><div class="column is-1 is-paddingless"><p class="text-center has-text-grey-light">-</p></div><div class="column is-1 is-paddingless"><p class="text-center has-text-grey-light">-</p></div><div class="column is-5 is-paddingless"><p class="text-center has-text-grey-light">-</p></div></div>');
+        $('#'+spellSponListingID).mouseenter(function(){
+            $(this).addClass('has-background-grey-darker');
+        });
+        $('#'+spellSponListingID).mouseleave(function(){
+            $(this).removeClass('has-background-grey-darker');
+        });
+    }
 
-    if(didDisplayALevel){
+    if(hasSlotsAtLevel){
         g_hasCastingSpontaneous = true;
 
         let spellSponCastingSetID = 'spellSponCastingSet'+level;
         $('#'+spellListSectionID).append('<p class="text-left pl-5"><span class="has-text-grey-kinda-light has-text-weight-bold is-size-5 pr-2">'+sectionName+'</span><span id="'+spellSponCastingSetID+'" class="is-unselectable cursor-clickable"></span></p>');
         $('#'+spellListSectionID).append('<hr class="hr-highlighted" style="margin-top:-0.5em; margin-bottom:0em;">');
-        $('#'+spellListSectionID).append('<div class="columns is-mobile pt-1 is-marginless"><div class="column is-5 is-paddingless"><p class="has-text-left pl-3"><strong class="has-text-grey-light"><u>Name</u></strong></p></div><div class="column is-1 is-paddingless"><p class="text-center"><strong class="has-text-grey-light"><u>Cast</u></strong></p></div><div class="column is-1 is-paddingless"><p class="text-center"><strong class="has-text-grey-light"><u>Range</u></strong></p></div><div class="column is-5 is-paddingless"><p class="text-center"><strong class="has-text-grey-light"><u>Traits</u></strong></p></div></div>');
+        $('#'+spellListSectionID).append('<div class="columns is-mobile pt-1 is-marginless"><div class="column is-5 is-paddingless"><p class="has-text-left pl-3"><strong class="has-text-grey-kinda-light"><u>Name</u></strong></p></div><div class="column is-1 is-paddingless"><p class="text-center"><strong class="has-text-grey-kinda-light"><u>Cast</u></strong></p></div><div class="column is-1 is-paddingless"><p class="text-center"><strong class="has-text-grey-kinda-light"><u>Range</u></strong></p></div><div class="column is-5 is-paddingless"><p class="text-center"><strong class="has-text-grey-kinda-light"><u>Traits</u></strong></p></div></div>');
 
         if(level != 0){    
             displaySpontaneousCastingsSet(spellSponCastingSetID, filteredSlotArray, spellListingSponClass);
@@ -503,8 +520,6 @@ function displaySpellsFocus() {
         DivineSpellDC : getStatTotal('DIVINE_SPELL_DC'),
     };
 
-    console.log(g_focusSpellMap);
-
     $('#spellsTabContent').append('<div id="spellsFocusContent" class="use-custom-scrollbar" style="height: 595px; max-height: 595px; overflow-y: auto;"></div>');
 
     let isFirstLevel = true;
@@ -514,7 +529,23 @@ function displaySpellsFocus() {
         let prevLevel = -100;
         $('#spellsFocusContent').append('<p class="focusSpellSourceTitle is-hidden is-size-4 mt-3 is-family-secondary has-text-grey-light">'+capitalizeWord(spellSRC)+'</p>');
 
-        for(let focusSpellData of focusSpellDataArray){
+        let sortedFocusSpellDataArray = focusSpellDataArray.sort(
+            function(a, b) {
+                let aSpellData = g_spellMap.get(a.SpellID+"");
+                let bSpellData = g_spellMap.get(b.SpellID+"");
+                if(aSpellData == null || bSpellData == null){
+                    return -1;
+                } else {
+                    if (aSpellData.Spell.level === bSpellData.Spell.level) {
+                        // Name is only important when levels are the same
+                        return aSpellData.Spell.name > bSpellData.Spell.name ? 1 : -1;
+                    }
+                    return aSpellData.Spell.level - bSpellData.Spell.level;
+                }
+            }
+        );
+
+        for(let focusSpellData of sortedFocusSpellDataArray){
             focusSpellData.SpellSRC = spellSRC;
             let spellDataStruct = g_spellMap.get(focusSpellData.SpellID+"");
             if(spellDataStruct == null) { continue; }
@@ -525,10 +556,10 @@ function displaySpellsFocus() {
                     $('#spellsFocusContent').append('<p class="text-left pl-5 pr-3"><span class="has-text-grey-kinda-light has-text-weight-bold is-size-5">'+sectionName+'</span><span id="focusPointsCastingSet" class="is-unselectable cursor-clickable"></span></p>');
                     isFirstLevel = false;
                 } else {
-                    $('#spellsFocusContent').append('<p class="is-size-5 has-text-grey-light has-text-weight-bold text-left pl-5 pt-2">'+sectionName+'</p>');
+                    $('#spellsFocusContent').append('<p class="is-size-5 has-text-grey-kinda-light has-text-weight-bold text-left pl-5 pt-2">'+sectionName+'</p>');
                 }
                 $('#spellsFocusContent').append('<hr class="hr-highlighted" style="margin-top:-0.5em; margin-bottom:0em;">');
-                $('#spellsFocusContent').append('<div class="columns is-mobile pt-1 is-marginless"><div class="column is-5 is-paddingless"><p class="has-text-left pl-3"><strong class="has-text-grey-light"><u>Name</u></strong></p></div><div class="column is-1 is-paddingless"><p class="text-center"><strong class="has-text-grey-light"><u>Cast</u></strong></p></div><div class="column is-1 is-paddingless"><p class="text-center"><strong class="has-text-grey-light"><u>Range</u></strong></p></div><div class="column is-5 is-paddingless"><p class="text-center"><strong class="has-text-grey-light"><u>Traits</u></strong></p></div></div>');
+                $('#spellsFocusContent').append('<div class="columns is-mobile pt-1 is-marginless"><div class="column is-5 is-paddingless"><p class="has-text-left pl-3"><strong class="has-text-grey-kinda-light"><u>Name</u></strong></p></div><div class="column is-1 is-paddingless"><p class="text-center"><strong class="has-text-grey-kinda-light"><u>Cast</u></strong></p></div><div class="column is-1 is-paddingless"><p class="text-center"><strong class="has-text-grey-kinda-light"><u>Range</u></strong></p></div><div class="column is-5 is-paddingless"><p class="text-center"><strong class="has-text-grey-kinda-light"><u>Traits</u></strong></p></div></div>');
             }
 
             let spellListingID = 'focusSpellListing'+focusSpellCount;
@@ -564,7 +595,8 @@ function displaySpellsFocus() {
             }
             tagsInnerHTML += '</div>';
 
-            $('#spellsFocusContent').append('<div id="'+spellListingID+'" class="focusSpellListingClass columns is-mobile is-marginless cursor-clickable"><div class="column is-5 is-paddingless"><p class="has-text-left pl-3 pt-1">'+spellName+'</p></div><div class="column is-1 is-paddingless"><p class="text-center has-text-grey-light pt-1">'+spellCast+'</p></div><div class="column is-1 is-paddingless"><p class="text-center has-text-grey-light pt-1">'+spellRange+'</p></div><div class="column is-5 is-paddingless"><p class="text-center has-text-grey-light">'+tagsInnerHTML+'</p></div></div>');
+            let focusListingClass = (spellDataStruct.Spell.level != 0) ? 'focusSpellListingClass' : 'focusCantripListingClass';
+            $('#spellsFocusContent').append('<div id="'+spellListingID+'" class="'+focusListingClass+' columns is-mobile is-marginless cursor-clickable"><div class="column is-5 is-paddingless"><p class="has-text-left pl-3 pt-1">'+spellName+'</p></div><div class="column is-1 is-paddingless"><p class="text-center has-text-grey-light pt-1">'+spellCast+'</p></div><div class="column is-1 is-paddingless"><p class="text-center has-text-grey-light pt-1">'+spellRange+'</p></div><div class="column is-5 is-paddingless"><p class="text-center has-text-grey-light">'+tagsInnerHTML+'</p></div></div>');
 
             
             $('#'+spellListingID).click(function(){
@@ -598,40 +630,29 @@ function displaySpellsFocus() {
 function displayFocusCastingsSet(changeType){
 
     let performedChange = false;
-    let focusSpellDataArray = [];
-    for(const [spellSRC, focusSpellArray] of g_focusSpellMap.entries()){
-        for(let focusSpellData of focusSpellArray){
-            if(changeType !== 'NONE' && !performedChange){
-                if(changeType === 'ADD' && focusSpellData.Used == 0){
-                    focusSpellData.Used = 1;
-                    socket.emit("requestFocusSpellCastingUpdate",
-                        getCharIDFromURL(),
-                        focusSpellData,
-                        spellSRC,
-                        focusSpellData.SpellID,
-                        focusSpellData.Used);
-                    performedChange = true;
-                } else if(changeType === 'REMOVE' && focusSpellData.Used == 1){
-                    focusSpellData.Used = 0;
-                    socket.emit("requestFocusSpellCastingUpdate",
-                        getCharIDFromURL(),
-                        focusSpellData,
-                        spellSRC,
-                        focusSpellData.SpellID,
-                        focusSpellData.Used);
-                    performedChange = true;
-                }
+    for(let focusPointData of g_focusPointArray){
+        if(changeType !== 'NONE' && !performedChange){
+            if(changeType === 'ADD' && focusPointData.value == 1){
+                focusPointData.value = 0;
+                socket.emit("requestFocusPointUpdate",
+                    getCharIDFromURL(),
+                    focusPointData,
+                    focusPointData.value);
+                performedChange = true;
+            } else if(changeType === 'REMOVE' && focusPointData.value == 0){
+                focusPointData.value = 1;
+                socket.emit("requestFocusPointUpdate",
+                    getCharIDFromURL(),
+                    focusPointData,
+                    focusPointData.value);
+                performedChange = true;
             }
-
-
-            focusSpellData.SpellSRC = spellSRC;
-            focusSpellDataArray.push(focusSpellData);
         }
     }
     
-    focusSpellDataArray = focusSpellDataArray.sort(
+    g_focusPointArray = g_focusPointArray.sort(
         function(a, b) {
-            return (a.Used == 1 && b.Used == 0) ? 1 : -1;
+            return (a.value == 0 && b.value == 1) ? 1 : -1;
         }
     );
 
@@ -639,10 +660,10 @@ function displayFocusCastingsSet(changeType){
     
     g_focusOpenPoint = false;
     let spellCastingsHTML = '';
-    for (let i = 0; i < focusSpellDataArray.length; i++) {
+    for (let i = 0; i < g_focusPointArray.length; i++) {
         if(i < 3){
-            let focusSpellData = focusSpellDataArray[i];
-            if(focusSpellData.Used == 1) {
+            let focusPointData = g_focusPointArray[i];
+            if(focusPointData.value == 0) {
                 spellCastingsHTML += '<span name="'+i+'" class="icon mt-1 is-pulled-right has-text-info '+pointsButtonsClass+'"><i class="fas fa-lg fa-square"></i></span>';
             } else {
                 g_focusOpenPoint = true;
@@ -664,16 +685,13 @@ function displayFocusCastingsSet(changeType){
     $('.'+pointsButtonsClass).off('click');
     $('.'+pointsButtonsClass).click(function(){
         event.stopImmediatePropagation();
-        let focusSpellData = focusSpellDataArray[parseInt($(this).attr('name'))];
+        let focusPointData = g_focusPointArray[$(this).attr('name')];
 
-        focusSpellData.Used = (focusSpellData.Used == 1) ? 0 : 1;
-
-        socket.emit("requestFocusSpellCastingUpdate",
+        focusPointData.value = (focusPointData.value == 1) ? 0 : 1;
+        socket.emit("requestFocusPointUpdate",
             getCharIDFromURL(),
-            focusSpellData,
-            focusSpellData.SpellSRC,
-            focusSpellData.SpellID,
-            focusSpellData.Used);
+            focusPointData,
+            focusPointData.value);
 
         displayFocusCastingsSet('NONE');
     });
@@ -710,13 +728,13 @@ function displaySpellsInnate() {
         if(innateSpell.SpellLevel > prevLevel){
             let sectionName = (innateSpell.SpellLevel == 0) ? 'Cantrips' : 'Level '+innateSpell.SpellLevel;
             if(isFirstLevel){
-                $('#spellsInnateContent').append('<p class="is-size-5 has-text-grey-light has-text-weight-bold text-left pl-5">'+sectionName+'</p>');
+                $('#spellsInnateContent').append('<p class="is-size-5 has-text-grey-kinda-light has-text-weight-bold text-left pl-5">'+sectionName+'</p>');
                 isFirstLevel = false;
             } else {
-                $('#spellsInnateContent').append('<p class="is-size-5 has-text-grey-light has-text-weight-bold text-left pl-5 pt-2">'+sectionName+'</p>');
+                $('#spellsInnateContent').append('<p class="is-size-5 has-text-grey-kinda-light has-text-weight-bold text-left pl-5 pt-2">'+sectionName+'</p>');
             }
             $('#spellsInnateContent').append('<hr class="hr-highlighted" style="margin-top:-0.5em; margin-bottom:0em;">');
-            $('#spellsInnateContent').append('<div class="columns is-mobile pt-1 is-marginless"><div class="column is-4 is-paddingless"><p class="has-text-left pl-3"><strong class="has-text-grey-light"><u>Name</u></strong></p></div><div class="column is-2 is-paddingless"><p class="text-center has-tooltip-bottom" data-tooltip="Casts per Day"><strong class="has-text-grey-light"><u>Castings</u></strong></p></div><div class="column is-1 is-paddingless"><p class="text-center"><strong class="has-text-grey-light"><u>Cast</u></strong></p></div><div class="column is-1 is-paddingless"><p class="text-center"><strong class="has-text-grey-light"><u>Range</u></strong></p></div><div class="column is-4 is-paddingless"><p class="text-center"><strong class="has-text-grey-light"><u>Traits</u></strong></p></div></div>');
+            $('#spellsInnateContent').append('<div class="columns is-mobile pt-1 is-marginless"><div class="column is-4 is-paddingless"><p class="has-text-left pl-3"><strong class="has-text-grey-kinda-light"><u>Name</u></strong></p></div><div class="column is-2 is-paddingless"><p class="text-center has-tooltip-bottom" data-tooltip="Casts per Day"><strong class="has-text-grey-kinda-light"><u>Castings</u></strong></p></div><div class="column is-1 is-paddingless"><p class="text-center"><strong class="has-text-grey-kinda-light"><u>Cast</u></strong></p></div><div class="column is-1 is-paddingless"><p class="text-center"><strong class="has-text-grey-kinda-light"><u>Range</u></strong></p></div><div class="column is-4 is-paddingless"><p class="text-center"><strong class="has-text-grey-kinda-light"><u>Traits</u></strong></p></div></div>');
         }
 
         let spellDataStruct = spellMap.get(innateSpell.SpellID+"");

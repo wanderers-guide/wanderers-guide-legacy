@@ -18,6 +18,7 @@ function finishBackground(isUpdate){
     let backgroundDescription = $("#inputDescription").val();
     let backgroundBoostsArray = $("#inputBoosts").val();
     let backgroundCode = $("#inputCode").val();
+    let backgroundContentSrc = $("#inputContentSource").val();
     
     let backgroundBoosts = '';
     for(let backgroundBoost of backgroundBoostsArray) {
@@ -41,6 +42,7 @@ function finishBackground(isUpdate){
         backgroundDescription,
         backgroundBoosts,
         backgroundCode,
+        backgroundContentSrc
     });
 
 }

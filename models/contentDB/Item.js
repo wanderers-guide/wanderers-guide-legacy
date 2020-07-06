@@ -48,6 +48,9 @@ const Item = db.define('items', {
   quantity: {
     type: Sequelize.INTEGER
   },
+  materialType: {
+    type: Sequelize.STRING
+  },
   hitPoints: {
     type: Sequelize.INTEGER
   },
@@ -68,6 +71,12 @@ const Item = db.define('items', {
     values: ['GENERAL', 'WEAPON', 'ARMOR', 'SHIELD', 'STORAGE', 'RUNE']
   },
   isArchived: {
+    type: Sequelize.INTEGER
+  },
+  contentSrc: {
+    type: Sequelize.STRING
+  },
+  homebrewID: {
     type: Sequelize.INTEGER
   },
   version: {

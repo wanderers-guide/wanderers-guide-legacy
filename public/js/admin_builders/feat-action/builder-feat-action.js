@@ -72,6 +72,8 @@ function finishFeat(isUpdate){
         featSelectMultiple = ($("#inputFeatSelectMultiple:checked").val() == '1') ? 1 : 0;
     }
     let featCode = $("#inputFeatCode").val();
+
+    let featContentSrc = $("#inputContentSource").val();
     
     let requestPacket = null;
     let featID = null;
@@ -101,7 +103,8 @@ function finishFeat(isUpdate){
         featDesc,
         featSpecial,
         featSelectMultiple,
-        featCode
+        featCode,
+        featContentSrc,
     });
 
 }

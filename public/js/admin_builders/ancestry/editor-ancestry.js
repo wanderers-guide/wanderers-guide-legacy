@@ -27,6 +27,7 @@ socket.on("returnAdminAncestryDetails", function(ancestryObject, featsObject){
     $("#inputPhysicalFeatureOne").val(ancestry.Ancestry.physicalFeatureOneID);
     $("#inputPhysicalFeatureTwo").val(ancestry.Ancestry.physicalFeatureTwoID);
     $("#inputDescription").val(ancestry.Ancestry.description);
+    $("#inputContentSource").val(ancestry.Ancestry.contentSrc);
 
     // Ancestry Boosts and Flaws
     let firstFreeSelected = false;

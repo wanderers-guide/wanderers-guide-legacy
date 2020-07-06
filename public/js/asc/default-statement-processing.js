@@ -6,7 +6,7 @@ function processDefaultItemRuneSheetCode(ascCode, invItemID){
     ascCode = ascCode.toUpperCase();
     let ascStatements = ascCode.split(/\n/);
 
-    let runeData = generateRuneDataStruct();
+    const runeData = g_runeDataStruct;
 
     g_defaultItemPropRuneSlotNum = 0;
     let success = true;

@@ -342,7 +342,7 @@ module.exports = class SocketConnections {
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
           if(ownsChar){
             CharSpells.addToSpellBook(charID, spellSRC, spellID, spellLevel).then((result) => {
-              CharSpells.getSpellBook(charID, spellSRC).then((spellBookStruct) => {
+              CharSpells.getSpellBook(charID, spellSRC, false).then((spellBookStruct) => {
                 socket.emit('returnSpellBookUpdated', spellBookStruct);
               });
             });
@@ -354,7 +354,7 @@ module.exports = class SocketConnections {
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
           if(ownsChar){
             CharSpells.removeFromSpellBook(charID, spellSRC, spellID, spellLevel).then((result) => {
-              CharSpells.getSpellBook(charID, spellSRC).then((spellBookStruct) => {
+              CharSpells.getSpellBook(charID, spellSRC, false).then((spellBookStruct) => {
                 socket.emit('returnSpellBookUpdated', spellBookStruct);
               });
             });
@@ -365,7 +365,7 @@ module.exports = class SocketConnections {
       socket.on('requestSpellBookUpdate', function(charID, spellSRC){
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
           if(ownsChar){
-            CharSpells.getSpellBook(charID, spellSRC).then((spellBookStruct) => {
+            CharSpells.getSpellBook(charID, spellSRC, false).then((spellBookStruct) => {
               socket.emit('returnSpellBookUpdated', spellBookStruct);
             });
           }
@@ -394,12 +394,23 @@ module.exports = class SocketConnections {
         }
       });
 
-      socket.on('requestFocusSpellCastingUpdate', function(charID, srcStruct, spellSRC, spellID, used){
+      
+      socket.on('requestFocusSpellUpdate', function(charID, srcStruct, spellSRC, spellID){
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
           if(ownsChar){
-            CharDataMapping.setData(charID, 'focusSpell', srcStruct, spellSRC+"="+spellID+"="+used)
+            CharDataMapping.setData(charID, 'focusSpell', srcStruct, spellSRC+"="+spellID)
             .then((result) => {
-              socket.emit('returnFocusSpellCastingUpdate');
+              socket.emit('returnFocusSpellUpdate');
+            });
+          }
+        });
+      });
+      socket.on('requestFocusPointUpdate', function(charID, srcStruct, unused){
+        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+          if(ownsChar){
+            CharDataMapping.setData(charID, 'focusPoint', srcStruct, unused)
+            .then((result) => {
+              socket.emit('returnFocusPointUpdate');
             });
           }
         });
@@ -753,7 +764,7 @@ module.exports = class SocketConnections {
               CharDataMapping.setData(charID, 'domains', srcStruct, domain.Domain.id)
               .then((result) => {
                 CharDataMapping.setData(charID, 'focusSpell', srcStruct, 
-                    domain.SpellSRC+"="+domain.Domain.initialSpellID+"=0")
+                    domain.SpellSRC+"="+domain.Domain.initialSpellID)
                 .then((result) => {
                   socket.emit('returnDomainChange');
                 });
@@ -775,7 +786,7 @@ module.exports = class SocketConnections {
               CharDataMapping.setData(charID, 'advancedDomains', srcStruct, domain.Domain.id)
               .then((result) => {
                 CharDataMapping.setData(charID, 'focusSpell', srcStruct, 
-                    domain.SpellSRC+"="+domain.Domain.advancedSpellID+"=0")
+                    domain.SpellSRC+"="+domain.Domain.advancedSpellID)
                 .then((result) => {
                   socket.emit('returnDomainAdvancementChange');
                 });
@@ -1014,7 +1025,7 @@ module.exports = class SocketConnections {
           if(ownsChar){
             CharSpells.setSpellSlot(charID, srcStruct, spellSRC, spellSlot)
             .then((spellSlot) => {
-              if(spellSlots != null){
+              if(spellSlot != null){
                 socket.emit('returnSpellSlotChange');
               } else {
                 socket.emit('returnASCStatementFailure', 'Invalid Spell Slot \"'+spellSlot+'\"');
@@ -1115,7 +1126,7 @@ module.exports = class SocketConnections {
             .then((spell) => {
               if(spell != null){
                 if(spell.isFocusSpell === 1){
-                  CharDataMapping.setData(charID, 'focusSpell', srcStruct, spellSRC+"="+spell.id+"=0")
+                  CharDataMapping.setData(charID, 'focusSpell', srcStruct, spellSRC+"="+spell.id)
                   .then((result) => {
                     socket.emit('returnFocusSpellChange');
                   });
@@ -1125,6 +1136,19 @@ module.exports = class SocketConnections {
               } else {
                 socket.emit('returnASCStatementFailure', 'Invalid Spell \"'+spellName+'\"');
               }
+            });
+          } else {
+            socket.emit('returnASCStatementFailure', 'Incorrect Auth');
+          }
+        });
+      });
+
+      socket.on('requestFocusPointChange', function(charID, srcStruct){
+        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+          if(ownsChar){
+            CharDataMapping.setData(charID, 'focusPoint', srcStruct, '1')
+            .then((result) => {
+              socket.emit('returnFocusPointChange');
             });
           } else {
             socket.emit('returnASCStatementFailure', 'Incorrect Auth');

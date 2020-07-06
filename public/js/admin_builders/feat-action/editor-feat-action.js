@@ -37,6 +37,8 @@ socket.on("returnAdminFeatDetails", function(featsObject){
     $("#inputFeatSelectMultiple").prop('checked', checkBoxState);
     $("#inputFeatCode").val(feat.Feat.code);
 
+    $("#inputContentSource").val(feat.Feat.contentSrc);
+
     const GENERAL_TAG_ID = 8; // Hardcoded General and Skill Tag IDs
     const SKILL_TAG_ID = 9;
     for(let featTag of feat.Tags){

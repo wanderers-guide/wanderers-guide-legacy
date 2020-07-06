@@ -79,6 +79,12 @@ const Spell = db.define('spells', {
   isArchived: {
     type: Sequelize.INTEGER
   },
+  contentSrc: {
+    type: Sequelize.STRING
+  },
+  homebrewID: {
+    type: Sequelize.INTEGER
+  },
   version: {
     type: Sequelize.STRING
   }

@@ -6,6 +6,10 @@ let gOption_hasAutoHeightenSpells = false;
 let gOption_hasProfWithoutLevel = false;
 /* ~~~~~~~~~~~~~~~~~ */
 
+/* Sheet-State Options */
+let gState_hasFinesseMeleeUseDexDamage = false;
+/* ~~~~~~~~~~~~~~~~~~~ */
+
 let g_character = null;
 let g_classDetails = null;
 let g_ancestry = null;
@@ -51,6 +55,8 @@ let g_resistAndVulners = null;
 let g_specializationStruct = null;
 let g_weaponFamiliaritiesArray = null;
 
+let g_runeDataStruct = null;
+
 let g_notesFields = null;
 
 let currentInvests = null;
@@ -60,6 +66,14 @@ let g_inventoryTabScroll = null;
 let g_selectedTabID = 'inventoryTab';
 let g_selectedSubTabID = null;
 let g_selectedSubTabLock = false;
+
+let g_selectedActionSubTabID = 'actionTabEncounter';
+let g_selectedActionOptionValue = 'core';
+
+let g_selectedSpellSubTabID = null;
+
+let g_selectedDetailsSubTabID = 'detailsTabFeats';
+let g_selectedDetailsOptionValue = 'All';
 
 let g_preConditions_strScore = null;
 let g_preConditions_dexScore = null;
@@ -129,6 +143,8 @@ socket.on("returnCharacterSheetInfo", function(charInfo){
     g_weaponProfMap = buildWeaponProfMap();
     g_armorProfMap = buildArmorProfMap();
 
+    g_runeDataStruct = generateRuneDataStruct();
+
     g_featMap = objToMap(charInfo.FeatObject);
     g_featChoiceArray = charInfo.ChoicesStruct.FeatArray;
 
@@ -146,6 +162,7 @@ socket.on("returnCharacterSheetInfo", function(charInfo){
     g_spellSlotsMap = objToMap(charInfo.SpellDataStruct.SpellSlotObject);
     g_spellBookArray = charInfo.SpellDataStruct.SpellBookArray;
 
+    g_focusPointArray = charInfo.SpellDataStruct.FocusPointsArray;
     g_focusSpellMap = objToMap(charInfo.SpellDataStruct.FocusSpellObject);
     /*g_focusSpellMap = new Map([...g_focusSpellMap.entries()].sort(
         function(a, b) {
@@ -1360,10 +1377,12 @@ function determineArmor(dexMod, strScore) {
 
         } else {
 
-            applyArmorCheckPenaltyToSkill('Acrobatics', checkPenalty);
-            applyArmorCheckPenaltyToSkill('Athletics', checkPenalty);
-            applyArmorCheckPenaltyToSkill('Stealth', checkPenalty);
-            applyArmorCheckPenaltyToSkill('Thievery', checkPenalty);
+            if(checkPenalty != 0){
+                applyArmorCheckPenaltyToSkill('Acrobatics', checkPenalty);
+                applyArmorCheckPenaltyToSkill('Athletics', checkPenalty);
+                applyArmorCheckPenaltyToSkill('Stealth', checkPenalty);
+                applyArmorCheckPenaltyToSkill('Thievery', checkPenalty);
+            }
 
         }
 
@@ -1427,6 +1446,7 @@ function determineArmor(dexMod, strScore) {
         let profNumber = getProfNumber(profNumUps, g_character.level);
 
         let totalAC = 10 + dexMod + profNumber + profBonus;
+        totalAC += getStatTotal('AC');
 
         $('#acNumber').html(totalAC);
         $('#acSection').attr('data-tooltip', 'Wearing Nothing');
@@ -1781,17 +1801,13 @@ function takeRest(){
             0);
     }
 
-    // Reset Focus Spells
-    for(const [spellSRC, focusSpellArray] of g_focusSpellMap.entries()){
-        for(let focusSpellData of focusSpellArray){
-            focusSpellData.Used = 0;
-            socket.emit("requestFocusSpellCastingUpdate",
-                getCharIDFromURL(),
-                focusSpellData,
-                spellSRC,
-                focusSpellData.SpellID,
-                focusSpellData.Used);
-        }
+    // Reset Focus Points
+    for(let focusPointData of g_focusPointArray){
+        focusPointData.value = 1;
+        socket.emit("requestFocusPointUpdate",
+            getCharIDFromURL(),
+            focusPointData,
+            focusPointData.value);
     }
 
     // Reset Spell Slots

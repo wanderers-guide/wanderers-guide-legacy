@@ -43,7 +43,7 @@ function openActionsTab(data) {
         changeActionTab('actionTabDowntime', data);
     });
 
-    $('#actionTabEncounter').click();
+    $('#'+g_selectedActionSubTabID).click();
 
 }
 
@@ -56,11 +56,13 @@ function openActionsTab(data) {
 // Action Tabs //
 function changeActionTab(type, data){
     if(!g_selectedSubTabLock) {g_selectedSubTabID = type;}
+    g_selectedActionSubTabID = type;
 
     $('#actionFilterSelectByAction').off('change');
     $('#actionFilterSelectBySkill').off('change');
     $('#actionFilterSearch').off('change');
 
+    $('#actionFilterSelectBySkill').val(g_selectedActionOptionValue);
 
     $('#actionTabContent').html('');
 
@@ -101,6 +103,7 @@ function changeActionTab(type, data){
 
     $('#actionFilterSelectBySkill').change(function(){
         actionFilterSearch.val('');
+        g_selectedActionOptionValue = $(this).val();
         changeActionTab(type, data);
     });
 

@@ -38,7 +38,7 @@ socket.on("returnWeaponSpecializationChange", function(){
 
 //////////////////////////////// Give Armor Specialization ///////////////////////////////////
 // GIVE-ARMOR-SPECIALIZATION=TRAIT~Dwarf
-// GIVE-ARMOR-SPECIALIZATION=ARMOR~Leather
+// GIVE-ARMOR-SPECIALIZATION=NAME~Leather
 // GIVE-ARMOR-SPECIALIZATION=Light_Armor
 
 function giveArmorSpecialization(srcStruct, armorName){
@@ -56,7 +56,7 @@ socket.on("returnArmorSpecializationChange", function(){
 
 //////////////////////////////// Give Critical Specialization ///////////////////////////////////
 // GIVE-WEAPON-CRITICAL-SPECIALIZATION=TRAIT~Dwarf
-// GIVE-WEAPON-CRITICAL-SPECIALIZATION=WEAPON~Spear
+// GIVE-WEAPON-CRITICAL-SPECIALIZATION=NAME~Spear
 // GIVE-WEAPON-CRITICAL-SPECIALIZATION=GROUP~Polearm
 // GIVE-WEAPON-CRITICAL-SPECIALIZATION=PROF~E
 // GIVE-WEAPON-CRITICAL-SPECIALIZATION=Simple_Weapons

@@ -208,6 +208,8 @@ function finishClass(isUpdate){
     let classReflex = $("#inputReflex").val();
     let classWill = $("#inputWill").val();
 
+    let classClassDC = $("#inputClassDC").val();
+
     let classWeaponsTrainedArray = $("#inputWeaponsTrained").val();
     let classWeaponsExpertArray = $("#inputWeaponsExpert").val();
     let classWeapons = '';
@@ -229,6 +231,7 @@ function finishClass(isUpdate){
     classArmor = classArmor.slice(0, -4); // Trim off that last ',,, '
 
     let classDescription = $("#inputDescription").val();
+    let classContentSrc = $("#inputContentSource").val();
 
 
     let classAbilitiesArray = [];
@@ -320,11 +323,13 @@ function finishClass(isUpdate){
         classFortitude,
         classReflex,
         classWill,
+        classClassDC,
         classWeapons,
         classArmor,
         classDescription,
         classAbilitiesArray,
-        classFeatsArray
+        classFeatsArray,
+        classContentSrc
     });
 
 }

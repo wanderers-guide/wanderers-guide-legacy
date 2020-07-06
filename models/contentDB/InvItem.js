@@ -36,6 +36,9 @@ const InvItem = db.define('invItems', {
   hitPoints: {
     type: Sequelize.INTEGER
   },
+  materialType: {
+    type: Sequelize.STRING
+  },
   brokenThreshold: {
     type: Sequelize.INTEGER
   },

@@ -49,6 +49,8 @@ function finishSpell(isUpdate){
     let spellHeightenedThreeText = $("#inputHeightenedThreeText").val();
     let spellHeightenedFourVal = $("#inputHeightenedFourVal").val();
     let spellHeightenedFourText = $("#inputHeightenedFourText").val();
+
+    let spellContentSrc = $("#inputContentSource").val();
     
     let requestPacket = null;
     let spellID = null;
@@ -87,6 +89,7 @@ function finishSpell(isUpdate){
         spellHeightenedThreeText,
         spellHeightenedFourVal,
         spellHeightenedFourText,
+        spellContentSrc,
     });
 
 }

@@ -10,10 +10,6 @@ function processingSpells(ascStatement, srcStruct, locationID){
         let data = ascStatement.split('=')[1];
         let segments = data.split(':');
         giveSpellSlot(srcStruct, segments[0], segments[1]);
-    } else if(ascStatement.includes("GIVE-FOCUS-SPELL")){// GIVE-FOCUS-SPELL=Bard:Meld_Into_Stone
-        let data = ascStatement.split('=')[1];
-        let segments = data.split(':');
-        giveFocusSpell(srcStruct, segments[0], segments[1]);
     } else if(ascStatement.includes("SET-SPELL-KEY-ABILITY")){// SET-SPELL-KEY-ABILITY=Bard:INT
         let data = ascStatement.split('=')[1]; //                 Will default to CHA if nothing is set
         let segments = data.split(':');
@@ -106,20 +102,5 @@ function setSpellCastingType(srcStruct, spellSRC, castingType){
 }
 
 socket.on("returnSpellCastingTypeChange", function(){
-    statementComplete();
-});
-
-//////////////////////////////// Give Focus Spell ///////////////////////////////////
-function giveFocusSpell(srcStruct, spellSRC, spellName){
-    spellName = spellName.replace(/_/g," ");
-    spellName = spellName.replace(/’/g,"'");
-    socket.emit("requestFocusSpellChange",
-        getCharIDFromURL(),
-        srcStruct,
-        spellSRC,
-        spellName);
-}
-
-socket.on("returnFocusSpellChange", function(){
     statementComplete();
 });

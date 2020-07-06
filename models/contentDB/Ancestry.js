@@ -36,6 +36,12 @@ const Ancestry = db.define('ancestries', {
   isArchived: {
     type: Sequelize.INTEGER
   },
+  contentSrc: {
+    type: Sequelize.STRING
+  },
+  homebrewID: {
+    type: Sequelize.INTEGER
+  },
   version: {
     type: Sequelize.STRING
   }

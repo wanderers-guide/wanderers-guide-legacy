@@ -124,6 +124,7 @@ function finishAncestry(isUpdate){
     let ancestryFlawsArray = $("#inputFlaws").val();
     let ancestryLangsArray = $("#inputLangs").val();
     let ancestryBonusLangsArray = $("#inputBonusLangs").val();
+    let ancestryContentSrc = $("#inputContentSource").val();
 
     let ancestryHeritagesArray = [];
     $(".ancestryHeritage").each(function(){
@@ -201,7 +202,8 @@ function finishAncestry(isUpdate){
         ancestryLangsArray,
         ancestryBonusLangsArray,
         ancestryHeritagesArray,
-        ancestryFeatsArray
+        ancestryFeatsArray,
+        ancestryContentSrc
     });
 
 }

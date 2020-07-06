@@ -62,6 +62,12 @@ const Feat = db.define('feats', {
   isArchived: {
     type: Sequelize.INTEGER
   },
+  contentSrc: {
+    type: Sequelize.STRING
+  },
+  homebrewID: {
+    type: Sequelize.INTEGER
+  },
   version: {
     type: Sequelize.STRING
   }

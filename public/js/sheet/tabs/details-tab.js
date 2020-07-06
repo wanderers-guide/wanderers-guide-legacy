@@ -17,13 +17,14 @@ function openDetailsTab(data){
         changeDetailsTab('detailsTabDescription', data);
     });
 
-    $('#detailsTabFeats').click();
+    $('#'+g_selectedDetailsSubTabID).click();
 
 }
 
 // Details Tabs //
 function changeDetailsTab(type, data){
     if(!g_selectedSubTabLock) {g_selectedSubTabID = type;}
+    g_selectedDetailsSubTabID = type;
 
     $('#detailsTabContent').html('');
 
@@ -46,6 +47,8 @@ function changeDetailsTab(type, data){
 function displayFeatsSection(data) {
 
     $('#detailsTabContent').append('<div class="columns is-mobile is-marginless"><div class="column is-10"><p class="control has-icons-left"><input id="featsSearch" class="input" type="text" placeholder="Search Feats"><span class="icon is-left"><i class="fas fa-search" aria-hidden="true"></i></span></p></div><div class="column"><div class="select"><select id="featsFilterByType"><option value="All">All</option><option value="Class">Class</option><option value="Ancestry">Ancestry</option><option value="Other">Other</option></select></div></div></div><div id="featsContent" class="use-custom-scrollbar"></div>');
+
+    $('#featsFilterByType').val(g_selectedDetailsOptionValue);
     displayFeatContent(data);
 
 }
@@ -74,6 +77,7 @@ function displayFeatContent(data){
     }
 
     $('#featsFilterByType').change(function(){
+        g_selectedDetailsOptionValue = $(this).val();
         displayFeatContent(data);
     });
 
@@ -230,6 +234,8 @@ function displayFeat(featData, featTags, featCount){
 function displayAbilitiesSection(data) {
 
     $('#detailsTabContent').append('<div class="columns is-mobile is-marginless"><div class="column is-10"><p class="control has-icons-left"><input id="abilitiesSearch" class="input" type="text" placeholder="Search Abilities"><span class="icon is-left"><i class="fas fa-search" aria-hidden="true"></i></span></p></div><div class="column"><div class="select"><select id="abilitiesFilterByType"><option value="All">All</option><option value="Class">Class</option><option value="Ancestry">Ancestry</option><option value="Other">Other</option></select></div></div></div><div id="abilitiesContent" class="use-custom-scrollbar"></div>');
+
+    $('#abilitiesFilterByType').val(g_selectedDetailsOptionValue);
     displayAbilitiesContent(data);
 
 }
@@ -258,6 +264,7 @@ function displayAbilitiesContent(data){
     }
 
     $('#abilitiesFilterByType').change(function(){
+        g_selectedDetailsOptionValue = $(this).val();
         displayAbilitiesContent(data);
     });
 

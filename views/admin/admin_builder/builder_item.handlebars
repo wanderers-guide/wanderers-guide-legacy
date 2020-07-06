@@ -78,6 +78,27 @@
                     </div>
                 </div>
 
+                <div class="tile is-child field">
+                    <label class="label">Source</label>
+                    <div class="control">
+                        <div class="select">
+                            <select id="inputContentSource">
+                                <option value="CRB">Core Rulebook</option>
+                                <option value="ADV-PLAYER-GUIDE">Advanced Player’s Guide</option>
+                                <option value="GM-GUIDE">Gamemastery Guide</option>
+                                <option value="LOST-GOD-MAGIC">Lost Omens: Gods & Magic</option>
+                                <option value="LOST-CHAR-GUIDE">Lost Omens: Character Guide</option>
+                                <option value="LOST-WORLD-GUIDE">Lost Omens: World Guide</option>
+                                <option value="FALL-OF-PLAGUE">The Fall of Plaguestone</option>
+                                <option value="AGE-OF-ASHES">Age of Ashes</option>
+                                <option value="EXTINCTION-CURSE">Extinction Curse</option>
+                                <option value="BEST-1">Bestiary</option>
+                                <option value="BEST-2">Bestiary 2</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="tile is-child columns">
 
                     <div class="column field">
@@ -202,6 +223,24 @@
                         </div>
                     </div>
 
+                    <div id="sectionMaterial" class="column field">
+                        <label class="label">Material</label>
+                        <div class="control">
+                            <div class="select">
+                                <select id="inputMaterial">
+                                    <option value="">N/A</option>
+                                    <option value="ADAMANTINE">Adamantine</option>
+                                    <option value="COLD IRON">Cold Iron</option>
+                                    <option value="DARKWOOD">Darkwood</option>
+                                    <option value="DRAGONHIDE">Dragonhide</option>
+                                    <option value="MITHRAL">Mithral</option>
+                                    <option value="ORICHALCUM">Orichalcum</option>
+                                    <option value="SILVER">Silver</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
                     <div id="sectionHands" class="column field">
                         <label class="label">Hands</label>
                         <div class="control">
@@ -275,7 +314,6 @@
                             <div class="select">
                                 <select id="inputMeleeWeaponType">
                                     <option value="AXE" selected>Axe</option>
-                                    <option value="BOMB">Bomb</option>
                                     <option value="BRAWLING">Brawling</option>
                                     <option value="CLUB">Club</option>
                                     <option value="FLAIL">Flail</option>
@@ -309,7 +347,8 @@
                                 <select id="inputRangedWeaponType">
                                     <option value="BOW" selected>Bow</option>
                                     <option value="DART">Dart</option>
-                                    <option value="SLING">Sling</option>                                
+                                    <option value="SLING">Sling</option>   
+                                    <option value="BOMB">Bomb</option>                             
                                 </select>
                             </div>
                         </div>

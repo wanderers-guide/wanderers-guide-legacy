@@ -1,9 +1,7 @@
 
 function openWeaponsTab(data) {
 
-    let runeDataStruct = generateRuneDataStruct();
-
-    let addWeaponEntry = function(weaponEntryID, item, invItem, runeDataStruct, data) {
+    let addWeaponEntry = function(weaponEntryID, item, invItem, data) {
         let weaponListEntryID = 'weaponListEntry'+weaponEntryID;
 
         let calcStruct = getAttackAndDamage(item, invItem);
@@ -20,7 +18,6 @@ function openWeaponsTab(data) {
             openQuickView('invItemView', {
                 InvItem : invItem,
                 Item : item,
-                RuneDataStruct : runeDataStruct,
                 InvData : null,
                 Data : data // Same contents in data object as inventory tab uses
             });
@@ -61,14 +58,14 @@ function openWeaponsTab(data) {
         let pwInvItem = pwItem.Item;
         pwInvItem.currentHitPoints = pwInvItem.hitPoints;
         pwInvItem.viewOnly = true;
-        addWeaponEntry(weaponEntryID, pwItem, pwInvItem, runeDataStruct, data);
+        addWeaponEntry(weaponEntryID, pwItem, pwInvItem, data);
     }
 
     for(const invItem of g_invStruct.InvItems){
         let item = g_itemMap.get(invItem.itemID+"");
         if(item.WeaponData != null){
             weaponEntryID++;
-            addWeaponEntry(weaponEntryID, item, invItem, runeDataStruct, data);
+            addWeaponEntry(weaponEntryID, item, invItem, data);
         }
     }
 

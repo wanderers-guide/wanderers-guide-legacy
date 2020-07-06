@@ -182,6 +182,11 @@ function runNextStatement(){
             return 'WAIT';
         }
 
+        if(ascStatement.includes("-FOCUS")){
+            processingFocusSpells(ascStatement, srcStruct, locationID);
+            return 'WAIT';
+        }
+
         if(ascStatement.includes("-SPELL")){
             processingSpells(ascStatement, srcStruct, locationID);
             return 'WAIT';
@@ -219,6 +224,11 @@ function runNextStatement(){
 
         if(ascStatement.includes("-SPEED")){
             processingSpeeds(ascStatement, srcStruct, locationID);
+            return 'WAIT';
+        }
+
+        if(ascStatement.includes("-KEY-ABILITY")){
+            processingKeyAbilities(ascStatement, srcStruct, locationID);
             return 'WAIT';
         }
 

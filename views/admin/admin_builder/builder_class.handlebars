@@ -59,6 +59,27 @@
                 </div>
 
                 <div class="tile is-child field">
+                    <label class="label">Source</label>
+                    <div class="control">
+                        <div class="select">
+                            <select id="inputContentSource">
+                                <option value="CRB">Core Rulebook</option>
+                                <option value="ADV-PLAYER-GUIDE">Advanced Player’s Guide</option>
+                                <option value="GM-GUIDE">Gamemastery Guide</option>
+                                <option value="LOST-GOD-MAGIC">Lost Omens: Gods & Magic</option>
+                                <option value="LOST-CHAR-GUIDE">Lost Omens: Character Guide</option>
+                                <option value="LOST-WORLD-GUIDE">Lost Omens: World Guide</option>
+                                <option value="FALL-OF-PLAGUE">The Fall of Plaguestone</option>
+                                <option value="AGE-OF-ASHES">Age of Ashes</option>
+                                <option value="EXTINCTION-CURSE">Extinction Curse</option>
+                                <option value="BEST-1">Bestiary</option>
+                                <option value="BEST-2">Bestiary 2</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tile is-child field">
                     <label class="label">Hit Points</label>
                     <div class="control">
                         <input id="inputHitPoints" class="input" type="number" value="8">
@@ -79,7 +100,8 @@
                                     <option value="Constitution">Constitution</option>
                                     <option value="Intelligence">Intelligence</option>
                                     <option value="Wisdom">Wisdom</option>
-                                    <option value="">OTHER</option>
+                                    <option value="Charisma">Charisma</option>
+                                    <option value="OTHER">OTHER</option>
                                     <option value="OR">OR</option>
                                 </select>
                             </div>
@@ -104,6 +126,7 @@
                                     <option value="Constitution">Constitution</option>
                                     <option value="Intelligence">Intelligence</option>
                                     <option value="Wisdom">Wisdom</option>
+                                    <option value="Charisma">Charisma</option>
                                 </select>
                             </div>
                         </div>
@@ -119,6 +142,7 @@
                                     <option value="Constitution">Constitution</option>
                                     <option value="Intelligence">Intelligence</option>
                                     <option value="Wisdom">Wisdom</option>
+                                    <option value="Charisma">Charisma</option>
                                 </select>
                             </div>
                         </div>
@@ -135,6 +159,21 @@
                         <div class="control">
                             <div class="select">
                                 <select id="inputPerception">
+                                    <option value="U">Untrained</option>
+                                    <option value="T" selected>Trained</option>
+                                    <option value="E">Expert</option>
+                                    <option value="M">Master</option>
+                                    <option value="L">Legendary</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="column field">
+                        <label class="label">Class DC</label>
+                        <div class="control">
+                            <div class="select">
+                                <select id="inputClassDC">
                                     <option value="U">Untrained</option>
                                     <option value="T" selected>Trained</option>
                                     <option value="E">Expert</option>
@@ -173,6 +212,7 @@
                                     <option value="Medicine or Religion">Medicine or Religion</option>
                                     <option value="Nature or Survival">Nature or Survival</option>
                                     <option value="Stealth or Thievery">Stealth or Thievery</option>
+                                    <option value="Occultism, Performance">Occultism and Performance</option>
                                 </select>
                             </div>
                         </div>
@@ -521,7 +561,7 @@
                             <div class="field">
                                 <label class="label">Requirements</label>
                                 <div class="control">
-                                    <input class="input inputFeatReq" type="text" maxlength="290">
+                                    <input class="input inputFeatReq" type="text" maxlength="590">
                                 </div>
                             </div>
 

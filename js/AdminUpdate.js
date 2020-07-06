@@ -41,6 +41,7 @@ module.exports = class AdminUpdate {
             backgroundDescription,
             backgroundBoosts,
             backgroundCode,
+            backgroundContentSrc,
         */
         for(let d in data) { if(data[d] === ''){ data[d] = null; } }
         data.backgroundName = data.backgroundName.replace(/’/g,"'");
@@ -53,6 +54,8 @@ module.exports = class AdminUpdate {
             boostOne: data.backgroundBoosts,
             boostTwo: 'ALL',
             code: data.backgroundCode,
+            contentSrc: data.backgroundContentSrc,
+            homebrewID: null,
         }).then(background => {
             return background;
         });
@@ -106,11 +109,13 @@ module.exports = class AdminUpdate {
             classFortitude,
             classReflex,
             classWill,
+            classClassDC,
             classWeapons,
             classArmor,
             classDescription,
             classAbilitiesArray,
-            classFeatsArray
+            classFeatsArray,
+            classContentSrc,
         */
         for(let d in data) { if(data[d] === ''){ data[d] = null; } }
         data.className = data.className.replace(/’/g,"'");
@@ -132,11 +137,14 @@ module.exports = class AdminUpdate {
                 tFortitude: data.classFortitude,
                 tReflex: data.classReflex,
                 tWill: data.classWill,
+                tClassDC: data.classClassDC,
                 tSkills: data.classSkills,
                 tSkillsMore: data.classSkillsMore,
                 tWeapons: data.classWeapons,
                 tArmor: data.classArmor,
-                tagID: classTag.id
+                tagID: classTag.id,
+                contentSrc: data.classContentSrc,
+                homebrewID: null,
             }).then(cClass => {
                 let classFeatPromises = []; // Create Class Feats
                 if(data.classFeatsArray != null){
@@ -149,6 +157,7 @@ module.exports = class AdminUpdate {
                         classFeat.minProf = null;
                         classFeat.genericType = null;
                         classFeat.isArchived = 0;
+                        classFeat.contentSrc = cClass.contentSrc;
                         classFeat.version = null;
                         let newPromise = AdminUpdate.addFeatPreparedData(classFeat);
                         classFeatPromises.push(newPromise);
@@ -300,7 +309,8 @@ module.exports = class AdminUpdate {
             ancestryBonusLangsArray,
             ancestryHeritagesArray,
             ancestryFeatsArray,
-            ancestryTagDesc
+            ancestryTagDesc,
+            ancestryContentSrc,
         */
         for(let d in data) { if(data[d] === ''){ data[d] = null; } }
         data.ancestryName = data.ancestryName.replace(/’/g,"'");
@@ -323,7 +333,9 @@ module.exports = class AdminUpdate {
                 additionalSenseID: data.ancestryAdditionalSenseID,
                 physicalFeatureOneID: data.ancestryPhysicalFeatureOneID,
                 physicalFeatureTwoID: data.ancestryPhysicalFeatureTwoID,
-                tagID: ancestryTag.id
+                tagID: ancestryTag.id,
+                contentSrc: data.ancestryContentSrc,
+                homebrewID: null,
             }).then(ancestry => {
                 let ancestryBoostsPromises = []; // Create Ancestry Boosts
                 if(data.ancestryBoostsArray != null){
@@ -392,6 +404,7 @@ module.exports = class AdminUpdate {
                                         ancestryFeat.minProf = null;
                                         ancestryFeat.genericType = null;
                                         ancestryFeat.isArchived = 0;
+                                        ancestryFeat.contentSrc = ancestry.contentSrc;
                                         ancestryFeat.version = null;
                                         let newPromise = AdminUpdate.addFeatPreparedData(ancestryFeat);
                                         ancestryFeatPromises.push(newPromise);
@@ -535,7 +548,8 @@ module.exports = class AdminUpdate {
             featSpecial,
             featSelectMultiple,
             featCode,
-            featVersion
+            featVersion,
+            featContentSrc,
         */
         data.isDefault = 0;
         data.isArchived = 0;
@@ -581,6 +595,7 @@ module.exports = class AdminUpdate {
             featTagsArray: data.featTagsArray,
             genericType: data.genericType,
             isArchived: data.isArchived,
+            contentSrc: data.featContentSrc,
             version: data.featVersion
         }).then(feat => {
             return feat;
@@ -608,6 +623,7 @@ module.exports = class AdminUpdate {
             featTagsArray,
             genericType,
             isArchived,
+            contentSrc
             version
         */
         for(let d in data) { if(data[d] === ''){ data[d] = null; } }
@@ -634,7 +650,9 @@ module.exports = class AdminUpdate {
             code: data.code,
             genericType: data.genericType,
             isArchived: data.isArchived,
-            version: data.version
+            contentSrc: data.contentSrc,
+            homebrewID: null,
+            version: data.version,
         }).then(feat => {
             let featTagPromises = []; // Create Feat Tags
             if(data.featTagsArray != null) {
@@ -688,6 +706,7 @@ module.exports = class AdminUpdate {
             itemCode,
             itemBulk,
             itemSize,
+            itemMaterial,
             itemHands,
             itemIsShoddy,
             itemHasQuantity,
@@ -699,7 +718,8 @@ module.exports = class AdminUpdate {
             itemArmorData,
             itemShieldData,
             itemStorageData,
-            itemRuneData
+            itemRuneData,
+            itemContentSrc
         */
 
         data.hidden = 0;
@@ -724,6 +744,7 @@ module.exports = class AdminUpdate {
             data.itemPrice = parseInt(data.itemPrice)+300; // 3gp for the cost of the runestone
             data.itemBulk = 0.1;
             data.itemSize = 'MEDIUM';
+            data.itemMaterial = '';
             data.itemHands = 'ONE';
             data.itemIsShoddy = 0;
             data.itemHasQuantity = 0;
@@ -750,6 +771,7 @@ module.exports = class AdminUpdate {
             description: data.itemDesc,
             itemType: data.itemCategory,
             hands: data.itemHands,
+            materialType: data.itemMaterial,
             size: data.itemSize,
             craftRequirements: data.itemCraftReq,
             usage: data.itemUsage,
@@ -763,6 +785,8 @@ module.exports = class AdminUpdate {
             code: data.itemCode,
             itemStructType: data.builderType,
             isArchived: data.isArchived,
+            contentSrc: data.itemContentSrc,
+            homebrewID: null,
         }).then(item => {
             let itemTagsPromises = []; // Create Item Tags
             if(data.itemTagsArray != null){
@@ -909,6 +933,7 @@ module.exports = class AdminUpdate {
             spellHeightenedThreeText,
             spellHeightenedFourVal,
             spellHeightenedFourText,
+            spellContentSrc,
         */
 
         data.isArchived = 0;
@@ -944,6 +969,8 @@ module.exports = class AdminUpdate {
             heightenedFourText: data.spellHeightenedFourText,
             isFocusSpell: data.spellIsFocus,
             isArchived: data.isArchived,
+            contentSrc: data.spellContentSrc,
+            homebrewID: null,
         }).then(spell => {
             let spellTagsPromises = []; // Create Spell Tags
             if(data.spellTagsArray != null){

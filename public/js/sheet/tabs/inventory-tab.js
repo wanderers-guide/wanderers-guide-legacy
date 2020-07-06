@@ -85,8 +85,6 @@ function displayInventorySection(data){
         }
     }
 
-    let runeDataStruct = generateRuneDataStruct();
-
     let inventorySearch = $('#inventorySearch');
     let invSearchInput = null;
     if(inventorySearch.val() != ''){
@@ -147,7 +145,7 @@ function displayInventorySection(data){
         }
 
         if(willDisplay) {
-            displayInventoryItem(invItem, openBagInvItemArray, runeDataStruct, data);
+            displayInventoryItem(invItem, openBagInvItemArray, data);
         }
 
     }
@@ -157,7 +155,7 @@ function displayInventorySection(data){
 
 }
 
-function displayInventoryItem(invItem, openBagInvItemArray, runeDataStruct, data) {
+function displayInventoryItem(invItem, openBagInvItemArray, data) {
 
     let item = g_itemMap.get(invItem.itemID+"");
     let itemIsStorage = (item.Item.itemType == "STORAGE");
@@ -283,7 +281,6 @@ function displayInventoryItem(invItem, openBagInvItemArray, runeDataStruct, data
                     openQuickView('invItemView', {
                         InvItem : baggedInvItem,
                         Item : baggedItem,
-                        RuneDataStruct : runeDataStruct,
                         InvData : {
                             OpenBagInvItemArray : openBagInvItemArray,
                             ItemIsStorage : baggedItemIsStorage,
@@ -391,7 +388,6 @@ function displayInventoryItem(invItem, openBagInvItemArray, runeDataStruct, data
         openQuickView('invItemView', {
             InvItem : invItem,
             Item : item,
-            RuneDataStruct : runeDataStruct,
             InvData : {
                 OpenBagInvItemArray : openBagInvItemArray,
                 ItemIsStorage : itemIsStorage,

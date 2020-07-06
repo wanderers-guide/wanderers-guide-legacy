@@ -119,6 +119,14 @@ function processSheetCode(ascCode, sourceName, isTest){
             continue;
         }
 
+        if(ascStatement.toUpperCase() == "SET-FINESSE-MELEE-USE-DEX-DAMAGE"){
+            if(isTest) {continue;}
+
+            gState_hasFinesseMeleeUseDexDamage = true;
+
+            continue;
+        }
+
         // Could not identify asc statement
         success = false;
 

@@ -57,6 +57,52 @@ function openSpellQuickview(data){
     $('#quickViewTitle').html(spellName);
     let qContent = $('#quickViewContent');
 
+    if(data.SpellSlotData != null){ // Set Slot Color-Type //
+        
+        let typeStruct = getSpellTypeStruct(data.SpellSlotData.Slot.type);
+
+        let displayColorTypes = function(typeStruct) {
+            let redTypeIcon = (typeStruct.Red) ? 'fas fa-xs fa-circle' : 'far fa-xs fa-circle';
+            let greenTypeIcon = (typeStruct.Green) ? 'fas fa-xs fa-circle' : 'far fa-xs fa-circle';
+            let blueTypeIcon = (typeStruct.Blue) ? 'fas fa-xs fa-circle' : 'far fa-xs fa-circle';
+    
+            $('#quickViewTitleRight').html('<span class="pr-2"><span class="icon has-text-danger is-small cursor-clickable spellSlotRedType"><i class="'+redTypeIcon+'"></i></span><span class="icon has-text-success is-small cursor-clickable spellSlotGreenType"><i class="'+greenTypeIcon+'"></i></span><span class="icon has-text-link is-small cursor-clickable spellSlotBlueType"><i class="'+blueTypeIcon+'"></i></span></span>');
+
+            $('.spellSlotRedType').click(function(){
+                typeStruct.Red = !typeStruct.Red;
+                data.SpellSlotData.Slot.type = getSpellTypeData(typeStruct);
+                socket.emit("requestSpellSlotUpdate",
+                    getCharIDFromURL(),
+                    data.SpellSlotData.Slot);
+                displayColorTypes(typeStruct);
+                openSpellSRCTab(data.SpellSlotData.SpellSRC, data.SpellSlotData.Data);
+            });
+    
+            $('.spellSlotGreenType').click(function(){
+                typeStruct.Green = !typeStruct.Green;
+                data.SpellSlotData.Slot.type = getSpellTypeData(typeStruct);
+                socket.emit("requestSpellSlotUpdate",
+                    getCharIDFromURL(),
+                    data.SpellSlotData.Slot);
+                displayColorTypes(typeStruct);
+                openSpellSRCTab(data.SpellSlotData.SpellSRC, data.SpellSlotData.Data);
+            });
+    
+            $('.spellSlotBlueType').click(function(){
+                typeStruct.Blue = !typeStruct.Blue;
+                data.SpellSlotData.Slot.type = getSpellTypeData(typeStruct);
+                socket.emit("requestSpellSlotUpdate",
+                    getCharIDFromURL(),
+                    data.SpellSlotData.Slot);
+                displayColorTypes(typeStruct);
+                openSpellSRCTab(data.SpellSlotData.SpellSRC, data.SpellSlotData.Data);
+            });
+        };
+
+        displayColorTypes(typeStruct);
+    
+    }
+
     if(data.SRCTabData != null){ // Remove from SpellBook //
 
         qContent.append('<button id="spellRemoveFromSpellBookBtn" class="button is-small is-danger is-outlined is-rounded is-fullwidth"><span>Remove Spell</span></button>');
@@ -108,13 +154,29 @@ function openSpellQuickview(data){
             spellTradition = spellBook.SpellList;
             spellSRC = spellBook.SpellSRC;
             spellKeyAbility = spellBook.SpellKeyAbility;
-            spellUsed = !g_focusOpenPoint;
+            if(spellDataStruct.Spell.level == 0) {
+                spellUsed = false;
+            } else {
+                spellUsed = !g_focusOpenPoint;
+            }
         } else if(sheetSpellType === 'INNATE') {
             spellTradition = data.SheetData.InnateSpell.SpellTradition;
             spellKeyAbility = data.SheetData.InnateSpell.KeyAbility;
         }
+        
+        if(data.SheetData.Slot != null){
 
-        $('#quickViewTitleRight').html('<span class="pr-2">'+capitalizeWord(spellTradition)+'</span>');
+            let typeStruct = getSpellTypeStruct(data.SheetData.Slot.type);
+    
+            let redTypeIconHidden = (typeStruct.Red) ? '' : 'is-hidden';
+            let greenTypeIconHidden = (typeStruct.Green) ? '' : 'is-hidden';
+            let blueTypeIconHidden = (typeStruct.Blue) ? '' : 'is-hidden';
+    
+            $('#quickViewTitleRight').html('<span class="pr-2"><span class="icon has-text-danger is-small '+redTypeIconHidden+'"><i class="fas fa-xs fa-circle"></i></span><span class="icon has-text-success is-small '+greenTypeIconHidden+'"><i class="fas fa-xs fa-circle"></i></span><span class="icon has-text-link is-small '+blueTypeIconHidden+'"><i class="fas fa-xs fa-circle"></i></span><span class="pl-2">'+capitalizeWord(spellTradition)+'</span></span>');
+    
+        } else {
+            $('#quickViewTitleRight').html('<span class="pr-2">'+capitalizeWord(spellTradition)+'</span>');
+        }
 
         let spellAttack, spellDC = 0;
         if(spellTradition === 'ARCANE'){
@@ -463,6 +525,9 @@ function openSpellQuickview(data){
 
 
 function spellViewTextProcessor(text, spellKeyAbility){
+
+    text = text.replace('plus your spellcasting modifier', '+ {'+spellKeyAbility+'_MOD|'+lengthenAbilityType(spellKeyAbility)+' Modifier}');
+    text = text.replace('plus your spellcasting ability modifier', '+ {'+spellKeyAbility+'_MOD|'+lengthenAbilityType(spellKeyAbility)+' Modifier}');
 
     text = text.replace('equal to your spellcasting ability modifier', '{'+spellKeyAbility+'_MOD|'+lengthenAbilityType(spellKeyAbility)+' Modifier}');
     text = text.replace('your spellcasting ability modifier', '{'+spellKeyAbility+'_MOD|'+lengthenAbilityType(spellKeyAbility)+' Modifier}');

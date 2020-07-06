@@ -699,44 +699,48 @@ module.exports = class CharGathering {
             return Promise.all(spellBookSlotPromises)
             .then(function(spellBookSlotArray) {
 
-                return CharSpells.getFocusSpells(charID)
-                .then((focusSpellMap) => {
-                    let spellBookFocusPromises = [];
-                    for(const [spellSRC, focusSpellDataArray] of focusSpellMap.entries()){
-                        let newPromise = CharSpells.getSpellBook(charID, spellSRC, true);
-                        spellBookFocusPromises.push(newPromise);
-                    }
-                    return Promise.all(spellBookFocusPromises)
-                    .then(function(spellBookFocusArray) {
-                        let spellBookArray = spellBookSlotArray
-                            .concat(spellBookFocusArray.filter((entry) => spellBookSlotArray.indexOf(entry) < 0));
+                return CharSpells.getFocusPoints(charID)
+                .then((focusPointsDataArray) => {
+                    return CharSpells.getFocusSpells(charID)
+                    .then((focusSpellMap) => {
+                        let spellBookFocusPromises = [];
+                        for(const [spellSRC, focusSpellDataArray] of focusSpellMap.entries()){
+                            let newPromise = CharSpells.getSpellBook(charID, spellSRC, true);
+                            spellBookFocusPromises.push(newPromise);
+                        }
+                        return Promise.all(spellBookFocusPromises)
+                        .then(function(spellBookFocusArray) {
+                            let spellBookArray = spellBookSlotArray
+                                .concat(spellBookFocusArray.filter((entry) => spellBookSlotArray.indexOf(entry) < 0));
 
-                        return CharDataMappingExt.getDataAllInnateSpell(charID)
-                        .then((innateSpellArray) => {
-                            let innateSpellPromises = [];
-                            for(const innateSpell of innateSpellArray){
-                                let innateSpellCastingsID = getInnateSpellCastingID(innateSpell);
-                                let newPromise = InnateSpellCasting.findOrCreate({where: {innateSpellID: innateSpellCastingsID}, defaults: {timesCast: 0}, raw: true});
-                                innateSpellPromises.push(newPromise);
-                            }
-
-                            return Promise.all(innateSpellPromises)
-                            .then(function(innateSpellCastings) {
-                                for(let innateSpell of innateSpellArray){
+                            return CharDataMappingExt.getDataAllInnateSpell(charID)
+                            .then((innateSpellArray) => {
+                                let innateSpellPromises = [];
+                                for(const innateSpell of innateSpellArray){
                                     let innateSpellCastingsID = getInnateSpellCastingID(innateSpell);
-                                    let innateSpellData = innateSpellCastings.find(innateSpellData => {
-                                        return innateSpellData[0].innateSpellID === innateSpellCastingsID;
-                                    });
-                                    innateSpell.TimesCast = innateSpellData[0].timesCast;
-                                    innateSpell.TimesPerDay = parseInt(innateSpell.TimesPerDay);
-                                    innateSpell.SpellLevel = parseInt(innateSpell.SpellLevel);
+                                    let newPromise = InnateSpellCasting.findOrCreate({where: {innateSpellID: innateSpellCastingsID}, defaults: {timesCast: 0}, raw: true});
+                                    innateSpellPromises.push(newPromise);
                                 }
-                                return {
-                                    SpellSlotObject: mapToObj(spellSlotsMap),
-                                    SpellBookArray: spellBookArray,
-                                    InnateSpellArray: innateSpellArray,
-                                    FocusSpellObject: mapToObj(focusSpellMap),
-                                };
+
+                                return Promise.all(innateSpellPromises)
+                                .then(function(innateSpellCastings) {
+                                    for(let innateSpell of innateSpellArray){
+                                        let innateSpellCastingsID = getInnateSpellCastingID(innateSpell);
+                                        let innateSpellData = innateSpellCastings.find(innateSpellData => {
+                                            return innateSpellData[0].innateSpellID === innateSpellCastingsID;
+                                        });
+                                        innateSpell.TimesCast = innateSpellData[0].timesCast;
+                                        innateSpell.TimesPerDay = parseInt(innateSpell.TimesPerDay);
+                                        innateSpell.SpellLevel = parseInt(innateSpell.SpellLevel);
+                                    }
+                                    return {
+                                        SpellSlotObject: mapToObj(spellSlotsMap),
+                                        SpellBookArray: spellBookArray,
+                                        InnateSpellArray: innateSpellArray,
+                                        FocusSpellObject: mapToObj(focusSpellMap),
+                                        FocusPointsArray: focusPointsDataArray,
+                                    };
+                                });
                             });
                         });
                     });

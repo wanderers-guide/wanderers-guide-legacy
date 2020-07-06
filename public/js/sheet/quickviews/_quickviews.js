@@ -57,6 +57,8 @@ function openQuickView(type, data) {
         openAddSpellQuickview(data);
     } else if(type == 'spellView'){
         openSpellQuickview(data);
+    } else if(type == 'spellEmptyView'){
+        openSpellEmptyQuickview(data);
     } else if(type == 'skillView'){
         openSkillQuickview(data);
     } else if(type == 'abilityScoreView'){

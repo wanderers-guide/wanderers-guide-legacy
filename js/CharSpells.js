@@ -315,11 +315,17 @@ module.exports = class CharSpells {
                     focusSpellArray = focusSpellMap.get(focusSpellDataParts[0]);
                 }
                 focusSpellData.SpellID = focusSpellDataParts[1];
-                focusSpellData.Used = focusSpellDataParts[2];
                 focusSpellArray.push(focusSpellData);
                 focusSpellMap.set(focusSpellDataParts[0], focusSpellArray);
             }
             return focusSpellMap;
+        });
+    }
+
+    static getFocusPoints(charID) {
+        return CharDataMapping.getDataAll(charID, 'focusPoint', null)
+        .then((focusPointDataArray) => {
+            return focusPointDataArray;
         });
     }
 

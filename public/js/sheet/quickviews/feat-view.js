@@ -86,7 +86,8 @@ function openFeatQuickview(data) {
     
     featContentInnerHTML += '<hr class="m-1">';
 
-    featContentInnerHTML += '<div>'+processText(data.Feat.description, true, true, 'MEDIUM')+'</div>';
+    let description = featViewTextProcessor(data.Feat.description);
+    featContentInnerHTML += '<div>'+processText(description, true, true, 'MEDIUM')+'</div>';
 
     if(data.Feat.special != null){
         featContentInnerHTML += '<div><p class="negative-indent"><span><strong>Special: </strong></span><span>'+data.Feat.special+'</span></p></div>';
@@ -99,4 +100,18 @@ function openFeatQuickview(data) {
         displayNotesField(qContent, data.SrcStruct);
     }
 
+}
+
+function featViewTextProcessor(text){
+
+    let speedNum = getStatTotal('SPEED');
+    speedNum = (speedNum > 5) ? speedNum : 5;
+
+    text = text.replace('for 5 feet plus 5 feet per 20 feet of your land Speed', '<span class="has-text-info">'+(5+5*Math.floor(speedNum/20))+' feet</span>');
+    text = text.replace('for 5 feet per 20 feet of your land Speed', '<span class="has-text-info">'+(5*Math.floor(speedNum/20) != 0 ? 5*Math.floor(speedNum/20) : 5)+' feet</span>');
+
+    text = text.replace('10 feet plus 5 feet per 20 feet of your land Speed', '<span class="has-text-info">'+(10+5*Math.floor(speedNum/20))+' feet</span>');
+    text = text.replace('5 feet plus 5 feet per 20 feet of your land Speed.', '<span class="has-text-info">'+(5+5*Math.floor(speedNum/20))+' feet</span>');
+
+    return text;
 }

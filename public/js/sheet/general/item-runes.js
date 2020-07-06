@@ -2,57 +2,57 @@
 // Note: The fundamental RuneIDs in here are hardcoded. //
 
 function isWeaponPotencyOne(runeID){
-    return runeID == 3;
+    return runeID == 20;
 }
 
 function isWeaponPotencyTwo(runeID){
-    return runeID == 2;
+    return runeID == 27;
 }
 
 function isWeaponPotencyThree(runeID){
-    return runeID == 1;
+    return runeID == 31;
 }
 
 //
 
 function isStriking(runeID){
-    return runeID == 6;
+    return runeID == 24;
 }
 
 function isGreaterStriking(runeID){
-    return runeID == 5;
+    return runeID == 29;
 }
 
 function isMajorStriking(runeID){
-    return runeID == 4;
+    return runeID == 33;
 }
 
 //
 
 function isArmorPotencyOne(runeID){
-    return runeID == 10;
+    return runeID == 25;
 }
 
 function isArmorPotencyTwo(runeID){
-    return runeID == 11;
+    return runeID == 28;
 }
 
 function isArmorPotencyThree(runeID){
-    return runeID == 12;
+    return runeID == 32;
 }
 
 //
 
 function isResilient(runeID){
-    return runeID == 13;
+    return runeID == 26;
 }
 
 function isGreaterResilient(runeID){
-    return runeID == 14;
+    return runeID == 30;
 }
 
 function isMajorResilient(runeID){
-    return runeID == 15;
+    return runeID == 34;
 }
 
 //
@@ -83,7 +83,8 @@ function runestoneNameToRuneName(runestoneItemName){
 
 
 
-function displayRunesForItem(qContent, invItem, runeDataStruct, isWeapon){
+function displayRunesForItem(qContent, invItem, isWeapon){
+    const runeDataStruct = g_runeDataStruct;
 
     let invItemAddFundamentalRuneSelectID = 'invItemAddFundamentalRuneSelect'+invItem.id;
     let invItemAddFundamentalRuneButtonID = 'invItemAddFundamentalRuneButton'+invItem.id;
@@ -94,6 +95,8 @@ function displayRunesForItem(qContent, invItem, runeDataStruct, isWeapon){
     $('#'+invItemAddFundamentalRuneSelectID).append('<hr class="dropdown-divider"></hr>');
     
     if(isWeapon) {
+
+        console.log('');
 
         for(let weaponRuneItem of runeDataStruct.WeaponArray){
             if(weaponRuneItem == null){ continue; }

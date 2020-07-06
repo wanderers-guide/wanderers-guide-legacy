@@ -464,6 +464,17 @@
                 </p>
                 <div class="py-2">
                     <div class="code-block">
+                        IF (HAS-FEAT==Specialty Crafting) {GIVE-FEAT-NAME=Ancestral Paragon}
+                    </div>
+                    <p class="pl-3">
+                        - If the character has the Specialty Crafting feat, the statement inside the brackets will execute (which will give the character the Ancestral Paragon feat).
+                    </p>
+                    <p class="pl-3">
+                        Boolean Operators: '==' or '!='
+                    </p>
+                </div>
+                <div class="py-2">
+                    <div class="code-block">
                         IF (HAS-CLASS-ABILITY==Cloistered Cleric) {GIVE_LANG}
                     </div>
                     <p class="pl-3">
@@ -630,6 +641,22 @@
                     </div>
                     <p class="pl-3">
                         - Generates a feat selector, listing only that character's class feats with the level 1 or lower.
+                    </p>
+                </div>
+                <div class="py-2">
+                    <div class="code-block">
+                        GIVE-CLASS-FEAT=1[metamagic]
+                    </div>
+                    <p class="pl-3">
+                        - Generates a feat selector, listing only that character's class feats with the metamagic trait and are level 1 or lower.
+                    </p>
+                </div>
+                <div class="py-2">
+                    <div class="code-block">
+                        GIVE-CLASS-FEAT=15[abjuration,arcane,metamagic]
+                    </div>
+                    <p class="pl-3">
+                        - Generates a feat selector, listing only that character's class feats with the abjuration, arcane, and metamagic traits and are level 15 or lower.
                     </p>
                 </div>
             </div>
@@ -900,6 +927,14 @@
                     </div>
                     <p class="pl-3">
                         - Gives the character Meld into Stone as a focus spells using the Cleric spellcasting source.
+                    </p>
+                </div>
+                <div class="py-2">
+                    <div class="code-block">
+                        GIVE-FOCUS-POINT
+                    </div>
+                    <p class="pl-3">
+                        - Increases the number of Focus Points in the character's focus pool.
                     </p>
                 </div>
                 <h1 class="title is-size-5 is-marginless mt-2 mb-1 pl-3">Innate Spells</h1>

@@ -26,6 +26,9 @@ const Class = db.define('classes', {
   tWill: {
     type: Sequelize.STRING
   },
+  tClassDC: {
+    type: Sequelize.STRING
+  },
   tSkills: {
     type: Sequelize.STRING
   },
@@ -42,6 +45,12 @@ const Class = db.define('classes', {
     type: Sequelize.INTEGER
   },
   isArchived: {
+    type: Sequelize.INTEGER
+  },
+  contentSrc: {
+    type: Sequelize.STRING
+  },
+  homebrewID: {
     type: Sequelize.INTEGER
   },
   version: {

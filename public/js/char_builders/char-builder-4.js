@@ -145,7 +145,11 @@ function displayCurrentClass(classStruct, saving) {
     let keyAbility = $('#keyAbility');
     keyAbility.html('');
     
-    if(classStruct.Class.keyAbility.includes(' or ')) {
+    if(classStruct.Class.keyAbility == 'OTHER'){
+
+        keyAbility.append('<p class="is-size-5">Other</p>');
+
+    } else if(classStruct.Class.keyAbility.includes(' or ')) {
 
         let keyAbilitySelectID = 'keyAbilitySelect';
         let keyAbilityControlShellClass = 'keyAbilityControlShell';
@@ -236,7 +240,12 @@ function displayCurrentClass(classStruct, saving) {
     
     let profSkillsUL = $('#profSkillsUL');
 
-    let tSkillsArray = classStruct.Class.tSkills.split(', ');
+    let tSkillsArray;
+    if(classStruct.Class.tSkills != null){
+        tSkillsArray = classStruct.Class.tSkills.split(', ');
+    } else {
+        tSkillsArray = [];
+    }
     for(const tSkill of tSkillsArray){
 
         let tSkillID = tSkill.replace(/ /g,'_');
@@ -400,7 +409,17 @@ function displayCurrentClass(classStruct, saving) {
     }
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Class DC ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
-    savingProfArray.push({ For : "Class_DC", To : "Class_DC", Prof : "T" });
+    let profClassDC = $('#profClassDC');
+    profClassDC.html('');
+    profClassDC.append('<ul id="profClassDCUL"></ul>');
+
+    let profClassDCUL = $('#profClassDCUL');
+    profClassDCUL.append('<li id="profClassDCLI"></li>');
+
+    let profClassDCLI = $('#profClassDCLI');
+    profClassDCLI.append(profToWord(classStruct.Class.tClassDC));
+
+    savingProfArray.push({ For : "Class_DC", To : "Class_DC", Prof : classStruct.Class.tClassDC });
 
 
     if(saving){

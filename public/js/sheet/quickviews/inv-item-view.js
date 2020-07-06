@@ -36,6 +36,17 @@ function openInvItemQuickview(data) {
         tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-very-small is-warning has-tooltip-bottom has-tooltip-multiline" data-tooltip="Improvised or of dubious make, shoddy items are never available for purchase except for in the most desperate of communities. When available, a shoddy item usually costs half the Price of a standard item, though you can never sell one in any case. Attacks and checks involving a shoddy item take a –2 item penalty. This penalty also applies to any DCs that a shoddy item applies to (such as AC, for shoddy armor). A shoddy suit of armor also worsens the armor’s check penalty by 2. A shoddy item’s Hit Points and Broken Threshold are each half that of a normal item of its type.">Shoddy</button>';
     }
 
+    let rarity = data.Item.Item.rarity;
+    switch(rarity) {
+        case 'UNCOMMON': tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-very-small is-primary">Uncommon</button>';
+            break;
+        case 'RARE': tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-very-small is-success">Rare</button>';
+            break;
+        case 'UNIQUE': tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-very-small is-danger">Unique</button>';
+            break;
+        default: break;
+    }
+
     let itemSize = data.InvItem.size;
     switch(itemSize) {
         case 'TINY': tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-very-small is-link">Tiny</button>';
@@ -49,16 +60,18 @@ function openInvItemQuickview(data) {
         default: break;
     }
 
-    let rarity = data.Item.Item.rarity;
-    switch(rarity) {
-        case 'UNCOMMON': tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-very-small is-primary">Uncommon</button>';
-            break;
-        case 'RARE': tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-very-small is-success">Rare</button>';
-            break;
-        case 'UNIQUE': tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-very-small is-danger">Unique</button>';
-            break;
-        default: break;
+    if(data.InvItem.materialType != null){
+        let itemMaterial = g_materialsMap.get(data.InvItem.materialType);
+        if(itemMaterial != null){
+            tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-very-small is-link has-tooltip-bottom has-tooltip-multiline" data-tooltip="'+itemMaterial.Description+'">'+itemMaterial.Name+'</button>';
+        }
     }
+
+    data.Item.TagArray = data.Item.TagArray.sort(
+        function(a, b) {
+            return a.Tag.name > b.Tag.name ? 1 : -1;
+        }
+    );
     for(const tagStruct of data.Item.TagArray){
         let tagDescription = tagStruct.Tag.description;
         if(tagDescription.length > g_tagStringLengthMax){
@@ -285,10 +298,13 @@ function openInvItemQuickview(data) {
     displayCriticalSpecialization(qContent, data.Item);
 
     // Item Runes
-    if(!viewOnly){ // In ViewOnly mode you cannot view weapon runes
+    let consumableTag = data.Item.TagArray.find(tag => {
+        return tag.Tag.id == 402; // Hardcoded Consumable Tag ID
+    });
+    if(!viewOnly && consumableTag == null){ // In ViewOnly mode you cannot view weapon runes
         if(data.Item.WeaponData != null){
 
-            displayRunesForItem(qContent, data.InvItem, data.RuneDataStruct, true);
+            displayRunesForItem(qContent, data.InvItem, true);
 
             qContent.append('<hr class="m-2">');
 
@@ -296,7 +312,7 @@ function openInvItemQuickview(data) {
 
         if(data.Item.ArmorData != null){
 
-            displayRunesForItem(qContent, data.InvItem, data.RuneDataStruct, false);
+            displayRunesForItem(qContent, data.InvItem, false);
 
             qContent.append('<hr class="m-2">');
 

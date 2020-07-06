@@ -15,8 +15,8 @@ function getAttackAndDamage(itemData, invItem){
         });
         let abilMod = strMod;
         if(finesseTag != null){
-            abilMod = (dexMod > abilMod) ? dexMod : abilMod;
-        }
+            abilMod = (pre_dexMod > abilMod) ? pre_dexMod : abilMod;
+        } // Use preDex mod becuase Clumsy condition affects ranged attacks but not finesse melee attacks
     
         let profData = g_weaponProfMap.get(itemData.Item.id);
     
@@ -30,7 +30,19 @@ function getAttackAndDamage(itemData, invItem){
             profBonus = 0;
         }
 
-        let dmgStrBonus = (pre_strMod == 0) ? '' : signNumber(pre_strMod);
+        let splashTag = itemData.TagArray.find(tag => {
+            return tag.Tag.id == 391; // Hardcoded Splash Tag ID
+        });
+        let dmgStrBonus = '';
+        if(gState_hasFinesseMeleeUseDexDamage && finesseTag != null){
+            if(pre_dexMod != 0){
+                dmgStrBonus = signNumber(pre_dexMod);
+            }
+        } else {
+            if(splashTag == null && pre_strMod != 0){
+                dmgStrBonus = signNumber(pre_strMod);
+            }
+        }
 
         let potencyRuneBonus = 0;
         if(itemRuneData != null){
@@ -84,7 +96,7 @@ function getAttackAndDamage(itemData, invItem){
 
         let damage = '';
         let maxDamage = diceNum*dieTypeToNum(itemData.WeaponData.dieType)+pre_strMod+weapSpecialBonus;
-        if(maxDamage > 1) {
+        if(maxDamage >= 1) {
             damage = diceNum+""+itemData.WeaponData.dieType+dmgStrBonus+weapSpecial+" "+itemData.WeaponData.damageType;
         } else {
             damage = '<a class="has-text-grey" data-tooltip="'+diceNum+""+itemData.WeaponData.dieType+dmgStrBonus+weapSpecial+'">1</a> '+itemData.WeaponData.damageType;
@@ -95,10 +107,13 @@ function getAttackAndDamage(itemData, invItem){
     } else if(itemData.WeaponData.isRanged == 1){
 
         let thrownTag = itemData.TagArray.find(tag => {
-            return tag.Tag.id == 47; // Hardcoded Thrown Tag ID
+            return 47 <= tag.Tag.id && tag.Tag.id <= 54; // Hardcoded Thrown Tag ID Range (47-54)
+        });
+        let splashTag = itemData.TagArray.find(tag => {
+            return tag.Tag.id == 391; // Hardcoded Splash Tag ID
         });
         let dmgStrBonus = '';
-        if(thrownTag != null && pre_strMod != 0){
+        if(thrownTag != null && splashTag == null && pre_strMod != 0){
             dmgStrBonus = signNumber(pre_strMod);
         }
 
@@ -166,7 +181,7 @@ function getAttackAndDamage(itemData, invItem){
 
         let damage = '';
         let maxDamage = diceNum*dieTypeToNum(itemData.WeaponData.dieType)+pre_strMod+weapSpecialBonus;
-        if(maxDamage > 1) {
+        if(maxDamage >= 1) {
             damage = diceNum+""+itemData.WeaponData.dieType+dmgStrBonus+weapSpecial+" "+itemData.WeaponData.damageType;
         } else {
             damage = '<a class="has-text-grey" data-tooltip="'+diceNum+""+itemData.WeaponData.dieType+dmgStrBonus+weapSpecial+'">1</a> '+itemData.WeaponData.damageType;
@@ -175,7 +190,7 @@ function getAttackAndDamage(itemData, invItem){
         return { AttackBonus : attackBonus, Damage : damage };
 
     } else {
-        return null;
+        return { AttackBonus : null, Damage : null };
     }
 
 }

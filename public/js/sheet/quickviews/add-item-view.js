@@ -308,9 +308,14 @@ function displayItemDetails(itemDataStruct, addItemDetailsItemID){
         
     if(itemDataStruct.WeaponData != null){
 
+        let consumableTag = itemDataStruct.TagArray.find(tag => {
+            return tag.Tag.id == 402; // Hardcoded Consumable Tag ID
+        });
+
         if(itemDataStruct.WeaponData.isMelee == 1){
 
             let damage = itemDataStruct.WeaponData.diceNum+""+itemDataStruct.WeaponData.dieType+" "+itemDataStruct.WeaponData.damageType;
+            damage = (consumableTag != null) ? 'See Text' : damage;
 
             itemDetails.append('<div class="tile"><div class="tile is-child"><strong>Damage</strong></div></div>');
             itemDetails.append('<div class="tile"><div class="tile is-child"><p>'+damage+'</p></div></div>');
@@ -322,6 +327,7 @@ function displayItemDetails(itemDataStruct, addItemDetailsItemID){
         if(itemDataStruct.WeaponData.isRanged == 1){
 
             let damage = itemDataStruct.WeaponData.diceNum+""+itemDataStruct.WeaponData.dieType+" "+itemDataStruct.WeaponData.damageType;
+            damage = (consumableTag != null) ? 'See Text' : damage;
 
             itemDetails.append('<div class="tile"><div class="tile is-child"><strong>Damage</strong></div></div>');
             itemDetails.append('<div class="tile"><div class="tile is-child"><p>'+damage+'</p></div></div>');

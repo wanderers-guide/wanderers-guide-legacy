@@ -152,12 +152,12 @@ g_critSpecialTextMap.set('HAMMER', 'The target is knocked prone.');
 g_critSpecialTextMap.set('FLAIL', 'The target is knocked prone.');
 g_critSpecialTextMap.set('CLUB', 'You knock the target away from you up to 10 feet (you choose the distance). This is forced movement.');
 g_critSpecialTextMap.set('BRAWLING', 'The target must succeed at a Fortitude save against your class DC or be slowed 1 until the end of your next turn.');
-g_critSpecialTextMap.set('BOMB', 'Increase the radius of the bomb’s splash damage (if any) to 10 feet.');
 g_critSpecialTextMap.set('AXE', 'Choose one creature adjacent to the initial target and within reach. If its AC is lower than your attack roll result for the critical hit, you deal damage to that creature equal to the result of the weapon damage die you rolled (including extra dice from its striking rune, if any). This amount isn’t doubled, and no bonuses or other additional dice apply to this damage.');
 
 g_critSpecialTextMap.set('SLING', 'The target must succeed at a Fortitude save against your class DC or be stunned 1.');
 g_critSpecialTextMap.set('DART', 'The target takes 1d6 persistent bleed damage. You gain an item bonus to this bleed damage equal to the weapon’s item bonus to attack rolls.');
 g_critSpecialTextMap.set('BOW', 'If the target of the critical hit is adjacent to a surface, it gets stuck to that surface by the missile. The target is immobilized and must spend an (action: Interact) action to attempt a DC 10 Athletics check to pull the missile free; it can’t move from its space until it succeeds. The creature doesn’t become stuck if it is incorporeal, is liquid (like a water elemental or some oozes), or could otherwise escape without effort.');
+g_critSpecialTextMap.set('BOMB', 'Increase the radius of the bomb’s splash damage (if any) to 10 feet.');
 
 
 function criticalSpecializationText(item){

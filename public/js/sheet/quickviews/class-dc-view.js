@@ -31,7 +31,9 @@ function openClassDCQuickview(data) {
 
     let breakDownInnerHTML = '<p class="has-text-centered">'+data.TotalDC+' = ';
 
-    breakDownInnerHTML += '<a class="has-text-link has-tooltip-bottom has-tooltip-multiline" data-tooltip="This is your key ability modifier from your class. It is added when determining your class DC.">'+data.KeyMod+'</a>';
+    let keyAbilityName = lengthenAbilityType(g_classDetails.KeyAbility);
+    keyAbilityName = (keyAbilityName == null) ? 'Unselected' : keyAbilityName;
+    breakDownInnerHTML += '<a class="has-text-link has-tooltip-bottom has-tooltip-multiline" data-tooltip="This is your key ability modifier from your class ('+keyAbilityName+'). It is added when determining your class DC.">'+data.KeyMod+'</a>';
 
     breakDownInnerHTML += ' + ';
     
@@ -94,7 +96,7 @@ function openClassDCQuickview(data) {
             if(value == null){
                 qContent.append('<p class="has-text-centered">'+condition+'</p>');
             } else {
-                qContent.append('<p class="has-text-centered">'+value+' '+condition+'</p>');
+                qContent.append('<p class="has-text-centered">'+signNumber(value)+' '+condition+'</p>');
             }
         }
 

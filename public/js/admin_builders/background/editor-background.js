@@ -21,6 +21,7 @@ socket.on("returnAdminBackgroundDetails", function(backgrounds){
     $("#inputVersion").val(background.version);
     $("#inputDescription").val(background.description);
     $("#inputCode").val(background.code);
+    $("#inputContentSource").val(background.contentSrc);
 
     // Background Boost
     let boostArray = background.boostOne.split(',');

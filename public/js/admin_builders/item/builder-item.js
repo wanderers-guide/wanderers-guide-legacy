@@ -19,6 +19,7 @@ $(function () {
 
             $("#sectionBulk").removeClass('is-hidden');
             $("#sectionSize").removeClass('is-hidden');
+            $("#sectionMaterial").removeClass('is-hidden');
             $("#sectionHands").removeClass('is-hidden');
             $("#sectionIsShoddy").removeClass('is-hidden');
             $("#sectionQuantity").removeClass('is-hidden');
@@ -36,6 +37,7 @@ $(function () {
 
             $("#sectionBulk").removeClass('is-hidden');
             $("#sectionSize").removeClass('is-hidden');
+            $("#sectionMaterial").removeClass('is-hidden');
             $("#sectionHands").removeClass('is-hidden');
             $("#sectionIsShoddy").removeClass('is-hidden');
             $("#sectionQuantity").addClass('is-hidden');
@@ -53,6 +55,7 @@ $(function () {
 
             $("#sectionBulk").removeClass('is-hidden');
             $("#sectionSize").removeClass('is-hidden');
+            $("#sectionMaterial").removeClass('is-hidden');
             $("#sectionHands").removeClass('is-hidden');
             $("#sectionIsShoddy").removeClass('is-hidden');
             $("#sectionQuantity").removeClass('is-hidden');
@@ -70,6 +73,7 @@ $(function () {
 
             $("#sectionBulk").removeClass('is-hidden');
             $("#sectionSize").removeClass('is-hidden');
+            $("#sectionMaterial").removeClass('is-hidden');
             $("#sectionHands").addClass('is-hidden');
             $("#sectionIsShoddy").removeClass('is-hidden');
             $("#sectionQuantity").addClass('is-hidden');
@@ -87,6 +91,7 @@ $(function () {
 
             $("#sectionBulk").removeClass('is-hidden');
             $("#sectionSize").removeClass('is-hidden');
+            $("#sectionMaterial").removeClass('is-hidden');
             $("#sectionHands").addClass('is-hidden');
             $("#sectionIsShoddy").removeClass('is-hidden');
             $("#sectionQuantity").addClass('is-hidden');
@@ -104,6 +109,7 @@ $(function () {
 
             $("#sectionBulk").addClass('is-hidden');
             $("#sectionSize").addClass('is-hidden');
+            $("#sectionMaterial").addClass('is-hidden');
             $("#sectionHands").addClass('is-hidden');
             $("#sectionIsShoddy").addClass('is-hidden');
             $("#sectionQuantity").addClass('is-hidden');
@@ -147,6 +153,8 @@ function finishItem(isUpdate){
     let itemCraftReq = $("#inputCraftReq").val();
     let itemCode = $("#inputCode").val();
 
+    let itemContentSrc = $("#inputContentSource").val();
+
     let itemBulk = null;
     if($("#sectionBulk").is(":visible")) {
         itemBulk = $("#inputBulk").val();
@@ -154,6 +162,10 @@ function finishItem(isUpdate){
     let itemSize = null;
     if($("#sectionSize").is(":visible")) {
         itemSize = $("#inputSize").val();
+    }
+    let itemMaterial = null;
+    if($("#sectionMaterial").is(":visible")) {
+        itemMaterial = $("#inputMaterial").val();
     }
     let itemHands = null;
     if($("#sectionHands").is(":visible")) {
@@ -255,6 +267,7 @@ function finishItem(isUpdate){
         itemCode,
         itemBulk,
         itemSize,
+        itemMaterial,
         itemHands,
         itemIsShoddy,
         itemHasQuantity,
@@ -266,7 +279,8 @@ function finishItem(isUpdate){
         itemArmorData,
         itemShieldData,
         itemStorageData,
-        itemRuneData
+        itemRuneData,
+        itemContentSrc
     });
 
 }

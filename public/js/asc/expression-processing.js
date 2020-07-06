@@ -52,7 +52,7 @@ g_profConversionMap.set('SURVIVAL', {Name: 'Survival', Category: 'Skill'});
 g_profConversionMap.set('THIEVERY', {Name: 'Thievery', Category: 'Skill'});
 
 let hasInit = false;
-let g_expr_level, g_expr_profMap, g_expr_heritage, g_expr_classAbilityArray = null;
+let g_expr_level, g_expr_profMap, g_expr_heritage, g_expr_classAbilityArray, g_expr_featArray = null;
 
 function initExpressionProcessor(expDataStruct){
 
@@ -77,6 +77,13 @@ function initExpressionProcessor(expDataStruct){
                     }
                 }
             }
+        }
+    }
+
+    if(expDataStruct.ChoiceStruct.FeatArray != null){
+        g_expr_featArray = [];
+        for(let feat of expDataStruct.ChoiceStruct.FeatArray){
+            g_expr_featArray.push(feat.value.name.toUpperCase());
         }
     }
 
@@ -125,7 +132,11 @@ function testExpr(ascCode){
         return expHasClassAbility(expression, statement, elseStatement);
     }
 
-    if(expression.includes('HAS-PROF')){ // HAS-PROF==Arcana:T // Prof is that or better. If you're master, you're trained.
+    if(expression.includes('HAS-FEAT')){ // HAS-FEAT==Specialty Crafting
+        return expHasFeat(expression, statement, elseStatement);
+    }
+
+    if(expression.includes('HAS-PROF')){ // HAS-PROF==Arcana:T
         return expHasProf(expression, statement, elseStatement);
     }
 
@@ -205,9 +216,29 @@ function expHasClassAbility(expression, statement, elseStatement){
             return elseStatement;
         }
     } else if(expression.includes('!=')){
-        let classAbilityName = expression.split('==')[1].toUpperCase();
+        let classAbilityName = expression.split('!=')[1].toUpperCase();
         classAbilityName = classAbilityName.replace(/_/g," ");
         if(!g_expr_classAbilityArray.includes(classAbilityName)){
+            return statement;
+        } else {
+            return elseStatement;
+        }
+    }
+}
+
+function expHasFeat(expression, statement, elseStatement){
+    if(expression.includes('==')){
+        let featName = expression.split('==')[1].toUpperCase();
+        featName = featName.replace(/_/g," ");
+        if(g_expr_featArray.includes(featName)){
+            return statement;
+        } else {
+            return elseStatement;
+        }
+    } else if(expression.includes('!=')){
+        let featName = expression.split('!=')[1].toUpperCase();
+        featName = featName.replace(/_/g," ");
+        if(!g_expr_featArray.includes(featName)){
             return statement;
         } else {
             return elseStatement;

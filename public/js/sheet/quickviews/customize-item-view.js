@@ -14,6 +14,14 @@ function openCustomizeItemQuickview(data) {
 
     qContent.append('<hr class="m-2 mb-4">');
 
+    let materialSelectOptions = '<option value="">N/A</option>';
+    for(const [materialCodeName, data] of g_materialsMap.entries()){
+        materialSelectOptions += '<option value="'+materialCodeName+'">'+data.Name+'</option>';
+    }
+    qContent.append('<div class="field is-horizontal"><div class="field-label is-normal"><label class="label">Material</label></div><div class="field-body"><div class="field"><div class="control"><div class="select"><select id="customizeItemMaterial">'+materialSelectOptions+'</select></div></div></div></div></div>');
+
+    qContent.append('<hr class="m-2 mb-4">');
+
     qContent.append('<div class="field is-horizontal"><div class="field-label is-normal"><label class="label">Max HP</label></div><div class="field-body"><div class="field"><div class="control"><input class="input" id="customizeItemHitPoints" type="number" min="1" max="99999" value="'+data.InvItem.hitPoints+'"></div></div></div></div>');
     qContent.append('<div class="field is-horizontal"><div class="field-label is-normal"><label class="label">BT</label></div><div class="field-body"><div class="field"><div class="control"><input class="input" id="customizeItemBrokenThreshold" type="number" min="0" max="99999" value="'+data.InvItem.brokenThreshold+'"></div></div></div></div>');
     qContent.append('<div class="field is-horizontal"><div class="field-label is-normal"><label class="label">Hardness</label></div><div class="field-body"><div class="field"><div class="control"><input class="input" id="customizeItemHardness" type="number" min="0" max="99999" value="'+data.InvItem.hardness+'"></div></div></div></div>');
@@ -30,7 +38,7 @@ function openCustomizeItemQuickview(data) {
     if(data.InvItem.isShoddy == 1){
         $('#customizeItemShoddy').prop('checked', true);
     }
-
+    $('#customizeItemMaterial').val(data.InvItem.materialType);
 
     $('#customizeItemSaveButton').click(function(){
 
@@ -40,6 +48,7 @@ function openCustomizeItemQuickview(data) {
         let description = $('#customizeItemDescription').val();
         let size = $('#customizeItemSize').val();
         let isShoddy = ($('#customizeItemShoddy').prop('checked') == true) ? 1 : 0;
+        let materialType = $('#customizeItemMaterial').val();
         let hitPoints = parseInt($('#customizeItemHitPoints').val());
         let brokenThreshold = parseInt($('#customizeItemBrokenThreshold').val());
         let hardness = parseInt($('#customizeItemHardness').val());
@@ -107,6 +116,7 @@ function openCustomizeItemQuickview(data) {
                     description: description,
                     size: size,
                     isShoddy: isShoddy,
+                    materialType: materialType,
                     hitPoints: hitPoints,
                     brokenThreshold: brokenThreshold,
                     hardness: hardness,

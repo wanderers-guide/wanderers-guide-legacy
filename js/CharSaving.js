@@ -27,8 +27,8 @@ function hashCode(str) {
       (((prevHash << 5) - prevHash) + currVal.charCodeAt(0))|0, 0);
 }
 
-function isPotencyRune(runeID){ // Fund Runes have Hardcoded IDs
-    return runeID == 1 || runeID == 2 || runeID == 3 || runeID == 10 || runeID == 11 || runeID == 12;
+function isPotencyRune(runeID){ // Hardcoded - Fund Runes IDs
+    return runeID == 20 || runeID == 27 || runeID == 31 || runeID == 25 || runeID == 28 || runeID == 32;
 }
 
 module.exports = class CharSaving {
@@ -198,6 +198,7 @@ module.exports = class CharSaving {
                 quantity: quantity,
                 isShoddy: chosenItem.isShoddy,
                 currentHitPoints: chosenItem.hitPoints,
+                materialType: chosenItem.materialType,
                 hitPoints: chosenItem.hitPoints,
                 brokenThreshold: chosenItem.brokenThreshold,
                 hardness: chosenItem.hardness,
@@ -255,6 +256,7 @@ module.exports = class CharSaving {
             description: inUpdateValues.description,
             size: inUpdateValues.size,
             isShoddy: inUpdateValues.isShoddy,
+            materialType: inUpdateValues.materialType,
             hitPoints: inUpdateValues.hitPoints,
             brokenThreshold: inUpdateValues.brokenThreshold,
             hardness: inUpdateValues.hardness,

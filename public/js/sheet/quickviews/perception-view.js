@@ -94,7 +94,7 @@ function openPerceptionQuickview(data) {
             if(value == null){
                 qContent.append('<p class="has-text-centered">'+condition+'</p>');
             } else {
-                qContent.append('<p class="has-text-centered">'+value+' '+condition+'</p>');
+                qContent.append('<p class="has-text-centered">'+signNumber(value)+' '+condition+'</p>');
             }
         }
 

@@ -20,6 +20,12 @@ const Background = db.define('backgrounds', {
   isArchived: {
     type: Sequelize.INTEGER
   },
+  contentSrc: {
+    type: Sequelize.STRING
+  },
+  homebrewID: {
+    type: Sequelize.INTEGER
+  },
   version: {
     type: Sequelize.STRING
   }
