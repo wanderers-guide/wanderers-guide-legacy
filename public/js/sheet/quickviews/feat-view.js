@@ -17,6 +17,9 @@ function openFeatQuickview(data) {
     }
 
     $('#quickViewTitle').html(featNameInnerHTML);
+    if(data.Feat.level > 0){
+        $('#quickViewTitleRight').html('<span class="pr-2">Level '+data.Feat.level+'</span>');
+    }
     let qContent = $('#quickViewContent');
 
     let featTagsInnerHTML = '<div class="columns is-centered is-marginless"><div class="column is-9 is-paddingless"><div class="buttons is-marginless is-centered">';

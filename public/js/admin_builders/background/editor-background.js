@@ -24,9 +24,11 @@ socket.on("returnAdminBackgroundDetails", function(backgrounds){
     $("#inputContentSource").val(background.contentSrc);
 
     // Background Boost
-    let boostArray = background.boostOne.split(',');
-    for(let boost of boostArray){
-        $('#inputBoosts option[value="'+boost+'"]').attr('selected','selected');
+    if(background.boostOne != null){
+        let boostArray = background.boostOne.split(',');
+        for(let boost of boostArray){
+            $('#inputBoosts option[value="'+boost+'"]').attr('selected','selected');
+        }
     }
 
     $("#updateButton").click(function(){

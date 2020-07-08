@@ -147,6 +147,15 @@ socket.on("returnCharacterSheetInfo", function(charInfo){
 
     g_featMap = objToMap(charInfo.FeatObject);
     g_featChoiceArray = charInfo.ChoicesStruct.FeatArray;
+    g_featChoiceArray = g_featChoiceArray.sort(
+        function(a, b) {
+            if (a.value.level === b.value.level) {
+                // Name is only important when levels are the same
+                return a.value.name > b.value.name ? 1 : -1;
+            }
+            return a.value.level - b.value.level;
+        }
+    );
 
     g_spellMap = objToMap(charInfo.SpellObject);
     g_spellMap = new Map([...g_spellMap.entries()].sort(
@@ -1331,13 +1340,11 @@ function determineArmor(dexMod, strScore) {
         let profData = g_armorProfMap.get(armorStruct.Item.Item.id);
 
         let profNumUps = null;
-        let profBonus = null;
         if(profData != null){
             profNumUps = profData.NumUps;
-            profBonus = profData.UserBonus;
+            addStat('AC', 'USER_BONUS', profData.UserBonus);
         } else {
             profNumUps = 0;
-            profBonus = 0;
         }
 
         let profNumber = getProfNumber(profNumUps, g_character.level);
@@ -1362,8 +1369,9 @@ function determineArmor(dexMod, strScore) {
         }
 
         let shoddyPenalty = (armorStruct.InvItem.isShoddy == 1) ? -2 : 0;
+        let totalArmorBonus = armorStruct.Item.ArmorData.acBonus + brokenPenalty + shoddyPenalty;
 
-        let totalAC = 10 + dexMod + profNumber + armorStruct.Item.ArmorData.acBonus + profBonus + brokenPenalty + shoddyPenalty;
+        let totalAC = 10 + dexMod + profNumber + totalArmorBonus;
         totalAC += getStatTotal('AC');
 
         // Apply armor penalties to character...
@@ -1396,11 +1404,11 @@ function determineArmor(dexMod, strScore) {
             let armorRuneData = armorStruct.InvItem.itemRuneData;
 
             if(isArmorPotencyOne(armorRuneData.fundPotencyRuneID)){
-                totalAC += 1;
+                addStat('AC', 'ITEM_BONUS', 1);
             } else if(isArmorPotencyTwo(armorRuneData.fundPotencyRuneID)){
-                totalAC += 2;
+                addStat('AC', 'ITEM_BONUS', 2);
             } else if(isArmorPotencyThree(armorRuneData.fundPotencyRuneID)){
-                totalAC += 3;
+                addStat('AC', 'ITEM_BONUS', 3);
             }
 
             if(isResilient(armorRuneData.fundRuneID)){
@@ -1424,32 +1432,57 @@ function determineArmor(dexMod, strScore) {
 
         }
 
-
         // Final Product
-        $('#acNumber').html(totalAC);
+        let totalACDisplayed = (hasConditionals('AC')) ? totalAC+'<sup class="is-size-5 has-text-info">*</sup>' : totalAC;
+        $('#acNumber').html(totalACDisplayed);
         $('#acSection').attr('data-tooltip', armorStruct.InvItem.name);
+
+        $("#acSection").click(function(){
+            openQuickView('acView', {
+                TotalAC : totalAC,
+                DexMod : dexMod,
+                ArmorItemName : armorStruct.InvItem.name,
+                ProfNum : profNumber,
+                CharLevel : g_character.level,
+                NumUps : profNumUps,
+                ArmorBonus : totalArmorBonus,
+            });
+        });
 
     } else {
 
         let profData = g_armorProfMap.get(31); // No Armor Hidden Item ID
 
         let profNumUps = null;
-        let profBonus = null;
         if(profData != null){
             profNumUps = profData.NumUps;
-            profBonus = profData.UserBonus;
+            addStat('AC', 'USER_BONUS', profData.UserBonus);
         } else {
             profNumUps = 0;
-            profBonus = 0;
         }
 
         let profNumber = getProfNumber(profNumUps, g_character.level);
 
-        let totalAC = 10 + dexMod + profNumber + profBonus;
+        let totalArmorBonus = 0;
+
+        let totalAC = 10 + dexMod + profNumber + totalArmorBonus;
         totalAC += getStatTotal('AC');
 
-        $('#acNumber').html(totalAC);
+        let totalACDisplayed = (hasConditionals('AC')) ? totalAC+'<sup class="is-size-5 has-text-info">*</sup>' : totalAC;
+        $('#acNumber').html(totalACDisplayed);
         $('#acSection').attr('data-tooltip', 'Wearing Nothing');
+
+        $("#acSection").click(function(){
+            openQuickView('acView', {
+                TotalAC : totalAC,
+                DexMod : dexMod,
+                ArmorItemName : 'Wearing Nothing',
+                ProfNum : profNumber,
+                CharLevel : g_character.level,
+                NumUps : profNumUps,
+                ArmorBonus : totalArmorBonus,
+            });
+        });
 
     }
 
@@ -1763,6 +1796,10 @@ function otherProfBuild(content, prof, name, otherProfsNum, profData){
         prof = '<span class="is-underlined">'+prof+'</span>';
     } else {
         prof = '<span>'+prof+'</span>';
+    }
+
+    if(profData.UserBonus != 0 || profData.UserProfOverride){
+        prof += '<sup>*</sup>';
     }
 
     content.append('<div id="otherProf'+otherProfsNum+'" class="cursor-clickable"><span class="is-size-7 is-italic">'+prof+' - </span><span class="is-size-7 has-text-weight-bold">'+name+'</span></div>');

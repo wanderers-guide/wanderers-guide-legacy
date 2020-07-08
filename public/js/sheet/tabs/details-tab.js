@@ -46,7 +46,7 @@ function changeDetailsTab(type, data){
 
 function displayFeatsSection(data) {
 
-    $('#detailsTabContent').append('<div class="columns is-mobile is-marginless"><div class="column is-10"><p class="control has-icons-left"><input id="featsSearch" class="input" type="text" placeholder="Search Feats"><span class="icon is-left"><i class="fas fa-search" aria-hidden="true"></i></span></p></div><div class="column"><div class="select"><select id="featsFilterByType"><option value="All">All</option><option value="Class">Class</option><option value="Ancestry">Ancestry</option><option value="Other">Other</option></select></div></div></div><div id="featsContent" class="use-custom-scrollbar"></div>');
+    $('#detailsTabContent').append('<div class="columns is-mobile is-marginless"><div class="column is-10"><p class="control has-icons-left"><input id="featsSearch" class="input" type="text" placeholder="Search Feats"><span class="icon is-left"><i class="fas fa-search" aria-hidden="true"></i></span></p></div><div class="column"><div class="select"><select id="featsFilterByType"><option value="All">All</option><option value="Class">Class</option><option value="Ancestry">Ancestry</option><option value="Other">Other</option></select></div></div></div><div id="featsContent" class="use-custom-scrollbar" style="height: 520px; max-height: 520px; overflow-y: auto;"></div>');
 
     $('#featsFilterByType').val(g_selectedDetailsOptionValue);
     displayFeatContent(data);
@@ -117,7 +117,7 @@ function displayAncestryFeats(data, featsSearchValue){
 }
 
 function displayOtherFeats(data, featsSearchValue){
-    $('#featsContent').append('<p class="is-size-5 has-text-grey-light has-text-weight-bold text-left pl-5">General / Skill</p>');
+    $('#featsContent').append('<p class="is-size-5 has-text-grey-light has-text-weight-bold text-left pl-5">General / Other</p>');
     $('#featsContent').append('<hr class="hr-light" style="margin-top:-0.5em; margin-bottom:0em;">');
     featDisplayByType(data, null, featsSearchValue);
 }
@@ -178,7 +178,17 @@ function displayFeat(featData, featTags, featCount){
     let feat = featData.value;
     let featID = 'featDetailsEntry'+feat.id+"C"+featCount;
 
-    let featNameInnerHTML = '<span>'+feat.name+'</span>';
+    let featNameInnerHTML = '';
+    if(feat.level > 9){
+        featNameInnerHTML += '<span class="is-size-7 has-text-grey">'+feat.level+' - </span>';
+    } else if(feat.level > 0){
+        featNameInnerHTML += '<span class="is-size-7 has-text-grey pl-2">'+feat.level+' - </span>';
+    } else {
+        featNameInnerHTML += '<span class="is-size-7 has-text-grey pl-4 ml-2"></span>';
+    }
+
+    featNameInnerHTML += '<span>'+feat.name+'</span>';
+
     switch(feat.actions) {
         case 'FREE_ACTION': featNameInnerHTML += '<span class="px-2 pf-icon">[free-action]</span>'; break;
         case 'REACTION': featNameInnerHTML += '<span class="px-2 pf-icon">[reaction]</span>'; break;
@@ -202,11 +212,22 @@ function displayFeat(featData, featTags, featCount){
             break;
         default: break;
     }
+
+    if(feat.skillID != null){
+        let skill = null;
+        for(const [skillName, skillData] of g_skillMap.entries()){
+            if(skillData.Skill.id == feat.skillID) {
+                skill = skillData.Skill;
+                break;
+            }
+        }
+        featTagsInnerHTML += '<button class="button is-marginless mr-2 my-1 is-very-small is-info">'+skill.name+'</button>';
+    }
+
     for(const tag of featTags){
         featTagsInnerHTML += '<button class="button is-marginless mr-2 my-1 is-very-small is-info">'+tag.name+'</button>';
     }
     featTagsInnerHTML += '</div>';
-
 
     $('#featsContent').append('<div id="'+featID+'" class="columns is-mobile border-bottom border-dark-lighter cursor-clickable is-marginless mx-2"><div class="column is-paddingless pl-3"><p class="text-left pt-1">'+featNameInnerHTML+'</p></div><div class="column is-paddingless"><p class="">'+featTagsInnerHTML+'</p></div></div>');
     
@@ -233,7 +254,7 @@ function displayFeat(featData, featTags, featCount){
 
 function displayAbilitiesSection(data) {
 
-    $('#detailsTabContent').append('<div class="columns is-mobile is-marginless"><div class="column is-10"><p class="control has-icons-left"><input id="abilitiesSearch" class="input" type="text" placeholder="Search Abilities"><span class="icon is-left"><i class="fas fa-search" aria-hidden="true"></i></span></p></div><div class="column"><div class="select"><select id="abilitiesFilterByType"><option value="All">All</option><option value="Class">Class</option><option value="Ancestry">Ancestry</option><option value="Other">Other</option></select></div></div></div><div id="abilitiesContent" class="use-custom-scrollbar"></div>');
+    $('#detailsTabContent').append('<div class="columns is-mobile is-marginless"><div class="column is-10"><p class="control has-icons-left"><input id="abilitiesSearch" class="input" type="text" placeholder="Search Abilities"><span class="icon is-left"><i class="fas fa-search" aria-hidden="true"></i></span></p></div><div class="column"><div class="select"><select id="abilitiesFilterByType"><option value="All">All</option><option value="Class">Class</option><option value="Ancestry">Ancestry</option><option value="Other">Other</option></select></div></div></div><div id="abilitiesContent" class="use-custom-scrollbar" style="height: 520px; max-height: 520px; overflow-y: auto;"></div>');
 
     $('#abilitiesFilterByType').val(g_selectedDetailsOptionValue);
     displayAbilitiesContent(data);

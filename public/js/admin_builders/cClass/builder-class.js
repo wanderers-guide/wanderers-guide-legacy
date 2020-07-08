@@ -28,6 +28,14 @@ $(function () {
         });
         $("#selectedArmorTrained").html(armorNames);
     });
+
+    $("#inputArmorExpert").change(function(){
+        let armorNames = '- ';
+        $(this).find(":selected").each(function(){
+            armorNames += $(this).text()+', ';
+        });
+        $("#selectedArmorExpert").html(armorNames);
+    });
     
 
     $("#inputKeyAbility").change(function(){
@@ -224,9 +232,14 @@ function finishClass(isUpdate){
 
 
     let classArmorTrainedArray = $("#inputArmorTrained").val();
+    let classArmorExpertArray = $("#inputArmorExpert").val();
     let classArmor = '';
+
     for(let classArmorTrained of classArmorTrainedArray) {
         classArmor += 'T:::'+classArmorTrained+',,, ';
+    }
+    for(let classArmorExpert of classArmorExpertArray) {
+        classArmor += 'E:::'+classArmorExpert+',,, ';
     }
     classArmor = classArmor.slice(0, -4); // Trim off that last ',,, '
 
@@ -309,7 +322,7 @@ function finishClass(isUpdate){
     } else {
         requestPacket = "requestAdminAddClass";
     }
-    
+
     
     socket.emit(requestPacket,{
         classID,

@@ -40,7 +40,7 @@ function openWeaponsTab(data) {
     phyFeatWeaponMap.set(0, 56); // <- Fist, Hardcoded
 
     for(const physicalFeature of g_phyFeatArray){
-        if(physicalFeature.itemWeaponID != null){
+        if(physicalFeature.value.itemWeaponID != null){
             if(physicalFeature.value.overrides == null){
                 if(!phyFeatWeaponMap.has(physicalFeature.value.id)) {
                     phyFeatWeaponMap.set(physicalFeature.value.id, physicalFeature.value.itemWeaponID);

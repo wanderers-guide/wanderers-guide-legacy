@@ -99,6 +99,8 @@ function openQuickView(type, data) {
         openClassDCQuickview(data);
     } else if(type == 'conditionView'){
         openConditionQuickview(data);
+    } else if(type == 'acView'){
+        openACQuickview(data);
     }
 
 }

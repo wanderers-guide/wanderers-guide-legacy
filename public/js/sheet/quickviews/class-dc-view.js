@@ -29,7 +29,7 @@ function openClassDCQuickview(data) {
     qContent.append('<hr class="m-2">');
     qContent.append('<p class="has-text-centered"><strong>DC Breakdown</strong></p>');
 
-    let breakDownInnerHTML = '<p class="has-text-centered">'+data.TotalDC+' = ';
+    let breakDownInnerHTML = '<p class="has-text-centered">'+data.TotalDC+' = 10 + ';
 
     let keyAbilityName = lengthenAbilityType(g_classDetails.KeyAbility);
     keyAbilityName = (keyAbilityName == null) ? 'Unselected' : keyAbilityName;
@@ -90,7 +90,7 @@ function openClassDCQuickview(data) {
 
         qContent.append('<hr class="m-2">');
 
-        qContent.append('<p class="has-text-centered"><strong>Contitionals</strong></p>');
+        qContent.append('<p class="has-text-centered"><strong>Conditionals</strong></p>');
         
         for(const [condition, value] of conditionalStatMap.entries()){
             if(value == null){

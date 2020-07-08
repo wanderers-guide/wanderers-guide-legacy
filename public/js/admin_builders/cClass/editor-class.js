@@ -44,26 +44,33 @@ socket.on("returnAdminClassDetails", function(classObject, featsObject){
     $("#inputDescription").val(cClass.Class.description);
     $("#inputContentSource").val(cClass.Class.contentSrc);
 
-    let classWeaponsArray = cClass.Class.tWeapons.split(',,, ');
-    for(let classWeapon of classWeaponsArray) {
-        let weapData = classWeapon.split(':::');
-        if(weapData[0] === 'T'){
-            $('#inputWeaponsTrained option[value="'+weapData[1]+'"]').attr('selected','selected');
-        } else if(weapData[0] === 'E'){
-            $('#inputWeaponsExpert option[value="'+weapData[1]+'"]').attr('selected','selected');
+    if(cClass.Class.tWeapons != null){
+        let classWeaponsArray = cClass.Class.tWeapons.split(',,, ');
+        for(let classWeapon of classWeaponsArray) {
+            let weapData = classWeapon.split(':::');
+            if(weapData[0] === 'T'){
+                $('#inputWeaponsTrained option[value="'+weapData[1]+'"]').attr('selected','selected');
+            } else if(weapData[0] === 'E'){
+                $('#inputWeaponsExpert option[value="'+weapData[1]+'"]').attr('selected','selected');
+            }
         }
+        $('#inputWeaponsTrained').trigger("change");
+        $('#inputWeaponsExpert').trigger("change");
     }
-    $('#inputWeaponsTrained').trigger("change");
-    $('#inputWeaponsExpert').trigger("change");
 
-    let classArmorArray = cClass.Class.tArmor.split(',,, ');
-    for(let classArmor of classArmorArray) {
-        let armorData = classArmor.split(':::');
-        if(armorData[0] === 'T'){
-            $('#inputArmorTrained option[value="'+armorData[1]+'"]').attr('selected','selected');
+    if(cClass.Class.tArmor != null){
+        let classArmorArray = cClass.Class.tArmor.split(',,, ');
+        for(let classArmor of classArmorArray) {
+            let armorData = classArmor.split(':::');
+            if(armorData[0] === 'T'){
+                $('#inputArmorTrained option[value="'+armorData[1]+'"]').attr('selected','selected');
+            } else if(armorData[0] === 'E'){
+                $('#inputArmorExpert option[value="'+armorData[1]+'"]').attr('selected','selected');
+            }
         }
+        $('#inputArmorTrained').trigger("change");
+        $('#inputArmorExpert').trigger("change");
     }
-    $('#inputArmorTrained').trigger("change");
 
     // Class Abilities //
     for(let classAbil of cClass.Abilities){

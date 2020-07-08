@@ -657,7 +657,7 @@ module.exports = class CharGathering {
             for(const specialsData of specialsDataArray){
                 if(specialsData.value == 1){
                     hasWeapSpecial = true;
-                } else if(specialsData.value == 1){
+                } else if(specialsData.value == 2){
                     hasWeapSpecialGreater = true;
                 }
             }

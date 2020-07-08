@@ -99,7 +99,7 @@ function openSkillQuickview(data) {
 
         qContent.append('<hr class="m-2">');
 
-        qContent.append('<p class="has-text-centered"><strong>Contitionals</strong></p>');
+        qContent.append('<p class="has-text-centered"><strong>Conditionals</strong></p>');
         
         for(const [condition, value] of conditionalStatMap.entries()){
             if(value == null){

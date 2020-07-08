@@ -103,13 +103,13 @@
 }
 
 .message-header, .card-header {
-    background-color: hsl(0, 0%, 21%);
+    background-color: hsl(212, 0%, 17%);
     border-color: hsl(0, 0%, 13%);
     color: hsl(0, 0%, 73%);
 }
 
 .message {
-    background-color: hsl(212, 1%, 25%);
+    background-color: hsl(212, 0%, 19%);
     border-color: #282828;
 }
 
