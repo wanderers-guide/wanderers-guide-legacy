@@ -1,7 +1,7 @@
 
 function openDetailsTab(data){
 
-    $('#tabContent').append('<div class="tabs is-small is-centered is-marginless"><ul class="details-tabs"><li><a id="detailsTabFeats">Feats</a></li><li><a id="detailsTabAbilities">Abilities</a></li><li><a id="detailsTabDescription">Description</a></li></ul></div>');
+    $('#tabContent').append('<div class="tabs is-centered is-marginless"><ul class="details-tabs"><li><a id="detailsTabFeats">Feats</a></li><li><a id="detailsTabAbilities">Abilities</a></li><li><a id="detailsTabDescription">Description</a></li></ul></div>');
 
     $('#tabContent').append('<div id="detailsTabContent"></div>');
 
