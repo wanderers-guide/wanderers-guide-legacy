@@ -65,6 +65,9 @@ function giveLang(srcStruct, locationID, bonusOnly){
         return hasSameSrc(lang, srcStruct);
     });
 
+    console.log(langArray);
+    console.log(savedLang);
+
     for(const [langID, langData] of ascLangMap.entries()){
         
         if(bonusOnly){
@@ -108,6 +111,7 @@ function giveLang(srcStruct, locationID, bonusOnly){
 
             } else {
 
+                $('.'+selectLangControlShellClass).removeClass("is-danger");
                 $('.'+selectLangControlShellClass).removeClass("is-info");
 
                 let langID = $(this).val();
@@ -117,7 +121,6 @@ function giveLang(srcStruct, locationID, bonusOnly){
 
                     let langArray = ascChoiceStruct.LangArray;
                     if(!hasDuplicateLang(langArray, langID)) {
-                        $('.'+selectLangControlShellClass).removeClass("is-danger");
 
                         $('#'+langDescriptionID).html('');
 
@@ -136,6 +139,11 @@ function giveLang(srcStruct, locationID, bonusOnly){
                 } else {
 
                     $('#'+langDescriptionID).html('');
+
+                    socket.emit("requestLanguageChange",
+                        getCharIDFromURL(),
+                        srcStruct,
+                        langID);
 
                 }
                 
