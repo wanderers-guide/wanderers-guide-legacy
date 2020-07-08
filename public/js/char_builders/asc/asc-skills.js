@@ -52,7 +52,7 @@ function giveSkill(srcStruct, locationID, profType){
     let selectIncreaseControlShellClass = selectIncreaseID+'ControlShell';
     let increaseDescriptionID = "selectIncreaseDescription"+locationID+"-"+srcStruct.sourceCodeSNum;
 
-    $('#'+locationID).append('<div class="field"><div class="select '+selectIncreaseControlShellClass+'"><select id="'+selectIncreaseID+'" class="selectIncrease"></select></div></div>');
+    $('#'+locationID).append('<div class="field is-grouped is-grouped-centered is-marginless"><div class="select '+selectIncreaseControlShellClass+'"><select id="'+selectIncreaseID+'" class="selectIncrease"></select></div></div>');
 
     $('#'+locationID).append('<div id="'+increaseDescriptionID+'"></div>');
 
@@ -110,7 +110,7 @@ function giveSkill(srcStruct, locationID, profType){
                             $('#'+increaseDescriptionID).html('');
                         } else {
                             $('.'+selectIncreaseControlShellClass).addClass("is-danger");
-                            $('#'+increaseDescriptionID).html('<p class="help is-danger">You cannot increase the proficiency of this skill any further at your current level!</p>');
+                            $('#'+increaseDescriptionID).html('<p class="help is-danger text-center">You cannot increase the proficiency of this skill any further at your current level!</p>');
                         }
                     } else {
                         canSave = true;

@@ -517,12 +517,12 @@ module.exports = class CharGathering {
                     let langMap = new Map();
 
                     for(const lang of languages){
-                        let isBonus = ancestLangs.find(ancestLang => {
+                        let bonusLangData = ancestLangs.find(ancestLang => {
                             if(ancestLang.langID === lang.id) {
                                 return ancestLang.isBonus == 1;
                             }
                         });
-
+                        let isBonus = (bonusLangData != null);
                         langMap.set(lang.id, {Lang : lang, IsBonus : isBonus});
                     }
 
@@ -631,8 +631,9 @@ module.exports = class CharGathering {
     static getNoteField(charID, notesData) {
         let noteFieldID = srcStructToCode(charID, 'notesField', notesData);
         return NoteField.findOne({ where: { id: noteFieldID, charID: charID } })
-        .then(function(noteField) {
+        .then((noteField) => {
             if(noteField != null){
+                console.log(notesData);
                 notesData.text = noteField.text;
                 notesData.placeholderText = noteField.placeholderText;
             }

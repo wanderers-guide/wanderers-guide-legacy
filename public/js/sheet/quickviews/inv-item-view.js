@@ -4,6 +4,9 @@ function openInvItemQuickview(data) {
     let viewOnly = (data.InvItem.viewOnly != null) ? true : false;
 
     let invItemName = data.InvItem.name;
+    if(data.Item.Item.level > 0){
+        invItemName += '<sup class="has-text-grey-light is-size-7 is-italic"> Lvl '+data.Item.Item.level+'</sup>';
+    }
     if(data.InvItem.name != data.Item.Item.name && data.Item.Item.id != 62){ // Hardcoded New Item ID
         invItemName += '<p class="is-inline pl-1 is-size-7 is-italic"> ( '+data.Item.Item.name+' )</p>';
     }

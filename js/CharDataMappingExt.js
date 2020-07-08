@@ -51,7 +51,7 @@ module.exports = class CharDataMappingExt {
         return CharDataMapping.getDataSingle(charID, 'abilityBonus', srcStruct)
         .then((dataValue) => {
             if(dataValue != null) {
-                let vParts = dataValue.split(getSeparator());
+                let vParts = dataValue.value.split(getSeparator());
                 return { Ability: vParts[0], Bonus: vParts[1] };
             } else {
                 return null;

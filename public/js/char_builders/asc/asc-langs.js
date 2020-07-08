@@ -17,7 +17,11 @@ function initLangProcessing(ascStatement, srcStruct, locationID) {
 socket.on("returnASCLangs", function(ascStatement, srcStruct, locationID, langObject){
     let langMap = objToMap(langObject);
     //console.log("Setting langMap to new one...");
-    ascLangMap = langMap;
+    ascLangMap = new Map([...langMap.entries()].sort(
+        function(a, b) {
+            return a[1].Lang.name > b[1].Lang.name ? 1 : -1;
+        })
+    );
     processingLangs(ascStatement, srcStruct, locationID);
 });
 
@@ -47,9 +51,9 @@ function giveLang(srcStruct, locationID, bonusOnly){
     let selectLangControlShellClass = selectLangID+'ControlShell';
     let langDescriptionID = selectLangID+"Description";
 
-    $('#'+locationID).append('<div class="field"><div class="select '+selectLangControlShellClass+'"><select id="'+selectLangID+'" class="selectLang"></select></div></div>');
+    $('#'+locationID).append('<div class="field is-grouped is-grouped-centered is-marginless"><div class="select '+selectLangControlShellClass+'"><select id="'+selectLangID+'" class="selectLang"></select></div></div>');
 
-    $('#'+locationID).append('<div class="columns is-centered"><div id="'+langDescriptionID+'" class="column is-8"></div></div>');
+    $('#'+locationID).append('<div class="columns is-centered is-marginless pb-2"><div id="'+langDescriptionID+'" class="column is-8 is-paddingless"></div></div>');
 
     $('#'+selectLangID).append('<option value="chooseDefault">Choose a Language</option>');
     $('#'+selectLangID).append('<hr class="dropdown-divider"></hr>');
@@ -57,11 +61,9 @@ function giveLang(srcStruct, locationID, bonusOnly){
     // Set saved prof choices to savedProfData
     let langArray = ascChoiceStruct.LangArray;
 
-    let lang = langArray.find(lang => {
+    let savedLang = langArray.find(lang => {
         return hasSameSrc(lang, srcStruct);
     });
-
-    let savedLang = lang;
 
     for(const [langID, langData] of ascLangMap.entries()){
         
@@ -69,7 +71,7 @@ function giveLang(srcStruct, locationID, bonusOnly){
 
             if(langData.IsBonus) {
 
-                if(savedLang != null && savedLang.id == langID) {
+                if(savedLang != null && savedLang.value.id == langID) {
                     $('#'+selectLangID).append('<option value="'+langData.Lang.id+'" selected>'+langData.Lang.name+'</option>');
                 } else {
                     $('#'+selectLangID).append('<option value="'+langData.Lang.id+'">'+langData.Lang.name+'</option>');
@@ -79,7 +81,7 @@ function giveLang(srcStruct, locationID, bonusOnly){
 
         } else {
 
-            if(savedLang != null && savedLang.id == langID) {
+            if(savedLang != null && savedLang.value.id == langID) {
                 $('#'+selectLangID).append('<option value="'+langData.Lang.id+'" selected>'+langData.Lang.name+'</option>');
             } else {
                 $('#'+selectLangID).append('<option value="'+langData.Lang.id+'">'+langData.Lang.name+'</option>');
@@ -109,7 +111,6 @@ function giveLang(srcStruct, locationID, bonusOnly){
                 $('.'+selectLangControlShellClass).removeClass("is-info");
 
                 let langID = $(this).val();
-                let lang = ascLangMap.get(langID).Lang;
 
                 // Save lang
                 if(triggerSave == null || triggerSave) {
@@ -128,7 +129,7 @@ function giveLang(srcStruct, locationID, bonusOnly){
                     } else {
                         $('.'+selectLangControlShellClass).addClass("is-danger");
 
-                        $('#'+langDescriptionID).html('<p class="help is-danger">You already know this language!</p>');
+                        $('#'+langDescriptionID).html('<p class="help is-danger text-center">You already know this language!</p>');
 
                     }
                 

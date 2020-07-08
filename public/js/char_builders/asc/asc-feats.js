@@ -153,7 +153,9 @@ function displayFeatChoice(srcStruct, locationID, selectionName, tagsArray, feat
     let descriptionFeatID = "descriptionFeat"+locationID+"-"+srcStruct.sourceCodeSNum;
     let selectFeatControlShellClass = selectFeatID+'ControlShell';
 
-    $('#'+locationID).append('<div class="field"><div class="select '+selectFeatControlShellClass+'"><select id="'+selectFeatID+'" class="selectFeat"></select></div><div id="'+descriptionFeatID+'"></div></div>');
+    $('#'+locationID).append('<div class="field is-grouped is-grouped-centered is-marginless"><div class="select '+selectFeatControlShellClass+'"><select id="'+selectFeatID+'" class="selectFeat"></select></div></div>');
+
+    $('#'+locationID).append('<div id="'+descriptionFeatID+'"></div>');
 
     $('#'+selectFeatID).append('<option value="chooseDefault">'+selectionName+'</option>');
 
@@ -270,7 +272,7 @@ function displayFeatChoice(srcStruct, locationID, selectionName, tagsArray, feat
                     $('.'+selectFeatControlShellClass).addClass("is-danger");
 
                     // Display feat as issue
-                    $('#'+descriptionFeatID).html('<p class="help is-danger">You cannot select a feat more than once unless it states otherwise.</p>');
+                    $('#'+descriptionFeatID).html('<p class="help is-danger text-center">You cannot select a feat more than once unless it states otherwise.</p>');
 
                 } else {
                     $('.'+selectFeatControlShellClass).removeClass("is-danger");

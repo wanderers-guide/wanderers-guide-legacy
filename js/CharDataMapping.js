@@ -61,7 +61,7 @@ module.exports = class CharDataMapping {
         }).then((charData) => {
             console.log(charData);
             if(charData != null){
-                return charData.value;
+                return charData;
             } else {
                 return null;
             }

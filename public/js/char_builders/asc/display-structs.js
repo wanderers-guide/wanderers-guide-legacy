@@ -71,7 +71,7 @@ function displayFeat(locationID, feat){
       featInnerHTML += '<div class="feat-attrib"><span><strong>Special: </strong></span><span class="has-text-justified">'+feat.Feat.special+'</span></div>';
     }
   
-    featInnerHTML += '<div id="'+locationID+'Code"></div>';
+    featInnerHTML += '<div id="'+locationID+'Code" class="pt-1"></div>';
   
     featInnerHTML += '</div></div>';
   
