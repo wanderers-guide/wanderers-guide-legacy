@@ -69,44 +69,58 @@ socket.on("returnFinalizeDetails", function(character, abilObject, cClass, ances
         $(".finalize-content").removeClass("is-hidden");
         
         let skillsSection = $('#trainSkills');
-        for (let i = 0; i < getMod(intScore)+cClass.tSkillsMore; i++) {
+        for (let i = 0; i < 20; i++) {
 
-            let skillsSectionID = "skillSelection"+i;
+            if(i < getMod(intScore)+cClass.tSkillsMore){
+                let skillsSectionID = "skillSelection"+i;
             
-            skillsSection.append('<div id="'+skillsSectionID+'"></div>');
-            
-            let srcStruct = {
-                sourceType: 'class',
-                sourceLevel: 1,
-                sourceCode: 'inits-bonus-'+i,
-                sourceCodeSNum: 'a',
-            };
-            processCode(
-                'GIVE-SKILL=T',
-                srcStruct,
-                skillsSectionID);
+                skillsSection.append('<div id="'+skillsSectionID+'"></div>');
+                
+                let srcStruct = {
+                    sourceType: 'class',
+                    sourceLevel: 1,
+                    sourceCode: 'inits-bonus-'+i,
+                    sourceCodeSNum: 'a',
+                };
+                processCode(
+                    'GIVE-SKILL=T',
+                    srcStruct,
+                    skillsSectionID);
+            } else {
+                processCode(
+                    'GIVE-SKILL=T',
+                    srcStruct,
+                    null);
+            }
             
         }
 
         let langsSection = $('#learnLanguages');
         let additionalLangs = getMod(intScore);
         if(ancestry.name == 'Human'){ additionalLangs++; } // Hardcoded - ancestry named Human gains +1 langs. 
-        for (let i = 0; i < additionalLangs; i++) {
+        for (let i = 0; i < 12; i++) {
 
-            let langSelectionID = "langSelection"+i;
+            if(i < additionalLangs){
+                let langSelectionID = "langSelection"+i;
             
-            langsSection.append('<div id="'+langSelectionID+'"></div>');
-            
-            let srcStruct = {
-                sourceType: 'class',
-                sourceLevel: 1,
-                sourceCode: 'inits-bonus-'+i,
-                sourceCodeSNum: 'a',
-            };
-            processCode(
-                'GIVE-LANG-BONUS-ONLY',
-                srcStruct,
-                langSelectionID);
+                langsSection.append('<div id="'+langSelectionID+'"></div>');
+                
+                let srcStruct = {
+                    sourceType: 'class',
+                    sourceLevel: 1,
+                    sourceCode: 'inits-bonus-'+i,
+                    sourceCodeSNum: 'a',
+                };
+                processCode(
+                    'GIVE-LANG-BONUS-ONLY',
+                    srcStruct,
+                    langSelectionID);
+            } else {
+                processCode(
+                    'GIVE-LANG-BONUS-ONLY',
+                    srcStruct,
+                    null);
+            }
             
         }
 

@@ -117,7 +117,7 @@ function displayAncestryFeats(data, featsSearchValue){
 }
 
 function displayOtherFeats(data, featsSearchValue){
-    $('#featsContent').append('<p class="is-size-5 has-text-grey-light has-text-weight-bold text-left pl-5">General / Other</p>');
+    $('#featsContent').append('<p class="is-size-5 has-text-grey-light has-text-weight-bold text-left pl-5">Other</p>');
     $('#featsContent').append('<hr class="hr-light" style="margin-top:-0.5em; margin-bottom:0em;">');
     featDisplayByType(data, null, featsSearchValue);
 }
