@@ -65,9 +65,6 @@ function giveLang(srcStruct, locationID, bonusOnly){
         return hasSameSrc(lang, srcStruct);
     });
 
-    console.log(langArray);
-    console.log(savedLang);
-
     for(const [langID, langData] of ascLangMap.entries()){
         
         if(bonusOnly){

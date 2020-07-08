@@ -88,9 +88,9 @@ socket.on("returnFinalizeDetails", function(character, abilObject, cClass, ances
                     srcStruct,
                     skillsSectionID);
             } else {
-                processCode(
-                    'GIVE-SKILL=T',
-                    srcStruct,
+                socket.emit("requestProficiencyChange",
+                    getCharIDFromURL(),
+                    {srcStruct, isSkill : true},
                     null);
             }
             
@@ -118,8 +118,8 @@ socket.on("returnFinalizeDetails", function(character, abilObject, cClass, ances
                     srcStruct,
                     langSelectionID);
             } else {
-                processCode(
-                    'GIVE-LANG-BONUS-ONLY',
+                socket.emit("requestLanguageChange",
+                    getCharIDFromURL(),
                     srcStruct,
                     null);
             }
