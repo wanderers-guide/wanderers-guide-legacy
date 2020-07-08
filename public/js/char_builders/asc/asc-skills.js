@@ -54,7 +54,7 @@ function giveSkill(srcStruct, locationID, profType){
 
     $('#'+locationID).append('<div class="field is-grouped is-grouped-centered is-marginless"><div class="select '+selectIncreaseControlShellClass+'"><select id="'+selectIncreaseID+'" class="selectIncrease"></select></div></div>');
 
-    $('#'+locationID).append('<div id="'+increaseDescriptionID+'"></div>');
+    $('#'+locationID).append('<div id="'+increaseDescriptionID+'" class="pb-2"></div>');
 
     $('#'+selectIncreaseID).append('<option value="chooseDefault">Choose a Skill</option>');
     $('#'+selectIncreaseID).append('<hr class="dropdown-divider"></hr>');

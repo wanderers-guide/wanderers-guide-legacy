@@ -71,17 +71,18 @@ socket.on("returnFinalizeDetails", function(character, abilObject, cClass, ances
         let skillsSection = $('#trainSkills');
         for (let i = 0; i < 20; i++) {
 
+            let srcStruct = {
+                sourceType: 'class',
+                sourceLevel: 1,
+                sourceCode: 'inits-bonus-'+i,
+                sourceCodeSNum: 'a',
+            };
+
             if(i < getMod(intScore)+cClass.tSkillsMore){
                 let skillsSectionID = "skillSelection"+i;
             
                 skillsSection.append('<div id="'+skillsSectionID+'"></div>');
                 
-                let srcStruct = {
-                    sourceType: 'class',
-                    sourceLevel: 1,
-                    sourceCode: 'inits-bonus-'+i,
-                    sourceCodeSNum: 'a',
-                };
                 processCode(
                     'GIVE-SKILL=T',
                     srcStruct,
@@ -100,17 +101,18 @@ socket.on("returnFinalizeDetails", function(character, abilObject, cClass, ances
         if(ancestry.name == 'Human'){ additionalLangs++; } // Hardcoded - ancestry named Human gains +1 langs. 
         for (let i = 0; i < 12; i++) {
 
+            let srcStruct = {
+                sourceType: 'class',
+                sourceLevel: 1,
+                sourceCode: 'inits-bonus-'+i,
+                sourceCodeSNum: 'a',
+            };
+
             if(i < additionalLangs){
                 let langSelectionID = "langSelection"+i;
             
                 langsSection.append('<div id="'+langSelectionID+'"></div>');
                 
-                let srcStruct = {
-                    sourceType: 'class',
-                    sourceLevel: 1,
-                    sourceCode: 'inits-bonus-'+i,
-                    sourceCodeSNum: 'a',
-                };
                 processCode(
                     'GIVE-LANG-BONUS-ONLY',
                     srcStruct,
