@@ -443,30 +443,32 @@ function displayCurrentClass(classStruct, saving) {
 
     $('#classAbilities').html('<div id="classAbilitiesTabs"></div><div id="classAbilitiesContent"></div>');
 
-    let abilityTabsArray = [];
+    let abilityTabsTempSet = new Set();
     let abilityNameSet = new Set();
     for(const classAbility of classStruct.Abilities) {
         if(classAbility.selectType != 'SELECT_OPTION') {
-            if(abilityNameSet.has(classAbility.name) && !abilityTabsArray.includes(classAbility.name)){
-                abilityTabsArray.push(classAbility.name);
+            if(abilityNameSet.has(classAbility.name)){
+                abilityTabsTempSet.add(classAbility.name);
+            } else {
+                abilityNameSet.add(classAbility.name);
             }
-            abilityNameSet.add(classAbility.name);
         }
     }
 
-    abilityTabsArray = abilityTabsArray.sort(
-        function(a, b) {
-            return a > b ? 1 : -1;
+    let abilityTabsSet = new Set();
+    for(const abilName of abilityNameSet){
+        if(abilityTabsTempSet.has(abilName)){
+            abilityTabsSet.add(abilName);
         }
-    );
+    }
 
     let abilityTabHTML = '';
-    for(const abilityTab of abilityTabsArray){
+    for(const abilityTab of abilityTabsSet){
         let hashOfName = hashCode(abilityTab);
         abilityTabHTML += '<li><a id="abilityTab'+hashOfName+'">'+abilityTab+'</a></li>';
         $('#classAbilitiesContent').append('<div id="abilityContent'+hashOfName+'" class="is-hidden"></div>');
     }
-    abilityTabHTML += '<li><a id="abilityTabOther">Other</a></li>';
+    abilityTabHTML += '<li><a id="abilityTabOther">Extra Features</a></li>';
     $('#classAbilitiesContent').append('<div id="abilityContentOther" class="is-hidden"></div>');
 
     $('#classAbilitiesTabs').html('<div class="tabs is-centered is-marginless"><ul class="ability-tabs">'+abilityTabHTML+'</ul></div>');
@@ -481,7 +483,7 @@ function displayCurrentClass(classStruct, saving) {
             let classAbilityCodeID = "classAbilityCode"+classAbility.id;
 
             let tabContent = null;
-            if(abilityTabsArray.includes(classAbility.name)){
+            if(abilityTabsSet.has(classAbility.name)){
 
                 let hashOfName = hashCode(classAbility.name);
                 tabContent = $('#abilityContent'+hashOfName);
@@ -622,6 +624,16 @@ function displayCurrentClass(classStruct, saving) {
 
     processCode_ClassAbilities(classStruct.Abilities);
 
+
+    
+    for(let abilityTab of $('.ability-tabs a')){
+        let tabNameHash = $(abilityTab).attr('id').replace('abilityTab', '');
+        if($('#abilityContent'+tabNameHash).html() == ''){
+            $(abilityTab).parent().addClass('is-hidden');
+        } else {
+            $(abilityTab).parent().removeClass('is-hidden');
+        }
+    }
 
     $('.ability-tabs a').click(function(){
         $('#classAbilitiesContent > div').addClass('is-hidden');

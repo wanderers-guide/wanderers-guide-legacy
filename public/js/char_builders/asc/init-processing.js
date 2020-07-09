@@ -2,7 +2,7 @@
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Apeiron Styling Code ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 // ======================================================================================== //
 
-let processingDebug = true;
+let processingDebug = false;
 
 // Global Variables //
 let codeQueue = [];

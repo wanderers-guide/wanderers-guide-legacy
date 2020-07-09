@@ -54,7 +54,7 @@
     color:rgba(219,219,219,.4);
 }
 
-.button.is-link.is-inverted {
+.button.is-info.is-inverted {
     background-color: #282828;
     color: #3298dc;
 }
@@ -69,7 +69,7 @@
     background: linear-gradient(to left,#999 50%,#999 50%);
 }
 
-.steps .step-item.is-link.is-active .step-marker {
+.steps .step-item.is-info.is-active .step-marker {
     background-color: #282828;
 }
 
@@ -85,7 +85,7 @@
     color: rgb(184, 184, 184);
 }
 
-.button.is-link.is-inverted:hover {
+.button.is-info.is-inverted:hover {
     background-color: #282828;
 }
 
@@ -136,10 +136,10 @@
 }
 
 .step-marker a {
-    color: hsl(217, 71%, 53%);
+    color: hsl(204, 86%, 53%);
 }
 .step-marker a:hover {
-    color: hsl(217, 71%, 53%);
+    color: hsl(204, 86%, 53%);
 }
 
 li {
@@ -208,7 +208,7 @@ hr {
 
 /* Builder A Link */
 
-.builder-step-icon-link {
+.builder-step-icon-info {
     color: inherit;
 }
 
