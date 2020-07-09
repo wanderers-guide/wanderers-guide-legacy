@@ -208,6 +208,9 @@ module.exports = class CharGathering {
     }
 
     static getAllItems(){
+
+        console.log('~~~~~~~~~~~ REQUESTING ALL ITEMS ~~~~~~~~~~~');
+
         return Item.findAll()
         .then((items) => {
             return Tag.findAll()
@@ -335,6 +338,9 @@ module.exports = class CharGathering {
     }
 
     static getAllSkills(charID) {
+
+        console.log('~~~~~~~~~~~ REQUESTING ALL SKILLS ~~~~~~~~~~~');
+
         return Skill.findAll()
         .then((skills) => {
             return CharDataMappingExt.getDataAllProficiencies(charID)
@@ -396,6 +402,9 @@ module.exports = class CharGathering {
     }
 
     static getAllAncestries(includeTag) {
+
+        console.log('~~~~~~~~~~~ REQUESTING ALL ANCESTRIES ~~~~~~~~~~~');
+
         return Ancestry.findAll()
         .then((ancestries) => {
             return Heritage.findAll({
@@ -689,6 +698,9 @@ module.exports = class CharGathering {
 
 
     static getSpellData(charID){
+
+        console.log('~~~~~~~~~~~ REQUESTING SPELL DATA ~~~~~~~~~~~');
+
         return CharSpells.getSpellSlots(charID)
         .then((spellSlotsMap) => {
 
@@ -752,6 +764,8 @@ module.exports = class CharGathering {
     
 
     static getCharChoices(charID) {
+
+        console.log('~~~~~~~~~~~ REQUESTING CHAR CHOICES ~~~~~~~~~~~');
 
         return Character.findOne({ where: { id: charID} })
         .then((character) => {
@@ -1015,6 +1029,9 @@ module.exports = class CharGathering {
     
 
     static getFinalProfs(charID) {
+
+        console.log('~~~~~~~~~~~ REQUESTING FINAL PROFS ~~~~~~~~~~~');
+
         return CharDataMappingExt.getDataAllProficiencies(charID)
         .then((profDataArray) => {
             let newProfMap = new Map();
@@ -1130,6 +1147,8 @@ module.exports = class CharGathering {
 
     static getCharacterInfo(charID){
 
+        console.log('~~~~~~~~~~~ REQUESTING CHAR INFO ~~~~~~~~~~~');
+
         return Character.findOne({ where: { id: charID } })
         .then((character) => {
             return Background.findOne({ where: { id: character.backgroundID} })
@@ -1225,58 +1244,42 @@ module.exports = class CharGathering {
 
     static getAllCharacterBuilderInfo(character) {
 
-        return Class.findOne({ where: { id: character.classID} })
-        .then((charClass) => {
-            return Background.findOne({ where: { id: character.backgroundID} })
-            .then((charBackground) => {
-                return Ancestry.findOne({ where: { id: character.ancestryID} })
-                .then((charAncestry) => {
-                    return Heritage.findOne({ where: { id: character.heritageID} })
-                    .then((charHeritage) => {
-                        let srcStruct = {
-                            sourceType: 'other',
-                            sourceLevel: 1,
-                            sourceCode: 'none',
-                            sourceCodeSNum: 'a',
-                        };
-                        return CharDataMappingExt.getDataSingleAbilityBonus(character.id, srcStruct)
-                        .then((bonusData) => {
+        let srcStruct = {
+            sourceType: 'other',
+            sourceLevel: 1,
+            sourceCode: 'none',
+            sourceCodeSNum: 'a',
+        };
+        return CharDataMappingExt.getDataSingleAbilityBonus(character.id, srcStruct)
+        .then((bonusData) => {
 
-                            let charAbilities = null;
-                            if(bonusData != null) {
-                                let bonusArray = JSON.parse(bonusData.Bonus);
-                                charAbilities = {
-                                    STR : 10 + parseInt(bonusArray[0]),
-                                    DEX : 10 + parseInt(bonusArray[1]),
-                                    CON : 10 + parseInt(bonusArray[2]),
-                                    INT : 10 + parseInt(bonusArray[3]),
-                                    WIS : 10 + parseInt(bonusArray[4]),
-                                    CHA : 10 + parseInt(bonusArray[5]),
-                                };
-                            } else {
-                                charAbilities = {
-                                    STR : 10,
-                                    DEX : 10,
-                                    CON : 10,
-                                    INT : 10,
-                                    WIS : 10,
-                                    CHA : 10,
-                                };
-                            }
-                                
-                            return {
-                                char: character,
-                                cClass: charClass,
-                                background: charBackground,
-                                ancestry: charAncestry,
-                                heritage: charHeritage,
-                                charAbilities: charAbilities
-                            };
+            let charAbilities = null;
+            if(bonusData != null) {
+                let bonusArray = JSON.parse(bonusData.Bonus);
+                charAbilities = {
+                    STR : 10 + parseInt(bonusArray[0]),
+                    DEX : 10 + parseInt(bonusArray[1]),
+                    CON : 10 + parseInt(bonusArray[2]),
+                    INT : 10 + parseInt(bonusArray[3]),
+                    WIS : 10 + parseInt(bonusArray[4]),
+                    CHA : 10 + parseInt(bonusArray[5]),
+                };
+            } else {
+                charAbilities = {
+                    STR : 10,
+                    DEX : 10,
+                    CON : 10,
+                    INT : 10,
+                    WIS : 10,
+                    CHA : 10,
+                };
+            }
+                
+            return {
+                char: character,
+                charAbilities: charAbilities,
+            };
 
-                        });
-                    });
-                });
-            });
         });
 
     }

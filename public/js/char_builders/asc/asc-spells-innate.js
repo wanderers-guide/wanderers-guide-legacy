@@ -1,36 +1,5 @@
 
 //------------------------- Processing Innate Spells -------------------------//
-function initInnateSpellProcessing(ascStatement, srcStruct, locationID){
-    if(ascSpellMap == null) {
-        //console.log("Did not find valid spellMap :(");
-        socket.emit("requestASCSpells",
-                getCharIDFromURL(),
-                ascStatement,
-                srcStruct,
-                locationID);
-    } else {
-        //console.log("> Found a valid spellMap!");
-        processingInnateSpells(ascStatement, srcStruct, locationID);
-    }
-}
-
-socket.on("returnASCSpells", function(ascStatement, srcStruct, locationID, spellObject){
-    let spellsMap = objToMap(spellObject);
-    spellsMap = new Map([...spellsMap.entries()].sort(
-        function(a, b) {
-            if (a[1].Spell.level === b[1].Spell.level) {
-                // Name is only important when levels are the same
-                return a[1].Spell.name > b[1].Spell.name ? 1 : -1;
-            }
-            return b[1].Spell.level - a[1].Spell.level;
-        })
-    );
-    //console.log("Setting spellMap to new one...");
-    ascSpellMap = spellsMap;
-    processingInnateSpells(ascStatement, srcStruct, locationID);
-});
-
-
 function processingInnateSpells(ascStatement, srcStruct, locationID){
 
     if(ascStatement.includes("GIVE-INNATE-SPELL")){// GIVE-INNATE-SPELL=3:divine:1
@@ -122,41 +91,39 @@ function displayInnateSpellChoice(srcStruct, locationID, spellLevel, spellTradit
     // On spell choice change
     $('#'+selectSpellID).change(function(event, triggerSave) {
 
-        if(!($(this).is(":hidden"))) {
+        let spellID = $(this).val();
+        let spell = ascSpellMap.get(spellID+"");
 
-            let spellID = $(this).val();
-            let spell = ascSpellMap.get(spellID+"");
+        if($(this).val() == "chooseDefault" || spell == null){
+            $('.'+selectSpellControlShellClass).addClass("is-info");
 
-            if($(this).val() == "chooseDefault" || spell == null){
-                $('.'+selectSpellControlShellClass).addClass("is-info");
+            // Display nothing
+            $('#'+descriptionSpellID).html('');
 
-                // Display nothing
-                $('#'+descriptionSpellID).html('');
+            socket.emit("requestASCInnateSpellChange",
+                getCharIDFromURL(),
+                srcStruct,
+                null,
+                selectSpellControlShellClass);
 
+        } else {
+            $('.'+selectSpellControlShellClass).removeClass("is-info");
+
+            // Display spell
+            displaySpell(descriptionSpellID, spell);
+
+            // Save spell
+            if(triggerSave == null || triggerSave) {
+                $('.'+selectSpellControlShellClass).addClass("is-loading");
                 socket.emit("requestASCInnateSpellChange",
                     getCharIDFromURL(),
                     srcStruct,
-                    null,
+                    {name: spell.Spell.name, level: spell.Spell.level, tradition: spellTradition, tPd: timesPerDay},
                     selectSpellControlShellClass);
-
-            } else {
-                $('.'+selectSpellControlShellClass).removeClass("is-info");
-
-                // Display spell
-                displaySpell(descriptionSpellID, spell);
-
-                // Save spell
-                if(triggerSave == null || triggerSave) {
-                    $('.'+selectSpellControlShellClass).addClass("is-loading");
-                    socket.emit("requestASCInnateSpellChange",
-                        getCharIDFromURL(),
-                        srcStruct,
-                        {name: spell.Spell.name, level: spell.Spell.level, tradition: spellTradition, tPd: timesPerDay},
-                        selectSpellControlShellClass);
-                }
-
             }
+
         }
+        
     });
 
     $('#'+selectSpellID).trigger("change", [triggerChange]);

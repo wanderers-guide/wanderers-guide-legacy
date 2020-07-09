@@ -83,7 +83,9 @@ function initExpressionProcessor(expDataStruct){
     if(expDataStruct.ChoiceStruct.FeatArray != null){
         g_expr_featArray = [];
         for(let feat of expDataStruct.ChoiceStruct.FeatArray){
-            g_expr_featArray.push(feat.value.name.toUpperCase());
+            if(feat.value != null){
+                g_expr_featArray.push(feat.value.name.toUpperCase());
+            }
         }
     }
 

@@ -1,35 +1,5 @@
 
 //------------------------- Processing Feats -------------------------//
-function initFeatProcessing(ascStatement, srcStruct, locationID){
-    if(ascFeatMap == null) {
-        //console.log("Did not find valid featMap :(");
-        socket.emit("requestASCFeats",
-                getCharIDFromURL(),
-                ascStatement,
-                srcStruct,
-                locationID);
-    } else {
-        //console.log("> Found a valid featMap!");
-        processingFeats(ascStatement, srcStruct, locationID);
-    }
-}
-
-socket.on("returnASCFeats", function(ascStatement, srcStruct, locationID, featObject){
-    let featMap = objToMap(featObject);
-    featMap = new Map([...featMap.entries()].sort(
-        function(a, b) {
-            if (a[1].Feat.level === b[1].Feat.level) {
-                // Name is only important when levels are the same
-                return a[1].Feat.name > b[1].Feat.name ? 1 : -1;
-            }
-            return b[1].Feat.level - a[1].Feat.level;
-        })
-    );
-    //console.log("Setting featMap to new one...");
-    ascFeatMap = featMap;
-    processingFeats(ascStatement, srcStruct, locationID);
-});
-
 function processingFeats(ascStatement, srcStruct, locationID){
     
     if(ascStatement.includes("GIVE-GENERAL-FEAT")){ // GIVE-GENERAL-FEAT=3[metamagic]
@@ -148,12 +118,13 @@ function giveClassFeat(srcStruct, locationID, featLevel, className, optionalTags
 function displayFeatChoice(srcStruct, locationID, selectionName, tagsArray, featLevel, optionalTags) {
 
     // TO-DO. If feat requires prereq, check feats that the char has from choiceMap
+    let featSelectionTypeClass = selectionName.replace(/ /g,'')+'Selector';
     
     let selectFeatID = "selectFeat"+locationID+"-"+srcStruct.sourceCodeSNum;
     let descriptionFeatID = "descriptionFeat"+locationID+"-"+srcStruct.sourceCodeSNum;
     let selectFeatControlShellClass = selectFeatID+'ControlShell';
 
-    $('#'+locationID).append('<div class="field is-grouped is-grouped-centered is-marginless"><div class="select '+selectFeatControlShellClass+'"><select id="'+selectFeatID+'" class="selectFeat"></select></div></div>');
+    $('#'+locationID).append('<div class="field is-grouped is-grouped-centered is-marginless mb-1"><div class="select '+selectFeatControlShellClass+'"><select id="'+selectFeatID+'" class="selectFeat '+featSelectionTypeClass+'"></select></div></div>');
 
     $('#'+locationID).append('<div id="'+descriptionFeatID+'"></div>');
 
@@ -161,10 +132,8 @@ function displayFeatChoice(srcStruct, locationID, selectionName, tagsArray, feat
 
     let triggerChange = false;
     // Set saved feat choices
-
-    let featArray = ascChoiceStruct.FeatArray;
     
-    let featData = featArray.find(featData => {
+    let featData = ascChoiceStruct.FeatArray.find(featData => {
         return hasSameSrc(featData, srcStruct);
     });
 
@@ -235,69 +204,87 @@ function displayFeatChoice(srcStruct, locationID, selectionName, tagsArray, feat
     }
 
     // On feat choice change
-    $('#'+selectFeatID).change(function(event, triggerSave, checkDup) {
+    $('#'+selectFeatID).change(function(event, triggerSave, dontCheckDup) {
 
-        if(!($(this).is(":hidden"))) {
+        let featID = $(this).val();
+        let feat = ascFeatMap.get(featID+"");
 
-            let featID = $(this).val();
-            let feat = ascFeatMap.get(featID+"");
+        if($(this).val() == "chooseDefault" || feat == null){
+            $('.'+selectFeatControlShellClass).addClass("is-info");
+            $('.'+selectFeatControlShellClass).removeClass("is-danger");
 
-            if($(this).val() == "chooseDefault" || feat == null){
-                $('.'+selectFeatControlShellClass).addClass("is-info");
-                $('.'+selectFeatControlShellClass).removeClass("is-danger");
+            // Display nothing
+            $('#'+descriptionFeatID).html('');
 
-                // Display nothing
-                $('#'+descriptionFeatID).html('');
+            featsUpdateASCChoiceStruct(srcStruct, null);
+            socket.emit("requestFeatChange",
+                getCharIDFromURL(),
+                {srcStruct, feat : null, featID : null, codeLocationID : descriptionFeatID+"Code" },
+                selectFeatControlShellClass);
 
-                socket.emit("requestFeatChange",
-                    getCharIDFromURL(),
-                    {srcStruct, feat : null, featID : null, codeLocationID : descriptionFeatID+"Code" },
-                    selectFeatControlShellClass);
+        } else {
+            $('.'+selectFeatControlShellClass).removeClass("is-info");
+
+            let featArray = ascChoiceStruct.FeatArray;
+
+            let canSelectFeat = true;
+            if((dontCheckDup == null || !dontCheckDup) && feat.Feat.canSelectMultiple == 0 && hasDuplicateFeat(featArray, $(this).val())){
+                canSelectFeat = false;
+            }
+
+            if(!canSelectFeat){
+                
+                $('.'+selectFeatControlShellClass).addClass("is-danger");
+
+                // Display feat as issue
+                $('#'+descriptionFeatID).html('<p class="help is-danger text-center">You cannot select a feat more than once unless it states otherwise.</p>');
+                featsUpdateASCChoiceStruct(srcStruct, null);
 
             } else {
-                $('.'+selectFeatControlShellClass).removeClass("is-info");
+                $('.'+selectFeatControlShellClass).removeClass("is-danger");
 
-                let featArray = ascChoiceStruct.FeatArray;
+                // Display feat
+                displayFeat(descriptionFeatID, feat);
 
-                let canSelectFeat = true;
-                if((checkDup == null || checkDup) && feat.Feat.canSelectMultiple == 0 && hasDuplicateFeat(featArray, $(this).val())){
-                    canSelectFeat = false;
+                // Save feats
+                if(triggerSave == null || triggerSave) {
+                    $('.'+selectFeatControlShellClass).addClass("is-loading");
+
+                    featsUpdateASCChoiceStruct(srcStruct, feat.Feat);
+                    socket.emit("requestFeatChange",
+                        getCharIDFromURL(),
+                        {srcStruct, feat, featID, codeLocationID : descriptionFeatID+"Code" },
+                        selectFeatControlShellClass);
                 }
-                if(selectedFeat != null && selectedFeat.id == feat.Feat.id) {
-                    canSelectFeat = true;
-                }
-
-                if(!canSelectFeat){
-                    
-                    $('.'+selectFeatControlShellClass).addClass("is-danger");
-
-                    // Display feat as issue
-                    $('#'+descriptionFeatID).html('<p class="help is-danger text-center">You cannot select a feat more than once unless it states otherwise.</p>');
-
-                } else {
-                    $('.'+selectFeatControlShellClass).removeClass("is-danger");
-
-                    // Display feat
-                    displayFeat(descriptionFeatID, feat);
-
-                    // Save feats
-                    if(triggerSave == null || triggerSave) {
-                        $('.'+selectFeatControlShellClass).addClass("is-loading");
-                        socket.emit("requestFeatChange",
-                            getCharIDFromURL(),
-                            {srcStruct, feat, featID, codeLocationID : descriptionFeatID+"Code" },
-                            selectFeatControlShellClass);
-                    }
-                
-                }
-
+            
             }
+
         }
+        
     });
 
-    $('#'+selectFeatID).trigger("change", [triggerChange, false]);
+    $('#'+selectFeatID).trigger("change", [triggerChange, true]);
 
     statementComplete();
+
+}
+
+function featsUpdateASCChoiceStruct(srcStruct, feat){
+
+    let foundFeatData = false;
+    for(let featData of ascChoiceStruct.FeatArray){
+        if(hasSameSrc(featData, srcStruct)){
+            foundFeatData = true;
+            featData.value = feat;
+            break;
+        }
+    }
+
+    if(!foundFeatData){
+        let featData = srcStruct;
+        featData.value = feat;
+        ascChoiceStruct.FeatArray.push(featData);
+    }
 
 }
 
@@ -313,7 +300,6 @@ socket.on("returnFeatChange", function(featChangePacket, selectFeatControlShellC
     }
 
     selectorUpdated();
-    socket.emit("requestASCUpdateChoices", getCharIDFromURL(), 'FEATS');
 
     // Clear previous code and run new code
     if(featChangePacket.feat != null){
@@ -350,6 +336,7 @@ function giveFeatByName(srcStruct, featName, locationID){
 
     displayFeat(descriptionFeatID, featEntry);
 
+    featsUpdateASCChoiceStruct(srcStruct, featEntry.Feat);
     socket.emit("requestFeatChangeByName",
         getCharIDFromURL(),
         {srcStruct, feat : featEntry, featName : featName,

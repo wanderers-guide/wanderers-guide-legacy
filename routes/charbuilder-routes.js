@@ -61,10 +61,6 @@ function goToBuilder(req, res, buildStageName, charID){
                     title: "Character Builder - Apeiron",
                     user: req.user,
                     character: cInfo.char,
-                    charClass: cInfo.cClass,
-                    charBackground: cInfo.background,
-                    charAncestry: cInfo.ancestry,
-                    charHeritage: cInfo.heritage,
                     charAbilities: cInfo.charAbilities
                 });
 

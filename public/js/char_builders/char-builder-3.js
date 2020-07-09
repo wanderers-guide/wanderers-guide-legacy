@@ -85,6 +85,7 @@ socket.on("returnBackgroundDetails", function(backgrounds, inChoiceStruct){
                     getCharIDFromURL(),
                     backgroundID);
             } else {
+                injectASCChoiceStruct(choiceStruct);
                 displayCurrentBackground(background);
             }
 

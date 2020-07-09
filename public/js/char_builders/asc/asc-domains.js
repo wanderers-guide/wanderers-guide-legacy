@@ -51,40 +51,36 @@ function giveDomain(srcStruct, locationID, spellSRC){
     // On select change
     $('#'+selectID).change(function(event, triggerSave) {
         
-        if(!($(this).is(":hidden"))) {
+        if($(this).val() == "chooseDefault"){
 
-            if($(this).val() == "chooseDefault"){
+            $('.'+selectControlShellClass).addClass("is-info");
 
-                $('.'+selectControlShellClass).addClass("is-info");
+            $('#'+descriptionID).html('');
 
-                $('#'+descriptionID).html('');
+            socket.emit("requestDomainChange",
+                getCharIDFromURL(),
+                srcStruct,
+                null);
 
-                socket.emit("requestDomainChange",
-                    getCharIDFromURL(),
-                    srcStruct,
-                    null);
+        } else {
 
-            } else {
+            $('.'+selectControlShellClass).removeClass("is-info");
 
-                $('.'+selectControlShellClass).removeClass("is-info");
+            let domainID = $(this).val();
+            let domain = ascChoiceStruct.AllDomains.find(domain => {
+                return domain.id == domainID;
+            });
 
-                let domainID = $(this).val();
-                let domain = ascChoiceStruct.AllDomains.find(domain => {
-                    return domain.id == domainID;
-                });
+            $('#'+descriptionID).html(processText(domain.description, false));
 
-                $('#'+descriptionID).html(processText(domain.description, false));
-
-                socket.emit("requestDomainChange",
-                    getCharIDFromURL(),
-                    srcStruct,
-                    {Domain: domain, SpellSRC: spellSRC});
-                
-            }
-
-            $(this).blur();
-
+            socket.emit("requestDomainChange",
+                getCharIDFromURL(),
+                srcStruct,
+                {Domain: domain, SpellSRC: spellSRC});
+            
         }
+
+        $(this).blur();
 
     });
 
@@ -133,40 +129,36 @@ function giveDomainAdvancement(srcStruct, locationID, spellSRC){
     // On select change
     $('#'+selectID).change(function(event, triggerSave) {
         
-        if(!($(this).is(":hidden"))) {
+        if($(this).val() == "chooseDefault"){
 
-            if($(this).val() == "chooseDefault"){
+            $('.'+selectControlShellClass).addClass("is-info");
 
-                $('.'+selectControlShellClass).addClass("is-info");
+            $('#'+descriptionID).html('');
 
-                $('#'+descriptionID).html('');
+            socket.emit("requestDomainAdvancementChange",
+                getCharIDFromURL(),
+                srcStruct,
+                null);
 
-                socket.emit("requestDomainAdvancementChange",
-                    getCharIDFromURL(),
-                    srcStruct,
-                    null);
+        } else {
 
-            } else {
+            $('.'+selectControlShellClass).removeClass("is-info");
 
-                $('.'+selectControlShellClass).removeClass("is-info");
+            let domainID = $(this).val();
+            let domain = ascChoiceStruct.AllDomains.find(domain => {
+                return domain.id == domainID;
+            });
 
-                let domainID = $(this).val();
-                let domain = ascChoiceStruct.AllDomains.find(domain => {
-                    return domain.id == domainID;
-                });
+            $('#'+descriptionID).html(processText(domain.description, false));
 
-                $('#'+descriptionID).html(processText(domain.description, false));
-
-                socket.emit("requestDomainAdvancementChange",
-                    getCharIDFromURL(),
-                    srcStruct,
-                    {Domain: domain, SpellSRC: spellSRC});
-                
-            }
-
-            $(this).blur();
-
+            socket.emit("requestDomainAdvancementChange",
+                getCharIDFromURL(),
+                srcStruct,
+                {Domain: domain, SpellSRC: spellSRC});
+            
         }
+
+        $(this).blur();
 
     });
 

@@ -1,30 +1,5 @@
 
 //------------------------- Processing Langs -------------------------//
-function initLangProcessing(ascStatement, srcStruct, locationID) {
-    if(ascLangMap == null) {
-        //console.log("Did not find valid langMap :(");
-        socket.emit("requestASCLangs",
-                getCharIDFromURL(),
-                ascStatement,
-                srcStruct,
-                locationID);
-    } else {
-        //console.log("> Found a valid langMap!");
-        processingLangs(ascStatement, srcStruct, locationID);
-    }
-}
-
-socket.on("returnASCLangs", function(ascStatement, srcStruct, locationID, langObject){
-    let langMap = objToMap(langObject);
-    //console.log("Setting langMap to new one...");
-    ascLangMap = new Map([...langMap.entries()].sort(
-        function(a, b) {
-            return a[1].Lang.name > b[1].Lang.name ? 1 : -1;
-        })
-    );
-    processingLangs(ascStatement, srcStruct, locationID);
-});
-
 function processingLangs(ascStatement, srcStruct, locationID){
 
     if(ascStatement.includes("GIVE-LANG-NAME")){ // GIVE-LANG-NAME=Elven
@@ -94,46 +69,28 @@ function giveLang(srcStruct, locationID, bonusOnly){
     // On lang choice change
     $('#'+selectLangID).change(function(event, triggerSave) {
         
-        if(!($(this).is(":hidden"))) {
-
-            if($(this).val() == "chooseDefault"){
+        if($(this).val() == "chooseDefault"){
                 
-                $('.'+selectLangControlShellClass).removeClass("is-danger");
-                $('.'+selectLangControlShellClass).addClass("is-info");
+            $('.'+selectLangControlShellClass).removeClass("is-danger");
+            $('.'+selectLangControlShellClass).addClass("is-info");
 
-                socket.emit("requestLanguageChange",
-                    getCharIDFromURL(),
-                    srcStruct,
-                    null);
+            socket.emit("requestLanguageChange",
+                getCharIDFromURL(),
+                srcStruct,
+                null);
 
-            } else {
+        } else {
 
-                $('.'+selectLangControlShellClass).removeClass("is-danger");
-                $('.'+selectLangControlShellClass).removeClass("is-info");
+            $('.'+selectLangControlShellClass).removeClass("is-danger");
+            $('.'+selectLangControlShellClass).removeClass("is-info");
 
-                let langID = $(this).val();
+            let langID = $(this).val();
 
-                // Save lang
-                if(triggerSave == null || triggerSave) {
+            // Save lang
+            if(triggerSave == null || triggerSave) {
 
-                    let langArray = ascChoiceStruct.LangArray;
-                    if(!hasDuplicateLang(langArray, langID)) {
-
-                        $('#'+langDescriptionID).html('');
-
-                        socket.emit("requestLanguageChange",
-                            getCharIDFromURL(),
-                            srcStruct,
-                            langID);
-
-                    } else {
-                        $('.'+selectLangControlShellClass).addClass("is-danger");
-
-                        $('#'+langDescriptionID).html('<p class="help is-danger text-center">You already know this language!</p>');
-
-                    }
-                
-                } else {
+                let langArray = ascChoiceStruct.LangArray;
+                if(!hasDuplicateLang(langArray, langID)) {
 
                     $('#'+langDescriptionID).html('');
 
@@ -142,13 +99,27 @@ function giveLang(srcStruct, locationID, bonusOnly){
                         srcStruct,
                         langID);
 
+                } else {
+                    $('.'+selectLangControlShellClass).addClass("is-danger");
+
+                    $('#'+langDescriptionID).html('<p class="help is-danger text-center">You already know this language!</p>');
+
                 }
-                
+            
+            } else {
+
+                $('#'+langDescriptionID).html('');
+
+                socket.emit("requestLanguageChange",
+                    getCharIDFromURL(),
+                    srcStruct,
+                    langID);
+
             }
-
-            $(this).blur();
-
+            
         }
+
+        $(this).blur();
 
     });
 

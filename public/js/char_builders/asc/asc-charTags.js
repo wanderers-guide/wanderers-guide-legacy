@@ -73,34 +73,32 @@ function displayCharTagChoice(srcStruct, locationID){
     // On char tag choice change
     $('#'+selectCharTagID).change(function(event, triggerSave) {
 
-        if(!($(this).is(":hidden"))) {
+        let charTagName = $(this).val();
 
-            let charTagName = $(this).val();
+        if($(this).val() == "chooseDefault"){
+            $('.'+selectCharTagControlShellClass).addClass("is-info");
 
-            if($(this).val() == "chooseDefault"){
-                $('.'+selectCharTagControlShellClass).addClass("is-info");
+            socket.emit("requestASCCharTagChange",
+                getCharIDFromURL(),
+                srcStruct,
+                null,
+                selectCharTagControlShellClass);
 
+        } else {
+            $('.'+selectCharTagControlShellClass).removeClass("is-info");
+
+            // Save char tag
+            if(triggerSave == null || triggerSave) {
+                $('.'+selectCharTagControlShellClass).addClass("is-loading");
                 socket.emit("requestASCCharTagChange",
                     getCharIDFromURL(),
                     srcStruct,
-                    null,
+                    charTagName,
                     selectCharTagControlShellClass);
-
-            } else {
-                $('.'+selectCharTagControlShellClass).removeClass("is-info");
-
-                // Save char tag
-                if(triggerSave == null || triggerSave) {
-                    $('.'+selectCharTagControlShellClass).addClass("is-loading");
-                    socket.emit("requestASCCharTagChange",
-                        getCharIDFromURL(),
-                        srcStruct,
-                        charTagName,
-                        selectCharTagControlShellClass);
-                }
-
             }
+
         }
+        
     });
 
     $('#'+selectCharTagID).trigger("change", [triggerChange]);

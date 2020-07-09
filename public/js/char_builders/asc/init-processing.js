@@ -2,11 +2,15 @@
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Apeiron Styling Code ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 // ======================================================================================== //
 
+let processingDebug = true;
+
 // Global Variables //
 let codeQueue = [];
 let runningCodeQueue = false;
 let gCode_statements, gCode_srcStruct, gCode_locationID;
-let ascChoiceStruct, ascSkillMap, ascFeatMap, ascLangMap, ascSpellMap = null;
+let ascChoiceStruct = null;
+let ascMapsInit = false;
+let ascSkillMap, ascFeatMap, ascLangMap, ascSpellMap = null;
 //                  //
 
 function processCode(ascCode, srcStruct, locationID){
@@ -19,46 +23,55 @@ function processCode(ascCode, srcStruct, locationID){
     let newSrcStruct = cloneObj(srcStruct);
 
     if(ascChoiceStruct == null){
-        //console.log("Did not find valid choiceStruct :(");
-        socket.emit("requestASCChoices",
-            getCharIDFromURL(),
-            ascCode,
-            newSrcStruct,
-            locationID);
-    } else {
-        //console.log("> Found a valid choiceStruct!");
-        codeDecompiling(ascCode, newSrcStruct, locationID);
+        displayError("ASC ChoiceStruct Has Not Been Init!");
+        if(processingDebug) {console.log("ASC ChoiceStruct Has Not Been Init!");}
+        return;
     }
 
-}
+    codeDecompiling(ascCode, newSrcStruct, locationID);
 
-socket.on("returnASCChoices", function(ascCode, srcStruct, locationID, choiceStruct){
-    //console.log("Setting choiceStruct new one...");
-    ascChoiceStruct = choiceStruct;
-    initExpressionProcessor({
-        ChoiceStruct : choiceStruct,
-    });
-    
-    codeDecompiling(ascCode, srcStruct, locationID);
-});
+}
 
 function codeDecompiling(ascCode, srcStruct, locationID){
 
     codeQueue.push({ ascCode, srcStruct, locationID });
 
     if(!runningCodeQueue){
-        shiftCodeQueue();
+
+        runningCodeQueue = true;
+        if(!ascMapsInit){
+            //if(processingDebug) {console.log("Did not find valid ASC Maps :(");}
+            socket.emit("requestASCMapsInit",
+                getCharIDFromURL());
+        } else {
+            //if(processingDebug) {console.log("> Found a valid ASC Maps!");}
+            shiftCodeQueue();
+        }
+
     }
 
 }
+
+socket.on("returnASCMapsInit", function(){
+    //if(processingDebug) {console.log("Setting ASC Maps...");}
+    ascMapsInit = true;
+
+    initExpressionProcessor({
+        ChoiceStruct : ascChoiceStruct,
+    });
+    
+    window.setTimeout(() => {
+        shiftCodeQueue();
+    }, 100);
+});
 
 function shiftCodeQueue(){
 
     runningCodeQueue = true;
     let code = codeQueue.shift();
 
-    console.log("Starting Code Queue:");
-    console.log(code);
+    if(processingDebug) {console.log("Starting Code Queue:");}
+    if(processingDebug) {console.log(code);}
     if(code != null){
         gCode_statements = code.ascCode.split(/\n/);
         gCode_locationID = code.locationID;
@@ -68,23 +81,23 @@ function shiftCodeQueue(){
         
         let stateReturn = runNextStatement();
         if(stateReturn === 'END'){
-            console.log("Code Queue Complete - only 1 statement!");
+            if(processingDebug) {console.log("Code Queue Complete - only 1 statement!");}
             shiftCodeQueue();
         } else if(stateReturn === 'SKIP'){
             statementComplete();
         }
     } else {
         runningCodeQueue = false;
-        console.log("No More Code Queues Remaining :)");
+        if(processingDebug) {console.log("No More Code Queues Remaining :)");}
         finishLoadingPage();
     }
     
 }
 
 function statementComplete(){
-    console.log("Statement Complete, onto next statement...");
+    if(processingDebug) {console.log("Statement Complete, onto next statement...");}
 
-    console.log(gCode_srcStruct.sourceCodeSNum);
+    if(processingDebug) {console.log(gCode_srcStruct.sourceCodeSNum);}
     // Up ticks the first digit in the sourceCodeSNum string.
     let sourceCodeSNum = gCode_srcStruct.sourceCodeSNum;
     let firstChar = sourceCodeSNum[0]; // Get first char
@@ -96,11 +109,11 @@ function statementComplete(){
     }
     sourceCodeSNum = firstChar+sourceCodeSNum;
     gCode_srcStruct.sourceCodeSNum = sourceCodeSNum;
-    console.log(gCode_srcStruct.sourceCodeSNum);
+    if(processingDebug) {console.log(gCode_srcStruct.sourceCodeSNum);}
     
     let stateReturn = runNextStatement();
     if(stateReturn === 'END'){
-        console.log("Code Queue Complete");
+        if(processingDebug) {console.log("Code Queue Complete");}
         shiftCodeQueue();
     } else if(stateReturn === 'SKIP'){
         statementComplete();
@@ -118,9 +131,9 @@ function runNextStatement(){
     };
     let locationID = gCode_locationID;
 
-    console.log('SRC-STRUCT');
-    console.log(srcStruct);
-    console.log(ascStatement);
+    if(processingDebug) {console.log('SRC-STRUCT');}
+    if(processingDebug) {console.log(srcStruct);}
+    if(processingDebug) {console.log(ascStatement);}
     
     if(ascStatement != null){
         if(ascStatement == ''){ return 'SKIP'; }
@@ -133,7 +146,7 @@ function runNextStatement(){
         
         // It could be a sheet statement,
         if(testSheetCode(ascStatement)){
-            console.log("Skipping '"+ascStatement+"' because it's a sheet statement.");
+            if(processingDebug) {console.log("Skipping '"+ascStatement+"' because it's a sheet statement.");}
             return 'SKIP';
         }
 
@@ -153,7 +166,7 @@ function runNextStatement(){
         }
 
         if(ascStatement.includes("-FEAT")){
-            initFeatProcessing(ascStatement, srcStruct, locationID);
+            processingFeats(ascStatement, srcStruct, locationID);
             return 'WAIT';
         }
 
@@ -163,12 +176,12 @@ function runNextStatement(){
         }
 
         if(ascStatement.includes("-SKILL")){
-            initSkillProcessing(ascStatement, srcStruct, locationID);
+            processingSkills(ascStatement, srcStruct, locationID);
             return 'WAIT';
         }
 
         if(ascStatement.includes("-LANG")){
-            initLangProcessing(ascStatement, srcStruct, locationID);
+            processingLangs(ascStatement, srcStruct, locationID);
             return 'WAIT';
         }
 
@@ -178,7 +191,7 @@ function runNextStatement(){
         }
 
         if(ascStatement.includes("-INNATE")){
-            initInnateSpellProcessing(ascStatement, srcStruct, locationID);
+            processingInnateSpells(ascStatement, srcStruct, locationID);
             return 'WAIT';
         }
 
@@ -253,8 +266,15 @@ socket.on("returnASCStatementFailure", function(details){
 
 /////////////
 
+function injectASCChoiceStruct(choiceStruct){
+    ascChoiceStruct = choiceStruct;
+    updateExpressionProcessor({
+        ChoiceStruct : choiceStruct,
+    });
+}
+
 socket.on("returnASCUpdateChoices", function(updateType, updateData){
-    //console.log("Updating choiceStruct part...");
+    //if(processingDebug) {console.log("Updating choiceStruct part...");}
 
     if(updateType == 'ABILITY-BOOSTS'){
         ascChoiceStruct.BonusArray = updateData;
@@ -264,7 +284,7 @@ socket.on("returnASCUpdateChoices", function(updateType, updateData){
         ascChoiceStruct.DomainArray = updateData;
     } else {
         displayError("Failed to update correct charChoice data!");
-        console.error('Failed to update correct charChoice data!');
+        if(processingDebug) {console.error('Failed to update correct charChoice data!');}
     }
     
     updateExpressionProcessor({
@@ -274,41 +294,11 @@ socket.on("returnASCUpdateChoices", function(updateType, updateData){
 
 socket.on("returnASCUpdateSkills", function(skillObject){
     let skillMap = objToMap(skillObject);
-    //console.log("Updating skillMap...");
+    //if(processingDebug) {console.log("Updating skillMap...");}
     ascSkillMap = skillMap;
 });
 
-socket.on("returnASCUpdateLangs", function(langObject){
-    let langMap = objToMap(langObject);
-    //console.log("Updating langMap...");
-    ascLangMap = langMap;
-});
-
-/////////////
-
-function injectASCChoiceStruct(choiceStruct){
-    ascChoiceStruct = choiceStruct;
-    updateExpressionProcessor({
-        ChoiceStruct : choiceStruct,
-    });
-}
-
-//////////////
-
-function processCode_ClassAbilities(classAbilities){
-    socket.emit("requestASCClassAbilities",
-            getCharIDFromURL(),
-            classAbilities);
-}
-
-socket.on("returnASCClassAbilities", function(choiceStruct, featObject, skillObject, classAbilities){
-    //console.log("Setting choiceStruct, featMap, and skillmap to new ones before classAbilities...");
-    ascChoiceStruct = choiceStruct;
-    updateExpressionProcessor({
-        ChoiceStruct : choiceStruct,
-    });
-    ascSkillMap = objToMap(skillObject);
-
+socket.on("returnASCUpdateFeats", function(featObject){
     let featMap = objToMap(featObject);
     featMap = new Map([...featMap.entries()].sort(
         function(a, b) {
@@ -319,10 +309,41 @@ socket.on("returnASCClassAbilities", function(choiceStruct, featObject, skillObj
             return b[1].Feat.level - a[1].Feat.level;
         })
     );
+    //if(processingDebug) {console.log("Updating featMap...");}
     ascFeatMap = featMap;
-    
+});
+
+socket.on("returnASCUpdateLangs", function(langObject){
+    let langMap = objToMap(langObject);
+    //if(processingDebug) {console.log("Updating langMap...");}
+    ascLangMap = new Map([...langMap.entries()].sort(
+        function(a, b) {
+            return a[1].Lang.name > b[1].Lang.name ? 1 : -1;
+        })
+    );
+});
+
+socket.on("returnASCUpdateSpells", function(spellObject){
+    let spellsMap = objToMap(spellObject);
+    spellsMap = new Map([...spellsMap.entries()].sort(
+        function(a, b) {
+            if (a[1].Spell.level === b[1].Spell.level) {
+                // Name is only important when levels are the same
+                return a[1].Spell.name > b[1].Spell.name ? 1 : -1;
+            }
+            return b[1].Spell.level - a[1].Spell.level;
+        })
+    );
+    //if(processingDebug) {console.log("Updating spellMap...");}
+    ascSpellMap = spellsMap;
+});
+
+//////////////
+
+function processCode_ClassAbilities(classAbilities){
+    //if(processingDebug) {console.log("Starting to run class abilities code...");}
     for(const classAbility of classAbilities) {
-        if(classAbility.selectType != 'SELECT_OPTION' && classAbility.level <= choiceStruct.Level) {
+        if(classAbility.selectType != 'SELECT_OPTION' && classAbility.level <= ascChoiceStruct.Level) {
             let srcStruct = {
                 sourceType: 'class',
                 sourceLevel: classAbility.level,
@@ -335,39 +356,12 @@ socket.on("returnASCClassAbilities", function(choiceStruct, featObject, skillObj
                 'classAbilityCode'+classAbility.id);
         }
     }
-});
-
-/////////////
-
-function processCode_AncestryAbilities(ancestryFeatsLocs){
-    socket.emit("requestASCAncestryFeats",
-            getCharIDFromURL(),
-            ancestryFeatsLocs);
 }
 
-socket.on("returnASCAncestryFeats", function(choiceStruct, featObject, skillObject, ancestryFeatsLocs){
-    //console.log("Setting choiceStruct, featMap, and skillmap to new ones before ancestryFeats...");
-    ascChoiceStruct = choiceStruct;
-    updateExpressionProcessor({
-        ChoiceStruct : choiceStruct,
-    });
-    ascSkillMap = objToMap(skillObject);
-
-    let featMap = objToMap(featObject);
-    featMap = new Map([...featMap.entries()].sort(
-        function(a, b) {
-            if (a[1].Feat.level === b[1].Feat.level) {
-                // Name is only important when levels are the same
-                return a[1].Feat.name > b[1].Feat.name ? 1 : -1;
-            }
-            return b[1].Feat.level - a[1].Feat.level;
-        })
-    );
-    ascFeatMap = featMap;
-
+function processCode_AncestryAbilities(ancestryFeatsLocs){
+    //if(processingDebug) {console.log("Starting to run ancestry feats code...");}
     let ancestryFeatCount = 0;
     for(const ancestryFeatsLoc of ancestryFeatsLocs) {
-        // No need for a process clear because it will be going to Feats data every time.
         let srcStruct = {
             sourceType: 'ancestry',
             sourceLevel: ancestryFeatsLoc.Level,
@@ -380,4 +374,4 @@ socket.on("returnASCAncestryFeats", function(choiceStruct, featObject, skillObje
             ancestryFeatsLoc.LocationID);
         ancestryFeatCount++;
     }
-});
+}

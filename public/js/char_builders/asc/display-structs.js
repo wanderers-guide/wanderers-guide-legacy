@@ -18,7 +18,7 @@ function displayFeat(locationID, feat){
     }
   
     if(feat.Feat.level > 0){
-      featInnerHTML += '</div><div class="level-right is-size-4">Lvl '+feat.Feat.level+'</div></div>';
+      featInnerHTML += '</div><div class="level-right is-size-5 is-italic">Lvl '+feat.Feat.level+'</div></div>';
     } else {
       featInnerHTML += '</div><div class="level-right is-size-4"></div></div>';
     }

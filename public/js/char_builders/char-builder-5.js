@@ -36,8 +36,9 @@ function goToChar() {
 
 // ~~~~~~~~~~~~~~ // Processings // ~~~~~~~~~~~~~~ //
 
-socket.on("returnFinalizeDetails", function(character, abilObject, cClass, ancestry){
-
+socket.on("returnFinalizeDetails", function(character, abilObject, cClass, ancestry, choiceStruct){
+    injectASCChoiceStruct(choiceStruct);
+    
     let abilMap = objToMap(abilObject);
 
     let strScore = abilMap.get("STR");
@@ -64,67 +65,19 @@ socket.on("returnFinalizeDetails", function(character, abilObject, cClass, ances
     $("#chaScore").html(chaScore);
     $("#chaMod").html(signNumber(getMod(chaScore)));
 
-
     if(character.classID != null && character.ancestryID != null){
-        $(".finalize-content").removeClass("is-hidden");
+
+        let srcStruct = {
+            sourceType: 'class',
+            sourceLevel: 1,
+            sourceCode: 'inits-bonus',
+            sourceCodeSNum: 'a',
+        };
         
-        let skillsSection = $('#trainSkills');
-        for (let i = 0; i < 20; i++) {
-
-            let srcStruct = {
-                sourceType: 'class',
-                sourceLevel: 1,
-                sourceCode: 'inits-bonus-'+i,
-                sourceCodeSNum: 'a',
-            };
-
-            if(i < getMod(intScore)+cClass.tSkillsMore){
-                let skillsSectionID = "skillSelection"+i;
-            
-                skillsSection.append('<div id="'+skillsSectionID+'"></div>');
-                
-                processCode(
-                    'GIVE-SKILL=T',
-                    srcStruct,
-                    skillsSectionID);
-            } else {
-                socket.emit("requestProficiencyChange",
-                    getCharIDFromURL(),
-                    {srcStruct, isSkill : true},
-                    null);
-            }
-            
-        }
-
-        let langsSection = $('#learnLanguages');
-        let additionalLangs = getMod(intScore);
-        if(ancestry.name == 'Human'){ additionalLangs++; } // Hardcoded - ancestry named Human gains +1 langs. 
-        for (let i = 0; i < 12; i++) {
-
-            let srcStruct = {
-                sourceType: 'class',
-                sourceLevel: 1,
-                sourceCode: 'inits-bonus-'+i,
-                sourceCodeSNum: 'a',
-            };
-
-            if(i < additionalLangs){
-                let langSelectionID = "langSelection"+i;
-            
-                langsSection.append('<div id="'+langSelectionID+'"></div>');
-                
-                processCode(
-                    'GIVE-LANG-BONUS-ONLY',
-                    srcStruct,
-                    langSelectionID);
-            } else {
-                socket.emit("requestLanguageChange",
-                    getCharIDFromURL(),
-                    srcStruct,
-                    null);
-            }
-            
-        }
+        socket.emit("requestLangsAndTrainingsClear",
+            getCharIDFromURL(),
+            srcStruct,
+            {cClass, ancestry, intScore});
 
     } else {
 
@@ -181,3 +134,34 @@ function finishLoadingPage() {
 function selectorUpdated() {
 
 }
+
+
+socket.on("returnLangsAndTrainingsClear", function(srcStruct, dataPacket){
+
+    $(".finalize-content").removeClass("is-hidden");
+        
+    let giveSkillTrainingCode = '';
+    for (let i = 0; i < getMod(dataPacket.intScore)+dataPacket.cClass.tSkillsMore; i++) {
+        giveSkillTrainingCode += 'GIVE-SKILL=T\n';
+    }
+
+    $('#trainSkills').append('<div id="skillSelection"></div>');
+    processCode(
+        giveSkillTrainingCode,
+        srcStruct,
+        'skillSelection');
+
+    let giveLanguageCode = '';
+    let additionalLangs = getMod(dataPacket.intScore);
+    if(dataPacket.ancestry.name == 'Human'){ additionalLangs++; } // Hardcoded - ancestry named Human gains +1 langs. 
+    for (let i = 0; i < additionalLangs; i++) {
+        giveLanguageCode += 'GIVE-LANG-BONUS-ONLY\n';
+    }
+
+    $('#learnLanguages').append('<div id="langSelection"></div>');
+    processCode(
+        giveLanguageCode,
+        srcStruct,
+        'langSelection');
+
+});

@@ -606,9 +606,25 @@ module.exports = class SocketConnections {
               CharGathering.getClass(charID, character.classID).then((classDetails) => {
                 CharGathering.getAncestry(character.ancestryID).then((ancestry) => {
                   CharGathering.getAbilityScores(charID).then((abilObject) => {
-                    socket.emit('returnFinalizeDetails', character, abilObject, classDetails.Class, ancestry);
+                    CharGathering.getCharChoices(charID).then((choiceStruct) => {
+                      socket.emit('returnFinalizeDetails', character, abilObject, classDetails.Class, ancestry, choiceStruct);
+                    });
                   });
                 });
+              });
+            });
+          }
+        });
+      });
+
+      socket.on('requestLangsAndTrainingsClear', function(charID, srcStruct, dataPacket){
+        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+          if(ownsChar){
+            CharDataMapping.deleteData(charID, 'languages', srcStruct)
+            .then((result) => {
+              CharDataMapping.deleteData(charID, 'proficiencies', srcStruct)
+              .then((result) => {
+                socket.emit('returnLangsAndTrainingsClear', srcStruct, dataPacket);
               });
             });
           }
@@ -1233,70 +1249,21 @@ module.exports = class SocketConnections {
           }
         });
       });
-    
-      socket.on('requestASCFeats', function(charID, ascStatement, srcStruct, locationID){
-        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
-          if(ownsChar){
-            CharGathering.getAllFeats().then((featsObject) => {
-              socket.emit('returnASCFeats', ascStatement, srcStruct, locationID, featsObject);
-            });
-          }
-        });
-      });
-    
-      socket.on('requestASCSkills', function(charID, ascStatement, srcStruct, locationID){
+
+
+      socket.on('requestASCMapsInit', function(charID){
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
           if(ownsChar){
             CharGathering.getAllSkills(charID).then((skillsObject) => {
-              socket.emit('returnASCSkills', ascStatement, srcStruct, locationID, skillsObject);
-            });
-          }
-        });
-      });
-    
-      socket.on('requestASCLangs', function(charID, ascStatement, srcStruct, locationID){
-        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
-          if(ownsChar){
-            CharGathering.getAllLanguages(charID).then((langsObject) => {
-              socket.emit('returnASCLangs', ascStatement, srcStruct, locationID, langsObject);
-            });
-          }
-        });
-      });
-
-      socket.on('requestASCSpells', function(charID, ascStatement, srcStruct, locationID){
-        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
-          if(ownsChar){
-            CharGathering.getAllSpells().then((spellMap) => {
-              socket.emit('returnASCSpells', ascStatement, srcStruct, locationID, mapToObj(spellMap));
-            });
-          }
-        });
-      });
-    
-      socket.on('requestASCClassAbilities', function(charID, classAbilities){
-        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
-          if(ownsChar){
-            CharGathering.getAllFeats().then((featsObject) => {
-              CharGathering.getAllSkills(charID).then((skillsObject) => {
-                CharGathering.getCharChoices(charID).then((choiceStruct) => {
-                  socket.emit('returnASCClassAbilities', choiceStruct, 
-                        featsObject, skillsObject, classAbilities);
-                });
-              });
-            });
-          }
-        });
-      });
-    
-      socket.on('requestASCAncestryFeats', function(charID, ancestryFeatsLocs){
-        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
-          if(ownsChar){
-            CharGathering.getAllFeats().then((featsObject) => {
-              CharGathering.getAllSkills(charID).then((skillsObject) => {
-                CharGathering.getCharChoices(charID).then((choiceStruct) => {
-                  socket.emit('returnASCAncestryFeats', choiceStruct, 
-                        featsObject, skillsObject, ancestryFeatsLocs);
+              CharGathering.getAllFeats().then((featsObject) => {
+                CharGathering.getAllLanguages(charID).then((langsObject) => {
+                  CharGathering.getAllSpells().then((spellMap) => {
+                    socket.emit('returnASCUpdateSkills', skillsObject);
+                    socket.emit('returnASCUpdateFeats', featsObject);
+                    socket.emit('returnASCUpdateLangs', langsObject);
+                    socket.emit('returnASCUpdateSpells', mapToObj(spellMap));
+                    socket.emit('returnASCMapsInit');
+                  });
                 });
               });
             });
@@ -1325,6 +1292,8 @@ module.exports = class SocketConnections {
           }
         });
       });
+
+      
     
       socket.on('requestASCUpdateSkills', function(charID){
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {

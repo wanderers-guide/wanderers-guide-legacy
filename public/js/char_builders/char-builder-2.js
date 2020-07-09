@@ -86,6 +86,7 @@ socket.on("returnAncestryAndChoices", function(ancestryObject, inChoiceStruct){
                     ancestryID);
                 
             } else {
+                injectASCChoiceStruct(choiceStruct);
                 displayCurrentAncestry(ancestryMap.get(ancestryID), false);
             }
 

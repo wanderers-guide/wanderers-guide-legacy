@@ -14,6 +14,11 @@ function objToMap(obj) {
     return strMap;
 }
 
+function hashCode(str) {
+  return str.split('').reduce((prevHash, currVal) =>
+    (((prevHash << 5) - prevHash) + currVal.charCodeAt(0))|0, 0);
+}
+
 function cloneObj(obj){
   return JSON.parse(JSON.stringify(obj));
 }
@@ -156,7 +161,7 @@ function profToWord(prof){
 function hasDuplicateSelected(selectOptions) {
   let optionValArray = [];
   $(selectOptions).each(function() {
-      if(!($(this).is(":hidden")) && $(this).val() != "chooseDefault"){
+      if($(this).val() != "chooseDefault"){
           optionValArray.push($(this).val());
       }
   });
@@ -165,7 +170,7 @@ function hasDuplicateSelected(selectOptions) {
 
 function hasDuplicateFeat(featArray, featID){
   for(const feat of featArray){
-    if(feat.value.id == featID) {
+    if(feat.value != null && feat.value.id == featID) {
       return true;
     }
   }

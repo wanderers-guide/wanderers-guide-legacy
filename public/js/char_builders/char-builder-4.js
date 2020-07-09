@@ -92,6 +92,7 @@ socket.on("returnClassDetails", function(classObject, inChoiceStruct){
                     classID);
                 
             } else {
+                injectASCChoiceStruct(choiceStruct);
                 displayCurrentClass(classMap.get(classID), false);
             }
 
@@ -324,7 +325,7 @@ function displayCurrentClass(classStruct, saving) {
     profSkillsUL.append('<li id="profSkillsLIAdditionalTrained"></li>');
     let profSkillsLIAddTrained = $('#profSkillsLIAdditionalTrained');
 
-    profSkillsLIAddTrained.append('Trained in <a class="has-text-link has-tooltip-bottom has-tooltip-multiline" data-tooltip="You will get to select training in an additional number of skills equal to '+classStruct.Class.tSkillsMore+' plus your Intelligence modifer in the Finalize step">'+classStruct.Class.tSkillsMore+'*</a> more skills');
+    profSkillsLIAddTrained.append('Trained in <a class="has-text-info has-tooltip-bottom has-tooltip-multiline" data-tooltip="You will get to select training in an additional number of skills equal to '+classStruct.Class.tSkillsMore+' plus your Intelligence modifer in the Finalize step">'+classStruct.Class.tSkillsMore+'*</a> more skills');
 
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Saving Throws ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
@@ -440,35 +441,74 @@ function displayCurrentClass(classStruct, saving) {
     }
 
 
-    let classAbilities = $('#classAbilities');
-    classAbilities.html('');
+    $('#classAbilities').html('<div id="classAbilitiesTabs"></div><div id="classAbilitiesContent"></div>');
+
+    let abilityTabsArray = [];
+    let abilityNameSet = new Set();
+    for(const classAbility of classStruct.Abilities) {
+        if(classAbility.selectType != 'SELECT_OPTION') {
+            if(abilityNameSet.has(classAbility.name) && !abilityTabsArray.includes(classAbility.name)){
+                abilityTabsArray.push(classAbility.name);
+            }
+            abilityNameSet.add(classAbility.name);
+        }
+    }
+
+    abilityTabsArray = abilityTabsArray.sort(
+        function(a, b) {
+            return a > b ? 1 : -1;
+        }
+    );
+
+    let abilityTabHTML = '';
+    for(const abilityTab of abilityTabsArray){
+        let hashOfName = hashCode(abilityTab);
+        abilityTabHTML += '<li><a id="abilityTab'+hashOfName+'">'+abilityTab+'</a></li>';
+        $('#classAbilitiesContent').append('<div id="abilityContent'+hashOfName+'" class="is-hidden"></div>');
+    }
+    abilityTabHTML += '<li><a id="abilityTabOther">Other</a></li>';
+    $('#classAbilitiesContent').append('<div id="abilityContentOther" class="is-hidden"></div>');
+
+    $('#classAbilitiesTabs').html('<div class="tabs is-centered is-marginless"><ul class="ability-tabs">'+abilityTabHTML+'</ul></div>');
 
     for(const classAbility of classStruct.Abilities) {
 
         if(classAbility.selectType != 'SELECT_OPTION' && classAbility.level <= choiceStruct.Level) {
-
-                    // accordions now contains an array of all Accordion instances
-                    var accordions = bulmaAccordion.attach();
 
             let classAbilityID = "classAbility"+classAbility.id;
             let classAbilityHeaderID = "classAbilityHeader"+classAbility.id;
             let classAbilityContentID = "classAbilityContent"+classAbility.id;
             let classAbilityCodeID = "classAbilityCode"+classAbility.id;
 
-            
-            classAbilities.append('<section class="accordions"><article id="'+classAbilityID+'" class="accordion classAbility"></article></section>');
+            let tabContent = null;
+            if(abilityTabsArray.includes(classAbility.name)){
 
-            let classAbilityInnerCard = $('#'+classAbilityID);
-            classAbilityInnerCard.append('<div id="'+classAbilityHeaderID+'" class="accordion-header toggle"><p class="is-size-4 has-text-weight-semibold">'+classAbility.name+'<span class="classAbilityUnselectedOption"></span></p><span class="has-text-weight-bold">'+abilityLevelDisplay(classAbility.level)+'</span></div>');
+                let hashOfName = hashCode(classAbility.name);
+                tabContent = $('#abilityContent'+hashOfName);
+                tabContent.append('<div id="'+classAbilityID+'" class="classAbility pt-1"></div>');
 
-            classAbilityInnerCard.append('<div class="accordion-body"><div id="'+classAbilityContentID+'" class="accordion-content"></div></div>');
+                let classAbilitySection = $('#'+classAbilityID);
+                classAbilitySection.append('<span id="'+classAbilityHeaderID+'" class="is-size-4 has-text-weight-semibold">Level '+classAbility.level+'<span class="classAbilityUnselectedOption"></span></span>');
+                classAbilitySection.append('<div id="'+classAbilityContentID+'"></div>');
+                classAbilitySection.append('<hr class="ability-hr">');
 
+            } else {
+
+                tabContent = $('#abilityContentOther');
+                tabContent.append('<div id="'+classAbilityID+'" class="classAbility pt-1"></div>');
+
+                let classAbilitySection = $('#'+classAbilityID);
+                classAbilitySection.append('<span id="'+classAbilityHeaderID+'" class="is-size-4 has-text-weight-semibold">'+classAbility.name+'<sup class="is-italic pl-2 is-size-6">'+abilityLevelDisplay(classAbility.level)+'</sup><span class="classAbilityUnselectedOption"></span></span>');
+                classAbilitySection.append('<div id="'+classAbilityContentID+'"></div>');
+                classAbilitySection.append('<hr class="ability-hr">');
+
+            }
 
             let classAbilityContent = $('#'+classAbilityContentID);
             let abilityDescription = processText(classAbility.description, false);
             classAbilityContent.append('<div class="container px-5" id="classAbility'+classAbility.id+'"><div class="mx-5">'+abilityDescription+'</div></div>');
 
-            classAbilityContent.append('<div class="columns is-mobile is-centered"><div id="'+classAbilityCodeID+'" class="column is-mobile is-11"></div></div>');
+            classAbilityContent.append('<div class="columns is-mobile is-centered is-marginless"><div id="'+classAbilityCodeID+'" class="column is-mobile is-11 is-paddingless"></div></div>');
 
             if(classAbility.selectType === 'SELECTOR') {
 
@@ -507,10 +547,6 @@ function displayCurrentClass(classStruct, saving) {
                 classAbilityContent.append(classAbilitySelectorInnerHTML);
 
             }
-
-                    // accordions now contains an array of all Accordion instances
-                    var accordions2 = bulmaAccordion.attach();
-
 
 
         }
@@ -584,10 +620,19 @@ function displayCurrentClass(classStruct, saving) {
 
     $('.classAbilSelection').trigger("change", [false]);
 
-
-
     processCode_ClassAbilities(classStruct.Abilities);
 
+
+    $('.ability-tabs a').click(function(){
+        $('#classAbilitiesContent > div').addClass('is-hidden');
+        $('.ability-tabs > li').removeClass("is-active");
+
+        let tabNameHash = $(this).attr('id').replace('abilityTab', '');
+        $('#abilityContent'+tabNameHash).removeClass('is-hidden');
+        $('#abilityTab'+tabNameHash).parent().addClass("is-active");
+    });
+
+    $('.ability-tabs a:first').click();
 
 }
 

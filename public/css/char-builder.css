@@ -78,7 +78,7 @@
 }
 
 .has-text-title {
-    color: #999;
+    color: rgb(172, 172, 172);
 }
 
 .has-text-value {
@@ -180,6 +180,30 @@ hr {
 
 .blendedInLine {
     display: inline;
+}
+
+/* Class Abilities Tab */
+.ability-tabs li:hover {
+    color: #3298dc;
+}
+.ability-tabs li {
+    color: #bdbdbd;
+}
+.ability-tabs a:hover {
+    border-bottom-color: #3298dc;
+}
+
+.tabs:not(.is-boxed) li.is-active a {
+    border-bottom-color: #3298dc;
+    color: #3298dc;
+}
+
+.ability-hr {
+    border-color: hsl(0, 0%, 35%);
+    margin-left: 10rem;
+    margin-right: 10rem;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
 }
 
 /* Builder A Link */
