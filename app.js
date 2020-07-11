@@ -79,8 +79,8 @@ let server = null;
 if (process.env.PRODUCTION == 'true'){
   
   const options = {
-    key: fs.readFileSync('/etc/letsencrypt/live/apeiron.app/privkey.pem', 'utf8'),
-    cert: fs.readFileSync('/etc/letsencrypt/live/apeiron.app/cert.pem', 'utf8')
+    key: fs.readFileSync('/etc/letsencrypt/live/wanderersguide.app/privkey.pem', 'utf8'),
+    cert: fs.readFileSync('/etc/letsencrypt/live/wanderersguide.app/cert.pem', 'utf8')
   };
 
   server = https.createServer(options, app).listen(443);
