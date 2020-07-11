@@ -117,7 +117,7 @@ function getStatExtraBonuses(statName){
         for(const [source, valueData] of statDataMap.entries()){
             if(source != 'PROF_BONUS' && source != 'MODIFIER' && source != 'BASE' && valueData.Value != 0){
                 let cleanedSource = source.replace(/_/g, " ").toLowerCase();
-                let statSource = (valueData.Src == 'CORE') ? null : capitalizeWord(valueData.Src);
+                let statSource = (valueData.Src == 'CORE') ? null : capitalizeWords(valueData.Src);
                 if(statSource != null) {
                     extraBonuses.push(signNumber(valueData.Value)+' '+cleanedSource+' from '+statSource);
                 } else {
@@ -162,6 +162,12 @@ function addConditionalStat(statName, condition, value){
     statName = statName.replace(/\s/g, "_").toUpperCase();
     let statDataMap = g_conditionalStatManagerMap.get(statName);
     if(statDataMap != null){
+        let existingDataValue = statDataMap.get(condition);
+        if(existingDataValue != null){
+            if(existingDataValue > value) {
+                value = existingDataValue;
+            }
+        }
         statDataMap.set(condition, value);
         g_conditionalStatManagerMap.set(statName, statDataMap);
     } else {

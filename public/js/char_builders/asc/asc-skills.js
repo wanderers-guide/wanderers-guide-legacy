@@ -56,7 +56,7 @@ function giveSkill(srcStruct, locationID, profType){
     }
 
     // On increase choice change
-    $('#'+selectIncreaseID).change(function(event, triggerSave) {
+    $('#'+selectIncreaseID).change(function() {
         
         if($(this).val() == "chooseDefault"){
 
@@ -73,49 +73,31 @@ function giveSkill(srcStruct, locationID, profType){
 
             $('.'+selectIncreaseControlShellClass).removeClass("is-info");
 
-            // Save increase
-            if(triggerSave == null || triggerSave) {
-            
-                let canSave = false;
-
-                if(profType === 'UP') {
-                    let skillName = $('#'+selectIncreaseID).val();
-                    let numUps = ascSkillMap.get(skillName).NumUps;
-                    if(isAbleToSelectIncrease(numUps+1, ascChoiceStruct.Level)) {
-                        canSave = true;
-                        $('#'+increaseDescriptionID).html('');
-                    } else {
-                        $('.'+selectIncreaseControlShellClass).addClass("is-danger");
-                        $('#'+increaseDescriptionID).html('<p class="help is-danger text-center">You cannot increase the proficiency of this skill any further at your current level!</p>');
-                    }
-                } else {
+            let canSave = false;
+            if(profType === 'UP') {
+                let skillName = $('#'+selectIncreaseID).val();
+                let numUps = ascSkillMap.get(skillName).NumUps;
+                if(isAbleToSelectIncrease(numUps+1, ascChoiceStruct.Level)) {
                     canSave = true;
-                }
-
-                if(canSave) {
-                    $('.'+selectIncreaseControlShellClass).removeClass("is-danger");
-
-                    let skillName = $(this).val();
-
-                    skillsUpdateASCChoiceStruct(srcStruct, skillName, profType);
-                    socket.emit("requestProficiencyChange",
-                        getCharIDFromURL(),
-                        {srcStruct, isSkill : true},
-                        { For : "Skill", To : skillName, Prof : profType });
-                }
-            
-            } else {
-
-                let numUps = $('#'+selectIncreaseID+' option:selected').attr("name");
-                if(isAbleToSelectIncrease(parseInt(numUps), ascChoiceStruct.Level)) {
-                    $('.'+selectIncreaseControlShellClass).removeClass("is-danger");
+                    $('#'+increaseDescriptionID).html('');
                 } else {
                     $('.'+selectIncreaseControlShellClass).addClass("is-danger");
-
-                    $('#'+increaseDescriptionID).html('<p class="help is-danger">You cannot increase the proficiency of this skill any further at your current level!</p>');
-
+                    $('#'+increaseDescriptionID).html('<p class="help is-danger text-center">You cannot increase the proficiency of this skill any further at your current level!</p>');
                 }
+            } else {
+                canSave = true;
+            }
 
+            if(canSave) {
+                $('.'+selectIncreaseControlShellClass).removeClass("is-danger");
+
+                let skillName = $(this).val();
+
+                skillsUpdateASCChoiceStruct(srcStruct, skillName, profType);
+                socket.emit("requestProficiencyChange",
+                    getCharIDFromURL(),
+                    {srcStruct, isSkill : true},
+                    { For : "Skill", To : skillName, Prof : profType });
             }
             
         }
@@ -124,7 +106,7 @@ function giveSkill(srcStruct, locationID, profType){
 
     });
 
-    $('#'+selectIncreaseID).trigger("change", [false]);
+    $('#'+selectIncreaseID).trigger("change");
 
     statementComplete();
 

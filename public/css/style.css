@@ -133,6 +133,9 @@ header {
     -webkit-text-decoration-color: hsl(204, 86%, 53%); /* Safari */  
     text-decoration-color: hsl(204, 86%, 53%);
 }
+.has-text-info-lighter {
+    color: hsl(204, 86%, 65%);
+}
 .is-size-8 {
     font-size: 0.5rem!important;
 }

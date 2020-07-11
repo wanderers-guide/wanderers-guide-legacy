@@ -129,6 +129,18 @@ module.exports = class SocketConnections {
     // Socket.IO Connections
     io.on('connection', function(socket){
 
+      socket.on('requestInvUpdate', function(charID){
+        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+          if(ownsChar){
+            CharGathering.getCharacter(charID).then((character) => {
+              CharGathering.getInventory(character.inventoryID).then((invStruct) => {
+                socket.emit('returnInvUpdate', invStruct);
+              });
+            });
+          }
+        });
+      });
+
       socket.on('requestAddPropertyRune', function(invItemID, propRuneID, propRuneSlot){
         AuthCheck.ownsInvItem(socket, invItemID).then((ownsItem) => {
           if(ownsItem){
@@ -223,13 +235,27 @@ module.exports = class SocketConnections {
         });
       });
     
-      socket.on('requestInvItemMoveBag', function(invItemID, bagItemID){
+      socket.on('requestInvItemMoveBag', function(invItemID, bagInvItemID){
         AuthCheck.ownsInvItem(socket, invItemID).then((ownsItem) => {
           if(ownsItem){
             CharGathering.getInvIDFromInvItemID(invItemID).then((invID) => {
-              CharSaving.saveInvItemToNewBag(invItemID, bagItemID).then(() => {
+              CharSaving.saveInvItemToNewBag(invItemID, bagInvItemID).then(() => {
                 CharGathering.getInventory(invID).then((invStruct) => {
                   socket.emit('returnInvItemMoveBag', invItemID, invStruct);
+                });
+              });
+            });
+          }
+        });
+      });
+
+      socket.on('requestAddItemToBag', function(itemID, quantity, bagInvItemID){
+        AuthCheck.ownsInvItem(socket, bagInvItemID).then((ownsItem) => {
+          if(ownsItem){
+            CharGathering.getInvIDFromInvItemID(bagInvItemID).then((invID) => {
+              CharSaving.addItemToInv(invID, itemID, quantity).then((invItem) => {
+                CharSaving.saveInvItemToNewBag(invItem.id, bagInvItemID).then(() => {
+                  socket.emit('returnAddItemToBag');
                 });
               });
             });

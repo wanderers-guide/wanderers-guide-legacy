@@ -338,6 +338,12 @@ function loadCharSheet(){
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 
+    // Run Items Code (investitures and others) //
+    // -- armor and shield item code runs when equipped
+    determineInvestitures();
+    runAllItemsCode();
+    
+
     // Display Ability Scores //
     displayAbilityScores();
 
@@ -356,9 +362,6 @@ function loadCharSheet(){
 
     // Display Health and Temp //
     initHealthAndTemp();
-
-    // Determine Invested Items and Run Code //
-    determineInvestitures();
 
     // Determine Armor //
     determineArmor(getMod(getStatTotal('SCORE_DEX')), g_preConditions_strScore);
@@ -642,7 +645,7 @@ function displayInformation() {
         openQuickView('savingThrowView', {
             ProfData : fortData,
             ProfNum : fortProfNum,
-            AbilMod : getMod(g_abilMap.get("CON")),
+            AbilMod : getModOfValue('CON'),
             TotalBonus : fortBonus,
             CharLevel : g_character.level,
             AbilityName : 'Constitution',
@@ -667,7 +670,7 @@ function displayInformation() {
         openQuickView('savingThrowView', {
             ProfData : reflexData,
             ProfNum : reflexProfNum,
-            AbilMod : getMod(g_abilMap.get("DEX")),
+            AbilMod : getModOfValue('DEX'),
             TotalBonus : reflexBonus,
             CharLevel : g_character.level,
             AbilityName : 'Dexterity',
@@ -692,7 +695,7 @@ function displayInformation() {
         openQuickView('savingThrowView', {
             ProfData : willData,
             ProfNum : willProfNum,
-            AbilMod : getMod(g_abilMap.get("WIS")),
+            AbilMod : getModOfValue('WIS'),
             TotalBonus : willBonus,
             CharLevel : g_character.level,
             AbilityName : 'Wisdom',
@@ -767,7 +770,7 @@ function displayInformation() {
         openQuickView('perceptionView', {
             ProfData : perceptionData,
             ProfNum : perceptionProfNum,
-            WisMod : getMod(g_abilMap.get("WIS")),
+            WisMod : getModOfValue('WIS'),
             TotalBonus : perceptionBonus,
             CharLevel : g_character.level,
             PrimaryVisionSense : primaryVisionSense,
@@ -955,7 +958,7 @@ function displayInformation() {
 
         let skillButtonID = ("skillButton"+skillName).replace(/ /g,'_');
 
-        let abilMod = getMod(g_abilMap.get(skillData.Skill.ability));
+        let abilMod = getModOfValue(skillData.Skill.ability);
         let profNum = getProfNumber(profData.NumUps, g_character.level);
 
         if(hasUntrainedImprovisationFeat){
@@ -1324,6 +1327,13 @@ function determineArmor(dexMod, strScore) {
     let shieldStruct = findEquippedShield();
     if(shieldStruct != null){
 
+        let investedTag = shieldStruct.Item.TagArray.find(tagStruct => {
+            return tagStruct.Tag.id === 235; // Hardcoded Invested Tag ID
+        });
+        if(investedTag == null){
+            processSheetCode(shieldStruct.InvItem.code, shieldStruct.InvItem.name);
+        }
+
         // Halve maxHP if it's shoddy
         let maxHP = (shieldStruct.InvItem.isShoddy == 1) ? Math.floor(shieldStruct.InvItem.hitPoints/2) : shieldStruct.InvItem.hitPoints;
 
@@ -1336,6 +1346,13 @@ function determineArmor(dexMod, strScore) {
 
     let armorStruct = findEquippedArmor();
     if(armorStruct != null){
+
+        let investedTag = armorStruct.Item.TagArray.find(tagStruct => {
+            return tagStruct.Tag.id === 235; // Hardcoded Invested Tag ID
+        });
+        if(investedTag == null){
+            processSheetCode(armorStruct.InvItem.code, armorStruct.InvItem.name);
+        }
 
         let profData = g_armorProfMap.get(armorStruct.Item.Item.id);
 
@@ -1736,11 +1753,28 @@ function determineInvestitures(){
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////// Feats and Abilities Code ///////////////////////////////////
+///////////////////////////////// Feats, Abilities, Items Code /////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
+function runAllItemsCode() {
+        
+    for(const invItem of g_invStruct.InvItems){
+        
+        let item = g_itemMap.get(invItem.itemID+"");
+        let investedTag = item.TagArray.find(tagStruct => {
+            return tagStruct.Tag.id === 235; // Hardcoded Invested Tag ID
+        });
+
+        if(investedTag == null && item.ArmorData == null && item.ShieldData == null){
+            processSheetCode(invItem.code, invItem.name);
+        }
+        
+    }
+
+}
+
 function runAllFeatsAndAbilitiesCode() {
-    
+
     for(const feat of g_featChoiceArray){
         if(feat != null && feat.value != null){
             processSheetCode(feat.value.code, feat.value.name);
@@ -1924,7 +1958,7 @@ socket.on("returnAddItemToInv", function(item, invItem, invStruct){
     $('#addItemAddItem'+item.id).removeClass('is-loading');
     $('#createCustomItemBtn').removeClass('is-loading');
     g_invStruct = invStruct;
-    processDefaultItemRuneSheetCode(item.code, invItem.id);
+    processDefaultItemRuneSheetCode(item.code, item.id, invItem.id);
     loadCharSheet();
 });
 
@@ -1942,9 +1976,18 @@ socket.on("returnInvItemMoveBag", function(invItemID, invStruct){
     closeQuickView();
 });
 
+socket.on("returnAddItemToBag", function(){
+    // Reloads inventory manually after some time.
+});
+
 socket.on("returnInvItemUpdated", function(invStruct){
     g_invStruct = invStruct;
     loadCharSheet();
     closeQuickView();
+});
+
+socket.on("returnInvUpdate", function(invStruct){
+    g_invStruct = invStruct;
+    loadCharSheet();
 });
 

@@ -29,14 +29,14 @@ function openAddItemQuickview(data) {
 
     $('#itemTabGeneral').click(function(){
         $('#allItemsFilterBySubcategory').parent().parent().removeClass('is-hidden');
-        $('#allItemsFilterBySubcategory').html('<option value="ALL">All</option><option value="STORAGE">Storage</option><option value="TOOL">Tool</option><option value="INSTRUMENT">Instrument</option><option value="WEAPON">Weapon</option><option value="ARMOR">Armor</option><option value="SHIELD">Shield</option><option value="AMMUNITION">Ammunition</option><option value="SNARE">Snare</option><option value="KIT">Kit</option><option value="INGREDIENT">Ingredient</option><option value="OTHER">Other</option>');
+        $('#allItemsFilterBySubcategory').html('<option value="ALL">All</option><option value="STORAGE">Storage</option><option value="TOOL">Tool</option><option value="INSTRUMENT">Instrument</option><option value="WEAPON">Weapon</option><option value="ARMOR">Armor</option><option value="SHIELD">Shield</option><option value="AMMUNITION">Ammunition</option><option value="SNARE">Snare</option><option value="KIT">Kit</option><option value="BOOK">Book</option><option value="INGREDIENT">Ingredient</option><option value="OTHER">Other</option>');
         $('#allItemSearch').attr('placeholder', 'Search General Items');
         changeItemCategoryTab('itemTabGeneral', data);
     });
 
     $('#itemTabMagical').click(function(){
         $('#allItemsFilterBySubcategory').parent().parent().removeClass('is-hidden');
-        $('#allItemsFilterBySubcategory').html('<option value="ALL">All</option><option value="RUNE">Runestone</option><option value="STAFF">Staff</option><option value="WAND">Wand</option><option value="TALISMAN">Talisman</option><option value="POTION">Potion</option><option value="OIL">Oil</option><option value="SCROLL">Scroll</option><option value="WEAPON">Weapon</option><option value="ARMOR">Armor</option><option value="SHIELD">Shield</option><option value="AMMUNITION">Ammunition</option><option value="STORAGE">Storage</option><option value="STRUCTURE">Structure</option><option value="COMPANION">Companion</option><option value="OTHER">Other</option>');
+        $('#allItemsFilterBySubcategory').html('<option value="ALL">All</option><option value="RUNE">Runestone</option><option value="STAFF">Staff</option><option value="WAND">Wand</option><option value="ROD">Rod</option><option value="TALISMAN">Talisman</option><option value="POTION">Potion</option><option value="OIL">Oil</option><option value="SCROLL">Scroll</option><option value="BOOK">Book</option><option value="INSTRUMENT">Instrument</option><option value="WEAPON">Weapon</option><option value="ARMOR">Armor</option><option value="SHIELD">Shield</option><option value="AMMUNITION">Ammunition</option><option value="STORAGE">Storage</option><option value="STRUCTURE">Structure</option><option value="COMPANION">Companion</option><option value="OTHER">Other</option>');
         $('#allItemSearch').attr('placeholder', 'Search Magical Items');
         changeItemCategoryTab('itemTabMagical', data);
     });
@@ -106,7 +106,9 @@ function changeItemCategoryTab(type, data){
             willDisplay = (allItemSearchInput != null);
         } else if(type == 'itemTabGeneral') {
             let magical = itemDataStruct.TagArray.find(tag => {
-                return tag.Tag.id === 41; // Hardcoded - Magical Trait ID 41
+                // Hardcoded - Magical Trait ID 41;
+                // Primal Trait ID 304; Occult Trait ID 500; Divine Trait ID 265; Arcane Trait ID 2;
+                return tag.Tag.id === 41 || tag.Tag.id === 304 || tag.Tag.id === 500 || tag.Tag.id === 265 || tag.Tag.id === 2;
             });
             let alchemical = itemDataStruct.TagArray.find(tag => {
                 return tag.Tag.id === 399; // Hardcoded - Alchemical Trait ID 399
@@ -114,7 +116,9 @@ function changeItemCategoryTab(type, data){
             willDisplay = (magical == null && alchemical == null && itemDataStruct.Item.itemType != 'CURRENCY');
         } else if(type == 'itemTabMagical') {
             let magical = itemDataStruct.TagArray.find(tag => {
-                return tag.Tag.id === 41; // Hardcoded - Magical Trait ID 41
+                // Hardcoded - Magical Trait ID 41;
+                // Primal Trait ID 304; Occult Trait ID 500; Divine Trait ID 265; Arcane Trait ID 2;
+                return tag.Tag.id === 41 || tag.Tag.id === 304 || tag.Tag.id === 500 || tag.Tag.id === 265 || tag.Tag.id === 2;
             });
             willDisplay = (magical != null);
         } else if(type == 'itemTabAlchemical') {
@@ -201,8 +205,8 @@ function displayAddItem(itemID, itemDataStruct, data){
     let addItemChevronItemID = 'addItemChevronItemID'+itemID;
     let addItemNameID = 'addItemName'+itemID;
     let addItemDetailsItemID = 'addItemDetailsItem'+itemID;
-
-    let itemLevel = (itemDataStruct.Item.level == 0) ? "" : "Lvl "+itemDataStruct.Item.level;
+    
+    let itemLevel = (itemDataStruct.Item.level == 0 || itemDataStruct.Item.level == 999) ? "" : "Lvl "+itemDataStruct.Item.level;
 
     let itemName = itemDataStruct.Item.name;
     if(itemDataStruct.Item.quantity > 1){

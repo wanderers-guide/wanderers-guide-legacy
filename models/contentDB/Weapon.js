@@ -10,7 +10,7 @@ const Weapon = db.define('weapons', {
   },
   dieType: {
     type: Sequelize.ENUM,
-    values: ['', 'd2', 'd4', 'd6', 'd8', 'd10', 'd12', 'd20']
+    values: ['', 'd2', 'd4', 'd6', 'd8', 'd10', 'd12', 'd20', 'NONE']
   },
   damageType: {
     type: Sequelize.STRING

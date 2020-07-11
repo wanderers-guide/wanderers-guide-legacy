@@ -119,6 +119,23 @@ function processSheetCode(ascCode, sourceName, isTest){
             continue;
         }
 
+        if(ascStatement.toUpperCase().includes("SET-APEX-ABILITY-SCORE")){
+            if(isTest) {continue;}
+            // SET-APEX-ABILITY-SCORE=X (Ex. SET-APEX-ABILITY-SCORE=DEX)
+
+            let adjustmentData = ascStatement.split('=');
+            let abilityScore = adjustmentData[1];
+
+            let baseStat = getStat('SCORE_'+abilityScore, 'BASE');
+            if(baseStat >= 18){
+                addStat('SCORE_'+abilityScore, 'BASE', baseStat+2);
+            } else {
+                addStat('SCORE_'+abilityScore, 'BASE', 18);
+            }
+
+            continue;
+        }
+
         if(ascStatement.toUpperCase() == "SET-FINESSE-MELEE-USE-DEX-DAMAGE"){
             if(isTest) {continue;}
 

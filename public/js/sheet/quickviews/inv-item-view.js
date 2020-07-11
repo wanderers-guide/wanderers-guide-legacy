@@ -4,10 +4,11 @@ function openInvItemQuickview(data) {
     let viewOnly = (data.InvItem.viewOnly != null) ? true : false;
 
     let invItemName = data.InvItem.name;
-    if(data.Item.Item.level > 0){
+    if(data.Item.Item.level > 0 && data.Item.Item.level != 999){
         invItemName += '<sup class="has-text-grey-light is-size-7 is-italic"> Lvl '+data.Item.Item.level+'</sup>';
     }
-    if(data.InvItem.name != data.Item.Item.name && data.Item.Item.id != 62){ // Hardcoded New Item ID
+    // Hardcoded New Item ID // If item isn't New Item and isn't an item with N/A level
+    if(data.InvItem.name != data.Item.Item.name && data.Item.Item.id != 62 && data.Item.Item.level != 999){
         invItemName += '<p class="is-inline pl-1 is-size-7 is-italic"> ( '+data.Item.Item.name+' )</p>';
     }
     $('#quickViewTitle').html(invItemName);
@@ -130,10 +131,17 @@ function openInvItemQuickview(data) {
         price += ' for '+data.Item.Item.quantity;
     }
 
+    qContent.append('<p class="is-size-6 has-text-left px-3"><strong>Price:</strong> '+price+'</p>');
+
+    let usageBulkEntry = '';
+    if(data.Item.Item.usage != null){
+        usageBulkEntry += '<strong>Usage:</strong> '+data.Item.Item.usage+'; ';
+    }
     let bulk = getConvertedBulkForSize(data.InvItem.size, data.InvItem.bulk);
     bulk = getBulkFromNumber(bulk);
-    qContent.append('<p class="is-size-6 has-text-left px-3"><strong>Price:</strong> '+price+'</p>');
-    qContent.append('<p class="is-size-6 has-text-left px-3"><strong>Bulk:</strong> '+bulk+'</p>');
+    usageBulkEntry += '<strong>Bulk:</strong> '+bulk;
+    qContent.append('<p class="is-size-6 has-text-left px-3 negative-indent">'+usageBulkEntry+'</p>');
+
     if(data.Item.Item.hands != 'NONE'){
         qContent.append('<p class="is-size-6 has-text-left px-3"><strong>Hands:</strong> '+getHandsToString(data.Item.Item.hands)+'</p>');
     }
@@ -229,6 +237,11 @@ function openInvItemQuickview(data) {
     }
 
     qContent.append('<div class="px-2">'+processText(data.InvItem.description, true, true, 'MEDIUM')+'</div>');
+
+    if(data.Item.Item.craftRequirements != null){
+        qContent.append('<hr class="m-2">');
+        qContent.append('<div class="px-2">'+processText('~ Craft Requirements: '+data.Item.Item.craftRequirements+'\n', true, true, 'MEDIUM')+'</div>');
+    }
 
     qContent.append('<hr class="m-2">');
 

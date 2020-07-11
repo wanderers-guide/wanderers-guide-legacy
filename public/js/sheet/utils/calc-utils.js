@@ -95,11 +95,15 @@ function getAttackAndDamage(itemData, invItem){
         let weapSpecial = (weapSpecialBonus != 0) ? signNumber(weapSpecialBonus) : '';
 
         let damage = '';
-        let maxDamage = diceNum*dieTypeToNum(itemData.WeaponData.dieType)+pre_strMod+weapSpecialBonus;
-        if(maxDamage >= 1) {
-            damage = diceNum+""+itemData.WeaponData.dieType+dmgStrBonus+weapSpecial+" "+itemData.WeaponData.damageType;
+        if(itemData.WeaponData.dieType != 'NONE') {
+            let maxDamage = diceNum*dieTypeToNum(itemData.WeaponData.dieType)+pre_strMod+weapSpecialBonus;
+            if(maxDamage >= 1) {
+                damage = diceNum+""+itemData.WeaponData.dieType+dmgStrBonus+weapSpecial+" "+itemData.WeaponData.damageType;
+            } else {
+                damage = '<a class="has-text-grey" data-tooltip="'+diceNum+""+itemData.WeaponData.dieType+dmgStrBonus+weapSpecial+'">1</a> '+itemData.WeaponData.damageType;
+            }
         } else {
-            damage = '<a class="has-text-grey" data-tooltip="'+diceNum+""+itemData.WeaponData.dieType+dmgStrBonus+weapSpecial+'">1</a> '+itemData.WeaponData.damageType;
+            damage = '-';
         }
 
         return { AttackBonus : attackBonus, Damage : damage };
@@ -180,11 +184,15 @@ function getAttackAndDamage(itemData, invItem){
         let weapSpecial = (weapSpecialBonus != 0) ? signNumber(weapSpecialBonus) : '';
 
         let damage = '';
-        let maxDamage = diceNum*dieTypeToNum(itemData.WeaponData.dieType)+pre_strMod+weapSpecialBonus;
-        if(maxDamage >= 1) {
-            damage = diceNum+""+itemData.WeaponData.dieType+dmgStrBonus+weapSpecial+" "+itemData.WeaponData.damageType;
+        if(itemData.WeaponData.dieType != 'NONE') {
+            let maxDamage = diceNum*dieTypeToNum(itemData.WeaponData.dieType)+pre_strMod+weapSpecialBonus;
+            if(maxDamage >= 1) {
+                damage = diceNum+""+itemData.WeaponData.dieType+dmgStrBonus+weapSpecial+" "+itemData.WeaponData.damageType;
+            } else {
+                damage = '<a class="has-text-grey" data-tooltip="'+diceNum+""+itemData.WeaponData.dieType+dmgStrBonus+weapSpecial+'">1</a> '+itemData.WeaponData.damageType;
+            }
         } else {
-            damage = '<a class="has-text-grey" data-tooltip="'+diceNum+""+itemData.WeaponData.dieType+dmgStrBonus+weapSpecial+'">1</a> '+itemData.WeaponData.damageType;
+            damage = '-';
         }
 
         return { AttackBonus : attackBonus, Damage : damage };

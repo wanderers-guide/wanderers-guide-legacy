@@ -26,7 +26,7 @@ function openTagQuickview(data) {
 
     } else {
 
-        qContent.append('Failed to find trait!');
+        qContent.append('<p class="pl-2 pr-1 negative-indent has-text-left has-text-danger"><em>Unknown trait!</em></p>');
 
     }
 

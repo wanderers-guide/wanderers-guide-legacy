@@ -111,7 +111,7 @@
                     <div id="sectionBulk" class="column field">
                         <label class="label">Bulk</label>
                         <div class="control">
-                            <input id="inputBulk" class="input" type="number" value="1.0" step="0.1" min="0">
+                            <input id="inputBulk" class="input" type="number" value="0.0" step="0.1" min="0">
                         </div>
                     </div>
 
@@ -151,6 +151,7 @@
                                     <option value="28">28</option>
                                     <option value="29">29</option>
                                     <option value="30">30</option>
+                                    <option value="999">N/A</option>
                                 </select>
                             </div>
                         </div>
@@ -172,6 +173,7 @@
                                     <option value="RUNE">Runestone</option>
                                     <option value="WAND">Wand</option>
                                     <option value="STAFF">Staff</option>
+                                    <option value="ROD">Rod</option>
                                     <option value="TALISMAN">Talisman</option>
                                     <option value="POTION">Potion</option>
                                     <option value="OIL">Oil</option>
@@ -181,6 +183,7 @@
                                     <option value="POISON">Poison</option>
                                     <option value="STORAGE">Storage</option>
                                     <option value="TOOL">Tool</option>
+                                    <option value="BOOK">Book</option>
                                     <option value="SNARE">Snare</option>
                                     <option value="KIT">Kit</option>
                                     <option value="INGREDIENT">Ingredient</option>
@@ -264,7 +267,7 @@
                         <div class="control">
                             <div class="select">
                                 <select id="inputDieType">
-                                    <option value="">-</option>
+                                    <option value="">1</option>
                                     <option value="d2">d2</option>
                                     <option value="d4">d4</option>
                                     <option value="d6" selected>d6</option>
@@ -272,6 +275,7 @@
                                     <option value="d10">d10</option>
                                     <option value="d12">d12</option>
                                     <option value="d20">d20</option>
+                                    <option value="NONE">-</option>
                                 </select>
                             </div>
                         </div>
@@ -375,14 +379,14 @@
                     <div class="column field">
                         <label class="label">Max Bulk Storage</label>
                         <div class="control">
-                            <input id="inputMaxBulkStorage" class="input" type="number" value="4.0" step="0.1" min="0">
+                            <input id="inputMaxBulkStorage" class="input" type="number" value="0.0" step="0.1" min="0">
                         </div>
                     </div>
 
                     <div class="column field">
                         <label class="label">Bulk Ignored</label>
                         <div class="control">
-                            <input id="inputBulkIgnored" class="input" type="number" value="2.0" step="0.1" min="0">
+                            <input id="inputBulkIgnored" class="input" type="number" value="0.0" step="0.1" min="0">
                         </div>
                     </div>
 
@@ -400,7 +404,7 @@
                     <div class="column field">
                         <label class="label">AC Bonus</label>
                         <div class="control">
-                            <input id="inputShieldACBonus" class="input" type="number" value="2" maxlength="1">
+                            <input id="inputShieldACBonus" class="input" type="number" value="0" maxlength="1">
                         </div>
                     </div>
 
@@ -446,14 +450,14 @@
                     <div class="column field">
                         <label class="label">AC Bonus</label>
                         <div class="control">
-                            <input id="inputArmorACBonus" class="input" type="number" value="1" maxlength="1">
+                            <input id="inputArmorACBonus" class="input" type="number" value="0" maxlength="1">
                         </div>
                     </div>
 
                     <div class="column field">
                         <label class="label">Dex Cap</label>
                         <div class="control">
-                            <input id="inputArmorDexCap" class="input" type="number" value="3" maxlength="1">
+                            <input id="inputArmorDexCap" class="input" type="number" value="0" maxlength="1">
                         </div>
                     </div>
 
@@ -543,9 +547,12 @@
                 </div>
 
                 <div class="tile is-child field">
-                    <label class="label">Craft Requirements</label>
+                    <label class="label">
+                        Craft Requirements
+                        <a href="/asc_docs/#description_fields" target="_blank"><span class="icon is-small has-text-info has-tooltip-top" data-tooltip="ASC Docs"><i class="fas fa-book"></i></span></a>
+                    </label>
                     <div class="control">
-                        <input class="input" id="inputCraftReq" type="text" maxlength="110" placeholder="">
+                        <input class="input" id="inputCraftReq" type="text" maxlength="350" placeholder="">
                     </div>
                 </div>
 
@@ -577,21 +584,21 @@
                     <div class="column field">
                         <label class="label"> <strong class="has-tooltip-bottom" data-tooltip="Page 577 has a Table of Material Stats">Hardness</strong></label>
                         <div class="control">
-                            <input id="inputHardness" class="input" type="number" value="1">
+                            <input id="inputHardness" class="input" type="number" value="0">
                         </div>
                     </div>
 
                     <div class="column field">
                         <label class="label"><strong class="has-tooltip-bottom" data-tooltip="Page 577 has a Table of Material Stats">Hit Points</strong></label>
                         <div class="control">
-                            <input id="inputHitPoints" class="input" type="number" value="4">
+                            <input id="inputHitPoints" class="input" type="number" value="0">
                         </div>
                     </div>
 
                     <div class="column field">
                         <label class="label"><strong class="has-tooltip-bottom" data-tooltip="Page 577 has a Table of Material Stats">Broken Threshold</strong></label>
                         <div class="control">
-                            <input id="inputBrokenThreshold" class="input" type="number" value="2">
+                            <input id="inputBrokenThreshold" class="input" type="number" value="0">
                         </div>
                     </div>
 

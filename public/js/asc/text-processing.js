@@ -16,6 +16,8 @@ let supportedWebLinks = [
 function processText(text, isSheet, isJustified = false, size = 'MEDIUM', indexConditions = true) {
     if(text == null) {return text;}
 
+    console.log(text);
+
     let _j = (isJustified) ? ' has-text-justified ' : '';
     let _s = '';
 
@@ -36,7 +38,6 @@ function processText(text, isSheet, isJustified = false, size = 'MEDIUM', indexC
 
     // ---- - Makes horizontal divider
     text = text.replace(/\n\-\-\-\-/g, '<hr class="m-1">');
-    text = text.replace(/\-\-\-\-/g, '<hr class="m-1">');
 
     // \n -> Newline
     text = text.replace(/\n/g, '</p><p class="p-1 pl-2 '+_j+_s+'">');
@@ -183,12 +184,12 @@ function handleFeatLink(match, linkName, innerTextName) {
 }
 
 function handleFeatLinkExt(match, linkName, innerTextDisplay, innerTextName) {
-    innerTextName = innerTextName.toUpperCase();
+    innerTextName = innerTextName.replace(/’/g,'\'').toUpperCase();
     for(const [featID, featStruct] of g_featMap.entries()){
         let featName = featStruct.Feat.name.toUpperCase();
         if(innerTextName === featName) {
             let featLinkClass = 'featTextLink'+featStruct.Feat.id;
-            let featLinkText = '<span class="'+featLinkClass+' has-text-info cursor-clickable">'+innerTextDisplay+'</span>';
+            let featLinkText = '<span class="'+featLinkClass+' has-text-info-lighter cursor-clickable">'+innerTextDisplay+'</span>';
             setTimeout(function() {
                 $('.'+featLinkClass).off('click');
                 $('.'+featLinkClass).click(function(){
@@ -211,12 +212,12 @@ function handleItemLink(match, linkName, innerTextName) {
 }
 
 function handleItemLinkExt(match, linkName, innerTextDisplay, innerTextName) {
-    innerTextName = innerTextName.toUpperCase();
+    innerTextName = innerTextName.replace(/’/g,'\'').toUpperCase();
     for(const [itemID, itemDataStruct] of g_itemMap.entries()){
-        let itemName = itemDataStruct.Item.name.toUpperCase();
+        let itemName = itemDataStruct.Item.name.replace(/[\(\)]/g,'').toUpperCase();
         if(innerTextName === itemName) {
             let itemLinkClass = 'itemTextLink'+itemDataStruct.Item.id;
-            let itemLinkText = '<span class="'+itemLinkClass+' has-text-info cursor-clickable">'+innerTextDisplay+'</span>';
+            let itemLinkText = '<span class="'+itemLinkClass+' has-text-info-lighter cursor-clickable">'+innerTextDisplay+'</span>';
             setTimeout(function() {
                 $('.'+itemLinkClass).off('click');
                 $('.'+itemLinkClass).click(function(){
@@ -238,12 +239,12 @@ function handleSpellLink(match, linkName, innerTextName) {
 }
 
 function handleSpellLinkExt(match, linkName, innerTextDisplay, innerTextName) {
-    innerTextName = innerTextName.toUpperCase();
+    innerTextName = innerTextName.replace(/’/g,'\'').toUpperCase();
     for(const [spellID, spellDataStruct] of g_spellMap.entries()){
         let spellName = spellDataStruct.Spell.name.toUpperCase();
         if(innerTextName === spellName) {
             let spellLinkClass = 'itemTextLink'+spellDataStruct.Spell.id;
-            let spellLinkText = '<span class="'+spellLinkClass+' has-text-info cursor-clickable">'+innerTextDisplay+'</span>';
+            let spellLinkText = '<span class="'+spellLinkClass+' has-text-info-lighter cursor-clickable">'+innerTextDisplay+'</span>';
             setTimeout(function() {
                 $('.'+spellLinkClass).off('click');
                 $('.'+spellLinkClass).click(function(){
@@ -266,7 +267,7 @@ function handleTraitLink(match, linkName, innerTextName) {
 
 function handleTraitLinkExt(match, linkName, innerTextDisplay, innerTextName) {
     let traitLinkClass = 'itemTextLink'+innerTextName;
-    let traitLinkText = '<span class="'+traitLinkClass+' has-text-info cursor-clickable">'+innerTextDisplay+'</span>';
+    let traitLinkText = '<span class="'+traitLinkClass+' is-underlined-info cursor-clickable">'+innerTextDisplay+'</span>';
     setTimeout(function() {
         $('.'+traitLinkClass).off('click');
         $('.'+traitLinkClass).click(function(){

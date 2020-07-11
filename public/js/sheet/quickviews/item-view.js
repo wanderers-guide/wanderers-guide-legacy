@@ -11,8 +11,8 @@ function openItemQuickview(data) {
         itemName += ' ('+itemDataStruct.Item.quantity+')';
     }
     $('#quickViewTitle').html(itemName);
-
-    let itemLevel = (itemDataStruct.Item.level == 0) ? "" : "Lvl "+itemDataStruct.Item.level;
+    
+    let itemLevel = (itemDataStruct.Item.level == 0 || itemDataStruct.Item.level == 999) ? "" : "Lvl "+itemDataStruct.Item.level;
     $('#quickViewTitleRight').html('<span class="pr-2">'+itemLevel+'</span>');
 
     let tagsInnerHTML = '';
@@ -113,7 +113,12 @@ function openItemQuickview(data) {
     }
     qContent.append('<div class="tile text-center"><div class="tile is-child is-4"><strong>Price</strong></div><div class="tile is-child is-4"><strong>Bulk</strong></div><div class="tile is-child is-4"><strong>Hands</strong></div></div>');
     qContent.append('<div class="tile text-center"><div class="tile is-child is-4"><p>'+price+'</p></div><div class="tile is-child is-4"><p>'+getBulkFromNumber(itemDataStruct.Item.bulk)+'</p></div><div class="tile is-child is-4"><p>'+getHandsToString(itemDataStruct.Item.hands)+'</p></div></div>');
-    
+
+    if(itemDataStruct.Item.usage != null){
+        qContent.append('<hr class="m-2">');
+        qContent.append('<p class="is-size-6 has-text-left px-3 negative-indent"><strong>Usage:</strong> '+itemDataStruct.Item.usage+'</p>');
+    }
+
     qContent.append('<hr class="m-2">');
 
         
@@ -199,5 +204,9 @@ function openItemQuickview(data) {
 
     qContent.append('<div class="text-left">'+processText(itemDataStruct.Item.description, true, true, 'MEDIUM')+'</div>');
 
+    if(itemDataStruct.Item.craftRequirements != null){
+        qContent.append('<hr class="m-2">');
+        qContent.append(processText('~ Craft Requirements: '+itemDataStruct.Item.craftRequirements+'\n', true, true, 'MEDIUM'));
+    }
 
 }
