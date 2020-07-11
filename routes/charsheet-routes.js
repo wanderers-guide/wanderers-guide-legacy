@@ -1,6 +1,3 @@
-/* Copyright (C) 2019, Apeiron, all rights reserved.
-    Made by Aaron Cassar.
-*/
 
 const router = require('express').Router();
 const Character = require('../models/contentDB/Character');
@@ -28,13 +25,13 @@ router.get('*', (req, res) => {
             // When a user attempts to view a character sheet that isn't theirs, give them 404
             console.log("AUTH FAILURE - User attempted to view a character that isn't theirs!");
             res.status(404);
-            res.render('error/404_error', { title: "404 Not Found - Apeiron", user: req.user });
+            res.render('error/404_error', { title: "404 Not Found - Wanderer's Guide", user: req.user });
         }
 
     }).catch(err => {
         console.log(err);
         res.status(404);
-        res.render('error/404_error', { title: "404 Not Found - Apeiron", user: req.user });
+        res.render('error/404_error', { title: "404 Not Found - Wanderer's Guide", user: req.user });
     });
 
 });
@@ -43,7 +40,7 @@ router.get('*', (req, res) => {
 function goToCharSheet(character, req, res) {
 
     res.render('sheet/charsheet', {
-        title: character.name+" - Apeiron",
+        title: character.name+" - Wanderer's Guide",
         user: req.user
     });
 

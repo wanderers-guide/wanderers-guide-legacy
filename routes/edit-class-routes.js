@@ -1,6 +1,3 @@
-/* Copyright (C) 2020, Apeiron Character Manager, all rights reserved.
-    By Aaron Cassar.
-*/
 
 const router = require('express').Router();
 
@@ -22,7 +19,7 @@ router.get('*', (req, res) => {
             order: [['name', 'ASC'],]
         }).then((weaponItems) => {
             res.render('admin/admin_builder/builder_class', {
-                title: "Class Builder - Apeiron",
+                title: "Class Builder - Wanderer's Guide",
                 user: req.user,
                 tags,
                 weaponItems,

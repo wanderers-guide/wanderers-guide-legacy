@@ -1,6 +1,3 @@
-/* Copyright (C) 2020, Apeiron, all rights reserved.
-    By Aaron Cassar.
-*/
 
 const router = require('express').Router();
 
@@ -17,7 +14,7 @@ router.get('*', (req, res) => {
         order: [['name', 'ASC'],]
     }).then((tags) => {
         res.render('admin/admin_builder/builder_item', {
-            title: "Item Builder - Apeiron",
+            title: "Item Builder - Wanderer's Guide",
             user: req.user,
             tags,
             itemID: extraData

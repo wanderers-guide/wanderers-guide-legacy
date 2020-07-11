@@ -1,6 +1,3 @@
-/* Copyright (C) 2019, Apeiron, all rights reserved.
-    Made by Aaron Cassar.
-*/
 
 const router = require('express').Router();
 const charbuilderRoutes = require('./charbuilder-routes');
@@ -53,7 +50,7 @@ router.get('/', (req, res) => {
                     }
     
                     res.render('pages/character_list', {
-                        title: "Your Characters - Apeiron",
+                        title: "Your Characters - Wanderer's Guide",
                         user: req.user,
                         characters,
                         canMakeCharacter: CharStateUtils.canMakeCharacter(req.user, characters),
@@ -66,7 +63,7 @@ router.get('/', (req, res) => {
     }).catch((error) => {
         console.error(error);
         res.status(500);
-        res.render('error/500_error', { title: "500 Server Error - Apeiron", user: req.user });
+        res.render('error/500_error', { title: "500 Server Error - Wanderer's Guide", user: req.user });
     });
 
 });
@@ -115,7 +112,7 @@ router.get('/add', (req, res) => {
         } else {
             // Cannot make another character, goto 404 not found
             res.status(404);
-            res.render('error/404_error', { title: "404 Not Found - Apeiron", user: req.user });
+            res.render('error/404_error', { title: "404 Not Found - Wanderer's Guide", user: req.user });
         }
 
     });

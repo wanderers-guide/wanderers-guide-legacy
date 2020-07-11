@@ -1,6 +1,3 @@
-/* Copyright (C) 2019, Apeiron, all rights reserved.
-    By Aaron Cassar.
-*/
 
 const router = require('express').Router();
 const editClassRoutes = require('./edit-class-routes');
@@ -37,7 +34,7 @@ const adminAuthCheck = (req, res, next) => {
 
 router.get('/panel', adminAuthCheck, (req, res) => {
 
-    res.render('admin/admin_panel', {  title: "Admin Panel - Apeiron", user: req.user });
+    res.render('admin/admin_panel', {  title: "Admin Panel - Wanderer's Guide", user: req.user });
 
 });
 
@@ -49,7 +46,7 @@ router.get('/manage/class', adminAuthCheck, (req, res) => {
     }).then((classes) => {
 
         res.render('admin/admin_manager/manager_class', {
-            title: "Class Manager - Apeiron",
+            title: "Class Manager - Wanderer's Guide",
             user: req.user,
             classes
         });
@@ -69,7 +66,7 @@ router.get('/create/class', adminAuthCheck, (req, res) => {
             order: [['name', 'ASC'],]
         }).then((weaponItems) => {
             res.render('admin/admin_builder/builder_class', {
-                title: "Class Builder - Apeiron",
+                title: "Class Builder - Wanderer's Guide",
                 user: req.user,
                 tags,
                 weaponItems,
@@ -89,7 +86,7 @@ router.get('/manage/ancestry', adminAuthCheck, (req, res) => {
     }).then((ancestries) => {
 
         res.render('admin/admin_manager/manager_ancestry', {
-            title: "Ancestry Manager - Apeiron",
+            title: "Ancestry Manager - Wanderer's Guide",
             user: req.user,
             ancestries
         });
@@ -113,7 +110,7 @@ router.get('/create/ancestry', adminAuthCheck, (req, res) => {
                 .then((physicalFeatures) => {
 
                     res.render('admin/admin_builder/builder_ancestry', {
-                        title: "Ancestry Builder - Apeiron",
+                        title: "Ancestry Builder - Wanderer's Guide",
                         user: req.user,
                         languages,
                         tags,
@@ -139,7 +136,7 @@ router.get('/manage/background', adminAuthCheck, (req, res) => {
     }).then((backgrounds) => {
 
         res.render('admin/admin_manager/manager_background', {
-            title: "Background Manager - Apeiron",
+            title: "Background Manager - Wanderer's Guide",
             user: req.user,
             backgrounds
         });
@@ -151,7 +148,7 @@ router.get('/manage/background', adminAuthCheck, (req, res) => {
 router.get('/create/background', adminAuthCheck, (req, res) => {
 
     res.render('admin/admin_builder/builder_background', {
-        title: "Background Builder - Apeiron",
+        title: "Background Builder - Wanderer's Guide",
         user: req.user,
     });
 
@@ -168,7 +165,7 @@ router.get('/manage/feat-action', adminAuthCheck, (req, res) => {
     }).then((feats) => {
 
         res.render('admin/admin_manager/manager_feat-action', {
-            title: "Feat / Action Manager - Apeiron",
+            title: "Feat / Action Manager - Wanderer's Guide",
             user: req.user,
             feats
         });
@@ -187,7 +184,7 @@ router.get('/create/feat-action', adminAuthCheck, (req, res) => {
             order: [['name', 'ASC'],]
         }).then((tags) => {
             res.render('admin/admin_builder/builder_feat-action', {
-                title: "Feat / Action Builder - Apeiron",
+                title: "Feat / Action Builder - Wanderer's Guide",
                 user: req.user,
                 skills,
                 tags
@@ -208,7 +205,7 @@ router.get('/manage/item', adminAuthCheck, (req, res) => {
     }).then((items) => {
 
         res.render('admin/admin_manager/manager_item', {
-            title: "Item Manager - Apeiron",
+            title: "Item Manager - Wanderer's Guide",
             user: req.user,
             items
         });
@@ -224,7 +221,7 @@ router.get('/create/item', adminAuthCheck, (req, res) => {
         order: [['name', 'ASC'],]
     }).then((tags) => {
         res.render('admin/admin_builder/builder_item', {
-            title: "Item Builder - Apeiron",
+            title: "Item Builder - Wanderer's Guide",
             user: req.user,
             tags
         }); 
@@ -243,7 +240,7 @@ router.get('/manage/spell', adminAuthCheck, (req, res) => {
     }).then((spells) => {
 
         res.render('admin/admin_manager/manager_spell', {
-            title: "Spell Manager - Apeiron",
+            title: "Spell Manager - Wanderer's Guide",
             user: req.user,
             spells
         });
@@ -259,7 +256,7 @@ router.get('/create/spell', adminAuthCheck, (req, res) => {
         order: [['name', 'ASC'],]
     }).then((tags) => {
         res.render('admin/admin_builder/builder_spell', {
-            title: "Spell Builder - Apeiron",
+            title: "Spell Builder - Wanderer's Guide",
             user: req.user,
             tags
         });

@@ -55,7 +55,7 @@ function openAddItemQuickview(data) {
         changeItemCategoryTab('itemTabCurrency', data);
     });
 
-    $('#itemTabGeneral').click();
+    $('#itemTabAll').click();
 
 }
 

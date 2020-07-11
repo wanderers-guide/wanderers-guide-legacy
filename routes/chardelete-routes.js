@@ -1,6 +1,3 @@
-/* Copyright (C) 2020, Apeiron, all rights reserved.
-    By Aaron Cassar.
-*/
 
 const router = require('express').Router();
 const Character = require('../models/contentDB/Character');
@@ -34,7 +31,7 @@ router.get('*', (req, res) => {
         } else {
             // Either character id is invalid or user doesn't own character, goto 404 not found
             res.status(404);
-            res.render('error/404_error', { title: "404 Not Found - Apeiron", user: req.user });
+            res.render('error/404_error', { title: "404 Not Found - Wanderer's Guide", user: req.user });
         }
 
     });

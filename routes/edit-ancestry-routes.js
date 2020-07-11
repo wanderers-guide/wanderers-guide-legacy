@@ -1,6 +1,3 @@
-/* Copyright (C) 2020, Apeiron, all rights reserved.
-    By Aaron Cassar.
-*/
 
 const router = require('express').Router();
 
@@ -28,7 +25,7 @@ router.get('*', (req, res) => {
                 .then((physicalFeatures) => {
 
                     res.render('admin/admin_builder/builder_ancestry', {
-                        title: "Ancestry Builder - Apeiron",
+                        title: "Ancestry Builder - Wanderer's Guide",
                         user: req.user,
                         languages,
                         tags,

@@ -10,7 +10,7 @@ const authCheck = (req, res, next) => {
 };
 
 router.get('/', authCheck, (req, res) => {
-    res.render('pages/profile', { title: req.user.username+"'s Profile - Apeiron", user: req.user });
+    res.render('pages/profile', { title: req.user.username+"'s Profile - Wanderer's Guide", user: req.user });
 });
 
 router.use('/characters', authCheck, charRoutes);

@@ -83,7 +83,7 @@ let g_preConditions_dexScore = null;
 $(function () {
 
     // Remove Footer //
-    $('#apeiron-footer').addClass('is-hidden');
+    $('#wanderers-guide-footer').addClass('is-hidden');
     $('#main-container').addClass('is-paddingless');
 
     socket.emit("requestCharacterSheetInfo",

@@ -1,6 +1,3 @@
-/* Copyright (C) 2019, Apeiron, all rights reserved.
-    Made by Aaron Cassar.
-*/
 
 const router = require('express').Router();
 const Character = require('../models/contentDB/Character');
@@ -36,12 +33,12 @@ router.get('*', (req, res) => {
             goToBuilder(req, res, 'char_builder_5', charID);
         } else {
             res.status(404);
-            res.render('error/404_error', { title: "404 Not Found - Apeiron", user: req.user });
+            res.render('error/404_error', { title: "404 Not Found - Wanderer's Guide", user: req.user });
         }
 
     } else {
         res.status(404);
-        res.render('error/404_error', { title: "404 Not Found - Apeiron", user: req.user });
+        res.render('error/404_error', { title: "404 Not Found - Wanderer's Guide", user: req.user });
     }
 
 });
@@ -58,7 +55,7 @@ function goToBuilder(req, res, buildStageName, charID){
             CharGathering.getAllCharacterBuilderInfo(character).then((cInfo) => {
 
                 res.render('char_builder/'+buildStageName, {
-                    title: "Character Builder - Apeiron",
+                    title: "Character Builder - Wanderer's Guide",
                     user: req.user,
                     character: cInfo.char,
                     charAbilities: cInfo.charAbilities
@@ -69,12 +66,12 @@ function goToBuilder(req, res, buildStageName, charID){
         } else {
             // When a user attempts to view a character builder that isn't theirs, give them 404
             res.status(404);
-            res.render('error/404_error', { title: "404 Not Found - Apeiron", user: req.user });
+            res.render('error/404_error', { title: "404 Not Found - Wanderer's Guide", user: req.user });
         }
 
     }).catch(err => {
         res.status(404);
-        res.render('error/404_error', { title: "404 Not Found - Apeiron", user: req.user });
+        res.render('error/404_error', { title: "404 Not Found - Wanderer's Guide", user: req.user });
     });
 
 }
