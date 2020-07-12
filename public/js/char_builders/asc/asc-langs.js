@@ -131,7 +131,7 @@ function giveLang(srcStruct, locationID, bonusOnly){
 
 socket.on("returnLanguageChange", function(){
     selectorUpdated();
-    socket.emit("requestASCUpdateLangs", getCharIDFromURL());
+    socket.emit("requestWSCUpdateLangs", getCharIDFromURL());
 });
 
 //////////////////////////////// Give Lang (by Lang Name) ///////////////////////////////////

@@ -693,6 +693,7 @@ module.exports = class AdminUpdate {
         /* Data:
             itemID,
             builderType,
+            data.itemCopyOfOther,
             itemName,
             itemVersion,
             itemPrice,
@@ -724,6 +725,7 @@ module.exports = class AdminUpdate {
 
         data.hidden = 0;
         data.isArchived = 0;
+        data.itemProfName = null;
         if(data.builderType == "GENERAL"){
             //
         } else if(data.builderType == "STORAGE"){
@@ -731,14 +733,109 @@ module.exports = class AdminUpdate {
             data.itemQuantity = 1;
         } else if(data.builderType == "WEAPON"){
             //
+            if(data.itemCopyOfOther != null && data.itemCopyOfOther.WeaponData != null){
+                // Set Prof Name
+                data.itemProfName = data.itemCopyOfOther.WeaponData.profName;
+
+                // Fill in all weapon data
+                data.itemWeaponData = {};
+                data.itemWeaponData.dieType = data.itemCopyOfOther.WeaponData.dieType;
+                data.itemWeaponData.damageType = data.itemCopyOfOther.WeaponData.damageType;
+                data.itemWeaponData.weaponCategory = data.itemCopyOfOther.WeaponData.category;
+                data.itemWeaponData.isMelee = data.itemCopyOfOther.WeaponData.isMelee;
+                data.itemWeaponData.meleeWeaponType = data.itemCopyOfOther.WeaponData.meleeWeaponType;
+                data.itemWeaponData.isRanged = data.itemCopyOfOther.WeaponData.isRanged;
+                data.itemWeaponData.rangedWeaponType = data.itemCopyOfOther.WeaponData.rangedWeaponType;
+                data.itemWeaponData.range = data.itemCopyOfOther.WeaponData.rangedRange;
+                data.itemWeaponData.reload = data.itemCopyOfOther.WeaponData.rangedReload;
+
+                // Add traits from copy
+                for(let otherCopyTag of data.itemCopyOfOther.TagArray){
+                    if(otherCopyTag != null){
+                        data.itemTagsArray.push(otherCopyTag.Tag.id);
+                    }
+                }
+
+                // Set hardness, hitpoints, & broken threshold
+                if(data.itemCopyOfOther.Item != null){
+                    data.itemHitPoints = data.itemCopyOfOther.Item.hitPoints;
+                    data.itemBrokenThreshold = data.itemCopyOfOther.Item.brokenThreshold;
+                    data.itemHardness = data.itemCopyOfOther.Item.hardness;
+                } else {
+                    data.itemHitPoints = 0;
+                    data.itemBrokenThreshold = 0;
+                    data.itemHardness = 0;
+                }
+            }
         } else if(data.builderType == "ARMOR"){
             data.itemHasQuantity = 0;
             data.itemQuantity = 1;
             data.itemHands = 'NONE';
+
+            if(data.itemCopyOfOther != null && data.itemCopyOfOther.ArmorData != null){
+                // Set Prof Name
+                data.itemProfName = data.itemCopyOfOther.ArmorData.profName;
+
+                // Fill in all armor data
+                data.itemArmorData = {};
+                data.itemArmorData.acBonus = data.itemCopyOfOther.ArmorData.acBonus;
+                data.itemArmorData.dexCap = data.itemCopyOfOther.ArmorData.dexCap;
+                data.itemArmorData.checkPenalty = data.itemCopyOfOther.ArmorData.checkPenalty;
+                data.itemArmorData.speedPenalty = data.itemCopyOfOther.ArmorData.speedPenalty;
+                data.itemArmorData.minStrength = data.itemCopyOfOther.ArmorData.minStrength;
+                data.itemArmorData.type = data.itemCopyOfOther.ArmorData.armorType;
+                data.itemArmorData.category = data.itemCopyOfOther.ArmorData.category;
+
+                // Add traits from copy
+                for(let otherCopyTag of data.itemCopyOfOther.TagArray){
+                    if(otherCopyTag != null){
+                        data.itemTagsArray.push(otherCopyTag.Tag.id);
+                    }
+                }
+
+                // Set hardness, hitpoints, & broken threshold
+                if(data.itemCopyOfOther.Item != null){
+                    data.itemHitPoints = data.itemCopyOfOther.Item.hitPoints;
+                    data.itemBrokenThreshold = data.itemCopyOfOther.Item.brokenThreshold;
+                    data.itemHardness = data.itemCopyOfOther.Item.hardness;
+                } else {
+                    data.itemHitPoints = 0;
+                    data.itemBrokenThreshold = 0;
+                    data.itemHardness = 0;
+                }
+            }
         } else if(data.builderType == "SHIELD"){
             data.itemHasQuantity = 0;
             data.itemQuantity = 1;
             data.itemHands = 'NONE';
+
+            if(data.itemCopyOfOther != null && data.itemCopyOfOther.ShieldData != null){
+                // Set Prof Name
+                data.itemProfName = data.itemCopyOfOther.ShieldData.profName;
+
+                // Fill in all shield data
+                data.itemShieldData = {};
+                data.itemShieldData.acBonus = data.itemCopyOfOther.ShieldData.acBonus;
+                data.itemShieldData.speedPenalty = data.itemCopyOfOther.ShieldData.speedPenalty;
+
+                // Add traits from copy
+                for(let otherCopyTag of data.itemCopyOfOther.TagArray){
+                    if(otherCopyTag != null){
+                        data.itemTagsArray.push(otherCopyTag.Tag.id);
+                    }
+                }
+
+                // Set hardness, hitpoints, & broken threshold
+                if(data.itemCopyOfOther.Item != null){
+                    data.itemHitPoints = data.itemCopyOfOther.Item.hitPoints;
+                    data.itemBrokenThreshold = data.itemCopyOfOther.Item.brokenThreshold;
+                    data.itemHardness = data.itemCopyOfOther.Item.hardness;
+                } else {
+                    data.itemHitPoints = 0;
+                    data.itemBrokenThreshold = 0;
+                    data.itemHardness = 0;
+                }
+            }
         } else if(data.builderType == "RUNE"){
             data.itemName += ' Runestone';
             data.itemPrice = parseInt(data.itemPrice)+300; // 3gp for the cost of the runestone
@@ -761,6 +858,7 @@ module.exports = class AdminUpdate {
         data.itemName = data.itemName.replace(/’/g,"'");
         if(data.itemDesc == null){ data.itemDesc = '__No Description__'; }
         if(data.itemVersion == null){ data.itemVersion = '1.0'; }
+        if(data.itemProfName == null){ data.itemProfName = data.itemName; }
         return Item.create({ // Create Item
             name: data.itemName,
             version: data.itemVersion,
@@ -817,6 +915,7 @@ module.exports = class AdminUpdate {
                     if(data.itemWeaponData != null){
                         return Weapon.create({
                             itemID: item.id,
+                            profName: data.itemProfName,
                             diceNum: 1,
                             dieType: data.itemWeaponData.dieType,
                             damageType: data.itemWeaponData.damageType,
@@ -839,6 +938,7 @@ module.exports = class AdminUpdate {
                         let sPenalty = becomeNegative(data.itemArmorData.speedPenalty);
                         return Armor.create({
                             itemID: item.id,
+                            profName: data.itemProfName,
                             acBonus: data.itemArmorData.acBonus,
                             dexCap: data.itemArmorData.dexCap,
                             checkPenalty: cPenalty,
@@ -857,6 +957,7 @@ module.exports = class AdminUpdate {
                         let sPenalty = becomeNegative(data.itemShieldData.speedPenalty);
                         return Shield.create({
                             itemID: item.id,
+                            profName: data.itemProfName,
                             acBonus: data.itemShieldData.acBonus,
                             speedPenalty: sPenalty
                         }).then(shield => {

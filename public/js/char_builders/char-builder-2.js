@@ -86,7 +86,7 @@ socket.on("returnAncestryAndChoices", function(ancestryObject, inChoiceStruct){
                     ancestryID);
                 
             } else {
-                injectASCChoiceStruct(choiceStruct);
+                injectWSCChoiceStruct(choiceStruct);
                 displayCurrentAncestry(ancestryMap.get(ancestryID), false);
             }
 
@@ -147,7 +147,7 @@ socket.on("returnAncestryChange", function(inChoiceStruct){
     choiceStruct = inChoiceStruct;
 
     if(g_ancestry != null){
-        injectASCChoiceStruct(choiceStruct);
+        injectWSCChoiceStruct(choiceStruct);
         displayCurrentAncestry(g_ancestry, true);
     } else {
         finishLoadingPage();

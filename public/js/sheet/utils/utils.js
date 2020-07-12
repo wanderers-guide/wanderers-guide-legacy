@@ -58,6 +58,10 @@ function getBulmaTextColorFromCurrentHP(currentHP, maxHP) {
   }
 }
 
+function doesntHaveItemHealth(invItem){
+  return (invItem.hitPoints == 0);
+}
+
 function rankLevel(level){
   switch(level) {
     case 1:

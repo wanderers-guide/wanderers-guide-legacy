@@ -63,7 +63,7 @@ function giveSkill(srcStruct, locationID, profType){
             $('.'+selectIncreaseControlShellClass).removeClass("is-danger");
             $('.'+selectIncreaseControlShellClass).addClass("is-info");
 
-            skillsUpdateASCChoiceStruct(srcStruct, null, null);
+            skillsUpdateWSCChoiceStruct(srcStruct, null, null);
             socket.emit("requestProficiencyChange",
                 getCharIDFromURL(),
                 {srcStruct, isSkill : true},
@@ -93,7 +93,7 @@ function giveSkill(srcStruct, locationID, profType){
 
                 let skillName = $(this).val();
 
-                skillsUpdateASCChoiceStruct(srcStruct, skillName, profType);
+                skillsUpdateWSCChoiceStruct(srcStruct, skillName, profType);
                 socket.emit("requestProficiencyChange",
                     getCharIDFromURL(),
                     {srcStruct, isSkill : true},
@@ -124,7 +124,7 @@ function isAbleToSelectIncrease(numUps, charLevel){
     }
 }
 
-function skillsUpdateASCChoiceStruct(srcStruct, profTo, profType){
+function skillsUpdateWSCChoiceStruct(srcStruct, profTo, profType){
 
     let foundProfData = false;
     for(let profData of ascChoiceStruct.ProfArray){
@@ -157,7 +157,7 @@ socket.on("returnProficiencyChange", function(profChangePacket){
 
     if(profChangePacket.isSkill){
         selectorUpdated();
-        socket.emit("requestASCUpdateSkills", getCharIDFromURL());
+        socket.emit("requestWSCUpdateSkills", getCharIDFromURL());
     }
     if(profChangePacket.isStatement != null && profChangePacket.isStatement){
         statementComplete();

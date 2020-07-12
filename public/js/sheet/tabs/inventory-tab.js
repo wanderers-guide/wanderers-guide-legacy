@@ -271,7 +271,9 @@ function displayInventoryItem(invItem, openBagInvItemArray, data) {
                     $('#'+baggedInvItemShoddyTagID).removeClass('is-hidden');
                 }
 
-                if(baggedInvItem.currentHitPoints > baggedInvItemBrokenThreshold){
+                let notBroken = (baggedInvItem.currentHitPoints > baggedInvItemBrokenThreshold);
+                if(doesntHaveItemHealth(baggedInvItem)) {notBroken = true;}
+                if(notBroken){
                     $('#'+baggedInvItemBrokenTagID).addClass('is-hidden');
                 } else {
                     $('#'+baggedInvItemBrokenTagID).removeClass('is-hidden');
@@ -347,6 +349,7 @@ function displayInventoryItem(invItem, openBagInvItemArray, data) {
 
     if(item.ShieldData != null){
         let notBroken = (invItem.currentHitPoints > brokenThreshold);
+        if(doesntHaveItemHealth(invItem)) {notBroken = true;}
         if(notBroken){
             $('#'+invItemNameID).append('<button name="'+invItem.id+'" class="equipShieldButton button is-very-small is-info is-rounded is-outlined mb-1 ml-3"><span class="icon is-small"><i class="fas fa-shield-alt"></i></span></button>');
         } else {
@@ -378,7 +381,9 @@ function displayInventoryItem(invItem, openBagInvItemArray, data) {
         $('#'+invItemShoddyTagID).removeClass('is-hidden');
     }
 
-    if(invItem.currentHitPoints > brokenThreshold){
+    let notBroken = (invItem.currentHitPoints > brokenThreshold);
+    if(doesntHaveItemHealth(invItem)) {notBroken = true;}
+    if(notBroken){
         $('#'+invItemBrokenTagID).addClass('is-hidden');
     } else {
         $('#'+invItemBrokenTagID).removeClass('is-hidden');

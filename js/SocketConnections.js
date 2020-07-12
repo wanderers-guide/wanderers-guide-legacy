@@ -862,7 +862,7 @@ module.exports = class SocketConnections {
               });
             }
           } else {
-            socket.emit('returnASCStatementFailure', 'Incorrect Auth');
+            socket.emit('returnWSCStatementFailure', 'Incorrect Auth');
           }
         });
       });
@@ -875,7 +875,7 @@ module.exports = class SocketConnections {
               socket.emit('returnWeaponFamiliarityChange');
             });
           } else {
-            socket.emit('returnASCStatementFailure', 'Incorrect Auth');
+            socket.emit('returnWSCStatementFailure', 'Incorrect Auth');
           }
         });
       });
@@ -889,10 +889,10 @@ module.exports = class SocketConnections {
                 socket.emit('returnWeaponSpecializationChange');
               });
             } else {
-              socket.emit('returnASCStatementFailure', 'Invalid weapon specialization type \"'+type+'\"');
+              socket.emit('returnWSCStatementFailure', 'Invalid weapon specialization type \"'+type+'\"');
             }
           } else {
-            socket.emit('returnASCStatementFailure', 'Incorrect Auth');
+            socket.emit('returnWSCStatementFailure', 'Incorrect Auth');
           }
         });
       });
@@ -905,7 +905,7 @@ module.exports = class SocketConnections {
               socket.emit('returnArmorSpecializationChange');
             });
           } else {
-            socket.emit('returnASCStatementFailure', 'Incorrect Auth');
+            socket.emit('returnWSCStatementFailure', 'Incorrect Auth');
           }
         });
       });
@@ -918,7 +918,7 @@ module.exports = class SocketConnections {
               socket.emit('returnWeaponCriticalSpecializationChange');
             });
           } else {
-            socket.emit('returnASCStatementFailure', 'Incorrect Auth');
+            socket.emit('returnWSCStatementFailure', 'Incorrect Auth');
           }
         });
       });
@@ -933,10 +933,10 @@ module.exports = class SocketConnections {
                 socket.emit('returnSpeedChange');
               });
             } else {
-              socket.emit('returnASCStatementFailure', 'Invalid Speed Amount \"'+speedAmt+'\"');
+              socket.emit('returnWSCStatementFailure', 'Invalid Speed Amount \"'+speedAmt+'\"');
             }
           } else {
-            socket.emit('returnASCStatementFailure', 'Incorrect Auth');
+            socket.emit('returnWSCStatementFailure', 'Incorrect Auth');
           }
         });
       });
@@ -949,7 +949,7 @@ module.exports = class SocketConnections {
               socket.emit('returnCharTagChange');
             });
           } else {
-            socket.emit('returnASCStatementFailure', 'Incorrect Auth');
+            socket.emit('returnWSCStatementFailure', 'Incorrect Auth');
           }
         });
       });
@@ -966,11 +966,11 @@ module.exports = class SocketConnections {
                   socket.emit('returnFeatChange', featChangePacket, null);
                 });
               } else {
-                socket.emit('returnASCStatementFailure', 'Cannot find feat \"'+featChangePacket.featName+'\"');
+                socket.emit('returnWSCStatementFailure', 'Cannot find feat \"'+featChangePacket.featName+'\"');
               }
             });
           } else {
-            socket.emit('returnASCStatementFailure', 'Incorrect Auth');
+            socket.emit('returnWSCStatementFailure', 'Incorrect Auth');
           }
         });
       });
@@ -983,7 +983,7 @@ module.exports = class SocketConnections {
               socket.emit('returnFeatHideByName');
             });
           } else {
-            socket.emit('returnASCStatementFailure', 'Incorrect Auth');
+            socket.emit('returnWSCStatementFailure', 'Incorrect Auth');
           }
         });
       });
@@ -999,11 +999,11 @@ module.exports = class SocketConnections {
                   socket.emit('returnLanguageChangeByName');
                 });
               } else {
-                socket.emit('returnASCStatementFailure', 'Cannot find language \"'+langName+'\"');
+                socket.emit('returnWSCStatementFailure', 'Cannot find language \"'+langName+'\"');
               }
             });
           } else {
-            socket.emit('returnASCStatementFailure', 'Incorrect Auth');
+            socket.emit('returnWSCStatementFailure', 'Incorrect Auth');
           }
         });
       });
@@ -1019,7 +1019,7 @@ module.exports = class SocketConnections {
                   socket.emit('returnSensesChangeByName');
                 });
               } else {
-                socket.emit('returnASCStatementFailure', 'Cannot find sense \"'+senseName+'\"');
+                socket.emit('returnWSCStatementFailure', 'Cannot find sense \"'+senseName+'\"');
               }
             });
           }
@@ -1037,7 +1037,7 @@ module.exports = class SocketConnections {
                   socket.emit('returnPhysicalFeaturesChangeByName');
                 });
               } else {
-                socket.emit('returnASCStatementFailure', 'Cannot find physical feature \"'+physicalFeatureName+'\"');
+                socket.emit('returnWSCStatementFailure', 'Cannot find physical feature \"'+physicalFeatureName+'\"');
               }
             });
           }
@@ -1053,11 +1053,11 @@ module.exports = class SocketConnections {
               if(spellSlots != null){
                 socket.emit('returnSpellSlotChange');
               } else {
-                socket.emit('returnASCStatementFailure', 'Invalid Spellcasting \"'+spellcasting+'\"');
+                socket.emit('returnWSCStatementFailure', 'Invalid Spellcasting \"'+spellcasting+'\"');
               }
             });
           } else {
-            socket.emit('returnASCStatementFailure', 'Incorrect Auth');
+            socket.emit('returnWSCStatementFailure', 'Incorrect Auth');
           }
         });
       });
@@ -1070,11 +1070,11 @@ module.exports = class SocketConnections {
               if(spellSlot != null){
                 socket.emit('returnSpellSlotChange');
               } else {
-                socket.emit('returnASCStatementFailure', 'Invalid Spell Slot \"'+spellSlot+'\"');
+                socket.emit('returnWSCStatementFailure', 'Invalid Spell Slot \"'+spellSlot+'\"');
               }
             });
           } else {
-            socket.emit('returnASCStatementFailure', 'Incorrect Auth');
+            socket.emit('returnWSCStatementFailure', 'Incorrect Auth');
           }
         });
       });
@@ -1088,7 +1088,7 @@ module.exports = class SocketConnections {
               socket.emit('returnKeySpellAbilityChange');
             });
           } else {
-            socket.emit('returnASCStatementFailure', 'Incorrect Auth');
+            socket.emit('returnWSCStatementFailure', 'Incorrect Auth');
           }
         });
       });
@@ -1102,7 +1102,7 @@ module.exports = class SocketConnections {
               socket.emit('returnSpellCastingTypeChange');
             });
           } else {
-            socket.emit('returnASCStatementFailure', 'Incorrect Auth');
+            socket.emit('returnWSCStatementFailure', 'Incorrect Auth');
           }
         });
       });
@@ -1117,10 +1117,10 @@ module.exports = class SocketConnections {
                 socket.emit('returnSpellListChange');
               });
             } else {
-              socket.emit('returnASCStatementFailure', 'Invalid Spell Tradition \"'+spellList+'\"');
+              socket.emit('returnWSCStatementFailure', 'Invalid Spell Tradition \"'+spellList+'\"');
             }
           } else {
-            socket.emit('returnASCStatementFailure', 'Incorrect Auth');
+            socket.emit('returnWSCStatementFailure', 'Incorrect Auth');
           }
         });
       });
@@ -1142,20 +1142,20 @@ module.exports = class SocketConnections {
                         socket.emit('returnInnateSpellChange');
                       });
                     } else {
-                      socket.emit('returnASCStatementFailure', 'Spell level cannot be lower than minimum spell level!');
+                      socket.emit('returnWSCStatementFailure', 'Spell level cannot be lower than minimum spell level!');
                     }
                   } else {
-                    socket.emit('returnASCStatementFailure', 'Invalid Spell \"'+spellName+'\"');
+                    socket.emit('returnWSCStatementFailure', 'Invalid Spell \"'+spellName+'\"');
                   }
                 });
               } else {
-                socket.emit('returnASCStatementFailure', 'Invalid Parameters \"'+timesPerDay+'\" and \"'+spellLevel+'\"');
+                socket.emit('returnWSCStatementFailure', 'Invalid Parameters \"'+timesPerDay+'\" and \"'+spellLevel+'\"');
               }
             } else {
-              socket.emit('returnASCStatementFailure', 'Invalid Spell Tradition \"'+spellTradition+'\"');
+              socket.emit('returnWSCStatementFailure', 'Invalid Spell Tradition \"'+spellTradition+'\"');
             }
           } else {
-            socket.emit('returnASCStatementFailure', 'Incorrect Auth');
+            socket.emit('returnWSCStatementFailure', 'Incorrect Auth');
           }
         });
       });
@@ -1173,14 +1173,14 @@ module.exports = class SocketConnections {
                     socket.emit('returnFocusSpellChange');
                   });
                 } else {
-                  socket.emit('returnASCStatementFailure', '\"'+spellName+'\" is not a focus spell!');
+                  socket.emit('returnWSCStatementFailure', '\"'+spellName+'\" is not a focus spell!');
                 }
               } else {
-                socket.emit('returnASCStatementFailure', 'Invalid Spell \"'+spellName+'\"');
+                socket.emit('returnWSCStatementFailure', 'Invalid Spell \"'+spellName+'\"');
               }
             });
           } else {
-            socket.emit('returnASCStatementFailure', 'Incorrect Auth');
+            socket.emit('returnWSCStatementFailure', 'Incorrect Auth');
           }
         });
       });
@@ -1193,7 +1193,7 @@ module.exports = class SocketConnections {
               socket.emit('returnFocusPointChange');
             });
           } else {
-            socket.emit('returnASCStatementFailure', 'Incorrect Auth');
+            socket.emit('returnWSCStatementFailure', 'Incorrect Auth');
           }
         });
       });
@@ -1208,10 +1208,10 @@ module.exports = class SocketConnections {
                 socket.emit('returnResistanceChange');
               });
             } else {
-              socket.emit('returnASCStatementFailure', "Invalid Resistance Amount '"+resistAmount+"'!");
+              socket.emit('returnWSCStatementFailure', "Invalid Resistance Amount '"+resistAmount+"'!");
             }
           } else {
-            socket.emit('returnASCStatementFailure', 'Incorrect Auth');
+            socket.emit('returnWSCStatementFailure', 'Incorrect Auth');
           }
         });
       });
@@ -1225,10 +1225,10 @@ module.exports = class SocketConnections {
                 socket.emit('returnVulnerabilityChange');
               });
             } else {
-              socket.emit('returnASCStatementFailure', "Invalid Vulnerability Amount '"+vulnerableAmount+"'!");
+              socket.emit('returnWSCStatementFailure', "Invalid Vulnerability Amount '"+vulnerableAmount+"'!");
             }
           } else {
-            socket.emit('returnASCStatementFailure', 'Incorrect Auth');
+            socket.emit('returnWSCStatementFailure', 'Incorrect Auth');
           }
         });
       });
@@ -1251,7 +1251,7 @@ module.exports = class SocketConnections {
               }
             });
           } else {
-            socket.emit('returnASCStatementFailure', 'Incorrect Auth');
+            socket.emit('returnWSCStatementFailure', 'Incorrect Auth');
           }
         });
       });
@@ -1261,34 +1261,34 @@ module.exports = class SocketConnections {
 
   }
 
-  static builderASC(io) {
+  static builderWSC(io) {
 
     // Socket.IO Connections
     io.on('connection', function(socket){
 
-      socket.on('requestASCChoices', function(charID, ascCode, srcStruct, locationID){
+      socket.on('requestWSCChoices', function(charID, ascCode, srcStruct, locationID){
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
           if(ownsChar){
             CharGathering.getCharChoices(charID).then((choiceStruct) => {
-              socket.emit('returnASCChoices', ascCode, srcStruct, locationID, choiceStruct);
+              socket.emit('returnWSCChoices', ascCode, srcStruct, locationID, choiceStruct);
             });
           }
         });
       });
 
 
-      socket.on('requestASCMapsInit', function(charID){
+      socket.on('requestWSCMapsInit', function(charID){
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
           if(ownsChar){
             CharGathering.getAllSkills(charID).then((skillsObject) => {
               CharGathering.getAllFeats().then((featsObject) => {
                 CharGathering.getAllLanguages(charID).then((langsObject) => {
                   CharGathering.getAllSpells().then((spellMap) => {
-                    socket.emit('returnASCUpdateSkills', skillsObject);
-                    socket.emit('returnASCUpdateFeats', featsObject);
-                    socket.emit('returnASCUpdateLangs', langsObject);
-                    socket.emit('returnASCUpdateSpells', mapToObj(spellMap));
-                    socket.emit('returnASCMapsInit');
+                    socket.emit('returnWSCUpdateSkills', skillsObject);
+                    socket.emit('returnWSCUpdateFeats', featsObject);
+                    socket.emit('returnWSCUpdateLangs', langsObject);
+                    socket.emit('returnWSCUpdateSpells', mapToObj(spellMap));
+                    socket.emit('returnWSCMapsInit');
                   });
                 });
               });
@@ -1297,23 +1297,23 @@ module.exports = class SocketConnections {
         });
       });
     
-      socket.on('requestASCUpdateChoices', function(charID, updateType){
+      socket.on('requestWSCUpdateChoices', function(charID, updateType){
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
           if(ownsChar){
             if(updateType == 'ABILITY-BOOSTS'){
               CharGathering.getChoicesAbilityBonus(charID).then((bonusDataArray) => {
-                socket.emit('returnASCUpdateChoices', 'ABILITY-BOOSTS', bonusDataArray);
+                socket.emit('returnWSCUpdateChoices', 'ABILITY-BOOSTS', bonusDataArray);
               });
             } else if(updateType == 'FEATS'){
               CharGathering.getChoicesFeats(charID).then((featDataArray) => {
-                socket.emit('returnASCUpdateChoices', 'FEATS', featDataArray);
+                socket.emit('returnWSCUpdateChoices', 'FEATS', featDataArray);
               });
             } else if(updateType == 'DOMAINS'){
               CharGathering.getChoicesDomains(charID).then((domainDataArray) => {
-                socket.emit('returnASCUpdateChoices', 'DOMAINS', domainDataArray);
+                socket.emit('returnWSCUpdateChoices', 'DOMAINS', domainDataArray);
               });
             } else {
-              socket.emit('returnASCUpdateChoices', null, null);
+              socket.emit('returnWSCUpdateChoices', null, null);
             }
           }
         });
@@ -1321,41 +1321,41 @@ module.exports = class SocketConnections {
 
       
     
-      socket.on('requestASCUpdateSkills', function(charID){
+      socket.on('requestWSCUpdateSkills', function(charID){
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
           if(ownsChar){
             CharGathering.getAllSkills(charID).then((skillsObject) => {
-              socket.emit('returnASCUpdateSkills', skillsObject);
+              socket.emit('returnWSCUpdateSkills', skillsObject);
             });
           }
         });
       });
 
-      socket.on('requestASCAbilityBonusChange', function(charID, srcStruct, abilityBonusStruct, selectBoostControlShellClass){
+      socket.on('requestWSCAbilityBonusChange', function(charID, srcStruct, abilityBonusStruct, selectBoostControlShellClass){
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
           if(ownsChar){
             if(abilityBonusStruct == null){
               CharDataMapping.deleteData(charID, 'abilityBonus', srcStruct)
               .then((result) => {
-                socket.emit('returnASCAbilityBonusChange', selectBoostControlShellClass);
+                socket.emit('returnWSCAbilityBonusChange', selectBoostControlShellClass);
               });
             } else {
               CharDataMappingExt.setDataAbilityBonus(charID, srcStruct, abilityBonusStruct.Ability, abilityBonusStruct.Bonus)
               .then((result) => {
-                socket.emit('returnASCAbilityBonusChange', selectBoostControlShellClass);
+                socket.emit('returnWSCAbilityBonusChange', selectBoostControlShellClass);
               });
             }
           }
         });
       });
 
-      socket.on('requestASCInnateSpellChange', function(charID, srcStruct, innateSpellStruct, selectControlShellClass){
+      socket.on('requestWSCInnateSpellChange', function(charID, srcStruct, innateSpellStruct, selectControlShellClass){
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
           if(ownsChar){
             if(innateSpellStruct == null){
               CharDataMapping.deleteData(charID, 'innateSpell', srcStruct)
               .then((result) => {
-                socket.emit('returnASCInnateSpellChange', selectControlShellClass);
+                socket.emit('returnWSCInnateSpellChange', selectControlShellClass);
               });
             } else {
               CharGathering.getSpellByName(innateSpellStruct.name)
@@ -1363,7 +1363,7 @@ module.exports = class SocketConnections {
                 if(spell != null){
                   CharDataMappingExt.setDataInnateSpell(charID, srcStruct, spell.id, innateSpellStruct.level, innateSpellStruct.tradition, innateSpellStruct.tPd)
                   .then((result) => {
-                    socket.emit('returnASCInnateSpellChange', selectControlShellClass);
+                    socket.emit('returnWSCInnateSpellChange', selectControlShellClass);
                   });
                 }
               });
@@ -1372,15 +1372,15 @@ module.exports = class SocketConnections {
         });
       });
 
-      socket.on('requestASCCharTagChange', function(charID, srcStruct, charTag, selectControlShellClass){
+      socket.on('requestWSCCharTagChange', function(charID, srcStruct, charTag, selectControlShellClass){
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
           if(ownsChar){
             CharTags.setTag(charID, srcStruct, charTag)
             .then((result) => {
-              socket.emit('returnASCCharTagChange', selectControlShellClass);
+              socket.emit('returnWSCCharTagChange', selectControlShellClass);
             });
           } else {
-            socket.emit('returnASCStatementFailure', 'Incorrect Auth');
+            socket.emit('returnWSCStatementFailure', 'Incorrect Auth');
           }
         });
       });

@@ -30,15 +30,11 @@ function openInvItemQuickview(data) {
     data.InvItem.currentHitPoints = (data.InvItem.currentHitPoints > maxHP) ? maxHP : data.InvItem.currentHitPoints;
 
     let isBroken = (data.InvItem.currentHitPoints <= brokenThreshold);
+    if(doesntHaveItemHealth(data.InvItem)) {isBroken = false;}
+
     let isInvestable = false;
 
     let tagsInnerHTML = '';
-    if(isBroken){
-        tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-very-small is-danger has-tooltip-bottom has-tooltip-multiline" data-tooltip="A broken object can’t be used for its normal function, nor does it grant bonuses - with the exception of armor. Broken armor still grants its item bonus to AC, but it also imparts a status penalty to AC depending on its category: -1 for broken light armor, -2 for broken medium armor, or -3 for broken heavy armor. A broken item still imposes penalties and limitations normally incurred by carrying, holding, or wearing it.">Broken</button>';
-    }
-    if(isShoddy){
-        tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-very-small is-warning has-tooltip-bottom has-tooltip-multiline" data-tooltip="Improvised or of dubious make, shoddy items are never available for purchase except for in the most desperate of communities. When available, a shoddy item usually costs half the Price of a standard item, though you can never sell one in any case. Attacks and checks involving a shoddy item take a –2 item penalty. This penalty also applies to any DCs that a shoddy item applies to (such as AC, for shoddy armor). A shoddy suit of armor also worsens the armor’s check penalty by 2. A shoddy item’s Hit Points and Broken Threshold are each half that of a normal item of its type.">Shoddy</button>';
-    }
 
     let rarity = data.Item.Item.rarity;
     switch(rarity) {
@@ -51,15 +47,22 @@ function openInvItemQuickview(data) {
         default: break;
     }
 
+    if(isBroken){
+        tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-very-small is-danger has-tooltip-bottom has-tooltip-multiline" data-tooltip="A broken object can’t be used for its normal function, nor does it grant bonuses - with the exception of armor. Broken armor still grants its item bonus to AC, but it also imparts a status penalty to AC depending on its category: -1 for broken light armor, -2 for broken medium armor, or -3 for broken heavy armor. A broken item still imposes penalties and limitations normally incurred by carrying, holding, or wearing it.">Broken</button>';
+    }
+    if(isShoddy){
+        tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-very-small is-warning has-tooltip-bottom has-tooltip-multiline" data-tooltip="Improvised or of dubious make, shoddy items are never available for purchase except for in the most desperate of communities. When available, a shoddy item usually costs half the Price of a standard item, though you can never sell one in any case. Attacks and checks involving a shoddy item take a –2 item penalty. This penalty also applies to any DCs that a shoddy item applies to (such as AC, for shoddy armor). A shoddy suit of armor also worsens the armor’s check penalty by 2. A shoddy item’s Hit Points and Broken Threshold are each half that of a normal item of its type.">Shoddy</button>';
+    }
+
     let itemSize = data.InvItem.size;
     switch(itemSize) {
-        case 'TINY': tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-very-small is-link">Tiny</button>';
+        case 'TINY': tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-very-small is-link has-tooltip-bottom has-tooltip-multiline" data-tooltip="An item of Tiny size has the same Price but half the Bulk of a Medium-sized version of the same item (half of a 1 Bulk item is treated as light Bulk for this conversion).">Tiny</button>';
             break;
-        case 'SMALL': tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-very-small is-link">Small</button>';
+        case 'SMALL': tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-very-small is-link has-tooltip-bottom has-tooltip-multiline" data-tooltip="An item of Small size has the same Price and Bulk as the Medium-sized version, the item is simply a bit smaller for tinier folk.">Small</button>';
             break;
-        case 'LARGE': tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-very-small is-link">Large</button>'; break;
-        case 'HUGE': tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-very-small is-link">Huge</button>'; break;
-        case 'GARGANTUAN': tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-very-small is-link">Gargantuan</button>';
+        case 'LARGE': tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-very-small is-link has-tooltip-bottom has-tooltip-multiline" data-tooltip="An item of Large size has 2 times the Price and Bulk of a Medium-sized version of the same item.">Large</button>'; break;
+        case 'HUGE': tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-very-small is-link has-tooltip-bottom has-tooltip-multiline" data-tooltip="An item of Huge size has 4 times the Price and Bulk of a Medium-sized version of the same item.">Huge</button>'; break;
+        case 'GARGANTUAN': tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-very-small is-link has-tooltip-bottom has-tooltip-multiline" data-tooltip="An item of Gargantuan size has 8 times the Price and Bulk of a Medium-sized version of the same item.">Gargantuan</button>';
             break;
         default: break;
     }
@@ -131,15 +134,15 @@ function openInvItemQuickview(data) {
         price += ' for '+data.Item.Item.quantity;
     }
 
-    qContent.append('<p class="is-size-6 has-text-left px-3"><strong>Price:</strong> '+price+'</p>');
+    qContent.append('<p class="is-size-6 has-text-left px-3"><strong>Price</strong> '+price+'</p>');
 
     let usageBulkEntry = '';
     if(data.Item.Item.usage != null){
-        usageBulkEntry += '<strong>Usage:</strong> '+data.Item.Item.usage+'; ';
+        usageBulkEntry += '<strong>Usage</strong> '+data.Item.Item.usage+'; ';
     }
     let bulk = getConvertedBulkForSize(data.InvItem.size, data.InvItem.bulk);
     bulk = getBulkFromNumber(bulk);
-    usageBulkEntry += '<strong>Bulk:</strong> '+bulk;
+    usageBulkEntry += '<strong>Bulk</strong> '+bulk;
     qContent.append('<p class="is-size-6 has-text-left px-3 negative-indent">'+usageBulkEntry+'</p>');
 
     if(data.Item.Item.hands != 'NONE'){
@@ -240,7 +243,7 @@ function openInvItemQuickview(data) {
 
     if(data.Item.Item.craftRequirements != null){
         qContent.append('<hr class="m-2">');
-        qContent.append('<div class="px-2">'+processText('~ Craft Requirements: '+data.Item.Item.craftRequirements+'\n', true, true, 'MEDIUM')+'</div>');
+        qContent.append('<div class="px-2">'+processText('~ Craft Requirements: '+data.Item.Item.craftRequirements, true, true, 'MEDIUM')+'</div>');
     }
 
     qContent.append('<hr class="m-2">');
@@ -336,10 +339,11 @@ function openInvItemQuickview(data) {
     }
 
     // Health, Hardness, and Broken Threshold
-    if(!viewOnly) {
+    if(!viewOnly && !doesntHaveItemHealth(data.InvItem)) {
         qContent.append('<p class="has-text-centered is-size-7"><strong>Health</strong></p>');
         qContent.append('<div class="field has-addons has-addons-centered"><p class="control"><input id="'+invItemHPInputID+'" class="input is-small" type="number" min="0" max="'+maxHP+'" value="'+data.InvItem.currentHitPoints+'"></p><p class="control"><a class="button is-static is-small has-text-grey-light has-background-grey-darkest border-darker">/</a><p class="control"><a class="button is-static is-small has-text-grey-lighter has-background-grey-darklike border-darker">'+maxHP+'</a></p></div>');
         qContent.append('<div class="columns is-centered is-marginless text-center"><div class="column is-4 is-paddingless"><p class="is-size-7 has-text-right pr-2"><strong>Hardness:</strong> '+data.InvItem.hardness+'</p></div><div class="column is-5 is-paddingless"><p class="is-size-7 has-text-left pl-2"><strong>Broken Threshold:</strong> '+brokenThreshold+'</p></div></div>');
+        qContent.append('<hr class="mt-2 mb-3">');
         
         $('#'+invItemHPInputID).blur(function() {
             let newHP = $(this).val();
@@ -358,7 +362,6 @@ function openInvItemQuickview(data) {
 
     // Move, Customize, and Remove Item
     if(!viewOnly) {
-        qContent.append('<hr class="mt-2 mb-3">');
         if(data.InvData != null){
             if(data.InvData.ItemIsStorage && !data.InvData.ItemIsStorageAndEmpty) {
 

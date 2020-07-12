@@ -1,8 +1,6 @@
 
 $(function () {
 
-    socket.emit("requestAdminItemDetails");
-
 });
 
 socket.on("returnAdminItemDetails", function(itemObject){
@@ -42,32 +40,38 @@ socket.on("returnAdminItemDetails", function(itemObject){
     $("#inputHardness").val(item.Item.hardness);
     
     if(item.WeaponData != null){
-        $("#inputDieType").val(item.WeaponData.dieType);
-        $("#inputDamageType").val(item.WeaponData.damageType);
-        $("#inputWeaponCategory").val(item.WeaponData.category);
-        let isMelee = (item.WeaponData.isMelee == 1) ? true : false;
-        $("#inputIsMelee").prop('checked', isMelee);
-        $("#inputMeleeWeaponType").val(item.WeaponData.meleeWeaponType);
-        let isRanged = (item.WeaponData.isRanged == 1) ? true : false;
-        $("#inputIsRanged").prop('checked', isRanged);
-        $("#inputRangedWeaponType").val(item.WeaponData.rangedWeaponType);
-        $("#inputRange").val(item.WeaponData.rangedRange);
-        $("#inputReload").val(item.WeaponData.rangedReload);
+        if(item.WeaponData.profName == item.Item.name){
+            $("#inputDieType").val(item.WeaponData.dieType);
+            $("#inputDamageType").val(item.WeaponData.damageType);
+            $("#inputWeaponCategory").val(item.WeaponData.category);
+            let isMelee = (item.WeaponData.isMelee == 1) ? true : false;
+            $("#inputIsMelee").prop('checked', isMelee);
+            $("#inputMeleeWeaponType").val(item.WeaponData.meleeWeaponType);
+            let isRanged = (item.WeaponData.isRanged == 1) ? true : false;
+            $("#inputIsRanged").prop('checked', isRanged);
+            $("#inputRangedWeaponType").val(item.WeaponData.rangedWeaponType);
+            $("#inputRange").val(item.WeaponData.rangedRange);
+            $("#inputReload").val(item.WeaponData.rangedReload);
+        }
     }
 
     if(item.ArmorData != null){
-        $("#inputArmorACBonus").val(item.ArmorData.acBonus);
-        $("#inputArmorDexCap").val(item.ArmorData.dexCap);
-        $("#inputArmorType").val(item.ArmorData.armorType);
-        $("#inputArmorCategory").val(item.ArmorData.category);
-        $("#inputArmorCheckPenalty").val(item.ArmorData.checkPenalty);
-        $("#inputArmorSpeedPenalty").val(item.ArmorData.speedPenalty);
-        $("#inputArmorMinStrength").val(item.ArmorData.minStrength);
+        if(item.ArmorData.profName == item.Item.name){
+            $("#inputArmorACBonus").val(item.ArmorData.acBonus);
+            $("#inputArmorDexCap").val(item.ArmorData.dexCap);
+            $("#inputArmorType").val(item.ArmorData.armorType);
+            $("#inputArmorCategory").val(item.ArmorData.category);
+            $("#inputArmorCheckPenalty").val(item.ArmorData.checkPenalty);
+            $("#inputArmorSpeedPenalty").val(item.ArmorData.speedPenalty);
+            $("#inputArmorMinStrength").val(item.ArmorData.minStrength);
+        }
     }
 
     if(item.ShieldData != null){
-        $("#inputShieldACBonus").val(item.ShieldData.acBonus);
-        $("#inputShieldSpeedPenalty").val(item.ShieldData.speedPenalty);
+        if(item.ShieldData.profName == item.Item.name){
+            $("#inputShieldACBonus").val(item.ShieldData.acBonus);
+            $("#inputShieldSpeedPenalty").val(item.ShieldData.speedPenalty);
+        }
     }
 
     if(item.StorageData != null){
@@ -89,12 +93,58 @@ socket.on("returnAdminItemDetails", function(itemObject){
         $("#inputPrice").val(itemPrice);
     }
     
+    $("#inputBuilderType").trigger("change");
+    $("#inputCategory").val(item.Item.itemType);
+
+    if(item.WeaponData != null && item.WeaponData.profName != item.Item.name){
+        let copyItemID = null;
+        for(const [itemID, itemDataStruct] of itemMap.entries()){
+            if(itemDataStruct.Item.name === item.WeaponData.profName){
+                copyItemID = itemID;
+                item.TagArray = tagArrayDifference(item.TagArray, itemDataStruct.TagArray);
+                break;
+            }
+        }
+        if(copyItemID != null){
+            $("#inputItemCopyOfOther").val(copyItemID);
+            $("#inputItemCopyOfOther").trigger("change");
+        }
+    }
+
+    if(item.ArmorData != null && item.ArmorData.profName != item.Item.name){
+        let copyItemID = null;
+        for(const [itemID, itemDataStruct] of itemMap.entries()){
+            if(itemDataStruct.Item.name === item.ArmorData.profName){
+                copyItemID = itemID;
+                item.TagArray = tagArrayDifference(item.TagArray, itemDataStruct.TagArray);
+                break;
+            }
+        }
+        if(copyItemID != null){
+            $("#inputItemCopyOfOther").val(copyItemID);
+            $("#inputItemCopyOfOther").trigger("change");
+        }
+    }
+
+    if(item.ShieldData != null && item.ShieldData.profName != item.Item.name){
+        let copyItemID = null;
+        for(const [itemID, itemDataStruct] of itemMap.entries()){
+            if(itemDataStruct.Item.name === item.ShieldData.profName){
+                copyItemID = itemID;
+                item.TagArray = tagArrayDifference(item.TagArray, itemDataStruct.TagArray);
+                break;
+            }
+        }
+        if(copyItemID != null){
+            $("#inputItemCopyOfOther").val(copyItemID);
+            $("#inputItemCopyOfOther").trigger("change");
+        }
+    }
+
     for(let tag of item.TagArray){
         $("#inputTags").find('option[value='+tag.Tag.id+']').attr('selected','selected');
     }
     $("#inputTags").trigger("change");
-    $("#inputBuilderType").trigger("change");
-    $("#inputCategory").val(item.Item.itemType);
 
     $("#updateButton").click(function(){
         $(this).unbind();
@@ -102,3 +152,22 @@ socket.on("returnAdminItemDetails", function(itemObject){
     });
 
 });
+
+function tagArrayDifference(arr1, arr2) {
+    let newArr1 = [];
+    for(let tag of arr1){
+        newArr1.push(tag.Tag.id);
+    }
+    let newArr2 = [];
+    for(let tag of arr2){
+        newArr2.push(tag.Tag.id);
+    }
+    let diffArr = newArr1
+      .filter(x => !newArr2.includes(x))
+      .concat(newArr2.filter(x => !newArr1.includes(x)));
+    let finalDiffArr = [];
+    for(let tagID of diffArr){
+        finalDiffArr.push({Tag: {id: tagID}});
+    }
+    return finalDiffArr;
+  }

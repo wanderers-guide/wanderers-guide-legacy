@@ -216,7 +216,7 @@ function displayFeatChoice(srcStruct, locationID, selectionName, tagsArray, feat
             // Display nothing
             $('#'+descriptionFeatID).html('');
 
-            featsUpdateASCChoiceStruct(srcStruct, null);
+            featsUpdateWSCChoiceStruct(srcStruct, null);
             socket.emit("requestFeatChange",
                 getCharIDFromURL(),
                 {srcStruct, feat : null, featID : null, codeLocationID : descriptionFeatID+"Code" },
@@ -238,7 +238,7 @@ function displayFeatChoice(srcStruct, locationID, selectionName, tagsArray, feat
 
                 // Display feat as issue
                 $('#'+descriptionFeatID).html('<p class="help is-danger text-center">You cannot select a feat more than once unless it states otherwise.</p>');
-                featsUpdateASCChoiceStruct(srcStruct, null);
+                featsUpdateWSCChoiceStruct(srcStruct, null);
 
             } else {
                 $('.'+selectFeatControlShellClass).removeClass("is-danger");
@@ -250,7 +250,7 @@ function displayFeatChoice(srcStruct, locationID, selectionName, tagsArray, feat
                 if(triggerSave == null || triggerSave) {
                     $('.'+selectFeatControlShellClass).addClass("is-loading");
 
-                    featsUpdateASCChoiceStruct(srcStruct, feat.Feat);
+                    featsUpdateWSCChoiceStruct(srcStruct, feat.Feat);
                     socket.emit("requestFeatChange",
                         getCharIDFromURL(),
                         {srcStruct, feat, featID, codeLocationID : descriptionFeatID+"Code" },
@@ -269,7 +269,7 @@ function displayFeatChoice(srcStruct, locationID, selectionName, tagsArray, feat
 
 }
 
-function featsUpdateASCChoiceStruct(srcStruct, feat){
+function featsUpdateWSCChoiceStruct(srcStruct, feat){
 
     let foundFeatData = false;
     for(let featData of ascChoiceStruct.FeatArray){
@@ -336,7 +336,7 @@ function giveFeatByName(srcStruct, featName, locationID){
 
     displayFeat(descriptionFeatID, featEntry);
 
-    featsUpdateASCChoiceStruct(srcStruct, featEntry.Feat);
+    featsUpdateWSCChoiceStruct(srcStruct, featEntry.Feat);
     socket.emit("requestFeatChangeByName",
         getCharIDFromURL(),
         {srcStruct, feat : featEntry, featName : featName,

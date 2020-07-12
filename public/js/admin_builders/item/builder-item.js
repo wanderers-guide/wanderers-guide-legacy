@@ -1,13 +1,27 @@
 
 let socket = io();
+let g_itemMap = null;
 
 // ~~~~~~~~~~~~~~ // Run on Load // ~~~~~~~~~~~~~~ //
 $(function () {
 
+    socket.emit("requestAdminItemDetails");
+
+});
+
+socket.on("returnAdminItemDetails", function(itemObject){
+
+    let itemMap = objToMap(itemObject);
+    g_itemMap = itemMap;
+
     let builderTypeSelection = $("#inputBuilderType");
     builderTypeSelection.change(function(){
         let builderType = $(this).val();
+        $("#inputItemCopyOfOther").off('change');
         if(builderType == "GENERAL"){
+            $("#inputItemCopyOfOther").html('');
+            $("#sectionItemCopyOfOther").addClass('is-hidden');
+
             $("#sectionWeapon").addClass('is-hidden');
             $("#sectionWeaponMelee").addClass('is-hidden');
             $("#sectionWeaponRanged").addClass('is-hidden');
@@ -26,6 +40,9 @@ $(function () {
             $("#sectionHealth").removeClass('is-hidden');
             $("#inputCategory").val("OTHER");
         } else if(builderType == "STORAGE"){
+            $("#inputItemCopyOfOther").html('');
+            $("#sectionItemCopyOfOther").addClass('is-hidden');
+
             $("#sectionWeapon").addClass('is-hidden');
             $("#sectionWeaponMelee").addClass('is-hidden');
             $("#sectionWeaponRanged").addClass('is-hidden');
@@ -44,6 +61,23 @@ $(function () {
             $("#sectionHealth").removeClass('is-hidden');
             $("#inputCategory").val("STORAGE");
         } else if(builderType == "WEAPON"){
+            let copyOfOtherItemHTML = '<option value="">Create New Weapon</option>';
+            for(const [itemID, itemDataStruct] of itemMap.entries()){
+                if(itemDataStruct.WeaponData != null && itemDataStruct.WeaponData.profName === itemDataStruct.Item.name){
+                    copyOfOtherItemHTML += '<option value="'+itemID+'">'+itemDataStruct.Item.name+'</option>';
+                }
+            }
+            $("#inputItemCopyOfOther").html(copyOfOtherItemHTML);
+            $("#sectionItemCopyOfOther").removeClass('is-hidden');
+            $("#inputItemCopyOfOther").change(function(){
+                if($(this).val() != ''){
+                    $("#sectionWeapon").addClass('is-hidden');
+                    $("#sectionWeaponMelee").addClass('is-hidden');
+                    $("#sectionWeaponRanged").addClass('is-hidden');
+                    $("#sectionHealth").addClass('is-hidden');
+                }
+            });
+
             $("#sectionWeapon").removeClass('is-hidden');
             $("#sectionWeaponMelee").removeClass('is-hidden');
             $("#sectionWeaponRanged").removeClass('is-hidden');
@@ -62,6 +96,22 @@ $(function () {
             $("#sectionHealth").removeClass('is-hidden');
             $("#inputCategory").val("WEAPON");
         } else if(builderType == "ARMOR"){
+            let copyOfOtherItemHTML = '<option value="">Create New Armor</option>';
+            for(const [itemID, itemDataStruct] of itemMap.entries()){
+                if(itemDataStruct.ArmorData != null && itemDataStruct.ArmorData.profName === itemDataStruct.Item.name){
+                    copyOfOtherItemHTML += '<option value="'+itemID+'">'+itemDataStruct.Item.name+'</option>';
+                }
+            }
+            $("#inputItemCopyOfOther").html(copyOfOtherItemHTML);
+            $("#sectionItemCopyOfOther").removeClass('is-hidden');
+            $("#inputItemCopyOfOther").change(function(){
+                if($(this).val() != ''){
+                    $("#sectionArmor").addClass('is-hidden');
+                    $("#sectionArmorPenalties").addClass('is-hidden');
+                    $("#sectionHealth").addClass('is-hidden');
+                }
+            });
+
             $("#sectionWeapon").addClass('is-hidden');
             $("#sectionWeaponMelee").addClass('is-hidden');
             $("#sectionWeaponRanged").addClass('is-hidden');
@@ -80,6 +130,21 @@ $(function () {
             $("#sectionHealth").removeClass('is-hidden');
             $("#inputCategory").val("ARMOR");
         } else if(builderType == "SHIELD"){
+            let copyOfOtherItemHTML = '<option value="">Create New Shield</option>';
+            for(const [itemID, itemDataStruct] of itemMap.entries()){
+                if(itemDataStruct.ShieldData != null && itemDataStruct.ShieldData.profName === itemDataStruct.Item.name){
+                    copyOfOtherItemHTML += '<option value="'+itemID+'">'+itemDataStruct.Item.name+'</option>';
+                }
+            }
+            $("#inputItemCopyOfOther").html(copyOfOtherItemHTML);
+            $("#sectionItemCopyOfOther").removeClass('is-hidden');
+            $("#inputItemCopyOfOther").change(function(){
+                if($(this).val() != ''){
+                    $("#sectionShield").addClass('is-hidden');
+                    $("#sectionHealth").addClass('is-hidden');
+                }
+            });
+
             $("#sectionWeapon").addClass('is-hidden');
             $("#sectionWeaponMelee").addClass('is-hidden');
             $("#sectionWeaponRanged").addClass('is-hidden');
@@ -98,6 +163,9 @@ $(function () {
             $("#sectionHealth").removeClass('is-hidden');
             $("#inputCategory").val("SHIELD");
         } else if(builderType == "RUNE"){
+            $("#inputItemCopyOfOther").html('');
+            $("#sectionItemCopyOfOther").addClass('is-hidden');
+
             $("#sectionWeapon").addClass('is-hidden');
             $("#sectionWeaponMelee").addClass('is-hidden');
             $("#sectionWeaponRanged").addClass('is-hidden');
@@ -241,6 +309,12 @@ function finishItem(isUpdate){
             minStrength: $("#inputArmorMinStrength").val()
         };
     }
+
+    let itemCopyOfOther = null;
+    let copyOtherID = $("#inputItemCopyOfOther").val();
+    if(copyOtherID != null && copyOtherID != ''){
+        itemCopyOfOther = g_itemMap.get(copyOtherID);
+    }
     
     let requestPacket = null;
     let itemID = null;
@@ -254,6 +328,7 @@ function finishItem(isUpdate){
     socket.emit(requestPacket,{
         itemID,
         builderType,
+        itemCopyOfOther,
         itemName,
         itemVersion,
         itemPrice,

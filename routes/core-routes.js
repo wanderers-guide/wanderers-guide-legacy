@@ -28,8 +28,8 @@ router.get('/license', (req, res) => {
 });
 
 // create license route
-router.get('/asc_docs', (req, res) => {
-    res.render('pages/asc_docs', { title: "ASC Docs - Wanderer's Guide", user: req.user });
+router.get('/wsc_docs', (req, res) => {
+    res.render('pages/wsc_docs', { title: "WSC Docs - Wanderer's Guide", user: req.user });
 });
 
 module.exports = router;

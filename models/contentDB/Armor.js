@@ -5,6 +5,9 @@ const Armor = db.define('armors', {
   itemID: {
     type: Sequelize.INTEGER
   },
+  profName: {
+    type: Sequelize.STRING
+  },
   acBonus: {
     type: Sequelize.INTEGER
   },

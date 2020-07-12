@@ -5,6 +5,9 @@ const Weapon = db.define('weapons', {
   itemID: {
     type: Sequelize.INTEGER
   },
+  profName: {
+    type: Sequelize.STRING
+  },
   diceNum: {
     type: Sequelize.INTEGER
   },

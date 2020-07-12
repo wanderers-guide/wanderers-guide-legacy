@@ -5,6 +5,9 @@ const Shield = db.define('shields', {
   itemID: {
     type: Sequelize.INTEGER
   },
+  profName: {
+    type: Sequelize.STRING
+  },
   acBonus: {
     type: Sequelize.INTEGER
   },

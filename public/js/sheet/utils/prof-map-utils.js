@@ -1,8 +1,17 @@
 
-function findItemDataByName(itemMap, itemName){
+function findItemDataByName(itemMap, profItemName, type){
     for(const [itemID, itemData] of itemMap.entries()){
-        if(itemData.Item.name.toUpperCase() == itemName){
-            return itemData;
+        console.log(itemData);
+        console.log(profItemName);
+        console.log(type);
+        if(type == 'WEAPON' && itemData.WeaponData != null){
+            if(itemData.WeaponData.profName == profItemName){
+                return itemData;
+            }
+        } else if(type == 'ARMOR' && itemData.ArmorData != null){
+            if(itemData.ArmorData.profName == profItemName){
+                return itemData;
+            }
         }
     }
     return null;
@@ -89,7 +98,7 @@ function buildWeaponProfMap(){
                 }
             } else {
                 let dProfName = profName.toUpperCase().replace(/_/g,' ');
-                let itemData = findItemDataByName(g_itemMap, dProfName);
+                let itemData = findItemDataByName(g_itemMap, dProfName, 'WEAPON');
                 if(itemData != null && itemData.WeaponData != null){
 
                     let numUps = profData.NumUps;
@@ -169,7 +178,7 @@ function buildArmorProfMap(){
                 }
             } else {
                 let dProfName = profName.toUpperCase().replace(/_/g,' ');
-                let itemData = findItemDataByName(g_itemMap, dProfName);
+                let itemData = findItemDataByName(g_itemMap, dProfName, 'ARMOR');
                 if(itemData != null){
                     armorProfMap.set(itemData.Item.id, {
                         NumUps : profData.NumUps,

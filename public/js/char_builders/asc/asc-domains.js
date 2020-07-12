@@ -92,7 +92,7 @@ function giveDomain(srcStruct, locationID, spellSRC){
 
 socket.on("returnDomainChange", function(){
     selectorUpdated();
-    socket.emit("requestASCUpdateChoices", getCharIDFromURL(), 'DOMAINS');
+    socket.emit("requestWSCUpdateChoices", getCharIDFromURL(), 'DOMAINS');
 });
 
 

@@ -206,7 +206,7 @@ function openItemQuickview(data) {
 
     if(itemDataStruct.Item.craftRequirements != null){
         qContent.append('<hr class="m-2">');
-        qContent.append(processText('~ Craft Requirements: '+itemDataStruct.Item.craftRequirements+'\n', true, true, 'MEDIUM'));
+        qContent.append(processText('~ Craft Requirements: '+itemDataStruct.Item.craftRequirements, true, true, 'MEDIUM'));
     }
 
 }

@@ -144,7 +144,7 @@ SocketConnections.builderFinalize(io);
 SocketConnections.builderGeneral(io);
 
 SocketConnections.builderGeneralProcessing(io);
-SocketConnections.builderASC(io);
+SocketConnections.builderWSC(io);
 
 SocketConnections.homePage(io);
 SocketConnections.adminPanel(io);

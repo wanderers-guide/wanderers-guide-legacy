@@ -100,7 +100,7 @@ function displayInnateSpellChoice(srcStruct, locationID, spellLevel, spellTradit
             // Display nothing
             $('#'+descriptionSpellID).html('');
 
-            socket.emit("requestASCInnateSpellChange",
+            socket.emit("requestWSCInnateSpellChange",
                 getCharIDFromURL(),
                 srcStruct,
                 null,
@@ -115,7 +115,7 @@ function displayInnateSpellChoice(srcStruct, locationID, spellLevel, spellTradit
             // Save spell
             if(triggerSave == null || triggerSave) {
                 $('.'+selectSpellControlShellClass).addClass("is-loading");
-                socket.emit("requestASCInnateSpellChange",
+                socket.emit("requestWSCInnateSpellChange",
                     getCharIDFromURL(),
                     srcStruct,
                     {name: spell.Spell.name, level: spell.Spell.level, tradition: spellTradition, tPd: timesPerDay},
@@ -133,7 +133,7 @@ function displayInnateSpellChoice(srcStruct, locationID, spellLevel, spellTradit
 }
 
 
-socket.on("returnASCInnateSpellChange", function(selectControlShellClass){
+socket.on("returnWSCInnateSpellChange", function(selectControlShellClass){
     if(selectControlShellClass != null) {
         $('.'+selectControlShellClass).removeClass("is-loading");
         $('.'+selectControlShellClass+'>select').blur();

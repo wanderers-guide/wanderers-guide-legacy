@@ -112,14 +112,14 @@ function displayAbilityBoostSingle(srcStruct, locationID, abilityTypes){
 
             if($(this).val() != "chooseDefault"){
                 $(this).parent().removeClass("is-info");
-                socket.emit("requestASCAbilityBonusChange",
+                socket.emit("requestWSCAbilityBonusChange",
                     getCharIDFromURL(),
                     srcStruct,
                     {Ability: shortenAbilityType($(this).val()), Bonus: "Boost"},
                     selectBoostControlShellClass);
             } else {
                 $(this).parent().addClass("is-info");
-                socket.emit("requestASCAbilityBonusChange",
+                socket.emit("requestWSCAbilityBonusChange",
                     getCharIDFromURL(),
                     srcStruct,
                     null,
@@ -134,9 +134,9 @@ function displayAbilityBoostSingle(srcStruct, locationID, abilityTypes){
 
 }
 
-socket.on("returnASCAbilityBonusChange", function(selectBoostControlShellClass){
+socket.on("returnWSCAbilityBonusChange", function(selectBoostControlShellClass){
     $('.'+selectBoostControlShellClass).removeClass("is-loading");
     $('.'+selectBoostControlShellClass+'>select').blur();
     selectorUpdated();
-    socket.emit("requestASCUpdateChoices", getCharIDFromURL(), 'ABILITY-BOOSTS');
+    socket.emit("requestWSCUpdateChoices", getCharIDFromURL(), 'ABILITY-BOOSTS');
 });

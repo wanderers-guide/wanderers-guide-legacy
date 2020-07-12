@@ -92,7 +92,7 @@ socket.on("returnClassDetails", function(classObject, inChoiceStruct){
                     classID);
                 
             } else {
-                injectASCChoiceStruct(choiceStruct);
+                injectWSCChoiceStruct(choiceStruct);
                 displayCurrentClass(classMap.get(classID), false);
             }
 
@@ -118,7 +118,7 @@ socket.on("returnClassChange", function(inChoiceStruct){
     choiceStruct = inChoiceStruct;
 
     if(g_class != null){
-        injectASCChoiceStruct(choiceStruct);
+        injectWSCChoiceStruct(choiceStruct);
         displayCurrentClass(g_class, true);
     } else {
         finishLoadingPage();

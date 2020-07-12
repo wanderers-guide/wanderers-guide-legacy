@@ -78,7 +78,7 @@ function displayCharTagChoice(srcStruct, locationID){
         if($(this).val() == "chooseDefault"){
             $('.'+selectCharTagControlShellClass).addClass("is-info");
 
-            socket.emit("requestASCCharTagChange",
+            socket.emit("requestWSCCharTagChange",
                 getCharIDFromURL(),
                 srcStruct,
                 null,
@@ -90,7 +90,7 @@ function displayCharTagChoice(srcStruct, locationID){
             // Save char tag
             if(triggerSave == null || triggerSave) {
                 $('.'+selectCharTagControlShellClass).addClass("is-loading");
-                socket.emit("requestASCCharTagChange",
+                socket.emit("requestWSCCharTagChange",
                     getCharIDFromURL(),
                     srcStruct,
                     charTagName,
@@ -107,7 +107,7 @@ function displayCharTagChoice(srcStruct, locationID){
 
 }
 
-socket.on("returnASCCharTagChange", function(selectControlShellClass){
+socket.on("returnWSCCharTagChange", function(selectControlShellClass){
     if(selectControlShellClass != null) {
         $('.'+selectControlShellClass).removeClass("is-loading");
         $('.'+selectControlShellClass+'>select').blur();

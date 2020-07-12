@@ -8,9 +8,7 @@ function openCustomizeItemQuickview(data) {
     qContent.append('<div class="field is-horizontal"><div class="field-label is-normal"><label class="label">Name</label></div><div class="field-body"><div class="field"><div class="control"><input id="customizeItemName" class="input" type="text" maxlength="32" value="'+data.InvItem.name+'"></div></div></div></div>');
     qContent.append('<div class="field is-horizontal"><div class="field-label is-normal"><label class="label">Price (cp)</label></div><div class="field-body"><div class="field"><div class="control"><input id="customizeItemPrice" class="input" type="number" min="0" max="99999999" value="'+data.InvItem.price+'"></div></div></div></div>');
     qContent.append('<div class="field is-horizontal"><div class="field-label is-normal"><label class="label">Bulk</label></div><div class="field-body"><div class="field"><div class="control"><input class="input" id="customizeItemBulk" type="number" min="0" max="100" step="0.1" value="'+data.InvItem.bulk+'"></div></div></div></div>');
-    qContent.append('<div class="field"><label class="label">Description <a href="/asc_docs/#description_fields" target="_blank"><span class="icon is-small has-text-info has-tooltip-top" data-tooltip="ASC Docs"><i class="fas fa-book"></i></span></a></label><div class="control"><textarea id="customizeItemDescription" class="textarea">'+data.InvItem.description+'</textarea></div></div>');
-    qContent.append('<div class="field is-horizontal"><div class="field-label is-normal"><label class="label">Size</label></div><div class="field-body"><div class="field"><div class="control"><div class="select"><select id="customizeItemSize"><option value="TINY">Tiny</option><option value="SMALL">Small</option><option value="MEDIUM">Medium</option><option value="LARGE">Large</option><option value="HUGE">Huge</option><option value="GARGANTUAN">Gargantuan</option></select></div></div></div></div></div>');
-    qContent.append('<div class="field is-horizontal"><div class="field-label"><label class="label">Shoddy</label></div><div class="field-body"><div class="field"><div class="control"><label class="checkbox"><input id="customizeItemShoddy" type="checkbox"></label></div></div></div></div>');
+    qContent.append('<div class="field"><label class="label">Description <a href="/wsc_docs/#description_fields" target="_blank"><span class="icon is-small has-text-info has-tooltip-top" data-tooltip="WSC Docs"><i class="fas fa-book"></i></span></a></label><div class="control"><textarea id="customizeItemDescription" class="textarea use-custom-scrollbar">'+data.InvItem.description+'</textarea></div></div>');
 
     qContent.append('<hr class="m-2 mb-4">');
 
@@ -20,16 +18,19 @@ function openCustomizeItemQuickview(data) {
     }
     qContent.append('<div class="field is-horizontal"><div class="field-label is-normal"><label class="label">Material</label></div><div class="field-body"><div class="field"><div class="control"><div class="select"><select id="customizeItemMaterial">'+materialSelectOptions+'</select></div></div></div></div></div>');
 
+    qContent.append('<div class="field is-horizontal"><div class="field-label is-normal"><label class="label">Size</label></div><div class="field-body"><div class="field"><div class="control"><div class="select"><select id="customizeItemSize"><option value="TINY">Tiny</option><option value="SMALL">Small</option><option value="MEDIUM">Medium</option><option value="LARGE">Large</option><option value="HUGE">Huge</option><option value="GARGANTUAN">Gargantuan</option></select></div></div></div></div></div>');
+    qContent.append('<div class="field is-horizontal"><div class="field-label"><label class="label">Shoddy</label></div><div class="field-body"><div class="field"><div class="control"><label class="checkbox"><input id="customizeItemShoddy" type="checkbox"></label></div></div></div></div>');
+
     qContent.append('<hr class="m-2 mb-4">');
 
-    qContent.append('<div class="field is-horizontal"><div class="field-label is-normal"><label class="label">Max HP</label></div><div class="field-body"><div class="field"><div class="control"><input class="input" id="customizeItemHitPoints" type="number" min="1" max="99999" value="'+data.InvItem.hitPoints+'"></div></div></div></div>');
+    qContent.append('<div class="field is-horizontal"><div class="field-label is-normal"><label class="label">Max HP</label></div><div class="field-body"><div class="field"><div class="control"><input class="input" id="customizeItemHitPoints" type="number" min="0" max="99999" value="'+data.InvItem.hitPoints+'"></div></div></div></div>');
     qContent.append('<div class="field is-horizontal"><div class="field-label is-normal"><label class="label">BT</label></div><div class="field-body"><div class="field"><div class="control"><input class="input" id="customizeItemBrokenThreshold" type="number" min="0" max="99999" value="'+data.InvItem.brokenThreshold+'"></div></div></div></div>');
     qContent.append('<div class="field is-horizontal"><div class="field-label is-normal"><label class="label">Hardness</label></div><div class="field-body"><div class="field"><div class="control"><input class="input" id="customizeItemHardness" type="number" min="0" max="99999" value="'+data.InvItem.hardness+'"></div></div></div></div>');
 
     qContent.append('<hr class="m-2 mb-4">');
     
     data.InvItem.code = (data.InvItem.code == null) ? '' : data.InvItem.code;
-    qContent.append('<div class="field is-horizontal"><div class="field-label is-normal"><label class="label">Code <a href="/asc_docs/#code_fields" target="_blank"><span class="icon is-small has-text-info has-tooltip-top" data-tooltip="ASC Docs"><i class="fas fa-book"></i></span></a></label></div><div class="field-body"><div class="field"><div class="control"><textarea id="customizeItemCode" class="textarea nanum-coding use-custom-scrollbar" rows="1" spellcheck="false" maxlength="990">'+data.InvItem.code+'</textarea></div></div></div></div>');
+    qContent.append('<div class="field is-horizontal"><div class="field-label is-normal"><label class="label">Code <a href="/wsc_docs/#code_fields" target="_blank"><span class="icon is-small has-text-info has-tooltip-top" data-tooltip="WSC Docs"><i class="fas fa-book"></i></span></a></label></div><div class="field-body"><div class="field"><div class="control"><textarea id="customizeItemCode" class="textarea nanum-coding use-custom-scrollbar" rows="1" spellcheck="false" maxlength="990">'+data.InvItem.code+'</textarea></div></div></div></div>');
 
     qContent.append('<div class="buttons is-centered pt-2"><button id="customizeItemSaveButton" class="button is-link">Save</button></div>');
 
@@ -81,7 +82,7 @@ function openCustomizeItemQuickview(data) {
             description = '__No Description__';
         }
 
-        if(hitPoints == null || hitPoints > 99999 || hitPoints < 1 || hitPoints % 1 != 0) {
+        if(hitPoints == null || hitPoints > 99999 || hitPoints < 0 || hitPoints % 1 != 0) {
             $('#customizeItemHitPoints').addClass('is-danger');
             isValid = false;
         } else {

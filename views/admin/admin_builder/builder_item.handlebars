@@ -4,8 +4,8 @@
     <script type="text/javascript" src="/js/admin_builders/item/builder-item.js"></script>
     {{#if itemID}}
         <script type="text/javascript" src="/js/admin_builders/item/editor-item.js"></script>
-        <script type="text/javascript" src="/js/admin_builders/editor-utils.js"></script>
     {{/if}}
+    <script type="text/javascript" src="/js/admin_builders/editor-utils.js"></script>
 {{/section}}
 
 {{#section 'nav_home'}}
@@ -58,6 +58,12 @@
                                     <option value="ARMOR">Armor</option>
                                     <option value="SHIELD">Shield</option>
                                     <option value="RUNE">Runestone</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div id="sectionItemCopyOfOther" class="control is-hidden">
+                            <div class="select">
+                                <select id="inputItemCopyOfOther">
                                 </select>
                             </div>
                         </div>
@@ -539,7 +545,7 @@
                 <div class="tile is-child field">
                     <label class="label">
                         Description
-                        <a href="/asc_docs/#description_fields" target="_blank"><span class="icon is-small has-text-info has-tooltip-top" data-tooltip="ASC Docs"><i class="fas fa-book"></i></span></a>
+                        <a href="/asc_docs/#description_fields" target="_blank"><span class="icon is-small has-text-info has-tooltip-top" data-tooltip="WSC Docs"><i class="fas fa-book"></i></span></a>
                     </label>
                     <div class="control">
                         <textarea class="textarea" id="inputDesc" placeholder="This item is the starter kit for an adventurer..."></textarea>
@@ -549,7 +555,7 @@
                 <div class="tile is-child field">
                     <label class="label">
                         Craft Requirements
-                        <a href="/asc_docs/#description_fields" target="_blank"><span class="icon is-small has-text-info has-tooltip-top" data-tooltip="ASC Docs"><i class="fas fa-book"></i></span></a>
+                        <a href="/asc_docs/#description_fields" target="_blank"><span class="icon is-small has-text-info has-tooltip-top" data-tooltip="WSC Docs"><i class="fas fa-book"></i></span></a>
                     </label>
                     <div class="control">
                         <input class="input" id="inputCraftReq" type="text" maxlength="350" placeholder="">
@@ -607,7 +613,7 @@
                 <div class="tile is-child field">
                     <label class="label">
                         Code
-                        <a href="/asc_docs/#code_fields" target="_blank"><span class="icon is-small has-text-info has-tooltip-top" data-tooltip="ASC Docs"><i class="fas fa-book"></i></span></a>
+                        <a href="/asc_docs/#code_fields" target="_blank"><span class="icon is-small has-text-info has-tooltip-top" data-tooltip="WSC Docs"><i class="fas fa-book"></i></span></a>
                     </label>
                     <div class="control">
                         <textarea id="inputCode" class="textarea nanum-coding use-custom-scrollbar" rows="1" spellcheck="false" maxlength="990"></textarea>

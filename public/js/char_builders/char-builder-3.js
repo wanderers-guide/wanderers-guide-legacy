@@ -85,7 +85,7 @@ socket.on("returnBackgroundDetails", function(backgrounds, inChoiceStruct){
                     getCharIDFromURL(),
                     backgroundID);
             } else {
-                injectASCChoiceStruct(choiceStruct);
+                injectWSCChoiceStruct(choiceStruct);
                 displayCurrentBackground(background);
             }
 
@@ -115,7 +115,7 @@ socket.on("returnBackgroundChange", function(choiceStruct){
     $('#selectBackgroundControlShell').removeClass("is-loading");
 
     if(g_background != null){
-        injectASCChoiceStruct(choiceStruct);
+        injectWSCChoiceStruct(choiceStruct);
         displayCurrentBackground(g_background);
     } else {
         finishLoadingPage();

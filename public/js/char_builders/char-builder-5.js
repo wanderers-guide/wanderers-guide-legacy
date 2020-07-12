@@ -37,7 +37,7 @@ function goToChar() {
 // ~~~~~~~~~~~~~~ // Processings // ~~~~~~~~~~~~~~ //
 
 socket.on("returnFinalizeDetails", function(character, abilObject, cClass, ancestry, choiceStruct){
-    injectASCChoiceStruct(choiceStruct);
+    injectWSCChoiceStruct(choiceStruct);
     
     let abilMap = objToMap(abilObject);
 

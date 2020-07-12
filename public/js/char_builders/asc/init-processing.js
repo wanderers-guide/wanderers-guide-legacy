@@ -23,8 +23,8 @@ function processCode(ascCode, srcStruct, locationID){
     let newSrcStruct = cloneObj(srcStruct);
 
     if(ascChoiceStruct == null){
-        displayError("ASC ChoiceStruct Has Not Been Init!");
-        if(processingDebug) {console.log("ASC ChoiceStruct Has Not Been Init!");}
+        displayError("WSC ChoiceStruct Has Not Been Init!");
+        if(processingDebug) {console.log("WSC ChoiceStruct Has Not Been Init!");}
         return;
     }
 
@@ -40,11 +40,11 @@ function codeDecompiling(ascCode, srcStruct, locationID){
 
         runningCodeQueue = true;
         if(!ascMapsInit){
-            //if(processingDebug) {console.log("Did not find valid ASC Maps :(");}
-            socket.emit("requestASCMapsInit",
+            //if(processingDebug) {console.log("Did not find valid WSC Maps :(");}
+            socket.emit("requestWSCMapsInit",
                 getCharIDFromURL());
         } else {
-            //if(processingDebug) {console.log("> Found a valid ASC Maps!");}
+            //if(processingDebug) {console.log("> Found a valid WSC Maps!");}
             shiftCodeQueue();
         }
 
@@ -52,8 +52,8 @@ function codeDecompiling(ascCode, srcStruct, locationID){
 
 }
 
-socket.on("returnASCMapsInit", function(){
-    //if(processingDebug) {console.log("Setting ASC Maps...");}
+socket.on("returnWSCMapsInit", function(){
+    //if(processingDebug) {console.log("Setting WSC Maps...");}
     ascMapsInit = true;
 
     initExpressionProcessor({
@@ -104,7 +104,7 @@ function statementComplete(){
     sourceCodeSNum = sourceCodeSNum.substr(1); // Remove first char
     firstChar = charIncrease(firstChar);
     if(firstChar == null){
-        displayError("Attempted to run more ASC statements than maximum!");
+        displayError("Attempted to run more WSC statements than maximum!");
         return;
     }
     sourceCodeSNum = firstChar+sourceCodeSNum;
@@ -255,7 +255,7 @@ function runNextStatement(){
 }
 
 
-socket.on("returnASCStatementFailure", function(details){
+socket.on("returnWSCStatementFailure", function(details){
     if(details != null){
         displayError("Statement failure: \'"+details+"\'");
     } else {
@@ -266,14 +266,14 @@ socket.on("returnASCStatementFailure", function(details){
 
 /////////////
 
-function injectASCChoiceStruct(choiceStruct){
+function injectWSCChoiceStruct(choiceStruct){
     ascChoiceStruct = choiceStruct;
     updateExpressionProcessor({
         ChoiceStruct : choiceStruct,
     });
 }
 
-socket.on("returnASCUpdateChoices", function(updateType, updateData){
+socket.on("returnWSCUpdateChoices", function(updateType, updateData){
     //if(processingDebug) {console.log("Updating choiceStruct part...");}
 
     if(updateType == 'ABILITY-BOOSTS'){
@@ -292,13 +292,13 @@ socket.on("returnASCUpdateChoices", function(updateType, updateData){
     });
 });
 
-socket.on("returnASCUpdateSkills", function(skillObject){
+socket.on("returnWSCUpdateSkills", function(skillObject){
     let skillMap = objToMap(skillObject);
     //if(processingDebug) {console.log("Updating skillMap...");}
     ascSkillMap = skillMap;
 });
 
-socket.on("returnASCUpdateFeats", function(featObject){
+socket.on("returnWSCUpdateFeats", function(featObject){
     let featMap = objToMap(featObject);
     featMap = new Map([...featMap.entries()].sort(
         function(a, b) {
@@ -313,7 +313,7 @@ socket.on("returnASCUpdateFeats", function(featObject){
     ascFeatMap = featMap;
 });
 
-socket.on("returnASCUpdateLangs", function(langObject){
+socket.on("returnWSCUpdateLangs", function(langObject){
     let langMap = objToMap(langObject);
     //if(processingDebug) {console.log("Updating langMap...");}
     ascLangMap = new Map([...langMap.entries()].sort(
@@ -323,7 +323,7 @@ socket.on("returnASCUpdateLangs", function(langObject){
     );
 });
 
-socket.on("returnASCUpdateSpells", function(spellObject){
+socket.on("returnWSCUpdateSpells", function(spellObject){
     let spellsMap = objToMap(spellObject);
     spellsMap = new Map([...spellsMap.entries()].sort(
         function(a, b) {

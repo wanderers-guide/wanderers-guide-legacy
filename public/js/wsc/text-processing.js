@@ -39,9 +39,6 @@ function processText(text, isSheet, isJustified = false, size = 'MEDIUM', indexC
     // ---- - Makes horizontal divider
     text = text.replace(/\n\-\-\-\-/g, '<hr class="m-1">');
 
-    // \n -> Newline
-    text = text.replace(/\n/g, '</p><p class="p-1 pl-2 '+_j+_s+'">');
-
     // ***word*** - Makes word bigger and bold
     text = text.replace(/\*\*\*(.+?)\*\*\*/g, '<strong class="has-text-weight-very-bold'+_incS+'">$1</strong>');
 
@@ -55,12 +52,15 @@ function processText(text, isSheet, isJustified = false, size = 'MEDIUM', indexC
     text = text.replace(/\~\~(.+?)\~\~/g, '<s>$1</s>');
 
     // ~ Some Text Here: Other Text
-    let regexNonBulletList = /\~(.+?)\:/g;
+    let regexNonBulletList = /[\n]?\~(.+?)\:/g;
     text = text.replace(regexNonBulletList, '</p><p class="pl-2 pr-1 negative-indent has-text-left '+_s+'"><strong>$1</strong>');
 
     // * Some Text Here: Other Text
-    let regexBulletList = /\*(.+?)\:/g;
+    let regexBulletList = /[\n]?\*(.+?)\:/g;
     text = text.replace(regexBulletList, '</p><p class="pl-2 pr-1 negative-indent has-text-left '+_s+'">&#x2022;<strong>$1</strong>');
+
+    // \n -> Newline
+    text = text.replace(/\n/g, '</p><p class="p-1 pl-2 '+_j+_s+'">');
 
     // Website Link - [URL]
     let regexURL = /\[(.+?)\]/g;
@@ -173,6 +173,8 @@ function processText(text, isSheet, isJustified = false, size = 'MEDIUM', indexC
     let regexBestiary = /Pathfinder Bestiary\s+(\d+)/g;
     text = text.replace(regexBestiary, '<a href="https://paizo.com/products/btq01zp4?Pathfinder-Bestiary" target="_blank" class="external-link">Pathfinder Bestiary $1</a>');
 
+    // Clean up any random spaces that were created...
+    text = text.replace('<p class="p-1 pl-2 '+_j+_s+'"></p>', '');
     return text;
 
 }

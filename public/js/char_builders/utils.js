@@ -187,7 +187,7 @@ function hasDuplicateLang(langArray, langID){
 }
 
 
-// ASC statement maximum: 26
+// WSC statement maximum: 26
 function charIncrease(char){
   switch(char) {
     case 'a': return 'b';
