@@ -83,8 +83,6 @@ if (process.env.PRODUCTION == 'true'){
     cert: fs.readFileSync('/etc/letsencrypt/live/wanderersguide.app/cert.pem', 'utf8')
   };
 
-  console.log(options);
-
   server = https.createServer(options, app).listen(443);
 
 } else {
