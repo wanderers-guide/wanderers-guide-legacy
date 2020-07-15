@@ -98,16 +98,16 @@ function updateExpressionProcessor(expDataStruct){
 }
 
 
-function testExpr(ascCode){
+function testExpr(wscCode){
     if(!hasInit) {
         displayError("Expression Processor has not been init!");
         return null;
     }
 
     // IF(*){*} or IF(*){*}ELSE{*}
-    let rMatchIf = ascCode.match(/^\s*IF\s*\((.*?)\)\s*\{(.*?)\}\s*$/);
-    let rMatchIfElse = ascCode.match(/^\s*IF\s*\((.*?)\)\s*\{(.*?)\}\s*ELSE\s*\{(.*?)\}\s*$/);
-    if(rMatchIf == null && rMatchIfElse == null) { return ascCode; }
+    let rMatchIf = wscCode.match(/^\s*IF\s*\((.*?)\)\s*\{(.*?)\}\s*$/);
+    let rMatchIfElse = wscCode.match(/^\s*IF\s*\((.*?)\)\s*\{(.*?)\}\s*ELSE\s*\{(.*?)\}\s*$/);
+    if(rMatchIf == null && rMatchIfElse == null) { return wscCode; }
 
     let expression;
     let statement;

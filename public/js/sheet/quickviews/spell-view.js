@@ -57,6 +57,12 @@ function openSpellQuickview(data){
     $('#quickViewTitle').html(spellName);
     let qContent = $('#quickViewContent');
 
+    // Display Level to right if just viewing spell from index
+    if(data.SheetData == null && data.SpellSlotData == null){
+        let spellLevel = (spellDataStruct.Spell.level === 0) ? "Cantrip" : "Lvl "+spellDataStruct.Spell.level;
+        $('#quickViewTitleRight').html('<span class="pr-2">'+spellLevel+'</span>');
+    }
+
     if(data.SpellSlotData != null){ // Set Slot Color-Type //
         
         let typeStruct = getSpellTypeStruct(data.SpellSlotData.Slot.type);

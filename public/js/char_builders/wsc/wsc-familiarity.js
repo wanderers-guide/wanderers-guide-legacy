@@ -1,12 +1,12 @@
 
 //--------------------- Processing Familiarities --------------------//
-function processingFamiliarities(ascStatement, srcStruct, locationID){
+function processingFamiliarities(wscStatement, srcStruct, locationID){
     
-    if(ascStatement.includes("GIVE-WEAPON-FAMILIARITY")){ // GIVE-WEAPON-FAMILIARITY=Goblin
-        let trait = ascStatement.split('=')[1];
+    if(wscStatement.includes("GIVE-WEAPON-FAMILIARITY")){ // GIVE-WEAPON-FAMILIARITY=Goblin
+        let trait = wscStatement.split('=')[1];
         giveWeaponFamiliarity(srcStruct, trait);
     } else {
-        displayError("Unknown statement (2-Familiarity): \'"+ascStatement+"\'");
+        displayError("Unknown statement (2-Familiarity): \'"+wscStatement+"\'");
         statementComplete();
     }
 

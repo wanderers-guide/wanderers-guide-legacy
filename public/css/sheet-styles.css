@@ -163,6 +163,13 @@
     border-bottom-color: #3298dc;
 }
 
+.spell-tabs li:hover {
+    color: #3298dc;
+}
+.spell-tabs a:hover {
+    border-bottom-color: #3298dc;
+}
+
 .details-tabs li:hover {
     color: #3298dc;
 }

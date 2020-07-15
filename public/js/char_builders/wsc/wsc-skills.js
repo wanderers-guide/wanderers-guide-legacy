@@ -1,15 +1,15 @@
 
 //------------------------- Processing Skills -------------------------//
-function processingSkills(ascStatement, srcStruct, locationID){
+function processingSkills(wscStatement, srcStruct, locationID){
 
-    if(ascStatement.includes("GIVE-SKILL-INCREASE")){// GIVE-SKILL-INCREASE
+    if(wscStatement.includes("GIVE-SKILL-INCREASE")){// GIVE-SKILL-INCREASE
         giveSkillIncrease(srcStruct, locationID);
     }
-    else if(ascStatement.includes("GIVE-SKILL")){// GIVE-SKILL=T
-        let prof = ascStatement.split('=')[1];
+    else if(wscStatement.includes("GIVE-SKILL")){// GIVE-SKILL=T
+        let prof = wscStatement.split('=')[1];
         giveSkillProf(srcStruct, locationID, prof);
     } else {
-        displayError("Unknown statement (2-Skill): \'"+ascStatement+"\'");
+        displayError("Unknown statement (2-Skill): \'"+wscStatement+"\'");
         statementComplete();
     }
 
@@ -39,11 +39,11 @@ function giveSkill(srcStruct, locationID, profType){
     $('#'+selectIncreaseID).append('<hr class="dropdown-divider"></hr>');
 
     // Set saved skill choices
-    let savedSkillData = ascChoiceStruct.ProfArray.find(prof => {
+    let savedSkillData = wscChoiceStruct.ProfArray.find(prof => {
         return hasSameSrc(prof, srcStruct);
     });
 
-    for(const [skillName, skillData] of ascSkillMap.entries()){
+    for(const [skillName, skillData] of wscSkillMap.entries()){
 
         if(savedSkillData != null && savedSkillData.To == skillName) {
             $('#'+selectIncreaseID).append('<option value="'+skillName+'" selected>'+skillName+'</option>');
@@ -76,8 +76,8 @@ function giveSkill(srcStruct, locationID, profType){
             let canSave = false;
             if(profType === 'UP') {
                 let skillName = $('#'+selectIncreaseID).val();
-                let numUps = ascSkillMap.get(skillName).NumUps;
-                if(isAbleToSelectIncrease(numUps+1, ascChoiceStruct.Level)) {
+                let numUps = wscSkillMap.get(skillName).NumUps;
+                if(isAbleToSelectIncrease(numUps+1, wscChoiceStruct.Level)) {
                     canSave = true;
                     $('#'+increaseDescriptionID).html('');
                 } else {
@@ -127,7 +127,7 @@ function isAbleToSelectIncrease(numUps, charLevel){
 function skillsUpdateWSCChoiceStruct(srcStruct, profTo, profType){
 
     let foundProfData = false;
-    for(let profData of ascChoiceStruct.ProfArray){
+    for(let profData of wscChoiceStruct.ProfArray){
         if(hasSameSrc(profData, srcStruct)){
             foundProfData = true;
             if(profTo != null && profType != null){
@@ -148,7 +148,7 @@ function skillsUpdateWSCChoiceStruct(srcStruct, profTo, profType){
         profData.For = 'Skill';
         profData.To = profTo;
         profData.Prof = profType;
-        ascChoiceStruct.ProfArray.push(profData);
+        wscChoiceStruct.ProfArray.push(profData);
     }
 
 }

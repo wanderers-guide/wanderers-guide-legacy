@@ -1,15 +1,15 @@
 
 //------------------------- Processing Focus Spells ------------------------//
-function processingFocusSpells(ascStatement, srcStruct, locationID){
+function processingFocusSpells(wscStatement, srcStruct, locationID){
 
-     if(ascStatement.includes("GIVE-FOCUS-SPELL")){// GIVE-FOCUS-SPELL=Bard:Meld_Into_Stone
-        let data = ascStatement.split('=')[1];
+     if(wscStatement.includes("GIVE-FOCUS-SPELL")){// GIVE-FOCUS-SPELL=Bard:Meld_Into_Stone
+        let data = wscStatement.split('=')[1];
         let segments = data.split(':');
         giveFocusSpell(srcStruct, segments[0], segments[1]);
-    } else if(ascStatement.includes("GIVE-FOCUS-POINT")){// GIVE-FOCUS-POINT
+    } else if(wscStatement.includes("GIVE-FOCUS-POINT")){// GIVE-FOCUS-POINT
         giveFocusPoint(srcStruct);
     } else {
-        displayError("Unknown statement (2-SpellFocus): \'"+ascStatement+"\'");
+        displayError("Unknown statement (2-SpellFocus): \'"+wscStatement+"\'");
         statementComplete();
     }
 

@@ -5,32 +5,32 @@
 
 //wgc
 
-function testSheetCode(ascCode){
-    return processSheetCode(ascCode, 'TEST', true);
+function testSheetCode(wscCode){
+    return processSheetCode(wscCode, 'TEST', true);
 }
 
-function processSheetCode(ascCode, sourceName){
-    return processSheetCode(ascCode, sourceName, false);
+function processSheetCode(wscCode, sourceName){
+    return processSheetCode(wscCode, sourceName, false);
 }
 
-function processSheetCode(ascCode, sourceName, isTest){
-    if(ascCode == null) {return false;}
+function processSheetCode(wscCode, sourceName, isTest){
+    if(wscCode == null) {return false;}
     
-    let ascStatements = ascCode.split(/\n/);
+    let wscStatements = wscCode.split(/\n/);
 
     let success = true;
-    for(const ascStatementRaw of ascStatements) {
+    for(const wscStatementRaw of wscStatements) {
         // Test/Check Statement for Expressions //
-        let ascStatement = testExpr(ascStatementRaw);
-        if(ascStatement === null) {continue;}
+        let wscStatement = testExpr(wscStatementRaw);
+        if(wscStatement === null) {continue;}
         //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
 
-        if(ascStatement.toUpperCase().includes("GIVE-CONDITION")){ // GIVE-CONDITION=Clumsy:1 OR GIVE-CONDITION=Clumsy
+        if(wscStatement.toUpperCase().includes("GIVE-CONDITION")){ // GIVE-CONDITION=Clumsy:1 OR GIVE-CONDITION=Clumsy
             if(isTest) {continue;}
 
-            let conditionName = ascStatement.split('=')[1];
+            let conditionName = wscStatement.split('=')[1];
             let conditionValue = null;
-            if(ascStatement.includes(":")){
+            if(wscStatement.includes(":")){
                 let conditionNameData = conditionName.split(":");
                 conditionName = conditionNameData[0];
                 conditionValue = parseInt(conditionNameData[1]);
@@ -43,11 +43,11 @@ function processSheetCode(ascCode, sourceName, isTest){
             continue;
         }
 
-        if(ascStatement.toUpperCase().includes("CONDITIONAL-INCREASE-")){
+        if(wscStatement.toUpperCase().includes("CONDITIONAL-INCREASE-")){
             if(isTest) {continue;}
             // Ex. CONDITIONAL-INCREASE-PERCEPTION=2~status bonus to checks for initiative
 
-            let adjustmentData = (ascStatement.split('-')[2]).split('=');
+            let adjustmentData = (wscStatement.split('-')[2]).split('=');
             let adjustmentTowards = adjustmentData[0];
             let adjustmentNumInfoData = (adjustmentData[1]).split('~');
             let adjustmentNum = parseInt(adjustmentNumInfoData[0]);
@@ -57,11 +57,11 @@ function processSheetCode(ascCode, sourceName, isTest){
             continue;
         }
 
-        if(ascStatement.toUpperCase().includes("CONDITIONAL-DECREASE-")){
+        if(wscStatement.toUpperCase().includes("CONDITIONAL-DECREASE-")){
             if(isTest) {continue;}
             // Ex. CONDITIONAL-DECREASE-PERCEPTION=2~status penalty to checks for initiative
 
-            let adjustmentData = (ascStatement.split('-')[2]).split('=');
+            let adjustmentData = (wscStatement.split('-')[2]).split('=');
             let adjustmentTowards = adjustmentData[0];
             let adjustmentNumInfoData = (adjustmentData[1]).split('~');
             let adjustmentNum = parseInt(adjustmentNumInfoData[0]);
@@ -71,11 +71,11 @@ function processSheetCode(ascCode, sourceName, isTest){
             continue;
         }
 
-        if(ascStatement.toUpperCase().includes("CONDITIONAL-")){
+        if(wscStatement.toUpperCase().includes("CONDITIONAL-")){
             if(isTest) {continue;}
             // Ex. CONDITIONAL-SAVE_FORT=When you roll a success, you get a critical success instead.
 
-            let adjustmentData = (ascStatement.split('-')[1]).split('=');
+            let adjustmentData = (wscStatement.split('-')[1]).split('=');
             let adjustmentTowards = adjustmentData[0];
             let adjustmentInfo = adjustmentData[1];
             addConditionalStat(adjustmentTowards, adjustmentInfo, null);
@@ -83,11 +83,11 @@ function processSheetCode(ascCode, sourceName, isTest){
             continue;
         }
 
-        if(ascStatement.toUpperCase().includes("INCREASE-")){
+        if(wscStatement.toUpperCase().includes("INCREASE-")){
             if(isTest) {continue;}
             // INCREASE-X=5 (Ex. INCREASE-SCORE_STR=2, INCREASE-SPEED=10-STATUS)
 
-            let adjValData = ascStatement.split('-');
+            let adjValData = wscStatement.split('-');
             let adjustmentData = adjValData[1].split('=');
             let adjustmentTowards = adjustmentData[0];
 
@@ -102,11 +102,11 @@ function processSheetCode(ascCode, sourceName, isTest){
             continue;
         }
 
-        if(ascStatement.toUpperCase().includes("DECREASE-")){
+        if(wscStatement.toUpperCase().includes("DECREASE-")){
             if(isTest) {continue;}
             // DECREASE-X=5 (Ex. DECREASE-SCORE_STR=2, DECREASE-SPEED=10-STATUS)
 
-            let adjValData = ascStatement.split('-');
+            let adjValData = wscStatement.split('-');
             let adjustmentData = adjValData[1].split('=');
             let adjustmentTowards = adjustmentData[0];
 
@@ -121,11 +121,11 @@ function processSheetCode(ascCode, sourceName, isTest){
             continue;
         }
 
-        if(ascStatement.toUpperCase().includes("SET-APEX-ABILITY-SCORE")){
+        if(wscStatement.toUpperCase().includes("SET-APEX-ABILITY-SCORE")){
             if(isTest) {continue;}
             // SET-APEX-ABILITY-SCORE=X (Ex. SET-APEX-ABILITY-SCORE=DEX)
 
-            let adjustmentData = ascStatement.split('=');
+            let adjustmentData = wscStatement.split('=');
             let abilityScore = adjustmentData[1];
 
             let baseStat = getStat('SCORE_'+abilityScore, 'BASE');
@@ -138,7 +138,7 @@ function processSheetCode(ascCode, sourceName, isTest){
             continue;
         }
 
-        if(ascStatement.toUpperCase() == "SET-FINESSE-MELEE-USE-DEX-DAMAGE"){
+        if(wscStatement.toUpperCase() == "SET-FINESSE-MELEE-USE-DEX-DAMAGE"){
             if(isTest) {continue;}
 
             gState_hasFinesseMeleeUseDexDamage = true;
@@ -146,7 +146,7 @@ function processSheetCode(ascCode, sourceName, isTest){
             continue;
         }
 
-        // Could not identify asc statement
+        // Could not identify wsc statement
         success = false;
 
     }

@@ -1,17 +1,17 @@
 
 //------------------------- Processing Innate Spells -------------------------//
-function processingInnateSpells(ascStatement, srcStruct, locationID){
+function processingInnateSpells(wscStatement, srcStruct, locationID){
 
-    if(ascStatement.includes("GIVE-INNATE-SPELL")){// GIVE-INNATE-SPELL=3:divine:1
-        let data = ascStatement.split('=')[1]; // Set cast times per day to 0 to cast an unlimited number
+    if(wscStatement.includes("GIVE-INNATE-SPELL")){// GIVE-INNATE-SPELL=3:divine:1
+        let data = wscStatement.split('=')[1]; // Set cast times per day to 0 to cast an unlimited number
         let segments = data.split(':');// For cantrips just do: GIVE-INNATE-SPELL=0:divine:0
         giveInnateSpell(srcStruct, locationID, segments[0], segments[1], segments[2], segments[3]);
-    } else if(ascStatement.includes("GIVE-INNATE-SPELL-NAME")){// GIVE-INNATE-SPELL-NAME=Meld_Into_Stone:3:divine:1
-        let data = ascStatement.split('=')[1]; // Set cast times per day to 0 to cast an unlimited number
+    } else if(wscStatement.includes("GIVE-INNATE-SPELL-NAME")){// GIVE-INNATE-SPELL-NAME=Meld_Into_Stone:3:divine:1
+        let data = wscStatement.split('=')[1]; // Set cast times per day to 0 to cast an unlimited number
         let segments = data.split(':');// For cantrips just do: GIVE-INNATE-SPELL-NAME=Daze:0:divine:0
         giveInnateSpellByName(srcStruct, segments[0], segments[1], segments[2], segments[3]);
     } else {
-        displayError("Unknown statement (2-SpellInnate): \'"+ascStatement+"\'");
+        displayError("Unknown statement (2-SpellInnate): \'"+wscStatement+"\'");
         statementComplete();
     }
 
@@ -51,7 +51,7 @@ function displayInnateSpellChoice(srcStruct, locationID, spellLevel, spellTradit
     let triggerChange = false;
     // Set saved spell choices
 
-    let innateSpellArray = ascChoiceStruct.InnateSpellArray;
+    let innateSpellArray = wscChoiceStruct.InnateSpellArray;
     
     let innateSpellData = innateSpellArray.find(innateSpellData => {
         return hasSameSrc(innateSpellData, srcStruct);
@@ -63,7 +63,7 @@ function displayInnateSpellChoice(srcStruct, locationID, spellLevel, spellTradit
         triggerChange = true;
     }
 
-    for(const [spellID, spellData] of ascSpellMap.entries()){
+    for(const [spellID, spellData] of wscSpellMap.entries()){
         if(spellData.Spell.level != spellLevel){ continue; }
         if(!spellData.Spell.traditions.includes(spellTradition.toLowerCase())){ continue; }
 
@@ -92,7 +92,7 @@ function displayInnateSpellChoice(srcStruct, locationID, spellLevel, spellTradit
     $('#'+selectSpellID).change(function(event, triggerSave) {
 
         let spellID = $(this).val();
-        let spell = ascSpellMap.get(spellID+"");
+        let spell = wscSpellMap.get(spellID+"");
 
         if($(this).val() == "chooseDefault" || spell == null){
             $('.'+selectSpellControlShellClass).addClass("is-info");

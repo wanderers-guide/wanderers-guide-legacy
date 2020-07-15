@@ -1,12 +1,12 @@
 
 //--------------------- Processing Notes --------------------//
-function processingNotes(ascStatement, srcStruct, locationID){
+function processingNotes(wscStatement, srcStruct, locationID){
 
-    if(ascStatement.includes("GIVE-NOTES-FIELD")){ // GIVE-NOTES-FIELD=Placeholder Text
-        let placeholderText = ascStatement.split('=')[1]; // - Displays notes field for feats and class abilities
+    if(wscStatement.includes("GIVE-NOTES-FIELD")){ // GIVE-NOTES-FIELD=Placeholder Text
+        let placeholderText = wscStatement.split('=')[1]; // - Displays notes field for feats and class abilities
         giveNotesField(srcStruct, placeholderText, locationID);
     } else {
-        displayError("Unknown statement (2-Notes): \'"+ascStatement+"\'");
+        displayError("Unknown statement (2-Notes): \'"+wscStatement+"\'");
         statementComplete();
     }
 

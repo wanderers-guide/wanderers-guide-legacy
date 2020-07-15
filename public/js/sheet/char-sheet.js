@@ -949,7 +949,7 @@ function displayInformation() {
     skills.html('');
     let hasFascinatedCondition = hasCondition(14); // Hardcoded - Fascinated condition decreases all skills by -2
     let untrainedImprovisation = g_featChoiceArray.find(feat => {
-        return feat.value.id == 2270; // Hardcoded Untrained Improvisation Feat ID	
+        return feat.value.id == 2270; // Hardcoded Untrained Improvisation Feat ID
     });
     let hasUntrainedImprovisationFeat = (untrainedImprovisation != null);
     for(const [skillName, skillData] of g_skillMap.entries()){
@@ -1116,7 +1116,7 @@ function displayInformation() {
             event.stopImmediatePropagation();
         }
         changeTab('inventoryTab', {
-            StrMod : getMod(getStatTotal('SCORE_STR')),
+            StrScore : getStatTotal('SCORE_STR'),
             DexMod : getMod(getStatTotal('SCORE_DEX')),
             Size : g_ancestry.size,
         });
@@ -1396,15 +1396,32 @@ function determineArmor(dexMod, strScore) {
         checkPenalty += (armorStruct.InvItem.isShoddy == 1) ? -2 : 0;
         let speedPenalty = armorStruct.Item.ArmorData.speedPenalty;
 
+        console.log(strScore);
+        console.log(armorStruct.Item.ArmorData.minStrength);
         if(strScore >= armorStruct.Item.ArmorData.minStrength) {
 
             speedPenalty += 5;
 
+            if(checkPenalty != 0){
+                let noisyTag = armorStruct.Item.TagArray.find(tagStruct => {
+                    return tagStruct.Tag.id === 559; // Hardcoded Noisy Tag ID
+                });
+                if(noisyTag != null){
+                    applyArmorCheckPenaltyToSkill('Stealth', checkPenalty);
+                }
+            }
+
         } else {
 
             if(checkPenalty != 0){
-                applyArmorCheckPenaltyToSkill('Acrobatics', checkPenalty);
-                applyArmorCheckPenaltyToSkill('Athletics', checkPenalty);
+                let flexibleTag = armorStruct.Item.TagArray.find(tagStruct => {
+                    return tagStruct.Tag.id === 558; // Hardcoded Flexible Tag ID
+                });
+                if(flexibleTag == null){
+                    applyArmorCheckPenaltyToSkill('Acrobatics', checkPenalty);
+                    applyArmorCheckPenaltyToSkill('Athletics', checkPenalty);
+                }
+                console.log('got hereee');
                 applyArmorCheckPenaltyToSkill('Stealth', checkPenalty);
                 applyArmorCheckPenaltyToSkill('Thievery', checkPenalty);
             }
@@ -1453,6 +1470,14 @@ function determineArmor(dexMod, strScore) {
         let totalACDisplayed = (hasConditionals('AC')) ? totalAC+'<sup class="is-size-5 has-text-info">*</sup>' : totalAC;
         $('#acNumber').html(totalACDisplayed);
         $('#acSection').attr('data-tooltip', armorStruct.InvItem.name);
+
+        // Apply conditional if the armor has the Bulwark trait
+        let bulwarkTag = armorStruct.Item.TagArray.find(tagStruct => {
+            return tagStruct.Tag.id === 560; // Hardcoded Bulwark Tag ID
+        });
+        if(bulwarkTag != null){
+            addConditionalStat('SAVE_REFLEX', 'On saves to avoid a damaging effect, you add a +3 modifier instead of your Dexterity modifier.', null);
+        }
 
         $("#acSection").click(function(){
             openQuickView('acView', {
@@ -1583,24 +1608,32 @@ function generateRuneDataStruct(){
             }
         }
     }
-    weaponRuneArray = weaponRuneArray.sort(
-        function(a, b) {
-            if(a.RuneData.isFundamental == 1 && b.RuneData.isFundamental == 1){
-                return a.Item.id - b.Item.id;
+    let runesSort = function(a, b) {
+        if(a.RuneData.isFundamental == 1 && b.RuneData.isFundamental == 1){
+            if(a.Item.name.includes('Potency')) {
+                if(!b.Item.name.includes('Potency')){ // A is, B is not
+                    return 1;
+                } else {
+                    return a.Item.id - b.Item.id; // Both are Potency
+                }
             } else {
+                if(b.Item.name.includes('Potency')){ // A is not, B is
+                    return -1;
+                } else {
+                    return a.Item.id - b.Item.id; // Neither are Potency
+                }
+            }
+        } else {
+            if (a.Item.level === b.Item.level) {
+                // Name is only important when levels are the same
                 return a.Item.name > b.Item.name ? 1 : -1;
+            } else {
+                return a.Item.level - b.Item.level;
             }
         }
-    );
-    armorRuneArray = armorRuneArray.sort(
-        function(a, b) {
-            if(a.RuneData.isFundamental == 1 && b.RuneData.isFundamental == 1){
-                return a.Item.id - b.Item.id;
-            } else {
-                return a.Item.name > b.Item.name ? 1 : -1;
-            }
-        }
-    );
+    };
+    weaponRuneArray = weaponRuneArray.sort(runesSort);
+    armorRuneArray = armorRuneArray.sort(runesSort);
 
     return { WeaponArray : weaponRuneArray, ArmorArray : armorRuneArray };
 

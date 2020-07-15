@@ -1,20 +1,20 @@
 
 //--------------------- Processing Lore --------------------//
-function processingProf(ascStatement, srcStruct, locationID){
+function processingProf(wscStatement, srcStruct, locationID){
 
-    if(ascStatement.includes("GIVE-PROF-INCREASE-IN")){// GIVE-PROF-INCREASE-IN=Arcana
-        let profName = ascStatement.split('=')[1];
+    if(wscStatement.includes("GIVE-PROF-INCREASE-IN")){// GIVE-PROF-INCREASE-IN=Arcana
+        let profName = wscStatement.split('=')[1];
         giveProfIncrease(srcStruct, profName);
-    } else if(ascStatement.includes("GIVE-PROF-IN")){// GIVE-PROF-IN=Arcana:T
-        let data = ascStatement.split('=')[1];
+    } else if(wscStatement.includes("GIVE-PROF-IN")){// GIVE-PROF-IN=Arcana:T
+        let data = wscStatement.split('=')[1];
         let segments = data.split(':');
         giveProf(srcStruct, segments[0], segments[1]);
-    } else if(ascStatement.includes("GIVE-PROF-SKILL-OR-SELECT-OTHER-IN")){// GIVE-PROF-SKILL-OR-SELECT-OTHER-IN=Arcana:T
-        let data = ascStatement.split('=')[1];
+    } else if(wscStatement.includes("GIVE-PROF-SKILL-OR-SELECT-OTHER-IN")){// GIVE-PROF-SKILL-OR-SELECT-OTHER-IN=Arcana:T
+        let data = wscStatement.split('=')[1];
         let segments = data.split(':');
         giveProfSkillOrSelect(srcStruct, segments[0], segments[1], locationID);
     } else {
-        displayError("Unknown statement (2-Prof): \'"+ascStatement+"\'");
+        displayError("Unknown statement (2-Prof): \'"+wscStatement+"\'");
         statementComplete();
     }
 
@@ -51,7 +51,7 @@ function giveProfSkillOrSelect(srcStruct, profName, prof, locationID){
 
     if(profCategory === 'Skill'){
         
-        let profMap = objToMap(ascChoiceStruct.FinalProfObject);
+        let profMap = objToMap(wscChoiceStruct.FinalProfObject);
         for(const [profMapName, profMapData] of profMap.entries()){
             let tempSkillName = profMapData.Name.toUpperCase();
             tempSkillName = tempSkillName.replace(/_|\s+/g,"");

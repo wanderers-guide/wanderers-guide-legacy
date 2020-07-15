@@ -1,17 +1,17 @@
 
 //--------------------- Processing Ability Boosts --------------------//
-function processingAbilityBoosts(ascStatement, srcStruct, locationID){
+function processingAbilityBoosts(wscStatement, srcStruct, locationID){
 
     // GIVE-ABILITY-BOOST-SINGLE=ALL
     // GIVE-ABILITY-BOOST-SINGLE=INT,WIS,CHA
-    if(ascStatement.includes("GIVE-ABILITY-BOOST-SINGLE")){
-        let selectionOptions = ascStatement.split('=')[1];
+    if(wscStatement.includes("GIVE-ABILITY-BOOST-SINGLE")){
+        let selectionOptions = wscStatement.split('=')[1];
         giveAbilityBoostSingle(srcStruct, selectionOptions, locationID);
-    } else if(ascStatement.includes("GIVE-ABILITY-BOOST-MULTIPLE")){// GIVE-ABILITY-BOOST-MULTIPLE=3
-        let numberOfBoosts = ascStatement.split('=')[1];
+    } else if(wscStatement.includes("GIVE-ABILITY-BOOST-MULTIPLE")){// GIVE-ABILITY-BOOST-MULTIPLE=3
+        let numberOfBoosts = wscStatement.split('=')[1];
         giveAbilityBoostMultiple(srcStruct, numberOfBoosts, locationID);
     } else {
-        displayError("Unknown statement (2-Boost): \'"+ascStatement+"\'");
+        displayError("Unknown statement (2-Boost): \'"+wscStatement+"\'");
         statementComplete();
     }
 
@@ -85,7 +85,7 @@ function displayAbilityBoostSingle(srcStruct, locationID, abilityTypes){
         selectBoost.append('<option value="'+ability+'">'+ability+'</option>');
     }
 
-    let bonusArray = ascChoiceStruct.BonusArray;
+    let bonusArray = wscChoiceStruct.BonusArray;
 
     let bonus = bonusArray.find(bonus => {
         return hasSameSrc(bonus, srcStruct);

@@ -1,17 +1,17 @@
 
 //------------------------- Processing Resistances ------------------------//
-function processingResistances(ascStatement, srcStruct, locationID){
+function processingResistances(wscStatement, srcStruct, locationID){
 
-    if(ascStatement.includes("GIVE-RESISTANCE")){// GIVE-RESISTANCE=cold:HALF_LEVEL/LEVEL/3
-        let data = ascStatement.split('=')[1];
+    if(wscStatement.includes("GIVE-RESISTANCE")){// GIVE-RESISTANCE=cold:HALF_LEVEL/LEVEL/3
+        let data = wscStatement.split('=')[1];
         let segments = data.split(':');
         giveResistance(srcStruct, segments[0], segments[1]);
-    } else if(ascStatement.includes("GIVE-WEAKNESS")){// GIVE-WEAKNESS=cold:HALF_LEVEL/LEVEL/3
-        let data = ascStatement.split('=')[1];
+    } else if(wscStatement.includes("GIVE-WEAKNESS")){// GIVE-WEAKNESS=cold:HALF_LEVEL/LEVEL/3
+        let data = wscStatement.split('=')[1];
         let segments = data.split(':');
         giveVulnerability(srcStruct, segments[0], segments[1]);
     } else {
-        displayError("Unknown statement (2-Resist/Weak): \'"+ascStatement+"\'");
+        displayError("Unknown statement (2-Resist/Weak): \'"+wscStatement+"\'");
         statementComplete();
     }
 

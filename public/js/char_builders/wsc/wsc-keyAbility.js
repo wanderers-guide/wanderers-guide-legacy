@@ -1,11 +1,11 @@
 
 //--------------------- Processing Key Ability --------------------//
-function processingKeyAbilities(ascStatement, srcStruct, locationID){
+function processingKeyAbilities(wscStatement, srcStruct, locationID){
     
     // SET-KEY-ABILITY=ALL
     // SET-KEY-ABILITY=INT,WIS,CHA
-    if(ascStatement.includes("SET-KEY-ABILITY")){
-        let selectionOptions = ascStatement.split('=')[1];
+    if(wscStatement.includes("SET-KEY-ABILITY")){
+        let selectionOptions = wscStatement.split('=')[1];
         let keyAbilitySrcStruct = {
             sourceType: 'class',
             sourceLevel: 1,
@@ -14,7 +14,7 @@ function processingKeyAbilities(ascStatement, srcStruct, locationID){
         };
         giveAbilityBoostSingle(keyAbilitySrcStruct, selectionOptions, locationID);
     } else {
-        displayError("Unknown statement (2-KeyAbility): \'"+ascStatement+"\'");
+        displayError("Unknown statement (2-KeyAbility): \'"+wscStatement+"\'");
         statementComplete();
     }
 

@@ -1266,11 +1266,11 @@ module.exports = class SocketConnections {
     // Socket.IO Connections
     io.on('connection', function(socket){
 
-      socket.on('requestWSCChoices', function(charID, ascCode, srcStruct, locationID){
+      socket.on('requestWSCChoices', function(charID, wscCode, srcStruct, locationID){
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
           if(ownsChar){
             CharGathering.getCharChoices(charID).then((choiceStruct) => {
-              socket.emit('returnWSCChoices', ascCode, srcStruct, locationID, choiceStruct);
+              socket.emit('returnWSCChoices', wscCode, srcStruct, locationID, choiceStruct);
             });
           }
         });

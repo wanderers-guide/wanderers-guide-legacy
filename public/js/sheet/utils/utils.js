@@ -27,7 +27,7 @@ function capitalizeFirstLetterOfWord(word){
 
 function capitalizeWords(str){
   if(str == null){ return null;}
-  return str.toLowerCase().replace(/(?:^|\s|["'([{])+\S/g, match => match.toUpperCase());
+  return str.toLowerCase().replace(/(?:^|\s|["([{])+\S/g, match => match.toUpperCase());
 }
   
 function signNumber(number) {

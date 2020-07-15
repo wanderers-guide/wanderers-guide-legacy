@@ -53,7 +53,7 @@ function processText(text, isSheet, isJustified = false, size = 'MEDIUM', indexC
 
     // ~ Some Text Here: Other Text
     let regexNonBulletList = /[\n]?\~(.+?)\:/g;
-    text = text.replace(regexNonBulletList, '</p><p class="pl-2 pr-1 negative-indent has-text-left '+_s+'"><strong>$1</strong>');
+    text = text.replace(regexNonBulletList, '</p><p class="pl-4 pr-1 negative-indent has-text-left '+_s+'"><strong>$1</strong>');
 
     // * Some Text Here: Other Text
     let regexBulletList = /[\n]?\*(.+?)\:/g;
@@ -189,7 +189,7 @@ function handleFeatLinkExt(match, linkName, innerTextDisplay, innerTextName) {
     innerTextName = innerTextName.replace(/’/g,'\'').toUpperCase();
     for(const [featID, featStruct] of g_featMap.entries()){
         let featName = featStruct.Feat.name.toUpperCase();
-        if(innerTextName === featName) {
+        if(innerTextName === featName && featStruct.Feat.isArchived == 0) {
             let featLinkClass = 'featTextLink'+featStruct.Feat.id;
             let featLinkText = '<span class="'+featLinkClass+' has-text-info-lighter cursor-clickable">'+innerTextDisplay+'</span>';
             setTimeout(function() {
@@ -217,7 +217,7 @@ function handleItemLinkExt(match, linkName, innerTextDisplay, innerTextName) {
     innerTextName = innerTextName.replace(/’/g,'\'').toUpperCase();
     for(const [itemID, itemDataStruct] of g_itemMap.entries()){
         let itemName = itemDataStruct.Item.name.replace(/[\(\)]/g,'').toUpperCase();
-        if(innerTextName === itemName) {
+        if(innerTextName === itemName && itemDataStruct.Item.isArchived == 0) {
             let itemLinkClass = 'itemTextLink'+itemDataStruct.Item.id;
             let itemLinkText = '<span class="'+itemLinkClass+' has-text-info-lighter cursor-clickable">'+innerTextDisplay+'</span>';
             setTimeout(function() {
@@ -244,7 +244,7 @@ function handleSpellLinkExt(match, linkName, innerTextDisplay, innerTextName) {
     innerTextName = innerTextName.replace(/’/g,'\'').toUpperCase();
     for(const [spellID, spellDataStruct] of g_spellMap.entries()){
         let spellName = spellDataStruct.Spell.name.toUpperCase();
-        if(innerTextName === spellName) {
+        if(innerTextName === spellName && spellDataStruct.Spell.isArchived == 0) {
             let spellLinkClass = 'itemTextLink'+spellDataStruct.Spell.id;
             let spellLinkText = '<span class="'+spellLinkClass+' has-text-info-lighter cursor-clickable">'+innerTextDisplay+'</span>';
             setTimeout(function() {

@@ -1,12 +1,12 @@
 
 //--------------------- Processing Senses --------------------//
-function processingSenses(ascStatement, srcStruct, locationID){
+function processingSenses(wscStatement, srcStruct, locationID){
     
-    if(ascStatement.includes("GIVE-SENSE-NAME")){ // GIVE-SENSE-NAME=Darkvision
-        let senseName = ascStatement.split('=')[1];
+    if(wscStatement.includes("GIVE-SENSE-NAME")){ // GIVE-SENSE-NAME=Darkvision
+        let senseName = wscStatement.split('=')[1];
         giveSense(srcStruct, senseName);
     } else {
-        displayError("Unknown statement (2-Sense): \'"+ascStatement+"\'");
+        displayError("Unknown statement (2-Sense): \'"+wscStatement+"\'");
         statementComplete();
     }
 

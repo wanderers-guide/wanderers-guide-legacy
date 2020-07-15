@@ -1,45 +1,45 @@
 
 let g_defaultItemPropRuneSlotNum = null;
-function processDefaultItemRuneSheetCode(ascCode, itemID, invItemID){
-    if(ascCode == null) {return false;}
+function processDefaultItemRuneSheetCode(wscCode, itemID, invItemID){
+    if(wscCode == null) {return false;}
     
-    ascCode = ascCode.toUpperCase();
-    let ascStatements = ascCode.split(/\n/);
+    wscCode = wscCode.toUpperCase();
+    let wscStatements = wscCode.split(/\n/);
 
     const runeData = g_runeDataStruct;
 
     g_defaultItemPropRuneSlotNum = 0;
     let success = true;
-    for(const ascStatementRaw of ascStatements) {
+    for(const wscStatementRaw of wscStatements) {
         // Test/Check Statement for Expressions //
-        let ascStatement = testExpr(ascStatementRaw);
-        if(ascStatement === null) {continue;}
+        let wscStatement = testExpr(wscStatementRaw);
+        if(wscStatement === null) {continue;}
         //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
 
-        if(ascStatement.includes("DEFAULT-WEAPON-RUNE")){
+        if(wscStatement.includes("DEFAULT-WEAPON-RUNE")){
             // DEFAULT-WEAPON-RUNE=+1_Weapon_Potency
 
-            let data = ascStatement.split('=');
+            let data = wscStatement.split('=');
             defaultSetWeaponRunes(invItemID, data[1], runeData);
 
             continue;
         }
 
-        if(ascStatement.includes("DEFAULT-ARMOR-RUNE")){
+        if(wscStatement.includes("DEFAULT-ARMOR-RUNE")){
             // DEFAULT-ARMOR-RUNE=+3_Armor_Potency
 
-            let data = ascStatement.split('=');
+            let data = wscStatement.split('=');
             defaultSetArmorRunes(invItemID, data[1], runeData);
 
             continue;
         }
 
-        if(ascStatement.includes("DEFAULT-ADD-ITEM-TO-BAG")){
+        if(wscStatement.includes("DEFAULT-ADD-ITEM-TO-BAG")){
             // DEFAULT-ADD-ITEM-TO-BAG=Bedroll
             // DEFAULT-ADD-ITEM-TO-BAG=Torch~5
 
             let itemName, itemQty;
-            let data = ascStatement.split('=');
+            let data = wscStatement.split('=');
             let dataSplit = data[1].split('~');
             if(dataSplit[1] != null){
                 itemName = dataSplit[0];

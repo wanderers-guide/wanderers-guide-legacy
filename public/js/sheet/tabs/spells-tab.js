@@ -2,7 +2,7 @@
 
 function openSpellTab(data) {
 
-    $('#tabContent').append('<div id="spellsTabs" class="tabs is-small is-centered is-marginless"><ul><li><a id="spellsTabCore">Core</a></li><li><a id="spellsTabFocus">Focus</a></li><li><a id="spellsTabInnate">Innate</a></li></ul></div>');
+    $('#tabContent').append('<div id="spellsTabs" class="tabs is-centered is-marginless"><ul class="spell-tabs"><li><a id="spellsTabCore">Core</a></li><li><a id="spellsTabFocus">Focus</a></li><li><a id="spellsTabInnate">Innate</a></li></ul></div>');
 
     $('#tabContent').append('<div id="spellsTabContent"></div>');
 
@@ -81,7 +81,7 @@ let g_hasCastingSpontaneous = false;
 
 function displaySpellsCore() {
 
-    $('#spellsTabContent').append('<div class="columns is-mobile is-marginless"><div class="column is-9"><p class="control has-icons-left"><input id="spellsSearch" class="input" type="text" placeholder="Search Spells"><span class="icon is-left"><i class="fas fa-search" aria-hidden="true"></i></span></p></div><div class="column is-3"><button id="manageSpellsBtn" class="button is-info is-rounded">Manage Spells</button></div></div><div id="spellsCoreContent" class="use-custom-scrollbar" style="height: 535px; max-height: 535px; overflow-y: auto;"></div>');
+    $('#spellsTabContent').append('<div class="columns is-mobile is-marginless"><div class="column is-9"><p class="control has-icons-left"><input id="spellsSearch" class="input" type="text" placeholder="Search Spells"><span class="icon is-left"><i class="fas fa-search" aria-hidden="true"></i></span></p></div><div class="column is-3"><button id="manageSpellsBtn" class="button is-info is-rounded">Manage Spells</button></div></div><div id="spellsCoreContent" class="use-custom-scrollbar" style="height: 525px; max-height: 525px; overflow-y: auto;"></div>');
         
     prepDisplayOfSpellsAndSlots();
 

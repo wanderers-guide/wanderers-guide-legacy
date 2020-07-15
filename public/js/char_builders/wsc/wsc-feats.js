@@ -1,9 +1,9 @@
 
 //------------------------- Processing Feats -------------------------//
-function processingFeats(ascStatement, srcStruct, locationID){
+function processingFeats(wscStatement, srcStruct, locationID){
     
-    if(ascStatement.includes("GIVE-GENERAL-FEAT")){ // GIVE-GENERAL-FEAT=3[metamagic]
-        let value = ascStatement.split('=')[1];
+    if(wscStatement.includes("GIVE-GENERAL-FEAT")){ // GIVE-GENERAL-FEAT=3[metamagic]
+        let value = wscStatement.split('=')[1];
         let optionals = value.match(/^\d+?\[(\S+?)\]$/);
         if(optionals != null){
             optionals = optionals[1].split(',');
@@ -11,32 +11,32 @@ function processingFeats(ascStatement, srcStruct, locationID){
         let level = parseInt(value);
         giveGeneralFeat(srcStruct, locationID, level, optionals);
     }
-    else if(ascStatement.includes("GIVE-ANCESTRY-FEAT")){ // GIVE-ANCESTRY-FEAT=3[metamagic]
-        let value = ascStatement.split('=')[1];
+    else if(wscStatement.includes("GIVE-ANCESTRY-FEAT")){ // GIVE-ANCESTRY-FEAT=3[metamagic]
+        let value = wscStatement.split('=')[1];
         let optionals = value.match(/^\d+?\[(\S+?)\]$/);
         if(optionals != null){
             optionals = optionals[1].split(',');
         }
         let level = parseInt(value);
         let charTagsArray = [];
-        for(let dataTag of ascChoiceStruct.CharTagsArray){
+        for(let dataTag of wscChoiceStruct.CharTagsArray){
             charTagsArray.push(dataTag.value);
         }
         giveAncestryFeat(srcStruct, locationID, level,
             charTagsArray, optionals);
     }
-    else if(ascStatement.includes("GIVE-CLASS-FEAT")){ // GIVE-CLASS-FEAT=3[metamagic]
-        let value = ascStatement.split('=')[1];
+    else if(wscStatement.includes("GIVE-CLASS-FEAT")){ // GIVE-CLASS-FEAT=3[metamagic]
+        let value = wscStatement.split('=')[1];
         let optionals = value.match(/^\d+?\[(\S+?)\]$/);
         if(optionals != null){
             optionals = optionals[1].split(',');
         }
         let level = parseInt(value);
-        let className = (ascChoiceStruct.ClassDetails.Class != null) ? ascChoiceStruct.ClassDetails.Class.name : null;
+        let className = (wscChoiceStruct.ClassDetails.Class != null) ? wscChoiceStruct.ClassDetails.Class.name : null;
         giveClassFeat(srcStruct, locationID, level, className, optionals);
     }
-    else if(ascStatement.includes("GIVE-SKILL-FEAT")){ // GIVE-SKILL-FEAT=3[metamagic]
-        let value = ascStatement.split('=')[1];
+    else if(wscStatement.includes("GIVE-SKILL-FEAT")){ // GIVE-SKILL-FEAT=3[metamagic]
+        let value = wscStatement.split('=')[1];
         let optionals = value.match(/^\d+?\[(\S+?)\]$/);
         if(optionals != null){
             optionals = optionals[1].split(',');
@@ -44,17 +44,17 @@ function processingFeats(ascStatement, srcStruct, locationID){
         let level = parseInt(value);
         giveSkillFeat(srcStruct, locationID, level, optionals);
     } 
-    else if(ascStatement.includes("GIVE-FEAT-NAME")){ // GIVE-FEAT-NAME=Ancestral_Paragon
-        let featName = ascStatement.split('=')[1];
+    else if(wscStatement.includes("GIVE-FEAT-NAME")){ // GIVE-FEAT-NAME=Ancestral_Paragon
+        let featName = wscStatement.split('=')[1];
         featName = featName.replace(/_/g," ");
         giveFeatByName(srcStruct, featName, locationID);
     }
-    else if(ascStatement.includes("HIDE-FEAT-NAME")){ // HIDE-FEAT-NAME=Ancestral_Paragon
-        let featName = ascStatement.split('=')[1];
+    else if(wscStatement.includes("HIDE-FEAT-NAME")){ // HIDE-FEAT-NAME=Ancestral_Paragon
+        let featName = wscStatement.split('=')[1];
         featName = featName.replace(/_/g," ");
         hideFeatByName(srcStruct, featName);
     } else {
-        displayError("Unknown statement (2-Feat): \'"+ascStatement+"\'");
+        displayError("Unknown statement (2-Feat): \'"+wscStatement+"\'");
         statementComplete();
     }
 
@@ -133,7 +133,7 @@ function displayFeatChoice(srcStruct, locationID, selectionName, tagsArray, feat
     let triggerChange = false;
     // Set saved feat choices
     
-    let featData = ascChoiceStruct.FeatArray.find(featData => {
+    let featData = wscChoiceStruct.FeatArray.find(featData => {
         return hasSameSrc(featData, srcStruct);
     });
 
@@ -151,7 +151,7 @@ function displayFeatChoice(srcStruct, locationID, selectionName, tagsArray, feat
     }
 
     let prevLevel = 100;
-    for(const featStruct of ascFeatMap){
+    for(const featStruct of wscFeatMap){
         let feat = featStruct[1];
         if(feat.Feat.level < 1){ continue; }
 
@@ -207,7 +207,7 @@ function displayFeatChoice(srcStruct, locationID, selectionName, tagsArray, feat
     $('#'+selectFeatID).change(function(event, triggerSave, dontCheckDup) {
 
         let featID = $(this).val();
-        let feat = ascFeatMap.get(featID+"");
+        let feat = wscFeatMap.get(featID+"");
 
         if($(this).val() == "chooseDefault" || feat == null){
             $('.'+selectFeatControlShellClass).addClass("is-info");
@@ -225,7 +225,7 @@ function displayFeatChoice(srcStruct, locationID, selectionName, tagsArray, feat
         } else {
             $('.'+selectFeatControlShellClass).removeClass("is-info");
 
-            let featArray = ascChoiceStruct.FeatArray;
+            let featArray = wscChoiceStruct.FeatArray;
 
             let canSelectFeat = true;
             if((dontCheckDup == null || !dontCheckDup) && feat.Feat.canSelectMultiple == 0 && hasDuplicateFeat(featArray, $(this).val())){
@@ -272,7 +272,7 @@ function displayFeatChoice(srcStruct, locationID, selectionName, tagsArray, feat
 function featsUpdateWSCChoiceStruct(srcStruct, feat){
 
     let foundFeatData = false;
-    for(let featData of ascChoiceStruct.FeatArray){
+    for(let featData of wscChoiceStruct.FeatArray){
         if(hasSameSrc(featData, srcStruct)){
             foundFeatData = true;
             featData.value = feat;
@@ -283,7 +283,7 @@ function featsUpdateWSCChoiceStruct(srcStruct, feat){
     if(!foundFeatData){
         let featData = srcStruct;
         featData.value = feat;
-        ascChoiceStruct.FeatArray.push(featData);
+        wscChoiceStruct.FeatArray.push(featData);
     }
 
 }
@@ -317,7 +317,7 @@ function giveFeatByName(srcStruct, featName, locationID){
     featName = featName.replace(/_/g," ");
     featName = featName.replace(/’/g,"'");
     let featEntry = null;
-    ascFeatMap.forEach(function(value, key, map){
+    wscFeatMap.forEach(function(value, key, map){
         if(value.Feat.isArchived === 0) {
             if(value.Feat.name.toUpperCase() === featName){
                 featEntry = value;

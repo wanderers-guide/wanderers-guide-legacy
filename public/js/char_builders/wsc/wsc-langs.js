@@ -1,18 +1,18 @@
 
 //------------------------- Processing Langs -------------------------//
-function processingLangs(ascStatement, srcStruct, locationID){
+function processingLangs(wscStatement, srcStruct, locationID){
 
-    if(ascStatement.includes("GIVE-LANG-NAME")){ // GIVE-LANG-NAME=Elven
-        let langName = ascStatement.split('=')[1];
+    if(wscStatement.includes("GIVE-LANG-NAME")){ // GIVE-LANG-NAME=Elven
+        let langName = wscStatement.split('=')[1];
         giveLangByName(srcStruct, langName);
     }
-    else if(ascStatement.includes("GIVE-LANG-BONUS-ONLY")){// GIVE-LANG-BONUS-ONLY
+    else if(wscStatement.includes("GIVE-LANG-BONUS-ONLY")){// GIVE-LANG-BONUS-ONLY
         giveLang(srcStruct, locationID, true);
     }
-    else if(ascStatement.includes("GIVE-LANG")){// GIVE-LANG
+    else if(wscStatement.includes("GIVE-LANG")){// GIVE-LANG
         giveLang(srcStruct, locationID, false);
     } else {
-        displayError("Unknown statement (2-Lang): \'"+ascStatement+"\'");
+        displayError("Unknown statement (2-Lang): \'"+wscStatement+"\'");
         statementComplete();
     }
 
@@ -34,13 +34,13 @@ function giveLang(srcStruct, locationID, bonusOnly){
     $('#'+selectLangID).append('<hr class="dropdown-divider"></hr>');
 
     // Set saved prof choices to savedProfData
-    let langArray = ascChoiceStruct.LangArray;
+    let langArray = wscChoiceStruct.LangArray;
 
     let savedLang = langArray.find(lang => {
         return hasSameSrc(lang, srcStruct);
     });
 
-    for(const [langID, langData] of ascLangMap.entries()){
+    for(const [langID, langData] of wscLangMap.entries()){
         
         if(bonusOnly){
 
@@ -89,7 +89,7 @@ function giveLang(srcStruct, locationID, bonusOnly){
             // Save lang
             if(triggerSave == null || triggerSave) {
 
-                let langArray = ascChoiceStruct.LangArray;
+                let langArray = wscChoiceStruct.LangArray;
                 if(!hasDuplicateLang(langArray, langID)) {
 
                     $('#'+langDescriptionID).html('');

@@ -1,15 +1,15 @@
 
 //--------------------- Processing Domains --------------------//
-function processingDomains(ascStatement, srcStruct, locationID){
+function processingDomains(wscStatement, srcStruct, locationID){
 
-    if(ascStatement.includes("GIVE-DOMAIN-ADVANCEMENT")){ // GIVE-DOMAIN-ADVANCEMENT=Cleric
-        let spellSRC = ascStatement.split('=')[1];
+    if(wscStatement.includes("GIVE-DOMAIN-ADVANCEMENT")){ // GIVE-DOMAIN-ADVANCEMENT=Cleric
+        let spellSRC = wscStatement.split('=')[1];
         giveDomainAdvancement(srcStruct, locationID, spellSRC);
-    } else if(ascStatement.includes("GIVE-DOMAIN")){ // GIVE-DOMAIN=Cleric
-        let spellSRC = ascStatement.split('=')[1];
+    } else if(wscStatement.includes("GIVE-DOMAIN")){ // GIVE-DOMAIN=Cleric
+        let spellSRC = wscStatement.split('=')[1];
         giveDomain(srcStruct, locationID, spellSRC);
     } else {
-        displayError("Unknown statement (2-Domain): \'"+ascStatement+"\'");
+        displayError("Unknown statement (2-Domain): \'"+wscStatement+"\'");
         statementComplete();
     }
 
@@ -31,14 +31,11 @@ function giveDomain(srcStruct, locationID, spellSRC){
     $('#'+selectID).append('<hr class="dropdown-divider"></hr>');
 
     // Set saved domain choice
-    let savedDomainData = ascChoiceStruct.DomainArray.find(domain => {
+    let savedDomainData = wscChoiceStruct.DomainArray.find(domain => {
         return hasSameSrc(domain, srcStruct);
     });
 
-    console.log(ascChoiceStruct);
-    console.log(savedDomainData);
-
-    for(const domain of ascChoiceStruct.AllDomains){
+    for(const domain of wscChoiceStruct.AllDomains){
 
         if(savedDomainData != null && savedDomainData.value.id == domain.id) {
             $('#'+selectID).append('<option value="'+domain.id+'" selected>'+domain.name+'</option>');
@@ -67,7 +64,7 @@ function giveDomain(srcStruct, locationID, spellSRC){
             $('.'+selectControlShellClass).removeClass("is-info");
 
             let domainID = $(this).val();
-            let domain = ascChoiceStruct.AllDomains.find(domain => {
+            let domain = wscChoiceStruct.AllDomains.find(domain => {
                 return domain.id == domainID;
             });
 
@@ -112,11 +109,11 @@ function giveDomainAdvancement(srcStruct, locationID, spellSRC){
     $('#'+selectID).append('<hr class="dropdown-divider"></hr>');
 
     // Set saved domain choice
-    let savedDomainData = ascChoiceStruct.AdvancedDomainArray.find(domainAdvanced => {
+    let savedDomainData = wscChoiceStruct.AdvancedDomainArray.find(domainAdvanced => {
         return hasSameSrc(domainAdvanced, srcStruct);
     });
 
-    for(const domainData of ascChoiceStruct.DomainArray){
+    for(const domainData of wscChoiceStruct.DomainArray){
 
         if(savedDomainData != null && savedDomainData.value.id == domainData.value.id) {
             $('#'+selectID).append('<option value="'+domainData.value.id+'" selected>'+domainData.value.name+'</option>');
@@ -145,7 +142,7 @@ function giveDomainAdvancement(srcStruct, locationID, spellSRC){
             $('.'+selectControlShellClass).removeClass("is-info");
 
             let domainID = $(this).val();
-            let domain = ascChoiceStruct.AllDomains.find(domain => {
+            let domain = wscChoiceStruct.AllDomains.find(domain => {
                 return domain.id == domainID;
             });
 

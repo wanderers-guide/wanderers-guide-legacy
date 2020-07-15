@@ -8,38 +8,38 @@ let processingDebug = false;
 let codeQueue = [];
 let runningCodeQueue = false;
 let gCode_statements, gCode_srcStruct, gCode_locationID;
-let ascChoiceStruct = null;
-let ascMapsInit = false;
-let ascSkillMap, ascFeatMap, ascLangMap, ascSpellMap = null;
+let wscChoiceStruct = null;
+let wscMapsInit = false;
+let wscSkillMap, wscFeatMap, wscLangMap, wscSpellMap = null;
 //                  //
 
-function processCode(ascCode, srcStruct, locationID){
+function processCode(wscCode, srcStruct, locationID){
     
-    if(ascCode == null || ascCode == ''){
+    if(wscCode == null || wscCode == ''){
         return;
     }
 
-    ascCode = ascCode.toUpperCase();
+    wscCode = wscCode.toUpperCase();
     let newSrcStruct = cloneObj(srcStruct);
 
-    if(ascChoiceStruct == null){
+    if(wscChoiceStruct == null){
         displayError("WSC ChoiceStruct Has Not Been Init!");
         if(processingDebug) {console.log("WSC ChoiceStruct Has Not Been Init!");}
         return;
     }
 
-    codeDecompiling(ascCode, newSrcStruct, locationID);
+    codeDecompiling(wscCode, newSrcStruct, locationID);
 
 }
 
-function codeDecompiling(ascCode, srcStruct, locationID){
+function codeDecompiling(wscCode, srcStruct, locationID){
 
-    codeQueue.push({ ascCode, srcStruct, locationID });
+    codeQueue.push({ wscCode, srcStruct, locationID });
 
     if(!runningCodeQueue){
 
         runningCodeQueue = true;
-        if(!ascMapsInit){
+        if(!wscMapsInit){
             //if(processingDebug) {console.log("Did not find valid WSC Maps :(");}
             socket.emit("requestWSCMapsInit",
                 getCharIDFromURL());
@@ -54,10 +54,10 @@ function codeDecompiling(ascCode, srcStruct, locationID){
 
 socket.on("returnWSCMapsInit", function(){
     //if(processingDebug) {console.log("Setting WSC Maps...");}
-    ascMapsInit = true;
+    wscMapsInit = true;
 
     initExpressionProcessor({
-        ChoiceStruct : ascChoiceStruct,
+        ChoiceStruct : wscChoiceStruct,
     });
     
     window.setTimeout(() => {
@@ -73,7 +73,7 @@ function shiftCodeQueue(){
     if(processingDebug) {console.log("Starting Code Queue:");}
     if(processingDebug) {console.log(code);}
     if(code != null){
-        gCode_statements = code.ascCode.split(/\n/);
+        gCode_statements = code.wscCode.split(/\n/);
         gCode_locationID = code.locationID;
 
         code.srcStruct.sourceCodeSNum = 'a'+code.srcStruct.sourceCodeSNum;
@@ -122,7 +122,7 @@ function statementComplete(){
 
 function runNextStatement(){
 
-    let ascStatement = gCode_statements.shift();
+    let wscStatement = gCode_statements.shift();
     let srcStruct = {
         sourceType: gCode_srcStruct.sourceType,
         sourceLevel: gCode_srcStruct.sourceLevel,
@@ -133,119 +133,119 @@ function runNextStatement(){
 
     if(processingDebug) {console.log('SRC-STRUCT');}
     if(processingDebug) {console.log(srcStruct);}
-    if(processingDebug) {console.log(ascStatement);}
+    if(processingDebug) {console.log(wscStatement);}
     
-    if(ascStatement != null){
-        if(ascStatement == ''){ return 'SKIP'; }
-        if(ascStatement.endsWith(',')){ ascStatement = ascStatement.slice(0, -1); }
+    if(wscStatement != null){
+        if(wscStatement == ''){ return 'SKIP'; }
+        if(wscStatement.endsWith(',')){ wscStatement = wscStatement.slice(0, -1); }
 
         // Test/Check Statement for Expressions //
-        ascStatement = testExpr(ascStatement);
-        if(ascStatement === null) {return 'SKIP'; }
+        wscStatement = testExpr(wscStatement);
+        if(wscStatement === null) {return 'SKIP'; }
         //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
         
         // It could be a sheet statement,
-        if(testSheetCode(ascStatement)){
-            if(processingDebug) {console.log("Skipping '"+ascStatement+"' because it's a sheet statement.");}
+        if(testSheetCode(wscStatement)){
+            if(processingDebug) {console.log("Skipping '"+wscStatement+"' because it's a sheet statement.");}
             return 'SKIP';
         }
 
-        if(ascStatement.includes("-CHAR-TRAIT")){
-            processingCharTags(ascStatement, srcStruct, locationID);
+        if(wscStatement.includes("-CHAR-TRAIT")){
+            processingCharTags(wscStatement, srcStruct, locationID);
             return 'WAIT';
         }
 
-        if(ascStatement.includes("-PHYSICAL-FEATURE")){
-            processingPhysicalFeatures(ascStatement, srcStruct, locationID);
+        if(wscStatement.includes("-PHYSICAL-FEATURE")){
+            processingPhysicalFeatures(wscStatement, srcStruct, locationID);
             return 'WAIT';
         }
 
-        if(ascStatement.includes("-SENSE")){
-            processingSenses(ascStatement, srcStruct, locationID);
+        if(wscStatement.includes("-SENSE")){
+            processingSenses(wscStatement, srcStruct, locationID);
             return 'WAIT';
         }
 
-        if(ascStatement.includes("-FEAT")){
-            processingFeats(ascStatement, srcStruct, locationID);
+        if(wscStatement.includes("-FEAT")){
+            processingFeats(wscStatement, srcStruct, locationID);
             return 'WAIT';
         }
 
-        if(ascStatement.includes("-PROF")){
-            processingProf(ascStatement, srcStruct, locationID);
+        if(wscStatement.includes("-PROF")){
+            processingProf(wscStatement, srcStruct, locationID);
             return 'WAIT';
         }
 
-        if(ascStatement.includes("-SKILL")){
-            processingSkills(ascStatement, srcStruct, locationID);
+        if(wscStatement.includes("-SKILL")){
+            processingSkills(wscStatement, srcStruct, locationID);
             return 'WAIT';
         }
 
-        if(ascStatement.includes("-LANG")){
-            processingLangs(ascStatement, srcStruct, locationID);
+        if(wscStatement.includes("-LANG")){
+            processingLangs(wscStatement, srcStruct, locationID);
             return 'WAIT';
         }
 
-        if(ascStatement.includes("-ABILITY-BOOST")){
-            processingAbilityBoosts(ascStatement, srcStruct, locationID);
+        if(wscStatement.includes("-ABILITY-BOOST")){
+            processingAbilityBoosts(wscStatement, srcStruct, locationID);
             return 'WAIT';
         }
 
-        if(ascStatement.includes("-INNATE")){
-            processingInnateSpells(ascStatement, srcStruct, locationID);
+        if(wscStatement.includes("-INNATE")){
+            processingInnateSpells(wscStatement, srcStruct, locationID);
             return 'WAIT';
         }
 
-        if(ascStatement.includes("-FOCUS")){
-            processingFocusSpells(ascStatement, srcStruct, locationID);
+        if(wscStatement.includes("-FOCUS")){
+            processingFocusSpells(wscStatement, srcStruct, locationID);
             return 'WAIT';
         }
 
-        if(ascStatement.includes("-SPELL")){
-            processingSpells(ascStatement, srcStruct, locationID);
+        if(wscStatement.includes("-SPELL")){
+            processingSpells(wscStatement, srcStruct, locationID);
             return 'WAIT';
         }
 
-        if(ascStatement.includes("-LORE")){
-            processingLore(ascStatement, srcStruct, locationID);
+        if(wscStatement.includes("-LORE")){
+            processingLore(wscStatement, srcStruct, locationID);
             return 'WAIT';
         }
 
-        if(ascStatement.includes("-RESISTANCE") || ascStatement.includes("-WEAKNESS")){
-            processingResistances(ascStatement, srcStruct, locationID);
+        if(wscStatement.includes("-RESISTANCE") || wscStatement.includes("-WEAKNESS")){
+            processingResistances(wscStatement, srcStruct, locationID);
             return 'WAIT';
         }
 
-        if(ascStatement.includes("-DOMAIN")){
-            processingDomains(ascStatement, srcStruct, locationID);
+        if(wscStatement.includes("-DOMAIN")){
+            processingDomains(wscStatement, srcStruct, locationID);
             return 'WAIT';
         }
 
-        if(ascStatement.includes("-SPECIALIZATION")){
-            processingSpecializations(ascStatement, srcStruct, locationID);
+        if(wscStatement.includes("-SPECIALIZATION")){
+            processingSpecializations(wscStatement, srcStruct, locationID);
             return 'WAIT';
         }
 
-        if(ascStatement.includes("-FAMILIARITY")){
-            processingFamiliarities(ascStatement, srcStruct, locationID);
+        if(wscStatement.includes("-FAMILIARITY")){
+            processingFamiliarities(wscStatement, srcStruct, locationID);
             return 'WAIT';
         }
 
-        if(ascStatement.includes("-NOTES")){
-            processingNotes(ascStatement, srcStruct, locationID);
+        if(wscStatement.includes("-NOTES")){
+            processingNotes(wscStatement, srcStruct, locationID);
             return 'WAIT';
         }
 
-        if(ascStatement.includes("-SPEED")){
-            processingSpeeds(ascStatement, srcStruct, locationID);
+        if(wscStatement.includes("-SPEED")){
+            processingSpeeds(wscStatement, srcStruct, locationID);
             return 'WAIT';
         }
 
-        if(ascStatement.includes("-KEY-ABILITY")){
-            processingKeyAbilities(ascStatement, srcStruct, locationID);
+        if(wscStatement.includes("-KEY-ABILITY")){
+            processingKeyAbilities(wscStatement, srcStruct, locationID);
             return 'WAIT';
         }
 
-        displayError("Unknown statement (1): \'"+ascStatement+"\'");
+        displayError("Unknown statement (1): \'"+wscStatement+"\'");
         return 'END';
 
     } else {
@@ -267,7 +267,7 @@ socket.on("returnWSCStatementFailure", function(details){
 /////////////
 
 function injectWSCChoiceStruct(choiceStruct){
-    ascChoiceStruct = choiceStruct;
+    wscChoiceStruct = choiceStruct;
     updateExpressionProcessor({
         ChoiceStruct : choiceStruct,
     });
@@ -277,25 +277,25 @@ socket.on("returnWSCUpdateChoices", function(updateType, updateData){
     //if(processingDebug) {console.log("Updating choiceStruct part...");}
 
     if(updateType == 'ABILITY-BOOSTS'){
-        ascChoiceStruct.BonusArray = updateData;
+        wscChoiceStruct.BonusArray = updateData;
     } else if(updateType == 'FEATS'){
-        ascChoiceStruct.FeatArray = updateData;
+        wscChoiceStruct.FeatArray = updateData;
     } else if(updateType == 'DOMAINS'){
-        ascChoiceStruct.DomainArray = updateData;
+        wscChoiceStruct.DomainArray = updateData;
     } else {
         displayError("Failed to update correct charChoice data!");
         if(processingDebug) {console.error('Failed to update correct charChoice data!');}
     }
     
     updateExpressionProcessor({
-        ChoiceStruct : ascChoiceStruct,
+        ChoiceStruct : wscChoiceStruct,
     });
 });
 
 socket.on("returnWSCUpdateSkills", function(skillObject){
     let skillMap = objToMap(skillObject);
     //if(processingDebug) {console.log("Updating skillMap...");}
-    ascSkillMap = skillMap;
+    wscSkillMap = skillMap;
 });
 
 socket.on("returnWSCUpdateFeats", function(featObject){
@@ -310,13 +310,13 @@ socket.on("returnWSCUpdateFeats", function(featObject){
         })
     );
     //if(processingDebug) {console.log("Updating featMap...");}
-    ascFeatMap = featMap;
+    wscFeatMap = featMap;
 });
 
 socket.on("returnWSCUpdateLangs", function(langObject){
     let langMap = objToMap(langObject);
     //if(processingDebug) {console.log("Updating langMap...");}
-    ascLangMap = new Map([...langMap.entries()].sort(
+    wscLangMap = new Map([...langMap.entries()].sort(
         function(a, b) {
             return a[1].Lang.name > b[1].Lang.name ? 1 : -1;
         })
@@ -335,7 +335,7 @@ socket.on("returnWSCUpdateSpells", function(spellObject){
         })
     );
     //if(processingDebug) {console.log("Updating spellMap...");}
-    ascSpellMap = spellsMap;
+    wscSpellMap = spellsMap;
 });
 
 //////////////
@@ -343,7 +343,7 @@ socket.on("returnWSCUpdateSpells", function(spellObject){
 function processCode_ClassAbilities(classAbilities){
     //if(processingDebug) {console.log("Starting to run class abilities code...");}
     for(const classAbility of classAbilities) {
-        if(classAbility.selectType != 'SELECT_OPTION' && classAbility.level <= ascChoiceStruct.Level) {
+        if(classAbility.selectType != 'SELECT_OPTION' && classAbility.level <= wscChoiceStruct.Level) {
             let srcStruct = {
                 sourceType: 'class',
                 sourceLevel: classAbility.level,

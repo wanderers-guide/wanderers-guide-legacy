@@ -1,14 +1,14 @@
 
 //--------------------- Processing Char Tags --------------------//
-function processingCharTags(ascStatement, srcStruct, locationID){
+function processingCharTags(wscStatement, srcStruct, locationID){
     
-    if(ascStatement.includes("GIVE-CHAR-TRAIT-NAME")){ // GIVE-CHAR-TRAIT-NAME=Elf
-        let charTagName = ascStatement.split('=')[1];
+    if(wscStatement.includes("GIVE-CHAR-TRAIT-NAME")){ // GIVE-CHAR-TRAIT-NAME=Elf
+        let charTagName = wscStatement.split('=')[1];
         giveCharTag(srcStruct, charTagName);
-    } else if(ascStatement.includes("GIVE-CHAR-TRAIT")){ // GIVE-CHAR-TRAIT
+    } else if(wscStatement.includes("GIVE-CHAR-TRAIT")){ // GIVE-CHAR-TRAIT
         displayCharTagChoice(srcStruct, locationID);
     } else {
-        displayError("Unknown statement (2-CharTrait): \'"+ascStatement+"\'");
+        displayError("Unknown statement (2-CharTrait): \'"+wscStatement+"\'");
         statementComplete();
     }
 
@@ -44,7 +44,7 @@ function displayCharTagChoice(srcStruct, locationID){
     let triggerChange = false;
     // Set saved char trait choices
 
-    let charTagsArray = ascChoiceStruct.CharTagsArray;
+    let charTagsArray = wscChoiceStruct.CharTagsArray;
     
     let charTagsData = charTagsArray.find(charTags => {
         return hasSameSrc(charTags, srcStruct);
@@ -56,7 +56,7 @@ function displayCharTagChoice(srcStruct, locationID){
         triggerChange = true;
     }
 
-    for(const ancestry of ascChoiceStruct.AllAncestries){
+    for(const ancestry of wscChoiceStruct.AllAncestries){
         if(ancestry.isArchived === 0){
             $('#'+selectCharTagID).append('<option value="'+ancestry.name+'">'+ancestry.name+'</option>');
         }

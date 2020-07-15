@@ -1,19 +1,19 @@
 
 //--------------------- Processing Specializations --------------------//
-function processingSpecializations(ascStatement, srcStruct, locationID){
+function processingSpecializations(wscStatement, srcStruct, locationID){
     
-    if(ascStatement.includes("GIVE-WEAPON-SPECIALIZATION")){ // GIVE-WEAPON-SPECIALIZATION
+    if(wscStatement.includes("GIVE-WEAPON-SPECIALIZATION")){ // GIVE-WEAPON-SPECIALIZATION
         giveWeaponSpecialization(srcStruct, 1);
-    } else if(ascStatement.includes("GIVE-GREATER-WEAPON-SPECIALIZATION")){ // GIVE-GREATER-WEAPON-SPECIALIZATION
+    } else if(wscStatement.includes("GIVE-GREATER-WEAPON-SPECIALIZATION")){ // GIVE-GREATER-WEAPON-SPECIALIZATION
         giveWeaponSpecialization(srcStruct, 2);
-    } else if(ascStatement.includes("GIVE-WEAPON-CRITICAL-SPECIALIZATION")){ // GIVE-WEAPON-CRITICAL-SPECIALIZATION=
-        let weapName = ascStatement.split('=')[1];
+    } else if(wscStatement.includes("GIVE-WEAPON-CRITICAL-SPECIALIZATION")){ // GIVE-WEAPON-CRITICAL-SPECIALIZATION=
+        let weapName = wscStatement.split('=')[1];
         giveWeaponCriticalSpecialization(srcStruct, weapName);
-    } else if(ascStatement.includes("GIVE-ARMOR-SPECIALIZATION")){ // GIVE-ARMOR-SPECIALIZATION=
-        let armorName = ascStatement.split('=')[1];
+    } else if(wscStatement.includes("GIVE-ARMOR-SPECIALIZATION")){ // GIVE-ARMOR-SPECIALIZATION=
+        let armorName = wscStatement.split('=')[1];
         giveArmorSpecialization(srcStruct, armorName);
     } else {
-        displayError("Unknown statement (2-Specialization): \'"+ascStatement+"\'");
+        displayError("Unknown statement (2-Specialization): \'"+wscStatement+"\'");
         statementComplete();
     }
 

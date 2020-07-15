@@ -117,6 +117,13 @@ function getStatExtraBonuses(statName){
         for(const [source, valueData] of statDataMap.entries()){
             if(source != 'PROF_BONUS' && source != 'MODIFIER' && source != 'BASE' && valueData.Value != 0){
                 let cleanedSource = source.replace(/_/g, " ").toLowerCase();
+                if(cleanedSource.startsWith('other-')){
+                    if(cleanedSource.includes('bonus')){
+                        cleanedSource = 'bonus';
+                    } else if(cleanedSource.includes('penalty')){
+                        cleanedSource = 'penalty';
+                    }
+                }
                 let statSource = (valueData.Src == 'CORE') ? null : capitalizeWords(valueData.Src);
                 if(statSource != null) {
                     extraBonuses.push(signNumber(valueData.Value)+' '+cleanedSource+' from '+statSource);

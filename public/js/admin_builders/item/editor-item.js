@@ -40,7 +40,7 @@ socket.on("returnAdminItemDetails", function(itemObject){
     $("#inputHardness").val(item.Item.hardness);
     
     if(item.WeaponData != null){
-        if(item.WeaponData.profName == item.Item.name){
+        if(item.WeaponData.profName == item.Item.name || item.WeaponData.profName == null){
             $("#inputDieType").val(item.WeaponData.dieType);
             $("#inputDamageType").val(item.WeaponData.damageType);
             $("#inputWeaponCategory").val(item.WeaponData.category);
@@ -56,7 +56,7 @@ socket.on("returnAdminItemDetails", function(itemObject){
     }
 
     if(item.ArmorData != null){
-        if(item.ArmorData.profName == item.Item.name){
+        if(item.ArmorData.profName == item.Item.name || item.ArmorData.profName == null){
             $("#inputArmorACBonus").val(item.ArmorData.acBonus);
             $("#inputArmorDexCap").val(item.ArmorData.dexCap);
             $("#inputArmorType").val(item.ArmorData.armorType);
@@ -68,7 +68,7 @@ socket.on("returnAdminItemDetails", function(itemObject){
     }
 
     if(item.ShieldData != null){
-        if(item.ShieldData.profName == item.Item.name){
+        if(item.ShieldData.profName == item.Item.name || item.ShieldData.profName == null){
             $("#inputShieldACBonus").val(item.ShieldData.acBonus);
             $("#inputShieldSpeedPenalty").val(item.ShieldData.speedPenalty);
         }

@@ -29,21 +29,21 @@ function openAddItemQuickview(data) {
 
     $('#itemTabGeneral').click(function(){
         $('#allItemsFilterBySubcategory').parent().parent().removeClass('is-hidden');
-        $('#allItemsFilterBySubcategory').html('<option value="ALL">All</option><option value="STORAGE">Storage</option><option value="TOOL">Tool</option><option value="INSTRUMENT">Instrument</option><option value="WEAPON">Weapon</option><option value="ARMOR">Armor</option><option value="SHIELD">Shield</option><option value="AMMUNITION">Ammunition</option><option value="SNARE">Snare</option><option value="KIT">Kit</option><option value="BOOK">Book</option><option value="INGREDIENT">Ingredient</option><option value="OTHER">Other</option>');
+        $('#allItemsFilterBySubcategory').html('<option value="ALL">Category</option><option value="STORAGE">Storage</option><option value="TOOL">Tool</option><option value="INSTRUMENT">Instrument</option><option value="WEAPON">Weapon</option><option value="ARMOR">Armor</option><option value="SHIELD">Shield</option><option value="AMMUNITION">Ammunition</option><option value="KIT">Kit</option><option value="BOOK">Book</option><option value="INGREDIENT">Ingredient</option><option value="OTHER">Other</option>');
         $('#allItemSearch').attr('placeholder', 'Search General Items');
         changeItemCategoryTab('itemTabGeneral', data);
     });
 
     $('#itemTabMagical').click(function(){
         $('#allItemsFilterBySubcategory').parent().parent().removeClass('is-hidden');
-        $('#allItemsFilterBySubcategory').html('<option value="ALL">All</option><option value="RUNE">Runestone</option><option value="STAFF">Staff</option><option value="WAND">Wand</option><option value="ROD">Rod</option><option value="TALISMAN">Talisman</option><option value="POTION">Potion</option><option value="OIL">Oil</option><option value="SCROLL">Scroll</option><option value="BOOK">Book</option><option value="INSTRUMENT">Instrument</option><option value="WEAPON">Weapon</option><option value="ARMOR">Armor</option><option value="SHIELD">Shield</option><option value="AMMUNITION">Ammunition</option><option value="STORAGE">Storage</option><option value="STRUCTURE">Structure</option><option value="COMPANION">Companion</option><option value="OTHER">Other</option>');
+        $('#allItemsFilterBySubcategory').html('<option value="ALL">Category</option><option value="RUNE">Runestone</option><option value="STAFF">Staff</option><option value="WAND">Wand</option><option value="ROD">Rod</option><option value="TALISMAN">Talisman</option><option value="POTION">Potion</option><option value="OIL">Oil</option><option value="SCROLL">Scroll</option><option value="BOOK">Book</option><option value="INSTRUMENT">Instrument</option><option value="WEAPON">Weapon</option><option value="ARMOR">Armor</option><option value="SHIELD">Shield</option><option value="AMMUNITION">Ammunition</option><option value="HAT">Hat</option><option value="CIRCLET">Circlet</option><option value="MASK">Mask</option><option value="EYEPIECE">Eyepiece</option><option value="NECKLACE">Necklace</option><option value="CLOAK">Cloak</option><option value="BRACERS">Bracers</option><option value="GLOVES">Gloves</option><option value="RING">Ring</option><option value="BELT">Belt</option><option value="BOOTS">Boots</option><option value="STORAGE">Storage</option><option value="STRUCTURE">Structure</option><option value="COMPANION">Companion</option><option value="OTHER">Other</option>');
         $('#allItemSearch').attr('placeholder', 'Search Magical Items');
         changeItemCategoryTab('itemTabMagical', data);
     });
 
     $('#itemTabAlchemical').click(function(){
         $('#allItemsFilterBySubcategory').parent().parent().removeClass('is-hidden');
-        $('#allItemsFilterBySubcategory').html('<option value="ALL">All</option><option value="TOOL">Tool</option><option value="BOMB">Bomb</option><option value="ELIXIR">Elixir</option><option value="POISON">Poison</option><option value="INGREDIENT">Ingredient</option><option value="OTHER">Other</option>');
+        $('#allItemsFilterBySubcategory').html('<option value="ALL">Category</option><option value="TOOL">Tool</option><option value="BOMB">Bomb</option><option value="ELIXIR">Elixir</option><option value="POISON">Poison</option><option value="INGREDIENT">Ingredient</option><option value="OTHER">Other</option>');
         $('#allItemSearch').attr('placeholder', 'Search Alchemical Items');
         changeItemCategoryTab('itemTabAlchemical', data);
     });
@@ -145,6 +145,9 @@ function changeItemCategoryTab(type, data){
 
             if(allItemsFilterBySubcategoryValue == 'ALL'){
                 $('#allItemsFilterBySubcategory').parent().removeClass('is-info');
+                if(type != 'itemTabCurrency'){
+                    willDisplay = false;
+                }
             } else if(allItemsFilterBySubcategoryValue == 'OTHER'){
                 let foundItemType = false;
                 if(itemDataStruct.Item.itemType != 'OTHER') {
@@ -307,6 +310,11 @@ function displayItemDetails(itemDataStruct, addItemDetailsItemID){
     itemDetails.append('<div class="tile"><div class="tile is-child is-4"><strong>Price</strong></div><div class="tile is-child is-4"><strong>Bulk</strong></div><div class="tile is-child is-4"><strong>Hands</strong></div></div>');
     itemDetails.append('<div class="tile"><div class="tile is-child is-4"><p>'+price+'</p></div><div class="tile is-child is-4"><p>'+getBulkFromNumber(itemDataStruct.Item.bulk)+'</p></div><div class="tile is-child is-4"><p>'+getHandsToString(itemDataStruct.Item.hands)+'</p></div></div>');
     
+    if(itemDataStruct.Item.usage != null){
+        itemDetails.append('<hr class="m-2">');
+        itemDetails.append('<p class="is-size-6 has-text-left px-3 negative-indent"><strong>Usage:</strong> '+itemDataStruct.Item.usage+'</p>');
+    }
+
     itemDetails.append('<hr class="m-2">');
 
         

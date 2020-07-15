@@ -1,12 +1,12 @@
 
 //--------------------- Processing Physical Features --------------------//
-function processingPhysicalFeatures(ascStatement, srcStruct, locationID){
+function processingPhysicalFeatures(wscStatement, srcStruct, locationID){
     
-    if(ascStatement.includes("GIVE-PHYSICAL-FEATURE-NAME")){ // GIVE-PHYSICAL-FEATURE-NAME=Tusks
-        let phyFeatName = ascStatement.split('=')[1];
+    if(wscStatement.includes("GIVE-PHYSICAL-FEATURE-NAME")){ // GIVE-PHYSICAL-FEATURE-NAME=Tusks
+        let phyFeatName = wscStatement.split('=')[1];
         givePhysicalFeature(srcStruct, phyFeatName);
     } else {
-        displayError("Unknown statement (2-PhyFeat): \'"+ascStatement+"\'");
+        displayError("Unknown statement (2-PhyFeat): \'"+wscStatement+"\'");
         statementComplete();
     }
 

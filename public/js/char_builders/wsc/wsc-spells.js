@@ -1,29 +1,29 @@
 
 //------------------------- Processing Spells ------------------------//
-function processingSpells(ascStatement, srcStruct, locationID){
+function processingSpells(wscStatement, srcStruct, locationID){
 
-    if(ascStatement.includes("SET-SPELL-SLOTS")){// SET-SPELL-SLOTS=Bard:Three-Quarters/Full/Single-Set
-        let data = ascStatement.split('=')[1];
+    if(wscStatement.includes("SET-SPELL-SLOTS")){// SET-SPELL-SLOTS=Bard:Three-Quarters/Full/Single-Set
+        let data = wscStatement.split('=')[1];
         let segments = data.split(':');
         giveSpellCasting(srcStruct, segments[0], segments[1]);
-    } else if(ascStatement.includes("GIVE-SPELL-SLOT")){// GIVE-SPELL-SLOT=Bard:10
-        let data = ascStatement.split('=')[1];
+    } else if(wscStatement.includes("GIVE-SPELL-SLOT")){// GIVE-SPELL-SLOT=Bard:10
+        let data = wscStatement.split('=')[1];
         let segments = data.split(':');
         giveSpellSlot(srcStruct, segments[0], segments[1]);
-    } else if(ascStatement.includes("SET-SPELL-KEY-ABILITY")){// SET-SPELL-KEY-ABILITY=Bard:INT
-        let data = ascStatement.split('=')[1]; //                 Will default to CHA if nothing is set
+    } else if(wscStatement.includes("SET-SPELL-KEY-ABILITY")){// SET-SPELL-KEY-ABILITY=Bard:INT
+        let data = wscStatement.split('=')[1]; //                 Will default to CHA if nothing is set
         let segments = data.split(':');
         setSpellKeyAbility(srcStruct, segments[0], segments[1]);
-    } else if(ascStatement.includes("SET-SPELL-CASTING-TYPE")){
-        let data = ascStatement.split('=')[1]; //                 Will default to PREPARED-LIST
+    } else if(wscStatement.includes("SET-SPELL-CASTING-TYPE")){
+        let data = wscStatement.split('=')[1]; //                 Will default to PREPARED-LIST
         let segments = data.split(':');// SET-SPELL-CASTING-TYPE=Bard:PREPARED-LIST/PREPARED-BOOK/SPONTANEOUS-REPERTOIRE
         setSpellCastingType(srcStruct, segments[0], segments[1]);
-    } else if(ascStatement.includes("SET-SPELL-TRADITION")){// SET-SPELL-TRADITION=Wizard:Primal/Divine/Occult/Arcane
-        let data = ascStatement.split('=')[1];
+    } else if(wscStatement.includes("SET-SPELL-TRADITION")){// SET-SPELL-TRADITION=Wizard:Primal/Divine/Occult/Arcane
+        let data = wscStatement.split('=')[1];
         let segments = data.split(':');
         giveSpellList(srcStruct, segments[0], segments[1]);
     } else {
-        displayError("Unknown statement (2-Spell): \'"+ascStatement+"\'");
+        displayError("Unknown statement (2-Spell): \'"+wscStatement+"\'");
         statementComplete();
     }
 
