@@ -52,13 +52,16 @@ g_profConversionMap.set('SURVIVAL', {Name: 'Survival', Category: 'Skill'});
 g_profConversionMap.set('THIEVERY', {Name: 'Thievery', Category: 'Skill'});
 
 let hasInit = false;
-let g_expr_level, g_expr_profMap, g_expr_heritage, g_expr_classAbilityArray, g_expr_featArray = null;
+let g_expr_level, g_expr_focusPoints, g_expr_profMap, g_expr_senseArray,
+        g_expr_heritage, g_expr_classAbilityArray, g_expr_featArray = null;
 
 function initExpressionProcessor(expDataStruct){
 
     g_expr_level = expDataStruct.ChoiceStruct.Level;
     g_expr_profMap = objToMap(expDataStruct.ChoiceStruct.FinalProfObject);
     g_expr_heritage = expDataStruct.ChoiceStruct.Heritage;
+    g_expr_focusPoints = expDataStruct.ChoiceStruct.FocusPointArray.length;
+    g_expr_senseArray = expDataStruct.ChoiceStruct.SenseArray;
 
     if(expDataStruct.ChoiceStruct.ClassDetails != null){
         g_expr_classAbilityArray = [];
@@ -122,8 +125,47 @@ function testExpr(wscCode){
         elseStatement = null;
     }
 
+
+
+    if(expression.includes(' && ')){
+        let expParts = expression.split(' && ');
+        
+        let allTrue = true;
+        for(let expPart of expParts){
+            let resultStatement = expHandleExpression(expPart, statement, elseStatement);
+            if(resultStatement != statement){
+                allTrue = false;
+            }
+        }
+
+        if(allTrue) {
+            return statement;
+        } else {
+            return elseStatement;
+        }
+        
+    } else {
+        
+        let result = expHandleExpression(expression, statement, elseStatement);
+        if(result != -1){
+            return result;
+        } else {
+            displayError("Unknown expression: \'"+expression+"\'");
+            return null;
+        }
+
+    }
+
+}
+
+function expHandleExpression(expression, statement, elseStatement){
+
     if(expression.includes('HAS-LEVEL')){ // HAS-LEVEL==13
         return expHasLevel(expression, statement, elseStatement);
+    }
+
+    if(expression.includes('HAS-FOCUS-POINTS')){ // HAS-FOCUS-POINTS==3
+        return expHasFocusPoints(expression, statement, elseStatement);
     }
 
     if(expression.includes('HAS-HERITAGE')){ // HAS-HERITAGE==Treedweller
@@ -142,42 +184,54 @@ function testExpr(wscCode){
         return expHasProf(expression, statement, elseStatement);
     }
 
-    displayError("Unknown expression: \'"+expression+"\'");
-    return null;
+    if(expression.includes('HAS-VISION')){ // HAS-VISION==Darkvision
+        return expHasVision(expression, statement, elseStatement);
+    }
+
+    return -1;
+
 }
 
 function expHasLevel(expression, statement, elseStatement){
+    return expHasNumberCompare(g_expr_level, expression, statement, elseStatement);
+}
+
+function expHasFocusPoints(expression, statement, elseStatement){
+    return expHasNumberCompare(g_expr_focusPoints, expression, statement, elseStatement);
+}
+
+function expHasNumberCompare(charVarNumber, expression, statement, elseStatement){
     if(expression.includes('==')){
-        let level = parseInt(expression.split('==')[1]);
-        if(!isNaN(level)){
-            if(g_expr_level == level){
+        let number = parseInt(expression.split('==')[1]);
+        if(!isNaN(number)){
+            if(charVarNumber == number){
                 return statement;
             } else {
                 return elseStatement;
             }
         }
     } else if(expression.includes('>=')){
-        let level = parseInt(expression.split('>=')[1]);
-        if(!isNaN(level)){
-            if(g_expr_level >= level){
+        let number = parseInt(expression.split('>=')[1]);
+        if(!isNaN(number)){
+            if(charVarNumber >= number){
                 return statement;
             } else {
                 return elseStatement;
             }
         }
     } else if(expression.includes('<=')){
-        let level = parseInt(expression.split('<=')[1]);
-        if(!isNaN(level)){
-            if(g_expr_level <= level){
+        let number = parseInt(expression.split('<=')[1]);
+        if(!isNaN(number)){
+            if(charVarNumber <= number){
                 return statement;
             } else {
                 return elseStatement;
             }
         }
     } else if(expression.includes('!=')){
-        let level = parseInt(expression.split('!=')[1]);
-        if(!isNaN(level)){
-            if(g_expr_level != level){
+        let number = parseInt(expression.split('!=')[1]);
+        if(!isNaN(number)){
+            if(charVarNumber != number){
                 return statement;
             } else {
                 return elseStatement;
@@ -241,6 +295,40 @@ function expHasFeat(expression, statement, elseStatement){
         let featName = expression.split('!=')[1].toUpperCase();
         featName = featName.replace(/_/g," ");
         if(!g_expr_featArray.includes(featName)){
+            return statement;
+        } else {
+            return elseStatement;
+        }
+    }
+}
+
+function expHasVision(expression, statement, elseStatement){
+    if(expression.includes('==')){
+        let visionName = expression.split('==')[1].toUpperCase();
+        visionName = visionName.replace(/_/g," ");
+        let vision = g_expr_senseArray.find(senseData => {
+            if(senseData.value != null){
+                return visionName === senseData.value.name.toUpperCase();
+            } else {
+                return false;
+            }
+        });
+        if(vision != null){
+            return statement;
+        } else {
+            return elseStatement;
+        }
+    } else if(expression.includes('!=')){
+        let visionName = expression.split('!=')[1].toUpperCase();
+        visionName = visionName.replace(/_/g," ");
+        let vision = g_expr_senseArray.find(senseData => {
+            if(senseData.value != null){
+                return visionName === senseData.value.name.toUpperCase();
+            } else {
+                return false;
+            }
+        });
+        if(vision == null){
             return statement;
         } else {
             return elseStatement;

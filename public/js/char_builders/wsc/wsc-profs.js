@@ -85,28 +85,28 @@ function giveProfSkillOrSelect(srcStruct, profName, prof, locationID){
 
 function giveInProf(srcStruct, profName, prof){
 
-    profName = profName.replace(/_|\s+/g,"");
     let profProperName = null;
     let profCategory = null;
 
     if(profName.startsWith('LORE~')){
         profName = profName.replace(/LORE\~/g,'');
-        profProperName = profName+'_LORE';
+        profProperName = profName.replace(/\s+/g,'_').toUpperCase()+'_LORE';
         profCategory = 'Skill';
     }
 
     if(profName.startsWith('WEAPON~')){
         profName = profName.replace(/WEAPON\~/g,'');
-        profProperName = profName;
+        profProperName = profName.replace(/\s+/g,'_').toUpperCase();
         profCategory = 'Attack';
     }
 
     if(profName.startsWith('ARMOR~')){
         profName = profName.replace(/ARMOR\~/g,'');
-        profProperName = profName;
+        profProperName = profName.replace(/\s+/g,'_').toUpperCase();
         profCategory = 'Defense';
     }
 
+    profName = profName.replace(/_|\s+/g,'');
     let profData = g_profConversionMap.get(profName);
     if(profData != null){
         profProperName = profData.Name;

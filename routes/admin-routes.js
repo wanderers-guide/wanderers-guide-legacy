@@ -1,6 +1,8 @@
 
 const router = require('express').Router();
 const editClassRoutes = require('./edit-class-routes');
+const editArchetypeRoutes = require('./edit-archetype-routes');
+const editUniHeritageRoutes = require('./edit-uni-heritage-routes');
 const editBackgroundRoutes = require('./edit-background-routes');
 const editAncestryRoutes = require('./edit-ancestry-routes');
 const editFeatActionRoutes = require('./edit-feat-action-routes');
@@ -18,6 +20,8 @@ const SenseType = require('../models/contentDB/SenseType');
 const PhysicalFeature = require('../models/contentDB/PhysicalFeature');
 const Feat = require('../models/contentDB/Feat');
 const Skill = require('../models/contentDB/Skill');
+const Archetype = require('../models/contentDB/Archetype');
+const UniHeritage = require('../models/contentDB/UniHeritage');
 
 const adminAuthCheck = (req, res, next) => {
     if(!req.user){
@@ -78,6 +82,40 @@ router.get('/create/class', adminAuthCheck, (req, res) => {
 
 router.use('/edit/class', adminAuthCheck, editClassRoutes);
 
+// Archetype Builder
+router.get('/manage/archetype', adminAuthCheck, (req, res) => {
+
+    Archetype.findAll({
+        order: [['name', 'ASC'],]
+    }).then((archetypes) => {
+
+        res.render('admin/admin_manager/manager_archetype', {
+            title: "Archetype Manager - Wanderer's Guide",
+            user: req.user,
+            archetypes
+        });
+
+    });
+
+});
+
+router.get('/create/archetype', adminAuthCheck, (req, res) => {
+
+    Tag.findAll({
+        where: { isArchived: 0, isHidden: 0 },
+        order: [['name', 'ASC'],]
+    }).then((tags) => {
+        res.render('admin/admin_builder/builder_archetype', {
+            title: "Archetype Builder - Wanderer's Guide",
+            user: req.user,
+            tags,
+        });
+    });
+
+});
+
+router.use('/edit/archetype', adminAuthCheck, editArchetypeRoutes);
+
 // Ancestry Builder
 router.get('/manage/ancestry', adminAuthCheck, (req, res) => {
 
@@ -126,6 +164,43 @@ router.get('/create/ancestry', adminAuthCheck, (req, res) => {
 });
 
 router.use('/edit/ancestry', adminAuthCheck, editAncestryRoutes);
+
+
+// Uni-Heritage Builder
+router.get('/manage/uni-heritage', adminAuthCheck, (req, res) => {
+
+    UniHeritage.findAll({
+        order: [['name', 'ASC'],]
+    }).then((uniHeritages) => {
+
+        res.render('admin/admin_manager/manager_uni-heritage', {
+            title: "Universal Heritage Manager - Wanderer's Guide",
+            user: req.user,
+            uniHeritages
+        });
+
+    });
+
+});
+
+router.get('/create/uni-heritage', adminAuthCheck, (req, res) => {
+
+    Tag.findAll({
+        where: { isArchived: 0, isHidden: 0 },
+        order: [['name', 'ASC'],]
+    }).then((tags) => {
+        
+        res.render('admin/admin_builder/builder_uni-heritage', {
+            title: "Universal Heritage Builder - Wanderer's Guide",
+            user: req.user,
+            tags,
+        });
+
+    });
+
+});
+
+router.use('/edit/uni-heritage', adminAuthCheck, editUniHeritageRoutes);
 
 
 // Background Builder

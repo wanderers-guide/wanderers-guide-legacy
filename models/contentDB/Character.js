@@ -29,6 +29,9 @@ const Character = db.define('characters', {
   heritageID: {
     type: Sequelize.INTEGER
   },
+  uniHeritageID: {
+    type: Sequelize.INTEGER
+  },
   backgroundID: {
     type: Sequelize.INTEGER
   },
@@ -50,8 +53,11 @@ const Character = db.define('characters', {
   optionAutoHeightenSpells: { // Character Options
     type: Sequelize.INTEGER
   },
-  optionProfWithoutLevel: {
+  variantProfWithoutLevel: {
     type: Sequelize.INTEGER
+  },
+  enabledSources: {
+    type: Sequelize.STRING
   },
 });
 

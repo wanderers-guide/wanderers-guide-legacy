@@ -29,6 +29,16 @@ function getSpellEditorIDFromURL(){
   return parseInt(spl1[1]);
 }
 
+function getArchetypeEditorIDFromURL(){
+  let spl1 = window.location.pathname.split("archetype/");
+  return parseInt(spl1[1]);
+}
+
+function getUniHeritageEditorIDFromURL(){
+  let spl1 = window.location.pathname.split("uni-heritage/");
+  return parseInt(spl1[1]);
+}
+
 function objToMap(obj) {
     let strMap = new Map();
     for (let k of Object.keys(obj)) {

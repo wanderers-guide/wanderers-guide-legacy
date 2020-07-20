@@ -29,10 +29,12 @@ function giveAbilityBoostMultiple(srcStruct, numberOfBoosts, locationID) {
             multiBoostCodeStr += 'GIVE-ABILITY-BOOST-SINGLE=ALL\n';
         }
         if(multiBoostCodeStr != ''){
+            let newLocationID = locationID+'-BoostContent';
+            $('#'+locationID).append('<div class="field is-grouped is-grouped-centered"><div class="control" id="'+newLocationID+'"></div></div>');
             processCode(
                 multiBoostCodeStr,
                 srcStruct,
-                locationID);
+                newLocationID);
         }
     }
 }
@@ -76,7 +78,7 @@ function displayAbilityBoostSingle(srcStruct, locationID, abilityTypes){
     let selectBoostSet = "selectBoostSet"+locationID;
     let selectBoostControlShellClass = selectBoostSet+'ControlShell';
 
-    $('#'+locationID).append('<span class="select mb-1 mx-1 is-medium '+selectBoostControlShellClass+'"><select id="'+selectBoostID+'" class="'+selectBoostSet+'"></select></span>');
+    $('#'+locationID).append('<span class="select mb-1 mx-1 '+selectBoostControlShellClass+'"><select id="'+selectBoostID+'" class="'+selectBoostSet+'"></select></span>');
 
     let selectBoost = $('#'+selectBoostID);
     selectBoost.append('<option value="chooseDefault">Choose an Ability</option>');

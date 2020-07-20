@@ -13,7 +13,13 @@ const Heritage = db.define('heritages', {
   },
   code: {
     type: Sequelize.TEXT
-  }
+  },
+  contentSrc: {
+    type: Sequelize.STRING
+  },
+  homebrewID: {
+    type: Sequelize.INTEGER
+  },
 });
 
 module.exports = Heritage;

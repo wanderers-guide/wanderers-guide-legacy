@@ -16,8 +16,6 @@ let supportedWebLinks = [
 function processText(text, isSheet, isJustified = false, size = 'MEDIUM', indexConditions = true) {
     if(text == null) {return text;}
 
-    console.log(text);
-
     let _j = (isJustified) ? ' has-text-justified ' : '';
     let _s = '';
 

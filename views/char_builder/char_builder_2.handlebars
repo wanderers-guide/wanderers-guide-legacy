@@ -152,21 +152,21 @@
             <div class="tile is-ancestor is-vertical">
                 <div class="tile is-parent">
                     <div class="tile is-child">
-                        <p class="is-size-4 has-text-title has-text-weight-semibold">Hit Points</p>
+                        <p class="is-size-5 has-text-title has-text-weight-semibold">Hit Points</p>
                         <div class="container">
-                            <p id="ancestryHitPoints" class="is-size-3 has-text-value"></p>
+                            <p id="ancestryHitPoints" class="is-size-3-5 has-text-value"></p>
                         </div>
                     </div>
                     <div class="tile is-child">
-                        <p class="is-size-4 has-text-title has-text-weight-semibold">Size</p>
+                        <p class="is-size-5 has-text-title has-text-weight-semibold">Size</p>
                         <div class="container">
-                            <p id="ancestrySize" class="is-size-3 has-text-value"></p>
+                            <p id="ancestrySize" class="is-size-3-5 has-text-value"></p>
                         </div>
                     </div>
                     <div class="tile is-child">
-                        <p class="is-size-4 has-text-title has-text-weight-semibold">Speed</p>
+                        <p class="is-size-5 has-text-title has-text-weight-semibold">Speed</p>
                         <div class="container">
-                            <p id="ancestrySpeed" class="is-size-3 has-text-value"></p>
+                            <p id="ancestrySpeed" class="is-size-3-5 has-text-value"></p>
                         </div>
                     </div>
                 </div>
@@ -218,19 +218,28 @@
         
         <div id="heritage-container" class="box">
 
-            <div class="field">
-                <div id="selectHeritageControlShell" class="select is-medium is-info">
-                    <select id="selectHeritage">
-                    </select>
-                </div>
+            <div class="tabs is-small is-centered is-marginless">
+                <ul class="builder-tabs">
+                    <li><a id="ancestryHeritageTab" class="heritageTab">Ancestry</a></li>
+                    <li><a id="universalHeritageTab" class="heritageTab">Versatile</a></li>
+                </ul>
             </div>
 
-            <article class="message is-info">
-                <div id="heritageDescription" class="message-body"></div>
-            </article>
+            <div id="heritageSection" class="py-2">
+                <div class="field">
+                    <div id="selectHeritageControlShell" class="select is-medium is-info">
+                        <select id="selectHeritage">
+                        </select>
+                    </div>
+                </div>
 
-            <div class="columns is-centered">
-                <div id="heritageCodeOutput" class="column is-8 is-paddingless">
+                <article class="message is-info">
+                    <div id="heritageDescription" class="message-body"></div>
+                </article>
+
+                <div class="columns is-centered">
+                    <div id="heritageCodeOutput" class="column is-8 is-paddingless">
+                    </div>
                 </div>
             </div>
 

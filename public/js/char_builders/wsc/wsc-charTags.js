@@ -17,7 +17,7 @@ function processingCharTags(wscStatement, srcStruct, locationID){
 //////////////////////////////// Give Char Tag ///////////////////////////////////
 
 function giveCharTag(srcStruct, charTagName){
-    charTagName = capitalizeWord(charTagName);
+    charTagName = capitalizeWords(charTagName);
 
     socket.emit("requestCharTagChange",
         getCharIDFromURL(),
@@ -26,7 +26,8 @@ function giveCharTag(srcStruct, charTagName){
 
 }
 
-socket.on("returnCharTagChange", function(){
+socket.on("returnCharTagChange", function(charTagsArray){
+    wscChoiceStruct.CharTagsArray = charTagsArray;
     statementComplete();
 });
 
@@ -107,7 +108,8 @@ function displayCharTagChoice(srcStruct, locationID){
 
 }
 
-socket.on("returnWSCCharTagChange", function(selectControlShellClass){
+socket.on("returnWSCCharTagChange", function(charTagsArray, selectControlShellClass){
+    wscChoiceStruct.CharTagsArray = charTagsArray;
     if(selectControlShellClass != null) {
         $('.'+selectControlShellClass).removeClass("is-loading");
         $('.'+selectControlShellClass+'>select').blur();

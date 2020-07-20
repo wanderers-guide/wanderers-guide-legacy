@@ -142,6 +142,9 @@ header {
 .is-size-6-5 {
     font-size: 1.1rem!important;
 }
+.is-size-3-5 {
+    font-size: 1.75rem!important;
+}
 .is-table-size {
     height: 256px;
     width: 360px;

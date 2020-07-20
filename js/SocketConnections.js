@@ -1,11 +1,13 @@
 
 const CharGathering = require('./CharGathering');
 const CharSaving = require('./CharSaving');
+const CharContentSources = require('./CharContentSources');
 const CharSpells = require('./CharSpells');
 const CharTags = require('./CharTags');
 const CharDataMapping = require('./CharDataMapping');
 const CharDataMappingExt = require('./CharDataMappingExt');
 const AuthCheck = require('./AuthCheck');
+const AdminGathering = require('./AdminGathering');
 const AdminUpdate = require('./AdminUpdate');
 const GeneralUtils = require('./GeneralUtils');
 const HomeBackReport = require('../models/backgroundDB/HomeBackReport');
@@ -506,6 +508,22 @@ module.exports = class SocketConnections {
         });
       });
 
+      socket.on('requestCharacterSourceChange', function(charID, sourceName, isAdd){
+        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+          if(ownsChar){
+            if(isAdd) {
+              CharContentSources.addSource(charID, sourceName).then((result) => {
+                socket.emit('returnCharacterSourceChange');
+              });
+            } else {
+              CharContentSources.removeSource(charID, sourceName).then((result) => {
+                socket.emit('returnCharacterSourceChange');
+              });
+            }
+          }
+        });
+      });
+
     });
     
   }
@@ -515,12 +533,14 @@ module.exports = class SocketConnections {
     // Socket.IO Connections
     io.on('connection', function(socket){
 
-      socket.on('requestAncestryAndChoices', function(charID){
+      socket.on('requestAncestryDetails', function(charID){
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
           if(ownsChar){
-            CharGathering.getAllAncestries(false).then((ancestriesObject) => {
-              CharGathering.getCharChoices(charID).then((choiceStruct) => {
-                socket.emit('returnAncestryAndChoices', ancestriesObject, choiceStruct);
+            CharGathering.getAllAncestries(charID, false).then((ancestriesObject) => {
+              CharGathering.getAllUniHeritages(charID).then((uniHeritageArray) => {
+                CharGathering.getCharChoices(charID).then((choiceStruct) => {
+                  socket.emit('returnAncestryDetails', ancestriesObject, uniHeritageArray, choiceStruct);
+                });
               });
             });
           }
@@ -539,11 +559,14 @@ module.exports = class SocketConnections {
         });
       });
 
-      socket.on('requestHeritageChange', function(charID, heritageID){
+      socket.on('requestHeritageChange', function(charID, heritageID, isUniversal){
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
           if(ownsChar){
-            CharSaving.saveHeritage(charID, heritageID).then((result) => {
-              socket.emit('returnHeritageChange', heritageID);
+            CharSaving.saveHeritage(charID, heritageID, isUniversal).then((result) => {
+              return CharTags.getTags(charID)
+              .then((charTagsArray) => {
+                socket.emit('returnHeritageChange', heritageID, isUniversal, charTagsArray);
+              });
             });
           }
         });
@@ -561,7 +584,7 @@ module.exports = class SocketConnections {
       socket.on('requestBackgroundDetails', function(charID){
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
           if(ownsChar){
-            CharGathering.getAllBackgrounds().then((backgrounds) => {
+            CharGathering.getAllBackgrounds(charID).then((backgrounds) => {
               CharGathering.getCharChoices(charID).then((choiceStruct) => {
                 socket.emit('returnBackgroundDetails', backgrounds, choiceStruct);
               });
@@ -594,7 +617,7 @@ module.exports = class SocketConnections {
       socket.on('requestClassDetails', function(charID){
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
           if(ownsChar){
-            CharGathering.getAllClasses().then((classObject) => {
+            CharGathering.getAllClasses(charID).then((classObject) => {
               CharGathering.getCharChoices(charID).then((choiceStruct) => {
                 socket.emit('returnClassDetails', classObject, choiceStruct);
               });
@@ -946,7 +969,10 @@ module.exports = class SocketConnections {
           if(ownsChar){
             CharTags.setTag(charID, srcStruct, charTag)
             .then((result) => {
-              socket.emit('returnCharTagChange');
+              return CharTags.getTags(charID)
+              .then((charTagsArray) => {
+                socket.emit('returnCharTagChange', charTagsArray);
+              });
             });
           } else {
             socket.emit('returnWSCStatementFailure', 'Incorrect Auth');
@@ -1281,14 +1307,17 @@ module.exports = class SocketConnections {
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
           if(ownsChar){
             CharGathering.getAllSkills(charID).then((skillsObject) => {
-              CharGathering.getAllFeats().then((featsObject) => {
+              CharGathering.getAllFeats(charID).then((featsObject) => {
                 CharGathering.getAllLanguages(charID).then((langsObject) => {
-                  CharGathering.getAllSpells().then((spellMap) => {
-                    socket.emit('returnWSCUpdateSkills', skillsObject);
-                    socket.emit('returnWSCUpdateFeats', featsObject);
-                    socket.emit('returnWSCUpdateLangs', langsObject);
-                    socket.emit('returnWSCUpdateSpells', mapToObj(spellMap));
-                    socket.emit('returnWSCMapsInit');
+                  CharGathering.getAllSpells(charID).then((spellMap) => {
+                    CharGathering.getAllArchetypes(charID).then((archetypesArray) => {
+                      socket.emit('returnWSCUpdateSkills', skillsObject);
+                      socket.emit('returnWSCUpdateFeats', featsObject);
+                      socket.emit('returnWSCUpdateLangs', langsObject);
+                      socket.emit('returnWSCUpdateSpells', mapToObj(spellMap));
+                      socket.emit('returnWSCUpdateArchetypes', archetypesArray);
+                      socket.emit('returnWSCMapsInit');
+                    });
                   });
                 });
               });
@@ -1377,7 +1406,10 @@ module.exports = class SocketConnections {
           if(ownsChar){
             CharTags.setTag(charID, srcStruct, charTag)
             .then((result) => {
-              socket.emit('returnWSCCharTagChange', selectControlShellClass);
+              return CharTags.getTags(charID)
+              .then((charTagsArray) => {
+                socket.emit('returnWSCCharTagChange', charTagsArray, selectControlShellClass);
+              });
             });
           } else {
             socket.emit('returnWSCStatementFailure', 'Incorrect Auth');
@@ -1460,8 +1492,8 @@ module.exports = class SocketConnections {
       socket.on('requestAdminAncestryDetails', function(){
         AuthCheck.isAdmin(socket).then((isAdmin) => {
           if(isAdmin){
-            CharGathering.getAllAncestries(true).then((ancestriesObject) => {
-              CharGathering.getAllFeats().then((featsObject) => {
+            AdminGathering.getAllAncestries(true).then((ancestriesObject) => {
+              AdminGathering.getAllFeats().then((featsObject) => {
                 socket.emit('returnAdminAncestryDetails', ancestriesObject, featsObject);
               });
             });
@@ -1508,7 +1540,7 @@ module.exports = class SocketConnections {
       socket.on('requestAdminFeatDetails', function(){
         AuthCheck.isAdmin(socket).then((isAdmin) => {
           if(isAdmin){
-            CharGathering.getAllFeats().then((featsObject) => {
+            AdminGathering.getAllFeats().then((featsObject) => {
               socket.emit('returnAdminFeatDetails', featsObject);
             });
           }
@@ -1554,7 +1586,7 @@ module.exports = class SocketConnections {
       socket.on('requestAdminItemDetails', function(){
         AuthCheck.isAdmin(socket).then((isAdmin) => {
           if(isAdmin){
-            CharGathering.getAllItems().then((itemMap) => {
+            AdminGathering.getAllItems().then((itemMap) => {
               socket.emit('returnAdminItemDetails', mapToObj(itemMap));
             });
           }
@@ -1600,7 +1632,7 @@ module.exports = class SocketConnections {
       socket.on('requestAdminSpellDetails', function(){
         AuthCheck.isAdmin(socket).then((isAdmin) => {
           if(isAdmin){
-            CharGathering.getAllSpells().then((spellMap) => {
+            AdminGathering.getAllSpells().then((spellMap) => {
               socket.emit('returnAdminSpellDetails', mapToObj(spellMap));
             });
           }
@@ -1646,8 +1678,8 @@ module.exports = class SocketConnections {
       socket.on('requestAdminClassDetails', function(){
         AuthCheck.isAdmin(socket).then((isAdmin) => {
           if(isAdmin){
-            CharGathering.getAllClasses().then((classObject) => {
-              CharGathering.getAllFeats().then((featsObject) => {
+            AdminGathering.getAllClasses().then((classObject) => {
+              AdminGathering.getAllFeats().then((featsObject) => {
                 socket.emit('returnAdminClassDetails', classObject, featsObject);
               });
             });
@@ -1694,13 +1726,109 @@ module.exports = class SocketConnections {
       socket.on('requestAdminBackgroundDetails', function(){
         AuthCheck.isAdmin(socket).then((isAdmin) => {
           if(isAdmin){
-            CharGathering.getAllBackgrounds().then((backgrounds) => {
+            AdminGathering.getAllBackgrounds().then((backgrounds) => {
               socket.emit('returnAdminBackgroundDetails', backgrounds);
             });
           }
         });
       });
       
+
+      ////
+
+      socket.on('requestAdminAddArchetype', function(data){
+        AuthCheck.isAdmin(socket).then((isAdmin) => {
+          if(isAdmin){
+            AdminUpdate.addArchetype(data).then((result) => {
+              socket.emit('returnAdminCompleteArchetype');
+            });
+          }
+        });
+      });
+
+      socket.on('requestAdminUpdateArchetype', function(data){
+        AuthCheck.isAdmin(socket).then((isAdmin) => {
+          if(isAdmin){
+            if(data != null && data.archetypeID != null) {
+              AdminUpdate.archiveArchetype(data.archetypeID, true).then((result) => {
+                AdminUpdate.addArchetype(data).then((result) => {
+                  socket.emit('returnAdminCompleteArchetype');
+                });
+              });
+            }
+          }
+        });
+      });
+    
+      socket.on('requestAdminRemoveArchetype', function(archetypeID){
+        AuthCheck.isAdmin(socket).then((isAdmin) => {
+          if(isAdmin){
+            AdminUpdate.deleteArchetype(archetypeID).then((result) => {
+              socket.emit('returnAdminRemoveArchetype');
+            });
+          }
+        });
+      });
+
+      socket.on('requestAdminArchetypeDetails', function(){
+        AuthCheck.isAdmin(socket).then((isAdmin) => {
+          if(isAdmin){
+            AdminGathering.getAllArchetypes().then((archetypeArray) => {
+              AdminGathering.getAllFeats().then((featsObject) => {
+                socket.emit('returnAdminArchetypeDetails', archetypeArray, featsObject);
+              });
+            });
+          }
+        });
+      });
+
+      ////
+
+      socket.on('requestAdminAddUniHeritage', function(data){
+        AuthCheck.isAdmin(socket).then((isAdmin) => {
+          if(isAdmin){
+            AdminUpdate.addUniHeritage(data).then((result) => {
+              socket.emit('returnAdminCompleteUniHeritage');
+            });
+          }
+        });
+      });
+
+      socket.on('requestAdminUpdateUniHeritage', function(data){
+        AuthCheck.isAdmin(socket).then((isAdmin) => {
+          if(isAdmin){
+            if(data != null && data.uniHeritageID != null) {
+              AdminUpdate.archiveUniHeritage(data.uniHeritageID, true).then((result) => {
+                AdminUpdate.addUniHeritage(data).then((result) => {
+                  socket.emit('returnAdminCompleteUniHeritage');
+                });
+              });
+            }
+          }
+        });
+      });
+    
+      socket.on('requestAdminRemoveUniHeritage', function(uniHeritageID){
+        AuthCheck.isAdmin(socket).then((isAdmin) => {
+          if(isAdmin){
+            AdminUpdate.deleteUniHeritage(uniHeritageID).then((result) => {
+              socket.emit('returnAdminRemoveUniHeritage');
+            });
+          }
+        });
+      });
+
+      socket.on('requestAdminUniHeritageDetails', function(){
+        AuthCheck.isAdmin(socket).then((isAdmin) => {
+          if(isAdmin){
+            AdminGathering.getAllUniHeritages().then((uniHeritageArray) => {
+              AdminGathering.getAllFeats().then((featsObject) => {
+                socket.emit('returnAdminUniHeritageDetails', uniHeritageArray, featsObject);
+              });
+            });
+          }
+        });
+      });
 
     });
   }

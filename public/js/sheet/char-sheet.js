@@ -503,7 +503,11 @@ function displayInformation() {
     if(g_heritage == null){
         heritageAndAncestryName = g_ancestry.name;
     } else {
-        heritageAndAncestryName = g_heritage.name;
+        if(g_heritage.tagID != null){
+            heritageAndAncestryName = g_heritage.name+' '+g_ancestry.name;
+        } else {
+            heritageAndAncestryName = g_heritage.name;
+        }
     }
     $('#character-type').html(heritageAndAncestryName+" "+g_classDetails.Class.name);
     $('#character-level').html("Lvl "+g_character.level);
@@ -1655,7 +1659,7 @@ function determineBulkAndCoins(invItems, itemMap){
 
     for(const invItem of invItems){
 
-        // Coins //
+        // Coins - Hardcoded IDs //
         if(invItem.itemID == 22){ // Copper
             copperCoins += invItem.quantity;
         } else if(invItem.itemID == 23){ // Silver

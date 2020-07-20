@@ -13,6 +13,7 @@ const Class = require('../models/contentDB/Class');
 const Background = require('../models/contentDB/Background');
 const Ancestry = require('../models/contentDB/Ancestry');
 const Heritage = require('../models/contentDB/Heritage');
+const UniHeritage = require('../models/contentDB/UniHeritage');
 const Inventory = require('../models/contentDB/Inventory');
 
 router.get('/', (req, res) => {
@@ -23,39 +24,65 @@ router.get('/', (req, res) => {
         .then((classes) => {
             Heritage.findAll()
             .then((heritages) => {
-                Ancestry.findAll()
-                .then((ancestries) => {
+                UniHeritage.findAll()
+                .then((uniHeritages) => {
+                    Ancestry.findAll()
+                    .then((ancestries) => {
 
-                    for(let character of characters){
-    
-                        let cClass = classes.find(cClass => {
-                            return cClass.id == character.classID;
-                        });
-                        character.className = (cClass != null) ? cClass.name : "";
-    
-                        let heritage = heritages.find(heritage => {
-                            return heritage.id == character.heritageID;
-                        });
-                        if(heritage != null) {
-                            character.heritageName = heritage.name;
-                        } else {
-                            let ancestry = ancestries.find(ancestry => {
-                                return ancestry.id == character.ancestryID;
+                        for(let character of characters){
+        
+                            let cClass = classes.find(cClass => {
+                                return cClass.id == character.classID;
                             });
-                            character.heritageName = (ancestry != null) ? ancestry.name : "";
-                        }
-    
-                        character.isPlayable = CharStateUtils.isPlayable(character);
-    
-                    }
-    
-                    res.render('pages/character_list', {
-                        title: "Your Characters - Wanderer's Guide",
-                        user: req.user,
-                        characters,
-                        canMakeCharacter: CharStateUtils.canMakeCharacter(req.user, characters),
-                        characterLimit: CharStateUtils.getUserCharacterLimit()});
+                            character.className = (cClass != null) ? cClass.name : '';
+        
 
+                            if(character.heritageID != null){
+
+                                let heritage = heritages.find(heritage => {
+                                    return heritage.id == character.heritageID;
+                                });
+                                if(heritage != null) {
+                                    character.heritageName = heritage.name;
+                                }
+
+                            } else if (character.uniHeritageID != null){
+
+                                let heritageName = '';
+                                let uniHeritage = uniHeritages.find(uniHeritage => {
+                                    return uniHeritage.id == character.uniHeritageID;
+                                });
+                                if(uniHeritage != null) {
+                                    heritageName = uniHeritage.name;
+                                }
+
+                                let ancestry = ancestries.find(ancestry => {
+                                    return ancestry.id == character.ancestryID;
+                                });
+                                heritageName += (ancestry != null) ? ' '+ancestry.name : '';
+                                character.heritageName = heritageName;
+
+                            } else {
+
+                                let ancestry = ancestries.find(ancestry => {
+                                    return ancestry.id == character.ancestryID;
+                                });
+                                character.heritageName = (ancestry != null) ? ancestry.name : '';
+
+                            }
+        
+                            character.isPlayable = CharStateUtils.isPlayable(character);
+        
+                        }
+        
+                        res.render('pages/character_list', {
+                            title: "Your Characters - Wanderer's Guide",
+                            user: req.user,
+                            characters,
+                            canMakeCharacter: CharStateUtils.canMakeCharacter(req.user, characters),
+                            characterLimit: CharStateUtils.getUserCharacterLimit()});
+
+                    });
                 });
             });
         });

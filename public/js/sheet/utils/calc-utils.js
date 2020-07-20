@@ -17,10 +17,8 @@ function getAttackAndDamage(itemData, invItem){
         if(finesseTag != null){
             abilMod = (pre_dexMod > abilMod) ? pre_dexMod : abilMod;
         } // Use preDex mod becuase Clumsy condition affects ranged attacks but not finesse melee attacks
-    
-        console.log(itemData.Item);
+        
         let profData = g_weaponProfMap.get(itemData.Item.id);
-        console.log(profData);
     
         let profNumUps = null;
         let profBonus = null;
@@ -118,9 +116,28 @@ function getAttackAndDamage(itemData, invItem){
         let splashTag = itemData.TagArray.find(tag => {
             return tag.Tag.id == 391; // Hardcoded Splash Tag ID
         });
-        let dmgStrBonus = '';
+        let propulsiveTag = itemData.TagArray.find(tag => {
+            return tag.Tag.id == 391; // Hardcoded Propulsive Tag ID
+        });
+
+        let dmgStrSigned = '';
+        let dmgStr = 0;
+
+        if(propulsiveTag != null){
+            if(pre_strMod >= 0){
+                let strAmt = Math.floor(pre_strMod/2);
+                if(strAmt != 0){
+                    dmgStrSigned = signNumber(strAmt);
+                    dmgStr = strAmt;
+                }
+            } else {
+                dmgStrSigned = signNumber(strAmt);
+                dmgStr = strAmt;
+            }
+        }
         if(thrownTag != null && splashTag == null && pre_strMod != 0){
-            dmgStrBonus = signNumber(pre_strMod);
+            dmgStrSigned = signNumber(pre_strMod);
+            dmgStr = pre_strMod;
         }
 
         let profData = g_weaponProfMap.get(itemData.Item.id);
@@ -187,11 +204,11 @@ function getAttackAndDamage(itemData, invItem){
 
         let damage = '';
         if(itemData.WeaponData.dieType != 'NONE') {
-            let maxDamage = diceNum*dieTypeToNum(itemData.WeaponData.dieType)+pre_strMod+weapSpecialBonus;
+            let maxDamage = diceNum*dieTypeToNum(itemData.WeaponData.dieType)+dmgStr+weapSpecialBonus;
             if(maxDamage >= 1) {
-                damage = diceNum+""+itemData.WeaponData.dieType+dmgStrBonus+weapSpecial+" "+itemData.WeaponData.damageType;
+                damage = diceNum+""+itemData.WeaponData.dieType+dmgStrSigned+weapSpecial+" "+itemData.WeaponData.damageType;
             } else {
-                damage = '<a class="has-text-grey" data-tooltip="'+diceNum+""+itemData.WeaponData.dieType+dmgStrBonus+weapSpecial+'">1</a> '+itemData.WeaponData.damageType;
+                damage = '<a class="has-text-grey" data-tooltip="'+diceNum+""+itemData.WeaponData.dieType+dmgStrSigned+weapSpecial+'">1</a> '+itemData.WeaponData.damageType;
             }
         } else {
             damage = '-';

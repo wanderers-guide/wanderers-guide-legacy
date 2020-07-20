@@ -2,11 +2,13 @@
 const Character = require('../models/contentDB/Character');
 const Class = require('../models/contentDB/Class');
 const ClassAbility = require('../models/contentDB/ClassAbility');
+const Archetype = require('../models/contentDB/Archetype');
 const Background = require('../models/contentDB/Background');
 const Ancestry = require('../models/contentDB/Ancestry');
 const AncestryBoost = require('../models/contentDB/AncestryBoost');
 const AncestryFlaw = require('../models/contentDB/AncestryFlaw');
 const AncestryLanguage = require('../models/contentDB/AncestryLanguage');
+const UniHeritage = require('../models/contentDB/UniHeritage');
 const Tag = require('../models/contentDB/Tag');
 const Heritage = require('../models/contentDB/Heritage');
 const Feat = require('../models/contentDB/Feat');
@@ -291,6 +293,148 @@ module.exports = class AdminUpdate {
 
 
 
+    static addArchetype(data) {
+        /* Data:
+            archetypeID,
+            archetypeName,
+            archetypeVersion,
+            archetypeIsMulticlass,
+            archetypeDescription,
+            archetypeDedicationFeat,
+            archetypeFeatsArray,
+            archetypeContentSrc
+        */
+        for(let d in data) { if(data[d] === ''){ data[d] = null; } }
+        data.archetypeName = data.archetypeName.replace(/’/g,"'");
+        if(data.archetypeDescription == null){ data.archetypeDescription = '__No Description__'; }
+        if(data.archetypeVersion == null){ data.archetypeVersion = '1.0'; }
+        let tagDesc = 'This indicates content from the '+data.archetypeName.toLowerCase()+' archetype.';
+        return Tag.create({ // Create Archetype Tag
+            name: data.archetypeName+' Archetype',
+            description: tagDesc,
+            isHidden: 1,
+        }).then(archetypeTag => {
+
+            data.archetypeDedicationFeat.featTagsArray.push(580);// Hardcoded Dedication Tag ID
+            if(data.archetypeIsMulticlass === 1){
+                data.archetypeDedicationFeat.featTagsArray.push(599);// Hardcoded Multiclass Tag ID
+            }
+            data.archetypeDedicationFeat.name = data.archetypeName+' Dedication';
+            data.archetypeDedicationFeat.isDefault = 0;
+            data.archetypeDedicationFeat.skillID = null;
+            data.archetypeDedicationFeat.minProf = null;
+            data.archetypeDedicationFeat.genericType = null;
+            data.archetypeDedicationFeat.isArchived = 0;
+            data.archetypeDedicationFeat.contentSrc = data.archetypeContentSrc;
+            data.archetypeDedicationFeat.version = null;
+            return AdminUpdate.addFeatPreparedData(data.archetypeDedicationFeat)
+            .then(dedicationFeat => {
+
+                return Archetype.create({ // Create Archetype
+                    name: data.archetypeName,
+                    version: data.archetypeVersion,
+                    description: data.archetypeDescription,
+                    dedicationFeatID: dedicationFeat.id,
+                    isMulticlass: data.archetypeIsMulticlass,
+                    tagID: archetypeTag.id,
+                    contentSrc: data.archetypeContentSrc,
+                    homebrewID: null,
+                }).then(archetype => {
+                    let archetypeFeatPromises = []; // Create Archetype Feats
+                    if(data.archetypeFeatsArray != null){
+                        for(const archetypeFeat of data.archetypeFeatsArray) {
+                            if(!archetypeFeat.featTagsArray.includes(archetypeTag.id)){
+                                archetypeFeat.featTagsArray.push(archetypeTag.id);
+                            }
+                            archetypeFeat.isDefault = 0;
+                            archetypeFeat.skillID = null;
+                            archetypeFeat.minProf = null;
+                            archetypeFeat.genericType = null;
+                            archetypeFeat.isArchived = 0;
+                            archetypeFeat.contentSrc = archetype.contentSrc;
+                            archetypeFeat.version = null;
+                            let newPromise = AdminUpdate.addFeatPreparedData(archetypeFeat);
+                            archetypeFeatPromises.push(newPromise);
+                        }
+                    }
+                    return Promise.all(archetypeFeatPromises)
+                    .then(function(result) {
+                        return archetype;
+                    });
+                });
+
+            });
+        });
+
+    }
+
+    static deleteArchetype(archetypeID){
+        if(archetypeID == null) {return;}
+        return Archetype.findOne({where: { id: archetypeID}})
+        .then((archetype) => {
+            return FeatTag.findAll({where: { tagID: archetype.tagID }})
+            .then((featTags) => {
+                let archetypeFeatsPromises = []; // Delete Archetype Feats
+                for(const featTag of featTags) {
+                    let newPromise = Feat.destroy({
+                        where: { id: featTag.featID }
+                    });
+                    archetypeFeatsPromises.push(newPromise);
+                }
+                return Promise.all(archetypeFeatsPromises)
+                .then(function(result) {
+                    return Tag.destroy({ // Delete Tag (which will cascade to FeatTags)
+                        where: { id: archetype.tagID }
+                    }).then((result) => {
+                        return Feat.destroy({ // Delete Dedication Feat
+                            where: { id: archetype.dedicationFeatID }
+                        }).then((result) => {
+                            return Archetype.destroy({ // Finally, delete Archetype
+                                where: { id: archetype.id }
+                            }).then((result) => {
+                                return;
+                            });
+                        });
+                    });
+                });
+            });
+        });
+    }
+
+    static archiveArchetype(archetypeID, isArchived){
+        let archived = (isArchived) ? 1 : 0;
+        let updateValues = { isArchived: archived };
+        return Archetype.update(updateValues, { where: { id: archetypeID } })
+        .then((result) => {
+            return Archetype.findOne({where: { id: archetypeID }})
+            .then((archetype) => {
+                return Tag.update(updateValues, { where: { id: archetype.tagID } })
+                .then((result) => {
+                    return FeatTag.findAll({where: { tagID: archetype.tagID }})
+                    .then((featTags) => {
+                        let archetypeFeatsPromises = [];
+                        for(const featTag of featTags) {
+                            let newPromise = Feat.update(updateValues, {
+                                where: { id: featTag.featID }
+                            });
+                            archetypeFeatsPromises.push(newPromise);
+                        }
+                        return Promise.all(archetypeFeatsPromises)
+                        .then(function(result) {
+                            return Feat.update(updateValues, {
+                                where: { id: archetype.dedicationFeatID }
+                            }).then((result) => {
+                                return;
+                            });
+                        });
+                    });
+                });
+            });
+        });
+    }
+
+
+
     static addAncestry(data) {
         /* Data:
             ancestryName,
@@ -387,6 +531,8 @@ module.exports = class AdminUpdate {
                             if(data.ancestryHeritagesArray != null) {
                                 for(const ancestryHeritage of data.ancestryHeritagesArray) {
                                     ancestryHeritage.name += ' '+data.ancestryName;
+                                    ancestryHeritage.contentSrc = ancestry.contentSrc;
+                                    ancestryHeritage.homebrewID = ancestry.homebrewID;
                                     let newPromise = AdminUpdate.addHeritage(ancestry.id, ancestryHeritage);
                                     ancestryHeritagePromises.push(newPromise);
                                 }
@@ -513,7 +659,9 @@ module.exports = class AdminUpdate {
         /* Data:
             name,
             description,
-            code
+            code,
+            contentSrc,
+            homebrewID,
         */
         for(let d in data) { if(data[d] === ''){ data[d] = null; } }
         data.name = data.name.replace(/’/g,"'");
@@ -522,11 +670,138 @@ module.exports = class AdminUpdate {
             name: data.name,
             ancestryID: ancestryID,
             description: data.description,
-            code: data.code
+            code: data.code,
+            contentSrc: data.contentSrc,
+            homebrewID: data.homebrewID,
         }).then(heritage => {
             return heritage;
         });
     }
+
+
+    static addUniHeritage(data) {
+        /* Data:
+            uniHeritageID,
+            heritageName,
+            heritageVersion,
+            heritageDescription,
+            heritageContentSrc,
+            heritageCode,
+            heritageFeatsArray,
+        */
+        for(let d in data) { if(data[d] === ''){ data[d] = null; } }
+        data.heritageName = data.heritageName.replace(/’/g,"'");
+        if(data.heritageDescription == null){ data.heritageDescription = '__No Description__'; }
+        if(data.heritageVersion == null){ data.heritageVersion = '1.0'; }
+        let tagDesc = 'This indicates content from the '+data.heritageName.toLowerCase()+' heritage.';
+        return Tag.create({ // Create Heritage Tag
+            name: data.heritageName,
+            description: tagDesc,
+            isHidden: 1,
+        }).then(heritageTag => {
+            return UniHeritage.create({ // Create Heritage
+                name: data.heritageName,
+                version: data.heritageVersion,
+                description: data.heritageDescription,
+                tagID: heritageTag.id,
+                contentSrc: data.heritageContentSrc,
+                code: data.heritageCode,
+                homebrewID: null,
+            }).then(uniHeritage => {
+                let heritageFeatPromises = []; // Create Heritage Feats
+                if(data.heritageFeatsArray != null){
+                    for(const heritageFeat of data.heritageFeatsArray) {
+                        if(!heritageFeat.featTagsArray.includes(heritageTag.id)){
+                            heritageFeat.featTagsArray.push(heritageTag.id);
+                        }
+                        heritageFeat.isDefault = 0;
+                        heritageFeat.skillID = null;
+                        heritageFeat.minProf = null;
+                        heritageFeat.genericType = null;
+                        heritageFeat.isArchived = 0;
+                        heritageFeat.contentSrc = uniHeritage.contentSrc;
+                        heritageFeat.version = null;
+                        let newPromise = AdminUpdate.addFeatPreparedData(heritageFeat);
+                        heritageFeatPromises.push(newPromise);
+                    }
+                }
+                return Promise.all(heritageFeatPromises)
+                .then(function(result) {
+                    return uniHeritage;
+                });
+            });
+        });
+    }
+
+    static deleteUniHeritage(uniHeritageID){
+        if(uniHeritageID == null) {return;}
+        return UniHeritage.findOne({where: { id: uniHeritageID}})
+        .then((uniHeritage) => {
+            // Clear Heritage Details for every Character that had this Heritage
+            return Character.findAll({where: { heritageID: uniHeritage.id }})
+            .then((charactersWithHeritage) => {
+                let characterHeritageClearPromises = [];
+                for(const charWithHeritage of charactersWithHeritage) {
+                    let newPromise = CharSaving.saveHeritage(charWithHeritage.id, null);
+                    characterHeritageClearPromises.push(newPromise);
+                }
+                return Promise.all(characterHeritageClearPromises)
+                .then(function(result) {
+                    return FeatTag.findAll({where: { tagID: uniHeritage.tagID }})
+                    .then((featTags) => {
+                        let heritageFeatsPromises = []; // Delete Heritage Feats
+                        for(const featTag of featTags) {
+                            let newPromise = Feat.destroy({
+                                where: { id: featTag.featID }
+                            });
+                            heritageFeatsPromises.push(newPromise);
+                        }
+                        return Promise.all(heritageFeatsPromises)
+                        .then(function(result) {
+                            return Tag.destroy({ // Delete Tag (which will cascade to FeatTags)
+                                where: { id: uniHeritage.tagID }
+                            }).then((result) => {
+                                return UniHeritage.destroy({ // Finally, delete UniHeritage
+                                    where: { id: uniHeritage.id }
+                                }).then((result) => {
+                                    return;
+                                });
+                            });
+                        });
+                    });
+                });
+            });
+        });
+    }
+
+    static archiveUniHeritage(uniHeritageID, isArchived){
+        let archived = (isArchived) ? 1 : 0;
+        let updateValues = { isArchived: archived };
+        return UniHeritage.update(updateValues, { where: { id: uniHeritageID } })
+        .then((result) => {
+            return UniHeritage.findOne({where: { id: uniHeritageID}})
+            .then((uniHeritage) => {
+                return Tag.update(updateValues, { where: { id: uniHeritage.tagID } })
+                .then((result) => {
+                    return FeatTag.findAll({where: { tagID: uniHeritage.tagID }})
+                    .then((featTags) => {
+                        let heritageFeatsPromises = [];
+                        for(const featTag of featTags) {
+                            let newPromise = Feat.update(updateValues, {
+                                where: { id: featTag.featID }
+                            });
+                            heritageFeatsPromises.push(newPromise);
+                        }
+                        return Promise.all(heritageFeatsPromises)
+                        .then(function(result) {
+                            return;
+                        });
+                    });
+                });
+            });
+        });
+    }
+    
 
 
     static addFeat(data){

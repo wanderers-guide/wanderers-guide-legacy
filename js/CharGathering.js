@@ -1,7 +1,10 @@
 
+const { Op } = require("sequelize");
+
 const Character = require('../models/contentDB/Character');
 const Class = require('../models/contentDB/Class');
 const ClassAbility = require('../models/contentDB/ClassAbility');
+const Archetype = require('../models/contentDB/Archetype');
 const Feat = require('../models/contentDB/Feat');
 const FeatTag = require('../models/contentDB/FeatTag');
 const Tag = require('../models/contentDB/Tag');
@@ -16,6 +19,7 @@ const Inventory = require('../models/contentDB/Inventory');
 const Language = require('../models/contentDB/Language');
 const Ancestry = require('../models/contentDB/Ancestry');
 const Heritage = require('../models/contentDB/Heritage');
+const UniHeritage = require('../models/contentDB/UniHeritage');
 const AncestryLanguage = require('../models/contentDB/AncestryLanguage');
 const AncestryBoost = require('../models/contentDB/AncestryBoost');
 const AncestryFlaw = require('../models/contentDB/AncestryFlaw');
@@ -37,6 +41,7 @@ const ItemRune = require('../models/contentDB/ItemRune');
 const CharDataMapping = require('./CharDataMapping');
 const CharDataMappingExt = require('./CharDataMappingExt');
 
+const CharContentSources = require('./CharContentSources');
 const CharSpells = require('./CharSpells');
 const CharTags = require('./CharTags');
 
@@ -111,175 +116,243 @@ function capitalizeWord(word){
 
 module.exports = class CharGathering {
 
-    static getAllClasses() {
-        return Class.findAll()
-        .then((classes) => {
-            return ClassAbility.findAll({
+    static getAllClasses(charID) {
+        return Character.findOne({ where: { id: charID} })
+        .then((character) => {
+            return Class.findAll({
+                where: {
+                    contentSrc: {
+                      [Op.or]: CharContentSources.getSourceArray(character)
+                    }
+                }
+            }).then((classes) => {
+                return ClassAbility.findAll({
+                    order: [['level', 'ASC'],['name', 'ASC'],]
+                })
+                .then((allClassAbilities) => {
+                    
+                    let classMap = new Map();
+    
+                    for (const cClass of classes) {
+                        classMap.set(cClass.id, {Class : cClass, Abilities : []}); 
+                    }
+    
+                    for (const classAbil of allClassAbilities) {
+                        let classID = classAbil.classID;
+    
+                        let classStruct = classMap.get(classID);
+                        classStruct.Abilities.push(classAbil);
+    
+                    }
+    
+                    return mapToObj(classMap);
+    
+                });
+            });
+        });
+    }
+
+    static getAllArchetypes(charID) {
+        return Character.findOne({ where: { id: charID} })
+        .then((character) => {
+            return Archetype.findAll({
+                where: {
+                    contentSrc: {
+                      [Op.or]: CharContentSources.getSourceArray(character)
+                    }
+                }
+            })
+            .then((archetypes) => {
+                return archetypes;
+            });
+        });
+    }
+
+    static getAllUniHeritages(charID) {
+        return Character.findOne({ where: { id: charID} })
+        .then((character) => {
+            return UniHeritage.findAll({
+                where: {
+                    contentSrc: {
+                      [Op.or]: CharContentSources.getSourceArray(character)
+                    }
+                }
+            })
+            .then((uniHeritages) => {
+                return uniHeritages;
+            });
+        });
+    }
+
+    static getAllFeats(charID) {
+        return Character.findOne({ where: { id: charID} })
+        .then((character) => {
+            return Feat.findAll({
+                where: {
+                    contentSrc: {
+                      [Op.or]: CharContentSources.getSourceArray(character)
+                    }
+                }
+            })
+            .then((feats) => {
+                return FeatTag.findAll()
+                .then((featTags) => {
+                    return Tag.findAll()
+                    .then((tags) => {
+        
+                        let featMap = new Map();
+
+                        for (const feat of feats) {
+                            featMap.set(feat.id, {Feat : feat, Tags : []});
+                        }
+
+                        for (const featTag of featTags) {
+
+                            let tag = tags.find(tag => {
+                                return tag.id === featTag.tagID;
+                            });
+
+                            let featStruct = featMap.get(featTag.featID);
+                            if(featStruct != null){
+                                featStruct.Tags.push(tag);
+                            }
+
+                        }
+
+                        return mapToObj(featMap);
+        
+                    });
+                });
+            });
+        });
+    }
+
+    static getAllSpells(charID) {
+        return Character.findOne({ where: { id: charID} })
+        .then((character) => {
+            return Spell.findAll({
+                where: {
+                    contentSrc: {
+                      [Op.or]: CharContentSources.getSourceArray(character)
+                    }
+                },
                 order: [['level', 'ASC'],['name', 'ASC'],]
             })
-            .then((allClassAbilities) => {
-                
-                let classMap = new Map();
-
-                for (const cClass of classes) {
-                    classMap.set(cClass.id, {Class : cClass, Abilities : []}); 
-                }
-
-                for (const classAbil of allClassAbilities) {
-                    let classID = classAbil.classID;
-
-                    let classStruct = classMap.get(classID);
-                    classStruct.Abilities.push(classAbil);
-
-                }
-
-                return mapToObj(classMap);
-
-            });
-        });
-    }
-
-
-    static getAllFeats() {
-        return Feat.findAll()
-        .then((feats) => {
-            return FeatTag.findAll()
-            .then((featTags) => {
-                return Tag.findAll()
-                .then((tags) => {
+            .then((spells) => {
+                return TaggedSpell.findAll()
+                .then((taggedSpells) => {
+                    return Tag.findAll()
+                    .then((tags) => {
+        
+                        let spellMap = new Map();
     
-                    let featMap = new Map();
-
-                    for (const feat of feats) {
-                        
-                        featMap.set(feat.id, {Feat : feat, Tags : []});
-                    }
-
-                    for (const featTag of featTags) {
-
-                        let tag = tags.find(tag => {
-                            return tag.id === featTag.tagID;
-                        });
-
-                        let featStruct = featMap.get(featTag.featID);
-                        featStruct.Tags.push(tag);
-
-                    }
-
-                    return mapToObj(featMap);
+                        for (const spell of spells) {
+                            spellMap.set(spell.id, {Spell : spell, Tags : []});
+                        }
     
+                        for (const taggedSpell of taggedSpells) {
+    
+                            let tag = tags.find(tag => {
+                                return tag.id === taggedSpell.tagID;
+                            });
+    
+                            let spellStruct = spellMap.get(taggedSpell.spellID);
+                            if(spellStruct != null){
+                                spellStruct.Tags.push(tag);
+                            }
+    
+                        }
+    
+                        return spellMap;
+        
+                    });
                 });
             });
         });
     }
 
-    static getAllSpells() {
-        return Spell.findAll({
-            order: [['level', 'ASC'],['name', 'ASC'],]
-        })
-        .then((spells) => {
-            return TaggedSpell.findAll()
-            .then((taggedSpells) => {
-                return Tag.findAll()
-                .then((tags) => {
-    
-                    let spellMap = new Map();
-
-                    for (const spell of spells) {
-                        spellMap.set(spell.id, {Spell : spell, Tags : []});
-                    }
-
-                    for (const taggedSpell of taggedSpells) {
-
-                        let tag = tags.find(tag => {
-                            return tag.id === taggedSpell.tagID;
-                        });
-
-                        let spellStruct = spellMap.get(taggedSpell.spellID);
-                        spellStruct.Tags.push(tag);
-
-                    }
-
-                    return spellMap;
-    
-                });
-            });
-        });
-    }
-
-    static getAllItems(){
+    static getAllItems(charID){
 
         console.log('~~~~~~~~~~~ REQUESTING ALL ITEMS ~~~~~~~~~~~');
 
-        return Item.findAll()
-        .then((items) => {
-            return Tag.findAll()
-            .then((tags) => {
-                return TaggedItem.findAll()
-                .then((taggedItems) => {
-                    return Weapon.findAll()
-                    .then((weapons) => {
-                        return Armor.findAll()
-                        .then((armors) => {
-                            return Storage.findAll()
-                            .then((storages) => {
-                                return Shield.findAll()
-                                .then((shields) => {
-                                    return ItemRune.findAll()
-                                    .then((runes) => {
-                                                
-                                        let itemMap = new Map();
+        return Character.findOne({ where: { id: charID} })
+        .then((character) => {
+            return Item.findAll({
+                where: {
+                    contentSrc: {
+                      [Op.or]: CharContentSources.getSourceArray(character)
+                    }
+                }
+            })
+            .then((items) => {
+                return Tag.findAll()
+                .then((tags) => {
+                    return TaggedItem.findAll()
+                    .then((taggedItems) => {
+                        return Weapon.findAll()
+                        .then((weapons) => {
+                            return Armor.findAll()
+                            .then((armors) => {
+                                return Storage.findAll()
+                                .then((storages) => {
+                                    return Shield.findAll()
+                                    .then((shields) => {
+                                        return ItemRune.findAll()
+                                        .then((runes) => {
+                                                    
+                                            let itemMap = new Map();
 
-                                        for(const item of items){
+                                            for(const item of items){
 
-                                            let tagArray = [];
-                                            for(const taggedItem of taggedItems){
-                                                if(taggedItem.itemID == item.id) {
+                                                let tagArray = [];
+                                                for(const taggedItem of taggedItems){
+                                                    if(taggedItem.itemID == item.id) {
 
-                                                    let tag = tags.find(tag => {
-                                                        return tag.id == taggedItem.tagID;
-                                                    });
-            
-                                                    tagArray.push({
-                                                        Tag : tag
-                                                    });
+                                                        let tag = tags.find(tag => {
+                                                            return tag.id == taggedItem.tagID;
+                                                        });
+                
+                                                        tagArray.push({
+                                                            Tag : tag
+                                                        });
 
+                                                    }
                                                 }
+
+                                                let weapon = weapons.find(weapon => {
+                                                    return weapon.itemID == item.id;
+                                                });
+
+                                                let armor = armors.find(armor => {
+                                                    return armor.itemID == item.id;
+                                                });
+
+                                                let storage = storages.find(storage => {
+                                                    return storage.itemID == item.id;
+                                                });
+
+                                                let shield = shields.find(shield => {
+                                                    return shield.itemID == item.id;
+                                                });
+
+                                                let rune = runes.find(rune => {
+                                                    return rune.itemID == item.id;
+                                                });
+
+                                                itemMap.set(item.id, {
+                                                    Item : item,
+                                                    WeaponData : weapon,
+                                                    ArmorData : armor,
+                                                    StorageData : storage,
+                                                    ShieldData : shield,
+                                                    RuneData : rune,
+                                                    TagArray : tagArray
+                                                });
+
                                             }
 
-                                            let weapon = weapons.find(weapon => {
-                                                return weapon.itemID == item.id;
-                                            });
-
-                                            let armor = armors.find(armor => {
-                                                return armor.itemID == item.id;
-                                            });
-
-                                            let storage = storages.find(storage => {
-                                                return storage.itemID == item.id;
-                                            });
-
-                                            let shield = shields.find(shield => {
-                                                return shield.itemID == item.id;
-                                            });
-
-                                            let rune = runes.find(rune => {
-                                                return rune.itemID == item.id;
-                                            });
-
-                                            itemMap.set(item.id, {
-                                                Item : item,
-                                                WeaponData : weapon,
-                                                ArmorData : armor,
-                                                StorageData : storage,
-                                                ShieldData : shield,
-                                                RuneData : rune,
-                                                TagArray : tagArray
-                                            });
-
-                                        }
-
-                                        return itemMap;
+                                            return itemMap;
+                                        });
                                     });
                                 });
                             });
@@ -288,6 +361,7 @@ module.exports = class CharGathering {
                 });
             });
         });
+        
     }
 
     static getInvIDFromInvItemID(invItemID){
@@ -401,109 +475,133 @@ module.exports = class CharGathering {
         });
     }
 
-    static getAllAncestries(includeTag) {
+    static getAllAncestries(charID, includeTag) {
 
         console.log('~~~~~~~~~~~ REQUESTING ALL ANCESTRIES ~~~~~~~~~~~');
 
-        return Ancestry.findAll()
-        .then((ancestries) => {
-            return Heritage.findAll({
-                order: [['name', 'ASC'],]
+        return Character.findOne({ where: { id: charID} })
+        .then((character) => {
+            return Ancestry.findAll({
+                where: {
+                    contentSrc: {
+                      [Op.or]: CharContentSources.getSourceArray(character)
+                    }
+                }
             })
-            .then((heritages) => {
-                return Language.findAll()
-                .then((languages) => {
-                    return AncestryLanguage.findAll()
-                    .then((ancestLangs) => {
-                        return AncestryBoost.findAll()
-                        .then((ancestBoosts) => {
-                            return AncestryFlaw.findAll()
-                            .then((ancestFlaws) => {
-                                return Tag.findAll()
-                                .then((tags) => {
-                                    return SenseType.findAll()
-                                    .then((senseTypes) => {
-                                        return CharGathering.getAllPhysicalFeatures()
-                                        .then((physicalFeatures) => {
-
-                                            let ancestryMap = new Map();
-
-                                            for (const ancestry of ancestries) {
-                                                let tag = null;
-                                                if(includeTag){
-                                                    tag = tags.find(tag => {
-                                                        return tag.id === ancestry.tagID;
-                                                    });
-                                                }
-                                                let visionSense, additionalSense = null;
-                                                for(let senseType of senseTypes){
-                                                    if(senseType.id === ancestry.visionSenseID){
-                                                        visionSense = senseType;
-                                                    } else if(senseType.id === ancestry.additionalSenseID){
-                                                        additionalSense = senseType;
+            .then((ancestries) => {
+                return Heritage.findAll({
+                    where: {
+                        contentSrc: {
+                          [Op.or]: CharContentSources.getSourceArray(character)
+                        }
+                    },
+                    order: [['name', 'ASC'],]
+                })
+                .then((heritages) => {
+                    return Language.findAll()
+                    .then((languages) => {
+                        return AncestryLanguage.findAll()
+                        .then((ancestLangs) => {
+                            return AncestryBoost.findAll()
+                            .then((ancestBoosts) => {
+                                return AncestryFlaw.findAll()
+                                .then((ancestFlaws) => {
+                                    return Tag.findAll()
+                                    .then((tags) => {
+                                        return SenseType.findAll()
+                                        .then((senseTypes) => {
+                                            return CharGathering.getAllPhysicalFeatures()
+                                            .then((physicalFeatures) => {
+    
+                                                let ancestryMap = new Map();
+    
+                                                for (const ancestry of ancestries) {
+                                                    let tag = null;
+                                                    if(includeTag){
+                                                        tag = tags.find(tag => {
+                                                            return tag.id === ancestry.tagID;
+                                                        });
                                                     }
-                                                }
-                                                let physicalFeatureOne, physicalFeatureTwo = null;
-                                                for(let physicalFeature of physicalFeatures){
-                                                    if(physicalFeature.id === ancestry.physicalFeatureOneID){
-                                                        physicalFeatureOne = physicalFeature;
-                                                    } else if(physicalFeature.id === ancestry.physicalFeatureTwoID){
-                                                        physicalFeatureTwo = physicalFeature;
+                                                    let visionSense, additionalSense = null;
+                                                    for(let senseType of senseTypes){
+                                                        if(senseType.id === ancestry.visionSenseID){
+                                                            visionSense = senseType;
+                                                        } else if(senseType.id === ancestry.additionalSenseID){
+                                                            additionalSense = senseType;
+                                                        }
                                                     }
+                                                    let physicalFeatureOne, physicalFeatureTwo = null;
+                                                    for(let physicalFeature of physicalFeatures){
+                                                        if(physicalFeature.id === ancestry.physicalFeatureOneID){
+                                                            physicalFeatureOne = physicalFeature;
+                                                        } else if(physicalFeature.id === ancestry.physicalFeatureTwoID){
+                                                            physicalFeatureTwo = physicalFeature;
+                                                        }
+                                                    }
+                                                    ancestryMap.set(ancestry.id, {Ancestry : ancestry, Heritages : [],
+                                                        Languages : [], BonusLanguages : [], Boosts : [], Flaws : [],
+                                                        Tag : tag, VisionSense : visionSense, AdditionalSense : additionalSense,
+                                                        PhysicalFeatureOne: physicalFeatureOne, PhysicalFeatureTwo: 
+                                                        physicalFeatureTwo});
                                                 }
-                                                ancestryMap.set(ancestry.id, {Ancestry : ancestry, Heritages : [],
-                                                    Languages : [], BonusLanguages : [], Boosts : [], Flaws : [],
-                                                    Tag : tag, VisionSense : visionSense, AdditionalSense : additionalSense,
-                                                    PhysicalFeatureOne: physicalFeatureOne, PhysicalFeatureTwo: 
-                                                    physicalFeatureTwo});
-                                            }
-
-                                            for (const heritage of heritages) {
-
-                                                let ancestryStruct = ancestryMap.get(heritage.ancestryID);
-                                                ancestryStruct.Heritages.push(heritage);
-
-                                            }
-
-                                            for (const ancestLang of ancestLangs) {
-
-                                                if(ancestLang.isBonus === 1) {
-
-                                                    let language = languages.find(language => {
-                                                        return language.id === ancestLang.langID;
-                                                    });
-                            
-                                                    let ancestryStruct = ancestryMap.get(ancestLang.ancestryID);
-                                                    ancestryStruct.BonusLanguages.push(language);
-
-                                                } else {
-
-                                                    let language = languages.find(language => {
-                                                        return language.id === ancestLang.langID;
-                                                    });
-                            
-                                                    let ancestryStruct = ancestryMap.get(ancestLang.ancestryID);
-                                                    ancestryStruct.Languages.push(language);
-
+    
+                                                for (const heritage of heritages) {
+    
+                                                    let ancestryStruct = ancestryMap.get(heritage.ancestryID);
+                                                    if(ancestryStruct != null){
+                                                        ancestryStruct.Heritages.push(heritage);
+                                                    }
+    
                                                 }
-
-                                            }
-
-                                            for (const ancestBoost of ancestBoosts) {
-
-                                                let ancestryStruct = ancestryMap.get(ancestBoost.ancestryID);
-                                                ancestryStruct.Boosts.push(ancestBoost.boostedAbility);
-
-                                            }
-
-                                            for (const ancestFlaw of ancestFlaws) {
-
-                                                let ancestryStruct = ancestryMap.get(ancestFlaw.ancestryID);
-                                                ancestryStruct.Flaws.push(ancestFlaw.flawedAbility);
-
-                                            }
-
-                                            return mapToObj(ancestryMap);
+    
+                                                for (const ancestLang of ancestLangs) {
+    
+                                                    if(ancestLang.isBonus === 1) {
+    
+                                                        let language = languages.find(language => {
+                                                            return language.id === ancestLang.langID;
+                                                        });
+                                
+                                                        let ancestryStruct = ancestryMap.get(ancestLang.ancestryID);
+                                                        if(ancestryStruct != null){
+                                                            ancestryStruct.BonusLanguages.push(language);
+                                                        }
+    
+                                                    } else {
+    
+                                                        let language = languages.find(language => {
+                                                            return language.id === ancestLang.langID;
+                                                        });
+                                
+                                                        let ancestryStruct = ancestryMap.get(ancestLang.ancestryID);
+                                                        if(ancestryStruct != null){
+                                                            ancestryStruct.Languages.push(language);
+                                                        }
+    
+                                                    }
+    
+                                                }
+    
+                                                for (const ancestBoost of ancestBoosts) {
+    
+                                                    let ancestryStruct = ancestryMap.get(ancestBoost.ancestryID);
+                                                    if(ancestryStruct != null){
+                                                        ancestryStruct.Boosts.push(ancestBoost.boostedAbility);
+                                                    }
+    
+                                                }
+    
+                                                for (const ancestFlaw of ancestFlaws) {
+    
+                                                    let ancestryStruct = ancestryMap.get(ancestFlaw.ancestryID);
+                                                    if(ancestryStruct != null){
+                                                        ancestryStruct.Flaws.push(ancestFlaw.flawedAbility);
+                                                    }
+    
+                                                }
+    
+                                                return mapToObj(ancestryMap);
+                                            });
                                         });
                                     });
                                 });
@@ -569,17 +667,35 @@ module.exports = class CharGathering {
         });
     }
 
-    static getAllAncestriesBasic() {
-        return Ancestry.findAll()
-        .then((ancestries) => {
-            return ancestries;
+    static getAllAncestriesBasic(charID) {
+        return Character.findOne({ where: { id: charID} })
+        .then((character) => {
+            return Ancestry.findAll({
+                where: {
+                    contentSrc: {
+                      [Op.or]: CharContentSources.getSourceArray(character)
+                    }
+                }
+            })
+            .then((ancestries) => {
+                return ancestries;
+            });
         });
     }
 
-    static getAllBackgrounds() {
-        return Background.findAll()
-        .then((backgrounds) => {
-            return backgrounds;
+    static getAllBackgrounds(charID) {
+        return Character.findOne({ where: { id: charID} })
+        .then((character) => {
+            return Background.findAll({
+                where: {
+                    contentSrc: {
+                      [Op.or]: CharContentSources.getSourceArray(character)
+                    }
+                }
+            })
+            .then((backgrounds) => {
+                return backgrounds;
+            });
         });
     }
 
@@ -769,9 +885,9 @@ module.exports = class CharGathering {
 
         return Character.findOne({ where: { id: charID} })
         .then((character) => {
-            return Heritage.findOne({ where: { id: character.heritageID} })
+            return CharGathering.getCharHeritage(character)
             .then((heritage) => {
-                return CharGathering.getAllAncestriesBasic()
+                return CharGathering.getAllAncestriesBasic(charID)
                 .then((ancestries) => {
                     return CharTags.getTags(charID)
                     .then((charTagsArray) => {
@@ -793,36 +909,40 @@ module.exports = class CharGathering {
                                                     .then((senseDataArray) => {
                                                         return CharDataMapping.getDataAll(charID, 'phyFeats', PhysicalFeature)
                                                         .then((phyFeatDataArray) => {
-                                                            return CharGathering.getFinalProfs(charID)
-                                                            .then( (profMap) => {
-                                                                return CharGathering.getAllDomains()
-                                                                .then( (domains) => {
-                                                                    return CharGathering.getChoicesDomains(charID)
-                                                                    .then((domainDataArray) => {
-                                                                        return CharDataMapping.getDataAll(charID, 'advancedDomains', Domain)
-                                                                        .then((advancedDomainDataArray) => {
+                                                            return CharSpells.getFocusPoints(charID)
+                                                            .then((focusPointDataArray) => {
+                                                                return CharGathering.getFinalProfs(charID)
+                                                                .then( (profMap) => {
+                                                                    return CharGathering.getAllDomains()
+                                                                    .then( (domains) => {
+                                                                        return CharGathering.getChoicesDomains(charID)
+                                                                        .then((domainDataArray) => {
+                                                                            return CharDataMapping.getDataAll(charID, 'advancedDomains', Domain)
+                                                                            .then((advancedDomainDataArray) => {
 
-                                                                            let choiceStruct = {
-                                                                                Level : character.level,
-                                                                                Heritage : heritage,
-                                                                                ClassDetails : classDetails,
-                                                                                CharTagsArray : charTagsArray,
-                                                                                FeatArray : featDataArray,
-                                                                                BonusArray : bonusDataArray,
-                                                                                ChoiceArray : choiceDataArray,
-                                                                                ProfArray : profDataArray,
-                                                                                LangArray : langDataArray,
-                                                                                SenseArray : senseDataArray,
-                                                                                PhyFeatArray : phyFeatDataArray,
-                                                                                InnateSpellArray : innateSpellDataArray,
-                                                                                FinalProfObject : mapToObj(profMap),
-                                                                                AllDomains : domains,
-                                                                                AllAncestries : ancestries,
-                                                                                DomainArray : domainDataArray,
-                                                                                AdvancedDomainArray : advancedDomainDataArray,
-                                                                            };
-                                                    
-                                                                            return choiceStruct;
+                                                                                let choiceStruct = {
+                                                                                    Level : character.level,
+                                                                                    Heritage : heritage,
+                                                                                    ClassDetails : classDetails,
+                                                                                    CharTagsArray : charTagsArray,
+                                                                                    FeatArray : featDataArray,
+                                                                                    BonusArray : bonusDataArray,
+                                                                                    ChoiceArray : choiceDataArray,
+                                                                                    ProfArray : profDataArray,
+                                                                                    LangArray : langDataArray,
+                                                                                    SenseArray : senseDataArray,
+                                                                                    PhyFeatArray : phyFeatDataArray,
+                                                                                    InnateSpellArray : innateSpellDataArray,
+                                                                                    FinalProfObject : mapToObj(profMap),
+                                                                                    AllDomains : domains,
+                                                                                    AllAncestries : ancestries,
+                                                                                    DomainArray : domainDataArray,
+                                                                                    AdvancedDomainArray : advancedDomainDataArray,
+                                                                                    FocusPointArray : focusPointDataArray,
+                                                                                };
+                                                        
+                                                                                return choiceStruct;
+                                                                            });
                                                                         });
                                                                     });
                                                                 });
@@ -877,6 +997,22 @@ module.exports = class CharGathering {
         .then((heritage) => {
             return heritage;
         });
+    }
+
+    static getCharHeritage(character) {
+        if(character.heritageID != null){
+            return Heritage.findOne({ where: { id: character.heritageID} })
+            .then((heritage) => {
+                return heritage;
+            });
+        } else if (character.uniHeritageID != null) {
+            return UniHeritage.findOne({ where: { id: character.uniHeritageID} })
+            .then((uniHeritage) => {
+                return uniHeritage;
+            });
+        } else {
+            return Promise.resolve();
+        }
     }
 
     static getClass(charID, classID) {
@@ -972,56 +1108,59 @@ module.exports = class CharGathering {
 
     static getAbilityScores(charID) {
 
-        return CharDataMappingExt.getDataAllAbilityBonus(charID)
+        return CharGathering.getBaseAbilityScores(charID)
+        .then((charAbilityScores) => {
+            return CharDataMappingExt.getDataAllAbilityBonus(charID)
             .then((bonusDataArray) => {
 
-            let abilMap = new Map();
-            abilMap.set("STR", 10);
-            abilMap.set("DEX", 10);
-            abilMap.set("CON", 10);
-            abilMap.set("INT", 10);
-            abilMap.set("WIS", 10);
-            abilMap.set("CHA", 10);
+                let abilMap = new Map();
+                abilMap.set("STR", charAbilityScores.STR);
+                abilMap.set("DEX", charAbilityScores.DEX);
+                abilMap.set("CON", charAbilityScores.CON);
+                abilMap.set("INT", charAbilityScores.INT);
+                abilMap.set("WIS", charAbilityScores.WIS);
+                abilMap.set("CHA", charAbilityScores.CHA);
 
-            let boostMap = new Map();
-            for(const bonusData of bonusDataArray){
-                if(bonusData.Bonus == "Boost") {
-                    let boostNums = boostMap.get(bonusData.Ability);
-                    if(boostNums == null){
-                        boostMap.set(bonusData.Ability, 1);
+                let boostMap = new Map();
+                for(const bonusData of bonusDataArray){
+                    if(bonusData.Bonus == "Boost") {
+                        let boostNums = boostMap.get(bonusData.Ability);
+                        if(boostNums == null){
+                            boostMap.set(bonusData.Ability, 1);
+                        } else {
+                            boostMap.set(bonusData.Ability, boostNums+1);
+                        }
+                    } else if(bonusData.Bonus == "Flaw") {
+                        let boostNums = boostMap.get(bonusData.Ability);
+                        if(boostNums == null){
+                            boostMap.set(bonusData.Ability, -1);
+                        } else {
+                            boostMap.set(bonusData.Ability, boostNums-1);
+                        }
                     } else {
-                        boostMap.set(bonusData.Ability, boostNums+1);
-                    }
-                } else if(bonusData.Bonus == "Flaw") {
-                    let boostNums = boostMap.get(bonusData.Ability);
-                    if(boostNums == null){
-                        boostMap.set(bonusData.Ability, -1);
-                    } else {
-                        boostMap.set(bonusData.Ability, boostNums-1);
-                    }
-                } else {
-                    let abilBonus = abilMap.get(bonusData.Ability);
-                    abilMap.set(bonusData.Ability, abilBonus+parseInt(bonusData.Bonus));
-                }
-            }
-
-            for(const [ability, boostNums] of boostMap.entries()){
-                let abilityScore = abilMap.get(ability);
-                for (let i = 0; i < boostNums; i++) {
-                    if(abilityScore < 18){
-                        abilityScore += 2;
-                    } else {
-                        abilityScore += 1;
+                        let abilBonus = abilMap.get(bonusData.Ability);
+                        abilMap.set(bonusData.Ability, abilBonus+parseInt(bonusData.Bonus));
                     }
                 }
-                if(boostNums < 0) {
-                    abilityScore = abilityScore+boostNums*2;
+
+                for(const [ability, boostNums] of boostMap.entries()){
+                    let abilityScore = abilMap.get(ability);
+                    for (let i = 0; i < boostNums; i++) {
+                        if(abilityScore < 18){
+                            abilityScore += 2;
+                        } else {
+                            abilityScore += 1;
+                        }
+                    }
+                    if(boostNums < 0) {
+                        abilityScore = abilityScore+boostNums*2;
+                    }
+                    abilMap.set(ability, abilityScore);
                 }
-                abilMap.set(ability, abilityScore);
-            }
 
-            return mapToObj(abilMap);
+                return mapToObj(abilMap);
 
+            });
         });
 
     }
@@ -1155,7 +1294,7 @@ module.exports = class CharGathering {
             .then((background) => {
                 return Ancestry.findOne({ where: { id: character.ancestryID} })
                 .then((ancestry) => {
-                    return Heritage.findOne({ where: { id: character.heritageID} })
+                    return CharGathering.getCharHeritage(character)
                     .then((heritage) => {
                         return Inventory.findOne({ where: { id: character.inventoryID} })
                         .then((inventory) => {
@@ -1169,11 +1308,11 @@ module.exports = class CharGathering {
                                         .then( (choicesStruct) => {
                                             return CharGathering.getSpellData(charID)
                                             .then((spellDataStruct) => {
-                                                return CharGathering.getAllSpells()
+                                                return CharGathering.getAllSpells(charID)
                                                 .then((spellMap) => {
-                                                    return CharGathering.getAllFeats()
+                                                    return CharGathering.getAllFeats(charID)
                                                     .then( (featObject) => {
-                                                        return CharGathering.getAllItems()
+                                                        return CharGathering.getAllItems(charID)
                                                         .then( (itemMap) => {
                                                             return CharGathering.getAllConditions(charID)
                                                             .then( (conditionsObject) => {
@@ -1242,7 +1381,7 @@ module.exports = class CharGathering {
 
     }
 
-    static getAllCharacterBuilderInfo(character) {
+    static getBaseAbilityScores(charID) {
 
         let srcStruct = {
             sourceType: 'other',
@@ -1250,13 +1389,12 @@ module.exports = class CharGathering {
             sourceCode: 'none',
             sourceCodeSNum: 'a',
         };
-        return CharDataMappingExt.getDataSingleAbilityBonus(character.id, srcStruct)
+        return CharDataMappingExt.getDataSingleAbilityBonus(charID, srcStruct)
         .then((bonusData) => {
-
-            let charAbilities = null;
+            let charAbilityScores = null;
             if(bonusData != null) {
                 let bonusArray = JSON.parse(bonusData.Bonus);
-                charAbilities = {
+                charAbilityScores = {
                     STR : 10 + parseInt(bonusArray[0]),
                     DEX : 10 + parseInt(bonusArray[1]),
                     CON : 10 + parseInt(bonusArray[2]),
@@ -1265,7 +1403,7 @@ module.exports = class CharGathering {
                     CHA : 10 + parseInt(bonusArray[5]),
                 };
             } else {
-                charAbilities = {
+                charAbilityScores = {
                     STR : 10,
                     DEX : 10,
                     CON : 10,
@@ -1273,15 +1411,11 @@ module.exports = class CharGathering {
                     WIS : 10,
                     CHA : 10,
                 };
-            }
-                
-            return {
-                char: character,
-                charAbilities: charAbilities,
-            };
-
+            }   
+            return charAbilityScores;
         });
 
     }
+
 
 };

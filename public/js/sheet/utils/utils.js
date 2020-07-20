@@ -27,7 +27,7 @@ function capitalizeFirstLetterOfWord(word){
 
 function capitalizeWords(str){
   if(str == null){ return null;}
-  return str.toLowerCase().replace(/(?:^|\s|["([{])+\S/g, match => match.toUpperCase());
+  return str.toLowerCase().replace(/(?:^|\s|["([{_-])+\S/g, match => match.toUpperCase());
 }
   
 function signNumber(number) {
@@ -204,12 +204,10 @@ function getProfNumber(numUps, charLevel) {
 
 function getBulkFromNumber(bulkNumber){
   switch(bulkNumber) {
-    case 0:
-        return "-";
-    case 0.1:
-        return "L";
-    default:
-        return ""+bulkNumber;
+    case 0: return '-';
+    case 0.1: return 'L';
+    case 0.01: return 'L / 10';
+    default: return ''+bulkNumber;
   }
 }
 

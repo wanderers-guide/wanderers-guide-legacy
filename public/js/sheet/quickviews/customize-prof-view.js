@@ -3,7 +3,7 @@ function openCustomizeProfQuickview(data) {
     addBackFunctionality(data);
 
     let profName = data.ProfData.Name.replace(/_/g,' ');
-    $('#quickViewTitle').html("Customize - "+profName);
+    $('#quickViewTitle').html("Customize - "+capitalizeWords(profName));
     let qContent = $('#quickViewContent');
 
     qContent.append('<div class="field is-horizontal"><div class="field-label is-normal"><label class="label">Proficiency</label></div><div class="field-body"><div class="field"><div class="control"><div class="select"><select id="customizeProf"><option value="chooseDefault">Default</option><option value="U">Untrained</option><option value="T">Trained</option><option value="E">Expert</option><option value="M">Master</option><option value="L">Legendary</option></select></div></div></div></div></div>');
@@ -19,17 +19,12 @@ function openCustomizeProfQuickview(data) {
         $('#customizeProf').val('chooseDefault');
     }
 
-    console.log(data.ProfData);
-
     $('#customizeSaveButton').click(function(){
 
         // Reloads character sheet twice, which is unnecessary.
 
         let prof = $('#customizeProf').val();
         let userBonus = $('#customizeBonus').val();
-
-        console.log(prof);
-        console.log(userBonus);
 
         let srcStructProf = {
             sourceType: 'user-set',

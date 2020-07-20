@@ -307,7 +307,7 @@ function addFundamentalRuneEntry(qContent, invItem, runeID, runeName, runeDescri
 
     let runeEntryID = 'runeEntry'+runeID;
     let runeEntryDeleteID = runeEntryID+'Delete';
-    qContent.append('<div class="has-text-centered mt-1"><p class="is-inline"><a class="has-text-grey-lighter has-tooltip-bottom has-tooltip-multiline" data-tooltip="'+runeDescription+'">'+runeName+'</a></p><a id="'+runeEntryDeleteID+'" class="is-size-6"><span class="icon is-small has-text-danger ml-3"><i class="fas fa-minus-circle"></i></span></a></div>');
+    qContent.append('<div class="has-text-centered mt-1"><p class="is-inline"><a class="has-text-grey-lighter has-tooltip-bottom has-tooltip-multiline" data-tooltip="'+runeDescription+'">'+runeName+'</a></p><a id="'+runeEntryDeleteID+'" class="is-size-6"><span class="icon is-small has-text-danger ml-3"><i class="fas fa-sm fa-minus-circle"></i></span></a></div>');
 
     $('#'+runeEntryDeleteID).click(function() {
         socket.emit("requestRemoveFundamentalRune",

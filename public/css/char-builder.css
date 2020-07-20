@@ -113,6 +113,10 @@
     border-color: #282828;
 }
 
+.message a:not(.button):not(.tag):not(.dropdown-item) {
+    text-decoration: none;
+}
+
 .card {
     background-color: hsl(212, 1%, 24%);
     border-color: #282828;
@@ -182,6 +186,22 @@ hr {
     display: inline;
 }
 
+/* General Tab */
+.builder-tabs {
+    border-bottom-style: none!important;
+}
+.builder-tabs li:hover {
+    color: #3298dc;
+}
+.builder-tabs li {
+    color: #bdbdbd;
+    border-bottom-style: solid;
+    border-bottom-width: 0.5px;
+}
+.builder-tabs a:hover {
+    border-bottom-color: #3298dc;
+}
+
 /* Class Abilities Tab */
 .ability-tabs li:hover {
     color: #3298dc;
@@ -194,8 +214,8 @@ hr {
 }
 
 .tabs:not(.is-boxed) li.is-active a {
-    border-bottom-color: #3298dc;
-    color: #3298dc;
+    border-bottom-color: #3298dc!important;
+    color: #3298dc!important;
 }
 
 .ability-hr {
@@ -206,7 +226,7 @@ hr {
     margin-bottom: 0.5rem;
 }
 
-/* Builder A Link */
+/* Builder Symbol Link */
 
 .builder-step-icon-info {
     color: inherit;
@@ -232,4 +252,13 @@ hr {
 
 select {
     text-align-last:center;
+}
+
+/* Character Options */
+.char-options-hr {
+    border-color: hsl(0, 0%, 35%);
+    width: 280px;
+    margin: auto;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
 }

@@ -146,7 +146,7 @@ function openInvItemQuickview(data) {
     qContent.append('<p class="is-size-6 has-text-left px-3 negative-indent">'+usageBulkEntry+'</p>');
 
     if(data.Item.Item.hands != 'NONE'){
-        qContent.append('<p class="is-size-6 has-text-left px-3"><strong>Hands:</strong> '+getHandsToString(data.Item.Item.hands)+'</p>');
+        qContent.append('<p class="is-size-6 has-text-left px-3"><strong>Hands</strong> '+getHandsToString(data.Item.Item.hands)+'</p>');
     }
 
     qContent.append('<hr class="m-2">');
@@ -340,9 +340,31 @@ function openInvItemQuickview(data) {
 
     // Health, Hardness, and Broken Threshold
     if(!viewOnly && !doesntHaveItemHealth(data.InvItem)) {
-        qContent.append('<p class="has-text-centered is-size-7"><strong>Health</strong></p>');
-        qContent.append('<div class="field has-addons has-addons-centered"><p class="control"><input id="'+invItemHPInputID+'" class="input is-small" type="number" min="0" max="'+maxHP+'" value="'+data.InvItem.currentHitPoints+'"></p><p class="control"><a class="button is-static is-small has-text-grey-light has-background-grey-darkest border-darker">/</a><p class="control"><a class="button is-static is-small has-text-grey-lighter has-background-grey-darklike border-darker">'+maxHP+'</a></p></div>');
-        qContent.append('<div class="columns is-centered is-marginless text-center"><div class="column is-4 is-paddingless"><p class="is-size-7 has-text-right pr-2"><strong>Hardness:</strong> '+data.InvItem.hardness+'</p></div><div class="column is-5 is-paddingless"><p class="is-size-7 has-text-left pl-2"><strong>Broken Threshold:</strong> '+brokenThreshold+'</p></div></div>');
+
+
+        qContent.append('<p id="itemHealthName" class="has-text-centered is-size-7"><strong class="cursor-clickable">Health</strong><sub class="icon is-small pl-1 cursor-clickable"><i id="itemHealthChevron" class="fas fa-lg fa-chevron-down"></i></sub></p>');
+
+        qContent.append('<div id="itemHealthSection" class="is-hidden"></div>');
+
+        $('#itemHealthSection').append('<div class="field has-addons has-addons-centered"><p class="control"><input id="'+invItemHPInputID+'" class="input is-small" type="number" min="0" max="'+maxHP+'" value="'+data.InvItem.currentHitPoints+'"></p><p class="control"><a class="button is-static is-small has-text-grey-light has-background-grey-darkest border-darker">/</a><p class="control"><a class="button is-static is-small has-text-grey-lighter has-background-grey-darklike border-darker">'+maxHP+'</a></p></div>');
+        $('#itemHealthSection').append('<div class="columns is-centered is-marginless text-center"><div class="column is-4 is-paddingless"><p class="is-size-7 has-text-right pr-2"><strong>Hardness:</strong> '+data.InvItem.hardness+'</p></div><div class="column is-5 is-paddingless"><p class="is-size-7 has-text-left pl-2"><strong>Broken Threshold:</strong> '+brokenThreshold+'</p></div></div>');
+
+        $('#itemHealthName').click(function() {
+            if($("#itemHealthSection").hasClass("is-hidden")) {
+                $("#itemHealthSection").removeClass('is-hidden');
+                $("#itemHealthChevron").removeClass('fa-chevron-down');
+                $("#itemHealthChevron").addClass('fa-chevron-up');
+            } else {
+                $("#itemHealthSection").addClass('is-hidden');
+                $("#itemHealthChevron").removeClass('fa-chevron-up');
+                $("#itemHealthChevron").addClass('fa-chevron-down');
+            }
+        });
+
+        if(data.Item.ShieldData != null){
+            $("#itemHealthName").trigger("click");
+        }
+
         qContent.append('<hr class="mt-2 mb-3">');
         
         $('#'+invItemHPInputID).blur(function() {

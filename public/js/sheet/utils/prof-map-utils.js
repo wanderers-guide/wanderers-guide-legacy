@@ -1,15 +1,12 @@
 
 function findItemDataByName(itemMap, profItemName, type){
     for(const [itemID, itemData] of itemMap.entries()){
-        console.log(itemData);
-        console.log(profItemName);
-        console.log(type);
         if(type == 'WEAPON' && itemData.WeaponData != null){
-            if(itemData.WeaponData.profName == profItemName){
+            if(itemData.WeaponData.profName.toUpperCase() == profItemName){
                 return itemData;
             }
         } else if(type == 'ARMOR' && itemData.ArmorData != null){
-            if(itemData.ArmorData.profName == profItemName){
+            if(itemData.ArmorData.profName.toUpperCase() == profItemName){
                 return itemData;
             }
         }

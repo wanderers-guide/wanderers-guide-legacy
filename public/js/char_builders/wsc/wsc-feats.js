@@ -2,22 +2,52 @@
 //------------------------- Processing Feats -------------------------//
 function processingFeats(wscStatement, srcStruct, locationID){
     
-    if(wscStatement.includes("GIVE-GENERAL-FEAT")){ // GIVE-GENERAL-FEAT=3[metamagic]
+    if(wscStatement.includes("GIVE-GENERAL-FEAT=")){ // GIVE-GENERAL-FEAT=3[metamagic]
         let value = wscStatement.split('=')[1];
-        let optionals = value.match(/^\d+?\[(\S+?)\]$/);
+        let optionals = value.match(/^.+?\[(.+?)\]$/);
         if(optionals != null){
             optionals = optionals[1].split(',');
         }
-        let level = parseInt(value);
+        let level;
+        if(value.startsWith('LEVEL')){
+            level = wscChoiceStruct.Level;
+        } else if(value.startsWith('HALF_LEVEL')){
+            level = Math.floor(wscChoiceStruct.Level/2);
+        } else {
+            level = parseInt(value);
+        }
         giveGeneralFeat(srcStruct, locationID, level, optionals);
     }
-    else if(wscStatement.includes("GIVE-ANCESTRY-FEAT")){ // GIVE-ANCESTRY-FEAT=3[metamagic]
+    else if(wscStatement.includes("GIVE-FEAT=")){ // GIVE-FEAT=3[metamagic]
         let value = wscStatement.split('=')[1];
-        let optionals = value.match(/^\d+?\[(\S+?)\]$/);
+        let optionals = value.match(/^.+?\[(.+?)\]$/);
         if(optionals != null){
             optionals = optionals[1].split(',');
         }
-        let level = parseInt(value);
+        let level;
+        if(value.startsWith('LEVEL')){
+            level = wscChoiceStruct.Level;
+        } else if(value.startsWith('HALF_LEVEL')){
+            level = Math.floor(wscChoiceStruct.Level/2);
+        } else {
+            level = parseInt(value);
+        }
+        giveFeat(srcStruct, locationID, level, optionals);
+    }
+    else if(wscStatement.includes("GIVE-ANCESTRY-FEAT=")){ // GIVE-ANCESTRY-FEAT=3[metamagic]
+        let value = wscStatement.split('=')[1];
+        let optionals = value.match(/^.+?\[(.+?)\]$/);
+        if(optionals != null){
+            optionals = optionals[1].split(',');
+        }
+        let level;
+        if(value.startsWith('LEVEL')){
+            level = wscChoiceStruct.Level;
+        } else if(value.startsWith('HALF_LEVEL')){
+            level = Math.floor(wscChoiceStruct.Level/2);
+        } else {
+            level = parseInt(value);
+        }
         let charTagsArray = [];
         for(let dataTag of wscChoiceStruct.CharTagsArray){
             charTagsArray.push(dataTag.value);
@@ -25,31 +55,45 @@ function processingFeats(wscStatement, srcStruct, locationID){
         giveAncestryFeat(srcStruct, locationID, level,
             charTagsArray, optionals);
     }
-    else if(wscStatement.includes("GIVE-CLASS-FEAT")){ // GIVE-CLASS-FEAT=3[metamagic]
+    else if(wscStatement.includes("GIVE-CLASS-FEAT=")){ // GIVE-CLASS-FEAT=3[metamagic]
         let value = wscStatement.split('=')[1];
-        let optionals = value.match(/^\d+?\[(\S+?)\]$/);
+        let optionals = value.match(/^.+?\[(.+?)\]$/);
         if(optionals != null){
             optionals = optionals[1].split(',');
         }
-        let level = parseInt(value);
+        let level;
+        if(value.startsWith('LEVEL')){
+            level = wscChoiceStruct.Level;
+        } else if(value.startsWith('HALF_LEVEL')){
+            level = Math.floor(wscChoiceStruct.Level/2);
+        } else {
+            level = parseInt(value);
+        }
         let className = (wscChoiceStruct.ClassDetails.Class != null) ? wscChoiceStruct.ClassDetails.Class.name : null;
         giveClassFeat(srcStruct, locationID, level, className, optionals);
     }
-    else if(wscStatement.includes("GIVE-SKILL-FEAT")){ // GIVE-SKILL-FEAT=3[metamagic]
+    else if(wscStatement.includes("GIVE-SKILL-FEAT=")){ // GIVE-SKILL-FEAT=3[metamagic]
         let value = wscStatement.split('=')[1];
-        let optionals = value.match(/^\d+?\[(\S+?)\]$/);
+        let optionals = value.match(/^.+?\[(.+?)\]$/);
         if(optionals != null){
             optionals = optionals[1].split(',');
         }
-        let level = parseInt(value);
+        let level;
+        if(value.startsWith('LEVEL')){
+            level = wscChoiceStruct.Level;
+        } else if(value.startsWith('HALF_LEVEL')){
+            level = Math.floor(wscChoiceStruct.Level/2);
+        } else {
+            level = parseInt(value);
+        }
         giveSkillFeat(srcStruct, locationID, level, optionals);
     } 
-    else if(wscStatement.includes("GIVE-FEAT-NAME")){ // GIVE-FEAT-NAME=Ancestral_Paragon
+    else if(wscStatement.includes("GIVE-FEAT-NAME=")){ // GIVE-FEAT-NAME=Ancestral_Paragon
         let featName = wscStatement.split('=')[1];
         featName = featName.replace(/_/g," ");
         giveFeatByName(srcStruct, featName, locationID);
     }
-    else if(wscStatement.includes("HIDE-FEAT-NAME")){ // HIDE-FEAT-NAME=Ancestral_Paragon
+    else if(wscStatement.includes("HIDE-FEAT-NAME=")){ // HIDE-FEAT-NAME=Ancestral_Paragon
         let featName = wscStatement.split('=')[1];
         featName = featName.replace(/_/g," ");
         hideFeatByName(srcStruct, featName);
@@ -63,6 +107,21 @@ function processingFeats(wscStatement, srcStruct, locationID){
 
 ////////////////////////////////// Choose Feats /////////////////////////////////////////////
 
+function giveFeat(srcStruct, locationID, featLevel, optionalTags){
+
+    displayFeatChoice(
+        srcStruct,
+        locationID,
+        "Choose a Feat",
+        [],
+        featLevel,
+        optionalTags
+    );
+
+    statementComplete();
+
+}
+
 function giveGeneralFeat(srcStruct, locationID, featLevel, optionalTags){
 
     displayFeatChoice(
@@ -73,6 +132,8 @@ function giveGeneralFeat(srcStruct, locationID, featLevel, optionalTags){
         featLevel,
         optionalTags
     );
+
+    statementComplete();
 
 }
 
@@ -87,10 +148,13 @@ function giveSkillFeat(srcStruct, locationID, featLevel, optionalTags){
         optionalTags
     );
 
+    statementComplete();
+
 }
 
 function giveAncestryFeat(srcStruct, locationID, featLevel, charTagsArray, optionalTags){
 
+    console.log(charTagsArray);
     displayFeatChoice(
         srcStruct,
         locationID,
@@ -100,29 +164,170 @@ function giveAncestryFeat(srcStruct, locationID, featLevel, charTagsArray, optio
         optionalTags
     );
 
+    statementComplete();
+
 }
 
 function giveClassFeat(srcStruct, locationID, featLevel, className, optionalTags){
 
-    displayFeatChoice(
-        srcStruct,
-        locationID,
-        "Choose a Class Feat",
-        [className],
-        featLevel,
-        optionalTags
-    );
+    // Include sourceCodeSNum at the end for if a code field gives multiple class feats
+    let classFeatTabsID = locationID+'-classFeatTabs-'+srcStruct.sourceCodeSNum;
+    let containerLocationID = locationID+'-ClassFeatContainer-'+srcStruct.sourceCodeSNum;
+
+    let classTabClass = locationID+'-classFeatClassTab-'+srcStruct.sourceCodeSNum;
+    let archetypesTabClass = locationID+'-classFeatArchetypesTab-'+srcStruct.sourceCodeSNum;
+    let dedicationTabClass = locationID+'-classFeatDedicationTab-'+srcStruct.sourceCodeSNum;
+
+    $('#'+locationID).append('<div class="tabs is-small is-centered is-marginless"><ul id="'+classFeatTabsID+'" class="builder-tabs classFeatTabs" data-arch-tab-class="'+archetypesTabClass+'"></ul></div>');
+    let tabsContent = $('#'+classFeatTabsID);
+
+    tabsContent.append('<li><a class="'+classTabClass+'">'+className+' Class</a></li>');
+
+    let charArchetypesArray = [];
+    for(let featChoice of wscChoiceStruct.FeatArray){
+        if(featChoice.value != null) {
+            let feat = wscFeatMap.get(featChoice.value.id+"");
+            if(feat != null){
+                let dedicationTag = feat.Tags.find(featTag => {
+                    return featTag.name === 'Dedication';
+                });
+                if(dedicationTag != null){
+                    charArchetypesArray.push(featChoice.value.id);
+                }
+            }
+        }
+    }
+
+    for(let charArchetypeDedFeatID of charArchetypesArray){
+        let archetype = wscArchetypes.find(archetype => {
+            return archetype.dedicationFeatID == charArchetypeDedFeatID;
+        });
+        if(archetype != null){
+            tabsContent.append('<li><a class="'+archetypesTabClass+' '+archetypesTabClass+'-'+archetype.name+'" name="'+archetype.name+'">'+archetype.name+' Archetype</a></li>');
+        }
+    }
+
+    tabsContent.append('<li><a class="'+dedicationTabClass+'">Add Dedication</a></li>');
+
+    $('#'+locationID).append('<div class="py-2" id="'+containerLocationID+'"></div>');
+
+    $('.'+classTabClass).click(function(event, autoPageLoad){
+        if (autoPageLoad != 'AUTO_PAGE_LOAD') { autoPageLoad = null; }
+        if($(this).parent().hasClass('is-active')) { return; }
+
+        $('#'+containerLocationID).html('');
+        $('#'+classFeatTabsID).find('.is-active').removeClass('is-active');
+        $(this).parent().addClass('is-active');
+
+        displayFeatChoice(
+            srcStruct,
+            containerLocationID,
+            "Choose a Class Feat",
+            [className],
+            featLevel,
+            optionalTags,
+            autoPageLoad
+        );
+
+    });
+
+    $('.'+archetypesTabClass).click(function(event, autoPageLoad){
+        if (autoPageLoad != 'AUTO_PAGE_LOAD') { autoPageLoad = null; }
+        if($(this).parent().hasClass('is-active')) { return; }
+
+        $('#'+containerLocationID).html('');
+        $('#'+classFeatTabsID).find('.is-active').removeClass('is-active');
+        $(this).parent().addClass('is-active');
+        let archetypeName = $(this).attr('name');
+
+        displayFeatChoice(
+            srcStruct,
+            containerLocationID,
+            "Choose an Archetype Feat",
+            [archetypeName+' Archetype'],
+            featLevel,
+            optionalTags,
+            autoPageLoad
+        );
+
+    });
+
+    $('.'+dedicationTabClass).click(function(){
+        if($(this).parent().hasClass('is-active')) { return; }
+
+        $('#'+containerLocationID).html('');
+        $('#'+classFeatTabsID).find('.is-active').removeClass('is-active');
+        $(this).parent().addClass('is-active');
+
+        displayFeatChoice(
+            srcStruct,
+            containerLocationID,
+            "Choose a Dedication",
+            ['Dedication'],
+            featLevel,
+            optionalTags
+        );
+
+    });
+
+    let clickedTab = false;
+    let featData = wscChoiceStruct.FeatArray.find(featData => {
+        return hasSameSrc(featData, srcStruct);
+    });
+    if(featData != null && featData.value != null){
+        if(charArchetypesArray.includes(featData.value.id)){
+            // Click Dedication Tab
+            $('.'+dedicationTabClass).trigger("click");
+            clickedTab = true;
+
+            // Remove Self-Archetype Tab
+            let archetype = wscArchetypes.find(archetype => {
+                return archetype.dedicationFeatID == featData.value.id;
+            });
+            if(archetype != null) {
+                let selfArchetypeTabClass = archetypesTabClass+'-'+archetype.name;
+                $('#'+classFeatTabsID).find('.'+selfArchetypeTabClass).parent().remove();
+            }
+        } else {
+            let feat = wscFeatMap.get(featData.value.id+"");
+            if(feat != null){
+                for(let charArchetypeDedFeatID of charArchetypesArray){
+                    let archetype = wscArchetypes.find(archetype => {
+                        return archetype.dedicationFeatID == charArchetypeDedFeatID;
+                    });
+                    if(archetype != null){
+                        let archetypeTag = feat.Tags.find(featTag => {
+                            return featTag.name === archetype.name+' Archetype';
+                        });
+                        if(archetypeTag != null){
+                            // Click Archetype Tab
+                            $('.'+archetypesTabClass+'-'+archetype.name).trigger("click", ['AUTO_PAGE_LOAD']);
+                            clickedTab = true;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    if(!clickedTab){
+        $('.'+classTabClass).trigger("click", ['AUTO_PAGE_LOAD']);
+    }
+
+    statementComplete();
 
 }
 
-function displayFeatChoice(srcStruct, locationID, selectionName, tagsArray, featLevel, optionalTags) {
+function displayFeatChoice(srcStruct, locationID, selectionName, tagsArray, featLevel, optionalTags,
+        autoPageLoad = 'AUTO_PAGE_LOAD') {
 
     // TO-DO. If feat requires prereq, check feats that the char has from choiceMap
     let featSelectionTypeClass = selectionName.replace(/ /g,'')+'Selector';
     
-    let selectFeatID = "selectFeat"+locationID+"-"+srcStruct.sourceCodeSNum;
-    let descriptionFeatID = "descriptionFeat"+locationID+"-"+srcStruct.sourceCodeSNum;
-    let selectFeatControlShellClass = selectFeatID+'ControlShell';
+    let selectFeatID = "selectFeat-"+locationID+"-"+srcStruct.sourceCodeSNum;
+    let descriptionFeatID = "descriptionFeat-"+locationID+"-"+srcStruct.sourceCodeSNum;
+    let selectFeatControlShellClass = selectFeatID+'-ControlShell';
 
     $('#'+locationID).append('<div class="field is-grouped is-grouped-centered is-marginless mb-1"><div class="select '+selectFeatControlShellClass+'"><select id="'+selectFeatID+'" class="selectFeat '+featSelectionTypeClass+'"></select></div></div>');
 
@@ -167,7 +372,11 @@ function displayFeatChoice(srcStruct, locationID, selectionName, tagsArray, feat
         let hasCorrectTags = false;
         let sameOpsTagsArray = [];
         for(let featTag of feat.Tags){
-            if(tagsArray.includes(featTag.name)){
+            if(tagsArray.length > 0){
+                if(tagsArray.includes(featTag.name)){
+                    hasCorrectTags = true;
+                }
+            } else {
                 hasCorrectTags = true;
             }
             if(optionalTags != null){
@@ -177,7 +386,7 @@ function displayFeatChoice(srcStruct, locationID, selectionName, tagsArray, feat
                 }
             }
         }
-        if(optionalTags != null){
+        if(optionalTags != null && hasCorrectTags){
             hasCorrectTags = (optionalTags.sort().join(',') === sameOpsTagsArray.sort().join(','));
         }
 
@@ -204,7 +413,8 @@ function displayFeatChoice(srcStruct, locationID, selectionName, tagsArray, feat
     }
 
     // On feat choice change
-    $('#'+selectFeatID).change(function(event, triggerSave, dontCheckDup) {
+    $('#'+selectFeatID).change(function(event, triggerSave, dontCheckDup, autoPageLoad) {
+        autoPageLoad = (autoPageLoad == 'AUTO_PAGE_LOAD') ? true : false;
 
         let featID = $(this).val();
         let feat = wscFeatMap.get(featID+"");
@@ -219,7 +429,7 @@ function displayFeatChoice(srcStruct, locationID, selectionName, tagsArray, feat
             featsUpdateWSCChoiceStruct(srcStruct, null);
             socket.emit("requestFeatChange",
                 getCharIDFromURL(),
-                {srcStruct, feat : null, featID : null, codeLocationID : descriptionFeatID+"Code" },
+                {srcStruct, feat : null, featID : null, autoPageLoad, codeLocationID : descriptionFeatID+"Code" },
                 selectFeatControlShellClass);
 
         } else {
@@ -253,7 +463,7 @@ function displayFeatChoice(srcStruct, locationID, selectionName, tagsArray, feat
                     featsUpdateWSCChoiceStruct(srcStruct, feat.Feat);
                     socket.emit("requestFeatChange",
                         getCharIDFromURL(),
-                        {srcStruct, feat, featID, codeLocationID : descriptionFeatID+"Code" },
+                        {srcStruct, feat, featID, autoPageLoad, codeLocationID : descriptionFeatID+"Code" },
                         selectFeatControlShellClass);
                 }
             
@@ -263,9 +473,7 @@ function displayFeatChoice(srcStruct, locationID, selectionName, tagsArray, feat
         
     });
 
-    $('#'+selectFeatID).trigger("change", [triggerChange, true]);
-
-    statementComplete();
+    $('#'+selectFeatID).trigger("change", [triggerChange, true, autoPageLoad]);
 
 }
 
@@ -307,6 +515,44 @@ socket.on("returnFeatChange", function(featChangePacket, selectFeatControlShellC
             featChangePacket.feat.Feat.code,
             featChangePacket.srcStruct,
             featChangePacket.codeLocationID);
+    }
+
+    // If dedication is switched, reload all class abilities
+    if(featChangePacket.autoPageLoad != null && !featChangePacket.autoPageLoad){
+
+        // Get number of character archetypes
+        let charArchetypesArray = [];
+        for(let featChoice of wscChoiceStruct.FeatArray){
+            if(featChoice.value != null) {
+                let feat = wscFeatMap.get(featChoice.value.id+"");
+                if(feat != null){
+                    let dedicationTag = feat.Tags.find(featTag => {
+                        return featTag.name === 'Dedication';
+                    });
+                    if(dedicationTag != null){
+                        charArchetypesArray.push(featChoice.value.id);
+                    }
+                }
+            }
+        }
+
+        // Get number of current archetype tabs
+        let maxArchetypesLength = 0;
+        $('.classFeatTabs').each(function() {
+            let archetypesTabClass = $(this).attr('data-arch-tab-class');
+            let archLength = $('.'+archetypesTabClass).length;
+            if (archLength > maxArchetypesLength) {
+                maxArchetypesLength = archLength;
+            }
+        });
+
+        // If they aren't the same amount, reload class abilities
+        if(maxArchetypesLength != charArchetypesArray.length) {
+            if(temp_classAbilities != null){
+                processCode_ClassAbilities(temp_classAbilities);
+            }
+        }
+
     }
 
 });

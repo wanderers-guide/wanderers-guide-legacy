@@ -116,7 +116,7 @@ function openItemQuickview(data) {
 
     if(itemDataStruct.Item.usage != null){
         qContent.append('<hr class="m-2">');
-        qContent.append('<p class="is-size-6 has-text-left px-3 negative-indent"><strong>Usage:</strong> '+itemDataStruct.Item.usage+'</p>');
+        qContent.append('<p class="is-size-6 has-text-left px-3 negative-indent"><strong>Usage</strong> '+itemDataStruct.Item.usage+'</p>');
     }
 
     qContent.append('<hr class="m-2">');

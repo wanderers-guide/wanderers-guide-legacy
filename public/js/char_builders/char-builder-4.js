@@ -366,7 +366,14 @@ function displayCurrentClass(classStruct, saving) {
         let sections = tWeapons.split(':::');
         let weapTraining = sections[0];
         let weaponName = sections[1];
-        let weapID = weaponName.replace(/ /g,'_');
+
+        let weapID;
+        let profConvertData = g_profConversionMap.get(weaponName.replace(/_|\s+/g,'').toUpperCase());
+        if(profConvertData != null){
+            weapID = profConvertData.Name;
+        } else {
+            weapID = weaponName.replace(/\s+/g,'_').toUpperCase();
+        }
 
         profAttacksUL.append('<li id="profAttacksLI'+weapID+'"></li>');
         let profAttacksLI = $('#profAttacksLI'+weapID);
@@ -398,7 +405,14 @@ function displayCurrentClass(classStruct, saving) {
         let sections = tArmor.split(':::');
         let armorTraining = sections[0];
         let armorName = sections[1];
-        let armorID = armorName.replace(/ /g,'_');
+
+        let armorID;
+        let profConvertData = g_profConversionMap.get(armorName.replace(/_|\s+/g,'').toUpperCase());
+        if(profConvertData != null){
+            armorID = profConvertData.Name;
+        } else {
+            armorID = armorName.replace(/\s+/g,'_').toUpperCase();
+        }
 
         profDefensesUL.append('<li id="profDefensesLI'+armorID+'"></li>');
         let profDefensesLI = $('#profDefensesLI'+armorID);

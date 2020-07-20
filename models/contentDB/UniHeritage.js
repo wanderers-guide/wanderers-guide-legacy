@@ -1,21 +1,18 @@
 const Sequelize = require('sequelize');
 const db = require('../../config/databases/content-database');
 
-const Archetype = db.define('archetypes', {
+const UniHeritage = db.define('uniHeritages', {
   name: {
     type: Sequelize.STRING
   },
   description: {
     type: Sequelize.TEXT
   },
-  dedicationFeatID: {
-    type: Sequelize.INTEGER
-  },
-  isMulticlass: {
-    type: Sequelize.INTEGER
-  },
   tagID: {
     type: Sequelize.INTEGER
+  },
+  code: {
+    type: Sequelize.STRING
   },
   isArchived: {
     type: Sequelize.INTEGER
@@ -31,4 +28,4 @@ const Archetype = db.define('archetypes', {
   }
 });
 
-module.exports = Archetype;
+module.exports = UniHeritage;

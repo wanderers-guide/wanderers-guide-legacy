@@ -332,9 +332,9 @@ module.exports = class CharSaving {
             charUpVals = {
                 optionAutoHeightenSpells: value
             };
-        } else if(optionName === 'optionProfWithoutLevel'){
+        } else if(optionName === 'variantProfWithoutLevel'){
             charUpVals = {
-                optionProfWithoutLevel: value
+                variantProfWithoutLevel: value
             };
         }
 
@@ -404,9 +404,20 @@ module.exports = class CharSaving {
 
     }
 
-    static saveHeritage(charID, heritageID) {
+    static saveHeritage(charID, heritageID, isUniversal) {
 
-        let charUpVals = {heritageID: heritageID };
+        let charUpVals;
+        if(isUniversal) {
+            charUpVals = {
+                uniHeritageID: heritageID,
+                heritageID: null,
+            };
+        } else {
+            charUpVals = {
+                uniHeritageID: null,
+                heritageID: heritageID,
+            };
+        }
         
         return Character.update(charUpVals, { where: { id: charID } })
         .then((result) => {
@@ -428,7 +439,8 @@ module.exports = class CharSaving {
         };
         let charUpVals = {
             ancestryID: ancestryID,
-            heritageID: null
+            heritageID: null,
+            uniHeritageID: null,
         };
 
         return CharDataMapping.deleteDataBySourceType(charID, 'ancestry')

@@ -195,7 +195,6 @@ function displayInventoryItem(invItem, openBagInvItemArray, data) {
         } else {
             bagBulk += bulkIgnored;
         }
-        bagBulk = round(bagBulk, 1);
         let maxBagBulk = item.StorageData.maxBulkStorage;
         let bulkIgnoredMessage = "";
         if(bulkIgnored != 0.0){
@@ -205,7 +204,8 @@ function displayInventoryItem(invItem, openBagInvItemArray, data) {
                 bulkIgnoredMessage = "The first "+bulkIgnored+" Bulk of items don’t count towards your Total Bulk.";
             }
         }
-        $('#'+invItemStorageSectionID).append('<div class="tile is-parent is-paddingless pt-1 px-2"><div class="tile is-child is-1"></div><div class="tile is-child is-3 border-bottom border-dark-lighter"><p id="'+invItemStorageBulkAmountID+'" class="has-text-left pl-5 is-size-6 has-text-grey">Bulk '+bagBulk+' / '+maxBagBulk+'</p></div><div class="tile is-child is-8 border-bottom border-dark-lighter"><p class="has-text-left pl-3 is-size-6 has-text-grey is-italic">'+bulkIgnoredMessage+'</p></div></div>');
+        let roundedBagBulk = round(bagBulk, 2);
+        $('#'+invItemStorageSectionID).append('<div class="tile is-parent is-paddingless pt-1 px-2"><div class="tile is-child is-1"></div><div class="tile is-child is-3 border-bottom border-dark-lighter"><p id="'+invItemStorageBulkAmountID+'" class="has-text-left pl-5 is-size-6 has-text-grey">Bulk '+roundedBagBulk+' / '+maxBagBulk+'</p></div><div class="tile is-child is-8 border-bottom border-dark-lighter"><p class="has-text-left pl-3 is-size-6 has-text-grey is-italic">'+bulkIgnoredMessage+'</p></div></div>');
 
         if(bagBulk > maxBagBulk){
             $('#'+invItemStorageBulkAmountID).removeClass('has-text-grey');

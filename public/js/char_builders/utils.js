@@ -31,6 +31,11 @@ function capitalizeWord(word){
   return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
 }
 
+function capitalizeWords(str){
+  if(str == null){ return null;}
+  return str.toLowerCase().replace(/(?:^|\s|["([{_-])+\S/g, match => match.toUpperCase());
+}
+
 function getAllAbilityTypes() {
   return ['Strength','Dexterity','Constitution','Intelligence','Wisdom','Charisma'];
 }

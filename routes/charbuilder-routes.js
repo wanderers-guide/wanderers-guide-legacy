@@ -52,13 +52,14 @@ function goToBuilder(req, res, buildStageName, charID){
 
         if(character.userID === req.user.id){
 
-            CharGathering.getAllCharacterBuilderInfo(character).then((cInfo) => {
+            CharGathering.getBaseAbilityScores(character.id)
+            .then((charAbilityScores) => {
 
                 res.render('char_builder/'+buildStageName, {
                     title: "Character Builder - Wanderer's Guide",
                     user: req.user,
-                    character: cInfo.char,
-                    charAbilities: cInfo.charAbilities
+                    character: character,
+                    charAbilities: charAbilityScores
                 });
 
             });

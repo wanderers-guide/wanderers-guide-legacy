@@ -1,9 +1,9 @@
 
 {{#section 'header'}}
     <link rel="stylesheet" href="/css/admin-builders.css">
-    <script type="text/javascript" src="/js/admin_builders/ancestry/builder-ancestry.js"></script>
-    {{#if ancestryID}}
-        <script type="text/javascript" src="/js/admin_builders/ancestry/editor-ancestry.js"></script>
+    <script type="text/javascript" src="/js/admin_builders/uni-heritage/builder-uni-heritage.js"></script>
+    {{#if uniHeritageID}}
+        <script type="text/javascript" src="/js/admin_builders/uni-heritage/editor-uni-heritage.js"></script>
         <script type="text/javascript" src="/js/admin_builders/editor-utils.js"></script>
     {{/if}}
 {{/section}}
@@ -30,10 +30,10 @@
 
 
 <div class="pt-3">
-    {{#if ancestryID}}
-        <h1 class="is-size-1 has-text-light has-text-centered">Ancestry Editor</h1>
+    {{#if uniHeritageID}}
+        <h1 class="is-size-1 has-text-light has-text-centered">Universal Heritage Editor</h1>
     {{else}}
-        <h1 class="is-size-1 has-text-light has-text-centered">Ancestry Creation</h1>
+        <h1 class="is-size-1 has-text-light has-text-centered">Universal Heritage Creation</h1>
     {{/if}}
 </div>
 
@@ -79,164 +79,9 @@
                     </div>
                 </div>
 
-                <div class="tile is-child field">
-                    <label class="label">Hit Points</label>
-                    <div class="control">
-                        <input id="inputHitPoints" class="input" type="number" value="8">
-                    </div>
-                </div>
-
-                <div class="tile is-child field">
-                    <label class="label">Size</label>
-                    <div class="control">
-                        <div class="select">
-                            <select id="inputSize">
-                                <option value="TINY">Tiny</option>
-                                <option value="SMALL">Small</option>
-                                <option value="MEDIUM" selected>Medium</option>
-                                <option value="LARGE">Large</option>
-                                <option value="GARGANTUAN">Gargantuan</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="tile is-child field">
-                    <label class="label">Speed</label>
-                    <div class="control">
-                        <input id="inputSpeed" class="input" type="number" value="25" step="5">
-                    </div>
-                </div>
-
-                <div class="tile is-child field">
-                    <label class="label">Vision Sense</label>
-                    <div class="control">
-                        <div class="select">
-                            <select id="inputVisionSense">
-                                {{#each senseTypes}}
-                                    {{#ifEqual isVisionType 1}}
-                                        <option value="{{id}}">{{name}}</option>
-                                    {{/ifEqual}}
-                                {{/each}}
-                            </select>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="tile is-child field">
-                    <label class="label">Additional Sense</label>
-                    <div class="control">
-                        <div class="select">
-                            <select id="inputAdditionalSense">
-                                <option value="">Choose a Sense</option>
-                                {{#each senseTypes}}
-                                    {{#ifEqual isVisionType 0}}
-                                        <option value="{{id}}">{{name}}</option>
-                                    {{/ifEqual}}
-                                {{/each}}
-                            </select>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="tile is-child field">
-                    <label class="label">Physical Feature</label>
-                    <div class="control">
-                        <div class="select">
-                            <select id="inputPhysicalFeatureOne">
-                                <option value="">Choose a Feature</option>
-                                {{#each physicalFeatures}}
-                                    <option value="{{id}}">{{name}}</option>
-                                {{/each}}
-                            </select>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="tile is-child field">
-                    <label class="label">Physical Feature</label>
-                    <div class="control">
-                        <div class="select">
-                            <select id="inputPhysicalFeatureTwo">
-                                <option value="">Choose a Feature</option>
-                                {{#each physicalFeatures}}
-                                    <option value="{{id}}">{{name}}</option>
-                                {{/each}}
-                            </select>
-                        </div>
-                    </div>
-                </div>
-
             </div>
 
             <div class="tile is-parent is-vertical box is-6 is-marginless ml-2">
-
-                <div class="tile">
-                    <div class="tile is-child field">
-                        <label class="label">Boosts</label>
-                        <div class="control">
-                            <div class="select is-multiple">
-                                <select id="inputBoosts" multiple size="8" class="use-invisible-scrollbar">
-                                    <option id="boostOptionAnything1" value="Anything">Free</option>
-                                    <option id="boostOptionAnything2" value="Anything">Free</option>
-                                    <option value="Strength">Strength</option>
-                                    <option value="Dexterity">Dexterity</option>
-                                    <option value="Constitution">Constitution</option>
-                                    <option value="Intelligence">Intelligence</option>
-                                    <option value="Wisdom">Wisdom</option>
-                                    <option value="Charisma">Charisma</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="tile is-child field">
-                        <label class="label">Flaws</label>
-                        <div class="control">
-                            <div class="select is-multiple">
-                                <select id="inputFlaws" multiple size="6" class="use-invisible-scrollbar">
-                                    <option value="Strength">Strength</option>
-                                    <option value="Dexterity">Dexterity</option>
-                                    <option value="Constitution">Constitution</option>
-                                    <option value="Intelligence">Intelligence</option>
-                                    <option value="Wisdom">Wisdom</option>
-                                    <option value="Charisma">Charisma</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="tile">
-                    <div class="tile is-child field">
-                        <label class="label">Languages (known by default)</label>
-                        <div class="control">
-                            <div class="select is-multiple">
-                                <select id="inputLangs" multiple>
-                                    {{#each languages}}
-                                        <option value="{{id}}" name="{{name}}">{{name}}</option>
-                                    {{/each}}
-                                </select>
-                            </div>
-                        </div>
-                        <p id="selectedLanguages">- </p>
-                    </div>
-
-                    <div class="tile is-child field">
-                        <label class="label">Bonus Languages</label>
-                        <div class="control">
-                            <div class="select is-multiple">
-                                <select id="inputBonusLangs" multiple>
-                                    {{#each languages}}
-                                        <option value="{{id}}" name="{{name}}">{{name}}</option>
-                                    {{/each}}
-                                </select>
-                            </div>
-                        </div>
-                        <p id="selectedBonusLanguages">- </p>
-                    </div>
-
-                </div>
 
                 <div class="tile is-vertical">
 
@@ -249,6 +94,16 @@
                             <textarea id="inputDescription" class="textarea" placeholder="Always hungry for new experiences..."></textarea>
                         </div>
                     </div>
+
+                    <div class="tile is-child field">
+                        <label class="label">
+                            Code
+                            <a href="/wsc_docs/#code_fields" target="_blank"><span class="icon is-small has-text-info has-tooltip-top" data-tooltip="WSC Docs"><i class="fas fa-book"></i></span></a>
+                        </label>
+                        <div class="control">
+                            <textarea id="inputCode" class="textarea nanum-coding use-custom-scrollbar" rows="1" spellcheck="false" maxlength="990"></textarea>
+                        </div>
+                    </div>
                     
                 </div>
 
@@ -259,59 +114,14 @@
         <div class="tile is-vertical box ml-3 mt-3">
 
                 <div class="tile is-child">
-                    <button id="addHeritageButton" class="button is-link">Add Hertiage</button>
-                </div>
-
-                <div id="heritageContent" class="tile is-child">
-
-                    <div id="heritageLayout" class="card mb-2 ancestryHeritage is-hidden">
-                        <div class="card-header cursor-clickable">
-                            <p class="card-header-title is-paddingless has-text-grey-lighter is-size-5">Heritage</p>
-                            <a class="card-header-icon is-paddingless mt-1 delete is-medium"></a>
-                        </div>
-                        <div class="card-content">
-                            <div class="field">
-                                <label class="label">Name</label>
-                                <div class="control">
-                                    <input class="input inputHeritageName" type="text" placeholder="e.g. Wellspring">
-                                </div>
-                            </div>
-                            <div class="field">
-                                <label class="label">
-                                    Description
-                                    <a href="/wsc_docs/#description_fields" target="_blank"><span class="icon is-small has-text-info has-tooltip-top" data-tooltip="WSC Docs"><i class="fas fa-book"></i></span></a>
-                                </label>
-                                <div class="control">
-                                    <textarea class="textarea inputHeritageDesc" placeholder="Some other source of magic has a greater hold..."></textarea>
-                                </div>
-                            </div>
-                            <div class="field">
-                                <label class="label">
-                                    Code
-                                    <a href="/wsc_docs/#code_fields" target="_blank"><span class="icon is-small has-text-info has-tooltip-top" data-tooltip="WSC Docs"><i class="fas fa-book"></i></span></a>
-                                </label>
-                                <div class="control">
-                                    <textarea class="textarea inputHeritageCode nanum-coding use-custom-scrollbar" rows="1" spellcheck="false" maxlength="990"></textarea>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-
-        </div>
-
-        <div class="tile is-vertical box ml-3 mt-3">
-
-                <div class="tile is-child">
-                    <button id="addFeatButton" class="button is-link">Add Ancestry Feat</button>
+                    <button id="addFeatButton" class="button is-link">Add Heritage Feat</button>
                 </div>
 
                 <div id="featContent" class="tile is-child">
 
-                    <div id="featLayout" class="card mb-2 ancestryFeat is-hidden">
+                    <div id="featLayout" class="card mb-2 heritageFeat is-hidden">
                         <div class="card-header cursor-clickable">
-                            <p class="card-header-title is-paddingless has-text-grey-lighter is-size-5">Ancestry Feat</p>
+                            <p class="card-header-title is-paddingless has-text-grey-lighter is-size-5">Heritage Feat</p>
                             <a class="card-header-icon is-paddingless mt-1 delete is-medium"></a>
                         </div>
                         <div class="card-content">
@@ -465,10 +275,10 @@
 
 <div class="field is-grouped is-grouped-centered pb-2">
     <div class="control">
-        {{#if ancestryID}}
-            <button id="updateAncestryButton" class="button is-success">Update</button>
+        {{#if uniHeritageID}}
+            <button id="updateButton" class="button is-success">Update</button>
         {{else}}
-            <button id="createAncestryButton" class="button is-success">Create</button>
+            <button id="createButton" class="button is-success">Create</button>
         {{/if}}
     </div>
 </div>

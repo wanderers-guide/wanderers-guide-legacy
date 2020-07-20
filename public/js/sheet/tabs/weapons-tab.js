@@ -37,7 +37,7 @@ function openWeaponsTab(data) {
 
     // Physical Features to Unarmed Attacks
     let phyFeatWeaponMap = new Map();
-    phyFeatWeaponMap.set(0, 56); // <- Fist, Hardcoded
+    phyFeatWeaponMap.set(0, 56); // <- Fist, Hardcoded Item ID
 
     for(const physicalFeature of g_phyFeatArray){
         if(physicalFeature.value.itemWeaponID != null){
@@ -67,6 +67,16 @@ function openWeaponsTab(data) {
             weaponEntryID++;
             addWeaponEntry(weaponEntryID, item, invItem, data);
         }
+    }
+
+    // If has shield eqipped,
+    if(g_equippedShieldInvItemID != null){
+        weaponEntryID++;
+        let pwItem = g_itemMap.get(1266+""); // Shield Bash, Hardcoded Item ID
+        let pwInvItem = pwItem.Item;
+        pwInvItem.currentHitPoints = pwInvItem.hitPoints;
+        pwInvItem.viewOnly = true;
+        addWeaponEntry(weaponEntryID, pwItem, pwInvItem, data);
     }
 
 }

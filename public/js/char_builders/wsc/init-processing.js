@@ -10,7 +10,8 @@ let runningCodeQueue = false;
 let gCode_statements, gCode_srcStruct, gCode_locationID;
 let wscChoiceStruct = null;
 let wscMapsInit = false;
-let wscSkillMap, wscFeatMap, wscLangMap, wscSpellMap = null;
+let wscSkillMap, wscFeatMap, wscLangMap, wscSpellMap, wscArchetypes = null;
+let temp_classAbilities, temp_ancestryFeatsLocs = null;
 //                  //
 
 function processCode(wscCode, srcStruct, locationID){
@@ -24,7 +25,7 @@ function processCode(wscCode, srcStruct, locationID){
 
     if(wscChoiceStruct == null){
         displayError("WSC ChoiceStruct Has Not Been Init!");
-        if(processingDebug) {console.log("WSC ChoiceStruct Has Not Been Init!");}
+        if(processingDebug) {console.error("WSC ChoiceStruct Has Not Been Init!");}
         return;
     }
 
@@ -338,10 +339,16 @@ socket.on("returnWSCUpdateSpells", function(spellObject){
     wscSpellMap = spellsMap;
 });
 
+socket.on("returnWSCUpdateArchetypes", function(archetypesArray){
+    //if(processingDebug) {console.log("Updating ArchetypesArray...");}
+    wscArchetypes = archetypesArray;
+});
+
 //////////////
 
 function processCode_ClassAbilities(classAbilities){
     //if(processingDebug) {console.log("Starting to run class abilities code...");}
+    temp_classAbilities = classAbilities;
     for(const classAbility of classAbilities) {
         if(classAbility.selectType != 'SELECT_OPTION' && classAbility.level <= wscChoiceStruct.Level) {
             let srcStruct = {
@@ -350,6 +357,7 @@ function processCode_ClassAbilities(classAbilities){
                 sourceCode: 'classAbility-'+classAbility.id,
                 sourceCodeSNum: 'a',
             };
+            $('#classAbilityCode'+classAbility.id).html('');
             processCode(
                 classAbility.code,
                 srcStruct,
@@ -360,6 +368,7 @@ function processCode_ClassAbilities(classAbilities){
 
 function processCode_AncestryAbilities(ancestryFeatsLocs){
     //if(processingDebug) {console.log("Starting to run ancestry feats code...");}
+    temp_ancestryFeatsLocs = ancestryFeatsLocs;
     let ancestryFeatCount = 0;
     for(const ancestryFeatsLoc of ancestryFeatsLocs) {
         let srcStruct = {
@@ -368,6 +377,7 @@ function processCode_AncestryAbilities(ancestryFeatsLocs){
             sourceCode: 'ancestryFeat-'+ancestryFeatCount,
             sourceCodeSNum: 'a',
         };
+        $('#'+ancestryFeatsLoc.LocationID).html('');
         processCode(
             'GIVE-ANCESTRY-FEAT='+ancestryFeatsLoc.Level,
             srcStruct,
