@@ -17,9 +17,9 @@ router.get('/homebrew', (req, res) => {
     res.render('pages/homebrew', { title: "Homebrew - Wanderer's Guide", user: req.user });
 });
 
-// create upgrade route
-router.get('/upgrade', (req, res) => {
-    res.render('pages/upgrade', { title: "Upgrade - Wanderer's Guide", user: req.user });
+// create browse route
+router.get('/browse', (req, res) => {
+    res.render('pages/browse', { title: "Browse - Wanderer's Guide", user: req.user });
 });
 
 // create license route
@@ -27,7 +27,7 @@ router.get('/license', (req, res) => {
     res.render('pages/license', { title: "License - Wanderer's Guide", user: req.user });
 });
 
-// create license route
+// create docs route
 router.get('/wsc_docs', (req, res) => {
     res.render('pages/wsc_docs', { title: "WSC Docs - Wanderer's Guide", user: req.user });
 });

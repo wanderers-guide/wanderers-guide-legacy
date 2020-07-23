@@ -56,7 +56,7 @@ module.exports = class AuthCheck {
     static isMember(socket) {
         return User.findOne({ where: { id: getUserID(socket)} })
         .then((user) => {
-            return user.isMember === 1;
+            return user.isPatreonMember === 1;
         }).catch((error) => {
             return false;
         });

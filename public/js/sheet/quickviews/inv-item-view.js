@@ -60,8 +60,10 @@ function openInvItemQuickview(data) {
             break;
         case 'SMALL': tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-very-small is-link has-tooltip-bottom has-tooltip-multiline" data-tooltip="An item of Small size has the same Price and Bulk as the Medium-sized version, the item is simply a bit smaller for tinier folk.">Small</button>';
             break;
-        case 'LARGE': tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-very-small is-link has-tooltip-bottom has-tooltip-multiline" data-tooltip="An item of Large size has 2 times the Price and Bulk of a Medium-sized version of the same item.">Large</button>'; break;
-        case 'HUGE': tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-very-small is-link has-tooltip-bottom has-tooltip-multiline" data-tooltip="An item of Huge size has 4 times the Price and Bulk of a Medium-sized version of the same item.">Huge</button>'; break;
+        case 'LARGE': tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-very-small is-link has-tooltip-bottom has-tooltip-multiline" data-tooltip="An item of Large size has 2 times the Price and Bulk of a Medium-sized version of the same item.">Large</button>';
+            break;
+        case 'HUGE': tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-very-small is-link has-tooltip-bottom has-tooltip-multiline" data-tooltip="An item of Huge size has 4 times the Price and Bulk of a Medium-sized version of the same item.">Huge</button>';
+            break;
         case 'GARGANTUAN': tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-very-small is-link has-tooltip-bottom has-tooltip-multiline" data-tooltip="An item of Gargantuan size has 8 times the Price and Bulk of a Medium-sized version of the same item.">Gargantuan</button>';
             break;
         default: break;
@@ -245,8 +247,30 @@ function openInvItemQuickview(data) {
         qContent.append('<hr class="m-2">');
         qContent.append('<div class="px-2">'+processText('~ Craft Requirements: '+data.Item.Item.craftRequirements, true, true, 'MEDIUM')+'</div>');
     }
-
+    
     qContent.append('<hr class="m-2">');
+
+    // Item Runes
+    let consumableTag = data.Item.TagArray.find(tag => {
+        return tag.Tag.id == 402; // Hardcoded Consumable Tag ID
+    });
+    if(!viewOnly && consumableTag == null){ // In ViewOnly mode you cannot view weapon runes
+        if(data.Item.WeaponData != null){
+
+            displayRunesForItem(qContent, data.InvItem, true);
+
+            qContent.append('<hr class="m-2">');
+
+        }
+
+        if(data.Item.ArmorData != null){
+
+            displayRunesForItem(qContent, data.InvItem, false);
+
+            qContent.append('<hr class="m-2">');
+
+        }
+    }
 
     // Item Quantity
     if(!viewOnly && data.Item.Item.hasQuantity == 1){
@@ -315,28 +339,6 @@ function openInvItemQuickview(data) {
 
     // Item Specializations
     displayCriticalSpecialization(qContent, data.Item);
-
-    // Item Runes
-    let consumableTag = data.Item.TagArray.find(tag => {
-        return tag.Tag.id == 402; // Hardcoded Consumable Tag ID
-    });
-    if(!viewOnly && consumableTag == null){ // In ViewOnly mode you cannot view weapon runes
-        if(data.Item.WeaponData != null){
-
-            displayRunesForItem(qContent, data.InvItem, true);
-
-            qContent.append('<hr class="m-2">');
-
-        }
-
-        if(data.Item.ArmorData != null){
-
-            displayRunesForItem(qContent, data.InvItem, false);
-
-            qContent.append('<hr class="m-2">');
-
-        }
-    }
 
     // Health, Hardness, and Broken Threshold
     if(!viewOnly && !doesntHaveItemHealth(data.InvItem)) {

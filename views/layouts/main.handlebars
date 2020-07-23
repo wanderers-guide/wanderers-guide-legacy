@@ -71,15 +71,15 @@
 				<div class="container-fluid">
 					<div class="header d-md-flex justify-content-between align-items-center pt-1 pr-5">
 						<div>
-							<a href="/"><img src="/images/logo.png" style="height:35px;" alt="Wanderer's Guide"></a>
-							<p class="is-inline has-text-grey-lighter is-size-6 pl-1 font-bebas-neue">Alpha 0.9.7</p>
+							<a href="/"><img src="/images/logo.png" style="height:50px;" alt="Wanderer's Guide"></a>
+							<sup class="is-inline has-text-grey-lighter is-size-6 pl-1 font-bebas-neue">Alpha 0.9.8</sup>
 						</div>
 
-						<div class="nav_w3ls">
+						<div>
 							<nav>
 								<label for="drop" class="toggle">Menu</label>
 								<input type="checkbox" id="drop" />
-								<ul class="menu">
+								<ul class="menu pt-1">
 									{{{_sections.nav_home}}}
 					
 									<li class="mx-lg-4 mx-md-3 my-md-0 my-2"><a href="/#about_wanderers_guide">About Us</a></li>
@@ -89,20 +89,22 @@
 
 									{{{_sections.nav_homebrew}}}
 									{{/if}}
+
+									{{{_sections.nav_browse}}}
 									
 									{{#if user}}
 										<li class="mr-4">
-											<a href="#">
+											<a href="#" id="nav-profile-picture">
 												<object class="profile-header-icon" data="{{user.thumbnail}}" type="image/png">
 													<img class="profile-header-icon" src="/images/fb_profile_pic.png" alt="Profile Image">
 												</object>
 											</a>
 											<ul>
 												<li><a href="/profile" class="drop-text"><i class="fas fa-user-circle"></i> Account </a></li>
-												<li><a href="/upgrade" class="drop-text"><i class="fab fa-patreon"></i> Patreon </a></li>
 												{{#ifEqual user.isAdmin 1}}
 													<li><a href="/admin/panel" class="drop-text"><i class="fas fa-tools"></i> Admin Panel </a></li>
 												{{/ifEqual}}
+												<li><a href="https://www.patreon.com/wanderersguide" target="_blank" class="drop-text"><i class="fab fa-patreon"></i> Patreon<sup class="icon is-small"><i class="fas fa-xs fa-external-link-alt"></i></sup></a></li>
 												<li><a href="/license" class="drop-text"><i class="fas fa-scroll"></i> License </a></li>
 												<li><a href="/auth/logout" class="drop-text"><i class="fas fa-sign-out-alt"></i> Logout </a></li>
 											</ul>
@@ -136,13 +138,13 @@
 		<footer id="wanderers-guide-footer">
 			<div class="cpy-right text-center py-3">
 				<p class="text-center is-size-7">
-					© 2020 Wanderer's Guide
+					Wanderer's Guide<sup class="icon is-small"><i class="fas fa-xs fa-trademark"></i></sup>
 					<span class="has-text-grey-dark"> | </span>
 					<a href="/license" target="_blank">Licenses and Policies</a>
 					<span class="has-text-grey-dark"> | </span>
 					<a class="has-tooltip-top" data-tooltip="wanderersguide2e@gmail.com"><sub class="icon is-small"><i class="far fa-lg fa-envelope"></i></sub></a>
 					<span class="has-text-grey-dark"> | </span>
-					<a href="" target="_blank"><sub class="icon is-small"><i class="fab fa-lg fa-twitter"></i></sub></a>
+					<a href="https://twitter.com/wandererguide2e" target="_blank"><sub class="icon is-small"><i class="fab fa-lg fa-twitter"></i></sub></a>
 					<span class="has-text-grey-dark"> | </span>
 					<a href="https://www.patreon.com/wanderersguide" target="_blank"><sub class="icon is-small"><i class="fab fa-lg fa-patreon"></i></sub></a>
 				</p>

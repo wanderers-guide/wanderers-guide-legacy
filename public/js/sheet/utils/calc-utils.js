@@ -18,7 +18,7 @@ function getAttackAndDamage(itemData, invItem){
             abilMod = (pre_dexMod > abilMod) ? pre_dexMod : abilMod;
         } // Use preDex mod becuase Clumsy condition affects ranged attacks but not finesse melee attacks
         
-        let profData = g_weaponProfMap.get(itemData.Item.id);
+        let profData = g_weaponProfMap.get(itemData.WeaponData.profName);
     
         let profNumUps = null;
         let profBonus = null;
@@ -117,7 +117,7 @@ function getAttackAndDamage(itemData, invItem){
             return tag.Tag.id == 391; // Hardcoded Splash Tag ID
         });
         let propulsiveTag = itemData.TagArray.find(tag => {
-            return tag.Tag.id == 391; // Hardcoded Propulsive Tag ID
+            return tag.Tag.id == 653; // Hardcoded Propulsive Tag ID
         });
 
         let dmgStrSigned = '';
@@ -131,8 +131,8 @@ function getAttackAndDamage(itemData, invItem){
                     dmgStr = strAmt;
                 }
             } else {
-                dmgStrSigned = signNumber(strAmt);
-                dmgStr = strAmt;
+                dmgStrSigned = signNumber(pre_strMod);
+                dmgStr = pre_strMod;
             }
         }
         if(thrownTag != null && splashTag == null && pre_strMod != 0){
@@ -140,8 +140,8 @@ function getAttackAndDamage(itemData, invItem){
             dmgStr = pre_strMod;
         }
 
-        let profData = g_weaponProfMap.get(itemData.Item.id);
-        
+        let profData = g_weaponProfMap.get(itemData.WeaponData.profName);
+
         let profNumUps = null;
         let profBonus = null;
         if(profData != null){

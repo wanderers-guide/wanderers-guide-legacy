@@ -11,6 +11,10 @@
     <li class="mx-lg-4 mx-md-3 my-md-0 my-2"><a href="/homebrew">Homebrew</a></li>
 {{/section}}
 
+{{#section 'nav_browse'}}
+    <li class="mr-lg-4 mr-md-3"><a href="/browse"><i class="fas fa-lg fa-search"></i></a></li>
+{{/section}}
+
 {{#section 'nav_login'}}
     <li class="mr-4"><a href="/auth/login">Login <i class="fas fa-sign-in-alt"></i></a></li>
 {{/section}}
@@ -38,10 +42,15 @@
         {{#ifEqual user.isAdmin 1}}
             <p class="is-italic is-size-6 pl-4">Admin</p>
         {{/ifEqual}}
-        {{#ifEqual user.isMember 1}}
-            <p class="is-italic is-size-6 pl-4">Patron</p>
+        {{#ifEqual user.isPatreonSupporter 1}}
+            {{#ifEqual user.isPatreonMember 1}}
+                <p class="is-italic is-size-6 pl-4">Patron - Member</p>
+            {{/ifEqual}}
+            {{#ifEqual user.isPatreonMember 0}}
+                <p class="is-italic is-size-6 pl-4">Patron - Supporter</p>
+            {{/ifEqual}}
         {{/ifEqual}}
-        {{#ifEqual user.isMember 0}}
+        {{#ifEqual user.isPatreonSupporter 0}}
             <p class="is-italic is-size-6 pl-4">Non-Patron</p>
         {{/ifEqual}}
     </div>

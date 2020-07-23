@@ -98,6 +98,10 @@
     background-color: hsl(0, 0%, 12%)!important;
 }
 
+.has-background-black-like-more {
+    background-color: hsl(0, 0%, 11%)!important;
+}
+
 .has-background-grey-darkest {
     background-color: hsl(0, 0%, 17%)!important;
 }
@@ -305,4 +309,9 @@ hr {
 
 .has-tooltip-top { /* Fix bug with tooltips and negative indentation */
     text-indent: 0px;
+}
+
+/* For InvItem Property Runes */
+.select.is-success-dark select {
+    border-color: #47885e;
 }

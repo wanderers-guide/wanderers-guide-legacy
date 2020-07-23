@@ -11,10 +11,16 @@ const User = db.define('users', {
   thumbnail: {
     type: Sequelize.STRING
   },
-  isMember: {
+  isPatreonSupporter: {
+    type: Sequelize.TINYINT
+  },
+  isPatreonMember: {
     type: Sequelize.TINYINT
   },
   isAdmin: {
+    type: Sequelize.TINYINT
+  },
+  isDeveloper: {
     type: Sequelize.TINYINT
   }
 });

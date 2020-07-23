@@ -29,21 +29,21 @@ function openAddItemQuickview(data) {
 
     $('#itemTabGeneral').click(function(){
         $('#allItemsFilterBySubcategory').parent().parent().removeClass('is-hidden');
-        $('#allItemsFilterBySubcategory').html('<option value="ALL">Category</option><option value="STORAGE">Storage</option><option value="TOOL">Tool</option><option value="INSTRUMENT">Instrument</option><option value="WEAPON">Weapon</option><option value="ARMOR">Armor</option><option value="SHIELD">Shield</option><option value="AMMUNITION">Ammunition</option><option value="KIT">Kit</option><option value="BOOK">Book</option><option value="INGREDIENT">Ingredient</option><option value="OTHER">Other</option>');
+        $('#allItemsFilterBySubcategory').html('<option value="ALL">Category</option><option value="AMMUNITION">Ammunition</option><option value="ARMOR">Armor</option><option value="BOOK">Book</option><option value="INGREDIENT">Ingredient</option><option value="INSTRUMENT">Instrument</option><option value="KIT">Kit</option><option value="SHIELD">Shield</option><option value="STORAGE">Storage</option><option value="TOOL">Tool</option><option value="WEAPON">Weapon</option><option value="OTHER">Other</option>');
         $('#allItemSearch').attr('placeholder', 'Search General Items');
         changeItemCategoryTab('itemTabGeneral', data);
     });
 
     $('#itemTabMagical').click(function(){
         $('#allItemsFilterBySubcategory').parent().parent().removeClass('is-hidden');
-        $('#allItemsFilterBySubcategory').html('<option value="ALL">Category</option><option value="RUNE">Runestone</option><option value="STAFF">Staff</option><option value="WAND">Wand</option><option value="ROD">Rod</option><option value="TALISMAN">Talisman</option><option value="POTION">Potion</option><option value="OIL">Oil</option><option value="SCROLL">Scroll</option><option value="BOOK">Book</option><option value="INSTRUMENT">Instrument</option><option value="WEAPON">Weapon</option><option value="ARMOR">Armor</option><option value="SHIELD">Shield</option><option value="AMMUNITION">Ammunition</option><option value="HAT">Hat</option><option value="CIRCLET">Circlet</option><option value="MASK">Mask</option><option value="EYEPIECE">Eyepiece</option><option value="NECKLACE">Necklace</option><option value="CLOAK">Cloak</option><option value="BRACERS">Bracers</option><option value="GLOVES">Gloves</option><option value="RING">Ring</option><option value="BELT">Belt</option><option value="BOOTS">Boots</option><option value="STORAGE">Storage</option><option value="STRUCTURE">Structure</option><option value="COMPANION">Companion</option><option value="OTHER">Other</option>');
+        $('#allItemsFilterBySubcategory').html('<option value="ALL">Category</option><option value="AMMUNITION">Ammunition</option><option value="ARMOR">Armor</option><option value="BELT">Belt</option><option value="BOOK">Book</option><option value="BOOTS">Boots</option><option value="BRACERS">Bracers</option><option value="CIRCLET">Circlet</option><option value="CLOAK">Cloak</option><option value="COMPANION">Companion</option><option value="EYEPIECE">Eyepiece</option><option value="GLOVES">Gloves</option><option value="HAT">Hat</option><option value="INSTRUMENT">Instrument</option><option value="MASK">Mask</option><option value="NECKLACE">Necklace</option><option value="OIL">Oil</option><option value="POTION">Potion</option><option value="RING">Ring</option><option value="ROD">Rod</option><option value="RUNE">Runestone</option><option value="SCROLL">Scroll</option><option value="SHIELD">Shield</option><option value="STAFF">Staff</option><option value="STORAGE">Storage</option><option value="STRUCTURE">Structure</option><option value="TALISMAN">Talisman</option><option value="WAND">Wand</option><option value="WEAPON">Weapon</option><option value="OTHER">Other</option>');
         $('#allItemSearch').attr('placeholder', 'Search Magical Items');
         changeItemCategoryTab('itemTabMagical', data);
     });
 
     $('#itemTabAlchemical').click(function(){
         $('#allItemsFilterBySubcategory').parent().parent().removeClass('is-hidden');
-        $('#allItemsFilterBySubcategory').html('<option value="ALL">Category</option><option value="TOOL">Tool</option><option value="BOMB">Bomb</option><option value="ELIXIR">Elixir</option><option value="POISON">Poison</option><option value="INGREDIENT">Ingredient</option><option value="OTHER">Other</option>');
+        $('#allItemsFilterBySubcategory').html('<option value="ALL">Category</option><option value="BOMB">Bomb</option><option value="ELIXIR">Elixir</option><option value="INGREDIENT">Ingredient</option><option value="POISON">Poison</option><option value="TOOL">Tool</option><option value="OTHER">Other</option>');
         $('#allItemSearch').attr('placeholder', 'Search Alchemical Items');
         changeItemCategoryTab('itemTabAlchemical', data);
     });
@@ -185,12 +185,14 @@ function changeItemCategoryTab(type, data){
         if($('#'+addItemDetailsItemID).html() != ''){
             $('#'+addItemChevronItemID).removeClass('fa-chevron-up');
             $('#'+addItemChevronItemID).addClass('fa-chevron-down');
-            $('#'+addItemNameID).removeClass('has-text-weight-bold');
+            $('#'+addItemNameID).removeClass('has-text-white-ter');
+            $(this).parent().removeClass('has-background-black-like-more');
             displayItemDetails(null, addItemDetailsItemID);
         } else {
             $('#'+addItemChevronItemID).removeClass('fa-chevron-down');
             $('#'+addItemChevronItemID).addClass('fa-chevron-up');
-            $('#'+addItemNameID).addClass('has-text-weight-bold');
+            $('#'+addItemNameID).addClass('has-text-white-ter');
+            $(this).parent().addClass('has-background-black-like-more');
             displayItemDetails(itemDataStruct, addItemDetailsItemID);
         }
 
@@ -251,6 +253,22 @@ function displayItemDetails(itemDataStruct, addItemDetailsItemID){
         break;
       default: break;
     }
+
+    let itemSize = itemDataStruct.Item.size;
+    switch(itemSize) {
+        case 'TINY': tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-very-small is-link has-tooltip-bottom has-tooltip-multiline" data-tooltip="An item of Tiny size has the same Price but half the Bulk of a Medium-sized version of the same item (half of a 1 Bulk item is treated as light Bulk for this conversion).">Tiny</button>';
+            break;
+        case 'SMALL': tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-very-small is-link has-tooltip-bottom has-tooltip-multiline" data-tooltip="An item of Small size has the same Price and Bulk as the Medium-sized version, the item is simply a bit smaller for tinier folk.">Small</button>';
+            break;
+        case 'LARGE': tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-very-small is-link has-tooltip-bottom has-tooltip-multiline" data-tooltip="An item of Large size has 2 times the Price and Bulk of a Medium-sized version of the same item.">Large</button>';
+            break;
+        case 'HUGE': tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-very-small is-link has-tooltip-bottom has-tooltip-multiline" data-tooltip="An item of Huge size has 4 times the Price and Bulk of a Medium-sized version of the same item.">Huge</button>';
+            break;
+        case 'GARGANTUAN': tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-very-small is-link has-tooltip-bottom has-tooltip-multiline" data-tooltip="An item of Gargantuan size has 8 times the Price and Bulk of a Medium-sized version of the same item.">Gargantuan</button>';
+            break;
+        default: break;
+    }
+
     for(const tagStruct of itemDataStruct.TagArray){
         let tagDescription = tagStruct.Tag.description;
         if(tagDescription.length > g_tagStringLengthMax){
@@ -303,12 +321,17 @@ function displayItemDetails(itemDataStruct, addItemDetailsItemID){
     }
 
 
-    let price = getCoinToString(itemDataStruct.Item.price);
+    let price = getConvertedPriceForSize(itemDataStruct.Item.size, itemDataStruct.Item.price);
+    price = getCoinToString(price);
     if(itemDataStruct.Item.quantity > 1){
         price += ' for '+itemDataStruct.Item.quantity;
     }
+
+    let bulk = getConvertedBulkForSize(itemDataStruct.Item.size, itemDataStruct.Item.bulk);
+    bulk = getBulkFromNumber(bulk);
+
     itemDetails.append('<div class="tile"><div class="tile is-child is-4"><strong>Price</strong></div><div class="tile is-child is-4"><strong>Bulk</strong></div><div class="tile is-child is-4"><strong>Hands</strong></div></div>');
-    itemDetails.append('<div class="tile"><div class="tile is-child is-4"><p>'+price+'</p></div><div class="tile is-child is-4"><p>'+getBulkFromNumber(itemDataStruct.Item.bulk)+'</p></div><div class="tile is-child is-4"><p>'+getHandsToString(itemDataStruct.Item.hands)+'</p></div></div>');
+    itemDetails.append('<div class="tile"><div class="tile is-child is-4"><p>'+price+'</p></div><div class="tile is-child is-4"><p>'+bulk+'</p></div><div class="tile is-child is-4"><p>'+getHandsToString(itemDataStruct.Item.hands)+'</p></div></div>');
     
     if(itemDataStruct.Item.usage != null){
         itemDetails.append('<hr class="m-2">');

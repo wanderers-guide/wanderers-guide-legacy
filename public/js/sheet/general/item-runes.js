@@ -89,14 +89,13 @@ function displayRunesForItem(qContent, invItem, isWeapon){
     let invItemAddFundamentalRuneSelectID = 'invItemAddFundamentalRuneSelect'+invItem.id;
     let invItemAddFundamentalRuneButtonID = 'invItemAddFundamentalRuneButton'+invItem.id;
 
-    qContent.append('<div class="field has-addons has-addons-centered is-marginless"><div class="control"><div class="select is-small is-success"><select id="'+invItemAddFundamentalRuneSelectID+'"></select></div></div><div class="control"><button id="'+invItemAddFundamentalRuneButtonID+'" type="submit" class="button is-small is-success is-rounded is-outlined">Add</button></div></div>');
+    qContent.append('<div id="addFuneRuneField" class="field has-addons has-addons-centered is-marginless"><div class="control"><div class="select is-small is-success"><select id="'+invItemAddFundamentalRuneSelectID+'"></select></div></div><div class="control"><button id="'+invItemAddFundamentalRuneButtonID+'" type="submit" class="button is-small is-success is-rounded is-outlined">Add</button></div></div>');
 
     $('#'+invItemAddFundamentalRuneSelectID).append('<option value="chooseDefault">Add Fundamental Rune</option>');
     $('#'+invItemAddFundamentalRuneSelectID).append('<hr class="dropdown-divider"></hr>');
     
+    let foundRune = false;
     if(isWeapon) {
-
-        console.log('');
 
         for(let weaponRuneItem of runeDataStruct.WeaponArray){
             if(weaponRuneItem == null){ continue; }
@@ -119,6 +118,7 @@ function displayRunesForItem(qContent, invItem, isWeapon){
                 }
                         
                 if(!dontDisplay){
+                    foundRune = true;
                     $('#'+invItemAddFundamentalRuneSelectID).append('<option value="'+weaponRuneItem.RuneData.id+'">'+runestoneNameToRuneName(weaponRuneItem.Item.name)+'</option>');
                 }
             }
@@ -147,6 +147,7 @@ function displayRunesForItem(qContent, invItem, isWeapon){
                 }
                         
                 if(!dontDisplay){
+                    foundRune = true;
                     $('#'+invItemAddFundamentalRuneSelectID).append('<option value="'+armorRuneItem.RuneData.id+'">'+runestoneNameToRuneName(armorRuneItem.Item.name)+'</option>');
                 }
             }
@@ -154,15 +155,19 @@ function displayRunesForItem(qContent, invItem, isWeapon){
 
     }
 
-    $('#'+invItemAddFundamentalRuneButtonID).click(function() {
-        let runeID = $('#'+invItemAddFundamentalRuneSelectID).val();
-        if(runeID != "chooseDefault"){
-            $(this).addClass('is-loading');
-            socket.emit("requestAddFundamentalRune",
-                invItem.id,
-                runeID);
-        }
-    });
+    if(!foundRune){
+        $('#addFuneRuneField').addClass('is-hidden');
+    } else {
+        $('#'+invItemAddFundamentalRuneButtonID).click(function() {
+            let runeID = $('#'+invItemAddFundamentalRuneSelectID).val();
+            if(runeID != "chooseDefault"){
+                $(this).addClass('is-loading');
+                socket.emit("requestAddFundamentalRune",
+                    invItem.id,
+                    runeID);
+            }
+        });
+    }
 
     if(invItem.itemRuneData != null){
 
@@ -358,6 +363,10 @@ function addPropertyRuneSelection(qContent, invItem, runeArray, propertyRuneSlot
 
         let usageText = (runeItem.usage != null) ? '<p class="has-text-centered is-size-7"><strong>Usage: </strong>'+runeItem.usage+'</p>' : '';
         qContent.append('<div class="columns is-marginless"><div class="column is-paddingless is-8 is-offset-2"><hr class="m-0">'+usageText+processText(runeItem.description, true, true, 'SMALL')+'<hr class="m-1"></div></div>');
+
+        /* If existingPropRuneID isn't null, a property rune is active */
+        $('#'+propertyRuneSelectionID).parent().removeClass('is-success');
+        $('#'+propertyRuneSelectionID).parent().addClass('is-success-dark');
 
     }
     

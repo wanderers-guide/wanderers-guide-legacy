@@ -266,7 +266,7 @@ function handleTraitLink(match, linkName, innerTextName) {
 }
 
 function handleTraitLinkExt(match, linkName, innerTextDisplay, innerTextName) {
-    let traitLinkClass = 'itemTextLink'+innerTextName;
+    let traitLinkClass = 'itemTextLink'+(innerTextName.replace(/[' ]/g, ''));
     let traitLinkText = '<span class="'+traitLinkClass+' is-underlined-info cursor-clickable">'+innerTextDisplay+'</span>';
     setTimeout(function() {
         $('.'+traitLinkClass).off('click');

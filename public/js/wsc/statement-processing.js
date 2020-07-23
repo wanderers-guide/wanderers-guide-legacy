@@ -121,6 +121,26 @@ function processSheetCode(wscCode, sourceName, isTest){
             continue;
         }
 
+        if(wscStatement.toUpperCase().includes("OVERRIDE-")){
+            if(isTest) {continue;}
+            // OVERRIDE-X=5 (Ex. OVERRIDE-PERCEPTION=10-MODIFIER)
+
+            let adjValData = wscStatement.split('-');
+            let overrideData = adjValData[1].split('=');
+
+            let overrideTowards = overrideData[0];
+            let overrideSource = adjValData[2];
+            let overrideNum = parseInt(overrideData[1]);
+
+            if(overrideTowards.endsWith('_PENALTY')){
+                overrideNum = -1*overrideNum;
+            }
+            
+            addStat(overrideTowards, overrideSource, overrideNum);
+
+            continue;
+        }
+
         if(wscStatement.toUpperCase().includes("SET-APEX-ABILITY-SCORE")){
             if(isTest) {continue;}
             // SET-APEX-ABILITY-SCORE=X (Ex. SET-APEX-ABILITY-SCORE=DEX)

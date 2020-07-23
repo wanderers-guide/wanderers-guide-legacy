@@ -38,7 +38,7 @@ function buildWeaponProfMap(){
             if(profName == 'Simple_Weapons'){
                 for(const [itemID, itemData] of g_itemMap.entries()){
                     if(itemData.WeaponData != null && itemData.WeaponData.category == "SIMPLE"){
-                        weaponProfMap.set(parseInt(itemID), {
+                        weaponProfMap.set(itemData.WeaponData.profName, {
                             NumUps : profData.NumUps,
                             UserBonus : profData.UserBonus
                         });
@@ -58,7 +58,7 @@ function buildWeaponProfMap(){
                             }
                         }
 
-                        weaponProfMap.set(parseInt(itemID), {
+                        weaponProfMap.set(itemData.WeaponData.profName, {
                             NumUps : numUps,
                             UserBonus : profData.UserBonus
                         });
@@ -78,7 +78,7 @@ function buildWeaponProfMap(){
                             }
                         }
 
-                        weaponProfMap.set(parseInt(itemID), {
+                        weaponProfMap.set(itemData.WeaponData.profName, {
                             NumUps : numUps,
                             UserBonus : profData.UserBonus
                         });
@@ -87,7 +87,7 @@ function buildWeaponProfMap(){
             } else if(profName == 'Unarmed_Attacks'){
                 for(const [itemID, itemData] of g_itemMap.entries()){
                     if(itemData.WeaponData != null && itemData.WeaponData.category == "UNARMED"){
-                        weaponProfMap.set(parseInt(itemID), {
+                        weaponProfMap.set(itemData.WeaponData.profName, {
                             NumUps : profData.NumUps,
                             UserBonus : profData.UserBonus
                         });
@@ -95,7 +95,7 @@ function buildWeaponProfMap(){
                 }
             } else {
                 let dProfName = profName.toUpperCase().replace(/_/g,' ');
-                let itemData = findItemDataByName(g_itemMap, dProfName, 'WEAPON');
+                const itemData = findItemDataByName(g_itemMap, dProfName, 'WEAPON');
                 if(itemData != null && itemData.WeaponData != null){
 
                     let numUps = profData.NumUps;
@@ -116,7 +116,7 @@ function buildWeaponProfMap(){
                         }
                     }
 
-                    weaponProfMap.set(itemData.Item.id, {
+                    weaponProfMap.set(itemData.WeaponData.profName, {
                         NumUps : numUps,
                         UserBonus : profData.UserBonus
                     });
@@ -140,7 +140,7 @@ function buildArmorProfMap(){
             if(profName == 'Light_Armor'){
                 for(const [itemID, itemData] of g_itemMap.entries()){
                     if(itemData.ArmorData != null && itemData.ArmorData.category == "LIGHT"){
-                        armorProfMap.set(parseInt(itemID), {
+                        armorProfMap.set(itemData.ArmorData.profName, {
                             NumUps : profData.NumUps,
                             UserBonus : profData.UserBonus
                         });
@@ -149,7 +149,7 @@ function buildArmorProfMap(){
             } else if(profName == 'Medium_Armor'){
                 for(const [itemID, itemData] of g_itemMap.entries()){
                     if(itemData.ArmorData != null && itemData.ArmorData.category == "MEDIUM"){
-                        armorProfMap.set(parseInt(itemID), {
+                        armorProfMap.set(itemData.ArmorData.profName, {
                             NumUps : profData.NumUps,
                             UserBonus : profData.UserBonus
                         });
@@ -158,7 +158,7 @@ function buildArmorProfMap(){
             } else if(profName == 'Heavy_Armor'){
                 for(const [itemID, itemData] of g_itemMap.entries()){
                     if(itemData.ArmorData != null && itemData.ArmorData.category == "HEAVY"){
-                        armorProfMap.set(parseInt(itemID), {
+                        armorProfMap.set(itemData.ArmorData.profName, {
                             NumUps : profData.NumUps,
                             UserBonus : profData.UserBonus
                         });
@@ -167,7 +167,7 @@ function buildArmorProfMap(){
             } else if(profName == 'Unarmored_Defense'){
                 for(const [itemID, itemData] of g_itemMap.entries()){
                     if(itemData.ArmorData != null && itemData.ArmorData.category == "UNARMORED"){
-                        armorProfMap.set(parseInt(itemID), {
+                        armorProfMap.set(itemData.ArmorData.profName, {
                             NumUps : profData.NumUps,
                             UserBonus : profData.UserBonus
                         });
@@ -175,9 +175,9 @@ function buildArmorProfMap(){
                 }
             } else {
                 let dProfName = profName.toUpperCase().replace(/_/g,' ');
-                let itemData = findItemDataByName(g_itemMap, dProfName, 'ARMOR');
+                const itemData = findItemDataByName(g_itemMap, dProfName, 'ARMOR');
                 if(itemData != null){
-                    armorProfMap.set(itemData.Item.id, {
+                    armorProfMap.set(itemData.ArmorData.profName, {
                         NumUps : profData.NumUps,
                         UserBonus : profData.UserBonus
                     });

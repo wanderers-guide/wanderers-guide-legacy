@@ -11,8 +11,17 @@ $(function () {
 
 socket.on("returnAdminItemDetails", function(itemObject){
 
-    let itemMap = objToMap(itemObject);
-    g_itemMap = itemMap;
+    g_itemMap = objToMap(itemObject);
+    g_itemMap = new Map([...g_itemMap.entries()].sort(
+        function(a, b) {
+            if (a[1].Item.level === b[1].Item.level) {
+                // Name is only important when levels are the same
+                return a[1].Item.name > b[1].Item.name ? 1 : -1;
+            }
+            return a[1].Item.level - b[1].Item.level;
+        })
+    );
+    
 
     let builderTypeSelection = $("#inputBuilderType");
     builderTypeSelection.change(function(){
@@ -62,8 +71,8 @@ socket.on("returnAdminItemDetails", function(itemObject){
             $("#inputCategory").val("STORAGE");
         } else if(builderType == "WEAPON"){
             let copyOfOtherItemHTML = '<option value="">Create New Weapon</option>';
-            for(const [itemID, itemDataStruct] of itemMap.entries()){
-                if(itemDataStruct.WeaponData != null && itemDataStruct.WeaponData.profName === itemDataStruct.Item.name){
+            for(const [itemID, itemDataStruct] of g_itemMap.entries()){
+                if(itemDataStruct.WeaponData != null && itemDataStruct.Item.hidden === 0 && itemDataStruct.WeaponData.profName === itemDataStruct.Item.name){
                     copyOfOtherItemHTML += '<option value="'+itemID+'">'+itemDataStruct.Item.name+'</option>';
                 }
             }
@@ -97,8 +106,8 @@ socket.on("returnAdminItemDetails", function(itemObject){
             $("#inputCategory").val("WEAPON");
         } else if(builderType == "ARMOR"){
             let copyOfOtherItemHTML = '<option value="">Create New Armor</option>';
-            for(const [itemID, itemDataStruct] of itemMap.entries()){
-                if(itemDataStruct.ArmorData != null && itemDataStruct.ArmorData.profName === itemDataStruct.Item.name){
+            for(const [itemID, itemDataStruct] of g_itemMap.entries()){
+                if(itemDataStruct.ArmorData != null && itemDataStruct.Item.hidden === 0 && itemDataStruct.ArmorData.profName === itemDataStruct.Item.name){
                     copyOfOtherItemHTML += '<option value="'+itemID+'">'+itemDataStruct.Item.name+'</option>';
                 }
             }
@@ -131,8 +140,8 @@ socket.on("returnAdminItemDetails", function(itemObject){
             $("#inputCategory").val("ARMOR");
         } else if(builderType == "SHIELD"){
             let copyOfOtherItemHTML = '<option value="">Create New Shield</option>';
-            for(const [itemID, itemDataStruct] of itemMap.entries()){
-                if(itemDataStruct.ShieldData != null && itemDataStruct.ShieldData.profName === itemDataStruct.Item.name){
+            for(const [itemID, itemDataStruct] of g_itemMap.entries()){
+                if(itemDataStruct.ShieldData != null && itemDataStruct.Item.hidden === 0 && itemDataStruct.ShieldData.profName === itemDataStruct.Item.name){
                     copyOfOtherItemHTML += '<option value="'+itemID+'">'+itemDataStruct.Item.name+'</option>';
                 }
             }
@@ -141,7 +150,6 @@ socket.on("returnAdminItemDetails", function(itemObject){
             $("#inputItemCopyOfOther").change(function(){
                 if($(this).val() != ''){
                     $("#sectionShield").addClass('is-hidden');
-                    $("#sectionHealth").addClass('is-hidden');
                 }
             });
 

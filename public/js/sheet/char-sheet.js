@@ -340,8 +340,8 @@ function loadCharSheet(){
 
     // Run Items Code (investitures and others) //
     // -- armor and shield item code runs when equipped
-    determineInvestitures();
     runAllItemsCode();
+    determineInvestitures();
     
 
     // Display Ability Scores //
@@ -1396,12 +1396,13 @@ function determineArmor(dexMod, strScore) {
         totalAC += getStatTotal('AC');
 
         // Apply armor penalties to character...
-        let checkPenalty = armorStruct.Item.ArmorData.checkPenalty;
-        checkPenalty += (armorStruct.InvItem.isShoddy == 1) ? -2 : 0;
-        let speedPenalty = armorStruct.Item.ArmorData.speedPenalty;
+        addStat('ARMOR_CHECK_PENALTY', 'BASE', armorStruct.Item.ArmorData.checkPenalty);
+        addStat('ARMOR_SPEED_PENALTY', 'BASE', armorStruct.Item.ArmorData.speedPenalty);
+        let checkPenalty = getStatTotal('ARMOR_CHECK_PENALTY');
+        let speedPenalty = getStatTotal('ARMOR_SPEED_PENALTY');
 
-        console.log(strScore);
-        console.log(armorStruct.Item.ArmorData.minStrength);
+        checkPenalty += (armorStruct.InvItem.isShoddy == 1) ? -2 : 0;
+
         if(strScore >= armorStruct.Item.ArmorData.minStrength) {
 
             speedPenalty += 5;
@@ -1425,7 +1426,6 @@ function determineArmor(dexMod, strScore) {
                     applyArmorCheckPenaltyToSkill('Acrobatics', checkPenalty);
                     applyArmorCheckPenaltyToSkill('Athletics', checkPenalty);
                 }
-                console.log('got hereee');
                 applyArmorCheckPenaltyToSkill('Stealth', checkPenalty);
                 applyArmorCheckPenaltyToSkill('Thievery', checkPenalty);
             }
@@ -1716,7 +1716,7 @@ function determineBulkAndCoins(invItems, itemMap){
         }
     }
 
-    totalBulk = round(totalBulk, 0);
+    totalBulk = round(totalBulk, 1);
 
     let strMod = getMod(g_preConditions_strScore);
     let weightEncumbered = 5+strMod;
@@ -1780,6 +1780,18 @@ function determineInvestitures(){
     currentInvests = 0;
     for(const invItem of g_invStruct.InvItems){
         if(invItem.isInvested == 1) {
+
+            const item = g_itemMap.get(invItem.itemID+"");
+            if(item.ArmorData != null){
+                if(g_equippedArmorInvItemID != invItem.id){
+                    continue;
+                }
+            } else if(item.ShieldData != null){
+                if(g_equippedShieldInvItemID != invItem.id){
+                    continue;
+                }
+            }
+
             currentInvests++;
             
             processSheetCode(invItem.code, invItem.name);

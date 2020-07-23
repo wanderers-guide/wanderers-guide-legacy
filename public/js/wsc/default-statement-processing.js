@@ -17,7 +17,7 @@ function processDefaultItemRuneSheetCode(wscCode, itemID, invItemID){
         //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
 
         if(wscStatement.includes("DEFAULT-WEAPON-RUNE")){
-            // DEFAULT-WEAPON-RUNE=+1_Weapon_Potency
+            // DEFAULT-WEAPON-RUNE=+1 Weapon Potency
 
             let data = wscStatement.split('=');
             defaultSetWeaponRunes(invItemID, data[1], runeData);
@@ -26,7 +26,7 @@ function processDefaultItemRuneSheetCode(wscCode, itemID, invItemID){
         }
 
         if(wscStatement.includes("DEFAULT-ARMOR-RUNE")){
-            // DEFAULT-ARMOR-RUNE=+3_Armor_Potency
+            // DEFAULT-ARMOR-RUNE=+3 Armor Potency
 
             let data = wscStatement.split('=');
             defaultSetArmorRunes(invItemID, data[1], runeData);

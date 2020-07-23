@@ -1007,7 +1007,7 @@ module.exports = class AdminUpdate {
             data.itemHasQuantity = 0;
             data.itemQuantity = 1;
         } else if(data.builderType == "WEAPON"){
-            //
+            
             if(data.itemCopyOfOther != null && data.itemCopyOfOther.WeaponData != null){
                 // Set Prof Name
                 data.itemProfName = data.itemCopyOfOther.WeaponData.profName;
@@ -1042,6 +1042,12 @@ module.exports = class AdminUpdate {
                     data.itemHardness = 0;
                 }
             }
+
+            // Hardcoded Alchemical and Bomb ID
+            if(data.itemWeaponData != null && data.itemTagsArray.includes('399') && data.itemTagsArray.includes('401')) {
+                data.itemProfName = 'Alchemical Bombs';
+            }
+
         } else if(data.builderType == "ARMOR"){
             data.itemHasQuantity = 0;
             data.itemQuantity = 1;
@@ -1099,17 +1105,7 @@ module.exports = class AdminUpdate {
                         data.itemTagsArray.push(otherCopyTag.Tag.id);
                     }
                 }
-
-                // Set hardness, hitpoints, & broken threshold
-                if(data.itemCopyOfOther.Item != null){
-                    data.itemHitPoints = data.itemCopyOfOther.Item.hitPoints;
-                    data.itemBrokenThreshold = data.itemCopyOfOther.Item.brokenThreshold;
-                    data.itemHardness = data.itemCopyOfOther.Item.hardness;
-                } else {
-                    data.itemHitPoints = 0;
-                    data.itemBrokenThreshold = 0;
-                    data.itemHardness = 0;
-                }
+                
             }
         } else if(data.builderType == "RUNE"){
             data.itemName += ' Runestone';

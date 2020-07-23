@@ -17,6 +17,10 @@
     <li class="mx-lg-4 mx-md-3 my-md-0 my-2"><a href="/homebrew">Homebrew</a></li>
 {{/section}}
 
+{{#section 'nav_browse'}}
+    <li class="mr-lg-4 mr-md-3"><a href="/browse"><i class="fas fa-lg fa-search"></i></a></li>
+{{/section}}
+
 {{#section 'nav_login'}}
     <li class="mr-4"><a href="/auth/login">Login <i class="fas fa-sign-in-alt"></i></a></li>
 {{/section}}
@@ -387,6 +391,13 @@
                 </div>
                 <div class="pl-3 py-2">
                     <p class="">
+                        <strong>Armor Other:</strong>
+                    </p>
+                    <p class="pl-2">'ARMOR_CHECK_PENALTY'</p>
+                    <p class="pl-2">'ARMOR_SPEED_PENALTY'</p>
+                </div>
+                <div class="pl-3 py-2">
+                    <p class="">
                         <strong>Speed:</strong>
                     </p>
                     <p class="pl-2">'SPEED'</p>
@@ -462,6 +473,17 @@
                         - Adds a conditional to Fortitude, stating 'When you roll a success, you get a critical success instead.'
                     </p>
                 </div>
+                <div class="py-2">
+                    <div class="code-block">
+                        OVERRIDE-PERCEPTION=2-MODIFIER
+                    </div>
+                    <p class="pl-3 pb-2">
+                        <strong class="has-text-danger">Warning: </strong><em>This statement is complicated. Like everything here, feel free to mess around with it and see how it affects a character, but it many change things in seemly unexpected ways if you don't know what you're doing!</em>
+                    </p>
+                    <p class="pl-3">
+                        - Replaces the character's Wisdom modifier with 2 only if 2 is higher than the character's current Wisdom modifier. For stats that are penalties (like 'ARMOR_CHECK_PENALTY'), treat the override number as negative. For example, 'OVERRIDE-ARMOR_CHECK_PENALTY=1-BASE' would be a -1 penalty, which would be greater than many other armor penalties that are -2 or -3.
+                    </p>
+                </div>
             </div>
             <div id="code_if_else" class="mt-4 isHideable">
                 <h1 class="title is-size-4 is-marginless mb-1 pl-3">If - Else Statements</h1>
@@ -496,6 +518,17 @@
                     </div>
                     <p class="pl-3">
                         - If the character has the Treedweller heritage, the statement inside the brackets will execute (which will give the character a climb speed of 15 feet).
+                    </p>
+                    <p class="pl-3">
+                        Boolean Operators: '==' or '!='
+                    </p>
+                </div>
+                <div class="py-2">
+                    <div class="code-block">
+                        IF (HAS-VISION==Low-Light Vision) {GIVE-SENSE-NAME=Darkvision}
+                    </div>
+                    <p class="pl-3">
+                        - If the character has Low-Light Vision, the statement inside the brackets will execute (which will give the character Darkvision).
                     </p>
                     <p class="pl-3">
                         Boolean Operators: '==' or '!='

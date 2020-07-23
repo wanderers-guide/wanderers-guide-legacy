@@ -10,8 +10,12 @@ module.exports = class CharStateUtils {
     }
 
     static canMakeCharacter(user, characters) {
-        const CHAR_LIMIT = 3;
-        return user.isMember == 1 || characters.length < getUserCharacterLimit();
+        if(user.isPatreonSupporter === 1){
+            return user.isPatreonMember === 1 || characters.length < getUserCharacterLimit();
+        } else {
+            return false;
+        }
+        //return user.isPatreonMember === 1 || characters.length < getUserCharacterLimit();
     }
 
     static getUserCharacterLimit(){

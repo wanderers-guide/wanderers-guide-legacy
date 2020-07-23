@@ -30,13 +30,15 @@ function openItemQuickview(data) {
 
     let itemSize = itemDataStruct.Item.size;
     switch(itemSize) {
-        case 'TINY': tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-very-small is-link">Tiny</button>';
+        case 'TINY': tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-very-small is-link has-tooltip-bottom has-tooltip-multiline" data-tooltip="An item of Tiny size has the same Price but half the Bulk of a Medium-sized version of the same item (half of a 1 Bulk item is treated as light Bulk for this conversion).">Tiny</button>';
             break;
-        case 'SMALL': tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-very-small is-link">Small</button>';
+        case 'SMALL': tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-very-small is-link has-tooltip-bottom has-tooltip-multiline" data-tooltip="An item of Small size has the same Price and Bulk as the Medium-sized version, the item is simply a bit smaller for tinier folk.">Small</button>';
             break;
-        case 'LARGE': tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-very-small is-link">Large</button>'; break;
-        case 'HUGE': tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-very-small is-link">Huge</button>'; break;
-        case 'GARGANTUAN': tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-very-small is-link">Gargantuan</button>';
+        case 'LARGE': tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-very-small is-link has-tooltip-bottom has-tooltip-multiline" data-tooltip="An item of Large size has 2 times the Price and Bulk of a Medium-sized version of the same item.">Large</button>';
+            break;
+        case 'HUGE': tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-very-small is-link has-tooltip-bottom has-tooltip-multiline" data-tooltip="An item of Huge size has 4 times the Price and Bulk of a Medium-sized version of the same item.">Huge</button>';
+            break;
+        case 'GARGANTUAN': tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-very-small is-link has-tooltip-bottom has-tooltip-multiline" data-tooltip="An item of Gargantuan size has 8 times the Price and Bulk of a Medium-sized version of the same item.">Gargantuan</button>';
             break;
         default: break;
     }
@@ -104,15 +106,15 @@ function openItemQuickview(data) {
 
     }
 
-    // Item Specializations
-    displayCriticalSpecialization(qContent, itemDataStruct);
-
-    let price = getCoinToString(itemDataStruct.Item.price);
+    let price = getConvertedPriceForSize(itemDataStruct.Item.size, itemDataStruct.Item.price);
+    price = getCoinToString(price);
     if(itemDataStruct.Item.quantity > 1){
         price += ' for '+itemDataStruct.Item.quantity;
     }
     qContent.append('<div class="tile text-center"><div class="tile is-child is-4"><strong>Price</strong></div><div class="tile is-child is-4"><strong>Bulk</strong></div><div class="tile is-child is-4"><strong>Hands</strong></div></div>');
-    qContent.append('<div class="tile text-center"><div class="tile is-child is-4"><p>'+price+'</p></div><div class="tile is-child is-4"><p>'+getBulkFromNumber(itemDataStruct.Item.bulk)+'</p></div><div class="tile is-child is-4"><p>'+getHandsToString(itemDataStruct.Item.hands)+'</p></div></div>');
+    let bulk = getConvertedBulkForSize(itemDataStruct.Item.size, itemDataStruct.Item.bulk);
+    bulk = getBulkFromNumber(bulk);
+    qContent.append('<div class="tile text-center"><div class="tile is-child is-4"><p>'+price+'</p></div><div class="tile is-child is-4"><p>'+bulk+'</p></div><div class="tile is-child is-4"><p>'+getHandsToString(itemDataStruct.Item.hands)+'</p></div></div>');
 
     if(itemDataStruct.Item.usage != null){
         qContent.append('<hr class="m-2">');
@@ -208,5 +210,10 @@ function openItemQuickview(data) {
         qContent.append('<hr class="m-2">');
         qContent.append(processText('~ Craft Requirements: '+itemDataStruct.Item.craftRequirements, true, true, 'MEDIUM'));
     }
+
+    qContent.append('<hr class="m-2">');
+
+    // Item Specializations
+    displayCriticalSpecialization(qContent, itemDataStruct);
 
 }

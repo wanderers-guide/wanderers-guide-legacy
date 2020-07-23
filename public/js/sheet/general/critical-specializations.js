@@ -50,7 +50,7 @@ function hasWeaponCriticalSpecialization(item){
         } else if(weapCriticalData.value.startsWith('PROF~')){
             let profNumUps = profToNumUp(weapCriticalData.value.replace(/PROF\~/g,''));
 
-            let profData = g_weaponProfMap.get(item.id);
+            let profData = g_weaponProfMap.get(item.WeaponData.profName);
             if(profData != null){
                 let itemProfNumUps = profData.NumUps;
                 if(itemProfNumUps >= profNumUps){
@@ -123,11 +123,28 @@ function hasArmorSpecialization(item){
 
 function displayCriticalSpecialization(qContent, item){
 
+    let title = criticalSpecializationTitle(item);
+    if(title == null) {return;}
+    qContent.append('<p id="itemCritSpecialName" class="has-text-centered is-size-7"><strong class="cursor-clickable">'+title+'</strong><sub class="icon is-small pl-1 cursor-clickable"><i id="itemCritSpecialChevron" class="fas fa-lg fa-chevron-down"></i></sub></p>');
+    qContent.append('<div id="itemCritSpecialSection" class="is-hidden"></div>');
+    qContent.append('<hr class="m-2">');
+
+    $('#itemCritSpecialSection').append(processText(criticalSpecializationText(item), true, true, 'MEDIUM'));
+
+    $('#itemCritSpecialName').click(function() {
+        if($("#itemCritSpecialSection").hasClass("is-hidden")) {
+            $("#itemCritSpecialSection").removeClass('is-hidden');
+            $("#itemCritSpecialChevron").removeClass('fa-chevron-down');
+            $("#itemCritSpecialChevron").addClass('fa-chevron-up');
+        } else {
+            $("#itemCritSpecialSection").addClass('is-hidden');
+            $("#itemCritSpecialChevron").removeClass('fa-chevron-up');
+            $("#itemCritSpecialChevron").addClass('fa-chevron-down');
+        }
+    });
+
     if(hasCriticalSpecialization(item)){
-
-        qContent.append(criticalSpecializationText(item));
-        qContent.append('<hr class="m-2">');
-
+        $("#itemCritSpecialName").trigger("click");
     }
 
 }
@@ -160,17 +177,30 @@ g_critSpecialTextMap.set('BOW', 'If the target of the critical hit is adjacent t
 g_critSpecialTextMap.set('BOMB', 'Increase the radius of the bomb’s splash damage (if any) to 10 feet.');
 
 
+function criticalSpecializationTitle(item){
+    let isArmor = null;
+    if(item.ArmorData != null){
+        isArmor = true;
+    }
+    if(item.WeaponData != null){
+        isArmor = false;
+    }
+    if(isArmor == null) {return null;}
+    if(isArmor){
+        return 'Armor Specialization';
+    } else {
+        return 'Critical Specialization Effect';
+    }
+}
+
 function criticalSpecializationText(item){
 
     let text = null;
-    let isArmor = false;
     if(item.ArmorData != null){
-        isArmor = true;
         text = g_critSpecialTextMap.get(item.ArmorData.armorType);
     }
 
     if(item.WeaponData != null){
-        isArmor = false;
         if(item.WeaponData.isMelee == 1){
             text = g_critSpecialTextMap.get(item.WeaponData.meleeWeaponType);
         }
@@ -179,13 +209,6 @@ function criticalSpecializationText(item){
         }
     }
 
-    if(text != null){
-        if(isArmor){
-            return '<p class="has-text-centered"><strong>Armor Specialization</strong></p>'+processText(text, true, true, 'MEDIUM');
-        } else {
-            return '<p class="has-text-centered"><strong>Critical Specialization Effect</strong></p>'+processText(text, true, true, 'MEDIUM');
-        }
-    }
-    return null;
+    return text;
 
 }

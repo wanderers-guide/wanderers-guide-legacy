@@ -152,6 +152,7 @@ header {
     margin-right: auto;
 }
 
+
 /* Cursors */
 .cursor-clickable {
     cursor: pointer!important;
@@ -313,6 +314,10 @@ nav a {
     -ms-transition: 0.5s all;
 }
 
+#nav-profile-picture {
+    padding: 3px 3px;
+    margin-right: 10px;
+}
 
 nav ul li ul li:hover {
     color: #000;
@@ -774,7 +779,7 @@ p.wstyles {
     -moz-background-size: cover;
     -o-background-size: cover;
     -ms-background-size: cover;
-    min-height: 65px;
+    min-height: 58px;
 }
 
 .banner_w3lspvt-1 {
