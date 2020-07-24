@@ -37,6 +37,7 @@ router.get('/google/redirect', passport.authenticate('google'), (req, res) => {
             res.redirect('/profile/characters');
 
         }).catch((err) => {
+            console.error(err);
 
             console.log('Patreon - Invalid Access Token - ISSUE');
             let updateValues = {
@@ -93,15 +94,21 @@ router.get('/patreon/redirect', (req, res) => {
         return apiClient('/current_user');
     }).then(({ store }) => {
 
+        console.log('~~~~~~~~');
         let userData = store.findAll('user').map(user => user.serialize());
+        console.log(userData);
 
         let patreonUserID = userData[userData.length-1].data.id;
+        console.log(patreonUserID);
         let patreonName = userData[userData.length-1].data.attributes.full_name;
+        console.log(patreonName);
         let patreonEmail = userData[userData.length-1].data.attributes.email;
+        console.log(patreonEmail);
 
         let pledgesData = userData[userData.length-1].data.relationships.pledges.data;
+        console.log(userData[userData.length-1].data.relationships);
         let isSupporter = (pledgesData.length > 0);
-        //console.log(pledgesData); // Pledge data has the tier IDs
+        console.log(pledgesData); // Pledge data has the tier IDs
 
         let updateValues;
         if(isSupporter){
@@ -137,6 +144,7 @@ router.get('/patreon/redirect', (req, res) => {
         });
 
     }).catch((err) => {
+        console.error(err);
         res.redirect('/');
         return;
     });
