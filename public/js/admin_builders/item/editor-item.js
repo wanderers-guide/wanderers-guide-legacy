@@ -1,3 +1,6 @@
+/* Copyright (C) 2020, Wanderer's Guide, all rights reserved.
+    By Aaron Cassar.
+*/
 
 $(function () {
 
@@ -40,7 +43,7 @@ socket.on("returnAdminItemDetails", function(itemObject){
     $("#inputHardness").val(item.Item.hardness);
     
     if(item.WeaponData != null){
-        if(item.WeaponData.profName == item.Item.name || item.WeaponData.profName == null){
+        if(item.WeaponData.profName == item.Item.name || item.WeaponData.profName == 'Alchemical Bombs'){
             $("#inputDieType").val(item.WeaponData.dieType);
             $("#inputDamageType").val(item.WeaponData.damageType);
             $("#inputWeaponCategory").val(item.WeaponData.category);
@@ -56,7 +59,7 @@ socket.on("returnAdminItemDetails", function(itemObject){
     }
 
     if(item.ArmorData != null){
-        if(item.ArmorData.profName == item.Item.name || item.ArmorData.profName == null){
+        if(item.ArmorData.profName == item.Item.name){
             $("#inputArmorACBonus").val(item.ArmorData.acBonus);
             $("#inputArmorDexCap").val(item.ArmorData.dexCap);
             $("#inputArmorType").val(item.ArmorData.armorType);
@@ -68,7 +71,7 @@ socket.on("returnAdminItemDetails", function(itemObject){
     }
 
     if(item.ShieldData != null){
-        if(item.ShieldData.profName == item.Item.name || item.ShieldData.profName == null){
+        if(item.ShieldData.profName == item.Item.name){
             $("#inputShieldACBonus").val(item.ShieldData.acBonus);
             $("#inputShieldSpeedPenalty").val(item.ShieldData.speedPenalty);
         }
@@ -99,10 +102,12 @@ socket.on("returnAdminItemDetails", function(itemObject){
     if(item.WeaponData != null && item.WeaponData.profName != item.Item.name){
         let copyItemID = null;
         for(const [itemID, itemDataStruct] of itemMap.entries()){
-            if(itemDataStruct.Item.name === item.WeaponData.profName){
-                copyItemID = itemID;
-                item.TagArray = tagArrayDifference(item.TagArray, itemDataStruct.TagArray);
-                break;
+            if(itemDataStruct.Item.hidden == 0){
+                if(itemDataStruct.Item.name === item.WeaponData.profName){
+                    copyItemID = itemID;
+                    item.TagArray = tagArrayDifference(item.TagArray, itemDataStruct.TagArray);
+                    break;
+                }
             }
         }
         if(copyItemID != null){
@@ -114,10 +119,12 @@ socket.on("returnAdminItemDetails", function(itemObject){
     if(item.ArmorData != null && item.ArmorData.profName != item.Item.name){
         let copyItemID = null;
         for(const [itemID, itemDataStruct] of itemMap.entries()){
-            if(itemDataStruct.Item.name === item.ArmorData.profName){
-                copyItemID = itemID;
-                item.TagArray = tagArrayDifference(item.TagArray, itemDataStruct.TagArray);
-                break;
+            if(itemDataStruct.Item.hidden == 0){
+                if(itemDataStruct.Item.name === item.ArmorData.profName){
+                    copyItemID = itemID;
+                    item.TagArray = tagArrayDifference(item.TagArray, itemDataStruct.TagArray);
+                    break;
+                }
             }
         }
         if(copyItemID != null){
@@ -129,10 +136,12 @@ socket.on("returnAdminItemDetails", function(itemObject){
     if(item.ShieldData != null && item.ShieldData.profName != item.Item.name){
         let copyItemID = null;
         for(const [itemID, itemDataStruct] of itemMap.entries()){
-            if(itemDataStruct.Item.name === item.ShieldData.profName){
-                copyItemID = itemID;
-                item.TagArray = tagArrayDifference(item.TagArray, itemDataStruct.TagArray);
-                break;
+            if(itemDataStruct.Item.hidden == 0){
+                if(itemDataStruct.Item.name === item.ShieldData.profName){
+                    copyItemID = itemID;
+                    item.TagArray = tagArrayDifference(item.TagArray, itemDataStruct.TagArray);
+                    break;
+                }
             }
         }
         if(copyItemID != null){

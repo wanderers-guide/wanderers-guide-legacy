@@ -158,6 +158,7 @@ module.exports = class AdminUpdate {
                         classFeat.skillID = null;
                         classFeat.minProf = null;
                         classFeat.genericType = null;
+                        classFeat.genTypeName = null;
                         classFeat.isArchived = 0;
                         classFeat.contentSrc = cClass.contentSrc;
                         classFeat.version = null;
@@ -241,7 +242,10 @@ module.exports = class AdminUpdate {
                         let classFeatsPromises = []; // Delete Class Feats
                         for(const featTag of featTags) {
                             let newPromise = Feat.destroy({
-                                where: { id: featTag.featID }
+                                where: {
+                                    id: featTag.featID,
+                                    genericType: null
+                                }
                             });
                             classFeatsPromises.push(newPromise);
                         }
@@ -277,7 +281,10 @@ module.exports = class AdminUpdate {
                         let classFeatsPromises = [];
                         for(const featTag of featTags) {
                             let newPromise = Feat.update(updateValues, {
-                                where: { id: featTag.featID }
+                                where: {
+                                    id: featTag.featID,
+                                    genericType: null
+                                }
                             });
                             classFeatsPromises.push(newPromise);
                         }
@@ -324,6 +331,7 @@ module.exports = class AdminUpdate {
             data.archetypeDedicationFeat.skillID = null;
             data.archetypeDedicationFeat.minProf = null;
             data.archetypeDedicationFeat.genericType = null;
+            data.archetypeDedicationFeat.genTypeName = null;
             data.archetypeDedicationFeat.isArchived = 0;
             data.archetypeDedicationFeat.contentSrc = data.archetypeContentSrc;
             data.archetypeDedicationFeat.version = null;
@@ -350,6 +358,7 @@ module.exports = class AdminUpdate {
                             archetypeFeat.skillID = null;
                             archetypeFeat.minProf = null;
                             archetypeFeat.genericType = null;
+                            archetypeFeat.genTypeName = null;
                             archetypeFeat.isArchived = 0;
                             archetypeFeat.contentSrc = archetype.contentSrc;
                             archetypeFeat.version = null;
@@ -549,6 +558,7 @@ module.exports = class AdminUpdate {
                                         ancestryFeat.skillID = null;
                                         ancestryFeat.minProf = null;
                                         ancestryFeat.genericType = null;
+                                        ancestryFeat.genTypeName = null;
                                         ancestryFeat.isArchived = 0;
                                         ancestryFeat.contentSrc = ancestry.contentSrc;
                                         ancestryFeat.version = null;
@@ -600,7 +610,10 @@ module.exports = class AdminUpdate {
                                         let ancestryFeatsPromises = []; // Delete Ancestry Feats
                                         for(const featTag of featTags) {
                                             let newPromise = Feat.destroy({
-                                                where: { id: featTag.featID }
+                                                where: {
+                                                    id: featTag.featID,
+                                                    genericType: null
+                                                }
                                             });
                                             ancestryFeatsPromises.push(newPromise);
                                         }
@@ -640,7 +653,10 @@ module.exports = class AdminUpdate {
                         let ancestryFeatsPromises = [];
                         for(const featTag of featTags) {
                             let newPromise = Feat.update(updateValues, {
-                                where: { id: featTag.featID }
+                                where: {
+                                    id: featTag.featID,
+                                    genericType: null
+                                }
                             });
                             ancestryFeatsPromises.push(newPromise);
                         }
@@ -718,6 +734,7 @@ module.exports = class AdminUpdate {
                         heritageFeat.skillID = null;
                         heritageFeat.minProf = null;
                         heritageFeat.genericType = null;
+                        heritageFeat.genTypeName = null;
                         heritageFeat.isArchived = 0;
                         heritageFeat.contentSrc = uniHeritage.contentSrc;
                         heritageFeat.version = null;
@@ -825,6 +842,7 @@ module.exports = class AdminUpdate {
             featCode,
             featVersion,
             featContentSrc,
+            featGenTypeName,
         */
         data.isDefault = 0;
         data.isArchived = 0;
@@ -842,7 +860,13 @@ module.exports = class AdminUpdate {
             if(!data.featTagsArray.includes(SKILL_TAG_ID)){
                 data.featTagsArray.push(SKILL_TAG_ID);
             }
+        } else if(data.builderType == "CLASS-FEAT"){
+            //
+        } else if(data.builderType == "ANCESTRY-FEAT"){
+            //
         } else if(data.builderType == "BASIC-ACTION"){
+            data.isDefault = 1;
+        } else if(data.builderType == "SKILL-ACTION"){
             data.isDefault = 1;
         } else if(data.builderType == "SKILL-ACTION"){
             data.isDefault = 1;
@@ -869,6 +893,7 @@ module.exports = class AdminUpdate {
             code: data.featCode,
             featTagsArray: data.featTagsArray,
             genericType: data.genericType,
+            genTypeName: data.featGenTypeName,
             isArchived: data.isArchived,
             contentSrc: data.featContentSrc,
             version: data.featVersion
@@ -897,6 +922,7 @@ module.exports = class AdminUpdate {
             code,
             featTagsArray,
             genericType,
+            genTypeName,
             isArchived,
             contentSrc
             version
@@ -924,6 +950,7 @@ module.exports = class AdminUpdate {
             minProf: data.minProf,
             code: data.code,
             genericType: data.genericType,
+            genTypeName: data.genTypeName,
             isArchived: data.isArchived,
             contentSrc: data.contentSrc,
             homebrewID: null,

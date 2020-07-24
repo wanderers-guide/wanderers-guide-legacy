@@ -1,3 +1,6 @@
+/* Copyright (C) 2020, Wanderer's Guide, all rights reserved.
+    By Aaron Cassar.
+*/
 
 let socket = io();
 
@@ -135,7 +138,7 @@ function displayCurrentBackground(background) {
     }
 
     let backgroundDescription = $('#backgroundDescription');
-    backgroundDescription.html('<p>'+background.description+'</p>');
+    backgroundDescription.html(processText(background.description, false));
 
     // Code - Run General Code before Boosts Code, it's more likely to be delaying //
     $('#backgroundCodeOutput').html('');

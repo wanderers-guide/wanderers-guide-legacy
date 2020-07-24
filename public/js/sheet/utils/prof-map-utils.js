@@ -1,3 +1,6 @@
+/* Copyright (C) 2020, Wanderer's Guide, all rights reserved.
+    By Aaron Cassar.
+*/
 
 function findItemDataByName(itemMap, profItemName, type){
     for(const [itemID, itemData] of itemMap.entries()){

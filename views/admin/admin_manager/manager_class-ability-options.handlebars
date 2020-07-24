@@ -1,0 +1,102 @@
+
+{{#section 'header'}}
+    <script type="text/javascript" src="/js/admin_builders/feat-action/manager-feat-action.js"></script>
+    <link rel="stylesheet" href="/css/admin-manager.css">
+{{/section}}
+
+{{#section 'nav_home'}}
+    <li><a href="/">Home</a></li>
+{{/section}}
+
+{{#section 'nav_characters'}}
+    <li><a href="/profile/characters">Characters</a></li>
+{{/section}}
+
+{{#section 'nav_homebrew'}}
+    <li class="mx-lg-4 mx-md-3 my-md-0 my-2"><a href="/homebrew">Homebrew</a></li>
+{{/section}}
+
+{{#section 'nav_browse'}}
+    <li class="mr-lg-4 mr-md-3"><a href="/browse"><i class="fas fa-lg fa-search"></i></a></li>
+{{/section}}
+
+{{#section 'nav_login'}}
+    <li class="mr-4"><a href="/auth/login">Login <i class="fas fa-sign-in-alt"></i></a></li>
+{{/section}}
+
+
+
+{{#section 'banner_nav'}}
+    <div class="banner_w3lspvt-2"></div>
+{{/section}}
+
+<div class="container">
+
+    <div class="columns is-mobile is-centered is-vcentered pt-3 is-marginless">
+        <div class="column is-5 is-paddingless">
+            <h1 class="is-size-1 is-inline-block has-text-light">Class Ability Options Manager</h1>
+        </div>
+        <div class="column is-5 is-paddingless">
+            <a class="is-size-3 is-pulled-right" href="/admin/create/feat-action"><span class="icon is-large has-text-info"><i class="fas fa-plus"></i></span></a>
+        </div>
+    </div>
+    <hr>
+
+
+    <div class="columns mx-5 is-centered is-multiline mb-2 use-custom-scrollbar" style="height: 600px; max-height: 600px; overflow-y: auto;">
+        {{#each feats}}
+            {{#if genericType}}
+                <div class="column is-12 entryListing border-bottom border-dark" name="{{id}}">
+                    <div class="columns">
+                        <div class="column is-paddingless p-1 pl-2 is-8 entry-main">
+                            <span class="is-size-5 has-text-grey-lighter">{{name}}</span>
+                            <span class="is-size-6 has-text-grey-light"> - {{version}}</span>
+                            <sup class="is-size-7 has-text-grey is-italic">{{id}}</sup>
+                            {{#ifEqual isArchived 1}}
+                                <span class="icon is-medium has-text-grey-light is-pulled-right">
+                                    <i class="fas fa-lg fa-archive"></i>
+                                </span>
+                            {{/ifEqual}}
+                        </div>
+                        <div class="column is-paddingless p-1 pt-2 is-2 entry-update cursor-clickable text-center has-text-grey-light">
+                            <span class="is-size-6 pr-2">Update</span>
+                            <span class="icon is-small">
+                                <i class="fas fa-edit"></i>
+                            </span>
+                        </div>
+                        <div class="column is-paddingless p-1 pt-2 is-2 entry-delete cursor-clickable text-center has-text-grey-light">
+                            <span class="is-size-6 pr-1">Delete</span>
+                            <span class="icon is-small">
+                                <i class="fas fa-trash"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            {{/if}}
+        {{else}}
+            <div class="column">
+                <p class="has-text-centered is-italic">No feats or actions exist?!</p>
+            </div>
+        {{/each}}
+    </div>
+
+</div>
+
+
+<div class="modal">
+    <div class="modal-background"></div>
+    <div class="modal-card">
+        <header class="modal-card-head">
+            <p class="modal-card-title is-size-4 has-text-light">Delete Feat or Action</p>
+            <button class="delete modal-card-close" aria-label="close"></button>
+        </header>
+        <section class="modal-card-body">
+            <p class="has-text-light has-text-centered">Are you sure you want to delete this?</p>
+        </section>
+        <footer class="modal-card-foot is-paddingless p-3 field is-grouped is-grouped-centered">
+            <p class="control">
+                <a class="button is-danger is-outlined" id="delete-confirmation-btn">Delete</a>
+            </p>
+        </footer>
+    </div>
+</div>

@@ -1,3 +1,6 @@
+/* Copyright (C) 2020, Wanderer's Guide, all rights reserved.
+    By Aaron Cassar.
+*/
 
 function openSpeedQuickview(data) {
 
@@ -27,7 +30,7 @@ function addSpeedContent(qContent, speedStatName, speedName){
     let amalgBonuses = getStatExtraBonuses(speedStatName);
     if(amalgBonuses != null && amalgBonuses.length > 0){
 
-        let breakDownInnerHTML = '<p class="has-text-centered is-size-6-5">'+speedTotal+' = ';
+        let breakDownInnerHTML = '<p class="has-text-centered is-size-5-5">'+speedTotal+' = ';
         breakDownInnerHTML += '<a class="has-text-link has-tooltip-bottom" data-tooltip="This is your base speed.">'+speedBase+'</a>';
         breakDownInnerHTML += ' + ';
         let amalgBonus = speedTotal-speedBase;
@@ -44,7 +47,7 @@ function addSpeedContent(qContent, speedStatName, speedName){
 
     } else {
 
-        qContent.append('<p class="has-text-centered is-size-6-5">'+speedTotal+'</p>');
+        qContent.append('<p class="has-text-centered is-size-5-5">'+speedTotal+'</p>');
 
     }
 

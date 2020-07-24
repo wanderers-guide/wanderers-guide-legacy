@@ -22,25 +22,6 @@
 }
 
 /* Dark Mode Styling */
-.box {
-
-    box-shadow: 0 1px 3px rgba(0,0,0,0.5);
-    background: #282828;
-    border: 1px solid #282828;
-    color: #cccccc;
-    border-radius: 4px;
-
-}
-
-.input, .select select, .textarea, .button {
-    background-color: hsl(0, 0%, 21%);
-    border-color: hsl(0, 0%, 13%);
-    color: hsl(0, 0%, 82%);
-}
-
-.input:hover, .select select:hover, .textarea:hover, .button:hover {
-    border-color: hsl(0, 0%, 10%);
-}
 
 .select::after {
     border-color: hsl(0, 0%, 82%)!important;
@@ -48,10 +29,6 @@
 
 .select:hover::after {
     border-color: #3273dc!important;
-}
-
-.input::-webkit-input-placeholder, .select select::-webkit-input-placeholder, .textarea::-webkit-input-placeholder{
-    color:rgba(219,219,219,.4);
 }
 
 .button.is-info.is-inverted {

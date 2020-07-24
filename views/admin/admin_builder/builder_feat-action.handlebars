@@ -4,8 +4,8 @@
     <script type="text/javascript" src="/js/admin_builders/feat-action/builder-feat-action.js"></script>
     {{#if featID}}
         <script type="text/javascript" src="/js/admin_builders/feat-action/editor-feat-action.js"></script>
-        <script type="text/javascript" src="/js/admin_builders/editor-utils.js"></script>
     {{/if}}
+    <script type="text/javascript" src="/js/admin_builders/editor-utils.js"></script>
 {{/section}}
 
 {{#section 'nav_home'}}
@@ -58,13 +58,29 @@
                                 <select id="inputBuilderType">
                                     <option value="GENERAL-FEAT" selected>General Feat</option>
                                     <option value="SKILL-FEAT">Skill Feat</option>
+                                    <option value="CLASS-FEAT">Class Feat</option>
+                                    <option value="ANCESTRY-FEAT">Ancestry Feat</option>
                                     <option value="BASIC-ACTION">Basic Action</option>
                                     <option value="SKILL-ACTION">Skill Action</option>
                                 </select>
                             </div>
                         </div>
+                        <div id="sectionClassOptions" class="control is-hidden">
+                            <div class="select">
+                                <select id="inputClassOptions">
+                                </select>
+                            </div>
+                        </div>
+                        <div id="sectionAncestryOptions" class="control is-hidden">
+                            <div class="select">
+                                <select id="inputAncestryOptions">
+                                </select>
+                            </div>
+                        </div>
                     </div>
                 </div>
+
+
 
                 <div class="tile is-child field">
                     <label class="label">Name</label>
@@ -91,7 +107,7 @@
                                 <option value="LOST-GOD-MAGIC">Lost Omens: Gods & Magic</option>
                                 <option value="LOST-CHAR-GUIDE">Lost Omens: Character Guide</option>
                                 <option value="LOST-WORLD-GUIDE">Lost Omens: World Guide</option>
-                                <option value="FALL-OF-PLAGUE">The Fall of Plaguestone</option>
+                                <option value="FALL-OF-PLAGUE" selected>The Fall of Plaguestone</option>
                                 <option value="AGE-OF-ASHES">Age of Ashes</option>
                                 <option value="EXTINCTION-CURSE">Extinction Curse</option>
                                 <option value="BEST-1">Bestiary</option>

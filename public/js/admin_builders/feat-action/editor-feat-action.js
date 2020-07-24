@@ -1,18 +1,21 @@
+/* Copyright (C) 2020, Wanderer's Guide, all rights reserved.
+    By Aaron Cassar.
+*/
 
 $(function () {
 
-    socket.emit("requestAdminFeatDetails");
-
 });
 
-socket.on("returnAdminFeatDetails", function(featsObject){
+socket.on("returnAdminFeatDetailsPlus", function(featsObject, classObject, ancestryObject){
 
     let featMap = objToMap(featsObject);
+    g_classMap = objToMap(classObject);
+    g_ancestryMap = objToMap(ancestryObject);
     
     let feat = featMap.get(getFeatEditorIDFromURL()+"");
 
     if(feat == null){
-        window.location.href = '/admin/manage/feat-action';
+        window.location.href = '/admin/manage/feat-action'; //MAKE IT SO IT POPULATES CLASS AND ANCESTRY SELECTOR
         return;
     }
 
@@ -50,9 +53,39 @@ socket.on("returnAdminFeatDetails", function(featsObject){
     $("#inputBuilderType").trigger("change");
 
 
+    if(feat.Feat.genericType === 'CLASS-FEAT'){
+        let classID = getClassIDFromFeat(feat);
+        if(classID != null){
+            $('#inputClassOptions').val(classID);
+        }
+    } else if(feat.Feat.genericType === 'ANCESTRY-FEAT'){
+        let ancestryID = getAncestryIDFromFeat(feat);
+        if(ancestryID != null){
+            $('#inputAncestryOptions').val(ancestryID);
+        }
+    }
+
     $("#updateFeatButton").click(function(){
         $(this).unbind();
         finishFeat(true);
     });
 
 });
+
+function getClassIDFromFeat(feat){
+    for(const [classID, classData] of g_classMap.entries()){
+        if(classData.Class.isArchived === 0 && classData.Class.name === feat.Feat.genTypeName){
+            return classID;
+        }
+    }
+    return null;
+}
+
+function getAncestryIDFromFeat(feat){
+    for(const [ancestryID, ancestryData] of g_ancestryMap.entries()){
+        if(ancestryData.Ancestry.isArchived === 0 && ancestryData.Ancestry.name === feat.Feat.genTypeName){
+            return ancestryID;
+        }
+    }
+    return null;
+}

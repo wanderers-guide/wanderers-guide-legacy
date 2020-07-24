@@ -1,11 +1,14 @@
+/* Copyright (C) 2020, Wanderer's Guide, all rights reserved.
+    By Aaron Cassar.
+*/
 
 //--------------------- Processing Domains --------------------//
 function processingDomains(wscStatement, srcStruct, locationID){
 
-    if(wscStatement.includes("GIVE-DOMAIN-ADVANCEMENT")){ // GIVE-DOMAIN-ADVANCEMENT=Cleric
+    if(wscStatement.includes("GIVE-DOMAIN-ADVANCEMENT=")){ // GIVE-DOMAIN-ADVANCEMENT=Cleric
         let spellSRC = wscStatement.split('=')[1];
         giveDomainAdvancement(srcStruct, locationID, spellSRC);
-    } else if(wscStatement.includes("GIVE-DOMAIN")){ // GIVE-DOMAIN=Cleric
+    } else if(wscStatement.includes("GIVE-DOMAIN=")){ // GIVE-DOMAIN=Cleric
         let spellSRC = wscStatement.split('=')[1];
         giveDomain(srcStruct, locationID, spellSRC);
     } else {

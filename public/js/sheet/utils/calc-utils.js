@@ -1,4 +1,6 @@
-
+/* Copyright (C) 2020, Wanderer's Guide, all rights reserved.
+    By Aaron Cassar.
+*/
 
 function getAttackAndDamage(itemData, invItem){
 
@@ -28,6 +30,13 @@ function getAttackAndDamage(itemData, invItem){
         } else {
             profNumUps = 0;
             profBonus = 0;
+        }
+
+        let profAttackBonus;
+        if(profNumUps === 0 && gState_addLevelToUntrainedWeaponAttack && !gOption_hasProfWithoutLevel) {
+            profAttackBonus = g_character.level; // Sheet-State, adds level to untrained weapons
+        } else {
+            profAttackBonus = getProfNumber(profNumUps, g_character.level);
         }
 
         let splashTag = itemData.TagArray.find(tag => {
@@ -60,7 +69,7 @@ function getAttackAndDamage(itemData, invItem){
         let otherBonuses = getStatTotal('ATTACKS');
         otherBonuses += getStatTotal('MELEE_ATTACKS');
 
-        let attackBonus = signNumber(abilMod+getProfNumber(profNumUps, g_character.level)+profBonus+potencyRuneBonus+shoddyPenalty+otherBonuses);
+        let attackBonus = signNumber(abilMod+profAttackBonus+profBonus+potencyRuneBonus+shoddyPenalty+otherBonuses);
 
         let diceNum = itemData.WeaponData.diceNum;
         if(itemRuneData != null){
@@ -152,6 +161,13 @@ function getAttackAndDamage(itemData, invItem){
             profBonus = 0;
         }
 
+        let profAttackBonus;
+        if(profNumUps === 0 && gState_addLevelToUntrainedWeaponAttack && !gOption_hasProfWithoutLevel) {
+            profAttackBonus = g_character.level; // Sheet-State, adds level to untrained weapons
+        } else {
+            profAttackBonus = getProfNumber(profNumUps, g_character.level);
+        }
+
         let potencyRuneBonus = 0;
         if(itemRuneData != null){
             if(isWeaponPotencyOne(itemRuneData.fundPotencyRuneID)){
@@ -168,7 +184,7 @@ function getAttackAndDamage(itemData, invItem){
         let otherBonuses = getStatTotal('ATTACKS');
         otherBonuses += getStatTotal('RANGED_ATTACKS');
 
-        let attackBonus = signNumber(dexMod+getProfNumber(profNumUps, g_character.level)+profBonus+potencyRuneBonus+shoddyPenalty+otherBonuses);
+        let attackBonus = signNumber(dexMod+profAttackBonus+profBonus+potencyRuneBonus+shoddyPenalty+otherBonuses);
 
         let diceNum = itemData.WeaponData.diceNum;
         if(itemRuneData != null){

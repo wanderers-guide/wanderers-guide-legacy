@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const passport = require('passport');
 
+const User = require('../models/contentDB/User');
 
 // ================================================================================ //
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Account Auth ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
@@ -27,7 +28,35 @@ router.get('/google', passport.authenticate('google', {
 router.get('/google/redirect', passport.authenticate('google'), (req, res) => {
     // User info is now stored in req.user
 
-    res.redirect('/profile/characters');
+    if(req.user.patreonAccessToken != null){
+        const apiClient = patreonAPI(req.user.patreonAccessToken);
+        apiClient('/current_user')
+        .then((result) => {
+
+            console.log('Patreon - Valid Access Token - OK');
+            res.redirect('/profile/characters');
+
+        }).catch((err) => {
+
+            console.log('Patreon - Invalid Access Token - ISSUE');
+            let updateValues = {
+                isPatreonSupporter: 0,
+                isPatreonMember: 0,
+                patreonAccessToken: null
+            };
+            User.update(updateValues, { where: { id: req.user.id } })
+            .then((result) => {
+                res.redirect('/profile');
+            });
+            
+        });
+    } else {
+
+        console.log('Patreon - No Access Token - OK');
+        res.redirect('/profile/characters');
+
+    }
+
 });
 
 
@@ -41,7 +70,7 @@ const patreonOAuth = patreon.oauth;
 const campaignID = '4805226';
 
 let patreonOAuthClient = patreonOAuth(process.env.PATREON_CLIENT_ID, process.env.PATREON_CLIENT_SECRET);
-let redirectURL = null;
+let redirectURL;
 if (process.env.PRODUCTION == 'true'){
     redirectURL = 'https://wanderersguide.app/auth/patreon/redirect';
 } else {
@@ -49,29 +78,75 @@ if (process.env.PRODUCTION == 'true'){
 }
 
 router.get('/patreon/redirect', (req, res) => {
+    if(!req.user){
+        res.redirect('/');
+        return;
+    }
 
     const { code } = req.query;
     let token;
-
+    
     return patreonOAuthClient.getTokens(code, redirectURL)
     .then(({ access_token }) => {
         token = access_token;
         const apiClient = patreonAPI(token);
         return apiClient('/current_user');
     }).then(({ store }) => {
-        console.log(store);
+        let userData = store.findAll('user').map(user => user.serialize());
+        let patreonUserID = userData[0].data.id;
+        let patreonName = userData[0].data.attributes.full_name;
+        let isSupporter = (userData[0].data.relationships.campaign != null);
+
+        let updateValues;
+        if(isSupporter){
+            updateValues = {
+                isPatreonSupporter: 1,
+                patreonUserID: patreonUserID,
+                patreonFullName: patreonName,
+                patreonAccessToken: token
+            };
+        } else {
+            updateValues = {
+                isPatreonSupporter: 0,
+                isPatreonMember: 0,
+                patreonAccessToken: null
+            };
+        }
+        User.update(updateValues, { where: { id: req.user.id } })
+        .then((result) => {
+            res.redirect('/profile');
+            return;
+        }).catch((err) => {
+            res.status(500);
+            res.render('error/patreon_link_error', { title: "Account Linking Error - Wanderer's Guide", user: req.user });
+            return;
+        });
+
+    }).catch((err) => {
+        res.redirect('/');
+        return;
+    });
+
+    /*
+    return patreonOAuthClient.getTokens(code, redirectURL)
+    .then(({ access_token }) => {
+        token = access_token;
+        const apiClient = patreonAPI(token);
+        return apiClient('/campaigns/'+campaignID+'/pledges');
+    }).then(({ store }) => {
+        //console.log(store);
         //console.log(store.findAll('user').map(user => user.serialize()));
     }).catch((err) => {
         console.log(err);
         res.redirect('/');
-    });
+    });*/
+
+    /* Patreon API Docs:
+        https://docs.patreon.com/#step-3-handling-oauth-redirect
+        https://github.com/Patreon/patreon-js
+    */
 
 });
-
- // /campaigns/+campaignID+/pledges
-
- // https://docs.patreon.com/#step-4-validating-receipt-of-the-oauth-token
- // https://github.com/Patreon/patreon-js
 
 
 module.exports = router;

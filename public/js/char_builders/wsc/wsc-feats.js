@@ -1,3 +1,6 @@
+/* Copyright (C) 2020, Wanderer's Guide, all rights reserved.
+    By Aaron Cassar.
+*/
 
 //------------------------- Processing Feats -------------------------//
 function processingFeats(wscStatement, srcStruct, locationID){
@@ -153,8 +156,7 @@ function giveSkillFeat(srcStruct, locationID, featLevel, optionalTags){
 }
 
 function giveAncestryFeat(srcStruct, locationID, featLevel, charTagsArray, optionalTags){
-
-    console.log(charTagsArray);
+    
     displayFeatChoice(
         srcStruct,
         locationID,

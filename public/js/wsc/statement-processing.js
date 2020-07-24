@@ -1,9 +1,10 @@
+/* Copyright (C) 2020, Wanderer's Guide, all rights reserved.
+    By Aaron Cassar.
+*/
 
 // ========================================================================================= //
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Wanderer's Guide Code ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 // ========================================================================================= //
-
-//wgc
 
 function testSheetCode(wscCode){
     return processSheetCode(wscCode, 'TEST', true);
@@ -162,6 +163,14 @@ function processSheetCode(wscCode, sourceName, isTest){
             if(isTest) {continue;}
 
             gState_hasFinesseMeleeUseDexDamage = true;
+
+            continue;
+        }
+
+        if(wscStatement.toUpperCase() == "SET-ADD-LEVEL-TO-UNTRAINED-WEAPONS"){
+            if(isTest) {continue;}
+
+            gState_addLevelToUntrainedWeaponAttack = true;
 
             continue;
         }

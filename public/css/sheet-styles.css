@@ -214,10 +214,6 @@
     border-color: #3273dc!important;
 }
 
-.input::-webkit-input-placeholder, .select select::-webkit-input-placeholder, .textarea::-webkit-input-placeholder{
-    color:rgba(219,219,219,.4);
-}
-
 .control.has-icons-left .icon, .control.has-icons-right .icon {
     color:rgba(219,219,219,.4);
 }

@@ -78,12 +78,14 @@
     </div>
 </div>
 
-<div id="docs_content" class="tile is-ancestor mb-3">
-    <div class="tile is-parent is-2"></div>
+<div id="docs_content" class="tile is-ancestor is-paddingless is-marginless mb-3">
+    <div class="tile is-parent is-2">
+        <div class="tile is-child"></div>
+    </div>
     <div class="tile is-parent is-vertical is-8">
         <div id="wsc_docs" class="tile is-child">
             <h1 class="main-title is-size-2 is-family-code has-text-centered">WSC Documentation</h1>
-            <p class="subtitle is-size-6 has-text-grey-light has-text-centered is-italic">Wanderer's Styling Code (WSC), is used to format text in Wanderer's Guide and implement features for homebrew content.</p>
+            <p class="subtitle is-size-6-5 has-text-grey-light has-text-centered is-italic">Wanderer's Styling Code (WSC), is used to format text in Wanderer's Guide and implement features for homebrew content.</p>
         </div>
         <div id="usage" class="tile is-child isHideable">
             <h1 class="title is-size-4 is-marginless mb-1 pl-3">Usage</h1>
@@ -91,7 +93,7 @@
                 WSC has two different forms, one is for description fields and the other is for code fields. Whenever something has an text area that is description for something, generally you can use WSC inside of it. Examples of this being: ancestry descriptions, heirtage descriptions, feat descriptions, and item descriptions. When making homebrew content, you will see that there are often fields that are labeled "Code" - these are code fields which is where you can input WSC to implement features. In addition, with these two different forms of WSC, some features are designed for the character sheet and others are designed for the character builder.
             </p>
         </div>
-        <div id="description_fields" class="column is-paddingless">
+        <div id="description_fields" class="tile is-child is-paddingless">
             <div class="isHideable">
                 <h1 class="main-title is-family-code is-size-3 has-text-centered is-marginless mb-2">Description Fields</h1>
                 <h1 class="title is-size-4 is-marginless mb-1 pl-3">Basics</h1>
@@ -294,7 +296,7 @@
                 </div>
             </div>
         </div>
-        <div id="code_fields" class="column is-paddingless">         
+        <div id="code_fields" class="tile is-child is-paddingless">         
             <div class="isHideable">
                 <h1 class="main-title is-size-3 is-family-code has-text-centered is-marginless mb-2">Code Fields</h1>
                 <h1 class="title is-size-4 is-marginless mb-1 pl-3">Basics</h1>
@@ -885,20 +887,6 @@
                         (U = Untrained, T = Trained, E = Expert, M = Master, L = Legendary)
                     </p>
                 </div>
-                <div class="py-2">
-                    <div class="code-block">
-                        GIVE-PROF-SKILL-OR-SELECT-OTHER-IN=Crafting:T
-                    </div>
-                    <p class="pl-3">
-                        - Sets the character's base proficiency in Crafting to Trained. If the character is already Trained or better in Crafting by some other source, instead generates a skill selector which will set the character to Trained in the selected skill.
-                    </p>
-                    <p class="pl-3">
-                        - Only works with skills.
-                    </p>
-                    <p class="pl-3">
-                        (U = Untrained, T = Trained, E = Expert, M = Master, L = Legendary)
-                    </p>
-                </div>
             </div>
             <div id="code_skills" class="mt-4 isHideable">
                 <h1 class="title is-size-4 is-marginless mb-1 pl-3">Skills</h1>
@@ -1228,5 +1216,7 @@
             </div>
         </div>
     </div>
-    <div class="tile is-parent is-2"></div>
+    <div class="tile is-parent is-2">
+        <div class="tile is-child"></div>
+    </div>
 </div>

@@ -1,3 +1,6 @@
+/* Copyright (C) 2020, Wanderer's Guide, all rights reserved.
+    By Aaron Cassar.
+*/
 
 $(function () {
 
@@ -136,7 +139,7 @@ socket.on("returnAdminClassDetails", function(classObject, featsObject){
         let classTag = value.Tags.find(tag => {
             return tag.id === cClass.Class.tagID;
         });
-        if(classTag != null){
+        if(classTag != null && value.Feat.genericType == null){
             $("#addFeatButton").trigger("click");
             classFeats.push(value);
         }

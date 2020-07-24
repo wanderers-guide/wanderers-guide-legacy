@@ -1,12 +1,15 @@
+/* Copyright (C) 2020, Wanderer's Guide, all rights reserved.
+    By Aaron Cassar.
+*/
 
 //------------------------- Processing Innate Spells -------------------------//
 function processingInnateSpells(wscStatement, srcStruct, locationID){
 
-    if(wscStatement.includes("GIVE-INNATE-SPELL")){// GIVE-INNATE-SPELL=3:divine:1
+    if(wscStatement.includes("GIVE-INNATE-SPELL=")){// GIVE-INNATE-SPELL=3:divine:1
         let data = wscStatement.split('=')[1]; // Set cast times per day to 0 to cast an unlimited number
         let segments = data.split(':');// For cantrips just do: GIVE-INNATE-SPELL=0:divine:0
         giveInnateSpell(srcStruct, locationID, segments[0], segments[1], segments[2], segments[3]);
-    } else if(wscStatement.includes("GIVE-INNATE-SPELL-NAME")){// GIVE-INNATE-SPELL-NAME=Meld_Into_Stone:3:divine:1
+    } else if(wscStatement.includes("GIVE-INNATE-SPELL-NAME=")){// GIVE-INNATE-SPELL-NAME=Meld_Into_Stone:3:divine:1
         let data = wscStatement.split('=')[1]; // Set cast times per day to 0 to cast an unlimited number
         let segments = data.split(':');// For cantrips just do: GIVE-INNATE-SPELL-NAME=Daze:0:divine:0
         giveInnateSpellByName(srcStruct, segments[0], segments[1], segments[2], segments[3]);
@@ -44,7 +47,7 @@ function displayInnateSpellChoice(srcStruct, locationID, spellLevel, spellTradit
     let descriptionSpellID = "descriptionInnateSpell"+locationID+"-"+srcStruct.sourceCodeSNum;
     let selectSpellControlShellClass = selectSpellID+'ControlShell';
 
-    $('#'+locationID).append('<div class="field"><div class="select '+selectSpellControlShellClass+'"><select id="'+selectSpellID+'" class="selectFeat"></select></div><div id="'+descriptionSpellID+'"></div></div>');
+    $('#'+locationID).append('<div class="field is-grouped is-grouped-centered is-marginless mb-1"><div class="select '+selectSpellControlShellClass+'"><select id="'+selectSpellID+'" class="selectFeat"></select></div><div id="'+descriptionSpellID+'"></div></div>');
 
     $('#'+selectSpellID).append('<option value="chooseDefault">'+selectionName+'</option>');
 

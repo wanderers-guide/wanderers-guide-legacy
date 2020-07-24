@@ -1,3 +1,6 @@
+/* Copyright (C) 2020, Wanderer's Guide, all rights reserved.
+    By Aaron Cassar.
+*/
 
 let socket = io();
 
@@ -279,10 +282,10 @@ function displayCurrentClass(classStruct, saving) {
 
                 if(skillName != "chooseDefault"){
                     $('.'+tSkillControlShellClass).removeClass("is-info");
-                    socket.emit("requestProficiencyChange",
-                        getCharIDFromURL(),
-                        {srcStruct, isSkill : true},
-                        { For : "Skill", To : skillName, Prof : 'T' });
+                    processCode(
+                        'GIVE-PROF-IN='+skillName+':T',
+                        srcStruct,
+                        'profSkillsCode');
                 } else {
                     $('.'+tSkillControlShellClass).addClass("is-info");
                     socket.emit("requestProficiencyChange",
@@ -437,21 +440,26 @@ function displayCurrentClass(classStruct, saving) {
     savingProfArray.push({ For : "Class_DC", To : "Class_DC", Prof : classStruct.Class.tClassDC });
 
 
-    if(saving){
-        let savingProfCount = 0;
-        for(let savingProf of savingProfArray){
-            let srcStruct = {
-                sourceType: 'class',
-                sourceLevel: 1,
-                sourceCode: 'inits-'+savingProfCount,
-                sourceCodeSNum: 'a',
-            };
+    let savingProfCount = 0;
+    for(let savingProf of savingProfArray){
+        let srcStruct = {
+            sourceType: 'class',
+            sourceLevel: 1,
+            sourceCode: 'inits-'+savingProfCount,
+            sourceCodeSNum: 'a',
+        };
+        if(savingProf.For === 'Skill' && savingProf.Prof === 'T'){
+            processCode(
+                'GIVE-PROF-IN='+savingProf.To+':T',
+                srcStruct,
+                'profSkillsCode');
+        } else {
             socket.emit("requestProficiencyChange",
                 getCharIDFromURL(),
                 {srcStruct, isSkill : false},
                 savingProf);
-            savingProfCount++;
         }
+        savingProfCount++;
     }
 
 

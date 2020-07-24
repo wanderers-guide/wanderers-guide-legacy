@@ -1,3 +1,6 @@
+/* Copyright (C) 2020, Wanderer's Guide, all rights reserved.
+    By Aaron Cassar.
+*/
 
 let socket = io();
 
@@ -304,7 +307,6 @@ function displayCurrentAncestry(ancestryStruct, saving) {
     
     $('#physicalFeatureOneCodeOutput').addClass('is-hidden');
     $('#physicalFeatureTwoCodeOutput').addClass('is-hidden');
-
 
     if(ancestryStruct.PhysicalFeatureOne != null || ancestryStruct.PhysicalFeatureTwo != null) {
         $('#sectionPhysicalFeatures').removeClass('is-hidden');

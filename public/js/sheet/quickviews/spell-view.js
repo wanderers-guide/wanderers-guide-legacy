@@ -1,3 +1,6 @@
+/* Copyright (C) 2020, Wanderer's Guide, all rights reserved.
+    By Aaron Cassar.
+*/
 
 const g_tagStringLengthMax = 620; // Hardcoded - Tag String Length Max
 

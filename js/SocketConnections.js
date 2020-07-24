@@ -1547,6 +1547,20 @@ module.exports = class SocketConnections {
         });
       });
 
+      socket.on('requestAdminFeatDetailsPlus', function(){
+        AuthCheck.isAdmin(socket).then((isAdmin) => {
+          if(isAdmin){
+            AdminGathering.getAllFeats().then((featsObject) => {
+              AdminGathering.getAllClasses().then((classObject) => {
+                AdminGathering.getAllAncestries(true).then((ancestriesObject) => {
+                  socket.emit('returnAdminFeatDetailsPlus', featsObject, classObject, ancestriesObject);
+                });
+              });
+            });
+          }
+        });
+      });
+
       ////
 
       socket.on('requestAdminAddItem', function(data){

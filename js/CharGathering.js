@@ -203,7 +203,24 @@ module.exports = class CharGathering {
                         let featMap = new Map();
 
                         for (const feat of feats) {
-                            featMap.set(feat.id, {Feat : feat, Tags : []});
+                            let fTags = [];
+                            /*
+                                If a feat has a genTypeName then it's a single feat for a class or ancestry.
+                                Search and give it the trait for that class or ancestry.
+                            */
+                            if(feat.genTypeName != null){
+                                let tag = tags.find(tag => {
+                                    if(tag.isArchived == 0){
+                                        return tag.name === feat.genTypeName;
+                                    } else {
+                                        return false;
+                                    }
+                                });
+                                if(tag != null){
+                                    fTags.push(tag);
+                                }
+                            }
+                            featMap.set(feat.id, {Feat : feat, Tags : fTags});
                         }
 
                         for (const featTag of featTags) {

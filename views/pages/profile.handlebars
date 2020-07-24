@@ -26,32 +26,45 @@
 {{/section}}
 
 
+<div class="container mt-5 pt-3">
+    <div class="columns is-centered is-mobile">
+        <div class="column is-8 box p-4">
+            <div class="columns is-centered is-mobile">
+                <div class="column is-4">
+                    <figure class="image is-128x128 is-pulled-right">
+                        <img class="is-rounded" src="{{user.thumbnail}}" alt="Profile Image">
+                        <p class="has-text-centered is-size-7 pt-1">ID #{{user.id}}</p>
+                    </figure>
+                </div>
+                <div class="column is-8">
+                    <p class="is-size-3">{{user.username}}'s Profile</p>
+                    {{#ifEqual user.isDeveloper 1}}
+                        <p class="is-italic is-size-6 pl-4">Developer</p>
+                    {{/ifEqual}}
+                    {{#ifEqual user.isAdmin 1}}
+                        <p class="is-italic is-size-6 pl-4">Admin</p>
+                    {{/ifEqual}}
+                    {{#ifEqual user.isPatreonSupporter 1}}
+                        {{#ifEqual user.isPatreonMember 1}}
+                            <p class="is-italic is-size-6 pl-4">Patron - Member</p>
+                        {{/ifEqual}}
+                        {{#ifEqual user.isPatreonMember 0}}
+                            <p class="is-italic is-size-6 pl-4">Patron - Supporter</p>
+                        {{/ifEqual}}
+                    {{/ifEqual}}
+                    {{#ifEqual user.isPatreonSupporter 0}}
+                        <p class="is-italic is-size-6 pl-4">Non-Patron</p>
+                    {{/ifEqual}}
+                </div>
+            </div>
 
-<div class="columns is-centered is-mobile mt-5">
-    <div class="column is-2">
-        <figure class="image is-128x128 is-pulled-right">
-            <img class="is-rounded" src="{{user.thumbnail}}" alt="Profile Image">
-            <p class="has-text-centered is-size-7 pt-1">ID #{{user.id}}</p>
-        </figure>
-    </div>
-    <div class="column is-4">
-        <p class="is-size-3">{{user.username}}'s Profile</p>
-        {{#ifEqual user.isDeveloper 1}}
-            <p class="is-italic is-size-6 pl-4">Developer</p>
-        {{/ifEqual}}
-        {{#ifEqual user.isAdmin 1}}
-            <p class="is-italic is-size-6 pl-4">Admin</p>
-        {{/ifEqual}}
-        {{#ifEqual user.isPatreonSupporter 1}}
-            {{#ifEqual user.isPatreonMember 1}}
-                <p class="is-italic is-size-6 pl-4">Patron - Member</p>
-            {{/ifEqual}}
-            {{#ifEqual user.isPatreonMember 0}}
-                <p class="is-italic is-size-6 pl-4">Patron - Supporter</p>
-            {{/ifEqual}}
-        {{/ifEqual}}
-        {{#ifEqual user.isPatreonSupporter 0}}
-            <p class="is-italic is-size-6 pl-4">Non-Patron</p>
-        {{/ifEqual}}
+            <div class="text-center mt-5 pt-2">
+                {{#if isPatreonConnected}}
+                    <a class="button is-info is-outlined" href="{{patreonAuthURL}}"><span class="icon"><i class="fab fa-patreon"></i></span><span>Refresh Patreon Link</span></a>
+                {{else}}
+                    <a class="button is-info" href="{{patreonAuthURL}}"><span class="icon"><i class="fab fa-patreon"></i></span><span>Connect to Patreon</span></a>
+                {{/if}}
+            </div>
+        </div>
     </div>
 </div>

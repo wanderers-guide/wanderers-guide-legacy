@@ -1,7 +1,8 @@
+/* Copyright (C) 2020, Wanderer's Guide, all rights reserved.
+    By Aaron Cassar.
+*/
 
 function openResistancesQuickview(data) {
-
-    console.log(data.ResistAndVulners);
 
     let resistAndVulnerText = '';
     if(data.ResistAndVulners.Resistances.length != 0){

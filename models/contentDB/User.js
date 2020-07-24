@@ -22,6 +22,15 @@ const User = db.define('users', {
   },
   isDeveloper: {
     type: Sequelize.TINYINT
+  },
+  patreonUserID: {
+    type: Sequelize.INTEGER
+  },
+  patreonFullName: {
+    type: Sequelize.STRING
+  },
+  patreonAccessToken: {
+    type: Sequelize.STRING
   }
 });
 

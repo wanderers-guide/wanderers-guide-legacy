@@ -1,3 +1,6 @@
+/* Copyright (C) 2020, Wanderer's Guide, all rights reserved.
+    By Aaron Cassar.
+*/
 
 //--------------------- Processing Lore --------------------//
 function processingProf(wscStatement, srcStruct, locationID){
@@ -8,17 +11,13 @@ function processingProf(wscStatement, srcStruct, locationID){
     } else if(wscStatement.includes("GIVE-PROF-IN")){// GIVE-PROF-IN=Arcana:T
         let data = wscStatement.split('=')[1];
         let segments = data.split(':');
-        giveProf(srcStruct, segments[0], segments[1]);
-    } else if(wscStatement.includes("GIVE-PROF-SKILL-OR-SELECT-OTHER-IN")){// GIVE-PROF-SKILL-OR-SELECT-OTHER-IN=Arcana:T
-        let data = wscStatement.split('=')[1];
-        let segments = data.split(':');
-        giveProfSkillOrSelect(srcStruct, segments[0], segments[1], locationID);
+        giveProf(srcStruct, segments[0], segments[1], locationID);
     } else {
         displayError("Unknown statement (2-Prof): \'"+wscStatement+"\'");
         statementComplete();
     }
 
-}
+}// GIVE-PROF-SKILL-OR-SELECT-OTHER-IN
 
 //////////////////////////////// Give Prof ///////////////////////////////////
 
@@ -26,17 +25,21 @@ function giveProfIncrease(srcStruct, profName){
     giveInProf(srcStruct, profName, 'UP');
 }
 
-function giveProf(srcStruct, profName, prof){
-    giveInProf(srcStruct, profName, prof);
+function giveProf(srcStruct, profName, prof, locationID){
+    if(prof === 'T'){
+        giveProfSkillTraining(srcStruct, profName, prof, locationID);
+    } else {
+        giveInProf(srcStruct, profName, prof);
+    }
 }
 
-function giveProfSkillOrSelect(srcStruct, profName, prof, locationID){
+function giveProfSkillTraining(srcStruct, profName, prof, locationID){
 
-    profName = profName.replace(/_|\s+/g,"");
+    let adjProfName = profName.replace(/_|\s+/g,"");
     let profProperName = null;
     let profCategory = null;
 
-    let profData = g_profConversionMap.get(profName);
+    let profData = g_profConversionMap.get(adjProfName);
     if(profData != null){
         profProperName = profData.Name;
         profCategory = profData.Category;
@@ -55,7 +58,7 @@ function giveProfSkillOrSelect(srcStruct, profName, prof, locationID){
         for(const [profMapName, profMapData] of profMap.entries()){
             let tempSkillName = profMapData.Name.toUpperCase();
             tempSkillName = tempSkillName.replace(/_|\s+/g,"");
-            if(profName === tempSkillName && profMapData.NumUps >= numUps){
+            if(adjProfName === tempSkillName && profMapData.NumUps >= numUps){
 
                 if(!hasSameSrc(srcStruct, profMapData.OriginalData)){
                     processCode(
@@ -76,8 +79,7 @@ function giveProfSkillOrSelect(srcStruct, profName, prof, locationID){
         return;
 
     } else {
-        displayError("Not a skill: \'"+profName+"\'");
-        statementComplete();
+        giveInProf(srcStruct, profName, prof);
         return;
     }
 

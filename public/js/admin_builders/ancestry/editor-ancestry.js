@@ -1,3 +1,6 @@
+/* Copyright (C) 2020, Wanderer's Guide, all rights reserved.
+    By Aaron Cassar.
+*/
 
 $(function () {
 
@@ -87,7 +90,7 @@ socket.on("returnAdminAncestryDetails", function(ancestryObject, featsObject){
         let ancestryTag = value.Tags.find(tag => {
             return tag.id === ancestry.Tag.id;
         });
-        if(ancestryTag != null){
+        if(ancestryTag != null && value.Feat.genericType == null){
             $("#addFeatButton").trigger("click");
             ancestryFeats.push(value);
         }

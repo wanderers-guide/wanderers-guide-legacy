@@ -1,3 +1,6 @@
+/* Copyright (C) 2020, Wanderer's Guide, all rights reserved.
+    By Aaron Cassar.
+*/
 
 //------------------------- Processing Skills -------------------------//
 function processingSkills(wscStatement, srcStruct, locationID){
@@ -31,9 +34,9 @@ function giveSkill(srcStruct, locationID, profType){
     let selectIncreaseControlShellClass = selectIncreaseID+'ControlShell';
     let increaseDescriptionID = "selectIncreaseDescription"+locationID+"-"+srcStruct.sourceCodeSNum;
 
-    $('#'+locationID).append('<div class="field is-grouped is-grouped-centered is-marginless"><div class="select '+selectIncreaseControlShellClass+'"><select id="'+selectIncreaseID+'" class="selectIncrease"></select></div></div>');
+    $('#'+locationID).append('<div class="field is-grouped is-grouped-centered is-marginless mt-1"><div class="select '+selectIncreaseControlShellClass+'"><select id="'+selectIncreaseID+'" class="selectIncrease"></select></div></div>');
 
-    $('#'+locationID).append('<div id="'+increaseDescriptionID+'" class="pb-2"></div>');
+    $('#'+locationID).append('<div id="'+increaseDescriptionID+'" class="pb-1"></div>');
 
     $('#'+selectIncreaseID).append('<option value="chooseDefault">Choose a Skill</option>');
     $('#'+selectIncreaseID).append('<hr class="dropdown-divider"></hr>');

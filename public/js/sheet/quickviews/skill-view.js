@@ -1,3 +1,6 @@
+/* Copyright (C) 2020, Wanderer's Guide, all rights reserved.
+    By Aaron Cassar.
+*/
 
 let amalgamationBonusText = "This is an amalgamation of any additional bonuses or penalties you might have. This includes adjustments from feats, items, conditions, or those you may have added manually.";
 

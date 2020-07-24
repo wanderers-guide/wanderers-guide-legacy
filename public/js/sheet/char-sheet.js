@@ -1,13 +1,17 @@
+/* Copyright (C) 2020, Wanderer's Guide, all rights reserved.
+    By Aaron Cassar.
+*/
 
 let socket = io();
 
 /* Character Options */
-let gOption_hasAutoHeightenSpells = false;
-let gOption_hasProfWithoutLevel = false;
+let gOption_hasAutoHeightenSpells;
+let gOption_hasProfWithoutLevel;
 /* ~~~~~~~~~~~~~~~~~ */
 
 /* Sheet-State Options */
-let gState_hasFinesseMeleeUseDexDamage = false;
+let gState_hasFinesseMeleeUseDexDamage;
+let gState_addLevelToUntrainedWeaponAttack;
 /* ~~~~~~~~~~~~~~~~~~~ */
 
 let g_character = null;
@@ -116,9 +120,9 @@ socket.on("returnCharacterSheetInfo", function(charInfo){
 
     g_character = charInfo.Character;
 
-    /* Character Options */
+    /* Character Options and Variants */
     gOption_hasAutoHeightenSpells = (g_character.optionAutoHeightenSpells === 1);
-    gOption_hasProfWithoutLevel = (g_character.optionProfWithoutLevel === 1);
+    gOption_hasProfWithoutLevel = (g_character.variantProfWithoutLevel === 1);
 
     g_otherSpeeds = charInfo.OtherSpeeds;
 
@@ -227,6 +231,10 @@ function loadCharSheet(){
 
     // Unbind All jQuery Events //
     $('#character-sheet-section').find("*").off();
+
+    // Init Sheet-States //
+    gState_hasFinesseMeleeUseDexDamage = false;
+    gState_addLevelToUntrainedWeaponAttack = false;
 
     // Init Stats (set to new Map) //
     initStats();
@@ -966,7 +974,7 @@ function displayInformation() {
         let profNum = getProfNumber(profData.NumUps, g_character.level);
 
         if(hasUntrainedImprovisationFeat){
-            if(profData.NumUps === 0){
+            if(profData.NumUps === 0 && !gOption_hasProfWithoutLevel){
                 if(g_character.level < 7){
                     let profBonus = Math.floor(g_character.level/2);
                     addStat('SKILL_'+skillName, 'PROFICIENCY_BONUS', profBonus, 'Untrained Improvisation');
