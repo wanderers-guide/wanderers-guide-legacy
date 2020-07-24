@@ -29,6 +29,9 @@ const User = db.define('users', {
   patreonFullName: {
     type: Sequelize.STRING
   },
+  patreonEmail: {
+    type: Sequelize.STRING
+  },
   patreonAccessToken: {
     type: Sequelize.STRING
   }

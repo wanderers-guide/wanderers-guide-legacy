@@ -92,24 +92,38 @@ router.get('/patreon/redirect', (req, res) => {
         const apiClient = patreonAPI(token);
         return apiClient('/current_user');
     }).then(({ store }) => {
+
         let userData = store.findAll('user').map(user => user.serialize());
-        let patreonUserID = userData[0].data.id;
-        let patreonName = userData[0].data.attributes.full_name;
-        let isSupporter = (userData[0].data.relationships.campaign != null);
+
+        let patreonUserID = userData[userData.length-1].data.id;
+        let patreonName = userData[userData.length-1].data.attributes.full_name;
+        let patreonEmail = userData[userData.length-1].data.attributes.email;
+
+        let pledgesData = userData[userData.length-1].data.relationships.pledges.data;
+        let isSupporter = (pledgesData.length > 0);
+        //console.log(pledgesData); // Pledge data has the tier IDs
 
         let updateValues;
         if(isSupporter){
+            let pData = pledgesData[pledgesData.length-1];
+            let isMember = (pData.type === 'pledge' && pData.id === '46234666');
+            let isMemberBinary = (isMember) ? 1 : 0;
             updateValues = {
                 isPatreonSupporter: 1,
+                isPatreonMember: isMemberBinary,
                 patreonUserID: patreonUserID,
                 patreonFullName: patreonName,
+                patreonEmail: patreonEmail,
                 patreonAccessToken: token
             };
         } else {
             updateValues = {
                 isPatreonSupporter: 0,
                 isPatreonMember: 0,
-                patreonAccessToken: null
+                patreonUserID: patreonUserID,
+                patreonFullName: patreonName,
+                patreonEmail: patreonEmail,
+                patreonAccessToken: token
             };
         }
         User.update(updateValues, { where: { id: req.user.id } })

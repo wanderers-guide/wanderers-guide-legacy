@@ -13,9 +13,9 @@ router.get('/', authCheck, (req, res) => {
 
     let patreonAuthURL;
     if (process.env.PRODUCTION == 'true'){
-        patreonAuthURL = 'https://www.patreon.com/oauth2/authorize?response_type=code&client_id=R9VNPfo04Dd-T2p0nmNNTLhLiRF3EOuat7z2pyx8zD6YVbK1Sm1Kq9kbM509ZVdL&redirect_uri=https://wanderersguide.app/auth/patreon/redirect';
+        patreonAuthURL = 'https://www.patreon.com/oauth2/authorize?response_type=code&client_id=muoRJEEoFBwx_RQCR3GvkAEI1o_SA2pIM3rYbx_VrdRbm6Ca4VQS2TFLm5wlyprt&redirect_uri=https://wanderersguide.app/auth/patreon/redirect&scope=users pledges-to-me my-campaign';
     } else {
-        patreonAuthURL = 'https://www.patreon.com/oauth2/authorize?response_type=code&client_id=R9VNPfo04Dd-T2p0nmNNTLhLiRF3EOuat7z2pyx8zD6YVbK1Sm1Kq9kbM509ZVdL&redirect_uri=http://localhost/auth/patreon/redirect';
+        patreonAuthURL = 'https://www.patreon.com/oauth2/authorize?response_type=code&client_id=muoRJEEoFBwx_RQCR3GvkAEI1o_SA2pIM3rYbx_VrdRbm6Ca4VQS2TFLm5wlyprt&redirect_uri=http://localhost/auth/patreon/redirect&scope=users pledges-to-me my-campaign';
     }
 
     let isPatreonConnected = (req.user.patreonAccessToken != null);
