@@ -58,6 +58,7 @@ function openWeaponsTab(data) {
     for(const [pfWeaponID, itemWeaponID] of phyFeatWeaponMap.entries()){
         weaponEntryID++;
         let pwItem = g_itemMap.get(itemWeaponID+"");
+        if(pwItem == null) { continue; }
         let pwInvItem = pwItem.Item;
         pwInvItem.currentHitPoints = pwInvItem.hitPoints;
         pwInvItem.viewOnly = true;
@@ -66,6 +67,7 @@ function openWeaponsTab(data) {
 
     for(const invItem of g_invStruct.InvItems){
         let item = g_itemMap.get(invItem.itemID+"");
+        if(item == null) { continue; }
         if(item.WeaponData != null){
             weaponEntryID++;
             addWeaponEntry(weaponEntryID, item, invItem, data);
@@ -76,10 +78,12 @@ function openWeaponsTab(data) {
     if(g_equippedShieldInvItemID != null){
         weaponEntryID++;
         let pwItem = g_itemMap.get(1266+""); // Shield Bash, Hardcoded Item ID
-        let pwInvItem = pwItem.Item;
-        pwInvItem.currentHitPoints = pwInvItem.hitPoints;
-        pwInvItem.viewOnly = true;
-        addWeaponEntry(weaponEntryID, pwItem, pwInvItem, data);
+        if(pwItem != null) {
+            let pwInvItem = pwItem.Item;
+            pwInvItem.currentHitPoints = pwInvItem.hitPoints;
+            pwInvItem.viewOnly = true;
+            addWeaponEntry(weaponEntryID, pwItem, pwInvItem, data);
+        }
     }
 
 }

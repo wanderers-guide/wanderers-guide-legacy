@@ -83,8 +83,10 @@ function displayInventorySection(data){
     let openBagInvItemArray = [];
     for(const invItem of g_invStruct.InvItems){
         let item = g_itemMap.get(invItem.itemID+"");
-        if(item.StorageData != null && invItem.bagInvItemID == null){
-            openBagInvItemArray.push(invItem);
+        if(item != null){
+            if(item.StorageData != null && invItem.bagInvItemID == null){
+                openBagInvItemArray.push(invItem);
+            }
         }
     }
 
@@ -112,7 +114,7 @@ function displayInventorySection(data){
 
         if(invSearchInput == 'weapons'){
             let item = g_itemMap.get(invItem.itemID+"");
-            if(item.Item.itemType == 'WEAPON'){
+            if(item != null && item.Item.itemType == 'WEAPON'){
                 willDisplay = true;
             } else {
                 willDisplay = false;
@@ -120,7 +122,7 @@ function displayInventorySection(data){
 
         } else if(invSearchInput == 'armor'){
             let item = g_itemMap.get(invItem.itemID+"");
-            if(item.Item.itemType == 'ARMOR'){
+            if(item != null && item.Item.itemType == 'ARMOR'){
                 willDisplay = true;
             } else {
                 willDisplay = false;
@@ -128,7 +130,7 @@ function displayInventorySection(data){
 
         } else if(invSearchInput == 'coins' || invSearchInput == 'money' || invSearchInput == 'currency'){
             let item = g_itemMap.get(invItem.itemID+"");
-            if(item.Item.itemType == 'CURRENCY'){
+            if(item != null && item.Item.itemType == 'CURRENCY'){
                 willDisplay = true;
             } else {
                 willDisplay = false;
@@ -161,6 +163,7 @@ function displayInventorySection(data){
 function displayInventoryItem(invItem, openBagInvItemArray, data) {
 
     let item = g_itemMap.get(invItem.itemID+"");
+    if(item == null) { return; }
     let itemIsStorage = (item.StorageData != null);
     let itemIsStorageAndEmpty = false;
 
@@ -219,9 +222,14 @@ function displayInventoryItem(invItem, openBagInvItemArray, data) {
         let foundBaggedItem = false;
         for(const baggedInvItem of g_invStruct.InvItems){
             if(baggedInvItem.bagInvItemID == invItem.id){
-                foundBaggedItem = true;
 
                 let baggedItem = g_itemMap.get(baggedInvItem.itemID+"");
+                if(baggedItem == null) {
+                    continue;
+                } else {
+                    foundBaggedItem = true;
+                }
+
                 let baggedItemIsStorage = (baggedItem.StorageData != null);
 
                 let baggedInvItemSectionID = 'baggedInvItemSection'+baggedInvItem.id;

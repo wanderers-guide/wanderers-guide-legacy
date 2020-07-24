@@ -158,6 +158,11 @@ router.get('/patreon/redirect', (req, res) => {
     /* Patreon API Docs:
         https://docs.patreon.com/#step-3-handling-oauth-redirect
         https://github.com/Patreon/patreon-js
+
+
+        Patreon Tier IDs:
+        [ { type: 'pledge', id: '46219432' } ] <- Supporter
+        [ { type: 'pledge', id: '46234666' } ] <- Member
     */
 
 });

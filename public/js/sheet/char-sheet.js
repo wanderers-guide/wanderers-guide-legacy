@@ -1019,6 +1019,7 @@ function displayInformation() {
 
     for(const feat of g_featChoiceArray){
         let featStruct = g_featMap.get(feat.value.id+"");
+        if(featStruct == null) { continue; }
 
         // Hardcoded Exploration and Downtime Tag IDs
         let explorationTag = featStruct.Tags.find(tag => {
@@ -1569,6 +1570,7 @@ function findEquippedArmor() {
     for(const invItem of g_invStruct.InvItems){
         if(invItem.id == g_equippedArmorInvItemID) {
             let item = g_itemMap.get(invItem.itemID+"");
+            if(item == null) { continue; }
             if(invItem.bagInvItemID == null && item.ArmorData != null){
                 return { Item : item, InvItem : invItem };
             }
@@ -1581,6 +1583,7 @@ function findEquippedShield() {
     for(const invItem of g_invStruct.InvItems){
         if(invItem.id == g_equippedShieldInvItemID) {
             let item = g_itemMap.get(invItem.itemID+"");
+            if(item == null) { continue; }
             if(invItem.bagInvItemID == null && item.ShieldData != null){
 
                 // Halve maxHP if it's shoddy
@@ -1702,7 +1705,7 @@ function determineBulkAndCoins(invItems, itemMap){
 
             let includeSelf = true;
             let item = itemMap.get(invItem.itemID+"");
-            if(item.StorageData != null){
+            if(item != null && item.StorageData != null){
                 if(item.StorageData.ignoreSelfBulkIfWearing == 1){
                     includeSelf = false;
                 }
@@ -1790,6 +1793,7 @@ function determineInvestitures(){
         if(invItem.isInvested == 1) {
 
             const item = g_itemMap.get(invItem.itemID+"");
+            if(item == null){ continue; }
             if(item.ArmorData != null){
                 if(g_equippedArmorInvItemID != invItem.id){
                     continue;
@@ -1818,6 +1822,8 @@ function runAllItemsCode() {
     for(const invItem of g_invStruct.InvItems){
         
         let item = g_itemMap.get(invItem.itemID+"");
+        if(item == null) { continue; }
+
         let investedTag = item.TagArray.find(tagStruct => {
             return tagStruct.Tag.id === 235; // Hardcoded Invested Tag ID
         });
