@@ -69,6 +69,7 @@ const patreon = require('patreon');
 const patreonAPI = patreon.patreon;
 const patreonOAuth = patreon.oauth;
 const campaignID = '4805226';
+const myUserID = '32932027';
 
 let patreonOAuthClient = patreonOAuth(process.env.PATREON_CLIENT_ID, process.env.PATREON_CLIENT_SECRET);
 let redirectURL;
@@ -97,23 +98,37 @@ router.get('/patreon/redirect', (req, res) => {
         console.log('~~~~~~~~');
         let userData = store.findAll('user').map(user => user.serialize());
         console.log(userData);
+        let uData = findPatronData(userData);
+        if(uData == null){
+            console.error('Failed to find user data!');
+            console.error(userData);
+            res.redirect('/');
+            return;
+        }
 
-        let patreonUserID = userData[userData.length-1].data.id;
+        console.log(uData);
+
+        let patreonUserID = uData.id;
         console.log(patreonUserID);
-        let patreonName = userData[userData.length-1].data.attributes.full_name;
+        let patreonName = uData.attributes.full_name;
         console.log(patreonName);
-        let patreonEmail = userData[userData.length-1].data.attributes.email;
+        let patreonEmail = uData.attributes.email;
         console.log(patreonEmail);
 
-        let pledgesData = userData[userData.length-1].data.relationships.pledges.data;
-        console.log(userData[userData.length-1].data.relationships);
-        let isSupporter = (pledgesData.length > 0);
-        console.log(pledgesData); // Pledge data has the tier IDs
+        console.log(uData.relationships);
+        let isSupporter;
+        if(uData.relationships.pledges != null){
+            let pledgesData = uData.relationships.pledges.data;
+            isSupporter = (pledgesData.length > 0);
+            console.log(pledgesData); // Pledge data has the tier IDs
+        } else {
+            isSupporter = false;
+        }
 
         let updateValues;
         if(isSupporter){
             let pData = pledgesData[pledgesData.length-1];
-            let isMember = (pData.type === 'pledge' && pData.id === '46234666');
+            let isMember = false; //(pData.type === 'pledge' && pData.id === '46234666');
             let isMemberBinary = (isMember) ? 1 : 0;
             updateValues = {
                 isPatreonSupporter: 1,
@@ -174,6 +189,15 @@ router.get('/patreon/redirect', (req, res) => {
     */
 
 });
+
+function findPatronData(userData){
+    for(let uData of userData){
+        if(uData.data.type == 'user' && uData.data.id != myUserID) {
+            return uData.data;
+        }
+    }
+    return null;
+}
 
 
 module.exports = router;
