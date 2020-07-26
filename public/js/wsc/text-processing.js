@@ -124,6 +124,22 @@ function processText(text, isSheet, isJustified = false, size = 'MEDIUM', indexC
         text = text.replace(regexSpellLink, '$2');
     }
 
+    // (Language: Gnomish-like | Gnomish)
+    let regexLanguageLinkExt = /\((Language):\s*([^(:]+?)\s*\|\s*(.+?)\s*\)/ig;
+    if(isSheet) {
+        text = text.replace(regexLanguageLinkExt, handleLanguageLinkExt);
+    } else {
+        text = text.replace(regexLanguageLinkExt, '$2');
+    }
+
+    // (Language: Gnomish)
+    let regexLanguageLink = /\((Language):\s*([^(:]+?)\s*\)/ig;
+    if(isSheet) {
+        text = text.replace(regexLanguageLink, handleLanguageLink);
+    } else {
+        text = text.replace(regexLanguageLink, '$2');
+    }
+
     // (Trait: Infusing | Infused)
     let regexTraitLinkExt = /\((Trait):\s*([^(:]+?)\s*\|\s*(.+?)\s*\)/ig;
     if(isSheet) {
@@ -246,7 +262,7 @@ function handleSpellLinkExt(match, linkName, innerTextDisplay, innerTextName) {
     for(const [spellID, spellDataStruct] of g_spellMap.entries()){
         let spellName = spellDataStruct.Spell.name.toUpperCase();
         if(innerTextName === spellName && spellDataStruct.Spell.isArchived == 0) {
-            let spellLinkClass = 'itemTextLink'+spellDataStruct.Spell.id;
+            let spellLinkClass = 'spellTextLink'+spellDataStruct.Spell.id;
             let spellLinkText = '<span class="'+spellLinkClass+' has-text-info-lighter cursor-clickable">'+innerTextDisplay+'</span>';
             setTimeout(function() {
                 $('.'+spellLinkClass).off('click');
@@ -264,12 +280,39 @@ function handleSpellLinkExt(match, linkName, innerTextDisplay, innerTextName) {
 }
 
 
+function handleLanguageLink(match, linkName, innerTextName) {
+    return handleLanguageLinkExt(match, linkName, innerTextName, innerTextName);
+}
+
+function handleLanguageLinkExt(match, linkName, innerTextDisplay, innerTextName) {
+    innerTextName = innerTextName.replace(/’/g,'\'').toUpperCase();
+    for(const language of g_allLanguages){
+        let langName = language.name.toUpperCase();
+        if(innerTextName === langName) {
+            let langLinkClass = 'langTextLink'+language.id;
+            let langLinkText = '<span class="'+langLinkClass+' has-text-info-lighter cursor-clickable">'+innerTextDisplay+'</span>';
+            setTimeout(function() {
+                $('.'+langLinkClass).off('click');
+                $('.'+langLinkClass).click(function(){
+                    openQuickView('languageView', {
+                        Language : language,
+                        _prevBackData: {Type: g_QViewLastType, Data: g_QViewLastData},
+                    });
+                });
+            }, 100);
+            return langLinkText;
+        }
+    }
+    return '<span class="has-text-danger">Unknown Language</span>';
+}
+
+
 function handleTraitLink(match, linkName, innerTextName) {
     return handleTraitLinkExt(match, linkName, innerTextName, innerTextName);
 }
 
 function handleTraitLinkExt(match, linkName, innerTextDisplay, innerTextName) {
-    let traitLinkClass = 'itemTextLink'+(innerTextName.replace(/[' ]/g, ''));
+    let traitLinkClass = 'traitTextLink'+(innerTextName.replace(/[' ]/g, ''));
     let traitLinkText = '<span class="'+traitLinkClass+' is-underlined-info cursor-clickable">'+innerTextDisplay+'</span>';
     setTimeout(function() {
         $('.'+traitLinkClass).off('click');

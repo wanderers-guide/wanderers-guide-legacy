@@ -175,6 +175,23 @@ header {
     margin-right: auto;
 }
 
+/* Rarities */
+.button.is-uncommon {
+    background-color: hsl(157, 65%, 38%);
+    border-color: transparent;
+    color: #fff;
+}
+.button.is-rare {
+    background-color: hsl(224, 55%, 42%);
+    border-color: transparent;
+    color: #fff;
+}
+.button.is-unique {
+    background-color: hsl(282, 58%, 38%);
+    border-color: transparent;
+    color: #fff;
+}
+
 
 /* Cursors */
 .cursor-clickable {

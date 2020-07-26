@@ -239,3 +239,8 @@ select {
     margin-top: 0.5rem;
     margin-bottom: 0.5rem;
 }
+
+/* Lore Input */
+.loreInput {
+    width: 130px;
+}

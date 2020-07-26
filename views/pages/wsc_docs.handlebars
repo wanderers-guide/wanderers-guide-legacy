@@ -782,27 +782,16 @@
                         GIVE-LORE=Sailing
                     </div>
                     <p class="pl-3">
-                        - Gives the character Sailing Lore, by adding it to their skill list.
-                    </p>
-                    <p class="pl-3">
-                        - Note: Does not set proficiency in the lore - they will be Untrained by default.
+                        - Gives the character Sailing Lore, by adding it to their skill list, and makes them Trained in that Lore skill.
                     </p>
                 </div>
-                <div class="pt-4 pb-2">
-                    <p class="pl-3">
-                        <strong>Warrior Background Example:</strong>
-                    </p>
-                    <p>
-                        The warrior background makes the character Trained in the Warfare Lore skill. This is two steps, one is to give the character Warfare Lore and the other is to make them Trained in it.
-                    </p>
-                    <p>
-                        You can implement something like this using the following code:
-                    </p>
+                <div class="py-2">
                     <div class="code-block">
-                        GIVE-LORE=Warfare
-                        <br/>
-                        GIVE-PROF-IN=LORE~Warfare:T
+                        GIVE-LORE-CHOOSE
                     </div>
+                    <p class="pl-3">
+                        - Generates an input field. Text input into the field will be saved and give the character a Lore skill with that name. They will become Trained in that Lore skill automatically.
+                    </p>
                 </div>
             </div>
             <div id="code_proficiencies" class="mt-4 isHideable">

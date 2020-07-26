@@ -17,7 +17,7 @@ function processingProf(wscStatement, srcStruct, locationID){
         statementComplete();
     }
 
-}// GIVE-PROF-SKILL-OR-SELECT-OTHER-IN
+}
 
 //////////////////////////////// Give Prof ///////////////////////////////////
 

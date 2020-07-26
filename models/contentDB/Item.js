@@ -23,7 +23,7 @@ const Item = db.define('items', {
   },
   itemType: {
     type: Sequelize.ENUM,
-    values: ['POTION', 'BOMB', 'ROD', 'BOOK', 'ELIXIR', 'POISON', 'COMPANION', 'DRUG', 'ARMOR', 'STORAGE', 'TOOL', 'AMMUNITION', 'OIL', 'SCROLL', 'STAFF', 'STRUCTURE', 'TALISMAN', 'SNARE', 'KIT', 'INGREDIENT', 'INSTRUMENT', 'OTHER', 'WEAPON', 'SHIELD', 'RUNE', 'WAND', 'CURRENCY', 'HAT', 'NECKLACE', 'BRACERS', 'CLOAK', 'RING', 'MASK', 'GLOVES', 'BELT', 'BOOTS', 'EYEPIECE', 'CIRCLET']
+    values: ['POTION', 'ARTIFACT', 'BOMB', 'ROD', 'BOOK', 'ELIXIR', 'POISON', 'COMPANION', 'DRUG', 'ARMOR', 'STORAGE', 'TOOL', 'AMMUNITION', 'OIL', 'SCROLL', 'STAFF', 'STRUCTURE', 'TALISMAN', 'SNARE', 'KIT', 'INGREDIENT', 'INSTRUMENT', 'OTHER', 'WEAPON', 'SHIELD', 'RUNE', 'WAND', 'CURRENCY', 'HAT', 'NECKLACE', 'BRACERS', 'CLOAK', 'RING', 'MASK', 'GLOVES', 'BELT', 'BOOTS', 'EYEPIECE', 'CIRCLET']
   },
   craftRequirements: {
     type: Sequelize.STRING

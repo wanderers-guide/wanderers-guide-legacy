@@ -3,6 +3,7 @@
 */
 
 function openLanguageQuickview(data) {
+    addBackFunctionality(data);
 
     $('#quickViewTitle').html(data.Language.name);
     let qContent = $('#quickViewContent');

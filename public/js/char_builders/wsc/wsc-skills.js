@@ -33,9 +33,11 @@ function giveSkill(srcStruct, locationID, profType){
     let selectIncreaseID = "selectIncrease"+locationID+"-"+srcStruct.sourceCodeSNum;
     let selectIncreaseControlShellClass = selectIncreaseID+'ControlShell';
     let increaseDescriptionID = "selectIncreaseDescription"+locationID+"-"+srcStruct.sourceCodeSNum;
+    let increaseCodeID = "selectIncreaseCode"+locationID+"-"+srcStruct.sourceCodeSNum;
 
     $('#'+locationID).append('<div class="field is-grouped is-grouped-centered is-marginless mt-1"><div class="select '+selectIncreaseControlShellClass+'"><select id="'+selectIncreaseID+'" class="selectIncrease"></select></div></div>');
 
+    $('#'+locationID).append('<div id="'+increaseCodeID+'" class=""></div>');
     $('#'+locationID).append('<div id="'+increaseDescriptionID+'" class="pb-1"></div>');
 
     $('#'+selectIncreaseID).append('<option value="chooseDefault">Choose a Skill</option>');
@@ -58,9 +60,18 @@ function giveSkill(srcStruct, locationID, profType){
 
     }
 
+    // Add Lore Option
+    $('#'+selectIncreaseID).append('<hr class="dropdown-divider"></hr>');
+    if(savedSkillData != null && savedSkillData.To == 'addLore') {
+        $('#'+selectIncreaseID).append('<option value="addLore" selected>Add Lore</option>');
+    } else {
+        $('#'+selectIncreaseID).append('<option value="addLore">Add Lore</option>');
+    }
+
     // On increase choice change
     $('#'+selectIncreaseID).change(function() {
-        
+        $('#'+increaseCodeID).html('');
+
         if($(this).val() == "chooseDefault"){
 
             $('.'+selectIncreaseControlShellClass).removeClass("is-danger");
@@ -71,6 +82,20 @@ function giveSkill(srcStruct, locationID, profType){
                 getCharIDFromURL(),
                 {srcStruct, isSkill : true},
                 null);
+
+        } else if($(this).val() == "addLore"){
+
+            $('.'+selectIncreaseControlShellClass).removeClass("is-danger");
+            $('.'+selectIncreaseControlShellClass).removeClass("is-info");
+
+            socket.emit("requestProficiencyChange",
+                getCharIDFromURL(),
+                {srcStruct, isSkill : true},
+                { For : "Skill", To : 'addLore', Prof : profType });
+            processCode(
+                'GIVE-LORE-CHOOSE',
+                srcStruct,
+                increaseCodeID);
 
         } else {
 

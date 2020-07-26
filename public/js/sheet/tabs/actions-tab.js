@@ -234,11 +234,11 @@ function displayAction(featStruct, actionCount, skillMap) {
 
     let actionTagsInnerHTML = '<div class="buttons is-marginless is-right">';
     switch(featStruct.Feat.rarity) {
-        case 'UNCOMMON': actionTagsInnerHTML += '<button class="button is-marginless mr-2 my-1 is-very-small is-primary">Uncommon</button>';
+        case 'UNCOMMON': actionTagsInnerHTML += '<button class="button is-marginless mr-2 my-1 is-very-small is-uncommon">Uncommon</button>';
             break;
-        case 'RARE': actionTagsInnerHTML += '<button class="button is-marginless mr-2 my-1 is-very-small is-success">Rare</button>';
+        case 'RARE': actionTagsInnerHTML += '<button class="button is-marginless mr-2 my-1 is-very-small is-rare">Rare</button>';
             break;
-        case 'UNIQUE': actionTagsInnerHTML += '<button class="button is-marginless mr-2 my-1 is-very-small is-danger">Unique</button>';
+        case 'UNIQUE': actionTagsInnerHTML += '<button class="button is-marginless mr-2 my-1 is-very-small is-unique">Unique</button>';
             break;
         default: break;
     }

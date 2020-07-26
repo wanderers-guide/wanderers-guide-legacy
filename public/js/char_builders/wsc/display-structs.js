@@ -28,11 +28,11 @@ function displayFeat(locationID, feat){
   
     featInnerHTML += '<div class="card-content has-text-left pt-1"><div class="buttons is-marginless">';
     switch(feat.Feat.rarity) {
-      case 'UNCOMMON': featInnerHTML += '<button class="button is-marginless mr-2 mb-1 is-very-small is-primary">Uncommon</button>';
+      case 'UNCOMMON': featInnerHTML += '<button class="button is-marginless mr-2 mb-1 is-very-small is-uncommon">Uncommon</button>';
         break;
-      case 'RARE': featInnerHTML += '<button class="button is-marginless mr-2 mb-1 is-very-small is-success">Rare</button>';
+      case 'RARE': featInnerHTML += '<button class="button is-marginless mr-2 mb-1 is-very-small is-rare">Rare</button>';
         break;
-      case 'UNIQUE': featInnerHTML += '<button class="button is-marginless mr-2 mb-1 is-very-small is-danger">Unique</button>';
+      case 'UNIQUE': featInnerHTML += '<button class="button is-marginless mr-2 mb-1 is-very-small is-unique">Unique</button>';
         break;
       default: break;
     }

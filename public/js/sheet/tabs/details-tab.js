@@ -207,11 +207,11 @@ function displayFeat(featData, featTags, featCount){
 
     let featTagsInnerHTML = '<div class="buttons is-marginless is-right">';
     switch(feat.rarity) {
-        case 'UNCOMMON': featTagsInnerHTML += '<button class="button is-marginless mr-2 my-1 is-very-small is-primary">Uncommon</button>';
+        case 'UNCOMMON': featTagsInnerHTML += '<button class="button is-marginless mr-2 my-1 is-very-small is-uncommon">Uncommon</button>';
             break;
-        case 'RARE': featTagsInnerHTML += '<button class="button is-marginless mr-2 my-1 is-very-small is-success">Rare</button>';
+        case 'RARE': featTagsInnerHTML += '<button class="button is-marginless mr-2 my-1 is-very-small is-rare">Rare</button>';
             break;
-        case 'UNIQUE': featTagsInnerHTML += '<button class="button is-marginless mr-2 my-1 is-very-small is-danger">Unique</button>';
+        case 'UNIQUE': featTagsInnerHTML += '<button class="button is-marginless mr-2 my-1 is-very-small is-unique">Unique</button>';
             break;
         default: break;
     }

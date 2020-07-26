@@ -42,9 +42,11 @@ let g_equippedShieldInvItemID = null;
 
 let g_abilMap = null;
 let g_skillMap = null;
-let g_langArray = null;
 let g_senseArray = null;
 let g_phyFeatArray = null;
+
+let g_langArray = null;
+let g_allLanguages = null;
 
 let g_featMap = null;
 let g_featChoiceArray = null;
@@ -136,10 +138,12 @@ socket.on("returnCharacterSheetInfo", function(charInfo){
 
     g_abilMap = objToMap(charInfo.AbilObject);
     g_skillMap = objToMap(charInfo.SkillObject);
-    g_langArray = charInfo.ChoicesStruct.LangArray;
     g_senseArray = charInfo.ChoicesStruct.SenseArray;
     g_phyFeatArray = charInfo.ChoicesStruct.PhyFeatArray;
 
+    g_langArray = charInfo.ChoicesStruct.LangArray;
+    g_allLanguages = charInfo.AllLanguages;
+    
     g_specializationStruct = charInfo.SpecializeStruct;
     g_weaponFamiliaritiesArray = charInfo.WeaponFamiliarities;
 
@@ -1367,7 +1371,7 @@ function determineArmor(dexMod, strScore) {
             processSheetCode(armorStruct.InvItem.code, armorStruct.InvItem.name);
         }
 
-        let profData = g_armorProfMap.get(armorStruct.Item.Item.id);
+        let profData = g_armorProfMap.get(armorStruct.Item.ArmorData.profName);
 
         let profNumUps = null;
         if(profData != null){
@@ -1506,7 +1510,7 @@ function determineArmor(dexMod, strScore) {
 
     } else {
 
-        let profData = g_armorProfMap.get(31); // No Armor Hidden Item ID
+        let profData = g_armorProfMap.get('No Armor'); // Hardcoded - No Armor Hidden Prof Name
 
         let profNumUps = null;
         if(profData != null){

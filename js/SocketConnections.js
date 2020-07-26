@@ -870,18 +870,24 @@ module.exports = class SocketConnections {
     // Socket.IO Connections
     io.on('connection', function(socket){
 
-      socket.on('requestLoreChange', function(charID, srcStruct, loreName){
+      socket.on('requestLoreChange', function(charID, srcStruct, loreName, inputPacket=null){
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
           if(ownsChar){
             if(loreName == null){
               CharDataMapping.deleteData(charID, 'loreCategories', srcStruct)
               .then((result) => {
-                socket.emit('returnLoreChange');
+                CharDataMapping.deleteData(charID, 'proficiencies', srcStruct)
+                .then((result) => {
+                  socket.emit('returnLoreChange', srcStruct, loreName, inputPacket);
+                });
               });
             } else {
               CharDataMapping.setData(charID, 'loreCategories', srcStruct, loreName)
               .then((result) => {
-                socket.emit('returnLoreChange');
+                CharDataMappingExt.setDataProficiencies(charID, srcStruct, 'Skill', loreName+'_LORE', 'T')
+                .then((result) => {
+                  socket.emit('returnLoreChange', srcStruct, loreName, inputPacket);
+                });
               });
             }
           } else {

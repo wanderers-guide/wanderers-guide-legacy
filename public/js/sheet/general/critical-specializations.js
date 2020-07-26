@@ -105,7 +105,7 @@ function hasArmorSpecialization(item){
         } else if(armorCriticalData.value.startsWith('PROF~')){
             let profNumUps = profToNumUp(armorCriticalData.value.replace(/PROF\~/g,''));
 
-            let profData = g_armorProfMap.get(item.id);
+            let profData = g_armorProfMap.get(item.ArmorData.profName);
             if(profData != null){
                 let itemProfNumUps = profData.NumUps;
                 if(itemProfNumUps >= profNumUps){
