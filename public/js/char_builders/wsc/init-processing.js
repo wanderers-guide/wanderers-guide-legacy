@@ -297,10 +297,26 @@ socket.on("returnWSCUpdateChoices", function(updateType, updateData){
     });
 });
 
-socket.on("returnWSCUpdateSkills", function(skillObject){
+socket.on("returnWSCUpdateSkills", function(skillObject, refreshLists){
     let skillMap = objToMap(skillObject);
     //if(processingDebug) {console.log("Updating skillMap...");}
     wscSkillMap = skillMap;
+
+    if(refreshLists){
+        // Update Skill Lists
+        $('.selectIncrease').each(function(){
+            let selectIncreaseID = $(this).attr('id');
+            let srcStruct = {
+                sourceType: $(this).attr('data-sourceType'),
+                sourceLevel: $(this).attr('data-sourceLevel'),
+                sourceCode: $(this).attr('data-sourceCode'),
+                sourceCodeSNum: $(this).attr('data-sourceCodeSNum'),
+            };
+            let profType = $(this).attr('data-profType');
+            populateSkillLists(selectIncreaseID, srcStruct, profType);
+        });
+    }
+
 });
 
 socket.on("returnWSCUpdateFeats", function(featObject){

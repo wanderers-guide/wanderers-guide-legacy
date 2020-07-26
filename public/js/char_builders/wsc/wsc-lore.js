@@ -41,7 +41,7 @@ function giveLoreChoose(srcStruct, locationID){
                 getCharIDFromURL(),
                 srcStruct,
                 null,
-                { ControlShellID: inputLoreControlShell });
+                { ControlShellID: inputLoreControlShell});
 
         } else {
 
@@ -54,7 +54,7 @@ function giveLoreChoose(srcStruct, locationID){
                     getCharIDFromURL(),
                     srcStruct,
                     $(this).val().toUpperCase(),
-                    { ControlShellID: inputLoreControlShell });
+                    { ControlShellID: inputLoreControlShell});
 
             } else {
                 $(this).addClass("is-danger");
@@ -85,12 +85,14 @@ function giveLore(srcStruct, loreName){
 }
 
 socket.on("returnLoreChange", function(srcStruct, loreName, inputPacket){
+
     if(inputPacket != null){
         $('#'+inputPacket.ControlShellID).removeClass("is-loading");
     } else {
         statementComplete();
     }
-
+    
     skillsUpdateWSCChoiceStruct(srcStruct, loreName+'_LORE', 'T');
+    socket.emit("requestWSCUpdateSkills", getCharIDFromURL(), true);
 
 });

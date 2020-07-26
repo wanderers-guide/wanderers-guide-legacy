@@ -1317,7 +1317,7 @@ module.exports = class SocketConnections {
                 CharGathering.getAllLanguages(charID).then((langsObject) => {
                   CharGathering.getAllSpells(charID).then((spellMap) => {
                     CharGathering.getAllArchetypes(charID).then((archetypesArray) => {
-                      socket.emit('returnWSCUpdateSkills', skillsObject);
+                      socket.emit('returnWSCUpdateSkills', skillsObject, false);
                       socket.emit('returnWSCUpdateFeats', featsObject);
                       socket.emit('returnWSCUpdateLangs', langsObject);
                       socket.emit('returnWSCUpdateSpells', mapToObj(spellMap));
@@ -1356,11 +1356,11 @@ module.exports = class SocketConnections {
 
       
     
-      socket.on('requestWSCUpdateSkills', function(charID){
+      socket.on('requestWSCUpdateSkills', function(charID, refreshLists=false){
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
           if(ownsChar){
             CharGathering.getAllSkills(charID).then((skillsObject) => {
-              socket.emit('returnWSCUpdateSkills', skillsObject);
+              socket.emit('returnWSCUpdateSkills', skillsObject, refreshLists);
             });
           }
         });

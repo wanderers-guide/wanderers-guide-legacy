@@ -35,38 +35,12 @@ function giveSkill(srcStruct, locationID, profType){
     let increaseDescriptionID = "selectIncreaseDescription"+locationID+"-"+srcStruct.sourceCodeSNum;
     let increaseCodeID = "selectIncreaseCode"+locationID+"-"+srcStruct.sourceCodeSNum;
 
-    $('#'+locationID).append('<div class="field is-grouped is-grouped-centered is-marginless mt-1"><div class="select '+selectIncreaseControlShellClass+'"><select id="'+selectIncreaseID+'" class="selectIncrease"></select></div></div>');
+    $('#'+locationID).append('<div class="field is-grouped is-grouped-centered is-marginless mt-1"><div class="select '+selectIncreaseControlShellClass+'"><select id="'+selectIncreaseID+'" class="selectIncrease" data-profType="'+profType+'" data-sourceType="'+srcStruct.sourceType+'" data-sourceLevel="'+srcStruct.sourceLevel+'" data-sourceCode="'+srcStruct.sourceCode+'" data-sourceCodeSNum="'+srcStruct.sourceCodeSNum+'"></select></div></div>');
 
     $('#'+locationID).append('<div id="'+increaseCodeID+'" class=""></div>');
     $('#'+locationID).append('<div id="'+increaseDescriptionID+'" class="pb-1"></div>');
-
-    $('#'+selectIncreaseID).append('<option value="chooseDefault">Choose a Skill</option>');
-    $('#'+selectIncreaseID).append('<hr class="dropdown-divider"></hr>');
-
-    // Set saved skill choices
-    let savedSkillData = wscChoiceStruct.ProfArray.find(prof => {
-        return hasSameSrc(prof, srcStruct);
-    });
-
-    for(const [skillName, skillData] of wscSkillMap.entries()){
-
-        if(savedSkillData != null && savedSkillData.To == skillName) {
-            $('#'+selectIncreaseID).append('<option value="'+skillName+'" selected>'+skillName+'</option>');
-        } else {
-            if(skillData.NumUps < profToNumUp(profType)) {
-                $('#'+selectIncreaseID).append('<option value="'+skillName+'">'+skillName+'</option>');
-            }
-        }
-
-    }
-
-    // Add Lore Option
-    $('#'+selectIncreaseID).append('<hr class="dropdown-divider"></hr>');
-    if(savedSkillData != null && savedSkillData.To == 'addLore') {
-        $('#'+selectIncreaseID).append('<option value="addLore" selected>Add Lore</option>');
-    } else {
-        $('#'+selectIncreaseID).append('<option value="addLore">Add Lore</option>');
-    }
+    
+    populateSkillLists(selectIncreaseID, srcStruct, profType);
 
     // On increase choice change
     $('#'+selectIncreaseID).change(function() {
@@ -76,6 +50,10 @@ function giveSkill(srcStruct, locationID, profType){
 
             $('.'+selectIncreaseControlShellClass).removeClass("is-danger");
             $('.'+selectIncreaseControlShellClass).addClass("is-info");
+
+            if(profType === 'UP') {
+                $('#'+increaseDescriptionID).html('');
+            }
 
             skillsUpdateWSCChoiceStruct(srcStruct, null, null);
             socket.emit("requestProficiencyChange",
@@ -88,6 +66,11 @@ function giveSkill(srcStruct, locationID, profType){
             $('.'+selectIncreaseControlShellClass).removeClass("is-danger");
             $('.'+selectIncreaseControlShellClass).removeClass("is-info");
 
+            if(profType === 'UP') {
+                $('#'+increaseDescriptionID).html('');
+            }
+
+            skillsUpdateWSCChoiceStruct(srcStruct, 'addLore', profType);
             socket.emit("requestProficiencyChange",
                 getCharIDFromURL(),
                 {srcStruct, isSkill : true},
@@ -120,6 +103,9 @@ function giveSkill(srcStruct, locationID, profType){
                 $('.'+selectIncreaseControlShellClass).removeClass("is-danger");
 
                 let skillName = $(this).val();
+                if(skillName.includes(' Lore')){
+                    skillName = skillName.toUpperCase().replace(/ /g,'_');
+                }
 
                 skillsUpdateWSCChoiceStruct(srcStruct, skillName, profType);
                 socket.emit("requestProficiencyChange",
@@ -154,8 +140,10 @@ function isAbleToSelectIncrease(numUps, charLevel){
 
 function skillsUpdateWSCChoiceStruct(srcStruct, profTo, profType){
 
+    let profArray = wscChoiceStruct.ProfArray;
+
     let foundProfData = false;
-    for(let profData of wscChoiceStruct.ProfArray){
+    for(let profData of profArray){
         if(hasSameSrc(profData, srcStruct)){
             foundProfData = true;
             if(profTo != null && profType != null){
@@ -176,7 +164,42 @@ function skillsUpdateWSCChoiceStruct(srcStruct, profTo, profType){
         profData.For = 'Skill';
         profData.To = profTo;
         profData.Prof = profType;
-        wscChoiceStruct.ProfArray.push(profData);
+        profArray.push(profData);
+    }
+
+    wscChoiceStruct.ProfArray = profArray;
+
+}
+
+function populateSkillLists(selectIncreaseID, srcStruct, profType){
+
+    $('#'+selectIncreaseID).html('');
+    $('#'+selectIncreaseID).append('<option value="chooseDefault">Choose a Skill</option>');
+    $('#'+selectIncreaseID).append('<hr class="dropdown-divider"></hr>');
+
+    // Set saved skill choices
+    let savedSkillData = wscChoiceStruct.ProfArray.find(prof => {
+        return hasSameSrc(prof, srcStruct);
+    });
+
+    for(const [skillName, skillData] of wscSkillMap.entries()){
+
+        if(savedSkillData != null && savedSkillData.To == skillName) {
+            $('#'+selectIncreaseID).append('<option value="'+skillName+'" selected>'+skillName+'</option>');
+        } else {
+            if(skillData.NumUps < profToNumUp(profType)) {
+                $('#'+selectIncreaseID).append('<option value="'+skillName+'">'+skillName+'</option>');
+            }
+        }
+
+    }
+
+    // Add Lore Option
+    $('#'+selectIncreaseID).append('<hr class="dropdown-divider"></hr>');
+    if(savedSkillData != null && savedSkillData.To == 'addLore') {
+        $('#'+selectIncreaseID).append('<option value="addLore" selected>Add Lore</option>');
+    } else {
+        $('#'+selectIncreaseID).append('<option value="addLore">Add Lore</option>');
     }
 
 }

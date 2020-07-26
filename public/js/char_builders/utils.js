@@ -27,7 +27,7 @@ function cloneObj(obj){
 }
 
 function hasSameSrc(dataStruct, srcStruct){
-  return (dataStruct.sourceType === srcStruct.sourceType && dataStruct.sourceLevel === srcStruct.sourceLevel && dataStruct.sourceCode === srcStruct.sourceCode && dataStruct.sourceCodeSNum === srcStruct.sourceCodeSNum);
+  return (dataStruct.sourceType == srcStruct.sourceType && dataStruct.sourceLevel == srcStruct.sourceLevel && dataStruct.sourceCode == srcStruct.sourceCode && dataStruct.sourceCodeSNum == srcStruct.sourceCodeSNum);
 }
 
 function capitalizeWord(word){
