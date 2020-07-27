@@ -5,6 +5,8 @@
 function openFeatQuickview(data) {
     addBackFunctionality(data);
 
+    console.log('got herrr here');
+
     let featNameInnerHTML = '<span>'+data.Feat.name+'</span>';
     switch(data.Feat.actions) {
         case 'FREE_ACTION': featNameInnerHTML += '<span class="px-2 pf-icon">[free-action]</span>'; break;

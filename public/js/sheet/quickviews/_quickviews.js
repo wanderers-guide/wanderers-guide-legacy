@@ -49,7 +49,7 @@ function openQuickView(type, data) {
         closeQuickView();
     });
 
-    if(data._prevBackData == null){
+    if(data._prevBackData == null || !$('#quickviewDefault').hasClass('is-active')){
         $('#quickviewDefault').addClass('quickview-auto-close-protection');
         $('#quickviewDefault').addClass('is-active');
     }
