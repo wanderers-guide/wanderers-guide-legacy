@@ -71,6 +71,9 @@ const patreonOAuth = patreon.oauth;
 const campaignID = '4805226';
 const myUserID = '32932027';
 
+const supporterTierID = '5612688';
+const memberTierID = '5628112';
+
 let patreonOAuthClient = patreonOAuth(process.env.PATREON_CLIENT_ID, process.env.PATREON_CLIENT_SECRET);
 let redirectURL;
 if (process.env.PRODUCTION == 'true'){
@@ -96,8 +99,16 @@ router.get('/patreon/redirect', (req, res) => {
     }).then(({ store }) => {
 
         console.log('~~~~~~~~');
+
+        // Campaign Data //
+        //let campaignData = store.findAll('campaign').map(campaign => campaign.serialize());
+        /* Displays all current tiers and their IDs */
+        //console.log(campaignData[0].data.relationships.rewards.data);
+
+        // User Data //
         let userData = store.findAll('user').map(user => user.serialize());
         console.log(userData);
+
         let uData = findPatronData(userData);
         if(uData == null){
             console.error('Failed to find user data!');
@@ -115,20 +126,27 @@ router.get('/patreon/redirect', (req, res) => {
         let patreonEmail = uData.attributes.email;
         console.log(patreonEmail);
 
-        console.log(uData.relationships);
-        let isSupporter;
-        if(uData.relationships.pledges != null){
-            let pledgesData = uData.relationships.pledges.data;
-            isSupporter = (pledgesData.length > 0);
-            console.log(pledgesData); // Pledge data has the tier IDs
-        } else {
-            isSupporter = false;
-        }
+        // Pledge Data //
+        let pledgeData = store.findAll('pledge').map(pledge => pledge.serialize());
+        console.log(pledgeData);
+        console.log(pledgeData[0].data.relationships.reward);
+
+        let pledgeTier = findPatronTier(pledgeData);
 
         let updateValues;
-        if(isSupporter){
+        if(pledgeTier === 'MEMBER'){
             updateValues = {
                 isPatreonSupporter: 1,
+                isPatreonMember: 1,
+                patreonUserID: patreonUserID,
+                patreonFullName: patreonName,
+                patreonEmail: patreonEmail,
+                patreonAccessToken: token
+            };
+        } else if(pledgeTier === 'SUPPORTER'){
+            updateValues = {
+                isPatreonSupporter: 1,
+                isPatreonMember: 0,
                 patreonUserID: patreonUserID,
                 patreonFullName: patreonName,
                 patreonEmail: patreonEmail,
@@ -156,33 +174,9 @@ router.get('/patreon/redirect', (req, res) => {
 
     }).catch((err) => {
         console.error(err);
-        res.redirect('/');
+        res.redirect('/profile');
         return;
     });
-
-    /*
-    return patreonOAuthClient.getTokens(code, redirectURL)
-    .then(({ access_token }) => {
-        token = access_token;
-        const apiClient = patreonAPI(token);
-        return apiClient('/campaigns/'+campaignID+'/pledges');
-    }).then(({ store }) => {
-        //console.log(store);
-        //console.log(store.findAll('user').map(user => user.serialize()));
-    }).catch((err) => {
-        console.log(err);
-        res.redirect('/');
-    });*/
-
-    /* Patreon API Docs:
-        https://docs.patreon.com/#step-3-handling-oauth-redirect
-        https://github.com/Patreon/patreon-js
-
-
-        Patreon Tier IDs:
-        [ { type: 'pledge', id: '46219432' } ] <- Supporter
-        [ { type: 'pledge', id: '46234666' } ] <- Member
-    */
 
 });
 
@@ -195,5 +189,19 @@ function findPatronData(userData){
     return null;
 }
 
+function findPatronTier(pledgeData){
+    for(let pData of pledgeData){
+        if(pData.data.type == 'pledge' &&
+            pData.data.relationships != null &&
+            pData.data.relationships.reward != null){
+            if(pData.data.relationships.reward.data.id == supporterTierID){
+                return 'SUPPORTER';
+            } else if(pData.data.relationships.reward.data.id == memberTierID){
+                return 'MEMBER';
+            }
+        }
+    }
+    return 'NONE';
+}
 
 module.exports = router;
