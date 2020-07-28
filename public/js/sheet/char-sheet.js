@@ -12,6 +12,7 @@ let gOption_hasProfWithoutLevel;
 /* Sheet-State Options */
 let gState_hasFinesseMeleeUseDexDamage;
 let gState_addLevelToUntrainedWeaponAttack;
+let gState_displayCompanionTab;
 /* ~~~~~~~~~~~~~~~~~~~ */
 
 let g_character = null;
@@ -55,6 +56,8 @@ let g_spellMap = null;
 let g_spellSlotsMap = null;
 let g_spellBookArray = null;
 let g_innateSpellArray = null;
+
+let g_companionData = null;
 
 let g_resistAndVulners = null;
 
@@ -213,6 +216,8 @@ socket.on("returnCharacterSheetInfo", function(charInfo){
 
     g_resistAndVulners = charInfo.ResistAndVulners;
 
+    g_companionData = charInfo.CompanionData;
+
     g_notesFields = charInfo.NotesFields;
 
     initExpressionProcessor({
@@ -239,6 +244,7 @@ function loadCharSheet(){
     // Init Sheet-States //
     gState_hasFinesseMeleeUseDexDamage = false;
     gState_addLevelToUntrainedWeaponAttack = false;
+    gState_displayCompanionTab = false;
 
     // Init Stats (set to new Map) //
     initStats();
@@ -1157,7 +1163,7 @@ function displayInformation() {
             Background : g_background,
             PhyFeats : g_phyFeatArray,
             ClassDetails : g_classDetails,
-            Ancestry : g_ancestry,
+            Ancestry : g_ancestry
         });
     });
 

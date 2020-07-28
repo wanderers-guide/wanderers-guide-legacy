@@ -104,6 +104,8 @@ function openQuickView(type, data) {
         openConditionQuickview(data);
     } else if(type == 'acView'){
         openACQuickview(data);
+    } else if(type == 'animalCompanionView'){
+        openAnimalCompQuickview(data);
     }
 
 }
@@ -117,7 +119,7 @@ function closeQuickView() {
 
 function addBackFunctionality(quickViewData){
 
-    if(quickViewData._prevBackData != null){
+    if(quickViewData._prevBackData != null && quickViewData._prevBackData.Data != null){
         $('#quickViewTitleClose').html('<span id="quickViewBack" class="icon has-text-light cursor-clickable" style="font-size:0.8em;"><i class="fas fa-arrow-left"></i></i></span>');
         $('#quickViewBack').click(function(){
             openQuickView(quickViewData._prevBackData.Type, quickViewData._prevBackData.Data);

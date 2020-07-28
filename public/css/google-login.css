@@ -19,6 +19,10 @@
     transition-timing-function: ease-in-out;
     padding: 0;
   }
+
+  .google-button__text {
+    color: #737373;
+  }
   
   .google-button.active {
     background-color: #e5e5e5;

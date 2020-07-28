@@ -8,8 +8,8 @@ function openLanguageQuickview(data) {
     $('#quickViewTitle').html(data.Language.name);
     let qContent = $('#quickViewContent');
 
-    qContent.append('<p class="negative-indent"><strong>Speakers:</strong> '+data.Language.speakers+'</p>');
-    qContent.append('<p class="negative-indent"><strong>Script:</strong> '+data.Language.script+'</p>');
+    qContent.append('<p class="negative-indent"><strong>Speakers</strong> '+data.Language.speakers+'</p>');
+    qContent.append('<p class="negative-indent"><strong>Script</strong> '+data.Language.script+'</p>');
     qContent.append('<hr class="m-2">');
     qContent.append(processText(data.Language.description, true, true, 'MEDIUM'));
 

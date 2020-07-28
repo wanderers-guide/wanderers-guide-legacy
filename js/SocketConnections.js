@@ -447,6 +447,46 @@ module.exports = class SocketConnections {
     });
 
   }
+
+
+  static sheetCompanions(io) {
+
+    // Socket.IO Connections
+    io.on('connection', function(socket){
+
+      socket.on('requestAddAnimalCompanion', function(charID, animalCompID){
+        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+          if(ownsChar){
+            CharSaving.addAnimalCompanion(charID, animalCompID).then((charAnimalComp) => {
+              socket.emit('returnAddAnimalCompanion', charAnimalComp);
+            });
+          }
+        });
+      });
+
+      socket.on('requestUpdateAnimalCompanion', function(charID, charAnimalCompID, updateValues){
+        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+          if(ownsChar){
+            CharSaving.updateAnimalCompanion(charID, charAnimalCompID, updateValues).then(() => {
+              socket.emit('returnUpdateAnimalCompanion');
+            });
+          }
+        });
+      });
+
+      socket.on('requestRemoveAnimalCompanion', function(charID, charAnimalCompID){
+        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+          if(ownsChar){
+            CharSaving.deleteAnimalCompanion(charID, charAnimalCompID).then(() => {
+              socket.emit('returnRemoveAnimalCompanion', charAnimalCompID);
+            });
+          }
+        });
+      });
+
+    });
+
+  }
   
 
   static builderBasics(io) {

@@ -60,6 +60,10 @@ function processText(text, isSheet, isJustified = false, size = 'MEDIUM', indexC
     let regexBulletList = /[\n]?\*(.+?)\:/g;
     text = text.replace(regexBulletList, '</p><p class="pl-2 pr-1 negative-indent has-text-left '+_s+'">&#x2022;<strong>$1</strong>');
 
+    // :> Some Text
+    let regexNonBulletSpacedList = /[\n]?\:\> /g;
+    text = text.replace(regexNonBulletSpacedList, '</p><p class="pl-4 pr-1 has-text-left '+_s+'">');
+
     // \n -> Newline
     text = text.replace(/\n/g, '</p><p class="p-1 pl-2 '+_j+_s+'">');
 

@@ -127,11 +127,8 @@ router.get('/patreon/redirect', (req, res) => {
 
         let updateValues;
         if(isSupporter){
-            let isMember = false; //(pData.type === 'pledge' && pData.id === '46234666');
-            let isMemberBinary = (isMember) ? 1 : 0;
             updateValues = {
                 isPatreonSupporter: 1,
-                isPatreonMember: isMemberBinary,
                 patreonUserID: patreonUserID,
                 patreonFullName: patreonName,
                 patreonEmail: patreonEmail,

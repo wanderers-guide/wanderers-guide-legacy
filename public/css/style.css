@@ -68,7 +68,8 @@ h6 {
     color: rgb(189, 189, 189);
 }
 
-p {
+p,
+.is-p {
     margin: 0;
     padding: 0;
     font-size: 15px;
@@ -77,6 +78,11 @@ p {
     color: rgb(172, 172, 172);
     font-family: 'Nunito Sans', sans-serif;
 }
+
+span {
+    font-family: 'Nunito Sans', sans-serif;
+}
+
 
 ul,
 ol {
@@ -147,6 +153,12 @@ header {
 }
 .is-underlined {
     text-decoration: underline;
+}
+.is-bold-thick {
+    font-weight: 900;
+}
+.is-bold {
+    font-weight: 675;
 }
 .is-underlined-info {
     text-decoration: underline;

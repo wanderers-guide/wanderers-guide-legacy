@@ -111,7 +111,7 @@
 }
 
 .border-dark-lighter {
-    border-color: hsl(210, 3%, 23%)!important;
+    border-color: #363636!important;/*hsl(210, 3%, 23%)!important;*/
 }
 
 .border-darker {
@@ -310,4 +310,15 @@ hr {
 /* For InvItem Property Runes */
 .select.is-success-dark select {
     border-color: #47885e;
+}
+
+/* Companions */
+.companion-icon {
+    width: 64px!important;
+    height: 64px!important;
+    object-fit: cover!important;
+}
+
+.companion-bonus-offset {
+    padding-right: 0.5rem!important;
 }

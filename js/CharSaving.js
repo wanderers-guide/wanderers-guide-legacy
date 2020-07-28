@@ -11,6 +11,8 @@ const InvItem = require('../models/contentDB/InvItem');
 const InvItemRune = require('../models/contentDB/InvItemRune');
 const CharCondition = require('../models/contentDB/CharCondition');
 const InnateSpellCasting = require('../models/contentDB/InnateSpellCasting');
+const AnimalCompanion = require('../models/contentDB/AnimalCompanion');
+const CharAnimalCompanion = require('../models/contentDB/CharAnimalCompanion');
 
 const CharDataMapping = require('./CharDataMapping');
 const CharDataMappingExt = require('./CharDataMappingExt');
@@ -284,6 +286,55 @@ module.exports = class CharSaving {
         }
 
     }
+
+
+    static addAnimalCompanion(charID, animalCompID) {
+        return AnimalCompanion.findOne({ where: { id: animalCompID } })
+        .then((animalComp) => {
+            return CharAnimalCompanion.create({
+                charID: charID,
+                animalCompanionID: animalComp.id,
+                age: 'YOUNG',
+                specialization: null,
+                name: animalComp.name,
+                description: animalComp.description,
+                imageURL: '',
+                currentHP: -1,
+            }).then((charAnimalComp) => {
+                return charAnimalComp;
+            });
+        });
+    }
+
+    static deleteAnimalCompanion(charID, charAnimalCompID) {
+        return CharAnimalCompanion.destroy({
+            where: {
+                id: charAnimalCompID,
+                charID: charID
+            }
+        }).then((result) => {
+            return;
+        });
+    }
+
+    static updateAnimalCompanion(charID, charAnimalCompID, inUpdateValues) {
+        let updateValues = {
+            name: inUpdateValues.Name,
+            description: inUpdateValues.Description,
+            imageURL: inUpdateValues.ImageURL,
+            currentHP: inUpdateValues.CurrentHealth,
+        };
+        return CharAnimalCompanion.update(updateValues, {
+            where: {
+                id: charAnimalCompID,
+                charID: charID
+            }
+        }).then((result) => {
+            return;
+        });
+    }
+
+
 
     static saveName(charID, name) {
 

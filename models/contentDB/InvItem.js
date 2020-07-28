@@ -30,6 +30,9 @@ const InvItem = db.define('invItems', {
   isShoddy: {
     type: Sequelize.INTEGER
   },
+  isDropped: {
+    type: Sequelize.INTEGER
+  },
   currentHitPoints: {
     type: Sequelize.INTEGER
   },

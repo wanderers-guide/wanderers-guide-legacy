@@ -175,6 +175,14 @@ function processSheetCode(wscCode, sourceName, isTest){
             continue;
         }
 
+        if(wscStatement.toUpperCase() == "DISPLAY-COMPANION-TAB"){
+            if(isTest) {continue;}
+
+            //gState_displayCompanionTab = true;
+
+            continue;
+        }
+
         // Could not identify wsc statement
         success = false;
 
