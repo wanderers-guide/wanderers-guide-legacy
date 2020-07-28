@@ -193,12 +193,6 @@ function displaySpellsAndSlots(spellSlotMap, data){
         $('.castingTypeTitle').removeClass('is-hidden');
     }
 
-    if(!g_hasCastingSpontaneous){
-        $('.spellSponListing').addClass('is-hidden');
-    } else {
-        $('.spellSponListing').removeClass('is-hidden');
-    }
-
 }
 
 
@@ -435,7 +429,7 @@ function displaySpellsInLevelSpontaneous(level, slotArray, data, spellsSearchInp
 
         }
     }
-    if(!didDisplaySpellAtLevel){
+    if(!didDisplaySpellAtLevel && hasSlotsAtLevel){
         let spellSponListingID = 'spellSponListingNoSpellsL'+level;
         $('#spellsCoreContent').append('<div id="'+spellSponListingID+'" class="'+spellListingSponClass+' spellSponListing columns is-mobile is-marginless"><div class="column is-5 is-paddingless"><p class="has-text-left pl-4 has-text-grey-light">-</p></div><div class="column is-1 is-paddingless"><p class="text-center has-text-grey-light">-</p></div><div class="column is-1 is-paddingless"><p class="text-center has-text-grey-light">-</p></div><div class="column is-5 is-paddingless"><p class="text-center has-text-grey-light">-</p></div></div>');
         $('#'+spellSponListingID).mouseenter(function(){

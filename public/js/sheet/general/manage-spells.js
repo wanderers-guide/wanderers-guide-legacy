@@ -22,7 +22,7 @@ function openManageSpellsModal(data){
     for(let spellBook of g_spellBookArray) {
         if(spellBook.IsFocus) {continue;}
         let spellSRCTabID = 'spellSRCTab'+spellBook.SpellSRC.replace(/\s/g, "_");
-        $('#manageSpellsTabs').append('<li id="'+spellSRCTabID+'" class="spellSRCTabs"><a>'+capitalizeWord(spellBook.SpellSRC)+'</a></li>');
+        $('#manageSpellsTabs').append('<li id="'+spellSRCTabID+'" class="spellSRCTabs"><a>'+capitalizeWords(spellBook.SpellSRC)+'</a></li>');
 
         $('#'+spellSRCTabID).click(function(){
             $('.spellSRCTabs').removeClass('is-active');
