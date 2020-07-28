@@ -171,6 +171,7 @@ function openSpellQuickview(data){
         } else if(sheetSpellType === 'INNATE') {
             spellTradition = data.SheetData.InnateSpell.SpellTradition;
             spellKeyAbility = data.SheetData.InnateSpell.KeyAbility;
+            spellUsed = (data.SheetData.InnateSpell.TimesCast == data.SheetData.InnateSpell.TimesPerDay);
         }
         
         if(data.SheetData.Slot != null){
@@ -222,7 +223,7 @@ function openSpellQuickview(data){
         spellAttack = signNumber(spellAttack);
         spellDC += 10;
 
-        if(sheetSpellType === 'CORE' || sheetSpellType === 'FOCUS') {
+        if(sheetSpellType === 'CORE' || sheetSpellType === 'FOCUS' || sheetSpellType === 'INNATE') {
             if(spellUsed){
                 qContent.append('<button id="spellUnCastSpellBtn" class="button is-small is-info is-rounded is-outlined is-fullwidth mb-2"><span>Recover</span></button>');
             } else {
@@ -249,8 +250,8 @@ function openSpellQuickview(data){
                         spellSlotsArray = updateSlotUsed(spellSlotsArray, data.SheetData.Slot.slotID, true);
                     }
                     g_spellSlotsMap.set(spellSRC, spellSlotsArray);
-                    closeQuickView();
                     prepDisplayOfSpellsAndSlots();
+                    closeQuickView();
                 }
             });
     
@@ -264,8 +265,8 @@ function openSpellQuickview(data){
                     spellSlotsArray = updateSlotUsed(spellSlotsArray, data.SheetData.Slot.slotID, false);
                 }
                 g_spellSlotsMap.set(spellSRC, spellSlotsArray);
-                closeQuickView();
                 prepDisplayOfSpellsAndSlots();
+                closeQuickView();
             });
         }
 
@@ -279,6 +280,36 @@ function openSpellQuickview(data){
     
             $('#spellUnCastSpellBtn').click(function(){
                 displayFocusCastingsSet('REMOVE');
+                closeQuickView();
+            });
+        }
+
+        if(sheetSpellType === 'INNATE') {
+            $('#spellCastSpellBtn').click(function(){
+                if(spellDataStruct.Spell.level == 0) {
+                    closeQuickView();
+                } else {
+                    let innateSpellIndex = g_innateSpellArray.indexOf(data.SheetData.InnateSpell);
+                    let newTimesCast = data.SheetData.InnateSpell.TimesCast+1;
+                    socket.emit("requestInnateSpellCastingUpdate",
+                        cloneObj(data.SheetData.InnateSpell),
+                        newTimesCast);
+                        data.SheetData.InnateSpell.TimesCast = newTimesCast;
+                    g_innateSpellArray[innateSpellIndex] = data.SheetData.InnateSpell;
+                    displaySpellsInnate();
+                    closeQuickView();
+                }
+            });
+    
+            $('#spellUnCastSpellBtn').click(function(){
+                let innateSpellIndex = g_innateSpellArray.indexOf(data.SheetData.InnateSpell);
+                let newTimesCast = data.SheetData.InnateSpell.TimesCast-1;
+                socket.emit("requestInnateSpellCastingUpdate",
+                    cloneObj(data.SheetData.InnateSpell),
+                    newTimesCast);
+                    data.SheetData.InnateSpell.TimesCast = newTimesCast;
+                g_innateSpellArray[innateSpellIndex] = data.SheetData.InnateSpell;
+                displaySpellsInnate();
                 closeQuickView();
             });
         }

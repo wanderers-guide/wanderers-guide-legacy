@@ -178,7 +178,7 @@ function processSheetCode(wscCode, sourceName, isTest){
         if(wscStatement.toUpperCase() == "DISPLAY-COMPANION-TAB"){
             if(isTest) {continue;}
 
-            //gState_displayCompanionTab = true;
+            gState_displayCompanionTab = true;
 
             continue;
         }

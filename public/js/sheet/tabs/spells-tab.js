@@ -150,27 +150,8 @@ function displaySpellsAndSlots(spellSlotMap, data){
     g_hasCastingPrepared = false;
     g_hasCastingSpontaneous = false;
 
-    // Spontaneous //
-    $('#spellsCoreContent').append('<p class="castingTypeTitle is-hidden is-size-3 is-family-secondary has-text-grey-light">Spontaneous</p>');
-    if(spellsSearchInput != null){
-        if(spellsSearchInput === 'cantrip' || spellsSearchInput === 'cantrips') {
-            displaySpellsInLevelSpontaneous(0, spellSlotMap.get(0), data, null);
-            return;
-        } else {
-            const foundStruct = spellsSearchInput.match(/^(level|lvl) ([0-9]|10)\s*$/);
-            if(foundStruct != null){
-                let level = parseInt(foundStruct[2]);
-                displaySpellsInLevelSpontaneous(level, spellSlotMap.get(level), data, null);
-                return;
-            }
-        }
-    }
-    for(const [level, slotArray] of spellSlotMap.entries()){
-        displaySpellsInLevelSpontaneous(level, slotArray, data, spellsSearchInput);
-    }
-
     // Prepared //
-    $('#spellsCoreContent').append('<p class="castingTypeTitle is-hidden is-size-3 mt-3 pr-4 is-family-secondary has-text-grey-light">Prepared</p>');
+    $('#spellsCoreContent').append('<p class="castingTypeTitle is-hidden is-size-3 is-family-secondary has-text-grey-light">Prepared</p>');
     if(spellsSearchInput != null){
         if(spellsSearchInput === 'cantrip' || spellsSearchInput === 'cantrips') {
             displaySpellsInLevelPrepared(0, spellSlotMap.get(0), data, null);
@@ -186,6 +167,25 @@ function displaySpellsAndSlots(spellSlotMap, data){
     }
     for(const [level, slotArray] of spellSlotMap.entries()){
         displaySpellsInLevelPrepared(level, slotArray, data, spellsSearchInput);
+    }
+
+    // Spontaneous //
+    $('#spellsCoreContent').append('<p class="castingTypeTitle is-hidden is-size-3 mt-3 is-family-secondary has-text-grey-light">Spontaneous</p>');
+    if(spellsSearchInput != null){
+        if(spellsSearchInput === 'cantrip' || spellsSearchInput === 'cantrips') {
+            displaySpellsInLevelSpontaneous(0, spellSlotMap.get(0), data, null);
+            return;
+        } else {
+            const foundStruct = spellsSearchInput.match(/^(level|lvl) ([0-9]|10)\s*$/);
+            if(foundStruct != null){
+                let level = parseInt(foundStruct[2]);
+                displaySpellsInLevelSpontaneous(level, spellSlotMap.get(level), data, null);
+                return;
+            }
+        }
+    }
+    for(const [level, slotArray] of spellSlotMap.entries()){
+        displaySpellsInLevelSpontaneous(level, slotArray, data, spellsSearchInput);
     }
 
     // Distinguish prepared spells from spontaneous if the character has both
@@ -324,7 +324,9 @@ function displaySpellsInLevelSpontaneous(level, slotArray, data, spellsSearchInp
         }
     );
 
+    // If a level has no spell slots, don't display anything for that level
     let hasSlotsAtLevel = (filteredSlotArray.length > 0);
+    if(!hasSlotsAtLevel) {return;}
 
     let sectionName = (level == 0) ? 'Cantrips' : 'Level '+level;
     let spellListSectionID = 'spontaneousSpellTabListSectionByLevel'+level;
@@ -429,7 +431,9 @@ function displaySpellsInLevelSpontaneous(level, slotArray, data, spellsSearchInp
 
         }
     }
-    if(!didDisplaySpellAtLevel && hasSlotsAtLevel){
+
+    // Display Empty Slot Entry, If No Spells at Level //
+    if(!didDisplaySpellAtLevel){
         let spellSponListingID = 'spellSponListingNoSpellsL'+level;
         $('#spellsCoreContent').append('<div id="'+spellSponListingID+'" class="'+spellListingSponClass+' spellSponListing columns is-mobile is-marginless"><div class="column is-5 is-paddingless"><p class="has-text-left pl-4 has-text-grey-light">-</p></div><div class="column is-1 is-paddingless"><p class="text-center has-text-grey-light">-</p></div><div class="column is-1 is-paddingless"><p class="text-center has-text-grey-light">-</p></div><div class="column is-5 is-paddingless"><p class="text-center has-text-grey-light">-</p></div></div>');
         $('#'+spellSponListingID).mouseenter(function(){
@@ -440,18 +444,14 @@ function displaySpellsInLevelSpontaneous(level, slotArray, data, spellsSearchInp
         });
     }
 
-    if(hasSlotsAtLevel){
-        g_hasCastingSpontaneous = true;
-
-        let spellSponCastingSetID = 'spellSponCastingSet'+level;
-        $('#'+spellListSectionID).append('<p class="text-left pl-5"><span class="has-text-grey-kinda-light has-text-weight-bold is-size-5 pr-2">'+sectionName+'</span><span id="'+spellSponCastingSetID+'" class="is-unselectable cursor-clickable"></span></p>');
-        $('#'+spellListSectionID).append('<hr class="hr-highlighted" style="margin-top:-0.5em; margin-bottom:0em;">');
-        $('#'+spellListSectionID).append('<div class="columns is-mobile pt-1 is-marginless"><div class="column is-5 is-paddingless"><p class="has-text-left pl-3"><strong class="has-text-grey-kinda-light"><u>Name</u></strong></p></div><div class="column is-1 is-paddingless"><p class="text-center"><strong class="has-text-grey-kinda-light"><u>Cast</u></strong></p></div><div class="column is-1 is-paddingless"><p class="text-center"><strong class="has-text-grey-kinda-light"><u>Range</u></strong></p></div><div class="column is-5 is-paddingless"><p class="text-center"><strong class="has-text-grey-kinda-light"><u>Traits</u></strong></p></div></div>');
-
-        if(level != 0){    
-            displaySpontaneousCastingsSet(spellSponCastingSetID, filteredSlotArray, spellListingSponClass);
-        }
-
+    // Display Casting Set //
+    g_hasCastingSpontaneous = true;
+    let spellSponCastingSetID = 'spellSponCastingSet'+level;
+    $('#'+spellListSectionID).append('<p class="text-left pl-5"><span class="has-text-grey-kinda-light has-text-weight-bold is-size-5 pr-2">'+sectionName+'</span><span id="'+spellSponCastingSetID+'" class="is-unselectable cursor-clickable"></span></p>');
+    $('#'+spellListSectionID).append('<hr class="hr-highlighted" style="margin-top:-0.5em; margin-bottom:0em;">');
+    $('#'+spellListSectionID).append('<div class="columns is-mobile pt-1 is-marginless"><div class="column is-5 is-paddingless"><p class="has-text-left pl-3"><strong class="has-text-grey-kinda-light"><u>Name</u></strong></p></div><div class="column is-1 is-paddingless"><p class="text-center"><strong class="has-text-grey-kinda-light"><u>Cast</u></strong></p></div><div class="column is-1 is-paddingless"><p class="text-center"><strong class="has-text-grey-kinda-light"><u>Range</u></strong></p></div><div class="column is-5 is-paddingless"><p class="text-center"><strong class="has-text-grey-kinda-light"><u>Traits</u></strong></p></div></div>');
+    if(level != 0){    
+        displaySpontaneousCastingsSet(spellSponCastingSetID, filteredSlotArray, spellListingSponClass);
     }
 
 }
@@ -720,6 +720,7 @@ function displaySpellsInnate() {
     let spellMap = g_spellMap;
     let innateSpellArray = g_innateSpellArray;
 
+    $('#spellsTabContent').html('');
     $('#spellsTabContent').append('<div id="spellsInnateContent" class="use-custom-scrollbar" style="height: 595px; max-height: 595px; overflow-y: auto;"></div>');
 
     let isFirstLevel = true;
@@ -736,7 +737,7 @@ function displaySpellsInnate() {
                 $('#spellsInnateContent').append('<p class="is-size-5 has-text-grey-kinda-light has-text-weight-bold text-left pl-5 pt-2">'+sectionName+'</p>');
             }
             $('#spellsInnateContent').append('<hr class="hr-highlighted" style="margin-top:-0.5em; margin-bottom:0em;">');
-            $('#spellsInnateContent').append('<div class="columns is-mobile pt-1 is-marginless"><div class="column is-4 is-paddingless"><p class="has-text-left pl-3"><strong class="has-text-grey-kinda-light"><u>Name</u></strong></p></div><div class="column is-2 is-paddingless"><p class="text-center has-tooltip-bottom" data-tooltip="Casts per Day"><strong class="has-text-grey-kinda-light"><u>Castings</u></strong></p></div><div class="column is-1 is-paddingless"><p class="text-center"><strong class="has-text-grey-kinda-light"><u>Cast</u></strong></p></div><div class="column is-1 is-paddingless"><p class="text-center"><strong class="has-text-grey-kinda-light"><u>Range</u></strong></p></div><div class="column is-4 is-paddingless"><p class="text-center"><strong class="has-text-grey-kinda-light"><u>Traits</u></strong></p></div></div>');
+            $('#spellsInnateContent').append('<div class="columns is-mobile pt-1 is-marginless"><div class="column is-4 is-paddingless"><p class="has-text-left pl-3"><strong class="has-text-grey-kinda-light"><u>Name</u></strong></p></div><div class="column is-2 is-paddingless"><p class="text-center"><strong class="has-text-grey-kinda-light"><u>Casts Per Day</u></strong></p></div><div class="column is-1 is-paddingless"><p class="text-center"><strong class="has-text-grey-kinda-light"><u>Cast</u></strong></p></div><div class="column is-1 is-paddingless"><p class="text-center"><strong class="has-text-grey-kinda-light"><u>Range</u></strong></p></div><div class="column is-4 is-paddingless"><p class="text-center"><strong class="has-text-grey-kinda-light"><u>Traits</u></strong></p></div></div>');
         }
 
         let spellDataStruct = spellMap.get(innateSpell.SpellID+"");
