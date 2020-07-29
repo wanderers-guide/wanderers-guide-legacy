@@ -238,6 +238,7 @@ function displayFeat(featData, featTags, featCount){
     }
 
     for(const tag of featTags){
+        if(feat.level == -1 && tag.name == 'General'){ continue; }
         featTagsInnerHTML += '<button class="button is-marginless mr-2 my-1 is-very-small is-info">'+tag.name+'</button>';
     }
     featTagsInnerHTML += '</div>';
@@ -513,8 +514,8 @@ function displayCompanionsSection(){
     }
 
 
-
-    $('#companionsContent').append('<div class="columns is-mobile is-centered is-marginless my-1"><div class="column is-narrow"><div id="addAnimalCompanionField" class="field has-addons has-addons-centered is-marginless"><div class="control"><div class="select is-small is-info"><select id="selectAnimalCompanion"></select></div></div><div class="control"><button id="addAnimalCompanion" type="submit" class="button is-small is-info is-rounded">Add</button></div></div></div><div class="column is-narrow"><div id="addFamiliarField" class="field is-grouped is-grouped-centered is-marginless"><div class="control"><button id="addFamiliar" type="submit" class="button is-small is-info is-rounded">Add Familiar</button></div></div></div></div>');
+    // Familiar Column is-hidden
+    $('#companionsContent').append('<div class="columns is-mobile is-centered is-marginless my-1"><div class="column is-narrow"><div id="addAnimalCompanionField" class="field has-addons has-addons-centered is-marginless"><div class="control"><div class="select is-small is-info"><select id="selectAnimalCompanion"></select></div></div><div class="control"><button id="addAnimalCompanion" type="submit" class="button is-small is-info is-rounded">Add</button></div></div></div><div class="column is-narrow is-hidden"><div id="addFamiliarField" class="field is-grouped is-grouped-centered is-marginless"><div class="control"><button id="addFamiliar" type="submit" class="button is-small is-info is-rounded">Add Familiar</button></div></div></div></div>');
 
 
 

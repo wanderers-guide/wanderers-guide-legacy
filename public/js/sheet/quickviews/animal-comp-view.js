@@ -49,7 +49,7 @@ function openAnimalCompQuickview(data) {
         }
     });
 
-    qContent.append('<hr class="mt-1 mb-2 mx-3" style="border-width: 3px;">');
+    qContent.append('<hr class="mt-1 mb-2 mx-4" style="border-width: 3px;">');
 
     // Char Level //
     let lvl = g_character.level;
@@ -65,9 +65,7 @@ function openAnimalCompQuickview(data) {
     qContent.append('<div class="columns is-centered is-marginless text-center mx-3"><div class="column is-2 is-paddingless"><p class="is-bold-thick">Str</p></div><div class="column is-2 is-paddingless"><p class="is-bold-thick">Dex</p></div><div class="column is-2 is-paddingless"><p class="is-bold-thick">Con</p></div><div class="column is-2 is-paddingless"><p class="is-bold-thick">Int</p></div><div class="column is-2 is-paddingless"><p class="is-bold-thick">Wis</p></div><div class="column is-2 is-paddingless"><p class="is-bold-thick">Cha</p></div></div>');
     qContent.append('<div class="columns is-centered is-marginless text-center mx-3"><div class="column is-2 is-paddingless"><p class="companion-bonus-offset">'+signNumber(modStr)+'</p></div><div class="column is-2 is-paddingless"><p class="companion-bonus-offset">'+signNumber(modDex)+'</p></div><div class="column is-2 is-paddingless"><p class="companion-bonus-offset">'+signNumber(modCon)+'</p></div><div class="column is-2 is-paddingless"><p class="companion-bonus-offset">'+signNumber(modInt)+'</p></div><div class="column is-2 is-paddingless"><p class="companion-bonus-offset">'+signNumber(modWis)+'</p></div><div class="column is-2 is-paddingless"><p class="companion-bonus-offset">'+signNumber(modCha)+'</p></div></div>');
 
-    qContent.append('<hr class="my-2 mx-3" style="border-width: 3px;">');
-
-    // Trained in Barding & Unarmored Defense, Perception, and all Saving Throws
+    qContent.append('<hr class="my-2 mx-4" style="border-width: 3px;">');
 
     let percepBonus = modWis+getProfNumber(getAnimalPerceptionNumUps(animal, charAnimal), lvl);
     let AC = 10+modDex+getProfNumber(getAnimalUnarmoredDefenseNumUps(animal, charAnimal), lvl);
@@ -99,7 +97,7 @@ function openAnimalCompQuickview(data) {
         if(skillNumUps != 0){
             let skillBonus = abilMod+getProfNumber(skillNumUps, lvl);
 
-            qContent.append('<div class="px-4"><span class="has-text-grey-lighter">'+signNumber(skillBonus)+'</span><span class="pl-3 is-p">'+capitalizeWords(skill)+'</span></div>');
+            qContent.append('<div class="px-4 columns is-marginless"><div class="column is-1 is-paddingless"><span class="is-p has-text-grey-lighter">'+signNumber(skillBonus)+'</span></div><div class="column is-paddingless"><span class="is-p pl-1">'+capitalizeWords(skill)+'</span></div></div>');
         }
     }
 
@@ -124,13 +122,20 @@ function openAnimalCompQuickview(data) {
         qContent.append('<div class="px-2">'+processText('~ Special: '+animal.special, true, true, 'MEDIUM')+'</div>');
     }
 
+    let specializationText = getAnimalSpecializationText(charAnimal);
+    if(specializationText != null){
+        qContent.append('<div class="px-2">'+processText('~ Extra: '+specializationText, true, true, 'MEDIUM')+'</div>');
+    }
+
     qContent.append('<hr class="m-2">');
 
     displayAnimalCompanionAttack(qContent, animal, charAnimal, 1);
     displayAnimalCompanionAttack(qContent, animal, charAnimal, 2);
     displayAnimalCompanionAttack(qContent, animal, charAnimal, 3);
 
-    // Advanced Man
+    if(hasAnimalAdvancedManeuver(animal, charAnimal)){
+        qContent.append('<div class="px-2">'+processText('~ Advanced Maneuver: (action: '+capitalizeWords(animal.advancedManeuver)+')', true, true, 'MEDIUM')+'</div>');
+    }
 
     if(hasAnimalMagicalAttacks(animal, charAnimal)){
         qContent.append('<div class="px-2">'+processText(':> Your companion’s attacks become magical for the purpose of ignoring resistances.', true, true, 'MEDIUM')+'</div>');
@@ -161,6 +166,12 @@ function openAnimalCompQuickview(data) {
 
     $('#selectAnimalAge').val(charAnimal.age);
     $('#selectAnimalSpecialization').val(charAnimal.specialization);
+
+    if($('#selectAnimalAge').val() == 'NIMBLE' || $('#selectAnimalAge').val() == 'SAVAGE'){
+        $('#selectAnimalSpecialization').parent().parent().removeClass('is-hidden');
+    } else {
+        $('#selectAnimalSpecialization').parent().parent().addClass('is-hidden');
+    }
 
     $('#selectAnimalAge').change(function() {
         if($('#selectAnimalAge').val() != charAnimal.age){
@@ -261,6 +272,10 @@ function updateAnimalCompanion(charAnimalComp) {
         Age : $('#selectAnimalAge').val(),
         Specialization : $('#selectAnimalSpecialization').val(),
     };
+
+    if(updateValues.Age == 'YOUNG' || updateValues.Age == 'MATURE'){
+        updateValues.Specialization = 'NONE';
+    }
 
     charAnimalComp.name = updateValues.Name;
     charAnimalComp.currentHP = updateValues.CurrentHealth;

@@ -5,8 +5,6 @@
 function openFeatQuickview(data) {
     addBackFunctionality(data);
 
-    console.log('got herrr here');
-
     let featNameInnerHTML = '<span>'+data.Feat.name+'</span>';
     switch(data.Feat.actions) {
         case 'FREE_ACTION': featNameInnerHTML += '<span class="px-2 pf-icon">[free-action]</span>'; break;
@@ -54,6 +52,7 @@ function openFeatQuickview(data) {
         }
     );
     for(const tag of data.Tags){
+        if(data.Feat.level == -1 && tag.name == 'General'){ continue; }
         let tagDescription = tag.description;
         if(tagDescription.length > g_tagStringLengthMax){
             tagDescription = tagDescription.substring(0, g_tagStringLengthMax);
@@ -76,23 +75,31 @@ function openFeatQuickview(data) {
     });
 
     let featContentInnerHTML = '';
+    let foundUpperFeatLine = false;
     if(data.Feat.prerequisites != null){
         featContentInnerHTML += '<div><p class="negative-indent"><span><strong>Prerequisites: </strong></span><span>'+data.Feat.prerequisites+'</span></p></div>';
+        foundUpperFeatLine = true;
     }
     if(data.Feat.frequency != null){
         featContentInnerHTML += '<div><p class="negative-indent"><span><strong>Frequency: </strong></span><span>'+data.Feat.frequency+'</span></p></div>';
+        foundUpperFeatLine = true;
     }
     if(data.Feat.cost != null){
         featContentInnerHTML += '<div><p class="negative-indent"><span><strong>Cost: </strong></span><span>'+data.Feat.cost+'</span></p></div>';
+        foundUpperFeatLine = true;
     }
     if(data.Feat.trigger != null){
         featContentInnerHTML += '<div><p class="negative-indent"><span><strong>Trigger: </strong></span><span>'+data.Feat.trigger+'</span></p></div>';
+        foundUpperFeatLine = true;
     }
     if(data.Feat.requirements != null){
         featContentInnerHTML += '<div><p class="negative-indent"><span><strong>Requirements: </strong></span><span>'+data.Feat.requirements+'</span></p></div>';
+        foundUpperFeatLine = true;
     }
-    
-    featContentInnerHTML += '<hr class="m-1">';
+
+    if(foundUpperFeatLine){
+        featContentInnerHTML += '<hr class="m-1">';
+    }
 
     let description = featViewTextProcessor(data.Feat.description);
     featContentInnerHTML += '<div>'+processText(description, true, true, 'MEDIUM')+'</div>';
