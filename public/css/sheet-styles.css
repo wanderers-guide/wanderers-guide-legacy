@@ -202,6 +202,10 @@
     color: hsl(0, 0%, 86%);
 }
 
+.input-background-color {
+    background-color: hsl(0, 0%, 18%);
+}
+
 .input:hover, .select select:hover, .textarea:hover {
     border-color: hsl(0, 0%, 10%);
 }

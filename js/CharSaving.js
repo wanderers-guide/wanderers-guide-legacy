@@ -295,7 +295,7 @@ module.exports = class CharSaving {
                 charID: charID,
                 animalCompanionID: animalComp.id,
                 age: 'YOUNG',
-                specialization: null,
+                specialization: 'NONE',
                 name: animalComp.name,
                 description: animalComp.description,
                 imageURL: '',
@@ -323,6 +323,8 @@ module.exports = class CharSaving {
             description: inUpdateValues.Description,
             imageURL: inUpdateValues.ImageURL,
             currentHP: inUpdateValues.CurrentHealth,
+            age: inUpdateValues.Age,
+            specialization: inUpdateValues.Specialization,
         };
         return CharAnimalCompanion.update(updateValues, {
             where: {

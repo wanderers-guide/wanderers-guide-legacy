@@ -169,7 +169,7 @@ function displayAddSpell(spellDataStruct, data){
         spellAddSelectHTML += '</select></div>';
         $('#'+spellTradAddSpellBtnWrapperID).html(spellAddSelectHTML);
 
-        $('#'+spellTradAddSpellID).click(function(){
+        $('#'+spellTradAddSpellID).change(function(){
             let spellLevel = $("#"+spellTradAddSpellID+" option:selected").val();
             if(spellLevel != 'chooseDefault') {
                 prev_spellSRC = data.SpellBook.SpellSRC;
