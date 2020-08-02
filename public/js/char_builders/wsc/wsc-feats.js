@@ -91,6 +91,13 @@ function processingFeats(wscStatement, srcStruct, locationID){
         }
         giveSkillFeat(srcStruct, locationID, level, optionals);
     } 
+    else if(wscStatement.includes("GIVE-FEAT-FROM=")){ // GIVE-FEAT-FROM=Choose a Tradition:feat 1,feat 2,feat 2
+        let value = wscStatement.split('=')[1];
+        let valueParts = value.split(':');
+        let chooseTitle = valueParts[0];
+        let customListParts = valueParts[1].split(',');
+        giveFeatCustomList(srcStruct, locationID, chooseTitle, customListParts);
+    }
     else if(wscStatement.includes("GIVE-FEAT-NAME=")){ // GIVE-FEAT-NAME=Ancestral_Paragon
         let featName = wscStatement.split('=')[1];
         featName = featName.replace(/_/g," ");
@@ -109,6 +116,24 @@ function processingFeats(wscStatement, srcStruct, locationID){
 
 
 ////////////////////////////////// Choose Feats /////////////////////////////////////////////
+
+function giveFeatCustomList(srcStruct, locationID, chooseTitle, customList){
+
+    chooseTitle = capitalizeWords(chooseTitle).replace(/( A )/,' a ').replace(/( An )/,' an ');
+    displayFeatChoice(
+        srcStruct,
+        locationID,
+        chooseTitle,
+        [],
+        100,
+        [],
+        'AUTO_PAGE_LOAD',
+        customList
+    );
+
+    statementComplete();
+
+}
 
 function giveFeat(srcStruct, locationID, featLevel, optionalTags){
 
@@ -322,7 +347,7 @@ function giveClassFeat(srcStruct, locationID, featLevel, className, optionalTags
 }
 
 function displayFeatChoice(srcStruct, locationID, selectionName, tagsArray, featLevel, optionalTags,
-        autoPageLoad = 'AUTO_PAGE_LOAD') {
+        autoPageLoad = 'AUTO_PAGE_LOAD', customList = null) {
 
     // TO-DO. If feat requires prereq, check feats that the char has from choiceMap
     let featSelectionTypeClass = selectionName.replace(/ /g,'')+'Selector';
@@ -356,11 +381,17 @@ function displayFeatChoice(srcStruct, locationID, selectionName, tagsArray, feat
             optionalTags[i] = optionalTags[i].toLowerCase();
         }
     }
+    // Make custom list feat names lowercase
+    if(customList != null){
+        for (let i = 0; i < customList.length; i++) {
+            customList[i] = customList[i].toLowerCase();
+        }
+    }
 
     let prevLevel = 100;
     for(const featStruct of wscFeatMap){
         let feat = featStruct[1];
-        if(feat.Feat.level < 1){ continue; }
+        if(feat.Feat.level < 1 && customList == null){ continue; }
 
         let featName = feat.Feat.name;
         if(feat.Feat.isArchived === 1){
@@ -372,24 +403,30 @@ function displayFeatChoice(srcStruct, locationID, selectionName, tagsArray, feat
         }
 
         let hasCorrectTags = false;
-        let sameOpsTagsArray = [];
-        for(let featTag of feat.Tags){
-            if(tagsArray.length > 0){
-                if(tagsArray.includes(featTag.name)){
+        if(customList == null) {
+            let sameOpsTagsArray = [];
+            for(let featTag of feat.Tags){
+                if(tagsArray.length > 0){
+                    if(tagsArray.includes(featTag.name)){
+                        hasCorrectTags = true;
+                    }
+                } else {
                     hasCorrectTags = true;
                 }
-            } else {
-                hasCorrectTags = true;
-            }
-            if(optionalTags != null){
-                let featTagNameLower = featTag.name.toLowerCase();
-                if(optionalTags.includes(featTagNameLower)){
-                    sameOpsTagsArray.push(featTagNameLower);
+                if(optionalTags != null){
+                    let featTagNameLower = featTag.name.toLowerCase();
+                    if(optionalTags.includes(featTagNameLower)){
+                        sameOpsTagsArray.push(featTagNameLower);
+                    }
                 }
             }
-        }
-        if(optionalTags != null && hasCorrectTags){
-            hasCorrectTags = (optionalTags.sort().join(',') === sameOpsTagsArray.sort().join(','));
+            if(optionalTags != null && hasCorrectTags){
+                hasCorrectTags = (optionalTags.sort().join(',') === sameOpsTagsArray.sort().join(','));
+            }
+        } else {
+            if(customList.includes(feat.Feat.name.toLowerCase())){
+                hasCorrectTags = true;
+            }
         }
 
         if(feat.Feat.level <= featLevel && hasCorrectTags){
@@ -398,7 +435,11 @@ function displayFeatChoice(srcStruct, locationID, selectionName, tagsArray, feat
                 $('#'+selectFeatID).append('<hr class="dropdown-divider"></hr>');
             }
 
-            $('#'+selectFeatID).append('<option value="'+feat.Feat.id+'">('+feat.Feat.level+') '+featName+'</option>');
+            if(customList == null) {
+                $('#'+selectFeatID).append('<option value="'+feat.Feat.id+'">('+feat.Feat.level+') '+featName+'</option>');
+            } else {
+                $('#'+selectFeatID).append('<option value="'+feat.Feat.id+'">'+featName+'</option>');
+            }
 
             prevLevel = feat.Feat.level;
 

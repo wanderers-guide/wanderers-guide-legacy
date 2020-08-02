@@ -43,28 +43,26 @@ function giveLang(srcStruct, locationID, bonusOnly){
         return hasSameSrc(lang, srcStruct);
     });
 
-    for(const [langID, langData] of wscLangMap.entries()){
-        
-        if(bonusOnly){
+    let sortedLangMap = new Map([...wscLangMap.entries()].sort(
+        function(a, b) {
+            return a[1].IsBonus && !b[1].IsBonus ? -1 : 1;
+        })
+    );
 
-            if(langData.IsBonus) {
+    for(const [langID, langData] of sortedLangMap.entries()){
 
-                if(savedLang != null && savedLang.value.id == langID) {
-                    $('#'+selectLangID).append('<option value="'+langData.Lang.id+'" selected>'+langData.Lang.name+'</option>');
-                } else {
-                    $('#'+selectLangID).append('<option value="'+langData.Lang.id+'">'+langData.Lang.name+'</option>');
-                }
-
-            }
-
-        } else {
-
-            if(savedLang != null && savedLang.value.id == langID) {
+        if(savedLang != null && savedLang.value.id == langID) {
+            if(bonusOnly && !langData.IsBonus){
+                $('#'+selectLangID).append('<option value="'+langData.Lang.id+'" class="nonavailable-select-option" selected>'+langData.Lang.name+'</option>');
+            } else {
                 $('#'+selectLangID).append('<option value="'+langData.Lang.id+'" selected>'+langData.Lang.name+'</option>');
+            }
+        } else {
+            if(bonusOnly && !langData.IsBonus){
+                $('#'+selectLangID).append('<option value="'+langData.Lang.id+'" class="nonavailable-select-option">'+langData.Lang.name+'</option>');
             } else {
                 $('#'+selectLangID).append('<option value="'+langData.Lang.id+'">'+langData.Lang.name+'</option>');
             }
-
         }
 
     }
