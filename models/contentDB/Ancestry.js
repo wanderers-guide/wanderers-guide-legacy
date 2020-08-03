@@ -5,6 +5,10 @@ const Ancestry = db.define('ancestries', {
   name: {
     type: Sequelize.STRING
   },
+  rarity: {
+    type: Sequelize.ENUM,
+    values: ['COMMON', 'UNCOMMON', 'RARE', 'UNIQUE']
+  },
   hitPoints: {
     type: Sequelize.INTEGER
   },

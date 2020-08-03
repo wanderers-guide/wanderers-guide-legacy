@@ -53,17 +53,17 @@ socket.on("returnBackgroundDetails", function(backgrounds, inChoiceStruct){
     // Populate Background Selector
     let selectBackground = $('#selectBackground');
     selectBackground.append('<option value="chooseDefault" name="chooseDefault">Choose a Background</option>');
-    selectBackground.append('<hr class="dropdown-divider"></hr>');
+    selectBackground.append('<optgroup label="──────────"></optgroup>');
     for(const background of backgrounds){
         let currentBackgroundID = $('#selectBackground').attr('name');
         if(background.id == currentBackgroundID){
             if(background.isArchived == 0){
-                selectBackground.append('<option value="'+background.id+'" selected>'+background.name+'</option>');
+                selectBackground.append('<option value="'+background.id+'" class="'+selectOptionRarity(background.rarity)+'" selected>'+background.name+'</option>');
             } else {
-                selectBackground.append('<option value="'+background.id+'" selected>'+background.name+' (archived)</option>');
+                selectBackground.append('<option value="'+background.id+'" class="'+selectOptionRarity(background.rarity)+'" selected>'+background.name+' (archived)</option>');
             }
         } else if(background.isArchived == 0){
-            selectBackground.append('<option value="'+background.id+'">'+background.name+'</option>');
+            selectBackground.append('<option value="'+background.id+'" class="'+selectOptionRarity(background.rarity)+'">'+background.name+'</option>');
         }
     }
 
@@ -162,10 +162,12 @@ function displayCurrentBackground(background) {
         sourceCode: 'boost-choose',
         sourceCodeSNum: 'a',
     };
-    processCode(
-        'GIVE-ABILITY-BOOST-SINGLE='+background.boostOne+'\n GIVE-ABILITY-BOOST-SINGLE='+background.boostTwo,
-        boostSrcStruct,
-        'backBoostSection');
+    if(background.boostOne != null && background.boostTwo != null) {
+        processCode(
+            'GIVE-ABILITY-BOOST-SINGLE='+background.boostOne+'\n GIVE-ABILITY-BOOST-SINGLE='+background.boostTwo,
+            boostSrcStruct,
+            'backBoostSection');
+    }
 
 }
 

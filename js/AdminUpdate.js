@@ -40,6 +40,7 @@ module.exports = class AdminUpdate {
             backgroundID,
             backgroundName,
             backgroundVersion,
+            backgroundRarity,
             backgroundDescription,
             backgroundBoosts,
             backgroundCode,
@@ -52,6 +53,7 @@ module.exports = class AdminUpdate {
         return Background.create({ // Create Background
             name: data.backgroundName,
             version: data.backgroundVersion,
+            rarity: data.backgroundRarity,
             description: data.backgroundDescription,
             boostOne: data.backgroundBoosts,
             boostTwo: 'ALL',
@@ -448,6 +450,7 @@ module.exports = class AdminUpdate {
         /* Data:
             ancestryName,
             ancestryVersion,
+            ancestryRarity,
             ancestryHitPoints,
             ancestrySize,
             ancestrySpeed,
@@ -478,6 +481,7 @@ module.exports = class AdminUpdate {
             return Ancestry.create({ // Create Ancestry
                 name: data.ancestryName,
                 version: data.ancestryVersion,
+                rarity: data.ancestryRarity,
                 hitPoints: data.ancestryHitPoints,
                 size: data.ancestrySize,
                 speed: data.ancestrySpeed,

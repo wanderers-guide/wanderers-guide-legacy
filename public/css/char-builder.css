@@ -163,10 +163,6 @@ hr {
     display: inline;
 }
 
-.nonavailable-select-option {
-    background-color: hsl(0, 0%, 18%);
-}
-
 /* General Tab */
 .builder-tabs {
     border-bottom-style: none!important;

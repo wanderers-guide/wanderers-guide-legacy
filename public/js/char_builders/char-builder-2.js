@@ -60,17 +60,17 @@ socket.on("returnAncestryDetails", function(ancestryObject, uniHeritageArray, in
     // Populate Ancestry Selector
     let selectAncestry = $('#selectAncestry');
     selectAncestry.append('<option value="chooseDefault" name="chooseDefault">Choose an Ancestry</option>');
-    selectAncestry.append('<hr class="dropdown-divider"></hr>');
+    selectAncestry.append('<optgroup label="──────────"></optgroup>');
     for(const [key, value] of ancestryMap.entries()){
         let currentAncestryID = $('#selectAncestry').attr('name');
         if(value.Ancestry.id == currentAncestryID){
             if(value.Ancestry.isArchived == 0){
-                selectAncestry.append('<option value="'+value.Ancestry.id+'" selected>'+value.Ancestry.name+'</option>');
+                selectAncestry.append('<option value="'+value.Ancestry.id+'" class="'+selectOptionRarity(value.Ancestry.rarity)+'" selected>'+value.Ancestry.name+'</option>');
             } else {
-                selectAncestry.append('<option value="'+value.Ancestry.id+'" selected>'+value.Ancestry.name+' (archived)</option>');
+                selectAncestry.append('<option value="'+value.Ancestry.id+'" class="'+selectOptionRarity(value.Ancestry.rarity)+'" selected>'+value.Ancestry.name+' (archived)</option>');
             }
         } else if(value.Ancestry.isArchived == 0){
-            selectAncestry.append('<option value="'+value.Ancestry.id+'">'+value.Ancestry.name+'</option>');
+            selectAncestry.append('<option value="'+value.Ancestry.id+'" class="'+selectOptionRarity(value.Ancestry.rarity)+'">'+value.Ancestry.name+'</option>');
         }
     }
     
@@ -474,7 +474,7 @@ function displayHeritageSelectOptions(ancestryStruct, charHeritage){
     selectHeritage.html('');
 
     selectHeritage.append('<option value="chooseDefault">Choose a Heritage</option>');
-    selectHeritage.append('<hr class="dropdown-divider"></hr>');
+    selectHeritage.append('<optgroup label="──────────"></optgroup>');
 
     if(isUniversalHeritage()){
         for(const uniHeritage of g_uniHeritageArray){

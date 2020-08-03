@@ -156,7 +156,6 @@ function findArmorRuneByName(runeCodeName, runeData){
     for(let weapRune of runeData.ArmorArray){
         if(weapRune != null) {
             let weapRuneName = runestoneNameToRuneName(weapRune.Item.name).toUpperCase();
-            console.log(weapRuneName+' '+runeCodeName);
             if(weapRuneName === runeCodeName){
                 return weapRune;
             }

@@ -18,6 +18,7 @@ function finishBackground(isUpdate){
 
     let backgroundName = $("#inputName").val();
     let backgroundVersion = $("#inputVersion").val();
+    let backgroundRarity = $("#inputRarity").val();
     let backgroundDescription = $("#inputDescription").val();
     let backgroundBoostsArray = $("#inputBoosts").val();
     let backgroundCode = $("#inputCode").val();
@@ -42,6 +43,7 @@ function finishBackground(isUpdate){
         backgroundID,
         backgroundName,
         backgroundVersion,
+        backgroundRarity,
         backgroundDescription,
         backgroundBoosts,
         backgroundCode,

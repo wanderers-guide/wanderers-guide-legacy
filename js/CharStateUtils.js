@@ -1,7 +1,5 @@
 
-function getUserCharacterLimit(){
-    return 3;
-}
+function getUserCharacterLimit(){ return 3; }
 
 module.exports = class CharStateUtils {
 
@@ -10,12 +8,7 @@ module.exports = class CharStateUtils {
     }
 
     static canMakeCharacter(user, characters) {
-        if(user.isPatreonSupporter === 1){
-            return user.isPatreonMember === 1 || characters.length < getUserCharacterLimit();
-        } else {
-            return false;
-        }
-        //return user.isPatreonMember === 1 || characters.length < getUserCharacterLimit();
+        return user.isPatreonMember === 1 || characters.length < getUserCharacterLimit();
     }
 
     static getUserCharacterLimit(){

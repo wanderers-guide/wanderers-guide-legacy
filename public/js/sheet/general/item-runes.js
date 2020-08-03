@@ -95,7 +95,7 @@ function displayRunesForItem(qContent, invItem, isWeapon){
     qContent.append('<div id="addFuneRuneField" class="field has-addons has-addons-centered is-marginless"><div class="control"><div class="select is-small is-success"><select id="'+invItemAddFundamentalRuneSelectID+'"></select></div></div><div class="control"><button id="'+invItemAddFundamentalRuneButtonID+'" type="submit" class="button is-small is-success is-rounded is-outlined">Add</button></div></div>');
 
     $('#'+invItemAddFundamentalRuneSelectID).append('<option value="chooseDefault">Add Fundamental Rune</option>');
-    $('#'+invItemAddFundamentalRuneSelectID).append('<hr class="dropdown-divider"></hr>');
+    $('#'+invItemAddFundamentalRuneSelectID).append('<optgroup label="──────────"></optgroup>');
     
     let foundRune = false;
     if(isWeapon) {
@@ -344,7 +344,7 @@ function addPropertyRuneSelection(qContent, invItem, runeArray, propertyRuneSlot
     qContent.append('<div class="has-text-centered p-1"><div class="select is-small is-success"><select id="'+propertyRuneSelectionID+'"></select></div></div>');
 
     $('#'+propertyRuneSelectionID).append('<option value="chooseDefault">Add Property Rune</option>');
-    $('#'+propertyRuneSelectionID).append('<hr class="dropdown-divider"></hr>');
+    $('#'+propertyRuneSelectionID).append('<optgroup label="──────────"></optgroup>');
 
     let existingPropRuneID = getPropertyRuneIDBySlot(invItem, propertyRuneSlot);
     for(let weaponRuneItem of runeArray){

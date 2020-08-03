@@ -204,6 +204,18 @@ header {
     color: #fff;
 }
 
+select .is-non-available {
+    background-color: hsl(0, 0%, 18%);
+}
+select .is-uncommon {
+    background-color: hsl(158, 25%, 22%);
+}
+select .is-rare {
+    background-color: hsl(225, 30%, 22%);
+}
+select .is-unique {
+    background-color: hsl(282, 30%, 22%);
+}
 
 /* Cursors */
 .cursor-clickable {

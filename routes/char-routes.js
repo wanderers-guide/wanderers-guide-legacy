@@ -129,7 +129,7 @@ router.get('/add', (req, res) => {
                                     inventoryID: inventory.id,
                                 }).then(character => {
                                     res.redirect('/profile/characters/builder/'+character.id+'/page1');
-                                }).catch(err => console.log(err));
+                                }).catch(err => console.error(err));
                             });
                         });
                     });

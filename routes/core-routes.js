@@ -24,7 +24,7 @@ router.get('/browse', (req, res) => {
 
 // create license route
 router.get('/license', (req, res) => {
-    res.render('pages/license', { title: "License - Wanderer's Guide", user: req.user });
+    res.render('pages/license', { title: "Licenses - Wanderer's Guide", user: req.user });
 });
 
 // create docs route

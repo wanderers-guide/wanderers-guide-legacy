@@ -22,6 +22,7 @@ socket.on("returnAdminBackgroundDetails", function(backgrounds){
 
     $("#inputName").val(background.name);
     $("#inputVersion").val(background.version);
+    $("#inputRarity").val(background.rarity);
     $("#inputDescription").val(background.description);
     $("#inputCode").val(background.code);
     $("#inputContentSource").val(background.contentSrc);

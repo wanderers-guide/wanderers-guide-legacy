@@ -115,6 +115,7 @@ function finishAncestry(isUpdate){
 
     let ancestryName = $("#inputName").val();
     let ancestryVersion = $("#inputVersion").val();
+    let ancestryRarity = $("#inputRarity").val();
     let ancestryHitPoints = $("#inputHitPoints").val();
     let ancestrySize = $("#inputSize").val();
     let ancestrySpeed = $("#inputSpeed").val();
@@ -192,6 +193,7 @@ function finishAncestry(isUpdate){
         ancestryID,
         ancestryName,
         ancestryVersion,
+        ancestryRarity,
         ancestryHitPoints,
         ancestrySize,
         ancestrySpeed,

@@ -31,7 +31,7 @@ function giveDomain(srcStruct, locationID, spellSRC){
     $('#'+locationID).append('<div id="'+descriptionID+'"></div>');
 
     $('#'+selectID).append('<option value="chooseDefault">Choose a Domain</option>');
-    $('#'+selectID).append('<hr class="dropdown-divider"></hr>');
+    $('#'+selectID).append('<optgroup label="──────────"></optgroup>');
 
     // Set saved domain choice
     let savedDomainData = wscChoiceStruct.DomainArray.find(domain => {
@@ -109,7 +109,7 @@ function giveDomainAdvancement(srcStruct, locationID, spellSRC){
     $('#'+locationID).append('<div id="'+descriptionID+'"></div>');
 
     $('#'+selectID).append('<option value="chooseDefault">Choose a Domain</option>');
-    $('#'+selectID).append('<hr class="dropdown-divider"></hr>');
+    $('#'+selectID).append('<optgroup label="──────────"></optgroup>');
 
     // Set saved domain choice
     let savedDomainData = wscChoiceStruct.AdvancedDomainArray.find(domainAdvanced => {

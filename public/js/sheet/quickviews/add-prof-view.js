@@ -26,7 +26,7 @@ function openAddProfQuickview(data) {
             profSubType.append('<option value="Advanced_Weapons">Advanced Weapons</option>');
             profSubType.append('<option value="Unarmed_Attacks">Unarmed Attacks</option>');
 
-            profSubType.append('<hr class="dropdown-divider"></hr>');
+            profSubType.append('<optgroup label="──────────"></optgroup>');
 
             for(const [itemID, itemDataStruct] of g_itemMap.entries()){
                 if(itemDataStruct.Item.itemType == 'WEAPON' && itemDataStruct.Item.level === 0 && itemDataStruct.Item.hidden === 0 && itemDataStruct.WeaponData != null){
@@ -44,7 +44,7 @@ function openAddProfQuickview(data) {
             profSubType.append('<option value="Heavy_Armor">Heavy Armor</option>');
             profSubType.append('<option value="Unarmored_Defense">Unarmored Defense</option>');
 
-            profSubType.append('<hr class="dropdown-divider"></hr>');
+            profSubType.append('<optgroup label="──────────"></optgroup>');
 
             for(const [itemID, itemDataStruct] of g_itemMap.entries()){
                 

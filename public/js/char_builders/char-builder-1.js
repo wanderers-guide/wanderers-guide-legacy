@@ -116,7 +116,6 @@ function deployAbilityScoreChange(){
 function handleCharacterOptions(character) {
 
     // Content Sources //
-    console.log(JSON.stringify(['CRB', 'ADV-PLAYER-GUIDE', 'GM-GUIDE']));
     let contentSourceArray = JSON.parse(character.enabledSources);
 
     $("#contentSrc-CRB").change(function(){

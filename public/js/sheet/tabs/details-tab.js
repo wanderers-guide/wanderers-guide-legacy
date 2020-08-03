@@ -521,7 +521,7 @@ function displayCompanionsSection(){
 
     // Add Animal Companion //
     $('#selectAnimalCompanion').append('<option value="chooseDefault">Animal Companion</option>');
-	$('#selectAnimalCompanion').append('<hr class="dropdown-divider"></hr>');
+	$('#selectAnimalCompanion').append('<optgroup label="──────────"></optgroup>');
 		
 	for(let animalComp of g_companionData.AllAnimalCompanions){
         $('#selectAnimalCompanion').append('<option value="'+animalComp.id+'">'+animalComp.name+'</option>');

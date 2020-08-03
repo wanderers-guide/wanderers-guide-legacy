@@ -85,7 +85,7 @@ function displayAbilityBoostSingle(srcStruct, locationID, abilityTypes){
 
     let selectBoost = $('#'+selectBoostID);
     selectBoost.append('<option value="chooseDefault">Choose an Ability</option>');
-    selectBoost.append('<hr class="dropdown-divider"></hr>');
+    selectBoost.append('<optgroup label="──────────"></optgroup>');
     for(const ability of abilityTypes){
         selectBoost.append('<option value="'+ability+'">'+ability+'</option>');
     }

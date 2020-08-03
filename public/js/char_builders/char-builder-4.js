@@ -64,7 +64,7 @@ socket.on("returnClassDetails", function(classObject, inChoiceStruct){
     // Populate Class Selector
     let selectClass = $('#selectClass');
     selectClass.append('<option value="chooseDefault" name="chooseDefault">Choose a Class</option>');
-    selectClass.append('<hr class="dropdown-divider"></hr>');
+    selectClass.append('<optgroup label="──────────"></optgroup>');
     for(const [key, value] of classMap.entries()){
         let currentClassID = $('#selectClass').attr('name');
         if(value.Class.id == currentClassID){
@@ -162,7 +162,7 @@ function displayCurrentClass(classStruct, saving) {
 
         let keyAbilitySelect = $('#'+keyAbilitySelectID);
         keyAbilitySelect.append('<option value="chooseDefault">Choose an Ability</option>');
-        keyAbilitySelect.append('<hr class="dropdown-divider"></hr>');
+        keyAbilitySelect.append('<optgroup label="──────────"></optgroup>');
 
         keyAbilitySelect.append('<option value="'+keyAbilityOptionArray[0]+'">'+keyAbilityOptionArray[0]+'</option>');
         keyAbilitySelect.append('<option value="'+keyAbilityOptionArray[1]+'">'+keyAbilityOptionArray[1]+'</option>');
@@ -265,7 +265,7 @@ function displayCurrentClass(classStruct, saving) {
             let tSkillSelect = $('#'+tSkillID);
 
             tSkillSelect.append('<option value="chooseDefault">Choose a Skill</option>');
-            tSkillSelect.append('<hr class="dropdown-divider"></hr>');
+            tSkillSelect.append('<optgroup label="──────────"></optgroup>');
 
             tSkillSelect.append('<option value="'+tSkillsOptionArray[0]+'">'+tSkillsOptionArray[0]+'</option>');
             tSkillSelect.append('<option value="'+tSkillsOptionArray[1]+'">'+tSkillsOptionArray[1]+'</option>');
@@ -546,7 +546,7 @@ function displayCurrentClass(classStruct, saving) {
                 classAbilitySelectorInnerHTML += '<select id="'+selectorID+'" class="classAbilSelection" name="'+classAbility.id+'">';
 
                 classAbilitySelectorInnerHTML += '<option value="chooseDefault">Choose a '+classAbility.name+'</option>';
-                classAbilitySelectorInnerHTML += '<hr class="dropdown-divider"></hr>';
+                classAbilitySelectorInnerHTML += '<optgroup label="──────────"></optgroup>';
 
                 let choice = choiceArray.find(choice => {
                     return choice.SelectorID == classAbility.id;

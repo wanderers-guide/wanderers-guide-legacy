@@ -195,6 +195,15 @@ function hasDuplicateLang(langArray, langID){
 }
 
 
+function selectOptionRarity(rarity){
+  switch(rarity) {
+    case 'UNCOMMON': return 'is-uncommon';
+    case 'RARE': return 'is-rare';
+    case 'UNIQUE': return 'is-unique';
+    default: return '';
+  }
+}
+
 // WSC statement maximum: 26
 function charIncrease(char){
   switch(char) {

@@ -175,7 +175,7 @@ function populateSkillLists(selectIncreaseID, srcStruct, profType){
 
     $('#'+selectIncreaseID).html('');
     $('#'+selectIncreaseID).append('<option value="chooseDefault">Choose a Skill</option>');
-    $('#'+selectIncreaseID).append('<hr class="dropdown-divider"></hr>');
+    $('#'+selectIncreaseID).append('<optgroup label="──────────"></optgroup>');
 
     // Set saved skill choices
     let savedSkillData = wscChoiceStruct.ProfArray.find(prof => {
@@ -195,7 +195,7 @@ function populateSkillLists(selectIncreaseID, srcStruct, profType){
     }
 
     // Add Lore Option
-    $('#'+selectIncreaseID).append('<hr class="dropdown-divider"></hr>');
+    $('#'+selectIncreaseID).append('<optgroup label="──────────"></optgroup>');
     if(savedSkillData != null && savedSkillData.To == 'addLore') {
         $('#'+selectIncreaseID).append('<option value="addLore" selected>Add Lore</option>');
     } else {

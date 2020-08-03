@@ -34,7 +34,7 @@ function giveLang(srcStruct, locationID, bonusOnly){
     $('#'+locationID).append('<div class="columns is-centered is-marginless pb-2"><div id="'+langDescriptionID+'" class="column is-8 is-paddingless"></div></div>');
 
     $('#'+selectLangID).append('<option value="chooseDefault">Choose a Language</option>');
-    $('#'+selectLangID).append('<hr class="dropdown-divider"></hr>');
+    $('#'+selectLangID).append('<optgroup label="──────────"></optgroup>');
 
     // Set saved prof choices to savedProfData
     let langArray = wscChoiceStruct.LangArray;
@@ -53,13 +53,13 @@ function giveLang(srcStruct, locationID, bonusOnly){
 
         if(savedLang != null && savedLang.value.id == langID) {
             if(bonusOnly && !langData.IsBonus){
-                $('#'+selectLangID).append('<option value="'+langData.Lang.id+'" class="nonavailable-select-option" selected>'+langData.Lang.name+'</option>');
+                $('#'+selectLangID).append('<option value="'+langData.Lang.id+'" class="is-non-available" selected>'+langData.Lang.name+'</option>');
             } else {
                 $('#'+selectLangID).append('<option value="'+langData.Lang.id+'" selected>'+langData.Lang.name+'</option>');
             }
         } else {
             if(bonusOnly && !langData.IsBonus){
-                $('#'+selectLangID).append('<option value="'+langData.Lang.id+'" class="nonavailable-select-option">'+langData.Lang.name+'</option>');
+                $('#'+selectLangID).append('<option value="'+langData.Lang.id+'" class="is-non-available">'+langData.Lang.name+'</option>');
             } else {
                 $('#'+selectLangID).append('<option value="'+langData.Lang.id+'">'+langData.Lang.name+'</option>');
             }

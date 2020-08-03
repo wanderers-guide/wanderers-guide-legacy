@@ -432,13 +432,13 @@ function displayFeatChoice(srcStruct, locationID, selectionName, tagsArray, feat
         if(feat.Feat.level <= featLevel && hasCorrectTags){
 
             if(feat.Feat.level < prevLevel){
-                $('#'+selectFeatID).append('<hr class="dropdown-divider"></hr>');
+                $('#'+selectFeatID).append('<optgroup label="──────────"></optgroup>');
             }
 
             if(customList == null) {
-                $('#'+selectFeatID).append('<option value="'+feat.Feat.id+'">('+feat.Feat.level+') '+featName+'</option>');
+                $('#'+selectFeatID).append('<option value="'+feat.Feat.id+'" class="'+selectOptionRarity(feat.Feat.rarity)+'">('+feat.Feat.level+') '+featName+'</option>');
             } else {
-                $('#'+selectFeatID).append('<option value="'+feat.Feat.id+'">'+featName+'</option>');
+                $('#'+selectFeatID).append('<option value="'+feat.Feat.id+'" class="'+selectOptionRarity(feat.Feat.rarity)+'">'+featName+'</option>');
             }
 
             prevLevel = feat.Feat.level;
@@ -589,8 +589,16 @@ socket.on("returnFeatChange", function(featChangePacket, selectFeatControlShellC
             }
         });
 
+        // Changed feat has Dedication tag
+        let featDedicationTag = null;
+        if(featChangePacket.feat != null){
+            featDedicationTag = featChangePacket.feat.Tags.find(featTag => {
+                return featTag.name === 'Dedication';
+            });
+        }
+
         // If they aren't the same amount, reload class abilities
-        if(maxArchetypesLength != charArchetypesArray.length) {
+        if(maxArchetypesLength != charArchetypesArray.length || featDedicationTag != null) {
             if(temp_classAbilities != null){
                 processCode_ClassAbilities(temp_classAbilities);
             }

@@ -22,6 +22,7 @@ socket.on("returnAdminAncestryDetails", function(ancestryObject, featsObject){
 
     $("#inputName").val(ancestry.Ancestry.name);
     $("#inputVersion").val(ancestry.Ancestry.version);
+    $("#inputRarity").val(ancestry.Ancestry.rarity);
     $("#inputHitPoints").val(ancestry.Ancestry.hitPoints);
     $("#inputSize").val(ancestry.Ancestry.size);
     $("#inputSpeed").val(ancestry.Ancestry.speed);
