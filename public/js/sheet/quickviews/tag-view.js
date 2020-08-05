@@ -8,7 +8,7 @@ function openTagQuickview(data) {
     $('#quickViewTitle').html('Trait - '+capitalizeFirstLetterOfWord(data.TagName));
     let qContent = $('#quickViewContent');
 
-    let tag = data.TagArray.find(tag => {
+    let tag = g_allTags.find(tag => {
         if(tag.name != null){
             return tag.name.toUpperCase() === data.TagName.toUpperCase();
         } else {

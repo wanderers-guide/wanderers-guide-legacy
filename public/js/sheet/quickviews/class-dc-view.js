@@ -21,6 +21,10 @@ function openClassDCQuickview(data) {
     } else {
         qContent.append('<p><strong>Proficiency:</strong> '+profName+'</p>');
     }
+
+    let keyAbilityName = lengthenAbilityType(g_classDetails.KeyAbility);
+    keyAbilityName = (keyAbilityName == null) ? 'Unselected' : keyAbilityName;
+    qContent.append('<p><strong>Ability Score:</strong> '+keyAbilityName+'</p>');
     
     let userBonus = data.ProfData.UserBonus;
     if(userBonus != 0){
@@ -34,8 +38,6 @@ function openClassDCQuickview(data) {
 
     let breakDownInnerHTML = '<p class="has-text-centered">'+data.TotalDC+' = 10 + ';
 
-    let keyAbilityName = lengthenAbilityType(g_classDetails.KeyAbility);
-    keyAbilityName = (keyAbilityName == null) ? 'Unselected' : keyAbilityName;
     breakDownInnerHTML += '<a class="has-text-link has-tooltip-bottom has-tooltip-multiline" data-tooltip="This is your key ability modifier from your class ('+keyAbilityName+'). It is added when determining your class DC.">'+data.KeyMod+'</a>';
 
     breakDownInnerHTML += ' + ';

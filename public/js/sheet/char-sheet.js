@@ -1350,7 +1350,8 @@ function determineArmor(dexMod, strScore) {
     let shieldStruct = findEquippedShield();
     if(shieldStruct != null){
 
-        let investedTag = shieldStruct.Item.TagArray.find(tagStruct => {
+        let tagArray = getItemTraitsArray(shieldStruct.Item, shieldStruct.InvItem);
+        let investedTag = tagArray.find(tagStruct => {
             return tagStruct.Tag.id === 235; // Hardcoded Invested Tag ID
         });
         if(investedTag == null){
@@ -1370,7 +1371,9 @@ function determineArmor(dexMod, strScore) {
     let armorStruct = findEquippedArmor();
     if(armorStruct != null){
 
-        let investedTag = armorStruct.Item.TagArray.find(tagStruct => {
+        let tagArray = getItemTraitsArray(armorStruct.Item, armorStruct.InvItem);
+        
+        let investedTag = tagArray.find(tagStruct => {
             return tagStruct.Tag.id === 235; // Hardcoded Invested Tag ID
         });
         if(investedTag == null){
@@ -1427,7 +1430,7 @@ function determineArmor(dexMod, strScore) {
             speedPenalty += 5;
 
             if(checkPenalty != 0){
-                let noisyTag = armorStruct.Item.TagArray.find(tagStruct => {
+                let noisyTag = tagArray.find(tagStruct => {
                     return tagStruct.Tag.id === 559; // Hardcoded Noisy Tag ID
                 });
                 if(noisyTag != null){
@@ -1438,7 +1441,7 @@ function determineArmor(dexMod, strScore) {
         } else {
 
             if(checkPenalty != 0){
-                let flexibleTag = armorStruct.Item.TagArray.find(tagStruct => {
+                let flexibleTag = tagArray.find(tagStruct => {
                     return tagStruct.Tag.id === 558; // Hardcoded Flexible Tag ID
                 });
                 if(flexibleTag == null){
@@ -1495,7 +1498,7 @@ function determineArmor(dexMod, strScore) {
         $('#acSection').attr('data-tooltip', armorStruct.InvItem.name);
 
         // Apply conditional if the armor has the Bulwark trait
-        let bulwarkTag = armorStruct.Item.TagArray.find(tagStruct => {
+        let bulwarkTag = tagArray.find(tagStruct => {
             return tagStruct.Tag.id === 560; // Hardcoded Bulwark Tag ID
         });
         if(bulwarkTag != null){
@@ -1834,7 +1837,8 @@ function runAllItemsCode() {
         let item = g_itemMap.get(invItem.itemID+"");
         if(item == null) { continue; }
 
-        let investedTag = item.TagArray.find(tagStruct => {
+        let tagArray = getItemTraitsArray(item, invItem);
+        let investedTag = tagArray.find(tagStruct => {
             return tagStruct.Tag.id === 235; // Hardcoded Invested Tag ID
         });
 

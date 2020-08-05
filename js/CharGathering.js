@@ -733,8 +733,10 @@ module.exports = class CharGathering {
     }
 
     static getAllTags() {
-        return Tag.findAll({raw: true})
-        .then((tags) => {
+        return Tag.findAll({
+            raw: true,
+            order: [['name', 'ASC'],]
+        }).then((tags) => {
             return tags;
         });
     }

@@ -34,6 +34,6 @@ function openAbilityScoreQuickview(data){
     qContent.append('<hr class="m-2">');
     qContent.append('<p class="has-text-centered is-size-7"><strong>Calulating Ability Modifer from Score</strong></p>');
     qContent.append('<p class="has-text-centered is-size-7">To determine the ability modifier from its score, you must look at how far away it is from 10. For every 2 higher it is than 10, your modifier is that number greater. For example, the ability modifier of 16 is +3. If the score is odd, the modifier is the same of the score of one lower. So the ability modifier of 17 is still only +3. The same works in the opposite direction – the ability modifier of 8 is -1. The actual mathmatical formula for this is:</p>');
-    qContent.append('<p class="has-text-centered is-size-7 is-italic">Modifier = ⌊(Score-10)/2⌋</p>');
+    qContent.append('<p class="has-text-centered is-size-7">Modifier = ⌊(Score-10)/2⌋</p>');
 
 }

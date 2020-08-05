@@ -436,3 +436,26 @@ function getConvertedPriceForSize(size, price){
       return price;
   }
 }
+
+////////
+
+function getItemTraitsArray(item, invItem){
+  let tagArray;
+  try {
+    tagArray = [];
+    let tagIDArray = JSON.parse(invItem.itemTags);
+    for(let tag of g_allTags){
+      if(tagIDArray.includes(tag.id+"")){
+        tagArray.push({ Tag: tag });
+      }
+    }
+  } catch (err) {
+    tagArray = item.TagArray;
+    tagArray = tagArray.sort(
+      function(a, b) {
+        return a.Tag.name > b.Tag.name ? 1 : -1;
+      }
+    );
+  }
+  return tagArray;
+}

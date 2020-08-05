@@ -323,7 +323,6 @@ function handleTraitLinkExt(match, linkName, innerTextDisplay, innerTextName) {
         $('.'+traitLinkClass).click(function(){
             openQuickView('tagView', {
                 TagName : innerTextName,
-                TagArray : g_allTags,
                 _prevBackData: {Type: g_QViewLastType, Data: g_QViewLastData},
             });
         });

@@ -6,6 +6,8 @@ const Character = require('../models/contentDB/Character');
 const Ancestry = require('../models/contentDB/Ancestry');
 const NoteField = require('../models/contentDB/NoteField');
 const Item = require('../models/contentDB/Item');
+const TaggedItem = require('../models/contentDB/TaggedItem');
+const Weapon = require('../models/contentDB/Weapon');
 const Inventory = require('../models/contentDB/Inventory');
 const InvItem = require('../models/contentDB/InvItem');
 const InvItemRune = require('../models/contentDB/InvItemRune');
@@ -187,26 +189,45 @@ module.exports = class CharSaving {
     }
 
     static addItemToInv(invID, itemID, quantity) {
-        return Item.findOne({ where: { id: itemID} })
+        return Item.findOne({ where: { id: itemID } })
         .then((chosenItem) => {
-            return InvItem.create({
-                invID: invID,
-                itemID: chosenItem.id,
-                name: chosenItem.name,
-                price: chosenItem.price,
-                bulk: chosenItem.bulk,
-                description: chosenItem.description,
-                size: chosenItem.size,
-                quantity: quantity,
-                isShoddy: chosenItem.isShoddy,
-                currentHitPoints: chosenItem.hitPoints,
-                materialType: chosenItem.materialType,
-                hitPoints: chosenItem.hitPoints,
-                brokenThreshold: chosenItem.brokenThreshold,
-                hardness: chosenItem.hardness,
-                code: chosenItem.code,
-            }).then((invItem) => {
-                return invItem;
+            return Weapon.findOne({ where: { itemID: chosenItem.id } })
+            .then((chosenWeapon) => {
+
+                let isWeapon = 0;
+                let dieType = null;
+                let damageType = null;
+                if(chosenWeapon != null){
+                    isWeapon = 1;
+                    dieType = chosenWeapon.dieType;
+                    damageType = chosenWeapon.damageType;
+                }
+
+                return InvItem.create({
+                    invID: invID,
+                    itemID: chosenItem.id,
+                    name: chosenItem.name,
+                    price: chosenItem.price,
+                    bulk: chosenItem.bulk,
+                    description: chosenItem.description,
+                    size: chosenItem.size,
+                    quantity: quantity,
+                    isShoddy: chosenItem.isShoddy,
+                    currentHitPoints: chosenItem.hitPoints,
+                    materialType: chosenItem.materialType,
+                    hitPoints: chosenItem.hitPoints,
+                    brokenThreshold: chosenItem.brokenThreshold,
+                    hardness: chosenItem.hardness,
+                    code: chosenItem.code,
+                    itemTags: null,
+
+                    itemIsWeapon: isWeapon,
+                    itemWeaponDieType: dieType,
+                    itemWeaponDamageType: damageType,
+                }).then((invItem) => {
+                    return invItem;
+                });
+
             });
         });
     }
@@ -263,6 +284,10 @@ module.exports = class CharSaving {
             brokenThreshold: inUpdateValues.brokenThreshold,
             hardness: inUpdateValues.hardness,
             code: inUpdateValues.code,
+            itemTags: inUpdateValues.itemTagsData,
+
+            itemWeaponDieType: inUpdateValues.weaponDieType,
+            itemWeaponDamageType: inUpdateValues.weaponDamageType,
         };
         return InvItem.update(updateValues, { where: { id: invItemID } })
         .then((result) => {

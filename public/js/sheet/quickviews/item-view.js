@@ -74,10 +74,8 @@ function openItemQuickview(data) {
 
     $('.tagButton').click(function(){
         let tagName = $(this).text();
-        let tagArray = itemDataStruct.TagArray;
         openQuickView('tagView', {
             TagName : tagName,
-            TagArray : tagArray,
             _prevBackData: {Type: g_QViewLastType, Data: g_QViewLastData},
         });
     });

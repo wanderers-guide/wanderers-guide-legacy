@@ -79,12 +79,8 @@ function openInvItemQuickview(data) {
         }
     }
 
-    data.Item.TagArray = data.Item.TagArray.sort(
-        function(a, b) {
-            return a.Tag.name > b.Tag.name ? 1 : -1;
-        }
-    );
-    for(const tagStruct of data.Item.TagArray){
+    let tagArray = getItemTraitsArray(data.Item, data.InvItem);
+    for(const tagStruct of tagArray){
         let tagDescription = tagStruct.Tag.description;
         if(tagDescription.length > g_tagStringLengthMax){
             tagDescription = tagDescription.substring(0, g_tagStringLengthMax);
@@ -108,10 +104,8 @@ function openInvItemQuickview(data) {
 
     $('.tagButton').click(function(){
         let tagName = $(this).text();
-        let tagArray = data.Item.TagArray;
         openQuickView('tagView', {
             TagName : tagName,
-            TagArray : tagArray,
             _prevBackData: {Type: g_QViewLastType, Data: g_QViewLastData},
         });
     });
@@ -254,7 +248,7 @@ function openInvItemQuickview(data) {
     qContent.append('<hr class="m-2">');
 
     // Item Runes
-    let consumableTag = data.Item.TagArray.find(tag => {
+    let consumableTag = tagArray.find(tag => {
         return tag.Tag.id == 402; // Hardcoded Consumable Tag ID
     });
     if(!viewOnly && consumableTag == null){ // In ViewOnly mode you cannot view weapon runes

@@ -10,9 +10,20 @@ function getAttackAndDamage(itemData, invItem){
     let pre_dexMod = getMod(g_preConditions_dexScore);
     let itemRuneData = invItem.itemRuneData;
 
+    let tagArray = getItemTraitsArray(itemData, invItem);
+
+    let damageDieType = invItem.itemWeaponDieType;
+    if(damageDieType == null){
+        damageDieType = itemData.WeaponData.dieType;
+    }
+    let damageDamageType = invItem.itemWeaponDamageType;
+    if(damageDamageType == null){
+        damageDamageType = itemData.WeaponData.damageType;
+    }
+
     if(itemData.WeaponData.isMelee == 1){
 
-        let finesseTag = itemData.TagArray.find(tag => {
+        let finesseTag = tagArray.find(tag => {
             return tag.Tag.id == 42; // Hardcoded Finesse Tag ID
         });
         let abilMod = strMod;
@@ -39,7 +50,7 @@ function getAttackAndDamage(itemData, invItem){
             profAttackBonus = getProfNumber(profNumUps, g_character.level);
         }
 
-        let splashTag = itemData.TagArray.find(tag => {
+        let splashTag = tagArray.find(tag => {
             return tag.Tag.id == 391; // Hardcoded Splash Tag ID
         });
         let dmgStrBonus = '';
@@ -104,12 +115,12 @@ function getAttackAndDamage(itemData, invItem){
         let weapSpecial = (weapSpecialBonus != 0) ? signNumber(weapSpecialBonus) : '';
 
         let damage = '';
-        if(itemData.WeaponData.dieType != 'NONE') {
-            let maxDamage = diceNum*dieTypeToNum(itemData.WeaponData.dieType)+pre_strMod+weapSpecialBonus;
+        if(damageDieType != 'NONE') {
+            let maxDamage = diceNum*dieTypeToNum(damageDieType)+pre_strMod+weapSpecialBonus;
             if(maxDamage >= 1) {
-                damage = diceNum+""+itemData.WeaponData.dieType+dmgStrBonus+weapSpecial+" "+itemData.WeaponData.damageType;
+                damage = diceNum+""+damageDieType+dmgStrBonus+weapSpecial+" "+damageDamageType;
             } else {
-                damage = '<a class="has-text-grey" data-tooltip="'+diceNum+""+itemData.WeaponData.dieType+dmgStrBonus+weapSpecial+'">1</a> '+itemData.WeaponData.damageType;
+                damage = '<a class="has-text-grey" data-tooltip="'+diceNum+""+damageDieType+dmgStrBonus+weapSpecial+'">1</a> '+damageDamageType;
             }
         } else {
             damage = '-';
@@ -119,13 +130,13 @@ function getAttackAndDamage(itemData, invItem){
 
     } else if(itemData.WeaponData.isRanged == 1){
 
-        let thrownTag = itemData.TagArray.find(tag => {
+        let thrownTag = tagArray.find(tag => {
             return 47 <= tag.Tag.id && tag.Tag.id <= 54; // Hardcoded Thrown Tag ID Range (47-54)
         });
-        let splashTag = itemData.TagArray.find(tag => {
+        let splashTag = tagArray.find(tag => {
             return tag.Tag.id == 391; // Hardcoded Splash Tag ID
         });
-        let propulsiveTag = itemData.TagArray.find(tag => {
+        let propulsiveTag = tagArray.find(tag => {
             return tag.Tag.id == 653; // Hardcoded Propulsive Tag ID
         });
 
@@ -219,12 +230,12 @@ function getAttackAndDamage(itemData, invItem){
         let weapSpecial = (weapSpecialBonus != 0) ? signNumber(weapSpecialBonus) : '';
 
         let damage = '';
-        if(itemData.WeaponData.dieType != 'NONE') {
-            let maxDamage = diceNum*dieTypeToNum(itemData.WeaponData.dieType)+dmgStr+weapSpecialBonus;
+        if(damageDieType != 'NONE') {
+            let maxDamage = diceNum*dieTypeToNum(damageDieType)+dmgStr+weapSpecialBonus;
             if(maxDamage >= 1) {
-                damage = diceNum+""+itemData.WeaponData.dieType+dmgStrSigned+weapSpecial+" "+itemData.WeaponData.damageType;
+                damage = diceNum+""+damageDieType+dmgStrSigned+weapSpecial+" "+damageDamageType;
             } else {
-                damage = '<a class="has-text-grey" data-tooltip="'+diceNum+""+itemData.WeaponData.dieType+dmgStrSigned+weapSpecial+'">1</a> '+itemData.WeaponData.damageType;
+                damage = '<a class="has-text-grey" data-tooltip="'+diceNum+""+damageDieType+dmgStrSigned+weapSpecial+'">1</a> '+damageDamageType;
             }
         } else {
             damage = '-';

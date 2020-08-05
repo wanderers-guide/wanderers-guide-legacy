@@ -60,7 +60,16 @@ function giveAbilityBoostSingle(srcStruct, selectionOptions, locationID){
                 }
             }
             if(abilityTypes.length != 0){
-                displayAbilityBoostSingle(srcStruct, locationID, abilityTypes);
+                if(abilityTypes.length != 1) {
+                    displayAbilityBoostSingle(srcStruct, locationID, abilityTypes);
+                } else {
+                    socket.emit("requestWSCAbilityBonusChange",
+                        getCharIDFromURL(),
+                        srcStruct,
+                        {Ability: shortenAbilityType(abilityTypes[0]), Bonus: "Boost"},
+                        null);
+                    statementComplete();
+                }
             } else {
                 displayError("Attempted to produce an invalid ability boost! (2)");
                 statementComplete();
@@ -140,8 +149,10 @@ function displayAbilityBoostSingle(srcStruct, locationID, abilityTypes){
 }
 
 socket.on("returnWSCAbilityBonusChange", function(selectBoostControlShellClass){
-    $('.'+selectBoostControlShellClass).removeClass("is-loading");
-    $('.'+selectBoostControlShellClass+'>select').blur();
+    if(selectBoostControlShellClass != null){
+        $('.'+selectBoostControlShellClass).removeClass("is-loading");
+        $('.'+selectBoostControlShellClass+'>select').blur();
+    }
     selectorUpdated();
     socket.emit("requestWSCUpdateChoices", getCharIDFromURL(), 'ABILITY-BOOSTS');
 });

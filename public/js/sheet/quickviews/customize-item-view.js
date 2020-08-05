@@ -9,9 +9,28 @@ function openCustomizeItemQuickview(data) {
     let qContent = $('#quickViewContent');
 
     qContent.append('<div class="field is-horizontal"><div class="field-label is-normal"><label class="label">Name</label></div><div class="field-body"><div class="field"><div class="control"><input id="customizeItemName" class="input" type="text" maxlength="32" spellcheck="false" value="'+data.InvItem.name+'"></div></div></div></div>');
-    qContent.append('<div class="field is-horizontal"><div class="field-label is-normal"><label class="label">Price (cp)</label></div><div class="field-body"><div class="field"><div class="control"><input id="customizeItemPrice" class="input" type="number" min="0" max="99999999" value="'+data.InvItem.price+'"></div></div></div></div>');
-    qContent.append('<div class="field is-horizontal"><div class="field-label is-normal"><label class="label">Bulk</label></div><div class="field-body"><div class="field"><div class="control"><input class="input" id="customizeItemBulk" type="number" min="0" max="100" step="0.1" value="'+data.InvItem.bulk+'"></div></div></div></div>');
+    qContent.append('<div class="field is-horizontal"><div class="field-label is-normal"><label class="label">Price (cp)</label></div><div class="field-body"><div class="field is-narrow"><div class="control"><input id="customizeItemPrice" class="input" type="number" min="0" max="99999999" value="'+data.InvItem.price+'"></div></div></div></div>');
+    qContent.append('<div class="field is-horizontal"><div class="field-label is-normal"><label class="label">Bulk</label></div><div class="field-body"><div class="field is-narrow"><div class="control"><input class="input" id="customizeItemBulk" type="number" min="0" max="100" step="0.1" value="'+data.InvItem.bulk+'"></div></div></div></div>');
     qContent.append('<div class="field"><label class="label">Description <a href="/wsc_docs/#description_fields" target="_blank"><span class="icon is-small has-text-info has-tooltip-top" data-tooltip="WSC Docs"><i class="fas fa-book"></i></span></a></label><div class="control"><textarea id="customizeItemDescription" class="textarea use-custom-scrollbar">'+data.InvItem.description+'</textarea></div></div>');
+
+    if(data.InvItem.itemIsWeapon == 1){
+
+        qContent.append('<hr class="m-2 mb-4">');
+
+        qContent.append('<div class="field is-horizontal"><div class="field-label is-normal"><label class="label">Dmg Die</label></div><div class="field-body"><div class="field"><div class="control"><div class="select"><select id="customizeWeaponDamageDie"><option value="">1</option><option value="d2">d2</option><option value="d4">d4</option><option value="d6">d6</option><option value="d8">d8</option><option value="d10">d10</option><option value="d12">d12</option><option value="d20">d20</option><option value="NONE">-</option></select></div></div></div></div></div>');
+        qContent.append('<div class="field is-horizontal"><div class="field-label is-normal"><label class="label">Dmg Type</label></div><div class="field-body"><div class="field is-narrow"><div class="control"><input id="customizeWeaponDamageType" class="input" type="text" maxlength="40" spellcheck="false" value="'+data.InvItem.itemWeaponDamageType+'"></div></div></div></div>');
+
+    }
+
+    qContent.append('<hr class="m-2 mb-4">');
+
+    let tagsSelectOptions = '';
+    for(let tag of g_allTags){
+        if(tag.isHidden == 0 && tag.isArchived == 0){
+            tagsSelectOptions += '<option value="'+tag.id+'">'+tag.name+'</option>';
+        }
+    }
+    qContent.append('<div class="field is-horizontal"><div class="field-label is-normal"><label class="label">Traits</label></div><div class="field-body"><div class="field is-marginless"><div class="control"><div class="select is-small is-multiple"><select id="customizeItemTraits" class="use-custom-scrollbar" size="6" multiple>'+tagsSelectOptions+'</select></div></div></div><div class="field" id="selectedTraits"></div></div></div>');
 
     qContent.append('<hr class="m-2 mb-4">');
 
@@ -26,9 +45,9 @@ function openCustomizeItemQuickview(data) {
 
     qContent.append('<hr class="m-2 mb-4">');
 
-    qContent.append('<div class="field is-horizontal"><div class="field-label is-normal"><label class="label">Max HP</label></div><div class="field-body"><div class="field"><div class="control"><input class="input" id="customizeItemHitPoints" type="number" min="0" max="99999" value="'+data.InvItem.hitPoints+'"></div></div></div></div>');
-    qContent.append('<div class="field is-horizontal"><div class="field-label is-normal"><label class="label">BT</label></div><div class="field-body"><div class="field"><div class="control"><input class="input" id="customizeItemBrokenThreshold" type="number" min="0" max="99999" value="'+data.InvItem.brokenThreshold+'"></div></div></div></div>');
-    qContent.append('<div class="field is-horizontal"><div class="field-label is-normal"><label class="label">Hardness</label></div><div class="field-body"><div class="field"><div class="control"><input class="input" id="customizeItemHardness" type="number" min="0" max="99999" value="'+data.InvItem.hardness+'"></div></div></div></div>');
+    qContent.append('<div class="field is-horizontal"><div class="field-label is-normal"><label class="label">Max HP</label></div><div class="field-body"><div class="field is-narrow"><div class="control"><input class="input" id="customizeItemHitPoints" type="number" min="0" max="99999" value="'+data.InvItem.hitPoints+'"></div></div></div></div>');
+    qContent.append('<div class="field is-horizontal"><div class="field-label is-normal"><label class="label">BT</label></div><div class="field-body"><div class="field is-narrow"><div class="control"><input class="input" id="customizeItemBrokenThreshold" type="number" min="0" max="99999" value="'+data.InvItem.brokenThreshold+'"></div></div></div></div>');
+    qContent.append('<div class="field is-horizontal"><div class="field-label is-normal"><label class="label">Hardness</label></div><div class="field-body"><div class="field is-narrow"><div class="control"><input class="input" id="customizeItemHardness" type="number" min="0" max="99999" value="'+data.InvItem.hardness+'"></div></div></div></div>');
 
     qContent.append('<hr class="m-2 mb-4">');
     
@@ -43,6 +62,32 @@ function openCustomizeItemQuickview(data) {
         $('#customizeItemShoddy').prop('checked', true);
     }
     $('#customizeItemMaterial').val(data.InvItem.materialType);
+
+    // Traits //
+    $("#customizeItemTraits").change(function(){
+        let tagNames = '';
+        $(this).find(":selected").each(function(){
+            tagNames += '<p class="is-size-6-5">- '+$(this).text()+'</p>';
+        });
+        $("#selectedTraits").html(tagNames);
+        
+    });
+    try {
+        let tagArray = JSON.parse(data.InvItem.itemTags);
+        for(let tagID of tagArray){
+            $("#customizeItemTraits").find('option[value='+tagID+']').attr('selected','selected');
+        }
+    } catch (err) {
+        for(let tag of data.Item.TagArray){
+            $("#customizeItemTraits").find('option[value='+tag.Tag.id+']').attr('selected','selected');
+        }
+    }
+    $("#customizeItemTraits").trigger("change");
+
+    // Weapon //
+    if(data.InvItem.itemIsWeapon == 1){
+        $('#customizeWeaponDamageDie').val(data.InvItem.itemWeaponDieType);
+    }
 
     $('#customizeItemSaveButton').click(function(){
 
@@ -110,6 +155,20 @@ function openCustomizeItemQuickview(data) {
             code = null;
         }
 
+        // Traits //
+        let itemTagsData = JSON.stringify($("#customizeItemTraits").val());
+        if(itemTagsData.length > 400){
+            itemTagsData = null;
+        }
+
+        // Weapon //
+        let weaponDieType = null;
+        let weaponDamageType = null;
+        if(data.InvItem.itemIsWeapon == 1){
+            weaponDieType = $('#customizeWeaponDamageDie').val();
+            weaponDamageType = $('#customizeWeaponDamageType').val();
+        }
+
         if(isValid){
             socket.emit("requestCustomizeInvItem",
                 data.InvItem.id,
@@ -125,6 +184,10 @@ function openCustomizeItemQuickview(data) {
                     brokenThreshold: brokenThreshold,
                     hardness: hardness,
                     code: code,
+                    itemTagsData: itemTagsData,
+
+                    weaponDieType: weaponDieType,
+                    weaponDamageType: weaponDamageType,
                 });
         }
 

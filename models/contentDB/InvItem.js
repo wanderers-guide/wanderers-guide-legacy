@@ -51,6 +51,9 @@ const InvItem = db.define('invItems', {
   code: {
     type: Sequelize.STRING
   },
+  itemTags: {
+    type: Sequelize.STRING
+  },
   isInvested: {
     type: Sequelize.INTEGER
   },
@@ -59,7 +62,17 @@ const InvItem = db.define('invItems', {
   },
   itemRuneData: { // Injected with object data in CharGathering
     type: Sequelize.INTEGER
-  }
+  },
+  itemIsWeapon: {
+    type: Sequelize.INTEGER
+  },
+  itemWeaponDieType: {
+    type: Sequelize.ENUM,
+    values: ['', 'd2', 'd4', 'd6', 'd8', 'd10', 'd12', 'd20', 'NONE']
+  },
+  itemWeaponDamageType: {
+    type: Sequelize.STRING
+  },
 });
 
 module.exports = InvItem;

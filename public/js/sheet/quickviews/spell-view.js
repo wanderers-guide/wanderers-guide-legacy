@@ -349,10 +349,8 @@ function openSpellQuickview(data){
 
     $('.tagButton').click(function(){
         let tagName = $(this).text();
-        let tagArray = spellDataStruct.Tags;
         openQuickView('tagView', {
             TagName : tagName,
-            TagArray : tagArray,
             _prevBackData: {Type: g_QViewLastType, Data: g_QViewLastData},
         });
     });
