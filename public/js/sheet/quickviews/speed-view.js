@@ -23,6 +23,7 @@ function addSpeedContent(qContent, speedStatName, speedName){
 
     let speedAmalgBonusNumID = 'amalgSpeedBonusNum'+speedStatName;
     let speedTotal = getStatTotal(speedStatName);
+    
     let speedBase = getStat(speedStatName, 'BASE');
 
     qContent.append('<p class="has-text-centered is-size-5"><strong>'+speedName+'</strong></p>');

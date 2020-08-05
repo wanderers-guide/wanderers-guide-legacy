@@ -104,6 +104,8 @@ function openQuickView(type, data) {
         openConditionQuickview(data);
     } else if(type == 'acView'){
         openACQuickview(data);
+    } else if(type == 'charInfoView'){
+        openCharInfoQuickview(data);
     } else if(type == 'animalCompanionView'){
         openAnimalCompQuickview(data);
     }

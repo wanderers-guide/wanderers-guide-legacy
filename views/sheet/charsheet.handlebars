@@ -28,6 +28,7 @@
     <script src="/js/sheet/quickviews/spell-view.js"></script>
     <script src="/js/sheet/quickviews/spell-empty-view.js"></script>
     <script src="/js/sheet/quickviews/item-view.js"></script>
+    <script src="/js/sheet/quickviews/char-info-view.js"></script>
     <script src="/js/sheet/quickviews/ability-view.js"></script>
     <script src="/js/sheet/quickviews/resist-view.js"></script>
     <script src="/js/sheet/quickviews/speed-view.js"></script>
@@ -102,14 +103,14 @@
             <div class="tile is-parent is-paddingless">
                 <div class="tile is-3">
                     <div class="tile mb-4 mr-2">
-                        <div class="tile sheet-box pb-1">
-                            <div class="tile is-vertical is-7">
+                        <div class="tile sheet-box">
+                            <div id="charInfoContent" class="tile is-vertical is-7 pb-1">
                                 <p id="character-name" class="is-size-5 has-text-light is-clipped"></p>
                                 <div class="tile is-child">
                                     <p id="character-type" class="is-size-7 has-text-grey-light"></p>
                                 </div>
                             </div>
-                            <div class="tile is-vertical is-5">
+                            <div id="charExperienceContent" class="tile is-vertical is-5 pb-1">
                                 <p id="character-level" class="is-size-6 has-text-grey-lighter"></p>
                                 <div class="tile is-child pb-3">
                                     <p class="is-size-7 has-text-grey-light has-text-weight-semibold">Experience</p>

@@ -260,11 +260,8 @@ function loadCharSheet(){
 
     addStat('SPEED', 'BASE', g_ancestry.speed);
     for(const otherSpeed of g_otherSpeeds){
-        addStat('SPEED_'+otherSpeed.Type, 'BASE', parseInt(otherSpeed.Amount));
+        addStat('SPEED_'+otherSpeed.Type, 'BASE', otherSpeed.Amount);
     }
-
-    addStat('MAX_HEALTH', 'ANCESTRY', g_ancestry.hitPoints);
-    addStat('MAX_HEALTH_BONUS_PER_LEVEL', 'MODIFIER', 'CON');
 
     let classDCData = g_profMap.get("Class_DC");
     addStat('CLASS_DC', 'PROF_BONUS', classDCData.NumUps);
@@ -354,6 +351,9 @@ function loadCharSheet(){
         addStat('DIVINE_SPELL_DC', 'USER_BONUS', divineSpellDC.UserBonus);
     }
 
+    addStat('MAX_HEALTH', 'ANCESTRY', g_ancestry.hitPoints);
+    addStat('MAX_HEALTH_BONUS_PER_LEVEL', 'BASE', getModOfValue('CON'));
+
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 
     // Run Items Code (investitures and others) //
@@ -382,7 +382,7 @@ function loadCharSheet(){
     initHealthAndTemp();
 
     // Determine Armor //
-    determineArmor(getMod(getStatTotal('SCORE_DEX')), g_preConditions_strScore);
+    determineArmor(getModOfValue('DEX'), g_preConditions_strScore);
 
     // Display Conditions List //
     displayConditionsList();
@@ -529,6 +529,18 @@ function displayInformation() {
     }
     $('#character-type').html(heritageAndAncestryName+" "+g_classDetails.Class.name);
     $('#character-level').html("Lvl "+g_character.level);
+
+    /*
+    $("#charInfoContent").click(function(){
+        openQuickView('charInfoView', {
+        });
+    });
+    $("#charInfoContent").mouseenter(function(){
+        $(this).addClass('has-background-grey-darker');
+    });
+    $("#charInfoContent").mouseleave(function(){
+        $(this).removeClass('has-background-grey-darker');
+    });*/
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////// Experience //////////////////////////////////////////
