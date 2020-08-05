@@ -143,7 +143,9 @@ module.exports = class CharGathering {
                         let classID = classAbil.classID;
     
                         let classStruct = classMap.get(classID);
-                        classStruct.Abilities.push(classAbil);
+                        if(classStruct != null){
+                            classStruct.Abilities.push(classAbil);
+                        }
     
                     }
     
