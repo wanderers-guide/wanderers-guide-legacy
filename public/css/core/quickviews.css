@@ -1,0 +1,13 @@
+
+.quickview-header {
+  background-color: #1d1d1d;
+  border-bottom-color: #303030;
+}
+.quickview-body {
+  background-color: #242424;
+}
+
+/* Misc */
+.border-additems {
+  border-color: hsl(0, 0%, 19%)!important;
+}

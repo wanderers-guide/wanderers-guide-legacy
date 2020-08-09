@@ -4,6 +4,11 @@
 
 $(function () {
 
+    // ~ Remove Footer ~ //
+    $('#wanderers-guide-footer').addClass('is-hidden');
+    $('#main-container').addClass('is-paddingless');
+    // ~~~~~~~~~~~~~~~~~ //
+
     $(".text-processing").each(function(){
         $(this).html(processText($(this).text(), false));
     });

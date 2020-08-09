@@ -41,10 +41,10 @@ function processText(text, isSheet, isJustified = false, size = 'MEDIUM', indexC
     text = text.replace(/\n\-\-\-\-/g, '<hr class="m-1">');
 
     // ***word*** - Makes word bigger and bold
-    text = text.replace(/\*\*\*(.+?)\*\*\*/g, '<strong class="has-text-weight-very-bold'+_incS+'">$1</strong>');
+    text = text.replace(/\*\*\*(.+?)\*\*\*/g, '<strong class="is-bold-very'+_incS+'">$1</strong>');
 
     // **word** - Makes word bold
-    text = text.replace(/\*\*(.+?)\*\*/g, '<strong class="has-text-weight-very-bold">$1</strong>');
+    text = text.replace(/\*\*(.+?)\*\*/g, '<strong class="is-bold-very">$1</strong>');
 
     // __word__ - Makes word italicized
     text = text.replace(/\_\_(.+?)\_\_/g, '<em>$1</em>');
@@ -82,7 +82,7 @@ function processText(text, isSheet, isJustified = false, size = 'MEDIUM', indexC
 
     // (Feat: Striking | Strike)
     let regexFeatLinkExt = /\((Feat|Ability|Action|Activity):\s*([^(:]+?)\s*\|\s*(.+?)\s*\)/ig;
-    if(isSheet) {
+    if(true) {
         text = text.replace(regexFeatLinkExt, handleFeatLinkExt);
     } else {
         text = text.replace(regexFeatLinkExt, '$2');
@@ -90,7 +90,7 @@ function processText(text, isSheet, isJustified = false, size = 'MEDIUM', indexC
 
     // (Feat: Strike)
     let regexFeatLink = /\((Feat|Ability|Action|Activity):\s*([^(:]+?)\s*\)/ig;
-    if(isSheet) {
+    if(true) {
         text = text.replace(regexFeatLink, handleFeatLink);
     } else {
         text = text.replace(regexFeatLink, '$2');
@@ -98,7 +98,7 @@ function processText(text, isSheet, isJustified = false, size = 'MEDIUM', indexC
 
     // (Item: Striking | Strike)
     let regexItemLinkExt = /\((Item):\s*([^(:]+?)\s*\|\s*(.+?)\s*\)/ig;
-    if(isSheet) {
+    if(true) {
         text = text.replace(regexItemLinkExt, handleItemLinkExt);
     } else {
         text = text.replace(regexItemLinkExt, '$2');
@@ -106,7 +106,7 @@ function processText(text, isSheet, isJustified = false, size = 'MEDIUM', indexC
 
     // (Item: Strike)
     let regexItemLink = /\((Item):\s*([^(:]+?)\s*\)/ig;
-    if(isSheet) {
+    if(true) {
         text = text.replace(regexItemLink, handleItemLink);
     } else {
         text = text.replace(regexItemLink, '$2');
@@ -114,7 +114,7 @@ function processText(text, isSheet, isJustified = false, size = 'MEDIUM', indexC
 
     // (Spell: Striking | Strike)
     let regexSpellLinkExt = /\((Spell):\s*([^(:]+?)\s*\|\s*(.+?)\s*\)/ig;
-    if(isSheet) {
+    if(true) {
         text = text.replace(regexSpellLinkExt, handleSpellLinkExt);
     } else {
         text = text.replace(regexSpellLinkExt, '$2');
@@ -122,7 +122,7 @@ function processText(text, isSheet, isJustified = false, size = 'MEDIUM', indexC
 
     // (Spell: Strike)
     let regexSpellLink = /\((Spell):\s*([^(:]+?)\s*\)/ig;
-    if(isSheet) {
+    if(true) {
         text = text.replace(regexSpellLink, handleSpellLink);
     } else {
         text = text.replace(regexSpellLink, '$2');
@@ -130,7 +130,7 @@ function processText(text, isSheet, isJustified = false, size = 'MEDIUM', indexC
 
     // (Language: Gnomish-like | Gnomish)
     let regexLanguageLinkExt = /\((Language):\s*([^(:]+?)\s*\|\s*(.+?)\s*\)/ig;
-    if(isSheet) {
+    if(true) {
         text = text.replace(regexLanguageLinkExt, handleLanguageLinkExt);
     } else {
         text = text.replace(regexLanguageLinkExt, '$2');
@@ -138,7 +138,7 @@ function processText(text, isSheet, isJustified = false, size = 'MEDIUM', indexC
 
     // (Language: Gnomish)
     let regexLanguageLink = /\((Language):\s*([^(:]+?)\s*\)/ig;
-    if(isSheet) {
+    if(true) {
         text = text.replace(regexLanguageLink, handleLanguageLink);
     } else {
         text = text.replace(regexLanguageLink, '$2');
@@ -146,7 +146,7 @@ function processText(text, isSheet, isJustified = false, size = 'MEDIUM', indexC
 
     // (Trait: Infusing | Infused)
     let regexTraitLinkExt = /\((Trait):\s*([^(:]+?)\s*\|\s*(.+?)\s*\)/ig;
-    if(isSheet) {
+    if(true) {
         text = text.replace(regexTraitLinkExt, handleTraitLinkExt);
     } else {
         text = text.replace(regexTraitLinkExt, '$2');
@@ -154,14 +154,14 @@ function processText(text, isSheet, isJustified = false, size = 'MEDIUM', indexC
 
     // (Trait: Infused)
     let regexTraitLink = /\((Trait):\s*([^(:]+?)\s*\)/ig;
-    if(isSheet) {
+    if(true) {
         text = text.replace(regexTraitLink, handleTraitLink);
     } else {
         text = text.replace(regexTraitLink, '$2');
     }
 
     // Conditions Search and Replace
-    if(isSheet && indexConditions) {
+    if(true && indexConditions) {
         text = handleIndexConditions(text);
     }
 

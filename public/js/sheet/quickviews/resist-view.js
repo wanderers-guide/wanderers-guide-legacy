@@ -27,10 +27,10 @@ function openResistancesQuickview(data) {
         for(let resist of data.ResistAndVulners.Resistances) {
             let type = capitalizeWord(resist.Type);
             let amount = resist.Amount;
-            if(amount === 'LEVEL'){
-                amount = data.CharLevel;
-            } else if(amount === 'HALF_LEVEL'){
-                amount = Math.ceil(data.CharLevel/2);
+            if(amount.includes('LEVEL')){
+                amount = amount.replace('LEVEL', data.CharLevel);
+            } else if(amount.includes('HALF_LEVEL')){
+                amount = amount.replace('HALF_LEVEL', Math.ceil(data.CharLevel/2));
             }
             qContent.append('<p class="has-text-centered is-size-5">'+type+' '+amount+'</p>');
         }
@@ -41,10 +41,10 @@ function openResistancesQuickview(data) {
         for(let vulner of data.ResistAndVulners.Vulnerabilities) {
             let type = capitalizeWord(vulner.Type);
             let amount = vulner.Amount;
-            if(amount === 'LEVEL'){
-                amount = data.CharLevel;
-            } else if(amount === 'HALF_LEVEL'){
-                amount = Math.ceil(data.CharLevel/2);
+            if(amount.includes('LEVEL')){
+                amount = amount.replace('LEVEL', data.CharLevel);
+            } else if(amount.includes('HALF_LEVEL')){
+                amount = amount.replace('HALF_LEVEL', Math.ceil(data.CharLevel/2));
             }
             qContent.append('<p class="has-text-centered is-size-5">'+type+' '+amount+'</p>');
         }

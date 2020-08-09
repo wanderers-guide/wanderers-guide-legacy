@@ -26,7 +26,7 @@ function giveDomain(srcStruct, locationID, spellSRC){
     let selectControlShellClass = selectID+'ControlShell';
     let descriptionID = "selectDomainDescription"+locationID+"-"+srcStruct.sourceCodeSNum;
 
-    $('#'+locationID).append('<div class="field mt-1"><div class="select '+selectControlShellClass+'"><select id="'+selectID+'"></select></div></div>');
+    $('#'+locationID).append('<div class="field is-grouped is-grouped-centered is-marginless mt-1"><div class="select '+selectControlShellClass+'"><select id="'+selectID+'"></select></div></div>');
 
     $('#'+locationID).append('<div id="'+descriptionID+'"></div>');
 
@@ -104,7 +104,7 @@ function giveDomainAdvancement(srcStruct, locationID, spellSRC){
     let selectControlShellClass = selectID+'ControlShell';
     let descriptionID = "selectDomainAdvancementDescription"+locationID+"-"+srcStruct.sourceCodeSNum;
 
-    $('#'+locationID).append('<div class="field mt-1"><div class="select '+selectControlShellClass+'"><select id="'+selectID+'"></select></div></div>');
+    $('#'+locationID).append('<div class="field is-grouped is-grouped-centered is-marginless mt-1"><div class="select '+selectControlShellClass+'"><select id="'+selectID+'"></select></div></div>');
 
     $('#'+locationID).append('<div id="'+descriptionID+'"></div>');
 

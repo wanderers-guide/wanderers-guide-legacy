@@ -1,0 +1,81 @@
+
+.modal-card-head {
+  background-color: #161616;
+  border-bottom-color: #282828;
+}
+.modal-card-body {
+  background-color: #1C1C1C;
+}
+.modal-card-foot {
+  background-color: #161616;
+  border-top-color: #282828;
+}
+
+
+
+
+/* Manage Spells Modal */
+
+.is-filled-spell-slot {
+  background-color: hsl(0, 0%, 21%)!important;
+  color: #cccccc!important;
+  border-color: hsl(210, 3%, 23%)!important;
+}
+
+.is-filled-red-spell-slot {
+  background-color: hsl(0, 25%, 21%)!important;
+  color: #cccccc!important;
+  border-color: hsl(210, 3%, 23%)!important;
+}
+
+.is-filled-green-spell-slot {
+  background-color: hsl(144, 25%, 21%)!important;
+  color: #cccccc!important;
+  border-color: hsl(210, 3%, 23%)!important;
+}
+
+.is-filled-blue-spell-slot {
+  background-color: hsl(220, 25%, 21%)!important;
+  color: #cccccc!important;
+  border-color: hsl(210, 3%, 23%)!important;
+}
+
+.is-filled-multiple-spell-slot {
+  background-color: hsl(53, 23%, 21%)!important;
+  color: #cccccc!important;
+  border-color: hsl(210, 3%, 23%)!important;
+}
+
+.is-empty-spell-slot {
+  background-color: hsl(0, 0%, 35%)!important;
+  color: #dddddd!important;
+  border-color: hsl(210, 3%, 23%)!important;
+}
+
+.is-empty-red-spell-slot {
+  background-color: hsl(0, 25%, 35%)!important;
+  color: #dddddd!important;
+  border-color: hsl(210, 3%, 23%)!important;
+}
+
+.is-empty-green-spell-slot {
+  background-color: hsl(144, 25%, 35%)!important;
+  color: #dddddd!important;
+  border-color: hsl(210, 3%, 23%)!important;
+}
+
+.is-empty-blue-spell-slot {
+  background-color: hsl(220, 25%, 35%)!important;
+  color: #dddddd!important;
+  border-color: hsl(210, 3%, 23%)!important;
+}
+
+.is-empty-multiple-spell-slot {
+  background-color: hsl(53, 23%, 35%)!important;
+  color: #dddddd!important;
+  border-color: hsl(210, 3%, 23%)!important;
+}
+
+.has-empty-slot-background {
+  background-color: hsl(0, 0%, 14%);
+}

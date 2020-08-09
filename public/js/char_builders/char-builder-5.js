@@ -4,6 +4,16 @@
 
 let socket = io();
 
+// Core Builder Data //
+let g_featMap = null;
+let g_skillMap = null;
+let g_itemMap = null;
+let g_spellMap = null;
+let g_allLanguages = null;
+let g_allConditions = null;
+let g_allTags = null;
+// ~~~~~~~~~~~~~~~~~ //
+
 // ~~~~~~~~~~~~~~ // General - Run On Load // ~~~~~~~~~~~~~~ //
 $(function () {
 
@@ -39,7 +49,18 @@ function goToChar() {
 
 // ~~~~~~~~~~~~~~ // Processings // ~~~~~~~~~~~~~~ //
 
-socket.on("returnFinalizeDetails", function(character, abilObject, cClass, ancestry, choiceStruct){
+socket.on("returnFinalizeDetails", function(coreDataStruct, character, abilObject, cClass, ancestry, choiceStruct){
+
+    // Core Builder Data //
+    g_featMap = objToMap(coreDataStruct.FeatObject);
+    g_skillMap = objToMap(coreDataStruct.SkillObject);
+    g_itemMap = objToMap(coreDataStruct.ItemObject);
+    g_spellMap = objToMap(coreDataStruct.SpellObject);
+    g_allLanguages = coreDataStruct.AllLanguages;
+    g_allConditions = coreDataStruct.AllConditions;
+    g_allTags = coreDataStruct.AllTags;
+    // ~~~~~~~~~~~~~~~~~ //
+
     injectWSCChoiceStruct(choiceStruct);
     
     let abilMap = objToMap(abilObject);

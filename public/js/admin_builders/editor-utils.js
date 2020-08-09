@@ -42,10 +42,7 @@ function getUniHeritageEditorIDFromURL(){
   return parseInt(spl1[1]);
 }
 
-function objToMap(obj) {
-    let strMap = new Map();
-    for (let k of Object.keys(obj)) {
-      strMap.set(k, obj[k]);
-    }
-    return strMap;
+function getClassFeatureEditorIDFromURL(){
+  let spl1 = window.location.pathname.split("class-feature/");
+  return parseInt(spl1[1]);
 }

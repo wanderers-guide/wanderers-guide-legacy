@@ -7,7 +7,7 @@ $(function () {
 
     let quickviews = bulmaQuickview.attach();
 
-    $('#character-sheet-section').click(function(){
+    $('#center-body').click(function(){
         if($('#quickviewDefault').hasClass('quickview-auto-close-protection')){
             $('#quickviewDefault').removeClass('quickview-auto-close-protection');
         } else {

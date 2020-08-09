@@ -579,7 +579,9 @@ module.exports = class SocketConnections {
             CharGathering.getAllAncestries(charID, false).then((ancestriesObject) => {
               CharGathering.getAllUniHeritages(charID).then((uniHeritageArray) => {
                 CharGathering.getCharChoices(charID).then((choiceStruct) => {
-                  socket.emit('returnAncestryDetails', ancestriesObject, uniHeritageArray, choiceStruct);
+                  CharGathering.getBuilderCore(charID).then((coreDataStruct) => {
+                    socket.emit('returnAncestryDetails', coreDataStruct, ancestriesObject, uniHeritageArray, choiceStruct);
+                  });
                 });
               });
             });
@@ -626,7 +628,9 @@ module.exports = class SocketConnections {
           if(ownsChar){
             CharGathering.getAllBackgrounds(charID).then((backgrounds) => {
               CharGathering.getCharChoices(charID).then((choiceStruct) => {
-                socket.emit('returnBackgroundDetails', backgrounds, choiceStruct);
+                CharGathering.getBuilderCore(charID).then((coreDataStruct) => {
+                  socket.emit('returnBackgroundDetails', coreDataStruct, backgrounds, choiceStruct);
+                });
               });
             });
           }
@@ -659,7 +663,9 @@ module.exports = class SocketConnections {
           if(ownsChar){
             CharGathering.getAllClasses(charID).then((classObject) => {
               CharGathering.getCharChoices(charID).then((choiceStruct) => {
-                socket.emit('returnClassDetails', classObject, choiceStruct);
+                CharGathering.getBuilderCore(charID).then((coreDataStruct) => {
+                  socket.emit('returnClassDetails', coreDataStruct, classObject, choiceStruct);
+                });
               });
             });
           }
@@ -696,7 +702,9 @@ module.exports = class SocketConnections {
                 CharGathering.getAncestry(character.ancestryID).then((ancestry) => {
                   CharGathering.getAbilityScores(charID).then((abilObject) => {
                     CharGathering.getCharChoices(charID).then((choiceStruct) => {
-                      socket.emit('returnFinalizeDetails', character, abilObject, classDetails.Class, ancestry, choiceStruct);
+                      CharGathering.getBuilderCore(charID).then((coreDataStruct) => {
+                        socket.emit('returnFinalizeDetails', coreDataStruct, character, abilObject, classDetails.Class, ancestry, choiceStruct);
+                      });
                     });
                   });
                 });
@@ -1274,14 +1282,10 @@ module.exports = class SocketConnections {
       socket.on('requestResistanceChange', function(charID, srcStruct, resistType, resistAmount){
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
           if(ownsChar){
-            if(resistAmount === 'HALF_LEVEL' || resistAmount === 'LEVEL' || !isNaN(parseInt(resistAmount))){
-              CharDataMappingExt.setDataResistance(charID, srcStruct, resistType, resistAmount)
-              .then((result) => {
-                socket.emit('returnResistanceChange');
-              });
-            } else {
-              socket.emit('returnWSCStatementFailure', "Invalid Resistance Amount '"+resistAmount+"'!");
-            }
+            CharDataMappingExt.setDataResistance(charID, srcStruct, resistType, resistAmount)
+            .then((result) => {
+              socket.emit('returnResistanceChange');
+            });
           } else {
             socket.emit('returnWSCStatementFailure', 'Incorrect Auth');
           }
@@ -1291,14 +1295,10 @@ module.exports = class SocketConnections {
       socket.on('requestVulnerabilityChange', function(charID, srcStruct, vulnerableType, vulnerableAmount){
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
           if(ownsChar){
-            if(vulnerableAmount === 'HALF_LEVEL' || vulnerableAmount === 'LEVEL' || !isNaN(parseInt(vulnerableAmount))){
-              CharDataMappingExt.setDataVulnerability(charID, srcStruct, vulnerableType, vulnerableAmount)
-              .then((result) => {
-                socket.emit('returnVulnerabilityChange');
-              });
-            } else {
-              socket.emit('returnWSCStatementFailure', "Invalid Vulnerability Amount '"+vulnerableAmount+"'!");
-            }
+            CharDataMappingExt.setDataVulnerability(charID, srcStruct, vulnerableType, vulnerableAmount)
+            .then((result) => {
+              socket.emit('returnVulnerabilityChange');
+            });
           } else {
             socket.emit('returnWSCStatementFailure', 'Incorrect Auth');
           }
@@ -1885,6 +1885,42 @@ module.exports = class SocketConnections {
               AdminGathering.getAllFeats().then((featsObject) => {
                 socket.emit('returnAdminUniHeritageDetails', uniHeritageArray, featsObject);
               });
+            });
+          }
+        });
+      });
+
+      ////
+
+      socket.on('requestAdminAddClassFeature', function(data){
+        AuthCheck.isAdmin(socket).then((isAdmin) => {
+          if(isAdmin){
+            AdminUpdate.addClassFeature(data).then((result) => {
+              socket.emit('returnAdminCompleteClassFeature');
+            });
+          }
+        });
+      });
+
+      socket.on('requestAdminUpdateClassFeature', function(data){
+        AuthCheck.isAdmin(socket).then((isAdmin) => {
+          if(isAdmin){
+            if(data != null && data.classFeatureID != null) {
+              AdminUpdate.archiveClassFeature(data.classFeatureID, true).then((result) => {
+                AdminUpdate.addClassFeature(data).then((result) => {
+                  socket.emit('returnAdminCompleteClassFeature');
+                });
+              });
+            }
+          }
+        });
+      });
+    
+      socket.on('requestAdminRemoveClassFeature', function(classFeatureID){
+        AuthCheck.isAdmin(socket).then((isAdmin) => {
+          if(isAdmin){
+            AdminUpdate.deleteClassFeature(classFeatureID).then((result) => {
+              socket.emit('returnAdminRemoveClassFeature');
             });
           }
         });

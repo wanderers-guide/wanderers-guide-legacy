@@ -4,6 +4,16 @@
 
 let socket = io();
 
+// Core Builder Data //
+let g_featMap = null;
+let g_skillMap = null;
+let g_itemMap = null;
+let g_spellMap = null;
+let g_allLanguages = null;
+let g_allConditions = null;
+let g_allTags = null;
+// ~~~~~~~~~~~~~~~~~ //
+
 let g_uniHeritageArray = null;
 let g_charLevel = null;
 
@@ -45,7 +55,17 @@ function prevPage() {
 
 // ~~~~~~~~~~~~~~ // Processings // ~~~~~~~~~~~~~~ //
 
-socket.on("returnAncestryDetails", function(ancestryObject, uniHeritageArray, inChoiceStruct){
+socket.on("returnAncestryDetails", function(coreDataStruct, ancestryObject, uniHeritageArray, inChoiceStruct){
+
+    // Core Builder Data //
+    g_featMap = objToMap(coreDataStruct.FeatObject);
+    g_skillMap = objToMap(coreDataStruct.SkillObject);
+    g_itemMap = objToMap(coreDataStruct.ItemObject);
+    g_spellMap = objToMap(coreDataStruct.SpellObject);
+    g_allLanguages = coreDataStruct.AllLanguages;
+    g_allConditions = coreDataStruct.AllConditions;
+    g_allTags = coreDataStruct.AllTags;
+    // ~~~~~~~~~~~~~~~~~ //
 
     g_uniHeritageArray = uniHeritageArray;
     g_charLevel = inChoiceStruct.Level;

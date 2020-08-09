@@ -57,6 +57,7 @@
     <script src="/js/sheet/utils/animal-comp-utils.js"></script>
     <script src="/js/sheet/utils/struct-utils.js"></script>
     <script src="/js/sheet/utils/material-utils.js"></script>
+    <script src="/js/sheet/utils/item-utils.js"></script>
     <script src="/js/sheet/utils/utils.js"></script>
 {{/section}}
 
@@ -364,108 +365,116 @@
 </section>
 
 
-<div id="quickviewDefault" class="quickview">
-    <div class="quickview-header">
-        <p id="quickViewTitle" class="title is-size-5 has-text-grey-lighter"></p>
-        <div class="is-inline-flex">
-            <p id="quickViewTitleRight"></p>
-            <p id="quickViewTitleClose"></p>
+
+{{#section 'overlay'}}
+    
+    <!-- Right Quickview -->
+    <div id="quickviewDefault" class="quickview">
+        <div class="quickview-header">
+            <p id="quickViewTitle" class="title is-size-5 has-text-grey-lighter"></p>
+            <div class="is-inline-flex">
+                <p id="quickViewTitleRight"></p>
+                <p id="quickViewTitleClose"></p>
+            </div>
+        </div>
+        <div class="quickview-body use-custom-scrollbar">
+            <div id="quickViewContent" class="quickview-block pt-1 pb-3 px-3">
+            </div>
         </div>
     </div>
-    <div class="quickview-body use-custom-scrollbar">
-        <div id="quickViewContent" class="quickview-block pt-1 pb-3 px-3">
+
+    <!-- Conditions Modal -->
+    <div id="conditionsModalDefault" name="" class="modal" style="z-index:30;">
+    <div id="conditionsModalBackground" class="modal-background"></div>
+    <div class="modal-card">
+        <div class="modal-card-head">
+        <p id="conditionsModalTitle" class="modal-card-title has-text-centered is-size-4 has-text-grey-lighter"></p>
+        <a id="conditionsModalRemoveButton" class="is-pulled-right is-size-6"><span class="icon is-medium has-text-danger"><i class="fas fa-minus-circle"></i></span></a>
+        </div>
+        <section class="modal-card-body py-2">
+            <p id="conditionsModalSourceSection" class="has-text-centered"><strong class="has-text-grey-light">From: </strong><em id="conditionsModalSourceContent"></em></p>
+            <p id="conditionsModalContent"></p>
+        </section>
+        <div id="conditionsModalFooter" class="modal-card-foot buttons is-centered">
+                <button id="conditionsModalSubtractButton" class="button is-very-small is-info is-rounded">
+                    <span class="icon">
+                        <i class="fas fa-heading fa-minus"></i>
+                    </span>
+                </button>
+                <button id="conditionsModalValueButton" class="button is-static has-background-grey-darker border-dark">
+                    <p id="conditionsModalValue" class="has-text-grey-lighter"></p>
+                </button>
+                <button id="conditionsModalAddButton" class="button is-very-small is-info is-rounded">
+                    <span class="icon">
+                        <i class="fas fa-heading fa-plus"></i>
+                    </span>
+                </button>
         </div>
     </div>
-</div>
+    <button id="conditionsModalCloseButton" class="modal-close is-large" aria-label="close"></button>
+    </div>
 
-<div id="conditionsModalDefault" name="" class="modal" style="z-index:30;">
-  <div id="conditionsModalBackground" class="modal-background"></div>
-  <div class="modal-card">
-    <div class="modal-card-head">
-      <p id="conditionsModalTitle" class="modal-card-title has-text-centered is-size-4 has-text-grey-lighter"></p>
-      <a id="conditionsModalRemoveButton" class="is-pulled-right is-size-6"><span class="icon is-medium has-text-danger"><i class="fas fa-minus-circle"></i></span></a>
-    </div>
-    <section class="modal-card-body py-2">
-        <p id="conditionsModalSourceSection" class="has-text-centered"><strong class="has-text-grey-light">From: </strong><em id="conditionsModalSourceContent"></em></p>
-        <p id="conditionsModalContent"></p>
-    </section>
-    <div id="conditionsModalFooter" class="modal-card-foot buttons is-centered">
-            <button id="conditionsModalSubtractButton" class="button is-very-small is-info is-rounded">
-                <span class="icon">
-                    <i class="fas fa-heading fa-minus"></i>
-                </span>
-            </button>
-            <button id="conditionsModalValueButton" class="button is-static has-background-grey-darker border-dark">
-                <p id="conditionsModalValue" class="has-text-grey-lighter"></p>
-            </button>
-            <button id="conditionsModalAddButton" class="button is-very-small is-info is-rounded">
-                <span class="icon">
-                    <i class="fas fa-heading fa-plus"></i>
-                </span>
-            </button>
-    </div>
-  </div>
-  <button id="conditionsModalCloseButton" class="modal-close is-large" aria-label="close"></button>
-</div>
-
-<div id="conditionsSelectModalDefault" name="" class="modal" style="z-index:30;">
-  <div id="conditionsSelectModalBackground" class="modal-background"></div>
-  <div class="modal-card">
-    <div class="modal-card-head">
-      <p id="conditionsSelectModalTitle" class="modal-card-title has-text-centered is-size-4 has-text-grey-lighter">Choose a Condition</p>
-      <button id="conditionsSelectModalCloseButton" class="delete" aria-label="close"></button>
-    </div>
-    <section class="modal-card-body is-paddingless use-invisible-scrollbar p-2">
-        <div id="conditionsSelectModalContent" class="tile is-ancestor is-vertical"></div>
-    </section>
-    <div class="modal-card-foot">
-    </div>
-  </div>
-</div>
-
-
-<div id="manageSpellsModalDefault" name="" class="modal" style="z-index:30;">
-  <div id="manageSpellsModalBackground" class="modal-background"></div>
-  <div class="modal-card" style="width: 90%; height: 90%;">
-    <div class="modal-card-head">
-      <p id="manageSpellsModalTitle" class="modal-card-title has-text-centered is-size-4 has-text-grey-lighter">Manage Spells<span class="icon is-size-6 has-text-info has-tooltip-multiline has-tooltip-bottom" data-tooltip="For prepared spellcasters, drag spells from your spell list over to the appropriate slots to prepare them."><i class="far fa-question-circle"></i></span></p>
-      <button id="manageSpellsModalCloseButton" class="delete" aria-label="close"></button>
-    </div>
-    <section class="modal-card-body is-paddingless px-2 use-invisible-scrollbar">
-        <div class="tabs is-boxed is-small is-marginless">
-            <ul id="manageSpellsTabs" class="sheet-tabs has-text-grey-lighter">
-            </ul>
+    <!-- Conditions Select Modal -->
+    <div id="conditionsSelectModalDefault" name="" class="modal" style="z-index:30;">
+    <div id="conditionsSelectModalBackground" class="modal-background"></div>
+    <div class="modal-card">
+        <div class="modal-card-head">
+        <p id="conditionsSelectModalTitle" class="modal-card-title has-text-centered is-size-4 has-text-grey-lighter">Choose a Condition</p>
+        <button id="conditionsSelectModalCloseButton" class="delete" aria-label="close"></button>
         </div>
-        <div class="tile is-ancestor">
-            <div class="tile is-parent">
-                <div class="tile is-child is-3">
-                    <div class="columns is-marginless has-background-black-like">
-                        <div id="manageSpellsListName" class="column is-10 is-paddingless">
+        <section class="modal-card-body is-paddingless use-invisible-scrollbar p-2">
+            <div id="conditionsSelectModalContent" class="tile is-ancestor is-vertical"></div>
+        </section>
+        <div class="modal-card-foot">
+        </div>
+    </div>
+    </div>
+
+    <!-- Spells Manager Modal -->
+    <div id="manageSpellsModalDefault" name="" class="modal" style="z-index:30;">
+    <div id="manageSpellsModalBackground" class="modal-background"></div>
+    <div class="modal-card" style="width: 90%; height: 90%;">
+        <div class="modal-card-head">
+        <p id="manageSpellsModalTitle" class="modal-card-title has-text-centered is-size-4 has-text-grey-lighter">Manage Spells<span class="icon is-size-6 has-text-info has-tooltip-multiline has-tooltip-bottom" data-tooltip="For prepared spellcasters, drag spells from your spell list over to the appropriate slots to prepare them."><i class="far fa-question-circle"></i></span></p>
+        <button id="manageSpellsModalCloseButton" class="delete" aria-label="close"></button>
+        </div>
+        <section class="modal-card-body is-paddingless px-2 use-invisible-scrollbar">
+            <div class="tabs is-boxed is-small is-marginless">
+                <ul id="manageSpellsTabs" class="sheet-tabs has-text-grey-lighter">
+                </ul>
+            </div>
+            <div class="tile is-ancestor">
+                <div class="tile is-parent">
+                    <div class="tile is-child is-3">
+                        <div class="columns is-marginless has-background-black-like">
+                            <div id="manageSpellsListName" class="column is-10 is-paddingless">
+                            </div>
+                            <div class="column is-2 is-paddingless">
+                                <span id="manageSpellsOpenSpellListsBtn" class="icon is-medium has-text-info pt-2 cursor-clickable">
+                                    <i class="fas fa-lg fa-plus"></i>
+                                </span>
+                            </div>
                         </div>
-                        <div class="column is-2 is-paddingless">
-                            <span id="manageSpellsOpenSpellListsBtn" class="icon is-medium has-text-info pt-2 cursor-clickable">
-                                <i class="fas fa-lg fa-plus"></i>
-                            </span>
+                        <div class="border-top border-bottom border-dark-lighter">
+                            <p class="control has-icons-left">
+                                <input id="manageSpellsSpellBookSearch" class="input" type="text" placeholder="Search">
+                                <span class="icon is-left"><i class="fas fa-search" aria-hidden="true"></i></span>
+                            </p>
+                        </div>
+                        <div id="manageSpellsSpellBook" class="use-custom-scrollbar" style="height: 500px; max-height: 500px; overflow-y: auto;">
                         </div>
                     </div>
-                    <div class="border-top border-bottom border-dark-lighter">
-                        <p class="control has-icons-left">
-                            <input id="manageSpellsSpellBookSearch" class="input" type="text" placeholder="Search">
-                            <span class="icon is-left"><i class="fas fa-search" aria-hidden="true"></i></span>
-                        </p>
-                    </div>
-                    <div id="manageSpellsSpellBook" class="use-custom-scrollbar" style="height: 500px; max-height: 500px; overflow-y: auto;">
-                    </div>
-                </div>
-                <div class="tile is-child is-9">
-                    <div id="manageSpellsSlots" class="use-custom-scrollbar" style="height: 610px; max-height: 610px; overflow-y: auto;">
+                    <div class="tile is-child is-9">
+                        <div id="manageSpellsSlots" class="use-custom-scrollbar" style="height: 610px; max-height: 610px; overflow-y: auto;">
+                        </div>
                     </div>
                 </div>
             </div>
+        </section>
+        <div class="modal-card-foot">
         </div>
-    </section>
-    <div class="modal-card-foot">
     </div>
-  </div>
-</div>
+    </div>
+
+{{/section}}
 

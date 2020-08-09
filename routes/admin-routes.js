@@ -1,6 +1,7 @@
 
 const router = require('express').Router();
 const editClassRoutes = require('./edit-class-routes');
+const editClassFeatureRoutes = require('./edit-class-feature-routes');
 const editArchetypeRoutes = require('./edit-archetype-routes');
 const editUniHeritageRoutes = require('./edit-uni-heritage-routes');
 const editBackgroundRoutes = require('./edit-background-routes');
@@ -10,6 +11,7 @@ const editItemRoutes = require('./edit-item-routes');
 const editSpellRoutes = require('./edit-spell-routes');
 
 const Class = require('../models/contentDB/Class');
+const ClassAbility = require('../models/contentDB/ClassAbility');
 const Background = require('../models/contentDB/Background');
 const Ancestry = require('../models/contentDB/Ancestry');
 const Item = require('../models/contentDB/Item');
@@ -81,6 +83,33 @@ router.get('/create/class', adminAuthCheck, (req, res) => {
 });
 
 router.use('/edit/class', adminAuthCheck, editClassRoutes);
+
+// Class Feature Builder
+router.get('/manage/class-feature', adminAuthCheck, (req, res) => {
+
+    ClassAbility.findAll()
+    .then((classAbilities) => {
+
+        res.render('admin/admin_manager/manager_class-feature', {
+            title: "Class Feature Manager - Wanderer's Guide",
+            user: req.user,
+            classAbilities
+        });
+
+    });
+
+});
+
+router.get('/create/class-feature', adminAuthCheck, (req, res) => {
+
+    res.render('admin/admin_builder/builder_class-feature', {
+        title: "Class Feature Builder - Wanderer's Guide",
+        user: req.user,
+    });
+
+});
+
+router.use('/edit/class-feature', adminAuthCheck, editClassFeatureRoutes);
 
 // Archetype Builder
 router.get('/manage/archetype', adminAuthCheck, (req, res) => {

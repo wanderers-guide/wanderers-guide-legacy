@@ -122,11 +122,6 @@ header {
     z-index: 9;
 }
 
-/* More Bolds */
-.has-text-weight-very-bold {
-    font-weight: 900;
-}
-
 /* Dark Mode Styling */
 .box {
     box-shadow: 0 1px 3px rgba(0,0,0,0.5);
@@ -146,75 +141,8 @@ header {
 .input::-webkit-input-placeholder, .select select::-webkit-input-placeholder, .textarea::-webkit-input-placeholder{
     color:rgba(219,219,219,.4);
 }
-
-/* Bulma Expansions */
-.button.is-very-small {
-    font-size: 0.6rem!important;
-}
-.is-underlined {
-    text-decoration: underline;
-}
-.is-bold-thick {
-    font-weight: 900;
-}
-.is-bold {
-    font-weight: 675;
-}
-.is-underlined-info {
-    text-decoration: underline;
-    -webkit-text-decoration-color: hsl(204, 86%, 53%); /* Safari */  
-    text-decoration-color: hsl(204, 86%, 53%);
-}
-.has-text-info-lighter {
-    color: hsl(204, 86%, 65%);
-}
-.is-size-8 {
-    font-size: 0.5rem!important;
-}
-.is-size-6-5 {
-    font-size: 0.85rem!important;
-}
-.is-size-5-5 {
-    font-size: 1.1rem!important;
-}
-.is-size-3-5 {
-    font-size: 1.75rem!important;
-}
-.is-table-size {
-    height: 256px;
-    width: 360px;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-/* Rarities */
-.button.is-uncommon {
-    background-color: hsl(157, 65%, 38%);
-    border-color: transparent;
-    color: #fff;
-}
-.button.is-rare {
-    background-color: hsl(224, 55%, 42%);
-    border-color: transparent;
-    color: #fff;
-}
-.button.is-unique {
-    background-color: hsl(282, 58%, 38%);
-    border-color: transparent;
-    color: #fff;
-}
-
-select .is-non-available {
-    background-color: hsl(0, 0%, 18%);
-}
-select .is-uncommon {
-    background-color: hsl(158, 25%, 22%);
-}
-select .is-rare {
-    background-color: hsl(225, 30%, 22%);
-}
-select .is-unique {
-    background-color: hsl(282, 30%, 22%);
+hr {
+    border-color: #363636!important;
 }
 
 /* Cursors */
@@ -225,18 +153,12 @@ select .is-unique {
     cursor: default!important;
 }
 
-/* Backgrounds */
-.background-ac {
-    background: 50% transparent url("../images/ac_background.png") no-repeat;
-    background-size: contain;
-}
-.background-shield {
-    background: 50% transparent url("../images/shield_background.png") no-repeat;
-    background-size: contain;
+/* Misc */
+.has-tooltip-top { /* Fix bug with tooltips and negative indentation */
+    text-indent: 0px;
 }
 
 /* Core (Header - Body - Footer) Placement */
-
 * {
     box-sizing: border-box;
 }
@@ -270,9 +192,8 @@ body {
 
 
 /* Main Body */
-.center-body {
+#center-body {
     background-color: #1C1C1C;
-    /* background-image: url("../images/builder_background.png"); */
     position: relative;
 }
 

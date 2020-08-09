@@ -4,6 +4,16 @@
 
 let socket = io();
 
+// Core Builder Data //
+let g_featMap = null;
+let g_skillMap = null;
+let g_itemMap = null;
+let g_spellMap = null;
+let g_allLanguages = null;
+let g_allConditions = null;
+let g_allTags = null;
+// ~~~~~~~~~~~~~~~~~ //
+
 let choiceStruct = null;
 let g_background = null;
 
@@ -41,7 +51,17 @@ function prevPage() {
 
 // ~~~~~~~~~~~~~~ // Processings // ~~~~~~~~~~~~~~ //
 
-socket.on("returnBackgroundDetails", function(backgrounds, inChoiceStruct){
+socket.on("returnBackgroundDetails", function(coreDataStruct, backgrounds, inChoiceStruct){
+
+    // Core Builder Data //
+    g_featMap = objToMap(coreDataStruct.FeatObject);
+    g_skillMap = objToMap(coreDataStruct.SkillObject);
+    g_itemMap = objToMap(coreDataStruct.ItemObject);
+    g_spellMap = objToMap(coreDataStruct.SpellObject);
+    g_allLanguages = coreDataStruct.AllLanguages;
+    g_allConditions = coreDataStruct.AllConditions;
+    g_allTags = coreDataStruct.AllTags;
+    // ~~~~~~~~~~~~~~~~~ //
 
     choiceStruct = inChoiceStruct;
     backgrounds = backgrounds.sort(

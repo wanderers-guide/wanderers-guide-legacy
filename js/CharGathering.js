@@ -142,6 +142,15 @@ module.exports = class CharGathering {
                     for (const classAbil of allClassAbilities) {
                         let classID = classAbil.classID;
     
+                        if(classID == null && classAbil.indivClassName != null){
+                            let cClass = classes.find(cClass => {
+                                return cClass.name === classAbil.indivClassName;
+                            });
+                            if(cClass != null){
+                                classID = cClass.id;
+                            }
+                        }
+    
                         let classStruct = classMap.get(classID);
                         if(classStruct != null){
                             classStruct.Abilities.push(classAbil);
@@ -180,7 +189,8 @@ module.exports = class CharGathering {
                     contentSrc: {
                       [Op.or]: CharContentSources.getSourceArray(character)
                     }
-                }
+                },
+                order: [['name', 'ASC'],]
             })
             .then((uniHeritages) => {
                 return uniHeritages;
@@ -986,6 +996,39 @@ module.exports = class CharGathering {
           });
         });
       });
+    }
+
+    static getBuilderCore(charID) {
+        return CharGathering.getAllFeats(charID)
+        .then( (featObject) => {
+            return CharGathering.getAllItems(charID)
+            .then( (itemMap) => {
+                return CharGathering.getAllSpells(charID)
+                .then((spellMap) => {
+                    return CharGathering.getAllSkills(charID)
+                    .then((skillObject) => {
+                        return CharGathering.getAllTags()
+                        .then( (tags) => {
+                            return Condition.findAll()
+                            .then((allConditions) => {
+                                return Language.findAll()
+                                .then((allLanguages) => {
+                                    return {
+                                        FeatObject: featObject,
+                                        SkillObject: skillObject,
+                                        ItemObject: mapToObj(itemMap),
+                                        SpellObject: mapToObj(spellMap),
+                                        AllTags: tags,
+                                        AllConditions: allConditions,
+                                        AllLanguages: allLanguages,
+                                    };
+                                });
+                            });
+                        });
+                    });
+                });
+            });
+        });
     }
 
     static getChoicesAbilityBonus(charID) {

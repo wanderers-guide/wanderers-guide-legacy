@@ -90,38 +90,6 @@
 
 }
 
-.has-text-grey-kinda-light {
-    color: hsl(0, 0%, 60%)!important;
-}
-
-.has-background-black-like {
-    background-color: hsl(0, 0%, 12%)!important;
-}
-
-.has-background-black-like-more {
-    background-color: hsl(0, 0%, 11%)!important;
-}
-
-.has-background-grey-darkest {
-    background-color: hsl(0, 0%, 17%)!important;
-}
-
-.has-background-grey-darklike {
-    background-color: hsl(0, 0%, 19%)!important;
-}
-
-.border-dark-lighter {
-    border-color: #363636!important;/*hsl(210, 3%, 23%)!important;*/
-}
-
-.border-darker {
-    border-color: #202020!important;
-}
-
-.border-additems {
-    border-color: hsl(0, 0%, 19%)!important;
-}
-
 .card-header {
     background-color: hsl(0, 0%, 17%);
     border-color: hsl(0, 0%, 13%);
@@ -133,26 +101,8 @@
     border-color: #282828;
 }
 
-.modal-card-head {
-    background-color: #161616;
-    border-bottom-color: #282828;
-}
-.modal-card-body {
-    background-color: #1C1C1C;
-}
-.modal-card-foot {
-    background-color: #161616;
-    border-top-color: #282828;
-}
 
-.quickview-header {
-    background-color: #1d1d1d;
-    border-bottom-color: #303030;
-}
-.quickview-body {
-    background-color: #242424;
-}
-
+/* Tabs */
 .sheet-tabs li.is-active a {
     color: #303030;
 }
@@ -196,6 +146,8 @@
     color: #3298dc;
 }
 
+
+/* Darkmode Styles */
 .input, .select select, .textarea {
     background-color: hsl(0, 0%, 18%);
     border-color: hsl(0, 0%, 13%);
@@ -231,10 +183,6 @@ strong {
     font-weight: 800;
 }
 
-hr {
-    border-color: #363636!important;
-}
-
 .hr-highlighted {
     border-color: #444444!important;
 }
@@ -243,72 +191,15 @@ hr {
     border-color: #5a5a5a!important;
 }
 
-.is-filled-spell-slot {
-    background-color: hsl(0, 0%, 21%)!important;
-    color: #cccccc!important;
-    border-color: hsl(210, 3%, 23%)!important;
-}
 
-.is-filled-red-spell-slot {
-    background-color: hsl(0, 25%, 21%)!important;
-    color: #cccccc!important;
-    border-color: hsl(210, 3%, 23%)!important;
+/* Background Images */
+.background-ac {
+    background: 50% transparent url("../images/ac_background.png") no-repeat;
+    background-size: contain;
 }
-
-.is-filled-green-spell-slot {
-    background-color: hsl(144, 25%, 21%)!important;
-    color: #cccccc!important;
-    border-color: hsl(210, 3%, 23%)!important;
-}
-
-.is-filled-blue-spell-slot {
-    background-color: hsl(220, 25%, 21%)!important;
-    color: #cccccc!important;
-    border-color: hsl(210, 3%, 23%)!important;
-}
-
-.is-filled-multiple-spell-slot {
-    background-color: hsl(53, 23%, 21%)!important;
-    color: #cccccc!important;
-    border-color: hsl(210, 3%, 23%)!important;
-}
-
-.is-empty-spell-slot {
-    background-color: hsl(0, 0%, 35%)!important;
-    color: #dddddd!important;
-    border-color: hsl(210, 3%, 23%)!important;
-}
-
-.is-empty-red-spell-slot {
-    background-color: hsl(0, 25%, 35%)!important;
-    color: #dddddd!important;
-    border-color: hsl(210, 3%, 23%)!important;
-}
-
-.is-empty-green-spell-slot {
-    background-color: hsl(144, 25%, 35%)!important;
-    color: #dddddd!important;
-    border-color: hsl(210, 3%, 23%)!important;
-}
-
-.is-empty-blue-spell-slot {
-    background-color: hsl(220, 25%, 35%)!important;
-    color: #dddddd!important;
-    border-color: hsl(210, 3%, 23%)!important;
-}
-
-.is-empty-multiple-spell-slot {
-    background-color: hsl(53, 23%, 35%)!important;
-    color: #dddddd!important;
-    border-color: hsl(210, 3%, 23%)!important;
-}
-
-.has-empty-slot-background {
-    background-color: hsl(0, 0%, 14%);
-}
-
-.has-tooltip-top { /* Fix bug with tooltips and negative indentation */
-    text-indent: 0px;
+.background-shield {
+    background: 50% transparent url("../images/shield_background.png") no-repeat;
+    background-size: contain;
 }
 
 /* For InvItem Property Runes */

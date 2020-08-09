@@ -215,6 +215,8 @@ function openItemQuickview(data) {
     qContent.append('<hr class="m-2">');
 
     // Item Specializations
-    displayCriticalSpecialization(qContent, itemDataStruct);
+    if(isSheetPage()) {
+        displayCriticalSpecialization(qContent, itemDataStruct);
+    }
 
 }

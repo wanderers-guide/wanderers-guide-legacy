@@ -116,6 +116,7 @@ function openFeatQuickview(data) {
 }
 
 function featViewTextProcessor(text){
+    if(!isSheetPage()) { return text; }
 
     let speedNum = getStatTotal('SPEED');
     speedNum = (speedNum > 5) ? speedNum : 5;

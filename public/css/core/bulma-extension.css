@@ -1,0 +1,110 @@
+
+/* Typography */
+.is-underlined {
+  text-decoration: underline;
+}
+.is-bold-very {
+  font-weight: 900;
+}
+.is-bold {
+  font-weight: 675;
+}
+.is-thin {
+  font-weight: 200;
+}
+.is-thin-very {
+  font-weight: 100;
+}
+.is-underlined-info {
+  text-decoration: underline;
+  -webkit-text-decoration-color: hsl(204, 86%, 53%); /* Safari */  
+  text-decoration-color: hsl(204, 86%, 53%);
+}
+
+/* Text Colors */
+.has-text-info-lighter {
+  color: hsl(204, 86%, 65%);
+}
+.has-text-grey-kinda-light {
+  color: hsl(0, 0%, 60%)!important;
+}
+
+/* Background Colors */
+.has-background-black-like {
+  background-color: hsl(0, 0%, 12%)!important;
+}
+.has-background-black-like-more {
+  background-color: hsl(0, 0%, 11%)!important;
+}
+.has-background-grey-darkest {
+  background-color: hsl(0, 0%, 17%)!important;
+}
+.has-background-grey-darklike {
+  background-color: hsl(0, 0%, 19%)!important;
+}
+
+/* Text Sizes */
+.is-size-8 {
+  font-size: 0.5rem!important;
+}
+.is-size-6-5 {
+  font-size: 0.85rem!important;
+}
+.is-size-5-5 {
+  font-size: 1.1rem!important;
+}
+.is-size-3-5 {
+  font-size: 1.75rem!important;
+}
+
+/* Button Sizes */
+.button.is-very-small {
+  font-size: 0.6rem!important;
+}
+
+/* Border */
+.border-dark-lighter {
+  border-color: #363636!important;/*hsl(210, 3%, 23%)!important;*/
+}
+.border-darker {
+  border-color: #202020!important;
+}
+
+/* Misc */
+.is-table-size {
+  height: 256px;
+  width: 360px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+
+/* Rarities */
+.button.is-uncommon {
+  background-color: hsl(157, 65%, 38%);
+  border-color: transparent;
+  color: #fff;
+}
+.button.is-rare {
+  background-color: hsl(224, 55%, 42%);
+  border-color: transparent;
+  color: #fff;
+}
+.button.is-unique {
+  background-color: hsl(282, 58%, 38%);
+  border-color: transparent;
+  color: #fff;
+}
+
+select .is-non-available {
+  background-color: hsl(0, 0%, 18%);
+}
+select .is-uncommon {
+  background-color: hsl(158, 25%, 22%);
+}
+select .is-rare {
+  background-color: hsl(225, 30%, 22%);
+}
+select .is-unique {
+  background-color: hsl(282, 30%, 22%);
+}

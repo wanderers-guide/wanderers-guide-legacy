@@ -3,6 +3,7 @@
 */
 
 let socket = io();
+let isSheetInit = false;
 
 /* Character Options */
 let gOption_hasAutoHeightenSpells;
@@ -102,6 +103,7 @@ $(function () {
 
 
 socket.on("returnCharacterSheetInfo", function(charInfo){
+    isSheetInit = true;
 
     g_itemMap = objToMap(charInfo.ItemObject);
     g_itemMap = new Map([...g_itemMap.entries()].sort(

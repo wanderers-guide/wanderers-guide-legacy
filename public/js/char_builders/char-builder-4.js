@@ -4,6 +4,16 @@
 
 let socket = io();
 
+// Core Builder Data //
+let g_featMap = null;
+let g_skillMap = null;
+let g_itemMap = null;
+let g_spellMap = null;
+let g_allLanguages = null;
+let g_allConditions = null;
+let g_allTags = null;
+// ~~~~~~~~~~~~~~~~~ //
+
 let choiceStruct = null;
 let g_class = null;
 
@@ -51,7 +61,17 @@ function reloadPage(){
 
 // ~~~~~~~~~~~~~~ // Process Class Info // ~~~~~~~~~~~~~~ //
 
-socket.on("returnClassDetails", function(classObject, inChoiceStruct){
+socket.on("returnClassDetails", function(coreDataStruct, classObject, inChoiceStruct){
+
+    // Core Builder Data //
+    g_featMap = objToMap(coreDataStruct.FeatObject);
+    g_skillMap = objToMap(coreDataStruct.SkillObject);
+    g_itemMap = objToMap(coreDataStruct.ItemObject);
+    g_spellMap = objToMap(coreDataStruct.SpellObject);
+    g_allLanguages = coreDataStruct.AllLanguages;
+    g_allConditions = coreDataStruct.AllConditions;
+    g_allTags = coreDataStruct.AllTags;
+    // ~~~~~~~~~~~~~~~~~ //
 
     choiceStruct = inChoiceStruct;
     let classMap = objToMap(classObject);
@@ -522,7 +542,7 @@ function displayCurrentClass(classStruct, saving) {
                 tabContent.append('<div id="'+classAbilityID+'" class="classAbility pt-1"></div>');
 
                 let classAbilitySection = $('#'+classAbilityID);
-                classAbilitySection.append('<span id="'+classAbilityHeaderID+'" class="is-size-4 has-text-weight-semibold">'+classAbility.name+'<sup class="is-italic pl-2 is-size-6">'+abilityLevelDisplay(classAbility.level)+'</sup><span class="classAbilityUnselectedOption"></span></span>');
+                classAbilitySection.append('<span id="'+classAbilityHeaderID+'" class="is-size-4 has-text-weight-semibold">'+classAbility.name+'<sup class="is-italic pl-2 is-size-6">'+rankLevel(classAbility.level)+'</sup><span class="classAbilityUnselectedOption"></span></span>');
                 classAbilitySection.append('<div id="'+classAbilityContentID+'"></div>');
                 classAbilitySection.append('<hr class="ability-hr">');
 

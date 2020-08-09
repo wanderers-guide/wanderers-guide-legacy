@@ -27,6 +27,18 @@ const ClassAbility = db.define('classAbilities', {
   displayInSheet: {
     type: Sequelize.INTEGER
   },
+  indivClassName: {
+    type: Sequelize.STRING
+  },
+  indivClassAbilName: {
+    type: Sequelize.STRING
+  },
+  isArchived: {
+    type: Sequelize.INTEGER
+  },
+  contentSrc: {
+    type: Sequelize.STRING
+  },
 });
 
 module.exports = ClassAbility;

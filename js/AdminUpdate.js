@@ -173,6 +173,8 @@ module.exports = class AdminUpdate {
                     let classAbilitiesPromises = []; // Create Class Abilities
                     if(data.classAbilitiesArray != null) {
                         for(const classAbility of data.classAbilitiesArray) {
+                            classAbility.indivClassName = null;
+                            classAbility.contentSrc = cClass.contentSrc;
                             let newPromise =  AdminUpdate.addClassAbility(cClass.id, classAbility);
                             classAbilitiesPromises.push(newPromise);
                         }
@@ -201,6 +203,8 @@ module.exports = class AdminUpdate {
             selectType: selectType,
             selectOptionFor: null,
             displayInSheet: classAbility.displayInSheet,
+            indivClassName: classAbility.indivClassName,
+            contentSrc: classAbility.contentSrc,
         }).then(classAbilityModel => {
             let classAbilityOptionsPromises = [];
             if(classAbility.options.length > 0){
@@ -297,6 +301,42 @@ module.exports = class AdminUpdate {
                     });
                 });
             });
+        });
+    }
+
+
+
+    static addClassFeature(data) {
+        /* Data:
+            classFeatureID,
+            classFeatureData,
+            classFeatureClassName,
+            classFeatureContentSrc
+        */
+        for(let d in data) { if(data[d] === ''){ data[d] = null; } }
+        data.classFeatureData.indivClassName = data.classFeatureClassName;
+        data.classFeatureData.contentSrc = data.classFeatureContentSrc;
+        return AdminUpdate.addClassAbility(null, data.classFeatureData)
+        .then(classAbility => {
+            return classAbility;
+        });
+    }
+
+    static deleteClassFeature(classFeatureID){
+        if(classFeatureID == null) {return;}
+        return ClassAbility.destroy({
+            where: { id: classFeatureID }
+        }).then((result) => { // Which will cascade to delect select options
+            return;
+        });
+    }
+
+    static archiveClassFeature(classFeatureID, isArchived){
+        let archived = (isArchived) ? 1 : 0;
+        let updateValues = { isArchived: archived };
+        return ClassAbility.update(updateValues, { where: { id: classFeatureID } })
+        .then((result) => {
+            return;
         });
     }
 
@@ -932,6 +972,7 @@ module.exports = class AdminUpdate {
             version
         */
         for(let d in data) { if(data[d] === ''){ data[d] = null; } }
+        if(data.name == null) { return Promise.resolve(); }
         data.name = data.name.replace(/’/g,"'");
         if(data.description == null){ data.description = '__No Description__'; }
         if(data.version == null){ data.version = '1.0'; }

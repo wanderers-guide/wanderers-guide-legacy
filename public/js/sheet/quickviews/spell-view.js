@@ -563,6 +563,7 @@ function openSpellQuickview(data){
 
 
 function spellViewTextProcessor(text, spellKeyAbility){
+    if(!isSheetPage()) { return text; }
 
     text = text.replace('plus your spellcasting modifier', '+ {'+spellKeyAbility+'_MOD|'+lengthenAbilityType(spellKeyAbility)+' Modifier}');
     text = text.replace('plus your spellcasting ability modifier', '+ {'+spellKeyAbility+'_MOD|'+lengthenAbilityType(spellKeyAbility)+' Modifier}');

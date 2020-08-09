@@ -128,11 +128,14 @@ function displayCriticalSpecialization(qContent, item){
 
     let title = criticalSpecializationTitle(item);
     if(title == null) {return;}
+    let text = criticalSpecializationText(item);
+    if(text == null) {return;}
+
     qContent.append('<p id="itemCritSpecialName" class="has-text-centered is-size-7"><strong class="cursor-clickable">'+title+'</strong><sub class="icon is-small pl-1 cursor-clickable"><i id="itemCritSpecialChevron" class="fas fa-lg fa-chevron-down"></i></sub></p>');
     qContent.append('<div id="itemCritSpecialSection" class="is-hidden"></div>');
     qContent.append('<hr class="m-2">');
 
-    $('#itemCritSpecialSection').append(processText(criticalSpecializationText(item), true, true, 'MEDIUM'));
+    $('#itemCritSpecialSection').append(processText(text, true, true, 'MEDIUM'));
 
     $('#itemCritSpecialName').click(function() {
         if($("#itemCritSpecialSection").hasClass("is-hidden")) {

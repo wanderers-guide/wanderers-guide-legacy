@@ -56,8 +56,19 @@ module.exports = class AdminGathering {
                 for (const classAbil of allClassAbilities) {
                     let classID = classAbil.classID;
 
+                    if(classID == null && classAbil.indivClassName != null){
+                        let cClass = classes.find(cClass => {
+                            return cClass.name === classAbil.indivClassName;
+                        });
+                        if(cClass != null){
+                            classID = cClass.id;
+                        }
+                    }
+
                     let classStruct = classMap.get(classID);
-                    classStruct.Abilities.push(classAbil);
+                    if(classStruct != null){
+                        classStruct.Abilities.push(classAbil);
+                    }
 
                 }
 
@@ -75,7 +86,9 @@ module.exports = class AdminGathering {
     }
 
     static getAllUniHeritages() {
-        return UniHeritage.findAll()
+        return UniHeritage.findAll({
+            order: [['name', 'ASC'],]
+        })
         .then((uniHeritages) => {
             return uniHeritages;
         });
