@@ -188,7 +188,8 @@ function openSpellQuickview(data){
             $('#quickViewTitleRight').html('<span class="pr-2">'+capitalizeWord(spellTradition)+'</span>');
         }
 
-        let spellAttack, spellDC = 0;
+        let spellAttack = 0;
+        let spellDC = 0;
         if(spellTradition === 'ARCANE'){
             spellAttack = data.SheetData.Data.ArcaneSpellAttack;
             spellDC = data.SheetData.Data.ArcaneSpellDC;
@@ -219,7 +220,7 @@ function openSpellQuickview(data){
         let abilityMod = getModOfValue(spellKeyAbility);
         spellAttack += abilityMod;
         spellDC += abilityMod;
-
+        
         spellAttack = signNumber(spellAttack);
         spellDC += 10;
 

@@ -752,7 +752,10 @@ function displayInformation() {
     let speedContent = $("#speedContent");
     let speedNum = getStatTotal('SPEED');
     speedNum = (speedNum > 5) ? speedNum : 5;
-    speedContent.html(speedNum+' ft');
+
+    let speedDisplayed = (hasConditionals('SPEED')) ?
+            speedNum+' ft<sup class="is-size-5 has-text-info">*</sup>' : speedNum+' ft';
+    speedContent.html(speedDisplayed);
 
     $("#speedSection").click(function(){
         openQuickView('speedView', {

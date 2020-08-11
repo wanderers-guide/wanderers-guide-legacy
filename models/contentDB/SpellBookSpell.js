@@ -14,6 +14,9 @@ const SpellBookSpell = db.define('spellBookSpells', {
   spellLevel: {
     type: Sequelize.INTEGER
   },
+  srcStructHashed: {
+    type: Sequelize.INTEGER
+  }
 });
 
 module.exports = SpellBookSpell;

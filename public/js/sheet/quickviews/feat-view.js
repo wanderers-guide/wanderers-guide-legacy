@@ -108,7 +108,10 @@ function openFeatQuickview(data) {
 
     qContent.append(featContentInnerHTML);
 
-    // Notes Field
+    // Add Text Statements
+    processAddText(data.Feat.code, 'quickViewContent');
+
+    // Note Field Statements
     if(data.SrcStruct != null){
         displayNotesField(qContent, data.SrcStruct);
     }
@@ -121,11 +124,11 @@ function featViewTextProcessor(text){
     let speedNum = getStatTotal('SPEED');
     speedNum = (speedNum > 5) ? speedNum : 5;
 
-    text = text.replace('for 5 feet plus 5 feet per 20 feet of your land Speed', '<span class="has-text-info">'+(5+5*Math.floor(speedNum/20))+' feet</span>');
-    text = text.replace('for 5 feet per 20 feet of your land Speed', '<span class="has-text-info">'+(5*Math.floor(speedNum/20) != 0 ? 5*Math.floor(speedNum/20) : 5)+' feet</span>');
+    text = text.replace('for 5 feet plus 5 feet per 20 feet of your land Speed', '<span class="has-text-info has-tooltip-top" data-tooltip="5+5 per 20ft of land Speed">'+(5+5*Math.floor(speedNum/20))+' feet</span>');
+    text = text.replace('for 5 feet per 20 feet of your land Speed', '<span class="has-text-info has-tooltip-top" data-tooltip="5 per 20ft of land Speed">'+(5*Math.floor(speedNum/20) != 0 ? 5*Math.floor(speedNum/20) : 5)+' feet</span>');
 
-    text = text.replace('10 feet plus 5 feet per 20 feet of your land Speed', '<span class="has-text-info">'+(10+5*Math.floor(speedNum/20))+' feet</span>');
-    text = text.replace('5 feet plus 5 feet per 20 feet of your land Speed.', '<span class="has-text-info">'+(5+5*Math.floor(speedNum/20))+' feet</span>');
+    text = text.replace('10 feet plus 5 feet per 20 feet of your land Speed', '<span class="has-text-info has-tooltip-top" data-tooltip="10+5 per 20ft of land Speed">'+(10+5*Math.floor(speedNum/20))+' feet</span>');
+    text = text.replace('5 feet plus 5 feet per 20 feet of your land Speed.', '<span class="has-text-info has-tooltip-top" data-tooltip="5+5 per 20ft of land Speed">'+(5+5*Math.floor(speedNum/20))+' feet</span>');
 
     return text;
 }

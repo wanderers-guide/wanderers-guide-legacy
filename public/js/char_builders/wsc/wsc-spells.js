@@ -25,6 +25,10 @@ function processingSpells(wscStatement, srcStruct, locationID){
         let data = wscStatement.split('=')[1];
         let segments = data.split(':');
         giveSpellList(srcStruct, segments[0], segments[1]);
+    } else if(wscStatement.includes("ADD-SPELL-TO-LIST")){// ADD-SPELL-TO-LIST=Wizard:Meld_Into_Stone:3
+        let data = wscStatement.split('=')[1];
+        let segments = data.split(':');
+        addSpellToSpellbook(srcStruct, segments[0], segments[1], segments[2]);
     } else {
         displayError("Unknown statement (2-Spell): \'"+wscStatement+"\'");
         statementComplete();
@@ -92,7 +96,7 @@ socket.on("returnSpellListChange", function(){
 
 //////////////////////////////// Set Casting Type ///////////////////////////////////
 function setSpellCastingType(srcStruct, spellSRC, castingType){
-    if(castingType === 'PREPARED-LIST' || castingType === 'PREPARED-BOOK' || castingType === 'SPONTANEOUS-REPERTOIRE') {
+    if(castingType === 'PREPARED-LIST' || castingType === 'PREPARED-BOOK' || castingType === 'PREPARED-FAMILIAR' || castingType === 'SPONTANEOUS-REPERTOIRE') {
         socket.emit("requestSpellCastingTypeChange",
             getCharIDFromURL(),
             srcStruct,
@@ -105,5 +109,21 @@ function setSpellCastingType(srcStruct, spellSRC, castingType){
 }
 
 socket.on("returnSpellCastingTypeChange", function(){
+    statementComplete();
+});
+
+
+//////////////////////////////// Add Spell to Spellbook ///////////////////////////////////
+function addSpellToSpellbook(srcStruct, spellSRC, spellName, spellLevel){
+    spellName = spellName.replace(/_/g," ");
+    socket.emit("requestBuilderSpellAddToSpellBook",
+        getCharIDFromURL(),
+        srcStruct,
+        spellSRC,
+        spellName,
+        spellLevel);
+}
+
+socket.on("returnBuilderSpellAddToSpellBook", function(){
     statementComplete();
 });

@@ -707,6 +707,10 @@ function selectorUpdated() {
         } else {
             $(this).find('.classAbilityUnselectedOption').html('');
         }
+
+        // Make sure everything is centered
+        $(this).find('.has-text-left').removeClass('has-text-left');
+        
     });
     
 }

@@ -217,6 +217,16 @@ function getKeyAbilityFromSpellSRC(spellKeyAbilityDataArray, spellSRC){
     return 'CHA';
 }
 
+function srcStructToCode(charID, source, srcStruct) {
+    if(srcStruct == null){ return -1; }
+    return hashCode(charID+'-'+source+'-'+srcStruct.sourceType+'-'+srcStruct.sourceLevel+'-'+srcStruct.sourceCode+'-'+srcStruct.sourceCodeSNum);
+}
+
+function hashCode(str) {
+    return str.split('').reduce((prevHash, currVal) =>
+      (((prevHash << 5) - prevHash) + currVal.charCodeAt(0))|0, 0);
+}
+
 module.exports = class CharSpells {
 
     static removeFromSpellBook(charID, spellSRC, spellID, spellLevel){
@@ -233,17 +243,60 @@ module.exports = class CharSpells {
         });
     }
 
-    static addToSpellBook(charID, spellSRC, spellID, spellLevel){
-        return SpellBookSpell.create({ // Create SpellBookSpell
-            spellSRC: spellSRC,
-            charID: charID,
-            spellID: spellID,
-            spellLevel: spellLevel,
-        }).then(spellBookSpell => {
-            return spellBookSpell;
-        }).catch(function(err) {
-            return null;
-        }); 
+    static addToSpellBook(charID, spellSRC, spellID, spellLevel, noDuplicates=false){
+        let createSpellBookSpell = function(charID, spellSRC, spellID, spellLevel) {
+            return SpellBookSpell.create({ // Create SpellBookSpell
+                spellSRC: spellSRC,
+                charID: charID,
+                spellID: spellID,
+                spellLevel: spellLevel,
+            }).then(spellBookSpell => {
+                return spellBookSpell;
+            }).catch(function(err) {
+                return null;
+            });
+        };
+        if(noDuplicates) {
+            return SpellBookSpell.findOne({
+                where: {
+                    spellSRC: spellSRC,
+                    charID: charID,
+                    spellID: spellID,
+                    spellLevel: spellLevel,
+                }
+            }).then((spellBookSpell) => {
+                if(spellBookSpell == null){
+                    return createSpellBookSpell(charID, spellSRC, spellID, spellLevel);
+                } else {
+                    return null;
+                }
+            });
+        } else {
+            return createSpellBookSpell(charID, spellSRC, spellID, spellLevel);
+        }
+    }
+
+
+    static addToSpellBookFromBuilder(charID, spellSRC, spellID, spellLevel, srcStruct){
+        let srcStructHashed = srcStructToCode(charID, 'Spell', srcStruct);
+        return SpellBookSpell.destroy({
+            where: {
+                charID: charID,
+                srcStructHashed: srcStructHashed,
+            },
+        }).then((result) => {
+            return SpellBookSpell.create({
+                spellSRC: spellSRC,
+                charID: charID,
+                spellID: spellID,
+                spellLevel: spellLevel,
+                srcStructHashed: srcStructHashed,
+            }).then(spellBookSpell => {
+                return spellBookSpell;
+            }).catch(function(err) {
+                return null;
+            });
+        });
     }
 
     static getSpellBook(charID, spellSRC, isFocus){

@@ -113,7 +113,8 @@ function testExpr(wscCode){
     // IF(*){*} or IF(*){*}ELSE{*}
     let rMatchIf = wscCode.match(/^\s*IF\s*\((.*?)\)\s*\{(.*?)\}\s*$/);
     let rMatchIfElse = wscCode.match(/^\s*IF\s*\((.*?)\)\s*\{(.*?)\}\s*ELSE\s*\{(.*?)\}\s*$/);
-    if(rMatchIf == null && rMatchIfElse == null) { return wscCode; }
+    let rMatchIfSheet = wscCode.match(/^\s*IF-SHEET\s*\((.*?)\)\s*\{(.*?)\}\s*$/);
+    if(rMatchIf == null && rMatchIfElse == null && rMatchIfSheet == null) { return wscCode; }
 
     let expression;
     let statement;
@@ -126,8 +127,13 @@ function testExpr(wscCode){
         expression = rMatchIf[1];
         statement = rMatchIf[2];
         elseStatement = null;
+    } else if(rMatchIfSheet != null){
+        expression = rMatchIfSheet[1];
+        statement = rMatchIfSheet[2];
+        elseStatement = null;
+        // If not on the character sheet, treat expression as true
+        if(!isSheetPage()){ return statement; }
     }
-
 
 
     if(expression.includes(' && ')){
@@ -148,7 +154,7 @@ function testExpr(wscCode){
         }
         
     } else {
-        
+
         let result = expHandleExpression(expression, statement, elseStatement);
         if(result != -1){
             return result;

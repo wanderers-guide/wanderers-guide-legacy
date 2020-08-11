@@ -416,6 +416,10 @@ function displayDescriptionSection(data){
 
     $('#descriptionContent').append('<div class="mx-3">'+processText(data.Background.description, true, true, 'SMALL')+'</div>');
 
+    // Add Text Statements
+    processAddText(data.Background.code, 'descriptionContent');
+
+    // Note Field Statements
     let srcStructBackground = { // Hardcoded - same srcStruct as in char-builder-3.js
         sourceType: 'background',
         sourceLevel: 1,
@@ -430,7 +434,11 @@ function displayDescriptionSection(data){
         $('#descriptionContent').append('<hr class="hr-light" style="margin-top:-0.5em; margin-bottom:0em;">');
     
         $('#descriptionContent').append('<div class="mx-3">'+processText(data.Heritage.description, true, true, 'SMALL')+'</div>');
+
+        // Add Text Statements
+        processAddText(data.Heritage.code, 'descriptionContent');
     
+        // Note Field Statements
         let srcStructHeritage = { // Hardcoded - same srcStruct as in char-builder-2.js
             sourceType: 'ancestry',
             sourceLevel: 1,

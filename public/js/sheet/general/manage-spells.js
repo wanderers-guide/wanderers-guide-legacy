@@ -105,6 +105,8 @@ function openSpellSRCTab(spellSRC, data){
 
     if(spellBook.SpellCastingType === 'PREPARED-BOOK'){
         $('#manageSpellsListName').html('<p class="is-size-5 has-text-centered has-tooltip-multiline has-tooltip-bottom" data-tooltip="All the spells you know how to prepare and cast are kept in your spellbook. Your spellbook starts with 10 common cantrips and five common 1st-level spells. At every additional level, you add two more spells to your book. You may also come across spells in your adventures which you can add to your book as well.">Spellbook</p>');
+    } else if(spellBook.SpellCastingType === 'PREPARED-FAMILIAR'){
+        $('#manageSpellsListName').html('<p class="is-size-5 has-text-centered has-tooltip-multiline has-tooltip-bottom" data-tooltip="Your familiar functions as a direct conduit between you and your patron. Your patron teaches your familiar spells who then teaches and facilitates those spells to you. Your familiar starts off knowing 10 cantrips, five 1st-level spells, and one additional spell determined by your patron’s theme. At every additional level, your familiar learns two new spells of any level you can cast, chosen from common spells of your tradition or others you gain access to.">Familiar\'s Spells</p>');
     } else if(spellBook.SpellCastingType === 'PREPARED-LIST'){
         $('#manageSpellsListName').html('<p class="is-size-5 has-text-centered has-tooltip-multiline has-tooltip-bottom" data-tooltip="You know how to prepare and cast all common spells from your tradition\'s spell list ('+capitalizeWord(spellBook.SpellList)+'). Add the appropriate spells to your spell list accordingly.">Spell List</p>');
     } else if(spellBook.SpellCastingType === 'SPONTANEOUS-REPERTOIRE'){

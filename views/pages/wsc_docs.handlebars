@@ -73,6 +73,7 @@
                 <li><a href="/wsc_docs/#code_specializations">Specializations</a></li>
                 <li><a href="/wsc_docs/#code_char_traits">Character Traits</a></li>
                 <li><a href="/wsc_docs/#code_notes_field">Notes Field</a></li>
+                <li><a href="/wsc_docs/#code_add_text">Add Text</a></li>
             </ul>
         </aside>
     </div>
@@ -404,7 +405,7 @@
                     </p>
                     <p class="pl-2">'SPEED'</p>
                     <p class="pl-2">
-                        For other Speeds add 'SPEED_' and then the name of the speed in all capitals: 'SPEED_CLIMB'
+                        For other Speeds, put 'SPEED_' and then the name of the speed. Ex: 'SPEED_CLIMB'
                     </p>
                 </div>
                 <div class="pl-3 py-2">
@@ -592,6 +593,14 @@
                     </p>
                     <p class="pl-3">
                         Boolean Operators: '==', '!=', '>=', or '<='
+                    </p>
+                </div>
+                <div class="py-2">
+                    <div class="code-block">
+                        IF-SHEET ( Condition ) { Statement }
+                    </div>
+                    <p class="pl-3">
+                        - If the character meets the condition, the statement inside the brackets will execute (like normal). But this if statement will only be tested in the character sheet (not in the character builder or anywhere else). In all other non-sheet contexts, the condition is essentially treats as true - executing the statement.
                     </p>
                 </div>
             </div>
@@ -941,7 +950,7 @@
                         - Sets the Bard spellcasting source to use a repertoire - making them a spontaneous caster.
                     </p>
                     <p class="pl-3">
-                        - Options are: Prepared-List, Prepared-Book, and Spontaneous-Repertoire.
+                        - Options are: Prepared-List, Prepared-Book, Prepared-Familiar, and Spontaneous-Repertoire.
                     </p>
                 </div>
                 <div class="py-2">
@@ -986,6 +995,14 @@
                     </p>
                     <p class="pl-3">
                         - Options are: 0 - 10.
+                    </p>
+                </div>
+                <div class="py-2">
+                    <div class="code-block">
+                        ADD-SPELL-TO-LIST=Witch:Spirit Link:1
+                    </div>
+                    <p class="pl-3">
+                        - Adds the Spirit Link spell at 1st-level to the spell list/repertoire for the Witch spellcasting source.
                     </p>
                 </div>
                 <h1 class="title is-size-5 is-marginless mt-2 mb-1 pl-3">Focus Spells</h1>
@@ -1222,6 +1239,23 @@
                     </div>
                     <p class="pl-3">
                         - Generates a notes field in the character sheet with the given placeholder text.
+                    </p>
+                </div>
+            </div>
+            <div id="code_add_text" class="mt-4 isHideable">
+                <h1 class="title is-size-4 is-marginless mb-1 pl-3">Add Text</h1>
+                <p>
+                    Occasionally a class feature or feat may need an extra sentence or two tacked on at the end if the character meets a certain condition. You can use the following statement to display text, usually displaying it below the description of something.
+                </p>
+                <p>
+                    This statement is usually used within an if statement, allowing certain text to be displayed if a character is at a certain level or has a certain class ability, for example.
+                </p>
+                <div class="py-2">
+                    <div class="code-block">
+                        ADD-TEXT=Any text you'd like to display!
+                    </div>
+                    <p class="pl-3">
+                        - The displayed text will be parsed like a description field.
                     </p>
                 </div>
             </div>

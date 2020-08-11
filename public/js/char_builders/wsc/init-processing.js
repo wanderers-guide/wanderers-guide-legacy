@@ -19,12 +19,15 @@ let temp_classAbilities, temp_ancestryFeatsLocs = null;
 //                  //
 
 function processCode(wscCode, srcStruct, locationID){
-    
-    if(wscCode == null || wscCode == ''){
-        return;
-    }
+    if(wscCode == null || wscCode == ''){ return; }
 
+    // Process ADD-TEXT Statements
+    processAddText(wscCode, locationID);
+
+    // Uppercase all code (to make everything case insensitive)
     wscCode = wscCode.toUpperCase();
+
+    // Clone srcStruct object (to prevent some concurrency issues)
     let newSrcStruct = cloneObj(srcStruct);
 
     if(wscChoiceStruct == null){
@@ -149,11 +152,12 @@ function runNextStatement(){
         if(wscStatement === null) {return 'SKIP'; }
         //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
         
-        // It could be a sheet statement,
+        // Test/Check if Statement is a Sheet Statement //
         if(testSheetCode(wscStatement)){
             if(processingDebug) {console.log("Skipping '"+wscStatement+"' because it's a sheet statement.");}
             return 'SKIP';
         }
+        //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
 
         if(wscStatement.includes("-CHAR-TRAIT")){
             processingCharTags(wscStatement, srcStruct, locationID);
@@ -247,6 +251,11 @@ function runNextStatement(){
 
         if(wscStatement.includes("-KEY-ABILITY")){
             processingKeyAbilities(wscStatement, srcStruct, locationID);
+            return 'WAIT';
+        }
+
+        if(wscStatement.includes("ADD-TEXT")){
+            processingAddText(wscStatement, srcStruct, locationID);
             return 'WAIT';
         }
 

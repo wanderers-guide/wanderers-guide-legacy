@@ -25,6 +25,10 @@ function openAbilityQuickview(data) {
 
                  $('#'+abilityOptionCardID).append(processText(abilityOption.description, true));
 
+                // Add Text Statements
+                processAddText(abilityOption.code, abilityOptionCardID);
+
+                // Note Field Statements
                 let srcStruct = { // Hardcoded 'classAbilitySelector' sourceCode title name
                     sourceType: null,
                     sourceLevel: null,
@@ -39,7 +43,10 @@ function openAbilityQuickview(data) {
         }
     }
 
-    
+    // Add Text Statements
+    processAddText(data.Ability.code, 'quickViewContent');
+
+    // Note Field Statements
     let srcStruct = { // Hardcoded 'classAbility' sourceCode title name
         sourceType: null,
         sourceLevel: null,

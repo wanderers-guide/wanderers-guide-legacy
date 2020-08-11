@@ -631,7 +631,7 @@ function giveFeatByName(srcStruct, featName, locationID){
     let descriptionFeatID = "descriptionFeat"+locationID+"-"+srcStruct.sourceCodeSNum;
     $('#'+locationID).append('<div id="'+descriptionFeatID+'"></div>');
 
-    displayFeat(descriptionFeatID, featEntry);
+    //displayFeat(descriptionFeatID, featEntry);
 
     featsUpdateWSCChoiceStruct(srcStruct, featEntry.Feat);
     socket.emit("requestFeatChangeByName",

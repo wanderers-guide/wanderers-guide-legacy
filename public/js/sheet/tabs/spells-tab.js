@@ -209,7 +209,9 @@ function displaySpellsInLevelPrepared(level, slotArray, data, spellsSearchInput)
         let spellBook = g_spellBookArray.find(spellBook => {
             return spellBook.SpellSRC === slot.SpellSRC;
         });
-        if(spellBook.SpellCastingType !== 'PREPARED-BOOK' && spellBook.SpellCastingType !== 'PREPARED-LIST'){
+        if(spellBook.SpellCastingType !== 'PREPARED-BOOK' &&
+                spellBook.SpellCastingType !== 'PREPARED-FAMILIAR' &&
+                spellBook.SpellCastingType !== 'PREPARED-LIST'){
             continue;
         }
 

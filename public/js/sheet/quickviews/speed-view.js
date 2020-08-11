@@ -9,11 +9,28 @@ function openSpeedQuickview(data) {
 
     qContent.append('<p>Speed is the distance a character can move using a single action, measured in feet. Moving through an area of difficult terrain costs an extra 5 feet and moving through an area of greater difficult terrain costs 10 additional feet for each 5 feet of movement.</p>');
 
-    let speedName = 'SPEED';
-    addSpeedContent(qContent, speedName, 'Speed');
+    addSpeedContent(qContent, 'SPEED', 'Speed');
 
     for(const otherSpeed of g_otherSpeeds){
         addSpeedContent(qContent, 'SPEED_'+otherSpeed.Type, capitalizeWords(otherSpeed.Type));
+    }
+
+    // Conditionals //
+    let conditionalStatMap = getConditionalStatMap('SPEED');
+    if(conditionalStatMap != null){
+
+        qContent.append('<hr class="m-2">');
+
+        qContent.append('<p class="has-text-centered"><strong>Conditionals</strong></p>');
+        
+        for(const [condition, value] of conditionalStatMap.entries()){
+            if(value == null){
+                qContent.append('<p class="has-text-centered">'+condition+'</p>');
+            } else {
+                qContent.append('<p class="has-text-centered">'+signNumber(value)+' '+condition+'</p>');
+            }
+        }
+
     }
 
 }

@@ -10,11 +10,7 @@ function testSheetCode(wscCode){
     return processSheetCode(wscCode, 'TEST', true);
 }
 
-function processSheetCode(wscCode, sourceName){
-    return processSheetCode(wscCode, sourceName, false);
-}
-
-function processSheetCode(wscCode, sourceName, isTest){
+function processSheetCode(wscCode, sourceName, isTest=false){
     if(wscCode == null) {return false;}
     
     let wscStatements = wscCode.split(/\n/);
@@ -26,7 +22,11 @@ function processSheetCode(wscCode, sourceName, isTest){
         if(wscStatement === null) {continue;}
         //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
 
-        if(wscStatement.toUpperCase().includes("GIVE-CONDITION")){ // GIVE-CONDITION=Clumsy:1 OR GIVE-CONDITION=Clumsy
+        if(wscStatement.toUpperCase().includes("ADD-TEXT=")){
+            continue; // Ignore ADD-TEXT statements, they're processed separately
+        }
+
+        if(wscStatement.toUpperCase().includes("GIVE-CONDITION=")){ // GIVE-CONDITION=Clumsy:1 OR GIVE-CONDITION=Clumsy
             if(isTest) {continue;}
 
             let conditionName = wscStatement.split('=')[1];
@@ -142,7 +142,7 @@ function processSheetCode(wscCode, sourceName, isTest){
             continue;
         }
 
-        if(wscStatement.toUpperCase().includes("SET-APEX-ABILITY-SCORE")){
+        if(wscStatement.toUpperCase().includes("SET-APEX-ABILITY-SCORE=")){
             if(isTest) {continue;}
             // SET-APEX-ABILITY-SCORE=X (Ex. SET-APEX-ABILITY-SCORE=DEX)
 

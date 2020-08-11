@@ -1205,6 +1205,36 @@ module.exports = class SocketConnections {
         });
       });
 
+      // Add Spell to Spellbook for Spell SRC //
+      socket.on('requestBuilderSpellAddToSpellBook', function(charID, srcStruct, spellSRC, spellName, spellLevel){
+        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+          if(ownsChar){
+            let sLevel = parseInt(spellLevel);
+            if(!isNaN(sLevel)) {
+              CharGathering.getSpellByName(spellName)
+              .then((spell) => {
+                if(spell != null){
+                  if(spell.level <= sLevel) {
+                    CharSpells.addToSpellBookFromBuilder(charID, spellSRC, spell.id, sLevel, srcStruct)
+                    .then((result) => {
+                      socket.emit('returnBuilderSpellAddToSpellBook');
+                    });
+                  } else {
+                    socket.emit('returnWSCStatementFailure', 'Spell level cannot be lower than minimum spell level!');
+                  }
+                } else {
+                  socket.emit('returnWSCStatementFailure', 'Invalid Spell \"'+spellName+'\"');
+                }
+              });
+            } else {
+              socket.emit('returnWSCStatementFailure', 'Invalid Parameters \"'+spellLevel+'\"');
+            }
+          } else {
+            socket.emit('returnWSCStatementFailure', 'Incorrect Auth');
+          }
+        });
+      });
+
       // Innate Spell //
       socket.on('requestInnateSpellChange', function(charID, srcStruct, spellName, spellLevel, spellTradition, timesPerDay){
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
@@ -1229,7 +1259,7 @@ module.exports = class SocketConnections {
                   }
                 });
               } else {
-                socket.emit('returnWSCStatementFailure', 'Invalid Parameters \"'+timesPerDay+'\" and \"'+spellLevel+'\"');
+                socket.emit('returnWSCStatementFailure', 'Invalid Parameters \"'+timesPerDay+'\" and / or \"'+spellLevel+'\"');
               }
             } else {
               socket.emit('returnWSCStatementFailure', 'Invalid Spell Tradition \"'+spellTradition+'\"');

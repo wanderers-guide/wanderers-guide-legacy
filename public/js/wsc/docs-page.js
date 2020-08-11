@@ -10,7 +10,7 @@ $(function () {
     // ~~~~~~~~~~~~~~~~~ //
 
     $(".text-processing").each(function(){
-        $(this).html(processText($(this).text(), false));
+        $(this).html(processText($(this).text(), false, false, 'MEDIUM', false));
     });
     
     updateHideables();
