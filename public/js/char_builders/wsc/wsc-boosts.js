@@ -120,6 +120,11 @@ function displayAbilityBoostSingle(srcStruct, locationID, abilityTypes){
 
         if(hasDuplicateSelected($('.'+selectBoostSet))){
             $('.'+selectBoostControlShellClass).addClass("is-danger");
+            if($(this).val() != "chooseDefault"){
+                $(this).parent().removeClass("is-info");
+            } else {
+                $(this).parent().addClass("is-info");
+            }
         } else {
             $('.'+selectBoostControlShellClass).removeClass("is-danger");
             $('.'+selectBoostControlShellClass).addClass("is-loading");

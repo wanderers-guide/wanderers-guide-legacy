@@ -58,17 +58,6 @@ function lengthenAbilityType(shortType) {
 }
 
 /* Prof Conversions */
-function numUpToProf(numUp){
-  switch(numUp) {
-    case 0: return "U";
-    case 1: return "T";
-    case 2: return "E";
-    case 3: return "M";
-    case 4: return "L";
-    default: return "?";
-  }
-}
-
 function profToNumUp(prof){
   switch(prof) {
     case "U": return 0;
@@ -88,7 +77,7 @@ function getProfLetterFromNumUps(numUps) {
     case 2: return "E";
     case 3: return "M";
     case 4: return "L";
-    default: return null;
+    default: return "?";
   }
 }
 
@@ -99,14 +88,14 @@ function getProfNameFromNumUps(numUps) {
     case 2: return "Expert";
     case 3: return "Master";
     case 4: return "Legendary";
-    default: return null;
+    default: return "Unknown";
   }
 }
 
 function profToWord(prof){
+  if(prof != null) {prof = prof.toUpperCase();}
   switch(prof) {
-    case "UNTRAINED": return "Untrained";
-    case "U": return "Untrained";
+    case "UNTRAINED": return "U";
     case "TRAINED": return "Trained";
     case "T": return "Trained";
     case "EXPERT": return "Expert";
@@ -116,6 +105,18 @@ function profToWord(prof){
     case "LEGENDARY": return "Legendary";
     case "L": return "Legendary";
     default: return "Unknown";
+  }
+}
+
+function profToLetter(prof){
+  if(prof != null) {prof = prof.toUpperCase();}
+  switch(prof) {
+    case "UNTRAINED": return "U";
+    case "TRAINED": return "T";
+    case "EXPERT": return "E";
+    case "MASTER": return "M";
+    case "LEGENDARY": return "L";
+    default: return "?";
   }
 }
 

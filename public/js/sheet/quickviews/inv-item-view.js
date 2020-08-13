@@ -107,7 +107,7 @@ function openInvItemQuickview(data) {
         openQuickView('tagView', {
             TagName : tagName,
             _prevBackData: {Type: g_QViewLastType, Data: g_QViewLastData},
-        });
+        }, $('#quickviewDefault').hasClass('is-active'));
     });
 
     if(isInvestable){
@@ -426,7 +426,7 @@ function openInvItemQuickview(data) {
                     Item: data.Item,
                     InvItem: data.InvItem,
                     _prevBackData: {Type: g_QViewLastType, Data: g_QViewLastData},
-                });
+                }, $('#quickviewDefault').hasClass('is-active'));
             });
         }
 

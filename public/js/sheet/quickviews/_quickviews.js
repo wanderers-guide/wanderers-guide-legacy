@@ -37,7 +37,7 @@ $(function () {
 let g_QViewLastType = null;
 let g_QViewLastData = null;
 
-function openQuickView(type, data) {
+function openQuickView(type, data, noProtection=false) {
 
     $('#quickViewTitle').html('');
     $('#quickViewTitleRight').html('');
@@ -49,10 +49,11 @@ function openQuickView(type, data) {
         closeQuickView();
     });
 
-    if(data._prevBackData == null || !$('#quickviewDefault').hasClass('is-active')){
+    if(!noProtection) {
         $('#quickviewDefault').addClass('quickview-auto-close-protection');
-        $('#quickviewDefault').addClass('is-active');
     }
+    $('#quickviewDefault').addClass('is-active');
+
     g_QViewLastType = type;
     g_QViewLastData = data;
 
@@ -124,7 +125,7 @@ function addBackFunctionality(quickViewData){
     if(quickViewData._prevBackData != null && quickViewData._prevBackData.Data != null){
         $('#quickViewTitleClose').html('<span id="quickViewBack" class="icon has-text-light cursor-clickable" style="font-size:0.8em;"><i class="fas fa-arrow-left"></i></i></span>');
         $('#quickViewBack').click(function(){
-            openQuickView(quickViewData._prevBackData.Type, quickViewData._prevBackData.Data);
+            openQuickView(quickViewData._prevBackData.Type, quickViewData._prevBackData.Data, true);
         });
     }
 

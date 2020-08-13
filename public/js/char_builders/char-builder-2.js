@@ -5,6 +5,7 @@
 let socket = io();
 
 // Core Builder Data //
+let g_abilMap = null;
 let g_featMap = null;
 let g_skillMap = null;
 let g_itemMap = null;
@@ -58,6 +59,7 @@ function prevPage() {
 socket.on("returnAncestryDetails", function(coreDataStruct, ancestryObject, uniHeritageArray, inChoiceStruct){
 
     // Core Builder Data //
+    g_abilMap = objToMap(coreDataStruct.AbilObject);
     g_featMap = objToMap(coreDataStruct.FeatObject);
     g_skillMap = objToMap(coreDataStruct.SkillObject);
     g_itemMap = objToMap(coreDataStruct.ItemObject);
@@ -234,7 +236,7 @@ function displayCurrentAncestry(ancestryStruct, saving) {
 
 
     let ancestryDescription = $('#ancestryDescription');
-    ancestryDescription.html(processText(ancestryStruct.Ancestry.description, false));
+    ancestryDescription.html(processText(ancestryStruct.Ancestry.description, false, true));
 
 
 
@@ -611,8 +613,7 @@ function buildFeatStruct(featLevel) {
 
     let locationID = "descriptionFeat"+featLevel;
 
-    $('#ancestryFeats').append('<article class="message"><div class="message-header py-1"><p class="is-size-4 has-text-grey-light has-text-weight-semibold">Ancestry Feat</p><span class="has-text-weight-bold">Lvl '+featLevel+'</span></div><div class="message-body"><div class="columns is-centered"><div id="'+locationID+'" class="column is-paddingless is-8"></div></div></div></article>');
-
+    $('#ancestryFeats').append('<div class=""><div class="pb-3"><span class="is-size-4 has-text-weight-semibold">Level '+featLevel+'</span><p>You gain an ancestry feat.</p></div><div class="columns is-centered"><div id="'+locationID+'" class="column is-paddingless is-8"></div></div></div>');
 
     return { LocationID : locationID, Level : featLevel };
 

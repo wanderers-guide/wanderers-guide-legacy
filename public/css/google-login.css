@@ -10,7 +10,6 @@
     height: 40px;
     border-width: 0;
     background: white;
-    color: #737373;
     border-radius: 5px;
     white-space: nowrap;
     box-shadow: 1px 1px 0px 1px rgba(0,0,0,0.05);
@@ -18,10 +17,6 @@
     transition-duration: 150ms;
     transition-timing-function: ease-in-out;
     padding: 0;
-  }
-
-  .google-button__text {
-    color: #737373;
   }
   
   .google-button.active {
@@ -53,7 +48,8 @@
     vertical-align: middle;
     padding: 0 24px;
     font-size: 14px;
-    font-weight: bold;
+    color: #6b6b6b;
+    font-weight: 550;
     font-family: 'Roboto',arial,sans-serif;
   }
   

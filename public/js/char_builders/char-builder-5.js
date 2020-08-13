@@ -5,6 +5,7 @@
 let socket = io();
 
 // Core Builder Data //
+let g_abilMap = null;
 let g_featMap = null;
 let g_skillMap = null;
 let g_itemMap = null;
@@ -35,23 +36,12 @@ function prevPage() {
     window.location.href = window.location.href.replace("page5", "page4");
 }
 
-function goToChar() {
-    // Hardcoded redirect
-    if(window.location.href.includes("/page5?")) {
-        window.location.href = window.location.href.replace(
-            "builder/"+getCharIDFromURL()+"/page5?", getCharIDFromURL());
-    } else {
-        window.location.href = window.location.href.replace(
-            "builder/"+getCharIDFromURL()+"/page5", getCharIDFromURL());
-    }
-}
-
-
 // ~~~~~~~~~~~~~~ // Processings // ~~~~~~~~~~~~~~ //
 
-socket.on("returnFinalizeDetails", function(coreDataStruct, character, abilObject, cClass, ancestry, choiceStruct){
+socket.on("returnFinalizeDetails", function(coreDataStruct, character, cClass, ancestry, choiceStruct){
 
     // Core Builder Data //
+    g_abilMap = objToMap(coreDataStruct.AbilObject);
     g_featMap = objToMap(coreDataStruct.FeatObject);
     g_skillMap = objToMap(coreDataStruct.SkillObject);
     g_itemMap = objToMap(coreDataStruct.ItemObject);
@@ -62,30 +52,28 @@ socket.on("returnFinalizeDetails", function(coreDataStruct, character, abilObjec
     // ~~~~~~~~~~~~~~~~~ //
 
     injectWSCChoiceStruct(choiceStruct);
-    
-    let abilMap = objToMap(abilObject);
 
-    let strScore = abilMap.get("STR");
+    let strScore = g_abilMap.get("STR");
     $("#strScore").html(strScore);
     $("#strMod").html(signNumber(getMod(strScore)));
 
-    let dexScore = abilMap.get("DEX");
+    let dexScore = g_abilMap.get("DEX");
     $("#dexScore").html(dexScore);
     $("#dexMod").html(signNumber(getMod(dexScore)));
 
-    let conScore = abilMap.get("CON");
+    let conScore = g_abilMap.get("CON");
     $("#conScore").html(conScore);
     $("#conMod").html(signNumber(getMod(conScore)));
 
-    let intScore = abilMap.get("INT");
+    let intScore = g_abilMap.get("INT");
     $("#intScore").html(intScore);
     $("#intMod").html(signNumber(getMod(intScore)));
 
-    let wisScore = abilMap.get("WIS");
+    let wisScore = g_abilMap.get("WIS");
     $("#wisScore").html(wisScore);
     $("#wisMod").html(signNumber(getMod(wisScore)));
 
-    let chaScore = abilMap.get("CHA");
+    let chaScore = g_abilMap.get("CHA");
     $("#chaScore").html(chaScore);
     $("#chaMod").html(signNumber(getMod(chaScore)));
 
@@ -141,11 +129,6 @@ socket.on("returnFinalizeDetails", function(coreDataStruct, character, abilObjec
 
         $("#goToCharButton").attr("data-tooltip", "Character Incomplete\n"+infoNeeded);
 
-    } else {
-        // Go to Character Sheet
-        $("#goToCharButton").click(function(){
-            goToChar();
-        });
     }
 
 });

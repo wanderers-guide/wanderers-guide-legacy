@@ -14,7 +14,7 @@ let runningCodeQueue = false;
 let gCode_statements, gCode_srcStruct, gCode_locationID;
 let wscChoiceStruct = null;
 let wscMapsInit = false;
-let wscSkillMap, wscFeatMap, wscLangMap, wscSpellMap, wscArchetypes = null;
+let g_langMap, g_archetypes = null;
 let temp_classAbilities, temp_ancestryFeatsLocs = null;
 //                  //
 
@@ -292,6 +292,7 @@ socket.on("returnWSCUpdateChoices", function(updateType, updateData){
 
     if(updateType == 'ABILITY-BOOSTS'){
         wscChoiceStruct.BonusArray = updateData;
+        updateAbilityMap();
     } else if(updateType == 'FEATS'){
         wscChoiceStruct.FeatArray = updateData;
     } else if(updateType == 'DOMAINS'){
@@ -306,28 +307,6 @@ socket.on("returnWSCUpdateChoices", function(updateType, updateData){
     });
 });
 
-socket.on("returnWSCUpdateSkills", function(skillObject, refreshLists){
-    let skillMap = objToMap(skillObject);
-    //if(processingDebug) {console.log("Updating skillMap...");}
-    wscSkillMap = skillMap;
-
-    if(refreshLists){
-        // Update Skill Lists
-        $('.selectIncrease').each(function(){
-            let selectIncreaseID = $(this).attr('id');
-            let srcStruct = {
-                sourceType: $(this).attr('data-sourceType'),
-                sourceLevel: $(this).attr('data-sourceLevel'),
-                sourceCode: $(this).attr('data-sourceCode'),
-                sourceCodeSNum: $(this).attr('data-sourceCodeSNum'),
-            };
-            let profType = $(this).attr('data-profType');
-            populateSkillLists(selectIncreaseID, srcStruct, profType);
-        });
-    }
-
-});
-
 socket.on("returnWSCUpdateFeats", function(featObject){
     let featMap = objToMap(featObject);
     featMap = new Map([...featMap.entries()].sort(
@@ -340,13 +319,13 @@ socket.on("returnWSCUpdateFeats", function(featObject){
         })
     );
     //if(processingDebug) {console.log("Updating featMap...");}
-    wscFeatMap = featMap;
+    g_featMap = featMap;
 });
 
 socket.on("returnWSCUpdateLangs", function(langObject){
     let langMap = objToMap(langObject);
     //if(processingDebug) {console.log("Updating langMap...");}
-    wscLangMap = new Map([...langMap.entries()].sort(
+    g_langMap = new Map([...langMap.entries()].sort(
         function(a, b) {
             return a[1].Lang.name > b[1].Lang.name ? 1 : -1;
         })
@@ -365,12 +344,12 @@ socket.on("returnWSCUpdateSpells", function(spellObject){
         })
     );
     //if(processingDebug) {console.log("Updating spellMap...");}
-    wscSpellMap = spellsMap;
+    g_spellMap = spellsMap;
 });
 
 socket.on("returnWSCUpdateArchetypes", function(archetypesArray){
     //if(processingDebug) {console.log("Updating ArchetypesArray...");}
-    wscArchetypes = archetypesArray;
+    g_archetypes = archetypesArray;
 });
 
 //////////////

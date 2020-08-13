@@ -43,7 +43,7 @@ function giveLang(srcStruct, locationID, bonusOnly){
         return hasSameSrc(lang, srcStruct);
     });
 
-    let sortedLangMap = new Map([...wscLangMap.entries()].sort(
+    let sortedLangMap = new Map([...g_langMap.entries()].sort(
         function(a, b) {
             return a[1].IsBonus && !b[1].IsBonus ? -1 : 1;
         })

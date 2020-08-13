@@ -91,8 +91,41 @@ socket.on("returnLoreChange", function(srcStruct, loreName, inputPacket){
     } else {
         statementComplete();
     }
-    
-    skillsUpdateWSCChoiceStruct(srcStruct, loreName+'_LORE', 'T');
-    socket.emit("requestWSCUpdateSkills", getCharIDFromURL(), true);
+
+    loreUpdateWSCChoiceStruct(srcStruct, loreName);
+    if(loreName != null){
+        skillsUpdateWSCChoiceStruct(srcStruct, loreName+'_LORE', 'T');
+    } else {
+        skillsUpdateWSCChoiceStruct(srcStruct, null, null);
+    }
+    updateSkillMap(true);
 
 });
+
+function loreUpdateWSCChoiceStruct(srcStruct, loreName){
+
+    if(loreName != null){ loreName = loreName.toUpperCase(); }
+    let loreArray = wscChoiceStruct.LoreArray;
+
+    let foundLoreData = false;
+    for(let loreData of loreArray){
+        if(hasSameSrc(loreData, srcStruct)){
+            foundLoreData = true;
+            if(loreName != null){
+                loreData.value = loreName;
+            } else {
+                loreData.value = null;
+            }
+            break;
+        }
+    }
+
+    if(!foundLoreData){
+        let loreData = cloneObj(srcStruct);
+        loreData.value = loreName;
+        loreArray.push(loreData);
+    }
+
+    wscChoiceStruct.LoreArray = loreArray;
+
+}

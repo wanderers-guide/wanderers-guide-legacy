@@ -5,6 +5,7 @@
 let socket = io();
 
 // Core Builder Data //
+let g_abilMap = null;
 let g_featMap = null;
 let g_skillMap = null;
 let g_itemMap = null;
@@ -54,6 +55,7 @@ function prevPage() {
 socket.on("returnBackgroundDetails", function(coreDataStruct, backgrounds, inChoiceStruct){
 
     // Core Builder Data //
+    g_abilMap = objToMap(coreDataStruct.AbilObject);
     g_featMap = objToMap(coreDataStruct.FeatObject);
     g_skillMap = objToMap(coreDataStruct.SkillObject);
     g_itemMap = objToMap(coreDataStruct.ItemObject);
@@ -158,7 +160,7 @@ function displayCurrentBackground(background) {
     }
 
     let backgroundDescription = $('#backgroundDescription');
-    backgroundDescription.html(processText(background.description, false));
+    backgroundDescription.html(processText(background.description, false, true));
 
     // Code - Run General Code before Boosts Code, it's more likely to be delaying //
     $('#backgroundCodeOutput').html('');

@@ -2,10 +2,7 @@
 const router = require('express').Router();
 const Character = require('../models/contentDB/Character');
 
-const Class = require('../models/contentDB/Class');
-const Background = require('../models/contentDB/Background');
-const Ancestry = require('../models/contentDB/Ancestry');
-
+const CharStateUtils = require('../js/CharStateUtils');
 const CharGathering = require('../js/CharGathering');
 
 const PATH = '/profile/characters/builder/'; // <- Change this if routes are ever changed //
@@ -55,11 +52,14 @@ function goToBuilder(req, res, buildStageName, charID){
             CharGathering.getBaseAbilityScores(character.id)
             .then((charAbilityScores) => {
 
+                let isPlayable = CharStateUtils.isPlayable(character);
+
                 res.render('char_builder/'+buildStageName, {
                     title: "Character Builder - Wanderer's Guide",
                     user: req.user,
                     character: character,
-                    charAbilities: charAbilityScores
+                    charAbilities: charAbilityScores,
+                    isPlayable: isPlayable,
                 });
 
             });

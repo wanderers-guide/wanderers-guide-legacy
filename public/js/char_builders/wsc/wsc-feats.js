@@ -213,7 +213,7 @@ function giveClassFeat(srcStruct, locationID, featLevel, className, optionalTags
     let charArchetypesArray = [];
     for(let featChoice of wscChoiceStruct.FeatArray){
         if(featChoice.value != null) {
-            let feat = wscFeatMap.get(featChoice.value.id+"");
+            let feat = g_featMap.get(featChoice.value.id+"");
             if(feat != null){
                 let dedicationTag = feat.Tags.find(featTag => {
                     return featTag.name === 'Dedication';
@@ -226,7 +226,7 @@ function giveClassFeat(srcStruct, locationID, featLevel, className, optionalTags
     }
 
     for(let charArchetypeDedFeatID of charArchetypesArray){
-        let archetype = wscArchetypes.find(archetype => {
+        let archetype = g_archetypes.find(archetype => {
             return archetype.dedicationFeatID == charArchetypeDedFeatID;
         });
         if(archetype != null){
@@ -308,7 +308,7 @@ function giveClassFeat(srcStruct, locationID, featLevel, className, optionalTags
             clickedTab = true;
 
             // Remove Self-Archetype Tab
-            let archetype = wscArchetypes.find(archetype => {
+            let archetype = g_archetypes.find(archetype => {
                 return archetype.dedicationFeatID == featData.value.id;
             });
             if(archetype != null) {
@@ -316,10 +316,10 @@ function giveClassFeat(srcStruct, locationID, featLevel, className, optionalTags
                 $('#'+classFeatTabsID).find('.'+selfArchetypeTabClass).parent().remove();
             }
         } else {
-            let feat = wscFeatMap.get(featData.value.id+"");
+            let feat = g_featMap.get(featData.value.id+"");
             if(feat != null){
                 for(let charArchetypeDedFeatID of charArchetypesArray){
-                    let archetype = wscArchetypes.find(archetype => {
+                    let archetype = g_archetypes.find(archetype => {
                         return archetype.dedicationFeatID == charArchetypeDedFeatID;
                     });
                     if(archetype != null){
@@ -349,32 +349,6 @@ function giveClassFeat(srcStruct, locationID, featLevel, className, optionalTags
 function displayFeatChoice(srcStruct, locationID, selectionName, tagsArray, featLevel, optionalTags,
         autoPageLoad = 'AUTO_PAGE_LOAD', customList = null) {
 
-    // TO-DO. If feat requires prereq, check feats that the char has from choiceMap
-    let featSelectionTypeClass = selectionName.replace(/ /g,'')+'Selector';
-    
-    let selectFeatID = "selectFeat-"+locationID+"-"+srcStruct.sourceCodeSNum;
-    let descriptionFeatID = "descriptionFeat-"+locationID+"-"+srcStruct.sourceCodeSNum;
-    let selectFeatControlShellClass = selectFeatID+'-ControlShell';
-
-    $('#'+locationID).append('<div class="field is-grouped is-grouped-centered is-marginless mb-1"><div class="select '+selectFeatControlShellClass+'"><select id="'+selectFeatID+'" class="selectFeat '+featSelectionTypeClass+'"></select></div></div>');
-
-    $('#'+locationID).append('<div id="'+descriptionFeatID+'"></div>');
-
-    $('#'+selectFeatID).append('<option value="chooseDefault">'+selectionName+'</option>');
-
-    let triggerChange = false;
-    // Set saved feat choices
-    
-    let featData = wscChoiceStruct.FeatArray.find(featData => {
-        return hasSameSrc(featData, srcStruct);
-    });
-
-    let selectedFeat = null;
-    if(featData != null){
-        selectedFeat = featData.value;
-        triggerChange = true;
-    }
-
     // Make optional tags lowercase
     if(optionalTags != null){
         for (let i = 0; i < optionalTags.length; i++) {
@@ -388,19 +362,12 @@ function displayFeatChoice(srcStruct, locationID, selectionName, tagsArray, feat
         }
     }
 
+    let featSelectionArray = [];
+
     let prevLevel = 100;
-    for(const featStruct of wscFeatMap){
+    for(const featStruct of g_featMap){
         let feat = featStruct[1];
         if(feat.Feat.level < 1 && customList == null){ continue; }
-
-        let featName = feat.Feat.name;
-        if(feat.Feat.isArchived === 1){
-            if(selectedFeat != null && selectedFeat.id == feat.Feat.id){
-                featName += ' - Archived';
-            } else {
-                continue;
-            }
-        }
 
         let hasCorrectTags = false;
         if(customList == null) {
@@ -432,14 +399,10 @@ function displayFeatChoice(srcStruct, locationID, selectionName, tagsArray, feat
         if(feat.Feat.level <= featLevel && hasCorrectTags){
 
             if(feat.Feat.level < prevLevel){
-                $('#'+selectFeatID).append('<optgroup label="──────────"></optgroup>');
+                featSelectionArray.push({NewLevel: feat.Feat.level});
             }
 
-            if(customList == null) {
-                $('#'+selectFeatID).append('<option value="'+feat.Feat.id+'" class="'+selectOptionRarity(feat.Feat.rarity)+'">('+feat.Feat.level+') '+featName+'</option>');
-            } else {
-                $('#'+selectFeatID).append('<option value="'+feat.Feat.id+'" class="'+selectOptionRarity(feat.Feat.rarity)+'">'+featName+'</option>');
-            }
+            featSelectionArray.push(feat);
 
             prevLevel = feat.Feat.level;
 
@@ -447,166 +410,12 @@ function displayFeatChoice(srcStruct, locationID, selectionName, tagsArray, feat
 
     }
 
-    if(selectedFeat != null){
-        $('#'+selectFeatID).val(selectedFeat.id);
-        if ($('#'+selectFeatID).val() != selectedFeat.id){
-            $('#'+selectFeatID).val($("#"+selectFeatID+" option:first").val());
-            $('#'+selectFeatID).parent().addClass("is-info");
-        }
-    }
+    giveFeatSelection(locationID, srcStruct, selectionName, featSelectionArray);
 
-    // On feat choice change
-    $('#'+selectFeatID).change(function(event, triggerSave, dontCheckDup, autoPageLoad) {
-        autoPageLoad = (autoPageLoad == 'AUTO_PAGE_LOAD') ? true : false;
-
-        let featID = $(this).val();
-        let feat = wscFeatMap.get(featID+"");
-
-        if($(this).val() == "chooseDefault" || feat == null){
-            $('.'+selectFeatControlShellClass).addClass("is-info");
-            $('.'+selectFeatControlShellClass).removeClass("is-danger");
-
-            // Display nothing
-            $('#'+descriptionFeatID).html('');
-
-            featsUpdateWSCChoiceStruct(srcStruct, null);
-            socket.emit("requestFeatChange",
-                getCharIDFromURL(),
-                {srcStruct, feat : null, featID : null, autoPageLoad, codeLocationID : descriptionFeatID+"Code" },
-                selectFeatControlShellClass);
-
-        } else {
-            $('.'+selectFeatControlShellClass).removeClass("is-info");
-
-            let featArray = wscChoiceStruct.FeatArray;
-
-            let canSelectFeat = true;
-            if((dontCheckDup == null || !dontCheckDup) && feat.Feat.canSelectMultiple == 0 && hasDuplicateFeat(featArray, $(this).val())){
-                canSelectFeat = false;
-            }
-
-            if(!canSelectFeat){
-                
-                $('.'+selectFeatControlShellClass).addClass("is-danger");
-
-                // Display feat as issue
-                $('#'+descriptionFeatID).html('<p class="help is-danger text-center">You cannot select a feat more than once unless it states otherwise.</p>');
-                featsUpdateWSCChoiceStruct(srcStruct, null);
-
-            } else {
-                $('.'+selectFeatControlShellClass).removeClass("is-danger");
-
-                // Display feat
-                displayFeat(descriptionFeatID, feat);
-
-                // Save feats
-                if(triggerSave == null || triggerSave) {
-                    $('.'+selectFeatControlShellClass).addClass("is-loading");
-
-                    featsUpdateWSCChoiceStruct(srcStruct, feat.Feat);
-                    socket.emit("requestFeatChange",
-                        getCharIDFromURL(),
-                        {srcStruct, feat, featID, autoPageLoad, codeLocationID : descriptionFeatID+"Code" },
-                        selectFeatControlShellClass);
-                }
-            
-            }
-
-        }
-        
-    });
-
-    $('#'+selectFeatID).trigger("change", [triggerChange, true, autoPageLoad]);
-
-}
-
-function featsUpdateWSCChoiceStruct(srcStruct, feat){
-
-    let foundFeatData = false;
-    for(let featData of wscChoiceStruct.FeatArray){
-        if(hasSameSrc(featData, srcStruct)){
-            foundFeatData = true;
-            featData.value = feat;
-            break;
-        }
-    }
-
-    if(!foundFeatData){
-        let featData = srcStruct;
-        featData.value = feat;
-        wscChoiceStruct.FeatArray.push(featData);
-    }
-
-}
-
-socket.on("returnFeatChange", function(featChangePacket, selectFeatControlShellClass){
     
-    if(selectFeatControlShellClass != null) {
-        $('.'+selectFeatControlShellClass).removeClass("is-loading");
-        $('.'+selectFeatControlShellClass+'>select').blur();
-    }
 
-    if(featChangePacket.isStatement != null && featChangePacket.isStatement){
-        statementComplete();
-    }
+}
 
-    selectorUpdated();
-
-    // Clear previous code and run new code
-    if(featChangePacket.feat != null){
-        processCode(
-            featChangePacket.feat.Feat.code,
-            featChangePacket.srcStruct,
-            featChangePacket.codeLocationID);
-    }
-
-    // If dedication is switched, reload all class abilities
-    if(featChangePacket.autoPageLoad != null && !featChangePacket.autoPageLoad){
-
-        // Get number of character archetypes
-        let charArchetypesArray = [];
-        for(let featChoice of wscChoiceStruct.FeatArray){
-            if(featChoice.value != null) {
-                let feat = wscFeatMap.get(featChoice.value.id+"");
-                if(feat != null){
-                    let dedicationTag = feat.Tags.find(featTag => {
-                        return featTag.name === 'Dedication';
-                    });
-                    if(dedicationTag != null){
-                        charArchetypesArray.push(featChoice.value.id);
-                    }
-                }
-            }
-        }
-
-        // Get number of current archetype tabs
-        let maxArchetypesLength = 0;
-        $('.classFeatTabs').each(function() {
-            let archetypesTabClass = $(this).attr('data-arch-tab-class');
-            let archLength = $('.'+archetypesTabClass).length;
-            if (archLength > maxArchetypesLength) {
-                maxArchetypesLength = archLength;
-            }
-        });
-
-        // Changed feat has Dedication tag
-        let featDedicationTag = null;
-        if(featChangePacket.feat != null){
-            featDedicationTag = featChangePacket.feat.Tags.find(featTag => {
-                return featTag.name === 'Dedication';
-            });
-        }
-
-        // If they aren't the same amount, reload class abilities
-        if(maxArchetypesLength != charArchetypesArray.length || featDedicationTag != null) {
-            if(temp_classAbilities != null){
-                processCode_ClassAbilities(temp_classAbilities);
-            }
-        }
-
-    }
-
-});
 
 //////////////////////////////// Give Feat (by Name) ///////////////////////////////////
 
@@ -614,7 +423,7 @@ function giveFeatByName(srcStruct, featName, locationID){
     featName = featName.replace(/_/g," ");
     featName = featName.replace(/’/g,"'");
     let featEntry = null;
-    wscFeatMap.forEach(function(value, key, map){
+    g_featMap.forEach(function(value, key, map){
         if(value.Feat.isArchived === 0) {
             if(value.Feat.name.toUpperCase() === featName){
                 featEntry = value;
@@ -628,16 +437,14 @@ function giveFeatByName(srcStruct, featName, locationID){
         return;
     }
 
-    let descriptionFeatID = "descriptionFeat"+locationID+"-"+srcStruct.sourceCodeSNum;
-    $('#'+locationID).append('<div id="'+descriptionFeatID+'"></div>');
-
-    //displayFeat(descriptionFeatID, featEntry);
+    let featCodeSectionID = "featCode-"+locationID+"-"+srcStruct.sourceCodeSNum;
+    $('#'+locationID).append('<div id="'+featCodeSectionID+'"></div>');
 
     featsUpdateWSCChoiceStruct(srcStruct, featEntry.Feat);
     socket.emit("requestFeatChangeByName",
         getCharIDFromURL(),
         {srcStruct, feat : featEntry, featName : featName,
-            codeLocationID : descriptionFeatID+"Code", isStatement : true });
+            codeLocationID : featCodeSectionID, isStatement : true });
 
 }
 

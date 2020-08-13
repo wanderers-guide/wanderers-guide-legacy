@@ -252,7 +252,7 @@ function displaySpellDetails(spellDataStruct, spellTradDetailsSpellID){
         openQuickView('tagView', {
             TagName : tagName,
             _prevBackData: {Type: g_QViewLastType, Data: g_QViewLastData},
-        });
+        }, $('#quickviewDefault').hasClass('is-active'));
     });
 
     // Traditions

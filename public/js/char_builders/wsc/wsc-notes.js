@@ -36,7 +36,7 @@ socket.on("returnNotesFieldChange", function(notesData, locationID){
     
     let notesFieldID = getCharIDFromURL()+'-notesField-'+notesData.sourceType+'-'+notesData.sourceLevel+'-'+notesData.sourceCode+'-'+notesData.sourceCodeSNum;
     let notesFieldControlShellID = notesFieldID+'ControlShell';
-    $('#'+locationID).append('<div id="'+notesFieldControlShellID+'" class="control my-1 mx-5 px-5"><textarea id="'+notesFieldID+'" class="textarea use-custom-scrollbar" rows="2" spellcheck="false" maxlength="3000" placeholder="'+placeholderText+'">'+notesText+'</textarea></div>');
+    $('#'+locationID).append('<div id="'+notesFieldControlShellID+'" class="control my-1" style="max-width: 350px; margin: auto;"><textarea id="'+notesFieldID+'" class="textarea use-custom-scrollbar" rows="2" spellcheck="false" maxlength="3000" placeholder="'+placeholderText+'">'+notesText+'</textarea></div>');
 
     $("#"+notesFieldID).blur(function(){
         if(notesData.text != $(this).val()) {

@@ -5,6 +5,7 @@
 let socket = io();
 
 // Core Builder Data //
+let g_abilMap = null;
 let g_featMap = null;
 let g_skillMap = null;
 let g_itemMap = null;
@@ -64,6 +65,7 @@ function reloadPage(){
 socket.on("returnClassDetails", function(coreDataStruct, classObject, inChoiceStruct){
 
     // Core Builder Data //
+    g_abilMap = objToMap(coreDataStruct.AbilObject);
     g_featMap = objToMap(coreDataStruct.FeatObject);
     g_skillMap = objToMap(coreDataStruct.SkillObject);
     g_itemMap = objToMap(coreDataStruct.ItemObject);
@@ -142,6 +144,7 @@ socket.on("returnClassChange", function(inChoiceStruct){
 
     if(g_class != null){
         injectWSCChoiceStruct(choiceStruct);
+        updateSkillMap(true);
         displayCurrentClass(g_class, true);
     } else {
         finishLoadingPage();
@@ -162,7 +165,7 @@ function displayCurrentClass(classStruct, saving) {
     }
 
     let classDescription = $('#classDescription');
-    classDescription.html(processText(classStruct.Class.description, false));
+    classDescription.html(processText(classStruct.Class.description, false, true));
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Key Ability ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 
@@ -586,7 +589,7 @@ function displayCurrentClass(classStruct, saving) {
                 classAbilitySelectorInnerHTML += '</select>';
                 classAbilitySelectorInnerHTML += '</div></div>';
 
-                classAbilitySelectorInnerHTML += '<div class="columns is-centered"><div class="column is-mobile is-11"><article class="message is-info"><div class="message-body"><div id="'+descriptionID+'"></div><div id="'+abilityCodeID+'"></div></div></article></div></div>';
+                classAbilitySelectorInnerHTML += '<div class="columns is-centered"><div class="column is-mobile is-8"><article class="message is-info"><div class="message-body"><div id="'+descriptionID+'"></div><div id="'+abilityCodeID+'"></div></div></article></div></div>';
 
                 classAbilityContent.append(classAbilitySelectorInnerHTML);
 
@@ -702,7 +705,7 @@ function finishLoadingPage() {
 function selectorUpdated() {
 
     $('.classAbility').each(function() {
-        if($(this).find('.select.is-info').length !== 0){
+        if($(this).find('.select.is-info').length !== 0 || $(this).find('.feat-selection.is-default').length !== 0){
             $(this).find('.classAbilityUnselectedOption').html('<span class="icon is-small has-text-info pl-3"><i class="fas fa-xs fa-circle"></i></span>');
         } else {
             $(this).find('.classAbilityUnselectedOption').html('');

@@ -220,7 +220,7 @@ function handleFeatLinkExt(match, linkName, innerTextDisplay, innerTextName) {
                         Feat : featStruct.Feat,
                         Tags : featStruct.Tags,
                         _prevBackData: {Type: g_QViewLastType, Data: g_QViewLastData},
-                    });
+                    }, $('#quickviewDefault').hasClass('is-active'));
                 });
             }, 100);
             return featLinkText;
@@ -247,7 +247,7 @@ function handleItemLinkExt(match, linkName, innerTextDisplay, innerTextName) {
                     openQuickView('itemView', {
                         ItemDataStruct : itemDataStruct,
                         _prevBackData: {Type: g_QViewLastType, Data: g_QViewLastData},
-                    });
+                    }, $('#quickviewDefault').hasClass('is-active'));
                 });
             }, 100);
             return itemLinkText;
@@ -274,7 +274,7 @@ function handleSpellLinkExt(match, linkName, innerTextDisplay, innerTextName) {
                     openQuickView('spellView', {
                         SpellDataStruct: spellDataStruct,
                         _prevBackData: {Type: g_QViewLastType, Data: g_QViewLastData},
-                    });
+                    }, $('#quickviewDefault').hasClass('is-active'));
                 });
             }, 100);
             return spellLinkText;
@@ -301,7 +301,7 @@ function handleLanguageLinkExt(match, linkName, innerTextDisplay, innerTextName)
                     openQuickView('languageView', {
                         Language : language,
                         _prevBackData: {Type: g_QViewLastType, Data: g_QViewLastData},
-                    });
+                    }, $('#quickviewDefault').hasClass('is-active'));
                 });
             }, 100);
             return langLinkText;
@@ -324,7 +324,7 @@ function handleTraitLinkExt(match, linkName, innerTextDisplay, innerTextName) {
             openQuickView('tagView', {
                 TagName : innerTextName,
                 _prevBackData: {Type: g_QViewLastType, Data: g_QViewLastData},
-            });
+            }, $('#quickviewDefault').hasClass('is-active'));
         });
     }, 100);
     return traitLinkText;
@@ -337,8 +337,8 @@ function handleIndexConditions(text){
     for(const condition of g_allConditions){
         let conditionName = condition.name.toLowerCase();
         let conditionLinkClass = 'conditionTextLink'+conditionName.replace(/ /g,'-');
-        let conditionLinkText = '<span class="'+conditionLinkClass+' is-underlined-info cursor-clickable">'+conditionName+'</span>';
-        let conditionNameRegex = new RegExp(conditionName, "g");
+        let conditionLinkText = ' <span class="'+conditionLinkClass+' is-underlined-info cursor-clickable">'+conditionName+'</span>';
+        let conditionNameRegex = new RegExp(' '+conditionName, "g");
         text = text.replace(conditionNameRegex, conditionLinkText);
         setTimeout(function() {
             $('.'+conditionLinkClass).off('click');
@@ -346,7 +346,7 @@ function handleIndexConditions(text){
                 openQuickView('conditionView', {
                     Condition : condition,
                     _prevBackData: {Type: g_QViewLastType, Data: g_QViewLastData},
-                });
+                }, $('#quickviewDefault').hasClass('is-active'));
             });
         }, 100);
     }

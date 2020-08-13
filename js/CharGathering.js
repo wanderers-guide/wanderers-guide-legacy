@@ -466,7 +466,9 @@ module.exports = class CharGathering {
                     });
 
                     for(const loreData of loreDataArray) {
-                        skillArray.push({ SkillName : capitalizeWords(loreData.value)+" Lore", Skill : loreSkill });
+                        if(loreData.value != null){
+                            skillArray.push({ SkillName : capitalizeWords(loreData.value)+" Lore", Skill : loreSkill });
+                        }
                     }
 
                     let skillMap = new Map();
@@ -478,7 +480,7 @@ module.exports = class CharGathering {
                         for(const profData of profDataArray){
                             tempCount++;
 
-                            if(profData.For == "Skill"){
+                            if(profData.For == "Skill" && profData.To != null){
                                 let tempSkillName = skillData.SkillName.toUpperCase();
                                 tempSkillName = tempSkillName.replace(/_|\s+/g,"");
                                 let tempProfTo = profData.To.toUpperCase();
@@ -1009,19 +1011,23 @@ module.exports = class CharGathering {
                     .then((skillObject) => {
                         return CharGathering.getAllTags()
                         .then( (tags) => {
-                            return Condition.findAll()
-                            .then((allConditions) => {
-                                return Language.findAll()
-                                .then((allLanguages) => {
-                                    return {
-                                        FeatObject: featObject,
-                                        SkillObject: skillObject,
-                                        ItemObject: mapToObj(itemMap),
-                                        SpellObject: mapToObj(spellMap),
-                                        AllTags: tags,
-                                        AllConditions: allConditions,
-                                        AllLanguages: allLanguages,
-                                    };
+                            return CharGathering.getAbilityScores(charID)
+                            .then((abilObject) => {
+                                return Condition.findAll()
+                                .then((allConditions) => {
+                                    return Language.findAll()
+                                    .then((allLanguages) => {
+                                        return {
+                                            FeatObject: featObject,
+                                            SkillObject: skillObject,
+                                            ItemObject: mapToObj(itemMap),
+                                            SpellObject: mapToObj(spellMap),
+                                            AbilObject: abilObject,
+                                            AllTags: tags,
+                                            AllConditions: allConditions,
+                                            AllLanguages: allLanguages,
+                                        };
+                                    });
                                 });
                             });
                         });

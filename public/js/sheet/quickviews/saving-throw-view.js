@@ -10,7 +10,7 @@ function openSavingThrowQuickview(data) {
         openQuickView('customizeProfView', {
             ProfData : data.ProfData,
             _prevBackData: {Type: g_QViewLastType, Data: g_QViewLastData},
-        });
+        }, $('#quickviewDefault').hasClass('is-active'));
     });
 
     let qContent = $('#quickViewContent');

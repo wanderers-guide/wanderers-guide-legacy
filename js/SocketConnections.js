@@ -700,11 +700,9 @@ module.exports = class SocketConnections {
             CharGathering.getCharacter(charID).then((character) => {
               CharGathering.getClass(charID, character.classID).then((classDetails) => {
                 CharGathering.getAncestry(character.ancestryID).then((ancestry) => {
-                  CharGathering.getAbilityScores(charID).then((abilObject) => {
-                    CharGathering.getCharChoices(charID).then((choiceStruct) => {
-                      CharGathering.getBuilderCore(charID).then((coreDataStruct) => {
-                        socket.emit('returnFinalizeDetails', coreDataStruct, character, abilObject, classDetails.Class, ancestry, choiceStruct);
-                      });
+                  CharGathering.getCharChoices(charID).then((choiceStruct) => {
+                    CharGathering.getBuilderCore(charID).then((coreDataStruct) => {
+                      socket.emit('returnFinalizeDetails', coreDataStruct, character, classDetails.Class, ancestry, choiceStruct);
                     });
                   });
                 });
@@ -792,19 +790,19 @@ module.exports = class SocketConnections {
         });
       });
     
-      socket.on('requestFeatChange', function(charID, featChangePacket, selectFeatControlShellClass){
+      socket.on('requestFeatChange', function(charID, featChangePacket){
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
           if(ownsChar){
             let srcStruct = featChangePacket.srcStruct;
             if(featChangePacket.featID == null){
               CharDataMapping.deleteData(charID, 'chosenFeats', srcStruct)
               .then((result) => {
-                socket.emit('returnFeatChange', featChangePacket, selectFeatControlShellClass);
+                socket.emit('returnFeatChange', featChangePacket);
               });
             } else {
               CharDataMapping.setData(charID, 'chosenFeats', srcStruct, featChangePacket.featID)
               .then((result) => {
-                socket.emit('returnFeatChange', featChangePacket, selectFeatControlShellClass);
+                socket.emit('returnFeatChange', featChangePacket);
               });
             }
           }
@@ -1043,7 +1041,7 @@ module.exports = class SocketConnections {
                 let srcStruct = featChangePacket.srcStruct;
                 CharDataMapping.setData(charID, 'chosenFeats', srcStruct, feat.id)
                 .then((result) => {
-                  socket.emit('returnFeatChange', featChangePacket, null);
+                  socket.emit('returnFeatChange', featChangePacket);
                 });
               } else {
                 socket.emit('returnWSCStatementFailure', 'Cannot find feat \"'+featChangePacket.featName+'\"');
@@ -1382,18 +1380,15 @@ module.exports = class SocketConnections {
       socket.on('requestWSCMapsInit', function(charID){
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
           if(ownsChar){
-            CharGathering.getAllSkills(charID).then((skillsObject) => {
-              CharGathering.getAllFeats(charID).then((featsObject) => {
-                CharGathering.getAllLanguages(charID).then((langsObject) => {
-                  CharGathering.getAllSpells(charID).then((spellMap) => {
-                    CharGathering.getAllArchetypes(charID).then((archetypesArray) => {
-                      socket.emit('returnWSCUpdateSkills', skillsObject, false);
-                      socket.emit('returnWSCUpdateFeats', featsObject);
-                      socket.emit('returnWSCUpdateLangs', langsObject);
-                      socket.emit('returnWSCUpdateSpells', mapToObj(spellMap));
-                      socket.emit('returnWSCUpdateArchetypes', archetypesArray);
-                      socket.emit('returnWSCMapsInit');
-                    });
+            CharGathering.getAllFeats(charID).then((featsObject) => {
+              CharGathering.getAllLanguages(charID).then((langsObject) => {
+                CharGathering.getAllSpells(charID).then((spellMap) => {
+                  CharGathering.getAllArchetypes(charID).then((archetypesArray) => {
+                    socket.emit('returnWSCUpdateFeats', featsObject);
+                    socket.emit('returnWSCUpdateLangs', langsObject);
+                    socket.emit('returnWSCUpdateSpells', mapToObj(spellMap));
+                    socket.emit('returnWSCUpdateArchetypes', archetypesArray);
+                    socket.emit('returnWSCMapsInit');
                   });
                 });
               });
@@ -1420,18 +1415,6 @@ module.exports = class SocketConnections {
             } else {
               socket.emit('returnWSCUpdateChoices', null, null);
             }
-          }
-        });
-      });
-
-      
-    
-      socket.on('requestWSCUpdateSkills', function(charID, refreshLists=false){
-        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
-          if(ownsChar){
-            CharGathering.getAllSkills(charID).then((skillsObject) => {
-              socket.emit('returnWSCUpdateSkills', skillsObject, refreshLists);
-            });
           }
         });
       });

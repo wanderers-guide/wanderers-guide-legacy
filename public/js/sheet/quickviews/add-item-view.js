@@ -291,7 +291,7 @@ function displayItemDetails(itemDataStruct, addItemDetailsItemID){
         openQuickView('tagView', {
             TagName : tagName,
             _prevBackData: {Type: g_QViewLastType, Data: g_QViewLastData},
-        });
+        }, $('#quickviewDefault').hasClass('is-active'));
     });
 
     if(itemDataStruct.WeaponData != null){

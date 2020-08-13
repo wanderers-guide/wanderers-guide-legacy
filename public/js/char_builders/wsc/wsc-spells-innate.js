@@ -66,7 +66,7 @@ function displayInnateSpellChoice(srcStruct, locationID, spellLevel, spellTradit
         triggerChange = true;
     }
 
-    for(const [spellID, spellData] of wscSpellMap.entries()){
+    for(const [spellID, spellData] of g_spellMap.entries()){
         if(spellData.Spell.level != spellLevel){ continue; }
         if(!spellData.Spell.traditions.includes(spellTradition.toLowerCase())){ continue; }
 
@@ -95,7 +95,7 @@ function displayInnateSpellChoice(srcStruct, locationID, spellLevel, spellTradit
     $('#'+selectSpellID).change(function(event, triggerSave) {
 
         let spellID = $(this).val();
-        let spell = wscSpellMap.get(spellID+"");
+        let spell = g_spellMap.get(spellID+"");
 
         if($(this).val() == "chooseDefault" || spell == null){
             $('.'+selectSpellControlShellClass).addClass("is-info");

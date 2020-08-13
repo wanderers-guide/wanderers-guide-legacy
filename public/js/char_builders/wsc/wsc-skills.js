@@ -43,7 +43,7 @@ function giveSkill(srcStruct, locationID, profType){
     populateSkillLists(selectIncreaseID, srcStruct, profType);
 
     // On increase choice change
-    $('#'+selectIncreaseID).change(function() {
+    $('#'+selectIncreaseID).change(function(event, dontCheckDups) {
         $('#'+increaseCodeID).html('');
 
         if($(this).val() == "chooseDefault"){
@@ -87,8 +87,8 @@ function giveSkill(srcStruct, locationID, profType){
             let canSave = false;
             if(profType === 'UP') {
                 let skillName = $('#'+selectIncreaseID).val();
-                let numUps = wscSkillMap.get(skillName).NumUps;
-                if(isAbleToSelectIncrease(numUps+1, wscChoiceStruct.Level)) {
+                let numUps = g_skillMap.get(skillName).NumUps;
+                if(dontCheckDups || isAbleToSelectIncrease(numUps+1, wscChoiceStruct.Level)) {
                     canSave = true;
                     $('#'+increaseDescriptionID).html('');
                 } else {
@@ -120,7 +120,7 @@ function giveSkill(srcStruct, locationID, profType){
 
     });
 
-    $('#'+selectIncreaseID).trigger("change");
+    $('#'+selectIncreaseID).trigger("change", [true]);
 
     statementComplete();
 
@@ -139,7 +139,7 @@ function isAbleToSelectIncrease(numUps, charLevel){
 }
 
 function skillsUpdateWSCChoiceStruct(srcStruct, profTo, profType){
-
+    
     let profArray = wscChoiceStruct.ProfArray;
 
     let foundProfData = false;
@@ -152,14 +152,17 @@ function skillsUpdateWSCChoiceStruct(srcStruct, profTo, profType){
                 profData.To = profTo;
                 profData.Prof = profType;
             } else {
-                profData = null;
+                profData.value = null;
+                profData.For = null;
+                profData.To = null;
+                profData.Prof = null;
             }
             break;
         }
     }
 
-    if(!foundProfData){
-        let profData = srcStruct;
+    if(!foundProfData && profTo != null && profType != null){
+        let profData = cloneObj(srcStruct);
         profData.value = 'Skill:::'+profTo+':::'+profType;
         profData.For = 'Skill';
         profData.To = profTo;
@@ -182,9 +185,9 @@ function populateSkillLists(selectIncreaseID, srcStruct, profType){
         return hasSameSrc(prof, srcStruct);
     });
 
-    for(const [skillName, skillData] of wscSkillMap.entries()){
-
-        if(savedSkillData != null && savedSkillData.To == skillName) {
+    for(const [skillName, skillData] of g_skillMap.entries()){
+        
+        if(savedSkillData != null && similarSkills(savedSkillData, skillName)) {
             $('#'+selectIncreaseID).append('<option value="'+skillName+'" selected>'+skillName+'</option>');
         } else {
             if(skillData.NumUps < profToNumUp(profType)) {
@@ -202,13 +205,26 @@ function populateSkillLists(selectIncreaseID, srcStruct, profType){
         $('#'+selectIncreaseID).append('<option value="addLore">Add Lore</option>');
     }
 
+    // Exists to guarantee it will be blue when at chooseDefault or not
+    if($('#'+selectIncreaseID).val() == 'chooseDefault'){
+        $('#'+selectIncreaseID).parent().addClass("is-info");
+    } else {
+        $('#'+selectIncreaseID).parent().removeClass("is-info");
+    }
+
+}
+
+function similarSkills(savedSkillData, skillName){
+    let skillNameOne = savedSkillData.To.toUpperCase().replace(/ /g,"_");
+    let skillNameTwo = skillName.toUpperCase().replace(/ /g,"_");
+    return (skillNameOne === skillNameTwo);
 }
 
 socket.on("returnProficiencyChange", function(profChangePacket){
 
     if(profChangePacket.isSkill){
         selectorUpdated();
-        socket.emit("requestWSCUpdateSkills", getCharIDFromURL());
+        updateSkillMap(false);
     }
     if(profChangePacket.isStatement != null && profChangePacket.isStatement){
         statementComplete();

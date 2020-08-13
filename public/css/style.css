@@ -119,7 +119,7 @@ a:hover {
 header {
     position: absolute;
     width: 100%;
-    z-index: 9;
+    z-index: 15;
 }
 
 /* Dark Mode Styling */
@@ -333,7 +333,7 @@ nav ul ul {
     background: #333;
     padding: 10px;
     border-radius: 4px;
-    z-index: 9;
+    z-index: 15;
 }
 
 /* Display Dropdowns on Hover */

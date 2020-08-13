@@ -24,6 +24,8 @@
     <script type="text/javascript" src="/js/char_builders/wsc/wsc-familiarity.js"></script>
     <script type="text/javascript" src="/js/char_builders/wsc/wsc-keyAbility.js"></script>
     <script type="text/javascript" src="/js/char_builders/wsc/display-structs.js"></script>
+    <script type="text/javascript" src="/js/char_builders/wsc/feats-selection.js"></script>
+    <script type="text/javascript" src="/js/char_builders/wsc/skill-manager.js"></script>
     
     <script type="text/javascript" src="/js/wsc/text-processing.js"></script>
     <script type="text/javascript" src="/js/wsc/expression-processing.js"></script>
@@ -31,9 +33,11 @@
     <script type="text/javascript" src="/js/wsc/add-text-processing.js"></script>
     <script type="text/javascript" src="/js/wsc/errorHandling.js"></script>
 
+    <script type="text/javascript" src="/js/char_builders/top-stickies.js"></script>
     <script type="text/javascript" src="/js/char_builders/utils.js"></script>
 
     <!-- Quickview -->
+    <script type="text/javascript" src="/js/char_builders/wsc/quickview-left.js"></script>
     <script src="/js/sheet/quickviews/_quickviews.js"></script>
     <script src="/js/sheet/quickviews/feat-view.js"></script>
     <script src="/js/sheet/quickviews/language-view.js"></script>
@@ -76,21 +80,35 @@
     <div class="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
 </div>
 
-<div class="page_change_buttons_shell page_change_button_left">
-    <button class="button is-info is-rounded page_change_button" id="prevButton">
+<div class="sticky_buttons_shell sticky_button_left">
+    <button class="button is-info is-rounded sticky_button" id="prevButton">
         <span class="icon">
             <i class="fas fa-arrow-left"></i>
         </span>
     </button>
 </div>
 
-<div class="page_change_buttons_shell page_change_button_right">
-    <button class="button is-info is-rounded page_change_button" id="nextButton">
+<div class="sticky_buttons_shell sticky_button_right">
+    <button class="button is-info is-rounded sticky_button" id="nextButton">
         <span class="icon">
             <i class="fas fa-arrow-right"></i>
         </span>
     </button>
 </div>
+
+<div class="sticky_buttons_shell sticky_button_leftest">
+    <span class="icon is-medium has-text-info cursor-clickable sticky_button is-upper" id="leftQuickviewButton">
+        <i class="fas fa-2x fa-chart-bar"></i>
+    </span>
+</div>
+
+{{#if isPlayable}}
+    <div class="sticky_buttons_shell sticky_button_rightest">
+        <span class="icon is-medium has-text-info cursor-clickable sticky_button is-upper" id="goToCharButton">
+            <i class="fas fa-2x fa-address-card"></i>
+        </span>
+    </div>
+{{/if}}
 
 <div id="char-builder" class="container py-4 text-center">
 
@@ -251,6 +269,20 @@
         </div>
         <div class="quickview-body use-custom-scrollbar">
             <div id="quickViewContent" class="quickview-block pt-1 pb-3 px-3">
+            </div>
+        </div>
+    </div>
+
+    <!-- Left Quickview -->
+    <div id="quickviewLeftDefault" class="quickview is-left" data-str-base="{{charAbilities.STR}}" data-dex-base="{{charAbilities.DEX}}" data-con-base="{{charAbilities.CON}}" data-int-base="{{charAbilities.INT}}" data-wis-base="{{charAbilities.WIS}}" data-cha-base="{{charAbilities.CHA}}">
+        <div class="quickview-header">
+            <p id="quickViewLeftTitle" class="title is-size-5 has-text-grey-lighter"></p>
+            <div class="is-inline-flex">
+                <p id="quickViewLeftTitleClose"></p>
+            </div>
+        </div>
+        <div class="quickview-body use-custom-scrollbar">
+            <div id="quickViewLeftContent" class="quickview-block pt-1 pb-3 px-3">
             </div>
         </div>
     </div>

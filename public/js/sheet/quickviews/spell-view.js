@@ -353,7 +353,7 @@ function openSpellQuickview(data){
         openQuickView('tagView', {
             TagName : tagName,
             _prevBackData: {Type: g_QViewLastType, Data: g_QViewLastData},
-        });
+        }, $('#quickviewDefault').hasClass('is-active'));
     });
 
     // Traditions
@@ -485,7 +485,9 @@ function openSpellQuickview(data){
 
     if(spellDataStruct.Spell.heightenedOneVal != null || spellDataStruct.Spell.heightenedTwoVal != null || spellDataStruct.Spell.heightenedThreeVal != null) {
 
-        if(!gOption_hasAutoHeightenSpells || spellHeightenLevel == null){
+        let autoHeightenSpells = false;
+        if(isSheetPage()){ autoHeightenSpells = gOption_hasAutoHeightenSpells; }
+        if(!autoHeightenSpells || spellHeightenLevel == null){
 
             qContent.append('<hr class="m-2">');
 
@@ -608,3 +610,45 @@ function handleSpellAutoHeightenedIncreaseBonus(match, dieAmount, dieType, bonus
     bonusAmount = bonusAmount*g_tempAutoHeightenCount;
     return 'by '+dieAmount+'d'+dieType+'+'+bonusAmount+''+endingChar;
 }
+
+// Spell Utils //
+function getHeightenedTextFromCodeName(codeName){
+    switch(codeName) {
+      case "PLUS_ONE": return "+1";
+      case "PLUS_TWO": return "+2";
+      case "PLUS_THREE": return "+3";
+      case "PLUS_FOUR": return "+4";
+      case "LEVEL_2": return "2nd";
+      case "LEVEL_3": return "3rd";
+      case "LEVEL_4": return "4th";
+      case "LEVEL_5": return "5th";
+      case "LEVEL_6": return "6th";
+      case "LEVEL_7": return "7th";
+      case "LEVEL_8": return "8th";
+      case "LEVEL_9": return "9th";
+      case "LEVEL_10": return "10th";
+      case "CUSTOM": return "CUSTOM";
+      default: return codeName;
+    }
+  }
+  
+  function getHeightenedCount(spellLevel, spellHeightenLevel, heightenName){
+    if(spellLevel === 0){ spellLevel = 1; } // Cantrips are treated as 1st level
+    switch(heightenName) {
+      case "PLUS_ONE": return Math.floor(spellHeightenLevel-spellLevel);
+      case "PLUS_TWO": return Math.floor((spellHeightenLevel-spellLevel)/2);
+      case "PLUS_THREE": return Math.floor((spellHeightenLevel-spellLevel)/3);
+      case "PLUS_FOUR": return Math.floor((spellHeightenLevel-spellLevel)/4);
+      case "LEVEL_2": return (spellHeightenLevel >= 2) ? 1 : 0;
+      case "LEVEL_3": return (spellHeightenLevel >= 3) ? 1 : 0;
+      case "LEVEL_4": return (spellHeightenLevel >= 4) ? 1 : 0;
+      case "LEVEL_5": return (spellHeightenLevel >= 5) ? 1 : 0;
+      case "LEVEL_6": return (spellHeightenLevel >= 6) ? 1 : 0;
+      case "LEVEL_7": return (spellHeightenLevel >= 7) ? 1 : 0;
+      case "LEVEL_8": return (spellHeightenLevel >= 8) ? 1 : 0;
+      case "LEVEL_9": return (spellHeightenLevel >= 9) ? 1 : 0;
+      case "LEVEL_10": return (spellHeightenLevel >= 10) ? 1 : 0;
+      case "CUSTOM": return 1;
+      default: return 0;
+    }
+  }

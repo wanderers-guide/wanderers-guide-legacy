@@ -6,6 +6,7 @@
     <script type="text/javascript" src="/js/wsc/text-processing.js"></script>
     <script type="text/javascript" src="/js/wsc/errorHandling.js"></script>
 
+    <script type="text/javascript" src="/js/char_builders/top-stickies.js"></script>
     <script type="text/javascript" src="/js/char_builders/utils.js"></script>
 {{/section}}
 
@@ -39,13 +40,21 @@
     <div class="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
 </div>
 
-<div class="page_change_buttons_shell page_change_button_right">
-    <button class="button is-info is-rounded page_change_button" id="nextButton">
+<div class="sticky_buttons_shell sticky_button_right">
+    <button class="button is-info is-rounded sticky_button" id="nextButton">
         <span class="icon">
             <i class="fas fa-arrow-right"></i>
         </span>
     </button>
 </div>
+
+{{#if isPlayable}}
+    <div class="sticky_buttons_shell sticky_button_rightest">
+        <span class="icon is-medium has-text-info cursor-clickable sticky_button is-upper" id="goToCharButton">
+            <i class="fas fa-2x fa-address-card"></i> 
+        </span>
+    </div>
+{{/if}}
 
 <div id="char-builder" class="container py-4 text-center">
 

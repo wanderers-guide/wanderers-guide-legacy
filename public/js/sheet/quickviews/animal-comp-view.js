@@ -178,7 +178,7 @@ function openAnimalCompQuickview(data) {
             updateAnimalCompanion(charAnimal);
             openQuickView('animalCompanionView', {
                 CharAnimalComp: charAnimal
-            });
+            }, $('#quickviewDefault').hasClass('is-active'));
         }
     });
 
@@ -187,7 +187,7 @@ function openAnimalCompQuickview(data) {
             updateAnimalCompanion(charAnimal);
             openQuickView('animalCompanionView', {
                 CharAnimalComp: charAnimal
-            });
+            }, $('#quickviewDefault').hasClass('is-active'));
         }
     });
     
