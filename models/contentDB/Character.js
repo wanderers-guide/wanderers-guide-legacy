@@ -50,12 +50,18 @@ const Character = db.define('characters', {
   dataID: {
     type: Sequelize.INTEGER
   },
-  optionAutoHeightenSpells: { // Character Options
+  // Character Options //
+  optionAutoHeightenSpells: {
     type: Sequelize.INTEGER
   },
+  optionPublicCharacter: {
+    type: Sequelize.INTEGER
+  },
+  // Character Variants //
   variantProfWithoutLevel: {
     type: Sequelize.INTEGER
   },
+  // Character Enabled Sources //
   enabledSources: {
     type: Sequelize.STRING
   },

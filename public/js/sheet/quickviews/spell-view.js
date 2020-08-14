@@ -405,22 +405,23 @@ function openSpellQuickview(data){
 
     let spellCost = '';
     if(spellDataStruct.Spell.cost != null){
-        spellCost = '<strong>Cost</strong> '+spellDataStruct.Spell.cost+'; ';
+        spellCost = '<strong>Cost</strong> '+removePeriodAtEndOfStr(spellDataStruct.Spell.cost)+'; ';
     }
     ctrString += spellCost;
 
     let spellTrigger = '';
     if(spellDataStruct.Spell.trigger != null){
-        spellTrigger = '<strong>Trigger</strong> '+spellDataStruct.Spell.trigger+'; ';
+        spellTrigger = '<strong>Trigger</strong> '+removePeriodAtEndOfStr(spellDataStruct.Spell.trigger)+'; ';
     }
     ctrString += spellTrigger;
 
     let spellRequirements = '';
     if(spellDataStruct.Spell.requirements != null){
-        spellRequirements = '<strong>Requirements</strong> '+spellDataStruct.Spell.requirements+'; ';
+        spellRequirements = '<strong>Requirements</strong> '+removePeriodAtEndOfStr(spellDataStruct.Spell.requirements)+'; ';
     }
     ctrString += spellRequirements;
     ctrString = ctrString.slice(0, -2);// Trim off that last '; '
+    if(ctrString != '') {ctrString += '.';}// Add period at end.
 
     qContent.append('<div class="tile"><div class="tile is-child"><p class="text-left negative-indent">'+ctrString+'</p></div></div>');
 
@@ -630,9 +631,9 @@ function getHeightenedTextFromCodeName(codeName){
       case "CUSTOM": return "CUSTOM";
       default: return codeName;
     }
-  }
+}
   
-  function getHeightenedCount(spellLevel, spellHeightenLevel, heightenName){
+function getHeightenedCount(spellLevel, spellHeightenLevel, heightenName){
     if(spellLevel === 0){ spellLevel = 1; } // Cantrips are treated as 1st level
     switch(heightenName) {
       case "PLUS_ONE": return Math.floor(spellHeightenLevel-spellLevel);
@@ -651,4 +652,12 @@ function getHeightenedTextFromCodeName(codeName){
       case "CUSTOM": return 1;
       default: return 0;
     }
-  }
+}
+
+function removePeriodAtEndOfStr(str){
+    if(str.endsWith('.')) {
+        return str.substring(0, str.length - 1);
+    } else {
+        return str;
+    }
+}

@@ -406,7 +406,11 @@ module.exports = class CharSaving {
     static saveCharacterOption(charID, optionName, value) {
 
         let charUpVals = null;
-        if(optionName === 'optionAutoHeightenSpells'){
+        if(optionName === 'optionPublicCharacter'){
+            charUpVals = {
+                optionPublicCharacter: value
+            };
+        } else if(optionName === 'optionAutoHeightenSpells'){
             charUpVals = {
                 optionAutoHeightenSpells: value
             };

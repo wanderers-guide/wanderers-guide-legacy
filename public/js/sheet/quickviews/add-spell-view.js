@@ -302,22 +302,23 @@ function displaySpellDetails(spellDataStruct, spellTradDetailsSpellID){
 
     let spellCost = '';
     if(spellDataStruct.Spell.cost != null){
-        spellCost = '<strong>Cost</strong> '+spellDataStruct.Spell.cost+'; ';
+        spellCost = '<strong>Cost</strong> '+removePeriodAtEndOfStr(spellDataStruct.Spell.cost)+'; ';
     }
     ctrString += spellCost;
 
     let spellTrigger = '';
     if(spellDataStruct.Spell.trigger != null){
-        spellTrigger = '<strong>Trigger</strong> '+spellDataStruct.Spell.trigger+'; ';
+        spellTrigger = '<strong>Trigger</strong> '+removePeriodAtEndOfStr(spellDataStruct.Spell.trigger)+'; ';
     }
     ctrString += spellTrigger;
 
     let spellRequirements = '';
     if(spellDataStruct.Spell.requirements != null){
-        spellRequirements = '<strong>Requirements</strong> '+spellDataStruct.Spell.requirements+'; ';
+        spellRequirements = '<strong>Requirements</strong> '+removePeriodAtEndOfStr(spellDataStruct.Spell.requirements)+'; ';
     }
     ctrString += spellRequirements;
     ctrString = ctrString.slice(0, -2);// Trim off that last '; '
+    if(ctrString != '') {ctrString += '.';}// Add period at end.
 
     spellDetails.append('<div class="tile"><div class="tile is-child"><p class="text-left negative-indent">'+ctrString+'</p></div></div>');
 
@@ -409,4 +410,12 @@ function displaySpellDetails(spellDataStruct, spellTradDetailsSpellID){
     }
 
 
+}
+
+function removePeriodAtEndOfStr(str){
+    if(str.endsWith('.')) {
+        return str.substring(0, str.length - 1);
+    } else {
+        return str;
+    }
 }

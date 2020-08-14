@@ -9,6 +9,7 @@ const CharDataMappingExt = require('./CharDataMappingExt');
 const AuthCheck = require('./AuthCheck');
 const AdminGathering = require('./AdminGathering');
 const AdminUpdate = require('./AdminUpdate');
+const CharStateUtils = require('./CharStateUtils');
 const GeneralUtils = require('./GeneralUtils');
 const HomeBackReport = require('../models/backgroundDB/HomeBackReport');
 
@@ -33,7 +34,15 @@ module.exports = class SocketConnections {
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
           if(ownsChar){
             CharGathering.getCharacterInfo(charID).then((charInfo) => {
-              socket.emit('returnCharacterSheetInfo', charInfo);
+              socket.emit('returnCharacterSheetInfo', charInfo, false);
+            });
+          } else {
+            CharGathering.getCharacter(charID).then((character) => {
+              if(CharStateUtils.isPublic(character)){
+                CharGathering.getCharacterInfo(charID).then((charInfo) => {
+                  socket.emit('returnCharacterSheetInfo', charInfo, true);
+                });
+              }
             });
           }
         });

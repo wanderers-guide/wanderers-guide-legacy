@@ -167,7 +167,7 @@ router.get('/patreon/redirect', (req, res) => {
             res.redirect('/profile');
             return;
         }).catch((err) => {
-            res.status(500);
+            res.status(403);
             res.render('error/patreon_link_error', { title: "Account Linking Error - Wanderer's Guide", user: req.user });
             return;
         });

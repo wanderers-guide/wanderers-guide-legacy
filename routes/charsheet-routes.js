@@ -12,25 +12,26 @@ router.get('*', (req, res) => {
     If privatizing character data ever becomes important, we may want to change this. */
     Character.findOne({ where: { id: charID} })
     .then((character) => {
+        if(character != null){
+            if(CharStateUtils.isPublic(character) || (req.user != null && character.userID === req.user.id)){
 
-        if(character.userID === req.user.id){
-
-            if(CharStateUtils.isPlayable(character)) {
-                goToCharSheet(character, req, res);
+                if(CharStateUtils.isPlayable(character)) {
+                    goToCharSheet(character, req, res);
+                } else {
+                    res.redirect('/profile/characters/builder/'+character.id+'/page1');
+                }
+    
             } else {
-                res.redirect('/profile/characters/builder/'+character.id+'/page1');
+                res.status(403); // 403 - Forbidden
+                res.render('error/private_character_error', { title: "Private Character Error - Wanderer's Guide", user: req.user });
             }
-
         } else {
-            // When a user attempts to view a character sheet that isn't theirs, give them 404
-            console.error("AUTH FAILURE - User attempted to view a character that isn't theirs!");
-            res.status(404);
-            res.render('error/404_error', { title: "404 Not Found - Wanderer's Guide", user: req.user });
+            res.status(403); // 403 - Forbidden, really a 404 - Not Found
+            res.render('error/private_character_error', { title: "Private Character Error - Wanderer's Guide", user: req.user });
         }
-
     }).catch(err => {
         console.error(err);
-        res.status(404);
+        res.status(404); // 404 - Not Found
         res.render('error/404_error', { title: "404 Not Found - Wanderer's Guide", user: req.user });
     });
 

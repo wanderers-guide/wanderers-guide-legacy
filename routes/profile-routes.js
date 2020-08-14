@@ -2,7 +2,8 @@ const router = require('express').Router();
 const charRoutes = require('./char-routes');
 
 const authCheck = (req, res, next) => {
-    if(!req.user){
+    let rSheetPageMatch = req.originalUrl.match(/\/profile\/characters\/\d+$/);
+    if(!req.user && rSheetPageMatch == null){
         res.redirect('/auth/login');
     } else {
         next();

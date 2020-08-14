@@ -7,6 +7,10 @@ module.exports = class CharStateUtils {
         return character.name != null && character.ancestryID != null && character.backgroundID != null && character.classID != null;
     }
 
+    static isPublic(character) {
+        return character.optionPublicCharacter === 1;
+    }
+
     static canMakeCharacter(user, characters) {
         return user.isPatreonMember === 1 || characters.length < getUserCharacterLimit();
     }

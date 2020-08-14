@@ -4,6 +4,7 @@
 
 let socket = io();
 let isSheetInit = false;
+let isViewOnly = false;
 
 /* Character Options */
 let gOption_hasAutoHeightenSpells;
@@ -102,8 +103,15 @@ $(function () {
 });
 
 
-socket.on("returnCharacterSheetInfo", function(charInfo){
+socket.on("returnCharacterSheetInfo", function(charInfo, viewOnly){
     isSheetInit = true;
+    isViewOnly = viewOnly;
+
+    // View Only //
+    if(isViewOnly){
+        $('#backToBuilderButton').attr('disabled', true);
+        $('#restButton').attr('disabled', true);
+    }
 
     g_itemMap = objToMap(charInfo.ItemObject);
     g_itemMap = new Map([...g_itemMap.entries()].sort(
@@ -654,16 +662,20 @@ function displayInformation() {
     /////////////////////////////////////// Back to Builder ////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////
     $("#backToBuilderButton").click(function(){
-        // Hardcoded redirect
-        window.location.href = window.location.href.replace(
-            "/"+getCharIDFromURL(), "/builder/"+getCharIDFromURL()+"/page1?");
+        if(!isViewOnly){
+            // Hardcoded redirect
+            window.location.href = window.location.href.replace(
+                "/"+getCharIDFromURL(), "/builder/"+getCharIDFromURL()+"/page1?");
+        }
     });
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////// Take Rest ///////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////
     $("#restButton").click(function(){
-        takeRest();
+        if(!isViewOnly){
+            takeRest();
+        }
     });
 
     ////////////////////////////////////////////////////////////////////////////////////////////////

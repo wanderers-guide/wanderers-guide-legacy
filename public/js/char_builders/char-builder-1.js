@@ -201,6 +201,21 @@ function handleCharacterOptions(character) {
     $("#variantProficiencyWithoutLevel").prop('checked', (character.variantProfWithoutLevel === 1));
 
     // Options //
+    $("#optionPublicCharacter").change(function(){
+        let optionTypeValue = (this.checked) ? 1 : 0;
+        if(optionTypeValue === 1) {
+            $("#optionPublicCharacterInfo").removeClass('is-hidden');
+        } else {
+            $("#optionPublicCharacterInfo").addClass('is-hidden');
+        }
+        socket.emit("requestCharacterOptionChange", 
+            getCharIDFromURL(), 
+            'optionPublicCharacter',
+            optionTypeValue);
+    });
+    $("#optionPublicCharacter").prop('checked', (character.optionPublicCharacter === 1));
+    if(character.optionPublicCharacter === 1) { $("#optionPublicCharacterInfo").removeClass('is-hidden'); }
+    
     $("#optionAutoHeightenSpells").change(function(){
         let optionTypeValue = (this.checked) ? 1 : 0;
         socket.emit("requestCharacterOptionChange", 

@@ -65,13 +65,12 @@ function goToBuilder(req, res, buildStageName, charID){
             });
 
         } else {
-            // When a user attempts to view a character builder that isn't theirs, give them 404
-            res.status(404);
-            res.render('error/404_error', { title: "404 Not Found - Wanderer's Guide", user: req.user });
+            res.status(403); // 403 - Forbidden
+            res.render('error/403_builder_error', { title: "Character Builder - Wanderer's Guide", user: req.user });
         }
 
     }).catch(err => {
-        res.status(404);
+        res.status(404); // 404 - Not Found
         res.render('error/404_error', { title: "404 Not Found - Wanderer's Guide", user: req.user });
     });
 
