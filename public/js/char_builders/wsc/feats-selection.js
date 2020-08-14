@@ -52,7 +52,9 @@ function generateFeatSelection(contentLocID, srcStruct, selectionName, featsArra
       featListHTML += '<hr class="hr-feat-selection m-0"></hr>';
     }
     if(featData.NewLevel != null){
-      featListHTML += '<div class="feat-selection-level"><span class="">Level '+featData.NewLevel+'</span></div>';
+      if(featData.NewLevel > 0){
+        featListHTML += '<div class="feat-selection-level"><span class="">Level '+featData.NewLevel+'</span></div>';
+      }
     } else {
 
       let featNameHTML = '<span class="">'+featData.Feat.name+'</span>';
@@ -152,16 +154,13 @@ function generateFeatSelection(contentLocID, srcStruct, selectionName, featsArra
 
 socket.on("returnFeatChange", function(featChangePacket){
 
-  if(featChangePacket.isStatement != null && featChangePacket.isStatement){
-    statementComplete();
-  }
-
   selectorUpdated();
   // Updating feat selections will run code for all feats (including this one)
   updateAllFeatSelections();
 
 
-  // If dedication is switched, reload all class abilities
+  // If dedication is switched, reload all class abilities //
+  //if(featChangePacket.autoPageLoad != null && !featChangePacket.autoPageLoad){}
 
   // Get number of character archetypes
   let charArchetypesArray = [];

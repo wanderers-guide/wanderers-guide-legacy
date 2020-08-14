@@ -218,6 +218,9 @@ socket.on("returnHeritageChange", function(heritageID, isUniversal, charTagsArra
     $('#selectHeritageControlShell').removeClass("is-loading");
 
     wscChoiceStruct.CharTagsArray = charTagsArray;
+    if($('#quickviewLeftDefault').hasClass('is-active')){
+        openLeftQuickView('skillsView', null);
+    }
     displayCurrentHeritage(g_ancestryForHeritage, heritageID, isUniversal);
 
 });

@@ -231,6 +231,24 @@ function openLeftSkillsQuickview(data) {
   $('#quickViewLeftTitle').html('Statistics');
   let qContent = $('#quickViewLeftContent');
 
+  let charTags = cloneObj(wscChoiceStruct.CharTagsArray);
+  charTags.push({value: 'Humanoid'});
+  charTags = charTags.sort(
+      function(a, b) {
+          return a.value > b.value ? 1 : -1;
+      }
+  );
+  let tagsInnerHTML = '';
+  for(const charTag of charTags){
+    if(charTag.value != null && charTag.value != ''){
+      tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-very-small is-info tagButton">'+charTag.value+'</button>';
+    }
+  }
+  if(tagsInnerHTML != ''){
+    qContent.append('<div class="buttons is-marginless is-centered">'+tagsInnerHTML+'</div>');
+    qContent.append('<hr class="mb-2 mt-1">');
+  }
+
   qContent.append('<div class="columns is-centered is-marginless text-center mx-3"><div class="column is-2 is-paddingless"><p class="is-bold-very">Str</p></div><div class="column is-2 is-paddingless"><p class="is-bold-very">Dex</p></div><div class="column is-2 is-paddingless"><p class="is-bold-very">Con</p></div><div class="column is-2 is-paddingless"><p class="is-bold-very">Int</p></div><div class="column is-2 is-paddingless"><p class="is-bold-very">Wis</p></div><div class="column is-2 is-paddingless"><p class="is-bold-very">Cha</p></div></div>');
   qContent.append('<div class="columns is-centered is-marginless text-center mx-3"><div class="column is-2 is-paddingless"><p class="">'+g_abilMap.get("STR")+'</p></div><div class="column is-2 is-paddingless"><p class="">'+g_abilMap.get("DEX")+'</p></div><div class="column is-2 is-paddingless"><p class="">'+g_abilMap.get("CON")+'</p></div><div class="column is-2 is-paddingless"><p class="">'+g_abilMap.get("INT")+'</p></div><div class="column is-2 is-paddingless"><p class="">'+g_abilMap.get("WIS")+'</p></div><div class="column is-2 is-paddingless"><p class="">'+g_abilMap.get("CHA")+'</p></div></div>');
 

@@ -412,8 +412,6 @@ function displayFeatChoice(srcStruct, locationID, selectionName, tagsArray, feat
 
     giveFeatSelection(locationID, srcStruct, selectionName, featSelectionArray);
 
-    
-
 }
 
 
@@ -443,10 +441,13 @@ function giveFeatByName(srcStruct, featName, locationID){
     featsUpdateWSCChoiceStruct(srcStruct, featEntry.Feat);
     socket.emit("requestFeatChangeByName",
         getCharIDFromURL(),
-        {srcStruct, feat : featEntry, featName : featName,
-            codeLocationID : featCodeSectionID, isStatement : true });
+        {srcStruct, feat: featEntry, featName, codeLocationID: featCodeSectionID});
 
 }
+
+socket.on("returnFeatChangeByName", function(featChangePacket){
+    statementComplete();
+});
 
 //////////////////////////////// Hide Feat (by Name) ///////////////////////////////////
 

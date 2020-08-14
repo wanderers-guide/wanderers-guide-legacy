@@ -1050,7 +1050,7 @@ module.exports = class SocketConnections {
                 let srcStruct = featChangePacket.srcStruct;
                 CharDataMapping.setData(charID, 'chosenFeats', srcStruct, feat.id)
                 .then((result) => {
-                  socket.emit('returnFeatChange', featChangePacket);
+                  socket.emit('returnFeatChangeByName', featChangePacket);
                 });
               } else {
                 socket.emit('returnWSCStatementFailure', 'Cannot find feat \"'+featChangePacket.featName+'\"');

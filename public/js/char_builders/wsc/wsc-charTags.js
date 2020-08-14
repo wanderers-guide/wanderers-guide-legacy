@@ -31,6 +31,9 @@ function giveCharTag(srcStruct, charTagName){
 
 socket.on("returnCharTagChange", function(charTagsArray){
     wscChoiceStruct.CharTagsArray = charTagsArray;
+    if($('#quickviewLeftDefault').hasClass('is-active')){
+        openLeftQuickView('skillsView', null);
+    }
     statementComplete();
 });
 
@@ -116,6 +119,9 @@ socket.on("returnWSCCharTagChange", function(charTagsArray, selectControlShellCl
     if(selectControlShellClass != null) {
         $('.'+selectControlShellClass).removeClass("is-loading");
         $('.'+selectControlShellClass+'>select').blur();
+    }
+    if($('#quickviewLeftDefault').hasClass('is-active')){
+        openLeftQuickView('skillsView', null);
     }
     selectorUpdated();
 });

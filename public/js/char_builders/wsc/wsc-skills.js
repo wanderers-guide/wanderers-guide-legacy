@@ -35,6 +35,9 @@ function giveSkill(srcStruct, locationID, profType){
     let increaseDescriptionID = "selectIncreaseDescription"+locationID+"-"+srcStruct.sourceCodeSNum;
     let increaseCodeID = "selectIncreaseCode"+locationID+"-"+srcStruct.sourceCodeSNum;
 
+    // If ID already exists, just return. This is a temporary fix - this shouldn't be an issue in the first place.
+    if($('#'+selectIncreaseID).length != 0) { statementComplete(); return; }
+
     $('#'+locationID).append('<div class="field is-grouped is-grouped-centered is-marginless mt-1"><div class="select '+selectIncreaseControlShellClass+'"><select id="'+selectIncreaseID+'" class="selectIncrease" data-profType="'+profType+'" data-sourceType="'+srcStruct.sourceType+'" data-sourceLevel="'+srcStruct.sourceLevel+'" data-sourceCode="'+srcStruct.sourceCode+'" data-sourceCodeSNum="'+srcStruct.sourceCodeSNum+'"></select></div></div>');
 
     $('#'+locationID).append('<div id="'+increaseCodeID+'" class=""></div>');

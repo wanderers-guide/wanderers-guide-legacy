@@ -24,6 +24,9 @@ function processCode(wscCode, srcStruct, locationID){
     // Process ADD-TEXT Statements
     processAddText(wscCode, locationID);
 
+    // Add Loading Animiation //
+    $('#'+locationID).append('<div class="wsc-statement-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>');
+
     // Uppercase all code (to make everything case insensitive)
     wscCode = wscCode.toUpperCase();
 
@@ -158,6 +161,9 @@ function runNextStatement(){
             return 'SKIP';
         }
         //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+
+        // Remove Loading Animiation //
+        $('#'+locationID+' .wsc-statement-roller').remove();
 
         if(wscStatement.includes("-CHAR-TRAIT")){
             processingCharTags(wscStatement, srcStruct, locationID);
