@@ -957,7 +957,7 @@ module.exports = class CharGathering {
                                           .then((advancedDomainDataArray) => {
 
                                             let choiceStruct = {
-                                              Level: character.level,
+                                              Character: character,
                                               Heritage: heritage,
                                               ClassDetails: classDetails,
                                               CharTagsArray: charTagsArray,

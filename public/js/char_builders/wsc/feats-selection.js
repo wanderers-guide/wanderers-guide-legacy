@@ -43,7 +43,11 @@ function generateFeatSelection(contentLocID, srcStruct, selectionName, featsArra
   if(selectedFeat == null) {
     $('#'+contentLocID).html('<div class="mb-3"><div data-contentLoc-id="'+contentLocID+'" class="feat-selection is-default cursor-clickable columns is-mobile mb-0 p-0"><div class="column is-2 is-paddingless '+openFeatListClass+' py-2"></div><div class="column is-8 is-paddingless '+openFeatListClass+' py-2"><span class="">'+selectionName+'</span></div><div class="column is-2 is-paddingless '+openFeatListClass+' py-2"><span class="icon feat-selection-dropdown"><i class="fas fa-chevron-down '+featDropdownIconClass+'"></i></span></div></div><div class="'+featListSectionClass+' is-hidden"></div><div id="'+featCodeSectionID+'" class="py-2"></div></div>');
   } else {
-    $('#'+contentLocID).html('<div class="mb-3"><div data-contentLoc-id="'+contentLocID+'" class="feat-selection cursor-clickable columns is-mobile mb-0 p-0"><div class="column is-1 is-paddingless '+openFeatDetailsClass+' py-2"></div><div class="column is-10 is-paddingless '+openFeatDetailsClass+' py-2"><span class="">'+selectedFeat.Feat.name+'</span><sup class="is-size-7 has-text-grey is-italic"> Lvl '+selectedFeat.Feat.level+'</sup></div><div class="column is-1 is-paddingless '+openFeatListClass+' py-2" style="border-left: 1px solid hsl(0, 0%, 13%);"><span class="icon feat-selection-dropdown"><i class="fas fa-chevron-down '+featDropdownIconClass+'"></i></span></div></div><div class="'+featListSectionClass+' is-hidden"></div><div id="'+featCodeSectionID+'" class="py-2"></div></div>');
+    let featNameHTML = '<span class="">'+selectedFeat.Feat.name+'</span>';
+    if(selectedFeat.Feat.isArchived === 1){ featNameHTML += '<span class="has-text-grey-kinda-light is-size-6-5"> - Archived</span>'; }
+    let featLevelHTML = '';
+    if(selectedFeat.Feat.level > 0){ featLevelHTML = '<sup class="is-size-7 has-text-grey is-italic"> Lvl '+selectedFeat.Feat.level+'</sup>'; }
+    $('#'+contentLocID).html('<div class="mb-3"><div data-contentLoc-id="'+contentLocID+'" class="feat-selection cursor-clickable columns is-mobile mb-0 p-0"><div class="column is-1 is-paddingless '+openFeatDetailsClass+' py-2"></div><div class="column is-10 is-paddingless '+openFeatDetailsClass+' py-2">'+featNameHTML+''+featLevelHTML+'</div><div class="column is-1 is-paddingless '+openFeatListClass+' py-2" style="border-left: 1px solid hsl(0, 0%, 13%);"><span class="icon feat-selection-dropdown"><i class="fas fa-chevron-down '+featDropdownIconClass+'"></i></span></div></div><div class="'+featListSectionClass+' is-hidden"></div><div id="'+featCodeSectionID+'" class="py-2"></div></div>');
   }
 
   let featListHTML = '';
@@ -57,8 +61,7 @@ function generateFeatSelection(contentLocID, srcStruct, selectionName, featsArra
       }
     } else {
 
-      let featNameHTML = '<span class="">'+featData.Feat.name+'</span>';
-      let rightInfoHTML = '';
+      let featNameHTML = '<span class="">'+featData.Feat.name+'</span><span class="featPrereqIcon"></span>';
 
       if(featData.Feat.isArchived === 1){
         if(selectedFeat != null && selectedFeat.Feat.id == featData.Feat.id){
@@ -68,6 +71,7 @@ function generateFeatSelection(contentLocID, srcStruct, selectionName, featsArra
         }
       }
 
+      let rightInfoHTML = '';
       if(featData.Feat.skillID != null){
         rightInfoHTML = '<span class="has-text-grey-kinda-light is-size-7 is-pulled-right">'+getSkillNameAbbrev(getSkillIDToName(featData.Feat.skillID))+'</span>';
       }
@@ -115,6 +119,7 @@ function generateFeatSelection(contentLocID, srcStruct, selectionName, featsArra
     if($('.'+featListSectionClass).hasClass('is-hidden')){
       $('.'+featDropdownIconClass).removeClass('fa-chevron-down');
       $('.'+featDropdownIconClass).addClass('fa-chevron-up');
+      populatePrereqIcons(featListSectionClass);
       $('.'+featListSectionClass).removeClass('is-hidden');
     } else {
       $('.'+featDropdownIconClass).removeClass('fa-chevron-up');
@@ -262,6 +267,27 @@ function updateFeatSelectionEntryEvents(){
       Tags : feat.Tags,
       _prevBackData: {Type: g_QViewLastType, Data: g_QViewLastData},
     });
+  });
+
+}
+
+function populatePrereqIcons(featListSectionClass){
+  if(wscChoiceStruct.Character.optionAutoDetectPreReqs !== 1) { return; }
+
+  $('.'+featListSectionClass+' .feat-selection-list .feat-selection-list-entry').each(function(){
+    let feat = g_featMap.get($(this).attr('data-feat-id'));
+    let preReqResult = meetsPrereqs(feat.Feat);
+
+    let preReqIconHTML = '';
+    if(preReqResult == 'TRUE'){
+      preReqIconHTML = ' '+preReqGetIconTrue();
+    } else if(preReqResult == 'FALSE'){
+      preReqIconHTML = ' '+preReqGetIconFalse();
+    } else if(preReqResult == 'UNKNOWN'){
+      preReqIconHTML = ' '+preReqGetIconUnknown();
+    }
+    $(this).find(".featPrereqIcon").html(preReqIconHTML);
+
   });
 
 }

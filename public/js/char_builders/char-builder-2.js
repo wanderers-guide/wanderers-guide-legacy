@@ -3,6 +3,7 @@
 */
 
 let socket = io();
+let isBuilderInit = false;
 
 // Core Builder Data //
 let g_abilMap = null;
@@ -16,7 +17,6 @@ let g_allTags = null;
 // ~~~~~~~~~~~~~~~~~ //
 
 let g_uniHeritageArray = null;
-let g_charLevel = null;
 
 let g_ancestry = null;
 let g_ancestryForHeritage = null;
@@ -57,6 +57,7 @@ function prevPage() {
 // ~~~~~~~~~~~~~~ // Processings // ~~~~~~~~~~~~~~ //
 
 socket.on("returnAncestryDetails", function(coreDataStruct, ancestryObject, uniHeritageArray, inChoiceStruct){
+    isBuilderInit = true;
 
     // Core Builder Data //
     g_abilMap = objToMap(coreDataStruct.AbilObject);
@@ -70,7 +71,6 @@ socket.on("returnAncestryDetails", function(coreDataStruct, ancestryObject, uniH
     // ~~~~~~~~~~~~~~~~~ //
 
     g_uniHeritageArray = uniHeritageArray;
-    g_charLevel = inChoiceStruct.Level;
     injectWSCChoiceStruct(inChoiceStruct);
     let ancestryMap = objToMap(ancestryObject);
     ancestryMap = new Map([...ancestryMap.entries()].sort(
@@ -572,11 +572,9 @@ function displayCurrentHeritage(ancestryStruct, heritageID, isUniversal) {
 
     }
 
-    if(g_charLevel != null){
-        window.setTimeout(() => {
-            createAncestryFeats(g_charLevel);
-        }, 250);
-    }
+    window.setTimeout(() => {
+        createAncestryFeats(wscChoiceStruct.Character.level);
+    }, 250);
 
 }
 

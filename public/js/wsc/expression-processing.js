@@ -60,7 +60,7 @@ let g_expr_level, g_expr_focusPoints, g_expr_profMap, g_expr_senseArray,
 
 function initExpressionProcessor(expDataStruct){
 
-    g_expr_level = expDataStruct.ChoiceStruct.Level;
+    g_expr_level = expDataStruct.ChoiceStruct.Character.level;
     g_expr_profMap = objToMap(expDataStruct.ChoiceStruct.FinalProfObject);
     g_expr_heritage = expDataStruct.ChoiceStruct.Heritage;
     g_expr_focusPoints = expDataStruct.ChoiceStruct.FocusPointArray.length;
@@ -379,7 +379,7 @@ function expHasProf(expression, statement, elseStatement){
         if(profData == null){
             let tempSkillName = profMapData.Name.toUpperCase();
             tempSkillName = tempSkillName.replace(/_|\s+/g,"");
-            if(tempSkillName === profName && expHasProfNumUpsCompare(profMapData.NumUps, boolOp, numUps)) {
+            if(tempSkillName === profName.toUpperCase() && expHasProfNumUpsCompare(profMapData.NumUps, boolOp, numUps)) {
                 return statement;
             }
         } else {

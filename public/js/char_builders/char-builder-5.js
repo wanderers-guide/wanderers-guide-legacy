@@ -3,6 +3,7 @@
 */
 
 let socket = io();
+let isBuilderInit = false;
 
 // Core Builder Data //
 let g_abilMap = null;
@@ -39,6 +40,7 @@ function prevPage() {
 // ~~~~~~~~~~~~~~ // Processings // ~~~~~~~~~~~~~~ //
 
 socket.on("returnFinalizeDetails", function(coreDataStruct, character, cClass, ancestry, choiceStruct){
+    isBuilderInit = true;
 
     // Core Builder Data //
     g_abilMap = objToMap(coreDataStruct.AbilObject);

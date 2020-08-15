@@ -13,6 +13,7 @@ let gOption_hasProfWithoutLevel;
 
 /* Sheet-State Options */
 let gState_hasFinesseMeleeUseDexDamage;
+let gState_armoredStealth;
 let gState_addLevelToUntrainedWeaponAttack;
 let gState_displayCompanionTab;
 /* ~~~~~~~~~~~~~~~~~~~ */
@@ -170,6 +171,9 @@ socket.on("returnCharacterSheetInfo", function(charInfo, viewOnly){
     g_featChoiceArray = charInfo.ChoicesStruct.FeatArray;
     g_featChoiceArray = g_featChoiceArray.sort(
         function(a, b) {
+            if(a.value == null || b.value == null){
+                return b.value != null ? 1 : -1;
+            }
             if (a.value.level === b.value.level) {
                 // Name is only important when levels are the same
                 return a.value.name > b.value.name ? 1 : -1;
@@ -253,6 +257,7 @@ function loadCharSheet(){
 
     // Init Sheet-States //
     gState_hasFinesseMeleeUseDexDamage = false;
+    gState_armoredStealth = false;
     gState_addLevelToUntrainedWeaponAttack = false;
     gState_displayCompanionTab = false;
 
@@ -1000,7 +1005,7 @@ function displayInformation() {
     skills.html('');
     let hasFascinatedCondition = hasCondition(14); // Hardcoded - Fascinated condition decreases all skills by -2
     let untrainedImprovisation = g_featChoiceArray.find(feat => {
-        return feat.value.id == 2270; // Hardcoded Untrained Improvisation Feat ID
+        return feat.value != null && feat.value.id == 2270; // Hardcoded Untrained Improvisation Feat ID
     });
     let hasUntrainedImprovisationFeat = (untrainedImprovisation != null);
     for(const [skillName, skillData] of g_skillMap.entries()){
@@ -1057,6 +1062,7 @@ function displayInformation() {
     let downtimeFeatStructArray = [];
 
     for(const feat of g_featChoiceArray){
+        if(feat.value == null) { continue; }
         let featStruct = g_featMap.get(feat.value.id+"");
         if(featStruct == null) { continue; }
 
@@ -1454,16 +1460,20 @@ function determineArmor(dexMod, strScore) {
 
         checkPenalty += (armorStruct.InvItem.isShoddy == 1) ? -2 : 0;
 
+        let noisyTag = tagArray.find(tagStruct => {
+            return tagStruct.Tag.id === 559; // Hardcoded Noisy Tag ID
+        });
         if(strScore >= armorStruct.Item.ArmorData.minStrength) {
 
             speedPenalty += 5;
 
             if(checkPenalty != 0){
-                let noisyTag = tagArray.find(tagStruct => {
-                    return tagStruct.Tag.id === 559; // Hardcoded Noisy Tag ID
-                });
                 if(noisyTag != null){
-                    applyArmorCheckPenaltyToSkill('Stealth', checkPenalty);
+                    if(gState_armoredStealth && profNumUps > 0){
+                        // If you have Armor Stealth and are trained in the armor, ignore noisy trait
+                    } else {
+                        applyArmorCheckPenaltyToSkill('Stealth', checkPenalty);
+                    }
                 }
             }
 
@@ -1477,7 +1487,24 @@ function determineArmor(dexMod, strScore) {
                     applyArmorCheckPenaltyToSkill('Acrobatics', checkPenalty);
                     applyArmorCheckPenaltyToSkill('Athletics', checkPenalty);
                 }
-                applyArmorCheckPenaltyToSkill('Stealth', checkPenalty);
+                if(gState_armoredStealth && profNumUps > 0 && noisyTag == null) {
+                    /*  If you have Armor Stealth and are trained in the armor, 
+                        ignore noisy trait and reduce Stealth penalty if no noisy trait.
+                    */
+                    let stealthCheckPenalty = checkPenalty;
+                    let stealthNumUps = getStat('SKILL_STEALTH', 'PROF_BONUS');
+                    if(stealthNumUps == 4){ // Legendary
+                        stealthCheckPenalty += 3;
+                    } else if(stealthNumUps == 3){ // Master
+                        stealthCheckPenalty += 2;
+                    } else { // Expert or less
+                        stealthCheckPenalty += 1;
+                    }
+                    if(stealthCheckPenalty > 0) { stealthCheckPenalty = 0; }
+                    applyArmorCheckPenaltyToSkill('Stealth', stealthCheckPenalty);
+                } else {
+                    applyArmorCheckPenaltyToSkill('Stealth', checkPenalty);
+                }
                 applyArmorCheckPenaltyToSkill('Thievery', checkPenalty);
             }
 
@@ -1916,6 +1943,7 @@ function runAllFeatsAndAbilitiesCode() {
     }
 
     for(let phyFeat of g_phyFeatArray){
+        if(phyFeat.value == null) { continue; }
         processSheetCode(phyFeat.value.code, phyFeat.value.name);
     }
     

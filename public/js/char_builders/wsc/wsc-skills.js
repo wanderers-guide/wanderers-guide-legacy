@@ -91,7 +91,7 @@ function giveSkill(srcStruct, locationID, profType){
             if(profType === 'UP') {
                 let skillName = $('#'+selectIncreaseID).val();
                 let numUps = g_skillMap.get(skillName).NumUps;
-                if(dontCheckDups || isAbleToSelectIncrease(numUps+1, wscChoiceStruct.Level)) {
+                if(dontCheckDups || isAbleToSelectIncrease(numUps+1, wscChoiceStruct.Character.level)) {
                     canSave = true;
                     $('#'+increaseDescriptionID).html('');
                 } else {

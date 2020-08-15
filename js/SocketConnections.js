@@ -768,12 +768,12 @@ module.exports = class SocketConnections {
             if(classChoiceStruct == null){
               CharDataMapping.deleteData(charID, 'classChoice', srcStruct)
               .then((result) => {
-                socket.emit('returnClassChoiceChange');
+                socket.emit('returnClassChoiceChange', srcStruct, null, null);
               });
             } else {
               CharDataMappingExt.setDataClassChoice(charID, srcStruct, classChoiceStruct.SelectorID, classChoiceStruct.OptionID)
               .then((result) => {
-                socket.emit('returnClassChoiceChange');
+                socket.emit('returnClassChoiceChange', srcStruct, classChoiceStruct.SelectorID, classChoiceStruct.OptionID);
               });
             }
           }

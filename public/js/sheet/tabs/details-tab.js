@@ -139,6 +139,7 @@ function featDisplayByType(data, sortingTagNameArray, featsSearchValue){
 
     let featCount = 0;
     for(const feat of data.FeatChoiceArray){
+        if(feat.value == null) { continue; }
         let featTags = data.FeatMap.get(feat.value.id+"").Tags;
         if(sortingTagNameArray == null){
             // Is Other, display if feat is NOT ancestry or class
@@ -342,6 +343,7 @@ function displayAncestryAbilities(data, abilitiesSearchValue){
     let abilCount = 0;
     for(let phyFeat of data.PhyFeats){
         if(phyFeat.sourceType != 'ancestry'){ continue; }
+        if(phyFeat.value == null) { continue; }
         let phyFeatAbil = {
             name: phyFeat.value.name,
             description: phyFeat.value.description,

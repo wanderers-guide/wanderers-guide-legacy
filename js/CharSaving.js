@@ -410,6 +410,10 @@ module.exports = class CharSaving {
             charUpVals = {
                 optionPublicCharacter: value
             };
+        } else if(optionName === 'optionAutoDetectPreReqs'){
+            charUpVals = {
+                optionAutoDetectPreReqs: value
+            };
         } else if(optionName === 'optionAutoHeightenSpells'){
             charUpVals = {
                 optionAutoHeightenSpells: value

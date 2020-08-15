@@ -167,6 +167,14 @@ function processSheetCode(wscCode, sourceName, isTest=false){
             continue;
         }
 
+        if(wscStatement.toUpperCase() == "SET-ARMORED-STEALTH"){
+            if(isTest) {continue;}
+
+            gState_armoredStealth = true;
+
+            continue;
+        }
+
         if(wscStatement.toUpperCase() == "SET-ADD-LEVEL-TO-UNTRAINED-WEAPONS"){
             if(isTest) {continue;}
 

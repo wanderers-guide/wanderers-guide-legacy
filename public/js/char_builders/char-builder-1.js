@@ -3,6 +3,8 @@
 */
 
 let socket = io();
+let isBuilderInit = false;
+
 
 // ~~~~~~~~~~~~~~ // General - Run On Load // ~~~~~~~~~~~~~~ //
 $(function () {
@@ -28,6 +30,7 @@ function nextPage() {
 // ~~~~~~~~~~~~~~ // Processings // ~~~~~~~~~~~~~~ //
 
 socket.on("returnCharacterDetails", function(character){
+    isBuilderInit = true;
 
     // When character name changes, save name
     $("#charName").change(function(){
@@ -224,6 +227,15 @@ function handleCharacterOptions(character) {
             optionTypeValue);
     });
     $("#optionAutoHeightenSpells").prop('checked', (character.optionAutoHeightenSpells === 1));
+
+    $("#optionAutoDetectPreReqs").change(function(){
+        let optionTypeValue = (this.checked) ? 1 : 0;
+        socket.emit("requestCharacterOptionChange", 
+            getCharIDFromURL(), 
+            'optionAutoDetectPreReqs',
+            optionTypeValue);
+    });
+    $("#optionAutoDetectPreReqs").prop('checked', (character.optionAutoDetectPreReqs === 1));
     
     
 }

@@ -51,6 +51,9 @@ const Character = db.define('characters', {
     type: Sequelize.INTEGER
   },
   // Character Options //
+  optionAutoDetectPreReqs: {
+    type: Sequelize.INTEGER
+  },
   optionAutoHeightenSpells: {
     type: Sequelize.INTEGER
   },

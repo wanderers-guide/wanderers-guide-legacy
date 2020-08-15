@@ -4,5 +4,20 @@
 
 
 function displaySpell(locationID, spell){
-  $('#'+locationID).html('<div class="">'+processText('(feat: '+spell.Spell.name+')', false)+'</div>');
+  let buttonClass = locationID+'-spellView-'+spell.Spell.id;
+  $('#'+locationID).html('<button class="'+buttonClass+' button is-small is-info is-rounded is-outlined">View Spell</button>');
+
+  let inSpellName = spell.Spell.name.replace(/’/g,'\'').toUpperCase();
+  for(const [spellID, spellDataStruct] of g_spellMap.entries()){
+    let spellName = spellDataStruct.Spell.name.toUpperCase();
+    if(inSpellName === spellName && spellDataStruct.Spell.isArchived == 0) {
+        $('.'+buttonClass).click(function(){
+          openQuickView('spellView', {
+              SpellDataStruct: spellDataStruct,
+              _prevBackData: {Type: g_QViewLastType, Data: g_QViewLastData},
+          }, $('#quickviewDefault').hasClass('is-active'));
+        });
+        return;
+    }
+  }
 }

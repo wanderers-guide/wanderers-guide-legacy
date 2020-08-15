@@ -156,3 +156,7 @@ function round(value, precision) {
 function isSheetPage(){
   return typeof isSheetInit !== 'undefined';
 }
+
+function isBuilderPage(){
+  return typeof isBuilderInit !== 'undefined';
+}

@@ -43,7 +43,9 @@ function openFeatQuickview(data) {
                 break;
             }
         }
-        featTagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-very-small is-info has-tooltip-bottom has-tooltip-multiline" data-tooltip="An action with this trait is categorized under the '+skill.name+' skill. It usually requires a certain proficiency in the skill to perform.">'+skill.name+'</button>';
+        if(skill != null){
+            featTagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-very-small is-info has-tooltip-bottom has-tooltip-multiline" data-tooltip="An action with this trait is categorized under the '+skill.name+' skill. It usually requires a certain proficiency in the skill to perform.">'+skill.name+'</button>';
+        }
     }
 
     data.Tags = data.Tags.sort(
@@ -75,23 +77,56 @@ function openFeatQuickview(data) {
     let featContentInnerHTML = '';
     let foundUpperFeatLine = false;
     if(data.Feat.prerequisites != null){
-        featContentInnerHTML += '<div><p class="negative-indent"><span><strong>Prerequisites: </strong></span><span>'+data.Feat.prerequisites+'</span></p></div>';
+        if(isBuilderPage() && wscChoiceStruct.Character.optionAutoDetectPreReqs === 1){
+            let resultArray = preReqResultArray(data.Feat);
+
+            let preReqStr = '';
+            for(let resultData of resultArray){
+                let featLinkClass = 'featLink-'+Math.floor((Math.random()*9999));
+                if(resultData.Result == 'TRUE'){
+                    if(resultData.Type == 'FEAT'){
+                        preReqStr += '<span class="prereq-true '+featLinkClass+' has-tooltip-bottom" data-tooltip="Feat">'+resultData.PreReqPart+'</span>'+preReqGetIconTrue();
+                        preReqFeatLink(featLinkClass, resultData.PreReqPart);
+                    } else if(resultData.Type == 'CLASS-FEATURE'){
+                        preReqStr += '<span class="prereq-true has-tooltip-bottom" data-tooltip="Class Feature">'+resultData.PreReqPart+'</span>'+preReqGetIconTrue();
+                    } else {
+                        preReqStr += '<span class="prereq-true">'+resultData.PreReqPart+'</span>'+preReqGetIconTrue();
+                    }
+                } else if(resultData.Result == 'FALSE') {
+                    if(resultData.Type == 'FEAT'){
+                        preReqStr += '<span class="prereq-false '+featLinkClass+' has-tooltip-bottom" data-tooltip="Feat">'+resultData.PreReqPart+'</span>'+preReqGetIconFalse();
+                        preReqFeatLink(featLinkClass, resultData.PreReqPart);
+                    } else if(resultData.Type == 'CLASS-FEATURE'){
+                        preReqStr += '<span class="prereq-false has-tooltip-bottom" data-tooltip="Class Feature">'+resultData.PreReqPart+'</span>'+preReqGetIconFalse();
+                    } else {
+                        preReqStr += '<span class="prereq-false">'+resultData.PreReqPart+'</span>'+preReqGetIconFalse();
+                    }
+                } else if(resultData.Result == 'UNKNOWN') {
+                    preReqStr += '<span class="prereq-unknown">'+resultData.PreReqPart+'</span>'+preReqGetIconUnknown();
+                }
+                preReqStr += ', ';
+            }
+            preReqStr = preReqStr.slice(0, -2);// Trim off that last ', '
+            featContentInnerHTML += '<div><p class=""><span><strong>Prerequisites </strong></span><span>'+preReqStr+'</span></p></div>';
+        } else {
+            featContentInnerHTML += '<div><p class="negative-indent"><span><strong>Prerequisites </strong></span><span>'+data.Feat.prerequisites+'</span></p></div>';
+        }
         foundUpperFeatLine = true;
     }
     if(data.Feat.frequency != null){
-        featContentInnerHTML += '<div><p class="negative-indent"><span><strong>Frequency: </strong></span><span>'+data.Feat.frequency+'</span></p></div>';
+        featContentInnerHTML += '<div><p class="negative-indent"><span><strong>Frequency </strong></span><span>'+data.Feat.frequency+'</span></p></div>';
         foundUpperFeatLine = true;
     }
     if(data.Feat.cost != null){
-        featContentInnerHTML += '<div><p class="negative-indent"><span><strong>Cost: </strong></span><span>'+data.Feat.cost+'</span></p></div>';
+        featContentInnerHTML += '<div><p class="negative-indent"><span><strong>Cost </strong></span><span>'+data.Feat.cost+'</span></p></div>';
         foundUpperFeatLine = true;
     }
     if(data.Feat.trigger != null){
-        featContentInnerHTML += '<div><p class="negative-indent"><span><strong>Trigger: </strong></span><span>'+data.Feat.trigger+'</span></p></div>';
+        featContentInnerHTML += '<div><p class="negative-indent"><span><strong>Trigger </strong></span><span>'+data.Feat.trigger+'</span></p></div>';
         foundUpperFeatLine = true;
     }
     if(data.Feat.requirements != null){
-        featContentInnerHTML += '<div><p class="negative-indent"><span><strong>Requirements: </strong></span><span>'+data.Feat.requirements+'</span></p></div>';
+        featContentInnerHTML += '<div><p class="negative-indent"><span><strong>Requirements </strong></span><span>'+data.Feat.requirements+'</span></p></div>';
         foundUpperFeatLine = true;
     }
 
@@ -103,7 +138,7 @@ function openFeatQuickview(data) {
     featContentInnerHTML += '<div>'+processText(description, true, true, 'MEDIUM')+'</div>';
 
     if(data.Feat.special != null){
-        featContentInnerHTML += '<div><p class="negative-indent"><span><strong>Special: </strong></span><span>'+data.Feat.special+'</span></p></div>';
+        featContentInnerHTML += '<div><p class="negative-indent"><span><strong>Special </strong></span><span>'+data.Feat.special+'</span></p></div>';
     }
 
     qContent.append(featContentInnerHTML);

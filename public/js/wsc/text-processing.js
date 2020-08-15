@@ -62,7 +62,7 @@ function processText(text, isSheet, isJustified = false, size = 'MEDIUM', indexC
 
     // :> Some Text
     let regexNonBulletSpacedList = /[\n]?\:\> /g;
-    text = text.replace(regexNonBulletSpacedList, '</p><p class="pl-4 pr-1 has-text-left '+_s+'">');
+    text = text.replace(regexNonBulletSpacedList, '</p><p class="pl-4 ml-1 pr-1 has-text-left '+_s+'">');
 
     // \n -> Newline
     text = text.replace(/\n/g, '</p><p class="p-1 pl-2 '+_j+_s+'">');

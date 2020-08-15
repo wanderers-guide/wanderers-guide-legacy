@@ -410,6 +410,26 @@ select {
     border-color: hsl(0, 0%, 17%)!important;
 }
 
+.prereq-icon {
+    font-size: .6em;
+}
+
+.prereq-true {
+    text-decoration: underline;
+    -webkit-text-decoration-color: hsl(204, 53%, 43%); /* Safari */  
+    text-decoration-color: hsl(204, 60%, 49%);
+}
+.prereq-false {
+    text-decoration: underline;
+    -webkit-text-decoration-color: hsl(348, 54%, 44%); /* Safari */  
+    text-decoration-color: hsl(348, 50%, 52%);
+}
+.prereq-unknown {
+    text-decoration: underline;
+    -webkit-text-decoration-color: hsl(48, 65%, 43%); /* Safari */  
+    text-decoration-color: hsl(48, 61%, 57%);
+}
+
 /* Feat Selection Scrollbar */
 .use-feat-selection-scrollbar::-webkit-scrollbar {
     width: 0.35em;

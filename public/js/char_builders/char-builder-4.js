@@ -3,6 +3,7 @@
 */
 
 let socket = io();
+let isBuilderInit = false;
 
 // Core Builder Data //
 let g_abilMap = null;
@@ -63,6 +64,7 @@ function reloadPage(){
 // ~~~~~~~~~~~~~~ // Process Class Info // ~~~~~~~~~~~~~~ //
 
 socket.on("returnClassDetails", function(coreDataStruct, classObject, inChoiceStruct){
+    isBuilderInit = true;
 
     // Core Builder Data //
     g_abilMap = objToMap(coreDataStruct.AbilObject);
@@ -507,20 +509,19 @@ function displayCurrentClass(classStruct, saving) {
         }
     }
 
-    let abilityTabHTML = '';
+    let abilityTabHTML = '<li><a id="abilityTabOther">Core Features</a></li>';
     for(const abilityTab of abilityTabsSet){
         let hashOfName = hashCode(abilityTab);
         abilityTabHTML += '<li><a id="abilityTab'+hashOfName+'">'+abilityTab+'</a></li>';
         $('#classAbilitiesContent').append('<div id="abilityContent'+hashOfName+'" class="is-hidden"></div>');
     }
-    abilityTabHTML += '<li><a id="abilityTabOther">Extra Features</a></li>';
     $('#classAbilitiesContent').append('<div id="abilityContentOther" class="is-hidden"></div>');
 
     $('#classAbilitiesTabs').html('<div class="tabs is-centered is-marginless"><ul class="ability-tabs">'+abilityTabHTML+'</ul></div>');
 
     for(const classAbility of classStruct.Abilities) {
 
-        if(classAbility.selectType != 'SELECT_OPTION' && classAbility.level <= choiceStruct.Level) {
+        if(classAbility.selectType != 'SELECT_OPTION' && classAbility.level <= choiceStruct.Character.level) {
 
             let classAbilityID = "classAbility"+classAbility.id;
             let classAbilityHeaderID = "classAbilityHeader"+classAbility.id;
@@ -589,7 +590,7 @@ function displayCurrentClass(classStruct, saving) {
                 classAbilitySelectorInnerHTML += '</select>';
                 classAbilitySelectorInnerHTML += '</div></div>';
 
-                classAbilitySelectorInnerHTML += '<div class="columns is-centered"><div class="column is-mobile is-8"><article class="message is-info"><div class="message-body"><div id="'+descriptionID+'"></div><div id="'+abilityCodeID+'"></div></div></article></div></div>';
+                classAbilitySelectorInnerHTML += '<div class="columns is-centered is-hidden"><div class="column is-mobile is-8"><article class="message is-info"><div class="message-body"><div id="'+descriptionID+'"></div><div id="'+abilityCodeID+'"></div></div></article></div></div>';
 
                 classAbilityContent.append(classAbilitySelectorInnerHTML);
 
@@ -625,6 +626,7 @@ function displayCurrentClass(classStruct, saving) {
 
             if($(this).val() == "chooseDefault"){
                 $(this).parent().addClass("is-info");
+                $('#'+descriptionID).parent().parent().parent().parent().addClass('is-hidden');
                 
                 // Save ability choice
                 if(triggerSave == null || triggerSave) {
@@ -636,6 +638,7 @@ function displayCurrentClass(classStruct, saving) {
 
             } else {
                 $(this).parent().removeClass("is-info");
+                $('#'+descriptionID).parent().parent().parent().parent().removeClass('is-hidden');
 
                 let chosenAbilityID = $(this).val();
                 let chosenClassAbility = classStruct.Abilities.find(classAbility => {
@@ -693,8 +696,40 @@ function displayCurrentClass(classStruct, saving) {
 
 }
 
-socket.on("returnClassChoiceChange", function(){
+socket.on("returnClassChoiceChange", function(srcStruct, selectorID, optionID){
     
+    let choiceArray = wscChoiceStruct.ChoiceArray;
+
+    let foundChoiceData = false;
+    for(let choiceData of choiceArray){
+        if(hasSameSrc(choiceData, srcStruct)){
+            foundChoiceData = true;
+            if(selectorID != null && optionID != null){
+                choiceData.value = selectorID+':::'+optionID;
+                choiceData.SelectorID = selectorID;
+                choiceData.OptionID = optionID;
+            } else {
+                choiceData.value = null;
+                choiceData.SelectorID = null;
+                choiceData.OptionID = null;
+            }
+            break;
+        }
+    }
+
+    if(!foundChoiceData && selectorID != null && optionID != null){
+        let choiceData = cloneObj(srcStruct);
+        choiceData.value = selectorID+':::'+optionID;
+        choiceData.SelectorID = selectorID;
+        choiceData.OptionID = optionID;
+        choiceArray.push(choiceData);
+    }
+
+    wscChoiceStruct.ChoiceArray = choiceArray;
+    updateExpressionProcessor({
+        ChoiceStruct : wscChoiceStruct,
+    });
+
 });
 
 function finishLoadingPage() {

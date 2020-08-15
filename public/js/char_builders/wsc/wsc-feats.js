@@ -13,9 +13,9 @@ function processingFeats(wscStatement, srcStruct, locationID){
         }
         let level;
         if(value.startsWith('LEVEL')){
-            level = wscChoiceStruct.Level;
+            level = wscChoiceStruct.Character.level;
         } else if(value.startsWith('HALF_LEVEL')){
-            level = Math.floor(wscChoiceStruct.Level/2);
+            level = Math.floor(wscChoiceStruct.Character.level/2);
         } else {
             level = parseInt(value);
         }
@@ -29,9 +29,9 @@ function processingFeats(wscStatement, srcStruct, locationID){
         }
         let level;
         if(value.startsWith('LEVEL')){
-            level = wscChoiceStruct.Level;
+            level = wscChoiceStruct.Character.level;
         } else if(value.startsWith('HALF_LEVEL')){
-            level = Math.floor(wscChoiceStruct.Level/2);
+            level = Math.floor(wscChoiceStruct.Character.level/2);
         } else {
             level = parseInt(value);
         }
@@ -45,9 +45,9 @@ function processingFeats(wscStatement, srcStruct, locationID){
         }
         let level;
         if(value.startsWith('LEVEL')){
-            level = wscChoiceStruct.Level;
+            level = wscChoiceStruct.Character.level;
         } else if(value.startsWith('HALF_LEVEL')){
-            level = Math.floor(wscChoiceStruct.Level/2);
+            level = Math.floor(wscChoiceStruct.Character.level/2);
         } else {
             level = parseInt(value);
         }
@@ -66,9 +66,9 @@ function processingFeats(wscStatement, srcStruct, locationID){
         }
         let level;
         if(value.startsWith('LEVEL')){
-            level = wscChoiceStruct.Level;
+            level = wscChoiceStruct.Character.level;
         } else if(value.startsWith('HALF_LEVEL')){
-            level = Math.floor(wscChoiceStruct.Level/2);
+            level = Math.floor(wscChoiceStruct.Character.level/2);
         } else {
             level = parseInt(value);
         }
@@ -83,9 +83,9 @@ function processingFeats(wscStatement, srcStruct, locationID){
         }
         let level;
         if(value.startsWith('LEVEL')){
-            level = wscChoiceStruct.Level;
+            level = wscChoiceStruct.Character.level;
         } else if(value.startsWith('HALF_LEVEL')){
-            level = Math.floor(wscChoiceStruct.Level/2);
+            level = Math.floor(wscChoiceStruct.Character.level/2);
         } else {
             level = parseInt(value);
         }

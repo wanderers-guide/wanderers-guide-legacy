@@ -85,6 +85,7 @@ module.exports = class CharDataMapping {
                         let model = models.find(model => {
                             return model.id == data.value;
                         });
+                        if(model == null){ model = null; }
                         newDataArray.push({
                             charID: data.charID,
                             source: data.source,

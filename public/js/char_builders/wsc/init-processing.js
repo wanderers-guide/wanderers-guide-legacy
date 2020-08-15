@@ -146,6 +146,9 @@ function runNextStatement(){
     if(processingDebug) {console.log(srcStruct);}
     if(processingDebug) {console.log(wscStatement);}
     
+    // Remove Loading Animiation //
+    $('#'+locationID+' .wsc-statement-roller').remove();
+
     if(wscStatement != null){
         if(wscStatement == ''){ return 'SKIP'; }
         if(wscStatement.endsWith(',')){ wscStatement = wscStatement.slice(0, -1); }
@@ -161,9 +164,6 @@ function runNextStatement(){
             return 'SKIP';
         }
         //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
-
-        // Remove Loading Animiation //
-        $('#'+locationID+' .wsc-statement-roller').remove();
 
         if(wscStatement.includes("-CHAR-TRAIT")){
             processingCharTags(wscStatement, srcStruct, locationID);
@@ -364,7 +364,7 @@ function processCode_ClassAbilities(classAbilities){
     //if(processingDebug) {console.log("Starting to run class abilities code...");}
     temp_classAbilities = classAbilities;
     for(const classAbility of classAbilities) {
-        if(classAbility.selectType != 'SELECT_OPTION' && classAbility.level <= wscChoiceStruct.Level) {
+        if(classAbility.selectType != 'SELECT_OPTION' && classAbility.level <= wscChoiceStruct.Character.level) {
             let srcStruct = {
                 sourceType: 'class',
                 sourceLevel: classAbility.level,
