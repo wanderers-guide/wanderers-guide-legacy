@@ -260,14 +260,16 @@ function finishClass(isUpdate){
             let classFeatureDisplayInSheet = ($(this).find(".inputClassFeatureDisplayInSheet:checked").val() == '1') ? 1 : 0;
             
             let classFeatureOptions = [];
-            if(!$(this).find(".classFeatureSelectionOptions").hasClass("isLayout")){
-                $(this).find(".classFeatureOption").each(function(){
-                    classFeatureOptions.push({
-                        name: $(this).find(".inputClassFeatureName").val(),
-                        description: $(this).find(".inputClassFeatureDesc").val(),
-                        code: $(this).find(".inputClassFeatureCode").val(),
+            if($(this).find(".inputClassFeatureIsSelector").is(":checked")) {
+                if(!$(this).find(".classFeatureSelectionOptions").hasClass("isLayout")){
+                    $(this).find(".classFeatureOption").each(function(){
+                        classFeatureOptions.push({
+                            name: $(this).find(".inputClassFeatureName").val(),
+                            description: $(this).find(".inputClassFeatureDesc").val(),
+                            code: $(this).find(".inputClassFeatureCode").val(),
+                        });
                     });
-                });
+                }
             }
 
             classAbilitiesArray.push({

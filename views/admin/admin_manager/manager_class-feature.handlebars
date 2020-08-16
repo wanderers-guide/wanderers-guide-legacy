@@ -45,7 +45,6 @@
 
     <div class="columns mx-5 is-centered is-multiline mb-2 use-custom-scrollbar" style="height: 600px; max-height: 600px; overflow-y: auto;">
         {{#each classAbilities}}
-            {{#if indivClassName}}
                 <div class="column is-12 entryListing border-bottom border-dark" name="{{id}}">
                     <div class="columns">
                         <div class="column is-paddingless p-1 pl-2 is-8 entry-main">
@@ -72,7 +71,6 @@
                         </div>
                     </div>
                 </div>
-            {{/if}}
         {{else}}
             <div class="column">
                 <p class="has-text-centered is-italic">No class features exist?!</p>

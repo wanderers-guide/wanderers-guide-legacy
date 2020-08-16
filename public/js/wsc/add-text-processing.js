@@ -2,7 +2,7 @@
     By Aaron Cassar.
 */
 
-function processAddText(code, locationID){
+function processAddText(code, locationID, centerText=false){
   if(code == null || locationID == null) {return;}
 
   let allStatements = code.split(/\n/);
@@ -17,7 +17,12 @@ function processAddText(code, locationID){
 
       let text = statement.split('=')[1];
       let centerStyle = '';
+      if(centerText) { centerStyle = 'text-center'; }
       $('#'+locationID).append('<div class="py-1 '+centerStyle+'">'+processText(text, false, true, 'MEDIUM')+'</div>');
+
+      if(centerText) {
+        $('#'+locationID).find('.has-text-left').removeClass('has-text-left');
+      }
 
     }
   }

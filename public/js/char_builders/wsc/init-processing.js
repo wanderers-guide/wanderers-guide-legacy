@@ -22,7 +22,7 @@ function processCode(wscCode, srcStruct, locationID){
     if(wscCode == null || wscCode == ''){ return; }
 
     // Process ADD-TEXT Statements
-    processAddText(wscCode, locationID);
+    processAddText(wscCode, locationID, true);
 
     // Add Loading Animiation //
     $('#'+locationID).append('<div class="wsc-statement-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>');

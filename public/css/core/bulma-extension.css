@@ -20,6 +20,10 @@
   -webkit-text-decoration-color: hsl(204, 86%, 53%); /* Safari */  
   text-decoration-color: hsl(204, 86%, 53%);
 }
+.has-text-center-justified {
+  text-align: justify!important;
+  text-align-last: center!important;
+}
 
 /* Text Colors */
 .has-text-info-lighter {

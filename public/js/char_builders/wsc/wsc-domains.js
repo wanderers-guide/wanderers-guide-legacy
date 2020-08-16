@@ -71,7 +71,7 @@ function giveDomain(srcStruct, locationID, spellSRC){
                 return domain.id == domainID;
             });
 
-            $('#'+descriptionID).html(processText(domain.description, false));
+            $('#'+descriptionID).html(processText(domain.description, false, null));
 
             socket.emit("requestDomainChange",
                 getCharIDFromURL(),
@@ -149,7 +149,7 @@ function giveDomainAdvancement(srcStruct, locationID, spellSRC){
                 return domain.id == domainID;
             });
 
-            $('#'+descriptionID).html(processText(domain.description, false));
+            $('#'+descriptionID).html(processText(domain.description, false, null));
 
             socket.emit("requestDomainAdvancementChange",
                 getCharIDFromURL(),

@@ -76,7 +76,14 @@ socket.on("returnAdminClassDetails", function(classObject, featsObject){
     }
 
     // Class Abilities //
+    let filteredClassAbils = [];
     for(let classAbil of cClass.Abilities){
+        if(classAbil.indivClassName == null){
+            filteredClassAbils.push(classAbil);
+        }
+    }
+
+    for(let classAbil of filteredClassAbils){
         if(classAbil.selectType != 'SELECT_OPTION') {
             $("#addClassFeatureButton").trigger("click");
         }
@@ -85,10 +92,10 @@ socket.on("returnAdminClassDetails", function(classObject, featsObject){
     let classAbilCount = 0;
     $(".classFeature").each(function(){
         if(!$(this).hasClass("isLayout")) {
-            let classAbil = cClass.Abilities[classAbilCount];
+            let classAbil = filteredClassAbils[classAbilCount];
             classAbilCount++;
             while (classAbil.selectType === 'SELECT_OPTION') {
-                classAbil = cClass.Abilities[classAbilCount];
+                classAbil = filteredClassAbils[classAbilCount];
                 classAbilCount++;
             }
 
@@ -109,7 +116,7 @@ socket.on("returnAdminClassDetails", function(classObject, featsObject){
                 $(this).find(".inputClassFeatureIsSelector").trigger("change");
 
                 let classAbilOptionsArray = [];
-                for(let classAbilOption of cClass.Abilities){
+                for(let classAbilOption of filteredClassAbils){
                     if(classAbilOption.selectType === 'SELECT_OPTION' && classAbilOption.selectOptionFor === classAbil.id){
                         classAbilOptionsArray.push(classAbilOption);
                         $(this).find(".classFeatureAddOptionButton").trigger("click");

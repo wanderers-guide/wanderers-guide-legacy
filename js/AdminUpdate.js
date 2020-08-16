@@ -217,6 +217,8 @@ module.exports = class AdminUpdate {
                         code: classAbilityOption.code,
                         selectType: 'SELECT_OPTION',
                         selectOptionFor: classAbilityModel.id,
+                        indivClassName: classAbility.indivClassName,
+                        contentSrc: classAbility.contentSrc,
                     });
                     classAbilityOptionsPromises.push(newPromise);
                 }
@@ -311,14 +313,41 @@ module.exports = class AdminUpdate {
             classFeatureID,
             classFeatureData,
             classFeatureClassName,
+            classFeatureClassAbilName,
             classFeatureContentSrc
         */
         for(let d in data) { if(data[d] === ''){ data[d] = null; } }
         data.classFeatureData.indivClassName = data.classFeatureClassName;
+        data.classFeatureData.indivClassAbilName = data.classFeatureClassAbilName;
         data.classFeatureData.contentSrc = data.classFeatureContentSrc;
-        return AdminUpdate.addClassAbility(null, data.classFeatureData)
-        .then(classAbility => {
-            return classAbility;
+        if(data.classFeatureData.indivClassAbilName == null){
+            return AdminUpdate.addClassAbility(null, data.classFeatureData)
+            .then(classAbility => {
+                return classAbility;
+            });
+        } else {
+            return AdminUpdate.addClassAbilityOption(data.classFeatureData)
+            .then(classAbility => {
+                return classAbility;
+            });
+        }
+    }
+
+    static addClassAbilityOption(classAbility){
+        return ClassAbility.create({
+            classID: null,
+            name: classAbility.name,
+            level: null,
+            description: classAbility.description,
+            code: classAbility.code,
+            selectType: 'SELECT_OPTION',
+            selectOptionFor: null,
+            displayInSheet: 1,
+            indivClassName: classAbility.indivClassName,
+            indivClassAbilName: classAbility.indivClassAbilName,
+            contentSrc: classAbility.contentSrc,
+        }).then(classAbilityModel => {
+            return classAbilityModel;
         });
     }
 

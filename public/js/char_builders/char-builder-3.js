@@ -162,7 +162,7 @@ function displayCurrentBackground(background) {
     }
 
     let backgroundDescription = $('#backgroundDescription');
-    backgroundDescription.html(processText(background.description, false, true));
+    backgroundDescription.html(processText(background.description, false, null, 'MEDIUM', false));
 
     // Code - Run General Code before Boosts Code, it's more likely to be delaying //
     $('#backgroundCodeOutput').html('');

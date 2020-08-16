@@ -239,7 +239,7 @@ function displayCurrentAncestry(ancestryStruct, saving) {
 
 
     let ancestryDescription = $('#ancestryDescription');
-    ancestryDescription.html(processText(ancestryStruct.Ancestry.description, false, true));
+    ancestryDescription.html(processText(ancestryStruct.Ancestry.description, false, null, 'MEDIUM', false));
 
 
 
@@ -547,7 +547,7 @@ function displayCurrentHeritage(ancestryStruct, heritageID, isUniversal) {
         }
     
         let heritageDescription = $('#heritageDescription');
-        heritageDescription.html(processText(heritage.description, false));
+        heritageDescription.html(processText(heritage.description, false, null, 'MEDIUM', false));
         heritageDescription.removeClass('is-hidden');
 
         $('#heritageCodeOutput').html('');

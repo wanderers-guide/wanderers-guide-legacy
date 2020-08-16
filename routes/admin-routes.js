@@ -90,10 +90,23 @@ router.get('/manage/class-feature', adminAuthCheck, (req, res) => {
     ClassAbility.findAll()
     .then((classAbilities) => {
 
+        let filteredClassAbils = [];
+        for(let ability of classAbilities){
+            if(ability.indivClassName != null){
+                if(ability.selectType == 'SELECT_OPTION'){
+                    if(ability.indivClassAbilName != null){
+                        filteredClassAbils.push(ability);
+                    }
+                } else {
+                    filteredClassAbils.push(ability);
+                }
+            }
+        }
+
         res.render('admin/admin_manager/manager_class-feature', {
             title: "Class Feature Manager - Wanderer's Guide",
             user: req.user,
-            classAbilities
+            classAbilities: filteredClassAbils
         });
 
     });

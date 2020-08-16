@@ -129,7 +129,12 @@ module.exports = class CharGathering {
                 }
             }).then((classes) => {
                 return ClassAbility.findAll({
-                    order: [['level', 'ASC'],['name', 'ASC'],]
+                    order: [['level', 'ASC'],['name', 'ASC'],],
+                    where: {
+                        contentSrc: {
+                          [Op.or]: CharContentSources.getSourceArray(character)
+                        }
+                    }
                 })
                 .then((allClassAbilities) => {
                     

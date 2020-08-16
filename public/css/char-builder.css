@@ -216,6 +216,12 @@ hr {
     margin-bottom: 0.5rem;
 }
 
+.ability-text-section {
+    padding: 0 15%;
+    text-align: justify;
+    text-align-last: center;
+}
+
 /* Builder Symbol Link */
 
 .builder-step-icon-info {

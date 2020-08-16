@@ -19,7 +19,12 @@ let supportedWebLinks = [
 function processText(text, isSheet, isJustified = false, size = 'MEDIUM', indexConditions = true) {
     if(text == null) {return text;}
 
-    let _j = (isJustified) ? ' has-text-justified ' : '';
+    let _j;
+    if(isJustified == null){
+        _j = ' has-text-center-justified ';
+    } else {
+        _j = (isJustified) ? ' has-text-justified ' : '';
+    }
     let _s = '';
 
     let _incS = '';

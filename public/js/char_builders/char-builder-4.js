@@ -167,7 +167,7 @@ function displayCurrentClass(classStruct, saving) {
     }
 
     let classDescription = $('#classDescription');
-    classDescription.html(processText(classStruct.Class.description, false, true));
+    classDescription.html(processText(classStruct.Class.description, false, null, 'MEDIUM', false));
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Key Ability ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 
@@ -553,8 +553,8 @@ function displayCurrentClass(classStruct, saving) {
             }
 
             let classAbilityContent = $('#'+classAbilityContentID);
-            let abilityDescription = processText(classAbility.description, false);
-            classAbilityContent.append('<div class="container px-5" id="classAbility'+classAbility.id+'"><div class="mx-5">'+abilityDescription+'</div></div>');
+            let abilityDescription = processText(classAbility.description, false, null);
+            classAbilityContent.append('<div class="container ability-text-section" id="classAbility'+classAbility.id+'">'+abilityDescription+'</div>');
 
             classAbilityContent.append('<div class="columns is-mobile is-centered is-marginless"><div id="'+classAbilityCodeID+'" class="column is-mobile is-11 is-paddingless"></div></div>');
 
@@ -645,7 +645,7 @@ function displayCurrentClass(classStruct, saving) {
                     return classAbility.id == chosenAbilityID;
                 });
 
-                $('#'+descriptionID).html(processText(chosenClassAbility.description, false));
+                $('#'+descriptionID).html(processText(chosenClassAbility.description, false, null));
 
                 // Save ability choice
                 if(triggerSave == null || triggerSave) {

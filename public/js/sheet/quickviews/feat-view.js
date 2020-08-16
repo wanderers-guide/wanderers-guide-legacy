@@ -77,7 +77,7 @@ function openFeatQuickview(data) {
     let featContentInnerHTML = '';
     let foundUpperFeatLine = false;
     if(data.Feat.prerequisites != null){
-        if(isBuilderPage() && wscChoiceStruct.Character.optionAutoDetectPreReqs === 1){
+        if(isBuilderPage() && wscChoiceStruct.Character.optionAutoDetectPreReqs === 1) {
             let resultArray = preReqResultArray(data.Feat);
 
             let preReqStr = '';
@@ -108,6 +108,8 @@ function openFeatQuickview(data) {
             }
             preReqStr = preReqStr.slice(0, -2);// Trim off that last ', '
             featContentInnerHTML += '<div><p class=""><span><strong>Prerequisites </strong></span><span>'+preReqStr+'</span></p></div>';
+        } else if(isSheetPage()) {
+            // Don't display prereq, unnecessary
         } else {
             featContentInnerHTML += '<div><p class="negative-indent"><span><strong>Prerequisites </strong></span><span>'+data.Feat.prerequisites+'</span></p></div>';
         }

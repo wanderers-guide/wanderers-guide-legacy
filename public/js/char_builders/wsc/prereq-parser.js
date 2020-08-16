@@ -38,6 +38,8 @@ let g_preReqIgnoreArray = [
   'legendary in Arcana, Nature, Occultism, or Religion',
   'deity who grants the cold, fire, nature, or travel domain',
   'trained in Alcohol Lore, Cooking Lore, or Crafting',
+  'trained in Perception, Society, and Thievery',
+  'trained in Crafting, Deception, and Stealth',
 ];
 
 function preReqResultArray(feat){

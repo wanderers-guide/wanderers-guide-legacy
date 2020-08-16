@@ -495,10 +495,10 @@
                 </p>
                 <div class="py-2">
                     <div class="code-block">
-                        IF (HAS-FEAT==Specialty Crafting) {GIVE-FEAT-NAME=Ancestral Paragon}
+                        IF (HAS-FEAT==Specialty Crafting) { Statement }
                     </div>
                     <p class="pl-3">
-                        - If the character has the Specialty Crafting feat, the statement inside the brackets will execute (which will give the character the Ancestral Paragon feat).
+                        - If the character has the Specialty Crafting feat, the statement inside the brackets will execute.
                     </p>
                     <p class="pl-3">
                         Boolean Operators: '==' or '!='
@@ -506,10 +506,10 @@
                 </div>
                 <div class="py-2">
                     <div class="code-block">
-                        IF (HAS-CLASS-ABILITY==Cloistered Cleric) {GIVE_LANG}
+                        IF (HAS-CLASS-ABILITY==Cloistered Cleric) { Statement }
                     </div>
                     <p class="pl-3">
-                        - If the character has the Cloistered Cleric class ability, the statement inside the brackets will execute (which will generate a language selector for the character).
+                        - If the character has the Cloistered Cleric class ability, the statement inside the brackets will execute.
                     </p>
                     <p class="pl-3">
                         Boolean Operators: '==' or '!='
@@ -517,10 +517,10 @@
                 </div>
                 <div class="py-2">
                     <div class="code-block">
-                        IF (HAS-HERITAGE==Treedweller) {GIVE-SPEED=Climb:15}
+                        IF (HAS-HERITAGE==Treedweller) { Statement }
                     </div>
                     <p class="pl-3">
-                        - If the character has the Treedweller heritage, the statement inside the brackets will execute (which will give the character a climb speed of 15 feet).
+                        - If the character has the Treedweller heritage, the statement inside the brackets will execute.
                     </p>
                     <p class="pl-3">
                         Boolean Operators: '==' or '!='
@@ -528,10 +528,10 @@
                 </div>
                 <div class="py-2">
                     <div class="code-block">
-                        IF (HAS-VISION==Low-Light Vision) {GIVE-SENSE-NAME=Darkvision}
+                        IF (HAS-VISION==Low-Light Vision) { Statement }
                     </div>
                     <p class="pl-3">
-                        - If the character has Low-Light Vision, the statement inside the brackets will execute (which will give the character Darkvision).
+                        - If the character has Low-Light Vision, the statement inside the brackets will execute.
                     </p>
                     <p class="pl-3">
                         Boolean Operators: '==' or '!='
@@ -539,10 +539,10 @@
                 </div>
                 <div class="py-2">
                     <div class="code-block">
-                        IF (HAS-LEVEL>=13) {GIVE-PROF-IN=Perception:M}
+                        IF (HAS-LEVEL>=13) { Statement }
                     </div>
                     <p class="pl-3">
-                        - If the character is level 13 or greater, the statement inside the brackets will execute (which will make the character master in Perception).
+                        - If the character is level 13 or greater, the statement inside the brackets will execute.
                     </p>
                     <p class="pl-3">
                         - Any number between 0 and 20 for the level.
@@ -553,10 +553,10 @@
                 </div>
                 <div class="py-2">
                     <div class="code-block">
-                        IF (HAS-PROF==Arcana:T) {GIVE-PROF-IN=Society:E}
+                        IF (HAS-PROF==Arcana:T) { Statement }
                     </div>
                     <p class="pl-3">
-                        - If the character is trained in Arcana, the statement inside the brackets will execute (which will make the character expert in Society).
+                        - If the character is trained in Arcana, the statement inside the brackets will execute.
                     </p>
                     <p class="pl-3">
                         Boolean Operators: '==', '!=', '>=', or '<='
@@ -564,10 +564,10 @@
                 </div>
                 <div class="py-2">
                     <div class="code-block">
-                        IF (HAS-FOCUS-POINTS==0) {GIVE-FOCUS-POINT}
+                        IF (HAS-FOCUS-POINTS==0) { Statement }
                     </div>
                     <p class="pl-3">
-                        - If the character has zero Focus Points, the statement inside the brackets will execute (which will give them one Focus Point).
+                        - If the character has zero Focus Points, the statement inside the brackets will execute.
                     </p>
                     <p class="pl-3">
                         Boolean Operators: '==', '!=', '>=', or '<='
@@ -575,10 +575,10 @@
                 </div>
                 <div class="py-2">
                     <div class="code-block">
-                        IF (HAS-PROF>=Stealth:T) {GIVE-SPEED=Swim:15} ELSE {GIVE-LANG-NAME=Elven}
+                        IF (HAS-PROF>=Stealth:T) {GIVE-SPEED=Swim:15} ELSE { Statement }
                     </div>
                     <p class="pl-3">
-                        - If the character is trained or better in Stealth, the first statement will execute (which will give the character a swim speed of 15 feet). If the character is not trained in Stealth, the second statement will execute (which will give the character the Elven language).
+                        - If the character is trained or better in Stealth, the first statement will execute (which will give the character a swim speed of 15 feet). If the character is not trained in Stealth, the second statement will execute.
                     </p>
                     <p class="pl-3">
                         Boolean Operators: '==', '!=', '>=', or '<='
@@ -586,10 +586,10 @@
                 </div>
                 <div class="py-2">
                     <div class="code-block">
-                        IF (HAS-FEAT==Goblin Song && HAS-FOCUS-POINTS==0) {GIVE-FOCUS-POINT}
+                        IF (HAS-FEAT==Goblin Song && HAS-FOCUS-POINTS==0) { Statement }
                     </div>
                     <p class="pl-3">
-                        - If the character has the Goblin Song feat and has zero Focus Points, the statement inside the brackets will execute (which will give them one Focus Point).
+                        - If the character has the Goblin Song feat and has zero Focus Points, the statement inside the brackets will execute.
                     </p>
                     <p class="pl-3">
                         Boolean Operators: '==', '!=', '>=', or '<='
