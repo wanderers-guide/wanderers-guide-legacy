@@ -446,6 +446,10 @@ function giveFeatByName(srcStruct, featName, locationID){
 }
 
 socket.on("returnFeatChangeByName", function(featChangePacket){
+    processCode(
+        featChangePacket.feat.Feat.code,
+        featChangePacket.srcStruct,
+        featChangePacket.codeLocationID);
     statementComplete();
 });
 

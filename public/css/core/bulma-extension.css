@@ -112,3 +112,16 @@ select .is-rare {
 select .is-unique {
   background-color: hsl(282, 30%, 22%);
 }
+
+.feat-selection-list-entry.is-non-available {
+  background-color: hsl(0, 0%, 18%);
+}
+.feat-selection-list-entry.is-uncommon {
+  background-color: hsl(158, 25%, 22%);
+}
+.feat-selection-list-entry.is-rare {
+  background-color: hsl(225, 30%, 22%);
+}
+.feat-selection-list-entry.is-unique {
+  background-color: hsl(282, 30%, 22%);
+}

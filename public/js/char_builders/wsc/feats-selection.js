@@ -76,8 +76,17 @@ function generateFeatSelection(contentLocID, srcStruct, selectionName, featsArra
         rightInfoHTML = '<span class="has-text-grey-kinda-light is-size-7 is-pulled-right">'+getSkillNameAbbrev(getSkillIDToName(featData.Feat.skillID))+'</span>';
       }
 
-      let hasFeat = (featData.Feat.canSelectMultiple == 0 && hasDuplicateFeat(wscChoiceStruct.FeatArray, featData.Feat.id));
+      /*
+      let featRarityClass = '';
+      if(featData.Feat.rarity == 'UNCOMMON'){
+        featRarityClass = 'is-uncommon';
+      } else if(featData.Feat.rarity == 'RARE'){
+        featRarityClass = 'is-rare';
+      } else if(featData.Feat.rarity == 'UNIQUE'){
+        featRarityClass = 'is-unique';
+      }*/
 
+      let hasFeat = (featData.Feat.canSelectMultiple == 0 && hasDuplicateFeat(wscChoiceStruct.FeatArray, featData.Feat.id));
       if(selectedFeat != null && selectedFeat.Feat.id == featData.Feat.id){
         featListHTML += '<div class="cursor-clickable feat-selection-list-entry is-prev-selected columns is-mobile m-0 p-0" data-feat-id="'+featData.Feat.id+'"><div class="column is-2 is-paddingless py-2 feat-selection-list-entry-view"></div><div class="column is-7 is-paddingless py-2 feat-selection-list-entry-view">'+featNameHTML+'</div><div class="column is-1 is-paddingless py-2 feat-selection-list-entry-view">'+rightInfoHTML+'</div><div class="column is-2 is-paddingless py-2 feat-selection-list-entry-choose"><button class="button is-very-small is-danger is-outlined is-rounded '+featRemoveButtonClass+'" data-feat-id="'+featData.Feat.id+'">Remove</button></div></div>';
       } else if(hasFeat) {
