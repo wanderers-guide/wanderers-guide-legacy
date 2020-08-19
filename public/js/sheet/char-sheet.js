@@ -14,6 +14,7 @@ let gOption_hasProfWithoutLevel;
 /* Sheet-State Options */
 let gState_hasFinesseMeleeUseDexDamage;
 let gState_armoredStealth;
+let gState_mightyBulwark;
 let gState_addLevelToUntrainedWeaponAttack;
 let gState_displayCompanionTab;
 /* ~~~~~~~~~~~~~~~~~~~ */
@@ -168,6 +169,7 @@ socket.on("returnCharacterSheetInfo", function(charInfo, viewOnly){
     g_runeDataStruct = generateRuneDataStruct();
 
     g_featMap = objToMap(charInfo.FeatObject);
+    g_featMap = updateFeatMapWithMiscs(g_featMap);
     g_featChoiceArray = charInfo.ChoicesStruct.FeatArray;
     g_featChoiceArray = g_featChoiceArray.sort(
         function(a, b) {
@@ -258,6 +260,7 @@ function loadCharSheet(){
     // Init Sheet-States //
     gState_hasFinesseMeleeUseDexDamage = false;
     gState_armoredStealth = false;
+    gState_mightyBulwark = false;
     gState_addLevelToUntrainedWeaponAttack = false;
     gState_displayCompanionTab = false;
 
@@ -1558,7 +1561,11 @@ function determineArmor(dexMod, strScore) {
             return tagStruct.Tag.id === 560; // Hardcoded Bulwark Tag ID
         });
         if(bulwarkTag != null){
-            addConditionalStat('SAVE_REFLEX', 'On saves to avoid a damaging effect, you add a +3 modifier instead of your Dexterity modifier.', null);
+            if(gState_mightyBulwark) {
+                addConditionalStat('SAVE_REFLEX', 'You add a +4 modifier instead of your Dexterity modifier.', null);
+            } else {
+                addConditionalStat('SAVE_REFLEX', 'On saves to avoid a damaging effect, you add a +3 modifier instead of your Dexterity modifier.', null);
+            }
         }
 
         $("#acSection").click(function(){
@@ -1931,8 +1938,9 @@ function runAllFeatsAndAbilitiesCode() {
                         let abilityOption = g_classDetails.Abilities.find(ability => {
                             return ability.id == classAbilChoice.OptionID;
                         });
-                        processSheetCode(abilityOption.code, abilityOption.name);
-
+                        if(abilityOption != null){
+                            processSheetCode(abilityOption.code, abilityOption.name);
+                        }
                         break;
 
                     }

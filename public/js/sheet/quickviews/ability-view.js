@@ -18,6 +18,7 @@ function openAbilityQuickview(data) {
                 let abilityOption = g_classDetails.Abilities.find(ability => {
                     return ability.id == classAbilChoice.OptionID;
                 });
+                if(abilityOption == null){ break; }
                 
                 let abilityOptionCardID = 'abilityOptionCard'+abilityOption.id;
                 

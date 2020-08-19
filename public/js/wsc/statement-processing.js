@@ -12,7 +12,7 @@ function testSheetCode(wscCode){
 
 function processSheetCode(wscCode, sourceName, isTest=false){
     if(wscCode == null) {return false;}
-    
+
     let wscStatements = wscCode.split(/\n/);
 
     let success = true;
@@ -21,12 +21,13 @@ function processSheetCode(wscCode, sourceName, isTest=false){
         let wscStatement = testExpr(wscStatementRaw);
         if(wscStatement === null) {continue;}
         //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+        let wscStatementUpper = wscStatement.toUpperCase();
 
-        if(wscStatement.toUpperCase().includes("ADD-TEXT=")){
+        if(wscStatementUpper.includes("ADD-TEXT=")){
             continue; // Ignore ADD-TEXT statements, they're processed separately
         }
 
-        if(wscStatement.toUpperCase().includes("GIVE-CONDITION=")){ // GIVE-CONDITION=Clumsy:1 OR GIVE-CONDITION=Clumsy
+        if(wscStatementUpper.includes("GIVE-CONDITION=")){ // GIVE-CONDITION=Clumsy:1 OR GIVE-CONDITION=Clumsy
             if(isTest) {continue;}
 
             let conditionName = wscStatement.split('=')[1];
@@ -44,7 +45,7 @@ function processSheetCode(wscCode, sourceName, isTest=false){
             continue;
         }
 
-        if(wscStatement.toUpperCase().includes("CONDITIONAL-INCREASE-")){
+        if(wscStatementUpper.includes("CONDITIONAL-INCREASE-")){
             if(isTest) {continue;}
             // Ex. CONDITIONAL-INCREASE-PERCEPTION=2~status bonus to checks for initiative
 
@@ -58,7 +59,7 @@ function processSheetCode(wscCode, sourceName, isTest=false){
             continue;
         }
 
-        if(wscStatement.toUpperCase().includes("CONDITIONAL-DECREASE-")){
+        if(wscStatementUpper.includes("CONDITIONAL-DECREASE-")){
             if(isTest) {continue;}
             // Ex. CONDITIONAL-DECREASE-PERCEPTION=2~status penalty to checks for initiative
 
@@ -72,7 +73,7 @@ function processSheetCode(wscCode, sourceName, isTest=false){
             continue;
         }
 
-        if(wscStatement.toUpperCase().includes("CONDITIONAL-")){
+        if(wscStatementUpper.includes("CONDITIONAL-")){
             if(isTest) {continue;}
             // Ex. CONDITIONAL-SAVE_FORT=When you roll a success, you get a critical success instead.
 
@@ -84,7 +85,7 @@ function processSheetCode(wscCode, sourceName, isTest=false){
             continue;
         }
 
-        if(wscStatement.toUpperCase().includes("INCREASE-")){
+        if(wscStatementUpper.includes("INCREASE-")){
             if(isTest) {continue;}
             // INCREASE-X=5 (Ex. INCREASE-SCORE_STR=2, INCREASE-SPEED=10-STATUS)
 
@@ -103,7 +104,7 @@ function processSheetCode(wscCode, sourceName, isTest=false){
             continue;
         }
 
-        if(wscStatement.toUpperCase().includes("DECREASE-")){
+        if(wscStatementUpper.includes("DECREASE-")){
             if(isTest) {continue;}
             // DECREASE-X=5 (Ex. DECREASE-SCORE_STR=2, DECREASE-SPEED=10-STATUS)
 
@@ -122,7 +123,7 @@ function processSheetCode(wscCode, sourceName, isTest=false){
             continue;
         }
 
-        if(wscStatement.toUpperCase().includes("OVERRIDE-")){
+        if(wscStatementUpper.includes("OVERRIDE-")){
             if(isTest) {continue;}
             // OVERRIDE-X=5 (Ex. OVERRIDE-PERCEPTION=10-MODIFIER)
 
@@ -142,7 +143,7 @@ function processSheetCode(wscCode, sourceName, isTest=false){
             continue;
         }
 
-        if(wscStatement.toUpperCase().includes("SET-APEX-ABILITY-SCORE=")){
+        if(wscStatementUpper.includes("SET-APEX-ABILITY-SCORE=")){
             if(isTest) {continue;}
             // SET-APEX-ABILITY-SCORE=X (Ex. SET-APEX-ABILITY-SCORE=DEX)
 
@@ -159,7 +160,7 @@ function processSheetCode(wscCode, sourceName, isTest=false){
             continue;
         }
 
-        if(wscStatement.toUpperCase() == "SET-FINESSE-MELEE-USE-DEX-DAMAGE"){
+        if(wscStatementUpper == "SET-FINESSE-MELEE-USE-DEX-DAMAGE"){
             if(isTest) {continue;}
 
             gState_hasFinesseMeleeUseDexDamage = true;
@@ -167,7 +168,7 @@ function processSheetCode(wscCode, sourceName, isTest=false){
             continue;
         }
 
-        if(wscStatement.toUpperCase() == "SET-ARMORED-STEALTH"){
+        if(wscStatementUpper == "SET-ARMORED-STEALTH"){
             if(isTest) {continue;}
 
             gState_armoredStealth = true;
@@ -175,7 +176,15 @@ function processSheetCode(wscCode, sourceName, isTest=false){
             continue;
         }
 
-        if(wscStatement.toUpperCase() == "SET-ADD-LEVEL-TO-UNTRAINED-WEAPONS"){
+        if(wscStatementUpper == "SET-MIGHTY-BULWARK"){
+            if(isTest) {continue;}
+
+            gState_mightyBulwark = true;
+
+            continue;
+        }
+
+        if(wscStatementUpper == "SET-ADD-LEVEL-TO-UNTRAINED-WEAPONS"){
             if(isTest) {continue;}
 
             gState_addLevelToUntrainedWeaponAttack = true;
@@ -183,7 +192,7 @@ function processSheetCode(wscCode, sourceName, isTest=false){
             continue;
         }
 
-        if(wscStatement.toUpperCase() == "DISPLAY-COMPANION-TAB"){
+        if(wscStatementUpper == "DISPLAY-COMPANION-TAB"){
             if(isTest) {continue;}
 
             gState_displayCompanionTab = true;
@@ -195,6 +204,11 @@ function processSheetCode(wscCode, sourceName, isTest=false){
         success = false;
 
     }
+
+    // MiscFeats is run even on tests, which is how the code is run for character builder.
+    //  - Probably should change this to a better system in the future.
+    let miscFeatSuccess = processMiscFeatStatements(wscCode);
+    if(!success && miscFeatSuccess) { success = true; }
 
     return success;
 

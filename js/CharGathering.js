@@ -1112,7 +1112,12 @@ module.exports = class CharGathering {
                if(cClass != null){
                     return ClassAbility.findAll({
                         order: [['level', 'ASC'],['name', 'ASC'],],
-                        where: { classID: cClass.id },
+                        where: {
+                            [Op.or]: [
+                                { classID: cClass.id },
+                                { indivClassName: cClass.name }
+                            ],
+                        },
                         raw: true,
                     }).then((classAbilities) => {
                         return {Class : cClass, Abilities : classAbilities, KeyAbility : keyAbility};

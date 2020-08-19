@@ -102,11 +102,6 @@ function processingFeats(wscStatement, srcStruct, locationID){
         let featName = wscStatement.split('=')[1];
         featName = featName.replace(/_/g," ");
         giveFeatByName(srcStruct, featName, locationID);
-    }
-    else if(wscStatement.includes("HIDE-FEAT-NAME=")){ // HIDE-FEAT-NAME=Ancestral_Paragon
-        let featName = wscStatement.split('=')[1];
-        featName = featName.replace(/_/g," ");
-        hideFeatByName(srcStruct, featName);
     } else {
         displayError("Unknown statement (2-Feat): \'"+wscStatement+"\'");
         statementComplete();
@@ -352,13 +347,13 @@ function displayFeatChoice(srcStruct, locationID, selectionName, tagsArray, feat
     // Make optional tags lowercase
     if(optionalTags != null){
         for (let i = 0; i < optionalTags.length; i++) {
-            optionalTags[i] = optionalTags[i].toLowerCase();
+            optionalTags[i] = optionalTags[i].toLowerCase().trim();
         }
     }
     // Make custom list feat names lowercase
     if(customList != null){
         for (let i = 0; i < customList.length; i++) {
-            customList[i] = customList[i].toLowerCase();
+            customList[i] = customList[i].toLowerCase().trim();
         }
     }
 
@@ -430,7 +425,9 @@ function giveFeatByName(srcStruct, featName, locationID){
         }
     });
     if(featEntry == null){
-        displayError("Cannot find feat: \'"+featName+"\'");
+        if(!isFeatHidden(featName)){
+            displayError("Cannot find feat: \'"+featName+"\'");
+        }
         statementComplete();
         return;
     }
@@ -450,20 +447,5 @@ socket.on("returnFeatChangeByName", function(featChangePacket){
         featChangePacket.feat.Feat.code,
         featChangePacket.srcStruct,
         featChangePacket.codeLocationID);
-    statementComplete();
-});
-
-//////////////////////////////// Hide Feat (by Name) ///////////////////////////////////
-
-function hideFeatByName(srcStruct, featName){
-
-    socket.emit("requestFeatHideByName",
-        getCharIDFromURL(),
-        srcStruct,
-        featName);
-
-}
-
-socket.on("returnFeatHideByName", function(){
     statementComplete();
 });

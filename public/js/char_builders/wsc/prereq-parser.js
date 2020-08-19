@@ -40,6 +40,9 @@ let g_preReqIgnoreArray = [
   'trained in Alcohol Lore, Cooking Lore, or Crafting',
   'trained in Perception, Society, and Thievery',
   'trained in Crafting, Deception, and Stealth',
+  'expert in Acrobatics and Athletics',
+  'expert in Deception and Society',
+  'trained in Diplomacy or Intimidation',
 ];
 
 function preReqResultArray(feat){

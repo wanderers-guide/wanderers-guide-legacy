@@ -576,7 +576,7 @@ function displayCurrentClass(classStruct, saving) {
                     return choice.SelectorID == classAbility.id;
                 });
                 for(const classSelectionOption of classStruct.Abilities) {
-                    if(classSelectionOption.selectType === 'SELECT_OPTION' && classSelectionOption.selectOptionFor === classAbility.id) {
+                    if(classSelectionOption.selectType === 'SELECT_OPTION' && (classSelectionOption.selectOptionFor === classAbility.id || classSelectionOption.indivClassAbilName === classAbility.name)) {
 
                         if(choice != null && choice.OptionID == classSelectionOption.id) {
                             classAbilitySelectorInnerHTML += '<option value="'+classSelectionOption.id+'" selected>'+classSelectionOption.name+'</option>';
@@ -747,7 +747,8 @@ function selectorUpdated() {
         }
 
         // Make sure everything is centered
-        $(this).find('.has-text-left').removeClass('has-text-left');
+        //$(this).find('.has-text-left').removeClass('has-text-left');
+        
         
     });
     

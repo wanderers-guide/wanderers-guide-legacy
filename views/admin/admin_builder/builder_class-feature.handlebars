@@ -34,7 +34,7 @@
 
 
 <div class="pt-3">
-    {{#if classID}}
+    {{#if classFeatureID}}
         <h1 class="is-size-1 has-text-light has-text-centered">Class Feature Editor</h1>
     {{else}}
         <h1 class="is-size-1 has-text-light has-text-centered">Class Feature Creation</h1>
@@ -160,7 +160,7 @@
                                     <a href="/wsc_docs/#code_fields" target="_blank"><span class="icon is-small has-text-info has-tooltip-top" data-tooltip="WSC Docs"><i class="fas fa-book"></i></span></a>
                                 </label>
                                 <div class="control">
-                                    <textarea class="textarea inputClassFeatureCode nanum-coding use-custom-scrollbar" rows="1" spellcheck="false" maxlength="990"></textarea>
+                                    <textarea class="textarea inputClassFeatureCode nanum-coding use-custom-scrollbar" rows="1" spellcheck="false" maxlength="1990"></textarea>
                                 </div>
                             </div>
                             <div class="field pt-1 classFeatureDisplayInSheetSection">
@@ -194,7 +194,7 @@
 
 <div class="field is-grouped is-grouped-centered pb-2">
     <div class="control">
-        {{#if classID}}
+        {{#if classFeatureID}}
             <button id="updateButton" class="button is-success">Update</button>
         {{else}}
             <button id="createButton" class="button is-success">Create</button>

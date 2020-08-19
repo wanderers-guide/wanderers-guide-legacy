@@ -140,7 +140,9 @@ function featDisplayByType(data, sortingTagNameArray, featsSearchValue){
     let featCount = 0;
     for(const feat of data.FeatChoiceArray){
         if(feat.value == null) { continue; }
-        let featTags = data.FeatMap.get(feat.value.id+"").Tags;
+        let featData = data.FeatMap.get(feat.value.id+"");
+        if(featData == null) { continue; }
+        let featTags = featData.Tags;
         if(sortingTagNameArray == null){
             // Is Other, display if feat is NOT ancestry or class
             let sortingTagNameArray = [];

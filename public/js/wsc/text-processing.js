@@ -49,7 +49,7 @@ function processText(text, isSheet, isJustified = false, size = 'MEDIUM', indexC
     text = text.replace(/\*\*\*(.+?)\*\*\*/g, '<strong class="is-bold-very'+_incS+'">$1</strong>');
 
     // **word** - Makes word bold
-    text = text.replace(/\*\*(.+?)\*\*/g, '<strong class="is-bold-very">$1</strong>');
+    text = text.replace(/\*\*(.+?)\*\*/g, '<strong class="is-bold">$1</strong>');
 
     // __word__ - Makes word italicized
     text = text.replace(/\_\_(.+?)\_\_/g, '<em>$1</em>');
@@ -59,11 +59,11 @@ function processText(text, isSheet, isJustified = false, size = 'MEDIUM', indexC
 
     // ~ Some Text Here: Other Text
     let regexNonBulletList = /[\n]?\~(.+?)\:/g;
-    text = text.replace(regexNonBulletList, '</p><p class="pl-2 pr-1 negative-indent has-text-left '+_s+'"><strong>$1</strong>');
+    text = text.replace(regexNonBulletList, '</p><p class="pl-2 pr-1 negative-indent has-text-left '+_s+'"><strong class="is-bold">$1</strong>');
 
     // * Some Text Here: Other Text
     let regexBulletList = /[\n]?\*(.+?)\:/g;
-    text = text.replace(regexBulletList, '</p><p class="pl-2 pr-1 negative-indent has-text-left '+_s+'">&#x2022;<strong>$1</strong>');
+    text = text.replace(regexBulletList, '</p><p class="pl-2 pr-1 negative-indent has-text-left '+_s+'">&#x2022;<strong class="is-bold">$1</strong>');
 
     // :> Some Text
     let regexNonBulletSpacedList = /[\n]?\:\> /g;
@@ -186,10 +186,10 @@ function processText(text, isSheet, isJustified = false, size = 'MEDIUM', indexC
     // Success:text
     // Failure:text
     // Critical Failure:text
-    text = text.replace('Critical Success:','</p><p class="pl-2 pr-1 negative-indent has-text-left '+_s+'"><strong>Critical Success</strong>');
-    text = text.replace('Success:','</p><p class="pl-2 pr-1 negative-indent has-text-left '+_s+'"><strong>Success</strong>');
-    text = text.replace('Critical Failure:','</p><p class="pl-2 pr-1 negative-indent has-text-left '+_s+'"><strong>Critical Failure</strong>');
-    text = text.replace('Failure:','</p><p class="pl-2 pr-1 negative-indent has-text-left '+_s+'"><strong>Failure</strong>');
+    text = text.replace('Critical Success:','</p><p class="pl-2 pr-1 negative-indent has-text-left '+_s+'"><strong class="is-bold">Critical Success</strong>');
+    text = text.replace('Success:','</p><p class="pl-2 pr-1 negative-indent has-text-left '+_s+'"><strong class="is-bold">Success</strong>');
+    text = text.replace('Critical Failure:','</p><p class="pl-2 pr-1 negative-indent has-text-left '+_s+'"><strong class="is-bold">Critical Failure</strong>');
+    text = text.replace('Failure:','</p><p class="pl-2 pr-1 negative-indent has-text-left '+_s+'"><strong class="is-bold">Failure</strong>');
 
     // page ### -> Core Rulebook Link
     let regexCoreRules = /page\s+(\d+)/g;
@@ -212,10 +212,10 @@ function handleFeatLink(match, linkName, innerTextName) {
 }
 
 function handleFeatLinkExt(match, linkName, innerTextDisplay, innerTextName) {
-    innerTextName = innerTextName.replace(/’/g,'\'').toUpperCase();
+    let innerTextNameUpper = innerTextName.replace(/’/g,'\'').toUpperCase();
     for(const [featID, featStruct] of g_featMap.entries()){
         let featName = featStruct.Feat.name.toUpperCase();
-        if(innerTextName === featName && featStruct.Feat.isArchived == 0) {
+        if(innerTextNameUpper === featName && featStruct.Feat.isArchived == 0) {
             let featLinkClass = 'featTextLink'+featStruct.Feat.id;
             let featLinkText = '<span class="'+featLinkClass+' has-text-info-lighter cursor-clickable">'+innerTextDisplay+'</span>';
             setTimeout(function() {
@@ -231,7 +231,11 @@ function handleFeatLinkExt(match, linkName, innerTextDisplay, innerTextName) {
             return featLinkText;
         }
     }
-    return '<span class="has-text-danger">Unknown '+capitalizeWord(linkName)+'</span>';
+    if(isFeatHidden(innerTextNameUpper)){
+        return innerTextName;
+    } else {
+        return '<span class="has-text-danger">Unknown '+capitalizeWord(linkName)+'</span>';
+    }
 }
 
 

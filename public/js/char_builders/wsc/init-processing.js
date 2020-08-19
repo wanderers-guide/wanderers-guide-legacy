@@ -326,6 +326,7 @@ socket.on("returnWSCUpdateFeats", function(featObject){
     );
     //if(processingDebug) {console.log("Updating featMap...");}
     g_featMap = featMap;
+    g_featMap = updateFeatMapWithMiscs(g_featMap);
 });
 
 socket.on("returnWSCUpdateLangs", function(langObject){

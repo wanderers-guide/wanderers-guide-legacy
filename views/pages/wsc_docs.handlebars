@@ -74,6 +74,7 @@
                 <li><a href="/wsc_docs/#code_char_traits">Character Traits</a></li>
                 <li><a href="/wsc_docs/#code_notes_field">Notes Field</a></li>
                 <li><a href="/wsc_docs/#code_add_text">Add Text</a></li>
+                <li><a href="/wsc_docs/#code_miscellaneous">Miscellaneous</a></li>
             </ul>
         </aside>
     </div>
@@ -495,7 +496,7 @@
                 </p>
                 <div class="py-2">
                     <div class="code-block">
-                        IF (HAS-FEAT==Specialty Crafting) { Statement }
+                        IF (HAS-FEAT==Specialty Crafting) {Statement}
                     </div>
                     <p class="pl-3">
                         - If the character has the Specialty Crafting feat, the statement inside the brackets will execute.
@@ -506,7 +507,7 @@
                 </div>
                 <div class="py-2">
                     <div class="code-block">
-                        IF (HAS-CLASS-ABILITY==Cloistered Cleric) { Statement }
+                        IF (HAS-CLASS-ABILITY==Cloistered Cleric) {Statement}
                     </div>
                     <p class="pl-3">
                         - If the character has the Cloistered Cleric class ability, the statement inside the brackets will execute.
@@ -517,7 +518,7 @@
                 </div>
                 <div class="py-2">
                     <div class="code-block">
-                        IF (HAS-HERITAGE==Treedweller) { Statement }
+                        IF (HAS-HERITAGE==Treedweller) {Statement}
                     </div>
                     <p class="pl-3">
                         - If the character has the Treedweller heritage, the statement inside the brackets will execute.
@@ -528,7 +529,7 @@
                 </div>
                 <div class="py-2">
                     <div class="code-block">
-                        IF (HAS-VISION==Low-Light Vision) { Statement }
+                        IF (HAS-VISION==Low-Light Vision) {Statement}
                     </div>
                     <p class="pl-3">
                         - If the character has Low-Light Vision, the statement inside the brackets will execute.
@@ -539,7 +540,7 @@
                 </div>
                 <div class="py-2">
                     <div class="code-block">
-                        IF (HAS-LEVEL>=13) { Statement }
+                        IF (HAS-LEVEL>=13) {Statement}
                     </div>
                     <p class="pl-3">
                         - If the character is level 13 or greater, the statement inside the brackets will execute.
@@ -553,7 +554,7 @@
                 </div>
                 <div class="py-2">
                     <div class="code-block">
-                        IF (HAS-PROF==Arcana:T) { Statement }
+                        IF (HAS-PROF==Arcana:T) {Statement}
                     </div>
                     <p class="pl-3">
                         - If the character is trained in Arcana, the statement inside the brackets will execute.
@@ -564,7 +565,7 @@
                 </div>
                 <div class="py-2">
                     <div class="code-block">
-                        IF (HAS-FOCUS-POINTS==0) { Statement }
+                        IF (HAS-FOCUS-POINTS==0) {Statement}
                     </div>
                     <p class="pl-3">
                         - If the character has zero Focus Points, the statement inside the brackets will execute.
@@ -575,7 +576,7 @@
                 </div>
                 <div class="py-2">
                     <div class="code-block">
-                        IF (HAS-PROF>=Stealth:T) {GIVE-SPEED=Swim:15} ELSE { Statement }
+                        IF (HAS-PROF>=Stealth:T) {GIVE-SPEED=Swim:15} ELSE {Statement}
                     </div>
                     <p class="pl-3">
                         - If the character is trained or better in Stealth, the first statement will execute (which will give the character a swim speed of 15 feet). If the character is not trained in Stealth, the second statement will execute.
@@ -586,7 +587,7 @@
                 </div>
                 <div class="py-2">
                     <div class="code-block">
-                        IF (HAS-FEAT==Goblin Song && HAS-FOCUS-POINTS==0) { Statement }
+                        IF (HAS-FEAT==Goblin Song && HAS-FOCUS-POINTS==0) {Statement}
                     </div>
                     <p class="pl-3">
                         - If the character has the Goblin Song feat and has zero Focus Points, the statement inside the brackets will execute.
@@ -597,7 +598,7 @@
                 </div>
                 <div class="py-2">
                     <div class="code-block">
-                        IF-SHEET ( Condition ) { Statement }
+                        IF-SHEET (Condition) {Statement}
                     </div>
                     <p class="pl-3">
                         - If the character meets the condition, the statement inside the brackets will execute (like normal). But this if statement will only be tested in the character sheet (not in the character builder or anywhere else). In all other non-sheet contexts, the condition is essentially treats as true - executing the statement.
@@ -745,6 +746,14 @@
                     </div>
                     <p class="pl-3">
                         - Generates a feat selector, listing all feats with the wizard and metamagic traits and are level 3 or lower.
+                    </p>
+                </div>
+                <div class="py-2">
+                    <div class="code-block">
+                        GIVE-FEAT-FROM=Choose a Tradition:feat 1,feat 2,feat 3,etc
+                    </div>
+                    <p class="pl-3">
+                        - Generates a feat selector, listing only feats with the names: 'feat 1', 'feat 2', 'feat 3', and 'etc'. The feat selector will say 'Choose a Tradition' for the feat selection.
                     </p>
                 </div>
             </div>
@@ -1008,10 +1017,10 @@
                 <h1 class="title is-size-5 is-marginless mt-2 mb-1 pl-3">Focus Spells</h1>
                 <div class="py-2">
                     <div class="code-block">
-                        GIVE-FOCUS-SPELL=Cleric:Meld into Stone
+                        GIVE-FOCUS-SPELL=Shadowdancer:Dance of Darkness
                     </div>
                     <p class="pl-3">
-                        - Gives the character Meld into Stone as a focus spells using the Cleric spellcasting source.
+                        - Gives the character Dance of Darkness as a focus spell using the Shadowdancer spellcasting source.
                     </p>
                 </div>
                 <div class="py-2">
@@ -1023,17 +1032,6 @@
                     </p>
                 </div>
                 <h1 class="title is-size-5 is-marginless mt-2 mb-1 pl-3">Innate Spells</h1>
-                <div class="py-2">
-                    <div class="code-block">
-                        GIVE-INNATE-SPELL=5:DIVINE:2
-                    </div>
-                    <p class="pl-3">
-                        - Generates a selector, listing only 5th level spells within the Divine tradition spell list. The chosen spell can be cast twice per day.
-                    </p>
-                    <p class="pl-3">
-                        - Options for tradition is: Arcane, Divine, Occult, and Primal.
-                    </p>
-                </div>
                 <div class="py-2">
                     <div class="code-block">
                         GIVE-INNATE-SPELL-NAME=Meld into Stone:3:DIVINE:1
@@ -1051,6 +1049,17 @@
                     </div>
                     <p class="pl-3">
                         - Gives the character Daze as an innate arcane cantrip, can be cast any number of times per day.
+                    </p>
+                    <p class="pl-3">
+                        - Options for tradition is: Arcane, Divine, Occult, and Primal.
+                    </p>
+                </div>
+                <div class="py-2">
+                    <div class="code-block">
+                        GIVE-INNATE-SPELL=5:DIVINE:2
+                    </div>
+                    <p class="pl-3">
+                        - Generates a selector, listing only 5th level spells within the Divine tradition spell list. The chosen spell can be cast twice per day.
                     </p>
                     <p class="pl-3">
                         - Options for tradition is: Arcane, Divine, Occult, and Primal.
@@ -1256,6 +1265,33 @@
                     </div>
                     <p class="pl-3">
                         - The displayed text will be parsed like a description field.
+                    </p>
+                </div>
+            </div>
+            <div id="code_miscellaneous" class="mt-4 isHideable">
+                <h1 class="title is-size-4 is-marginless mb-1 pl-3">Miscellaneous</h1>
+                <div class="py-2">
+                    <div class="code-block">
+                        HIDE-FEAT-NAME=Drain Bonded Item
+                    </div>
+                    <p class="pl-3">
+                        - Hides all feats with the name Drain Bonded Item. Feats with that name are essentially treated as though they don't exist.
+                    </p>
+                </div>
+                <div class="py-2">
+                    <div class="code-block">
+                        UNHIDE-FEAT-NAME=Drain Bonded Item
+                    </div>
+                    <p class="pl-3">
+                        - Makes a feat that was made hidden by HIDE-FEAT-NAME no longer hidden.
+                    </p>
+                </div>
+                <div class="py-2">
+                    <div class="code-block">
+                        OVERRIDE-FEAT-LEVEL=Magical Trickster:2
+                    </div>
+                    <p class="pl-3">
+                        - Makes all feats with the name Magical Trickster have their level set to 2nd instead of what levels they were before.
                     </p>
                 </div>
             </div>

@@ -212,7 +212,7 @@ module.exports = class AdminUpdate {
                     let newPromise =  ClassAbility.create({
                         classID: classID,
                         name: classAbilityOption.name,
-                        level: classAbility.level,
+                        level: null,
                         description: classAbilityOption.description,
                         code: classAbilityOption.code,
                         selectType: 'SELECT_OPTION',
