@@ -1744,7 +1744,9 @@ function determineBulkAndCoins(invItems, itemMap){
     let goldCoins = 0;
     let platinumCoins = 0;
 
+    let droppedItemArray = [];
     for(const invItem of invItems){
+        if(invItem.isDropped == 1) { droppedItemArray.push(invItem.id); continue; }
 
         // Coins - Hardcoded IDs //
         if(invItem.itemID == 22){ // Copper
@@ -1764,12 +1766,14 @@ function determineBulkAndCoins(invItems, itemMap){
                 let bagInvItem = invItems.find(searchInvItem => {
                     return searchInvItem.id == invItem.bagInvItemID;
                 });
-                let bagItem = itemMap.get(bagInvItem.itemID+"");
-                let invItemQuantity = (invItem.quantity == null) ? 1 : invItem.quantity;
-                let invItemBulk = getConvertedBulkForSize(invItem.size, invItem.bulk);
-                invItemBulk = (invItemBulk == 0.0) ? 0.001 : invItemBulk;
-                let invItemTotalBulk = invItemBulk * invItemQuantity;
-                bagBulkMap.set(invItem.bagInvItemID, invItemTotalBulk-bagItem.StorageData.bulkIgnored);
+                if(bagInvItem != null){
+                    let bagItem = itemMap.get(bagInvItem.itemID+"");
+                    let invItemQuantity = (invItem.quantity == null) ? 1 : invItem.quantity;
+                    let invItemBulk = getConvertedBulkForSize(invItem.size, invItem.bulk);
+                    invItemBulk = (invItemBulk == 0.0) ? 0.001 : invItemBulk;
+                    let invItemTotalBulk = invItemBulk * invItemQuantity;
+                    bagBulkMap.set(invItem.bagInvItemID, invItemTotalBulk-bagItem.StorageData.bulkIgnored);
+                }
             } else {
                 let invItemQuantity = (invItem.quantity == null) ? 1 : invItem.quantity;
                 let invItemBulk = getConvertedBulkForSize(invItem.size, invItem.bulk);
@@ -1798,7 +1802,7 @@ function determineBulkAndCoins(invItems, itemMap){
     }
 
     for(const [bagInvItemID, bulkAmount] of bagBulkMap.entries()){
-        if(bulkAmount > 0){
+        if(bulkAmount > 0 && !droppedItemArray.includes(bagInvItemID)){
             totalBulk += bulkAmount;
         }
     }

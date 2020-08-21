@@ -142,6 +142,7 @@ function openInvItemQuickview(data) {
     let bulk = getConvertedBulkForSize(data.InvItem.size, data.InvItem.bulk);
     bulk = getBulkFromNumber(bulk);
     usageBulkEntry += '<strong>Bulk</strong> '+bulk;
+    if(data.InvItem.isDropped == 1) { usageBulkEntry += '<span class="is-size-6-5 is-italic"> (Dropped)</span>'; }
     qContent.append('<p class="is-size-6 has-text-left px-3 negative-indent">'+usageBulkEntry+'</p>');
 
     if(data.Item.Item.hands != 'NONE'){
@@ -384,13 +385,12 @@ function openInvItemQuickview(data) {
     // Move, Customize, and Remove Item
     if(!viewOnly) {
         if(data.InvData != null){
-            if(data.InvData.ItemIsStorage && !data.InvData.ItemIsStorageAndEmpty) {
 
-            } else {
-
-                qContent.append('<div class="field has-addons has-addons-centered"><div class="control"><div class="select is-small is-link"><select id="'+invItemMoveSelectID+'"></select></div></div><div class="control"><button id="'+invItemMoveButtonID+'" type="submit" class="button is-small is-link is-rounded is-outlined">Move</button></div></div>');
+            qContent.append('<div class="field has-addons has-addons-centered"><div class="control"><div class="select is-small is-link"><select id="'+invItemMoveSelectID+'"></select></div></div><div class="control"><button id="'+invItemMoveButtonID+'" type="submit" class="button is-small is-link is-rounded is-outlined">Move</button></div></div>');
         
-                $('#'+invItemMoveSelectID).append('<option value="Unstored">Unstored</option>');
+            $('#'+invItemMoveSelectID).append('<option value="Unstored">Unstored</option>');
+            if(data.InvData.ItemIsStorage && !data.InvData.ItemIsStorageAndEmpty) {
+            } else {
                 for(const bagInvItem of data.InvData.OpenBagInvItemArray){
                     if(data.InvItem.id != bagInvItem.id) {
                         if(data.InvItem.bagInvItemID == bagInvItem.id){
@@ -400,18 +400,23 @@ function openInvItemQuickview(data) {
                         }
                     }
                 }
-        
-                $('#'+invItemMoveButtonID).click(function() {
-                    let bagItemID = $('#'+invItemMoveSelectID).val();
-                    if(bagItemID == 'Unstored') { bagItemID = null; }
-                    $(this).addClass('is-loading');
-                    socket.emit("requestInvItemMoveBag",
-                        data.InvItem.id,
-                        bagItemID,
-                        data.InvItem.invID);
-                });
-
             }
+            $('#'+invItemMoveSelectID).append('<option value="Dropped">Dropped</option>');
+                
+            if(data.InvItem.isDropped == 1){ $('#'+invItemMoveSelectID).val('Dropped'); }
+        
+            $('#'+invItemMoveButtonID).click(function() {
+                let bagItemID = $('#'+invItemMoveSelectID).val();
+                let isDropped = 0;
+                if(bagItemID == 'Unstored') { bagItemID = null; }
+                if(bagItemID == 'Dropped') { bagItemID = null; isDropped = 1; }
+                $(this).addClass('is-loading');
+                socket.emit("requestInvItemMoveBag",
+                    data.InvItem.id,
+                    bagItemID,
+                    isDropped);
+            });
+            
 
             qContent.append('<div class="buttons is-centered is-marginless"><a id="'+invItemCustomizeButtonID+'" class="button is-small is-primary is-rounded is-outlined">Customize</a><a id="'+invItemRemoveButtonID+'" class="button is-small is-danger is-rounded is-outlined">Remove</a></div>');
 

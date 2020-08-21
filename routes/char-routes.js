@@ -120,7 +120,7 @@ router.get('/add', (req, res) => {
                     }).then(result => {
                         CharSaving.addItemToInv(inventory.id, 23, 150) // Give starting 150 silver
                         .then(silverInvItem => {
-                            CharSaving.saveInvItemToNewBag(silverInvItem.id, pouchInvItem.id) // Put silver in pouch
+                            CharSaving.saveInvItemToNewBag(silverInvItem.id, pouchInvItem.id, 0) // Put silver in pouch
                             .then(result => {
                                 Character.create({
                                     name: "Unnamed Character",

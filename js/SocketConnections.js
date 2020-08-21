@@ -246,11 +246,11 @@ module.exports = class SocketConnections {
         });
       });
     
-      socket.on('requestInvItemMoveBag', function(invItemID, bagInvItemID){
+      socket.on('requestInvItemMoveBag', function(invItemID, bagInvItemID, isDropped){
         AuthCheck.ownsInvItem(socket, invItemID).then((ownsItem) => {
           if(ownsItem){
             CharGathering.getInvIDFromInvItemID(invItemID).then((invID) => {
-              CharSaving.saveInvItemToNewBag(invItemID, bagInvItemID).then(() => {
+              CharSaving.saveInvItemToNewBag(invItemID, bagInvItemID, isDropped).then(() => {
                 CharGathering.getInventory(invID).then((invStruct) => {
                   socket.emit('returnInvItemMoveBag', invItemID, invStruct);
                 });
@@ -265,7 +265,7 @@ module.exports = class SocketConnections {
           if(ownsItem){
             CharGathering.getInvIDFromInvItemID(bagInvItemID).then((invID) => {
               CharSaving.addItemToInv(invID, itemID, quantity).then((invItem) => {
-                CharSaving.saveInvItemToNewBag(invItem.id, bagInvItemID).then(() => {
+                CharSaving.saveInvItemToNewBag(invItem.id, bagInvItemID, 0).then(() => {
                   socket.emit('returnAddItemToBag');
                 });
               });

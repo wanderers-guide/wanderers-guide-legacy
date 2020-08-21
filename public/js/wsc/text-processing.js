@@ -195,9 +195,9 @@ function processText(text, isSheet, isJustified = false, size = 'MEDIUM', indexC
     let regexCoreRules = /page\s+(\d+)/g;
     text = text.replace(regexCoreRules, '<a href="https://paizo.com/products/btq01zp3?Pathfinder-Core-Rulebook" target="_blank" class="external-link">page $1</a>');
 
-    // Pathfinder Bestiary ### -> Bestiary Link
-    let regexBestiary = /Pathfinder Bestiary\s+(\d+)/g;
-    text = text.replace(regexBestiary, '<a href="https://paizo.com/products/btq01zp4?Pathfinder-Bestiary" target="_blank" class="external-link">Pathfinder Bestiary $1</a>');
+    // Bestiary pg. ### -> Bestiary Link
+    let regexBestiary = /Bestiary pg\.\s+(\d+)/g;
+    text = text.replace(regexBestiary, '<a href="https://paizo.com/products/btq01zp4?Pathfinder-Bestiary" target="_blank" class="external-link">Bestiary $1</a>');
 
     // Clean up any random spaces that were created...
     text = text.replace('<p class="p-1 pl-2 '+_j+_s+'"></p>', '');

@@ -378,6 +378,7 @@ function displayInventoryItem(invItem, openBagInvItemArray, data) {
     let bulk = getConvertedBulkForSize(invItem.size, invItem.bulk);
     bulk = getBulkFromNumber(bulk);
     if(item.StorageData != null && item.StorageData.ignoreSelfBulkIfWearing == 1){ bulk = '-'; }
+    if(invItem.isDropped == 1) { bulk = '<span class="is-size-6-5">Dropped</span>'; }
     $('#'+invItemBulkID).html(bulk);
 
     if(invItem.currentHitPoints == maxHP) {

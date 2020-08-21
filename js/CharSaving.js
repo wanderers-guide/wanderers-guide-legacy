@@ -239,8 +239,8 @@ module.exports = class CharSaving {
         });
     }
 
-    static saveInvItemToNewBag(invItemID, bagItemID) {
-        let updateValues = { bagInvItemID: bagItemID };
+    static saveInvItemToNewBag(invItemID, bagItemID, isDropped) {
+        let updateValues = { bagInvItemID: bagItemID, isDropped: isDropped };
         return InvItem.update(updateValues, { where: { id: invItemID } })
         .then((result) => {
             return;
