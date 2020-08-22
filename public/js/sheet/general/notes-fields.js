@@ -20,7 +20,7 @@ function displayNotesField(qContent, srcStruct, rows=4){
             $("#"+notesFieldControlShellID).addClass("is-loading");
             
             notesData.text = $(this).val();
-
+            
             socket.emit("requestNotesFieldSave",
                 getCharIDFromURL(),
                 notesData,
@@ -36,7 +36,7 @@ function getNotesData(srcStruct){
         // Checks if the note field statement's parent is the input srcStruct
         if(srcStruct.sourceCode === notesData.sourceCode){
             let sNum = notesData.sourceCodeSNum.substr(1); // Remove first char
-            if(srcStruct.sourceCodeSNum === sNum) {
+            if(srcStruct.sourceCodeSNum === sNum || (srcStruct.sourceCodeSNum == 'a' && sNum == '')) {
                 return notesData;
             }
         }

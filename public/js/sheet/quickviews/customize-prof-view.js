@@ -9,10 +9,12 @@ function openCustomizeProfQuickview(data) {
     $('#quickViewTitle').html("Customize - "+capitalizeWords(profName));
     let qContent = $('#quickViewContent');
 
-    qContent.append('<div class="field is-horizontal"><div class="field-label is-normal"><label class="label">Proficiency</label></div><div class="field-body"><div class="field"><div class="control"><div class="select"><select id="customizeProf"><option value="chooseDefault">Default</option><option value="U">Untrained</option><option value="T">Trained</option><option value="E">Expert</option><option value="M">Master</option><option value="L">Legendary</option></select></div></div></div></div></div>');
+    qContent.append('<div class="field is-horizontal"><div class="field-label is-normal" style="flex-grow: 2;"><label class="label">Proficiency</label></div><div class="field-body"><div class="field"><div class="control"><div class="select"><select id="customizeProf"><option value="chooseDefault">Default</option><option value="U">Untrained</option><option value="T">Trained</option><option value="E">Expert</option><option value="M">Master</option><option value="L">Legendary</option></select></div></div></div></div></div>');
 
     let userBonus = (data.ProfData.UserBonus != null) ? data.ProfData.UserBonus : 0;
-    qContent.append('<div class="field is-horizontal"><div class="field-label is-normal"><label class="label" style="white-space: nowrap;">Extra Bonus</label></div><div class="field-body"><div class="field"><div class="control" style="max-width: 120px;"><input id="customizeBonus" class="input" type="number" min="0" max="100" value="'+userBonus+'"></div></div></div></div>');
+    qContent.append('<div class="field is-horizontal"><div class="field-label is-normal" style="flex-grow: 2;"><label class="label" style="white-space: nowrap;">Extra Bonus</label></div><div class="field-body"><div class="field"><div class="control" style="max-width: 120px;"><input id="customizeBonus" class="input" type="number" min="0" max="100" value="'+userBonus+'"></div></div></div></div>');
+
+    qContent.append('<div class="field is-horizontal"><div class="field-label" style="flex-grow: 2;"><label class="label">Bonus Notes</label></div><div class="field-body"><div class="field"><div class="control"><label class="checkbox"><input id="customizeHasNoteField" type="checkbox"></label></div></div></div></div>');
 
     qContent.append('<div class="buttons is-centered pt-2"><button id="customizeSaveButton" class="button is-link is-rounded">Save</button></div>');
 
@@ -22,12 +24,44 @@ function openCustomizeProfQuickview(data) {
         $('#customizeProf').val('chooseDefault');
     }
 
+    let noteFieldSrcStruct = {
+        sourceType: 'bonus-area',
+        sourceLevel: 0,
+        sourceCode: 'bonus-area-'+data.NoteFieldID,
+        sourceCodeSNum: 'a',
+    };
+    let notesData = getNotesData(noteFieldSrcStruct);
+    if(notesData != null){
+        $('#customizeHasNoteField').prop('checked', true);
+    }
+
     $('#customizeSaveButton').click(function(){
 
         // Reloads character sheet twice, which is unnecessary.
 
         let prof = $('#customizeProf').val();
         let userBonus = $('#customizeBonus').val();
+        let hasNoteField = $('#customizeHasNoteField').prop('checked');
+
+
+        let noteFieldSrcStruct = {
+            sourceType: 'bonus-area',
+            sourceLevel: 0,
+            sourceCode: 'bonus-area-'+data.NoteFieldID,
+            sourceCodeSNum: 'a',
+        };
+        if(hasNoteField) {
+            socket.emit("requestNotesFieldChange",
+                getCharIDFromURL(),
+                noteFieldSrcStruct,
+                'Additional bonuses...',
+                null);
+        } else {
+            socket.emit("requestNotesFieldDelete",
+                getCharIDFromURL(),
+                noteFieldSrcStruct);
+        }
+
 
         let srcStructProf = {
             sourceType: 'user-set',
@@ -80,3 +114,29 @@ function openCustomizeProfQuickview(data) {
     });
 
 }
+
+socket.on("returnNotesFieldChange", function(newNotesData, locationID) {
+    g_notesFields.push({
+        charID: getCharIDFromURL(),
+        placeholderText: newNotesData.placeholderText,
+        source: 'notesField',
+        sourceCode: newNotesData.sourceCode,
+        sourceCodeSNum: newNotesData.sourceCodeSNum,
+        sourceLevel: newNotesData.sourceLevel,
+        sourceType: newNotesData.sourceType,
+        value: newNotesData.value,
+        text: '',
+    });
+});
+
+socket.on("returnNotesFieldDelete", function(srcStruct) {
+    let newNotesFieldArray = [];
+    for(let notesData of g_notesFields){
+        if(srcStruct.sourceCode === notesData.sourceCode &&
+                srcStruct.sourceCodeSNum === notesData.sourceCodeSNum){
+        } else {
+            newNotesFieldArray.push(notesData);
+        }
+    }
+    g_notesFields = newNotesFieldArray;
+});

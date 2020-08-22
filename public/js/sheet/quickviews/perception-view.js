@@ -3,12 +3,14 @@
 */
 
 function openPerceptionQuickview(data) {
+    let noteFieldID = 'perception-'+data.ProfData.Name.replace(/\s/g, "_");
 
     $('#quickViewTitle').html(data.ProfData.Name);
     $('#quickViewTitleRight').html('<button id="customizeProfBtn" class="button is-very-small is-success is-outlined is-rounded is-pulled-right mr-1">Customize</button>');
     $('#customizeProfBtn').click(function(){
         openQuickView('customizeProfView', {
             ProfData : data.ProfData,
+            NoteFieldID : noteFieldID,
             _prevBackData: {Type: g_QViewLastType, Data: g_QViewLastData},
         }, $('#quickviewDefault').hasClass('is-active'));
     });
@@ -102,6 +104,16 @@ function openPerceptionQuickview(data) {
         }
 
     }
+
+    // Display Note Field
+    let noteFieldSrcStruct = {
+        sourceType: 'bonus-area',
+        sourceLevel: 0,
+        sourceCode: 'bonus-area-'+noteFieldID,
+        sourceCodeSNum: 'a',
+    };
+    displayNotesField(qContent, noteFieldSrcStruct);
+    
 
     // Senses //
     qContent.append('<hr class="m-2">');

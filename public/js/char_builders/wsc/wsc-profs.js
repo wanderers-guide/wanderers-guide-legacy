@@ -54,8 +54,7 @@ function giveProfSkillTraining(srcStruct, profName, prof, locationID){
 
     if(profCategory === 'Skill'){
         
-        let profMap = objToMap(wscChoiceStruct.FinalProfObject);
-        for(const [profMapName, profMapData] of profMap.entries()){
+        for(const [profMapName, profMapData] of g_profMap.entries()){
             let tempSkillName = profMapData.Name.toUpperCase();
             tempSkillName = tempSkillName.replace(/_|\s+/g,"");
             if(adjProfName === tempSkillName && profMapData.NumUps >= numUps){

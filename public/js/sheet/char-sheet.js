@@ -2076,7 +2076,7 @@ function takeRest(){
 //////////////////////////////////////// Socket Returns ////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
-socket.on("returnFinalProfs", function(profObject, skillObject){
+socket.on("requestFinalProfsAndSkills", function(profObject, skillObject){
     g_profMap = objToMap(profObject);
     g_skillMap = objToMap(skillObject);
     g_weaponProfMap = buildWeaponProfMap();
@@ -2089,7 +2089,7 @@ socket.on("returnHeroPointsSave", function(){
 });
 
 socket.on("returnProficiencyChange", function(profChangePacket){
-    socket.emit("requestFinalProfs",
+    socket.emit("requestFinalProfsAndSkills",
         getCharIDFromURL());
 });
 

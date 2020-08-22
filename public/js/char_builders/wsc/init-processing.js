@@ -14,7 +14,7 @@ let runningCodeQueue = false;
 let gCode_statements, gCode_srcStruct, gCode_locationID;
 let wscChoiceStruct = null;
 let wscMapsInit = false;
-let g_langMap, g_archetypes = null;
+let g_langMap, g_archetypes, g_profMap = null;
 let temp_classAbilities, temp_ancestryFeatsLocs = null;
 //                  //
 
@@ -288,6 +288,7 @@ socket.on("returnWSCStatementFailure", function(details){
 
 function injectWSCChoiceStruct(choiceStruct){
     wscChoiceStruct = choiceStruct;
+    g_profMap = objToMap(choiceStruct.FinalProfObject);
     updateExpressionProcessor({
         ChoiceStruct : choiceStruct,
     });

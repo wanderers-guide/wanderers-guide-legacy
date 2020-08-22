@@ -3,12 +3,14 @@
 */
 
 function openOtherProfsQuickview(data) {
+    let noteFieldID = 'otherProf-'+data.Name.replace(/\s/g, "_");
 
     $('#quickViewTitle').html(data.Name);
     $('#quickViewTitleRight').html('<button id="customizeProfBtn" class="button is-very-small is-success is-outlined is-rounded is-pulled-right mr-1">Customize</button>');
     $('#customizeProfBtn').click(function(){
         openQuickView('customizeProfView', {
             ProfData : data.ProfData,
+            NoteFieldID : noteFieldID,
             _prevBackData: {Type: g_QViewLastType, Data: g_QViewLastData},
         }, $('#quickviewDefault').hasClass('is-active'));
     });
@@ -26,6 +28,16 @@ function openOtherProfsQuickview(data) {
     if(userBonus != 0){
         qContent.append('<p><strong>Extra Bonus:</strong> '+signNumber(userBonus)+'</p>');
     }
+
+    // Display Note Field
+    let noteFieldSrcStruct = {
+        sourceType: 'bonus-area',
+        sourceLevel: 0,
+        sourceCode: 'bonus-area-'+noteFieldID,
+        sourceCodeSNum: 'a',
+    };
+    displayNotesField(qContent, noteFieldSrcStruct);
+
 
     if(data.ProfData.UserAdded){
         qContent.append('<div class="buttons is-centered is-marginless"><a id="removeUserAddedProfButton" class="button is-small is-danger is-rounded is-outlined mt-3">Remove</a></div>');

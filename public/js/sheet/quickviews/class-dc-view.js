@@ -3,12 +3,14 @@
 */
 
 function openClassDCQuickview(data) {
+    let noteFieldID = 'classDC';
 
     $('#quickViewTitle').html('Class DC');
     $('#quickViewTitleRight').html('<button id="customizeProfBtn" class="button is-very-small is-success is-outlined is-rounded is-pulled-right mr-1">Customize</button>');
     $('#customizeProfBtn').click(function(){
         openQuickView('customizeProfView', {
             ProfData : data.ProfData,
+            NoteFieldID : noteFieldID,
             _prevBackData: {Type: g_QViewLastType, Data: g_QViewLastData},
         }, $('#quickviewDefault').hasClass('is-active'));
     });
@@ -106,5 +108,14 @@ function openClassDCQuickview(data) {
         }
 
     }
+
+    // Display Note Field
+    let noteFieldSrcStruct = {
+        sourceType: 'bonus-area',
+        sourceLevel: 0,
+        sourceCode: 'bonus-area-'+noteFieldID,
+        sourceCodeSNum: 'a',
+    };
+    displayNotesField(qContent, noteFieldSrcStruct);
 
 }

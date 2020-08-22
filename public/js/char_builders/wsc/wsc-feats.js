@@ -234,6 +234,7 @@ function giveClassFeat(srcStruct, locationID, featLevel, className, optionalTags
     $('#'+locationID).append('<div class="py-2" id="'+containerLocationID+'"></div>');
 
     $('.'+classTabClass).click(function(event, autoPageLoad){
+        event.stopImmediatePropagation();
         if (autoPageLoad != 'AUTO_PAGE_LOAD') { autoPageLoad = null; }
         if($(this).parent().hasClass('is-active')) { return; }
 
@@ -254,6 +255,7 @@ function giveClassFeat(srcStruct, locationID, featLevel, className, optionalTags
     });
 
     $('.'+archetypesTabClass).click(function(event, autoPageLoad){
+        event.stopImmediatePropagation();
         if (autoPageLoad != 'AUTO_PAGE_LOAD') { autoPageLoad = null; }
         if($(this).parent().hasClass('is-active')) { return; }
 
@@ -274,7 +276,8 @@ function giveClassFeat(srcStruct, locationID, featLevel, className, optionalTags
 
     });
 
-    $('.'+dedicationTabClass).click(function(){
+    $('.'+dedicationTabClass).click(function(event){
+        event.stopImmediatePropagation();
         if($(this).parent().hasClass('is-active')) { return; }
 
         $('#'+containerLocationID).html('');

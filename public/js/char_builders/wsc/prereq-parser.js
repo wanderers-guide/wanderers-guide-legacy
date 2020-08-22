@@ -31,33 +31,19 @@ function preReqFeatLink(featLinkClass, inFeatName){
   }
 }
 
-let g_preReqIgnoreArray = [
-  'trained in Arcana, Nature, Occultism, or Religion',
-  'expert in Arcana, Nature, Occultism, or Religion',
-  'master in Arcana, Nature, Occultism, or Religion',
-  'legendary in Arcana, Nature, Occultism, or Religion',
-  'deity who grants the cold, fire, nature, or travel domain',
-  'trained in Alcohol Lore, Cooking Lore, or Crafting',
-  'trained in Perception, Society, and Thievery',
-  'trained in Crafting, Deception, and Stealth',
-  'expert in Acrobatics and Athletics',
-  'expert in Deception and Society',
-  'trained in Diplomacy or Intimidation',
-];
-
 function preReqResultArray(feat){
   let resultArray = [];
-  let preReqStr = feat.prerequisites;
 
-  for(let preReqIgnore of g_preReqIgnoreArray){
-    let newPreReqStr = preReqStr.replace(preReqIgnore, '');
-    if(preReqStr != newPreReqStr){
-      preReqStr = newPreReqStr;
-      resultArray.push({Type: 'UNKNOWN', Result: 'UNKNOWN', PreReqPart: preReqIgnore});
+  let prereqParts = [];
+  let prereqSemicolonParts = feat.prerequisites.replace(/’/g,"'").split('; ');
+  for(let prereq of prereqSemicolonParts){
+    if(prereq.includes(', or ') || prereq.includes(', and ')){
+      prereqParts.push(prereq);
+    } else {
+      let prereqCommaParts = prereq.split(', ');
+      prereqParts = prereqParts.concat(prereqCommaParts);
     }
   }
-
-  let prereqParts = preReqStr.replace(/’/g,"'").split(/, |; /);
 
   for(let prereq of prereqParts){
     if(prereq == '') { continue; }
@@ -70,10 +56,10 @@ function preReqResultArray(feat){
     result = preReqCheckAbilityScores(uPreReq);
     if(result != null) { resultArray.push({Type: 'ABILITY-SCORE', Result: result, PreReqPart: prereq}); continue; }
 
-    result = preReqCheckFeats(uPreReq, prereq);
+    result = prereqListChecking('FEAT', uPreReq, prereq);
     if(result != null) { resultArray.push({Type: 'FEAT', Result: result, PreReqPart: prereq}); continue; }
 
-    result = preReqCheckClassAbilities(uPreReq, prereq);
+    result = prereqListChecking('CLASS-FEATURE', uPreReq, prereq);
     if(result != null) { resultArray.push({Type: 'CLASS-FEATURE', Result: result, PreReqPart: prereq}); continue; }
 
     resultArray.push({Type: 'UNKNOWN', Result: 'UNKNOWN', PreReqPart: prereq});
@@ -97,38 +83,7 @@ function meetsPrereqs(feat){
 }
 
 
-function preReqCheckProfs(prereq){
-  let rTrained = prereq.match(/TRAINED IN (.+)/);
-  if(rTrained != null){
-    return preReqConfirmSkillProf(rTrained[1], 1);
-  }
-  let rExpert = prereq.match(/EXPERT IN (.+)/);
-  if(rExpert != null){
-    return preReqConfirmSkillProf(rExpert[1], 2);
-  }
-  let rMaster = prereq.match(/MASTER IN (.+)/);
-  if(rMaster != null){
-    return preReqConfirmSkillProf(rMaster[1], 3);
-  }
-  let rLegendary = prereq.match(/LEGENDARY IN (.+)/);
-  if(rLegendary != null){
-    return preReqConfirmSkillProf(rLegendary[1], 4);
-  }
-  return null;
-}
-
-function preReqConfirmSkillProf(skillName, numUps){
-  let skillData = g_skillMap.get(capitalizeWords(skillName));
-  if(skillData != null){
-    return skillData.NumUps >= numUps ? 'TRUE' : 'FALSE';
-  } else {
-    if(skillName.endsWith(' LORE')){ return 'FALSE'; }
-    return 'UNKNOWN';
-  }
-}
-
-
-
+// Prereq Ability Score Checking //
 function preReqCheckAbilityScores(prereq){
   let rStr = prereq.match(/STRENGTH (\d+)/);
   if(rStr != null){
@@ -168,6 +123,148 @@ function preReqConfirmAbilityScore(scoreType, amt){
 
 
 
+// Prereq List Middleware //
+function prereqListChecking(type, prereq, oData) {
+
+  // For cases like the feat: 'Come and Get Me'
+  if(type == 'FEAT'){
+    let preFeatResult = preReqCheckFeats(prereq, oData);
+    if(preFeatResult != null) { return preFeatResult; }
+  }
+
+  let orCheck = false;
+  let listPrereqs;
+  if(prereq.includes(' OR ')){
+    listPrereqs = prereq.split(/, OR | OR |, /);
+    orCheck = true;
+  } else if(prereq.includes(' AND ')){
+    listPrereqs = prereq.split(/, AND | AND |, /);
+  } else {
+    listPrereqs = [prereq];
+  }
+
+  let totalResult = 'TRUE';
+  for(let subPre of listPrereqs){
+    let result;
+    if(type == 'PROF'){
+      result = preReqConfirmSkillProf(subPre, oData);
+    } else if(type == 'FEAT'){
+      result = preReqCheckFeats(subPre, oData);
+    } else if(type == 'CLASS-FEATURE'){
+      result = preReqCheckClassAbilities(subPre, oData);
+    } else {
+      result = 'FALSE';
+    }
+    if(result == null) { return null; }
+    if(orCheck) {
+      if(result == 'TRUE'){
+        return 'TRUE';
+      } else if(result == 'FALSE'){
+        totalResult = 'FALSE';
+      } else if(result == 'UNKNOWN'){
+        if(totalResult != 'FALSE') {
+          totalResult = 'UNKNOWN';
+        }
+      }
+    } else {
+      if(result == 'FALSE'){
+        totalResult = 'FALSE';
+      } else if(result == 'UNKNOWN'){
+        return 'UNKNOWN';
+      }
+    }
+  }
+  return totalResult;
+}
+
+
+
+// Prereq Profs Checking //
+function preReqCheckProfs(prereq){
+  let rTrained = prereq.match(/TRAINED IN (.+)/);
+  if(rTrained != null){
+    return prereqListChecking('PROF', rTrained[1], 1);
+  }
+  let rExpert = prereq.match(/EXPERT IN (.+)/);
+  if(rExpert != null){
+    return prereqListChecking('PROF', rExpert[1], 2);
+  }
+  let rMaster = prereq.match(/MASTER IN (.+)/);
+  if(rMaster != null){
+    return prereqListChecking('PROF', rMaster[1], 3);
+  }
+  let rLegendary = prereq.match(/LEGENDARY IN (.+)/);
+  if(rLegendary != null){
+    return prereqListChecking('PROF', rLegendary[1], 4);
+  }
+  return null;
+}
+
+function preReqConfirmSkillProf(skillName, numUps){
+  let customChecksResult = checkCustomSkillProfs(skillName, numUps);
+  if(customChecksResult != null) { return customChecksResult; }
+  let skillData = g_skillMap.get(capitalizeWords(skillName));
+  if(skillData != null){
+    return skillData.NumUps >= numUps ? 'TRUE' : 'FALSE';
+  } else {
+    if(skillName.endsWith(' LORE')){ return 'FALSE'; }
+    return 'UNKNOWN';
+  }
+}
+
+function checkCustomSkillProfs(name, numUps){
+
+  if(name === 'LORE'){
+    for(const [skillName, skillData] of g_skillMap.entries()){
+      if(skillData.Name.includes(' Lore') && skillData.NumUps >= numUps){
+        return 'TRUE';
+      }
+    }
+    return 'FALSE';
+  }
+
+  if(name === 'AT LEAST ONE SKILL'){
+    for(const [skillName, skillData] of g_skillMap.entries()){
+      if(skillData.NumUps >= numUps){
+        return 'TRUE';
+      }
+    }
+    return 'FALSE';
+  }
+
+  if(name === 'A SKILL WITH THE RECALL KNOWLEDGE ACTION'){
+    for(const [skillName, skillData] of g_skillMap.entries()){
+      if(skillData.NumUps >= numUps){
+        if(skillData.Name.includes(' Lore') ||
+            skillData.Name == 'Arcana' ||
+            skillData.Name == 'Crafting' ||
+            skillData.Name == 'Medicine' ||
+            skillData.Name == 'Nature' ||
+            skillData.Name == 'Occultism' ||
+            skillData.Name == 'Religion' || 
+            skillData.Name == 'Society'){
+          return 'TRUE';
+        }
+      }
+    }
+    return 'FALSE';
+  }
+
+  if(name === 'PERCEPTION'){
+    let percepData = g_profMap.get('Perception');
+    if(percepData != null && percepData.NumUps >= numUps){
+      return 'TRUE';
+    }
+    return 'FALSE';
+  }
+
+  return null;
+
+}
+
+
+
+// Prereq Feats Checking //
 function preReqCheckFeats(prereq, normalPreReq){
   for(let featData of wscChoiceStruct.FeatArray){
     if(featData.value != null){
@@ -176,35 +273,54 @@ function preReqCheckFeats(prereq, normalPreReq){
       }
     }
   }
-  if(capitalizeWords(prereq) === normalPreReq){
-    let skillData = g_skillMap.get(normalPreReq);
-    return skillData == null ? 'FALSE' : 'UNKNOWN';
-    // For cases like: trained in Nature, Arcana, or Occultism
-  } else {
-    return null;
+  for(const [featID, featStruct] of g_featMap.entries()){
+    if(featStruct.Feat != null && featStruct.Feat.isArchived == 0){
+      if(featStruct.Feat.name.toUpperCase() === prereq){
+        return 'FALSE';
+      }
+    }
   }
+  return null;
 }
 
 
-
+// Prereq Class Feature Checking //
 function preReqCheckClassAbilities(prereq, normalPreReq){
-  // TO-DO: Temporary solution, will rework in future
   if(g_expr_classAbilityArray != null &&
         wscChoiceStruct.ClassDetails != null &&
         wscChoiceStruct.ClassDetails.Abilities != null){
     if(prereq.toLowerCase() === normalPreReq){
 
       for(let abilityName of g_expr_classAbilityArray){
-        let abilNameCut = abilityName.toLowerCase().split('(')[0];
-        if(abilNameCut.includes(normalPreReq) || normalPreReq.includes(abilNameCut)) {
-          return 'TRUE';
+        let abilName = abilityName.toLowerCase().split('(')[0];
+        if(normalPreReq === abilName){ return 'TRUE'; }
+        if(normalPreReq.includes(abilName) || abilName.includes(normalPreReq)){
+          let ability = prereqFindClassAbility(abilityName);
+          if(ability != null){
+            if(ability.selectType != 'SELECTOR'){
+              // For long prereqs that go into more detail, the answer is most likely unknown.
+              if(abilName.split(' ').length+3 >= normalPreReq.split(' ').length){
+                return 'TRUE';
+              } else {
+                return 'UNKNOWN';
+              }
+            }
+          }
         }
       }
 
       for(let ability of wscChoiceStruct.ClassDetails.Abilities){
-        let abilNameCut = ability.name.toLowerCase().split('(')[0];
-        if(abilNameCut.includes(normalPreReq) || normalPreReq.includes(abilNameCut)) {
-          return 'FALSE';
+        let abilName = ability.name.toLowerCase().split('(')[0];
+        if(normalPreReq === abilName){ return 'FALSE'; }
+        if(normalPreReq.includes(abilName) || abilName.includes(normalPreReq)){
+          if(ability.selectType != 'SELECTOR'){
+            // For long prereqs that go into more detail, the answer is most likely unknown.
+            if(abilName.split(' ').length+3 >= normalPreReq.split(' ').length){
+              return 'FALSE';
+            } else {
+              return 'UNKNOWN';
+            }
+          }
         }
       }
 
@@ -216,4 +332,14 @@ function preReqCheckClassAbilities(prereq, normalPreReq){
   } else {
     return null;
   }
+}
+
+function prereqFindClassAbility(abilityName){
+  abilityName = abilityName.toLowerCase();
+  for(let ability of wscChoiceStruct.ClassDetails.Abilities){
+    if(abilityName === ability.name.toLowerCase()) {
+      return ability;
+    }
+  }
+  return null;
 }

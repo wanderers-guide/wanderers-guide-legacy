@@ -48,12 +48,12 @@ module.exports = class SocketConnections {
         });
       });
 
-      socket.on('requestFinalProfs', function(charID){
+      socket.on('requestFinalProfsAndSkills', function(charID){
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
           if(ownsChar){
             CharGathering.getFinalProfs(charID).then((profMap) => {
               CharGathering.getAllSkills(charID).then((skillObject) => {
-                socket.emit('returnFinalProfs', mapToObj(profMap), skillObject);
+                socket.emit('requestFinalProfsAndSkills', mapToObj(profMap), skillObject);
               });
             });
           }
@@ -1345,6 +1345,19 @@ module.exports = class SocketConnections {
                   socket.emit('returnNotesFieldChange', newNotesData, locationID);
                 });
               }
+            });
+          } else {
+            socket.emit('returnWSCStatementFailure', 'Incorrect Auth');
+          }
+        });
+      });
+
+      socket.on('requestNotesFieldDelete', function(charID, srcStruct){
+        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+          if(ownsChar){
+            CharDataMapping.deleteData(charID, 'notesField', srcStruct)
+            .then((result) => {
+              socket.emit('returnNotesFieldDelete', srcStruct);
             });
           } else {
             socket.emit('returnWSCStatementFailure', 'Incorrect Auth');

@@ -13,11 +13,14 @@ function openSkillQuickview(data) {
         };
     }
 
+    let noteFieldID = 'skill-'+data.SkillName.replace(/\s/g, "_");
+
     $('#quickViewTitle').html(data.SkillName);
     $('#quickViewTitleRight').html('<button id="customizeProfBtn" class="button is-very-small is-success is-outlined is-rounded is-pulled-right mr-1">Customize</button>');
     $('#customizeProfBtn').click(function(){
         openQuickView('customizeProfView', {
             ProfData : data.ProfData,
+            NoteFieldID : noteFieldID,
             _prevBackData: {Type: g_QViewLastType, Data: g_QViewLastData},
         }, $('#quickviewDefault').hasClass('is-active'));
     });
@@ -113,5 +116,14 @@ function openSkillQuickview(data) {
         }
 
     }
+
+    // Display Note Field
+    let noteFieldSrcStruct = {
+        sourceType: 'bonus-area',
+        sourceLevel: 0,
+        sourceCode: 'bonus-area-'+noteFieldID,
+        sourceCodeSNum: 'a',
+    };
+    displayNotesField(qContent, noteFieldSrcStruct);
 
 }
