@@ -166,6 +166,7 @@ function displayInventoryItem(invItem, openBagInvItemArray, data) {
     if(item == null) { return; }
     let itemIsStorage = (item.StorageData != null);
     let itemIsStorageAndEmpty = false;
+    let itemStorageBulkAmt = null;
 
     let invItemSectionID = 'invItemSection'+invItem.id;
     let invItemNameID = 'invItemName'+invItem.id;
@@ -211,6 +212,7 @@ function displayInventoryItem(invItem, openBagInvItemArray, data) {
             }
         }
         let roundedBagBulk = round(bagBulk, 2);
+        itemStorageBulkAmt = round(bagBulk-bulkIgnored, 2);
         $('#'+invItemStorageSectionID).append('<div class="tile is-parent is-paddingless pt-1 px-2"><div class="tile is-child is-1"></div><div class="tile is-child is-3 border-bottom border-dark-lighter"><p id="'+invItemStorageBulkAmountID+'" class="has-text-left pl-5 is-size-6 has-text-grey">Bulk '+roundedBagBulk+' / '+maxBagBulk+'</p></div><div class="tile is-child is-8 border-bottom border-dark-lighter"><p class="has-text-left pl-3 is-size-6 has-text-grey is-italic">'+bulkIgnoredMessage+'</p></div></div>');
 
         if(bagBulk > maxBagBulk){
@@ -376,8 +378,11 @@ function displayInventoryItem(invItem, openBagInvItemArray, data) {
     }
 
     let bulk = getConvertedBulkForSize(invItem.size, invItem.bulk);
+    if(item.StorageData != null){
+        if(item.StorageData.ignoreSelfBulkIfWearing == 1){ bulk = 0; }
+        if(itemStorageBulkAmt != null && itemStorageBulkAmt > 0) { bulk += itemStorageBulkAmt; }
+    }
     bulk = getBulkFromNumber(bulk);
-    if(item.StorageData != null && item.StorageData.ignoreSelfBulkIfWearing == 1){ bulk = '-'; }
     if(invItem.isDropped == 1) { bulk = '<span class="is-size-6-5">Dropped</span>'; }
     $('#'+invItemBulkID).html(bulk);
 
