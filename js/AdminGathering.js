@@ -114,8 +114,8 @@ module.exports = class AdminGathering {
                     for (const feat of feats) {
                         let fTags = [];
                         /*
-                            If a feat has a genTypeName then it's a single feat for a class or ancestry.
-                            Search and give it the trait for that class or ancestry.
+                            If a feat has a genTypeName then it's a single feat for a class, ancestry, or uniHeritage.
+                            Search and give it the trait for that class, ancestry, or uniHeritage.
                         */
                         if(feat.genTypeName != null){
                             let tag = tags.find(tag => {

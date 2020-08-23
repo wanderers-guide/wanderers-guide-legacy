@@ -276,7 +276,7 @@ function handleSpellLinkExt(match, linkName, innerTextDisplay, innerTextName) {
         let spellName = spellDataStruct.Spell.name.toUpperCase();
         if(innerTextName === spellName && spellDataStruct.Spell.isArchived == 0) {
             let spellLinkClass = 'spellTextLink'+spellDataStruct.Spell.id;
-            let spellLinkText = '<span class="'+spellLinkClass+' has-text-info-lighter cursor-clickable">'+innerTextDisplay+'</span>';
+            let spellLinkText = '<span class="'+spellLinkClass+' has-text-info-lighter is-italic cursor-clickable">'+innerTextDisplay+'</span>';
             setTimeout(function() {
                 $('.'+spellLinkClass).off('click');
                 $('.'+spellLinkClass).click(function(){

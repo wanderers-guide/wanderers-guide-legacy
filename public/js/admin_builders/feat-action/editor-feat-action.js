@@ -6,11 +6,12 @@ $(function () {
 
 });
 
-socket.on("returnAdminFeatDetailsPlus", function(featsObject, classObject, ancestryObject){
+socket.on("returnAdminFeatDetailsPlus", function(featsObject, classObject, ancestryObject, uniHeritageArray){
 
     let featMap = objToMap(featsObject);
     g_classMap = objToMap(classObject);
     g_ancestryMap = objToMap(ancestryObject);
+    g_uniHeritageArray = uniHeritageArray;
     
     let feat = featMap.get(getFeatEditorIDFromURL()+"");
 
@@ -85,6 +86,11 @@ function getAncestryIDFromFeat(feat){
     for(const [ancestryID, ancestryData] of g_ancestryMap.entries()){
         if(ancestryData.Ancestry.isArchived === 0 && ancestryData.Ancestry.name === feat.Feat.genTypeName){
             return ancestryID;
+        }
+    }
+    for(const uniHeritage of g_uniHeritageArray){
+        if(uniHeritage.isArchived === 0 && uniHeritage.name === feat.Feat.genTypeName){
+            return uniHeritage.name;
         }
     }
     return null;

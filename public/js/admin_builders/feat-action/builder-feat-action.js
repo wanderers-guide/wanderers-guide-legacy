@@ -6,6 +6,7 @@ let socket = io();
 
 let g_classMap = null;
 let g_ancestryMap = null;
+let g_uniHeritageArray = null;
 
 // ~~~~~~~~~~~~~~ // Run on Load // ~~~~~~~~~~~~~~ //
 $(function () {
@@ -14,7 +15,7 @@ $(function () {
 
 });
 
-socket.on("returnAdminFeatDetailsPlus", function(featsObject, classObject, ancestryObject){
+socket.on("returnAdminFeatDetailsPlus", function(featsObject, classObject, ancestryObject, uniHeritageArray){
 
     g_classMap = objToMap(classObject);
     g_classMap = new Map([...g_classMap.entries()].sort(
@@ -30,6 +31,8 @@ socket.on("returnAdminFeatDetailsPlus", function(featsObject, classObject, ances
         })
     );
 
+    g_uniHeritageArray = uniHeritageArray;
+
 
     $('#inputClassOptions').html('');
     for(const [classID, classData] of g_classMap.entries()){
@@ -42,6 +45,11 @@ socket.on("returnAdminFeatDetailsPlus", function(featsObject, classObject, ances
     for(const [ancestryID, ancestryData] of g_ancestryMap.entries()){
         if(ancestryData.Ancestry.isArchived === 0){
             $('#inputAncestryOptions').append('<option value="'+ancestryID+'">'+ancestryData.Ancestry.name+'</option>');
+        }
+    }
+    for(const uniHeritage of g_uniHeritageArray){
+        if(uniHeritage.isArchived === 0){
+            $('#inputAncestryOptions').append('<option value="'+uniHeritage.name+'">'+uniHeritage.name+'</option>');
         }
     }
 
@@ -148,9 +156,13 @@ function finishFeat(isUpdate){
         
     } else if($("#inputAncestryOptions").is(":visible")) {
         let ancestryID = $('#inputAncestryOptions').val();
-        let ancestryData = g_ancestryMap.get(ancestryID+"");
-        if(ancestryData != null){
-            featGenTypeName = ancestryData.Ancestry.name;
+        if(isNaN(ancestryID)){
+            featGenTypeName = ancestryID; // Must be UniHeritage Name
+        } else {
+            let ancestryData = g_ancestryMap.get(ancestryID+"");
+            if(ancestryData != null){
+                featGenTypeName = ancestryData.Ancestry.name;
+            }
         }
     }
 

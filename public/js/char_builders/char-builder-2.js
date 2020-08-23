@@ -545,6 +545,7 @@ function displayCurrentHeritage(ancestryStruct, heritageID, isUniversal) {
                 return heritage.id == heritageID;
             });
         }
+        wscChoiceStruct.Heritage = heritage;
     
         let heritageDescription = $('#heritageDescription');
         heritageDescription.html(processText(heritage.description, false, null, 'MEDIUM', false));
@@ -564,6 +565,8 @@ function displayCurrentHeritage(ancestryStruct, heritageID, isUniversal) {
             'heritageCodeOutput');
 
     } else {
+
+        wscChoiceStruct.Heritage = null;
 
         let heritageDescription = $('#heritageDescription');
         heritageDescription.html('');

@@ -432,8 +432,8 @@ select {
 }
 .prereq-unknown {
     text-decoration: underline;
-    -webkit-text-decoration-color: hsl(48, 65%, 43%); /* Safari */  
-    text-decoration-color: hsl(48, 61%, 57%);
+    -webkit-text-decoration-color: hsl(48, 43%, 51%); /* Safari */  
+    text-decoration-color: hsl(48, 43%, 51%);
 }
 
 /* Feat Selection Scrollbar */

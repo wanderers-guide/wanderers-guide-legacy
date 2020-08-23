@@ -56,6 +56,9 @@ function preReqResultArray(feat){
     result = preReqCheckAbilityScores(uPreReq);
     if(result != null) { resultArray.push({Type: 'ABILITY-SCORE', Result: result, PreReqPart: prereq}); continue; }
 
+    result = preReqCheckHeritages(uPreReq, prereq);
+    if(result != null) { resultArray.push({Type: 'HERITAGE', Result: result, PreReqPart: prereq}); continue; }
+
     result = prereqListChecking('FEAT', uPreReq, prereq);
     if(result != null) { resultArray.push({Type: 'FEAT', Result: result, PreReqPart: prereq}); continue; }
 
@@ -122,7 +125,6 @@ function preReqConfirmAbilityScore(scoreType, amt){
 }
 
 
-
 // Prereq List Middleware //
 function prereqListChecking(type, prereq, oData) {
 
@@ -152,6 +154,8 @@ function prereqListChecking(type, prereq, oData) {
       result = preReqCheckFeats(subPre, oData);
     } else if(type == 'CLASS-FEATURE'){
       result = preReqCheckClassAbilities(subPre, oData);
+    } else if(type == 'HERITAGE'){
+      result = preReqConfirmHeritage(subPre);
     } else {
       result = 'FALSE';
     }
@@ -178,6 +182,27 @@ function prereqListChecking(type, prereq, oData) {
 }
 
 
+// Prereq Heritage Checking //
+function preReqCheckHeritages(prereq, normalPreReq){
+  if(prereq.toLowerCase() === normalPreReq){
+    let rHeritage = prereq.match(/(.+) HERITAGE/);
+    if(rHeritage != null){
+      return prereqListChecking('HERITAGE', rHeritage[1], null);
+    } else {
+      return null;
+    }
+  } else {
+    return null;
+  }
+}
+
+function preReqConfirmHeritage(heritageName){
+  if(wscChoiceStruct.Heritage != null && heritageName === wscChoiceStruct.Heritage.name.toUpperCase()){
+    return 'TRUE';
+  } else {
+    return 'FALSE';
+  }
+}
 
 // Prereq Profs Checking //
 function preReqCheckProfs(prereq){

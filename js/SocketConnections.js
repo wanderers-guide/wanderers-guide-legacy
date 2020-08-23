@@ -1621,7 +1621,9 @@ module.exports = class SocketConnections {
             AdminGathering.getAllFeats().then((featsObject) => {
               AdminGathering.getAllClasses().then((classObject) => {
                 AdminGathering.getAllAncestries(true).then((ancestriesObject) => {
-                  socket.emit('returnAdminFeatDetailsPlus', featsObject, classObject, ancestriesObject);
+                  AdminGathering.getAllUniHeritages().then((uniHeritageArray) => {
+                    socket.emit('returnAdminFeatDetailsPlus', featsObject, classObject, ancestriesObject, uniHeritageArray);
+                  });
                 });
               });
             });
