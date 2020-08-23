@@ -254,7 +254,7 @@ function openLeftSkillsQuickview(data) {
 
   qContent.append('<hr class="m-2">');
 
-  qContent.append('<div class="columns px-5 is-marginless"><div id="skillsColumnOne" class="column is-6"></div><div id="skillsColumnTwo" class="column is-6"></div></div>');
+  qContent.append('<div class="columns is-centered is-marginless"><div id="skillsColumnOne" class="column pl-0 is-half-tablet is-two-fifths-desktop"></div><div id="skillsColumnTwo" class="column pr-0 is-half-tablet is-two-fifths-desktop"></div></div>');
 
   let switchColumnNum = Math.ceil(g_skillMap.size/2);
   let skillCount = 0;
@@ -268,7 +268,7 @@ function openLeftSkillsQuickview(data) {
       skillsColumnID = "skillsColumnOne";
     }
 
-    $('#'+skillsColumnID).append('<div><span class="is-size-6 has-text-grey-light">'+skillData.Name+'</span><span class="is-size-6-5 has-text-grey is-italic"> - '+getProfNameFromNumUps(skillData.NumUps)+'</span></div>');
+    $('#'+skillsColumnID).append('<div><span class="is-size-6 has-text-grey-light">'+skillData.Name+'</span><span class="is-size-7 has-text-grey is-italic"> - '+getProfNameFromNumUps(skillData.NumUps)+'</span></div>');
   }
 
   qContent.append('<hr class="m-2">');

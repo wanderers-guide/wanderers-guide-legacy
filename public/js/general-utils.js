@@ -95,7 +95,8 @@ function getProfNameFromNumUps(numUps) {
 function profToWord(prof){
   if(prof != null) {prof = prof.toUpperCase();}
   switch(prof) {
-    case "UNTRAINED": return "U";
+    case "UNTRAINED": return "Untrained";
+    case "U": return "Untrained";
     case "TRAINED": return "Trained";
     case "T": return "Trained";
     case "EXPERT": return "Expert";

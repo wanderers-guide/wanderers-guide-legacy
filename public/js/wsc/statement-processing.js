@@ -52,7 +52,7 @@ function processSheetCode(wscCode, sourceName, isTest=false){
             let adjustmentData = (wscStatement.split('-')[2]).split('=');
             let adjustmentTowards = adjustmentData[0];
             let adjustmentNumInfoData = (adjustmentData[1]).split('~');
-            let adjustmentNum = parseInt(adjustmentNumInfoData[0]);
+            let adjustmentNum = getSheetProcNumber(adjustmentNumInfoData[0]);
             let adjustmentCondition = adjustmentNumInfoData[1];
             addConditionalStat(adjustmentTowards, adjustmentCondition, adjustmentNum);
 
@@ -66,7 +66,7 @@ function processSheetCode(wscCode, sourceName, isTest=false){
             let adjustmentData = (wscStatement.split('-')[2]).split('=');
             let adjustmentTowards = adjustmentData[0];
             let adjustmentNumInfoData = (adjustmentData[1]).split('~');
-            let adjustmentNum = parseInt(adjustmentNumInfoData[0]);
+            let adjustmentNum = getSheetProcNumber(adjustmentNumInfoData[0]);
             let adjustmentCondition = adjustmentNumInfoData[1];
             addConditionalStat(adjustmentTowards, adjustmentCondition, -1*adjustmentNum);
 
@@ -93,7 +93,7 @@ function processSheetCode(wscCode, sourceName, isTest=false){
             let adjustmentData = adjValData[1].split('=');
             let adjustmentTowards = adjustmentData[0];
 
-            let adjustmentNum = parseInt(adjustmentData[1]);
+            let adjustmentNum = getSheetProcNumber(adjustmentData[1]);
             let adjustmentSource = 'OTHER-'+sourceName;
             if(adjValData[2] != null) {
                 adjustmentSource = adjValData[2];
@@ -112,7 +112,7 @@ function processSheetCode(wscCode, sourceName, isTest=false){
             let adjustmentData = adjValData[1].split('=');
             let adjustmentTowards = adjustmentData[0];
 
-            let adjustmentNum = parseInt(adjustmentData[1]);
+            let adjustmentNum = getSheetProcNumber(adjustmentData[1]);
             let adjustmentSource = 'OTHER-'+sourceName;
             if(adjValData[2] != null) {
                 adjustmentSource = adjValData[2];
@@ -132,7 +132,7 @@ function processSheetCode(wscCode, sourceName, isTest=false){
 
             let overrideTowards = overrideData[0];
             let overrideSource = adjValData[2];
-            let overrideNum = parseInt(overrideData[1]);
+            let overrideNum = getSheetProcNumber(overrideData[1]);
 
             if(overrideTowards.endsWith('_PENALTY')){
                 overrideNum = -1*overrideNum;
@@ -212,4 +212,16 @@ function processSheetCode(wscCode, sourceName, isTest=false){
 
     return success;
 
+}
+
+
+function getSheetProcNumber(strNum){
+    strNum = strNum.toUpperCase().trim();
+    if(strNum == 'LEVEL'){
+        return g_character.level;
+    } else if(strNum == 'HALF_LEVEL'){
+        return Math.floor(g_character.level/2);
+    } else {
+        return parseInt(strNum);
+    }
 }
