@@ -8,6 +8,10 @@ const Heritage = db.define('heritages', {
   ancestryID: {
     type: Sequelize.INTEGER
   },
+  rarity: {
+    type: Sequelize.ENUM,
+    values: ['COMMON', 'UNCOMMON', 'RARE', 'UNIQUE']
+  },
   description: {
     type: Sequelize.TEXT
   },

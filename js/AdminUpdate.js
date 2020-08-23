@@ -773,6 +773,7 @@ module.exports = class AdminUpdate {
             uniHeritageID,
             heritageName,
             heritageVersion,
+            heritageRarity,
             heritageDescription,
             heritageContentSrc,
             heritageCode,
@@ -791,6 +792,7 @@ module.exports = class AdminUpdate {
             return UniHeritage.create({ // Create Heritage
                 name: data.heritageName,
                 version: data.heritageVersion,
+                rarity: data.heritageRarity,
                 description: data.heritageDescription,
                 tagID: heritageTag.id,
                 contentSrc: data.heritageContentSrc,

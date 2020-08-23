@@ -504,18 +504,18 @@ function displayHeritageSelectOptions(ancestryStruct, charHeritage){
     if(isUniversalHeritage()){
         for(const uniHeritage of g_uniHeritageArray){
             if(charHeritage != null && charHeritage.tagID != null && charHeritage.id == uniHeritage.id) {
-                selectHeritage.append('<option value="'+uniHeritage.id+'" selected>'+uniHeritage.name+'</option>');
+                selectHeritage.append('<option value="'+uniHeritage.id+'" class="'+selectOptionRarity(uniHeritage.rarity)+'" selected>'+uniHeritage.name+'</option>');
             } else {
-                selectHeritage.append('<option value="'+uniHeritage.id+'">'+uniHeritage.name+'</option>');
+                selectHeritage.append('<option value="'+uniHeritage.id+'" class="'+selectOptionRarity(uniHeritage.rarity)+'">'+uniHeritage.name+'</option>');
             }
         }
     } else {
         if(ancestryStruct != null){
             for(const heritage of ancestryStruct.Heritages){
                 if(charHeritage != null && charHeritage.tagID == null && charHeritage.id == heritage.id) {
-                    selectHeritage.append('<option value="'+heritage.id+'" selected>'+heritage.name+'</option>');
+                    selectHeritage.append('<option value="'+heritage.id+'" class="'+selectOptionRarity(heritage.rarity)+'" selected>'+heritage.name+'</option>');
                 } else {
-                    selectHeritage.append('<option value="'+heritage.id+'">'+heritage.name+'</option>');
+                    selectHeritage.append('<option value="'+heritage.id+'" class="'+selectOptionRarity(heritage.rarity)+'">'+heritage.name+'</option>');
                 }
             }
         }

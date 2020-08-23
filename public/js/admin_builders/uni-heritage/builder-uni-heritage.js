@@ -62,6 +62,7 @@ function finishUniHeritage(isUpdate){
 
     let heritageName = $("#inputName").val();
     let heritageVersion = $("#inputVersion").val();
+    let heritageRarity = $("#inputRarity").val();
     let heritageDescription = $("#inputDescription").val();
     let heritageContentSrc = $("#inputContentSource").val();
     let heritageCode = $("#inputCode").val();
@@ -115,6 +116,7 @@ function finishUniHeritage(isUpdate){
         uniHeritageID,
         heritageName,
         heritageVersion,
+        heritageRarity,
         heritageDescription,
         heritageContentSrc,
         heritageCode,

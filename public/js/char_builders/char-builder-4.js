@@ -325,7 +325,7 @@ function displayCurrentClass(classStruct, saving) {
                 sourceType: 'class',
                 sourceLevel: 1,
                 sourceCode: 'inits-misc-'+tSkillID,
-                sourceCodeSNum: 'a',
+                sourceCodeSNum: 'aa',
             };
             let profArray = choiceStruct.ProfArray;
             let tSkillChoice = profArray.find(bonus => {
