@@ -135,7 +135,7 @@ function displayCriticalSpecialization(qContent, item){
     qContent.append('<div id="itemCritSpecialSection" class="is-hidden"></div>');
     qContent.append('<hr class="m-2">');
 
-    $('#itemCritSpecialSection').append(processText(text, true, true, 'MEDIUM'));
+    $('#itemCritSpecialSection').append(processText(text, true, null, 'MEDIUM'));
 
     $('#itemCritSpecialName').click(function() {
         if($("#itemCritSpecialSection").hasClass("is-hidden")) {
