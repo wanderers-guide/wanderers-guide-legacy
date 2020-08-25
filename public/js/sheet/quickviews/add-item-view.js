@@ -46,7 +46,7 @@ function openAddItemQuickview(data) {
 
     $('#itemTabAlchemical').click(function(){
         $('#allItemsFilterBySubcategory').parent().parent().removeClass('is-hidden');
-        $('#allItemsFilterBySubcategory').html('<option value="ALL">Category</option><option value="BOMB">Bomb</option><option value="ELIXIR">Elixir</option><option value="INGREDIENT">Ingredient</option><option value="POISON">Poison</option><option value="TOOL">Tool</option><option value="OTHER">Other</option>');
+        $('#allItemsFilterBySubcategory').html('<option value="ALL">Category</option><option value="BOMB">Bomb</option><option value="DRUG">Drug</option><option value="ELIXIR">Elixir</option><option value="INGREDIENT">Ingredient</option><option value="POISON">Poison</option><option value="TOOL">Tool</option><option value="OTHER">Other</option>');
         $('#allItemSearch').attr('placeholder', 'Search Alchemical Items');
         changeItemCategoryTab('itemTabAlchemical', data);
     });
