@@ -46,8 +46,9 @@ function giveSkill(srcStruct, locationID, profType){
     populateSkillLists(selectIncreaseID, srcStruct, profType);
 
     // On increase choice change
-    $('#'+selectIncreaseID).change(function(event, dontCheckDups) {
+    $('#'+selectIncreaseID).change(function(event, isAutoLoad) {
         $('#'+increaseCodeID).html('');
+        isAutoLoad = (isAutoLoad == null) ? false : isAutoLoad;
 
         if($(this).val() == "chooseDefault"){
 
@@ -61,7 +62,7 @@ function giveSkill(srcStruct, locationID, profType){
             skillsUpdateWSCChoiceStruct(srcStruct, null, null);
             socket.emit("requestProficiencyChange",
                 getCharIDFromURL(),
-                {srcStruct, isSkill : true},
+                {srcStruct, isSkill : true, isAutoLoad},
                 null);
 
         } else if($(this).val() == "addLore"){
@@ -76,7 +77,7 @@ function giveSkill(srcStruct, locationID, profType){
             skillsUpdateWSCChoiceStruct(srcStruct, 'addLore', profType);
             socket.emit("requestProficiencyChange",
                 getCharIDFromURL(),
-                {srcStruct, isSkill : true},
+                {srcStruct, isSkill : true, isAutoLoad},
                 { For : "Skill", To : 'addLore', Prof : profType });
             processCode(
                 'GIVE-LORE-CHOOSE',
@@ -91,7 +92,7 @@ function giveSkill(srcStruct, locationID, profType){
             if(profType === 'UP') {
                 let skillName = $('#'+selectIncreaseID).val();
                 let numUps = g_skillMap.get(skillName).NumUps;
-                if(dontCheckDups || isAbleToSelectIncrease(numUps+1, wscChoiceStruct.Character.level)) {
+                if(isAutoLoad || isAbleToSelectIncrease(numUps+1, wscChoiceStruct.Character.level)) {
                     canSave = true;
                     $('#'+increaseDescriptionID).html('');
                 } else {
@@ -113,7 +114,7 @@ function giveSkill(srcStruct, locationID, profType){
                 skillsUpdateWSCChoiceStruct(srcStruct, skillName, profType);
                 socket.emit("requestProficiencyChange",
                     getCharIDFromURL(),
-                    {srcStruct, isSkill : true},
+                    {srcStruct, isSkill : true, isAutoLoad},
                     { For : "Skill", To : skillName, Prof : profType });
             }
             
@@ -195,6 +196,8 @@ function populateSkillLists(selectIncreaseID, srcStruct, profType){
         } else {
             if(skillData.NumUps < profToNumUp(profType)) {
                 $('#'+selectIncreaseID).append('<option value="'+skillName+'">'+skillName+'</option>');
+            } else {
+              $('#'+selectIncreaseID).append('<option value="'+skillName+'" class="is-non-available">'+skillName+'</option>');
             }
         }
 
@@ -227,7 +230,9 @@ socket.on("returnProficiencyChange", function(profChangePacket){
 
     if(profChangePacket.isSkill){
         selectorUpdated();
-        updateSkillMap(false);
+        if(profChangePacket.isAutoLoad == null || !profChangePacket.isAutoLoad) {
+          updateSkillMap(true);
+        }
     }
     if(profChangePacket.isStatement != null && profChangePacket.isStatement){
         statementComplete();

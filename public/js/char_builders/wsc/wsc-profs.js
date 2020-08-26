@@ -71,6 +71,7 @@ function giveProfSkillTraining(srcStruct, profName, prof, locationID){
             }
         }
 
+        skillsUpdateWSCChoiceStruct(srcStruct, profProperName, prof);
         socket.emit("requestProficiencyChange",
             getCharIDFromURL(),
             {srcStruct, isSkill : true, isStatement : true},
@@ -120,6 +121,9 @@ function giveInProf(srcStruct, profName, prof){
     }
 
     if(profProperName != null && profCategory != null){
+        if(isSkill){
+            skillsUpdateWSCChoiceStruct(srcStruct, profProperName, prof);
+        }
         socket.emit("requestProficiencyChange",
             getCharIDFromURL(),
             {srcStruct, isSkill : isSkill, isStatement : true},

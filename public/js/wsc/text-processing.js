@@ -220,7 +220,8 @@ function handleFeatLinkExt(match, linkName, innerTextDisplay, innerTextName) {
             let featLinkText = '<span class="'+featLinkClass+' has-text-info-lighter cursor-clickable">'+innerTextDisplay+'</span>';
             setTimeout(function() {
                 $('.'+featLinkClass).off('click');
-                $('.'+featLinkClass).click(function(){
+                $('.'+featLinkClass).click(function(event){
+                    if($('#quickviewDefault').hasClass('is-active')) { event.stopImmediatePropagation(); }
                     openQuickView('featView', {
                         Feat : featStruct.Feat,
                         Tags : featStruct.Tags,
@@ -252,7 +253,8 @@ function handleItemLinkExt(match, linkName, innerTextDisplay, innerTextName) {
             let itemLinkText = '<span class="'+itemLinkClass+' has-text-info-lighter cursor-clickable">'+innerTextDisplay+'</span>';
             setTimeout(function() {
                 $('.'+itemLinkClass).off('click');
-                $('.'+itemLinkClass).click(function(){
+                $('.'+itemLinkClass).click(function(event){
+                    if($('#quickviewDefault').hasClass('is-active')) { event.stopImmediatePropagation(); }
                     openQuickView('itemView', {
                         ItemDataStruct : itemDataStruct,
                         _prevBackData: {Type: g_QViewLastType, Data: g_QViewLastData},
@@ -279,7 +281,8 @@ function handleSpellLinkExt(match, linkName, innerTextDisplay, innerTextName) {
             let spellLinkText = '<span class="'+spellLinkClass+' has-text-info-lighter is-italic cursor-clickable">'+innerTextDisplay+'</span>';
             setTimeout(function() {
                 $('.'+spellLinkClass).off('click');
-                $('.'+spellLinkClass).click(function(){
+                $('.'+spellLinkClass).click(function(event){
+                    if($('#quickviewDefault').hasClass('is-active')) { event.stopImmediatePropagation(); }
                     openQuickView('spellView', {
                         SpellDataStruct: spellDataStruct,
                         _prevBackData: {Type: g_QViewLastType, Data: g_QViewLastData},
@@ -306,7 +309,8 @@ function handleLanguageLinkExt(match, linkName, innerTextDisplay, innerTextName)
             let langLinkText = '<span class="'+langLinkClass+' has-text-info-lighter cursor-clickable">'+innerTextDisplay+'</span>';
             setTimeout(function() {
                 $('.'+langLinkClass).off('click');
-                $('.'+langLinkClass).click(function(){
+                $('.'+langLinkClass).click(function(event){
+                    if($('#quickviewDefault').hasClass('is-active')) { event.stopImmediatePropagation(); }
                     openQuickView('languageView', {
                         Language : language,
                         _prevBackData: {Type: g_QViewLastType, Data: g_QViewLastData},
@@ -351,7 +355,8 @@ function handleIndexConditions(text){
         text = text.replace(conditionNameRegex, conditionLinkText);
         setTimeout(function() {
             $('.'+conditionLinkClass).off('click');
-            $('.'+conditionLinkClass).click(function(){
+            $('.'+conditionLinkClass).click(function(event){
+                if($('#quickviewDefault').hasClass('is-active')) { event.stopImmediatePropagation(); }
                 openQuickView('conditionView', {
                     Condition : condition,
                     _prevBackData: {Type: g_QViewLastType, Data: g_QViewLastData},

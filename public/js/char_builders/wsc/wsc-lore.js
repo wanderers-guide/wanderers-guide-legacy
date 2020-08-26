@@ -31,7 +31,8 @@ function giveLoreChoose(srcStruct, locationID){
         return hasSameSrc(loreData, srcStruct);
     });
 
-    $('#'+inputLoreID).change(function(){
+    $('#'+inputLoreID).change(function(event, isAutoLoad){
+        isAutoLoad = (isAutoLoad == null) ? false : isAutoLoad;
 
         if($(this).val() == ''){
 
@@ -41,7 +42,7 @@ function giveLoreChoose(srcStruct, locationID){
                 getCharIDFromURL(),
                 srcStruct,
                 null,
-                { ControlShellID: inputLoreControlShell});
+                { ControlShellID: inputLoreControlShell, isAutoLoad});
 
         } else {
 
@@ -54,7 +55,7 @@ function giveLoreChoose(srcStruct, locationID){
                     getCharIDFromURL(),
                     srcStruct,
                     $(this).val().toUpperCase(),
-                    { ControlShellID: inputLoreControlShell});
+                    { ControlShellID: inputLoreControlShell, isAutoLoad});
 
             } else {
                 $(this).addClass("is-danger");
@@ -66,7 +67,7 @@ function giveLoreChoose(srcStruct, locationID){
 
     if(savedLoreData != null){
         $('#'+inputLoreID).val(capitalizeWords(savedLoreData.value));
-        $('#'+inputLoreID).trigger("change");
+        $('#'+inputLoreID).trigger("change", [true]);
     }
 
     statementComplete();
@@ -98,7 +99,9 @@ socket.on("returnLoreChange", function(srcStruct, loreName, inputPacket){
     } else {
         skillsUpdateWSCChoiceStruct(srcStruct, null, null);
     }
-    updateSkillMap(true);
+    if(inputPacket == null || inputPacket.isAutoLoad == null || !inputPacket.isAutoLoad) {
+      updateSkillMap(true);
+    }
 
 });
 

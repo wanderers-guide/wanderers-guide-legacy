@@ -721,14 +721,14 @@ module.exports = class SocketConnections {
         });
       });
 
-      socket.on('requestLangsAndTrainingsClear', function(charID, srcStruct, dataPacket){
+      socket.on('requestLangsAndTrainingsClear', function(charID, srcStruct){
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
           if(ownsChar){
             CharDataMapping.deleteData(charID, 'languages', srcStruct)
             .then((result) => {
               CharDataMapping.deleteData(charID, 'proficiencies', srcStruct)
               .then((result) => {
-                socket.emit('returnLangsAndTrainingsClear', srcStruct, dataPacket);
+                socket.emit('returnLangsAndTrainingsClear', srcStruct);
               });
             });
           }

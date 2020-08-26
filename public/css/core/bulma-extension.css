@@ -103,6 +103,9 @@
 select .is-non-available {
   background-color: hsl(0, 0%, 18%);
 }
+select .is-non-available-very {
+  background-color: hsl(0, 0%, 15%);
+}
 select .is-uncommon {
   background-color: hsl(158, 25%, 22%);
 }
@@ -115,6 +118,9 @@ select .is-unique {
 
 .feat-selection-list-entry.is-non-available {
   background-color: hsl(0, 0%, 18%);
+}
+.feat-selection-list-entry.is-non-available-very {
+  background-color: hsl(0, 0%, 15%);
 }
 .feat-selection-list-entry.is-uncommon {
   background-color: hsl(158, 25%, 22%);

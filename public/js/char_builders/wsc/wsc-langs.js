@@ -29,7 +29,7 @@ function giveLang(srcStruct, locationID, bonusOnly){
     let selectLangControlShellClass = selectLangID+'ControlShell';
     let langDescriptionID = selectLangID+"Description";
 
-    $('#'+locationID).append('<div class="field is-grouped is-grouped-centered is-marginless"><div class="select '+selectLangControlShellClass+'"><select id="'+selectLangID+'" class="selectLang"></select></div></div>');
+    $('#'+locationID).append('<div class="field is-grouped is-grouped-centered is-marginless mt-1"><div class="select '+selectLangControlShellClass+'"><select id="'+selectLangID+'" class="selectLang"></select></div></div>');
 
     $('#'+locationID).append('<div class="columns is-centered is-marginless pb-2"><div id="'+langDescriptionID+'" class="column is-8 is-paddingless"></div></div>');
 
@@ -75,6 +75,7 @@ function giveLang(srcStruct, locationID, bonusOnly){
             $('.'+selectLangControlShellClass).removeClass("is-danger");
             $('.'+selectLangControlShellClass).addClass("is-info");
 
+            langsUpdateWSCChoiceStruct(srcStruct, null);
             socket.emit("requestLanguageChange",
                 getCharIDFromURL(),
                 srcStruct,
@@ -95,6 +96,7 @@ function giveLang(srcStruct, locationID, bonusOnly){
 
                     $('#'+langDescriptionID).html('');
 
+                    langsUpdateWSCChoiceStruct(srcStruct, langID);
                     socket.emit("requestLanguageChange",
                         getCharIDFromURL(),
                         srcStruct,
@@ -111,6 +113,7 @@ function giveLang(srcStruct, locationID, bonusOnly){
 
                 $('#'+langDescriptionID).html('');
 
+                langsUpdateWSCChoiceStruct(srcStruct, langID);
                 socket.emit("requestLanguageChange",
                     getCharIDFromURL(),
                     srcStruct,
@@ -149,3 +152,33 @@ function giveLangByName(srcStruct, langName){
 socket.on("returnLanguageChangeByName", function(){
     statementComplete();
 });
+
+
+
+function langsUpdateWSCChoiceStruct(srcStruct, langID){
+    
+  let langArray = wscChoiceStruct.LangArray;
+  let langStruct = (langID != null) ? g_langMap.get(langID+"") : null;
+
+  let foundLangData = false;
+  for(let langData of langArray){
+    if(hasSameSrc(langData, srcStruct)){
+      foundLangData = true;
+      if(langStruct != null){
+        langData.value = langStruct.Lang;
+      } else {
+        langData.value = {};
+      }
+      break;
+    }
+  }
+
+  if(!foundLangData && langStruct != null){
+    let langData = cloneObj(srcStruct);
+    langData.value = langStruct.Lang;
+    langArray.push(langData);
+  }
+
+  wscChoiceStruct.LangArray = langArray;
+
+}

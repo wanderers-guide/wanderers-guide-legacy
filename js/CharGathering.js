@@ -934,66 +934,74 @@ module.exports = class CharGathering {
   
       return Character.findOne({ where: { id: charID } })
       .then((character) => {
-        return CharGathering.getCharHeritage(character)
-        .then((heritage) => {
-          return CharGathering.getAllAncestriesBasic(charID)
-          .then((ancestries) => {
-            return CharTags.getTags(charID)
-            .then((charTagsArray) => {
-              return CharGathering.getClass(charID, character.classID)
-              .then((classDetails) => {
-                return CharGathering.getChoicesFeats(charID)
-                .then((featDataArray) => {
-                  return CharGathering.getChoicesAbilityBonus(charID)
-                  .then((bonusDataArray) => {
-                    return CharDataMappingExt.getDataAllClassChoice(charID)
-                    .then((choiceDataArray) => {
-                      return CharDataMappingExt.getDataAllProficiencies(charID)
-                      .then((profDataArray) => {
-                        return CharDataMappingExt.getDataAllInnateSpell(charID)
-                        .then((innateSpellDataArray) => {
-                          return CharDataMapping.getDataAll(charID,"languages",Language)
-                          .then((langDataArray) => {
-                            return CharDataMapping.getDataAll(charID,"senses",SenseType)
-                            .then((senseDataArray) => {
-                              return CharDataMapping.getDataAll(charID,"phyFeats",PhysicalFeature)
-                              .then((phyFeatDataArray) => {
-                                return CharDataMapping.getDataAll(charID,"loreCategories",null)
-                                .then((loreDataArray) => {
-                                  return CharSpells.getFocusPoints(charID)
-                                  .then((focusPointDataArray) => {
-                                    return CharGathering.getFinalProfs(charID)
-                                    .then((profMap) => {
-                                      return CharGathering.getAllDomains()
-                                      .then((domains) => {
-                                        return CharGathering.getChoicesDomains(charID)
-                                        .then((domainDataArray) => {
-                                          return CharDataMapping.getDataAll(charID, "advancedDomains",Domain)
-                                          .then((advancedDomainDataArray) => {
+        return Background.findOne({ where: { id: character.backgroundID} })
+        .then((background) => {
+          return Ancestry.findOne({ where: { id: character.ancestryID} })
+          .then((ancestry) => {
+            return CharGathering.getCharHeritage(character)
+            .then((heritage) => {
+              return CharGathering.getAllAncestriesBasic(charID)
+              .then((ancestries) => {
+                return CharTags.getTags(charID)
+                .then((charTagsArray) => {
+                  return CharGathering.getClass(charID, character.classID)
+                  .then((classDetails) => {
+                    return CharGathering.getChoicesFeats(charID)
+                    .then((featDataArray) => {
+                      return CharGathering.getChoicesAbilityBonus(charID)
+                      .then((bonusDataArray) => {
+                        return CharDataMappingExt.getDataAllClassChoice(charID)
+                        .then((choiceDataArray) => {
+                          return CharDataMappingExt.getDataAllProficiencies(charID)
+                          .then((profDataArray) => {
+                            return CharDataMappingExt.getDataAllInnateSpell(charID)
+                            .then((innateSpellDataArray) => {
+                              return CharDataMapping.getDataAll(charID,"languages",Language)
+                              .then((langDataArray) => {
+                                return CharDataMapping.getDataAll(charID,"senses",SenseType)
+                                .then((senseDataArray) => {
+                                  return CharDataMapping.getDataAll(charID,"phyFeats",PhysicalFeature)
+                                  .then((phyFeatDataArray) => {
+                                    return CharDataMapping.getDataAll(charID,"loreCategories",null)
+                                    .then((loreDataArray) => {
+                                      return CharSpells.getFocusPoints(charID)
+                                      .then((focusPointDataArray) => {
+                                        return CharGathering.getFinalProfs(charID)
+                                        .then((profMap) => {
+                                          return CharGathering.getAllDomains()
+                                          .then((domains) => {
+                                            return CharGathering.getChoicesDomains(charID)
+                                            .then((domainDataArray) => {
+                                              return CharDataMapping.getDataAll(charID, "advancedDomains",Domain)
+                                              .then((advancedDomainDataArray) => {
 
-                                            let choiceStruct = {
-                                              Character: character,
-                                              Heritage: heritage,
-                                              ClassDetails: classDetails,
-                                              CharTagsArray: charTagsArray,
-                                              FeatArray: featDataArray,
-                                              BonusArray: bonusDataArray,
-                                              ChoiceArray: choiceDataArray,
-                                              ProfArray: profDataArray,
-                                              LangArray: langDataArray,
-                                              SenseArray: senseDataArray,
-                                              PhyFeatArray: phyFeatDataArray,
-                                              InnateSpellArray: innateSpellDataArray,
-                                              FinalProfObject: mapToObj(profMap),
-                                              AllDomains: domains,
-                                              AllAncestries: ancestries,
-                                              DomainArray: domainDataArray,
-                                              AdvancedDomainArray: advancedDomainDataArray,
-                                              FocusPointArray: focusPointDataArray,
-                                              LoreArray: loreDataArray,
-                                            };
-  
-                                            return choiceStruct;
+                                                let choiceStruct = {
+                                                  Character: character,
+                                                  Heritage: heritage,
+                                                  Background: background,
+                                                  Ancestry: ancestry,
+                                                  ClassDetails: classDetails,
+                                                  CharTagsArray: charTagsArray,
+                                                  FeatArray: featDataArray,
+                                                  BonusArray: bonusDataArray,
+                                                  ChoiceArray: choiceDataArray,
+                                                  ProfArray: profDataArray,
+                                                  LangArray: langDataArray,
+                                                  SenseArray: senseDataArray,
+                                                  PhyFeatArray: phyFeatDataArray,
+                                                  InnateSpellArray: innateSpellDataArray,
+                                                  FinalProfObject: mapToObj(profMap),
+                                                  AllDomains: domains,
+                                                  AllAncestries: ancestries,
+                                                  DomainArray: domainDataArray,
+                                                  AdvancedDomainArray: advancedDomainDataArray,
+                                                  FocusPointArray: focusPointDataArray,
+                                                  LoreArray: loreDataArray,
+                                                };
+      
+                                                return choiceStruct;
+                                              });
+                                            });
                                           });
                                         });
                                       });

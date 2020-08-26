@@ -90,8 +90,7 @@ socket.on("returnFinalizeDetails", function(coreDataStruct, character, cClass, a
         
         socket.emit("requestLangsAndTrainingsClear",
             getCharIDFromURL(),
-            srcStruct,
-            {cClass, ancestry, intScore});
+            srcStruct);
 
     } else {
 
@@ -145,29 +144,29 @@ function selectorUpdated() {
 }
 
 
-socket.on("returnLangsAndTrainingsClear", function(srcStruct, dataPacket){
+socket.on("returnLangsAndTrainingsClear", function(srcStruct){
 
     $(".finalize-content").removeClass("is-hidden");
         
     let giveSkillTrainingCode = '';
-    for (let i = 0; i < getMod(dataPacket.intScore)+dataPacket.cClass.tSkillsMore; i++) {
+    for (let i = 0; i < getMod(g_abilMap.get("INT"))+wscChoiceStruct.ClassDetails.Class.tSkillsMore; i++) {
         giveSkillTrainingCode += 'GIVE-SKILL=T\n';
     }
 
-    $('#trainSkills').append('<div id="skillSelection"></div>');
+    $('#trainSkills').html('<div id="skillSelection"></div>');
     processCode(
         giveSkillTrainingCode,
         srcStruct,
         'skillSelection');
 
     let giveLanguageCode = '';
-    let additionalLangs = getMod(dataPacket.intScore);
-    if(dataPacket.ancestry.name == 'Human'){ additionalLangs++; } // Hardcoded - ancestry named Human gains +1 langs. 
+    let additionalLangs = getMod(g_abilMap.get("INT"));
+    if(wscChoiceStruct.Ancestry.name == 'Human'){ additionalLangs++; } // Hardcoded - ancestry named Human gains +1 langs. 
     for (let i = 0; i < additionalLangs; i++) {
         giveLanguageCode += 'GIVE-LANG-BONUS-ONLY\n';
     }
 
-    $('#learnLanguages').append('<div id="langSelection"></div>');
+    $('#learnLanguages').html('<div id="langSelection"></div>');
     processCode(
         giveLanguageCode,
         srcStruct,

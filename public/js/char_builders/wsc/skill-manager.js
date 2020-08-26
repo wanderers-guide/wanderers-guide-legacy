@@ -268,9 +268,75 @@ function openLeftSkillsQuickview(data) {
       skillsColumnID = "skillsColumnOne";
     }
 
-    $('#'+skillsColumnID).append('<div><span class="is-size-6 has-text-grey-light">'+skillData.Name+'</span><span class="is-size-7 has-text-grey is-italic"> - '+getProfNameFromNumUps(skillData.NumUps)+'</span></div>');
+    $('#'+skillsColumnID).append('<div><span class="is-size-7 has-text-grey-kinda-light">'+getProfLetterFromNumUps(skillData.NumUps)+' - </span><span class="is-size-6 has-text-grey-light">'+skillData.Name+'</span></div>');
   }
 
+  qContent.append('<div><p class="is-size-7 has-text-grey-kinda-light has-text-centered is-italic" style="letter-spacing: 0px;">U = Untrained, T = Trained, E = Expert, M = Master, L = Legendary</span></p>');
+
   qContent.append('<hr class="m-2">');
+
+  qContent.append('<div class="columns is-centered is-marginless"><div id="finalSkillTrainingColumn" class="column pl-0"></div><div id="finalLanguagesColumn" class="column pr-0"></div></div>');
+
+  if(wscChoiceStruct.ClassDetails.Class != null){
+    let tSkillsMore = wscChoiceStruct.ClassDetails.Class.tSkillsMore;
+    $('#finalSkillTrainingColumn').append('<p class="is-size-5 has-text-centered"><span class="has-tooltip-top has-tooltip-multiline" data-tooltip="You become trained in an additional number of skills equal to an amount determined by your class ('+tSkillsMore+') plus your Intelligence modifier ('+getMod(g_abilMap.get("INT"))+').">Skill Training</span></p>');
+  }
+
+  if(wscChoiceStruct.Ancestry != null){
+    let humanExtraText = '';
+    if(wscChoiceStruct.Ancestry.name == 'Human'){ humanExtraText = ' Being a human gives you another language as well.'; }
+    $('#finalLanguagesColumn').append('<p class="is-size-5 has-text-centered"><span class="has-tooltip-top has-tooltip-multiline" data-tooltip="You learn an additional number of languages equal to your Intelligence modifier ('+getMod(g_abilMap.get("INT"))+').'+humanExtraText+' Your ancestry dictates what languages you can select from (the lighter options, listed at the top).">Languages</span></p>');
+  }
+
+  statsFinalSkillsAndLangs();
+
+}
+
+function statsFinalSkillsAndLangs(){
+
+  let srcStruct = {
+    sourceType: 'class',
+    sourceLevel: 1,
+    sourceCode: 'inits-bonus',
+    sourceCodeSNum: 'a',
+  };
+  
+  socket.emit("requestLangsAndTrainingsClear",
+      getCharIDFromURL(),
+      srcStruct,
+      null);
+
+  if(wscChoiceStruct.ClassDetails.Class != null){
+
+    let giveSkillTrainingCode = '';
+    for (let i = 0; i < getMod(g_abilMap.get("INT"))+wscChoiceStruct.ClassDetails.Class.tSkillsMore; i++) {
+        giveSkillTrainingCode += 'GIVE-SKILL=T\n';
+    }
+  
+    $('#finalSkillTrainingColumn').append('<div id="sideSkillSelection"></div>');
+    processCode(
+        giveSkillTrainingCode,
+        srcStruct,
+        'sideSkillSelection');
+
+
+  }
+
+  if(wscChoiceStruct.Ancestry != null){
+
+    let giveLanguageCode = '';
+    let additionalLangs = getMod(g_abilMap.get("INT"));
+    if(wscChoiceStruct.Ancestry.name == 'Human'){ additionalLangs++; } // Hardcoded - ancestry named Human gains +1 langs.  
+    for (let i = 0; i < additionalLangs; i++) {
+        giveLanguageCode += 'GIVE-LANG-BONUS-ONLY\n';
+    }
+  
+    $('#finalLanguagesColumn').append('<div id="sideLangSelection"></div>');
+    processCode(
+        giveLanguageCode,
+        srcStruct,
+        'sideLangSelection');
+
+  }
 
 }
