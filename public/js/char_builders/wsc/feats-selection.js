@@ -52,12 +52,9 @@ function generateFeatSelection(contentLocID, srcStruct, selectionName, featsArra
 
   let featListHTML = '';
   for(let featData of featsArray){
-    if(featListHTML != ''){ // If not first entry, put a divider
-      featListHTML += '<hr class="hr-feat-selection m-0"></hr>';
-    }
     if(featData.NewLevel != null){
       if(featData.NewLevel > 0){
-        featListHTML += '<div class="feat-selection-level"><span class="">Level '+featData.NewLevel+'</span></div>';
+        featListHTML += '<hr class="hr-feat-selection m-0"><div class="feat-selection-level"><span class="">Level '+featData.NewLevel+'</span></div>';
       }
     } else {
 
@@ -88,11 +85,11 @@ function generateFeatSelection(contentLocID, srcStruct, selectionName, featsArra
 
       let hasFeat = (featData.Feat.canSelectMultiple == 0 && hasDuplicateFeat(wscChoiceStruct.FeatArray, featData.Feat.id));
       if(selectedFeat != null && selectedFeat.Feat.id == featData.Feat.id){
-        featListHTML += '<div class="cursor-clickable feat-selection-list-entry is-prev-selected columns is-mobile m-0 p-0" data-feat-id="'+featData.Feat.id+'"><div class="column is-2 is-paddingless py-2 feat-selection-list-entry-view"></div><div class="column is-7 is-paddingless py-2 feat-selection-list-entry-view">'+featNameHTML+'</div><div class="column is-1 is-paddingless py-2 feat-selection-list-entry-view">'+rightInfoHTML+'</div><div class="column is-2 is-paddingless py-2 feat-selection-list-entry-choose"><button class="button is-very-small is-danger is-outlined is-rounded '+featRemoveButtonClass+'" data-feat-id="'+featData.Feat.id+'">Remove</button></div></div>';
+        featListHTML += '<hr class="hr-feat-selection m-0"><div class="cursor-clickable feat-selection-list-entry is-prev-selected columns is-mobile m-0 p-0" data-feat-id="'+featData.Feat.id+'"><div class="column is-2 is-paddingless py-2 feat-selection-list-entry-view"></div><div class="column is-7 is-paddingless py-2 feat-selection-list-entry-view">'+featNameHTML+'</div><div class="column is-1 is-paddingless py-2 feat-selection-list-entry-view">'+rightInfoHTML+'</div><div class="column is-2 is-paddingless py-2 feat-selection-list-entry-choose"><button class="button is-very-small is-danger is-outlined is-rounded '+featRemoveButtonClass+'" data-feat-id="'+featData.Feat.id+'">Remove</button></div></div>';
       } else if(hasFeat) {
-        featListHTML += '<div class="cursor-clickable feat-selection-list-entry is-prev-selected columns is-mobile m-0 p-0" data-feat-id="'+featData.Feat.id+'"><div class="column is-2 is-paddingless py-2 feat-selection-list-entry-view"></div><div class="column is-7 is-paddingless py-2 feat-selection-list-entry-view">'+featNameHTML+'</div><div class="column is-1 is-paddingless py-2 feat-selection-list-entry-view">'+rightInfoHTML+'</div><div class="column is-2 is-paddingless py-2"></div></div>';
+        featListHTML += '<hr class="hr-feat-selection m-0"><div class="cursor-clickable feat-selection-list-entry is-prev-selected columns is-mobile m-0 p-0" data-feat-id="'+featData.Feat.id+'"><div class="column is-2 is-paddingless py-2 feat-selection-list-entry-view"></div><div class="column is-7 is-paddingless py-2 feat-selection-list-entry-view">'+featNameHTML+'</div><div class="column is-1 is-paddingless py-2 feat-selection-list-entry-view">'+rightInfoHTML+'</div><div class="column is-2 is-paddingless py-2"></div></div>';
       } else {
-        featListHTML += '<div class="cursor-clickable feat-selection-list-entry columns is-mobile m-0 p-0" data-feat-id="'+featData.Feat.id+'"><div class="column is-2 is-paddingless py-2 feat-selection-list-entry-view"></div><div class="column is-7 is-paddingless py-2 feat-selection-list-entry-view">'+featNameHTML+'</div><div class="column is-1 is-paddingless py-2 feat-selection-list-entry-view">'+rightInfoHTML+'</div><div class="column is-2 is-paddingless py-2 feat-selection-list-entry-choose"><button class="button is-very-small is-info is-outlined is-rounded '+featSelectButtonClass+'" data-feat-id="'+featData.Feat.id+'">Select</button></div></div>';
+        featListHTML += '<hr class="hr-feat-selection m-0"><div class="cursor-clickable feat-selection-list-entry columns is-mobile m-0 p-0" data-feat-id="'+featData.Feat.id+'"><div class="column is-2 is-paddingless py-2 feat-selection-list-entry-view"></div><div class="column is-7 is-paddingless py-2 feat-selection-list-entry-view">'+featNameHTML+'</div><div class="column is-1 is-paddingless py-2 feat-selection-list-entry-view">'+rightInfoHTML+'</div><div class="column is-2 is-paddingless py-2 feat-selection-list-entry-choose"><button class="button is-very-small is-info is-outlined is-rounded '+featSelectButtonClass+'" data-feat-id="'+featData.Feat.id+'">Select</button></div></div>';
       }
 
     }

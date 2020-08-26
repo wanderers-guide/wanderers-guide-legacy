@@ -18,7 +18,13 @@ const Heritage = db.define('heritages', {
   code: {
     type: Sequelize.TEXT
   },
+  isArchived: {
+    type: Sequelize.INTEGER
+  },
   contentSrc: {
+    type: Sequelize.STRING
+  },
+  indivAncestryName: {
     type: Sequelize.STRING
   },
   homebrewID: {

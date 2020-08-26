@@ -88,9 +88,24 @@ module.exports = class AdminGathering {
     static getAllUniHeritages() {
         return UniHeritage.findAll({
             order: [['name', 'ASC'],]
-        })
-        .then((uniHeritages) => {
+        }).then((uniHeritages) => {
             return uniHeritages;
+        });
+    }
+
+    static getAllHeritages() {
+        return Heritage.findAll({
+            order: [['name', 'ASC'],]
+        }).then((heritages) => {
+            return heritages;
+        });
+    }
+
+    static getAllAncestriesBasic() {
+        return Ancestry.findAll({
+            order: [['name', 'ASC'],]
+        }).then((ancestries) => {
+            return ancestries;
         });
     }
 
@@ -326,8 +341,21 @@ module.exports = class AdminGathering {
 
                                             for (const heritage of heritages) {
 
-                                                let ancestryStruct = ancestryMap.get(heritage.ancestryID);
-                                                ancestryStruct.Heritages.push(heritage);
+                                                let ancestryID = null;
+                                                if(heritage.ancestryID != null){
+                                                    ancestryID = heritage.ancestryID;
+                                                } else if(heritage.indivAncestryName != null){
+                                                    let ancestry = ancestries.find(ancestry => {
+                                                        return ancestry.isArchived == 0 && ancestry.name === heritage.indivAncestryName;
+                                                    });
+                                                    if(ancestry != null){
+                                                        ancestryID = ancestry.id;
+                                                    }
+                                                }
+                                                let ancestryStruct = ancestryMap.get(ancestryID);
+                                                if(ancestryStruct != null){
+                                                    ancestryStruct.Heritages.push(heritage);
+                                                }
 
                                             }
 

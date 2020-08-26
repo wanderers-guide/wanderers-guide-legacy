@@ -1916,6 +1916,54 @@ module.exports = class SocketConnections {
 
       ////
 
+      socket.on('requestAdminAddHeritage', function(data){
+        AuthCheck.isAdmin(socket).then((isAdmin) => {
+          if(isAdmin){
+            AdminUpdate.addHeritage(null, data).then((result) => {
+              socket.emit('returnAdminCompleteHeritage');
+            });
+          }
+        });
+      });
+
+      socket.on('requestAdminUpdateHeritage', function(data){
+        AuthCheck.isAdmin(socket).then((isAdmin) => {
+          if(isAdmin){
+            if(data != null && data.heritageID != null) {
+              AdminUpdate.archiveHeritage(data.heritageID, true).then((result) => {
+                AdminUpdate.addHeritage(null, data).then((result) => {
+                  socket.emit('returnAdminCompleteHeritage');
+                });
+              });
+            }
+          }
+        });
+      });
+    
+      socket.on('requestAdminRemoveHeritage', function(heritageID){
+        AuthCheck.isAdmin(socket).then((isAdmin) => {
+          if(isAdmin){
+            AdminUpdate.deleteHeritage(heritageID).then((result) => {
+              socket.emit('returnAdminRemoveHeritage');
+            });
+          }
+        });
+      });
+
+      socket.on('requestAdminHeritageDetails', function(){
+        AuthCheck.isAdmin(socket).then((isAdmin) => {
+          if(isAdmin){
+            AdminGathering.getAllHeritages().then((heritageArray) => {
+              AdminGathering.getAllAncestriesBasic().then((ancestryArray) => {
+                socket.emit('returnAdminHeritageDetails', heritageArray, ancestryArray);
+              });
+            });
+          }
+        });
+      });
+
+      ////
+
       socket.on('requestAdminAddClassFeature', function(data){
         AuthCheck.isAdmin(socket).then((isAdmin) => {
           if(isAdmin){

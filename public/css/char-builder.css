@@ -192,6 +192,11 @@ hr {
     border-bottom-color: #3298dc;
 }
 
+/* Steps */
+.step-title {
+    font-size: 1.0rem!important;
+}
+
 /* Class Abilities Tab */
 .ability-tabs li:hover {
     color: #3298dc;

@@ -614,7 +614,8 @@ module.exports = class AdminUpdate {
                                 for(const ancestryHeritage of data.ancestryHeritagesArray) {
                                     ancestryHeritage.name += ' '+data.ancestryName;
                                     ancestryHeritage.contentSrc = ancestry.contentSrc;
-                                    ancestryHeritage.homebrewID = ancestry.homebrewID;
+                                    ancestryHeritage.rarity = 'COMMON';
+                                    ancestryHeritage.indivAncestryName = null;
                                     let newPromise = AdminUpdate.addHeritage(ancestry.id, ancestryHeritage);
                                     ancestryHeritagePromises.push(newPromise);
                                 }
@@ -748,9 +749,10 @@ module.exports = class AdminUpdate {
         /* Data:
             name,
             description,
+            rarity,
             code,
             contentSrc,
-            homebrewID,
+            indivAncestryName,
         */
         for(let d in data) { if(data[d] === ''){ data[d] = null; } }
         data.name = data.name.replace(/’/g,"'");
@@ -758,12 +760,47 @@ module.exports = class AdminUpdate {
         return Heritage.create({
             name: data.name,
             ancestryID: ancestryID,
+            rarity: data.rarity,
             description: data.description,
             code: data.code,
             contentSrc: data.contentSrc,
-            homebrewID: data.homebrewID,
+            indivAncestryName: data.indivAncestryName,
+            homebrewID: null,
         }).then(heritage => {
             return heritage;
+        });
+    }
+
+    static deleteHeritage(heritageID) {
+        if(heritageID == null) {return;}
+        return Heritage.findOne({where: { id: heritageID}})
+        .then((heritage) => {
+            // Clear Heritage Details for every Character that had this Heritage
+            return Character.findAll({where: { heritageID: heritage.id }})
+            .then((charactersWithHeritage) => {
+                let characterHeritageClearPromises = [];
+                for(const charWithHeritage of charactersWithHeritage) {
+                    let newPromise = CharSaving.saveHeritage(charWithHeritage.id, null, false);
+                    characterHeritageClearPromises.push(newPromise);
+                }
+                return Promise.all(characterHeritageClearPromises)
+                .then(function(result) {
+                    return Heritage.destroy({ // Finally, delete Heritage
+                        where: { id: heritage.id }
+                    }).then((result) => {
+                        return;
+                    });
+                });
+            });
+        });
+    }
+
+    static archiveHeritage(heritageID, isArchived){
+        let archived = (isArchived) ? 1 : 0;
+        let updateValues = { isArchived: archived };
+        return Heritage.update(updateValues, { where: { id: heritageID } })
+        .then((result) => {
+            return;
         });
     }
 
@@ -830,11 +867,11 @@ module.exports = class AdminUpdate {
         return UniHeritage.findOne({where: { id: uniHeritageID}})
         .then((uniHeritage) => {
             // Clear Heritage Details for every Character that had this Heritage
-            return Character.findAll({where: { heritageID: uniHeritage.id }})
+            return Character.findAll({where: { uniHeritageID: uniHeritage.id }})
             .then((charactersWithHeritage) => {
                 let characterHeritageClearPromises = [];
                 for(const charWithHeritage of charactersWithHeritage) {
-                    let newPromise = CharSaving.saveHeritage(charWithHeritage.id, null);
+                    let newPromise = CharSaving.saveHeritage(charWithHeritage.id, null, true);
                     characterHeritageClearPromises.push(newPromise);
                 }
                 return Promise.all(characterHeritageClearPromises)

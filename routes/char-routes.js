@@ -110,7 +110,7 @@ router.get('/add', (req, res) => {
                         name: 'Coin Pouch',
                         price: 0,
                         bulk: pouchInvItem.bulk,
-                        description: 'A worthless, small pouch used to hold coins.',
+                        description: 'A simple, small pouch used to hold coins.',
                         size: pouchInvItem.size,
                         isShoddy: pouchInvItem.isShoddy,
                         hitPoints: pouchInvItem.hitPoints,

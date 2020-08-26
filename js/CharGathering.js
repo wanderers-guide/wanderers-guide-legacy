@@ -585,7 +585,18 @@ module.exports = class CharGathering {
     
                                                 for (const heritage of heritages) {
     
-                                                    let ancestryStruct = ancestryMap.get(heritage.ancestryID);
+                                                    let ancestryID = null;
+                                                    if(heritage.ancestryID != null){
+                                                        ancestryID = heritage.ancestryID;
+                                                    } else if(heritage.indivAncestryName != null){
+                                                        let ancestry = ancestries.find(ancestry => {
+                                                            return ancestry.isArchived == 0 && ancestry.name === heritage.indivAncestryName;
+                                                        });
+                                                        if(ancestry != null){
+                                                            ancestryID = ancestry.id;
+                                                        }
+                                                    }
+                                                    let ancestryStruct = ancestryMap.get(ancestryID);
                                                     if(ancestryStruct != null){
                                                         ancestryStruct.Heritages.push(heritage);
                                                     }
@@ -798,7 +809,6 @@ module.exports = class CharGathering {
         return NoteField.findOne({ where: { id: noteFieldID, charID: charID } })
         .then((noteField) => {
             if(noteField != null){
-                console.log(notesData);
                 notesData.text = noteField.text;
                 notesData.placeholderText = noteField.placeholderText;
             }

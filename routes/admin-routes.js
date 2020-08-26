@@ -9,11 +9,13 @@ const editAncestryRoutes = require('./edit-ancestry-routes');
 const editFeatActionRoutes = require('./edit-feat-action-routes');
 const editItemRoutes = require('./edit-item-routes');
 const editSpellRoutes = require('./edit-spell-routes');
+const editHeritageRoutes = require('./edit-heritage-routes');
 
 const Class = require('../models/contentDB/Class');
 const ClassAbility = require('../models/contentDB/ClassAbility');
 const Background = require('../models/contentDB/Background');
 const Ancestry = require('../models/contentDB/Ancestry');
+const Heritage = require('../models/contentDB/Heritage');
 const Item = require('../models/contentDB/Item');
 const Spell = require('../models/contentDB/Spell');
 const Language = require('../models/contentDB/Language');
@@ -207,6 +209,31 @@ router.get('/create/ancestry', adminAuthCheck, (req, res) => {
 
 router.use('/edit/ancestry', adminAuthCheck, editAncestryRoutes);
 
+// Heritage Builder
+router.get('/manage/heritage', adminAuthCheck, (req, res) => {
+
+    Heritage.findAll({
+        order: [['name', 'ASC'],]
+    }).then((heritages) => {
+        res.render('admin/admin_manager/manager_heritage', {
+            title: "Heritage Manager - Wanderer's Guide",
+            user: req.user,
+            heritages
+        });
+    });
+
+});
+
+router.get('/create/heritage', adminAuthCheck, (req, res) => {
+
+    res.render('admin/admin_builder/builder_heritage', {
+        title: "Heritage Builder - Wanderer's Guide",
+        user: req.user,
+    });
+
+});
+
+router.use('/edit/heritage', adminAuthCheck, editHeritageRoutes);
 
 // Uni-Heritage Builder
 router.get('/manage/uni-heritage', adminAuthCheck, (req, res) => {

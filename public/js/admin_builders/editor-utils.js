@@ -46,3 +46,8 @@ function getClassFeatureEditorIDFromURL(){
   let spl1 = window.location.pathname.split("class-feature/");
   return parseInt(spl1[1]);
 }
+
+function getHeritageEditorIDFromURL(){
+  let spl1 = window.location.pathname.split("heritage/");
+  return parseInt(spl1[1]);
+}
