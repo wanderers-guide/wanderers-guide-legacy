@@ -499,7 +499,7 @@ function displayCompanionsSection(){
 
       let imageURL = charAnimalComp.imageURL;
       if(imageURL.match(/\.(jpeg|jpg|gif|png)$/) == null){
-          imageURL = 'https://wanderersguide.app/images/default_animal_comp.png';
+          imageURL = '/images/paw_icon.png';
       }
 
       initAnimalSpecializationArray(charAnimalComp);
