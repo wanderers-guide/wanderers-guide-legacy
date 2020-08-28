@@ -23,6 +23,9 @@ function openAnimalCompQuickview(data) {
             charAnimal.id);
     });
 
+    // Init Specializations //
+    initAnimalSpecializationArray(charAnimal);
+
     // Name //
     qContent.append('<div class="field is-marginless mb-1"><div class="control"><input id="animalName" class="input" type="text" maxlength="90" value="'+charAnimal.name+'" placeholder="Companion Name" spellcheck="false" autocomplete="off"></div></div>');
 
@@ -42,9 +45,9 @@ function openAnimalCompQuickview(data) {
     let currentHP = charAnimal.currentHP;
     if(currentHP == -1){ currentHP = maxHP; }
 
-    qContent.append('<div class="field has-addons has-addons-centered is-marginless"><p class="control"><input id="healthInput" class="input" type="number" min="0" max="'+maxHP+'" value="'+currentHP+'"></p><p class="control"><a class="button is-static has-text-grey-light has-background-grey-darkest border-darker">/</a><p class="control"><a class="button is-static has-text-grey-lighter has-background-grey-darklike border-darker">'+maxHP+'</a></p></div>');
-    $('#healthInput').blur(function() {
-        if($('#healthInput').val() != charAnimal.currentHP){
+    qContent.append('<div class="field has-addons has-addons-centered is-marginless"><p class="control"><input id="animalHealthInput" class="input" type="number" min="0" max="'+maxHP+'" value="'+currentHP+'"></p><p class="control"><a class="button is-static has-text-grey-light has-background-grey-darkest border-darker">/</a><p class="control"><a class="button is-static has-text-grey-lighter has-background-grey-darklike border-darker">'+maxHP+'</a></p></div>');
+    $('#animalHealthInput').blur(function() {
+        if($('#animalHealthInput').val() != charAnimal.currentHP){
             updateAnimalCompanion(charAnimal);
         }
     });
@@ -122,9 +125,13 @@ function openAnimalCompQuickview(data) {
         qContent.append('<div class="px-2">'+processText('~ Special: '+animal.special, true, true, 'MEDIUM')+'</div>');
     }
 
-    let specializationText = getAnimalSpecializationText(charAnimal);
-    if(specializationText != null){
-        qContent.append('<div class="px-2">'+processText('~ Extra: '+specializationText, true, true, 'MEDIUM')+'</div>');
+    let specializationArray = getAnimalSpecializationArray(charAnimal);
+    if(specializationArray != null && specializationArray.length > 0){
+      let specializationText = '**Extra**';
+      for(let specialText of specializationArray){
+        specializationText += '\n* : '+specialText;
+      }
+      qContent.append('<div class="px-2">'+processText(specializationText, true, true, 'MEDIUM')+'</div>');
     }
 
     qContent.append('<hr class="m-2">');
@@ -147,6 +154,14 @@ function openAnimalCompQuickview(data) {
 
     qContent.append('<hr class="m-2">');
 
+    if(charAnimal.age == 'NIMBLE' || charAnimal.age == 'SAVAGE'){
+      qContent.append('<div class="columns is-centered"><div class="field is-grouped is-grouped-right column is-4 px-0"><div class="control"><div class="select is-info"><select id="selectAnimalAge"><option value="YOUNG">Young</option><option value="MATURE">Mature</option><option value="NIMBLE">Nimble</option><option value="SAVAGE">Savage</option></select></div></div></div><div class="column is-1 px-0">'+processText('[https://pf2.easytool.es/index.php?id=6442&name=Specialized_Animal_Companions]', true, null, 'MEDIUM')+'</div><div class="column is-7 pl-0"><select id="selectAnimalSpecialization" data-placeholder="Select a Specialization" multiple><option value="AMBUSHER">Ambusher</option><option value="BULLY">Bully</option><option value="DAREDEVIL">Daredevil</option><option value="RACER">Racer</option><option value="TRACKER">Tracker</option><option value="WRECKER">Wrecker</option></select></div></div>');
+    } else {
+      qContent.append('<div class="field is-grouped is-grouped-centered"><div class="control"><div class="select is-info"><select id="selectAnimalAge"><option value="YOUNG">Young</option><option value="MATURE">Mature</option><option value="NIMBLE">Nimble</option><option value="SAVAGE">Savage</option></select></div></div>'+processText('[https://pf2.easytool.es/index.php?id=6431&name=Animal_Companions_and_Familiars]', true, null, 'MEDIUM')+'</div>');
+    }
+
+    qContent.append('<hr class="m-2">');
+
     qContent.append('<div class="field is-marginless mb-1"><div class="control"><textarea id="animalDescription" class="textarea use-custom-scrollbar" placeholder="Companion Description">'+charAnimal.description+'</textarea></div></div>');
     $('#animalDescription').blur(function() {
         if($('#animalDescription').val() != charAnimal.description){
@@ -154,43 +169,49 @@ function openAnimalCompQuickview(data) {
         }
     });
 
-    qContent.append('<div class="field is-marginless mb-1"><div class="control"><input id="animalImageURL" class="input" type="text" maxlength="200" value="'+charAnimal.imageURL+'" placeholder="Image URL" spellcheck="false" autocomplete="off"></div></div>');
+    qContent.append('<div class="field is-marginless mb-1"><div class="control"><input id="animalImageURL" class="input isURL" type="text" maxlength="200" value="'+charAnimal.imageURL+'" placeholder="Image URL" spellcheck="false" autocomplete="off"></div></div>');
     $('#animalImageURL').blur(function() {
         if($('#animalImageURL').val() != charAnimal.imageURL){
             updateAnimalCompanion(charAnimal);
         }
     });
 
-
-    qContent.append('<div class="field is-grouped is-grouped-centered"><div class="control"><div class="select is-info"><select id="selectAnimalAge"><option value="YOUNG">Young</option><option value="MATURE">Mature</option><option value="NIMBLE">Nimble</option><option value="SAVAGE">Savage</option></select></div></div><div class="control"><div class="select is-info"><select id="selectAnimalSpecialization"><option value="NONE">None</option><option value="AMBUSHER">Ambusher</option><option value="BULLY">Bully</option><option value="DAREDEVIL">Daredevil</option><option value="RACER">Racer</option><option value="TRACKER">Tracker</option><option value="WRECKER">Wrecker</option></select></div></div></div>');
-
     $('#selectAnimalAge').val(charAnimal.age);
-    $('#selectAnimalSpecialization').val(charAnimal.specialization);
-
-    if($('#selectAnimalAge').val() == 'NIMBLE' || $('#selectAnimalAge').val() == 'SAVAGE'){
-        $('#selectAnimalSpecialization').parent().parent().removeClass('is-hidden');
-    } else {
-        $('#selectAnimalSpecialization').parent().parent().addClass('is-hidden');
-    }
 
     $('#selectAnimalAge').change(function() {
         if($('#selectAnimalAge').val() != charAnimal.age){
             updateAnimalCompanion(charAnimal);
             openQuickView('animalCompanionView', {
-                CharAnimalComp: charAnimal
+                CharAnimalComp: charAnimal,
+                ViewScroll: $('#quickviewDefault').find('.quickview-body').scrollTop(),
             }, $('#quickviewDefault').hasClass('is-active'));
         }
     });
 
-    $('#selectAnimalSpecialization').change(function() {
-        if($('#selectAnimalSpecialization').val() != charAnimal.specialization){
-            updateAnimalCompanion(charAnimal);
-            openQuickView('animalCompanionView', {
-                CharAnimalComp: charAnimal
-            }, $('#quickviewDefault').hasClass('is-active'));
+    if($('#selectAnimalAge').val() == 'NIMBLE' || $('#selectAnimalAge').val() == 'SAVAGE'){
+      
+      for(let specialization of g_animalSpecialArray) {
+        $('#selectAnimalSpecialization option[value="'+specialization+'"]').attr('selected','selected');
+      }
+      $("#selectAnimalSpecialization").chosen({width: "100%"});
+
+      $("#selectAnimalSpecialization").chosen().change(function() {
+        if(JSON.stringify($('#selectAnimalSpecialization').val()) != charAnimal.specialization){
+          updateAnimalCompanion(charAnimal);
+          openQuickView('animalCompanionView', {
+            CharAnimalComp: charAnimal,
+            ViewScroll: $('#quickviewDefault').find('.quickview-body').scrollTop(),
+          }, $('#quickviewDefault').hasClass('is-active'));
         }
-    });
+      });
+
+    }
     
+
+    if(data.ViewScroll != null){
+      $('#quickviewDefault').find('.quickview-body').scrollTop(data.ViewScroll);
+    }
+
 }
 
 function displayAnimalCompanionAttack(qContent, animal, charAnimal, attackNum) {
@@ -266,11 +287,11 @@ function updateAnimalCompanion(charAnimalComp) {
 
     let updateValues = {
         Name : $('#animalName').val(),
-        CurrentHealth : $('#healthInput').val(),
+        CurrentHealth : $('#animalHealthInput').val(),
         Description : $('#animalDescription').val(),
         ImageURL : $('#animalImageURL').val(),
         Age : $('#selectAnimalAge').val(),
-        Specialization : $('#selectAnimalSpecialization').val(),
+        Specialization : JSON.stringify($('#selectAnimalSpecialization').val()),
     };
 
     if(updateValues.Age == 'YOUNG' || updateValues.Age == 'MATURE'){

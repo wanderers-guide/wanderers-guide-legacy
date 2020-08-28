@@ -8,6 +8,8 @@ let g_itemMap = null;
 // ~~~~~~~~~~~~~~ // Run on Load // ~~~~~~~~~~~~~~ //
 $(function () {
 
+    $("#inputTags").chosen();
+
     socket.emit("requestAdminItemDetails");
 
 });
@@ -197,17 +199,6 @@ socket.on("returnAdminItemDetails", function(itemObject){
         }
     });
     builderTypeSelection.trigger("change");
-
-
-    let inputTags = $("#inputTags");
-    inputTags.change(function(){
-        let tagNames = '- ';
-        $(this).find(":selected").each(function(){
-            tagNames += $(this).text()+' ';
-        });
-        $("#selectedTraits").html(tagNames);
-        
-    });
 
 
     $("#createButton").click(function(){

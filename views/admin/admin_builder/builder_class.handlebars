@@ -300,74 +300,55 @@
 
                     <div class="column">
 
-                        <div class="field">
+                        <div class="">
                             <label class="label">Attacks - Trained</label>
-                            <div class="control">
-                                <div class="select is-multiple">
-                                    <select id="inputWeaponsTrained" multiple>
-                                        <option value="Unarmed Attacks">Unarmed Attacks</option>
-                                        <option value="Simple Weapons">Simple Weapons</option>
-                                        <option value="Martial Weapons">Martial Weapons</option>
-                                        <option value="Advanced Weapons">Advanced Weapons</option>
-                                        {{#each weaponItems}}
-                                            <option value="{{name}}">{{name}}</option>
-                                        {{/each}}
-                                    </select>
-                                </div>
-                            </div>
-                            <p id="selectedWeaponTrained">- </p>
+                            <select id="inputWeaponsTrained" data-placeholder="Select Weapons" multiple>
+                                <option value="Unarmed Attacks">Unarmed Attacks</option>
+                                <option value="Simple Weapons">Simple Weapons</option>
+                                <option value="Martial Weapons">Martial Weapons</option>
+                                <option value="Advanced Weapons">Advanced Weapons</option>
+                                {{#each weaponItems}}
+                                    <option value="{{name}}">{{name}}</option>
+                                {{/each}}
+                            </select>
                         </div>
 
-                        <div class="field">
+
+                        <div class="">
                             <label class="label">Attacks - Expert</label>
-                            <div class="control">
-                                <div class="select is-multiple">
-                                    <select id="inputWeaponsExpert" multiple>
-                                        <option value="Unarmed Attacks">Unarmed Attacks</option>
-                                        <option value="Simple Weapons">Simple Weapons</option>
-                                        <option value="Martial Weapons">Martial Weapons</option>
-                                        <option value="Advanced Weapons">Advanced Weapons</option>
-                                        {{#each weaponItems}}
-                                            <option value="{{name}}">{{name}}</option>
-                                        {{/each}}
-                                    </select>
-                                </div>
-                            </div>
-                            <p id="selectedWeaponExpert">- </p>
+                            <select id="inputWeaponsExpert" data-placeholder="Select Weapons" multiple>
+                                <option value="Unarmed Attacks">Unarmed Attacks</option>
+                                <option value="Simple Weapons">Simple Weapons</option>
+                                <option value="Martial Weapons">Martial Weapons</option>
+                                <option value="Advanced Weapons">Advanced Weapons</option>
+                                {{#each weaponItems}}
+                                    <option value="{{name}}">{{name}}</option>
+                                {{/each}}
+                            </select>
                         </div>
 
                     </div>
 
                     <div class="column">
 
-                        <div class="field">
+                        <div class="">
                             <label class="label">Defenses - Trained</label>
-                            <div class="control">
-                                <div class="select is-multiple">
-                                    <select id="inputArmorTrained" multiple>
-                                        <option value="Unarmored Defense">Unarmored Defense</option>
-                                        <option value="Light Armor">Light Armor</option>
-                                        <option value="Medium Armor">Medium Armor</option>
-                                        <option value="Heavy Armor">Heavy Armor</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <p id="selectedArmorTrained">- </p>
+                            <select id="inputArmorTrained" data-placeholder="Select Armor" multiple>
+                                <option value="Unarmored Defense">Unarmored Defense</option>
+                                <option value="Light Armor">Light Armor</option>
+                                <option value="Medium Armor">Medium Armor</option>
+                                <option value="Heavy Armor">Heavy Armor</option>
+                            </select>
                         </div>
 
-                        <div class="field">
+                        <div class="">
                             <label class="label">Defenses - Expert</label>
-                            <div class="control">
-                                <div class="select is-multiple">
-                                    <select id="inputArmorExpert" multiple>
-                                        <option value="Unarmored Defense">Unarmored Defense</option>
-                                        <option value="Light Armor">Light Armor</option>
-                                        <option value="Medium Armor">Medium Armor</option>
-                                        <option value="Heavy Armor">Heavy Armor</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <p id="selectedArmorExpert">- </p>
+                            <select id="inputArmorExpert" data-placeholder="Select Armor" multiple>
+                                <option value="Unarmored Defense">Unarmored Defense</option>
+                                <option value="Light Armor">Light Armor</option>
+                                <option value="Medium Armor">Medium Armor</option>
+                                <option value="Heavy Armor">Heavy Armor</option>
+                            </select>
                         </div>
 
                     </div>
@@ -559,18 +540,13 @@
                                 </div>
                             </div>
 
-                            <div class="field">
+                            <div class="">
                                 <label class="label">Other Traits</label>
-                                <div class="control">
-                                    <div class="select is-multiple">
-                                        <select class="inputFeatTags" multiple>
-                                            {{#each tags}}
-                                                <option value="{{id}}">{{name}}</option>
-                                            {{/each}}
-                                        </select>
-                                    </div>
-                                </div>
-                                <p class="selectedTraits">- </p>
+                                <select class="inputFeatTags" data-placeholder="Select Traits" multiple>
+                                  {{#each tags}}
+                                    <option value="{{id}}">{{name}}</option>
+                                  {{/each}}
+                                </select>
                             </div>
 
                             <div class="field">

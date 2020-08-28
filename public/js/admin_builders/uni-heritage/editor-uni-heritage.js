@@ -82,7 +82,7 @@ socket.on("returnAdminUniHeritageDetails", function(uniHeritageArray, featsObjec
             $(this).find(".card-header").trigger("click");
             // Trigger Feat Name and Tags
             $(this).find(".inputFeatName").trigger("change");
-            $(this).find(".inputFeatTags").trigger("change");
+            $(this).find(".inputFeatTags").trigger("chosen:updated");
         }
     });
 

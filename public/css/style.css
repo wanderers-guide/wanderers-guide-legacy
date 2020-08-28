@@ -141,6 +141,9 @@ header {
 .input::-webkit-input-placeholder, .select select::-webkit-input-placeholder, .textarea::-webkit-input-placeholder{
     color:rgba(219,219,219,.4);
 }
+.input.isURL {
+  color: hsl(0, 0%, 60%)!important;
+}
 hr {
     border-color: #363636!important;
 }

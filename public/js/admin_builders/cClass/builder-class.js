@@ -8,37 +8,11 @@ let socket = io();
 $(function () {
 
     
-    $("#inputWeaponsTrained").change(function(){
-        let weapNames = '- ';
-        $(this).find(":selected").each(function(){
-            weapNames += $(this).text()+', ';
-        });
-        $("#selectedWeaponTrained").html(weapNames);
-    });
+    $("#inputWeaponsTrained").chosen();
+    $("#inputWeaponsExpert").chosen();
 
-    $("#inputWeaponsExpert").change(function(){
-        let weapNames = '- ';
-        $(this).find(":selected").each(function(){
-            weapNames += $(this).text()+', ';
-        });
-        $("#selectedWeaponExpert").html(weapNames);
-    });
-
-    $("#inputArmorTrained").change(function(){
-        let armorNames = '- ';
-        $(this).find(":selected").each(function(){
-            armorNames += $(this).text()+', ';
-        });
-        $("#selectedArmorTrained").html(armorNames);
-    });
-
-    $("#inputArmorExpert").change(function(){
-        let armorNames = '- ';
-        $(this).find(":selected").each(function(){
-            armorNames += $(this).text()+', ';
-        });
-        $("#selectedArmorExpert").html(armorNames);
-    });
+    $("#inputArmorTrained").chosen();
+    $("#inputArmorExpert").chosen();
     
 
     $("#inputKeyAbility").change(function(){
@@ -182,14 +156,7 @@ $(function () {
             $("#"+featID).find(".card-header-title").html('Class Feat - '+inputFeatName.val());
         });
 
-        let inputFeatTags = $("#"+featID).find(".inputFeatTags");
-        inputFeatTags.change(function(){
-            let tagNames = '- ';
-            $(this).find(":selected").each(function(){
-                tagNames += $(this).text()+' ';
-            });
-            $("#"+featID).find(".selectedTraits").html(tagNames);
-        });
+        $("#"+featID).find(".inputFeatTags").chosen();
 
     });
 

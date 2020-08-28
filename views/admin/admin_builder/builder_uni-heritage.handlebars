@@ -198,18 +198,13 @@
                                 </div>
                             </div>
 
-                            <div class="field">
+                            <div class="">
                                 <label class="label">Other Traits</label>
-                                <div class="control">
-                                    <div class="select is-multiple">
-                                        <select class="inputFeatTags" multiple>
-                                            {{#each tags}}
-                                                <option value="{{id}}">{{name}}</option>
-                                            {{/each}}
-                                        </select>
-                                    </div>
-                                </div>
-                                <p class="selectedTraits">- </p>
+                                <select class="inputFeatTags" data-placeholder="Select Traits" multiple>
+                                  {{#each tags}}
+                                    <option value="{{id}}">{{name}}</option>
+                                  {{/each}}
+                                </select>
                             </div>
 
                             <div class="field">

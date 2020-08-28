@@ -153,7 +153,7 @@ socket.on("returnAdminItemDetails", function(itemObject){
     for(let tag of item.TagArray){
         $("#inputTags").find('option[value='+tag.Tag.id+']').attr('selected','selected');
     }
-    $("#inputTags").trigger("change");
+    $("#inputTags").trigger("chosen:updated");
 
     $("#updateButton").click(function(){
         $(this).unbind();

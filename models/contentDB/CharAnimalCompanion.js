@@ -13,8 +13,8 @@ const CharAnimalCompanion = db.define('charAnimalCompanions', {
     values: ['YOUNG', 'MATURE', 'NIMBLE', 'SAVAGE']
   },
   specialization: {
-    type: Sequelize.ENUM,
-    values: ['NONE', 'AMBUSHER', 'BULLY', 'DAREDEVIL', 'RACER', 'TRACKER', 'WRECKER']
+    type: Sequelize.STRING
+    //values: ['NONE', 'AMBUSHER', 'BULLY', 'DAREDEVIL', 'RACER', 'TRACKER', 'WRECKER']
   },
   name: {
     type: Sequelize.STRING

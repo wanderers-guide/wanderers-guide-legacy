@@ -63,7 +63,7 @@ socket.on("returnAdminSpellDetails", function(spellObject){
     for(let tag of spell.Tags){
         $("#inputTags").find('option[value='+tag.id+']').attr('selected','selected');
     }
-    $("#inputTags").trigger("change");
+    $("#inputTags").trigger("chosen:updated");
 
     $("#updateButton").click(function(){
         $(this).unbind();

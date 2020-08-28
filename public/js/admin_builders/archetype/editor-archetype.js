@@ -91,7 +91,7 @@ socket.on("returnAdminArchetypeDetails", function(archetypeArray, featsObject){
             $(this).find(".card-header").trigger("click");
             // Trigger Feat Name and Tags
             $(this).find(".inputFeatName").trigger("change");
-            $(this).find(".inputFeatTags").trigger("change");
+            $(this).find(".inputFeatTags").trigger("chosen:updated");
         }
     });
 
@@ -118,6 +118,8 @@ socket.on("returnAdminArchetypeDetails", function(archetypeArray, featsObject){
                 $('#dedicationFeat').find(".inputFeatTags").find('option[value='+featTag.id+']').attr('selected','selected');
             }
         }
+
+        $('#dedicationFeat').find(".inputFeatTags").trigger("chosen:updated");
 
     }
 

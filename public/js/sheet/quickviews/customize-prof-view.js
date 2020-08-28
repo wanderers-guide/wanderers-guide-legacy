@@ -114,29 +114,3 @@ function openCustomizeProfQuickview(data) {
     });
 
 }
-
-socket.on("returnNotesFieldChange", function(newNotesData, locationID) {
-    g_notesFields.push({
-        charID: getCharIDFromURL(),
-        placeholderText: newNotesData.placeholderText,
-        source: 'notesField',
-        sourceCode: newNotesData.sourceCode,
-        sourceCodeSNum: newNotesData.sourceCodeSNum,
-        sourceLevel: newNotesData.sourceLevel,
-        sourceType: newNotesData.sourceType,
-        value: newNotesData.value,
-        text: '',
-    });
-});
-
-socket.on("returnNotesFieldDelete", function(srcStruct) {
-    let newNotesFieldArray = [];
-    for(let notesData of g_notesFields){
-        if(srcStruct.sourceCode === notesData.sourceCode &&
-                srcStruct.sourceCodeSNum === notesData.sourceCodeSNum){
-        } else {
-            newNotesFieldArray.push(notesData);
-        }
-    }
-    g_notesFields = newNotesFieldArray;
-});

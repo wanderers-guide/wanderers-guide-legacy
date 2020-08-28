@@ -226,32 +226,22 @@
                 </div>
 
                 <div class="tile">
-                    <div class="tile is-child field">
-                        <label class="label">Languages (known by default)</label>
-                        <div class="control">
-                            <div class="select is-multiple">
-                                <select id="inputLangs" multiple>
-                                    {{#each languages}}
-                                        <option value="{{id}}" name="{{name}}">{{name}}</option>
-                                    {{/each}}
-                                </select>
-                            </div>
-                        </div>
-                        <p id="selectedLanguages">- </p>
+                    <div class="tile is-child">
+                      <label class="label">Languages (known by default)</label>
+                      <select id="inputLangs" data-placeholder="Select Languages" multiple>
+                        {{#each languages}}
+                          <option value="{{id}}" name="{{name}}">{{name}}</option>
+                        {{/each}}
+                      </select>
                     </div>
 
-                    <div class="tile is-child field">
-                        <label class="label">Bonus Languages</label>
-                        <div class="control">
-                            <div class="select is-multiple">
-                                <select id="inputBonusLangs" multiple>
-                                    {{#each languages}}
-                                        <option value="{{id}}" name="{{name}}">{{name}}</option>
-                                    {{/each}}
-                                </select>
-                            </div>
-                        </div>
-                        <p id="selectedBonusLanguages">- </p>
+                    <div class="tile is-child">
+                      <label class="label">Bonus Languages</label>
+                      <select id="inputBonusLangs" data-placeholder="Select Languages" multiple>
+                        {{#each languages}}
+                          <option value="{{id}}" name="{{name}}">{{name}}</option>
+                        {{/each}}
+                      </select>
                     </div>
 
                 </div>
@@ -388,18 +378,13 @@
                                 </div>
                             </div>
 
-                            <div class="field">
+                            <div class="">
                                 <label class="label">Other Traits</label>
-                                <div class="control">
-                                    <div class="select is-multiple">
-                                        <select class="inputFeatTags" multiple>
-                                            {{#each tags}}
-                                                <option value="{{id}}">{{name}}</option>
-                                            {{/each}}
-                                        </select>
-                                    </div>
-                                </div>
-                                <p class="selectedTraits">- </p>
+                                <select class="inputFeatTags" data-placeholder="Select Traits" multiple>
+                                  {{#each tags}}
+                                    <option value="{{id}}">{{name}}</option>
+                                  {{/each}}
+                                </select>
                             </div>
 
                             <div class="field">

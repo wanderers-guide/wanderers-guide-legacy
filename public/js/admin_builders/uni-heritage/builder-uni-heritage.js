@@ -39,14 +39,7 @@ $(function () {
             $("#"+featID).find(".card-header-title").html('Ancestry Feat - '+inputFeatName.val());
         });
 
-        let inputFeatTags = $("#"+featID).find(".inputFeatTags");
-        inputFeatTags.change(function(){
-            let tagNames = '- ';
-            $(this).find(":selected").each(function(){
-                tagNames += $(this).text()+' ';
-            });
-            $("#"+featID).find(".selectedTraits").html(tagNames);
-        });
+        $("#"+featID).find(".inputFeatTags").chosen();
 
     });
 

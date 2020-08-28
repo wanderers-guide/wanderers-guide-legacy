@@ -17,6 +17,7 @@ $(function () {
         }
     });
 
+    $('#dedicationFeat').find(".inputFeatTags").chosen();
 
     let featCount = 0;
     $("#addFeatButton").click(function(){
@@ -50,14 +51,7 @@ $(function () {
             $("#"+featID).find(".card-header-title").html('Class Feat - '+inputFeatName.val());
         });
 
-        let inputFeatTags = $("#"+featID).find(".inputFeatTags");
-        inputFeatTags.change(function(){
-            let tagNames = '- ';
-            $(this).find(":selected").each(function(){
-                tagNames += $(this).text()+' ';
-            });
-            $("#"+featID).find(".selectedTraits").html(tagNames);
-        });
+        $("#"+featID).find(".inputFeatTags").chosen();
 
     });
 

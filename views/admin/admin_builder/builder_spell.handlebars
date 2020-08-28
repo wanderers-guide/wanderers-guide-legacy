@@ -201,18 +201,13 @@
                     </div>
                 </div>
 
-                <div class="tile is-child field">
+                <div class="tile is-child">
                     <label class="label">Traits</label>
-                    <div class="control">
-                    <div class="select is-multiple">
-                            <select id="inputTags" size="8" multiple>
-                                {{#each tags}}
-                                    <option value="{{id}}">{{name}}</option>
-                                {{/each}}
-                            </select>
-                        </div>
-                    </div>
-                    <p id="selectedTraits">- </p>
+                    <select id="inputTags" data-placeholder="Select Traits" multiple>
+                        {{#each tags}}
+                            <option value="{{id}}">{{name}}</option>
+                        {{/each}}
+                    </select>
                 </div>
 
                 <div class="tile is-child field">

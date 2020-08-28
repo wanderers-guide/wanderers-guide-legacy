@@ -9,11 +9,6 @@ function getCharIDFromURL(){
     return spl2[0];
 }
 
-
-function hasSameSrc(dataStruct, srcStruct){
-  return (dataStruct.sourceType == srcStruct.sourceType && dataStruct.sourceLevel == srcStruct.sourceLevel && dataStruct.sourceCode == srcStruct.sourceCode && dataStruct.sourceCodeSNum == srcStruct.sourceCodeSNum);
-}
-
 function getAllAbilityTypes() {
   return ['Strength','Dexterity','Constitution','Intelligence','Wisdom','Charisma'];
 }

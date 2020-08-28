@@ -15,6 +15,9 @@ function cloneObj(obj){
   return JSON.parse(JSON.stringify(obj));
 }
 
+function hasSameSrc(dataStruct, srcStruct){
+  return (dataStruct.sourceType == srcStruct.sourceType && dataStruct.sourceLevel == srcStruct.sourceLevel && dataStruct.sourceCode == srcStruct.sourceCode && dataStruct.sourceCodeSNum == srcStruct.sourceCodeSNum);
+}
 
 /* Capitalizing */
 function capitalizeWord(word){

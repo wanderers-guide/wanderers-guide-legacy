@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize');
 const keys = require('../keys');
 
-module.exports =  new Sequelize(keys.backgroundDB.DbName, keys.cloudSQL.Username, keys.cloudSQL.Password, {
+module.exports =  new Sequelize('mysql://doadmin:'+keys.cloudSQL.Password+'@db-mysql-sfo2-63519-do-user-7330312-0.a.db.ondigitalocean.com:25060/'+keys.contentDB.DbName+'?', {
   host: keys.cloudSQL.Host,
   dialect: 'mysql',
   operatorsAliases: '0',

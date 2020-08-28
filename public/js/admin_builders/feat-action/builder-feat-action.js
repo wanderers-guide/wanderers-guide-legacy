@@ -11,6 +11,8 @@ let g_uniHeritageArray = null;
 // ~~~~~~~~~~~~~~ // Run on Load // ~~~~~~~~~~~~~~ //
 $(function () {
 
+    $("#inputFeatTags").chosen();
+
     socket.emit("requestAdminFeatDetailsPlus");
 
 });
@@ -101,17 +103,7 @@ socket.on("returnAdminFeatDetailsPlus", function(featsObject, classObject, ances
         }
     });
     builderTypeSelection.trigger("change");
-
-
-    let inputFeatTags = $("#inputFeatTags");
-    inputFeatTags.change(function(){
-        let tagNames = '- ';
-        $(this).find(":selected").each(function(){
-            tagNames += $(this).text()+' ';
-        });
-        $("#selectedTraits").html(tagNames);
-    });
-
+    
 
     $("#createFeatButton").click(function(){
         $(this).unbind();

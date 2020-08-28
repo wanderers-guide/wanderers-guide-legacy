@@ -57,8 +57,8 @@ socket.on("returnAdminClassDetails", function(classObject, featsObject){
                 $('#inputWeaponsExpert option[value="'+weapData[1]+'"]').attr('selected','selected');
             }
         }
-        $('#inputWeaponsTrained').trigger("change");
-        $('#inputWeaponsExpert').trigger("change");
+        $('#inputWeaponsTrained').trigger("chosen:updated");
+        $('#inputWeaponsExpert').trigger("chosen:updated");
     }
 
     if(cClass.Class.tArmor != null){
@@ -71,8 +71,8 @@ socket.on("returnAdminClassDetails", function(classObject, featsObject){
                 $('#inputArmorExpert option[value="'+armorData[1]+'"]').attr('selected','selected');
             }
         }
-        $('#inputArmorTrained').trigger("change");
-        $('#inputArmorExpert').trigger("change");
+        $('#inputArmorTrained').trigger("chosen:updated");
+        $('#inputArmorExpert').trigger("chosen:updated");
     }
 
     // Class Abilities //
@@ -193,7 +193,7 @@ socket.on("returnAdminClassDetails", function(classObject, featsObject){
             $(this).find(".card-header").trigger("click");
             // Trigger Feat Name and Tags
             $(this).find(".inputFeatName").trigger("change");
-            $(this).find(".inputFeatTags").trigger("change");
+            $(this).find(".inputFeatTags").trigger("chosen:updated");
         }
     });
 

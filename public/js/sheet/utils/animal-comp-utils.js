@@ -1,3 +1,6 @@
+/* Copyright (C) 2020, Wanderer's Guide, all rights reserved.
+    By Aaron Cassar.
+*/
 
 function getAnimalCompanionMaxHealth(charAnimal){
 
@@ -17,10 +20,33 @@ function getAnimalCompanionMaxHealth(charAnimal){
 
 ////
 
+let g_animalSpecialArray = null;
+function initAnimalSpecializationArray(charAnimal){
+  if(charAnimal.specialization == 'NONE'){
+    g_animalSpecialArray = [];
+  } else {
+    try {
+      g_animalSpecialArray = JSON.parse(charAnimal.specialization);
+    } catch (error) {
+      g_animalSpecialArray = [];
+    }
+  }
+}
+
+function animalHasSpecial(specialName){
+  return g_animalSpecialArray.includes(specialName);
+}
+
+function animalHasAnySpecial(){
+  return g_animalSpecialArray.length > 0;
+}
+
+////
+
 function getAnimalModStr(animal, charAnimal){
   let modStr = animal.modStr;
-  if(charAnimal.specialization == 'BULLY'){ modStr += 1; }
-  if(charAnimal.specialization == 'WRECKER'){ modStr += 1; }
+  if(animalHasSpecial('BULLY')){ modStr += 1; }
+  if(animalHasSpecial('WRECKER')){ modStr += 1; }
   switch(charAnimal.age){
     case 'YOUNG': return modStr;
     case 'MATURE': return modStr+1;
@@ -32,9 +58,9 @@ function getAnimalModStr(animal, charAnimal){
 
 function getAnimalModDex(animal, charAnimal){
   let modDex = animal.modDex;
-  if(charAnimal.specialization != 'NONE'){ modDex += 1; }
-  if(charAnimal.specialization == 'AMBUSHER'){ modDex += 1; }
-  if(charAnimal.specialization == 'DAREDEVIL'){ modDex += 1; }
+  if(animalHasAnySpecial()){ modDex += 1; }
+  if(animalHasSpecial('AMBUSHER')){ modDex += 1; }
+  if(animalHasSpecial('DAREDEVIL')){ modDex += 1; }
   switch(charAnimal.age){
     case 'YOUNG': return modDex;
     case 'MATURE': return modDex+1;
@@ -46,7 +72,7 @@ function getAnimalModDex(animal, charAnimal){
 
 function getAnimalModCon(animal, charAnimal){
   let modCon = animal.modCon;
-  if(charAnimal.specialization == 'RACER'){ modCon += 1; }
+  if(animalHasSpecial('RACER')){ modCon += 1; }
   switch(charAnimal.age){
     case 'YOUNG': return modCon;
     case 'MATURE': return modCon+1;
@@ -58,7 +84,7 @@ function getAnimalModCon(animal, charAnimal){
 
 function getAnimalModInt(animal, charAnimal){
   let modInt = animal.modInt;
-  if(charAnimal.specialization != 'NONE'){ modInt += 2; }
+  if(animalHasAnySpecial()){ modInt += 2; }
   switch(charAnimal.age){
     case 'YOUNG': return modInt;
     case 'MATURE': return modInt;
@@ -70,7 +96,7 @@ function getAnimalModInt(animal, charAnimal){
 
 function getAnimalModWis(animal, charAnimal){
   let modWis = animal.modWis;
-  if(charAnimal.specialization == 'TRACKER'){ modWis += 1; }
+  if(animalHasSpecial('TRACKER')){ modWis += 1; }
   switch(charAnimal.age){
     case 'YOUNG': return modWis;
     case 'MATURE': return modWis+1;
@@ -82,7 +108,7 @@ function getAnimalModWis(animal, charAnimal){
 
 function getAnimalModCha(animal, charAnimal){
   let modCha = animal.modCha;
-  if(charAnimal.specialization == 'BULLY'){ modCha += 3; }
+  if(animalHasSpecial('BULLY')){ modCha += 3; }
   switch(charAnimal.age){
     case 'YOUNG': return modCha;
     case 'MATURE': return modCha;
@@ -95,7 +121,7 @@ function getAnimalModCha(animal, charAnimal){
 //
 
 function getAnimalDamageDieNumber(animal, charAnimal){
-  if(charAnimal.specialization != 'NONE'){
+  if(animalHasAnySpecial()){
     return 3;
   }
   switch(charAnimal.age){
@@ -112,10 +138,10 @@ function getAnimalAdditionalDamage(animal, charAnimal){
     case 'YOUNG': return 0;
     case 'MATURE': return 0;
     case 'NIMBLE':
-      if(charAnimal.specialization != 'NONE'){ return 4; }
+      if(animalHasAnySpecial()){ return 4; }
       return 2;
     case 'SAVAGE':
-      if(charAnimal.specialization != 'NONE'){ return 6; }
+      if(animalHasAnySpecial()){ return 6; }
       return 3;
     default: return -1;
   }
@@ -145,28 +171,36 @@ function hasAnimalMagicalAttacks(animal, charAnimal){
 
 //
 
-function getAnimalSpecializationText(charAnimal){
-  if(charAnimal.specialization == 'NONE'){
+function getAnimalSpecializationArray(charAnimal){
+  if(!animalHasAnySpecial()){
     return null;
-  } else if(charAnimal.specialization == 'AMBUSHER'){
-    return 'In your companion’s natural environment, it can use a (action: Sneak) action even if it’s currently observed. It gains a +2 circumstance bonus to initiative rolls using Stealth.';
-  } else if(charAnimal.specialization == 'BULLY'){
-    return null;
-  } else if(charAnimal.specialization == 'DAREDEVIL'){
-    return 'Your companion gains the deny advantage ability, so it isn’t flat-footed to hidden, undetected, or flanking creatures unless such a creature’s level is greater than yours.';
-  } else if(charAnimal.specialization == 'RACER'){
-    return 'Your companion gains a +10-foot status bonus to its Speed, swim Speed, or fly Speed (your choice).';
-  } else if(charAnimal.specialization == 'TRACKER'){
-    return 'Your companion can move at full Speed while following tracks.';
-  } else if(charAnimal.specialization == 'WRECKER'){
-    return 'Your companion’s unarmed attacks ignore half an object’s Hardness.';
   }
+  let specializationArray = [];
+  if(animalHasSpecial('AMBUSHER')){
+    specializationArray.push('In your companion’s natural environment, it can use a (action: Sneak) action even if it’s currently observed. It gains a +2 circumstance bonus to initiative rolls using Stealth.');
+  }
+  if(animalHasSpecial('BULLY')){
+    //
+  }
+  if(animalHasSpecial('DAREDEVIL')){
+    specializationArray.push('Your companion gains the deny advantage ability, so it isn’t flat-footed to hidden, undetected, or flanking creatures unless such a creature’s level is greater than yours.');
+  }
+  if(animalHasSpecial('RACER')){
+    specializationArray.push('Your companion gains a +10-foot status bonus to its Speed, swim Speed, or fly Speed (your choice).');
+  }
+  if(animalHasSpecial('TRACKER')){
+    specializationArray.push('Your companion can move at full Speed while following tracks.');
+  }
+  if(animalHasSpecial('WRECKER')){
+    specializationArray.push('Your companion’s unarmed attacks ignore half an object’s Hardness.');
+  }
+  return specializationArray;
 }
 
 //
 
 function getAnimalUnarmedAttacksNumUps(animal, charAnimal){
-  if(charAnimal.specialization != 'NONE'){
+  if(animalHasAnySpecial()){
     return 2;
   }
   switch(charAnimal.age){
@@ -180,8 +214,8 @@ function getAnimalUnarmedAttacksNumUps(animal, charAnimal){
 
 function getAnimalUnarmoredDefenseNumUps(animal, charAnimal){
   let cNumUps = 0;
-  if(charAnimal.specialization == 'AMBUSHER'){ cNumUps += 1; }
-  if(charAnimal.specialization == 'DAREDEVIL'){ cNumUps += 1; }
+  if(animalHasSpecial('AMBUSHER')){ cNumUps += 1; }
+  if(animalHasSpecial('DAREDEVIL')){ cNumUps += 1; }
   switch(charAnimal.age){
     case 'YOUNG': return cNumUps+1;
     case 'MATURE': return cNumUps+1;
@@ -227,7 +261,7 @@ function getAnimalSkillNumUps(animal, charAnimal, skillName){
 }
 
 function getAnimalAcrobaticsNumUps(animal, charAnimal){
-  if(charAnimal.specialization == 'DAREDEVIL'){ return 3; }
+  if(animalHasSpecial('DAREDEVIL')){ return 3; }
   switch(charAnimal.age){
     case 'YOUNG': return 1;
     case 'MATURE': return 1;
@@ -239,8 +273,8 @@ function getAnimalAcrobaticsNumUps(animal, charAnimal){
 
 function getAnimalAthleticsNumUps(animal, charAnimal){
   let cNumUps = 0;
-  if(charAnimal.specialization == 'WRECKER'){ return 3; }
-  if(charAnimal.specialization == 'BULLY'){ cNumUps += 1; }
+  if(animalHasSpecial('WRECKER')){ return 3; }
+  if(animalHasSpecial('BULLY')){ cNumUps += 1; }
   switch(charAnimal.age){
     case 'YOUNG': return cNumUps+1;
     case 'MATURE': return cNumUps+1;
@@ -252,7 +286,7 @@ function getAnimalAthleticsNumUps(animal, charAnimal){
 
 function getAnimalIntimidationNumUps(animal, charAnimal){
   let cNumUps = animal.skills.includes('intimidation') ? 1 : 0;
-  if(charAnimal.specialization == 'BULLY'){ cNumUps += 1; }
+  if(animalHasSpecial('BULLY')){ cNumUps += 1; }
   switch(charAnimal.age){
     case 'YOUNG': return cNumUps+0;
     case 'MATURE': return cNumUps+1;
@@ -264,7 +298,7 @@ function getAnimalIntimidationNumUps(animal, charAnimal){
 
 function getAnimalStealthNumUps(animal, charAnimal){
   let cNumUps = animal.skills.includes('stealth') ? 1 : 0;
-  if(charAnimal.specialization == 'AMBUSHER'){ cNumUps += 1; }
+  if(animalHasSpecial('AMBUSHER')){ cNumUps += 1; }
   switch(charAnimal.age){
     case 'YOUNG': return cNumUps+0;
     case 'MATURE': return cNumUps+1;
@@ -276,7 +310,7 @@ function getAnimalStealthNumUps(animal, charAnimal){
 
 function getAnimalSurvivalNumUps(animal, charAnimal){
   let cNumUps = animal.skills.includes('survival') ? 1 : 0;
-  if(charAnimal.specialization == 'TRACKER'){ cNumUps += 1; }
+  if(animalHasSpecial('TRACKER')){ cNumUps += 1; }
   switch(charAnimal.age){
     case 'YOUNG': return cNumUps+0;
     case 'MATURE': return cNumUps+1;
@@ -289,7 +323,7 @@ function getAnimalSurvivalNumUps(animal, charAnimal){
 //
 
 function getAnimalPerceptionNumUps(animal, charAnimal){
-  if(charAnimal.specialization != 'NONE'){
+  if(animalHasAnySpecial()){
     return 3;
   }
   switch(charAnimal.age){
@@ -304,8 +338,8 @@ function getAnimalPerceptionNumUps(animal, charAnimal){
 //
 
 function getAnimalFortitudeNumUps(animal, charAnimal){
-  if(charAnimal.specialization == 'RACER'){ return 4; }
-  if(charAnimal.specialization != 'NONE'){ return 3; }
+  if(animalHasSpecial('RACER')){ return 4; }
+  if(animalHasAnySpecial()){ return 3; }
   switch(charAnimal.age){
     case 'YOUNG': return 1;
     case 'MATURE': return 2;
@@ -316,7 +350,7 @@ function getAnimalFortitudeNumUps(animal, charAnimal){
 }
 
 function getAnimalReflexNumUps(animal, charAnimal){
-  if(charAnimal.specialization != 'NONE'){
+  if(animalHasAnySpecial()){
     return 3;
   }
   switch(charAnimal.age){
@@ -329,7 +363,7 @@ function getAnimalReflexNumUps(animal, charAnimal){
 }
 
 function getAnimalWillNumUps(animal, charAnimal){
-  if(charAnimal.specialization != 'NONE'){
+  if(animalHasAnySpecial()){
     return 3;
   }
   switch(charAnimal.age){

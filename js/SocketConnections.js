@@ -493,6 +493,38 @@ module.exports = class SocketConnections {
         });
       });
 
+
+
+      socket.on('requestAddFamiliar', function(charID){
+        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+          if(ownsChar){
+            CharSaving.addFamiliar(charID).then((charFamiliar) => {
+              socket.emit('returnAddFamiliar', charFamiliar);
+            });
+          }
+        });
+      });
+
+      socket.on('requestUpdateFamiliar', function(charID, charFamiliarID, updateValues){
+        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+          if(ownsChar){
+            CharSaving.updateFamiliar(charID, charFamiliarID, updateValues).then(() => {
+              socket.emit('returnUpdateFamiliar');
+            });
+          }
+        });
+      });
+
+      socket.on('requestRemoveFamiliar', function(charID, charFamiliarID){
+        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+          if(ownsChar){
+            CharSaving.deleteFamiliar(charID, charFamiliarID).then(() => {
+              socket.emit('returnRemoveFamiliar', charFamiliarID);
+            });
+          }
+        });
+      });
+
     });
 
   }

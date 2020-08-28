@@ -15,6 +15,7 @@ const CharCondition = require('../models/contentDB/CharCondition');
 const InnateSpellCasting = require('../models/contentDB/InnateSpellCasting');
 const AnimalCompanion = require('../models/contentDB/AnimalCompanion');
 const CharAnimalCompanion = require('../models/contentDB/CharAnimalCompanion');
+const CharFamiliar = require('../models/contentDB/CharFamiliar');
 
 const CharDataMapping = require('./CharDataMapping');
 const CharDataMappingExt = require('./CharDataMappingExt');
@@ -361,6 +362,48 @@ module.exports = class CharSaving {
         });
     }
 
+
+
+    static addFamiliar(charID) {
+      return CharFamiliar.create({
+        charID: charID,
+        name: 'Familiar',
+        description: '',
+        imageURL: '',
+        currentHP: -1,
+      }).then((charFamiliar) => {
+          return charFamiliar;
+      });
+    }
+
+    static deleteFamiliar(charID, charFamiliarID) {
+        return CharFamiliar.destroy({
+            where: {
+                id: charFamiliarID,
+                charID: charID
+            }
+        }).then((result) => {
+            return;
+        });
+    }
+
+    static updateFamiliar(charID, charFamiliarID, inUpdateValues) {
+        let updateValues = {
+            name: inUpdateValues.Name,
+            description: inUpdateValues.Description,
+            imageURL: inUpdateValues.ImageURL,
+            currentHP: inUpdateValues.CurrentHealth,
+            abilitiesJSON: inUpdateValues.AbilitiesJSON,
+        };
+        return CharFamiliar.update(updateValues, {
+            where: {
+                id: charFamiliarID,
+                charID: charID
+            }
+        }).then((result) => {
+            return;
+        });
+    }
 
 
     static saveName(charID, name) {

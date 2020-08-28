@@ -39,6 +39,8 @@ const Shield = require('../models/contentDB/Shield');
 const ItemRune = require('../models/contentDB/ItemRune');
 const AnimalCompanion = require('../models/contentDB/AnimalCompanion');
 const CharAnimalCompanion = require('../models/contentDB/CharAnimalCompanion');
+const FamiliarAbility = require('../models/contentDB/FamiliarAbility');
+const CharFamiliar = require('../models/contentDB/CharFamiliar');
 
 const CharDataMapping = require('./CharDataMapping');
 const CharDataMappingExt = require('./CharDataMappingExt');
@@ -1223,21 +1225,43 @@ module.exports = class CharGathering {
         });
     }
 
+    static getAllFamiliarAbilities(charID) {
+      return Character.findOne({ where: { id: charID} })
+      .then((character) => {
+          return FamiliarAbility.findAll({
+              where: {
+                  contentSrc: {
+                    [Op.or]: CharContentSources.getSourceArray(character)
+                  }
+              }
+          })
+          .then((familiarAbilities) => {
+              return familiarAbilities;
+          });
+      });
+  }
+
     static getCompanionData(charID){
+      return CharGathering.getAllAnimalCompanions(charID)
+      .then((allAnimalCompanions) => {
+        return CharAnimalCompanion.findAll({ where: { charID: charID} })
+        .then((charAnimalComps) => {
+          return CharGathering.getAllFamiliarAbilities(charID)
+          .then((allFamiliarAbilities) => {
+            return CharFamiliar.findAll({ where: { charID: charID} })
+            .then((charFamiliars) => {
 
-        return CharGathering.getAllAnimalCompanions(charID)
-        .then((allAnimalCompanions) => {
-            return CharAnimalCompanion.findAll({ where: { charID: charID} })
-            .then((charAnimalComps) => {
-
-                return {
-                    AllAnimalCompanions : allAnimalCompanions,
-                    AnimalCompanions : charAnimalComps,
-                };
+              return {
+                  AllAnimalCompanions : allAnimalCompanions,
+                  AnimalCompanions : charAnimalComps,
+                  AllFamiliarAbilities : allFamiliarAbilities,
+                  Familiars : charFamiliars,
+              };
 
             });
+          });
         });
-
+      });
     }
 
     static getAbilityScores(charID) {

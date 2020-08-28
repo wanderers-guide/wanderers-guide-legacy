@@ -90,7 +90,12 @@ let g_selectedDetailsOptionValue = 'All';
 
 let g_preConditions_strScore = null;
 let g_preConditions_dexScore = null;
+let g_preConditions_conScore = null;
+let g_preConditions_intScore = null;
+let g_preConditions_wisScore = null;
+let g_preConditions_chaScore = null;
 
+let g_totalACNum = null;
 
 // ~~~~~~~~~~~~~~ // Run on Load // ~~~~~~~~~~~~~~ //
 $(function () {
@@ -386,6 +391,10 @@ function loadCharSheet(){
     // Get STR and DEX score before conditions code runs (in the case of Enfeebled)
     g_preConditions_strScore = getStatTotal('SCORE_STR');
     g_preConditions_dexScore = getStatTotal('SCORE_DEX');
+    g_preConditions_conScore = getStatTotal('SCORE_CON');
+    g_preConditions_intScore = getStatTotal('SCORE_INT');
+    g_preConditions_wisScore = getStatTotal('SCORE_WIS');
+    g_preConditions_chaScore = getStatTotal('SCORE_CHA');
 
     // Run All Conditions Code //
     runAllConditionsCode();
@@ -1552,6 +1561,7 @@ function determineArmor(dexMod, strScore) {
         }
 
         // Final Product
+        g_totalACNum = totalAC;
         let totalACDisplayed = (hasConditionals('AC')) ? totalAC+'<sup class="is-size-5 has-text-info">*</sup>' : totalAC;
         $('#acNumber').html(totalACDisplayed);
         $('#acSection').attr('data-tooltip', armorStruct.InvItem.name);
@@ -1599,6 +1609,8 @@ function determineArmor(dexMod, strScore) {
         let totalAC = 10 + dexMod + profNumber + totalArmorBonus;
         totalAC += getStatTotal('AC');
 
+        // Final Product
+        g_totalACNum = totalAC;
         let totalACDisplayed = (hasConditionals('AC')) ? totalAC+'<sup class="is-size-5 has-text-info">*</sup>' : totalAC;
         $('#acNumber').html(totalACDisplayed);
         $('#acSection').attr('data-tooltip', 'Wearing Nothing');
@@ -2137,3 +2149,36 @@ socket.on("returnInvUpdate", function(invStruct){
     loadCharSheet();
 });
 
+////
+
+socket.on("returnNotesFieldChange", function(newNotesData, locationID) {
+  let newNoteData = {
+    charID: getCharIDFromURL(),
+    placeholderText: newNotesData.placeholderText,
+    source: 'notesField',
+    sourceCode: newNotesData.sourceCode,
+    sourceCodeSNum: newNotesData.sourceCodeSNum,
+    sourceLevel: newNotesData.sourceLevel,
+    sourceType: newNotesData.sourceType,
+    value: newNotesData.value,
+    text: '',
+  };
+  let existingNoteData = g_notesFields.find(noteData => {
+    return hasSameSrc(noteData, newNoteData);
+  });
+  if(existingNoteData == null){
+    g_notesFields.push(newNoteData);
+  }
+});
+
+socket.on("returnNotesFieldDelete", function(srcStruct) {
+  let newNotesFieldArray = [];
+  for(let notesData of g_notesFields){
+      if(srcStruct.sourceCode === notesData.sourceCode &&
+              srcStruct.sourceCodeSNum === notesData.sourceCodeSNum){
+      } else {
+          newNotesFieldArray.push(notesData);
+      }
+  }
+  g_notesFields = newNotesFieldArray;
+});

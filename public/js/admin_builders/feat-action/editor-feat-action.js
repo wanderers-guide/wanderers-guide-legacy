@@ -50,7 +50,7 @@ socket.on("returnAdminFeatDetailsPlus", function(featsObject, classObject, ances
             $("#inputFeatTags").find('option[value='+featTag.id+']').attr('selected','selected');
         }
     }
-    $("#inputFeatTags").trigger("change");
+    $("#inputFeatTags").trigger("chosen:updated");
     $("#inputBuilderType").trigger("change");
 
 

@@ -55,11 +55,11 @@ socket.on("returnAdminAncestryDetails", function(ancestryObject, featsObject){
     for(let lang of ancestry.Languages){
         $('#inputLangs option[name="'+lang.name+'"]').attr('selected','selected');
     }
-    $('#inputLangs').trigger("change");
+    $('#inputLangs').trigger("chosen:updated");
     for(let bonusLang of ancestry.BonusLanguages){
         $('#inputBonusLangs option[name="'+bonusLang.name+'"]').attr('selected','selected');
     }
-    $('#inputBonusLangs').trigger("change");
+    $('#inputBonusLangs').trigger("chosen:updated");
 
     // Ancestry Heritages
     for(let heritage of ancestry.Heritages){
@@ -138,7 +138,7 @@ socket.on("returnAdminAncestryDetails", function(ancestryObject, featsObject){
             $(this).find(".card-header").trigger("click");
             // Trigger Feat Name and Tags
             $(this).find(".inputFeatName").trigger("change");
-            $(this).find(".inputFeatTags").trigger("change");
+            $(this).find(".inputFeatTags").trigger("chosen:updated");
         }
     });
 

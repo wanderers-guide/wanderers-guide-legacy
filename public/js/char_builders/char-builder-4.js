@@ -137,6 +137,7 @@ socket.on("returnClassDetails", function(coreDataStruct, classObject, inChoiceSt
     });
  
     $('#selectClass').trigger("change", [false]);
+    finishLoadingPage();
 
 });
 

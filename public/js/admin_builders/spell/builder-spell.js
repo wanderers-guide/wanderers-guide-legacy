@@ -7,15 +7,7 @@ let socket = io();
 // ~~~~~~~~~~~~~~ // Run on Load // ~~~~~~~~~~~~~~ //
 $(function () {
 
-    let inputTags = $("#inputTags");
-    inputTags.change(function(){
-        let tagNames = '- ';
-        $(this).find(":selected").each(function(){
-            tagNames += $(this).text()+' ';
-        });
-        $("#selectedTraits").html(tagNames);
-    });
-
+    $("#inputTags").chosen();
 
     $("#createButton").click(function(){
         $(this).unbind();

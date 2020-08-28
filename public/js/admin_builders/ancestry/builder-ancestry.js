@@ -7,23 +7,8 @@ let socket = io();
 // ~~~~~~~~~~~~~~ // Run on Load // ~~~~~~~~~~~~~~ //
 $(function () {
 
-    
-    $("#inputLangs").change(function(){
-        let langNames = '- ';
-        $(this).find(":selected").each(function(){
-            langNames += $(this).text()+' ';
-        });
-        $("#selectedLanguages").html(langNames);
-    });
-
-    $("#inputBonusLangs").change(function(){
-        let langNames = '- ';
-        $(this).find(":selected").each(function(){
-            langNames += $(this).text()+' ';
-        });
-        $("#selectedBonusLanguages").html(langNames);
-    });
-
+    $("#inputLangs").chosen();
+    $("#inputBonusLangs").chosen();
     
     let heritageCount = 0;
     $("#addHeritageButton").click(function(){
@@ -92,14 +77,7 @@ $(function () {
             $("#"+featID).find(".card-header-title").html('Ancestry Feat - '+inputFeatName.val());
         });
 
-        let inputFeatTags = $("#"+featID).find(".inputFeatTags");
-        inputFeatTags.change(function(){
-            let tagNames = '- ';
-            $(this).find(":selected").each(function(){
-                tagNames += $(this).text()+' ';
-            });
-            $("#"+featID).find(".selectedTraits").html(tagNames);
-        });
+        $("#"+featID).find(".inputFeatTags").chosen();
 
     });
 
