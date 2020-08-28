@@ -50,9 +50,6 @@ function openFamiliarQuickview(data) {
 
     qContent.append('<hr class="mt-1 mb-2 mx-4" style="border-width: 3px;">');
 
-    // Char Level //
-    let lvl = g_character.level;
-
     let percepBonus = getFamiliarPerception();
     let AC = getFamiliarAC();
 
@@ -95,8 +92,11 @@ function openFamiliarQuickview(data) {
         }
     }
 
-    qContent.append('<div class="pb-1"><select id="selectFamiliarAbility" data-placeholder="Select Familiar Abilities" multiple>'+familiarAbilityHTML+'</select></div>');
+    qContent.append('<div class=""><select id="selectFamiliarAbility" data-placeholder="Select Familiar Abilities" multiple>'+familiarAbilityHTML+'</select></div>');
+    qContent.append('<div id="familiarAbilityDescriptions"></div>');
+
     qContent.append('<div class=""><select id="selectMasterAbility" data-placeholder="Select Master Abilities" multiple>'+masterAbilityHTML+'</select></div>');
+    qContent.append('<div id="masterAbilityDescriptions"></div>');
 
     let abilityArray = g_familiarAbilitiesMap.get(familiar.id);
     if(abilityArray != null){
@@ -126,24 +126,30 @@ function openFamiliarQuickview(data) {
 
     if(abilityArray != null){
       for(let ability of abilityArray) {
-        qContent.append('<div class="px-3"><p class="is-bold-very">'+ability.name+'</p></div>');
+        let descriptionContent = null;
+        if(ability.isMaster == 1) {
+          descriptionContent = $('#masterAbilityDescriptions');
+        } else {
+          descriptionContent = $('#familiarAbilityDescriptions');
+        }
+        descriptionContent.append('<div class="px-3"><p class="is-bold-very">'+ability.name+'</p></div>');
         if(ability.prerequisites != null){
-          qContent.append('<div class="px-4 ml-2"><p class="negative-indent"><span><strong>Prerequisites </strong></span><span>'+ability.prerequisites+'</span></p></div>');
+          descriptionContent.append('<div class="px-4 ml-2"><p class="negative-indent"><span><strong>Prerequisites </strong></span><span>'+ability.prerequisites+'</span></p></div>');
         }
         if(ability.requirements != null){
-          qContent.append('<div class="px-4 ml-2"><p class="negative-indent"><span><strong>Requirements </strong></span><span>'+ability.requirements+'</span></p></div>');
+          descriptionContent.append('<div class="px-4 ml-2"><p class="negative-indent"><span><strong>Requirements </strong></span><span>'+ability.requirements+'</span></p></div>');
         }
-        qContent.append('<div class="px-4">'+processText(ability.description, true, true, 'MEDIUM')+'</div>');
+        descriptionContent.append('<div class="px-4">'+processText(ability.description, true, true, 'MEDIUM')+'</div>');
         
         let familiarAbilityCodeID = 'familiarAbility'+ability.id;
-        qContent.append('<div id="'+familiarAbilityCodeID+'"></div>');
+        descriptionContent.append('<div id="'+familiarAbilityCodeID+'"></div>');
         // Add Text Statements
         processAddText(ability.code, familiarAbilityCodeID);
         // Note Field Statements
         let srcStruct = {
             sourceType: 'familiar',
             sourceLevel: 0,
-            sourceCode: familiarAbilityCodeID,
+            sourceCode: 'familiarAbility-'+familiar.id+'-'+ability.id,
             sourceCodeSNum: 'a',
         };
         displayNotesField($('#'+familiarAbilityCodeID), srcStruct, 1);

@@ -21,11 +21,12 @@ function openActionsTab(data) {
 
     filterInnerHTML += '<option value="others">Miscellaneous</option>';
     filterInnerHTML += '<option value="all">All</option>';
+    filterInnerHTML += '<optgroup label="── Skills ──"></optgroup>';
     for(const [skillName, skillData] of data.SkillMap.entries()){
-        filterInnerHTML += '<option value="'+skillData.Skill.id+'">Skill - '+skillData.Skill.name+'</option>';
+        filterInnerHTML += '<option value="'+skillData.Skill.id+'">'+skillData.Skill.name+'</option>';
     }
 
-    filterInnerHTML += '</select></div></div><div class="column is-2"><div class="select is-small"><select id="actionFilterSelectByAction"><option value="chooseDefault">By Action</option><option value="OneAction" class="pf-icon">[one-action]</option><option value="TwoActions" class="pf-icon">[two-actions]</option><option value="ThreeActions" class="pf-icon">[three-actions]</option><option value="FreeAction" class="pf-icon">[free-action]</option><option value="Reaction" class="pf-icon">[reaction]</option></select></div></div></div>';
+    filterInnerHTML += '</select></div></div><div class="column is-2"><div class="select is-small"><select id="actionFilterSelectByAction" class="pf-icon is-bold-very"><option value="chooseDefault" class="is-bold-very">By Action</option><optgroup label="───────"></optgroup><option value="OneAction" class="pf-icon">[one-action]</option><option value="TwoActions" class="pf-icon">[two-actions]</option><option value="ThreeActions" class="pf-icon">[three-actions]</option><option value="FreeAction" class="pf-icon">[free-action]</option><option value="Reaction" class="pf-icon">[reaction]</option></select></div></div></div>';
 
     filterInnerHTML += '<div class="mb-1"><p class="control has-icons-left"><input id="actionFilterSearch" class="input" type="text" placeholder="Search"><span class="icon is-left"><i class="fas fa-search" aria-hidden="true"></i></span></p></div>';
 
@@ -79,10 +80,8 @@ function changeActionTab(type, data){
     let actionFilterSelectByAction = $('#actionFilterSelectByAction');
     if(actionFilterSelectByAction.val() == "chooseDefault"){
         actionFilterSelectByAction.parent().removeClass('is-info');
-        actionFilterSelectByAction.removeClass('pf-icon');
     } else {
         actionFilterSelectByAction.parent().addClass('is-info');
-        actionFilterSelectByAction.addClass('pf-icon');
     }
     actionFilterSelectByAction.blur();
 

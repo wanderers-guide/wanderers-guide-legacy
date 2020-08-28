@@ -52,10 +52,10 @@ function processFamiliarAbilityCode(charFamiliarID, abilitiesArray){
     let noteFieldSrcStruct = {
       sourceType: 'familiar',
       sourceLevel: 0,
-      sourceCode: 'familiarAbility'+ability.id,
+      sourceCode: 'familiarAbility-'+charFamiliarID+'-'+ability.id,
       sourceCodeSNum: 'a',
     };
-    let rNoteField = abilCode.match(/GIVE-NOTES-FIELD=(.+)/ig);
+    let rNoteField = abilCode.match(/GIVE-NOTES-FIELD=(.+)/i);
     if(rNoteField != null){
       socket.emit("requestNotesFieldChange",
           getCharIDFromURL(),
