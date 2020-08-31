@@ -238,6 +238,12 @@ socket.on("returnCharacterSheetInfo", function(charInfo, viewOnly){
     g_resistAndVulners = charInfo.ResistAndVulners;
 
     g_companionData = charInfo.CompanionData;
+    g_companionData.AllAnimalCompanions = g_companionData.AllAnimalCompanions.sort(
+      function(a, b) {
+        return a.name > b.name ? 1 : -1;
+      }
+    );
+
 
     g_notesFields = charInfo.NotesFields;
 

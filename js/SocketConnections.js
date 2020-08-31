@@ -505,6 +505,16 @@ module.exports = class SocketConnections {
         });
       });
 
+      socket.on('requestAddSpecificFamiliar', function(charID, specificStruct){
+        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+          if(ownsChar){
+            CharSaving.addSpecificFamiliar(charID, specificStruct).then((charFamiliar) => {
+              socket.emit('returnAddFamiliar', charFamiliar);
+            });
+          }
+        });
+      });
+
       socket.on('requestUpdateFamiliar', function(charID, charFamiliarID, updateValues){
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
           if(ownsChar){

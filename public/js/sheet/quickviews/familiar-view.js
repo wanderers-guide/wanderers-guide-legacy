@@ -9,6 +9,8 @@ function openFamiliarQuickview(data) {
     let familiar = data.CharFamiliar;
     processFamiliarAbilities(familiar);
 
+    let specificStruct = getFamiliarSpecificStruct(familiar.specificType);
+
     // Remove Button //
     $('#quickViewTitleRight').html('<button id="removeFamiliarBtn" class="button is-very-small is-danger is-outlined is-rounded is-pulled-right mr-1">Remove</button>');
     $('#removeFamiliarBtn').click(function(){
@@ -16,6 +18,9 @@ function openFamiliarQuickview(data) {
             getCharIDFromURL(),
             familiar.id);
     });
+
+    // Familiar Traits //
+    displayFamiliarTraits(qContent, specificStruct);
 
     // Name //
     qContent.append('<div class="field is-marginless mb-1"><div class="control"><input id="familiarName" class="input" type="text" maxlength="90" value="'+familiar.name+'" placeholder="Familiar Name" spellcheck="false" autocomplete="off"></div></div>');
@@ -80,6 +85,12 @@ function openFamiliarQuickview(data) {
 
     qContent.append('<div class="px-3"><p class=""><strong>Senses</strong> '+sensesText+'</p></div>');
 
+    // Familiar Alignment //
+    displayFamiliarAlignment(qContent, specificStruct);
+
+    // Familiar Required Number of Abilities //
+    displayFamiliarReqAbils(qContent, specificStruct);
+
     qContent.append('<hr class="m-2">');
 
     let familiarAbilityHTML = '';
@@ -95,7 +106,7 @@ function openFamiliarQuickview(data) {
     qContent.append('<div class=""><select id="selectFamiliarAbility" data-placeholder="Select Familiar Abilities" multiple>'+familiarAbilityHTML+'</select></div>');
     qContent.append('<div id="familiarAbilityDescriptions"></div>');
 
-    qContent.append('<div class=""><select id="selectMasterAbility" data-placeholder="Select Master Abilities" multiple>'+masterAbilityHTML+'</select></div>');
+    qContent.append('<div class="pt-1"><select id="selectMasterAbility" data-placeholder="Select Master Abilities" multiple>'+masterAbilityHTML+'</select></div>');
     qContent.append('<div id="masterAbilityDescriptions"></div>');
 
     let abilityArray = g_familiarAbilitiesMap.get(familiar.id);
@@ -155,6 +166,9 @@ function openFamiliarQuickview(data) {
         displayNotesField($('#'+familiarAbilityCodeID), srcStruct, 1);
       }
     }
+
+    // Familiar Extra Abilities //
+    displayFamiliarExtraAbils(qContent, specificStruct);
 
     qContent.append('<hr class="m-2">');
 

@@ -5,6 +5,10 @@ const AnimalCompanion = db.define('animalCompanions', {
   name: {
     type: Sequelize.STRING
   },
+  rarity: {
+    type: Sequelize.ENUM,
+    values: ['COMMON', 'UNCOMMON', 'RARE', 'UNIQUE']
+  },
   description: {
     type: Sequelize.TEXT
   },

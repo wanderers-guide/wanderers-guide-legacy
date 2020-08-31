@@ -364,6 +364,20 @@ module.exports = class CharSaving {
 
 
 
+    static addSpecificFamiliar(charID, specificStruct) {
+      return CharFamiliar.create({
+        charID: charID,
+        name: specificStruct.Name,
+        description: specificStruct.Description,
+        imageURL: '',
+        currentHP: -1,
+        abilitiesJSON: specificStruct.AbilsJSON,
+        specificType: specificStruct.SpecificType,
+      }).then((charFamiliar) => {
+          return charFamiliar;
+      });
+    }
+
     static addFamiliar(charID) {
       return CharFamiliar.create({
         charID: charID,

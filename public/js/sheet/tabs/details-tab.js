@@ -570,7 +570,7 @@ function displayCompanionsSection(){
 	  $('#selectAnimalCompanion').append('<optgroup label="──────────"></optgroup>');
 		
 	  for(let animalComp of g_companionData.AllAnimalCompanions){
-        $('#selectAnimalCompanion').append('<option value="'+animalComp.id+'">'+animalComp.name+'</option>');
+        $('#selectAnimalCompanion').append('<option value="'+animalComp.id+'" class="'+selectOptionRarity(animalComp.rarity)+'">'+animalComp.name+'</option>');
     }
     
     $('#addAnimalCompanion').click(function() {
@@ -585,13 +585,26 @@ function displayCompanionsSection(){
 
 
     // Add Familiar //
-	  $('#selectFamiliar').append('<option value="Familiar">Familiar</option>');
+    $('#selectFamiliar').append('<option value="Familiar">Familiar</option>');
+
+    $('#selectFamiliar').append('<option value="FAERIE-DRAGON">Faerie Dragon</option>');
+    $('#selectFamiliar').append('<option value="IMP">Imp</option>');
+    $('#selectFamiliar').append('<option value="SPELLSLIME">Spellslime</option>');
     
     $('#addFamiliar').click(function() {
-        //let familiarType = $('#selectFamiliar').val();
+        let specificType = $('#selectFamiliar').val();
         $(this).addClass('is-loading');
-        socket.emit("requestAddFamiliar",
+        if(specificType == 'Familiar'){
+          socket.emit("requestAddFamiliar",
             getCharIDFromURL());
+        } else {
+          let specificStruct = getFamiliarSpecificStruct(specificType);
+          if(specificStruct != null){
+            socket.emit("requestAddSpecificFamiliar",
+              getCharIDFromURL(),
+              specificStruct);
+          }
+        }
     });
 
 }

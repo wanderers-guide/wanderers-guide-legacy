@@ -19,6 +19,9 @@ const CharFamiliar = db.define('charFamiliars', {
   },
   abilitiesJSON: {
     type: Sequelize.STRING
+  },
+  specificType: {
+    type: Sequelize.STRING
   }
 });
 
