@@ -22,16 +22,11 @@ function processingResistances(wscStatement, srcStruct, locationID){
 
 //////////////////////////////// Give Resistance ///////////////////////////////////
 function giveResistance(srcStruct, resistType, resistAmount){
-    if(resistAmount === 'HALF_LEVEL' || resistAmount === 'LEVEL' || !isNaN(parseInt(resistAmount))){
-        socket.emit("requestResistanceChange",
-            getCharIDFromURL(),
-            srcStruct,
-            resistType,
-            resistAmount);
-    } else {
-        displayError("Invalid Resistance Amount '"+resistAmount+"'!");
-        statementComplete();
-    }
+  socket.emit("requestResistanceChange",
+      getCharIDFromURL(),
+      srcStruct,
+      resistType,
+      resistAmount);
 }
 
 socket.on("returnResistanceChange", function(){
@@ -40,16 +35,11 @@ socket.on("returnResistanceChange", function(){
 
 //////////////////////////////// Give Vulnerability ///////////////////////////////////
 function giveVulnerability(srcStruct, vulnerableType, vulnerableAmount){
-    if(vulnerableAmount === 'HALF_LEVEL' || vulnerableAmount === 'LEVEL' || !isNaN(parseInt(vulnerableAmount))){
-        socket.emit("requestVulnerabilityChange",
-            getCharIDFromURL(),
-            srcStruct,
-            vulnerableType,
-            vulnerableAmount);
-    } else {
-        displayError("Invalid Vulnerability Amount '"+vulnerableAmount+"'!");
-        statementComplete();
-    }
+  socket.emit("requestVulnerabilityChange",
+      getCharIDFromURL(),
+      srcStruct,
+      vulnerableType,
+      vulnerableAmount);
 }
 
 socket.on("returnVulnerabilityChange", function(){
