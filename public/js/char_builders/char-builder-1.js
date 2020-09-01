@@ -161,6 +161,14 @@ function handleCharacterOptions(character) {
     });
     $("#contentSrc-LOST-GOD-MAGIC").prop('checked', contentSourceArray.includes('LOST-GOD-MAGIC'));
 
+    $("#contentSrc-LOST-LEGENDS").change(function(){
+      socket.emit("requestCharacterSourceChange", 
+          getCharIDFromURL(), 
+          'LOST-LEGENDS',
+          this.checked);
+    });
+    $("#contentSrc-LOST-LEGENDS").prop('checked', contentSourceArray.includes('LOST-LEGENDS'));
+
     $("#contentSrc-LOST-WORLD-GUIDE").change(function(){
         socket.emit("requestCharacterSourceChange", 
             getCharIDFromURL(), 
@@ -169,6 +177,14 @@ function handleCharacterOptions(character) {
     });
     $("#contentSrc-LOST-WORLD-GUIDE").prop('checked', contentSourceArray.includes('LOST-WORLD-GUIDE'));
 
+    $("#contentSrc-AGENTS-OF-EDGEWATCH").change(function(){
+      socket.emit("requestCharacterSourceChange", 
+          getCharIDFromURL(), 
+          'AGENTS-OF-EDGEWATCH',
+          this.checked);
+    });
+    $("#contentSrc-AGENTS-OF-EDGEWATCH").prop('checked', contentSourceArray.includes('AGENTS-OF-EDGEWATCH'));
+    
     $("#contentSrc-AGE-OF-ASHES").change(function(){
         socket.emit("requestCharacterSourceChange", 
             getCharIDFromURL(), 
