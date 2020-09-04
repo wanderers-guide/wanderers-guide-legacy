@@ -109,9 +109,11 @@ function numberWithCommas(x) {
 
 /* Worn Armor Bulk Adjustment */
 function getWornArmorBulkAdjustment(invItemID, currentBulk){
+  return currentBulk;
   if(g_equippedArmorInvItemID != null && g_equippedArmorInvItemID == invItemID){
     return currentBulk;
   } else {
+
     if(currentBulk == 0.1){
       return 1;
     } else if (currentBulk >= 1){
