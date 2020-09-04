@@ -1788,6 +1788,7 @@ function determineBulkAndCoins(invItems, itemMap){
                     let bagItem = itemMap.get(bagInvItem.itemID+"");
                     let invItemQuantity = (invItem.quantity == null) ? 1 : invItem.quantity;
                     let invItemBulk = getConvertedBulkForSize(invItem.size, invItem.bulk);
+                    invItemBulk = getWornArmorBulkAdjustment(invItem.id, invItemBulk);
                     invItemBulk = (invItemBulk == 0.0) ? 0.001 : invItemBulk;
                     let invItemTotalBulk = invItemBulk * invItemQuantity;
                     bagBulkMap.set(invItem.bagInvItemID, invItemTotalBulk-bagItem.StorageData.bulkIgnored);
@@ -1795,6 +1796,7 @@ function determineBulkAndCoins(invItems, itemMap){
             } else {
                 let invItemQuantity = (invItem.quantity == null) ? 1 : invItem.quantity;
                 let invItemBulk = getConvertedBulkForSize(invItem.size, invItem.bulk);
+                invItemBulk = getWornArmorBulkAdjustment(invItem.id, invItemBulk);
                 invItemBulk = (invItemBulk == 0.0) ? 0.001 : invItemBulk;
                 let invItemTotalBulk = invItemBulk * invItemQuantity;
                 bagBulkMap.set(invItem.bagInvItemID, bagBulk+invItemTotalBulk);
@@ -1812,6 +1814,7 @@ function determineBulkAndCoins(invItems, itemMap){
             if(includeSelf){
                 let invItemQuantity = (invItem.quantity == null) ? 1 : invItem.quantity;
                 let invItemBulk = getConvertedBulkForSize(invItem.size, invItem.bulk);
+                invItemBulk = getWornArmorBulkAdjustment(invItem.id, invItemBulk);
                 invItemBulk = (invItemBulk == 0.0) ? 0.001 : invItemBulk;
                 let invItemTotalBulk = invItemBulk * invItemQuantity;
                 totalBulk += invItemTotalBulk;

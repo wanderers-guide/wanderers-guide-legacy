@@ -14,6 +14,7 @@ const favicon = require('serve-favicon');
 
 const authRoutes = require('./routes/auth-routes');
 const adminRoutes = require('./routes/admin-routes');
+const apiRoutes = require('./routes/api-routes');
 const profileRoutes = require('./routes/profile-routes');
 const coreRoutes = require('./routes/core-routes');
 const errorRoutes = require('./routes/error-routes');
@@ -125,6 +126,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/auth', authRoutes);
 app.use('/profile', profileRoutes);
 app.use('/admin', adminRoutes);
+app.use('/api', apiRoutes);
 app.use('/', coreRoutes);
 app.use('*', errorRoutes); // 404 Route
 

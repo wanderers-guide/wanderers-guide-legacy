@@ -107,6 +107,21 @@ function numberWithCommas(x) {
   return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
+/* Worn Armor Bulk Adjustment */
+function getWornArmorBulkAdjustment(invItemID, currentBulk){
+  if(g_equippedArmorInvItemID != null && g_equippedArmorInvItemID == invItemID){
+    return currentBulk;
+  } else {
+    if(currentBulk == 0.1){
+      return 1;
+    } else if (currentBulk >= 1){
+      return currentBulk + 1;
+    } else {
+      return currentBulk;
+    }
+  }
+}
+
 /* Size Conversions */
 function getConvertedBulkForSize(size, bulk){
   switch(size) {

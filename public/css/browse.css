@@ -1,0 +1,13 @@
+
+/* Tabs */
+.category-tabs li.is-active a {
+  color: #303030;
+}
+.category-tabs li:hover {
+  color: #303030;
+}
+
+.tabs:not(.is-boxed) li.is-active a {
+  border-bottom-color: #3298dc;
+  color: #3298dc;
+}

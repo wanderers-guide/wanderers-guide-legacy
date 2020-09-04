@@ -14,6 +14,18 @@ function getUserID(socket){
 
 module.exports = class AuthCheck {
 
+    static ownsCharacterAPI(userID, charID) {
+        return Character.findAll({ where: { userID: userID} })
+        .then((characters) => {
+            let character = characters.find(character => {
+                return character.id == charID;
+            });
+            return (character != null);
+        }).catch((error) => {
+            return false;
+        });
+    }
+
     static ownsCharacter(socket, charID) {
         return Character.findAll({ where: { userID: getUserID(socket)} })
         .then((characters) => {

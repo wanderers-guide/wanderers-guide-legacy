@@ -140,8 +140,18 @@ function openInvItemQuickview(data) {
         usageBulkEntry += '<strong>Usage</strong> '+data.Item.Item.usage+'; ';
     }
     let bulk = getConvertedBulkForSize(data.InvItem.size, data.InvItem.bulk);
+
+    let armorAdjBulk = getWornArmorBulkAdjustment(data.InvItem.id, bulk);
+    let armorAdjBulkText = null;
+    if(bulk == 0.1 && armorAdjBulk == 1){
+      armorAdjBulkText = '<span class="is-size-6-5 has-text-info is-italic"> ➞ <strong class="has-text-info">1</strong> from carrying and not wearing armor</span>';
+    } else if(armorAdjBulk > bulk) {
+      armorAdjBulkText = '<span class="is-size-6-5 has-text-info is-italic"> + <strong class="has-text-info">1</strong> from carrying and not wearing armor</span>';
+    }
+
     bulk = getBulkFromNumber(bulk);
     usageBulkEntry += '<strong>Bulk</strong> '+bulk;
+    if(armorAdjBulkText != null) { usageBulkEntry += armorAdjBulkText; }
     if(data.InvItem.isDropped == 1) { usageBulkEntry += '<span class="is-size-6-5 is-italic"> (Dropped)</span>'; }
     qContent.append('<p class="is-size-6 has-text-left px-3 negative-indent">'+usageBulkEntry+'</p>');
 
