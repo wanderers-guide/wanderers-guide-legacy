@@ -108,19 +108,19 @@ function numberWithCommas(x) {
 }
 
 /* Worn Armor Bulk Adjustment */
-function getWornArmorBulkAdjustment(invItemID, currentBulk){
-  return currentBulk;
-  if(g_equippedArmorInvItemID != null && g_equippedArmorInvItemID == invItemID){
+function getWornArmorBulkAdjustment(invItem, currentBulk){
+  if(g_equippedArmorInvItemID != null && g_equippedArmorInvItemID == invItem.id){
     return currentBulk;
   } else {
-
-    if(currentBulk == 0.1){
-      return 1;
-    } else if (currentBulk >= 1){
-      return currentBulk + 1;
-    } else {
-      return currentBulk;
+    let item = g_itemMap.get(invItem.itemID+"");
+    if(item != null && item.ArmorData != null){
+      if(currentBulk == 0.1){
+        return 1;
+      } else if (currentBulk >= 1){
+        return currentBulk + 1;
+      }
     }
+    return currentBulk;
   }
 }
 

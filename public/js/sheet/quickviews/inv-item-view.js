@@ -141,7 +141,7 @@ function openInvItemQuickview(data) {
     }
     let bulk = getConvertedBulkForSize(data.InvItem.size, data.InvItem.bulk);
 
-    let armorAdjBulk = getWornArmorBulkAdjustment(data.InvItem.id, bulk);
+    let armorAdjBulk = getWornArmorBulkAdjustment(data.InvItem, bulk);
     let armorAdjBulkText = null;
     if(bulk == 0.1 && armorAdjBulk == 1){
       armorAdjBulkText = '<span class="is-size-6-5 has-text-info is-italic"> ➞ <strong class="has-text-info">1</strong> from carrying and not wearing armor</span>';

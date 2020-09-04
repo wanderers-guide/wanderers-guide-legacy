@@ -269,7 +269,7 @@ function displayInventoryItem(invItem, openBagInvItemArray, data) {
                 }
 
                 let bulk = getConvertedBulkForSize(baggedInvItem.size, baggedInvItem.bulk);
-                bulk = getWornArmorBulkAdjustment(baggedInvItem.id, bulk);
+                bulk = getWornArmorBulkAdjustment(baggedInvItem, bulk);
                 bulk = getBulkFromNumber(bulk);
                 $('#'+baggedInvItemBulkID).html(bulk);
 
@@ -379,7 +379,7 @@ function displayInventoryItem(invItem, openBagInvItemArray, data) {
     }
 
     let bulk = getConvertedBulkForSize(invItem.size, invItem.bulk);
-    bulk = getWornArmorBulkAdjustment(invItem.id, bulk);
+    bulk = getWornArmorBulkAdjustment(invItem, bulk);
     if(item.StorageData != null){
         if(item.StorageData.ignoreSelfBulkIfWearing == 1){ bulk = 0; }
         if(itemStorageBulkAmt != null && itemStorageBulkAmt > 0) { bulk += itemStorageBulkAmt; }
