@@ -56,7 +56,8 @@
                 <li class="py-1"><a href="/api_docs/#char-req-inventory">Inventory Requests</a></li>
                 <li class="py-1"><a href="/api_docs/#char-req-item">Item Requests</a></li>
                 <li class="py-1"><a href="/api_docs/#char-req-spellcasting">Spellcasting Requests</a></li>
-                <li class="pt-1"><a href="/api_docs/#char-req-companion">Companion Requests</a></li>
+                <li class="py-1"><a href="/api_docs/#char-req-companion">Companion Requests</a></li>
+                <li class="pt-1"><a href="/api_docs/#char-calculated-stats">Calculated Stats</a></li>
             </ul>
         </aside>
     </div>
@@ -519,41 +520,46 @@
                       <div class="column"><p class="text-center">Read</p></div>
                     </div>
                     <div class="columns table-row-b is-mobile is-marginless">
+                      <div class="column is-6"><p class="negative-indent"><span class="is-bold">GET</span> /api/char/<span class="has-text-info">&lt;character ID&gt;</span>/metadata</p></div>
+                      <div class="column is-4"><p class="text-center">Array of all raw character metadata as JSON objects, this includes all selection options and feat choices</p></div>
+                      <div class="column"><p class="text-center">Read</p></div>
+                    </div>
+                    <div class="columns table-row-a is-mobile is-marginless">
                       <div class="column is-6"><p class="negative-indent"><span class="is-bold">GET</span> /api/char/<span class="has-text-info">&lt;character ID&gt;</span>/current-hp</p></div>
                       <div class="column is-4"><p class="text-center">Character's current HP (integer)</p></div>
                       <div class="column"><p class="text-center">Read</p></div>
                     </div>
-                    <div class="columns table-row-a is-mobile is-marginless">
+                    <div class="columns table-row-b is-mobile is-marginless">
                       <div class="column is-6"><p class="negative-indent"><span class="is-bold">PUT</span> /api/char/<span class="has-text-info">&lt;character ID&gt;</span>/current-hp?value=<span class="has-text-info">&lt;new HP&gt;</span></p></div>
                       <div class="column is-4"><p class="text-center">OK</p></div>
                       <div class="column"><p class="text-center">Update</p></div>
                     </div>
-                    <div class="columns table-row-b is-mobile is-marginless">
+                    <div class="columns table-row-a is-mobile is-marginless">
                       <div class="column is-6"><p class="negative-indent"><span class="is-bold">GET</span> /api/char/<span class="has-text-info">&lt;character ID&gt;</span>/temp-hp</p></div>
                       <div class="column is-4"><p class="text-center">Character's temp HP (integer)</p></div>
                       <div class="column"><p class="text-center">Read</p></div>
                     </div>
-                    <div class="columns table-row-a is-mobile is-marginless">
+                    <div class="columns table-row-b is-mobile is-marginless">
                       <div class="column is-6"><p class="negative-indent"><span class="is-bold">PUT</span> /api/char/<span class="has-text-info">&lt;character ID&gt;</span>/temp-hp?value=<span class="has-text-info">&lt;new temp HP&gt;</span></p></div>
                       <div class="column is-4"><p class="text-center">OK</p></div>
                       <div class="column"><p class="text-center">Update</p></div>
                     </div>
-                    <div class="columns table-row-b is-mobile is-marginless">
+                    <div class="columns table-row-a is-mobile is-marginless">
                       <div class="column is-6"><p class="negative-indent"><span class="is-bold">GET</span> /api/char/<span class="has-text-info">&lt;character ID&gt;</span>/hero-points</p></div>
                       <div class="column is-4"><p class="text-center">Character's Hero Points (integer)</p></div>
                       <div class="column"><p class="text-center">Read</p></div>
                     </div>
-                    <div class="columns table-row-a is-mobile is-marginless">
+                    <div class="columns table-row-b is-mobile is-marginless">
                       <div class="column is-6"><p class="negative-indent"><span class="is-bold">PUT</span> /api/char/<span class="has-text-info">&lt;character ID&gt;</span>/hero-points?value=<span class="has-text-info">&lt;new Hero Points&gt;</span></p></div>
                       <div class="column is-4"><p class="text-center">OK</p></div>
                       <div class="column"><p class="text-center">Update</p></div>
                     </div>
-                    <div class="columns table-row-b is-mobile is-marginless">
+                    <div class="columns table-row-a is-mobile is-marginless">
                       <div class="column is-6"><p class="negative-indent"><span class="is-bold">GET</span> /api/char/<span class="has-text-info">&lt;character ID&gt;</span>/experience</p></div>
                       <div class="column is-4"><p class="text-center">Character's experience (integer)</p></div>
                       <div class="column"><p class="text-center">Read</p></div>
                     </div>
-                    <div class="columns table-row-a is-mobile is-marginless">
+                    <div class="columns table-row-b is-mobile is-marginless">
                       <div class="column is-6"><p class="negative-indent"><span class="is-bold">PUT</span> /api/char/<span class="has-text-info">&lt;character ID&gt;</span>/experience?value=<span class="has-text-info">&lt;new experience&gt;</span></p></div>
                       <div class="column is-4"><p class="text-center">OK</p></div>
                       <div class="column"><p class="text-center">Update</p></div>
@@ -640,6 +646,20 @@
             </div>
             <div id="char-req-companion" class="mt-4 isHideable">
                 <h1 class="title is-size-4 is-marginless pl-3">Companion Requests</h1>
+                <p class="is-size-5 pl-3">TO-DO</p>
+            </div>
+            <div id="char-calculated-stats" class="mt-4 isHideable">
+                <p class="pb-3">
+                    Calculated stats is Wanderer's Guides solution to being able to give API users an idea of what a character's stats look like without having to manually try to calculate them based off of the endless list of factors that could impact them.
+                </p>
+                <p class="">
+                    When a character sheet is loaded and all the math to calculate each of the character's stats is complete, the final character stats will be sent back and updated (which is the information you would be requesting here).
+                </p>
+                <div class="info-block">
+                  <p><i class="fas fa-info-circle"></i>
+                    Keep in mind these stats are just the base numbers, they do not include any conditional bonuses.
+                  </p>
+                </div>
                 <p class="is-size-5 pl-3">TO-DO</p>
             </div>
 

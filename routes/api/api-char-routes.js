@@ -18,6 +18,17 @@ function hasAccess(accessRights, neededAccessNum){
   return accessNum >= neededAccessNum;
 }
 
+// Metadata //
+router.get('/metadata', (req, res) => { // Read
+  if(hasAccess(req.accessRights, 1)) {
+    CharGathering.getAllMetadata(req.charID).then((metaDatas) => {
+      res.send(metaDatas);
+    });
+  } else {
+    res.sendStatus(401);
+  }
+});
+
 // Current HP //
 router.get('/current-hp', (req, res) => { // Read
   if(hasAccess(req.accessRights, 1)) {

@@ -41,6 +41,7 @@ const AnimalCompanion = require('../models/contentDB/AnimalCompanion');
 const CharAnimalCompanion = require('../models/contentDB/CharAnimalCompanion');
 const FamiliarAbility = require('../models/contentDB/FamiliarAbility');
 const CharFamiliar = require('../models/contentDB/CharFamiliar');
+const CharDataMappingModel = require('../models/contentDB/CharDataMapping');
 
 const CharDataMapping = require('./CharDataMapping');
 const CharDataMappingExt = require('./CharDataMappingExt');
@@ -119,6 +120,13 @@ function capitalizeWords(str){
   }
 
 module.exports = class CharGathering {
+
+    static getAllMetadata(charID){
+      return CharDataMappingModel.findAll({ where: { charID: charID } })
+      .then((charMetaDatas) => {
+          return charMetaDatas;
+      });
+    }
 
     static getAllClasses(charID) {
         return Character.findOne({ where: { id: charID} })
