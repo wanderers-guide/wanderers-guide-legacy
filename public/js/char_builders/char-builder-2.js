@@ -588,38 +588,93 @@ function createAncestryFeats(charLevel){
 
     let ancestryFeatsLocs = [];
 
-    if(charLevel >= 1){
-        let locID = buildFeatStruct(1);
-        ancestryFeatsLocs.push(locID);
-    }
-    if(charLevel >= 5){
-        let locID = buildFeatStruct(5);
-        ancestryFeatsLocs.push(locID);
-    }
-    if(charLevel >= 9){
-        let locID = buildFeatStruct(9);
-        ancestryFeatsLocs.push(locID);
-    }
-    if(charLevel >= 13){
-        let locID = buildFeatStruct(13);
-        ancestryFeatsLocs.push(locID);
-    }
-    if(charLevel >= 17){
-        let locID = buildFeatStruct(17);
-        ancestryFeatsLocs.push(locID);
+    // Use Ancestry Paragon Variant if enabled instead...
+    if(wscChoiceStruct.Character.variantAncestryParagon == 1){
+      
+      let locData1, locData3, locData7, locData11, locData15, locData19;
+
+      if(charLevel >= 1){
+        let locData = buildFeatStruct(1);
+        ancestryFeatsLocs.push(locData);
+
+        locData1 = buildFeatStruct(1, '1-2');
+      }
+      if(charLevel >= 3){
+        locData3 = buildFeatStruct(3);
+      }
+      if(charLevel >= 5){
+        let locData = buildFeatStruct(5);
+        ancestryFeatsLocs.push(locData);
+      }
+      if(charLevel >= 7){
+        locData7 = buildFeatStruct(7);
+      }
+      if(charLevel >= 9){
+        let locData = buildFeatStruct(9);
+        ancestryFeatsLocs.push(locData);
+      }
+      if(charLevel >= 11){
+        locData11 = buildFeatStruct(11);
+      }
+      if(charLevel >= 13){
+        let locData = buildFeatStruct(13);
+        ancestryFeatsLocs.push(locData);
+      }
+      if(charLevel >= 15){
+        locData15 = buildFeatStruct(15);
+      }
+      if(charLevel >= 17){
+        let locData = buildFeatStruct(17);
+        ancestryFeatsLocs.push(locData);
+      }
+      if(charLevel >= 19){
+        locData19 = buildFeatStruct(19);
+      }
+
+      ancestryFeatsLocs.push(locData1);
+      ancestryFeatsLocs.push(locData3);
+      ancestryFeatsLocs.push(locData7);
+      ancestryFeatsLocs.push(locData11);
+      ancestryFeatsLocs.push(locData15);
+      ancestryFeatsLocs.push(locData19);
+
+    } else { // Or else use normal...
+
+      if(charLevel >= 1){
+        let locData = buildFeatStruct(1);
+        ancestryFeatsLocs.push(locData);
+      }
+      if(charLevel >= 5){
+        let locData = buildFeatStruct(5);
+        ancestryFeatsLocs.push(locData);
+      }
+      if(charLevel >= 9){
+        let locData = buildFeatStruct(9);
+        ancestryFeatsLocs.push(locData);
+      }
+      if(charLevel >= 13){
+        let locData = buildFeatStruct(13);
+        ancestryFeatsLocs.push(locData);
+      }
+      if(charLevel >= 17){
+        let locData = buildFeatStruct(17);
+        ancestryFeatsLocs.push(locData);
+      }
+
     }
 
     processCode_AncestryAbilities(ancestryFeatsLocs);
 
 }
 
-function buildFeatStruct(featLevel) {
+function buildFeatStruct(featLevel, locID=null) {
 
-    let locationID = "descriptionFeat"+featLevel;
+  if(locID == null) { locID = featLevel; }
+  let locationID = "descriptionFeat"+locID;
 
-    $('#ancestryFeats').append('<div class=""><div class="pb-3"><span class="is-size-4 has-text-weight-semibold">Level '+featLevel+'</span><p>You gain an ancestry feat.</p></div><div class="columns is-centered"><div id="'+locationID+'" class="column is-paddingless is-8"></div></div></div>');
+  $('#ancestryFeats').append('<div class=""><div class="pb-3"><span class="is-size-4 has-text-weight-semibold">Level '+featLevel+'</span><p>You gain an ancestry feat.</p></div><div class="columns is-centered"><div id="'+locationID+'" class="column is-paddingless is-8"></div></div></div>');
 
-    return { LocationID : locationID, Level : featLevel };
+  return { LocationID : locationID, Level : featLevel };
 
 }
 

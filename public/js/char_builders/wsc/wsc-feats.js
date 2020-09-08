@@ -55,8 +55,7 @@ function processingFeats(wscStatement, srcStruct, locationID){
         for(let dataTag of wscChoiceStruct.CharTagsArray){
             charTagsArray.push(dataTag.value);
         }
-        giveAncestryFeat(srcStruct, locationID, level,
-            charTagsArray, optionals);
+        giveAncestryFeat(srcStruct, locationID, level, charTagsArray, optionals);
     }
     else if(wscStatement.includes("GIVE-CLASS-FEAT=")){ // GIVE-CLASS-FEAT=3[metamagic]
         let value = wscStatement.split('=')[1];
@@ -74,6 +73,22 @@ function processingFeats(wscStatement, srcStruct, locationID){
         }
         let className = (wscChoiceStruct.ClassDetails.Class != null) ? wscChoiceStruct.ClassDetails.Class.name : null;
         giveClassFeat(srcStruct, locationID, level, className, optionals);
+    }
+    else if(wscStatement.includes("GIVE-ARCHETYPE-FEAT=")){ // GIVE-ARCHETYPE-FEAT=3[metamagic]
+        let value = wscStatement.split('=')[1];
+        let optionals = value.match(/^.+?\[(.+?)\]$/);
+        if(optionals != null){
+            optionals = optionals[1].split(',');
+        }
+        let level;
+        if(value.startsWith('LEVEL')){
+            level = wscChoiceStruct.Character.level;
+        } else if(value.startsWith('HALF_LEVEL')){
+            level = Math.floor(wscChoiceStruct.Character.level/2);
+        } else {
+            level = parseInt(value);
+        }
+        giveArchetypeFeat(srcStruct, locationID, level, optionals);
     }
     else if(wscStatement.includes("GIVE-SKILL-FEAT=")){ // GIVE-SKILL-FEAT=3[metamagic]
         let value = wscStatement.split('=')[1];
@@ -190,7 +205,13 @@ function giveAncestryFeat(srcStruct, locationID, featLevel, charTagsArray, optio
 
 }
 
-function giveClassFeat(srcStruct, locationID, featLevel, className, optionalTags){
+function giveArchetypeFeat(srcStruct, locationID, featLevel, optionalTags){
+
+    giveClassFeat(srcStruct, locationID, featLevel, null, optionalTags, true);
+
+}
+
+function giveClassFeat(srcStruct, locationID, featLevel, className, optionalTags, isArchetypeOnlyFeat=false){
 
     // Include sourceCodeSNum at the end for if a code field gives multiple class feats
     let classFeatTabsID = locationID+'-classFeatTabs-'+srcStruct.sourceCodeSNum;
@@ -203,7 +224,9 @@ function giveClassFeat(srcStruct, locationID, featLevel, className, optionalTags
     $('#'+locationID).append('<div class="tabs is-small is-centered is-marginless"><ul id="'+classFeatTabsID+'" class="builder-tabs classFeatTabs" data-arch-tab-class="'+archetypesTabClass+'"></ul></div>');
     let tabsContent = $('#'+classFeatTabsID);
 
-    tabsContent.append('<li><a class="'+classTabClass+'">'+className+' Class</a></li>');
+    if(!isArchetypeOnlyFeat) {
+      tabsContent.append('<li><a class="'+classTabClass+'">'+className+' Class</a></li>');
+    }
 
     let charArchetypesArray = [];
     for(let featChoice of wscChoiceStruct.FeatArray){
@@ -233,7 +256,8 @@ function giveClassFeat(srcStruct, locationID, featLevel, className, optionalTags
 
     $('#'+locationID).append('<div class="py-2" id="'+containerLocationID+'"></div>');
 
-    $('.'+classTabClass).click(function(event, autoPageLoad){
+    if(!isArchetypeOnlyFeat) {
+      $('.'+classTabClass).click(function(event, autoPageLoad){
         event.stopImmediatePropagation();
         if (autoPageLoad != 'AUTO_PAGE_LOAD') { autoPageLoad = null; }
         if($(this).parent().hasClass('is-active')) { return; }
@@ -252,7 +276,8 @@ function giveClassFeat(srcStruct, locationID, featLevel, className, optionalTags
             autoPageLoad
         );
 
-    });
+      });
+    }
 
     $('.'+archetypesTabClass).click(function(event, autoPageLoad){
         event.stopImmediatePropagation();
@@ -336,8 +361,14 @@ function giveClassFeat(srcStruct, locationID, featLevel, className, optionalTags
         }
     }
 
-    if(!clickedTab){
+    if(!isArchetypeOnlyFeat) {
+      if(!clickedTab){
         $('.'+classTabClass).trigger("click", ['AUTO_PAGE_LOAD']);
+      }
+    } else {
+      if(!clickedTab){
+        $('.'+dedicationTabClass).trigger("click", ['AUTO_PAGE_LOAD']);
+      }
     }
 
     statementComplete();

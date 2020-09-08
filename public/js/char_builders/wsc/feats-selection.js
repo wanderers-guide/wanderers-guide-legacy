@@ -165,9 +165,9 @@ function generateFeatSelection(contentLocID, srcStruct, selectionName, featsArra
 
 socket.on("returnFeatChange", function(featChangePacket){
 
-  selectorUpdated();
   // Updating feat selections will run code for all feats (including this one)
   updateAllFeatSelections();
+  selectorUpdated();
 
 
   // If dedication is switched, reload all class abilities //

@@ -212,12 +212,30 @@ function handleCharacterOptions(character) {
     $("#contentSrc-FALL-OF-PLAGUE").prop('checked', contentSourceArray.includes('FALL-OF-PLAGUE'));
 
     // Variants //
+    $("#variantAncestryParagon").change(function(){
+      let optionTypeValue = (this.checked) ? 1 : 0;
+      socket.emit("requestCharacterOptionChange", 
+          getCharIDFromURL(), 
+          'variantAncestryParagon',
+          optionTypeValue);
+    });
+    $("#variantAncestryParagon").prop('checked', (character.variantAncestryParagon === 1));
+
+    $("#variantFreeArchetype").change(function(){
+      let optionTypeValue = (this.checked) ? 1 : 0;
+      socket.emit("requestCharacterOptionChange", 
+          getCharIDFromURL(), 
+          'variantFreeArchetype',
+          optionTypeValue);
+    });
+    $("#variantFreeArchetype").prop('checked', (character.variantFreeArchetype === 1));
+
     $("#variantProficiencyWithoutLevel").change(function(){
-        let optionTypeValue = (this.checked) ? 1 : 0;
-        socket.emit("requestCharacterOptionChange", 
-            getCharIDFromURL(), 
-            'variantProfWithoutLevel',
-            optionTypeValue);
+      let optionTypeValue = (this.checked) ? 1 : 0;
+      socket.emit("requestCharacterOptionChange", 
+          getCharIDFromURL(), 
+          'variantProfWithoutLevel',
+          optionTypeValue);
     });
     $("#variantProficiencyWithoutLevel").prop('checked', (character.variantProfWithoutLevel === 1));
 

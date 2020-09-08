@@ -64,6 +64,12 @@ const Character = db.define('characters', {
   variantProfWithoutLevel: {
     type: Sequelize.INTEGER
   },
+  variantFreeArchetype: {
+    type: Sequelize.INTEGER
+  },
+  variantAncestryParagon: {
+    type: Sequelize.INTEGER
+  },
   // Character Enabled Sources //
   enabledSources: {
     type: Sequelize.STRING

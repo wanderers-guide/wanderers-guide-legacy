@@ -159,6 +159,11 @@ function displayCurrentClass(classStruct, saving) {
     g_class = null;
     $('#selectClass').blur();
 
+    // Add support for Free Archetype Variant if enabled...
+    if(wscChoiceStruct.Character.variantFreeArchetype == 1){
+      classStruct = addFreeArchetypeVariant(classStruct);
+    }
+
     let choiceArray = choiceStruct.ChoiceArray;
 
     if(classStruct.Class.isArchived == 1){
@@ -749,7 +754,6 @@ function selectorUpdated() {
 
         // Make sure everything is centered
         //$(this).find('.has-text-left').removeClass('has-text-left');
-        
         
     });
     

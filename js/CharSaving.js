@@ -464,21 +464,29 @@ module.exports = class CharSaving {
 
         let charUpVals = null;
         if(optionName === 'optionPublicCharacter'){
-            charUpVals = {
-                optionPublicCharacter: value
-            };
+          charUpVals = {
+            optionPublicCharacter: value
+          };
         } else if(optionName === 'optionAutoDetectPreReqs'){
-            charUpVals = {
-                optionAutoDetectPreReqs: value
-            };
+          charUpVals = {
+            optionAutoDetectPreReqs: value
+          };
         } else if(optionName === 'optionAutoHeightenSpells'){
-            charUpVals = {
-                optionAutoHeightenSpells: value
-            };
+          charUpVals = {
+            optionAutoHeightenSpells: value
+          };
         } else if(optionName === 'variantProfWithoutLevel'){
-            charUpVals = {
-                variantProfWithoutLevel: value
-            };
+          charUpVals = {
+            variantProfWithoutLevel: value
+          };
+        } else if(optionName === 'variantFreeArchetype'){
+          charUpVals = {
+            variantFreeArchetype: value
+          };
+        } else if(optionName === 'variantAncestryParagon'){
+          charUpVals = {
+            variantAncestryParagon: value
+          };
         }
 
         if(charUpVals != null){
