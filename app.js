@@ -15,6 +15,7 @@ const favicon = require('serve-favicon');
 const authRoutes = require('./routes/auth-routes');
 const adminRoutes = require('./routes/admin-routes');
 const apiRoutes = require('./routes/api-routes');
+const browseRoutes = require('./routes/browse-routes');
 const profileRoutes = require('./routes/profile-routes');
 const coreRoutes = require('./routes/core-routes');
 const errorRoutes = require('./routes/error-routes');
@@ -29,6 +30,14 @@ const https = require('https');
 const http = require('http');
 
 const app = express();
+
+// Rate Limiter
+const rateLimiterFlexible = require('rate-limiter-flexible');
+const rateOptions = {
+  points: 6, // 6 points
+  duration: 1, // Per second
+};
+const rateLimiter = new rateLimiterFlexible.RateLimiterMemory(rateOptions);
 
 // Handlebars
 app.engine('handlebars', exphbs({
@@ -122,15 +131,35 @@ contentDB.authenticate()
 // Set static folder
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Security Headers
+app.use(function(req, res, next) {
+  res.header('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
+  res.header('X-Frame-Options', 'SAMEORIGIN');
+  res.header('X-Content-Type-Options', 'nosniff');
+  res.header('Referrer-Policy', 'no-referrer-when-downgrade');
+  next();
+});
+
+// Rate Limiter
+app.use(function(req, res, next) {
+  rateLimiter.consume(req.ipAddress, 2) // -> consume 2 points
+    .then((rateLimiterRes) => { // Points consumed
+      return next();
+    }).catch((rateLimiterRes) => { // Not enough points to consume
+      return res.sendStatus(429);
+    });
+});
+
 // Set up Routes
 app.use('/auth', authRoutes);
 app.use('/profile', profileRoutes);
 app.use('/admin', adminRoutes);
 app.use('/api', apiRoutes);
+app.use('/browse', browseRoutes);
 app.use('/', coreRoutes);
 app.use('*', errorRoutes); // 404 Route
 
-io.setMaxListeners(15);
+io.setMaxListeners(17);
 SocketConnections.sheetItems(io);
 SocketConnections.sheetConditions(io);
 SocketConnections.sheetCompanions(io);
@@ -148,4 +177,6 @@ SocketConnections.builderGeneralProcessing(io);
 SocketConnections.builderWSC(io);
 
 SocketConnections.homePage(io);
+SocketConnections.browse(io);
 SocketConnections.adminPanel(io);
+SocketConnections.appAPI(io);

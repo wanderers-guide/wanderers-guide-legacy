@@ -11,6 +11,16 @@ let g_uniHeritageArray = null;
 // ~~~~~~~~~~~~~~ // Run on Load // ~~~~~~~~~~~~~~ //
 $(function () {
 
+    // ~ Content Sources ~ //
+    for(let contSrcData of g_contentSources){
+      if(g_currentContentSource === contSrcData.CodeName){
+        $("#inputContentSource").append('<option value="'+contSrcData.CodeName+'" selected>'+contSrcData.TextName+'</option>');
+      } else {
+        $("#inputContentSource").append('<option value="'+contSrcData.CodeName+'">'+contSrcData.TextName+'</option>');
+      }
+    }
+    // ~ ~~~~~~~~~~~~~~~ ~ //
+
     $("#inputFeatTags").chosen();
 
     socket.emit("requestAdminFeatDetailsPlus");

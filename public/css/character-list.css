@@ -1,4 +1,10 @@
 
+.char-id {
+  position: absolute;
+  right: 5px;
+  top: 2px;
+}
+
 hr {
     border-color: #5e5e5e;
 }

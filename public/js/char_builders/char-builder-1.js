@@ -29,8 +29,10 @@ function nextPage() {
 
 // ~~~~~~~~~~~~~~ // Processings // ~~~~~~~~~~~~~~ //
 
-socket.on("returnCharacterDetails", function(character){
+socket.on("returnCharacterDetails", function(character, clientsWithAccess){
     isBuilderInit = true;
+
+    displayExternalCharacterAccess(clientsWithAccess);
 
     // When character name changes, save name
     $("#charName").change(function(){
@@ -278,4 +280,76 @@ socket.on("returnCharacterSourceChange", function() {
 
 socket.on("returnCharacterOptionChange", function() {
     $(".optionSwitch").blur();
+});
+
+//// External Character Access - API Clients ////
+
+function displayExternalCharacterAccess(clientsWithAccess){
+  if(clientsWithAccess != null && clientsWithAccess.length > 0){
+    $('.character-access-container').removeClass('is-hidden');
+  } else {
+    $('.character-access-container').addClass('is-hidden');
+    return;
+  }
+
+  $('#character-access-content').html('');
+  $('#character-access-content').append('<hr class="mt-0 mb-2 mx-0"></hr>');
+
+  let connectionCount = 0;
+  for(let client of clientsWithAccess){
+
+    let connectionID = 'accessConnection-'+connectionCount;
+    let connectionDeleteIconID = connectionID+'-delete';
+
+    if(connectionCount != 0){ $('#character-access-content').append('<hr class="my-2 mx-4"></hr>'); }
+
+    $('#character-access-content').append('<div id="'+connectionID+'" class="px-3 text-left"></div>');
+
+    $('#'+connectionID).append('<div class="columns is-mobile is-gapless is-marginless"><div class="column is-narrow is-11"><p class="is-bold is-size-5-5">'+client.appName+'</p></div><div class="column is-narrow is-1"><span id="'+connectionDeleteIconID+'" class="icon cursor-clickable has-text-danger text-right"><i class="fas fa-sm fa-minus-circle"></i></span></div></div>');
+    if(client.description != null && client.description != ''){
+      $('#'+connectionID).append('<div class=""><p>'+client.description+'</p></div>');
+    }
+    $('#'+connectionID).append('<div class=""><p class="is-bold is-size-7 has-text-info text-center">'+accessRightsToText(client.accessRights)+'</p></div>');
+
+    $('#'+connectionDeleteIconID).click(function() {
+      socket.emit("requestCharacterRemoveClientAccess", 
+          getCharIDFromURL(), 
+          client.clientID);
+    });
+
+    connectionCount++;
+  }
+
+  $('#character-access-dropdown').click(function() {
+    if($('#character-access-content').hasClass("is-hidden")) {
+      $('#character-access-content').removeClass('is-hidden');
+      $('#character-access-chevron').removeClass('fa-chevron-down');
+      $('#character-access-chevron').addClass('fa-chevron-up');
+    } else {
+      $('#character-access-content').addClass('is-hidden');
+      $('#character-access-chevron').removeClass('fa-chevron-up');
+      $('#character-access-chevron').addClass('fa-chevron-down');
+    }
+  });
+
+  $('#character-access-dropdown').mouseenter(function(){
+    $(this).addClass('has-background-grey-darker');
+  });
+  $('#character-access-dropdown').mouseleave(function(){
+      $(this).removeClass('has-background-grey-darker');
+  });
+
+}
+
+function accessRightsToText(accessRights){
+  switch(accessRights) {
+    case 'READ-ONLY': return 'Can read character information.';
+    case 'READ-UPDATE': return 'Can read and update character information.';
+    case 'READ-UPDATE-ADD-DELETE': return 'Can read, update, add, and delete character information.';
+    default: return 'ACCESS RIGHTS NOT FOUND';
+  }
+}
+
+socket.on("returnCharacterRemoveClientAccess", function(clientsWithAccess) {
+  displayExternalCharacterAccess(clientsWithAccess);
 });

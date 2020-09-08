@@ -1,0 +1,651 @@
+
+{{#section 'header'}}
+    <link rel="stylesheet" href="/css/docs-styles.css">
+    <script src="/js/wsc/docs-page.js"></script>
+    <script src="/js/wsc/text-processing.js"></script>
+{{/section}}
+
+{{#section 'nav_home'}}
+    <li><a href="/">Home</a></li>
+{{/section}}
+
+{{#section 'nav_characters'}}
+    <li><a href="/profile/characters">Characters</a></li>
+{{/section}}
+
+{{#section 'nav_homebrew'}}
+    <li class="mx-lg-4 mx-md-3 my-md-0 my-2"><a href="/homebrew">Homebrew</a></li>
+{{/section}}
+
+{{#section 'nav_browse'}}
+    <li class="mr-lg-4 mr-md-3"><a href="/browse"><i class="fas fa-lg fa-search"></i></a></li>
+{{/section}}
+
+{{#section 'nav_login'}}
+    <li class="mr-4"><a href="/auth/login">Login <i class="fas fa-sign-in-alt"></i></a></li>
+{{/section}}
+
+
+
+{{#section 'banner_nav'}}
+    <div class="banner_w3lspvt-2"></div>
+{{/section}}
+
+<div id="doc_nav_shell">
+    <div id="docs_nav" class="ml-2 mt-2">
+        <aside class="menu">
+            <p class="menu-label">
+                <a href="/api_docs/#api_docs">API Documentation</a>
+            </p>
+            <ul class="menu-list">
+                <li class="pb-1"><a href="/api_docs/#usage_and_setup">Usage & Setup</a></li>
+                <li class="pt-1"><a href="/api_docs/#errors">Errors</a></li>
+            </ul>
+            <p class="menu-label">
+                <a href="/api_docs/#general_endpoints">General Endpoints</a>
+            </p>
+            <ul class="menu-list">
+                <li class=""><a href="/api_docs/#general_endpoints">All Requests</a></li>
+            </ul>
+            <p class="menu-label">
+                <a href="/api_docs/#character_endpoints">Character Endpoints</a>
+            </p>
+            <ul class="menu-list">
+                <li class="pb-1"><a href="/api_docs/#char-req-basic">Basic Character Requests</a></li>
+                <li class="py-1"><a href="/api_docs/#char-req-conditions">Conditions Requests</a></li>
+                <li class="py-1"><a href="/api_docs/#char-req-inventory">Inventory Requests</a></li>
+                <li class="py-1"><a href="/api_docs/#char-req-item">Item Requests</a></li>
+                <li class="py-1"><a href="/api_docs/#char-req-spellcasting">Spellcasting Requests</a></li>
+                <li class="pt-1"><a href="/api_docs/#char-req-companion">Companion Requests</a></li>
+            </ul>
+        </aside>
+    </div>
+</div>
+
+<div id="docs_content" class="tile is-ancestor is-paddingless is-marginless mb-3">
+    <div class="tile is-parent is-2">
+        <div class="tile is-child"></div>
+    </div>
+    <div class="tile is-parent is-vertical is-8">
+        <div id="api_docs" class="tile is-child">
+            <h1 class="main-title is-size-2 is-family-code has-text-centered">API Documentation</h1>
+            <p class="subtitle is-size-6-5 has-text-grey-light has-text-centered is-italic p-2">
+              Welcome to the Wanderer's Guide API! The goal of this documentation is to empower and inform developers in the ways they can utilize the resources Wanderer's Guide provides.
+            </p>
+        </div>
+        <div id="usage_and_setup" class="tile is-child isHideable">
+                <div class="ml-4">
+                    <div class="mt-1">
+                        <p class="is-size-6-5">
+                          This API can be used in two primary ways: to access general endpoints and to access character endpoints. General endpoints are only GET requests and will return general information about Pathfinder Second Edition (such as an item, spell, or class). Character endpoints can be any kind of request and will have to do with protected information about a character within Wanderer's Guide. All general endpoints can be accessed with just an API key while character endpoints are a bit more difficult to access, they require an <span class="is-size-6-5 code">access_token</span> – something acquired through successfully gaining access to a character's information via <a class="has-text-info" href="https://oauth.net/" target="_blank">OAuth</a>.
+                        </p>
+                        <p class="is-size-6-5 pt-2">
+                          However, any project that uses Wanderer's Guide's API must also comply with Piazo's <a class="has-text-info" href="https://paizo.com/community/communityuse" target="_blank">Community Use Policy</a>. Failure to do so will result in, without warning, termination of the client and potentially further repercussions.
+                        </p>
+                    </div>
+                    <div class="mt-4">
+                        <h1 class="small-title is-size-4 is-marginless mb-1 pl-3">Basic Setup</h1>
+                        <p>
+                            The first thing you will need to do is register your client application. You can do this under your <a class="has-text-info" href="/profile" target="_blank">Profile</a> page.
+                        </p>
+                        <div class="info-block">
+                          <p><i class="fas fa-info-circle"></i>
+                            The information you provide when making your client will be displayed on the character authorization screen and in the character builder for any character you have been given access rights over. If you don't intend to access any character endpoints, the information you provide is not as important (although you will still need to fill in the minimum required fields – such as an app name and redirect URI – even if you won't be utilizing them).
+                          </p>
+                        </div>
+                        <p>
+                          Once created, you will be provided with a client ID and an API key. Your client ID is public information but your API key should be kept secret. If you believe your API key has been compromised, you can generate a new one by clicking refresh.
+                        </p>
+                    </div>
+                    <div class="mt-4">
+                        <h1 class="small-title is-size-4 is-marginless mb-1 pl-3">Setup - General Endpoints</h1>
+                        <p>
+                          To access the general endpoints you just need your API key. When you make any API request to a general endpoint, include an Authorization header and provide your API key as indicated:
+                        </p>
+                        <p class="pl-4">
+                          <span class="code">Authorization: Apikey &lt;your API key here&gt;</span>
+                        </p>
+                        <p>
+                          And that's it! You should now be able to access and request information from any general endpoint.
+                        </p>
+                    </div>
+                    <div class="mt-4">
+                        <h1 class="small-title is-size-4 is-marginless mb-1 pl-3">Setup - Character Endpoints</h1>
+                        <p>
+                          For access to character endpoints, Wanderer's Guide has its own OAuth provider service — the same technology that lets you login to Reddit with Apple, Medium with Twitter, and even login to Wanderer's Guide with Google.
+                        </p>
+                        <p>
+                          Below is the listed steps explaining how to establish authorization for a character and be given an <span class="code">access_token</span> for said character. The steps assume a basic understanding of <a class="has-text-info" href="https://restfulapi.net/http-methods/" target="_blank">HTTP protocols</a> and <a class="has-text-info" href="https://oauth.net/" target="_blank">OAuth</a>.
+                        </p>
+                    </div>
+                    <div class="mt-3">
+                        <h1 class="is-size-4 is-marginless mb-1 pl-5">Step 1 - Your Authorization Link</h1>
+                        <p>
+                          The first step in getting access to a character's information is by providing a URL to where they can give your application access to their character. You usually want to have a button linking directing to this URL. Direct your users to the following URL:
+                        </p>
+                        <p class="pl-4">
+                          <span class="is-size-5-5 code">wanderersguide.app/api/oauth2/authorize/&lt;their character ID here&gt;</span>
+                        </p>
+                        <p class="is-bold">
+                          With These Query Parameters:
+                        </p>
+                        <div class="columns mb-3">
+                            <div class="column is-8">
+                                <div class="columns is-mobile is-marginless">
+                                    <div class="column is-4 is-paddingless"><strong class="pl-2">Parameter</strong></div>
+                                    <div class="column is-paddingless"><strong class="pl-3">Description</strong></div>
+                                </div>
+                                <div class="columns table-row-a is-mobile is-marginless">
+                                    <div class="column is-4"><p>response_type</p></div>
+                                    <div class="column"><p>OAuth grant type. Set this to "code".</p></div>
+                                </div>
+                                <div class="columns table-row-b is-mobile is-marginless">
+                                    <div class="column is-4 is-mobile"><p>client_id</p></div>
+                                    <div class="column"><p>Your client ID.</p></div>
+                                </div>
+                                <div class="columns table-row-a is-mobile is-marginless">
+                                    <div class="column is-4 is-mobile"><p>state</p></div>
+                                    <div class="column"><p>An optional parameter that will be transparently appended as a query parameter when redirecting to your redirect URI. This can be used as a precaution against a <a class="has-text-info" href="https://medium.com/@charithra/introduction-to-csrf-a329badfca49/" target="_blank">CSRF</a>, and can be used as session/user identification as well.</p></div>
+                                </div>
+                            </div>
+                        </div>
+                        <p>
+                          All together your URL should look something like this:
+                        </p>
+                        <p class="pl-2">
+                          <span class=" code">wanderersguide.app/api/oauth2/authorize/&lt;their character ID here&gt;?response_type=code&client_id=&lt;your client ID here&gt;&state=&lt;optional string&gt;</span>
+                        </p>
+                        <div class="info-block">
+                          <p><i class="fas fa-info-circle"></i>
+                            On this page, users will be asked if they wish to grant your client access to their character's information. The scope of what you will be able to do with their character (what API requests you can make) is set when you made your client – the Character Access Rights. When the user clicks allow access, they will be redirected to the redirect URI you had set when creating your client.
+                          </p>
+                        </div>
+                    </div>
+                    <div class="mt-5">
+                        <h1 class="is-size-4 is-marginless mb-1 pl-5">Step 2 - Understanding the OAuth Redirect</h1>
+                        <p>
+                          When the user clicks allow access, they will be redirected to the redirect URI you had provided when making your client. Attached to the end of it, there will be some extra HTTPS query parameters as follows:
+                        </p>
+                        <div class="columns mt-2 mb-3">
+                            <div class="column is-8">
+                                <div class="columns is-mobile is-marginless">
+                                    <div class="column is-4 is-paddingless"><strong class="pl-2">Parameter</strong></div>
+                                    <div class="column is-paddingless"><strong class="pl-3">Description</strong></div>
+                                </div>
+                                <div class="columns table-row-a is-mobile is-marginless">
+                                    <div class="column is-4"><p>code</p></div>
+                                    <div class="column"><p>A single-use code that is used to fetch an access token for the character that was just allowed access.</p></div>
+                                </div>
+                                <div class="columns table-row-b is-mobile is-marginless">
+                                    <div class="column is-4 is-mobile"><p>state</p></div>
+                                    <div class="column"><p>The state parameter you provided in Step 1 (if you provided one).</p></div>
+                                </div>
+                            </div>
+                        </div>
+                        <p>
+                          The redirect URL should look something like this:
+                        </p>
+                        <p class="pl-2">
+                          <span class="code">https://www.mysite.com/custom-uri?code=&lt;single-use code&gt;&state=&lt;string, if you provided one&gt;</span>
+                        </p>
+                    </div>
+                    <div class="mt-5">
+                        <h1 class="is-size-4 is-marginless mb-1 pl-5">Step 3 - Getting Your Access Token</h1>
+                        <p>
+                          The user has just been redirected to the redirect URI you had provided. Attached to their URL is a code query parameter, listing a single-use code. You now want to use that single-use code to get an <span class="code">access_token</span> for that character.
+                        </p>
+                        <p>
+                          Make a POST request to the following URL with the following query parameters:
+                        </p>
+                        <p class="pl-2">
+                          <span class="code">wanderersguide.app/api/oauth2/token?code=&lt;your single-use code&gt;&client_id=&lt;your client ID&gt;</span>
+                        </p>
+                        <p>
+                          In addition, include an Authorization header in your request and provide your API key as indicated:
+                        </p>
+                        <p class="pl-4">
+                          <span class="code">Authorization: Apikey &lt;your API key here&gt;</span>
+                        </p>
+                        <div class="pt-3">
+                          <p>Your request will return a JSON response of:</p>
+                          <div class="code-reponse-block">
+                            <p>{</p>
+                            <p class="pl-4"><span class="has-text-info">"access_token":</span> &lt;the token you will use to access character information&gt;</p>
+                            <p class="pl-4"><span class="has-text-info">"expires_in":</span> &lt;the number of seconds before the access_token will expire&gt;</p>
+                            <p class="pl-4"><span class="has-text-info">"char_id":</span> &lt;the ID of the character that the access_token belongs to&gt;</p>
+                            <p class="pl-4"><span class="has-text-info">"access_rights":</span> &lt;your access rights for this character, using the given access_token&gt;</p>
+                            <p class="pl-4"><span class="has-text-info">"token_type":</span> "Bearer"</p>
+                            <p>}</p>
+                          </div>
+                        </div>
+                    </div>
+                    <div class="mt-5">
+                        <h1 class="is-size-4 is-marginless mb-1 pl-5">Step 4 - Using Your Access Token</h1>
+                        <p>
+                          Now that you have your <span class="code">access_token</span>, you can access the character endpoints for the character the <span class="code">access_token</span> belongs to!
+                        </p>
+                        <p>
+                          When you make any API request to a character endpoint, include an Authorization header and provide your <span class="code">access_token</span> as indicated:
+                        </p>
+                        <p class="pl-4">
+                          <span class="code">Authorization: Bearer &lt;your access_token here&gt;</span>
+                        </p>
+                        <p>
+                          And that's it! You should now be able to access and make requests for any character endpoint that you have the access rights for.
+                        </p>
+                        <div class="info-block">
+                          <p><i class="fas fa-info-circle"></i>
+                            Keep in mind, an access_token is specific to one character. That access_token will only gain you access to requests that are for that character alone. You must also have the necessary access rights to perform certain requests (such as needing the right to update information if you want to call a PUT request).
+                          </p>
+                        </div>
+                    </div>
+                </div>
+        </div>
+        <div id="errors" class="tile is-child is-paddingless">
+            <div class="isHideable">
+                <p class="text-center">
+                    The Wanderer's Guide API uses the following error codes:
+                </p>
+            </div>
+            <div class="mt-4 isHideable">
+                <div class="columns is-centered mb-3">
+                  <div class="column is-10">
+                    <div class="columns is-mobile is-marginless">
+                      <div class="column is-2 is-paddingless text-center"><strong>Error Code</strong></div>
+                      <div class="column is-paddingless pl-2"><strong>Meaning</strong></div>
+                    </div>
+                    <div class="columns table-row-a is-mobile is-marginless">
+                      <div class="column is-2"><p class="text-center is-bold">400</p></div>
+                      <div class="column"><p class="">Bad Request – Something was wrong with your request (syntax, size too large, etc).</p></div>
+                    </div>
+                    <div class="columns table-row-b is-mobile is-marginless">
+                      <div class="column is-2"><p class="text-center is-bold">401</p></div>
+                      <div class="column"><p class="">Unauthorized – Authentication failed (bad API key, invalid OAuth token, etc).</p></div>
+                    </div>
+                    <div class="columns table-row-a is-mobile is-marginless">
+                      <div class="column is-2"><p class="text-center is-bold">403</p></div>
+                      <div class="column"><p class="">Forbidden – The requested information is for administrators only.</p></div>
+                    </div>
+                    <div class="columns table-row-b is-mobile is-marginless">
+                      <div class="column is-2"><p class="text-center is-bold">404</p></div>
+                      <div class="column"><p class="">Not Found – The specified resource could not be found.</p></div>
+                    </div>
+                    <div class="columns table-row-a is-mobile is-marginless">
+                      <div class="column is-2"><p class="text-center is-bold">429</p></div>
+                      <div class="column"><p class="">Too Many Requests – Slow down!</p></div>
+                    </div>
+                  </div>
+                </div>
+            </div>
+        </div>
+        <div id="general_endpoints" class="tile is-child is-paddingless">
+            <div class="isHideable">
+                <h1 class="main-title is-family-code is-size-3 has-text-centered is-marginless mb-2">General Endpoints</h1>
+                <h1 class="small-title is-size-4 is-marginless mb-1 pl-5">Example</h1>
+                <p class="pl-3" style="max-width: 800px;">
+                    If I wanted to get information about the item caltrops, I would make the following GET request: <span class="code">wanderersguide.app/api/item?id=caltrops</span> with my API key in the Authorization header. On a success, this would return a JSON object containing all the information about the caltrops item.
+                </p>
+            </div>
+            <div id="gen-req-feat" class="mt-4 isHideable">
+                <h1 class="title is-size-4 is-marginless pl-3">Feat Requests</h1>
+                <div class="columns is-centered mb-3">
+                  <div class="column">
+                    <div class="columns is-mobile is-marginless">
+                      <div class="column is-paddingless"><strong></strong></div>
+                      <div class="column is-4 is-paddingless text-center"><strong>Returns</strong></div>
+                    </div>
+                    <div class="columns table-row-a is-mobile is-marginless">
+                      <div class="column"><p class="negative-indent"><span class="is-bold">GET</span> /api/feat?id=<span class="has-text-info">&lt;feat ID&gt;</span></p></div>
+                      <div class="column is-4"><p class="text-center">JSON of feat data</p></div>
+                    </div>
+                    <div class="columns table-row-b is-mobile is-marginless">
+                      <div class="column"><p class="negative-indent"><span class="is-bold">GET</span> /api/feat?name=<span class="has-text-info">&lt;feat name&gt;</span></p></div>
+                      <div class="column is-4"><p class="text-center">JSON of feat data</p></div>
+                    </div>
+                  </div>
+                </div>
+            </div>
+            <div id="gen-req-item" class="mt-4 isHideable">
+                <h1 class="title is-size-4 is-marginless pl-3">Item Requests</h1>
+                <div class="columns is-centered mb-3">
+                  <div class="column">
+                    <div class="columns is-mobile is-marginless">
+                      <div class="column is-paddingless"><strong></strong></div>
+                      <div class="column is-4 is-paddingless text-center"><strong>Returns</strong></div>
+                    </div>
+                    <div class="columns table-row-a is-mobile is-marginless">
+                      <div class="column"><p class="negative-indent"><span class="is-bold">GET</span> /api/item?id=<span class="has-text-info">&lt;item ID&gt;</span></p></div>
+                      <div class="column is-4"><p class="text-center">JSON of item data</p></div>
+                    </div>
+                    <div class="columns table-row-b is-mobile is-marginless">
+                      <div class="column"><p class="negative-indent"><span class="is-bold">GET</span> /api/item?name=<span class="has-text-info">&lt;item name&gt;</span></p></div>
+                      <div class="column is-4"><p class="text-center">JSON of item data</p></div>
+                    </div>
+                  </div>
+                </div>
+            </div>
+            <div id="gen-req-spell" class="mt-4 isHideable">
+                <h1 class="title is-size-4 is-marginless pl-3">Spell Requests</h1>
+                <div class="columns is-centered mb-3">
+                  <div class="column">
+                    <div class="columns is-mobile is-marginless">
+                      <div class="column is-paddingless"><strong></strong></div>
+                      <div class="column is-4 is-paddingless text-center"><strong>Returns</strong></div>
+                    </div>
+                    <div class="columns table-row-a is-mobile is-marginless">
+                      <div class="column"><p class="negative-indent"><span class="is-bold">GET</span> /api/spell?id=<span class="has-text-info">&lt;spell ID&gt;</span></p></div>
+                      <div class="column is-4"><p class="text-center">JSON of spell data</p></div>
+                    </div>
+                    <div class="columns table-row-b is-mobile is-marginless">
+                      <div class="column"><p class="negative-indent"><span class="is-bold">GET</span> /api/spell?name=<span class="has-text-info">&lt;spell name&gt;</span></p></div>
+                      <div class="column is-4"><p class="text-center">JSON of spell data</p></div>
+                    </div>
+                  </div>
+                </div>
+            </div>
+            <div id="gen-req-class" class="mt-4 isHideable">
+                <h1 class="title is-size-4 is-marginless pl-3">Class Requests</h1>
+                <div class="columns is-centered mb-3">
+                  <div class="column">
+                    <div class="columns is-mobile is-marginless">
+                      <div class="column is-paddingless"><strong></strong></div>
+                      <div class="column is-4 is-paddingless text-center"><strong>Returns</strong></div>
+                    </div>
+                    <div class="columns table-row-a is-mobile is-marginless">
+                      <div class="column"><p class="negative-indent"><span class="is-bold">GET</span> /api/class?id=<span class="has-text-info">&lt;class ID&gt;</span></p></div>
+                      <div class="column is-4"><p class="text-center">JSON of class data and all class features</p></div>
+                    </div>
+                    <div class="columns table-row-b is-mobile is-marginless">
+                      <div class="column"><p class="negative-indent"><span class="is-bold">GET</span> /api/class?name=<span class="has-text-info">&lt;class name&gt;</span></p></div>
+                      <div class="column is-4"><p class="text-center">JSON of class data and all class features</p></div>
+                    </div>
+                  </div>
+                </div>
+            </div>
+            <div id="gen-req-archetype" class="mt-4 isHideable">
+                <h1 class="title is-size-4 is-marginless pl-3">Archetype Requests</h1>
+                <div class="columns is-centered mb-3">
+                  <div class="column">
+                    <div class="columns is-mobile is-marginless">
+                      <div class="column is-paddingless"><strong></strong></div>
+                      <div class="column is-4 is-paddingless text-center"><strong>Returns</strong></div>
+                    </div>
+                    <div class="columns table-row-a is-mobile is-marginless">
+                      <div class="column"><p class="negative-indent"><span class="is-bold">GET</span> /api/archetype?id=<span class="has-text-info">&lt;archetype ID&gt;</span></p></div>
+                      <div class="column is-4"><p class="text-center">JSON of basic archetype data</p></div>
+                    </div>
+                    <div class="columns table-row-b is-mobile is-marginless">
+                      <div class="column"><p class="negative-indent"><span class="is-bold">GET</span> /api/archetype?name=<span class="has-text-info">&lt;archetype name&gt;</span></p></div>
+                      <div class="column is-4"><p class="text-center">JSON of basic archetype data</p></div>
+                    </div>
+                  </div>
+                </div>
+            </div>
+            <div id="gen-req-ancestry" class="mt-4 isHideable">
+                <h1 class="title is-size-4 is-marginless pl-3">Ancestry Requests</h1>
+                <div class="columns is-centered mb-3">
+                  <div class="column">
+                    <div class="columns is-mobile is-marginless">
+                      <div class="column is-paddingless"><strong></strong></div>
+                      <div class="column is-4 is-paddingless text-center"><strong>Returns</strong></div>
+                    </div>
+                    <div class="columns table-row-a is-mobile is-marginless">
+                      <div class="column"><p class="negative-indent"><span class="is-bold">GET</span> /api/ancestry?id=<span class="has-text-info">&lt;ancestry ID&gt;</span></p></div>
+                      <div class="column is-4"><p class="text-center">JSON of basic ancestry data</p></div>
+                    </div>
+                    <div class="columns table-row-b is-mobile is-marginless">
+                      <div class="column"><p class="negative-indent"><span class="is-bold">GET</span> /api/ancestry?name=<span class="has-text-info">&lt;ancestry name&gt;</span></p></div>
+                      <div class="column is-4"><p class="text-center">JSON of basic ancestry data</p></div>
+                    </div>
+                  </div>
+                </div>
+            </div>
+            <div id="gen-req-heritage" class="mt-4 isHideable">
+                <h1 class="title is-size-4 is-marginless pl-3">Heritage Requests</h1>
+                <div class="columns is-centered mb-3">
+                  <div class="column">
+                    <div class="columns is-mobile is-marginless">
+                      <div class="column is-paddingless"><strong></strong></div>
+                      <div class="column is-4 is-paddingless text-center"><strong>Returns</strong></div>
+                    </div>
+                    <div class="columns table-row-a is-mobile is-marginless">
+                      <div class="column"><p class="negative-indent"><span class="is-bold">GET</span> /api/heritage?id=<span class="has-text-info">&lt;heritage ID&gt;</span></p></div>
+                      <div class="column is-4"><p class="text-center">JSON of heritage data</p></div>
+                    </div>
+                    <div class="columns table-row-b is-mobile is-marginless">
+                      <div class="column"><p class="negative-indent"><span class="is-bold">GET</span> /api/heritage?name=<span class="has-text-info">&lt;heritage name&gt;</span></p></div>
+                      <div class="column is-4"><p class="text-center">JSON of heritage data</p></div>
+                    </div>
+                  </div>
+                </div>
+            </div>
+            <div id="gen-req-v-heritage" class="mt-4 isHideable">
+                <h1 class="title is-size-4 is-marginless pl-3">Versatile Heritage Requests</h1>
+                <div class="columns is-centered mb-3">
+                  <div class="column">
+                    <div class="columns is-mobile is-marginless">
+                      <div class="column is-paddingless"><strong></strong></div>
+                      <div class="column is-4 is-paddingless text-center"><strong>Returns</strong></div>
+                    </div>
+                    <div class="columns table-row-a is-mobile is-marginless">
+                      <div class="column"><p class="negative-indent"><span class="is-bold">GET</span> /api/v-heritage?id=<span class="has-text-info">&lt;versatile heritage ID&gt;</span></p></div>
+                      <div class="column is-4"><p class="text-center">JSON of heritage data</p></div>
+                    </div>
+                    <div class="columns table-row-b is-mobile is-marginless">
+                      <div class="column"><p class="negative-indent"><span class="is-bold">GET</span> /api/v-heritage?name=<span class="has-text-info">&lt;versatile heritage name&gt;</span></p></div>
+                      <div class="column is-4"><p class="text-center">JSON of heritage data</p></div>
+                    </div>
+                  </div>
+                </div>
+            </div>
+            <div id="gen-req-background" class="mt-4 isHideable">
+                <h1 class="title is-size-4 is-marginless pl-3">Background Requests</h1>
+                <div class="columns is-centered mb-3">
+                  <div class="column">
+                    <div class="columns is-mobile is-marginless">
+                      <div class="column is-paddingless"><strong></strong></div>
+                      <div class="column is-4 is-paddingless text-center"><strong>Returns</strong></div>
+                    </div>
+                    <div class="columns table-row-a is-mobile is-marginless">
+                      <div class="column"><p class="negative-indent"><span class="is-bold">GET</span> /api/background?id=<span class="has-text-info">&lt;background ID&gt;</span></p></div>
+                      <div class="column is-4"><p class="text-center">JSON of background data</p></div>
+                    </div>
+                    <div class="columns table-row-b is-mobile is-marginless">
+                      <div class="column"><p class="negative-indent"><span class="is-bold">GET</span> /api/background?name=<span class="has-text-info">&lt;background name&gt;</span></p></div>
+                      <div class="column is-4"><p class="text-center">JSON of background data</p></div>
+                    </div>
+                  </div>
+                </div>
+            </div>
+            <div id="gen-req-condition" class="mt-4 isHideable">
+                <h1 class="title is-size-4 is-marginless pl-3">Condition Requests</h1>
+                <div class="columns is-centered mb-3">
+                  <div class="column">
+                    <div class="columns is-mobile is-marginless">
+                      <div class="column is-paddingless"><strong></strong></div>
+                      <div class="column is-4 is-paddingless text-center"><strong>Returns</strong></div>
+                    </div>
+                    <div class="columns table-row-a is-mobile is-marginless">
+                      <div class="column"><p class="negative-indent"><span class="is-bold">GET</span> /api/condition?id=<span class="has-text-info">&lt;condition ID&gt;</span></p></div>
+                      <div class="column is-4"><p class="text-center">JSON of condition data</p></div>
+                    </div>
+                    <div class="columns table-row-b is-mobile is-marginless">
+                      <div class="column"><p class="negative-indent"><span class="is-bold">GET</span> /api/condition?name=<span class="has-text-info">&lt;condition name&gt;</span></p></div>
+                      <div class="column is-4"><p class="text-center">JSON of condition data</p></div>
+                    </div>
+                  </div>
+                </div>
+            </div>
+            <div id="gen-req-trait" class="mt-4 isHideable">
+                <h1 class="title is-size-4 is-marginless pl-3">Trait Requests</h1>
+                <div class="columns is-centered mb-3">
+                  <div class="column">
+                    <div class="columns is-mobile is-marginless">
+                      <div class="column is-paddingless"><strong></strong></div>
+                      <div class="column is-4 is-paddingless text-center"><strong>Returns</strong></div>
+                    </div>
+                    <div class="columns table-row-a is-mobile is-marginless">
+                      <div class="column"><p class="negative-indent"><span class="is-bold">GET</span> /api/trait?id=<span class="has-text-info">&lt;trait ID&gt;</span></p></div>
+                      <div class="column is-4"><p class="text-center">JSON of trait data</p></div>
+                    </div>
+                    <div class="columns table-row-b is-mobile is-marginless">
+                      <div class="column"><p class="negative-indent"><span class="is-bold">GET</span> /api/trait?name=<span class="has-text-info">&lt;trait name&gt;</span></p></div>
+                      <div class="column is-4"><p class="text-center">JSON of trait data</p></div>
+                    </div>
+                  </div>
+                </div>
+            </div>
+        </div>
+        <div id="character_endpoints" class="tile is-child is-paddingless">         
+            <div class="isHideable">
+                <h1 class="main-title is-size-3 is-family-code has-text-centered is-marginless mb-2">Character Endpoints</h1>
+                <h1 class="small-title is-size-4 is-marginless mb-1 pl-5">Example</h1>
+                <p class="pl-3" style="max-width: 800px;">
+                    If I wanted to set the current HP of the character with the ID 4321 to 15 HP, I would make the following PUT request: <span class="code">wanderersguide.app/api/char/4321/current-hp?value=15</new></span> with my <span class="code">access_token</span> in the Authorization header. I would also need the appropriate access rights, I would need the right to update character information. On a success, this would return the 200 HTTP status code (OK), meaning the update was successful.
+                </p>
+            </div>
+            <div id="char-req-basic" class="mt-4 isHideable">
+                <h1 class="title is-size-4 is-marginless pl-3">Basic Character Requests</h1>
+                <div class="columns is-centered mb-3">
+                  <div class="column">
+                    <div class="columns is-mobile is-marginless">
+                      <div class="column is-6 is-paddingless"><strong></strong></div>
+                      <div class="column is-4 is-paddingless text-center"><strong>Returns</strong></div>
+                      <div class="column is-paddingless text-center"><strong>Access Rights</strong></div>
+                    </div>
+                    <div class="columns table-row-a is-mobile is-marginless">
+                      <div class="column is-6"><p class="negative-indent"><span class="is-bold">GET</span> /api/char/<span class="has-text-info">&lt;character ID&gt;</span></p></div>
+                      <div class="column is-4"><p class="text-center">JSON of basic character info</p></div>
+                      <div class="column"><p class="text-center">Read</p></div>
+                    </div>
+                    <div class="columns table-row-b is-mobile is-marginless">
+                      <div class="column is-6"><p class="negative-indent"><span class="is-bold">GET</span> /api/char/<span class="has-text-info">&lt;character ID&gt;</span>/current-hp</p></div>
+                      <div class="column is-4"><p class="text-center">Character's current HP (integer)</p></div>
+                      <div class="column"><p class="text-center">Read</p></div>
+                    </div>
+                    <div class="columns table-row-a is-mobile is-marginless">
+                      <div class="column is-6"><p class="negative-indent"><span class="is-bold">PUT</span> /api/char/<span class="has-text-info">&lt;character ID&gt;</span>/current-hp?value=<span class="has-text-info">&lt;new HP&gt;</span></p></div>
+                      <div class="column is-4"><p class="text-center">OK</p></div>
+                      <div class="column"><p class="text-center">Update</p></div>
+                    </div>
+                    <div class="columns table-row-b is-mobile is-marginless">
+                      <div class="column is-6"><p class="negative-indent"><span class="is-bold">GET</span> /api/char/<span class="has-text-info">&lt;character ID&gt;</span>/temp-hp</p></div>
+                      <div class="column is-4"><p class="text-center">Character's temp HP (integer)</p></div>
+                      <div class="column"><p class="text-center">Read</p></div>
+                    </div>
+                    <div class="columns table-row-a is-mobile is-marginless">
+                      <div class="column is-6"><p class="negative-indent"><span class="is-bold">PUT</span> /api/char/<span class="has-text-info">&lt;character ID&gt;</span>/temp-hp?value=<span class="has-text-info">&lt;new temp HP&gt;</span></p></div>
+                      <div class="column is-4"><p class="text-center">OK</p></div>
+                      <div class="column"><p class="text-center">Update</p></div>
+                    </div>
+                    <div class="columns table-row-b is-mobile is-marginless">
+                      <div class="column is-6"><p class="negative-indent"><span class="is-bold">GET</span> /api/char/<span class="has-text-info">&lt;character ID&gt;</span>/hero-points</p></div>
+                      <div class="column is-4"><p class="text-center">Character's Hero Points (integer)</p></div>
+                      <div class="column"><p class="text-center">Read</p></div>
+                    </div>
+                    <div class="columns table-row-a is-mobile is-marginless">
+                      <div class="column is-6"><p class="negative-indent"><span class="is-bold">PUT</span> /api/char/<span class="has-text-info">&lt;character ID&gt;</span>/hero-points?value=<span class="has-text-info">&lt;new Hero Points&gt;</span></p></div>
+                      <div class="column is-4"><p class="text-center">OK</p></div>
+                      <div class="column"><p class="text-center">Update</p></div>
+                    </div>
+                    <div class="columns table-row-b is-mobile is-marginless">
+                      <div class="column is-6"><p class="negative-indent"><span class="is-bold">GET</span> /api/char/<span class="has-text-info">&lt;character ID&gt;</span>/experience</p></div>
+                      <div class="column is-4"><p class="text-center">Character's experience (integer)</p></div>
+                      <div class="column"><p class="text-center">Read</p></div>
+                    </div>
+                    <div class="columns table-row-a is-mobile is-marginless">
+                      <div class="column is-6"><p class="negative-indent"><span class="is-bold">PUT</span> /api/char/<span class="has-text-info">&lt;character ID&gt;</span>/experience?value=<span class="has-text-info">&lt;new experience&gt;</span></p></div>
+                      <div class="column is-4"><p class="text-center">OK</p></div>
+                      <div class="column"><p class="text-center">Update</p></div>
+                    </div>
+                  </div>
+                </div>
+            </div>
+            <div id="char-req-conditions" class="mt-4 isHideable">
+                <h1 class="title is-size-4 is-marginless pl-3">Conditions Requests</h1>
+                <div class="columns is-centered mb-3">
+                  <div class="column">
+                    <div class="columns is-mobile is-marginless">
+                      <div class="column is-6 is-paddingless"><strong></strong></div>
+                      <div class="column is-4 is-paddingless text-center"><strong>Returns</strong></div>
+                      <div class="column is-paddingless text-center"><strong>Access Rights</strong></div>
+                    </div>
+                    <div class="columns table-row-a is-mobile is-marginless">
+                      <div class="column is-6"><p class="negative-indent"><span class="is-bold">GET</span> /api/char/<span class="has-text-info">&lt;character ID&gt;</span>/conditions</p></div>
+                      <div class="column is-4"><p class="text-center">JSON of character's conditions data</p></div>
+                      <div class="column"><p class="text-center">Read</p></div>
+                    </div>
+                    <div class="columns table-row-b is-mobile is-marginless">
+                      <div class="column is-6"><p class="negative-indent"><span class="is-bold">POST</span> /api/char/<span class="has-text-info">&lt;character ID&gt;</span>/conditions?id=<span class="has-text-info">&lt;condition ID&gt;</span>&value=<span class="has-text-info">[optional, value of condition]</span></p></div>
+                      <div class="column is-4"><p class="text-center">JSON of updated conditions data</p></div>
+                      <div class="column"><p class="text-center">Add</p></div>
+                    </div>
+                    <div class="columns table-row-a is-mobile is-marginless">
+                      <div class="column is-6"><p class="negative-indent"><span class="is-bold">DELETE</span> /api/char/<span class="has-text-info">&lt;character ID&gt;</span>/conditions?id=<span class="has-text-info">&lt;condition ID&gt;</span></p></div>
+                      <div class="column is-4"><p class="text-center">JSON of updated conditions data</p></div>
+                      <div class="column"><p class="text-center">Delete</p></div>
+                    </div>
+                  </div>
+                </div>
+            </div>
+            <div id="char-req-inventory" class="mt-4 isHideable">
+                <h1 class="title is-size-4 is-marginless pl-3">Inventory Requests</h1>
+                <div class="columns is-centered mb-3">
+                  <div class="column">
+                    <div class="columns is-mobile is-marginless">
+                      <div class="column is-6 is-paddingless"><strong></strong></div>
+                      <div class="column is-4 is-paddingless text-center"><strong>Returns</strong></div>
+                      <div class="column is-paddingless text-center"><strong>Access Rights</strong></div>
+                    </div>
+                    <div class="columns table-row-a is-mobile is-marginless">
+                      <div class="column is-6"><p class="negative-indent"><span class="is-bold">GET</span> /api/char/<span class="has-text-info">&lt;character ID&gt;</span>/inventory</p></div>
+                      <div class="column is-4"><p class="text-center">JSON of character's inventory data, including an array of inventory items (their "id" is the invItem ID – a unique identifier for that character's item)</p></div>
+                      <div class="column"><p class="text-center">Read</p></div>
+                    </div>
+                    <div class="columns table-row-b is-mobile is-marginless">
+                      <div class="column is-6"><p class="negative-indent"><span class="is-bold">PUT</span> /api/char/<span class="has-text-info">&lt;character ID&gt;</span>/inventory/equip-armor-shield?armor_inv_item_id=<span class="has-text-info">[invItem ID of armor to be equipped, don't include parameter for none]</span>&shield_inv_item_id=<span class="has-text-info">[invItem ID of shield to be equipped, don't include parameter for none]</span></p></div>
+                      <div class="column is-4"><p class="text-center">OK</p></div>
+                      <div class="column"><p class="text-center">Update</p></div>
+                    </div>
+                    <div class="columns table-row-a is-mobile is-marginless">
+                      <div class="column is-6"><p class="negative-indent"><span class="is-bold">POST</span> /api/char/<span class="has-text-info">&lt;character ID&gt;</span>/inventory/add-item?item_id=<span class="has-text-info">&lt;item ID&gt;</span>&quantity=<span class="has-text-info">[optional, item quantity]</span></p></div>
+                      <div class="column is-4"><p class="text-center">JSON of invItem data</p></div>
+                      <div class="column"><p class="text-center">Add</p></div>
+                    </div>
+                    <div class="columns table-row-b is-mobile is-marginless">
+                      <div class="column is-6"><p class="negative-indent"><span class="is-bold">DELETE</span> /api/char/<span class="has-text-info">&lt;character ID&gt;</span>/inventory/remove-item?inv_item_id=<span class="has-text-info">&lt;invItem ID&gt;</span></p></div>
+                      <div class="column is-4"><p class="text-center">No Content (204)</p></div>
+                      <div class="column"><p class="text-center">Delete</p></div>
+                    </div>
+                    <div class="columns table-row-a is-mobile is-marginless">
+                      <div class="column is-6"><p class="negative-indent"><span class="is-bold">PUT</span> /api/char/<span class="has-text-info">&lt;character ID&gt;</span>/inventory/move-item?moving_inv_item_id=<span class="has-text-info">&lt;invItem ID of item being moved&gt;</span>&bag_inv_item_id=<span class="has-text-info">[invItem ID of bag the item is being moved to, don't include parameter to make the item unstored]</span></p></div>
+                      <div class="column is-4"><p class="text-center">OK</p></div>
+                      <div class="column"><p class="text-center">Update</p></div>
+                    </div>
+                    <div class="columns table-row-b is-mobile is-marginless">
+                      <div class="column is-6"><p class="negative-indent"><span class="is-bold">PUT</span> /api/char/<span class="has-text-info">&lt;character ID&gt;</span>/inventory/drop-item?inv_item_id=<span class="has-text-info">&lt;invItem ID&gt;</span></p></div>
+                      <div class="column is-4"><p class="text-center">OK</p></div>
+                      <div class="column"><p class="text-center">Update</p></div>
+                    </div>
+                  </div>
+                </div>
+            </div>
+            <div id="char-req-item" class="mt-4 isHideable">
+                <h1 class="title is-size-4 is-marginless pl-3">Item Requests</h1>
+                <p class="is-size-5 pl-3">TO-DO</p>
+            </div>
+            <div id="char-req-spellcasting" class="mt-4 isHideable">
+                <h1 class="title is-size-4 is-marginless pl-3">Spellcasting Requests</h1>
+                <p class="is-size-5 pl-3">TO-DO</p>
+            </div>
+            <div id="char-req-companion" class="mt-4 isHideable">
+                <h1 class="title is-size-4 is-marginless pl-3">Companion Requests</h1>
+                <p class="is-size-5 pl-3">TO-DO</p>
+            </div>
+
+        </div>
+    </div>
+    <div class="tile is-parent is-2">
+        <div class="tile is-child"></div>
+    </div>
+</div>

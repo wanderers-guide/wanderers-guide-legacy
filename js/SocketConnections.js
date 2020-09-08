@@ -9,6 +9,7 @@ const CharDataMappingExt = require('./CharDataMappingExt');
 const AuthCheck = require('./AuthCheck');
 const AdminGathering = require('./AdminGathering');
 const AdminUpdate = require('./AdminUpdate');
+const ClientAPI = require('./ClientAPI');
 const CharStateUtils = require('./CharStateUtils');
 const GeneralUtils = require('./GeneralUtils');
 const HomeBackReport = require('../models/backgroundDB/HomeBackReport');
@@ -549,7 +550,21 @@ module.exports = class SocketConnections {
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
           if(ownsChar){
             CharGathering.getCharacter(charID).then((character) => {
-              socket.emit('returnCharacterDetails', character);
+              ClientAPI.getClientsWhoAccess(charID).then((clientsWithAccess) => {
+                socket.emit('returnCharacterDetails', character, clientsWithAccess);
+              });
+            });
+          }
+        });
+      });
+
+      socket.on('requestCharacterRemoveClientAccess', function(charID, clientID){
+        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+          if(ownsChar){
+            ClientAPI.removeAccessToken(charID, clientID).then((result) => {
+              ClientAPI.getClientsWhoAccess(charID).then((clientsWithAccess) => {
+                socket.emit('returnCharacterRemoveClientAccess', clientsWithAccess);
+              });
             });
           }
         });
@@ -558,7 +573,7 @@ module.exports = class SocketConnections {
       socket.on('requestNameChange', function(charID, name){
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
           if(ownsChar){
-            let validNameRegex = /^[A-Za-z0-9 ,]+$/;
+            let validNameRegex = /^[A-Za-z0-9 ,\-–&_.!?'"]+$/;
             if(validNameRegex.test(name)) {
               CharSaving.saveName(charID, name).then((result) => {
                 socket.emit('returnNameChange');
@@ -2041,6 +2056,79 @@ module.exports = class SocketConnections {
       });
 
     });
+  }
+
+  static appAPI(io) {
+
+    // Socket.IO Connections
+    io.on('connection', function(socket){
+
+      socket.on('requestAllAPIClients', function(){
+        ClientAPI.getAllClients(socket).then((apiClients) => {
+          socket.emit('returnAllAPIClients', apiClients);
+        });
+      });
+
+      socket.on('requestAPIClientAdd', function(clientData){
+        ClientAPI.addClient(socket, clientData).then((apiClient) => {
+          ClientAPI.getAllClients(socket).then((allAPIClients) => {
+            socket.emit('returnAPIClientAdd', apiClient, allAPIClients);
+          });
+        });
+      });
+
+      socket.on('requestAPIClientDelete', function(clientData){
+        ClientAPI.deleteClient(socket, clientData).then((result) => {
+          ClientAPI.getAllClients(socket).then((allAPIClients) => {
+            socket.emit('returnAPIClientDelete', allAPIClients);
+          });
+        });
+      });
+
+      socket.on('requestAPIClientUpdate', function(clientData){
+        ClientAPI.updateClient(socket, clientData).then((result) => {
+          ClientAPI.getAllClients(socket).then((allAPIClients) => {
+            socket.emit('returnAPIClientUpdate', allAPIClients);
+          });
+        });
+      });
+
+      socket.on('requestAPIClientRefreshKey', function(clientData){
+        ClientAPI.refreshAPIKey(socket, clientData).then((result) => {
+          ClientAPI.getAllClients(socket).then((allAPIClients) => {
+            socket.emit('returnAPIClientRefreshKey', allAPIClients);
+          });
+        });
+      });
+
+      // Request Access //
+      socket.on('requestAPIRequestAccess', function(clientID, charID, accessRights){
+        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+          if(ownsChar){
+            ClientAPI.getRequestAccessData(clientID, charID, accessRights).then((accessData) => {
+              socket.emit('returnAPIRequestAccess', accessData);
+            });
+          }
+        });
+      });
+
+    });
+    
+  }
+
+  static browse(io) {
+
+    // Socket.IO Connections
+    io.on('connection', function(socket){
+
+      socket.on('requestBrowseAncestries', function(){
+        AdminGathering.getAllAncestries(true).then((ancestriesObject) => {
+          socket.emit('returnBrowseAncestries', ancestriesObject);
+        });
+      });
+
+    });
+    
   }
 
 };

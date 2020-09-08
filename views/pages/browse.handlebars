@@ -1,6 +1,8 @@
 
 {{#section 'header'}}
     <link rel="stylesheet" href="/css/browse.css">
+    <script src="/js/browse/ancestry/ancestry-browse.js"></script>
+    <script src="/js/browse/browse-utils.js"></script>
 {{/section}}
 
 {{#section 'nav_home'}}
@@ -29,9 +31,9 @@
     <div class="banner_w3lspvt-2"></div>
 {{/section}}
 
-<div class="container">
+<div class="container browse-container">
 
-    <h1 class="pt-3 is-size-1 has-text-light text-center">Browse</h1>
+  <h1 class="pt-3 is-size-1 has-text-light text-center">Browse</h1>
     <hr style="border-color: #5e5e5e;">
 
     <div>
@@ -42,19 +44,34 @@
     </div>
 
 <!--
-  <div class="tabs is-centered is-boxed is-medium is-marginless">
+  <div class="tabs is-centered is-boxed use-custom-scrollbar">
     <ul class="category-tabs">
-      <li><a id="actionsTab">Actions</a></li>
-      <li><a id="weaponsTab">Weapons</a></li>
-      <li><a id="spellsTab">Spells</a></li>
-      <li><a id="inventoryTab">Inventory</a></li>
-      <li><a id="detailsTab">Details</a></li>
-      <li><a id="notesTab">Notes</a></li>
+      <li><a id="ancestriesSearchTab">Ancestries</a></li>
+      <li><a id="archetypesSearchTab">Archetypes</a></li>
+      <li><a id="backgroundsSearchTab">Backgrounds</a></li>
+      <li><a id="classesSearchTab">Classes</a></li>
+      <li><a id="featsSearchTab">Feats</a></li>
+      <li><a id="itemsSearchTab">Items</a></li>
+      <li><a id="spellsSearchTab">Spells</a></li>
+      <li><a id="vHeritagesSearchTab">Versatile Heritages</a></li>
     </ul>
   </div>
   <div id="tabContent" class="mx-3 mb-3">
 
+    <div class="columns">
+      <div class="column is-4 m-1 is-paddingless">
+        <div class="section-box">
+          <p id="browsingFilter" class="is-size-6 text-center"><strong class="has-text-grey-lighter">Filter</strong></p>
+        </div>
+      </div>
+      <div id="browsingList" class="column section-box m-1 is-paddingless">
+
+
+
+      </div>
+    </div>
+
   </div>
--->
+  -->
 
 </div>

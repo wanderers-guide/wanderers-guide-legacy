@@ -403,10 +403,14 @@ module.exports = class CharGathering {
     }
 
     static getInvIDFromInvItemID(invItemID){
-        return InvItem.findOne({ where: { id: invItemID } })
-        .then((invItem) => {
-            return invItem.invID;
-        });
+      return InvItem.findOne({ where: { id: invItemID } })
+      .then((invItem) => {
+        if(invItem != null){
+          return invItem.invID;
+        } else {
+          return null;
+        }
+      });
     }
 
     static getInventory(inventoryID){

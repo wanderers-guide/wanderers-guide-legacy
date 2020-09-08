@@ -1,0 +1,33 @@
+
+#access-container {
+  border: 1px solid #363636;
+  background-color: hsl(0, 0%, 21%);
+  box-shadow: 0 1px 1px rgba(0,0,0,0.5);
+  border-radius: 4px;
+  color: #cccccc;
+
+  width: 420px;
+  display: block;
+  padding: 30px;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  color: #000;
+  margin: 100px auto;
+}
+
+p, span {
+  color: #bebebe;
+}
+
+.lighter-text {
+  color: #cccccc;
+}
+
+.app-icon {
+  margin: 0 auto 1rem;
+}
+
+.hr-light {
+  border-color: rgb(110, 110, 110)!important;
+}

@@ -8,6 +8,16 @@ let g_itemMap = null;
 // ~~~~~~~~~~~~~~ // Run on Load // ~~~~~~~~~~~~~~ //
 $(function () {
 
+    // ~ Content Sources ~ //
+    for(let contSrcData of g_contentSources){
+      if(g_currentContentSource === contSrcData.CodeName){
+        $("#inputContentSource").append('<option value="'+contSrcData.CodeName+'" selected>'+contSrcData.TextName+'</option>');
+      } else {
+        $("#inputContentSource").append('<option value="'+contSrcData.CodeName+'">'+contSrcData.TextName+'</option>');
+      }
+    }
+    // ~ ~~~~~~~~~~~~~~~ ~ //
+
     $("#inputTags").chosen();
 
     socket.emit("requestAdminItemDetails");

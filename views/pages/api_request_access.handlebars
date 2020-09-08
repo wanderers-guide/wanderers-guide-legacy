@@ -1,0 +1,52 @@
+
+{{#section 'header'}}
+    <link rel="stylesheet" href="/css/api-request-access.css">
+    <script src="/js/api/api-request-access.js"></script>
+{{/section}}
+
+<div id="access-container" class="container text-center" data-char-id="{{charID}}" data-client-id="{{clientID}}" data-access-rights="{{apiClient.accessRights}}" data-state="{{state}}">
+
+    {{#if apiClient.iconURL}}
+      <figure class="image is-64x64 app-icon">
+        <img src="{{apiClient.iconURL}}">
+      </figure>
+    {{else}}
+      <figure class="image is-64x64 app-icon">
+        <img src="https://wanderersguide.app/images/fox_head.png">
+      </figure>
+		{{/if}}
+
+    <div>
+      <p class="is-size-6"><span class="is-bold lighter-text">{{apiClient.appName}}</span> would like access to...</p>
+      <span style="position: relative;"><span class="is-size-5 lighter-text is-thin">{{charName}}</span><sup class="is-size-8 is-italic has-text-grey pl-1" style="position: absolute; top: 1px;">#{{charID}}</sup></span>
+    </div>
+
+    <div class="my-2">
+      <p>They would be given permission to:</p>
+      {{#ifEqual apiClient.accessRights 'READ-ONLY'}}
+        <p class="is-size-6-5 lighter-text is-bold">&#x2022; Read Information</p>
+      {{/ifEqual}}
+      {{#ifEqual apiClient.accessRights 'READ-UPDATE'}}
+        <p class="is-size-6-5 lighter-text is-bold">&#x2022; Read and Update Information</p>
+      {{/ifEqual}}
+      {{#ifEqual apiClient.accessRights 'READ-UPDATE-ADD-DELETE'}}
+        <p class="is-size-6-5 lighter-text is-bold">&#x2022; Read, Update, Add, and Delete Information</p>
+      {{/ifEqual}}
+    </div>
+
+    <div class="">
+      <a id="character-access-btn" class="button is-info is-rounded"><span class="has-text-light">Allow Access</span></a>
+    </div>
+
+    {{#if apiClient.description}}
+      <hr class="hr-light m-3">
+      <div class="px-4">
+        <p class="text-left is-bold lighter-text">{{apiClient.appName}}</p>
+        <p class="text-left is-size-6-5">{{apiClient.description}}</p>
+        {{#if apiClient.companyName}}
+          <p class="text-left is-size-7 is-thin">By {{apiClient.companyName}}</p>
+        {{/if}}
+      </div>
+    {{/if}}
+
+</div>

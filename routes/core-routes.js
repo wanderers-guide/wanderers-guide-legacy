@@ -17,19 +17,17 @@ router.get('/homebrew', (req, res) => {
     res.render('pages/homebrew', { title: "Homebrew - Wanderer's Guide", user: req.user });
 });
 
-// create browse route
-router.get('/browse', (req, res) => {
-    res.render('pages/browse', { title: "Browse - Wanderer's Guide", user: req.user });
-});
-
 // create license route
 router.get('/license', (req, res) => {
     res.render('pages/license', { title: "Licenses - Wanderer's Guide", user: req.user });
 });
 
-// create docs route
+// create docs routes
 router.get('/wsc_docs', (req, res) => {
     res.render('pages/wsc_docs', { title: "WSC Docs - Wanderer's Guide", user: req.user });
+});
+router.get('/api_docs', (req, res) => {
+  res.render('pages/api_docs', { title: "API Docs - Wanderer's Guide", user: req.user });
 });
 
 module.exports = router;

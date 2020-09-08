@@ -1,4 +1,7 @@
 
+const { Op } = require("sequelize");
+
+const Condition = require('../models/contentDB/Condition');
 const Class = require('../models/contentDB/Class');
 const ClassAbility = require('../models/contentDB/ClassAbility');
 const Archetype = require('../models/contentDB/Archetype');
@@ -39,6 +42,24 @@ function mapToObj(strMap) {
 
 module.exports = class AdminGathering {
 
+    static getTag(tagID) {
+      return Tag.findOne({ where: { id: tagID } })
+      .then((tag) => {
+        return {
+          trait : tag,
+        };
+      });
+    }
+
+    static getCondition(conditionID) {
+      return Condition.findOne({ where: { id: conditionID } })
+      .then((condition) => {
+        return {
+          condition : condition,
+        };
+      });
+    }
+
     static getAllClasses() {
         return Class.findAll()
         .then((classes) => {
@@ -78,11 +99,40 @@ module.exports = class AdminGathering {
         });
     }
 
+    static getClass(classID) {
+      return Class.findOne({ where: { id: classID, homebrewID: null } })
+      .then((cClass) => {
+        return ClassAbility.findAll({
+          order: [['level', 'ASC'],['name', 'ASC'],],
+          where: {
+              [Op.or]: [
+                  { classID: cClass.id },
+                  { indivClassName: cClass.name }
+              ],
+          },
+        }).then((classAbilities) => {
+          return {
+            class : cClass,
+            class_features : classAbilities,
+          };
+        });
+      });
+    }
+
     static getAllArchetypes() {
         return Archetype.findAll()
         .then((archetypes) => {
             return archetypes;
         });
+    }
+
+    static getArchetype(archetypeID) {
+      return Archetype.findOne({ where: { id: archetypeID, homebrewID: null } })
+      .then((archetype) => {
+        return {
+          archetype : archetype,
+        };
+      });
     }
 
     static getAllUniHeritages() {
@@ -93,12 +143,30 @@ module.exports = class AdminGathering {
         });
     }
 
+    static getUniHeritage(uniHeritageID) {
+      return UniHeritage.findOne({ where: { id: uniHeritageID, homebrewID: null } })
+      .then((uniHeritage) => {
+        return {
+          heritage : uniHeritage,
+        };
+      });
+    }
+
     static getAllHeritages() {
         return Heritage.findAll({
             order: [['name', 'ASC'],]
         }).then((heritages) => {
             return heritages;
         });
+    }
+
+    static getHeritage(heritageID) {
+      return Heritage.findOne({ where: { id: heritageID, homebrewID: null } })
+      .then((heritage) => {
+        return {
+          heritage : heritage,
+        };
+      });
     }
 
     static getAllAncestriesBasic() {
@@ -109,11 +177,29 @@ module.exports = class AdminGathering {
         });
     }
 
+    static getAncestryBasic(ancestryID) {
+      return Ancestry.findOne({ where: { id: ancestryID, homebrewID: null } })
+      .then((ancestry) => {
+        return {
+          ancestry : ancestry,
+        };
+      });
+    }
+
     static getAllBackgrounds() {
         return Background.findAll()
         .then((backgrounds) => {
             return backgrounds;
         });
+    }
+
+    static getBackground(backgroundID) {
+      return Background.findOne({ where: { id: backgroundID, homebrewID: null } })
+      .then((background) => {
+        return {
+          background : background,
+        };
+      });
     }
 
     static getAllFeats() {
@@ -165,6 +251,27 @@ module.exports = class AdminGathering {
         });
     }
 
+    static getFeat(featID) {
+      return Feat.findOne({ where: { id: featID, homebrewID: null } })
+      .then((feat) => {
+        return FeatTag.findAll({ where: { featID: featID } })
+        .then((featTags) => {
+          let featTagPromises = [];
+          for(const featTag of featTags) {
+              let newPromise = Tag.findOne({ where: { id: featTag.tagID } });
+              featTagPromises.push(newPromise);
+          }
+          return Promise.all(featTagPromises)
+          .then(function(tags) {
+            return {
+              feat : feat,
+              traits : tags,
+            };
+          });
+        });
+      });
+    }
+
     static getAllSpells() {
         return Spell.findAll({
             order: [['level', 'ASC'],['name', 'ASC'],]
@@ -197,6 +304,27 @@ module.exports = class AdminGathering {
                 });
             });
         });
+    }
+
+    static getSpell(spellID) {
+      return Spell.findOne({ where: { id: spellID, homebrewID: null } })
+      .then((spell) => {
+        return TaggedSpell.findAll({ where: { spellID: spellID } })
+        .then((spellTags) => {
+          let spellTagPromises = [];
+          for(const spellTag of spellTags) {
+              let newPromise = Tag.findOne({ where: { id: spellTag.tagID } });
+              spellTagPromises.push(newPromise);
+          }
+          return Promise.all(spellTagPromises)
+          .then(function(tags) {
+            return {
+              spell : spell,
+              traits : tags,
+            };
+          });
+        });
+      });
     }
 
     static getAllItems(){
@@ -280,6 +408,47 @@ module.exports = class AdminGathering {
                 });
             });
         });
+    }
+
+    static getItem(itemID) {
+      return Item.findOne({ where: { id: itemID, homebrewID: null } })
+      .then((item) => {
+        return TaggedItem.findAll({ where: { itemID: itemID } })
+        .then((itemTags) => {
+          let itemTagPromises = [];
+          for(const itemTag of itemTags) {
+              let newPromise = Tag.findOne({ where: { id: itemTag.tagID } });
+              itemTagPromises.push(newPromise);
+          }
+          return Promise.all(itemTagPromises)
+          .then(function(tags) {
+            return Weapon.findOne({ where: { itemID: itemID } })
+            .then((weaponData) => {
+              return Armor.findOne({ where: { itemID: itemID } })
+              .then((armorData) => {
+                return Storage.findOne({ where: { itemID: itemID } })
+                .then((storageData) => {
+                  return Shield.findOne({ where: { itemID: itemID } })
+                  .then((shieldData) => {
+                    return ItemRune.findOne({ where: { itemID: itemID } })
+                    .then((runeData) => {
+                      return {
+                        item : item,
+                        traits : tags,
+                        data_weapon : (weaponData != null) ? weaponData : undefined,
+                        data_armor : (armorData != null) ? armorData : undefined,
+                        data_storage : (storageData != null) ? storageData : undefined,
+                        data_shield : (shieldData != null) ? shieldData : undefined,
+                        data_rune : (runeData != null) ? runeData : undefined,
+                      };
+                    });
+                  });
+                });
+              });
+            });
+          });
+        });
+      });
     }
 
     static getAllAncestries(includeTag) {
@@ -408,6 +577,5 @@ module.exports = class AdminGathering {
             });
         });
     }
-
 
 };

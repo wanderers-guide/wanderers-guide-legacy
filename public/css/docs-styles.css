@@ -40,10 +40,14 @@ and (max-device-width : 1024px) {
 
 
 /* Other Styles */
-p {
+p, span {
     color: hsl(0, 0%, 71%);
     font-size: 1rem;
     text-align: justify;
+}
+
+.column p, .column span, .code {
+  text-align: inherit;
 }
 
 strong {
@@ -53,9 +57,35 @@ strong {
 
 .code-block {
     padding: 0.8rem;
-    background-color: #272729;
+    background-color: #2f2f31;
     font-family: 'Nanum Gothic Coding', monospace;
-    color: hsl(0, 0%, 71%);
+    color: hsl(0, 0%, 77%);
+}
+
+.code {
+  background-color: #2f2f31;
+  font-family: 'Nanum Gothic Coding', monospace;
+  color: hsl(0, 0%, 77%);
+}
+
+.code-reponse-block {
+  padding: 0.8rem;
+  background-color: #2f2f31;
+  font-family: 'Nanum Gothic Coding', monospace;
+  border-radius: 4px;
+}
+
+.info-block {
+  margin-left: 0.8rem;
+  margin-top: 0.4rem;
+  margin-bottom: 0.4rem;
+  padding: 0.2rem 0.4rem;
+  background-color: #1f5a81;
+  border-radius: 4px;
+}
+.info-block p {
+  color: hsl(0, 0%, 80%)!important;
+  font-size: 0.85rem!important;
 }
 
 .main-title {
@@ -71,6 +101,7 @@ strong {
 
 .small-title {
     font-family: monospace;
+    font-weight: 655;
     color: hsl(0, 0%, 75%);
 }
 

@@ -19,6 +19,37 @@ function hasSameSrc(dataStruct, srcStruct){
   return (dataStruct.sourceType == srcStruct.sourceType && dataStruct.sourceLevel == srcStruct.sourceLevel && dataStruct.sourceCode == srcStruct.sourceCode && dataStruct.sourceCodeSNum == srcStruct.sourceCodeSNum);
 }
 
+/* Content Sources */
+
+let g_contentSources = [
+  {TextName: 'Core Rulebook', CodeName: 'CRB'},
+  {TextName: 'Advanced Player’s Guide', CodeName: 'ADV-PLAYER-GUIDE'},
+  {TextName: 'Gamemastery Guide', CodeName: 'GM-GUIDE'},
+  {TextName: 'Lost Omens: Gods & Magic', CodeName: 'LOST-GOD-MAGIC'},
+  {TextName: 'Lost Omens: Character Guide', CodeName: 'LOST-CHAR-GUIDE'},
+  {TextName: 'Lost Omens: Legends', CodeName: 'LOST-LEGENDS'},
+  {TextName: 'Lost Omens: World Guide', CodeName: 'LOST-WORLD-GUIDE'},
+  {TextName: 'Agents of Edgewatch', CodeName: 'AGENTS-OF-EDGEWATCH'},
+  {TextName: 'Age of Ashes', CodeName: 'AGE-OF-ASHES'},
+  {TextName: 'Extinction Curse', CodeName: 'EXTINCTION-CURSE'},
+  {TextName: 'The Fall of Plaguestone', CodeName: 'FALL-OF-PLAGUE'},
+  {TextName: 'Bestiary', CodeName: 'BEST-1'},
+  {TextName: 'Bestiary 2', CodeName: 'BEST-2'},
+];
+
+let g_currentContentSource = 'EXTINCTION-CURSE';
+
+function getContentSourceTextName(codeName){
+  let contentSourceData = g_contentSources.find(contentSourceData => {
+    return contentSourceData.CodeName === codeName;
+  });
+  if(contentSourceData != null){
+    return contentSourceData.TextName;
+  } else {
+    return null;
+  }
+}
+
 /* Capitalizing */
 function capitalizeWord(word){
   if(word == null){ return null;}
@@ -153,7 +184,7 @@ function selectOptionRarity(rarity){
 }
 
 function round(value, precision) {
-  var multiplier = Math.pow(10, precision || 0);
+  let multiplier = Math.pow(10, precision || 0);
   return Math.floor(value * multiplier) / multiplier;
 }
 
