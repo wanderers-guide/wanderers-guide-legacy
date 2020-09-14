@@ -140,7 +140,7 @@ function openFeatQuickview(data) {
     featContentInnerHTML += '<div>'+processText(description, true, true, 'MEDIUM')+'</div>';
 
     if(data.Feat.special != null){
-        featContentInnerHTML += '<div><p class="negative-indent"><span><strong>Special </strong></span><span>'+data.Feat.special+'</span></p></div>';
+        featContentInnerHTML += '<div>'+processText('~ Special: '+data.Feat.special, true, true, 'MEDIUM')+'</div>';
     }
 
     qContent.append(featContentInnerHTML);

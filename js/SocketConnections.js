@@ -573,7 +573,7 @@ module.exports = class SocketConnections {
       socket.on('requestNameChange', function(charID, name){
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
           if(ownsChar){
-            let validNameRegex = /^[A-Za-z0-9 ,\-–&_.!?'"]+$/;
+            let validNameRegex = /^[^@#$%^*~=\/\\]+$/;
             if(validNameRegex.test(name)) {
               CharSaving.saveName(charID, name).then((result) => {
                 socket.emit('returnNameChange');

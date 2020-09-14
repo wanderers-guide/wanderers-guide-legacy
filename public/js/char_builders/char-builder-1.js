@@ -37,7 +37,7 @@ socket.on("returnCharacterDetails", function(character, clientsWithAccess){
     // When character name changes, save name
     $("#charName").change(function(){
 
-        let validNameRegex = /^[A-Za-z0-9 ,\-–&_.!?'"]+$/;
+        let validNameRegex = /^[^@#$%^*~=\/\\]+$/;
         if(validNameRegex.test($(this).val())) {
             $(this).removeClass("is-danger");
             $("#charNameSideIcon").addClass("is-hidden");
@@ -146,6 +146,14 @@ function handleCharacterOptions(character) {
             this.checked);
     });
     $("#contentSrc-GM-GUIDE").prop('checked', contentSourceArray.includes('GM-GUIDE'));
+
+    $("#contentSrc-SECRETS-OF-MAGIC").change(function(){
+        socket.emit("requestCharacterSourceChange", 
+            getCharIDFromURL(), 
+            'SECRETS-OF-MAGIC',
+            this.checked);
+    });
+    $("#contentSrc-SECRETS-OF-MAGIC").prop('checked', contentSourceArray.includes('SECRETS-OF-MAGIC'));
 
     $("#contentSrc-LOST-CHAR-GUIDE").change(function(){
         socket.emit("requestCharacterSourceChange", 

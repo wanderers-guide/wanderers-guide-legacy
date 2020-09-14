@@ -25,6 +25,7 @@ let g_contentSources = [
   {TextName: 'Core Rulebook', CodeName: 'CRB'},
   {TextName: 'Advanced Player’s Guide', CodeName: 'ADV-PLAYER-GUIDE'},
   {TextName: 'Gamemastery Guide', CodeName: 'GM-GUIDE'},
+  {TextName: 'Secrets of Magic', CodeName: 'SECRETS-OF-MAGIC'},
   {TextName: 'Lost Omens: Gods & Magic', CodeName: 'LOST-GOD-MAGIC'},
   {TextName: 'Lost Omens: Character Guide', CodeName: 'LOST-CHAR-GUIDE'},
   {TextName: 'Lost Omens: Legends', CodeName: 'LOST-LEGENDS'},

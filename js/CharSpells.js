@@ -129,7 +129,54 @@ function getSpellSlots(spellcasting){
             ],
             tenthLevel: []
         };
-    } else if(spellcasting === 'SINGLE-SET'){
+    } else if(spellcasting === 'PARTIAL'){
+      return {
+          cantrip: [
+              {slotID: SID+1, used: false, spellID: null, type: '', level_lock: 1},
+              {slotID: SID+2, used: false, spellID: null, type: '', level_lock: 1},
+              {slotID: SID+3, used: false, spellID: null, type: '', level_lock: 1},
+              {slotID: SID+4, used: false, spellID: null, type: '', level_lock: 1},
+              {slotID: SID+5, used: false, spellID: null, type: '', level_lock: 1},
+          ],
+          firstLevel: [
+              {slotID: SID+6, used: false, spellID: null, type: '', level_lock: 1, level_cutoff: 5},
+              {slotID: SID+7, used: false, spellID: null, type: '', level_lock: 2, level_cutoff: 5},
+          ],
+          secondLevel: [
+              {slotID: SID+8, used: false, spellID: null, type: '', level_lock: 3, level_cutoff: 7},
+              {slotID: SID+9, used: false, spellID: null, type: '', level_lock: 4, level_cutoff: 7},
+          ],
+          thirdLevel: [
+              {slotID: SID+10, used: false, spellID: null, type: '', level_lock: 5, level_cutoff: 9},
+              {slotID: SID+11, used: false, spellID: null, type: '', level_lock: 5, level_cutoff: 9},
+          ],
+          fourthLevel: [
+              {slotID: SID+12, used: false, spellID: null, type: '', level_lock: 7, level_cutoff: 11},
+              {slotID: SID+13, used: false, spellID: null, type: '', level_lock: 7, level_cutoff: 11},
+          ],
+          fifthLevel: [
+              {slotID: SID+14, used: false, spellID: null, type: '', level_lock: 9, level_cutoff: 13},
+              {slotID: SID+15, used: false, spellID: null, type: '', level_lock: 9, level_cutoff: 13},
+          ],
+          sixthLevel: [
+              {slotID: SID+16, used: false, spellID: null, type: '', level_lock: 11, level_cutoff: 15},
+              {slotID: SID+17, used: false, spellID: null, type: '', level_lock: 11, level_cutoff: 15},
+          ],
+          seventhLevel: [
+              {slotID: SID+18, used: false, spellID: null, type: '', level_lock: 13, level_cutoff: 17},
+              {slotID: SID+19, used: false, spellID: null, type: '', level_lock: 13, level_cutoff: 17},
+          ],
+          eighthLevel: [
+              {slotID: SID+20, used: false, spellID: null, type: '', level_lock: 15},
+              {slotID: SID+21, used: false, spellID: null, type: '', level_lock: 15},
+          ],
+          ninthLevel: [
+              {slotID: SID+22, used: false, spellID: null, type: '', level_lock: 17},
+              {slotID: SID+23, used: false, spellID: null, type: '', level_lock: 17},
+          ],
+          tenthLevel: []
+      };
+  } else if(spellcasting === 'SINGLE-SET'){
         return {
             cantrip: [
                 {slotID: SID+1, used: false, spellID: null, type: '', level_lock: 1},
@@ -416,6 +463,9 @@ module.exports = class CharSpells {
                 type: updateSlotObject.type,
                 level_lock: updateSlotObject.level_lock,
             };
+            if(updateSlotObject.level_cutoff != null){
+              spellSlotEntry.level_cutoff = updateSlotObject.level_cutoff;
+            }
             let updatedSpellSlotJSON = JSON.stringify(spellSlotEntry);
 
             // Regex which will manually replace spell slot directly through JSON
@@ -460,21 +510,26 @@ module.exports = class CharSpells {
                     for(let [levelRowName, slotsArray] of Object.entries(spellSlots)) {
                         let slotLevel = rowNameToLevel(levelRowName);
                         for(const slotData of slotsArray){
-                            if(slotData.level_lock <= character.level) {
+                            if(slotData.level_lock <= character.level && (slotData.level_cutoff == null || slotData.level_cutoff > character.level)) {
 
                                 let spellSlotArray = [];
                                 if(spellSlotsMap.has(spellSRC)){
                                     spellSlotArray = spellSlotsMap.get(spellSRC);
                                 }
 
-                                spellSlotArray.push({
-                                    slotID: slotData.slotID,
-                                    slotLevel: slotLevel,
-                                    used: slotData.used,
-                                    spellID: slotData.spellID,
-                                    type: slotData.type,
-                                    level_lock: slotData.level_lock,
-                                });
+                                let spellSlotEntry = {
+                                  slotID: slotData.slotID,
+                                  slotLevel: slotLevel,
+                                  used: slotData.used,
+                                  spellID: slotData.spellID,
+                                  type: slotData.type,
+                                  level_lock: slotData.level_lock,
+                                };
+                                if(slotData.level_cutoff != null){
+                                  spellSlotEntry.level_cutoff = slotData.level_cutoff;
+                                }
+
+                                spellSlotArray.push(spellSlotEntry);
 
                                 spellSlotsMap.set(spellSRC, spellSlotArray);
 
