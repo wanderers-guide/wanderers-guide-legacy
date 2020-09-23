@@ -122,11 +122,11 @@ const contentDB = require('./config/databases/content-database');
 // Testing Database Connections
 backgroundDB.authenticate()
   .then(() => console.log('Background Database connected...'))
-  .catch(err => console.error('Error: ' + err));
+  .catch(err => console.log('Database Connection Error: ' + err));
   
 contentDB.authenticate()
   .then(() => console.log('Content Database connected...'))
-  .catch(err => console.error('Error: ' + err));
+  .catch(err => console.log('Database Connection Error: ' + err));
 
 // Set static folder
 app.use(express.static(path.join(__dirname, 'public')));

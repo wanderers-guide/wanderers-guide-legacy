@@ -9,6 +9,8 @@ router.get('/', (req, res) => {
 
     Background.findOne({ order: [ [ Sequelize.fn('RAND') ] ] }).then((background) => {
         res.render('pages/home', { title: "Wanderer's Guide - Pathfinder 2e Character Manager", user: req.user, background });
+    }).catch((error) => {
+      res.render('pages/website_down', { title: "Website Down - Wanderer's Guide" });
     });
 });
 
