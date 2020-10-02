@@ -38,7 +38,7 @@ let g_contentSources = [
   {TextName: 'Bestiary 2', CodeName: 'BEST-2'},
 ];
 
-let g_currentContentSource = 'LOST-CHAR-GUIDE';
+let g_currentContentSource = 'LOST-WORLD-GUIDE';
 
 function getContentSourceTextName(codeName){
   let contentSourceData = g_contentSources.find(contentSourceData => {
