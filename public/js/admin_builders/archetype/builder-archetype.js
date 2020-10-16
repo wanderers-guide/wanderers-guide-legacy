@@ -58,7 +58,7 @@ $(function () {
 
         let inputFeatName = $("#"+featID).find(".inputFeatName");
         inputFeatName.change(function(){
-            $("#"+featID).find(".card-header-title").html('Class Feat - '+inputFeatName.val());
+            $("#"+featID).find(".card-header-title").html('Archetype Feat - '+inputFeatName.val());
         });
 
         $("#"+featID).find(".inputFeatTags").chosen();
