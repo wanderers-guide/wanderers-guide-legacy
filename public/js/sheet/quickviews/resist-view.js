@@ -28,11 +28,13 @@ function openResistancesQuickview(data) {
             let type = capitalizeWord(resist.Type);
             let amount = resist.Amount;
             if(amount.includes('HALF_LEVEL')){
-              amount = amount.replace('HALF_LEVEL', Math.ceil(data.CharLevel/2));
+              let halfLevel = Math.floor(data.CharLevel/2);
+              if(halfLevel == 0) { halfLevel = 1; } // Round down, minimum of 1
+              amount = amount.replace('HALF_LEVEL', halfLevel);
             } else if(amount.includes('LEVEL')){
                 amount = amount.replace('LEVEL', data.CharLevel);
             }
-            qContent.append('<p class="has-text-centered is-size-5">'+type+' '+amount+'</p>');
+            qContent.append('<p class="has-text-centered is-size-5">'+type+' '+evalString(amount)+'</p>');
         }
     }
 
@@ -42,11 +44,13 @@ function openResistancesQuickview(data) {
             let type = capitalizeWord(vulner.Type);
             let amount = vulner.Amount;
             if(amount.includes('HALF_LEVEL')){
-              amount = amount.replace('HALF_LEVEL', Math.ceil(data.CharLevel/2));
+              let halfLevel = Math.floor(data.CharLevel/2);
+              if(halfLevel == 0) { halfLevel = 1; } // Round down, minimum of 1
+              amount = amount.replace('HALF_LEVEL', halfLevel);
             } else if(amount.includes('LEVEL')){
                 amount = amount.replace('LEVEL', data.CharLevel);
             }
-            qContent.append('<p class="has-text-centered is-size-5">'+type+' '+amount+'</p>');
+            qContent.append('<p class="has-text-centered is-size-5">'+type+' '+evalString(amount)+'</p>');
         }
     }
 

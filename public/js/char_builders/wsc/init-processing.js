@@ -165,6 +165,11 @@ function runNextStatement(){
         }
         //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
 
+        if(wscStatement == "CLEAR-DATA-FROM-CODE-BLOCK"){
+            clearDataFromSrcStruct(srcStruct);
+            return 'WAIT';
+        }
+
         if(wscStatement.includes("-CHAR-TRAIT")){
             processingCharTags(wscStatement, srcStruct, locationID);
             return 'WAIT';
@@ -358,6 +363,19 @@ socket.on("returnWSCUpdateSpells", function(spellObject){
 socket.on("returnWSCUpdateArchetypes", function(archetypesArray){
     //if(processingDebug) {console.log("Updating ArchetypesArray...");}
     g_archetypes = archetypesArray;
+});
+
+//////////////
+
+function clearDataFromSrcStruct(srcStruct){
+  socket.emit("requestWSCSrcStructDataClear",
+      getCharIDFromURL(),
+      srcStruct);
+}
+
+socket.on("returnWSCSrcStructDataClear", function(choiceStruct){
+  injectWSCChoiceStruct(choiceStruct);
+  statementComplete();
 });
 
 //////////////
