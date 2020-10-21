@@ -375,7 +375,7 @@ function handleLink(match, innerTextURL) {
     try {
         urlObj = new URL(innerTextURL);
     } catch(err) {
-        displayError("Invalid URL: \'"+innerTextURL+"\'");
+        //displayError("Invalid URL: \'"+innerTextURL+"\'");
         return '['+innerTextURL+']';
     }
     let websiteName = urlObj.hostname;

@@ -429,7 +429,7 @@ module.exports = class CharSpells {
         });
     }
 
-    // Used to actually add a set of spell slots to character data
+    // Actually adds a set of spell slots to character data
     static setSpellCasting(charID, srcStruct, spellSRC, spellcasting){
         spellcasting = spellcasting.toUpperCase();
         let spellSlots = getSpellSlots(spellcasting);
@@ -439,15 +439,22 @@ module.exports = class CharSpells {
         });
     }
 
-    // Used to actually add a spell slot to character data
+    // Actually adds a spell slot to character data
     static setSpellSlot(charID, srcStruct, spellSRC, slotLevel){
         let rowName = levelToRowName(slotLevel);
         if(rowName == null) {return null;}
         let spellSlot = {};
         spellSlot[rowName] = [{slotID: getRandomSID(), used: false, spellID: null, type: '', level_lock: -1}];
-        return CharDataMapping.setData(charID, 'spellSlots', srcStruct, spellSRC+"="+JSON.stringify(spellSlot))
-        .then((result) => {
-          return spellSlot;
+        return CharDataMapping.getDataSingle(charID, 'spellSlots', srcStruct)
+        .then((spellSlotData) => {
+          if(spellSlotData == null){// If slot data doesn't already exist,
+            return CharDataMapping.setData(charID, 'spellSlots', srcStruct, spellSRC+"="+JSON.stringify(spellSlot))
+            .then((result) => {
+              return spellSlot;
+            });
+          } else {
+            return false; // Returns not null but not the spellslot either.
+          }
         });
     }
 
@@ -495,7 +502,7 @@ module.exports = class CharSpells {
         });
     }
 
-    static getSpellSlots(charID){
+    static getSpellSlotMap(charID){
         return Character.findOne({ where: { id: charID} })
         .then((character) => {
             return CharDataMapping.getDataAll(charID, 'spellSlots', null)
@@ -516,7 +523,7 @@ module.exports = class CharSpells {
                                 if(spellSlotsMap.has(spellSRC)){
                                     spellSlotArray = spellSlotsMap.get(spellSRC);
                                 }
-
+                                
                                 let spellSlotEntry = {
                                   slotID: slotData.slotID,
                                   slotLevel: slotLevel,

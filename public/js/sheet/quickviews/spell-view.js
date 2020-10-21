@@ -364,7 +364,9 @@ function openSpellQuickview(data){
             traditionsString += tradition+', ';
         }
         traditionsString = traditionsString.slice(0, -2);// Trim off that last ', '
-        qContent.append('<div class="tile"><div class="tile is-child"><p class="text-left"><strong>Traditions</strong> '+traditionsString+'</p></div></div>');
+        if(traditionsString != '') {
+          qContent.append('<div class="tile"><div class="tile is-child"><p class="text-left"><strong>Traditions</strong> '+traditionsString+'</p></div></div>');
+        }
     }
 
     // Cast

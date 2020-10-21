@@ -236,7 +236,9 @@ function displayCurrentAncestry(ancestryStruct, saving) {
     } else {
         $('#isArchivedMessage').addClass('is-hidden');
     }
-
+    
+    $('#physicalFeatureOneCodeOutput').html('');
+    $('#physicalFeatureTwoCodeOutput').html('');
 
     let ancestryDescription = $('#ancestryDescription');
     ancestryDescription.html(processText(ancestryStruct.Ancestry.description, false, null, 'MEDIUM', false));

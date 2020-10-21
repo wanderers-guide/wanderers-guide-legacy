@@ -881,7 +881,7 @@ module.exports = class CharGathering {
 
         console.log('~~~~~~~~~~~ REQUESTING SPELL DATA ~~~~~~~~~~~');
 
-        return CharSpells.getSpellSlots(charID)
+        return CharSpells.getSpellSlotMap(charID)
         .then((spellSlotsMap) => {
 
             let spellBookSlotPromises = [];
