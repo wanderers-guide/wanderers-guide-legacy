@@ -830,7 +830,11 @@ function displayInformation() {
         }
     }
 
-    $("#perceptionPrimaryVisionSense").html(primaryVisionSense.name);
+    if(primaryVisionSense != null){
+      $("#perceptionPrimaryVisionSense").html(primaryVisionSense.name);
+    } else {
+      $("#perceptionPrimaryVisionSense").html('None');
+    }
 
     let perceptionBonusContent = $("#perceptionBonusContent");
     let perceptionBonus = getStatTotal('PERCEPTION');
