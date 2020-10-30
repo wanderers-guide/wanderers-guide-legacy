@@ -12,6 +12,17 @@
 
 }
 
+.s-s-box {
+
+  box-shadow: 0 1px 3px rgba(0,0,0,0.5);
+  background: #1d1d1d;
+  border: 1px solid #1d1d1d;
+  border-radius: 4px;
+  max-width: 600px;
+  margin: auto;
+
+}
+
 /* Tabs */
 .category-tabs li.is-active a {
   color: #303030;
@@ -23,4 +34,23 @@
 .tabs:not(.is-boxed) li.is-active a {
   border-bottom-color: #3298dc;
   color: #3298dc;
+}
+
+/* Select and Input */
+.select select:focus, .input:focus {
+  border-color: #3298dc!important;
+}
+
+.select::after {
+  border-color: #b9b9b9!important;
+}
+
+/* Text */
+.label {
+  color: #b9b9b9;
+}
+
+strong {
+  color: #b9b9b9;
+  font-weight: 800;
 }

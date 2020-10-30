@@ -136,7 +136,7 @@ router.put('/experience', (req, res) => { // Update
 // Conditions //
 router.get('/conditions', (req, res) => { // Read
   if(hasAccess(req.accessRights, 1)) {
-    CharGathering.getAllConditions(req.charID).then((conditionsData) => {
+    CharGathering.getAllCharConditions(req.charID).then((conditionsData) => {
       res.send(conditionsData);
     });
   } else {
@@ -151,7 +151,7 @@ router.post('/conditions', (req, res) => { // Add
     if(!isNaN(conditionID)){
       if(isNaN(conditionValue)) { conditionValue = 1; }
       CharSaving.replaceCondition(req.charID, conditionID, conditionValue, null, null).then((result) => {
-        CharGathering.getAllConditions(req.charID).then((conditionsData) => {
+        CharGathering.getAllCharConditions(req.charID).then((conditionsData) => {
           res.status(201).send(conditionsData);
         });
       });
@@ -168,7 +168,7 @@ router.delete('/conditions', (req, res) => { // Delete
     let conditionID = parseInt(req.query.id);
     if(!isNaN(conditionID)){
       CharSaving.removeCondition(req.charID, conditionID).then((result) => {
-        CharGathering.getAllConditions(req.charID).then((conditionsData) => {
+        CharGathering.getAllCharConditions(req.charID).then((conditionsData) => {
           res.send(conditionsData);
         });
       });

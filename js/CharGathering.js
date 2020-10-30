@@ -703,7 +703,7 @@ module.exports = class CharGathering {
         });
     }
 
-    static getAllConditions(charID) {
+    static getAllCharConditions(charID) {
         return Condition.findAll()
         .then((conditions) => {
             return CharCondition.findAll({ where: { charID: charID} })
@@ -1484,7 +1484,7 @@ module.exports = class CharGathering {
                             .then( (featObject) => {
                               return CharGathering.getAllItems(charID)
                               .then( (itemMap) => {
-                                return CharGathering.getAllConditions(charID)
+                                return CharGathering.getAllCharConditions(charID)
                                 .then( (conditionsObject) => {
                                   return Condition.findAll()
                                   .then((allConditions) => {

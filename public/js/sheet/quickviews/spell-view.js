@@ -2,10 +2,9 @@
     By Aaron Cassar.
 */
 
-const g_tagStringLengthMax = 620; // Hardcoded - Tag String Length Max
-
 function openSpellQuickview(data){
     addBackFunctionality(data);
+    addContentSource(data.SpellDataStruct.Spell.contentSrc);
 
     let spellDataStruct = data.SpellDataStruct;
     let spellID = spellDataStruct.Spell.id;

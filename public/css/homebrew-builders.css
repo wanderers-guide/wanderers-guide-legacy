@@ -1,0 +1,70 @@
+
+/* Dark Mode Styling */
+
+.select::after {
+    border-color: hsl(0, 0%, 82%)!important;
+}
+
+.select:hover::after {
+    border-color: #3273dc!important;
+}
+
+.card {
+    background-color: hsl(0, 0%, 28%);
+    border-color: #282828;
+}
+
+.card-header {
+    background-color: hsl(0, 0%, 21%);
+    border-color: hsl(0, 0%, 13%);
+    color: hsl(0, 0%, 73%);
+}
+
+.button.is-link.is-inverted {
+    background-color: #282828;
+    color: #3298dc;
+}
+
+.has-text-bck-color {
+    color: #282828;
+}
+
+.has-text-title {
+    color: #999;
+}
+
+.has-text-value {
+    color: rgb(184, 184, 184);
+}
+
+.button.is-link.is-inverted:hover {
+    background-color: #282828;
+}
+
+.button.is-static {
+    background-color: hsl(0, 0%, 18%);
+    color: hsl(0, 0%, 68%);
+}
+
+.button:hover {
+    color: hsl(0, 0%, 82%);
+}
+
+a {
+    color: hsl(217, 71%, 53%);
+}
+a:hover {
+    color: hsl(217, 71%, 53%);
+}
+
+li {
+    color: hsl(0, 0%, 53%);
+}
+
+.label, strong {
+    color: hsl(0, 0%, 68%);
+}
+
+hr {
+    border-color: hsl(0, 0%, 68%);
+}

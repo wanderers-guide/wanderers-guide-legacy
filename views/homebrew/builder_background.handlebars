@@ -1,0 +1,151 @@
+
+{{#section 'header'}}
+    <link rel="stylesheet" href="/css/admin-builders.css">
+    <script type="text/javascript" src="/js/admin_builders/background/builder-background.js"></script>
+    {{#if backgroundID}}
+        <script type="text/javascript" src="/js/admin_builders/background/editor-background.js"></script>
+        <script type="text/javascript" src="/js/admin_builders/editor-utils.js"></script>
+    {{/if}}
+{{/section}}
+
+{{#section 'nav_home'}}
+    <li><a href="/">Home</a></li>
+{{/section}}
+
+{{#section 'nav_characters'}}
+    <li><a href="/profile/characters">Characters</a></li>
+{{/section}}
+
+{{#section 'nav_homebrew'}}
+    <li class="mx-lg-4 mx-md-3 my-md-0 my-2"><a href="/homebrew">Homebrew</a></li>
+{{/section}}
+
+{{#section 'nav_browse'}}
+    <li class="mr-lg-4 mr-md-3"><a href="/browse"><i class="fas fa-lg fa-search"></i></a></li>
+{{/section}}
+
+{{#section 'nav_login'}}
+    <li class="mr-4"><a href="/auth/login">Login <i class="fas fa-sign-in-alt"></i></a></li>
+{{/section}}
+
+{{#section 'banner_nav'}}
+    <div class="banner_w3lspvt-2"></div>
+{{/section}}
+
+
+<div class="pt-3">
+    {{#if backgroundID}}
+        <h1 class="is-size-1 has-text-light has-text-centered">Background Editor</h1>
+    {{else}}
+        <h1 class="is-size-1 has-text-light has-text-centered">Background Creation</h1>
+    {{/if}}
+</div>
+
+<div class="columns is-mobile is-centered mt-2 mb-3">
+    <div class="column is-8 tile is-ancestor is-vertical">
+
+        <div class="tile">
+
+            <div class="tile is-parent is-vertical box is-6 is-marginless mr-2">
+
+                <div class="tile is-child field">
+                    <label class="label">Name</label>
+                    <div class="control">
+                        <input id="inputName" class="input" type="text" placeholder="e.g. Warrior">
+                    </div>
+                </div>
+
+                <div class="tile is-child field">
+                    <label class="label">Version</label>
+                    <div class="control">
+                        <input id="inputVersion" class="input" type="text" placeholder="e.g. 1.0">
+                    </div>
+                </div>
+
+                <div class="tile is-child field">
+                    <label class="label">Source</label>
+                    <div class="control">
+                        <div class="select">
+                            <select id="inputContentSource">
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tile is-child field">
+                    <label class="label">Rarity</label>
+                    <div class="control">
+                        <div class="select">
+                            <select id="inputRarity">
+                                <option value="COMMON">Common</option>
+                                <option value="UNCOMMON">Uncommon</option>
+                                <option value="RARE">Rare</option>
+                                <option value="UNIQUE">Unique</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="tile is-parent is-vertical box is-6 is-marginless ml-2">
+
+                <div class="tile">
+                    <div class="tile is-child field">
+                        <label class="label">First Boost Options</label>
+                        <div class="control">
+                            <div class="select is-multiple">
+                                <select id="inputBoosts" multiple size="6" class="use-invisible-scrollbar">
+                                    <option value="STR">Strength</option>
+                                    <option value="DEX">Dexterity</option>
+                                    <option value="CON">Constitution</option>
+                                    <option value="INT">Intelligence</option>
+                                    <option value="WIS">Wisdom</option>
+                                    <option value="CHA">Charisma</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="tile">
+            <div class="tile is-parent is-vertical box mt-3 ml-3">
+                <div class="tile is-child field">
+                    <label class="label">
+                        Description
+                        <a href="/wsc_docs/#description_fields" target="_blank"><span class="icon is-small has-text-info has-tooltip-top" data-tooltip="WSC Docs"><i class="fas fa-book"></i></span></a>
+                    </label>
+                    <div class="control">
+                        <textarea id="inputDescription" class="textarea" placeholder="In your younger days, you waded into battle..."></textarea>
+                    </div>
+                </div>
+
+                <div class="tile is-child field">
+                    <label class="label">
+                        Code
+                        <a href="/wsc_docs/#code_fields" target="_blank"><span class="icon is-small has-text-info has-tooltip-top" data-tooltip="WSC Docs"><i class="fas fa-book"></i></span></a>
+                    </label>
+                    <div class="control">
+                        <textarea id="inputCode" class="textarea nanum-coding use-custom-scrollbar" rows="4" spellcheck="false" maxlength="990"></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="field is-grouped is-grouped-centered pb-2">
+    <div class="control">
+        {{#if backgroundID}}
+            <button id="updateButton" class="button is-success">Update</button>
+        {{else}}
+            <button id="createButton" class="button is-success">Create</button>
+        {{/if}}
+    </div>
+</div>

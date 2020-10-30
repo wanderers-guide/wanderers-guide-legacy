@@ -1,8 +1,37 @@
 
 {{#section 'header'}}
     <link rel="stylesheet" href="/css/browse.css">
-    <script src="/js/browse/ancestry/ancestry-browse.js"></script>
+    <script src="/js/browse/general-browse.js"></script>
     <script src="/js/browse/browse-utils.js"></script>
+
+    <script src="/js/libraries/display_class/display-class.js"></script>
+    <script src="/js/libraries/display_ancestry/display-ancestry.js"></script>
+    <script src="/js/libraries/display_archetype/display-archetype.js"></script>
+    <script src="/js/libraries/display_background/display-background.js"></script>
+    <script src="/js/libraries/display_uni_heritage/display-uni-heritage.js"></script>
+
+    <script src="/js/browse/feat/feat-browse.js"></script>
+    <script src="/js/browse/item/item-browse.js"></script>
+    <script src="/js/browse/spell/spell-browse.js"></script>
+    <script src="/js/browse/cClass/class-browse.js"></script>
+    <script src="/js/browse/ancestry/ancestry-browse.js"></script>
+    <script src="/js/browse/archetype/archetype-browse.js"></script>
+    <script src="/js/browse/background/background-browse.js"></script>
+    <script src="/js/browse/uni_heritage/uni-heritage-browse.js"></script>
+
+    <!-- Quickview -->
+    <script src="/js/sheet/quickviews/_quickviews.js"></script>
+    <script src="/js/sheet/quickviews/feat-view.js"></script>
+    <script src="/js/sheet/quickviews/language-view.js"></script>
+    <script src="/js/sheet/quickviews/spell-view.js"></script>
+    <script src="/js/sheet/quickviews/item-view.js"></script>
+    <script src="/js/sheet/quickviews/tag-view.js"></script>
+    <script src="/js/sheet/quickviews/ability-view.js"></script>
+    <script src="/js/sheet/quickviews/condition-view.js"></script>
+    <script src="/js/sheet/utils/item-utils.js"></script>
+    <script src="/js/sheet/utils/material-utils.js"></script>
+    <script src="/js/wsc/text-processing.js"></script>
+    <script src="/js/wsc/add-text-processing.js"></script>
 {{/section}}
 
 {{#section 'nav_home'}}
@@ -31,40 +60,340 @@
     <div class="banner_w3lspvt-2"></div>
 {{/section}}
 
-<div class="container browse-container">
+<div class="pageloader">
+    <div class="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+</div>
 
-  <h1 class="pt-3 is-size-1 has-text-light text-center">Browse</h1>
-    <hr style="border-color: #5e5e5e;">
+<div class="container browse-container pb-4">
 
-    <div>
-        <p class="is-size-5 text-center is-italic">Coming soon!</p>
-        <p class="text-center mx-5 px-5">
-            The plan for this page is for it to be an area where you can search through all the data in Wanderer's Guide. An area where you can browse through all the different classes, items, and spells without having to make a character.
-        </p>
-    </div>
-
-<!--
   <div class="tabs is-centered is-boxed use-custom-scrollbar">
     <ul class="category-tabs">
-      <li><a id="ancestriesSearchTab">Ancestries</a></li>
-      <li><a id="archetypesSearchTab">Archetypes</a></li>
-      <li><a id="backgroundsSearchTab">Backgrounds</a></li>
-      <li><a id="classesSearchTab">Classes</a></li>
-      <li><a id="featsSearchTab">Feats</a></li>
-      <li><a id="itemsSearchTab">Items</a></li>
-      <li><a id="spellsSearchTab">Spells</a></li>
-      <li><a id="vHeritagesSearchTab">Versatile Heritages</a></li>
+      <li><a id="ancestriesSearchTab" class="searchTab" data-tab-name="ancestry">Ancestries</a></li>
+      <li><a id="archetypesSearchTab" class="searchTab" data-tab-name="archetype">Archetypes</a></li>
+      <li><a id="backgroundsSearchTab" class="searchTab" data-tab-name="background">Backgrounds</a></li>
+      <li><a id="classesSearchTab" class="searchTab" data-tab-name="class">Classes</a></li>
+      <li><a id="featsSearchTab" class="searchTab" data-tab-name="feat">Feats</a></li>
+      <li><a id="itemsSearchTab" class="searchTab" data-tab-name="item">Items</a></li>
+      <li><a id="spellsSearchTab" class="searchTab" data-tab-name="spell">Spells</a></li>
+      <li><a id="vHeritagesSearchTab" class="searchTab" data-tab-name="v-heritage">Versatile Heritages</a></li>
     </ul>
   </div>
   <div id="tabContent" class="mx-3 mb-3">
 
     <div class="columns">
-      <div class="column is-4 m-1 is-paddingless">
+      <div id="searchFilterSection" class="column is-4 m-1 is-paddingless use-custom-scrollbar" style="height: 650px; max-height: 650px;overflow-y: auto;">
         <div class="section-box">
-          <p id="browsingFilter" class="is-size-6 text-center"><strong class="has-text-grey-lighter">Filter</strong></p>
+          <p id="browsingFilter" class="is-size-6 text-center"><strong class="has-text-grey-lighter">Search Filters</strong></p>
+
+          <div id="filterNameSection" class="is-hidden filterFieldSection field">
+            <div class="control">
+              <input class="input" id="filterNameInput" type="text" placeholder="Name" autocomplete="off">
+            </div>
+          </div>
+
+          <div id="filterTagsSection" class="is-hidden filterFieldSection field">
+            <select id="filterTagsInput" data-placeholder="Traits" multiple>
+            </select>
+          </div>
+
+          <div id="filterFeatPrereqSection" class="is-hidden filterFieldSection field">
+            <div class="control">
+              <input class="input" id="filterFeatPrereqInput" type="text" placeholder="Prerequisites" autocomplete="off">
+            </div>
+          </div>
+
+          <div id="filterItemUsageSection" class="is-hidden filterFieldSection field">
+            <div class="control">
+              <input class="input" id="filterItemUsageInput" type="text" placeholder="Usage" autocomplete="off">
+            </div>
+          </div>
+
+          <div id="filterDescSection" class="is-hidden filterFieldSection field">
+            <div class="control">
+              <input class="input" id="filterDescInput" type="text" placeholder="Description" autocomplete="off">
+            </div>
+          </div>
+
+          <div id="filterSpellTraditionSection" class="is-hidden filterFieldSection field is-horizontal">
+            <div class="field-label is-normal ml-2">
+              <label class="label">Tradition</label>
+            </div>
+            <div class="field-body">
+              <div class="field">
+                <div class="control">
+                  <div class="select">
+                    <select id="filterSpellTraditionInput">
+                      <option value="ANY">Any</option>
+                      <option value="arcane">Arcane</option>
+                      <option value="divine">Divine</option>
+                      <option value="occult">Occult</option>
+                      <option value="primal">Primal</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div id="filterActionsSection" class="is-hidden filterFieldSection field is-horizontal">
+            <div class="field-label is-normal ml-2">
+              <label class="label">Actions</label>
+            </div>
+            <div class="field-body">
+              <div class="field">
+                <div class="control">
+                  <div class="select">
+                    <select id="filterActionsInput" class="pf-icon">
+                      <option value="ANY">Any</option>
+                      <option value="NONE">None</option>
+                      <option value="ACTION">[one-action]</option>
+                      <option value="TWO_ACTIONS">[two-actions]</option>
+                      <option value="THREE_ACTIONS">[three-actions]</option>
+                      <option value="FREE_ACTION">[free-action]</option>
+                      <option value="REACTION">[reaction]</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div id="filterLevelSection" class="is-hidden filterFieldSection field is-horizontal">
+            <div class="field-label is-normal ml-2">
+              <label class="label">Level</label>
+            </div>
+            <div class="field-body">
+              <div class="field has-addons">
+                <p class="control">
+                  <span class="select">
+                    <select id="filterLevelRelationInput">
+                      <option value="EQUAL">=</option>
+                      <option value="LESS">&lt;</option>
+                      <option value="GREATER">&gt;</option>
+                      <option value="LESS-EQUAL">&#8804;</option>
+                      <option value="GREATER-EQUAL">&#8805;</option>
+                      <option value="NOT-EQUAL">&#8800;</option>
+                    </select>
+                  </span>
+                </p>
+                <p class="control">
+                  <input class="input" id="filterLevelInput" type="number" placeholder="Lvl">
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div id="filterSpellSavingThrowSection" class="is-hidden filterFieldSection field is-horizontal">
+            <div class="field-label is-normal ml-2">
+              <label class="label">Saving Throw</label>
+            </div>
+            <div class="field-body">
+              <div class="field">
+                <div class="control">
+                  <div class="select">
+                    <select id="filterSpellSavingThrowInput">
+                      <option value="ANY">Any</option>
+                      <option value="FORT">Fortitude</option>
+                      <option value="REFLEX">Reflex</option>
+                      <option value="WILL">Will</option>
+                      <option value="BASIC_FORT">Basic Fortitude</option>
+                      <option value="BASIC_REFLEX">Basic Reflex</option>
+                      <option value="BASIC_WILL">Basic Will</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div id="filterSpellFocusSection" class="is-hidden filterFieldSection field is-horizontal">
+            <div class="field-label is-normal ml-2">
+              <label class="label">Focus</label>
+            </div>
+            <div class="field-body">
+              <div class="field">
+                <div class="control">
+                  <div class="select">
+                    <select id="filterSpellFocusInput">
+                      <option value="ANY">Either</option>
+                      <option value="1">Only</option>
+                      <option value="0">None</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div id="filterItemPriceSection" class="is-hidden filterFieldSection field is-horizontal">
+            <div class="field-label is-normal ml-2">
+              <label class="label">Price</label>
+            </div>
+            <div class="field-body">
+              <div class="field has-addons">
+                <p class="control">
+                  <span class="select">
+                    <select id="filterItemPriceRelationInput">
+                      <option value="EQUAL">=</option>
+                      <option value="LESS">&lt;</option>
+                      <option value="GREATER">&gt;</option>
+                      <option value="LESS-EQUAL">&#8804;</option>
+                      <option value="GREATER-EQUAL">&#8805;</option>
+                      <option value="NOT-EQUAL">&#8800;</option>
+                    </select>
+                  </span>
+                </p>
+                <p class="control">
+                  <input class="input" id="filterItemPriceInput" type="number" placeholder="Price (in cp)" min="0" max="99999999">
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div id="filterItemBulkSection" class="is-hidden filterFieldSection field is-horizontal">
+            <div class="field-label is-normal ml-2">
+              <label class="label">Bulk</label>
+            </div>
+            <div class="field-body">
+              <div class="field has-addons">
+                <p class="control">
+                  <span class="select">
+                    <select id="filterItemBulkRelationInput">
+                      <option value="EQUAL">=</option>
+                      <option value="LESS">&lt;</option>
+                      <option value="GREATER">&gt;</option>
+                      <option value="LESS-EQUAL">&#8804;</option>
+                      <option value="GREATER-EQUAL">&#8805;</option>
+                      <option value="NOT-EQUAL">&#8800;</option>
+                    </select>
+                  </span>
+                </p>
+                <p class="control">
+                  <input class="input" id="filterItemBulkInput" type="number" placeholder="Bulk" min="0" max="999" step="0.1">
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div id="filterRaritySection" class="is-hidden filterFieldSection field is-horizontal">
+            <div class="field-label is-normal ml-2">
+              <label class="label">Rarity</label>
+            </div>
+            <div class="field-body">
+              <div class="field">
+                <div class="control">
+                  <div class="select">
+                    <select id="filterRarityInput">
+                      <option value="ANY">Any</option>
+                      <option value="COMMON">Common</option>
+                      <option value="UNCOMMON">Uncommon</option>
+                      <option value="RARE">Rare</option>
+                      <option value="UNIQUE">Unique</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div id="filterFeatSkillSection" class="is-hidden filterFieldSection field is-horizontal">
+            <div class="field-label is-normal ml-2">
+              <label class="label">Skill</label>
+            </div>
+            <div class="field-body">
+              <div class="field">
+                <div class="control">
+                  <div class="select">
+                    <select id="filterFeatSkillInput">
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div id="filterItemCategorySection" class="is-hidden filterFieldSection field is-horizontal">
+            <div class="field-label is-normal ml-2">
+              <label class="label">Category</label>
+            </div>
+            <div class="field-body">
+              <div class="field">
+                <div class="control">
+                  <div class="select">
+                    <select id="filterItemCategoryInput">
+                      <option value="ANY">Any</option>
+                      <option value="ARTIFACT">Artifact</option>
+                      <option value="AMMUNITION">Ammunition</option>
+                      <option value="ARMOR">Armor</option>
+                      <option value="BELT">Belt</option>
+                      <option value="BOMB">Bomb</option>
+                      <option value="BOOK">Book</option>
+                      <option value="BOOTS">Boots</option>
+                      <option value="BRACERS">Bracers</option>
+                      <option value="CIRCLET">Circlet</option>
+                      <option value="CLOAK">Cloak</option>
+                      <option value="COMPANION">Companion</option>
+                      <option value="CURRENCY">Currency</option>
+                      <option value="DRUG">Drug</option>
+                      <option value="ELIXIR">Elixir</option>
+                      <option value="EYEPIECE">Eyepiece</option>
+                      <option value="GLOVES">Gloves</option>
+                      <option value="HAT">Hat</option>
+                      <option value="INGREDIENT">Ingredient</option>
+                      <option value="INSTRUMENT">Instrument</option>
+                      <option value="KIT">Kit</option>
+                      <option value="MASK">Mask</option>
+                      <option value="NECKLACE">Necklace</option>
+                      <option value="OIL">Oil</option>
+                      <option value="POISON">Poison</option>
+                      <option value="POTION">Potion</option>
+                      <option value="RING">Ring</option>
+                      <option value="ROD">Rod</option>
+                      <option value="RUNE">Runestone</option>
+                      <option value="SCROLL">Scroll</option>
+                      <option value="SHIELD">Shield</option>
+                      <option value="STAFF">Staff</option>
+                      <option value="STORAGE">Storage</option>
+                      <option value="STRUCTURE">Structure</option>
+                      <option value="TALISMAN">Talisman</option>
+                      <option value="TOOL">Tool</option>
+                      <option value="WAND">Wand</option>
+                      <option value="WEAPON">Weapon</option>
+                      <option value="OTHER">Other</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div id="filterSourceSection" class="is-hidden filterFieldSection field is-horizontal">
+            <div class="field-label is-normal ml-2">
+              <label class="label">Source</label>
+            </div>
+            <div class="field-body">
+              <div class="field">
+                <div class="control">
+                  <div class="select is-small">
+                    <select id="filterSourceInput">
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <hr class="m-2">
+
+          <div class="field is-grouped is-grouped-centered pb-2">
+            <div class="control">
+              <button id="updateFilterButton" class="button is-info is-rounded ">Search</button>
+            </div>
+          </div>
+
         </div>
       </div>
-      <div id="browsingList" class="column section-box m-1 is-paddingless">
+      <div id="browsingList" class="column section-box m-1 use-custom-scrollbar" style="height: 650px; max-height: 650px;overflow-y: auto;">
 
 
 
@@ -72,6 +401,23 @@
     </div>
 
   </div>
-  -->
+  
 
 </div>
+
+{{#section 'overlay'}}
+    <!-- Right Quickview -->
+    <div id="quickviewDefault" class="quickview">
+        <div class="quickview-header">
+            <p id="quickViewTitle" class="title is-size-5 has-text-grey-lighter"></p>
+            <div class="is-inline-flex">
+                <p id="quickViewTitleRight"></p>
+                <p id="quickViewTitleClose"></p>
+            </div>
+        </div>
+        <div class="quickview-body use-custom-scrollbar">
+            <div id="quickViewContent" class="quickview-block pt-1 pb-3 px-3">
+            </div>
+        </div>
+    </div>
+{{/section}}

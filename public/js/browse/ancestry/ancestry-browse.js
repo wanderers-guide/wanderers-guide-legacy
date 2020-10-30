@@ -2,32 +2,74 @@
     By Aaron Cassar.
 */
 
-let socket = io();
+function filterAncestrySearch(){
 
-// ~~~~~~~~~~~~~~ // Run on Load // ~~~~~~~~~~~~~~ //
-$(function () {
+  let nameFilter = $('#filterNameInput').val();
+  let rarityFilter = $('#filterRarityInput').val();
+  let sourceFilter = $('#filterSourceInput').val();
 
-  socket.emit("requestBrowseAncestries");
 
-});
+  let allAncestries = new Set(g_allAncestries);
 
-socket.on("returnBrowseAncestries", function(ancestriesObject) {
-  
-  let ancestriesMap = objToMap(ancestriesObject);
-
-  for(const [ancestryID, ancestryData] of ancestriesMap.entries()){
-    console.log(ancestryData);
-
-    let name = ancestryData.Ancestry.name;
-    let hitPoints = ancestryData.Ancestry.hitPoints;
-    let size = capitalizeWords(ancestryData.Ancestry.size);
-    let speed = ancestryData.Ancestry.speed+' ft.';
-    let rarity = capitalizeWords(ancestryData.Ancestry.rarity);
-    let contentSrc = getContentSourceTextName(ancestryData.Ancestry.contentSrc);
-
-    let firstDescriptionSentence = getFirstSentence(ancestryData.Ancestry.description);
-
-    $('#browsingList').append('<div class="columns"><div class="column">'+name+'</div><div class="column">'+hitPoints+'</div><div class="column">'+size+'</div><div class="column">'+speed+'</div><div class="column">'+rarity+'</div><div class="column">'+contentSrc+'</div></div><div><p>'+firstDescriptionSentence+'</p></div>');
+  if(nameFilter != ''){
+    console.log('Filtering by Name...');
+    let parts = nameFilter.toUpperCase().split(' ');
+    for(const ancestry of allAncestries){
+      if(!textContainsWords(ancestry.name, parts)){
+        allAncestries.delete(ancestry);
+      }
+    }
   }
 
-});
+  if(rarityFilter != 'ANY'){
+    console.log('Filtering by Rarity...');
+    for(const ancestry of allAncestries){
+      if(ancestry.rarity !== rarityFilter){
+        allAncestries.delete(ancestry);
+      }
+    }
+  }
+
+  if(sourceFilter != 'ANY'){
+    console.log('Filtering by Source...');
+    for(const ancestry of allAncestries){
+      if(ancestry.contentSrc !== sourceFilter){
+        allAncestries.delete(ancestry);
+      }
+    }
+  }
+
+  displayAncestryResults(allAncestries);
+}
+
+function displayAncestryResults(allAncestries){
+  $('#browsingList').html('');
+
+  if(allAncestries.size <= 0){
+    $('#browsingList').html('<p class="has-text-centered is-italic">No results found!</p>');
+    return;
+  }
+
+  for(const ancestry of allAncestries){
+    if(ancestry.isArchived == 1) {continue;}
+
+    let entryID = 'ancestry-'+ancestry.id;
+    let name = ancestry.name;
+    let rarity = ancestry.rarity;
+
+    $('#browsingList').append('<div id="'+entryID+'" class="columns is-mobile border-bottom border-dark-lighter cursor-clickable"><div class="column is-8"><span class="is-size-5">'+name+'</span></div><div class="column is-4" style="position: relative;">'+convertRarityToHTML(rarity)+'</div></div>');
+
+    $('#'+entryID).click(function(){
+      new DisplayAncestry('tabContent', ancestry.id, g_featMap);
+    });
+
+    $('#'+entryID).mouseenter(function(){
+      $(this).addClass('has-background-grey-darker');
+    });
+    $('#'+entryID).mouseleave(function(){
+      $(this).removeClass('has-background-grey-darker');
+    });
+
+  }
+  $('#browsingList').scrollTop();
+}

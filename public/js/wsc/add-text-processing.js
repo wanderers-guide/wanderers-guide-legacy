@@ -3,7 +3,7 @@
 */
 
 function processAddText(code, locationID, centerText=false){
-  if(code == null || locationID == null) {return;}
+  if(code == null || locationID == null || typeof testExpr !== "function") {return;}
 
   let allStatements = code.split(/\n/);
   for(let statementRaw of allStatements){

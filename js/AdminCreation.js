@@ -33,7 +33,7 @@ function becomeNegative(number){
     }
 }
 
-module.exports = class AdminUpdate {
+module.exports = class AdminCreation {
 
     static addBackground(data) {
         /* Data:
@@ -164,7 +164,7 @@ module.exports = class AdminUpdate {
                         classFeat.isArchived = 0;
                         classFeat.contentSrc = cClass.contentSrc;
                         classFeat.version = null;
-                        let newPromise = AdminUpdate.addFeatPreparedData(classFeat);
+                        let newPromise = AdminCreation.addFeatPreparedData(classFeat);
                         classFeatPromises.push(newPromise);
                     }
                 }
@@ -175,7 +175,7 @@ module.exports = class AdminUpdate {
                         for(const classAbility of data.classAbilitiesArray) {
                             classAbility.indivClassName = null;
                             classAbility.contentSrc = cClass.contentSrc;
-                            let newPromise =  AdminUpdate.addClassAbility(cClass.id, classAbility);
+                            let newPromise =  AdminCreation.addClassAbility(cClass.id, classAbility);
                             classAbilitiesPromises.push(newPromise);
                         }
                     }
@@ -321,12 +321,12 @@ module.exports = class AdminUpdate {
         data.classFeatureData.indivClassAbilName = data.classFeatureClassAbilName;
         data.classFeatureData.contentSrc = data.classFeatureContentSrc;
         if(data.classFeatureData.indivClassAbilName == null){
-            return AdminUpdate.addClassAbility(null, data.classFeatureData)
+            return AdminCreation.addClassAbility(null, data.classFeatureData)
             .then(classAbility => {
                 return classAbility;
             });
         } else {
-            return AdminUpdate.addClassAbilityOption(data.classFeatureData)
+            return AdminCreation.addClassAbilityOption(data.classFeatureData)
             .then(classAbility => {
                 return classAbility;
             });
@@ -406,7 +406,7 @@ module.exports = class AdminUpdate {
             data.archetypeDedicationFeat.isArchived = 0;
             data.archetypeDedicationFeat.contentSrc = data.archetypeContentSrc;
             data.archetypeDedicationFeat.version = null;
-            return AdminUpdate.addFeatPreparedData(data.archetypeDedicationFeat)
+            return AdminCreation.addFeatPreparedData(data.archetypeDedicationFeat)
             .then(dedicationFeat => {
 
                 return Archetype.create({ // Create Archetype
@@ -433,7 +433,7 @@ module.exports = class AdminUpdate {
                             archetypeFeat.isArchived = 0;
                             archetypeFeat.contentSrc = archetype.contentSrc;
                             archetypeFeat.version = null;
-                            let newPromise = AdminUpdate.addFeatPreparedData(archetypeFeat);
+                            let newPromise = AdminCreation.addFeatPreparedData(archetypeFeat);
                             archetypeFeatPromises.push(newPromise);
                         }
                     }
@@ -616,7 +616,7 @@ module.exports = class AdminUpdate {
                                     ancestryHeritage.contentSrc = ancestry.contentSrc;
                                     ancestryHeritage.rarity = 'COMMON';
                                     ancestryHeritage.indivAncestryName = null;
-                                    let newPromise = AdminUpdate.addHeritage(ancestry.id, ancestryHeritage);
+                                    let newPromise = AdminCreation.addHeritage(ancestry.id, ancestryHeritage);
                                     ancestryHeritagePromises.push(newPromise);
                                 }
                             }
@@ -636,7 +636,7 @@ module.exports = class AdminUpdate {
                                         ancestryFeat.isArchived = 0;
                                         ancestryFeat.contentSrc = ancestry.contentSrc;
                                         ancestryFeat.version = null;
-                                        let newPromise = AdminUpdate.addFeatPreparedData(ancestryFeat);
+                                        let newPromise = AdminCreation.addFeatPreparedData(ancestryFeat);
                                         ancestryFeatPromises.push(newPromise);
                                     }
                                 }
@@ -850,7 +850,7 @@ module.exports = class AdminUpdate {
                         heritageFeat.isArchived = 0;
                         heritageFeat.contentSrc = uniHeritage.contentSrc;
                         heritageFeat.version = null;
-                        let newPromise = AdminUpdate.addFeatPreparedData(heritageFeat);
+                        let newPromise = AdminCreation.addFeatPreparedData(heritageFeat);
                         heritageFeatPromises.push(newPromise);
                     }
                 }
@@ -980,13 +980,11 @@ module.exports = class AdminUpdate {
             data.isDefault = 1;
         } else if(data.builderType == "SKILL-ACTION"){
             data.isDefault = 1;
-        } else if(data.builderType == "SKILL-ACTION"){
-            data.isDefault = 1;
         } else {
             console.error("Invalid BuilderType for Feat Creation: '"+data.builderType+"'!");
             return;
         }
-        return AdminUpdate.addFeatPreparedData({
+        return AdminCreation.addFeatPreparedData({
             name: data.featName,
             actions: data.featActions,
             level: data.featLevel,

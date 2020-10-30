@@ -2,8 +2,26 @@
     By Aaron Cassar.
 */
 
+/*
+data = {
+  Feat : selectedFeat.Feat,
+  Tags : selectedFeat.Tags,
+  _prevBackData: {Type: g_QViewLastType, Data: g_QViewLastData},
+}
+Requires:
+  - Text-Processing
+    - g_allConditions
+    - g_allLanguages
+    - g_featMap
+    - g_itemMap
+    - g_spellMap
+  - Add-Text-Processing
+  - g_skillMap (either CharGathering or GeneralGathering version)
+  - g_allTags
+*/
 function openFeatQuickview(data) {
     addBackFunctionality(data);
+    addContentSource(data.Feat.contentSrc);
 
     let featNameInnerHTML = '<span>'+data.Feat.name+'</span>';
     switch(data.Feat.actions) {

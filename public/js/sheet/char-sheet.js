@@ -162,6 +162,11 @@ socket.on("returnCharacterSheetInfo", function(charInfo, viewOnly){
     g_phyFeatArray = charInfo.ChoicesStruct.PhyFeatArray;
 
     g_langArray = charInfo.ChoicesStruct.LangArray;
+    g_langArray = g_langArray.sort(
+      function(a, b) {
+        return a.value.name > b.value.name ? 1 : -1;
+      }
+    );
     g_allLanguages = charInfo.AllLanguages;
     
     g_specializationStruct = charInfo.SpecializeStruct;

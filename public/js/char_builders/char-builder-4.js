@@ -264,7 +264,7 @@ function displayCurrentClass(classStruct, saving) {
     profPerceptionUL.append('<li id="profPerceptionLI"></li>');
 
     let profPerceptionLI = $('#profPerceptionLI');
-    profPerceptionLI.append(profToWord(classStruct.Class.tPerception)+" in Perception");
+    profPerceptionLI.append(profToWord(classStruct.Class.tPerception));
 
     savingProfArray.push({ For : "Perception", To : "Perception", Prof : classStruct.Class.tPerception });
 

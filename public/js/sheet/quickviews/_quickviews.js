@@ -116,19 +116,27 @@ function openQuickView(type, data, noProtection=false) {
 }
 
 function closeQuickView() {
-    $('#quickviewDefault').removeClass('is-active');
-    g_QViewLastData = null;
+  $('#quickviewDefault').removeClass('is-active');
+  g_QViewLastData = null;
 }
 
 
 
 function addBackFunctionality(quickViewData){
 
-    if(quickViewData._prevBackData != null && quickViewData._prevBackData.Data != null){
-        $('#quickViewTitleClose').html('<span id="quickViewBack" class="icon has-text-light cursor-clickable" style="font-size:0.8em;"><i class="fas fa-arrow-left"></i></i></span>');
-        $('#quickViewBack').click(function(){
-            openQuickView(quickViewData._prevBackData.Type, quickViewData._prevBackData.Data, true);
-        });
-    }
+  if(quickViewData._prevBackData != null && quickViewData._prevBackData.Data != null){
+    $('#quickViewTitleClose').html('<span id="quickViewBack" class="icon has-text-light cursor-clickable" style="font-size:0.8em;"><i class="fas fa-arrow-left"></i></i></span>');
+    $('#quickViewBack').click(function(){
+      openQuickView(quickViewData._prevBackData.Type, quickViewData._prevBackData.Data, true);
+    });
+  }
+
+}
+
+function addContentSource(contentSrc){
+  if(contentSrc == null) {return;}
+
+  $('#quickViewContent').parent().css('position','relative');
+  $('#quickViewContent').append('<div style="position: fixed; bottom: 5px; right: 12px;"><a class="is-size-7 has-text-grey is-italic" href="'+getContentSourceLink(contentSrc)+'" target="_blank">'+getContentSourceTextName(contentSrc)+'</a></div>');
 
 }

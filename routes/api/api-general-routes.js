@@ -13,7 +13,7 @@ const Background = require('../../models/contentDB/Background');
 const Tag = require('../../models/contentDB/Tag');
 const Condition = require('../../models/contentDB/Condition');
 
-const AdminGathering = require('../../js/AdminGathering');
+const GeneralGathering = require('../../js/GeneralGathering');
 
 function getModelByNameOrID(ModelType, name, id){
   if(id != null){
@@ -34,7 +34,7 @@ router.get('/item', (req, res) => {
   if(req.query.name != null || req.query.id != null){
     getModelByNameOrID(Item, req.query.name, req.query.id).then((item) => {
       if(item != null){
-        AdminGathering.getItem(item.id).then((itemData) => {
+        GeneralGathering.getItem(item.id).then((itemData) => {
           res.send(itemData);
         });
       } else {
@@ -51,7 +51,7 @@ router.get('/spell', (req, res) => {
   if(req.query.name != null || req.query.id != null){
     getModelByNameOrID(Spell, req.query.name, req.query.id).then((spell) => {
       if(spell != null){
-        AdminGathering.getSpell(spell.id).then((spellData) => {
+        GeneralGathering.getSpell(spell.id).then((spellData) => {
           res.send(spellData);
         });
       } else {
@@ -68,7 +68,7 @@ router.get('/feat', (req, res) => {
   if(req.query.name != null || req.query.id != null){
     getModelByNameOrID(Feat, req.query.name, req.query.id).then((feat) => {
       if(feat != null){
-        AdminGathering.getFeat(feat.id).then((featData) => {
+        GeneralGathering.getFeat(feat.id).then((featData) => {
           res.send(featData);
         });
       } else {
@@ -85,7 +85,7 @@ router.get('/class', (req, res) => {
   if(req.query.name != null || req.query.id != null){
     getModelByNameOrID(Class, req.query.name, req.query.id).then((cClass) => {
       if(cClass != null){
-        AdminGathering.getClass(cClass.id).then((classData) => {
+        GeneralGathering.getClass(cClass.id).then((classData) => {
           res.send(classData);
         });
       } else {
@@ -102,7 +102,7 @@ router.get('/ancestry', (req, res) => {
   if(req.query.name != null || req.query.id != null){
     getModelByNameOrID(Ancestry, req.query.name, req.query.id).then((ancestry) => {
       if(ancestry != null){
-        AdminGathering.getAncestryBasic(ancestry.id).then((ancestryData) => {
+        GeneralGathering.getAncestry(ancestry.id).then((ancestryData) => {
           res.send(ancestryData);
         });
       } else {
@@ -119,7 +119,7 @@ router.get('/archetype', (req, res) => {
   if(req.query.name != null || req.query.id != null){
     getModelByNameOrID(Archetype, req.query.name, req.query.id).then((archetype) => {
       if(archetype != null){
-        AdminGathering.getArchetype(archetype.id).then((archetypeData) => {
+        GeneralGathering.getArchetype(archetype.id).then((archetypeData) => {
           res.send(archetypeData);
         });
       } else {
@@ -136,7 +136,7 @@ router.get('/v-heritage', (req, res) => {
   if(req.query.name != null || req.query.id != null){
     getModelByNameOrID(UniHeritage, req.query.name, req.query.id).then((uniHeritage) => {
       if(uniHeritage != null){
-        AdminGathering.getUniHeritage(uniHeritage.id).then((uniHeritageData) => {
+        GeneralGathering.getUniHeritage(uniHeritage.id).then((uniHeritageData) => {
           res.send(uniHeritageData);
         });
       } else {
@@ -153,7 +153,7 @@ router.get('/heritage', (req, res) => {
   if(req.query.name != null || req.query.id != null){
     getModelByNameOrID(Heritage, req.query.name, req.query.id).then((heritage) => {
       if(heritage != null){
-        AdminGathering.getHeritage(heritage.id).then((heritageData) => {
+        GeneralGathering.getHeritage(heritage.id).then((heritageData) => {
           res.send(heritageData);
         });
       } else {
@@ -170,7 +170,7 @@ router.get('/background', (req, res) => {
   if(req.query.name != null || req.query.id != null){
     getModelByNameOrID(Background, req.query.name, req.query.id).then((background) => {
       if(background != null){
-        AdminGathering.getBackground(background.id).then((backgroundData) => {
+        GeneralGathering.getBackground(background.id).then((backgroundData) => {
           res.send(backgroundData);
         });
       } else {
@@ -187,7 +187,7 @@ router.get('/trait', (req, res) => {
   if(req.query.name != null || req.query.id != null){    
     getModelByNameOrID(Tag, req.query.name, req.query.id).then((tag) => {
       if(tag != null){
-        AdminGathering.getTag(tag.id).then((tagData) => {
+        GeneralGathering.getTag(tag.id).then((tagData) => {
           res.send(tagData);
         });
       } else {
@@ -204,7 +204,7 @@ router.get('/condition', (req, res) => {
   if(req.query.name != null || req.query.id != null){    
     getModelByNameOrID(Condition, req.query.name, req.query.id).then((condition) => {
       if(condition != null){
-        AdminGathering.getCondition(condition.id).then((conditionData) => {
+        GeneralGathering.getCondition(condition.id).then((conditionData) => {
           res.send(conditionData);
         });
       } else {

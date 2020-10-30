@@ -2,6 +2,7 @@
 const User = require('../models/contentDB/User');
 const Character = require('../models/contentDB/Character');
 const InvItem = require('../models/contentDB/InvItem');
+const HomebrewBundle = require('../models/contentDB/HomebrewBundle');
 
 // Returns UserID or -1 if not logged in.
 function getUserID(socket){
@@ -54,6 +55,22 @@ module.exports = class AuthCheck {
         }).catch((error) => {
             return false;
         });
+    }
+
+    static canEditHomebrew(socket, homebrewID) {
+      return HomebrewBundle.findOne({ where: { id: homebrewID, userID: getUserID(socket) } })
+      .then((homebrewBundle) => {
+          return homebrewBundle.isPublished === 0;
+      }).catch((error) => {
+          return false;
+      });
+    }
+
+    static getHomebrewBundles(socket) {
+      return HomebrewBundle.findAll({ where: { userID: getUserID(socket) } })
+      .then((homebrewBundles) => {
+          return homebrewBundles;
+      });
     }
 
     static isAdmin(socket) {

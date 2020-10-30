@@ -7,8 +7,10 @@ const CharTags = require('./CharTags');
 const CharDataMapping = require('./CharDataMapping');
 const CharDataMappingExt = require('./CharDataMappingExt');
 const AuthCheck = require('./AuthCheck');
-const AdminGathering = require('./AdminGathering');
-const AdminUpdate = require('./AdminUpdate');
+const GeneralGathering = require('./GeneralGathering');
+const HomebrewGathering = require('./HomebrewGathering');
+const AdminCreation = require('./AdminCreation');
+const HomebrewCreation = require('./HomebrewCreation');
 const ClientAPI = require('./ClientAPI');
 const CharStateUtils = require('./CharStateUtils');
 const GeneralUtils = require('./GeneralUtils');
@@ -344,7 +346,7 @@ module.exports = class SocketConnections {
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
           if(ownsChar){
             CharSaving.replaceCondition(charID, conditionID, value, sourceText, parentID).then((result) => {
-              CharGathering.getAllConditions(charID)
+              CharGathering.getAllCharConditions(charID)
               .then((conditionsObject) => {
                 socket.emit('returnUpdateConditionsMap', conditionsObject, true);
               });
@@ -357,7 +359,7 @@ module.exports = class SocketConnections {
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
           if(ownsChar){
             CharSaving.removeCondition(charID, conditionID).then((didRemove) => {
-              CharGathering.getAllConditions(charID)
+              CharGathering.getAllCharConditions(charID)
               .then((conditionsObject) => {
                 socket.emit('returnUpdateConditionsMap', conditionsObject, didRemove);
               });
@@ -1596,7 +1598,7 @@ module.exports = class SocketConnections {
       socket.on('requestAdminAddAncestry', function(data){
         AuthCheck.isAdmin(socket).then((isAdmin) => {
           if(isAdmin){
-            AdminUpdate.addAncestry(data).then((result) => {
+            AdminCreation.addAncestry(data).then((result) => {
               socket.emit('returnAdminCompleteAncestry');
             });
           }
@@ -1607,8 +1609,8 @@ module.exports = class SocketConnections {
         AuthCheck.isAdmin(socket).then((isAdmin) => {
           if(isAdmin){
             if(data != null && data.ancestryID != null) {
-              AdminUpdate.archiveAncestry(data.ancestryID, true).then((result) => {
-                AdminUpdate.addAncestry(data).then((result) => {
+              AdminCreation.archiveAncestry(data.ancestryID, true).then((result) => {
+                AdminCreation.addAncestry(data).then((result) => {
                   socket.emit('returnAdminCompleteAncestry');
                 });
               });
@@ -1620,7 +1622,7 @@ module.exports = class SocketConnections {
       socket.on('requestAdminRemoveAncestry', function(ancestryID){
         AuthCheck.isAdmin(socket).then((isAdmin) => {
           if(isAdmin){
-            AdminUpdate.deleteAncestry(ancestryID).then((result) => {
+            AdminCreation.deleteAncestry(ancestryID).then((result) => {
               socket.emit('returnAdminRemoveAncestry');
             });
           }
@@ -1630,8 +1632,8 @@ module.exports = class SocketConnections {
       socket.on('requestAdminAncestryDetails', function(){
         AuthCheck.isAdmin(socket).then((isAdmin) => {
           if(isAdmin){
-            AdminGathering.getAllAncestries(true).then((ancestriesObject) => {
-              AdminGathering.getAllFeats().then((featsObject) => {
+            GeneralGathering.getAllAncestries(true).then((ancestriesObject) => {
+              GeneralGathering.getAllFeats().then((featsObject) => {
                 socket.emit('returnAdminAncestryDetails', ancestriesObject, featsObject);
               });
             });
@@ -1644,7 +1646,7 @@ module.exports = class SocketConnections {
       socket.on('requestAdminAddFeat', function(data){
         AuthCheck.isAdmin(socket).then((isAdmin) => {
           if(isAdmin){
-            AdminUpdate.addFeat(data).then((result) => {
+            AdminCreation.addFeat(data).then((result) => {
               socket.emit('returnAdminCompleteFeat');
             });
           }
@@ -1655,8 +1657,8 @@ module.exports = class SocketConnections {
         AuthCheck.isAdmin(socket).then((isAdmin) => {
           if(isAdmin){
             if(data != null && data.featID != null) {
-              AdminUpdate.archiveFeat(data.featID, true).then((result) => {
-                AdminUpdate.addFeat(data).then((result) => {
+              AdminCreation.archiveFeat(data.featID, true).then((result) => {
+                AdminCreation.addFeat(data).then((result) => {
                   socket.emit('returnAdminCompleteFeat');
                 });
               });
@@ -1668,7 +1670,7 @@ module.exports = class SocketConnections {
       socket.on('requestAdminRemoveFeat', function(featID){
         AuthCheck.isAdmin(socket).then((isAdmin) => {
           if(isAdmin){
-            AdminUpdate.deleteFeat(featID).then((result) => {
+            AdminCreation.deleteFeat(featID).then((result) => {
               socket.emit('returnAdminRemoveFeat');
             });
           }
@@ -1678,7 +1680,7 @@ module.exports = class SocketConnections {
       socket.on('requestAdminFeatDetails', function(){
         AuthCheck.isAdmin(socket).then((isAdmin) => {
           if(isAdmin){
-            AdminGathering.getAllFeats().then((featsObject) => {
+            GeneralGathering.getAllFeats().then((featsObject) => {
               socket.emit('returnAdminFeatDetails', featsObject);
             });
           }
@@ -1688,10 +1690,10 @@ module.exports = class SocketConnections {
       socket.on('requestAdminFeatDetailsPlus', function(){
         AuthCheck.isAdmin(socket).then((isAdmin) => {
           if(isAdmin){
-            AdminGathering.getAllFeats().then((featsObject) => {
-              AdminGathering.getAllClasses().then((classObject) => {
-                AdminGathering.getAllAncestries(true).then((ancestriesObject) => {
-                  AdminGathering.getAllUniHeritages().then((uniHeritageArray) => {
+            GeneralGathering.getAllFeats().then((featsObject) => {
+              GeneralGathering.getAllClasses().then((classObject) => {
+                GeneralGathering.getAllAncestries(true).then((ancestriesObject) => {
+                  GeneralGathering.getAllUniHeritages().then((uniHeritageArray) => {
                     socket.emit('returnAdminFeatDetailsPlus', featsObject, classObject, ancestriesObject, uniHeritageArray);
                   });
                 });
@@ -1706,7 +1708,7 @@ module.exports = class SocketConnections {
       socket.on('requestAdminAddItem', function(data){
         AuthCheck.isAdmin(socket).then((isAdmin) => {
           if(isAdmin){
-            AdminUpdate.addItem(data).then((result) => {
+            AdminCreation.addItem(data).then((result) => {
               socket.emit('returnAdminCompleteItem');
             });
           }
@@ -1717,8 +1719,8 @@ module.exports = class SocketConnections {
         AuthCheck.isAdmin(socket).then((isAdmin) => {
           if(isAdmin){
             if(data != null && data.itemID != null) {
-              AdminUpdate.archiveItem(data.itemID, true).then((result) => {
-                AdminUpdate.addItem(data).then((result) => {
+              AdminCreation.archiveItem(data.itemID, true).then((result) => {
+                AdminCreation.addItem(data).then((result) => {
                   socket.emit('returnAdminCompleteItem');
                 });
               });
@@ -1730,7 +1732,7 @@ module.exports = class SocketConnections {
       socket.on('requestAdminRemoveItem', function(itemID){
         AuthCheck.isAdmin(socket).then((isAdmin) => {
           if(isAdmin){
-            AdminUpdate.deleteItem(itemID).then((result) => {
+            AdminCreation.deleteItem(itemID).then((result) => {
               socket.emit('returnAdminRemoveItem');
             });
           }
@@ -1740,7 +1742,7 @@ module.exports = class SocketConnections {
       socket.on('requestAdminItemDetails', function(){
         AuthCheck.isAdmin(socket).then((isAdmin) => {
           if(isAdmin){
-            AdminGathering.getAllItems().then((itemMap) => {
+            GeneralGathering.getAllItems().then((itemMap) => {
               socket.emit('returnAdminItemDetails', mapToObj(itemMap));
             });
           }
@@ -1752,7 +1754,7 @@ module.exports = class SocketConnections {
       socket.on('requestAdminAddSpell', function(data){
         AuthCheck.isAdmin(socket).then((isAdmin) => {
           if(isAdmin){
-            AdminUpdate.addSpell(data).then((result) => {
+            AdminCreation.addSpell(data).then((result) => {
               socket.emit('returnAdminCompleteSpell');
             });
           }
@@ -1763,8 +1765,8 @@ module.exports = class SocketConnections {
         AuthCheck.isAdmin(socket).then((isAdmin) => {
           if(isAdmin){
             if(data != null && data.spellID != null) {
-              AdminUpdate.archiveSpell(data.spellID, true).then((result) => {
-                AdminUpdate.addSpell(data).then((result) => {
+              AdminCreation.archiveSpell(data.spellID, true).then((result) => {
+                AdminCreation.addSpell(data).then((result) => {
                   socket.emit('returnAdminCompleteSpell');
                 });
               });
@@ -1776,7 +1778,7 @@ module.exports = class SocketConnections {
       socket.on('requestAdminRemoveSpell', function(spellID){
         AuthCheck.isAdmin(socket).then((isAdmin) => {
           if(isAdmin){
-            AdminUpdate.deleteSpell(spellID).then((result) => {
+            AdminCreation.deleteSpell(spellID).then((result) => {
               socket.emit('returnAdminRemoveSpell');
             });
           }
@@ -1786,7 +1788,7 @@ module.exports = class SocketConnections {
       socket.on('requestAdminSpellDetails', function(){
         AuthCheck.isAdmin(socket).then((isAdmin) => {
           if(isAdmin){
-            AdminGathering.getAllSpells().then((spellMap) => {
+            GeneralGathering.getAllSpells().then((spellMap) => {
               socket.emit('returnAdminSpellDetails', mapToObj(spellMap));
             });
           }
@@ -1798,7 +1800,7 @@ module.exports = class SocketConnections {
       socket.on('requestAdminAddClass', function(data){
         AuthCheck.isAdmin(socket).then((isAdmin) => {
           if(isAdmin){
-            AdminUpdate.addClass(data).then((result) => {
+            AdminCreation.addClass(data).then((result) => {
               socket.emit('returnAdminCompleteClass');
             });
           }
@@ -1809,8 +1811,8 @@ module.exports = class SocketConnections {
         AuthCheck.isAdmin(socket).then((isAdmin) => {
           if(isAdmin){
             if(data != null && data.classID != null) {
-              AdminUpdate.archiveClass(data.classID, true).then((result) => {
-                AdminUpdate.addClass(data).then((result) => {
+              AdminCreation.archiveClass(data.classID, true).then((result) => {
+                AdminCreation.addClass(data).then((result) => {
                   socket.emit('returnAdminCompleteClass');
                 });
               });
@@ -1822,7 +1824,7 @@ module.exports = class SocketConnections {
       socket.on('requestAdminRemoveClass', function(classID){
         AuthCheck.isAdmin(socket).then((isAdmin) => {
           if(isAdmin){
-            AdminUpdate.deleteClass(classID).then((result) => {
+            AdminCreation.deleteClass(classID).then((result) => {
               socket.emit('returnAdminRemoveClass');
             });
           }
@@ -1832,8 +1834,8 @@ module.exports = class SocketConnections {
       socket.on('requestAdminClassDetails', function(){
         AuthCheck.isAdmin(socket).then((isAdmin) => {
           if(isAdmin){
-            AdminGathering.getAllClasses().then((classObject) => {
-              AdminGathering.getAllFeats().then((featsObject) => {
+            GeneralGathering.getAllClasses().then((classObject) => {
+              GeneralGathering.getAllFeats().then((featsObject) => {
                 socket.emit('returnAdminClassDetails', classObject, featsObject);
               });
             });
@@ -1846,7 +1848,7 @@ module.exports = class SocketConnections {
       socket.on('requestAdminAddBackground', function(data){
         AuthCheck.isAdmin(socket).then((isAdmin) => {
           if(isAdmin){
-            AdminUpdate.addBackground(data).then((result) => {
+            AdminCreation.addBackground(data).then((result) => {
               socket.emit('returnAdminCompleteBackground');
             });
           }
@@ -1857,8 +1859,8 @@ module.exports = class SocketConnections {
         AuthCheck.isAdmin(socket).then((isAdmin) => {
           if(isAdmin){
             if(data != null && data.backgroundID != null) {
-              AdminUpdate.archiveBackground(data.backgroundID, true).then((result) => {
-                AdminUpdate.addBackground(data).then((result) => {
+              AdminCreation.archiveBackground(data.backgroundID, true).then((result) => {
+                AdminCreation.addBackground(data).then((result) => {
                   socket.emit('returnAdminCompleteBackground');
                 });
               });
@@ -1870,7 +1872,7 @@ module.exports = class SocketConnections {
       socket.on('requestAdminRemoveBackground', function(backgroundID){
         AuthCheck.isAdmin(socket).then((isAdmin) => {
           if(isAdmin){
-            AdminUpdate.deleteBackground(backgroundID).then((result) => {
+            AdminCreation.deleteBackground(backgroundID).then((result) => {
               socket.emit('returnAdminRemoveBackground');
             });
           }
@@ -1880,7 +1882,7 @@ module.exports = class SocketConnections {
       socket.on('requestAdminBackgroundDetails', function(){
         AuthCheck.isAdmin(socket).then((isAdmin) => {
           if(isAdmin){
-            AdminGathering.getAllBackgrounds().then((backgrounds) => {
+            GeneralGathering.getAllBackgrounds().then((backgrounds) => {
               socket.emit('returnAdminBackgroundDetails', backgrounds);
             });
           }
@@ -1893,7 +1895,7 @@ module.exports = class SocketConnections {
       socket.on('requestAdminAddArchetype', function(data){
         AuthCheck.isAdmin(socket).then((isAdmin) => {
           if(isAdmin){
-            AdminUpdate.addArchetype(data).then((result) => {
+            AdminCreation.addArchetype(data).then((result) => {
               socket.emit('returnAdminCompleteArchetype');
             });
           }
@@ -1904,8 +1906,8 @@ module.exports = class SocketConnections {
         AuthCheck.isAdmin(socket).then((isAdmin) => {
           if(isAdmin){
             if(data != null && data.archetypeID != null) {
-              AdminUpdate.archiveArchetype(data.archetypeID, true).then((result) => {
-                AdminUpdate.addArchetype(data).then((result) => {
+              AdminCreation.archiveArchetype(data.archetypeID, true).then((result) => {
+                AdminCreation.addArchetype(data).then((result) => {
                   socket.emit('returnAdminCompleteArchetype');
                 });
               });
@@ -1917,7 +1919,7 @@ module.exports = class SocketConnections {
       socket.on('requestAdminRemoveArchetype', function(archetypeID){
         AuthCheck.isAdmin(socket).then((isAdmin) => {
           if(isAdmin){
-            AdminUpdate.deleteArchetype(archetypeID).then((result) => {
+            AdminCreation.deleteArchetype(archetypeID).then((result) => {
               socket.emit('returnAdminRemoveArchetype');
             });
           }
@@ -1927,8 +1929,8 @@ module.exports = class SocketConnections {
       socket.on('requestAdminArchetypeDetails', function(){
         AuthCheck.isAdmin(socket).then((isAdmin) => {
           if(isAdmin){
-            AdminGathering.getAllArchetypes().then((archetypeArray) => {
-              AdminGathering.getAllFeats().then((featsObject) => {
+            GeneralGathering.getAllArchetypes().then((archetypeArray) => {
+              GeneralGathering.getAllFeats().then((featsObject) => {
                 socket.emit('returnAdminArchetypeDetails', archetypeArray, featsObject);
               });
             });
@@ -1941,7 +1943,7 @@ module.exports = class SocketConnections {
       socket.on('requestAdminAddUniHeritage', function(data){
         AuthCheck.isAdmin(socket).then((isAdmin) => {
           if(isAdmin){
-            AdminUpdate.addUniHeritage(data).then((result) => {
+            AdminCreation.addUniHeritage(data).then((result) => {
               socket.emit('returnAdminCompleteUniHeritage');
             });
           }
@@ -1952,8 +1954,8 @@ module.exports = class SocketConnections {
         AuthCheck.isAdmin(socket).then((isAdmin) => {
           if(isAdmin){
             if(data != null && data.uniHeritageID != null) {
-              AdminUpdate.archiveUniHeritage(data.uniHeritageID, true).then((result) => {
-                AdminUpdate.addUniHeritage(data).then((result) => {
+              AdminCreation.archiveUniHeritage(data.uniHeritageID, true).then((result) => {
+                AdminCreation.addUniHeritage(data).then((result) => {
                   socket.emit('returnAdminCompleteUniHeritage');
                 });
               });
@@ -1965,7 +1967,7 @@ module.exports = class SocketConnections {
       socket.on('requestAdminRemoveUniHeritage', function(uniHeritageID){
         AuthCheck.isAdmin(socket).then((isAdmin) => {
           if(isAdmin){
-            AdminUpdate.deleteUniHeritage(uniHeritageID).then((result) => {
+            AdminCreation.deleteUniHeritage(uniHeritageID).then((result) => {
               socket.emit('returnAdminRemoveUniHeritage');
             });
           }
@@ -1975,8 +1977,8 @@ module.exports = class SocketConnections {
       socket.on('requestAdminUniHeritageDetails', function(){
         AuthCheck.isAdmin(socket).then((isAdmin) => {
           if(isAdmin){
-            AdminGathering.getAllUniHeritages().then((uniHeritageArray) => {
-              AdminGathering.getAllFeats().then((featsObject) => {
+            GeneralGathering.getAllUniHeritages().then((uniHeritageArray) => {
+              GeneralGathering.getAllFeats().then((featsObject) => {
                 socket.emit('returnAdminUniHeritageDetails', uniHeritageArray, featsObject);
               });
             });
@@ -1989,7 +1991,7 @@ module.exports = class SocketConnections {
       socket.on('requestAdminAddHeritage', function(data){
         AuthCheck.isAdmin(socket).then((isAdmin) => {
           if(isAdmin){
-            AdminUpdate.addHeritage(null, data).then((result) => {
+            AdminCreation.addHeritage(null, data).then((result) => {
               socket.emit('returnAdminCompleteHeritage');
             });
           }
@@ -2000,8 +2002,8 @@ module.exports = class SocketConnections {
         AuthCheck.isAdmin(socket).then((isAdmin) => {
           if(isAdmin){
             if(data != null && data.heritageID != null) {
-              AdminUpdate.archiveHeritage(data.heritageID, true).then((result) => {
-                AdminUpdate.addHeritage(null, data).then((result) => {
+              AdminCreation.archiveHeritage(data.heritageID, true).then((result) => {
+                AdminCreation.addHeritage(null, data).then((result) => {
                   socket.emit('returnAdminCompleteHeritage');
                 });
               });
@@ -2013,7 +2015,7 @@ module.exports = class SocketConnections {
       socket.on('requestAdminRemoveHeritage', function(heritageID){
         AuthCheck.isAdmin(socket).then((isAdmin) => {
           if(isAdmin){
-            AdminUpdate.deleteHeritage(heritageID).then((result) => {
+            AdminCreation.deleteHeritage(heritageID).then((result) => {
               socket.emit('returnAdminRemoveHeritage');
             });
           }
@@ -2023,8 +2025,8 @@ module.exports = class SocketConnections {
       socket.on('requestAdminHeritageDetails', function(){
         AuthCheck.isAdmin(socket).then((isAdmin) => {
           if(isAdmin){
-            AdminGathering.getAllHeritages().then((heritageArray) => {
-              AdminGathering.getAllAncestriesBasic().then((ancestryArray) => {
+            GeneralGathering.getAllHeritages().then((heritageArray) => {
+              GeneralGathering.getAllAncestriesBasic().then((ancestryArray) => {
                 socket.emit('returnAdminHeritageDetails', heritageArray, ancestryArray);
               });
             });
@@ -2037,7 +2039,7 @@ module.exports = class SocketConnections {
       socket.on('requestAdminAddClassFeature', function(data){
         AuthCheck.isAdmin(socket).then((isAdmin) => {
           if(isAdmin){
-            AdminUpdate.addClassFeature(data).then((result) => {
+            AdminCreation.addClassFeature(data).then((result) => {
               socket.emit('returnAdminCompleteClassFeature');
             });
           }
@@ -2048,8 +2050,8 @@ module.exports = class SocketConnections {
         AuthCheck.isAdmin(socket).then((isAdmin) => {
           if(isAdmin){
             if(data != null && data.classFeatureID != null) {
-              AdminUpdate.archiveClassFeature(data.classFeatureID, true).then((result) => {
-                AdminUpdate.addClassFeature(data).then((result) => {
+              AdminCreation.archiveClassFeature(data.classFeatureID, true).then((result) => {
+                AdminCreation.addClassFeature(data).then((result) => {
                   socket.emit('returnAdminCompleteClassFeature');
                 });
               });
@@ -2061,7 +2063,7 @@ module.exports = class SocketConnections {
       socket.on('requestAdminRemoveClassFeature', function(classFeatureID){
         AuthCheck.isAdmin(socket).then((isAdmin) => {
           if(isAdmin){
-            AdminUpdate.deleteClassFeature(classFeatureID).then((result) => {
+            AdminCreation.deleteClassFeature(classFeatureID).then((result) => {
               socket.emit('returnAdminRemoveClassFeature');
             });
           }
@@ -2135,13 +2137,156 @@ module.exports = class SocketConnections {
     io.on('connection', function(socket){
 
       socket.on('requestBrowseAncestries', function(){
-        AdminGathering.getAllAncestries(true).then((ancestriesObject) => {
+        GeneralGathering.getAllAncestries(true).then((ancestriesObject) => {
           socket.emit('returnBrowseAncestries', ancestriesObject);
+        });
+      });
+
+      socket.on('requestBrowse', function(){
+        GeneralGathering.getAllFeats().then((featsObject) => {
+          GeneralGathering.getAllSkills().then((skillObject) => {
+            GeneralGathering.getAllItems().then((itemMap) => {
+              GeneralGathering.getAllSpells().then((spellMap) => {
+                GeneralGathering.getAllLanguages().then((allLanguages) => {
+                  GeneralGathering.getAllConditions().then((allConditions) => {
+                    GeneralGathering.getAllTags().then((allTags) => {
+                      GeneralGathering.getAllClassesBasic().then((classes) => {
+                        GeneralGathering.getAllAncestriesBasic().then((ancestries) => {
+                          GeneralGathering.getAllArchetypes().then((archetypes) => {
+                            GeneralGathering.getAllBackgrounds().then((backgrounds) => {
+                              GeneralGathering.getAllUniHeritages().then((uniHeritages) => {
+                                socket.emit('returnBrowse', featsObject, skillObject, mapToObj(itemMap), mapToObj(spellMap), allLanguages, allConditions, allTags, classes, ancestries, archetypes, backgrounds, uniHeritages);
+                              });
+                            });
+                          });
+                        });
+                      });
+                    });
+                  });
+                });
+              });
+            });
+          });
+        });
+      });
+
+      /// General Gathering ///
+
+      socket.on('requestGeneralClass', function(classID){
+        GeneralGathering.getClass(classID).then((classStruct) => {
+          socket.emit('returnGeneralClass', classStruct);
+        });
+      });
+
+      socket.on('requestGeneralAncestry', function(ancestryID){
+        GeneralGathering.getAncestry(ancestryID).then((ancestryStruct) => {
+          socket.emit('returnGeneralAncestry', ancestryStruct);
+        });
+      });
+
+      socket.on('requestGeneralArchetype', function(archetypeID){
+        GeneralGathering.getArchetype(archetypeID).then((archetypeStruct) => {
+          socket.emit('returnGeneralArchetype', archetypeStruct);
+        });
+      });
+
+      socket.on('requestGeneralBackground', function(backgroundID){
+        GeneralGathering.getBackground(backgroundID).then((backgroundStruct) => {
+          socket.emit('returnGeneralBackground', backgroundStruct);
+        });
+      });
+
+      socket.on('requestGeneralUniHeritage', function(uniHeritageID){
+        GeneralGathering.getUniHeritage(uniHeritageID).then((uniHeritageStruct) => {
+          socket.emit('returnGeneralUniHeritage', uniHeritageStruct);
         });
       });
 
     });
     
+  }
+
+
+  static homebrewGeneral(io) {
+
+    // Socket.IO Connections
+    io.on('connection', function(socket){
+
+      socket.on('requestHomebrewBundles', function(){
+        AuthCheck.getHomebrewBundles(socket).then((homebrewBundles) => {
+          socket.emit('returnHomebrewBundles', homebrewBundles);
+        });
+      });
+      
+      socket.on('requestBundleContents', function(homebrewID){
+        HomebrewGathering.getAllClasses(homebrewID).then((classes) => {
+          // Include the rest
+          socket.emit('returnBundleContents', classes);
+        });
+      });
+
+    });
+
+  }
+
+
+  static homebrewBuilder(io) {
+
+    // Socket.IO Connections
+    io.on('connection', function(socket){
+
+
+
+      ///
+
+      socket.on('requestHomebrewAddClass', function(homebrewID, data){
+        AuthCheck.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+          if(canEdit){
+            HomebrewCreation.addClass(homebrewID, data).then((result) => {
+              socket.emit('returnHomebrewAddClass');
+            });
+          }
+        });
+      });
+  
+      socket.on('requestHomebrewUpdateClass', function(homebrewID, data){
+        AuthCheck.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+          if(canEdit){
+            if(data != null && data.classID != null) {
+              HomebrewCreation.deleteClass(homebrewID, data.classID).then((result) => {
+                HomebrewCreation.addClass(homebrewID, data).then((result) => {
+                  socket.emit('returnHomebrewUpdateClass');
+                });
+              });
+            }
+          }
+        });
+      });
+    
+      socket.on('requestHomebrewRemoveClass', function(homebrewID, classID){
+        AuthCheck.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+          if(canEdit){
+            HomebrewCreation.deleteClass(homebrewID, classID).then((result) => {
+              socket.emit('returnHomebrewRemoveClass');
+            });
+          }
+        });
+      });
+  
+      socket.on('requestHomebrewClassDetails', function(homebrewID){
+        AuthCheck.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+          if(canEdit){
+            GeneralGathering.getAllClasses().then((classObject) => {
+              GeneralGathering.getAllFeats().then((featsObject) => {
+                socket.emit('returnHomebrewClassDetails', classObject, featsObject);
+              });
+            });
+          }
+        });
+      });
+
+    });
+
   }
 
 };

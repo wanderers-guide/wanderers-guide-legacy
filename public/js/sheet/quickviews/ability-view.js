@@ -4,6 +4,7 @@
 
 function openAbilityQuickview(data) {
     addBackFunctionality(data);
+    addContentSource(data.Ability.contentSrc);
 
     $('#quickViewTitle').html(data.Ability.name);
     $('#quickViewTitleRight').html('<span class="pr-2">Level '+data.Ability.level+'</span>');
@@ -36,7 +37,10 @@ function openAbilityQuickview(data) {
                     sourceCode: 'classAbilitySelector-'+abilityOption.selectOptionFor,
                     sourceCodeSNum: 'a',
                 };
-                displayNotesField($('#'+abilityOptionCardID), srcStruct);
+
+                if(typeof displayNotesField === "function") {
+                  displayNotesField($('#'+abilityOptionCardID), srcStruct);
+                }
 
                 break;
 
@@ -54,6 +58,8 @@ function openAbilityQuickview(data) {
         sourceCode: 'classAbility-'+data.Ability.id,
         sourceCodeSNum: 'a',
     };
-    displayNotesField(qContent, srcStruct);
+    if(typeof displayNotesField === "function") {
+      displayNotesField(qContent, srcStruct);
+    }
 
 }

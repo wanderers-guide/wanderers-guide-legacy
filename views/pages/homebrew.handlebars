@@ -1,4 +1,25 @@
 
+{{#section 'header'}}
+    <link rel="stylesheet" href="/css/homebrew.css">
+
+    <script src="/js/homebrew/homebrew.js"></script>
+    <script src="/js/homebrew/user-content.js"></script>
+    <script src="/js/libraries/confirm_message/confirm-message.js"></script>
+
+    <!-- Quickview -->
+    <script src="/js/sheet/quickviews/_quickviews.js"></script>
+    <script src="/js/sheet/quickviews/feat-view.js"></script>
+    <script src="/js/sheet/quickviews/language-view.js"></script>
+    <script src="/js/sheet/quickviews/spell-view.js"></script>
+    <script src="/js/sheet/quickviews/item-view.js"></script>
+    <script src="/js/sheet/quickviews/tag-view.js"></script>
+    <script src="/js/sheet/quickviews/condition-view.js"></script>
+    <script src="/js/sheet/utils/item-utils.js"></script>
+    <script src="/js/sheet/utils/material-utils.js"></script>
+    <script src="/js/wsc/text-processing.js"></script>
+    <script src="/js/wsc/add-text-processing.js"></script>
+{{/section}}
+
 {{#section 'nav_home'}}
     <li><a href="/">Home</a></li>
 {{/section}}
@@ -25,8 +46,9 @@
     <div class="banner_w3lspvt-2"></div>
 {{/section}}
 
-<div class="container">
+<div class="container homebrew-container">
 
+    
     <h1 class="pt-3 is-size-1 has-text-light text-center">Homebrew</h1>
     <hr style="border-color: #5e5e5e;">
 
@@ -36,5 +58,123 @@
             The plan for this page is for it to be the central hub for all things homebrew. This is where you would go to browse homebrew, manage homebrew you're subscribed to, and create your own homebrew.
         </p>
     </div>
+    
 
+  <!--
+  <div class="tabs is-centered is-boxed use-custom-scrollbar mb-3">
+    <ul class="category-tabs">
+      <li><a id="browseTab">Browse Homebrew</a></li>
+      <li><a id="userCollectionTab">My Collection</a></li>
+      <li><a id="userContentTab">My Creations</a></li>
+    </ul>
+  </div>
+  <div id="tabContent" class="mx-3 mb-3">
+
+    <div class="section-box pb-3">
+        <p style="position: relative;" class="is-size-4 has-text-centered pb-2"><span style="position: relative;" class="">Elf Pack geffe ff<span style="position: absolute; top: 0px; right: -100px;" class="button is-very-small is-info is-rounded"><span>Rename</span><span class="icon is-small"><i class="far fa-edit"></i></span></span></span><span style="position: absolute; top: 5px; right: 5px;" class="button is-success is-outlined">Publish</span></p>
+
+        <div class="build-bundle-container">
+          <p class="has-text-centered is-size-7">  </p>
+        </div>
+
+        <div class="build-bundle-container">
+          <div>
+            <p class="pl-3 is-size-5 is-underlined">Ancestries<span class="icon is-medium has-text-info"><i class="fas fa-sm fa-plus-circle"></i></span></p>
+            <div class="px-4 py-2">
+              <p class="is-size-7 has-text-grey is-italic">None</p>
+            </div>
+          </div>
+          <div>
+            <p class="pl-3 is-size-5 is-underlined">Archetypes<span class="icon is-medium has-text-info"><i class="fas fa-sm fa-plus-circle"></i></span></p>
+            <div class="px-4 py-2">
+              <p class="is-size-7 has-text-grey is-italic">None</p>
+            </div>
+          </div>
+          <div>
+            <p class="pl-3 is-size-5 is-underlined">Backgrounds<span class="icon is-medium has-text-info"><i class="fas fa-sm fa-plus-circle"></i></span></p>
+            <div class="px-4 py-2">
+              <p class="is-size-7 has-text-grey is-italic">None</p>
+            </div>
+          </div>
+          <div>
+            <p class="pl-3 is-size-5 is-underlined">Classes<span class="icon is-medium has-text-info"><i class="fas fa-sm fa-plus-circle"></i></span></p>
+            <div class="px-4 py-2">
+              <p class="is-size-7 has-text-grey is-italic">None</p>
+            </div>
+          </div>
+          <div>
+            <p class="pl-3 is-size-5 is-underlined">Class Features<span class="icon is-medium has-text-info"><i class="fas fa-sm fa-plus-circle"></i></span></p>
+            <div class="px-4 py-2">
+              <p class="is-size-7 has-text-grey is-italic">None</p>
+            </div>
+          </div>
+          <div>
+            <p class="pl-3 is-size-5 is-underlined">Feats / Actions<span class="icon is-medium has-text-info"><i class="fas fa-sm fa-plus-circle"></i></span></p>
+            <div class="px-4 py-2">
+              <p class="is-size-7 has-text-grey is-italic">None</p>
+            </div>
+          </div>
+          <div>
+            <p class="pl-3 is-size-5 is-underlined">Heritages<span class="icon is-medium has-text-info"><i class="fas fa-sm fa-plus-circle"></i></span></p>
+            <div class="px-4 py-2">
+              <p class="is-size-7 has-text-grey is-italic">None</p>
+            </div>
+          </div>
+          <div>
+            <p class="pl-3 is-size-5 is-underlined">Heritages (Versatile)<span class="icon is-medium has-text-info"><i class="fas fa-sm fa-plus-circle"></i></span></p>
+            <div class="px-4 py-2">
+              <p class="is-size-7 has-text-grey is-italic">None</p>
+            </div>
+          </div>
+          <div>
+            <p class="pl-3 is-size-5 is-underlined">Items<span class="icon is-medium has-text-info"><i class="fas fa-sm fa-plus-circle"></i></span></p>
+            <div class="px-4 py-2">
+              <p class="is-size-7 has-text-grey is-italic">None</p>
+            </div>
+          </div>
+          <div>
+            <p class="pl-3 is-size-5 is-underlined">Spells<span class="icon is-medium has-text-info"><i class="fas fa-sm fa-plus-circle"></i></span></p>
+            <div class="px-4 py-2">
+              <p class="is-size-7 has-text-grey is-italic">None</p>
+            </div>
+          </div>
+        </div>
+    </div>
+    -->
+
+    <!--
+    <div class="section-box pb-3">
+        <p style="position: relative;" class="is-size-4 has-text-centered pb-2">Homebrew Bundles<span style="position: absolute; top: 5px; right: 5px;" class="button is-small is-info is-rounded"><span>Create</span><span class="icon is-small"><i class="fas fa-plus"></i></span></span></p>
+
+        <div class="user-bundle-container">
+
+          <div class="columns border-bottom border-dark-lighter">
+            <div class="column is-6 text-center">
+              <span class="is-size-5" style="position: relative;">Elf Pack<sup class="is-size-7 has-text-grey is-underlined pl-2" style="position: absolute; top: 7px; right: -60px;">Published</sup></span>
+            </div>
+            <div class="column is-6">
+              <div class="buttons are-small is-centered">
+                <button class="button is-success">View</button>
+                <button class="button is-link">Update</button>
+                <button class="button is-danger">Delete</button>
+              </div>
+            </div>
+          </div>
+          <div class="columns border-bottom border-dark-lighter">
+            <div class="column is-6 text-center">
+              <span class="is-size-5">Orc Testing</span>
+            </div>
+            <div class="column is-6">
+              <div class="buttons are-small is-centered">
+                <button class="button is-info">Edit</button>
+                <button class="button is-danger">Delete</button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+    </div>
+  -->
+
+  </div>
 </div>

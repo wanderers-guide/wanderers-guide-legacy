@@ -79,7 +79,7 @@ let sessionMiddleware = expressSession({
   saveUninitialized: true,
   cookie: {
     secure: (process.env.PRODUCTION == 'true') ? true : false,
-    maxAge: 24 * 60 * 60 * 1000
+    maxAge: 8 * 24 * 60 * 60 * 1000
   }
 });
 app.use(sessionMiddleware);
@@ -159,7 +159,7 @@ app.use('/browse', browseRoutes);
 app.use('/', coreRoutes);
 app.use('*', errorRoutes); // 404 Route
 
-io.setMaxListeners(17);
+io.setMaxListeners(18);
 SocketConnections.sheetItems(io);
 SocketConnections.sheetConditions(io);
 SocketConnections.sheetCompanions(io);
@@ -175,6 +175,8 @@ SocketConnections.builderGeneral(io);
 
 SocketConnections.builderGeneralProcessing(io);
 SocketConnections.builderWSC(io);
+
+SocketConnections.homebrewBuilder(io);
 
 SocketConnections.homePage(io);
 SocketConnections.browse(io);

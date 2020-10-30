@@ -232,7 +232,7 @@ function handleFeatLinkExt(match, linkName, innerTextDisplay, innerTextName) {
             return featLinkText;
         }
     }
-    if(isFeatHidden(innerTextNameUpper)){
+    if(typeof isFeatHidden === "function" && isFeatHidden(innerTextNameUpper)){
         return innerTextName;
     } else {
         return '<span class="has-text-danger">Unknown '+capitalizeWord(linkName)+'</span>';

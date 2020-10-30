@@ -10,6 +10,7 @@ const FeatTag = require('../models/contentDB/FeatTag');
 const Tag = require('../models/contentDB/Tag');
 const Spell = require('../models/contentDB/Spell');
 const TaggedSpell = require('../models/contentDB/TaggedSpell');
+const Skill = require('../models/contentDB/Skill');
 const Background = require('../models/contentDB/Background');
 const Language = require('../models/contentDB/Language');
 const Ancestry = require('../models/contentDB/Ancestry');
@@ -40,7 +41,7 @@ function mapToObj(strMap) {
     return obj;
 }
 
-module.exports = class AdminGathering {
+module.exports = class GeneralGathering {
 
     static getTag(tagID) {
       return Tag.findOne({ where: { id: tagID } })
@@ -48,6 +49,15 @@ module.exports = class AdminGathering {
         return {
           trait : tag,
         };
+      });
+    }
+
+    static getAllTags() {
+      return Tag.findAll({
+        where: { isArchived: 0 },
+        order: [['name', 'ASC'],]
+      }).then((allTags) => {
+        return allTags;
       });
     }
 
@@ -99,16 +109,25 @@ module.exports = class AdminGathering {
         });
     }
 
+    static getAllClassesBasic() {
+      return Class.findAll({
+        order: [['name', 'ASC'],]
+      }).then((classes) => {
+        return classes;
+      });
+    }
+
     static getClass(classID) {
       return Class.findOne({ where: { id: classID, homebrewID: null } })
       .then((cClass) => {
         return ClassAbility.findAll({
           order: [['level', 'ASC'],['name', 'ASC'],],
           where: {
-              [Op.or]: [
-                  { classID: cClass.id },
-                  { indivClassName: cClass.name }
-              ],
+            [Op.or]: [
+                { classID: cClass.id },
+                { indivClassName: cClass.name }
+            ],
+            homebrewID: null,
           },
         }).then((classAbilities) => {
           return {
@@ -120,8 +139,9 @@ module.exports = class AdminGathering {
     }
 
     static getAllArchetypes() {
-        return Archetype.findAll()
-        .then((archetypes) => {
+        return Archetype.findAll({
+          order: [['name', 'ASC'],]
+        }).then((archetypes) => {
             return archetypes;
         });
     }
@@ -186,9 +206,95 @@ module.exports = class AdminGathering {
       });
     }
 
+    static getAncestry(ancestryID) {
+      return Ancestry.findOne({ where: { id: ancestryID, homebrewID: null } })
+      .then((ancestry) => {
+          return Heritage.findAll({
+              where: {
+                [Op.or]: [
+                    { ancestryID: ancestryID },
+                    { indivAncestryName: ancestry.name }
+                ],
+                homebrewID: null,
+              },
+              order: [['name', 'ASC'],]
+          }).then((heritages) => {
+              return Language.findAll()
+              .then((languages) => {
+                  return AncestryLanguage.findAll({ where: { ancestryID: ancestryID } })
+                  .then((ancestLangs) => {
+                      return AncestryBoost.findAll({ where: { ancestryID: ancestryID } })
+                      .then((ancestBoosts) => {
+                          return AncestryFlaw.findAll({ where: { ancestryID: ancestryID } })
+                          .then((ancestFlaws) => {
+                            return SenseType.findAll()
+                            .then((senseTypes) => {
+                                return CharGathering.getAllPhysicalFeatures()
+                                .then((physicalFeatures) => {
+
+                                    let visionSense = null;
+                                    let additionalSense = null;
+                                    for(let senseType of senseTypes){
+                                        if(senseType.id === ancestry.visionSenseID){
+                                            visionSense = senseType;
+                                        } else if(senseType.id === ancestry.additionalSenseID){
+                                            additionalSense = senseType;
+                                        }
+                                    }
+
+                                    let physicalFeatureOne = null;
+                                    let physicalFeatureTwo = null;
+                                    for(let physicalFeature of physicalFeatures){
+                                        if(physicalFeature.id === ancestry.physicalFeatureOneID){
+                                            physicalFeatureOne = physicalFeature;
+                                        } else if(physicalFeature.id === ancestry.physicalFeatureTwoID){
+                                            physicalFeatureTwo = physicalFeature;
+                                        }
+                                    }
+                                    
+                                    let ancestryStruct = {ancestry : ancestry, heritages : heritages,
+                                        languages : [], bonus_languages : [], boosts : [], flaws : [],
+                                        vision_sense : visionSense, additional_sense : additionalSense,
+                                        physical_feature_one: physicalFeatureOne, physical_feature_two: 
+                                        physicalFeatureTwo};
+
+                                    for (const ancestLang of ancestLangs) {
+                                        if(ancestLang.isBonus === 1) {
+                                            let language = languages.find(language => {
+                                                return language.id === ancestLang.langID;
+                                            });
+                                            ancestryStruct.bonus_languages.push(language);
+                                        } else {
+                                            let language = languages.find(language => {
+                                                return language.id === ancestLang.langID;
+                                            });
+                                            ancestryStruct.languages.push(language);
+                                        }
+                                    }
+
+                                    for (const ancestBoost of ancestBoosts) {
+                                      ancestryStruct.boosts.push(ancestBoost.boostedAbility);
+                                    }
+
+                                    for (const ancestFlaw of ancestFlaws) {
+                                      ancestryStruct.flaws.push(ancestFlaw.flawedAbility);
+                                    }
+
+                                    return ancestryStruct;
+                                });
+                            });
+                          });
+                      });
+                  });
+              });
+          });
+      });
+  }
+
     static getAllBackgrounds() {
-        return Background.findAll()
-        .then((backgrounds) => {
+        return Background.findAll({
+          order: [['name', 'ASC'],]
+        }).then((backgrounds) => {
             return backgrounds;
         });
     }
@@ -327,10 +433,38 @@ module.exports = class AdminGathering {
       });
     }
 
+    static getAllSkills() {
+      return Skill.findAll()
+      .then((skills) => {
+        let skillMap = new Map();
+        for(let skillData of skills){
+          skillMap.set(skillData.name, {
+            Name : skillData.name,
+            Skill : skillData
+          });
+        }
+        return mapToObj(skillMap);
+      });
+    }
+
+    static getAllConditions() {
+      return Condition.findAll()
+      .then((allConditions) => {
+        return allConditions;
+      });
+    }
+
+    static getAllLanguages() {
+      return Language.findAll()
+      .then((allLanguages) => {
+        return allLanguages;
+      });
+    }
+
     static getAllItems(){
 
         console.log('~~~~~~~~~~~ ADMIN - REQUESTING ALL ITEMS ~~~~~~~~~~~');
-
+        
         return Item.findAll()
         .then((items) => {
             return Tag.findAll()

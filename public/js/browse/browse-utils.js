@@ -10,3 +10,14 @@ function getFirstSentence(text){
     return '';
   }
 }
+
+function textContainsWords(text, wordArray){
+  if(text == null) {return false;}
+  text = text.toUpperCase();
+  for(let word of wordArray){
+    if(!text.includes(word)){
+      return false;
+    }
+  }
+  return true;
+}

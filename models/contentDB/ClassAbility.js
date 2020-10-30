@@ -39,6 +39,9 @@ const ClassAbility = db.define('classAbilities', {
   contentSrc: {
     type: Sequelize.STRING
   },
+  homebrewID: {
+    type: Sequelize.INTEGER
+  },
 });
 
 module.exports = ClassAbility;

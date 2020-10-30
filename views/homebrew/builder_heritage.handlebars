@@ -1,0 +1,125 @@
+
+{{#section 'header'}}
+    <link rel="stylesheet" href="/css/admin-builders.css">
+    <script type="text/javascript" src="/js/admin_builders/heritage/builder-heritage.js"></script>
+    {{#if heritageID}}
+        <script type="text/javascript" src="/js/admin_builders/heritage/editor-heritage.js"></script>
+        <script type="text/javascript" src="/js/admin_builders/editor-utils.js"></script>
+    {{/if}}
+{{/section}}
+
+{{#section 'nav_home'}}
+    <li><a href="/">Home</a></li>
+{{/section}}
+
+{{#section 'nav_characters'}}
+    <li><a href="/profile/characters">Characters</a></li>
+{{/section}}
+
+{{#section 'nav_homebrew'}}
+    <li class="mx-lg-4 mx-md-3 my-md-0 my-2"><a href="/homebrew">Homebrew</a></li>
+{{/section}}
+
+{{#section 'nav_browse'}}
+    <li class="mr-lg-4 mr-md-3"><a href="/browse"><i class="fas fa-lg fa-search"></i></a></li>
+{{/section}}
+
+{{#section 'nav_login'}}
+    <li class="mr-4"><a href="/auth/login">Login <i class="fas fa-sign-in-alt"></i></a></li>
+{{/section}}
+
+{{#section 'banner_nav'}}
+    <div class="banner_w3lspvt-2"></div>
+{{/section}}
+
+
+<div class="pt-3">
+    {{#if heritageID}}
+        <h1 class="is-size-1 has-text-light has-text-centered">Heritage Editor</h1>
+    {{else}}
+        <h1 class="is-size-1 has-text-light has-text-centered">Heritage Creation</h1>
+    {{/if}}
+</div>
+
+<div class="columns is-mobile is-centered mt-2 mb-3">
+    <div class="column is-6 tile is-ancestor is-vertical">
+
+        <div class="tile">
+
+            <div class="tile is-parent is-vertical box is-marginless mr-2">
+
+                <div class="tile is-child">
+                    <div class="field is-grouped is-grouped-centered">
+                        <div class="control">
+                            <div class="select">
+                                <select id="inputHeritageFor">
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tile is-child field">
+                    <label class="label">Name</label>
+                    <div class="control">
+                        <input id="inputName" class="input" type="text" placeholder="e.g. Umbral">
+                    </div>
+                </div>
+
+                <div class="tile is-child field">
+                    <label class="label">Source</label>
+                    <div class="control">
+                        <div class="select">
+                            <select id="inputContentSource">
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tile is-child field">
+                    <label class="label">Rarity</label>
+                    <div class="control">
+                        <div class="select">
+                            <select id="inputRarity">
+                                <option value="COMMON">Common</option>
+                                <option value="UNCOMMON">Uncommon</option>
+                                <option value="RARE">Rare</option>
+                                <option value="UNIQUE">Unique</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tile is-child field">
+                    <label class="label">
+                        Description
+                        <a href="/wsc_docs/#description_fields" target="_blank"><span class="icon is-small has-text-info has-tooltip-top" data-tooltip="WSC Docs"><i class="fas fa-book"></i></span></a>
+                    </label>
+                    <div class="control">
+                        <textarea id="inputDesc" class="textarea" placeholder="Whether from a connection to dark or shadowy fey..."></textarea>
+                    </div>
+                </div>
+                <div class="tile is-child field">
+                    <label class="label">
+                        Code
+                        <a href="/wsc_docs/#code_fields" target="_blank"><span class="icon is-small has-text-info has-tooltip-top" data-tooltip="WSC Docs"><i class="fas fa-book"></i></span></a>
+                    </label>
+                    <div class="control">
+                        <textarea id="inputCode" class="textarea nanum-coding use-custom-scrollbar" rows="1" spellcheck="false" maxlength="990"></textarea>
+                    </div>
+                </div>   
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="field is-grouped is-grouped-centered pb-2">
+    <div class="control">
+        {{#if heritageID}}
+            <button id="updateButton" class="button is-success">Update</button>
+        {{else}}
+            <button id="createButton" class="button is-success">Create</button>
+        {{/if}}
+    </div>
+</div>

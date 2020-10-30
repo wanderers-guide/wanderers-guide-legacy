@@ -4,6 +4,7 @@
 
 function openItemQuickview(data) {
     addBackFunctionality(data);
+    addContentSource(data.ItemDataStruct.Item.contentSrc);
 
     let qContent = $('#quickViewContent');
 

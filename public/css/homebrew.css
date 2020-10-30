@@ -1,0 +1,56 @@
+
+.homebrew-container {
+  color: #cccccc!important;
+}
+
+.section-box {
+
+  box-shadow: 0 1px 3px rgba(0,0,0,0.5);
+  background: #282828;
+  border: 1px solid #282828;
+  border-radius: 4px;
+
+}
+
+/* Tabs */
+.category-tabs li.is-active a {
+  color: #303030;
+}
+.category-tabs li:hover {
+  color: #303030;
+}
+
+.tabs:not(.is-boxed) li.is-active a {
+  border-bottom-color: #3298dc;
+  color: #3298dc;
+}
+
+/* Select and Input */
+.select select:focus, .input:focus {
+  border-color: #3298dc!important;
+}
+
+.select::after {
+  border-color: #b9b9b9!important;
+}
+
+/* Text */
+.label {
+  color: #b9b9b9;
+}
+
+strong {
+  color: #b9b9b9;
+  font-weight: 800;
+}
+
+/* Containers */
+.user-bundle-container {
+  max-width: 800px;
+  margin: auto;
+}
+
+.build-bundle-container {
+  max-width: 800px;
+  margin: auto;
+}
