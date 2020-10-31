@@ -7,7 +7,9 @@ function openAbilityQuickview(data) {
     addContentSource(data.Ability.contentSrc);
 
     $('#quickViewTitle').html(data.Ability.name);
-    $('#quickViewTitleRight').html('<span class="pr-2">Level '+data.Ability.level+'</span>');
+    if(data.Ability.level != null && data.Ability.level > 0) {
+      $('#quickViewTitleRight').html('<span class="pr-2">Level '+data.Ability.level+'</span>');
+    }
     let qContent = $('#quickViewContent');
 
     qContent.append('<div>'+processText(data.Ability.description, true, true, 'MEDIUM')+'</div>');
