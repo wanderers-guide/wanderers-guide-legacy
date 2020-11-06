@@ -1694,7 +1694,9 @@ module.exports = class SocketConnections {
               GeneralGathering.getAllClasses().then((classObject) => {
                 GeneralGathering.getAllAncestries(true).then((ancestriesObject) => {
                   GeneralGathering.getAllUniHeritages().then((uniHeritageArray) => {
-                    socket.emit('returnAdminFeatDetailsPlus', featsObject, classObject, ancestriesObject, uniHeritageArray);
+                    GeneralGathering.getAllArchetypes().then((archetypeArray) => {
+                      socket.emit('returnAdminFeatDetailsPlus', featsObject, classObject, ancestriesObject, uniHeritageArray, archetypeArray);
+                    });
                   });
                 });
               });
@@ -2217,6 +2219,34 @@ module.exports = class SocketConnections {
           socket.emit('returnHomebrewBundles', homebrewBundles);
         });
       });
+
+      socket.on('requestHomebrewBundle', function(homebrewID){
+        AuthCheck.getHomebrewBundle(socket, homebrewID).then((homebrewBundle) => {
+          socket.emit('returnHomebrewBundle', homebrewBundle);
+        });
+      });
+
+      socket.on('requestBundleCreate', function(){
+        AuthCheck.createHomebrewBundle(socket).then((homebrewBundle) => {
+          socket.emit('returnBundleCreate', homebrewBundle);
+        });
+      });
+
+      socket.on('requestBundleUpdate', function(homebrewID, updateValues){
+        AuthCheck.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+          if(canEdit){
+            AuthCheck.updateHomebrewBundle(socket, homebrewID, updateValues).then((homebrewBundle) => {
+              socket.emit('returnBundleUpdate', homebrewBundle);
+            });
+          }
+        });
+      });
+
+      socket.on('requestBundleDelete', function(homebrewID){
+        AuthCheck.deleteHomebrewBundle(socket, homebrewID).then((result) => {
+          socket.emit('returnBundleDelete');
+        });
+      });
       
       socket.on('requestBundleContents', function(homebrewID){
         HomebrewGathering.getAllClasses(homebrewID).then((classes) => {
@@ -2243,7 +2273,7 @@ module.exports = class SocketConnections {
         AuthCheck.canEditHomebrew(socket, homebrewID).then((canEdit) => {
           if(canEdit){
             HomebrewCreation.addClass(homebrewID, data).then((result) => {
-              socket.emit('returnHomebrewAddClass');
+              socket.emit('returnHomebrewCompleteClass');
             });
           }
         });
@@ -2255,7 +2285,7 @@ module.exports = class SocketConnections {
             if(data != null && data.classID != null) {
               HomebrewCreation.deleteClass(homebrewID, data.classID).then((result) => {
                 HomebrewCreation.addClass(homebrewID, data).then((result) => {
-                  socket.emit('returnHomebrewUpdateClass');
+                  socket.emit('returnHomebrewCompleteClass');
                 });
               });
             }

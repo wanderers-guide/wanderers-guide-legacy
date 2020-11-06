@@ -13,6 +13,9 @@ const Tag = db.define('tags', {
   },
   isArchived: {
     type: Sequelize.INTEGER
+  },
+  homebrewID: {
+    type: Sequelize.INTEGER
   }
 });
 

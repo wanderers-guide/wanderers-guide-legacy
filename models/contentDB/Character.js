@@ -74,6 +74,10 @@ const Character = db.define('characters', {
   enabledSources: {
     type: Sequelize.STRING
   },
+  // Character Enabled Homebrew //
+  enabledHomebrew: {
+    type: Sequelize.STRING
+  }
 });
 
 module.exports = Character;

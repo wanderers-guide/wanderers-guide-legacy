@@ -159,7 +159,7 @@ app.use('/browse', browseRoutes);
 app.use('/', coreRoutes);
 app.use('*', errorRoutes); // 404 Route
 
-io.setMaxListeners(18);
+io.setMaxListeners(19);
 SocketConnections.sheetItems(io);
 SocketConnections.sheetConditions(io);
 SocketConnections.sheetCompanions(io);
@@ -176,6 +176,7 @@ SocketConnections.builderGeneral(io);
 SocketConnections.builderGeneralProcessing(io);
 SocketConnections.builderWSC(io);
 
+SocketConnections.homebrewGeneral(io);
 SocketConnections.homebrewBuilder(io);
 
 SocketConnections.homePage(io);

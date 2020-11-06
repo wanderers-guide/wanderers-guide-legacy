@@ -3,6 +3,7 @@
 */
 
 let socket = io();
+let g_homebrewID = null;
 
 // ~~~~~~~~~~~~~~ // Run on Load // ~~~~~~~~~~~~~~ //
 $(function () {
@@ -296,16 +297,17 @@ function finishClass(isUpdate){
     });
     
     let requestPacket = null;
+    g_homebrewID = $('#builder-container').attr('data-bundle-id');
     let classID = null;
     if(isUpdate){
-        requestPacket = "requestAdminUpdateClass";
+        requestPacket = "requestHomebrewUpdateClass";
         classID = getClassEditorIDFromURL();
     } else {
-        requestPacket = "requestAdminAddClass";
+        requestPacket = "requestHomebrewAddClass";
     }
 
     
-    socket.emit(requestPacket,{
+    socket.emit(requestPacket, g_homebrewID, {
         classID,
         className,
         classVersion,
@@ -328,6 +330,6 @@ function finishClass(isUpdate){
 
 }
 
-socket.on("returnAdminCompleteClass", function() {
-    window.location.href = '/admin/manage/class';
+socket.on("returnHomebrewCompleteClass", function() {
+    window.location.href = '/homebrew/?edit_id='+g_homebrewID;
 });

@@ -107,6 +107,7 @@ module.exports = class HomebrewCreation {
             name: data.className,
             description: tagDesc,
             isHidden: 1,
+            homebrewID: homebrewID,
         }).then(classTag => {
             return Class.create({ // Create Class
                 name: data.className,
@@ -141,7 +142,7 @@ module.exports = class HomebrewCreation {
                         classFeat.isArchived = 0;
                         classFeat.contentSrc = cClass.contentSrc;
                         classFeat.version = null;
-                        let newPromise = HomebrewCreation.addFeatPreparedData(classFeat);
+                        let newPromise = HomebrewCreation.addFeatPreparedData(homebrewID, classFeat);
                         classFeatPromises.push(newPromise);
                     }
                 }
@@ -152,7 +153,7 @@ module.exports = class HomebrewCreation {
                         for(const classAbility of data.classAbilitiesArray) {
                             classAbility.indivClassName = null;
                             classAbility.contentSrc = cClass.contentSrc;
-                            let newPromise =  HomebrewCreation.addClassAbility(cClass.id, classAbility);
+                            let newPromise =  HomebrewCreation.addClassAbility(homebrewID, cClass.id, classAbility);
                             classAbilitiesPromises.push(newPromise);
                         }
                     }
@@ -298,7 +299,7 @@ module.exports = class HomebrewCreation {
 
 
 
-    static addArchetype(data) {
+    static addArchetype(homebrewID, data) {
         /* Data:
             archetypeID,
             archetypeName,
@@ -318,6 +319,7 @@ module.exports = class HomebrewCreation {
             name: data.archetypeName+' Archetype',
             description: tagDesc,
             isHidden: 1,
+            homebrewID: homebrewID,
         }).then(archetypeTag => {
 
             data.archetypeDedicationFeat.featTagsArray.push(580);// Hardcoded Dedication Tag ID
@@ -333,7 +335,7 @@ module.exports = class HomebrewCreation {
             data.archetypeDedicationFeat.isArchived = 0;
             data.archetypeDedicationFeat.contentSrc = data.archetypeContentSrc;
             data.archetypeDedicationFeat.version = null;
-            return HomebrewCreation.addFeatPreparedData(data.archetypeDedicationFeat)
+            return HomebrewCreation.addFeatPreparedData(homebrewID, data.archetypeDedicationFeat)
             .then(dedicationFeat => {
 
                 return Archetype.create({ // Create Archetype
@@ -360,7 +362,7 @@ module.exports = class HomebrewCreation {
                             archetypeFeat.isArchived = 0;
                             archetypeFeat.contentSrc = archetype.contentSrc;
                             archetypeFeat.version = null;
-                            let newPromise = HomebrewCreation.addFeatPreparedData(archetypeFeat);
+                            let newPromise = HomebrewCreation.addFeatPreparedData(homebrewID, archetypeFeat);
                             archetypeFeatPromises.push(newPromise);
                         }
                     }
@@ -442,7 +444,7 @@ module.exports = class HomebrewCreation {
 
 
 
-    static addAncestry(data) {
+    static addAncestry(homebrewID, data) {
         /* Data:
             ancestryName,
             ancestryVersion,
@@ -473,6 +475,7 @@ module.exports = class HomebrewCreation {
             name: data.ancestryName,
             description: tagDesc,
             isHidden: 1,
+            homebrewID: homebrewID,
         }).then(ancestryTag => {
             return Ancestry.create({ // Create Ancestry
                 name: data.ancestryName,
@@ -488,7 +491,7 @@ module.exports = class HomebrewCreation {
                 physicalFeatureTwoID: data.ancestryPhysicalFeatureTwoID,
                 tagID: ancestryTag.id,
                 contentSrc: data.ancestryContentSrc,
-                homebrewID: null,
+                homebrewID: homebrewID,
             }).then(ancestry => {
                 let ancestryBoostsPromises = []; // Create Ancestry Boosts
                 if(data.ancestryBoostsArray != null){
@@ -563,7 +566,7 @@ module.exports = class HomebrewCreation {
                                         ancestryFeat.isArchived = 0;
                                         ancestryFeat.contentSrc = ancestry.contentSrc;
                                         ancestryFeat.version = null;
-                                        let newPromise = HomebrewCreation.addFeatPreparedData(ancestryFeat);
+                                        let newPromise = HomebrewCreation.addFeatPreparedData(homebrewID, ancestryFeat);
                                         ancestryFeatPromises.push(newPromise);
                                     }
                                 }
@@ -672,7 +675,7 @@ module.exports = class HomebrewCreation {
     }
 
 
-    static addHeritage(ancestryID, data) {
+    static addHeritage(homebrewID, ancestryID, data) {
         /* Data:
             name,
             description,
@@ -692,7 +695,7 @@ module.exports = class HomebrewCreation {
             code: data.code,
             contentSrc: data.contentSrc,
             indivAncestryName: data.indivAncestryName,
-            homebrewID: null,
+            homebrewID: homebrewID,
         }).then(heritage => {
             return heritage;
         });
@@ -732,7 +735,7 @@ module.exports = class HomebrewCreation {
     }
 
 
-    static addUniHeritage(data) {
+    static addUniHeritage(homebrewID, data) {
         /* Data:
             uniHeritageID,
             heritageName,
@@ -761,7 +764,7 @@ module.exports = class HomebrewCreation {
                 tagID: heritageTag.id,
                 contentSrc: data.heritageContentSrc,
                 code: data.heritageCode,
-                homebrewID: null,
+                homebrewID: homebrewID,
             }).then(uniHeritage => {
                 let heritageFeatPromises = []; // Create Heritage Feats
                 if(data.heritageFeatsArray != null){
@@ -777,7 +780,7 @@ module.exports = class HomebrewCreation {
                         heritageFeat.isArchived = 0;
                         heritageFeat.contentSrc = uniHeritage.contentSrc;
                         heritageFeat.version = null;
-                        let newPromise = HomebrewCreation.addFeatPreparedData(heritageFeat);
+                        let newPromise = HomebrewCreation.addFeatPreparedData(homebrewID, heritageFeat);
                         heritageFeatPromises.push(newPromise);
                     }
                 }
@@ -903,6 +906,8 @@ module.exports = class HomebrewCreation {
             //
         } else if(data.builderType == "ANCESTRY-FEAT"){
             //
+        } else if(data.builderType == "ARCHETYPE-FEAT"){
+            //
         } else if(data.builderType == "BASIC-ACTION"){
             data.isDefault = 1;
         } else if(data.builderType == "SKILL-ACTION"){
@@ -911,7 +916,7 @@ module.exports = class HomebrewCreation {
             console.error("Invalid BuilderType for Feat Creation: '"+data.builderType+"'!");
             return;
         }
-        return HomebrewCreation.addFeatPreparedData({
+        return HomebrewCreation.addFeatPreparedData(homebrewID, {
             name: data.featName,
             actions: data.featActions,
             level: data.featLevel,
@@ -939,7 +944,7 @@ module.exports = class HomebrewCreation {
         });
     }
 
-    static addFeatPreparedData(data) {
+    static addFeatPreparedData(homebrewID, data) {
         /* Data:
             name,
             actions,
@@ -991,7 +996,7 @@ module.exports = class HomebrewCreation {
             genTypeName: data.genTypeName,
             isArchived: data.isArchived,
             contentSrc: data.contentSrc,
-            homebrewID: null,
+            homebrewID: homebrewID,
             version: data.version,
         }).then(feat => {
             let featTagPromises = []; // Create Feat Tags
@@ -1029,7 +1034,7 @@ module.exports = class HomebrewCreation {
     }
 
 
-    static addItem(data){
+    static addItem(homebrewID, data){
         /* Data:
             itemID,
             builderType,
@@ -1220,7 +1225,7 @@ module.exports = class HomebrewCreation {
             itemStructType: data.builderType,
             isArchived: data.isArchived,
             contentSrc: data.itemContentSrc,
-            homebrewID: null,
+            homebrewID: homebrewID,
         }).then(item => {
             let itemTagsPromises = []; // Create Item Tags
             if(data.itemTagsArray != null){
@@ -1341,7 +1346,7 @@ module.exports = class HomebrewCreation {
 
 
 
-    static addSpell(data){
+    static addSpell(homebrewID, data){
         /* Data:
             spellID,
             spellName,
@@ -1407,7 +1412,7 @@ module.exports = class HomebrewCreation {
             isFocusSpell: data.spellIsFocus,
             isArchived: data.isArchived,
             contentSrc: data.spellContentSrc,
-            homebrewID: null,
+            homebrewID: homebrewID,
         }).then(spell => {
             let spellTagsPromises = []; // Create Spell Tags
             if(data.spellTagsArray != null){

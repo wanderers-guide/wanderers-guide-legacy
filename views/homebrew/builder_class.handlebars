@@ -33,14 +33,10 @@
 
 
 <div class="pt-3">
-    {{#if classID}}
-        <h1 class="is-size-1 has-text-light has-text-centered">Class Editor</h1>
-    {{else}}
-        <h1 class="is-size-1 has-text-light has-text-centered">Class Creation</h1>
-    {{/if}}
+    <h1 class="is-size-1 has-text-light has-text-centered">Class Builder</h1>
 </div>
 
-<div class="columns is-mobile is-centered mt-2 mb-3">
+<div id="builder-container" data-user-id="{{user.id}}" data-bundle-id="{{bundleID}}" data-class-id="{{classID}}" class="columns is-mobile is-centered mt-2 mb-3">
     <div class="column is-8 tile is-ancestor is-vertical">
 
         <div class="tile">
@@ -606,9 +602,9 @@
 <div class="field is-grouped is-grouped-centered pb-2">
     <div class="control">
         {{#if classID}}
-            <button id="updateButton" class="button is-success">Update</button>
+            <button id="updateButton" class="button is-success">Save</button>
         {{else}}
-            <button id="createButton" class="button is-success">Create</button>
+            <button id="createButton" class="button is-success">Save</button>
         {{/if}}
     </div>
 </div>

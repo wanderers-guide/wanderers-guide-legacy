@@ -47,6 +47,8 @@ const CharDataMapping = require('./CharDataMapping');
 const CharDataMappingExt = require('./CharDataMappingExt');
 
 const CharContentSources = require('./CharContentSources');
+const CharContentHomebrew = require('./CharContentHomebrew');
+
 const CharSpells = require('./CharSpells');
 const CharTags = require('./CharTags');
 
@@ -135,7 +137,10 @@ module.exports = class CharGathering {
                 where: {
                     contentSrc: {
                       [Op.or]: CharContentSources.getSourceArray(character)
-                    }
+                    },
+                    homebrewID: {
+                      [Op.or]: CharContentHomebrew.getHomebrewArray(character)
+                    },
                 }
             }).then((classes) => {
                 return ClassAbility.findAll({
@@ -143,7 +148,10 @@ module.exports = class CharGathering {
                     where: {
                         contentSrc: {
                           [Op.or]: CharContentSources.getSourceArray(character)
-                        }
+                        },
+                        homebrewID: {
+                          [Op.or]: CharContentHomebrew.getHomebrewArray(character)
+                        },
                     }
                 })
                 .then((allClassAbilities) => {
@@ -187,7 +195,10 @@ module.exports = class CharGathering {
                 where: {
                     contentSrc: {
                       [Op.or]: CharContentSources.getSourceArray(character)
-                    }
+                    },
+                    homebrewID: {
+                      [Op.or]: CharContentHomebrew.getHomebrewArray(character)
+                    },
                 }
             })
             .then((archetypes) => {
@@ -203,7 +214,10 @@ module.exports = class CharGathering {
                 where: {
                     contentSrc: {
                       [Op.or]: CharContentSources.getSourceArray(character)
-                    }
+                    },
+                    homebrewID: {
+                      [Op.or]: CharContentHomebrew.getHomebrewArray(character)
+                    },
                 },
                 order: [['name', 'ASC'],]
             })
@@ -220,7 +234,10 @@ module.exports = class CharGathering {
                 where: {
                     contentSrc: {
                       [Op.or]: CharContentSources.getSourceArray(character)
-                    }
+                    },
+                    homebrewID: {
+                      [Op.or]: CharContentHomebrew.getHomebrewArray(character)
+                    },
                 }
             })
             .then((feats) => {
@@ -280,7 +297,10 @@ module.exports = class CharGathering {
                 where: {
                     contentSrc: {
                       [Op.or]: CharContentSources.getSourceArray(character)
-                    }
+                    },
+                    homebrewID: {
+                      [Op.or]: CharContentHomebrew.getHomebrewArray(character)
+                    },
                 },
                 order: [['level', 'ASC'],['name', 'ASC'],]
             })
@@ -327,7 +347,10 @@ module.exports = class CharGathering {
                 where: {
                     contentSrc: {
                       [Op.or]: CharContentSources.getSourceArray(character)
-                    }
+                    },
+                    homebrewID: {
+                      [Op.or]: CharContentHomebrew.getHomebrewArray(character)
+                    },
                 }
             })
             .then((items) => {
@@ -537,7 +560,10 @@ module.exports = class CharGathering {
                 where: {
                     contentSrc: {
                       [Op.or]: CharContentSources.getSourceArray(character)
-                    }
+                    },
+                    homebrewID: {
+                      [Op.or]: CharContentHomebrew.getHomebrewArray(character)
+                    },
                 }
             })
             .then((ancestries) => {
@@ -545,7 +571,10 @@ module.exports = class CharGathering {
                     where: {
                         contentSrc: {
                           [Op.or]: CharContentSources.getSourceArray(character)
-                        }
+                        },
+                        homebrewID: {
+                          [Op.or]: CharContentHomebrew.getHomebrewArray(character)
+                        },
                     },
                     order: [['name', 'ASC'],]
                 })
@@ -737,7 +766,10 @@ module.exports = class CharGathering {
                 where: {
                     contentSrc: {
                       [Op.or]: CharContentSources.getSourceArray(character)
-                    }
+                    },
+                    homebrewID: {
+                      [Op.or]: CharContentHomebrew.getHomebrewArray(character)
+                    },
                 }
             })
             .then((ancestries) => {
@@ -753,7 +785,10 @@ module.exports = class CharGathering {
                 where: {
                     contentSrc: {
                       [Op.or]: CharContentSources.getSourceArray(character)
-                    }
+                    },
+                    homebrewID: {
+                      [Op.or]: CharContentHomebrew.getHomebrewArray(character)
+                    },
                 }
             })
             .then((backgrounds) => {
@@ -1228,7 +1263,10 @@ module.exports = class CharGathering {
                 where: {
                     contentSrc: {
                       [Op.or]: CharContentSources.getSourceArray(character)
-                    }
+                    },
+                    homebrewID: {
+                      [Op.or]: CharContentHomebrew.getHomebrewArray(character)
+                    },
                 }
             })
             .then((animalCompanions) => {
@@ -1244,7 +1282,10 @@ module.exports = class CharGathering {
               where: {
                   contentSrc: {
                     [Op.or]: CharContentSources.getSourceArray(character)
-                  }
+                  },
+                  homebrewID: {
+                    [Op.or]: CharContentHomebrew.getHomebrewArray(character)
+                  },
               }
           })
           .then((familiarAbilities) => {

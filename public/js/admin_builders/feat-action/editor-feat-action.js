@@ -64,6 +64,11 @@ socket.on("returnAdminFeatDetailsPlus", function(featsObject, classObject, ances
         if(ancestryID != null){
             $('#inputAncestryOptions').val(ancestryID);
         }
+    } else if(feat.Feat.genericType === 'ARCHETYPE-FEAT'){
+      let archetypeID = getArchetypeIDFromFeat(feat);
+      if(archetypeID != null){
+          $('#inputArchetypeOptions').val(archetypeID);
+      }
     }
 
     $("#updateFeatButton").click(function(){
@@ -94,4 +99,13 @@ function getAncestryIDFromFeat(feat){
         }
     }
     return null;
+}
+
+function getArchetypeIDFromFeat(feat){
+  for(const archetype of g_archetypeArray){
+      if(archetype.isArchived === 0 && archetype.name === feat.Feat.genTypeName){
+          return archetype.name;
+      }
+  }
+  return null;
 }

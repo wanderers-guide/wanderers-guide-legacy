@@ -976,6 +976,8 @@ module.exports = class AdminCreation {
             //
         } else if(data.builderType == "ANCESTRY-FEAT"){
             //
+        } else if(data.builderType == "ARCHETYPE-FEAT"){
+            //
         } else if(data.builderType == "BASIC-ACTION"){
             data.isDefault = 1;
         } else if(data.builderType == "SKILL-ACTION"){

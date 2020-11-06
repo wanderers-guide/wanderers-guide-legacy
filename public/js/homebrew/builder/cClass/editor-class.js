@@ -4,19 +4,19 @@
 
 $(function () {
 
-    socket.emit("requestAdminClassDetails");
+    socket.emit("requestHomebrewClassDetails");
 
 });
 
-socket.on("returnAdminClassDetails", function(classObject, featsObject){
+socket.on("returnHomebrewClassDetails", function(classObject, featsObject){
 
     let classMap = objToMap(classObject);
     let featMap = objToMap(featsObject);
     
-    let cClass = classMap.get(getClassEditorIDFromURL()+"");
+    let cClass = classMap.get($('#builder-container').attr('data-class-id'));
 
     if(cClass == null){
-        window.location.href = '/admin/manage/class';
+        window.location.href = '/homebrew';
         return;
     }
 

@@ -74,7 +74,7 @@ router.get('/', (req, res) => {
                             character.isPlayable = CharStateUtils.isPlayable(character);
         
                         }
-        
+                        
                         res.render('pages/character_list', {
                             title: "Your Characters - Wanderer's Guide",
                             user: req.user,

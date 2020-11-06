@@ -57,6 +57,73 @@ module.exports = class AuthCheck {
         });
     }
 
+    static createHomebrewBundle(socket) {
+      return AuthCheck.isMember(socket)
+      .then((isMember) => {
+        if(isMember){
+          return HomebrewBundle.create({
+            userID: getUserID(socket),
+            name: 'Homebrew Bundle',
+            description: '',
+            contactInfo: '',
+            isPublished: 0,
+          }).then((homebrewBundle) => {
+            return homebrewBundle;
+          });
+        } else {
+          return;
+        }
+      });
+    }
+
+    static updateHomebrewBundle(socket, homebrewID, inUpdateValues) {
+      return HomebrewBundle.findOne({ where: { id: homebrewID, userID: getUserID(socket) } })
+      .then((homebrewBundle) => {
+        if(homebrewBundle != null){
+          let updateValues = {
+            name: inUpdateValues.Name,
+            description: inUpdateValues.Description,
+            contactInfo: inUpdateValues.ContactInfo,
+          };
+          return HomebrewBundle.update(updateValues, {
+            where: {
+              id: homebrewBundle.id,
+              userID: getUserID(socket),
+            }
+          }).then((result) => {
+            return HomebrewBundle.findOne({ where: { id: homebrewID, userID: getUserID(socket) } })
+            .then((homebrewBundle) => {
+              return homebrewBundle;
+            });
+          });
+        } else {
+          return;
+        }
+      }).catch((error) => {
+        return;
+      });
+    }
+
+    static deleteHomebrewBundle(socket, homebrewID) {
+      return HomebrewBundle.findOne({ where: { id: homebrewID, userID: getUserID(socket) } })
+      .then((homebrewBundle) => {
+        if(homebrewBundle != null){
+          return HomebrewBundle.destroy({
+            where: {
+              id: homebrewBundle.id,
+              userID: getUserID(socket)
+            }
+          }).then((result) => {
+            return;
+          });
+        } else {
+          return;
+        }
+      }).catch((error) => {
+        return;
+      });
+    }
+
     static canEditHomebrew(socket, homebrewID) {
       return HomebrewBundle.findOne({ where: { id: homebrewID, userID: getUserID(socket) } })
       .then((homebrewBundle) => {
@@ -70,6 +137,13 @@ module.exports = class AuthCheck {
       return HomebrewBundle.findAll({ where: { userID: getUserID(socket) } })
       .then((homebrewBundles) => {
           return homebrewBundles;
+      });
+    }
+
+    static getHomebrewBundle(socket, homebrewID) {
+      return HomebrewBundle.findOne({ where: { id: homebrewID, userID: getUserID(socket) } })
+      .then((homebrewBundle) => {
+          return homebrewBundle;
       });
     }
 
