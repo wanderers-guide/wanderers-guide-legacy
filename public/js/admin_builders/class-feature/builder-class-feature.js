@@ -61,7 +61,9 @@ socket.on("returnAdminClassDetails", function(classObject, featsObject){
             $('#classAbility0').find(".classFeatureLevelSection").removeClass('is-hidden');
             $('#classAbility0').find(".classFeatureDisplayInSheetSection").removeClass('is-hidden');
             $('#classAbility0').find(".classFeatureIsSelectorSection").removeClass('is-hidden');
-            $('#classAbility0').find(".classFeatureSelectionOptions").removeClass('is-hidden');
+            if($("#classAbility0").find(".inputClassFeatureIsSelector").is(":checked")){
+              $('#classAbility0').find(".classFeatureSelectionOptions").removeClass('is-hidden');
+            }
         } else if($(this).val() == 'FEATURE-OPTION'){
             $('#sectionClassFeatureFor').removeClass('is-hidden');
             $('#classAbility0').find(".classFeatureLevelSection").addClass('is-hidden');

@@ -142,6 +142,7 @@ function displaySpellResults(spellMap){
   );
 
   for(const [spellID, spellStruct] of spellMap.entries()){
+    if(spellStruct.Spell.isArchived == 1) {continue;}
 
     let entryID = 'spell-'+spellID;
     let name = spellStruct.Spell.name;

@@ -160,7 +160,7 @@ function displayItemResults(itemMap){
   );
 
   for(const [itemID, itemStruct] of itemMap.entries()){
-    if(itemStruct.Item.hidden == 1) {continue;}
+    if(itemStruct.Item.hidden == 1 || itemStruct.Item.isArchived == 1) {continue;}
 
     let entryID = 'item-'+itemID;
     let name = itemStruct.Item.name;

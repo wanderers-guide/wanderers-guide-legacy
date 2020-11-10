@@ -43,6 +43,7 @@ socket.on("returnAdminClassDetails", function(classObject, featsObject){
     }
 
     $("#classAbility0").find(".inputClassFeatureName").val(classFeature.name);
+    if(classFeature.level == null) {classFeature.level = 1;}
     $("#classAbility0").find(".inputClassFeatureLevel").val(classFeature.level);
     $("#classAbility0").find(".inputClassFeatureDesc").val(classFeature.description);
     $("#classAbility0").find(".inputClassFeatureCode").val(classFeature.code);

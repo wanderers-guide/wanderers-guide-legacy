@@ -50,7 +50,8 @@ router.get('/panel', adminAuthCheck, (req, res) => {
 router.get('/manage/class', adminAuthCheck, (req, res) => {
 
     Class.findAll({
-        order: [['name', 'ASC'],]
+        order: [['name', 'ASC'],],
+        where: { homebrewID: null }
     }).then((classes) => {
 
         res.render('admin/admin_manager/manager_class', {
@@ -66,11 +67,11 @@ router.get('/manage/class', adminAuthCheck, (req, res) => {
 router.get('/create/class', adminAuthCheck, (req, res) => {
 
     Tag.findAll({
-        where: { isArchived: 0, isHidden: 0 },
+        where: { isArchived: 0, isHidden: 0, homebrewID: null },
         order: [['name', 'ASC'],]
     }).then((tags) => {
         Item.findAll({
-            where: { isArchived: 0, hidden: 0, itemStructType: 'WEAPON' },
+            where: { isArchived: 0, hidden: 0, homebrewID: null, itemStructType: 'WEAPON' },
             order: [['name', 'ASC'],]
         }).then((weaponItems) => {
             res.render('admin/admin_builder/builder_class', {
@@ -89,8 +90,9 @@ router.use('/edit/class', adminAuthCheck, editClassRoutes);
 // Class Feature Builder
 router.get('/manage/class-feature', adminAuthCheck, (req, res) => {
 
-    ClassAbility.findAll()
-    .then((classAbilities) => {
+    ClassAbility.findAll({
+      where: { homebrewID: null }
+    }).then((classAbilities) => {
 
         let filteredClassAbils = [];
         for(let ability of classAbilities){
@@ -130,7 +132,8 @@ router.use('/edit/class-feature', adminAuthCheck, editClassFeatureRoutes);
 router.get('/manage/archetype', adminAuthCheck, (req, res) => {
 
     Archetype.findAll({
-        order: [['name', 'ASC'],]
+        order: [['name', 'ASC'],],
+        where: { homebrewID: null }
     }).then((archetypes) => {
 
         res.render('admin/admin_manager/manager_archetype', {
@@ -146,7 +149,7 @@ router.get('/manage/archetype', adminAuthCheck, (req, res) => {
 router.get('/create/archetype', adminAuthCheck, (req, res) => {
 
     Tag.findAll({
-        where: { isArchived: 0, isHidden: 0 },
+        where: { isArchived: 0, isHidden: 0, homebrewID: null },
         order: [['name', 'ASC'],]
     }).then((tags) => {
         res.render('admin/admin_builder/builder_archetype', {
@@ -164,7 +167,8 @@ router.use('/edit/archetype', adminAuthCheck, editArchetypeRoutes);
 router.get('/manage/ancestry', adminAuthCheck, (req, res) => {
 
     Ancestry.findAll({
-        order: [['name', 'ASC'],]
+        order: [['name', 'ASC'],],
+        where: { homebrewID: null }
     }).then((ancestries) => {
 
         res.render('admin/admin_manager/manager_ancestry', {
@@ -183,7 +187,7 @@ router.get('/create/ancestry', adminAuthCheck, (req, res) => {
         order: [['name', 'ASC'],]
     }).then((languages) => {
         Tag.findAll({
-            where: { isArchived: 0, isHidden: 0 },
+            where: { isArchived: 0, isHidden: 0, homebrewID: null },
             order: [['name', 'ASC'],]
         }).then((tags) => {
             SenseType.findAll()
@@ -213,7 +217,8 @@ router.use('/edit/ancestry', adminAuthCheck, editAncestryRoutes);
 router.get('/manage/heritage', adminAuthCheck, (req, res) => {
 
     Heritage.findAll({
-        order: [['name', 'ASC'],]
+        order: [['name', 'ASC'],],
+        where: { homebrewID: null }
     }).then((heritages) => {
         res.render('admin/admin_manager/manager_heritage', {
             title: "Heritage Manager - Wanderer's Guide",
@@ -239,7 +244,8 @@ router.use('/edit/heritage', adminAuthCheck, editHeritageRoutes);
 router.get('/manage/uni-heritage', adminAuthCheck, (req, res) => {
 
     UniHeritage.findAll({
-        order: [['name', 'ASC'],]
+        order: [['name', 'ASC'],],
+        where: { homebrewID: null }
     }).then((uniHeritages) => {
 
         res.render('admin/admin_manager/manager_uni-heritage', {
@@ -255,7 +261,7 @@ router.get('/manage/uni-heritage', adminAuthCheck, (req, res) => {
 router.get('/create/uni-heritage', adminAuthCheck, (req, res) => {
 
     Tag.findAll({
-        where: { isArchived: 0, isHidden: 0 },
+        where: { isArchived: 0, isHidden: 0, homebrewID: null },
         order: [['name', 'ASC'],]
     }).then((tags) => {
         
@@ -276,7 +282,8 @@ router.use('/edit/uni-heritage', adminAuthCheck, editUniHeritageRoutes);
 router.get('/manage/background', adminAuthCheck, (req, res) => {
 
     Background.findAll({
-        order: [['name', 'ASC'],]
+        order: [['name', 'ASC'],],
+        where: { homebrewID: null }
     }).then((backgrounds) => {
 
         res.render('admin/admin_manager/manager_background', {
@@ -305,7 +312,8 @@ router.use('/edit/background', adminAuthCheck, editBackgroundRoutes);
 router.get('/manage/feat-action', adminAuthCheck, (req, res) => {
 
     Feat.findAll({
-        order: [['name', 'ASC'],]
+        order: [['name', 'ASC'],],
+        where: { homebrewID: null }
     }).then((feats) => {
 
         res.render('admin/admin_manager/manager_feat-action', {
@@ -324,7 +332,7 @@ router.get('/create/feat-action', adminAuthCheck, (req, res) => {
         order: [['name', 'ASC'],]
     }).then((skills) => {
         Tag.findAll({
-            where: { isArchived: 0, isHidden: 0 },
+            where: { isArchived: 0, isHidden: 0, homebrewID: null },
             order: [['name', 'ASC'],]
         }).then((tags) => {
             res.render('admin/admin_builder/builder_feat-action', {
@@ -346,6 +354,7 @@ router.get('/manage/item', adminAuthCheck, (req, res) => {
 
     Item.findAll({
         order: [['level', 'ASC'],['name', 'ASC'],],
+        where: { homebrewID: null }
     }).then((items) => {
 
         res.render('admin/admin_manager/manager_item', {
@@ -361,7 +370,7 @@ router.get('/manage/item', adminAuthCheck, (req, res) => {
 router.get('/create/item', adminAuthCheck, (req, res) => {
 
     Tag.findAll({
-        where: { isArchived: 0, isHidden: 0 },
+        where: { isArchived: 0, isHidden: 0, homebrewID: null },
         order: [['name', 'ASC'],]
     }).then((tags) => {
         res.render('admin/admin_builder/builder_item', {
@@ -381,6 +390,7 @@ router.get('/manage/spell', adminAuthCheck, (req, res) => {
 
     Spell.findAll({
         order: [['level', 'ASC'],['name', 'ASC'],],
+        where: { homebrewID: null }
     }).then((spells) => {
 
         res.render('admin/admin_manager/manager_spell', {
@@ -396,7 +406,7 @@ router.get('/manage/spell', adminAuthCheck, (req, res) => {
 router.get('/create/spell', adminAuthCheck, (req, res) => {
 
     Tag.findAll({
-        where: { isArchived: 0, isHidden: 0 },
+        where: { isArchived: 0, isHidden: 0, homebrewID: null },
         order: [['name', 'ASC'],]
     }).then((tags) => {
         res.render('admin/admin_builder/builder_spell', {

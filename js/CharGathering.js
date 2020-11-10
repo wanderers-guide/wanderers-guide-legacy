@@ -985,7 +985,7 @@ module.exports = class CharGathering {
       .then((character) => {
         return Background.findOne({ where: { id: character.backgroundID} })
         .then((background) => {
-          return Ancestry.findOne({ where: { id: character.ancestryID} })
+          return CharGathering.getAncestry(character.ancestryID)
           .then((ancestry) => {
             return CharGathering.getCharHeritage(character)
             .then((heritage) => {
@@ -1132,7 +1132,7 @@ module.exports = class CharGathering {
 
 
     static getAncestry(ancestryID) {
-        return Ancestry.findOne({ where: { id: ancestryID} })
+        return Ancestry.findOne({ where: { id: ancestryID } })
         .then((ancestry) => {
             return ancestry;
         });
@@ -1208,7 +1208,7 @@ module.exports = class CharGathering {
     }
 
     static getAncestryLanguages(ancestryID){
-        return AncestryLanguage.findAll({ where: { ancestryID: ancestryID} })
+        return AncestryLanguage.findAll({ where: { ancestryID: ancestryID } })
         .then((ancestLangs) => {
             return ancestLangs;
         });
@@ -1496,14 +1496,13 @@ module.exports = class CharGathering {
     }
 
     static getCharacterInfo(charID){
-
       console.log('~~~~~~~~~~~ REQUESTING CHAR INFO ~~~~~~~~~~~');
 
       return Character.findOne({ where: { id: charID } })
       .then((character) => {
         return Background.findOne({ where: { id: character.backgroundID} })
         .then((background) => {
-          return Ancestry.findOne({ where: { id: character.ancestryID} })
+          return CharGathering.getAncestry(character.ancestryID)
           .then((ancestry) => {
             return CharGathering.getCharHeritage(character)
             .then((heritage) => {

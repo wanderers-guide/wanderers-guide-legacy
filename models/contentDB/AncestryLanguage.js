@@ -12,7 +12,10 @@ const AncestryLanguage = db.define('ancestryLanguages', {
   },
   isBonus: {
     type: Sequelize.TINYINT
-  }
+  },
+  homebrewID: {
+    type: Sequelize.INTEGER
+  },
 });
 
 module.exports = AncestryLanguage;

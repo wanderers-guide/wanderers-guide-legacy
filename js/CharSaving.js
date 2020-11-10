@@ -598,7 +598,7 @@ module.exports = class CharSaving {
         .then((result) => {
             return Character.update(charUpVals, { where: { id: charID } })
             .then((result) => {
-                return Ancestry.findOne({ where: { id: ancestryID} })
+                return Ancestry.findOne({ where: { id: ancestryID } })
                 .then((newAncestry) => {
                     let newAncestryName = (newAncestry != null) ? newAncestry.name : '';
                     return CharTags.setTag(charID, srcStruct, newAncestryName).then((result) => {

@@ -179,6 +179,14 @@ function handleCharacterOptions(character) {
     });
     $("#contentSrc-LOST-LEGENDS").prop('checked', contentSourceArray.includes('LOST-LEGENDS'));
 
+    $("#contentSrc-LOST-SOCIETY-GUIDE").change(function(){
+      socket.emit("requestCharacterSourceChange", 
+          getCharIDFromURL(), 
+          'LOST-SOCIETY-GUIDE',
+          this.checked);
+    });
+    $("#contentSrc-LOST-SOCIETY-GUIDE").prop('checked', contentSourceArray.includes('LOST-SOCIETY-GUIDE'));
+
     $("#contentSrc-LOST-WORLD-GUIDE").change(function(){
         socket.emit("requestCharacterSourceChange", 
             getCharIDFromURL(), 
@@ -218,6 +226,14 @@ function handleCharacterOptions(character) {
             this.checked);
     });
     $("#contentSrc-FALL-OF-PLAGUE").prop('checked', contentSourceArray.includes('FALL-OF-PLAGUE'));
+
+    $("#contentSrc-SLITHERING").change(function(){
+      socket.emit("requestCharacterSourceChange", 
+          getCharIDFromURL(), 
+          'SLITHERING',
+          this.checked);
+    });
+    $("#contentSrc-SLITHERING").prop('checked', contentSourceArray.includes('SLITHERING'));
 
     // Variants //
     $("#variantAncestryParagon").change(function(){

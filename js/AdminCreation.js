@@ -233,7 +233,7 @@ module.exports = class AdminCreation {
 
     static deleteClass(classID){
         if(classID == null) {return;}
-        return Class.findOne({where: { id: classID}})
+        return Class.findOne({where: { id: classID, homebrewID: null }})
         .then((cClass) => {
             // Clear Class Details for every Character that had this Class
             return Character.findAll({where: { classID: cClass.id }})
@@ -263,7 +263,7 @@ module.exports = class AdminCreation {
                                 where: { id: cClass.tagID }
                             }).then((result) => {
                                 return Class.destroy({ // Finally, delete Class
-                                    where: { id: cClass.id }
+                                    where: { id: cClass.id, homebrewID: null }
                                 }).then((result) => {
                                     return;
                                 });
@@ -278,9 +278,9 @@ module.exports = class AdminCreation {
     static archiveClass(classID, isArchived){
         let archived = (isArchived) ? 1 : 0;
         let updateValues = { isArchived: archived };
-        return Class.update(updateValues, { where: { id: classID } })
+        return Class.update(updateValues, { where: { id: classID, homebrewID: null } })
         .then((result) => {
-            return Class.findOne({where: { id: classID }})
+            return Class.findOne({where: { id: classID, homebrewID: null }})
             .then((cClass) => {
                 return Tag.update(updateValues, { where: { id: cClass.tagID } })
                 .then((result) => {
@@ -655,7 +655,7 @@ module.exports = class AdminCreation {
 
     static deleteAncestry(ancestryID){
         if(ancestryID == null) {return;}
-        return Ancestry.findOne({where: { id: ancestryID}})
+        return Ancestry.findOne({where: { id: ancestryID, homebrewID: null }})
         .then((ancestry) => {
             // Clear Ancestry Details for every Character that had this Ancestry
             return Character.findAll({where: { ancestryID: ancestry.id }})
@@ -697,7 +697,7 @@ module.exports = class AdminCreation {
                                                 where: { id: ancestry.tagID }
                                             }).then((result) => {
                                                 return Ancestry.destroy({ // Finally, delete Ancestry
-                                                    where: { id: ancestry.id }
+                                                    where: { id: ancestry.id, homebrewID: null }
                                                 }).then((result) => {
                                                     return;
                                                 });
@@ -716,9 +716,9 @@ module.exports = class AdminCreation {
     static archiveAncestry(ancestryID, isArchived){
         let archived = (isArchived) ? 1 : 0;
         let updateValues = { isArchived: archived };
-        return Ancestry.update(updateValues, { where: { id: ancestryID } })
+        return Ancestry.update(updateValues, { where: { id: ancestryID, homebrewID: null } })
         .then((result) => {
-            return Ancestry.findOne({where: { id: ancestryID}})
+            return Ancestry.findOne({where: { id: ancestryID, homebrewID: null }})
             .then((ancestry) => {
                 return Tag.update(updateValues, { where: { id: ancestry.tagID } })
                 .then((result) => {

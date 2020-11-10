@@ -66,7 +66,7 @@
 
     <div class="box">
 
-        <h1 class="title is-1 font-forum has-text-grey-light">Character Builder</h1>
+        <h1 class="title is-2 has-text-grey-light">Character Builder</h1>
 
         <div class="steps">
             <div class="step-item is-active is-info">
@@ -171,27 +171,27 @@
         </div>
         <div class="d-flex justify-content-center pb-2">
             <div class="p-1">
-                <h3>STR</h3>
+                <h4>STR</h4>
                 <input class="input abilScoreSet" type="number" name="abilSTR" id="abilSTR" min="0" max="30" value="{{charAbilities.STR}}" >
             </div>
             <div class="p-1">
-                <h3>DEX</h3>
+                <h4>DEX</h4>
                 <input class="input abilScoreSet" type="number" name="abilDEX" id="abilDEX" min="0" max="30" value="{{charAbilities.DEX}}" >
             </div>
             <div class="p-1">
-                <h3>CON</h3>
+                <h4>CON</h4>
                 <input class="input abilScoreSet" type="number" name="abilCON" id="abilCON" min="0" max="30" value="{{charAbilities.CON}}" >
             </div>
             <div class="p-1">
-                <h3>INT</h3>
+                <h4>INT</h4>
                 <input class="input abilScoreSet" type="number" name="abilINT" id="abilINT" min="0" max="30" value="{{charAbilities.INT}}" >
             </div>
             <div class="p-1">
-                <h3>WIS</h3>
+                <h4>WIS</h4>
                 <input class="input abilScoreSet" type="number" name="abilWIS" id="abilWIS" min="0" max="30" value="{{charAbilities.WIS}}" >
             </div>
             <div class="p-1">
-                <h3>CHA</h3>
+                <h4>CHA</h4>
                 <input class="input abilScoreSet" type="number" name="abilCHA" id="abilCHA" min="0" max="30" value="{{charAbilities.CHA}}" >
             </div>
         </div>
@@ -260,7 +260,14 @@
                         <div class="field">
                             <input id="contentSrc-LOST-LEGENDS" type="checkbox" name="contentSrc-LOST-LEGENDS" class="switch is-small is-rounded is-outlined is-info optionSwitch" value="1">
                             <label for="contentSrc-LOST-LEGENDS">
-                                Legends <sup class="is-thin">(incomplete)</sup>
+                                Legends
+                            </label>
+                        </div>
+
+                        <div class="field">
+                            <input id="contentSrc-LOST-SOCIETY-GUIDE" type="checkbox" name="contentSrc-LOST-SOCIETY-GUIDE" class="switch is-small is-rounded is-outlined is-info optionSwitch" value="1">
+                            <label for="contentSrc-LOST-SOCIETY-GUIDE">
+                                Pathfinder Society Guide <sup class="is-thin">(incomplete)</sup>
                             </label>
                         </div>
 
@@ -305,6 +312,13 @@
                             <input id="contentSrc-FALL-OF-PLAGUE" type="checkbox" name="contentSrc-FALL-OF-PLAGUE" class="switch is-small is-rounded is-outlined is-info optionSwitch" value="1">
                             <label for="contentSrc-FALL-OF-PLAGUE">
                                 The Fall of Plaguestone
+                            </label>
+                        </div>
+
+                        <div class="field">
+                            <input id="contentSrc-SLITHERING" type="checkbox" name="contentSrc-SLITHERING" class="switch is-small is-rounded is-outlined is-info optionSwitch" value="1">
+                            <label for="contentSrc-SLITHERING">
+                                The Slithering
                             </label>
                         </div>
 
@@ -381,7 +395,7 @@
       <div id="character-access-dropdown" class="columns is-mobile is-gapless is-marginless p-2 cursor-clickable">
         <div class="column is-narrow is-2"></div>
         <div class="column is-narrow is-8">
-          <h4>External Character Access</h4>
+          <h5>External Character Access</h5>
         </div>
         <div class="column is-narrow is-2">
           <span class="icon cursor-clickable has-text-grey-light">

@@ -1,11 +1,10 @@
 
 {{#section 'header'}}
-    <link rel="stylesheet" href="/css/admin-builders.css">
-    <script type="text/javascript" src="/js/admin_builders/item/builder-item.js"></script>
+    <link rel="stylesheet" href="/css/homebrew-builders.css">
+    <script type="text/javascript" src="/js/homebrew/builder/item/builder-item.js"></script>
     {{#if itemID}}
-        <script type="text/javascript" src="/js/admin_builders/item/editor-item.js"></script>
+        <script type="text/javascript" src="/js/homebrew/builder/item/editor-item.js"></script>
     {{/if}}
-    <script type="text/javascript" src="/js/admin_builders/editor-utils.js"></script>
 {{/section}}
 
 {{#section 'nav_home'}}
@@ -34,14 +33,10 @@
 
 
 <div class="pt-3">
-    {{#if itemID}}
-        <h1 class="is-size-1 has-text-light has-text-centered">Item Editor</h1>
-    {{else}}
-        <h1 class="is-size-1 has-text-light has-text-centered">Item Creation</h1>
-    {{/if}}
+    <h1 class="title is-2 has-text-grey-lighter has-text-centered">Item Builder</h1>
 </div>
 
-<div class="columns is-mobile is-centered mt-2 mb-3">
+<div id="builder-container" data-user-id="{{user.id}}" data-bundle-id="{{bundleID}}" data-item-id="{{itemID}}" class="columns is-mobile is-centered mt-2 mb-3">
     <div class="column is-8 tile is-ancestor is-vertical">
 
         <div class="tile">
@@ -78,23 +73,6 @@
                     <label class="label">Name</label>
                     <div class="control">
                         <input class="input" id="inputName" type="text" placeholder="e.g. Adventurer's Pack">
-                    </div>
-                </div>
-
-                <div class="tile is-child field">
-                    <label class="label">Version</label>
-                    <div class="control">
-                        <input id="inputVersion" class="input" type="text" placeholder="e.g. 1.0">
-                    </div>
-                </div>
-
-                <div class="tile is-child field">
-                    <label class="label">Source</label>
-                    <div class="control">
-                        <div class="select">
-                            <select id="inputContentSource">
-                            </select>
-                        </div>
                     </div>
                 </div>
 
@@ -629,9 +607,9 @@
 <div class="field is-grouped is-grouped-centered pb-2">
     <div class="control">
         {{#if itemID}}
-            <button id="updateButton" class="button is-success">Update</button>
+            <button id="updateButton" class="button is-success">Save</button>
         {{else}}
-            <button id="createButton" class="button is-success">Create</button>
+            <button id="createButton" class="button is-success">Save</button>
         {{/if}}
     </div>
 </div>

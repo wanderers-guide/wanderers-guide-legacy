@@ -39,26 +39,25 @@ module.exports = class HomebrewCreation {
         /* Data:
             backgroundID,
             backgroundName,
-            backgroundVersion,
             backgroundRarity,
             backgroundDescription,
             backgroundBoosts,
             backgroundCode,
-            backgroundContentSrc,
         */
         for(let d in data) { if(data[d] === ''){ data[d] = null; } }
+        if(data.backgroundName == null) { data.backgroundName = 'Unnamed Background'; }
         data.backgroundName = data.backgroundName.replace(/’/g,"'");
         if(data.backgroundDescription == null){ data.backgroundDescription = '__No Description__'; }
         data.backgroundVersion = 'Homebrew';
         return Background.create({ // Create Background
             name: data.backgroundName,
-            version: data.backgroundVersion,
+            version: null,
             rarity: data.backgroundRarity,
             description: data.backgroundDescription,
             boostOne: data.backgroundBoosts,
             boostTwo: 'ALL',
             code: data.backgroundCode,
-            contentSrc: data.backgroundContentSrc,
+            contentSrc: 'CRB',
             homebrewID: homebrewID,
         }).then(background => {
             return background;
@@ -68,8 +67,8 @@ module.exports = class HomebrewCreation {
 
     static deleteBackground(homebrewID, backgroundID){
         if(backgroundID == null) {return;}
-        return Background.destroy({
-          where: { id: background.id, homebrewID: homebrewID }
+        return Background.destroy({ // Delete Background
+          where: { id: backgroundID, homebrewID: homebrewID }
         }).then((result) => {
             return;
         });
@@ -81,7 +80,6 @@ module.exports = class HomebrewCreation {
         /* Data:
             classID,
             className,
-            classVersion,
             classHitPoints,
             classKeyAbility,
             classPerception,
@@ -96,9 +94,9 @@ module.exports = class HomebrewCreation {
             classDescription,
             classAbilitiesArray,
             classFeatsArray,
-            classContentSrc,
         */
         for(let d in data) { if(data[d] === ''){ data[d] = null; } }
+        if(data.className == null) { data.className = 'Unnamed Class'; }
         data.className = data.className.replace(/’/g,"'");
         if(data.classDescription == null){ data.classDescription = '__No Description__'; }
         data.classVersion = 'Homebrew';
@@ -111,7 +109,7 @@ module.exports = class HomebrewCreation {
         }).then(classTag => {
             return Class.create({ // Create Class
                 name: data.className,
-                version: data.classVersion,
+                version: null,
                 hitPoints: data.classHitPoints,
                 keyAbility: data.classKeyAbility,
                 description: data.classDescription,
@@ -125,7 +123,7 @@ module.exports = class HomebrewCreation {
                 tWeapons: data.classWeapons,
                 tArmor: data.classArmor,
                 tagID: classTag.id,
-                contentSrc: data.classContentSrc,
+                contentSrc: 'CRB',
                 homebrewID: homebrewID,
             }).then(cClass => {
                 let classFeatPromises = []; // Create Class Feats
@@ -182,7 +180,7 @@ module.exports = class HomebrewCreation {
             selectOptionFor: null,
             displayInSheet: classAbility.displayInSheet,
             indivClassName: classAbility.indivClassName,
-            contentSrc: classAbility.contentSrc,
+            contentSrc: 'CRB',
             homebrewID: homebrewID,
         }).then(classAbilityModel => {
             let classAbilityOptionsPromises = [];
@@ -197,7 +195,8 @@ module.exports = class HomebrewCreation {
                         selectType: 'SELECT_OPTION',
                         selectOptionFor: classAbilityModel.id,
                         indivClassName: classAbility.indivClassName,
-                        contentSrc: classAbility.contentSrc,
+                        contentSrc: 'CRB',
+                        homebrewID: homebrewID,
                     });
                     classAbilityOptionsPromises.push(newPromise);
                 }
@@ -221,7 +220,8 @@ module.exports = class HomebrewCreation {
                     let newPromise = Feat.destroy({
                         where: {
                             id: featTag.featID,
-                            genericType: null
+                            genericType: null,
+                            homebrewID: homebrewID,
                         }
                     });
                     classFeatsPromises.push(newPromise);
@@ -229,7 +229,7 @@ module.exports = class HomebrewCreation {
                 return Promise.all(classFeatsPromises)
                 .then(function(result) {
                     return Tag.destroy({ // Delete Tag (which will cascade to FeatTags)
-                        where: { id: cClass.tagID }
+                        where: { id: cClass.tagID, homebrewID: homebrewID }
                     }).then((result) => {
                         return Class.destroy({ // Finally, delete Class
                             where: { id: cClass.id, homebrewID: homebrewID }
@@ -250,12 +250,10 @@ module.exports = class HomebrewCreation {
             classFeatureData,
             classFeatureClassName,
             classFeatureClassAbilName,
-            classFeatureContentSrc
         */
         for(let d in data) { if(data[d] === ''){ data[d] = null; } }
         data.classFeatureData.indivClassName = data.classFeatureClassName;
         data.classFeatureData.indivClassAbilName = data.classFeatureClassAbilName;
-        data.classFeatureData.contentSrc = data.classFeatureContentSrc;
         if(data.classFeatureData.indivClassAbilName == null){
             return HomebrewCreation.addClassAbility(homebrewID, null, data.classFeatureData)
             .then(classAbility => {
@@ -281,7 +279,7 @@ module.exports = class HomebrewCreation {
             displayInSheet: 1,
             indivClassName: classAbility.indivClassName,
             indivClassAbilName: classAbility.indivClassAbilName,
-            contentSrc: classAbility.contentSrc,
+            contentSrc: 'CRB',
             homebrewID: homebrewID,
         }).then(classAbilityModel => {
             return classAbilityModel;
@@ -303,17 +301,15 @@ module.exports = class HomebrewCreation {
         /* Data:
             archetypeID,
             archetypeName,
-            archetypeVersion,
             archetypeIsMulticlass,
             archetypeDescription,
             archetypeDedicationFeat,
-            archetypeFeatsArray,
-            archetypeContentSrc
+            archetypeFeatsArray
         */
         for(let d in data) { if(data[d] === ''){ data[d] = null; } }
+        if(data.archetypeName == null) { data.archetypeName = 'Unnamed Archetype'; }
         data.archetypeName = data.archetypeName.replace(/’/g,"'");
         if(data.archetypeDescription == null){ data.archetypeDescription = '__No Description__'; }
-        if(data.archetypeVersion == null){ data.archetypeVersion = '1.0'; }
         let tagDesc = 'This indicates content from the '+data.archetypeName.toLowerCase()+' archetype.';
         return Tag.create({ // Create Archetype Tag
             name: data.archetypeName+' Archetype',
@@ -333,20 +329,20 @@ module.exports = class HomebrewCreation {
             data.archetypeDedicationFeat.genericType = null;
             data.archetypeDedicationFeat.genTypeName = null;
             data.archetypeDedicationFeat.isArchived = 0;
-            data.archetypeDedicationFeat.contentSrc = data.archetypeContentSrc;
+            data.archetypeDedicationFeat.contentSrc = 'CRB';
             data.archetypeDedicationFeat.version = null;
             return HomebrewCreation.addFeatPreparedData(homebrewID, data.archetypeDedicationFeat)
             .then(dedicationFeat => {
 
                 return Archetype.create({ // Create Archetype
                     name: data.archetypeName,
-                    version: data.archetypeVersion,
+                    version: null,
                     description: data.archetypeDescription,
                     dedicationFeatID: dedicationFeat.id,
                     isMulticlass: data.archetypeIsMulticlass,
                     tagID: archetypeTag.id,
-                    contentSrc: data.archetypeContentSrc,
-                    homebrewID: null,
+                    contentSrc: 'CRB',
+                    homebrewID: homebrewID,
                 }).then(archetype => {
                     let archetypeFeatPromises = []; // Create Archetype Feats
                     if(data.archetypeFeatsArray != null){
@@ -377,61 +373,29 @@ module.exports = class HomebrewCreation {
 
     }
 
-    static deleteArchetype(archetypeID){
+    static deleteArchetype(homebrewID, archetypeID){
         if(archetypeID == null) {return;}
-        return Archetype.findOne({where: { id: archetypeID}})
+        return Archetype.findOne({where: { id: archetypeID, homebrewID: homebrewID }})
         .then((archetype) => {
             return FeatTag.findAll({where: { tagID: archetype.tagID }})
             .then((featTags) => {
                 let archetypeFeatsPromises = []; // Delete Archetype Feats
                 for(const featTag of featTags) {
                     let newPromise = Feat.destroy({
-                        where: { id: featTag.featID }
+                        where: { id: featTag.featID, homebrewID: homebrewID }
                     });
                     archetypeFeatsPromises.push(newPromise);
                 }
                 return Promise.all(archetypeFeatsPromises)
                 .then(function(result) {
                     return Tag.destroy({ // Delete Tag (which will cascade to FeatTags)
-                        where: { id: archetype.tagID }
+                        where: { id: archetype.tagID, homebrewID: homebrewID }
                     }).then((result) => {
                         return Feat.destroy({ // Delete Dedication Feat
-                            where: { id: archetype.dedicationFeatID }
+                            where: { id: archetype.dedicationFeatID, homebrewID: homebrewID }
                         }).then((result) => {
                             return Archetype.destroy({ // Finally, delete Archetype
-                                where: { id: archetype.id }
-                            }).then((result) => {
-                                return;
-                            });
-                        });
-                    });
-                });
-            });
-        });
-    }
-
-    static archiveArchetype(archetypeID, isArchived){
-        let archived = (isArchived) ? 1 : 0;
-        let updateValues = { isArchived: archived };
-        return Archetype.update(updateValues, { where: { id: archetypeID } })
-        .then((result) => {
-            return Archetype.findOne({where: { id: archetypeID }})
-            .then((archetype) => {
-                return Tag.update(updateValues, { where: { id: archetype.tagID } })
-                .then((result) => {
-                    return FeatTag.findAll({where: { tagID: archetype.tagID }})
-                    .then((featTags) => {
-                        let archetypeFeatsPromises = [];
-                        for(const featTag of featTags) {
-                            let newPromise = Feat.update(updateValues, {
-                                where: { id: featTag.featID }
-                            });
-                            archetypeFeatsPromises.push(newPromise);
-                        }
-                        return Promise.all(archetypeFeatsPromises)
-                        .then(function(result) {
-                            return Feat.update(updateValues, {
-                                where: { id: archetype.dedicationFeatID }
+                                where: { id: archetype.id, homebrewID: homebrewID }
                             }).then((result) => {
                                 return;
                             });
@@ -447,7 +411,6 @@ module.exports = class HomebrewCreation {
     static addAncestry(homebrewID, data) {
         /* Data:
             ancestryName,
-            ancestryVersion,
             ancestryRarity,
             ancestryHitPoints,
             ancestrySize,
@@ -464,12 +427,11 @@ module.exports = class HomebrewCreation {
             ancestryHeritagesArray,
             ancestryFeatsArray,
             ancestryTagDesc,
-            ancestryContentSrc,
         */
         for(let d in data) { if(data[d] === ''){ data[d] = null; } }
+        if(data.ancestryName == null) { data.ancestryName = 'Unnamed Ancestry'; }
         data.ancestryName = data.ancestryName.replace(/’/g,"'");
         if(data.ancestryDescription == null){ data.ancestryDescription = '__No Description__'; }
-        if(data.ancestryVersion == null){ data.ancestryVersion = '1.0'; }
         let tagDesc = 'This indicates content from the '+data.ancestryName.toLowerCase()+' ancestry.';
         return Tag.create({ // Create Ancestry Tag
             name: data.ancestryName,
@@ -479,7 +441,7 @@ module.exports = class HomebrewCreation {
         }).then(ancestryTag => {
             return Ancestry.create({ // Create Ancestry
                 name: data.ancestryName,
-                version: data.ancestryVersion,
+                version: null,
                 rarity: data.ancestryRarity,
                 hitPoints: data.ancestryHitPoints,
                 size: data.ancestrySize,
@@ -490,7 +452,7 @@ module.exports = class HomebrewCreation {
                 physicalFeatureOneID: data.ancestryPhysicalFeatureOneID,
                 physicalFeatureTwoID: data.ancestryPhysicalFeatureTwoID,
                 tagID: ancestryTag.id,
-                contentSrc: data.ancestryContentSrc,
+                contentSrc: 'CRB',
                 homebrewID: homebrewID,
             }).then(ancestry => {
                 let ancestryBoostsPromises = []; // Create Ancestry Boosts
@@ -498,7 +460,8 @@ module.exports = class HomebrewCreation {
                     for(const ancestryBoost of data.ancestryBoostsArray) {
                         let newPromise = AncestryBoost.create({
                             ancestryID: ancestry.id,
-                            boostedAbility: ancestryBoost
+                            boostedAbility: ancestryBoost,
+                            homebrewID: homebrewID,
                         });
                         ancestryBoostsPromises.push(newPromise);
                     }
@@ -510,7 +473,8 @@ module.exports = class HomebrewCreation {
                         for(const ancestryFlaw of data.ancestryFlawsArray) {
                             let newPromise = AncestryFlaw.create({
                                 ancestryID: ancestry.id,
-                                flawedAbility: ancestryFlaw
+                                flawedAbility: ancestryFlaw,
+                                homebrewID: homebrewID,
                             });
                             ancestryFlawsPromises.push(newPromise);
                         }
@@ -533,7 +497,8 @@ module.exports = class HomebrewCreation {
                             let newPromise = AncestryLanguage.create({
                                 ancestryID: ancestry.id,
                                 langID,
-                                isBonus
+                                isBonus,
+                                homebrewID: homebrewID,
                             });
                             ancestryLangsPromises.push(newPromise);
                         }
@@ -546,7 +511,7 @@ module.exports = class HomebrewCreation {
                                     ancestryHeritage.contentSrc = ancestry.contentSrc;
                                     ancestryHeritage.rarity = 'COMMON';
                                     ancestryHeritage.indivAncestryName = null;
-                                    let newPromise = HomebrewCreation.addHeritage(ancestry.id, ancestryHeritage);
+                                    let newPromise = HomebrewCreation.addHeritage(homebrewID, ancestry.id, ancestryHeritage);
                                     ancestryHeritagePromises.push(newPromise);
                                 }
                             }
@@ -583,56 +548,44 @@ module.exports = class HomebrewCreation {
 
     }
 
-    static deleteAncestry(ancestryID){
+    static deleteAncestry(homebrewID, ancestryID){
         if(ancestryID == null) {return;}
-        return Ancestry.findOne({where: { id: ancestryID}})
+        return Ancestry.findOne({where: { id: ancestryID, homebrewID: homebrewID }})
         .then((ancestry) => {
-            // Clear Ancestry Details for every Character that had this Ancestry
-            return Character.findAll({where: { ancestryID: ancestry.id }})
-            .then((charactersWithAncestry) => {
-                let characterAncestryClearPromises = [];
-                for(const charWithAnc of charactersWithAncestry) {
-                    let newPromise = CharSaving.saveAncestry(charWithAnc.id, null);
-                    characterAncestryClearPromises.push(newPromise);
-                }
-                return Promise.all(characterAncestryClearPromises)
-                .then(function(result) {
-                    return AncestryBoost.destroy({ // Delete Ancestry Boosts
-                        where: { ancestryID: ancestry.id }
+          return AncestryBoost.destroy({ // Delete Ancestry Boosts
+            where: { ancestryID: ancestry.id, homebrewID: homebrewID }
+          }).then((result) => {
+            return AncestryFlaw.destroy({ // Delete Ancestry Flaws
+                where: { ancestryID: ancestry.id, homebrewID: homebrewID }
+            }).then((result) => {
+                return AncestryLanguage.destroy({ // Delete Ancestry Languages
+                    where: { ancestryID: ancestry.id, homebrewID: homebrewID }
+                }).then((result) => {
+                    return Heritage.destroy({ // Delete Ancestry Heritages
+                        where: { ancestryID: ancestry.id, homebrewID: homebrewID }
                     }).then((result) => {
-                        return AncestryFlaw.destroy({ // Delete Ancestry Flaws
-                            where: { ancestryID: ancestry.id }
-                        }).then((result) => {
-                            return AncestryLanguage.destroy({ // Delete Ancestry Languages
-                                where: { ancestryID: ancestry.id }
-                            }).then((result) => {
-                                return Heritage.destroy({ // Delete Ancestry Heritages
-                                    where: { ancestryID: ancestry.id }
+                        return FeatTag.findAll({where: { tagID: ancestry.tagID }})
+                        .then((featTags) => {
+                            let ancestryFeatsPromises = []; // Delete Ancestry Feats
+                            for(const featTag of featTags) {
+                                let newPromise = Feat.destroy({
+                                    where: {
+                                        id: featTag.featID,
+                                        genericType: null,
+                                        homebrewID: homebrewID,
+                                    }
+                                });
+                                ancestryFeatsPromises.push(newPromise);
+                            }
+                            return Promise.all(ancestryFeatsPromises)
+                            .then(function(result) {
+                                return Tag.destroy({ // Delete Tag (which will cascade to FeatTags)
+                                    where: { id: ancestry.tagID, homebrewID: homebrewID }
                                 }).then((result) => {
-                                    return FeatTag.findAll({where: { tagID: ancestry.tagID }})
-                                    .then((featTags) => {
-                                        let ancestryFeatsPromises = []; // Delete Ancestry Feats
-                                        for(const featTag of featTags) {
-                                            let newPromise = Feat.destroy({
-                                                where: {
-                                                    id: featTag.featID,
-                                                    genericType: null
-                                                }
-                                            });
-                                            ancestryFeatsPromises.push(newPromise);
-                                        }
-                                        return Promise.all(ancestryFeatsPromises)
-                                        .then(function(result) {
-                                            return Tag.destroy({ // Delete Tag (which will cascade to FeatTags)
-                                                where: { id: ancestry.tagID }
-                                            }).then((result) => {
-                                                return Ancestry.destroy({ // Finally, delete Ancestry
-                                                    where: { id: ancestry.id }
-                                                }).then((result) => {
-                                                    return;
-                                                });
-                                            });
-                                        });
+                                    return Ancestry.destroy({ // Finally, delete Ancestry
+                                        where: { id: ancestry.id, homebrewID: homebrewID }
+                                    }).then((result) => {
+                                        return;
                                     });
                                 });
                             });
@@ -640,39 +593,10 @@ module.exports = class HomebrewCreation {
                     });
                 });
             });
+          });
         });
     }
 
-    static archiveAncestry(ancestryID, isArchived){
-        let archived = (isArchived) ? 1 : 0;
-        let updateValues = { isArchived: archived };
-        return Ancestry.update(updateValues, { where: { id: ancestryID } })
-        .then((result) => {
-            return Ancestry.findOne({where: { id: ancestryID}})
-            .then((ancestry) => {
-                return Tag.update(updateValues, { where: { id: ancestry.tagID } })
-                .then((result) => {
-                    return FeatTag.findAll({where: { tagID: ancestry.tagID }})
-                    .then((featTags) => {
-                        let ancestryFeatsPromises = [];
-                        for(const featTag of featTags) {
-                            let newPromise = Feat.update(updateValues, {
-                                where: {
-                                    id: featTag.featID,
-                                    genericType: null
-                                }
-                            });
-                            ancestryFeatsPromises.push(newPromise);
-                        }
-                        return Promise.all(ancestryFeatsPromises)
-                        .then(function(result) {
-                            return;
-                        });
-                    });
-                });
-            });
-        });
-    }
 
 
     static addHeritage(homebrewID, ancestryID, data) {
@@ -681,10 +605,10 @@ module.exports = class HomebrewCreation {
             description,
             rarity,
             code,
-            contentSrc,
             indivAncestryName,
         */
         for(let d in data) { if(data[d] === ''){ data[d] = null; } }
+        if(data.name == null) { data.name = 'Unnamed Heritage'; }
         data.name = data.name.replace(/’/g,"'");
         if(data.description == null){ data.description = '__No Description__'; }
         return Heritage.create({
@@ -693,7 +617,7 @@ module.exports = class HomebrewCreation {
             rarity: data.rarity,
             description: data.description,
             code: data.code,
-            contentSrc: data.contentSrc,
+            contentSrc: 'CRB',
             indivAncestryName: data.indivAncestryName,
             homebrewID: homebrewID,
         }).then(heritage => {
@@ -701,36 +625,12 @@ module.exports = class HomebrewCreation {
         });
     }
 
-    static deleteHeritage(heritageID) {
+    static deleteHeritage(homebrewID, heritageID) {
         if(heritageID == null) {return;}
-        return Heritage.findOne({where: { id: heritageID}})
-        .then((heritage) => {
-            // Clear Heritage Details for every Character that had this Heritage
-            return Character.findAll({where: { heritageID: heritage.id }})
-            .then((charactersWithHeritage) => {
-                let characterHeritageClearPromises = [];
-                for(const charWithHeritage of charactersWithHeritage) {
-                    let newPromise = CharSaving.saveHeritage(charWithHeritage.id, null, false);
-                    characterHeritageClearPromises.push(newPromise);
-                }
-                return Promise.all(characterHeritageClearPromises)
-                .then(function(result) {
-                    return Heritage.destroy({ // Finally, delete Heritage
-                        where: { id: heritage.id }
-                    }).then((result) => {
-                        return;
-                    });
-                });
-            });
-        });
-    }
-
-    static archiveHeritage(heritageID, isArchived){
-        let archived = (isArchived) ? 1 : 0;
-        let updateValues = { isArchived: archived };
-        return Heritage.update(updateValues, { where: { id: heritageID } })
-        .then((result) => {
-            return;
+        return Heritage.destroy({
+          where: { id: heritageID, homebrewID: homebrewID }
+        }).then((result) => {
+          return;
         });
     }
 
@@ -739,30 +639,29 @@ module.exports = class HomebrewCreation {
         /* Data:
             uniHeritageID,
             heritageName,
-            heritageVersion,
             heritageRarity,
             heritageDescription,
-            heritageContentSrc,
             heritageCode,
             heritageFeatsArray,
         */
         for(let d in data) { if(data[d] === ''){ data[d] = null; } }
+        if(data.heritageName == null) { data.heritageName = 'Unnamed Versatile Heritage'; }
         data.heritageName = data.heritageName.replace(/’/g,"'");
         if(data.heritageDescription == null){ data.heritageDescription = '__No Description__'; }
-        if(data.heritageVersion == null){ data.heritageVersion = '1.0'; }
-        let tagDesc = 'This indicates content from the '+data.heritageName.toLowerCase()+' heritage.';
+        let tagDesc = 'This indicates content from the '+data.heritageName.toLowerCase()+' versatile heritage.';
         return Tag.create({ // Create Heritage Tag
             name: data.heritageName,
             description: tagDesc,
             isHidden: 1,
+            homebrewID: homebrewID,
         }).then(heritageTag => {
-            return UniHeritage.create({ // Create Heritage
+            return UniHeritage.create({ // Create Versatile Heritage
                 name: data.heritageName,
-                version: data.heritageVersion,
+                version: null,
                 rarity: data.heritageRarity,
                 description: data.heritageDescription,
                 tagID: heritageTag.id,
-                contentSrc: data.heritageContentSrc,
+                contentSrc: 'CRB',
                 code: data.heritageCode,
                 homebrewID: homebrewID,
             }).then(uniHeritage => {
@@ -792,78 +691,37 @@ module.exports = class HomebrewCreation {
         });
     }
 
-    static deleteUniHeritage(uniHeritageID){
+    static deleteUniHeritage(homebrewID, uniHeritageID){
         if(uniHeritageID == null) {return;}
-        return UniHeritage.findOne({where: { id: uniHeritageID}})
+        return UniHeritage.findOne({where: { id: uniHeritageID, homebrewID: homebrewID }})
         .then((uniHeritage) => {
-            // Clear Heritage Details for every Character that had this Heritage
-            return Character.findAll({where: { uniHeritageID: uniHeritage.id }})
-            .then((charactersWithHeritage) => {
-                let characterHeritageClearPromises = [];
-                for(const charWithHeritage of charactersWithHeritage) {
-                    let newPromise = CharSaving.saveHeritage(charWithHeritage.id, null, true);
-                    characterHeritageClearPromises.push(newPromise);
-                }
-                return Promise.all(characterHeritageClearPromises)
-                .then(function(result) {
-                    return FeatTag.findAll({where: { tagID: uniHeritage.tagID }})
-                    .then((featTags) => {
-                        let heritageFeatsPromises = []; // Delete Heritage Feats
-                        for(const featTag of featTags) {
-                            let newPromise = Feat.destroy({
-                                where: { id: featTag.featID }
-                            });
-                            heritageFeatsPromises.push(newPromise);
-                        }
-                        return Promise.all(heritageFeatsPromises)
-                        .then(function(result) {
-                            return Tag.destroy({ // Delete Tag (which will cascade to FeatTags)
-                                where: { id: uniHeritage.tagID }
-                            }).then((result) => {
-                                return UniHeritage.destroy({ // Finally, delete UniHeritage
-                                    where: { id: uniHeritage.id }
-                                }).then((result) => {
-                                    return;
-                                });
-                            });
-                        });
-                    });
-                });
-            });
+          return FeatTag.findAll({where: { tagID: uniHeritage.tagID }})
+          .then((featTags) => {
+              let heritageFeatsPromises = []; // Delete Heritage Feats
+              for(const featTag of featTags) {
+                  let newPromise = Feat.destroy({
+                      where: { id: featTag.featID, homebrewID: homebrewID }
+                  });
+                  heritageFeatsPromises.push(newPromise);
+              }
+              return Promise.all(heritageFeatsPromises)
+              .then(function(result) {
+                  return Tag.destroy({ // Delete Tag (which will cascade to FeatTags)
+                      where: { id: uniHeritage.tagID, homebrewID: homebrewID }
+                  }).then((result) => {
+                      return UniHeritage.destroy({ // Finally, delete UniHeritage
+                          where: { id: uniHeritage.id, homebrewID: homebrewID }
+                      }).then((result) => {
+                          return;
+                      });
+                  });
+              });
+          });
         });
     }
 
-    static archiveUniHeritage(uniHeritageID, isArchived){
-        let archived = (isArchived) ? 1 : 0;
-        let updateValues = { isArchived: archived };
-        return UniHeritage.update(updateValues, { where: { id: uniHeritageID } })
-        .then((result) => {
-            return UniHeritage.findOne({where: { id: uniHeritageID}})
-            .then((uniHeritage) => {
-                return Tag.update(updateValues, { where: { id: uniHeritage.tagID } })
-                .then((result) => {
-                    return FeatTag.findAll({where: { tagID: uniHeritage.tagID }})
-                    .then((featTags) => {
-                        let heritageFeatsPromises = [];
-                        for(const featTag of featTags) {
-                            let newPromise = Feat.update(updateValues, {
-                                where: { id: featTag.featID }
-                            });
-                            heritageFeatsPromises.push(newPromise);
-                        }
-                        return Promise.all(heritageFeatsPromises)
-                        .then(function(result) {
-                            return;
-                        });
-                    });
-                });
-            });
-        });
-    }
-    
 
-
-    static addFeat(data){
+    static addFeat(homebrewID, data){
         /* Data:
             builderType,
             featName,
@@ -937,8 +795,8 @@ module.exports = class HomebrewCreation {
             genericType: data.genericType,
             genTypeName: data.featGenTypeName,
             isArchived: data.isArchived,
-            contentSrc: data.featContentSrc,
-            version: data.featVersion
+            contentSrc: 'CRB',
+            version: null
         }).then(feat => {
             return feat;
         });
@@ -965,15 +823,12 @@ module.exports = class HomebrewCreation {
             featTagsArray,
             genericType,
             genTypeName,
-            isArchived,
-            contentSrc
-            version
+            isArchived
         */
         for(let d in data) { if(data[d] === ''){ data[d] = null; } }
-        if(data.name == null) { return Promise.resolve(); }
+        if(data.name == null) { data.name = 'Unnamed Feat'; }
         data.name = data.name.replace(/’/g,"'");
         if(data.description == null){ data.description = '__No Description__'; }
-        if(data.version == null){ data.version = '1.0'; }
         if(data.level == null){ data.level = -1; }
         return Feat.create({
             name: data.name,
@@ -995,9 +850,9 @@ module.exports = class HomebrewCreation {
             genericType: data.genericType,
             genTypeName: data.genTypeName,
             isArchived: data.isArchived,
-            contentSrc: data.contentSrc,
+            contentSrc: 'CRB',
             homebrewID: homebrewID,
-            version: data.version,
+            version: null,
         }).then(feat => {
             let featTagPromises = []; // Create Feat Tags
             if(data.featTagsArray != null) {
@@ -1016,19 +871,11 @@ module.exports = class HomebrewCreation {
         });
     }
 
-    static deleteFeat(featID) {
+    static deleteFeat(homebrewID, featID) {
+        if(featID == null) {return;}
         return Feat.destroy({ // Delete Feat (which will cascade to FeatTags)
-            where: { id: featID }
+            where: { id: featID, homebrewID: homebrewID }
         }).then((result) => {
-            return;
-        });
-    }
-
-    static archiveFeat(featID, isArchived){
-        let archived = (isArchived) ? 1 : 0;
-        let updateValues = { isArchived: archived };
-        return Feat.update(updateValues, { where: { id: featID } })
-        .then((result) => {
             return;
         });
     }
@@ -1040,7 +887,6 @@ module.exports = class HomebrewCreation {
             builderType,
             data.itemCopyOfOther,
             itemName,
-            itemVersion,
             itemPrice,
             itemLevel,
             itemCategory,
@@ -1065,7 +911,6 @@ module.exports = class HomebrewCreation {
             itemShieldData,
             itemStorageData,
             itemRuneData,
-            itemContentSrc
         */
 
         data.hidden = 0;
@@ -1196,13 +1041,13 @@ module.exports = class HomebrewCreation {
         }
 
         for(let d in data) { if(data[d] === ''){ data[d] = null; } }
+        if(data.itemName == null) { data.itemName = 'Unnamed Item'; }
         data.itemName = data.itemName.replace(/’/g,"'");
         if(data.itemDesc == null){ data.itemDesc = '__No Description__'; }
-        if(data.itemVersion == null){ data.itemVersion = '1.0'; }
         if(data.itemProfName == null){ data.itemProfName = data.itemName; }
         return Item.create({ // Create Item
             name: data.itemName,
-            version: data.itemVersion,
+            version: null,
             price: data.itemPrice,
             bulk: data.itemBulk,
             level: data.itemLevel,
@@ -1224,7 +1069,7 @@ module.exports = class HomebrewCreation {
             code: data.itemCode,
             itemStructType: data.builderType,
             isArchived: data.isArchived,
-            contentSrc: data.itemContentSrc,
+            contentSrc: 'CRB',
             homebrewID: homebrewID,
         }).then(item => {
             let itemTagsPromises = []; // Create Item Tags
@@ -1327,19 +1172,11 @@ module.exports = class HomebrewCreation {
         });
     }
 
-    static deleteItem(itemID) {
+    static deleteItem(homebrewID, itemID) {
+        if(itemID == null) {return;}
         return Item.destroy({ // Delete Item (which will cascade into cleaning up (deleting) everything else)
-            where: { id: itemID }
+            where: { id: itemID, homebrewID: homebrewID }
         }).then((result) => {
-            return;
-        });
-    }
-
-    static archiveItem(itemID, isArchived){
-        let archived = (isArchived) ? 1 : 0;
-        let updateValues = { isArchived: archived };
-        return Item.update(updateValues, { where: { id: itemID } })
-        .then((result) => {
             return;
         });
     }
@@ -1350,7 +1187,6 @@ module.exports = class HomebrewCreation {
         /* Data:
             spellID,
             spellName,
-            spellVersion,
             spellIsFocus,
             spellLevel,
             spellRarity,
@@ -1375,18 +1211,17 @@ module.exports = class HomebrewCreation {
             spellHeightenedThreeText,
             spellHeightenedFourVal,
             spellHeightenedFourText,
-            spellContentSrc,
         */
 
         data.isArchived = 0;
 
         for(let d in data) { if(data[d] === ''){ data[d] = null; } }
+        if(data.spellName == null) { data.spellName = 'Unnamed Spell'; }
         data.spellName = data.spellName.replace(/’/g,"'");
         if(data.spellDesc == null){ data.spellDesc = '__No Description__'; }
-        if(data.spellVersion == null){ data.spellVersion = '1.0'; }
         return Spell.create({ // Create Spell
             name: data.spellName,
-            version: data.spellVersion,
+            version: null,
             level: data.spellLevel,
             rarity: data.spellRarity,
             description: data.spellDesc,
@@ -1411,7 +1246,7 @@ module.exports = class HomebrewCreation {
             heightenedFourText: data.spellHeightenedFourText,
             isFocusSpell: data.spellIsFocus,
             isArchived: data.isArchived,
-            contentSrc: data.spellContentSrc,
+            contentSrc: 'CRB',
             homebrewID: homebrewID,
         }).then(spell => {
             let spellTagsPromises = []; // Create Spell Tags
@@ -1437,19 +1272,11 @@ module.exports = class HomebrewCreation {
         });
     }
 
-    static deleteSpell(spellID) {
+    static deleteSpell(homebrewID, spellID) {
+        if(spellID == null) {return;}
         return Spell.destroy({ // Delete Spell (which will cascade into cleaning up (deleting) everything else)
-            where: { id: spellID }
+            where: { id: spellID, homebrewID: homebrewID }
         }).then((result) => {
-            return;
-        });
-    }
-
-    static archiveSpell(spellID, isArchived){
-        let archived = (isArchived) ? 1 : 0;
-        let updateValues = { isArchived: archived };
-        return Spell.update(updateValues, { where: { id: spellID } })
-        .then((result) => {
             return;
         });
     }

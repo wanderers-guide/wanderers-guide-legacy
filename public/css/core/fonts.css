@@ -96,22 +96,20 @@
 
 /* Fonts from Google */
 
-
-
 .font-bebas-neue {
     font-family: 'Bebas Neue', cursive;
 }
 
-.font-comfortaa {
-    font-family: 'Comfortaa', cursive;
-}
-
-.font-forum {
-    font-family: 'Forum', cursive;
-}
-
 .font-noto-sans {
-    font-family: 'Noto Sans', sans-serif;
+  font-family: 'Noto Sans', sans-serif;
+}
+
+.title-font {/* font-lora */
+  font-family: 'Proza Libre', sans-serif;
+}
+
+.font-karla {
+  font-family: 'Karla', sans-serif;
 }
 
 .nanum-coding {

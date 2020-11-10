@@ -39,4 +39,69 @@ module.exports = class HomebrewGathering {
     });
   }
 
+  static getAllAncestries(homebrewID) {
+    return Ancestry.findAll({ where: { homebrewID: homebrewID } })
+    .then((ancestries) => {
+      return ancestries;
+    });
+  }
+
+  static getAllArchetypes(homebrewID) {
+    return Archetype.findAll({ where: { homebrewID: homebrewID } })
+    .then((archetypes) => {
+      return archetypes;
+    });
+  }
+
+  static getAllBackgrounds(homebrewID) {
+    return Background.findAll({ where: { homebrewID: homebrewID } })
+    .then((backgrounds) => {
+      return backgrounds;
+    });
+  }
+
+  static getAllClassFeatures(homebrewID) {
+    return ClassAbility.findAll({
+      where: { homebrewID: homebrewID, indivClassName: { [Op.ne]: null }, selectOptionFor: null }
+    }).then((classFeatures) => {
+      return classFeatures;
+    });
+  }
+
+  static getAllFeats(homebrewID) {
+    return Feat.findAll({
+      where: { homebrewID: homebrewID, genericType: { [Op.ne]: null } }
+    }).then((feats) => {
+      return feats;
+    });
+  }
+
+  static getAllHeritages(homebrewID) {
+    return Heritage.findAll({ where: { homebrewID: homebrewID, indivAncestryName: { [Op.ne]: null } } })
+    .then((heritages) => {
+      return heritages;
+    });
+  }
+
+  static getAllUniHeritages(homebrewID) {
+    return UniHeritage.findAll({ where: { homebrewID: homebrewID } })
+    .then((uniheritages) => {
+      return uniheritages;
+    });
+  }
+
+  static getAllItems(homebrewID) {
+    return Item.findAll({ where: { homebrewID: homebrewID } })
+    .then((items) => {
+      return items;
+    });
+  }
+
+  static getAllSpells(homebrewID) {
+    return Spell.findAll({ where: { homebrewID: homebrewID } })
+    .then((spells) => {
+      return spells;
+    });
+  }
+
 };

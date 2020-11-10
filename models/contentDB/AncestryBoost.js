@@ -8,7 +8,10 @@ const AncestryBoost = db.define('ancestryBoosts', {
   boostedAbility: {
     type: Sequelize.ENUM,
     values: ['Anything','Strength','Dexterity','Constitution','Intelligence','Wisdom','Charisma']
-  }
+  },
+  homebrewID: {
+    type: Sequelize.INTEGER
+  },
 });
 
 module.exports = AncestryBoost;

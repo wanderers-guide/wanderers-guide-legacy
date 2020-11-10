@@ -1,9 +1,10 @@
+
 /* Reset Code */
 body {
     padding: 0;
     margin: 0;
     background: #FFF;
-    font-family: 'Nunito Sans', sans-serif;
+    font-family: 'Open Sans', sans-serif;
 }
 
 body a,
@@ -64,7 +65,7 @@ h5,
 h6 {
     margin: 0;
     padding: 0;
-    font-family: 'Roboto Condensed', sans-serif;
+    font-family: 'Open Sans', sans-serif;
     color: rgb(189, 189, 189);
 }
 
@@ -76,11 +77,11 @@ p,
     letter-spacing: 1px;
     line-height: 1.9;
     color: rgb(172, 172, 172);
-    font-family: 'Nunito Sans', sans-serif;
+    font-family: 'Open Sans', sans-serif;
 }
 
 span {
-    font-family: 'Nunito Sans', sans-serif;
+    font-family: 'Open Sans', sans-serif;
 }
 
 
@@ -155,6 +156,9 @@ hr {
 .cursor-nonclickable {
     cursor: default!important;
 }
+.cursor-disabled {
+  cursor: not-allowed!important;
+}
 
 /* Misc */
 .has-tooltip-top { /* Fix bug with tooltips and negative indentation */
@@ -198,6 +202,10 @@ body {
 #center-body {
     background-color: #1C1C1C;
     position: relative;
+}
+
+.title, .modal-card-title, #quickViewTitle {
+  font-family: 'Proza Libre', sans-serif;
 }
 
 /* Indent all but first line of paragraph */

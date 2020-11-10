@@ -42,6 +42,7 @@ function openSpellQuickview(data){
             spellName += '<sup class="is-inline ml-2 is-size-7 is-italic">'+spellLevel+'</sup>';
             spellHeightenLevel = -1;
         } else {
+            if(spellLevel == 'Cantrip') { spellLevel+=' (1)'; }
             spellName += '<sup class="is-inline ml-2 is-size-7 is-italic">'+spellLevel+'<span class="icon" style="font-size: 0.8em;"><i class="fas fa-caret-right"></i></span>'+spellHeightened+'</sup>';
             spellHeightenLevel = spellHeightened;
         }

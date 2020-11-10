@@ -32,16 +32,18 @@ const g_contentSources = [
   {TextName: 'Lost Omens: Gods & Magic', CodeName: 'LOST-GOD-MAGIC', Link: ''},
   {TextName: 'Lost Omens: Character Guide', CodeName: 'LOST-CHAR-GUIDE', Link: 'https://paizo.com/products/btq01zt4?Pathfinder-Lost-Omens-Character-Guide'},
   {TextName: 'Lost Omens: Legends', CodeName: 'LOST-LEGENDS', Link: 'https://paizo.com/products/btq023gd?Pathfinder-Lost-Omens-Legends'},
+  {TextName: 'Lost Omens: Pathfinder Society Guide', CodeName: 'LOST-SOCIETY-GUIDE', Link: 'https://paizo.com/products/btq0233q?Pathfinder-Lost-Omens-Pathfinder-Society-Guide'},
   {TextName: 'Lost Omens: World Guide', CodeName: 'LOST-WORLD-GUIDE', Link: 'https://paizo.com/products/btq01zoj?Pathfinder-Lost-Omens-World-Guide'},
   {TextName: 'Agents of Edgewatch', CodeName: 'AGENTS-OF-EDGEWATCH', Link: 'https://paizo.com/store/pathfinder/adventures/adventurePath/agentsOfEdgewatch'},
   {TextName: 'Age of Ashes', CodeName: 'AGE-OF-ASHES', Link: 'https://paizo.com/store/pathfinder/adventures/adventurePath/ageOfAshes'},
   {TextName: 'Extinction Curse', CodeName: 'EXTINCTION-CURSE', Link: 'https://paizo.com/store/pathfinder/adventures/adventurePath/extinctioncurse'},
   {TextName: 'The Fall of Plaguestone', CodeName: 'FALL-OF-PLAGUE', Link: 'https://paizo.com/products/btq01zoh?Pathfinder-Adventure-The-Fall-of-Plaguestone'},
+  {TextName: 'The Slithering', CodeName: 'SLITHERING', Link: 'https://paizo.com/products/btq023hg?Pathfinder-Adventure-The-Slithering'},
   {TextName: 'Bestiary', CodeName: 'BEST-1', Link: 'https://paizo.com/products/btq01zp4?Pathfinder-Bestiary'},
   {TextName: 'Bestiary 2', CodeName: 'BEST-2', Link: 'https://paizo.com/products/btq022yq?Pathfinder-Bestiary-2'},
 ];
 
-const g_currentContentSource = 'LOST-LEGENDS';
+const g_currentContentSource = 'AGENTS-OF-EDGEWATCH';
 
 function getContentSourceTextName(codeName){
   let contentSourceData = g_contentSources.find(contentSourceData => {

@@ -7,7 +7,7 @@ function openUserContent(){
   socket.emit('requestHomebrewBundles');
 }
 
-socket.on("returnHomebrewBundles", function(homebrewBundles){
+socket.on("returnHomebrewBundles", function(homebrewBundles, canMakeHomebrew){
   g_homebrewBundles = homebrewBundles;
   $('#tabContent').html('');
   $('#tabContent').load("/templates/homebrew/display-user-content.html");
@@ -16,9 +16,15 @@ socket.on("returnHomebrewBundles", function(homebrewBundles){
     success : function(text)
     {
 
-      $('#createBundleBtn').click(function() {
-        socket.emit('requestBundleCreate');
-      });
+      if(canMakeHomebrew){
+        $('#createBundleBtn').click(function() {
+          socket.emit('requestBundleCreate');
+        });
+      } else {
+        $('#createBundleBtn').attr('disabled','disabled');
+        $('#createBundleBtn').parent().addClass('has-tooltip-left has-tooltip-multiline');
+        $('#createBundleBtn').parent().attr('data-tooltip', 'Only Wanderer tier patrons or better can create their own homebrew content. You can support us and what we\'re doing on Patreon!');
+      }
 
       let foundPublished = false;
       let foundInProgess = false;
@@ -36,9 +42,13 @@ socket.on("returnHomebrewBundles", function(homebrewBundles){
             
           });
 
-          $('#'+bundleUpdateID).click(function() {
-            
-          });
+          if(canMakeHomebrew){
+            $('#'+bundleUpdateID).click(function() {
+              
+            });
+          } else {
+            $('#'+bundleUpdateID).attr('disabled','disabled');
+          }
 
           $('#'+bundleDeleteID).click(function() {
             
@@ -52,9 +62,13 @@ socket.on("returnHomebrewBundles", function(homebrewBundles){
 
           $('#bundlesInProgessContainer').append('<div class="columns border-bottom border-dark-lighter"><div class="column is-6 text-center"><span class="is-size-5">'+homebrewBundle.name+'</span></div><div class="column is-6"><div class="buttons are-small is-centered"><button id="'+bundleEditID+'" class="button is-info">Edit</button><button id="'+bundleDeleteID+'" class="button is-danger">Delete</button></div></div></div>');
 
-          $('#'+bundleEditID).click(function() {
-            openBundleEditor(homebrewBundle);
-          });
+          if(canMakeHomebrew){
+            $('#'+bundleEditID).click(function() {
+              openBundleEditor(homebrewBundle);
+            });
+          } else {
+            $('#'+bundleEditID).attr('disabled','disabled');
+          }
 
           $('#'+bundleDeleteID).click(function() {
             socket.emit('requestBundleDelete', homebrewBundle.id);

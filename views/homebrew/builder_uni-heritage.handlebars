@@ -1,10 +1,9 @@
 
 {{#section 'header'}}
-    <link rel="stylesheet" href="/css/admin-builders.css">
-    <script type="text/javascript" src="/js/admin_builders/uni-heritage/builder-uni-heritage.js"></script>
+    <link rel="stylesheet" href="/css/homebrew-builders.css">
+    <script type="text/javascript" src="/js/homebrew/builder/uni-heritage/builder-uni-heritage.js"></script>
     {{#if uniHeritageID}}
-        <script type="text/javascript" src="/js/admin_builders/uni-heritage/editor-uni-heritage.js"></script>
-        <script type="text/javascript" src="/js/admin_builders/editor-utils.js"></script>
+        <script type="text/javascript" src="/js/homebrew/builder/uni-heritage/editor-uni-heritage.js"></script>
     {{/if}}
 {{/section}}
 
@@ -34,14 +33,10 @@
 
 
 <div class="pt-3">
-    {{#if uniHeritageID}}
-        <h1 class="is-size-1 has-text-light has-text-centered">Universal Heritage Editor</h1>
-    {{else}}
-        <h1 class="is-size-1 has-text-light has-text-centered">Universal Heritage Creation</h1>
-    {{/if}}
+    <h1 class="title is-2 has-text-grey-lighter has-text-centered">Versatile Heritage Builder</h1>
 </div>
 
-<div class="columns is-mobile is-centered mt-2 mb-3">
+<div id="builder-container" data-user-id="{{user.id}}" data-bundle-id="{{bundleID}}" data-uni-heritage-id="{{uniHeritageID}}" class="columns is-mobile is-centered mt-2 mb-3">
     <div class="column is-8 tile is-ancestor is-vertical">
 
         <div class="tile">
@@ -52,23 +47,6 @@
                     <label class="label">Name</label>
                     <div class="control">
                         <input id="inputName" class="input" type="text" placeholder="e.g. Gnome">
-                    </div>
-                </div>
-
-                <div class="tile is-child field">
-                    <label class="label">Version</label>
-                    <div class="control">
-                        <input id="inputVersion" class="input" type="text" placeholder="e.g. 1.0.0">
-                    </div>
-                </div>
-
-                <div class="tile is-child field">
-                    <label class="label">Source</label>
-                    <div class="control">
-                        <div class="select">
-                            <select id="inputContentSource">
-                            </select>
-                        </div>
                     </div>
                 </div>
 
@@ -282,9 +260,9 @@
 <div class="field is-grouped is-grouped-centered pb-2">
     <div class="control">
         {{#if uniHeritageID}}
-            <button id="updateButton" class="button is-success">Update</button>
+            <button id="updateButton" class="button is-success">Save</button>
         {{else}}
-            <button id="createButton" class="button is-success">Create</button>
+            <button id="createButton" class="button is-success">Save</button>
         {{/if}}
     </div>
 </div>

@@ -9,6 +9,9 @@
 .is-bold {
   font-weight: 675;
 }
+.is-weight-normal {
+  font-weight: 400;
+}
 .is-thin {
   font-weight: 200;
 }

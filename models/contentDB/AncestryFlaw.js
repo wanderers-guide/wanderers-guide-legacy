@@ -8,7 +8,10 @@ const AncestryFlaw = db.define('ancestryFlaws', {
   flawedAbility: {
     type: Sequelize.ENUM,
     values: ['Anything','Strength','Dexterity','Constitution','Intelligence','Wisdom','Charisma']
-  }
+  },
+  homebrewID: {
+    type: Sequelize.INTEGER
+  },
 });
 
 module.exports = AncestryFlaw;

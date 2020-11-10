@@ -4,7 +4,7 @@
 
 $(function () {
 
-    socket.emit("requestHomebrewClassDetails");
+  socket.emit("requestHomebrewClassDetails", $('#builder-container').attr('data-bundle-id'));
 
 });
 
@@ -14,14 +14,13 @@ socket.on("returnHomebrewClassDetails", function(classObject, featsObject){
     let featMap = objToMap(featsObject);
     
     let cClass = classMap.get($('#builder-container').attr('data-class-id'));
-
+    
     if(cClass == null){
         window.location.href = '/homebrew';
         return;
     }
 
     $("#inputName").val(cClass.Class.name);
-    $("#inputVersion").val(cClass.Class.version);
     $("#inputHitPoints").val(cClass.Class.hitPoints);
 
     let classKeyAbility = cClass.Class.keyAbility;
@@ -45,7 +44,6 @@ socket.on("returnHomebrewClassDetails", function(classObject, featsObject){
     $("#inputWill").val(cClass.Class.tWill);
     $("#inputClassDC").val(cClass.Class.tClassDC);
     $("#inputDescription").val(cClass.Class.description);
-    $("#inputContentSource").val(cClass.Class.contentSrc);
 
     if(cClass.Class.tWeapons != null){
         let classWeaponsArray = cClass.Class.tWeapons.split(',,, ');

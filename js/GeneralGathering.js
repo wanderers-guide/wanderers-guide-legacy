@@ -70,9 +70,10 @@ module.exports = class GeneralGathering {
       });
     }
 
-    static getAllClasses() {
-        return Class.findAll()
-        .then((classes) => {
+    static getAllClasses(homebrewID=null) {
+        return Class.findAll({
+          where: { homebrewID: { [Op.or]: [null,homebrewID] } }
+        }).then((classes) => {
             return ClassAbility.findAll({
                 order: [['level', 'ASC'],['name', 'ASC'],]
             })
@@ -109,17 +110,19 @@ module.exports = class GeneralGathering {
         });
     }
 
-    static getAllClassesBasic() {
+    static getAllClassesBasic(homebrewID=null) {
       return Class.findAll({
-        order: [['name', 'ASC'],]
+        order: [['name', 'ASC'],],
+        where: { homebrewID: { [Op.or]: [null,homebrewID] } }
       }).then((classes) => {
         return classes;
       });
     }
 
-    static getClass(classID) {
-      return Class.findOne({ where: { id: classID, homebrewID: null } })
+    static getClass(classID, homebrewID=null) {
+      return Class.findOne({ where: { id: classID, homebrewID: { [Op.or]: [null,homebrewID] } } })
       .then((cClass) => {
+        if(cClass == null) {return null;}
         return ClassAbility.findAll({
           order: [['level', 'ASC'],['name', 'ASC'],],
           where: {
@@ -127,7 +130,7 @@ module.exports = class GeneralGathering {
                 { classID: cClass.id },
                 { indivClassName: cClass.name }
             ],
-            homebrewID: null,
+            homebrewID: { [Op.or]: [null,homebrewID] },
           },
         }).then((classAbilities) => {
           return {
@@ -146,8 +149,8 @@ module.exports = class GeneralGathering {
         });
     }
 
-    static getArchetype(archetypeID) {
-      return Archetype.findOne({ where: { id: archetypeID, homebrewID: null } })
+    static getArchetype(archetypeID, homebrewID=null) {
+      return Archetype.findOne({ where: { id: archetypeID, homebrewID: { [Op.or]: [null,homebrewID] } } })
       .then((archetype) => {
         return {
           archetype : archetype,
@@ -163,8 +166,8 @@ module.exports = class GeneralGathering {
         });
     }
 
-    static getUniHeritage(uniHeritageID) {
-      return UniHeritage.findOne({ where: { id: uniHeritageID, homebrewID: null } })
+    static getUniHeritage(uniHeritageID, homebrewID=null) {
+      return UniHeritage.findOne({ where: { id: uniHeritageID, homebrewID: { [Op.or]: [null,homebrewID] } } })
       .then((uniHeritage) => {
         return {
           heritage : uniHeritage,
@@ -180,8 +183,8 @@ module.exports = class GeneralGathering {
         });
     }
 
-    static getHeritage(heritageID) {
-      return Heritage.findOne({ where: { id: heritageID, homebrewID: null } })
+    static getHeritage(heritageID, homebrewID=null) {
+      return Heritage.findOne({ where: { id: heritageID, homebrewID: { [Op.or]: [null,homebrewID] } } })
       .then((heritage) => {
         return {
           heritage : heritage,
@@ -189,16 +192,17 @@ module.exports = class GeneralGathering {
       });
     }
 
-    static getAllAncestriesBasic() {
+    static getAllAncestriesBasic(homebrewID=null) {
         return Ancestry.findAll({
-            order: [['name', 'ASC'],]
+            order: [['name', 'ASC'],],
+            where: { homebrewID: { [Op.or]: [null,homebrewID] } }
         }).then((ancestries) => {
             return ancestries;
         });
     }
 
-    static getAncestryBasic(ancestryID) {
-      return Ancestry.findOne({ where: { id: ancestryID, homebrewID: null } })
+    static getAncestryBasic(ancestryID, homebrewID=null) {
+      return Ancestry.findOne({ where: { id: ancestryID, homebrewID: { [Op.or]: [null,homebrewID] } } })
       .then((ancestry) => {
         return {
           ancestry : ancestry,
@@ -206,8 +210,8 @@ module.exports = class GeneralGathering {
       });
     }
 
-    static getAncestry(ancestryID) {
-      return Ancestry.findOne({ where: { id: ancestryID, homebrewID: null } })
+    static getAncestry(ancestryID, homebrewID=null) {
+      return Ancestry.findOne({ where: { id: ancestryID, homebrewID: { [Op.or]: [null,homebrewID] } } })
       .then((ancestry) => {
           return Heritage.findAll({
               where: {
@@ -215,7 +219,7 @@ module.exports = class GeneralGathering {
                     { ancestryID: ancestryID },
                     { indivAncestryName: ancestry.name }
                 ],
-                homebrewID: null,
+                homebrewID: { [Op.or]: [null,homebrewID] },
               },
               order: [['name', 'ASC'],]
           }).then((heritages) => {
@@ -291,16 +295,17 @@ module.exports = class GeneralGathering {
       });
   }
 
-    static getAllBackgrounds() {
+    static getAllBackgrounds(homebrewID=null) {
         return Background.findAll({
-          order: [['name', 'ASC'],]
+          order: [['name', 'ASC'],],
+          where: { homebrewID: { [Op.or]: [null,homebrewID] } }
         }).then((backgrounds) => {
             return backgrounds;
         });
     }
 
-    static getBackground(backgroundID) {
-      return Background.findOne({ where: { id: backgroundID, homebrewID: null } })
+    static getBackground(backgroundID, homebrewID=null) {
+      return Background.findOne({ where: { id: backgroundID, homebrewID: { [Op.or]: [null,homebrewID] } } })
       .then((background) => {
         return {
           background : background,
@@ -308,12 +313,12 @@ module.exports = class GeneralGathering {
       });
     }
 
-    static getAllFeats() {
-        return Feat.findAll()
+    static getAllFeats(homebrewID=null) {
+        return Feat.findAll({ where: { homebrewID: { [Op.or]: [null,homebrewID] } } })
         .then((feats) => {
             return FeatTag.findAll()
             .then((featTags) => {
-                return Tag.findAll()
+                return Tag.findAll({ where: { homebrewID: { [Op.or]: [null,homebrewID] } } })
                 .then((tags) => {
     
                     let featMap = new Map();
@@ -357,8 +362,8 @@ module.exports = class GeneralGathering {
         });
     }
 
-    static getFeat(featID) {
-      return Feat.findOne({ where: { id: featID, homebrewID: null } })
+    static getFeat(featID, homebrewID=null) {
+      return Feat.findOne({ where: { id: featID, homebrewID: { [Op.or]: [null,homebrewID] } } })
       .then((feat) => {
         return FeatTag.findAll({ where: { featID: featID } })
         .then((featTags) => {
@@ -378,14 +383,15 @@ module.exports = class GeneralGathering {
       });
     }
 
-    static getAllSpells() {
+    static getAllSpells(homebrewID=null) {
         return Spell.findAll({
-            order: [['level', 'ASC'],['name', 'ASC'],]
+            order: [['level', 'ASC'],['name', 'ASC'],],
+            where: { homebrewID: { [Op.or]: [null,homebrewID] } }
         })
         .then((spells) => {
             return TaggedSpell.findAll()
             .then((taggedSpells) => {
-                return Tag.findAll()
+                return Tag.findAll({ where: { homebrewID: { [Op.or]: [null,homebrewID] } } })
                 .then((tags) => {
     
                     let spellMap = new Map();
@@ -412,8 +418,8 @@ module.exports = class GeneralGathering {
         });
     }
 
-    static getSpell(spellID) {
-      return Spell.findOne({ where: { id: spellID, homebrewID: null } })
+    static getSpell(spellID, homebrewID=null) {
+      return Spell.findOne({ where: { id: spellID, homebrewID: { [Op.or]: [null,homebrewID] } } })
       .then((spell) => {
         return TaggedSpell.findAll({ where: { spellID: spellID } })
         .then((spellTags) => {
@@ -461,13 +467,13 @@ module.exports = class GeneralGathering {
       });
     }
 
-    static getAllItems(){
+    static getAllItems(homebrewID=null){
 
         console.log('~~~~~~~~~~~ ADMIN - REQUESTING ALL ITEMS ~~~~~~~~~~~');
         
-        return Item.findAll()
+        return Item.findAll({ where: { homebrewID: { [Op.or]: [null,homebrewID] } } })
         .then((items) => {
-            return Tag.findAll()
+            return Tag.findAll({ where: { homebrewID: { [Op.or]: [null,homebrewID] } } })
             .then((tags) => {
                 return TaggedItem.findAll()
                 .then((taggedItems) => {
@@ -544,8 +550,8 @@ module.exports = class GeneralGathering {
         });
     }
 
-    static getItem(itemID) {
-      return Item.findOne({ where: { id: itemID, homebrewID: null } })
+    static getItem(itemID, homebrewID=null) {
+      return Item.findOne({ where: { id: itemID, homebrewID: { [Op.or]: [null,homebrewID] } } })
       .then((item) => {
         return TaggedItem.findAll({ where: { itemID: itemID } })
         .then((itemTags) => {
@@ -585,12 +591,13 @@ module.exports = class GeneralGathering {
       });
     }
 
-    static getAllAncestries(includeTag) {
+    static getAllAncestries(includeTag, homebrewID=null) {
 
         console.log('~~~~~~~~~~~ ADMIN - REQUESTING ALL ANCESTRIES ~~~~~~~~~~~');
 
-        return Ancestry.findAll()
-        .then((ancestries) => {
+        return Ancestry.findAll({
+          where: { homebrewID: { [Op.or]: [null,homebrewID] } }
+        }).then((ancestries) => {
             return Heritage.findAll({
                 order: [['name', 'ASC'],]
             })
@@ -671,7 +678,9 @@ module.exports = class GeneralGathering {
                                                     });
                             
                                                     let ancestryStruct = ancestryMap.get(ancestLang.ancestryID);
-                                                    ancestryStruct.BonusLanguages.push(language);
+                                                    if(ancestryStruct != null){
+                                                      ancestryStruct.BonusLanguages.push(language);
+                                                    }
 
                                                 } else {
 
@@ -680,7 +689,9 @@ module.exports = class GeneralGathering {
                                                     });
                             
                                                     let ancestryStruct = ancestryMap.get(ancestLang.ancestryID);
-                                                    ancestryStruct.Languages.push(language);
+                                                    if(ancestryStruct != null){
+                                                      ancestryStruct.Languages.push(language);
+                                                    }
 
                                                 }
 
@@ -689,14 +700,18 @@ module.exports = class GeneralGathering {
                                             for (const ancestBoost of ancestBoosts) {
 
                                                 let ancestryStruct = ancestryMap.get(ancestBoost.ancestryID);
-                                                ancestryStruct.Boosts.push(ancestBoost.boostedAbility);
+                                                if(ancestryStruct != null){
+                                                  ancestryStruct.Boosts.push(ancestBoost.boostedAbility);
+                                                }
 
                                             }
 
                                             for (const ancestFlaw of ancestFlaws) {
 
                                                 let ancestryStruct = ancestryMap.get(ancestFlaw.ancestryID);
-                                                ancestryStruct.Flaws.push(ancestFlaw.flawedAbility);
+                                                if(ancestryStruct != null){
+                                                  ancestryStruct.Flaws.push(ancestFlaw.flawedAbility);
+                                                }
 
                                             }
 

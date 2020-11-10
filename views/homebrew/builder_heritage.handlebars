@@ -1,10 +1,9 @@
 
 {{#section 'header'}}
-    <link rel="stylesheet" href="/css/admin-builders.css">
-    <script type="text/javascript" src="/js/admin_builders/heritage/builder-heritage.js"></script>
+    <link rel="stylesheet" href="/css/homebrew-builders.css">
+    <script type="text/javascript" src="/js/homebrew/builder/heritage/builder-heritage.js"></script>
     {{#if heritageID}}
-        <script type="text/javascript" src="/js/admin_builders/heritage/editor-heritage.js"></script>
-        <script type="text/javascript" src="/js/admin_builders/editor-utils.js"></script>
+        <script type="text/javascript" src="/js/homebrew/builder/heritage/editor-heritage.js"></script>
     {{/if}}
 {{/section}}
 
@@ -34,14 +33,10 @@
 
 
 <div class="pt-3">
-    {{#if heritageID}}
-        <h1 class="is-size-1 has-text-light has-text-centered">Heritage Editor</h1>
-    {{else}}
-        <h1 class="is-size-1 has-text-light has-text-centered">Heritage Creation</h1>
-    {{/if}}
+    <h1 class="title is-2 has-text-grey-lighter has-text-centered">Heritage Builder</h1>
 </div>
 
-<div class="columns is-mobile is-centered mt-2 mb-3">
+<div id="builder-container" data-user-id="{{user.id}}" data-bundle-id="{{bundleID}}" data-heritage-id="{{heritageID}}" class="columns is-mobile is-centered mt-2 mb-3">
     <div class="column is-6 tile is-ancestor is-vertical">
 
         <div class="tile">
@@ -63,16 +58,6 @@
                     <label class="label">Name</label>
                     <div class="control">
                         <input id="inputName" class="input" type="text" placeholder="e.g. Umbral">
-                    </div>
-                </div>
-
-                <div class="tile is-child field">
-                    <label class="label">Source</label>
-                    <div class="control">
-                        <div class="select">
-                            <select id="inputContentSource">
-                            </select>
-                        </div>
                     </div>
                 </div>
 
@@ -117,9 +102,9 @@
 <div class="field is-grouped is-grouped-centered pb-2">
     <div class="control">
         {{#if heritageID}}
-            <button id="updateButton" class="button is-success">Update</button>
+            <button id="updateButton" class="button is-success">Save</button>
         {{else}}
-            <button id="createButton" class="button is-success">Create</button>
+            <button id="createButton" class="button is-success">Save</button>
         {{/if}}
     </div>
 </div>

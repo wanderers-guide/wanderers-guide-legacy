@@ -7,16 +7,6 @@ let g_homebrewID = null;
 
 // ~~~~~~~~~~~~~~ // Run on Load // ~~~~~~~~~~~~~~ //
 $(function () {
-
-    // ~ Content Sources ~ //
-    for(let contSrcData of g_contentSources){
-      if(g_currentContentSource === contSrcData.CodeName){
-        $("#inputContentSource").append('<option value="'+contSrcData.CodeName+'" selected>'+contSrcData.TextName+'</option>');
-      } else {
-        $("#inputContentSource").append('<option value="'+contSrcData.CodeName+'">'+contSrcData.TextName+'</option>');
-      }
-    }
-    // ~ ~~~~~~~~~~~~~~~ ~ //
     
     $("#inputWeaponsTrained").chosen();
     $("#inputWeaponsExpert").chosen();
@@ -181,7 +171,6 @@ $(function () {
 function finishClass(isUpdate){
 
     let className = $("#inputName").val();
-    let classVersion = $("#inputVersion").val();
     let classHitPoints = $("#inputHitPoints").val();
 
     let classKeyAbility = $("#inputKeyAbility").val();
@@ -224,7 +213,6 @@ function finishClass(isUpdate){
     classArmor = classArmor.slice(0, -4); // Trim off that last ',,, '
 
     let classDescription = $("#inputDescription").val();
-    let classContentSrc = $("#inputContentSource").val();
 
 
     let classAbilitiesArray = [];
@@ -298,10 +286,9 @@ function finishClass(isUpdate){
     
     let requestPacket = null;
     g_homebrewID = $('#builder-container').attr('data-bundle-id');
-    let classID = null;
+    let classID = $('#builder-container').attr('data-class-id');
     if(isUpdate){
         requestPacket = "requestHomebrewUpdateClass";
-        classID = getClassEditorIDFromURL();
     } else {
         requestPacket = "requestHomebrewAddClass";
     }
@@ -310,7 +297,6 @@ function finishClass(isUpdate){
     socket.emit(requestPacket, g_homebrewID, {
         classID,
         className,
-        classVersion,
         classHitPoints,
         classKeyAbility,
         classPerception,
@@ -324,8 +310,7 @@ function finishClass(isUpdate){
         classArmor,
         classDescription,
         classAbilitiesArray,
-        classFeatsArray,
-        classContentSrc
+        classFeatsArray
     });
 
 }

@@ -2216,7 +2216,9 @@ module.exports = class SocketConnections {
 
       socket.on('requestHomebrewBundles', function(){
         AuthCheck.getHomebrewBundles(socket).then((homebrewBundles) => {
-          socket.emit('returnHomebrewBundles', homebrewBundles);
+          AuthCheck.isMember(socket).then((canMakeHomebrew) => {
+            socket.emit('returnHomebrewBundles', homebrewBundles, canMakeHomebrew);
+          });
         });
       });
 
@@ -2250,8 +2252,25 @@ module.exports = class SocketConnections {
       
       socket.on('requestBundleContents', function(homebrewID){
         HomebrewGathering.getAllClasses(homebrewID).then((classes) => {
-          // Include the rest
-          socket.emit('returnBundleContents', classes);
+          HomebrewGathering.getAllAncestries(homebrewID).then((ancestries) => {
+            HomebrewGathering.getAllArchetypes(homebrewID).then((archetypes) => {
+              HomebrewGathering.getAllBackgrounds(homebrewID).then((backgrounds) => {
+                HomebrewGathering.getAllClassFeatures(homebrewID).then((classFeatures) => {
+                  HomebrewGathering.getAllFeats(homebrewID).then((feats) => {
+                    HomebrewGathering.getAllHeritages(homebrewID).then((heritages) => {
+                      HomebrewGathering.getAllUniHeritages(homebrewID).then((uniheritages) => {
+                        HomebrewGathering.getAllItems(homebrewID).then((items) => {
+                          HomebrewGathering.getAllSpells(homebrewID).then((spells) => {
+                            socket.emit('returnBundleContents', classes, ancestries, archetypes, backgrounds, classFeatures, feats, heritages, uniheritages, items, spells);
+                          });
+                        });
+                      });
+                    });
+                  });
+                });
+              });
+            });
+          });
         });
       });
 
@@ -2264,10 +2283,6 @@ module.exports = class SocketConnections {
 
     // Socket.IO Connections
     io.on('connection', function(socket){
-
-
-
-      ///
 
       socket.on('requestHomebrewAddClass', function(homebrewID, data){
         AuthCheck.canEditHomebrew(socket, homebrewID).then((canEdit) => {
@@ -2297,7 +2312,7 @@ module.exports = class SocketConnections {
         AuthCheck.canEditHomebrew(socket, homebrewID).then((canEdit) => {
           if(canEdit){
             HomebrewCreation.deleteClass(homebrewID, classID).then((result) => {
-              socket.emit('returnHomebrewRemoveClass');
+              socket.emit('returnHomebrewRemoveContent');
             });
           }
         });
@@ -2306,10 +2321,430 @@ module.exports = class SocketConnections {
       socket.on('requestHomebrewClassDetails', function(homebrewID){
         AuthCheck.canEditHomebrew(socket, homebrewID).then((canEdit) => {
           if(canEdit){
-            GeneralGathering.getAllClasses().then((classObject) => {
-              GeneralGathering.getAllFeats().then((featsObject) => {
+            GeneralGathering.getAllClasses(homebrewID).then((classObject) => {
+              GeneralGathering.getAllFeats(homebrewID).then((featsObject) => {
                 socket.emit('returnHomebrewClassDetails', classObject, featsObject);
               });
+            });
+          }
+        });
+      });
+
+      ////
+
+      socket.on('requestHomebrewAddAncestry', function(homebrewID, data){
+        AuthCheck.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+          if(canEdit){
+            HomebrewCreation.addAncestry(homebrewID, data).then((result) => {
+              socket.emit('returnHomebrewCompleteAncestry');
+            });
+          }
+        });
+      });
+  
+      socket.on('requestHomebrewUpdateAncestry', function(homebrewID, data){
+        AuthCheck.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+          if(canEdit){
+            if(data != null && data.ancestryID != null) {
+              HomebrewCreation.deleteAncestry(homebrewID, data.ancestryID).then((result) => {
+                HomebrewCreation.addAncestry(homebrewID, data).then((result) => {
+                  socket.emit('returnHomebrewCompleteAncestry');
+                });
+              });
+            }
+          }
+        });
+      });
+    
+      socket.on('requestHomebrewRemoveAncestry', function(homebrewID, ancestryID){
+        AuthCheck.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+          if(canEdit){
+            HomebrewCreation.deleteAncestry(homebrewID, ancestryID).then((result) => {
+              socket.emit('returnHomebrewRemoveContent');
+            });
+          }
+        });
+      });
+  
+      socket.on('requestHomebrewAncestryDetails', function(homebrewID){
+        AuthCheck.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+          if(canEdit){
+            GeneralGathering.getAllAncestries(true, homebrewID).then((ancestryObject) => {
+              GeneralGathering.getAllFeats(homebrewID).then((featsObject) => {
+                socket.emit('returnHomebrewAncestryDetails', ancestryObject, featsObject);
+              });
+            });
+          }
+        });
+      });
+
+      ////
+
+      socket.on('requestHomebrewAddArchetype', function(homebrewID, data){
+        AuthCheck.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+          if(canEdit){
+            HomebrewCreation.addArchetype(homebrewID, data).then((result) => {
+              socket.emit('returnHomebrewCompleteArchetype');
+            });
+          }
+        });
+      });
+  
+      socket.on('requestHomebrewUpdateArchetype', function(homebrewID, data){
+        AuthCheck.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+          if(canEdit){
+            if(data != null && data.archetypeID != null) {
+              HomebrewCreation.deleteArchetype(homebrewID, data.archetypeID).then((result) => {
+                HomebrewCreation.addArchetype(homebrewID, data).then((result) => {
+                  socket.emit('returnHomebrewCompleteArchetype');
+                });
+              });
+            }
+          }
+        });
+      });
+    
+      socket.on('requestHomebrewRemoveArchetype', function(homebrewID, archetypeID){
+        AuthCheck.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+          if(canEdit){
+            HomebrewCreation.deleteArchetype(homebrewID, archetypeID).then((result) => {
+              socket.emit('returnHomebrewRemoveContent');
+            });
+          }
+        });
+      });
+  
+      socket.on('requestHomebrewArchetypeDetails', function(homebrewID){
+        AuthCheck.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+          if(canEdit){
+            GeneralGathering.getAllArchetypes(true, homebrewID).then((archetypeArray) => {
+              GeneralGathering.getAllFeats(homebrewID).then((featsObject) => {
+                socket.emit('returnHomebrewArchetypeDetails', archetypeArray, featsObject);
+              });
+            });
+          }
+        });
+      });
+
+      ///
+
+      socket.on('requestHomebrewAddBackground', function(homebrewID, data){
+        AuthCheck.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+          if(canEdit){
+            HomebrewCreation.addBackground(homebrewID, data).then((result) => {
+              socket.emit('returnHomebrewCompleteBackground');
+            });
+          }
+        });
+      });
+  
+      socket.on('requestHomebrewUpdateBackground', function(homebrewID, data){
+        AuthCheck.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+          if(canEdit){
+            if(data != null && data.backgroundID != null) {
+              HomebrewCreation.deleteBackground(homebrewID, data.backgroundID).then((result) => {
+                HomebrewCreation.addBackground(homebrewID, data).then((result) => {
+                  socket.emit('returnHomebrewCompleteBackground');
+                });
+              });
+            }
+          }
+        });
+      });
+    
+      socket.on('requestHomebrewRemoveBackground', function(homebrewID, backgroundID){
+        AuthCheck.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+          if(canEdit){
+            HomebrewCreation.deleteBackground(homebrewID, backgroundID).then((result) => {
+              socket.emit('returnHomebrewRemoveContent');
+            });
+          }
+        });
+      });
+  
+      socket.on('requestHomebrewBackgroundDetails', function(homebrewID){
+        AuthCheck.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+          if(canEdit){
+            GeneralGathering.getAllBackgrounds(homebrewID).then((backgrounds) => {
+              socket.emit('returnHomebrewBackgroundDetails', backgrounds);
+            });
+          }
+        });
+      });
+
+      ////
+
+      socket.on('requestHomebrewAddClassFeature', function(homebrewID, data){
+        AuthCheck.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+          if(canEdit){
+            HomebrewCreation.addClassFeature(homebrewID, data).then((result) => {
+              socket.emit('returnHomebrewCompleteClassFeature');
+            });
+          }
+        });
+      });
+  
+      socket.on('requestHomebrewUpdateClassFeature', function(homebrewID, data){
+        AuthCheck.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+          if(canEdit){
+            if(data != null && data.classFeatureID != null) {
+              HomebrewCreation.deleteClassFeature(homebrewID, data.classFeatureID).then((result) => {
+                HomebrewCreation.addClassFeature(homebrewID, data).then((result) => {
+                  socket.emit('returnHomebrewCompleteClassFeature');
+                });
+              });
+            }
+          }
+        });
+      });
+    
+      socket.on('requestHomebrewRemoveClassFeature', function(homebrewID, classFeatureID){
+        AuthCheck.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+          if(canEdit){
+            HomebrewCreation.deleteClassFeature(homebrewID, classFeatureID).then((result) => {
+              socket.emit('returnHomebrewRemoveContent');
+            });
+          }
+        });
+      });
+
+      ////
+
+      socket.on('requestHomebrewAddFeat', function(homebrewID, data){
+        AuthCheck.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+          if(canEdit){
+            HomebrewCreation.addFeat(homebrewID, data).then((result) => {
+              socket.emit('returnHomebrewCompleteFeat');
+            });
+          }
+        });
+      });
+  
+      socket.on('requestHomebrewUpdateFeat', function(homebrewID, data){
+        AuthCheck.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+          if(canEdit){
+            if(data != null && data.featID != null) {
+              HomebrewCreation.deleteFeat(homebrewID, data.featID).then((result) => {
+                HomebrewCreation.addFeat(homebrewID, data).then((result) => {
+                  socket.emit('returnHomebrewCompleteFeat');
+                });
+              });
+            }
+          }
+        });
+      });
+    
+      socket.on('requestHomebrewRemoveFeat', function(homebrewID, featID){
+        AuthCheck.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+          if(canEdit){
+            HomebrewCreation.deleteFeat(homebrewID, featID).then((result) => {
+              socket.emit('returnHomebrewRemoveContent');
+            });
+          }
+        });
+      });
+  
+      socket.on('requestHomebrewFeatDetailsPlus', function(homebrewID){
+        AuthCheck.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+          if(canEdit){
+            GeneralGathering.getAllFeats(homebrewID).then((featsObject) => {
+              GeneralGathering.getAllClasses().then((classObject) => {
+                GeneralGathering.getAllAncestries(true).then((ancestriesObject) => {
+                  GeneralGathering.getAllUniHeritages().then((uniHeritageArray) => {
+                    GeneralGathering.getAllArchetypes().then((archetypeArray) => {
+                      socket.emit('returnHomebrewFeatDetailsPlus', featsObject, classObject, ancestriesObject, uniHeritageArray, archetypeArray);
+                    });
+                  });
+                });
+              });
+            });
+          }
+        });
+      });
+
+      ////
+
+      socket.on('requestHomebrewAddHeritage', function(homebrewID, data){
+        AuthCheck.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+          if(canEdit){
+            HomebrewCreation.addHeritage(homebrewID, null, data).then((result) => {
+              socket.emit('returnHomebrewCompleteHeritage');
+            });
+          }
+        });
+      });
+  
+      socket.on('requestHomebrewUpdateHeritage', function(homebrewID, data){
+        AuthCheck.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+          if(canEdit){
+            if(data != null && data.heritageID != null) {
+              HomebrewCreation.deleteHeritage(homebrewID, data.heritageID).then((result) => {
+                HomebrewCreation.addHeritage(homebrewID, null, data).then((result) => {
+                  socket.emit('returnHomebrewCompleteHeritage');
+                });
+              });
+            }
+          }
+        });
+      });
+    
+      socket.on('requestHomebrewRemoveHeritage', function(homebrewID, heritageID){
+        AuthCheck.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+          if(canEdit){
+            HomebrewCreation.deleteHeritage(homebrewID, heritageID).then((result) => {
+              socket.emit('returnHomebrewRemoveContent');
+            });
+          }
+        });
+      });
+  
+      socket.on('requestHomebrewHeritageDetails', function(homebrewID){
+        AuthCheck.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+          if(canEdit){
+            GeneralGathering.getAllHeritages(homebrewID).then((heritages) => {
+              GeneralGathering.getAllAncestriesBasic().then((ancestries) => {
+                socket.emit('returnHomebrewHeritageDetails', heritages, ancestries);
+              });
+            });
+          }
+        });
+      });
+
+      ////
+
+      socket.on('requestHomebrewAddUniHeritage', function(homebrewID, data){
+        AuthCheck.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+          if(canEdit){
+            HomebrewCreation.addUniHeritage(homebrewID, data).then((result) => {
+              socket.emit('returnHomebrewCompleteUniHeritage');
+            });
+          }
+        });
+      });
+  
+      socket.on('requestHomebrewUpdateUniHeritage', function(homebrewID, data){
+        AuthCheck.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+          if(canEdit){
+            if(data != null && data.uniHeritageID != null) {
+              HomebrewCreation.deleteUniHeritage(homebrewID, data.uniHeritageID).then((result) => {
+                HomebrewCreation.addUniHeritage(homebrewID, data).then((result) => {
+                  socket.emit('returnHomebrewCompleteUniHeritage');
+                });
+              });
+            }
+          }
+        });
+      });
+    
+      socket.on('requestHomebrewRemoveUniHeritage', function(homebrewID, uniHeritageID){
+        AuthCheck.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+          if(canEdit){
+            HomebrewCreation.deleteUniHeritage(homebrewID, uniHeritageID).then((result) => {
+              socket.emit('returnHomebrewRemoveContent');
+            });
+          }
+        });
+      });
+  
+      socket.on('requestHomebrewUniHeritageDetails', function(homebrewID){
+        AuthCheck.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+          if(canEdit){
+            GeneralGathering.getAllUniHeritages(homebrewID).then((uniheritages) => {
+              GeneralGathering.getAllFeats(homebrewID).then((featsObject) => {
+                socket.emit('returnHomebrewUniHeritageDetails', uniheritages, featsObject);
+              });
+            });
+          }
+        });
+      });
+
+      ////
+
+      socket.on('requestHomebrewAddItem', function(homebrewID, data){
+        AuthCheck.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+          if(canEdit){
+            HomebrewCreation.addItem(homebrewID, data).then((result) => {
+              socket.emit('returnHomebrewCompleteItem');
+            });
+          }
+        });
+      });
+  
+      socket.on('requestHomebrewUpdateItem', function(homebrewID, data){
+        AuthCheck.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+          if(canEdit){
+            if(data != null && data.itemID != null) {
+              HomebrewCreation.deleteItem(homebrewID, data.itemID).then((result) => {
+                HomebrewCreation.addItem(homebrewID, data).then((result) => {
+                  socket.emit('returnHomebrewCompleteItem');
+                });
+              });
+            }
+          }
+        });
+      });
+    
+      socket.on('requestHomebrewRemoveItem', function(homebrewID, itemID){
+        AuthCheck.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+          if(canEdit){
+            HomebrewCreation.deleteItem(homebrewID, itemID).then((result) => {
+              socket.emit('returnHomebrewRemoveContent');
+            });
+          }
+        });
+      });
+  
+      socket.on('requestHomebrewItemDetails', function(homebrewID){
+        AuthCheck.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+          if(canEdit){
+            GeneralGathering.getAllItems(homebrewID).then((itemMap) => {
+              socket.emit('returnHomebrewItemDetails', mapToObj(itemMap));
+            });
+          }
+        });
+      });
+
+      ////
+
+      socket.on('requestHomebrewAddSpell', function(homebrewID, data){
+        AuthCheck.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+          if(canEdit){
+            HomebrewCreation.addSpell(homebrewID, data).then((result) => {
+              socket.emit('returnHomebrewCompleteSpell');
+            });
+          }
+        });
+      });
+  
+      socket.on('requestHomebrewUpdateSpell', function(homebrewID, data){
+        AuthCheck.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+          if(canEdit){
+            if(data != null && data.spellID != null) {
+              HomebrewCreation.deleteSpell(homebrewID, data.spellID).then((result) => {
+                HomebrewCreation.addSpell(homebrewID, data).then((result) => {
+                  socket.emit('returnHomebrewCompleteSpell');
+                });
+              });
+            }
+          }
+        });
+      });
+    
+      socket.on('requestHomebrewRemoveSpell', function(homebrewID, spellID){
+        AuthCheck.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+          if(canEdit){
+            HomebrewCreation.deleteSpell(homebrewID, spellID).then((result) => {
+              socket.emit('returnHomebrewRemoveContent');
+            });
+          }
+        });
+      });
+  
+      socket.on('requestHomebrewSpellDetails', function(homebrewID){
+        AuthCheck.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+          if(canEdit){
+            GeneralGathering.getAllSpells(homebrewID).then((spellMap) => {
+              socket.emit('returnHomebrewSpellDetails', mapToObj(spellMap));
             });
           }
         });
