@@ -2,7 +2,6 @@
 const User = require('../models/contentDB/User');
 const Character = require('../models/contentDB/Character');
 const InvItem = require('../models/contentDB/InvItem');
-const HomebrewBundle = require('../models/contentDB/HomebrewBundle');
 
 // Returns UserID or -1 if not logged in.
 function getUserID(socket){
@@ -55,110 +54,6 @@ module.exports = class AuthCheck {
         }).catch((error) => {
             return false;
         });
-    }
-
-    static createHomebrewBundle(socket) {
-      return AuthCheck.isMember(socket)
-      .then((isMember) => {
-        if(isMember){
-          return HomebrewBundle.create({
-            userID: getUserID(socket),
-            name: 'Homebrew Bundle',
-            description: '',
-            contactInfo: '',
-            isPublished: 0,
-          }).then((homebrewBundle) => {
-            return homebrewBundle;
-          });
-        } else {
-          return;
-        }
-      });
-    }
-
-    static updateHomebrewBundle(socket, homebrewID, inUpdateValues) {
-      return AuthCheck.isMember(socket)
-      .then((isMember) => {
-        if(isMember){
-          return HomebrewBundle.findOne({ where: { id: homebrewID, userID: getUserID(socket) } })
-          .then((homebrewBundle) => {
-            if(homebrewBundle != null){
-              let updateValues = {
-                name: inUpdateValues.Name,
-                description: inUpdateValues.Description,
-                contactInfo: inUpdateValues.ContactInfo,
-              };
-              return HomebrewBundle.update(updateValues, {
-                where: {
-                  id: homebrewBundle.id,
-                  userID: getUserID(socket),
-                }
-              }).then((result) => {
-                return HomebrewBundle.findOne({ where: { id: homebrewID, userID: getUserID(socket) } })
-                .then((newHomebrewBundle) => {
-                  return newHomebrewBundle;
-                });
-              });
-            } else {
-              return;
-            }
-          }).catch((error) => {
-            return;
-          });
-        } else {
-          return;
-        }
-      });
-    }
-
-    static deleteHomebrewBundle(socket, homebrewID) {
-      return HomebrewBundle.findOne({ where: { id: homebrewID, userID: getUserID(socket) } })
-      .then((homebrewBundle) => {
-        if(homebrewBundle != null){
-          return HomebrewBundle.destroy({
-            where: {
-              id: homebrewBundle.id,
-              userID: getUserID(socket)
-            }
-          }).then((result) => {
-            return;
-          });
-        } else {
-          return;
-        }
-      }).catch((error) => {
-        return;
-      });
-    }
-
-    static canEditHomebrew(socket, homebrewID) {
-      return AuthCheck.isMember(socket)
-      .then((isMember) => {
-        if(isMember){
-          return HomebrewBundle.findOne({ where: { id: homebrewID, userID: getUserID(socket) } })
-          .then((homebrewBundle) => {
-              return homebrewBundle.isPublished === 0;
-          }).catch((error) => {
-              return false;
-          });
-        } else {
-          return false;
-        }
-      });
-    }
-
-    static getHomebrewBundles(socket) {
-      return HomebrewBundle.findAll({ where: { userID: getUserID(socket) } })
-      .then((homebrewBundles) => {
-          return homebrewBundles;
-      });
-    }
-
-    static getHomebrewBundle(socket, homebrewID) {
-      return HomebrewBundle.findOne({ where: { id: homebrewID, userID: getUserID(socket) } })
-      .then((homebrewBundle) => {
-          return homebrewBundle;
-      });
     }
 
     static isAdmin(socket) {

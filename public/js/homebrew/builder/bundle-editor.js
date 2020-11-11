@@ -6,10 +6,11 @@ let g_activeEditBundle = null;
 
 function openBundleEditor(homebrewBundle){
   g_activeEditBundle = homebrewBundle;
-  socket.emit('requestBundleContents', homebrewBundle.id);
+  socket.emit('requestBundleContents', 'EDIT', homebrewBundle.id);
 }
 
-socket.on("returnBundleContents", function(classes, ancestries, archetypes, backgrounds, classFeatures, feats, heritages, uniheritages, items, spells){
+socket.on("returnBundleContents", function(REQUEST_TYPE, userHasBundle, classes, ancestries, archetypes, backgrounds, classFeatures, feats, heritages, uniheritages, items, spells){
+  if(REQUEST_TYPE !== 'EDIT') {return;}
   $('#tabContent').html('');
   $('#tabContent').load("/templates/homebrew/display-edit-bundle.html");
   $.ajax({ type: "GET",
@@ -48,10 +49,12 @@ socket.on("returnBundleContents", function(classes, ancestries, archetypes, back
       $('#bundleRenameBtn').click(function() {
         $('#bundleName').html('<div class="pt-2"><input id="bundleRenameInput" class="input is-medium" style="max-width: 340px;" maxlength="40" value="'+g_activeEditBundle.name+'"></div>');
         $('#bundleRenameBtn').addClass('is-hidden');
+        $('#bundleRenameInput').focus();
 
         $('#bundleRenameInput').blur(function(){
-          $(this).unbind();
           let newName = $('#bundleRenameInput').val();
+          if(newName == null || newName == '') {return;}
+          $(this).unbind();
           $('#bundleName').html(newName);
           $('#bundleRenameBtn').removeClass('is-hidden');
           socket.emit("requestBundleUpdate",
@@ -70,8 +73,21 @@ socket.on("returnBundleContents", function(classes, ancestries, archetypes, back
         openUserContent();
       });
 
+      ///
+
       $('#bundlePublishBtn').click(function() {
-        
+        $('#publish-modal').addClass('is-active');
+        $('html').addClass('is-clipped');
+      });
+
+      $('#publish-modal-background,#publish-modal-close').click(function() {
+        $('#publish-modal').removeClass('is-active');
+        $('html').removeClass('is-clipped');
+      });
+      $('#publish-modal-btn').click(function() {
+        socket.emit("requestBundlePublish", g_activeEditBundle.id);
+        $('#publish-modal').removeClass('is-active');
+        $('html').removeClass('is-clipped');
       });
 
       ///
@@ -348,4 +364,8 @@ socket.on("returnBundleUpdate", function(homebrewBundle){
 
 socket.on("returnHomebrewRemoveContent", function(){
   openBundleEditor(g_activeEditBundle);
+});
+
+socket.on("returnBundlePublish", function(isPublished){
+  openUserContent();
 });

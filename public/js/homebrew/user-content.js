@@ -10,6 +10,7 @@ function openUserContent(){
 socket.on("returnHomebrewBundles", function(homebrewBundles, canMakeHomebrew){
   g_homebrewBundles = homebrewBundles;
   $('#tabContent').html('');
+  $('#tabContent').addClass('is-hidden');
   $('#tabContent').load("/templates/homebrew/display-user-content.html");
   $.ajax({ type: "GET",
     url: "/templates/homebrew/display-user-content.html",
@@ -36,10 +37,10 @@ socket.on("returnHomebrewBundles", function(homebrewBundles, canMakeHomebrew){
           let bundleUpdateID = 'bundle-'+homebrewBundle.id+'-update';
           let bundleDeleteID = 'bundle-'+homebrewBundle.id+'-delete';
 
-          $('#bundlesPublishedContainer').append('<div class="columns border-bottom border-dark-lighter"><div class="column is-6 text-center"><span class="is-size-5">'+homebrewBundle.name+'</span></div><div class="column is-6"><div class="buttons are-small is-centered"><button id="'+bundleViewID+'" class="button is-success">View</button><button id="'+bundleUpdateID+'" class="button is-link">Update</button><button id="'+bundleDeleteID+'" class="button is-danger">Delete</button></div></div></div>');
+          $('#bundlesPublishedContainer').append('<div class="columns border-bottom border-dark-lighter"><div class="column is-6 text-center"><span class="is-size-5">'+homebrewBundle.name+'</span></div><div class="column is-6"><div class="buttons are-small is-centered"><button id="'+bundleViewID+'" class="button is-outlined is-success">View</button><button id="'+bundleUpdateID+'" class="button is-outlined is-link">Update</button><button id="'+bundleDeleteID+'" class="button is-outlined is-danger">Delete</button></div></div></div>');
 
           $('#'+bundleViewID).click(function() {
-            
+            openBundleView(homebrewBundle);
           });
 
           if(canMakeHomebrew){
@@ -51,7 +52,7 @@ socket.on("returnHomebrewBundles", function(homebrewBundles, canMakeHomebrew){
           }
 
           $('#'+bundleDeleteID).click(function() {
-            
+            socket.emit('requestBundleDelete', homebrewBundle.id);
           });
 
         } else {
@@ -60,7 +61,7 @@ socket.on("returnHomebrewBundles", function(homebrewBundles, canMakeHomebrew){
           let bundleEditID = 'bundle-'+homebrewBundle.id+'-edit';
           let bundleDeleteID = 'bundle-'+homebrewBundle.id+'-delete';
 
-          $('#bundlesInProgessContainer').append('<div class="columns border-bottom border-dark-lighter"><div class="column is-6 text-center"><span class="is-size-5">'+homebrewBundle.name+'</span></div><div class="column is-6"><div class="buttons are-small is-centered"><button id="'+bundleEditID+'" class="button is-info">Edit</button><button id="'+bundleDeleteID+'" class="button is-danger">Delete</button></div></div></div>');
+          $('#bundlesInProgessContainer').append('<div class="columns border-bottom border-dark-lighter"><div class="column is-6 text-center"><span class="is-size-5">'+homebrewBundle.name+'</span></div><div class="column is-6"><div class="buttons are-small is-centered"><button id="'+bundleEditID+'" class="button is-outlined is-info">Edit</button><button id="'+bundleDeleteID+'" class="button is-outlined is-danger">Delete</button></div></div></div>');
 
           if(canMakeHomebrew){
             $('#'+bundleEditID).click(function() {
@@ -84,6 +85,7 @@ socket.on("returnHomebrewBundles", function(homebrewBundles, canMakeHomebrew){
         $('#bundlesInProgessContainer').html('<p class="has-text-centered has-text-grey is-italic">None</p>');
       }
 
+      $('#tabContent').removeClass('is-hidden');
     }
   });
 });

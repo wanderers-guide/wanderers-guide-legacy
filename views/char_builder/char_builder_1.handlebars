@@ -199,13 +199,13 @@
 
     <div class="box p-2 is-marginless">
 
-        <div class="columns is-mobile is-centered">
-            <div class="column is-4"> <!-- is-4 -->
+        <div class="columns is-centered">
+            <div class="column is-4">
                 <div class="pb-2">
-                    <h4>Content</h4>
+                    <h4>Books</h4>
                 </div>
-
-                <div class="columns is-mobile">
+                
+                <div class="columns is-mobile first-page-container my-1 use-custom-scrollbar">
                     <div class="column is-3"></div>
                     <div class="column is-9 text-left">
 
@@ -325,12 +325,24 @@
                     </div>
                 </div>
             </div>
-            <div class="column is-4"> <!-- is-4 -->
+            <div class="column is-4" style="position: relative;">
                 <div class="pb-2">
                     <h4>Homebrew</h4>
+                    <span id="noHomebrewMessage" class="is-hidden is-size-7 has-text-grey is-italic has-text-centered">Your homebrew collection is empty.</span>
                 </div>
 
-                <p class="is-italic">Coming soon!</p>
+                <div id="homebrewColumn" class="columns is-mobile first-page-container my-1 use-custom-scrollbar">
+                    <div class="column is-paddingless is-3"></div>
+                    <div class="column is-paddingless is-9 text-left">
+                      <div id="homebrewCollectionContainer"></div>
+                      <div style="position: absolute; left: 50%;">
+                        <div style="position: relative; left: -50%;">
+                          <span id="viewBrowseHomebrewBtn" class="is-hidden button is-rounded is-info is-very-small">Browse</span>
+                          <span id="viewHomebrewCollectionBtn" class="is-hidden button is-rounded is-info is-very-small">Go To Collection</span>
+                        </div>
+                      </div>
+                    </div>
+                </div>
 
             </div>
             <div class="column is-4">

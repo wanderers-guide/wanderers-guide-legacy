@@ -29,7 +29,7 @@ function nextPage() {
 
 // ~~~~~~~~~~~~~~ // Processings // ~~~~~~~~~~~~~~ //
 
-socket.on("returnCharacterDetails", function(character, clientsWithAccess){
+socket.on("returnCharacterDetails", function(character, clientsWithAccess, hBundles, progessBundles){
     isBuilderInit = true;
 
     displayExternalCharacterAccess(clientsWithAccess);
@@ -81,7 +81,7 @@ socket.on("returnCharacterDetails", function(character, clientsWithAccess){
         deployAbilityScoreChange();
     });
 
-    handleCharacterOptions(character);
+    handleCharacterOptions(character, hBundles, progessBundles);
 
     // Turn off page loading
     $('.pageloader').addClass("fadeout");
@@ -118,7 +118,8 @@ function deployAbilityScoreChange(){
     }
 }
 
-function handleCharacterOptions(character) {
+function handleCharacterOptions(character, hBundles, progessBundles) {
+    displayHomebrewBundles(character, hBundles, progessBundles);
 
     // Content Sources //
     let contentSourceArray = JSON.parse(character.enabledSources);
@@ -296,8 +297,7 @@ function handleCharacterOptions(character) {
             optionTypeValue);
     });
     $("#optionAutoDetectPreReqs").prop('checked', (character.optionAutoDetectPreReqs === 1));
-    
-    
+
 }
 
 
@@ -322,6 +322,78 @@ socket.on("returnCharacterSourceChange", function() {
 
 socket.on("returnCharacterOptionChange", function() {
     $(".optionSwitch").blur();
+});
+
+
+//// Homebrew Bundles ////
+function displayHomebrewBundles(character, hBundles, progessBundles){
+  let homebrewBundleArray = JSON.parse(character.enabledHomebrew);
+
+  hBundles = hBundles.sort(
+    function(a, b) {
+      return a.homebrewBundle.name > b.homebrewBundle.name ? 1 : -1;
+    }
+  );
+  progessBundles = progessBundles.sort(
+    function(a, b) {
+      return a.name > b.name ? 1 : -1;
+    }
+  );
+
+  for(let progessBundle of progessBundles) {
+    let homebrewBundle = progessBundle;
+    let bundleSwitchID = 'homebrew-bundle-progess-switch-'+homebrewBundle.id;
+    $('#homebrewCollectionContainer').append('<div class="field"><input id="'+bundleSwitchID+'" type="checkbox" name="'+bundleSwitchID+'" class="switch is-small is-rounded is-outlined is-info optionSwitch" value="1"><label for="'+bundleSwitchID+'">'+homebrewBundle.name+' <span class="has-text-grey is-italic">(in progress)</span></label></div>');
+
+    $('#'+bundleSwitchID).change(function(){
+      socket.emit('requestCharacterHomebrewChange', 
+          getCharIDFromURL(), 
+          homebrewBundle.id,
+          this.checked);
+    });
+    $('#'+bundleSwitchID).prop('checked', homebrewBundleArray.includes(homebrewBundle.id));
+
+  }
+
+  for(let hBundle of hBundles) {
+    let homebrewBundle = hBundle.homebrewBundle;
+    let bundleSwitchID = 'homebrew-bundle-switch-'+homebrewBundle.id;
+    $('#homebrewCollectionContainer').append('<div class="field"><input id="'+bundleSwitchID+'" type="checkbox" name="'+bundleSwitchID+'" class="switch is-small is-rounded is-outlined is-info optionSwitch" value="1"><label for="'+bundleSwitchID+'">'+homebrewBundle.name+'</label></div>');
+
+    $('#'+bundleSwitchID).change(function(){
+      socket.emit('requestCharacterHomebrewChange', 
+          getCharIDFromURL(), 
+          homebrewBundle.id,
+          this.checked);
+    });
+    $('#'+bundleSwitchID).prop('checked', homebrewBundleArray.includes(homebrewBundle.id));
+
+  }
+
+  if(hBundles.length > 0){
+    let hCollectionContainer = document.getElementById('homebrewColumn');
+    if(hCollectionContainer.scrollHeight > hCollectionContainer.clientHeight){
+      // container has scrollbar
+    } else {
+      $('#homebrewCollectionContainer').addClass('pb-3');
+      $('#viewHomebrewCollectionBtn').removeClass('is-hidden');
+    }
+  } else {
+    $('#noHomebrewMessage').removeClass('is-hidden');
+    $('#viewBrowseHomebrewBtn').removeClass('is-hidden');
+  }
+
+  $('#viewHomebrewCollectionBtn').click(function() {
+    window.location.href = '/homebrew/?sub_tab=collection';
+  });
+  $('#viewBrowseHomebrewBtn').click(function() {
+    window.location.href = '/homebrew/?sub_tab=browse';
+  });
+
+}
+
+socket.on("returnCharacterHomebrewChange", function() {
+  $(".optionSwitch").blur();
 });
 
 //// External Character Access - API Clients ////

@@ -1,5 +1,15 @@
 
 const Character = require('../models/contentDB/Character');
+const HomebrewBundle = require('../models/contentDB/HomebrewBundle');
+
+// Returns UserID or -1 if not logged in.
+function getUserID(socket){
+  if(socket.request.session.passport != null){
+      return socket.request.session.passport.user;
+  } else {
+      return -1;
+  }
+}
 
 module.exports = class CharContentHomebrew {
 
@@ -7,21 +17,26 @@ module.exports = class CharContentHomebrew {
         return JSON.parse(character.enabledHomebrew);
     }
 
-    static addHomebrewBundle(charID, homebrewID){
-        return Character.findOne({ where: { id: charID} })
-        .then((character) => {
-            let homebrewArray = CharContentHomebrew.getHomebrewArray(character);
-            homebrewArray.push(homebrewID);
-            let charUpVals = {enabledHomebrew: JSON.stringify(homebrewArray) };
-            return Character.update(charUpVals, { where: { id: character.id } })
-            .then((result) => {
-                return;
-            });
-        });
+    static addHomebrewBundle(socket, charID, homebrewID){
+      return HomebrewBundle.findOne({ where: { id: homebrewID } })
+      .then((homebrewBundle) => {
+        if(homebrewBundle != null && (homebrewBundle.isPublished === 1 || homebrewBundle.userID === getUserID(socket))) {
+          return Character.findOne({ where: { id: charID } })
+          .then((character) => {
+              let homebrewArray = CharContentHomebrew.getHomebrewArray(character);
+              homebrewArray.push(homebrewID);
+              let charUpVals = {enabledHomebrew: JSON.stringify(homebrewArray) };
+              return Character.update(charUpVals, { where: { id: character.id } })
+              .then((result) => {
+                  return;
+              });
+          });
+        }
+      });
     }
 
     static removeHomebrewBundle(charID, homebrewID){
-        return Character.findOne({ where: { id: charID} })
+        return Character.findOne({ where: { id: charID } })
         .then((character) => {
             let homebrewArray = CharContentHomebrew.getHomebrewArray(character);
             let bundleIndex = homebrewArray.indexOf(homebrewID);

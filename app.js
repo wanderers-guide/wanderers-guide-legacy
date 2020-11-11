@@ -46,9 +46,6 @@ app.engine('handlebars', exphbs({
       chooseSelection: function(checkedValue, currentValue) {
         return checkedValue === currentValue ? ' selected' : '';
       },
-      getBoostFlawElement: function(array, index) {
-        return array[index] != null ? array[index].boostedAbility : '';
-      },
       section: function(name, options){
         if(!this._sections) this._sections = {};
         this._sections[name] = options.fn(this);
@@ -60,9 +57,6 @@ app.engine('handlebars', exphbs({
         } else {
             return options.inverse(this);
         }
-      },
-      defaultAncestry: function(checkedName, currentName) {
-        return checkedName === currentName ? 'selectedAncestryOption' : null;
       },
     }
 }));

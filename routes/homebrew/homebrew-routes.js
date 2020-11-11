@@ -24,8 +24,15 @@ router.get('/', (req, res) => {
 
   let editHomebrewID = parseInt(req.query.edit_id); if(isNaN(editHomebrewID)){editHomebrewID=null;}
   let viewHomebrewID = parseInt(req.query.view_id); if(isNaN(viewHomebrewID)){viewHomebrewID=null;}
+  let homebrewTabName = req.query.sub_tab;
 
-  res.render('pages/homebrew', { title: "Homebrew - Wanderer's Guide", user: req.user, editHomebrewID, viewHomebrewID });
+  res.render('pages/homebrew', {
+    title: "Homebrew - Wanderer's Guide",
+    user: req.user,
+    editHomebrewID,
+    viewHomebrewID,
+    homebrewTabName,
+  });
 });
 
 const bundleAuthCheck = (req, res, next) => {

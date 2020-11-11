@@ -63,3 +63,13 @@ strong {
   max-width: 800px;
   margin: auto;
 }
+
+.view-bundle-container {
+  max-width: 800px;
+  margin: auto;
+}
+
+/* Labels */
+.field-label {
+  flex-grow: 2.5;
+}

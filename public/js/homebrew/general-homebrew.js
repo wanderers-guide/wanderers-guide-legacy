@@ -29,10 +29,20 @@ $(function () {
 
   let editHomebrewID = $('#homebrew-container').attr('data-edit-homebrew-id');
   let viewHomebrewID = $('#homebrew-container').attr('data-view-homebrew-id');
+  let homebrewTabName = $('#homebrew-container').attr('data-direct-to-tab').toUpperCase();
 
-  if(editHomebrewID != null || viewHomebrewID != null) {
-    if(editHomebrewID != null){
+  if(editHomebrewID != '' || viewHomebrewID != '' || homebrewTabName != '') {
+    if(editHomebrewID != ''){
       socket.emit('requestHomebrewBundle', editHomebrewID);
+    } else if(viewHomebrewID != ''){
+      //
+    } else if(homebrewTabName != ''){
+      switch(homebrewTabName) {
+        case 'BROWSE': $('#browseTab').trigger("click"); break;
+        case 'COLLECTION': $('#userCollectionTab').trigger("click"); break;
+        case 'CONTENT': $('#userContentTab').trigger("click"); break;
+        default: break;
+      }
     }
   } else {
     $('#browseTab').trigger("click");

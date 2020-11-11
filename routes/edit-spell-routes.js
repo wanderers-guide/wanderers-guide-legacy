@@ -10,7 +10,7 @@ router.get('*', (req, res) => {
     let extraData = req.originalUrl.substring(PATH.length);
 
     Tag.findAll({
-        where: { isArchived: 0, isHidden: 0 },
+        where: { isArchived: 0, isHidden: 0, homebrewID: null },
         order: [['name', 'ASC'],]
     }).then((tags) => {
         res.render('admin/admin_builder/builder_spell', {

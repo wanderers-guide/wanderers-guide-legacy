@@ -243,8 +243,13 @@ module.exports = class CharGathering {
             .then((feats) => {
                 return FeatTag.findAll()
                 .then((featTags) => {
-                    return Tag.findAll()
-                    .then((tags) => {
+                    return Tag.findAll({
+                      where: {
+                          homebrewID: {
+                            [Op.or]: CharContentHomebrew.getHomebrewArray(character)
+                          },
+                      }
+                    }).then((tags) => {
         
                         let featMap = new Map();
 
@@ -307,8 +312,13 @@ module.exports = class CharGathering {
             .then((spells) => {
                 return TaggedSpell.findAll()
                 .then((taggedSpells) => {
-                    return Tag.findAll()
-                    .then((tags) => {
+                    return Tag.findAll({
+                      where: {
+                          homebrewID: {
+                            [Op.or]: CharContentHomebrew.getHomebrewArray(character)
+                          },
+                      }
+                    }).then((tags) => {
         
                         let spellMap = new Map();
     
@@ -354,8 +364,13 @@ module.exports = class CharGathering {
                 }
             })
             .then((items) => {
-                return Tag.findAll()
-                .then((tags) => {
+                return Tag.findAll({
+                  where: {
+                      homebrewID: {
+                        [Op.or]: CharContentHomebrew.getHomebrewArray(character)
+                      },
+                  }
+                }).then((tags) => {
                     return TaggedItem.findAll()
                     .then((taggedItems) => {
                         return Weapon.findAll()
@@ -581,14 +596,34 @@ module.exports = class CharGathering {
                 .then((heritages) => {
                     return Language.findAll()
                     .then((languages) => {
-                        return AncestryLanguage.findAll()
-                        .then((ancestLangs) => {
-                            return AncestryBoost.findAll()
-                            .then((ancestBoosts) => {
-                                return AncestryFlaw.findAll()
-                                .then((ancestFlaws) => {
-                                    return Tag.findAll()
-                                    .then((tags) => {
+                        return AncestryLanguage.findAll({
+                          where: {
+                              homebrewID: {
+                                [Op.or]: CharContentHomebrew.getHomebrewArray(character)
+                              },
+                          }
+                        }).then((ancestLangs) => {
+                            return AncestryBoost.findAll({
+                              where: {
+                                  homebrewID: {
+                                    [Op.or]: CharContentHomebrew.getHomebrewArray(character)
+                                  },
+                              }
+                            }).then((ancestBoosts) => {
+                                return AncestryFlaw.findAll({
+                                  where: {
+                                      homebrewID: {
+                                        [Op.or]: CharContentHomebrew.getHomebrewArray(character)
+                                      },
+                                  }
+                                }).then((ancestFlaws) => {
+                                    return Tag.findAll({
+                                      where: {
+                                          homebrewID: {
+                                            [Op.or]: CharContentHomebrew.getHomebrewArray(character)
+                                          },
+                                      }
+                                    }).then((tags) => {
                                         return SenseType.findAll()
                                         .then((senseTypes) => {
                                             return CharGathering.getAllPhysicalFeatures()
@@ -811,13 +846,21 @@ module.exports = class CharGathering {
         });
     }
 
-    static getAllTags() {
+    static getAllTags(charID) {
+      return Character.findOne({ where: { id: charID} })
+      .then((character) => {
         return Tag.findAll({
-            raw: true,
-            order: [['name', 'ASC'],]
+          raw: true,
+          order: [['name', 'ASC'],],
+          where: {
+            homebrewID: {
+              [Op.or]: CharContentHomebrew.getHomebrewArray(character)
+            },
+          }
         }).then((tags) => {
             return tags;
         });
+      });
     }
 
     static getResistancesAndVulnerabilities(charID) {
@@ -1081,7 +1124,7 @@ module.exports = class CharGathering {
                 .then((spellMap) => {
                     return CharGathering.getAllSkills(charID)
                     .then((skillObject) => {
-                        return CharGathering.getAllTags()
+                        return CharGathering.getAllTags(charID)
                         .then( (tags) => {
                             return CharGathering.getAbilityScores(charID)
                             .then((abilObject) => {
@@ -1508,7 +1551,7 @@ module.exports = class CharGathering {
             .then((heritage) => {
               return Inventory.findOne({ where: { id: character.inventoryID} })
               .then((inventory) => {
-                return CharGathering.getAllTags()
+                return CharGathering.getAllTags(charID)
                 .then( (tags) => {
                   return CharGathering.getAbilityScores(charID)
                   .then((abilObject) => {

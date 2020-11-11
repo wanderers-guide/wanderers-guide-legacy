@@ -1,0 +1,83 @@
+<div class="">
+  
+  <div class="columns is-marginless">
+    <div id="searchFilterSection" class="column is-4 m-1 is-paddingless use-custom-scrollbar" style="height: 650px; max-height: 650px;overflow-y: auto;">
+      <div class="section-box">
+        <p id="browsingFilter" class="is-size-6 text-center"><strong class="has-text-grey-lighter">Search Filters</strong></p>
+
+        <div id="filterNameSection" class="filterFieldSection field">
+          <div class="control">
+            <input class="input" id="filterNameInput" type="text" placeholder="Name" autocomplete="off">
+          </div>
+        </div>
+
+        <div id="filterDescSection" class="filterFieldSection field">
+          <div class="control">
+            <input class="input" id="filterDescInput" type="text" placeholder="Description" autocomplete="off">
+          </div>
+        </div>
+
+        <div id="filterRatingSection" class="filterFieldSection field is-horizontal">
+          <div class="field-label is-normal ml-2">
+            <label class="label">Bundle Rating</label>
+          </div>
+          <div class="field-body">
+            <div class="field has-addons">
+              <p class="control">
+                <span class="select">
+                  <select id="filterRatingRelationInput">
+                    <option value="EQUAL">=</option>
+                    <option value="LESS">&lt;</option>
+                    <option value="GREATER">&gt;</option>
+                    <option value="LESS-EQUAL">&#8804;</option>
+                    <option value="GREATER-EQUAL">&#8805;</option>
+                    <option value="NOT-EQUAL">&#8800;</option>
+                  </select>
+                </span>
+              </p>
+              <p class="control">
+                <input class="input" id="filterRatingInput" type="number" placeholder="Rating" max="9999" min="0">
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div id="filterKeyRequiredSection" class="filterFieldSection field is-horizontal">
+          <div class="field-label is-normal ml-2">
+            <label class="label">Key Required</label>
+          </div>
+          <div class="field-body">
+            <div class="field">
+              <div class="control">
+                <div class="select">
+                  <select id="filterKeyRequiredInput">
+                    <option value="ANY">Either</option>
+                    <option value="0">None</option>
+                    <option value="1">Only</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <hr class="m-2">
+
+        <div class="field is-grouped is-grouped-centered pb-2">
+          <div class="control">
+            <button id="updateFilterButton" class="button is-info is-rounded ">Search</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <div id="browsingList" class="column section-box m-1 use-custom-scrollbar" style="height: 650px; max-height: 650px;overflow-y: auto;">
+
+
+
+    </div>
+  </div>
+
+</div>
+
+</div>

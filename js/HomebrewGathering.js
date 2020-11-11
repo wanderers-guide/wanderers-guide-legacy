@@ -30,8 +30,6 @@ const ItemRune = require('../models/contentDB/ItemRune');
 
 module.exports = class HomebrewGathering {
   
-  
-
   static getAllClasses(homebrewID) {
     return Class.findAll({ where: { homebrewID: homebrewID } })
     .then((classes) => {

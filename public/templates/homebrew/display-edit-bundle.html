@@ -6,7 +6,7 @@
   <span id="bundlePublishBtn" style="position: absolute; top: 5px; right: 5px; z-index: 1;" class="button is-success is-outlined">Publish</span>
 
   <div style="max-width: 70%; margin: auto;">
-    <p class="is-size-3 has-text-centered pb-2"><span class="ml-5 pl-5"><span id="bundleName" class="title-font has-text-grey-lighter is-bold"></span><span id="bundleRenameBtn" class="button is-very-small is-info is-rounded ml-2 mt-1"><span>Rename</span><span class="icon is-small"><i class="far fa-edit"></i></span></span></span></p>
+    <p class="is-size-3 has-text-centered pb-2"><span id="bundleName" class="title-font has-text-grey-lighter is-bold"></span><sup id="bundleRenameBtn" class="icon has-text-info is-size-6 pl-2 cursor-clickable"><i class="far fa-edit"></i></sup></p>
   </div>
 
   <div class="build-bundle-container pb-2">
@@ -88,5 +88,27 @@
         <p class="is-size-7 has-text-grey is-italic">None</p>
       </div>
     </div>
+  </div>
+</div>
+
+<div id="publish-modal" class="modal">
+  <div id="publish-modal-background" class="modal-background"></div>
+  <div class="modal-card">
+      <header class="modal-card-head">
+          <p class="modal-card-title is-size-4 has-text-grey-lighter">Publish Content</p>
+          <button id="publish-modal-close" class="delete modal-card-close" aria-label="close"></button>
+      </header>
+      <section class="modal-card-body">
+          <p class="has-text-grey-light">By clicking publish, you are agreeing to the following about the content you are publishing:</p>
+          <p class="pl-2 has-text-grey-light negative-indent">&#x2022; The content does not contain any third party’s intellectual property without their permission.</p>
+          <p class="pl-2 has-text-grey-light negative-indent">&#x2022; The content preserves a high standard of quality; it is not "low-effort content."</p>
+          <p class="pl-2 has-text-grey-light negative-indent">&#x2022; The content does not contain material that the general public would classify as "adult content," offensive, or inappropriate for minors.</p>
+          <p class="has-text-grey-light pt-1">Failure to comply with these agreements may result in your content being removed and potentially further repercussions.</p>
+      </section>
+      <footer class="modal-card-foot is-paddingless p-3 field is-grouped is-grouped-centered">
+          <p class="control">
+              <a id="publish-modal-btn" class="button is-success is-outlined">Publish</a>
+          </p>
+      </footer>
   </div>
 </div>

@@ -2,6 +2,7 @@
 const CharGathering = require('./CharGathering');
 const CharSaving = require('./CharSaving');
 const CharContentSources = require('./CharContentSources');
+const CharContentHomebrew = require('./CharContentHomebrew');
 const CharSpells = require('./CharSpells');
 const CharTags = require('./CharTags');
 const CharDataMapping = require('./CharDataMapping');
@@ -14,6 +15,7 @@ const HomebrewCreation = require('./HomebrewCreation');
 const ClientAPI = require('./ClientAPI');
 const CharStateUtils = require('./CharStateUtils');
 const GeneralUtils = require('./GeneralUtils');
+const UserHomebrew = require('./UserHomebrew');
 const HomeBackReport = require('../models/backgroundDB/HomeBackReport');
 
 function mapToObj(strMap) {
@@ -553,7 +555,11 @@ module.exports = class SocketConnections {
           if(ownsChar){
             CharGathering.getCharacter(charID).then((character) => {
               ClientAPI.getClientsWhoAccess(charID).then((clientsWithAccess) => {
-                socket.emit('returnCharacterDetails', character, clientsWithAccess);
+                UserHomebrew.getCollectedHomebrewBundles(socket).then((hBundles) => {
+                  UserHomebrew.getIncompleteHomebrewBundles(socket).then((progessBundles) => {
+                    socket.emit('returnCharacterDetails', character, clientsWithAccess, hBundles, progessBundles);
+                  });
+                });
               });
             });
           }
@@ -626,6 +632,22 @@ module.exports = class SocketConnections {
             } else {
               CharContentSources.removeSource(charID, sourceName).then((result) => {
                 socket.emit('returnCharacterSourceChange');
+              });
+            }
+          }
+        });
+      });
+
+      socket.on('requestCharacterHomebrewChange', function(charID, homebrewID, isAdd){
+        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+          if(ownsChar){
+            if(isAdd) {
+              CharContentHomebrew.addHomebrewBundle(socket, charID, homebrewID).then((result) => {
+                socket.emit('returnCharacterHomebrewChange');
+              });
+            } else {
+              CharContentHomebrew.removeHomebrewBundle(charID, homebrewID).then((result) => {
+                socket.emit('returnCharacterHomebrewChange');
               });
             }
           }
@@ -2214,8 +2236,20 @@ module.exports = class SocketConnections {
     // Socket.IO Connections
     io.on('connection', function(socket){
 
+      socket.on('requestPublishedHomebrewBundles', function(){
+        UserHomebrew.findPublishedBundles().then((hBundles) => {
+          socket.emit('returnPublishedHomebrewBundles', hBundles);
+        });
+      });
+
+      socket.on('requestCollectedHomebrewBundles', function(){
+        UserHomebrew.getCollectedHomebrewBundles(socket).then((hBundles) => {
+          socket.emit('returnCollectedHomebrewBundles', hBundles);
+        });
+      });
+
       socket.on('requestHomebrewBundles', function(){
-        AuthCheck.getHomebrewBundles(socket).then((homebrewBundles) => {
+        UserHomebrew.getHomebrewBundles(socket).then((homebrewBundles) => {
           AuthCheck.isMember(socket).then((canMakeHomebrew) => {
             socket.emit('returnHomebrewBundles', homebrewBundles, canMakeHomebrew);
           });
@@ -2223,21 +2257,21 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestHomebrewBundle', function(homebrewID){
-        AuthCheck.getHomebrewBundle(socket, homebrewID).then((homebrewBundle) => {
+        UserHomebrew.getHomebrewBundle(socket, homebrewID).then((homebrewBundle) => {
           socket.emit('returnHomebrewBundle', homebrewBundle);
         });
       });
 
       socket.on('requestBundleCreate', function(){
-        AuthCheck.createHomebrewBundle(socket).then((homebrewBundle) => {
+        UserHomebrew.createHomebrewBundle(socket).then((homebrewBundle) => {
           socket.emit('returnBundleCreate', homebrewBundle);
         });
       });
 
       socket.on('requestBundleUpdate', function(homebrewID, updateValues){
-        AuthCheck.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+        UserHomebrew.canEditHomebrew(socket, homebrewID).then((canEdit) => {
           if(canEdit){
-            AuthCheck.updateHomebrewBundle(socket, homebrewID, updateValues).then((homebrewBundle) => {
+            UserHomebrew.updateHomebrewBundle(socket, homebrewID, updateValues).then((homebrewBundle) => {
               socket.emit('returnBundleUpdate', homebrewBundle);
             });
           }
@@ -2245,12 +2279,12 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestBundleDelete', function(homebrewID){
-        AuthCheck.deleteHomebrewBundle(socket, homebrewID).then((result) => {
+        UserHomebrew.deleteHomebrewBundle(socket, homebrewID).then((result) => {
           socket.emit('returnBundleDelete');
         });
       });
       
-      socket.on('requestBundleContents', function(homebrewID){
+      socket.on('requestBundleContents', function(REQUEST_TYPE, homebrewID){
         HomebrewGathering.getAllClasses(homebrewID).then((classes) => {
           HomebrewGathering.getAllAncestries(homebrewID).then((ancestries) => {
             HomebrewGathering.getAllArchetypes(homebrewID).then((archetypes) => {
@@ -2261,7 +2295,9 @@ module.exports = class SocketConnections {
                       HomebrewGathering.getAllUniHeritages(homebrewID).then((uniheritages) => {
                         HomebrewGathering.getAllItems(homebrewID).then((items) => {
                           HomebrewGathering.getAllSpells(homebrewID).then((spells) => {
-                            socket.emit('returnBundleContents', classes, ancestries, archetypes, backgrounds, classFeatures, feats, heritages, uniheritages, items, spells);
+                            UserHomebrew.hasHomebrewBundle(socket, homebrewID).then((userHasBundle) => {
+                              socket.emit('returnBundleContents', REQUEST_TYPE, userHasBundle, classes, ancestries, archetypes, backgrounds, classFeatures, feats, heritages, uniheritages, items, spells);
+                            });
                           });
                         });
                       });
@@ -2272,6 +2308,24 @@ module.exports = class SocketConnections {
             });
           });
         });
+      });
+
+      socket.on('requestBundlePublish', function(homebrewID){
+        UserHomebrew.publishHomebrew(socket, homebrewID).then((isPublished) => {
+          socket.emit('returnBundlePublish', isPublished);
+        });
+      });
+
+      socket.on('requestBundleChangeCollection', function(homebrewID, toAdd){
+        if(toAdd){
+          UserHomebrew.addToHomebrewCollection(socket, homebrewID).then((result) => {
+            socket.emit('returnBundleChangeCollection');
+          });
+        } else {
+          UserHomebrew.removeFromHomebrewCollection(socket, homebrewID).then((result) => {
+            socket.emit('returnBundleChangeCollection');
+          });
+        }
       });
 
     });
@@ -2285,7 +2339,7 @@ module.exports = class SocketConnections {
     io.on('connection', function(socket){
 
       socket.on('requestHomebrewAddClass', function(homebrewID, data){
-        AuthCheck.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+        UserHomebrew.canEditHomebrew(socket, homebrewID).then((canEdit) => {
           if(canEdit){
             HomebrewCreation.addClass(homebrewID, data).then((result) => {
               socket.emit('returnHomebrewCompleteClass');
@@ -2295,7 +2349,7 @@ module.exports = class SocketConnections {
       });
   
       socket.on('requestHomebrewUpdateClass', function(homebrewID, data){
-        AuthCheck.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+        UserHomebrew.canEditHomebrew(socket, homebrewID).then((canEdit) => {
           if(canEdit){
             if(data != null && data.classID != null) {
               HomebrewCreation.deleteClass(homebrewID, data.classID).then((result) => {
@@ -2309,7 +2363,7 @@ module.exports = class SocketConnections {
       });
     
       socket.on('requestHomebrewRemoveClass', function(homebrewID, classID){
-        AuthCheck.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+        UserHomebrew.canEditHomebrew(socket, homebrewID).then((canEdit) => {
           if(canEdit){
             HomebrewCreation.deleteClass(homebrewID, classID).then((result) => {
               socket.emit('returnHomebrewRemoveContent');
@@ -2319,7 +2373,7 @@ module.exports = class SocketConnections {
       });
   
       socket.on('requestHomebrewClassDetails', function(homebrewID){
-        AuthCheck.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+        UserHomebrew.canEditHomebrew(socket, homebrewID).then((canEdit) => {
           if(canEdit){
             GeneralGathering.getAllClasses(homebrewID).then((classObject) => {
               GeneralGathering.getAllFeats(homebrewID).then((featsObject) => {
@@ -2333,7 +2387,7 @@ module.exports = class SocketConnections {
       ////
 
       socket.on('requestHomebrewAddAncestry', function(homebrewID, data){
-        AuthCheck.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+        UserHomebrew.canEditHomebrew(socket, homebrewID).then((canEdit) => {
           if(canEdit){
             HomebrewCreation.addAncestry(homebrewID, data).then((result) => {
               socket.emit('returnHomebrewCompleteAncestry');
@@ -2343,7 +2397,7 @@ module.exports = class SocketConnections {
       });
   
       socket.on('requestHomebrewUpdateAncestry', function(homebrewID, data){
-        AuthCheck.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+        UserHomebrew.canEditHomebrew(socket, homebrewID).then((canEdit) => {
           if(canEdit){
             if(data != null && data.ancestryID != null) {
               HomebrewCreation.deleteAncestry(homebrewID, data.ancestryID).then((result) => {
@@ -2357,7 +2411,7 @@ module.exports = class SocketConnections {
       });
     
       socket.on('requestHomebrewRemoveAncestry', function(homebrewID, ancestryID){
-        AuthCheck.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+        UserHomebrew.canEditHomebrew(socket, homebrewID).then((canEdit) => {
           if(canEdit){
             HomebrewCreation.deleteAncestry(homebrewID, ancestryID).then((result) => {
               socket.emit('returnHomebrewRemoveContent');
@@ -2367,7 +2421,7 @@ module.exports = class SocketConnections {
       });
   
       socket.on('requestHomebrewAncestryDetails', function(homebrewID){
-        AuthCheck.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+        UserHomebrew.canEditHomebrew(socket, homebrewID).then((canEdit) => {
           if(canEdit){
             GeneralGathering.getAllAncestries(true, homebrewID).then((ancestryObject) => {
               GeneralGathering.getAllFeats(homebrewID).then((featsObject) => {
@@ -2381,7 +2435,7 @@ module.exports = class SocketConnections {
       ////
 
       socket.on('requestHomebrewAddArchetype', function(homebrewID, data){
-        AuthCheck.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+        UserHomebrew.canEditHomebrew(socket, homebrewID).then((canEdit) => {
           if(canEdit){
             HomebrewCreation.addArchetype(homebrewID, data).then((result) => {
               socket.emit('returnHomebrewCompleteArchetype');
@@ -2391,7 +2445,7 @@ module.exports = class SocketConnections {
       });
   
       socket.on('requestHomebrewUpdateArchetype', function(homebrewID, data){
-        AuthCheck.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+        UserHomebrew.canEditHomebrew(socket, homebrewID).then((canEdit) => {
           if(canEdit){
             if(data != null && data.archetypeID != null) {
               HomebrewCreation.deleteArchetype(homebrewID, data.archetypeID).then((result) => {
@@ -2405,7 +2459,7 @@ module.exports = class SocketConnections {
       });
     
       socket.on('requestHomebrewRemoveArchetype', function(homebrewID, archetypeID){
-        AuthCheck.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+        UserHomebrew.canEditHomebrew(socket, homebrewID).then((canEdit) => {
           if(canEdit){
             HomebrewCreation.deleteArchetype(homebrewID, archetypeID).then((result) => {
               socket.emit('returnHomebrewRemoveContent');
@@ -2415,9 +2469,9 @@ module.exports = class SocketConnections {
       });
   
       socket.on('requestHomebrewArchetypeDetails', function(homebrewID){
-        AuthCheck.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+        UserHomebrew.canEditHomebrew(socket, homebrewID).then((canEdit) => {
           if(canEdit){
-            GeneralGathering.getAllArchetypes(true, homebrewID).then((archetypeArray) => {
+            GeneralGathering.getAllArchetypes(homebrewID).then((archetypeArray) => {
               GeneralGathering.getAllFeats(homebrewID).then((featsObject) => {
                 socket.emit('returnHomebrewArchetypeDetails', archetypeArray, featsObject);
               });
@@ -2429,7 +2483,7 @@ module.exports = class SocketConnections {
       ///
 
       socket.on('requestHomebrewAddBackground', function(homebrewID, data){
-        AuthCheck.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+        UserHomebrew.canEditHomebrew(socket, homebrewID).then((canEdit) => {
           if(canEdit){
             HomebrewCreation.addBackground(homebrewID, data).then((result) => {
               socket.emit('returnHomebrewCompleteBackground');
@@ -2439,7 +2493,7 @@ module.exports = class SocketConnections {
       });
   
       socket.on('requestHomebrewUpdateBackground', function(homebrewID, data){
-        AuthCheck.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+        UserHomebrew.canEditHomebrew(socket, homebrewID).then((canEdit) => {
           if(canEdit){
             if(data != null && data.backgroundID != null) {
               HomebrewCreation.deleteBackground(homebrewID, data.backgroundID).then((result) => {
@@ -2453,7 +2507,7 @@ module.exports = class SocketConnections {
       });
     
       socket.on('requestHomebrewRemoveBackground', function(homebrewID, backgroundID){
-        AuthCheck.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+        UserHomebrew.canEditHomebrew(socket, homebrewID).then((canEdit) => {
           if(canEdit){
             HomebrewCreation.deleteBackground(homebrewID, backgroundID).then((result) => {
               socket.emit('returnHomebrewRemoveContent');
@@ -2463,7 +2517,7 @@ module.exports = class SocketConnections {
       });
   
       socket.on('requestHomebrewBackgroundDetails', function(homebrewID){
-        AuthCheck.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+        UserHomebrew.canEditHomebrew(socket, homebrewID).then((canEdit) => {
           if(canEdit){
             GeneralGathering.getAllBackgrounds(homebrewID).then((backgrounds) => {
               socket.emit('returnHomebrewBackgroundDetails', backgrounds);
@@ -2475,7 +2529,7 @@ module.exports = class SocketConnections {
       ////
 
       socket.on('requestHomebrewAddClassFeature', function(homebrewID, data){
-        AuthCheck.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+        UserHomebrew.canEditHomebrew(socket, homebrewID).then((canEdit) => {
           if(canEdit){
             HomebrewCreation.addClassFeature(homebrewID, data).then((result) => {
               socket.emit('returnHomebrewCompleteClassFeature');
@@ -2485,7 +2539,7 @@ module.exports = class SocketConnections {
       });
   
       socket.on('requestHomebrewUpdateClassFeature', function(homebrewID, data){
-        AuthCheck.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+        UserHomebrew.canEditHomebrew(socket, homebrewID).then((canEdit) => {
           if(canEdit){
             if(data != null && data.classFeatureID != null) {
               HomebrewCreation.deleteClassFeature(homebrewID, data.classFeatureID).then((result) => {
@@ -2499,7 +2553,7 @@ module.exports = class SocketConnections {
       });
     
       socket.on('requestHomebrewRemoveClassFeature', function(homebrewID, classFeatureID){
-        AuthCheck.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+        UserHomebrew.canEditHomebrew(socket, homebrewID).then((canEdit) => {
           if(canEdit){
             HomebrewCreation.deleteClassFeature(homebrewID, classFeatureID).then((result) => {
               socket.emit('returnHomebrewRemoveContent');
@@ -2511,7 +2565,7 @@ module.exports = class SocketConnections {
       ////
 
       socket.on('requestHomebrewAddFeat', function(homebrewID, data){
-        AuthCheck.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+        UserHomebrew.canEditHomebrew(socket, homebrewID).then((canEdit) => {
           if(canEdit){
             HomebrewCreation.addFeat(homebrewID, data).then((result) => {
               socket.emit('returnHomebrewCompleteFeat');
@@ -2521,7 +2575,7 @@ module.exports = class SocketConnections {
       });
   
       socket.on('requestHomebrewUpdateFeat', function(homebrewID, data){
-        AuthCheck.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+        UserHomebrew.canEditHomebrew(socket, homebrewID).then((canEdit) => {
           if(canEdit){
             if(data != null && data.featID != null) {
               HomebrewCreation.deleteFeat(homebrewID, data.featID).then((result) => {
@@ -2535,7 +2589,7 @@ module.exports = class SocketConnections {
       });
     
       socket.on('requestHomebrewRemoveFeat', function(homebrewID, featID){
-        AuthCheck.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+        UserHomebrew.canEditHomebrew(socket, homebrewID).then((canEdit) => {
           if(canEdit){
             HomebrewCreation.deleteFeat(homebrewID, featID).then((result) => {
               socket.emit('returnHomebrewRemoveContent');
@@ -2545,7 +2599,7 @@ module.exports = class SocketConnections {
       });
   
       socket.on('requestHomebrewFeatDetailsPlus', function(homebrewID){
-        AuthCheck.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+        UserHomebrew.canEditHomebrew(socket, homebrewID).then((canEdit) => {
           if(canEdit){
             GeneralGathering.getAllFeats(homebrewID).then((featsObject) => {
               GeneralGathering.getAllClasses().then((classObject) => {
@@ -2565,7 +2619,7 @@ module.exports = class SocketConnections {
       ////
 
       socket.on('requestHomebrewAddHeritage', function(homebrewID, data){
-        AuthCheck.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+        UserHomebrew.canEditHomebrew(socket, homebrewID).then((canEdit) => {
           if(canEdit){
             HomebrewCreation.addHeritage(homebrewID, null, data).then((result) => {
               socket.emit('returnHomebrewCompleteHeritage');
@@ -2575,7 +2629,7 @@ module.exports = class SocketConnections {
       });
   
       socket.on('requestHomebrewUpdateHeritage', function(homebrewID, data){
-        AuthCheck.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+        UserHomebrew.canEditHomebrew(socket, homebrewID).then((canEdit) => {
           if(canEdit){
             if(data != null && data.heritageID != null) {
               HomebrewCreation.deleteHeritage(homebrewID, data.heritageID).then((result) => {
@@ -2589,7 +2643,7 @@ module.exports = class SocketConnections {
       });
     
       socket.on('requestHomebrewRemoveHeritage', function(homebrewID, heritageID){
-        AuthCheck.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+        UserHomebrew.canEditHomebrew(socket, homebrewID).then((canEdit) => {
           if(canEdit){
             HomebrewCreation.deleteHeritage(homebrewID, heritageID).then((result) => {
               socket.emit('returnHomebrewRemoveContent');
@@ -2599,7 +2653,7 @@ module.exports = class SocketConnections {
       });
   
       socket.on('requestHomebrewHeritageDetails', function(homebrewID){
-        AuthCheck.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+        UserHomebrew.canEditHomebrew(socket, homebrewID).then((canEdit) => {
           if(canEdit){
             GeneralGathering.getAllHeritages(homebrewID).then((heritages) => {
               GeneralGathering.getAllAncestriesBasic().then((ancestries) => {
@@ -2613,7 +2667,7 @@ module.exports = class SocketConnections {
       ////
 
       socket.on('requestHomebrewAddUniHeritage', function(homebrewID, data){
-        AuthCheck.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+        UserHomebrew.canEditHomebrew(socket, homebrewID).then((canEdit) => {
           if(canEdit){
             HomebrewCreation.addUniHeritage(homebrewID, data).then((result) => {
               socket.emit('returnHomebrewCompleteUniHeritage');
@@ -2623,7 +2677,7 @@ module.exports = class SocketConnections {
       });
   
       socket.on('requestHomebrewUpdateUniHeritage', function(homebrewID, data){
-        AuthCheck.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+        UserHomebrew.canEditHomebrew(socket, homebrewID).then((canEdit) => {
           if(canEdit){
             if(data != null && data.uniHeritageID != null) {
               HomebrewCreation.deleteUniHeritage(homebrewID, data.uniHeritageID).then((result) => {
@@ -2637,7 +2691,7 @@ module.exports = class SocketConnections {
       });
     
       socket.on('requestHomebrewRemoveUniHeritage', function(homebrewID, uniHeritageID){
-        AuthCheck.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+        UserHomebrew.canEditHomebrew(socket, homebrewID).then((canEdit) => {
           if(canEdit){
             HomebrewCreation.deleteUniHeritage(homebrewID, uniHeritageID).then((result) => {
               socket.emit('returnHomebrewRemoveContent');
@@ -2647,7 +2701,7 @@ module.exports = class SocketConnections {
       });
   
       socket.on('requestHomebrewUniHeritageDetails', function(homebrewID){
-        AuthCheck.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+        UserHomebrew.canEditHomebrew(socket, homebrewID).then((canEdit) => {
           if(canEdit){
             GeneralGathering.getAllUniHeritages(homebrewID).then((uniheritages) => {
               GeneralGathering.getAllFeats(homebrewID).then((featsObject) => {
@@ -2661,7 +2715,7 @@ module.exports = class SocketConnections {
       ////
 
       socket.on('requestHomebrewAddItem', function(homebrewID, data){
-        AuthCheck.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+        UserHomebrew.canEditHomebrew(socket, homebrewID).then((canEdit) => {
           if(canEdit){
             HomebrewCreation.addItem(homebrewID, data).then((result) => {
               socket.emit('returnHomebrewCompleteItem');
@@ -2671,7 +2725,7 @@ module.exports = class SocketConnections {
       });
   
       socket.on('requestHomebrewUpdateItem', function(homebrewID, data){
-        AuthCheck.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+        UserHomebrew.canEditHomebrew(socket, homebrewID).then((canEdit) => {
           if(canEdit){
             if(data != null && data.itemID != null) {
               HomebrewCreation.deleteItem(homebrewID, data.itemID).then((result) => {
@@ -2685,7 +2739,7 @@ module.exports = class SocketConnections {
       });
     
       socket.on('requestHomebrewRemoveItem', function(homebrewID, itemID){
-        AuthCheck.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+        UserHomebrew.canEditHomebrew(socket, homebrewID).then((canEdit) => {
           if(canEdit){
             HomebrewCreation.deleteItem(homebrewID, itemID).then((result) => {
               socket.emit('returnHomebrewRemoveContent');
@@ -2695,7 +2749,7 @@ module.exports = class SocketConnections {
       });
   
       socket.on('requestHomebrewItemDetails', function(homebrewID){
-        AuthCheck.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+        UserHomebrew.canEditHomebrew(socket, homebrewID).then((canEdit) => {
           if(canEdit){
             GeneralGathering.getAllItems(homebrewID).then((itemMap) => {
               socket.emit('returnHomebrewItemDetails', mapToObj(itemMap));
@@ -2707,7 +2761,7 @@ module.exports = class SocketConnections {
       ////
 
       socket.on('requestHomebrewAddSpell', function(homebrewID, data){
-        AuthCheck.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+        UserHomebrew.canEditHomebrew(socket, homebrewID).then((canEdit) => {
           if(canEdit){
             HomebrewCreation.addSpell(homebrewID, data).then((result) => {
               socket.emit('returnHomebrewCompleteSpell');
@@ -2717,7 +2771,7 @@ module.exports = class SocketConnections {
       });
   
       socket.on('requestHomebrewUpdateSpell', function(homebrewID, data){
-        AuthCheck.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+        UserHomebrew.canEditHomebrew(socket, homebrewID).then((canEdit) => {
           if(canEdit){
             if(data != null && data.spellID != null) {
               HomebrewCreation.deleteSpell(homebrewID, data.spellID).then((result) => {
@@ -2731,7 +2785,7 @@ module.exports = class SocketConnections {
       });
     
       socket.on('requestHomebrewRemoveSpell', function(homebrewID, spellID){
-        AuthCheck.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+        UserHomebrew.canEditHomebrew(socket, homebrewID).then((canEdit) => {
           if(canEdit){
             HomebrewCreation.deleteSpell(homebrewID, spellID).then((result) => {
               socket.emit('returnHomebrewRemoveContent');
@@ -2741,7 +2795,7 @@ module.exports = class SocketConnections {
       });
   
       socket.on('requestHomebrewSpellDetails', function(homebrewID){
-        AuthCheck.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+        UserHomebrew.canEditHomebrew(socket, homebrewID).then((canEdit) => {
           if(canEdit){
             GeneralGathering.getAllSpells(homebrewID).then((spellMap) => {
               socket.emit('returnHomebrewSpellDetails', mapToObj(spellMap));

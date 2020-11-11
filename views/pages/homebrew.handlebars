@@ -6,7 +6,10 @@
     <script src="/js/homebrew/user-content.js"></script>
     <script src="/js/homebrew/user-collection.js"></script>
     <script src="/js/homebrew/bundle-browse.js"></script>
+    <script src="/js/browse/browse-utils.js"></script>
 
+    <script src="/js/homebrew/bundle-view.js"></script>
+    
     <script src="/js/homebrew/builder/bundle-editor.js"></script>
 
     <script src="/js/libraries/confirm_message/confirm-message.js"></script>
@@ -51,10 +54,10 @@
     <div class="banner_w3lspvt-2"></div>
 {{/section}}
 
-<div id="homebrew-container" class="container" data-edit-homebrew-id="{{editHomebrewID}}" data-view-homebrew-id="{{viewHomebrewID}}">
+<div id="homebrew-container" class="container" data-edit-homebrew-id="{{editHomebrewID}}" data-view-homebrew-id="{{viewHomebrewID}}" data-direct-to-tab="{{homebrewTabName}}">
 
     
-    
+    <!--
     <h1 class="pt-3 is-size-1 has-text-light text-center">Homebrew</h1>
     <hr style="border-color: #5e5e5e;">
     <div>
@@ -63,12 +66,12 @@
             The plan for this page is for it to be the central hub for all things homebrew. This is where you would go to browse homebrew, manage homebrew you're subscribed to, and create your own homebrew.
         </p>
     </div>
-    
+    -->
     
     
 
-  <!--
-  <div class="tabs is-centered is-boxed use-custom-scrollbar mb-3">
+  
+  <div class="tabs is-centered is-boxed use-custom-scrollbar mb-2">
     <ul class="category-tabs">
       <li><a id="browseTab">Browse Homebrew</a></li>
       <li><a id="userCollectionTab">My Collection</a></li>
@@ -77,6 +80,6 @@
   </div>
   <div id="tabContent" class="mx-3 mb-3">
   </div>
-  -->
+  
 
 </div>

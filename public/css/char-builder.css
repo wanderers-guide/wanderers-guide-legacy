@@ -262,6 +262,13 @@ hr {
     font-family: 'Noto Sans', sans-serif;
 }
 
+/* First Page Containers */
+.first-page-container {
+  height: 550px;
+  max-height: 550px;
+  overflow-y: auto;
+}
+
 /* Center Selected Option */
 
 select {
