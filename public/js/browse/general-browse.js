@@ -23,18 +23,27 @@ let activeSearchTab = 'ancestry';
 
 // ~~~~~~~~~~~~~~ // Run on Load // ~~~~~~~~~~~~~~ //
 $(function () {
-
+  
   socket.emit("requestBrowse");
 
 });
 
 socket.on("returnBrowse", function(featsObject, skillObject, itemObject, spellObject, allLanguages, allConditions, allTags, classes, ancestries, archetypes, backgrounds, uniHeritages) {
+  let featMap = objToMap(featsObject);
+  let skillMap = objToMap(skillObject);
+  let itemMap = objToMap(itemObject);
+  let spellMap = objToMap(spellObject);
+
+  initBrowse(featMap, skillMap, itemMap, spellMap, allLanguages, allConditions, allTags, classes, ancestries, archetypes, backgrounds, uniHeritages);
+});
+
+function initBrowse(featMap, skillMap, itemMap, spellMap, allLanguages, allConditions, allTags, classes, ancestries, archetypes, backgrounds, uniHeritages) {
   finishLoadingPage();
   
-  g_featMap = objToMap(featsObject);
-  g_skillMap = objToMap(skillObject);
-  g_itemMap = objToMap(itemObject);
-  g_spellMap = objToMap(spellObject);
+  g_featMap = featMap;
+  g_skillMap = skillMap;
+  g_itemMap = itemMap;
+  g_spellMap = spellMap;
   g_allLanguages = allLanguages;
   g_allConditions = allConditions;
   g_allTags = allTags;
@@ -188,7 +197,7 @@ socket.on("returnBrowse", function(featsObject, skillObject, itemObject, spellOb
     }
   });
 
-});
+}
 
 function openTab(tabName){
   activeSearchTab = tabName;
