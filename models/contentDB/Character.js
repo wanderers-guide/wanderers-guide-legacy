@@ -47,6 +47,9 @@ const Character = db.define('characters', {
   details: {
     type: Sequelize.TEXT
   },
+  customCode: {
+    type: Sequelize.STRING
+  },
   dataID: {
     type: Sequelize.INTEGER
   },
@@ -58,6 +61,9 @@ const Character = db.define('characters', {
     type: Sequelize.INTEGER
   },
   optionPublicCharacter: {
+    type: Sequelize.INTEGER
+  },
+  optionCustomCodeBlock: {
     type: Sequelize.INTEGER
   },
   // Character Variants //

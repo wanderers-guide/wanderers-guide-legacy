@@ -18,7 +18,7 @@ router.get('*', (req, res) => {
                 if(CharStateUtils.isPlayable(character)) {
                     goToCharSheet(character, req, res);
                 } else {
-                    res.redirect('/profile/characters/builder/'+character.id+'/page1');
+                    res.redirect('/profile/characters/builder/basics/?id='+character.id);
                 }
     
             } else {

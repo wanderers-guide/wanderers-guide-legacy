@@ -32,7 +32,7 @@ $(function () {
             $(this).removeClass('card-footer-hover');
         });
         cardEdit.click(function() {
-            window.location.href = '/profile/characters/builder/'+characterID+'/page1';
+            window.location.href = '/profile/characters/builder/basics/?id='+characterID;
         });
 
         cardDelete.mouseenter(function(){

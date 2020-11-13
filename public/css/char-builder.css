@@ -47,6 +47,19 @@
 }
 
 
+/* Custom Code Block */
+
+#option-custom-code-block-container {
+  max-width: 620px;
+  display: block;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  color: #000;
+  margin: 0 auto;
+  margin-top: 1.5rem;
+}
+
 /* Dark Mode Styling */
 
 .select::after {

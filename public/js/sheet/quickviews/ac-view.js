@@ -18,7 +18,7 @@ function openACQuickview(data) {
 
     let breakDownInnerHTML = '<p class="has-text-centered">'+data.TotalAC+' = 10 + ';
 
-    breakDownInnerHTML += '<a class="has-text-link has-tooltip-bottom has-tooltip-multiline" data-tooltip="This is your Dexterity modifier, capped out by your armor\'s Dex Cap. It is added when determining your AC.">'+data.DexMod+'</a>';
+    breakDownInnerHTML += '<a class="has-text-link has-tooltip-bottom has-tooltip-multiline" data-tooltip="This is your Dexterity modifier, capped out by your armor\'s Dex Cap and decreased by certain conditions.">'+data.DexMod+'</a>';
 
     breakDownInnerHTML += ' + ';
 

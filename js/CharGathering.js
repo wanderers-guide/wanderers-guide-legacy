@@ -794,23 +794,19 @@ module.exports = class CharGathering {
         });
     }
 
-    static getAllAncestriesBasic(charID) {
-        return Character.findOne({ where: { id: charID} })
-        .then((character) => {
-            return Ancestry.findAll({
-                where: {
-                    contentSrc: {
-                      [Op.or]: CharContentSources.getSourceArray(character)
-                    },
-                    homebrewID: {
-                      [Op.or]: CharContentHomebrew.getHomebrewArray(character)
-                    },
-                }
-            })
-            .then((ancestries) => {
-                return ancestries;
-            });
-        });
+    static getAllAncestriesBasic(character) {
+      return Ancestry.findAll({
+        where: {
+            contentSrc: {
+              [Op.or]: CharContentSources.getSourceArray(character)
+            },
+            homebrewID: {
+              [Op.or]: CharContentHomebrew.getHomebrewArray(character)
+            },
+        }
+      }).then((ancestries) => {
+          return ancestries;
+      });
     }
 
     static getAllBackgrounds(charID) {
@@ -1032,7 +1028,7 @@ module.exports = class CharGathering {
           .then((ancestry) => {
             return CharGathering.getCharHeritage(character)
             .then((heritage) => {
-              return CharGathering.getAllAncestriesBasic(charID)
+              return CharGathering.getAllAncestriesBasic(character)
               .then((ancestries) => {
                 return CharTags.getTags(charID)
                 .then((charTagsArray) => {
@@ -1240,7 +1236,7 @@ module.exports = class CharGathering {
     }
 
     static getCharacter(charID) {
-        return Character.findOne({ where: { id: charID} })
+        return Character.findOne({ where: { id: charID } })
         .then((character) => {
             return character;
         });

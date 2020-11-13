@@ -11,8 +11,10 @@ $(function () {
 
     // Change page
     $("#nextButton").click(function(){
-        nextPage();
+      // Hardcoded redirect to page 2
+      window.location.href = '/profile/characters/builder/?id='+getCharIDFromURL()+'&page=2';
     });
+    initBuilderSteps();
     
     // On load get basic character info
     socket.emit("requestCharacterDetails",
@@ -20,11 +22,24 @@ $(function () {
 
 });
 
-// ~~~~~~~~~~~~~~ // Change Page // ~~~~~~~~~~~~~~ //
+function initBuilderSteps(){
 
-function nextPage() {
-    // Hardcoded redirect
-    window.location.href = window.location.href.replace("page1", "page2");
+  $('.builder-basics-page-btn').click(function(){
+    window.location.href = '/profile/characters/builder/basics/?id='+getCharIDFromURL();
+  });
+  $('.builder-ancestry-page-btn').click(function(){
+    window.location.href = '/profile/characters/builder/?id='+getCharIDFromURL()+'&page=2';
+  });
+  $('.builder-background-page-btn').click(function(){
+    window.location.href = '/profile/characters/builder/?id='+getCharIDFromURL()+'&page=3';
+  });
+  $('.builder-class-page-btn').click(function(){
+    window.location.href = '/profile/characters/builder/?id='+getCharIDFromURL()+'&page=4';
+  });
+  $('.builder-finalize-page-btn').click(function(){
+    window.location.href = '/profile/characters/builder/?id='+getCharIDFromURL()+'&page=5';
+  });
+
 }
 
 // ~~~~~~~~~~~~~~ // Processings // ~~~~~~~~~~~~~~ //
@@ -298,6 +313,34 @@ function handleCharacterOptions(character, hBundles, progessBundles) {
     });
     $("#optionAutoDetectPreReqs").prop('checked', (character.optionAutoDetectPreReqs === 1));
 
+    $("#optionCustomCodeBlock").change(function(){
+      let optionTypeValue = (this.checked) ? 1 : 0;
+      if(optionTypeValue === 1) {
+        $("#optionCustomCodeBlockInfo").removeClass('is-hidden');
+        $("#option-custom-code-block-container").removeClass('is-hidden');
+      } else {
+        $("#optionCustomCodeBlockInfo").addClass('is-hidden');
+        $("#option-custom-code-block-container").addClass('is-hidden');
+      }
+      socket.emit("requestCharacterOptionChange", 
+          getCharIDFromURL(), 
+          'optionCustomCodeBlock',
+          optionTypeValue);
+  });
+  $("#optionCustomCodeBlock").prop('checked', (character.optionCustomCodeBlock === 1));
+  if(character.optionCustomCodeBlock === 1) {
+    $("#optionCustomCodeBlockInfo").removeClass('is-hidden');
+    $("#option-custom-code-block-container").removeClass('is-hidden');
+  }
+  $("#inputCustomCodeBlock").blur(function(){
+    let newCode = $(this).val();
+    if(character.customCode != newCode){
+      character.customCode = newCode;
+      $('#inputCustomCodeBlock').parent().addClass("is-loading");
+      socket.emit("requestCharacterCustomCodeBlockChange", getCharIDFromURL(), newCode);
+    }
+  });
+
 }
 
 
@@ -324,6 +367,11 @@ socket.on("returnCharacterOptionChange", function() {
     $(".optionSwitch").blur();
 });
 
+//
+
+socket.on("returnCharacterCustomCodeBlockChange", function() {
+  $('#inputCustomCodeBlock').parent().removeClass("is-loading");
+});
 
 //// Homebrew Bundles ////
 function displayHomebrewBundles(character, hBundles, progessBundles){

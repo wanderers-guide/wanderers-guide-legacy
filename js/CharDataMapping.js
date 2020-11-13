@@ -69,39 +69,55 @@ module.exports = class CharDataMapping {
     }
 
     static getDataAll(charID, source, ModelForMap){
-        console.log("Get All - "+source);
+      console.log("Get All - "+source);
+      if(ModelForMap != null){
+        ModelForMap.hasMany(CharDataMappingModel, {foreignKey: 'value'});
+        CharDataMappingModel.belongsTo(ModelForMap, {foreignKey: 'value'});
         return CharDataMappingModel.findAll({
-            where: {
-                charID,
-                source,
-            },
-            raw: true,
-        }).then((dataArray) => {
-            if(ModelForMap != null){
-                return ModelForMap.findAll()
-                .then((models) => {
-                    let newDataArray = [];
-                    for(let data of dataArray){
-                        let model = models.find(model => {
-                            return model.id == data.value;
-                        });
-                        if(model == null){ model = null; }
-                        newDataArray.push({
-                            charID: data.charID,
-                            source: data.source,
-                            sourceType: data.sourceType,
-                            sourceLevel: data.sourceLevel,
-                            sourceCode: data.sourceCode,
-                            sourceCodeSNum: data.sourceCodeSNum,
-                            value: model,
-                        });
-                    }
-                    return newDataArray;
-                });
-            } else {
-                return dataArray;
+          where: {
+            charID,
+            source,
+          },
+          raw: true,
+          include: {
+            model: ModelForMap,
+          }
+        }).then(dataArray => {
+          let newDataArray = [];
+          for(let data of dataArray){
+            let isNull = true;
+            let dataValue = {};
+            for(let dPart of Object.keys(data)){
+              if(dPart.includes('.')){
+                if(data[dPart] != null) {isNull = false;}
+                let lastPart = dPart.split('.')[1];
+                dataValue[lastPart] = data[dPart];
+              }
             }
+            if(isNull){ dataValue = null; }
+            newDataArray.push({
+              charID: data.charID,
+              source: data.source,
+              sourceType: data.sourceType,
+              sourceLevel: data.sourceLevel,
+              sourceCode: data.sourceCode,
+              sourceCodeSNum: data.sourceCodeSNum,
+              value: dataValue,
+            });
+          }
+          return newDataArray;
         });
+      } else {
+        return CharDataMappingModel.findAll({
+          where: {
+            charID,
+            source,
+          },
+          raw: true,
+        }).then((dataArray) => {
+          return dataArray;
+        });
+      }
     }
 
 

@@ -3,10 +3,7 @@
 */
 
 function getCharIDFromURL(){
-    let spl1 = window.location.pathname.split("builder/");
-    let spl2 = spl1[1].split("/page");
-
-    return spl2[0];
+  return $('#char-builder-container').attr('data-char-id');
 }
 
 function getAllAbilityTypes() {

@@ -654,6 +654,16 @@ module.exports = class SocketConnections {
         });
       });
 
+      socket.on('requestCharacterCustomCodeBlockChange', function(charID, code){
+        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+          if(ownsChar){
+            CharSaving.saveCustomCode(charID, code).then((result) => {
+              socket.emit('returnCharacterCustomCodeBlockChange');
+            });
+          }
+        });
+      });
+
     });
     
   }
@@ -663,16 +673,12 @@ module.exports = class SocketConnections {
     // Socket.IO Connections
     io.on('connection', function(socket){
 
-      socket.on('requestAncestryDetails', function(charID){
+      socket.on('requestBuilderPageAncestry', function(charID){
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
           if(ownsChar){
             CharGathering.getAllAncestries(charID, false).then((ancestriesObject) => {
               CharGathering.getAllUniHeritages(charID).then((uniHeritageArray) => {
-                CharGathering.getCharChoices(charID).then((choiceStruct) => {
-                  CharGathering.getBuilderCore(charID).then((coreDataStruct) => {
-                    socket.emit('returnAncestryDetails', coreDataStruct, ancestriesObject, uniHeritageArray, choiceStruct);
-                  });
-                });
+                socket.emit('returnBuilderPageAncestry', ancestriesObject, uniHeritageArray);
               });
             });
           }
@@ -713,15 +719,11 @@ module.exports = class SocketConnections {
     // Socket.IO Connections
     io.on('connection', function(socket){
 
-      socket.on('requestBackgroundDetails', function(charID){
+      socket.on('requestBuilderPageBackground', function(charID){
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
           if(ownsChar){
             CharGathering.getAllBackgrounds(charID).then((backgrounds) => {
-              CharGathering.getCharChoices(charID).then((choiceStruct) => {
-                CharGathering.getBuilderCore(charID).then((coreDataStruct) => {
-                  socket.emit('returnBackgroundDetails', coreDataStruct, backgrounds, choiceStruct);
-                });
-              });
+              socket.emit('returnBuilderPageBackground', backgrounds);
             });
           }
         });
@@ -748,15 +750,11 @@ module.exports = class SocketConnections {
     // Socket.IO Connections
     io.on('connection', function(socket){
 
-      socket.on('requestClassDetails', function(charID){
+      socket.on('requestBuilderPageClass', function(charID){
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
           if(ownsChar){
             CharGathering.getAllClasses(charID).then((classObject) => {
-              CharGathering.getCharChoices(charID).then((choiceStruct) => {
-                CharGathering.getBuilderCore(charID).then((coreDataStruct) => {
-                  socket.emit('returnClassDetails', coreDataStruct, classObject, choiceStruct);
-                });
-              });
+              socket.emit('returnBuilderPageClass', classObject);
             });
           }
         });
@@ -784,17 +782,13 @@ module.exports = class SocketConnections {
     // Socket.IO Connections
     io.on('connection', function(socket){
 
-      socket.on('requestFinalizeDetails', function(charID){
+      socket.on('requestBuilderPageFinalize', function(charID){
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
           if(ownsChar){
             CharGathering.getCharacter(charID).then((character) => {
               CharGathering.getClass(charID, character.classID).then((classDetails) => {
                 CharGathering.getAncestry(character.ancestryID).then((ancestry) => {
-                  CharGathering.getCharChoices(charID).then((choiceStruct) => {
-                    CharGathering.getBuilderCore(charID).then((coreDataStruct) => {
-                      socket.emit('returnFinalizeDetails', coreDataStruct, character, classDetails.Class, ancestry, choiceStruct);
-                    });
-                  });
+                  socket.emit('returnBuilderPageFinalize', character, classDetails.Class, ancestry);
                 });
               });
             });
@@ -824,6 +818,20 @@ module.exports = class SocketConnections {
 
     // Socket.IO Connections
     io.on('connection', function(socket){
+
+      socket.on('requestCharBuilderDetails', function(charID){
+        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+          if(ownsChar){
+            CharGathering.getCharacter(charID).then((character) => {
+              CharGathering.getBuilderCore(charID).then((coreDataStruct) => {
+                CharGathering.getCharChoices(charID).then((choiceStruct) => {
+                  socket.emit('returnCharBuilderDetails', character, coreDataStruct, choiceStruct);
+                });
+              });
+            });
+          }
+        });
+      });
 
       socket.on('requestAbilityBonusChange', function(charID, srcStruct, abilityBonusStruct){
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {

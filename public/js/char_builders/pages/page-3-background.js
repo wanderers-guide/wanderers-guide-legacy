@@ -2,72 +2,12 @@
     By Aaron Cassar.
 */
 
-let socket = io();
-let isBuilderInit = false;
-
-// Core Builder Data //
-let g_abilMap = null;
-let g_featMap = null;
-let g_skillMap = null;
-let g_itemMap = null;
-let g_spellMap = null;
-let g_allLanguages = null;
-let g_allConditions = null;
-let g_allTags = null;
-// ~~~~~~~~~~~~~~~~~ //
-
-let choiceStruct = null;
 let g_background = null;
-
-// ~~~~~~~~~~~~~~ // General - Run On Load // ~~~~~~~~~~~~~~ //
-$(function () {
-
-    // Change page
-    $("#nextButton").click(function(){
-        nextPage();
-    });
-    
-    $("#prevButton").click(function(){
-        prevPage();
-    });
-
-    // On load get all ancestries and feats
-    socket.emit("requestBackgroundDetails",
-        getCharIDFromURL());
-
-
-});
-
-// ~~~~~~~~~~~~~~ // Change Page // ~~~~~~~~~~~~~~ //
-
-function nextPage() {
-    // Hardcoded redirect
-    window.location.href = window.location.href.replace("page3", "page4");
-}
-
-function prevPage() {
-    // Hardcoded redirect
-    window.location.href = window.location.href.replace("page3", "page2");
-}
-
 
 // ~~~~~~~~~~~~~~ // Processings // ~~~~~~~~~~~~~~ //
 
-socket.on("returnBackgroundDetails", function(coreDataStruct, backgrounds, inChoiceStruct){
-    isBuilderInit = true;
+function loadBackgroundPage(backgrounds) {
 
-    // Core Builder Data //
-    g_abilMap = objToMap(coreDataStruct.AbilObject);
-    g_featMap = objToMap(coreDataStruct.FeatObject);
-    g_skillMap = objToMap(coreDataStruct.SkillObject);
-    g_itemMap = objToMap(coreDataStruct.ItemObject);
-    g_spellMap = objToMap(coreDataStruct.SpellObject);
-    g_allLanguages = coreDataStruct.AllLanguages;
-    g_allConditions = coreDataStruct.AllConditions;
-    g_allTags = coreDataStruct.AllTags;
-    // ~~~~~~~~~~~~~~~~~ //
-
-    choiceStruct = inChoiceStruct;
     backgrounds = backgrounds.sort(
         function(a, b) {
             return a.name > b.name ? 1 : -1;
@@ -79,8 +19,7 @@ socket.on("returnBackgroundDetails", function(coreDataStruct, backgrounds, inCho
     selectBackground.append('<option value="chooseDefault" name="chooseDefault">Choose a Background</option>');
     selectBackground.append('<optgroup label="──────────"></optgroup>');
     for(const background of backgrounds){
-        let currentBackgroundID = $('#selectBackground').attr('name');
-        if(background.id == currentBackgroundID){
+        if(background.id == g_char_backgroundID){
             if(background.isArchived == 0){
                 selectBackground.append('<option value="'+background.id+'" class="'+selectOptionRarity(background.rarity)+'" selected>'+background.name+'</option>');
             } else {
@@ -107,12 +46,12 @@ socket.on("returnBackgroundDetails", function(coreDataStruct, backgrounds, inCho
             if(triggerSave == null || triggerSave) {
                 $('#selectBackgroundControlShell').addClass("is-loading");
                 
+                g_char_backgroundID = backgroundID;
                 g_background = background;
                 socket.emit("requestBackgroundChange",
                     getCharIDFromURL(),
                     backgroundID);
             } else {
-                injectWSCChoiceStruct(choiceStruct);
                 displayCurrentBackground(background);
             }
 
@@ -121,6 +60,7 @@ socket.on("returnBackgroundDetails", function(coreDataStruct, backgrounds, inCho
             $('#selectBackgroundControlShell').addClass("is-info");
 
             // Delete background, set to null
+            g_char_backgroundID = null;
             g_background = null;
             socket.emit("requestBackgroundChange",
                 getCharIDFromURL(),
@@ -136,7 +76,7 @@ socket.on("returnBackgroundDetails", function(coreDataStruct, backgrounds, inCho
     // Activate boostSingleSelection() triggers
     $('.abilityBoost').trigger("change", [false]);
 
-});
+}
 
 socket.on("returnBackgroundChange", function(choiceStruct){
     $('#selectBackgroundControlShell').removeClass("is-loading");
@@ -193,11 +133,6 @@ function displayCurrentBackground(background) {
             'backBoostSection');
     }
 
-}
-
-function finishLoadingPage() {
-    // Turn off page loading
-    $('.pageloader').addClass("fadeout");
 }
 
 function selectorUpdated() {

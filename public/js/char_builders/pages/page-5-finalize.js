@@ -2,58 +2,9 @@
     By Aaron Cassar.
 */
 
-let socket = io();
-let isBuilderInit = false;
-
-// Core Builder Data //
-let g_abilMap = null;
-let g_featMap = null;
-let g_skillMap = null;
-let g_itemMap = null;
-let g_spellMap = null;
-let g_allLanguages = null;
-let g_allConditions = null;
-let g_allTags = null;
-// ~~~~~~~~~~~~~~~~~ //
-
-// ~~~~~~~~~~~~~~ // General - Run On Load // ~~~~~~~~~~~~~~ //
-$(function () {
-
-    // Change page
-    $("#prevButton").click(function(){
-        prevPage();
-    });    
-
-    socket.emit("requestFinalizeDetails",
-        getCharIDFromURL());
-
-
-});
-
-// ~~~~~~~~~~~~~~ // Change Page // ~~~~~~~~~~~~~~ //
-
-function prevPage() {
-    // Hardcoded redirect
-    window.location.href = window.location.href.replace("page5", "page4");
-}
-
 // ~~~~~~~~~~~~~~ // Processings // ~~~~~~~~~~~~~~ //
 
-socket.on("returnFinalizeDetails", function(coreDataStruct, character, cClass, ancestry, choiceStruct){
-    isBuilderInit = true;
-
-    // Core Builder Data //
-    g_abilMap = objToMap(coreDataStruct.AbilObject);
-    g_featMap = objToMap(coreDataStruct.FeatObject);
-    g_skillMap = objToMap(coreDataStruct.SkillObject);
-    g_itemMap = objToMap(coreDataStruct.ItemObject);
-    g_spellMap = objToMap(coreDataStruct.SpellObject);
-    g_allLanguages = coreDataStruct.AllLanguages;
-    g_allConditions = coreDataStruct.AllConditions;
-    g_allTags = coreDataStruct.AllTags;
-    // ~~~~~~~~~~~~~~~~~ //
-
-    injectWSCChoiceStruct(choiceStruct);
+function loadFinalizePage(character, cClass, ancestry) {
 
     let strScore = g_abilMap.get("STR");
     $("#strScore").html(strScore);
@@ -102,9 +53,9 @@ socket.on("returnFinalizeDetails", function(coreDataStruct, character, cClass, a
 
     if (character.name == null || character.ancestryID == null || character.backgroundID == null || character.classID == null) {
 
-        $("#goToCharButton").removeClass("is-success");
-        $("#goToCharButton").addClass("is-danger");
-        $("#goToCharButton").addClass("has-tooltip-bottom");
+        $("#goToCharBigButton").removeClass("has-text-info");
+        $("#goToCharBigButton").addClass("has-text-danger");
+        $("#goToCharBigButton").addClass("has-tooltip-left");
 
         let infoNeeded = '';
         if(character.name == null) {
@@ -128,15 +79,30 @@ socket.on("returnFinalizeDetails", function(coreDataStruct, character, cClass, a
             $("#class-step").addClass("is-danger");
         }
 
-        $("#goToCharButton").attr("data-tooltip", "Character Incomplete\n"+infoNeeded);
+        $("#goToCharBigButton").attr("data-tooltip", "Character Incomplete\n"+infoNeeded);
 
+    } else {
+        $("#goToCharBigButton").removeClass("has-text-danger");
+        $("#goToCharBigButton").addClass("has-text-info");
+        $("#goToCharBigButton").removeClass("has-tooltip-left");
+        $("#goToCharBigButton").attr("data-tooltip", null);
+    }
+    
+    // Custom Code Block Option - Results //
+    if(character.optionCustomCodeBlock === 1){
+      $('#custom-code-block-results-section').removeClass('is-hidden');
+      let customCodeSrcStruct = {
+        sourceType: 'custom-code',
+        sourceLevel: 0,
+        sourceCode: 'custom-code',
+        sourceCodeSNum: 'a',
+      };
+      processCode(
+        character.customCode,
+        customCodeSrcStruct,
+        'custom-code-block-results-container');
     }
 
-});
-
-function finishLoadingPage() {
-    // Turn off page loading
-    $('.pageloader').addClass("fadeout");
 }
 
 function selectorUpdated() {

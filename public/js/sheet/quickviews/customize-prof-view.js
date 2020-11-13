@@ -23,13 +23,7 @@ function openCustomizeProfQuickview(data) {
     } else {
         $('#customizeProf').val('chooseDefault');
     }
-
-    let noteFieldSrcStruct = {
-        sourceType: 'bonus-area',
-        sourceLevel: 0,
-        sourceCode: 'bonus-area-'+data.NoteFieldID,
-        sourceCodeSNum: 'a',
-    };
+    
     let notesData = getNotesData(noteFieldSrcStruct);
     if(notesData != null){
         $('#customizeHasNoteField').prop('checked', true);

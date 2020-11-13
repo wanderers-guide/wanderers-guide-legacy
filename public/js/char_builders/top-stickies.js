@@ -10,17 +10,4 @@ $(function () {
     openLeftQuickView('skillsView', null);
   });
 
-  $('#goToCharButton').click(function(){
-    if(!$(this).hasClass('is-danger')){
-      goToSheet();
-    }
-  });
-
 });
-
-function goToSheet(){
-  // Hardcoded redirect
-  let rBuilderURL = 'builder\/'+getCharIDFromURL()+'\/page\\d.?';
-  let re = new RegExp(rBuilderURL,'');
-  window.location.href = window.location.href.replace(re, getCharIDFromURL());
-}

@@ -413,6 +413,11 @@ function loadCharSheet(){
     // Run Feats and Abilities Code //
     runAllFeatsAndAbilitiesCode();
 
+    // Run Custom Code Block Code //
+    if(g_character.optionCustomCodeBlock === 1){
+      processSheetCode(g_character.customCode, 'Custom Code');
+    }
+
     // Determine Bulk and Coins //
     determineBulkAndCoins(g_invStruct.InvItems, g_itemMap);
 
@@ -692,8 +697,7 @@ function displayInformation() {
     $("#backToBuilderButton").click(function(){
         if(!isViewOnly){
             // Hardcoded redirect
-            window.location.href = window.location.href.replace(
-                "/"+getCharIDFromURL(), "/builder/"+getCharIDFromURL()+"/page1?");
+            window.location.href = '/profile/characters/builder/basics/?id='+getCharIDFromURL();
         }
     });
 
@@ -1453,7 +1457,10 @@ function determineArmor(dexMod, strScore) {
         }
 
         let profNumber = getProfNumber(profNumUps, g_character.level);
-        dexMod = (dexMod > armorStruct.Item.ArmorData.dexCap) ? armorStruct.Item.ArmorData.dexCap : dexMod;
+
+        let pre_dexMod = getMod(g_preConditions_dexScore);
+        let newDexMod = (pre_dexMod > armorStruct.Item.ArmorData.dexCap) ? armorStruct.Item.ArmorData.dexCap : pre_dexMod;
+        dexMod = newDexMod - (pre_dexMod-dexMod);
 
         // Halve maxHP if it's shoddy
         let maxHP = (armorStruct.InvItem.isShoddy == 1) ? Math.floor(armorStruct.InvItem.hitPoints/2) : armorStruct.InvItem.hitPoints;

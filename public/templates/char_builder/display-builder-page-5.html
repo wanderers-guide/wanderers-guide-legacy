@@ -1,0 +1,143 @@
+
+<div id="char-builder" class="container py-4 text-center">
+
+  <div id="errorDisplay" class="hero is-danger is-hidden">
+      <div class="hero-body is-paddingless py-3">
+          <div id="errorMessage" class="container"></div>
+      </div>
+  </div>
+
+  <div class="box">
+
+      <h1 class="title is-2 has-text-grey-light">Character Builder</h1>
+
+      <div class="steps">
+          <div id="basics-step" class="step-item is-completed is-info">
+              <div class="step-marker">
+              <a class="builder-basics-page-btn"><span class="has-text-bck-color icon"><i class="fa fa-user-alt"></i></span></a>
+              </div>
+              <div class="step-details is-hidden-touch">
+                  <a class="builder-basics-page-btn button is-rounded is-inverted is-info"><p class="step-title">Basics</p></a>
+              </div>
+          </div>
+          <div id="ancestry-step" class="step-item is-completed is-info">
+              <div class="step-marker"><a class="builder-ancestry-page-btn"><span class="has-text-bck-color">A</span></a></div>
+              <div class="step-details is-hidden-touch">
+                  <a class="builder-ancestry-page-btn button is-rounded is-inverted is-info"><p class="step-title">Ancestry</p></a>
+              </div>
+          </div>
+          <div id="background-step" class="step-item is-completed is-info">
+              <div class="step-marker"><a class="builder-background-page-btn"><span class="has-text-bck-color">B</span></a></div>
+              <div class="step-details is-hidden-touch">
+                  <a class="builder-background-page-btn button is-rounded is-inverted is-info"><p class="step-title">Background</p></a>
+              </div>
+          </div>
+          <div id="class-step" class="step-item is-completed is-info">
+              <div class="step-marker"><a class="builder-class-page-btn"><span class="has-text-bck-color">C</span></a></div>
+              <div class="step-details is-hidden-touch">
+                  <a class="builder-class-page-btn button is-rounded is-inverted is-info"><p class="step-title">Class</p></a>
+              </div>
+          </div>
+          <div class="step-item is-active is-info">
+              <div class="step-marker">
+              <a class="builder-finalize-page-btn"><span class="icon"><i class="fa fa-flag"></i></span></a>
+              </div>
+              <div class="step-details is-hidden-touch">
+                  <a class="builder-finalize-page-btn button is-rounded is-inverted is-info"><p class="step-title">Finalize</p></a>
+              </div>
+          </div>
+      </div>
+
+      <div>
+
+          <div class="container finalize-content">
+              <p class="is-size-3 pb-3">Almost Done!</p>
+          </div>
+
+          <div class="columns is-mobile is-centered">
+              <div class="column is-narrow">
+                  <div id="ability-scores-box" class="columns is-mobile is-multiline is-centered box is-unselectable is-paddingless p-2">
+                      <div class="mx-2"></div>
+                      <div class="column is-paddingless is-narrow ">
+                          <div>Strength</div>
+                          <div id="strMod" class="is-size-3 pr-3"></div>
+                          <span id="strScore" class="button is-rounded is-static"></span>
+                      </div>
+                      <div class="mx-4"></div>
+                      <div class="column is-paddingless is-narrow ">
+                          <div>Dexterity</div>
+                          <div id="dexMod" class="is-size-3 pr-3"></div>
+                          <span id="dexScore" class="button is-rounded is-static"></span>
+                      </div>
+                      <div class="mx-4"></div>
+                      <div class="column is-paddingless is-narrow ">
+                          <div>Constitution</div>
+                          <div id="conMod" class="is-size-3 pr-3"></div>
+                          <span id="conScore" class="button is-rounded is-static"></span>
+                      </div>
+                      <div class="mx-4"></div>
+                      <div class="column is-paddingless is-narrow ">
+                          <div>Intelligence</div>
+                          <div id="intMod" class="is-size-3 pr-3"></div>
+                          <span id="intScore" class="button is-rounded is-static"></span>
+                      </div>
+                      <div class="mx-4"></div>
+                      <div class="column is-paddingless is-narrow ">
+                          <div>Wisdom</div>
+                          <div id="wisMod" class="is-size-3 pr-3"></div>
+                          <span id="wisScore" class="button is-rounded is-static"></span>
+                      </div>
+                      <div class="mx-4"></div>
+                      <div class="column is-paddingless is-narrow ">
+                          <div>Charisma</div>
+                          <div id="chaMod" class="is-size-3 pr-3"></div>
+                          <span id="chaScore" class="button is-rounded is-static"></span>
+                      </div>
+                      <div class="mx-2"></div>
+                  </div>
+              </div>
+          </div>
+
+          <div class="finalize-content">
+              <p>You can now select a number of additional languages to learn and skills to be trained in</p>
+              <p>based on your final ability scores listed above, specifically Intelligence.</p>
+              <p class="help is-info is-italic">Make sure you come back here each time your Intelligence modifier increases, you will be able to select another skill and language to learn!</p>
+          </div>
+
+      </div>
+
+  </div>
+
+  <div id="missing-class-message" class="box is-hidden">
+      <p class="is-size-5 is-italic">Must have an ancestry and class to gain additional skill training and languages.</p>
+  </div>
+
+  <div class="box finalize-content is-marginless">
+
+      <div class="columns">
+          <div class="column">
+              <div>
+                  <p class="is-size-4">Additional Skill Training</p>
+                  <p class="help is-info is-italic is-marginless pb-1">You become trained in skills you pick.</p>
+                  <div id="trainSkills"></div>
+              </div>
+          </div>
+          <div class="column">
+              <div>
+                  <p class="is-size-4">Additional Languages</p>
+                  <p class="help is-info is-italic is-marginless">The languages you choose from are determined by your ancestry</p>
+                  <p class="help is-info is-italic is-marginless pb-1">(although, your GM may allow you to select others).</p>
+                  <div id="learnLanguages"></div>
+              </div>
+          </div>
+      </div>
+
+  </div>
+
+  <div id="custom-code-block-results-section" class="box is-marginless mt-4 is-hidden">
+    <p class="is-size-5 has-text-centered">Custom Code Results</p>
+    <p class="help is-info is-italic">Anything generated from the code you wrote in the code block on the Basics page will appear below.</p>
+    <div id="custom-code-block-results-container" class="mt-3"></div>
+  </div>
+
+</div>

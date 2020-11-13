@@ -77,6 +77,14 @@ module.exports = class CharSaving {
             return;
         });
     }
+
+    static saveCustomCode(charID, code) {
+      let updateValues = { customCode: code };
+      return Character.update(updateValues, { where: { id: charID } })
+      .then((result) => {
+          return;
+      });
+    }
     
     static saveHeroPoints(charID, heroPoints) {
         let updateValues = { heroPoints: heroPoints };
@@ -474,6 +482,10 @@ module.exports = class CharSaving {
         } else if(optionName === 'optionAutoHeightenSpells'){
           charUpVals = {
             optionAutoHeightenSpells: value
+          };
+        } else if(optionName === 'optionCustomCodeBlock'){
+          charUpVals = {
+            optionCustomCodeBlock: value
           };
         } else if(optionName === 'variantProfWithoutLevel'){
           charUpVals = {

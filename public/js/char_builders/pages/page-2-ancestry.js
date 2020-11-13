@@ -2,76 +2,17 @@
     By Aaron Cassar.
 */
 
-let socket = io();
-let isBuilderInit = false;
-
-// Core Builder Data //
-let g_abilMap = null;
-let g_featMap = null;
-let g_skillMap = null;
-let g_itemMap = null;
-let g_spellMap = null;
-let g_allLanguages = null;
-let g_allConditions = null;
-let g_allTags = null;
-// ~~~~~~~~~~~~~~~~~ //
-
 let g_uniHeritageArray = null;
 
 let g_ancestry = null;
 let g_ancestryForHeritage = null;
 
-// ~~~~~~~~~~~~~~ // General - Run On Load // ~~~~~~~~~~~~~~ //
-$(function () {
-
-    // Change page
-    $("#nextButton").click(function(){
-        nextPage();
-    });
-    
-    $("#prevButton").click(function(){
-        prevPage();
-    });
-
-
-    // On load get all ancestries and feats
-    socket.emit("requestAncestryDetails",
-        getCharIDFromURL());
-
-
-});
-
-// ~~~~~~~~~~~~~~ // Change Page // ~~~~~~~~~~~~~~ //
-
-function nextPage() {
-    // Hardcoded redirect
-    window.location.href = window.location.href.replace("page2", "page3");
-}
-
-function prevPage() {
-    // Hardcoded redirect
-    window.location.href = window.location.href.replace("page2", "page1");
-}
-
-
 // ~~~~~~~~~~~~~~ // Processings // ~~~~~~~~~~~~~~ //
 
-socket.on("returnAncestryDetails", function(coreDataStruct, ancestryObject, uniHeritageArray, inChoiceStruct){
-    isBuilderInit = true;
-
-    // Core Builder Data //
-    g_abilMap = objToMap(coreDataStruct.AbilObject);
-    g_featMap = objToMap(coreDataStruct.FeatObject);
-    g_skillMap = objToMap(coreDataStruct.SkillObject);
-    g_itemMap = objToMap(coreDataStruct.ItemObject);
-    g_spellMap = objToMap(coreDataStruct.SpellObject);
-    g_allLanguages = coreDataStruct.AllLanguages;
-    g_allConditions = coreDataStruct.AllConditions;
-    g_allTags = coreDataStruct.AllTags;
-    // ~~~~~~~~~~~~~~~~~ //
+function loadAncestryPage(ancestryObject, uniHeritageArray) {
 
     g_uniHeritageArray = uniHeritageArray;
-    injectWSCChoiceStruct(inChoiceStruct);
+
     let ancestryMap = objToMap(ancestryObject);
     ancestryMap = new Map([...ancestryMap.entries()].sort(
         function(a, b) {
@@ -84,8 +25,7 @@ socket.on("returnAncestryDetails", function(coreDataStruct, ancestryObject, uniH
     selectAncestry.append('<option value="chooseDefault" name="chooseDefault">Choose an Ancestry</option>');
     selectAncestry.append('<optgroup label="──────────"></optgroup>');
     for(const [key, value] of ancestryMap.entries()){
-        let currentAncestryID = $('#selectAncestry').attr('name');
-        if(value.Ancestry.id == currentAncestryID){
+        if(value.Ancestry.id == g_char_ancestryID){
             if(value.Ancestry.isArchived == 0){
                 selectAncestry.append('<option value="'+value.Ancestry.id+'" class="'+selectOptionRarity(value.Ancestry.rarity)+'" selected>'+value.Ancestry.name+'</option>');
             } else {
@@ -108,6 +48,7 @@ socket.on("returnAncestryDetails", function(coreDataStruct, ancestryObject, uniH
             if(triggerSave == null || triggerSave) {
                 $('#selectAncestryControlShell').addClass("is-loading");
     
+                g_char_ancestryID = ancestryID;
                 g_ancestry = ancestryMap.get(ancestryID);
                 socket.emit("requestAncestryChange",
                     getCharIDFromURL(),
@@ -122,6 +63,7 @@ socket.on("returnAncestryDetails", function(coreDataStruct, ancestryObject, uniH
             $('#selectAncestryControlShell').addClass("is-info");
 
             // Delete ancestry, set to null
+            g_char_ancestryID = null;
             g_ancestry = null;
             socket.emit("requestAncestryChange",
                 getCharIDFromURL(),
@@ -199,7 +141,7 @@ socket.on("returnAncestryDetails", function(coreDataStruct, ancestryObject, uniH
     // Display current ancestry
     selectAncestry.trigger("change", [false]);
 
-});
+}
 
 socket.on("returnAncestryChange", function(inChoiceStruct){
     $('#selectAncestryControlShell').removeClass("is-loading");
@@ -678,12 +620,6 @@ function buildFeatStruct(featLevel, locID=null) {
 
   return { LocationID : locationID, Level : featLevel };
 
-}
-
-
-function finishLoadingPage() {
-    // Turn off page loading
-    $('.pageloader').addClass("fadeout");
 }
 
 function selectorUpdated() {

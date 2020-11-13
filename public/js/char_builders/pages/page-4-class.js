@@ -2,82 +2,12 @@
     By Aaron Cassar.
 */
 
-let socket = io();
-let isBuilderInit = false;
-
-// Core Builder Data //
-let g_abilMap = null;
-let g_featMap = null;
-let g_skillMap = null;
-let g_itemMap = null;
-let g_spellMap = null;
-let g_allLanguages = null;
-let g_allConditions = null;
-let g_allTags = null;
-// ~~~~~~~~~~~~~~~~~ //
-
-let choiceStruct = null;
 let g_class = null;
 
-// ~~~~~~~~~~~~~~ // General - Run On Load // ~~~~~~~~~~~~~~ //
-$(function () {
+// ~~~~~~~~~~~~~~ // Processings // ~~~~~~~~~~~~~~ //
 
-    // Change page
-    $("#nextButton").click(function(){
-        nextPage();
-    });
-    
-    $("#prevButton").click(function(){
-        prevPage();
-    });
+function loadClassPage(classObject) {
 
-    // On load get class details
-    socket.emit("requestClassDetails",
-        getCharIDFromURL());
-
-});
-
-
-// ~~~~~~~~~~~~~~ // Change Page // ~~~~~~~~~~~~~~ //
-
-function nextPage() {
-    // Hardcoded redirect
-    window.location.href = window.location.href.replace("page4", "page5");
-}
-
-function prevPage() {
-    // Hardcoded redirect
-    window.location.href = window.location.href.replace("page4", "page3");
-}
-
-// ~~~~~~~~~~~~~~ // Reload Page // ~~~~~~~~~~~~~~ //
-
-function reloadPage(){
-
-    $('#char-builder').find("*").off();
-    socket.emit("requestClassDetails",
-        getCharIDFromURL());
-
-}
-
-
-// ~~~~~~~~~~~~~~ // Process Class Info // ~~~~~~~~~~~~~~ //
-
-socket.on("returnClassDetails", function(coreDataStruct, classObject, inChoiceStruct){
-    isBuilderInit = true;
-
-    // Core Builder Data //
-    g_abilMap = objToMap(coreDataStruct.AbilObject);
-    g_featMap = objToMap(coreDataStruct.FeatObject);
-    g_skillMap = objToMap(coreDataStruct.SkillObject);
-    g_itemMap = objToMap(coreDataStruct.ItemObject);
-    g_spellMap = objToMap(coreDataStruct.SpellObject);
-    g_allLanguages = coreDataStruct.AllLanguages;
-    g_allConditions = coreDataStruct.AllConditions;
-    g_allTags = coreDataStruct.AllTags;
-    // ~~~~~~~~~~~~~~~~~ //
-
-    choiceStruct = inChoiceStruct;
     let classMap = objToMap(classObject);
     classMap = new Map([...classMap.entries()].sort(
         function(a, b) {
@@ -90,8 +20,7 @@ socket.on("returnClassDetails", function(coreDataStruct, classObject, inChoiceSt
     selectClass.append('<option value="chooseDefault" name="chooseDefault">Choose a Class</option>');
     selectClass.append('<optgroup label="──────────"></optgroup>');
     for(const [key, value] of classMap.entries()){
-        let currentClassID = $('#selectClass').attr('name');
-        if(value.Class.id == currentClassID){
+        if(value.Class.id == g_char_classID){
             if(value.Class.isArchived == 0){
                 selectClass.append('<option value="'+value.Class.id+'" selected>'+value.Class.name+'</option>');
             } else {
@@ -113,13 +42,13 @@ socket.on("returnClassDetails", function(coreDataStruct, classObject, inChoiceSt
             if(triggerSave == null || triggerSave) {
                 $('#selectClassControlShell').addClass("is-loading");
 
+                g_char_classID = classID;
                 g_class = classMap.get(classID);
                 socket.emit("requestClassChange",
                     getCharIDFromURL(),
                     classID);
                 
             } else {
-                injectWSCChoiceStruct(choiceStruct);
                 displayCurrentClass(classMap.get(classID), false);
             }
 
@@ -128,6 +57,7 @@ socket.on("returnClassDetails", function(coreDataStruct, classObject, inChoiceSt
             $('#selectClassControlShell').addClass("is-info");
 
             // Delete class, set to null
+            g_char_classID = null;
             g_class = null;
             socket.emit("requestClassChange",
                 getCharIDFromURL(),
@@ -139,14 +69,13 @@ socket.on("returnClassDetails", function(coreDataStruct, classObject, inChoiceSt
     $('#selectClass').trigger("change", [false]);
     finishLoadingPage();
 
-});
+}
 
 socket.on("returnClassChange", function(inChoiceStruct){
     $('#selectClassControlShell').removeClass("is-loading");
-    choiceStruct = inChoiceStruct;
 
     if(g_class != null){
-        injectWSCChoiceStruct(choiceStruct);
+        injectWSCChoiceStruct(inChoiceStruct);
         updateSkillMap(true);
         displayCurrentClass(g_class, true);
     } else {
@@ -164,7 +93,7 @@ function displayCurrentClass(classStruct, saving) {
       classStruct = addFreeArchetypeVariant(classStruct);
     }
 
-    let choiceArray = choiceStruct.ChoiceArray;
+    let choiceArray = wscChoiceStruct.ChoiceArray;
 
     if(classStruct.Class.isArchived == 1){
         $('#isArchivedMessage').removeClass('is-hidden');
@@ -222,7 +151,7 @@ function displayCurrentClass(classStruct, saving) {
             sourceCode: 'keyAbility',
             sourceCodeSNum: 'a'
         };
-        let bonusArray = choiceStruct.BonusArray;
+        let bonusArray = wscChoiceStruct.BonusArray;
         let keyAbilityChoice = bonusArray.find(bonus => {
             return hasSameSrc(bonus, keyAbilitySrcStruct);
         });
@@ -333,7 +262,7 @@ function displayCurrentClass(classStruct, saving) {
                 sourceCode: 'inits-misc-'+tSkillID,
                 sourceCodeSNum: 'aa',
             };
-            let profArray = choiceStruct.ProfArray;
+            let profArray = wscChoiceStruct.ProfArray;
             let tSkillChoice = profArray.find(bonus => {
                 return hasSameSrc(bonus, tSkillSrcStruct);
             });
@@ -527,7 +456,7 @@ function displayCurrentClass(classStruct, saving) {
 
     for(const classAbility of classStruct.Abilities) {
 
-        if(classAbility.selectType != 'SELECT_OPTION' && classAbility.level <= choiceStruct.Character.level) {
+        if(classAbility.selectType != 'SELECT_OPTION' && classAbility.level <= wscChoiceStruct.Character.level) {
 
             let classAbilityID = "classAbility"+classAbility.id;
             let classAbilityHeaderID = "classAbilityHeader"+classAbility.id;
@@ -737,11 +666,6 @@ socket.on("returnClassChoiceChange", function(srcStruct, selectorID, optionID){
     });
 
 });
-
-function finishLoadingPage() {
-    // Turn off page loading
-    $('.pageloader').addClass("fadeout");
-}
 
 function selectorUpdated() {
 
