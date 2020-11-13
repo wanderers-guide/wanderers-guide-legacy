@@ -8,9 +8,14 @@ function processingSkills(wscStatement, srcStruct, locationID){
     if(wscStatement.includes("GIVE-SKILL-INCREASE")){// GIVE-SKILL-INCREASE
         giveSkillIncrease(srcStruct, locationID);
     }
-    else if(wscStatement.includes("GIVE-SKILL")){// GIVE-SKILL=T
-        let prof = wscStatement.split('=')[1];
-        giveSkillProf(srcStruct, locationID, prof);
+    else if(wscStatement.includes("GIVE-SKILL")){// GIVE-SKILL=T[arcana,deception]
+        let value = wscStatement.split('=')[1];
+        let optionals = value.match(/^.+?\[(.+?)\]$/);
+        if(optionals != null){
+          value = value.split('[')[0];
+          optionals = optionals[1].split(',');
+        }
+        giveSkillProf(srcStruct, locationID, value, optionals);
     } else {
         displayError("Unknown statement (2-Skill): \'"+wscStatement+"\'");
         statementComplete();
@@ -24,11 +29,11 @@ function giveSkillIncrease(srcStruct, locationID){
     giveSkill(srcStruct, locationID, 'UP');
 }
 
-function giveSkillProf(srcStruct, locationID, prof){
-    giveSkill(srcStruct, locationID, prof);
+function giveSkillProf(srcStruct, locationID, prof, optionals){
+    giveSkill(srcStruct, locationID, prof, optionals);
 }
 
-function giveSkill(srcStruct, locationID, profType){
+function giveSkill(srcStruct, locationID, profType, optionals=null){
 
     let selectIncreaseID = "selectIncrease"+locationID+"-"+srcStruct.sourceCodeSNum;
     let selectIncreaseControlShellClass = selectIncreaseID+'ControlShell';
@@ -38,12 +43,13 @@ function giveSkill(srcStruct, locationID, profType){
     // If ID already exists, just return. This is a temporary fix - this shouldn't be an issue in the first place.
     if($('#'+selectIncreaseID).length != 0) { statementComplete(); return; }
 
-    $('#'+locationID).append('<div class="field is-grouped is-grouped-centered is-marginless mt-1"><div class="select '+selectIncreaseControlShellClass+'"><select id="'+selectIncreaseID+'" class="selectIncrease" data-profType="'+profType+'" data-sourceType="'+srcStruct.sourceType+'" data-sourceLevel="'+srcStruct.sourceLevel+'" data-sourceCode="'+srcStruct.sourceCode+'" data-sourceCodeSNum="'+srcStruct.sourceCodeSNum+'"></select></div></div>');
+    let optionalsString = JSON.stringify(optionals).replace(/"/g, '`');
+    $('#'+locationID).append('<div class="field is-grouped is-grouped-centered is-marginless mt-1"><div class="select '+selectIncreaseControlShellClass+'"><select id="'+selectIncreaseID+'" class="selectIncrease" data-profType="'+profType+'" data-sourceType="'+srcStruct.sourceType+'" data-sourceLevel="'+srcStruct.sourceLevel+'" data-sourceCode="'+srcStruct.sourceCode+'" data-sourceCodeSNum="'+srcStruct.sourceCodeSNum+'" data-optionals="'+optionalsString+'"></select></div></div>');
 
     $('#'+locationID).append('<div id="'+increaseCodeID+'" class=""></div>');
     $('#'+locationID).append('<div id="'+increaseDescriptionID+'" class="pb-1"></div>');
     
-    populateSkillLists(selectIncreaseID, srcStruct, profType);
+    populateSkillLists(selectIncreaseID, srcStruct, profType, optionals);
 
     // On increase choice change
     $('#'+selectIncreaseID).change(function(event, isAutoLoad) {
@@ -178,7 +184,7 @@ function skillsUpdateWSCChoiceStruct(srcStruct, profTo, profType){
 
 }
 
-function populateSkillLists(selectIncreaseID, srcStruct, profType){
+function populateSkillLists(selectIncreaseID, srcStruct, profType, optionals){
 
     $('#'+selectIncreaseID).html('');
     $('#'+selectIncreaseID).append('<option value="chooseDefault">Choose a Skill</option>');
@@ -190,8 +196,14 @@ function populateSkillLists(selectIncreaseID, srcStruct, profType){
     });
 
     for(const [skillName, skillData] of g_skillMap.entries()){
+
+        if(optionals != null){
+          if(!optionals.includes(skillName.toUpperCase())){
+            continue;
+          }
+        }
         
-        if(savedSkillData != null && similarSkills(savedSkillData, skillName)) {
+        if(savedSkillData != null && savedSkillData.To != null && similarSkills(savedSkillData, skillName)) {
             $('#'+selectIncreaseID).append('<option value="'+skillName+'" selected>'+skillName+'</option>');
         } else {
             if(skillData.NumUps < profToNumUp(profType)) {
@@ -203,12 +215,14 @@ function populateSkillLists(selectIncreaseID, srcStruct, profType){
 
     }
 
-    // Add Lore Option
-    $('#'+selectIncreaseID).append('<optgroup label="──────────"></optgroup>');
-    if(savedSkillData != null && savedSkillData.To == 'addLore') {
-        $('#'+selectIncreaseID).append('<option value="addLore" selected>Add Lore</option>');
-    } else {
-        $('#'+selectIncreaseID).append('<option value="addLore">Add Lore</option>');
+    if(optionals == null){
+      // Add Lore Option
+      $('#'+selectIncreaseID).append('<optgroup label="──────────"></optgroup>');
+      if(savedSkillData != null && savedSkillData.To == 'addLore') {
+          $('#'+selectIncreaseID).append('<option value="addLore" selected>Add Lore</option>');
+      } else {
+          $('#'+selectIncreaseID).append('<option value="addLore">Add Lore</option>');
+      }
     }
 
     // Exists to guarantee it will be blue when at chooseDefault or not

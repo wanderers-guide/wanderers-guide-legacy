@@ -185,7 +185,8 @@ function updateSkillMap(refreshLists){
             sourceCodeSNum: $(this).attr('data-sourceCodeSNum'),
         };
         let profType = $(this).attr('data-profType');
-        populateSkillLists(selectIncreaseID, srcStruct, profType);
+        let optionals = JSON.parse($(this).attr('data-optionals').replace(/`/g, '"'));
+        populateSkillLists(selectIncreaseID, srcStruct, profType, optionals);
     });
   }
 

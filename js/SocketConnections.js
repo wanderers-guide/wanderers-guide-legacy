@@ -1014,7 +1014,7 @@ module.exports = class SocketConnections {
     // Socket.IO Connections
     io.on('connection', function(socket){
 
-      socket.on('requestLoreChange', function(charID, srcStruct, loreName, inputPacket=null){
+      socket.on('requestLoreChange', function(charID, srcStruct, loreName, inputPacket=null, prof='T'){
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
           if(ownsChar){
             if(loreName == null){
@@ -1022,15 +1022,15 @@ module.exports = class SocketConnections {
               .then((result) => {
                 CharDataMapping.deleteData(charID, 'proficiencies', srcStruct)
                 .then((result) => {
-                  socket.emit('returnLoreChange', srcStruct, loreName, inputPacket);
+                  socket.emit('returnLoreChange', srcStruct, loreName, inputPacket, prof);
                 });
               });
             } else {
               CharDataMapping.setData(charID, 'loreCategories', srcStruct, loreName)
               .then((result) => {
-                CharDataMappingExt.setDataProficiencies(charID, srcStruct, 'Skill', loreName+'_LORE', 'T')
+                CharDataMappingExt.setDataProficiencies(charID, srcStruct, 'Skill', loreName+'_LORE', prof)
                 .then((result) => {
-                  socket.emit('returnLoreChange', srcStruct, loreName, inputPacket);
+                  socket.emit('returnLoreChange', srcStruct, loreName, inputPacket, prof);
                 });
               });
             }
