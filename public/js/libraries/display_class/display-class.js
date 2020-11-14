@@ -3,7 +3,7 @@
 */
 
 class DisplayClass {
-  constructor(containerID, classID, featMap) {
+  constructor(containerID, classID, featMap, homebrewID=null) {
     featMap = new Map([...featMap.entries()].sort(
       function(a, b) {
           if (a[1].Feat.level === b[1].Feat.level) {
@@ -18,7 +18,7 @@ class DisplayClass {
     $('#'+containerID).parent().append('<div id="'+classDisplayContainerID+'" class="is-hidden"></div>');
     $('#'+containerID).addClass('is-hidden');
 
-    socket.emit('requestGeneralClass', classID);
+    socket.emit('requestGeneralClass', classID, homebrewID);
     socket.off('returnGeneralClass');
     socket.on("returnGeneralClass", function(classStruct){
       $('#'+classDisplayContainerID).load("/templates/display-class.html");
@@ -37,8 +37,14 @@ class DisplayClass {
           });
 
           $('#class-name').html(classStruct.class.name);
-          $('#class-source').html(getContentSourceTextName(classStruct.class.contentSrc));
-          $('#class-description').html(classStruct.class.description);
+
+          let sourceTextName = getContentSourceTextName(classStruct.class.contentSrc);
+          if(classStruct.class.homebrewID != null){
+            sourceTextName = 'Bundle #'+classStruct.class.homebrewID;
+          }
+
+          $('#class-source').html(sourceTextName);
+          $('#class-description').html(processText(classStruct.class.description, false, null, 'MEDIUM', false));
           $('#class-key-ability').html(classStruct.class.keyAbility);
           $('#class-key-ability-desc').html('At 1st level, your class gives you an ability boost to '+classStruct.class.keyAbility+'.');
           $('#class-hit-points').html(classStruct.class.hitPoints+' plus your Constitution modifier');
@@ -85,7 +91,12 @@ class DisplayClass {
               if(classFeature.level != level || classFeature.selectType == 'SELECT_OPTION'){ continue; }
               if(firstEntry) { firstEntry = false; } else { $('#class-features').append('<hr class="m-2">'); }
 
-              $('#class-features').append('<div style="position: relative;"><div class=""><p class="is-size-4 has-text-weight-semibold has-text-centered has-text-grey-light">'+classFeature.name+'</p>'+processText(classFeature.description, false, null)+'</div><span style="position: absolute; top: 0px; right: 5px;" class="is-size-7 has-text-grey is-italic">'+getContentSourceTextName(classFeature.contentSrc)+'</span></div>');
+              let sourceTextName = getContentSourceTextName(classFeature.contentSrc);
+              if(classFeature.homebrewID != null){
+                sourceTextName = 'Bundle #'+classFeature.homebrewID;
+              }
+
+              $('#class-features').append('<div style="position: relative;"><div class=""><p class="is-size-4 has-text-weight-semibold has-text-centered has-text-grey-light">'+classFeature.name+'</p>'+processText(classFeature.description, false, null)+'</div><span style="position: absolute; top: 0px; right: 5px;" class="is-size-7 has-text-grey is-italic">'+sourceTextName+'</span></div>');
 
               if(classFeature.selectType == 'SELECTOR'){
                 $('#class-features').append('<p class="has-text-centered is-size-5 has-text-weight-semibold">Options</p)');
@@ -131,8 +142,14 @@ class DisplayClass {
                 classFeatLevel = featStruct.Feat.level;
                 $('#class-feats').append('<div class="border-bottom border-dark-lighter has-background-black-like-more text-center is-bold"><p>Level '+classFeatLevel+'</p></div>');
               }
+
+              let sourceTextName = getContentSourceTextName(featStruct.Feat.contentSrc);
+              if(featStruct.Feat.homebrewID != null){
+                sourceTextName = 'Bundle #'+featStruct.Feat.homebrewID;
+              }
+
               let featEntryID = 'class-feat-'+featStruct.Feat.id;
-              $('#class-feats').append('<div id="'+featEntryID+'" class="border-bottom border-dark-lighter px-2 py-2 has-background-black-ter cursor-clickable"><span class="pl-4">'+featStruct.Feat.name+convertActionToHTML(featStruct.Feat.actions)+'</span><span class="is-pulled-right is-size-7 has-text-grey is-italic">'+getContentSourceTextName(featStruct.Feat.contentSrc)+'</span></div>');
+              $('#class-feats').append('<div id="'+featEntryID+'" class="border-bottom border-dark-lighter px-2 py-2 has-background-black-ter cursor-clickable"><span class="pl-4">'+featStruct.Feat.name+convertActionToHTML(featStruct.Feat.actions)+'</span><span class="is-pulled-right is-size-7 has-text-grey is-italic">'+sourceTextName+'</span></div>');
 
               $('#'+featEntryID).click(function(){
                 openQuickView('featView', {

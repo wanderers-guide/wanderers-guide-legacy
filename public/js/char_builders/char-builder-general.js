@@ -93,6 +93,7 @@ socket.on("returnBuilderPageAncestry", function(ancestryObject, uniHeritageArray
       $("#goToCharBigButton").parent().addClass('is-hidden');
       initBuilderSteps();
 
+      window.history.pushState('builder', '', '/builder/?id='+getCharIDFromURL()+'&page=2');// Update URL
       loadAncestryPage(ancestryObject, uniHeritageArray);
     }
   });
@@ -118,6 +119,7 @@ socket.on("returnBuilderPageBackground", function(backgrounds){
       $("#goToCharBigButton").parent().addClass('is-hidden');
       initBuilderSteps();
 
+      window.history.pushState('builder', '', '/builder/?id='+getCharIDFromURL()+'&page=3');// Update URL
       loadBackgroundPage(backgrounds);
     }
   });
@@ -143,6 +145,7 @@ socket.on("returnBuilderPageClass", function(classObject){
       $("#goToCharBigButton").parent().addClass('is-hidden');
       initBuilderSteps();
 
+      window.history.pushState('builder', '', '/builder/?id='+getCharIDFromURL()+'&page=4');// Update URL
       loadClassPage(classObject);
     }
   });
@@ -167,6 +170,7 @@ socket.on("returnBuilderPageFinalize", function(character, cClass, ancestry){
       });
       initBuilderSteps();
 
+      window.history.pushState('builder', '', '/builder/?id='+getCharIDFromURL()+'&page=5');// Update URL
       loadFinalizePage(character, cClass, ancestry);
     }
   });

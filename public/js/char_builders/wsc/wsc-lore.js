@@ -43,7 +43,7 @@ function giveLoreChoose(srcStruct, locationID, prof='T'){
     // If ID already exists, just return. This is a temporary fix - this shouldn't be an issue in the first place.
     if($('#'+inputLoreID).length != 0) { statementComplete(); return; }
 
-    $('#'+locationID).append('<div class="field is-grouped is-grouped-centered is-marginless mt-1"><div id="'+inputLoreControlShell+'" class="control"><input id="'+inputLoreID+'" class="input loreInput" type="text" maxlength="20" placeholder="Lore Type"></div></div>');
+    $('#'+locationID).append('<div class="field is-grouped is-grouped-centered is-marginless mt-1"><div id="'+inputLoreControlShell+'" class="control"><input id="'+inputLoreID+'" class="input loreInput" type="text" maxlength="20" placeholder="Lore Type" autocomplete="off"></div></div>');
 
     // Set saved lore input data
     let savedLoreData = wscChoiceStruct.LoreArray.find(loreData => {

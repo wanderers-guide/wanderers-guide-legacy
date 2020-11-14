@@ -4,6 +4,7 @@
 
 
 function openUserCollection(){
+  window.history.pushState('homebrew', '', '/homebrew/?sub_tab=collection');// Update URL
   socket.emit('requestCollectedHomebrewBundles');
 }
 

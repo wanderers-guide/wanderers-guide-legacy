@@ -83,7 +83,7 @@ let g_hasCastingSpontaneous = false;
 
 function displaySpellsCore() {
 
-    $('#spellsTabContent').append('<div class="columns is-mobile is-marginless"><div class="column is-9"><p class="control has-icons-left"><input id="spellsSearch" class="input" type="text" placeholder="Search Spells"><span class="icon is-left"><i class="fas fa-search" aria-hidden="true"></i></span></p></div><div class="column is-3"><button id="manageSpellsBtn" class="button is-info is-rounded">Manage Spells</button></div></div><div id="spellsCoreContent" class="use-custom-scrollbar" style="height: 525px; max-height: 525px; overflow-y: auto;"></div>');
+    $('#spellsTabContent').append('<div class="columns is-mobile is-marginless"><div class="column is-9"><p class="control has-icons-left"><input id="spellsSearch" class="input" type="text" autocomplete="off" placeholder="Search Spells"><span class="icon is-left"><i class="fas fa-search" aria-hidden="true"></i></span></p></div><div class="column is-3"><button id="manageSpellsBtn" class="button is-info is-rounded">Manage Spells</button></div></div><div id="spellsCoreContent" class="use-custom-scrollbar" style="height: 525px; max-height: 525px; overflow-y: auto;"></div>');
         
     prepDisplayOfSpellsAndSlots();
 

@@ -4,21 +4,12 @@ const router = require('express').Router();
 const { Op } = require("sequelize");
 
 const HomebrewBundle = require('../../models/contentDB/HomebrewBundle');
-const Class = require('../../models/contentDB/Class');
-const ClassAbility = require('../../models/contentDB/ClassAbility');
-const Background = require('../../models/contentDB/Background');
-const Ancestry = require('../../models/contentDB/Ancestry');
-const Heritage = require('../../models/contentDB/Heritage');
 const Item = require('../../models/contentDB/Item');
-const Spell = require('../../models/contentDB/Spell');
 const Language = require('../../models/contentDB/Language');
 const Tag = require('../../models/contentDB/Tag');
 const SenseType = require('../../models/contentDB/SenseType');
 const PhysicalFeature = require('../../models/contentDB/PhysicalFeature');
-const Feat = require('../../models/contentDB/Feat');
 const Skill = require('../../models/contentDB/Skill');
-const Archetype = require('../../models/contentDB/Archetype');
-const UniHeritage = require('../../models/contentDB/UniHeritage');
 
 router.get('/', (req, res) => {
 

@@ -21,7 +21,7 @@ Requires:
 */
 function openFeatQuickview(data) {
     addBackFunctionality(data);
-    addContentSource(data.Feat.contentSrc);
+    addContentSource(data.Feat.contentSrc, data.Feat.homebrewID);
 
     let featNameInnerHTML = '<span>'+data.Feat.name+'</span>';
     switch(data.Feat.actions) {

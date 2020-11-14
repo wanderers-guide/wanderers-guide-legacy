@@ -2168,12 +2168,6 @@ module.exports = class SocketConnections {
     // Socket.IO Connections
     io.on('connection', function(socket){
 
-      socket.on('requestBrowseAncestries', function(){
-        GeneralGathering.getAllAncestries(true).then((ancestriesObject) => {
-          socket.emit('returnBrowseAncestries', ancestriesObject);
-        });
-      });
-
       socket.on('requestBrowse', function(){
         GeneralGathering.getAllFeats().then((featsObject) => {
           GeneralGathering.getAllSkills().then((skillObject) => {
@@ -2204,34 +2198,84 @@ module.exports = class SocketConnections {
 
       /// General Gathering ///
 
-      socket.on('requestGeneralClass', function(classID){
-        GeneralGathering.getClass(classID).then((classStruct) => {
-          socket.emit('returnGeneralClass', classStruct);
-        });
+      socket.on('requestGeneralClass', function(classID, homebrewID=null){
+        if(homebrewID == null){
+          GeneralGathering.getClass(classID).then((classStruct) => {
+            socket.emit('returnGeneralClass', classStruct);
+          });
+        } else {
+          UserHomebrew.canAccessHomebrewBundle(socket, homebrewID).then((canAccess) => {
+            if(canAccess){
+              GeneralGathering.getClass(classID, homebrewID).then((classStruct) => {
+                socket.emit('returnGeneralClass', classStruct);
+              });
+            }
+          });
+        }
       });
 
-      socket.on('requestGeneralAncestry', function(ancestryID){
-        GeneralGathering.getAncestry(ancestryID).then((ancestryStruct) => {
-          socket.emit('returnGeneralAncestry', ancestryStruct);
-        });
+      socket.on('requestGeneralAncestry', function(ancestryID, homebrewID=null){
+        if(homebrewID == null){
+          GeneralGathering.getAncestry(ancestryID).then((ancestryStruct) => {
+            socket.emit('returnGeneralAncestry', ancestryStruct);
+          });
+        } else {
+          UserHomebrew.canAccessHomebrewBundle(socket, homebrewID).then((canAccess) => {
+            if(canAccess){
+              GeneralGathering.getAncestry(ancestryID, homebrewID).then((ancestryStruct) => {
+                socket.emit('returnGeneralAncestry', ancestryStruct);
+              });
+            }
+          });
+        }
       });
 
-      socket.on('requestGeneralArchetype', function(archetypeID){
-        GeneralGathering.getArchetype(archetypeID).then((archetypeStruct) => {
-          socket.emit('returnGeneralArchetype', archetypeStruct);
-        });
+      socket.on('requestGeneralArchetype', function(archetypeID, homebrewID=null){
+        if(homebrewID == null){
+          GeneralGathering.getArchetype(archetypeID).then((archetypeStruct) => {
+            socket.emit('returnGeneralArchetype', archetypeStruct);
+          });
+        } else {
+          UserHomebrew.canAccessHomebrewBundle(socket, homebrewID).then((canAccess) => {
+            if(canAccess){
+              GeneralGathering.getArchetype(archetypeID, homebrewID).then((archetypeStruct) => {
+                socket.emit('returnGeneralArchetype', archetypeStruct);
+              });
+            }
+          });
+        }
       });
 
-      socket.on('requestGeneralBackground', function(backgroundID){
-        GeneralGathering.getBackground(backgroundID).then((backgroundStruct) => {
-          socket.emit('returnGeneralBackground', backgroundStruct);
-        });
+      socket.on('requestGeneralBackground', function(backgroundID, homebrewID=null){
+        if(homebrewID == null){
+          GeneralGathering.getBackground(backgroundID).then((backgroundStruct) => {
+            socket.emit('returnGeneralBackground', backgroundStruct);
+          });
+        } else {
+          UserHomebrew.canAccessHomebrewBundle(socket, homebrewID).then((canAccess) => {
+            if(canAccess){
+              GeneralGathering.getBackground(backgroundID, homebrewID).then((backgroundStruct) => {
+                socket.emit('returnGeneralBackground', backgroundStruct);
+              });
+            }
+          });
+        }
       });
 
-      socket.on('requestGeneralUniHeritage', function(uniHeritageID){
-        GeneralGathering.getUniHeritage(uniHeritageID).then((uniHeritageStruct) => {
-          socket.emit('returnGeneralUniHeritage', uniHeritageStruct);
-        });
+      socket.on('requestGeneralUniHeritage', function(uniHeritageID, homebrewID=null){
+        if(homebrewID == null){
+          GeneralGathering.getUniHeritage(uniHeritageID).then((uniHeritageStruct) => {
+            socket.emit('returnGeneralUniHeritage', uniHeritageStruct);
+          });
+        } else {
+          UserHomebrew.canAccessHomebrewBundle(socket, homebrewID).then((canAccess) => {
+            if(canAccess){
+              GeneralGathering.getUniHeritage(uniHeritageID, homebrewID).then((uniHeritageStruct) => {
+                socket.emit('returnGeneralUniHeritage', uniHeritageStruct);
+              });
+            }
+          });
+        }
       });
 
     });
@@ -2264,9 +2308,9 @@ module.exports = class SocketConnections {
         });
       });
 
-      socket.on('requestHomebrewBundle', function(homebrewID){
+      socket.on('requestHomebrewBundle', function(REQUEST_TYPE, homebrewID){
         UserHomebrew.getHomebrewBundle(socket, homebrewID).then((homebrewBundle) => {
-          socket.emit('returnHomebrewBundle', homebrewBundle);
+          socket.emit('returnHomebrewBundle', REQUEST_TYPE, homebrewBundle);
         });
       });
 
@@ -2304,7 +2348,9 @@ module.exports = class SocketConnections {
                         HomebrewGathering.getAllItems(homebrewID).then((items) => {
                           HomebrewGathering.getAllSpells(homebrewID).then((spells) => {
                             UserHomebrew.hasHomebrewBundle(socket, homebrewID).then((userHasBundle) => {
-                              socket.emit('returnBundleContents', REQUEST_TYPE, userHasBundle, classes, ancestries, archetypes, backgrounds, classFeatures, feats, heritages, uniheritages, items, spells);
+                              GeneralGathering.getAllTags(homebrewID).then((allTags) => {
+                                socket.emit('returnBundleContents', REQUEST_TYPE, userHasBundle, allTags, classes, ancestries, archetypes, backgrounds, classFeatures, feats, heritages, uniheritages, items, spells);
+                              });
                             });
                           });
                         });

@@ -8,7 +8,7 @@ function openCustomizeItemQuickview(data) {
     $('#quickViewTitle').html("Customize Item");
     let qContent = $('#quickViewContent');
 
-    qContent.append('<div class="field is-horizontal"><div class="field-label is-normal"><label class="label">Name</label></div><div class="field-body"><div class="field"><div class="control"><input id="customizeItemName" class="input" type="text" maxlength="32" spellcheck="false" value="'+data.InvItem.name+'"></div></div></div></div>');
+    qContent.append('<div class="field is-horizontal"><div class="field-label is-normal"><label class="label">Name</label></div><div class="field-body"><div class="field"><div class="control"><input id="customizeItemName" class="input" type="text" maxlength="32" spellcheck="false" autocomplete="off" value="'+data.InvItem.name+'"></div></div></div></div>');
     qContent.append('<div class="field is-horizontal"><div class="field-label is-normal"><label class="label">Price (cp)</label></div><div class="field-body"><div class="field is-narrow"><div class="control"><input id="customizeItemPrice" class="input" type="number" min="0" max="99999999" value="'+data.InvItem.price+'"></div></div></div></div>');
     qContent.append('<div class="field is-horizontal"><div class="field-label is-normal"><label class="label">Bulk</label></div><div class="field-body"><div class="field is-narrow"><div class="control"><input class="input" id="customizeItemBulk" type="number" min="0" max="100" step="0.1" value="'+data.InvItem.bulk+'"></div></div></div></div>');
     qContent.append('<div class="field"><label class="label">Description <a href="/wsc_docs/#description_fields" target="_blank"><span class="icon is-small has-text-info has-tooltip-top" data-tooltip="WSC Docs"><i class="fas fa-book"></i></span></a></label><div class="control"><textarea id="customizeItemDescription" class="textarea use-custom-scrollbar">'+data.InvItem.description+'</textarea></div></div>');
@@ -18,7 +18,7 @@ function openCustomizeItemQuickview(data) {
         qContent.append('<hr class="m-2 mb-4">');
 
         qContent.append('<div class="field is-horizontal"><div class="field-label is-normal"><label class="label">Dmg Die</label></div><div class="field-body"><div class="field"><div class="control"><div class="select"><select id="customizeWeaponDamageDie"><option value="">1</option><option value="d2">d2</option><option value="d4">d4</option><option value="d6">d6</option><option value="d8">d8</option><option value="d10">d10</option><option value="d12">d12</option><option value="d20">d20</option><option value="NONE">-</option></select></div></div></div></div></div>');
-        qContent.append('<div class="field is-horizontal"><div class="field-label is-normal"><label class="label">Dmg Type</label></div><div class="field-body"><div class="field is-narrow"><div class="control"><input id="customizeWeaponDamageType" class="input" type="text" maxlength="40" spellcheck="false" value="'+data.InvItem.itemWeaponDamageType+'"></div></div></div></div>');
+        qContent.append('<div class="field is-horizontal"><div class="field-label is-normal"><label class="label">Dmg Type</label></div><div class="field-body"><div class="field is-narrow"><div class="control"><input id="customizeWeaponDamageType" class="input" type="text" maxlength="40" spellcheck="false" autocomplete="off" value="'+data.InvItem.itemWeaponDamageType+'"></div></div></div></div>');
 
     }
 

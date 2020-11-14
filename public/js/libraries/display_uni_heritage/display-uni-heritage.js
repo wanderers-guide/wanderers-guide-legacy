@@ -3,7 +3,7 @@
 */
 
 class DisplayUniHeritage {
-  constructor(containerID, uniHeritageID, featMap) {
+  constructor(containerID, uniHeritageID, featMap, homebrewID=null) {
     featMap = new Map([...featMap.entries()].sort(
       function(a, b) {
           if (a[1].Feat.level === b[1].Feat.level) {
@@ -18,7 +18,7 @@ class DisplayUniHeritage {
     $('#'+containerID).parent().append('<div id="'+uniHeritageDisplayContainerID+'" class="is-hidden"></div>');
     $('#'+containerID).addClass('is-hidden');
 
-    socket.emit('requestGeneralUniHeritage', uniHeritageID);
+    socket.emit('requestGeneralUniHeritage', uniHeritageID, homebrewID);
     socket.off('returnGeneralUniHeritage');
     socket.on("returnGeneralUniHeritage", function(uniHeritageStruct){
       $('#'+uniHeritageDisplayContainerID).load("/templates/display-uni-heritage.html");
@@ -37,14 +37,22 @@ class DisplayUniHeritage {
           });
 
           $('#uni-heritage-name').html(uniHeritageStruct.heritage.name);
-          $('#uni-heritage-description').html(processText(uniHeritageStruct.heritage.description, false, null));
+          $('#uni-heritage-description').html(processText(uniHeritageStruct.heritage.description, false, null, 'MEDIUM', false));
 
           let sourceStr = '';
           let uniHeritageRarity = convertRarityToHTML(uniHeritageStruct.heritage.rarity, true);
           if(uniHeritageRarity == ''){
-            sourceStr = getContentSourceTextName(uniHeritageStruct.heritage.contentSrc);
+            let sourceTextName = getContentSourceTextName(uniHeritageStruct.heritage.contentSrc);
+            if(uniHeritageStruct.heritage.homebrewID != null){
+              sourceTextName = 'Bundle #'+uniHeritageStruct.heritage.homebrewID;
+            }
+            sourceStr = sourceTextName;
           } else {
-            sourceStr = '<span class="pr-2">'+getContentSourceTextName(uniHeritageStruct.heritage.contentSrc)+'</span>';
+            let sourceTextName = getContentSourceTextName(uniHeritageStruct.heritage.contentSrc);
+            if(uniHeritageStruct.heritage.homebrewID != null){
+              sourceTextName = 'Bundle #'+uniHeritageStruct.heritage.homebrewID;
+            }
+            sourceStr = '<span class="pr-2">'+sourceTextName+'</span>';
           }
           $('#uni-heritage-source').html(sourceStr+uniHeritageRarity);
 
@@ -61,8 +69,14 @@ class DisplayUniHeritage {
                 uniHeritageFeatLevel = featStruct.Feat.level;
                 $('#uni-heritage-feats').append('<div class="border-bottom border-dark-lighter has-background-black-like-more text-center is-bold"><p>Level '+uniHeritageFeatLevel+'</p></div>');
               }
+
+              let sourceTextName = getContentSourceTextName(featStruct.Feat.contentSrc);
+              if(featStruct.Feat.homebrewID != null){
+                sourceTextName = 'Bundle #'+featStruct.Feat.homebrewID;
+              }
+
               let featEntryID = 'uni-heritage-feat-'+featStruct.Feat.id;
-              $('#uni-heritage-feats').append('<div id="'+featEntryID+'" class="border-bottom border-dark-lighter px-2 py-2 has-background-black-ter cursor-clickable"><span class="pl-4">'+featStruct.Feat.name+convertActionToHTML(featStruct.Feat.actions)+'</span><span class="is-pulled-right is-size-7 has-text-grey is-italic">'+getContentSourceTextName(featStruct.Feat.contentSrc)+'</span></div>');
+              $('#uni-heritage-feats').append('<div id="'+featEntryID+'" class="border-bottom border-dark-lighter px-2 py-2 has-background-black-ter cursor-clickable"><span class="pl-4">'+featStruct.Feat.name+convertActionToHTML(featStruct.Feat.actions)+'</span><span class="is-pulled-right is-size-7 has-text-grey is-italic">'+sourceTextName+'</span></div>');
 
               $('#'+featEntryID).click(function(){
                 openQuickView('featView', {

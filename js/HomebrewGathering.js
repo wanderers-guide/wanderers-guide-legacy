@@ -29,7 +29,7 @@ const Shield = require('../models/contentDB/Shield');
 const ItemRune = require('../models/contentDB/ItemRune');
 
 module.exports = class HomebrewGathering {
-  
+
   static getAllClasses(homebrewID) {
     return Class.findAll({ where: { homebrewID: homebrewID } })
     .then((classes) => {
@@ -60,22 +60,25 @@ module.exports = class HomebrewGathering {
 
   static getAllClassFeatures(homebrewID) {
     return ClassAbility.findAll({
-      where: { homebrewID: homebrewID, indivClassName: { [Op.ne]: null }, selectOptionFor: null }
+      where: { homebrewID: homebrewID } // indivClassName: { [Op.ne]: null }, selectOptionFor: null
     }).then((classFeatures) => {
       return classFeatures;
     });
   }
 
   static getAllFeats(homebrewID) {
+    Feat.hasMany(FeatTag, {foreignKey: 'featID'});
+    FeatTag.belongsTo(Feat, {foreignKey: 'featID'});
     return Feat.findAll({
-      where: { homebrewID: homebrewID, genericType: { [Op.ne]: null } }
+      where: { homebrewID: homebrewID }, // genericType: { [Op.ne]: null }
+      include: [FeatTag]
     }).then((feats) => {
       return feats;
     });
   }
 
   static getAllHeritages(homebrewID) {
-    return Heritage.findAll({ where: { homebrewID: homebrewID, indivAncestryName: { [Op.ne]: null } } })
+    return Heritage.findAll({ where: { homebrewID: homebrewID } }) // indivAncestryName: { [Op.ne]: null }
     .then((heritages) => {
       return heritages;
     });
@@ -89,15 +92,23 @@ module.exports = class HomebrewGathering {
   }
 
   static getAllItems(homebrewID) {
-    return Item.findAll({ where: { homebrewID: homebrewID } })
-    .then((items) => {
+    Item.hasMany(TaggedItem, {foreignKey: 'itemID'});
+    TaggedItem.belongsTo(Item, {foreignKey: 'itemID'});
+    return Item.findAll({
+      where: { homebrewID: homebrewID },
+      include: [TaggedItem]
+    }).then((items) => {
       return items;
     });
   }
 
   static getAllSpells(homebrewID) {
-    return Spell.findAll({ where: { homebrewID: homebrewID } })
-    .then((spells) => {
+    Spell.hasMany(TaggedSpell, {foreignKey: 'spellID'});
+    TaggedSpell.belongsTo(Spell, {foreignKey: 'spellID'});
+    return Spell.findAll({
+      where: { homebrewID: homebrewID },
+      include: [TaggedSpell]
+    }).then((spells) => {
       return spells;
     });
   }

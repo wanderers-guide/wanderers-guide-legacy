@@ -23,6 +23,11 @@
   -webkit-text-decoration-color: hsl(204, 86%, 53%); /* Safari */  
   text-decoration-color: hsl(204, 86%, 53%);
 }
+.is-underlined-warning {
+  text-decoration: underline;
+  -webkit-text-decoration-color: hsl(48, 100%, 67%); /* Safari */  
+  text-decoration-color: hsl(48, 100%, 67%);
+}
 .has-text-center-justified {
   text-align: justify!important;
   text-align-last: center!important;

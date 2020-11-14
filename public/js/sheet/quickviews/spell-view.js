@@ -4,7 +4,7 @@
 
 function openSpellQuickview(data){
     addBackFunctionality(data);
-    addContentSource(data.SpellDataStruct.Spell.contentSrc);
+    addContentSource(data.SpellDataStruct.Spell.contentSrc, data.SpellDataStruct.Spell.homebrewID);
 
     let spellDataStruct = data.SpellDataStruct;
     let spellID = spellDataStruct.Spell.id;

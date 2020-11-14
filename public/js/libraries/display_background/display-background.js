@@ -3,13 +3,13 @@
 */
 
 class DisplayBackground {
-  constructor(containerID, backgroundID) {
+  constructor(containerID, backgroundID, homebrewID=null) {
 
     let backgroundDisplayContainerID = 'background-container-'+backgroundID;
     $('#'+containerID).parent().append('<div id="'+backgroundDisplayContainerID+'" class="is-hidden"></div>');
     $('#'+containerID).addClass('is-hidden');
 
-    socket.emit('requestGeneralBackground', backgroundID);
+    socket.emit('requestGeneralBackground', backgroundID, homebrewID);
     socket.off('returnGeneralBackground');
     socket.on("returnGeneralBackground", function(backgroundStruct){
       $('#'+backgroundDisplayContainerID).load("/templates/display-background.html");
@@ -28,14 +28,22 @@ class DisplayBackground {
           });
 
           $('#background-name').html(backgroundStruct.background.name);
-          $('#background-description').html(processText(backgroundStruct.background.description, false, null));
+          $('#background-description').html(processText(backgroundStruct.background.description, false, null, 'MEDIUM', false));
 
           let sourceStr = '';
           let backgroundRarity = convertRarityToHTML(backgroundStruct.background.rarity);
           if(backgroundRarity == ''){
-            sourceStr = getContentSourceTextName(backgroundStruct.background.contentSrc);
+            let sourceTextName = getContentSourceTextName(backgroundStruct.background.contentSrc);
+            if(backgroundStruct.background.homebrewID != null){
+              sourceTextName = 'Bundle #'+backgroundStruct.background.homebrewID;
+            }
+            sourceStr = sourceTextName;
           } else {
-            sourceStr = '<span class="pr-2">'+getContentSourceTextName(backgroundStruct.background.contentSrc)+'</span>';
+            let sourceTextName = getContentSourceTextName(backgroundStruct.background.contentSrc);
+            if(backgroundStruct.background.homebrewID != null){
+              sourceTextName = 'Bundle #'+backgroundStruct.background.homebrewID;
+            }
+            sourceStr = '<span class="pr-2">'+sourceTextName+'</span>';
           }
           $('#background-source').html(sourceStr+backgroundRarity);
 

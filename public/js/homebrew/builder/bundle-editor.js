@@ -2,15 +2,62 @@
     By Aaron Cassar.
 */
 
-let g_activeEditBundle = null;
-
 function openBundleEditor(homebrewBundle){
-  g_activeEditBundle = homebrewBundle;
+  g_activeBundle = homebrewBundle;
+  window.history.pushState('homebrew', '', '/homebrew/?edit_id='+g_activeBundle.id);// Update URL
   socket.emit('requestBundleContents', 'EDIT', homebrewBundle.id);
 }
 
-socket.on("returnBundleContents", function(REQUEST_TYPE, userHasBundle, classes, ancestries, archetypes, backgrounds, classFeatures, feats, heritages, uniheritages, items, spells){
+socket.on("returnBundleContents", function(REQUEST_TYPE, userHasBundle, allTags, classes, ancestries, archetypes, backgrounds, classFeatures, feats, heritages, uniheritages, items, spells){
   if(REQUEST_TYPE !== 'EDIT') {return;}
+
+  let featMap = new Map();
+  for(let feat of feats){
+    let tags = [];
+    // Find tags by id
+    for(let featTag of feat.featTags){
+      let tag = allTags.find(tag => {
+        return tag.id === featTag.tagID;
+      });
+      if(tag != null) {tags.push(tag);}
+    }
+    // Find tag for genTypeName
+    if(feat.genTypeName != null){
+      let tag = allTags.find(tag => {
+        if(tag.isArchived == 0){ return tag.name === feat.genTypeName; } else { return false; }
+      });
+      if(tag != null) {tags.push(tag);}
+    }
+    featMap.set(feat.id+'', {Feat : feat, Tags : tags});
+  }
+
+  let itemMap = new Map();
+  for(let item of items){
+    let tags = [];
+    // Find tags by id
+    for(let itemTag of item.taggedItems){
+      let tag = allTags.find(tag => {
+        return tag.id === itemTag.tagID;
+      });
+      if(tag != null) {tags.push({Tag: tag});}
+    }
+    itemMap.set(item.id+'', {Item : item, TagArray : tags});
+  }
+
+  let spellMap = new Map();
+  for(let spell of spells){
+    let tags = [];
+    // Find tags by id
+    for(let spellTag of spell.taggedSpells){
+      let tag = allTags.find(tag => {
+        return tag.id === spellTag.tagID;
+      });
+      if(tag != null) {tags.push(tag);}
+    }
+    spellMap.set(spell.id+'', {Spell : spell, Tags : tags});
+  }
+
+
   $('#tabContent').html('');
   $('#tabContent').load("/templates/homebrew/display-edit-bundle.html");
   $.ajax({ type: "GET",
@@ -18,15 +65,15 @@ socket.on("returnBundleContents", function(REQUEST_TYPE, userHasBundle, classes,
     success : function(text)
     {
 
-      $('#bundleName').html(g_activeEditBundle.name);
-      $('#bundleDescription').val(g_activeEditBundle.description);
-      $('#bundleContactInfo').val(g_activeEditBundle.contactInfo);
+      $('#bundleName').html(g_activeBundle.name);
+      $('#bundleDescription').val(g_activeBundle.description);
+      $('#bundleContactInfo').val(g_activeBundle.contactInfo);
 
       $("#bundleDescription").blur(function(){
-        if(g_activeEditBundle.description != $(this).val()) {
+        if(g_activeBundle.description != $(this).val()) {
           $('#bundleDescription').parent().addClass("is-loading");
           socket.emit("requestBundleUpdate",
-               g_activeEditBundle.id,
+               g_activeBundle.id,
               {
                 Description: $(this).val()
               }
@@ -35,10 +82,10 @@ socket.on("returnBundleContents", function(REQUEST_TYPE, userHasBundle, classes,
       });
 
       $("#bundleContactInfo").blur(function(){
-        if(g_activeEditBundle.contactInfo != $(this).val()) {
+        if(g_activeBundle.contactInfo != $(this).val()) {
           $('#bundleContactInfo').parent().addClass("is-loading");
           socket.emit("requestBundleUpdate",
-              g_activeEditBundle.id,
+              g_activeBundle.id,
               {
                 ContactInfo: $(this).val()
               }
@@ -47,7 +94,7 @@ socket.on("returnBundleContents", function(REQUEST_TYPE, userHasBundle, classes,
       });
 
       $('#bundleRenameBtn').click(function() {
-        $('#bundleName').html('<div class="pt-2"><input id="bundleRenameInput" class="input is-medium" style="max-width: 340px;" maxlength="40" value="'+g_activeEditBundle.name+'"></div>');
+        $('#bundleName').html('<div class="pt-2"><input id="bundleRenameInput" class="input is-medium" style="max-width: 340px;" maxlength="40" value="'+g_activeBundle.name+'" autocomplete="off"></div>');
         $('#bundleRenameBtn').addClass('is-hidden');
         $('#bundleRenameInput').focus();
 
@@ -58,7 +105,7 @@ socket.on("returnBundleContents", function(REQUEST_TYPE, userHasBundle, classes,
           $('#bundleName').html(newName);
           $('#bundleRenameBtn').removeClass('is-hidden');
           socket.emit("requestBundleUpdate",
-            g_activeEditBundle.id,
+            g_activeBundle.id,
             {
               Name: newName,
             }
@@ -85,7 +132,7 @@ socket.on("returnBundleContents", function(REQUEST_TYPE, userHasBundle, classes,
         $('html').removeClass('is-clipped');
       });
       $('#publish-modal-btn').click(function() {
-        socket.emit("requestBundlePublish", g_activeEditBundle.id);
+        socket.emit("requestBundlePublish", g_activeBundle.id);
         $('#publish-modal').removeClass('is-active');
         $('html').removeClass('is-clipped');
       });
@@ -93,7 +140,7 @@ socket.on("returnBundleContents", function(REQUEST_TYPE, userHasBundle, classes,
       ///
 
       $('#createClassBtn').click(function() {
-        window.location.href = '/homebrew/create/class/?id='+g_activeEditBundle.id;
+        window.location.href = '/homebrew/create/class/?id='+g_activeBundle.id;
       });
 
       if(classes.length > 0){
@@ -102,15 +149,15 @@ socket.on("returnBundleContents", function(REQUEST_TYPE, userHasBundle, classes,
           let viewClassID = 'entry-view-class-'+cClass.id;
           let editClassID = 'entry-edit-class-'+cClass.id;
           let deleteClassID = 'entry-delete-class-'+cClass.id;
-          $('#bundleContainerClasses').append('<div class="columns is-marginless mt-1 sub-section-box"><div class="column"><p class="is-size-5">'+cClass.name+'</p></div><div class="column"><div class="is-pulled-right buttons are-small"><button id="'+viewClassID+'" class="button is-rounded is-info">View</button><button id="'+editClassID+'" class="button is-success"><span>Edit</span><span class="icon is-small"><i class="far fa-edit"></i></span></button><button id="'+deleteClassID+'" class="button is-danger"><span>Delete</span><span class="icon is-small"><i class="fas fa-times"></i></span></button></div></div></div>');
+          $('#bundleContainerClasses').append('<div class="columns is-mobile is-marginless mt-1 sub-section-box"><div class="column"><p class="is-size-5">'+cClass.name+'</p></div><div class="column"><div class="is-pulled-right buttons are-small"><button id="'+viewClassID+'" class="button is-info is-outlined">View</button><button id="'+editClassID+'" class="button is-success is-outlined"><span>Edit</span><span class="icon is-small"><i class="far fa-edit"></i></span></button><button id="'+deleteClassID+'" class="button is-danger is-outlined"><span>Delete</span><span class="icon is-small"><i class="fas fa-times"></i></span></button></div></div></div>');
           $('#'+viewClassID).click(function() {
-            //new DisplayClass('tabContent', cClass.id, g_featMap);
+            new DisplayClass('tabContent', cClass.id, featMap, g_activeBundle.id);
           });
           $('#'+editClassID).click(function() {
-            window.location.href = '/homebrew/edit/class/?id='+g_activeEditBundle.id+'&class_id='+cClass.id;
+            window.location.href = '/homebrew/edit/class/?id='+g_activeBundle.id+'&class_id='+cClass.id;
           });
           $('#'+deleteClassID).click(function() {
-            socket.emit('requestHomebrewRemoveClass', g_activeEditBundle.id, cClass.id);
+            socket.emit('requestHomebrewRemoveClass', g_activeBundle.id, cClass.id);
           });
         }
       }
@@ -118,7 +165,7 @@ socket.on("returnBundleContents", function(REQUEST_TYPE, userHasBundle, classes,
       ///
 
       $('#createAncestryBtn').click(function() {
-        window.location.href = '/homebrew/create/ancestry/?id='+g_activeEditBundle.id;
+        window.location.href = '/homebrew/create/ancestry/?id='+g_activeBundle.id;
       });
 
       if(ancestries.length > 0){
@@ -127,15 +174,15 @@ socket.on("returnBundleContents", function(REQUEST_TYPE, userHasBundle, classes,
           let viewAncestryID = 'entry-view-ancestry-'+ancestry.id;
           let editAncestryID = 'entry-edit-ancestry-'+ancestry.id;
           let deleteAncestryID = 'entry-delete-ancestry-'+ancestry.id;
-          $('#bundleContainerAncestries').append('<div class="columns is-marginless mt-1 sub-section-box"><div class="column"><p class="is-size-5">'+ancestry.name+'</p></div><div class="column"><div class="is-pulled-right buttons are-small"><button id="'+viewAncestryID+'" class="button is-rounded is-info">View</button><button id="'+editAncestryID+'" class="button is-success"><span>Edit</span><span class="icon is-small"><i class="far fa-edit"></i></span></button><button id="'+deleteAncestryID+'" class="button is-danger"><span>Delete</span><span class="icon is-small"><i class="fas fa-times"></i></span></button></div></div></div>');
+          $('#bundleContainerAncestries').append('<div class="columns is-mobile is-marginless mt-1 sub-section-box"><div class="column"><p class="is-size-5">'+ancestry.name+'</p></div><div class="column"><div class="is-pulled-right buttons are-small"><button id="'+viewAncestryID+'" class="button is-info is-outlined">View</button><button id="'+editAncestryID+'" class="button is-success is-outlined"><span>Edit</span><span class="icon is-small"><i class="far fa-edit"></i></span></button><button id="'+deleteAncestryID+'" class="button is-danger is-outlined"><span>Delete</span><span class="icon is-small"><i class="fas fa-times"></i></span></button></div></div></div>');
           $('#'+viewAncestryID).click(function() {
-            //
+            new DisplayAncestry('tabContent', ancestry.id, featMap, g_activeBundle.id);
           });
           $('#'+editAncestryID).click(function() {
-            window.location.href = '/homebrew/edit/ancestry/?id='+g_activeEditBundle.id+'&ancestry_id='+ancestry.id;
+            window.location.href = '/homebrew/edit/ancestry/?id='+g_activeBundle.id+'&ancestry_id='+ancestry.id;
           });
           $('#'+deleteAncestryID).click(function() {
-            socket.emit('requestHomebrewRemoveAncestry', g_activeEditBundle.id, ancestry.id);
+            socket.emit('requestHomebrewRemoveAncestry', g_activeBundle.id, ancestry.id);
           });
         }
       }
@@ -143,7 +190,7 @@ socket.on("returnBundleContents", function(REQUEST_TYPE, userHasBundle, classes,
       ///
 
       $('#createArchetypeBtn').click(function() {
-        window.location.href = '/homebrew/create/archetype/?id='+g_activeEditBundle.id;
+        window.location.href = '/homebrew/create/archetype/?id='+g_activeBundle.id;
       });
 
       if(archetypes.length > 0){
@@ -152,15 +199,15 @@ socket.on("returnBundleContents", function(REQUEST_TYPE, userHasBundle, classes,
           let viewArchetypeID = 'entry-view-archetype-'+archetype.id;
           let editArchetypeID = 'entry-edit-archetype-'+archetype.id;
           let deleteArchetypeID = 'entry-delete-archetype-'+archetype.id;
-          $('#bundleContainerArchetypes').append('<div class="columns is-marginless mt-1 sub-section-box"><div class="column"><p class="is-size-5">'+archetype.name+'</p></div><div class="column"><div class="is-pulled-right buttons are-small"><button id="'+viewArchetypeID+'" class="button is-rounded is-info">View</button><button id="'+editArchetypeID+'" class="button is-success"><span>Edit</span><span class="icon is-small"><i class="far fa-edit"></i></span></button><button id="'+deleteArchetypeID+'" class="button is-danger"><span>Delete</span><span class="icon is-small"><i class="fas fa-times"></i></span></button></div></div></div>');
+          $('#bundleContainerArchetypes').append('<div class="columns is-mobile is-marginless mt-1 sub-section-box"><div class="column"><p class="is-size-5">'+archetype.name+'</p></div><div class="column"><div class="is-pulled-right buttons are-small"><button id="'+viewArchetypeID+'" class="button is-info is-outlined">View</button><button id="'+editArchetypeID+'" class="button is-success is-outlined"><span>Edit</span><span class="icon is-small"><i class="far fa-edit"></i></span></button><button id="'+deleteArchetypeID+'" class="button is-danger is-outlined"><span>Delete</span><span class="icon is-small"><i class="fas fa-times"></i></span></button></div></div></div>');
           $('#'+viewArchetypeID).click(function() {
-            //
+            new DisplayArchetype('tabContent', archetype.id, featMap, g_activeBundle.id);
           });
           $('#'+editArchetypeID).click(function() {
-            window.location.href = '/homebrew/edit/archetype/?id='+g_activeEditBundle.id+'&archetype_id='+archetype.id;
+            window.location.href = '/homebrew/edit/archetype/?id='+g_activeBundle.id+'&archetype_id='+archetype.id;
           });
           $('#'+deleteArchetypeID).click(function() {
-            socket.emit('requestHomebrewRemoveArchetype', g_activeEditBundle.id, archetype.id);
+            socket.emit('requestHomebrewRemoveArchetype', g_activeBundle.id, archetype.id);
           });
         }
       }
@@ -168,7 +215,7 @@ socket.on("returnBundleContents", function(REQUEST_TYPE, userHasBundle, classes,
       ////
 
       $('#createBackgroundBtn').click(function() {
-        window.location.href = '/homebrew/create/background/?id='+g_activeEditBundle.id;
+        window.location.href = '/homebrew/create/background/?id='+g_activeBundle.id;
       });
 
       if(backgrounds.length > 0){
@@ -177,15 +224,15 @@ socket.on("returnBundleContents", function(REQUEST_TYPE, userHasBundle, classes,
           let viewBackgroundID = 'entry-view-background-'+background.id;
           let editBackgroundID = 'entry-edit-background-'+background.id;
           let deleteBackgroundID = 'entry-delete-background-'+background.id;
-          $('#bundleContainerBackgrounds').append('<div class="columns is-marginless mt-1 sub-section-box"><div class="column"><p class="is-size-5">'+background.name+'</p></div><div class="column"><div class="is-pulled-right buttons are-small"><button id="'+viewBackgroundID+'" class="button is-rounded is-info">View</button><button id="'+editBackgroundID+'" class="button is-success"><span>Edit</span><span class="icon is-small"><i class="far fa-edit"></i></span></button><button id="'+deleteBackgroundID+'" class="button is-danger"><span>Delete</span><span class="icon is-small"><i class="fas fa-times"></i></span></button></div></div></div>');
+          $('#bundleContainerBackgrounds').append('<div class="columns is-mobile is-marginless mt-1 sub-section-box"><div class="column"><p class="is-size-5">'+background.name+'</p></div><div class="column"><div class="is-pulled-right buttons are-small"><button id="'+viewBackgroundID+'" class="button is-info is-outlined">View</button><button id="'+editBackgroundID+'" class="button is-success is-outlined"><span>Edit</span><span class="icon is-small"><i class="far fa-edit"></i></span></button><button id="'+deleteBackgroundID+'" class="button is-danger is-outlined"><span>Delete</span><span class="icon is-small"><i class="fas fa-times"></i></span></button></div></div></div>');
           $('#'+viewBackgroundID).click(function() {
-            //
+            new DisplayBackground('tabContent', background.id, g_activeBundle.id);
           });
           $('#'+editBackgroundID).click(function() {
-            window.location.href = '/homebrew/edit/background/?id='+g_activeEditBundle.id+'&background_id='+background.id;
+            window.location.href = '/homebrew/edit/background/?id='+g_activeBundle.id+'&background_id='+background.id;
           });
           $('#'+deleteBackgroundID).click(function() {
-            socket.emit('requestHomebrewRemoveBackground', g_activeEditBundle.id, background.id);
+            socket.emit('requestHomebrewRemoveBackground', g_activeBundle.id, background.id);
           });
         }
       }
@@ -193,24 +240,37 @@ socket.on("returnBundleContents", function(REQUEST_TYPE, userHasBundle, classes,
       ////
 
       $('#createClassFeatureBtn').click(function() {
-        window.location.href = '/homebrew/create/class-feature/?id='+g_activeEditBundle.id;
+        window.location.href = '/homebrew/create/class-feature/?id='+g_activeBundle.id;
       });
 
       if(classFeatures.length > 0){
         $('#bundleContainerClassFeatures').html('');
         for(const classFeature of classFeatures){
+          if(classFeature.indivClassName == null || classFeature.selectOptionFor != null) {continue;}
+
           let viewClassFeatureID = 'entry-view-class-feature-'+classFeature.id;
           let editClassFeatureID = 'entry-edit-class-feature-'+classFeature.id;
           let deleteClassFeatureID = 'entry-delete-class-feature-'+classFeature.id;
-          $('#bundleContainerClassFeatures').append('<div class="columns is-marginless mt-1 sub-section-box"><div class="column"><p class="is-size-5">'+classFeature.name+'</p></div><div class="column"><div class="is-pulled-right buttons are-small"><button id="'+viewClassFeatureID+'" class="button is-rounded is-info">View</button><button id="'+editClassFeatureID+'" class="button is-success"><span>Edit</span><span class="icon is-small"><i class="far fa-edit"></i></span></button><button id="'+deleteClassFeatureID+'" class="button is-danger"><span>Delete</span><span class="icon is-small"><i class="fas fa-times"></i></span></button></div></div></div>');
+          $('#bundleContainerClassFeatures').append('<div class="columns is-mobile is-marginless mt-1 sub-section-box"><div class="column"><p class="is-size-5">'+classFeature.name+'</p></div><div class="column"><div class="is-pulled-right buttons are-small"><button id="'+viewClassFeatureID+'" class="button is-info is-outlined">View</button><button id="'+editClassFeatureID+'" class="button is-success is-outlined"><span>Edit</span><span class="icon is-small"><i class="far fa-edit"></i></span></button><button id="'+deleteClassFeatureID+'" class="button is-danger is-outlined"><span>Delete</span><span class="icon is-small"><i class="fas fa-times"></i></span></button></div></div></div>');
           $('#'+viewClassFeatureID).click(function() {
-            //
+            let classText = (classFeature.indivClassName != null) ? '~ Class:: '+classFeature.indivClassName+'\n' : '';
+            let classAbilText = (classFeature.indivClassAbilName != null) ? '~ Option For:: '+classFeature.indivClassAbilName+'\n' : '';
+            let description = classText+classAbilText+'----\n'+classFeature.description;
+            openQuickView('abilityView', {
+              Ability : {
+                name: classFeature.name,
+                description: description,
+                level: classFeature.level,
+                contentSrc: classFeature.contentSrc,
+                homebrewID: classFeature.homebrewID,
+              }
+            });
           });
           $('#'+editClassFeatureID).click(function() {
-            window.location.href = '/homebrew/edit/class-feature/?id='+g_activeEditBundle.id+'&class_feature_id='+classFeature.id;
+            window.location.href = '/homebrew/edit/class-feature/?id='+g_activeBundle.id+'&class_feature_id='+classFeature.id;
           });
           $('#'+deleteClassFeatureID).click(function() {
-            socket.emit('requestHomebrewRemoveClassFeature', g_activeEditBundle.id, classFeature.id);
+            socket.emit('requestHomebrewRemoveClassFeature', g_activeBundle.id, classFeature.id);
           });
         }
       }
@@ -218,24 +278,30 @@ socket.on("returnBundleContents", function(REQUEST_TYPE, userHasBundle, classes,
       ////
 
       $('#createFeatBtn').click(function() {
-        window.location.href = '/homebrew/create/feat-activity/?id='+g_activeEditBundle.id;
+        window.location.href = '/homebrew/create/feat-activity/?id='+g_activeBundle.id;
       });
 
       if(feats.length > 0){
         $('#bundleContainerFeats').html('');
         for(const feat of feats){
+          if(feat.genericType == null) {continue;}
+
           let viewFeatID = 'entry-view-feat-activity-'+feat.id;
           let editFeatID = 'entry-edit-feat-activity-'+feat.id;
           let deleteFeatID = 'entry-delete-feat-activity-'+feat.id;
-          $('#bundleContainerFeats').append('<div class="columns is-marginless mt-1 sub-section-box"><div class="column"><p class="is-size-5">'+feat.name+'</p></div><div class="column"><div class="is-pulled-right buttons are-small"><button id="'+viewFeatID+'" class="button is-rounded is-info">View</button><button id="'+editFeatID+'" class="button is-success"><span>Edit</span><span class="icon is-small"><i class="far fa-edit"></i></span></button><button id="'+deleteFeatID+'" class="button is-danger"><span>Delete</span><span class="icon is-small"><i class="fas fa-times"></i></span></button></div></div></div>');
+          $('#bundleContainerFeats').append('<div class="columns is-mobile is-marginless mt-1 sub-section-box"><div class="column"><p class="is-size-5">'+feat.name+'</p></div><div class="column"><div class="is-pulled-right buttons are-small"><button id="'+viewFeatID+'" class="button is-info is-outlined">View</button><button id="'+editFeatID+'" class="button is-success is-outlined"><span>Edit</span><span class="icon is-small"><i class="far fa-edit"></i></span></button><button id="'+deleteFeatID+'" class="button is-danger is-outlined"><span>Delete</span><span class="icon is-small"><i class="fas fa-times"></i></span></button></div></div></div>');
           $('#'+viewFeatID).click(function() {
-            //
+            let featStruct = featMap.get(feat.id+'');
+            openQuickView('featView', {
+              Feat : featStruct.Feat,
+              Tags : featStruct.Tags
+            });
           });
           $('#'+editFeatID).click(function() {
-            window.location.href = '/homebrew/edit/feat-activity/?id='+g_activeEditBundle.id+'&feat_id='+feat.id;
+            window.location.href = '/homebrew/edit/feat-activity/?id='+g_activeBundle.id+'&feat_id='+feat.id;
           });
           $('#'+deleteFeatID).click(function() {
-            socket.emit('requestHomebrewRemoveFeat', g_activeEditBundle.id, feat.id);
+            socket.emit('requestHomebrewRemoveFeat', g_activeBundle.id, feat.id);
           });
         }
       }
@@ -243,24 +309,37 @@ socket.on("returnBundleContents", function(REQUEST_TYPE, userHasBundle, classes,
       ////
 
       $('#createHeritageBtn').click(function() {
-        window.location.href = '/homebrew/create/heritage/?id='+g_activeEditBundle.id;
+        window.location.href = '/homebrew/create/heritage/?id='+g_activeBundle.id;
       });
 
       if(heritages.length > 0){
         $('#bundleContainerHeritages').html('');
         for(const heritage of heritages){
+          if(heritage.indivAncestryName == null) {continue;}
+
           let viewHeritageID = 'entry-view-heritage-'+heritage.id;
           let editHeritageID = 'entry-edit-heritage-'+heritage.id;
           let deleteHeritageID = 'entry-delete-heritage-'+heritage.id;
-          $('#bundleContainerHeritages').append('<div class="columns is-marginless mt-1 sub-section-box"><div class="column"><p class="is-size-5">'+heritage.name+'</p></div><div class="column"><div class="is-pulled-right buttons are-small"><button id="'+viewHeritageID+'" class="button is-rounded is-info">View</button><button id="'+editHeritageID+'" class="button is-success"><span>Edit</span><span class="icon is-small"><i class="far fa-edit"></i></span></button><button id="'+deleteHeritageID+'" class="button is-danger"><span>Delete</span><span class="icon is-small"><i class="fas fa-times"></i></span></button></div></div></div>');
+          $('#bundleContainerHeritages').append('<div class="columns is-mobile is-marginless mt-1 sub-section-box"><div class="column"><p class="is-size-5">'+heritage.name+'</p></div><div class="column"><div class="is-pulled-right buttons are-small"><button id="'+viewHeritageID+'" class="button is-info is-outlined">View</button><button id="'+editHeritageID+'" class="button is-success is-outlined"><span>Edit</span><span class="icon is-small"><i class="far fa-edit"></i></span></button><button id="'+deleteHeritageID+'" class="button is-danger is-outlined"><span>Delete</span><span class="icon is-small"><i class="fas fa-times"></i></span></button></div></div></div>');
           $('#'+viewHeritageID).click(function() {
-            //
+            let ancestryText = (heritage.indivAncestryName != null) ? '~ Ancestry:: '+heritage.indivAncestryName+'\n' : '';
+            let rarityText = (heritage.rarity != null) ? '~ Rarity:: '+capitalizeWord(heritage.rarity)+'\n' : '';
+            let description = ancestryText+rarityText+'----\n'+heritage.description;
+            openQuickView('abilityView', {
+              Ability : {
+                name: heritage.name,
+                description: description,
+                level: 0,
+                contentSrc: heritage.contentSrc,
+                homebrewID: heritage.homebrewID,
+              }
+            });
           });
           $('#'+editHeritageID).click(function() {
-            window.location.href = '/homebrew/edit/heritage/?id='+g_activeEditBundle.id+'&heritage_id='+heritage.id;
+            window.location.href = '/homebrew/edit/heritage/?id='+g_activeBundle.id+'&heritage_id='+heritage.id;
           });
           $('#'+deleteHeritageID).click(function() {
-            socket.emit('requestHomebrewRemoveHeritage', g_activeEditBundle.id, heritage.id);
+            socket.emit('requestHomebrewRemoveHeritage', g_activeBundle.id, heritage.id);
           });
         }
       }
@@ -268,7 +347,7 @@ socket.on("returnBundleContents", function(REQUEST_TYPE, userHasBundle, classes,
       ////
 
       $('#createUniHeritageBtn').click(function() {
-        window.location.href = '/homebrew/create/uni-heritage/?id='+g_activeEditBundle.id;
+        window.location.href = '/homebrew/create/uni-heritage/?id='+g_activeBundle.id;
       });
 
       if(uniheritages.length > 0){
@@ -277,15 +356,15 @@ socket.on("returnBundleContents", function(REQUEST_TYPE, userHasBundle, classes,
           let viewUniHeritageID = 'entry-view-uni-heritage-'+uniheritage.id;
           let editUniHeritageID = 'entry-edit-uni-heritage-'+uniheritage.id;
           let deleteUniHeritageID = 'entry-delete-uni-heritage-'+uniheritage.id;
-          $('#bundleContainerUniHeritages').append('<div class="columns is-marginless mt-1 sub-section-box"><div class="column"><p class="is-size-5">'+uniheritage.name+'</p></div><div class="column"><div class="is-pulled-right buttons are-small"><button id="'+viewUniHeritageID+'" class="button is-rounded is-info">View</button><button id="'+editUniHeritageID+'" class="button is-success"><span>Edit</span><span class="icon is-small"><i class="far fa-edit"></i></span></button><button id="'+deleteUniHeritageID+'" class="button is-danger"><span>Delete</span><span class="icon is-small"><i class="fas fa-times"></i></span></button></div></div></div>');
+          $('#bundleContainerUniHeritages').append('<div class="columns is-mobile is-marginless mt-1 sub-section-box"><div class="column"><p class="is-size-5">'+uniheritage.name+'</p></div><div class="column"><div class="is-pulled-right buttons are-small"><button id="'+viewUniHeritageID+'" class="button is-info is-outlined">View</button><button id="'+editUniHeritageID+'" class="button is-success is-outlined"><span>Edit</span><span class="icon is-small"><i class="far fa-edit"></i></span></button><button id="'+deleteUniHeritageID+'" class="button is-danger is-outlined"><span>Delete</span><span class="icon is-small"><i class="fas fa-times"></i></span></button></div></div></div>');
           $('#'+viewUniHeritageID).click(function() {
-            //
+            new DisplayUniHeritage('tabContent', uniheritage.id, featMap, g_activeBundle.id);
           });
           $('#'+editUniHeritageID).click(function() {
-            window.location.href = '/homebrew/edit/uni-heritage/?id='+g_activeEditBundle.id+'&uni_heritage_id='+uniheritage.id;
+            window.location.href = '/homebrew/edit/uni-heritage/?id='+g_activeBundle.id+'&uni_heritage_id='+uniheritage.id;
           });
           $('#'+deleteUniHeritageID).click(function() {
-            socket.emit('requestHomebrewRemoveUniHeritage', g_activeEditBundle.id, uniheritage.id);
+            socket.emit('requestHomebrewRemoveUniHeritage', g_activeBundle.id, uniheritage.id);
           });
         }
       }
@@ -293,7 +372,7 @@ socket.on("returnBundleContents", function(REQUEST_TYPE, userHasBundle, classes,
       ////
 
       $('#createItemBtn').click(function() {
-        window.location.href = '/homebrew/create/item/?id='+g_activeEditBundle.id;
+        window.location.href = '/homebrew/create/item/?id='+g_activeBundle.id;
       });
 
       if(items.length > 0){
@@ -302,15 +381,18 @@ socket.on("returnBundleContents", function(REQUEST_TYPE, userHasBundle, classes,
           let viewItemID = 'entry-view-item-'+item.id;
           let editItemID = 'entry-edit-item-'+item.id;
           let deleteItemID = 'entry-delete-item-'+item.id;
-          $('#bundleContainerItems').append('<div class="columns is-marginless mt-1 sub-section-box"><div class="column"><p class="is-size-5">'+item.name+'</p></div><div class="column"><div class="is-pulled-right buttons are-small"><button id="'+viewItemID+'" class="button is-rounded is-info">View</button><button id="'+editItemID+'" class="button is-success"><span>Edit</span><span class="icon is-small"><i class="far fa-edit"></i></span></button><button id="'+deleteItemID+'" class="button is-danger"><span>Delete</span><span class="icon is-small"><i class="fas fa-times"></i></span></button></div></div></div>');
+          $('#bundleContainerItems').append('<div class="columns is-mobile is-marginless mt-1 sub-section-box"><div class="column"><p class="is-size-5">'+item.name+'</p></div><div class="column"><div class="is-pulled-right buttons are-small"><button id="'+viewItemID+'" class="button is-info is-outlined">View</button><button id="'+editItemID+'" class="button is-success is-outlined"><span>Edit</span><span class="icon is-small"><i class="far fa-edit"></i></span></button><button id="'+deleteItemID+'" class="button is-danger is-outlined"><span>Delete</span><span class="icon is-small"><i class="fas fa-times"></i></span></button></div></div></div>');
           $('#'+viewItemID).click(function() {
-            //
+            let itemStruct = itemMap.get(item.id+'');
+            openQuickView('itemView', {
+              ItemDataStruct : itemStruct
+            });
           });
           $('#'+editItemID).click(function() {
-            window.location.href = '/homebrew/edit/item/?id='+g_activeEditBundle.id+'&item_id='+item.id;
+            window.location.href = '/homebrew/edit/item/?id='+g_activeBundle.id+'&item_id='+item.id;
           });
           $('#'+deleteItemID).click(function() {
-            socket.emit('requestHomebrewRemoveItem', g_activeEditBundle.id, item.id);
+            socket.emit('requestHomebrewRemoveItem', g_activeBundle.id, item.id);
           });
         }
       }
@@ -318,7 +400,7 @@ socket.on("returnBundleContents", function(REQUEST_TYPE, userHasBundle, classes,
       ////
 
       $('#createSpellBtn').click(function() {
-        window.location.href = '/homebrew/create/spell/?id='+g_activeEditBundle.id;
+        window.location.href = '/homebrew/create/spell/?id='+g_activeBundle.id;
       });
 
       if(spells.length > 0){
@@ -327,15 +409,18 @@ socket.on("returnBundleContents", function(REQUEST_TYPE, userHasBundle, classes,
           let viewSpellID = 'entry-view-spell-'+spell.id;
           let editSpellID = 'entry-edit-spell-'+spell.id;
           let deleteSpellID = 'entry-delete-spell-'+spell.id;
-          $('#bundleContainerSpells').append('<div class="columns is-marginless mt-1 sub-section-box"><div class="column"><p class="is-size-5">'+spell.name+'</p></div><div class="column"><div class="is-pulled-right buttons are-small"><button id="'+viewSpellID+'" class="button is-rounded is-info">View</button><button id="'+editSpellID+'" class="button is-success"><span>Edit</span><span class="icon is-small"><i class="far fa-edit"></i></span></button><button id="'+deleteSpellID+'" class="button is-danger"><span>Delete</span><span class="icon is-small"><i class="fas fa-times"></i></span></button></div></div></div>');
+          $('#bundleContainerSpells').append('<div class="columns is-mobile is-marginless mt-1 sub-section-box"><div class="column"><p class="is-size-5">'+spell.name+'</p></div><div class="column"><div class="is-pulled-right buttons are-small"><button id="'+viewSpellID+'" class="button is-info is-outlined">View</button><button id="'+editSpellID+'" class="button is-success is-outlined"><span>Edit</span><span class="icon is-small"><i class="far fa-edit"></i></span></button><button id="'+deleteSpellID+'" class="button is-danger is-outlined"><span>Delete</span><span class="icon is-small"><i class="fas fa-times"></i></span></button></div></div></div>');
           $('#'+viewSpellID).click(function() {
-            //
+            let spellStruct = spellMap.get(spell.id+'');
+            openQuickView('spellView', {
+              SpellDataStruct: spellStruct,
+            });
           });
           $('#'+editSpellID).click(function() {
-            window.location.href = '/homebrew/edit/spell/?id='+g_activeEditBundle.id+'&spell_id='+spell.id;
+            window.location.href = '/homebrew/edit/spell/?id='+g_activeBundle.id+'&spell_id='+spell.id;
           });
           $('#'+deleteSpellID).click(function() {
-            socket.emit('requestHomebrewRemoveSpell', g_activeEditBundle.id, spell.id);
+            socket.emit('requestHomebrewRemoveSpell', g_activeBundle.id, spell.id);
           });
         }
       }
@@ -352,18 +437,18 @@ socket.on("returnBundleCreate", function(homebrewBundle){
 
 socket.on("returnBundleUpdate", function(homebrewBundle){
   if(homebrewBundle != null) {
-    g_activeEditBundle = homebrewBundle;
-    $('#bundleName').html(g_activeEditBundle.name);
+    g_activeBundle = homebrewBundle;
+    $('#bundleName').html(g_activeBundle.name);
     $('#bundleRenameBtn').removeClass('is-hidden');
     $('#bundleDescription').parent().removeClass("is-loading");
-    $('#bundleDescription').val(g_activeEditBundle.description);
+    $('#bundleDescription').val(g_activeBundle.description);
     $('#bundleContactInfo').parent().removeClass("is-loading");
-    $('#bundleContactInfo').val(g_activeEditBundle.contactInfo);
+    $('#bundleContactInfo').val(g_activeBundle.contactInfo);
   }
 });
 
 socket.on("returnHomebrewRemoveContent", function(){
-  openBundleEditor(g_activeEditBundle);
+  openBundleEditor(g_activeBundle);
 });
 
 socket.on("returnBundlePublish", function(isPublished){

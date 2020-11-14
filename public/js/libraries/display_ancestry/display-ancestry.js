@@ -3,7 +3,7 @@
 */
 
 class DisplayAncestry {
-  constructor(containerID, ancestryID, featMap) {
+  constructor(containerID, ancestryID, featMap, homebrewID=null) {
     featMap = new Map([...featMap.entries()].sort(
       function(a, b) {
           if (a[1].Feat.level === b[1].Feat.level) {
@@ -18,7 +18,7 @@ class DisplayAncestry {
     $('#'+containerID).parent().append('<div id="'+ancestryDisplayContainerID+'" class="is-hidden"></div>');
     $('#'+containerID).addClass('is-hidden');
     
-    socket.emit('requestGeneralAncestry', ancestryID);
+    socket.emit('requestGeneralAncestry', ancestryID, homebrewID);
     socket.off('returnGeneralAncestry');
     socket.on("returnGeneralAncestry", function(ancestryStruct){
       $('#'+ancestryDisplayContainerID).load("/templates/display-ancestry.html");
@@ -37,14 +37,22 @@ class DisplayAncestry {
           });
 
           $('#ancestry-name').html(ancestryStruct.ancestry.name);
-          $('#ancestry-description').html(ancestryStruct.ancestry.description);
+          $('#ancestry-description').html(processText(ancestryStruct.ancestry.description, false, null, 'MEDIUM', false));
 
           let sourceStr = '';
           let ancestryRarity = convertRarityToHTML(ancestryStruct.ancestry.rarity);
           if(ancestryRarity == ''){
-            sourceStr = getContentSourceTextName(ancestryStruct.ancestry.contentSrc);
+            let sourceTextName = getContentSourceTextName(ancestryStruct.ancestry.contentSrc);
+            if(ancestryStruct.ancestry.homebrewID != null){
+              sourceTextName = 'Bundle #'+ancestryStruct.ancestry.homebrewID;
+            }
+            sourceStr = sourceTextName;
           } else {
-            sourceStr = '<span class="pr-2">'+getContentSourceTextName(ancestryStruct.ancestry.contentSrc)+'</span>';
+            let sourceTextName = getContentSourceTextName(ancestryStruct.ancestry.contentSrc);
+            if(ancestryStruct.ancestry.homebrewID != null){
+              sourceTextName = 'Bundle #'+ancestryStruct.ancestry.homebrewID;
+            }
+            sourceStr = '<span class="pr-2">'+sourceTextName+'</span>';
           }
           $('#ancestry-source').html(sourceStr+ancestryRarity);
 
@@ -118,7 +126,13 @@ class DisplayAncestry {
           let firstHeritage = true;
           for(let heritage of ancestryStruct.heritages) {
             if(firstHeritage) {firstHeritage = false;} else {$('#ancestry-heritages').append('<hr class="m-2">');}
-            $('#ancestry-heritages').append('<div style="position: relative;"><div class="pb-2"><p><span id="ancestry-name" class="is-size-5 is-bold has-text-grey-light pl-3">'+heritage.name+'</span>'+convertRarityToHTML(heritage.rarity)+'</p>'+processText(heritage.description, false, null)+'</div><span class="is-size-7 has-text-grey is-italic pr-2" style="position: absolute; bottom: 0px; right: 0px;">'+getContentSourceTextName(heritage.contentSrc)+'</span></div>');
+
+            let sourceTextName = getContentSourceTextName(heritage.contentSrc);
+            if(heritage.homebrewID != null){
+              sourceTextName = 'Bundle #'+heritage.homebrewID;
+            }
+
+            $('#ancestry-heritages').append('<div style="position: relative;"><div class="pb-2"><p><span id="ancestry-name" class="is-size-5 is-bold has-text-grey-light pl-3">'+heritage.name+'</span>'+convertRarityToHTML(heritage.rarity)+'</p>'+processText(heritage.description, false, null)+'</div><span class="is-size-7 has-text-grey is-italic pr-2" style="position: absolute; bottom: 0px; right: 0px;">'+sourceTextName+'</span></div>');
           }
 
           ///
@@ -134,8 +148,14 @@ class DisplayAncestry {
                 ancestryFeatLevel = featStruct.Feat.level;
                 $('#ancestry-feats').append('<div class="border-bottom border-dark-lighter has-background-black-like-more text-center is-bold"><p>Level '+ancestryFeatLevel+'</p></div>');
               }
+
+              let sourceTextName = getContentSourceTextName(featStruct.Feat.contentSrc);
+              if(featStruct.Feat.homebrewID != null){
+                sourceTextName = 'Bundle #'+featStruct.Feat.homebrewID;
+              }
+
               let featEntryID = 'ancestry-feat-'+featStruct.Feat.id;
-              $('#ancestry-feats').append('<div id="'+featEntryID+'" class="border-bottom border-dark-lighter px-2 py-2 has-background-black-ter cursor-clickable"><span class="pl-4">'+featStruct.Feat.name+convertActionToHTML(featStruct.Feat.actions)+'</span><span class="is-pulled-right is-size-7 has-text-grey is-italic">'+getContentSourceTextName(featStruct.Feat.contentSrc)+'</span></div>');
+              $('#ancestry-feats').append('<div id="'+featEntryID+'" class="border-bottom border-dark-lighter px-2 py-2 has-background-black-ter cursor-clickable"><span class="pl-4">'+featStruct.Feat.name+convertActionToHTML(featStruct.Feat.actions)+'</span><span class="is-pulled-right is-size-7 has-text-grey is-italic">'+sourceTextName+'</span></div>');
 
               $('#'+featEntryID).click(function(){
                 openQuickView('featView', {

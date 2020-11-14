@@ -38,7 +38,7 @@ function openLanguageQuickview(data) {
 
     if(scriptClass != ''){
         qContent.append('<hr class="m-2">');
-        qContent.append('<input id="scriptDisplayArea" class="input is-medium" spellcheck="false" type="text" placeholder="Script Display Area">');
+        qContent.append('<input id="scriptDisplayArea" class="input is-medium" spellcheck="false" type="text" autocomplete="off" placeholder="Script Display Area">');
         $('#scriptDisplayArea').addClass(scriptClass);
 
     }

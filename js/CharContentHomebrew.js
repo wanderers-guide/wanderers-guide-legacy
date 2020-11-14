@@ -11,6 +11,10 @@ function getUserID(socket){
   }
 }
 
+function canAccessHomebrew(socket, homebrewBundle){
+  return homebrewBundle.isPublished === 1 || homebrewBundle.userID === getUserID(socket);
+}
+
 module.exports = class CharContentHomebrew {
 
     static getHomebrewArray(character){
@@ -20,7 +24,7 @@ module.exports = class CharContentHomebrew {
     static addHomebrewBundle(socket, charID, homebrewID){
       return HomebrewBundle.findOne({ where: { id: homebrewID } })
       .then((homebrewBundle) => {
-        if(homebrewBundle != null && (homebrewBundle.isPublished === 1 || homebrewBundle.userID === getUserID(socket))) {
+        if(homebrewBundle != null && canAccessHomebrew(socket, homebrewBundle)) {
           return Character.findOne({ where: { id: charID } })
           .then((character) => {
               let homebrewArray = CharContentHomebrew.getHomebrewArray(character);

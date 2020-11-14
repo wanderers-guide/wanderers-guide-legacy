@@ -3,7 +3,7 @@
 */
 
 class DisplayArchetype {
-  constructor(containerID, archetypeID, featMap) {
+  constructor(containerID, archetypeID, featMap, homebrewID=null) {
     featMap = new Map([...featMap.entries()].sort(
       function(a, b) {
           if (a[1].Feat.level === b[1].Feat.level) {
@@ -18,7 +18,7 @@ class DisplayArchetype {
     $('#'+containerID).parent().append('<div id="'+archetypeDisplayContainerID+'" class="is-hidden"></div>');
     $('#'+containerID).addClass('is-hidden');
 
-    socket.emit('requestGeneralArchetype', archetypeID);
+    socket.emit('requestGeneralArchetype', archetypeID, homebrewID);
     socket.off('returnGeneralArchetype');
     socket.on("returnGeneralArchetype", function(archetypeStruct){
       $('#'+archetypeDisplayContainerID).load("/templates/display-archetype.html");
@@ -37,16 +37,24 @@ class DisplayArchetype {
           });
 
           $('#archetype-name').html(archetypeStruct.archetype.name);
-          $('#archetype-description').html(processText(archetypeStruct.archetype.description, false, null));
+          $('#archetype-description').html(processText(archetypeStruct.archetype.description, false, null, 'MEDIUM', false));
 
           let dedFeatStruct = featMap.get(archetypeStruct.archetype.dedicationFeatID+'');
 
           let sourceStr = '';
           let archetypeRarity = convertRarityToHTML(dedFeatStruct.Feat.rarity);
           if(archetypeRarity == ''){
-            sourceStr = getContentSourceTextName(archetypeStruct.archetype.contentSrc);
+            let sourceTextName = getContentSourceTextName(archetypeStruct.archetype.contentSrc);
+            if(archetypeStruct.archetype.homebrewID != null){
+              sourceTextName = 'Bundle #'+archetypeStruct.archetype.homebrewID;
+            }
+            sourceStr = sourceTextName;
           } else {
-            sourceStr = '<span class="pr-2">'+getContentSourceTextName(archetypeStruct.archetype.contentSrc)+'</span>';
+            let sourceTextName = getContentSourceTextName(archetypeStruct.archetype.contentSrc);
+            if(archetypeStruct.archetype.homebrewID != null){
+              sourceTextName = 'Bundle #'+archetypeStruct.archetype.homebrewID;
+            }
+            sourceStr = '<span class="pr-2">'+sourceTextName+'</span>';
           }
           $('#archetype-source').html(sourceStr+archetypeRarity);
 
@@ -84,8 +92,14 @@ class DisplayArchetype {
                 archetypeFeatLevel = featStruct.Feat.level;
                 $('#archetype-feats').append('<div class="border-bottom border-dark-lighter has-background-black-like-more text-center is-bold"><p>Level '+archetypeFeatLevel+'</p></div>');
               }
+
+              let sourceTextName = getContentSourceTextName(featStruct.Feat.contentSrc);
+              if(featStruct.Feat.homebrewID != null){
+                sourceTextName = 'Bundle #'+featStruct.Feat.homebrewID;
+              }
+
               let featEntryID = 'archetype-feat-'+featStruct.Feat.id;
-              $('#archetype-feats').append('<div id="'+featEntryID+'" class="border-bottom border-dark-lighter px-2 py-2 has-background-black-ter cursor-clickable"><span class="pl-4">'+featStruct.Feat.name+convertActionToHTML(featStruct.Feat.actions)+'</span><span class="is-pulled-right is-size-7 has-text-grey is-italic">'+getContentSourceTextName(featStruct.Feat.contentSrc)+'</span></div>');
+              $('#archetype-feats').append('<div id="'+featEntryID+'" class="border-bottom border-dark-lighter px-2 py-2 has-background-black-ter cursor-clickable"><span class="pl-4">'+featStruct.Feat.name+convertActionToHTML(featStruct.Feat.actions)+'</span><span class="is-pulled-right is-size-7 has-text-grey is-italic">'+sourceTextName+'</span></div>');
 
               $('#'+featEntryID).click(function(){
                 openQuickView('featView', {

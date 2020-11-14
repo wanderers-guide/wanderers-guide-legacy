@@ -14,7 +14,18 @@ function getUserID(socket){
   }
 }
 
+function canAccessHomebrew(socket, homebrewBundle){
+  return homebrewBundle.isPublished === 1 || homebrewBundle.userID === getUserID(socket);
+}
+
 module.exports = class UserHomebrew {
+
+  static canAccessHomebrewBundle(socket, homebrewID){
+    return HomebrewBundle.findOne({ where: { id: homebrewID } })
+    .then((homebrewBundle) => {
+      return canAccessHomebrew(socket, homebrewBundle);
+    });
+  }
 
   static createHomebrewBundle(socket) {
     return AuthCheck.isMember(socket)
@@ -121,9 +132,13 @@ module.exports = class UserHomebrew {
   }
 
   static getHomebrewBundle(socket, homebrewID) {
-    return HomebrewBundle.findOne({ where: { id: homebrewID, userID: getUserID(socket) } })
+    return HomebrewBundle.findOne({ where: { id: homebrewID } })
     .then((homebrewBundle) => {
-      return homebrewBundle;
+      if(homebrewBundle != null && canAccessHomebrew(socket, homebrewBundle)) {
+        return homebrewBundle;
+      } else {
+        return null;
+      }
     });
   }
 

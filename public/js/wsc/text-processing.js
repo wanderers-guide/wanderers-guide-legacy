@@ -16,6 +16,15 @@ let supportedWebLinks = [
     {Website: 'paizo.com', Title: 'Paizo'},
 ];
 
+/*
+Optional Requirements:
+  - g_allConditions
+  - g_allLanguages
+  - g_allTags
+  - g_featMap
+  - g_itemMap
+  - g_spellMap
+*/
 function processText(text, isSheet, isJustified = false, size = 'MEDIUM', indexConditions = true) {
     if(text == null) {return text;}
 
@@ -82,91 +91,90 @@ function processText(text, isSheet, isJustified = false, size = 'MEDIUM', indexC
         // {+WIS_MOD} ->  Character Wisdom Modifier (signed)
         let regexSheetVariables = /\{(.+?)\}/g;
         text = text.replace(regexSheetVariables, handleSheetVariables);
-
     }
 
     // (Feat: Striking | Strike)
     let regexFeatLinkExt = /\((Feat|Ability|Action|Activity):\s*([^(:]+?)\s*\|\s*(.+?)\s*\)/ig;
-    if(true) {
+    if(typeof g_featMap !== 'undefined') {
         text = text.replace(regexFeatLinkExt, handleFeatLinkExt);
     } else {
-        text = text.replace(regexFeatLinkExt, '$2');
+        text = text.replace(regexFeatLinkExt, '<span class="is-underlined-warning">$2</span>');
     }
 
     // (Feat: Strike)
     let regexFeatLink = /\((Feat|Ability|Action|Activity):\s*([^(:]+?)\s*\)/ig;
-    if(true) {
+    if(typeof g_featMap !== 'undefined') {
         text = text.replace(regexFeatLink, handleFeatLink);
     } else {
-        text = text.replace(regexFeatLink, '$2');
+        text = text.replace(regexFeatLink, '<span class="is-underlined-warning">$2</span>');
     }
 
     // (Item: Striking | Strike)
     let regexItemLinkExt = /\((Item):\s*([^(:]+?)\s*\|\s*(.+?)\s*\)/ig;
-    if(true) {
+    if(typeof g_itemMap !== 'undefined') {
         text = text.replace(regexItemLinkExt, handleItemLinkExt);
     } else {
-        text = text.replace(regexItemLinkExt, '$2');
+        text = text.replace(regexItemLinkExt, '<span class="is-underlined-warning">$2</span>');
     }
 
     // (Item: Strike)
     let regexItemLink = /\((Item):\s*([^(:]+?)\s*\)/ig;
-    if(true) {
+    if(typeof g_itemMap !== 'undefined') {
         text = text.replace(regexItemLink, handleItemLink);
     } else {
-        text = text.replace(regexItemLink, '$2');
+        text = text.replace(regexItemLink, '<span class="is-underlined-warning">$2</span>');
     }
 
     // (Spell: Striking | Strike)
     let regexSpellLinkExt = /\((Spell):\s*([^(:]+?)\s*\|\s*(.+?)\s*\)/ig;
-    if(true) {
+    if(typeof g_spellMap !== 'undefined') {
         text = text.replace(regexSpellLinkExt, handleSpellLinkExt);
     } else {
-        text = text.replace(regexSpellLinkExt, '$2');
+        text = text.replace(regexSpellLinkExt, '<span class="is-underlined-warning">$2</span>');
     }
 
     // (Spell: Strike)
     let regexSpellLink = /\((Spell):\s*([^(:]+?)\s*\)/ig;
-    if(true) {
+    if(typeof g_spellMap !== 'undefined') {
         text = text.replace(regexSpellLink, handleSpellLink);
     } else {
-        text = text.replace(regexSpellLink, '$2');
+        text = text.replace(regexSpellLink, '<span class="is-underlined-warning">$2</span>');
     }
 
     // (Language: Gnomish-like | Gnomish)
     let regexLanguageLinkExt = /\((Language):\s*([^(:]+?)\s*\|\s*(.+?)\s*\)/ig;
-    if(true) {
+    if(typeof g_allLanguages !== 'undefined') {
         text = text.replace(regexLanguageLinkExt, handleLanguageLinkExt);
     } else {
-        text = text.replace(regexLanguageLinkExt, '$2');
+        text = text.replace(regexLanguageLinkExt, '<span class="is-underlined-warning">$2</span>');
     }
 
     // (Language: Gnomish)
     let regexLanguageLink = /\((Language):\s*([^(:]+?)\s*\)/ig;
-    if(true) {
+    if(typeof g_allLanguages !== 'undefined') {
         text = text.replace(regexLanguageLink, handleLanguageLink);
     } else {
-        text = text.replace(regexLanguageLink, '$2');
+        text = text.replace(regexLanguageLink, '<span class="is-underlined-warning">$2</span>');
     }
 
     // (Trait: Infusing | Infused)
     let regexTraitLinkExt = /\((Trait):\s*([^(:]+?)\s*\|\s*(.+?)\s*\)/ig;
-    if(true) {
+    if(typeof g_allTags !== 'undefined') {
         text = text.replace(regexTraitLinkExt, handleTraitLinkExt);
     } else {
-        text = text.replace(regexTraitLinkExt, '$2');
+        text = text.replace(regexTraitLinkExt, '<span class="is-underlined-warning">$2</span>');
     }
 
     // (Trait: Infused)
     let regexTraitLink = /\((Trait):\s*([^(:]+?)\s*\)/ig;
-    if(true) {
+    if(typeof g_allTags !== 'undefined') {
         text = text.replace(regexTraitLink, handleTraitLink);
     } else {
-        text = text.replace(regexTraitLink, '$2');
+        text = text.replace(regexTraitLink, '<span class="is-underlined-warning">$2</span>');
     }
 
     // Conditions Search and Replace
-    if(true && indexConditions) {
+    if(typeof g_allConditions !== 'undefined' && indexConditions) {
         text = handleIndexConditions(text);
     }
 

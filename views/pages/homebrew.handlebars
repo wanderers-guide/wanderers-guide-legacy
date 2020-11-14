@@ -1,12 +1,19 @@
 
 {{#section 'header'}}
     <link rel="stylesheet" href="/css/homebrew.css">
+    <link rel="stylesheet" href="/css/browse.css">
 
     <script src="/js/homebrew/general-homebrew.js"></script>
     <script src="/js/homebrew/user-content.js"></script>
     <script src="/js/homebrew/user-collection.js"></script>
     <script src="/js/homebrew/bundle-browse.js"></script>
     <script src="/js/browse/browse-utils.js"></script>
+
+    <script src="/js/libraries/display_class/display-class.js"></script>
+    <script src="/js/libraries/display_ancestry/display-ancestry.js"></script>
+    <script src="/js/libraries/display_archetype/display-archetype.js"></script>
+    <script src="/js/libraries/display_background/display-background.js"></script>
+    <script src="/js/libraries/display_uni_heritage/display-uni-heritage.js"></script>
 
     <script src="/js/homebrew/bundle-view.js"></script>
     
@@ -21,6 +28,7 @@
     <script src="/js/sheet/quickviews/spell-view.js"></script>
     <script src="/js/sheet/quickviews/item-view.js"></script>
     <script src="/js/sheet/quickviews/tag-view.js"></script>
+    <script src="/js/sheet/quickviews/ability-view.js"></script>
     <script src="/js/sheet/quickviews/condition-view.js"></script>
     <script src="/js/sheet/utils/item-utils.js"></script>
     <script src="/js/sheet/utils/material-utils.js"></script>
@@ -57,7 +65,7 @@
 <div id="homebrew-container" class="container" data-edit-homebrew-id="{{editHomebrewID}}" data-view-homebrew-id="{{viewHomebrewID}}" data-direct-to-tab="{{homebrewTabName}}">
 
     
-    
+    <!--
     <h1 class="pt-3 is-size-1 has-text-light text-center">Homebrew</h1>
     <hr style="border-color: #5e5e5e;">
     <div>
@@ -66,10 +74,10 @@
             The plan for this page is for it to be the central hub for all things homebrew. This is where you would go to browse homebrew, manage homebrew you've collected, and create your own homebrew.
         </p>
     </div>
+    -->
     
     
 
-  <!--
   <div class="tabs is-centered is-boxed use-custom-scrollbar mb-2">
     <ul class="category-tabs">
       <li><a id="browseTab">Browse Homebrew</a></li>
@@ -77,9 +85,23 @@
       <li><a id="userContentTab">My Creations</a></li>
     </ul>
   </div>
-  <div id="tabContent" class="mx-3 mb-3">
-  </div>
-  -->
-  
+  <div id="tabContent" class="mx-3 mb-3"></div><!-- tabContent must be empty! -->
 
 </div>
+
+{{#section 'overlay'}}
+    <!-- Right Quickview -->
+    <div id="quickviewDefault" class="quickview">
+        <div class="quickview-header">
+            <p id="quickViewTitle" class="title is-size-5 has-text-grey-lighter"></p>
+            <div class="is-inline-flex">
+                <p id="quickViewTitleRight"></p>
+                <p id="quickViewTitleClose"></p>
+            </div>
+        </div>
+        <div class="quickview-body use-custom-scrollbar">
+            <div id="quickViewContent" class="quickview-block pt-1 pb-3 px-3">
+            </div>
+        </div>
+    </div>
+{{/section}}

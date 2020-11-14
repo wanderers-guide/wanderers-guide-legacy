@@ -4,6 +4,8 @@
 
 let socket = io();
 
+let g_activeBundle = null;
+
 // ~~~~~~~~~~~~~~ // Run on Load // ~~~~~~~~~~~~~~ //
 $(function () {
 
@@ -33,9 +35,9 @@ $(function () {
 
   if(editHomebrewID != '' || viewHomebrewID != '' || homebrewTabName != '') {
     if(editHomebrewID != ''){
-      socket.emit('requestHomebrewBundle', editHomebrewID);
+      socket.emit('requestHomebrewBundle', 'EDIT', editHomebrewID);
     } else if(viewHomebrewID != ''){
-      //
+      socket.emit('requestHomebrewBundle', 'VIEW', viewHomebrewID);
     } else if(homebrewTabName != ''){
       switch(homebrewTabName) {
         case 'BROWSE': $('#browseTab').trigger("click"); break;
@@ -50,9 +52,24 @@ $(function () {
 
 });
 
-socket.on("returnHomebrewBundle", function(homebrewBundle){
+socket.on("returnHomebrewBundle", function(REQUEST_TYPE, homebrewBundle){
   if(homebrewBundle != null){
-    $('#userContentTab').parent().addClass("is-active");
-    openBundleEditor(homebrewBundle);
+    if(REQUEST_TYPE === 'EDIT') {
+      $('#userContentTab').parent().addClass("is-active");
+      openBundleEditor(homebrewBundle);
+    } else if(REQUEST_TYPE === 'VIEW') {
+      $('#browseTab').parent().addClass("is-active");
+      openBundleView(homebrewBundle);
+    }
   }
 });
+
+// Utils //
+/*
+function getHomebrewContentSrc(homebrewID){
+  if(g_activeBundle != null && g_activeBundle.id == homebrewID){
+    return g_activeBundle.name;
+  } else {
+    return null;
+  }
+}*/

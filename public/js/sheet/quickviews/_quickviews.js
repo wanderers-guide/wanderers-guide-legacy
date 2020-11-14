@@ -133,10 +133,19 @@ function addBackFunctionality(quickViewData){
 
 }
 
-function addContentSource(contentSrc){
-  if(contentSrc == null) {return;}
+function addContentSource(contentSrc, homebrewID){
+  if(contentSrc == null && homebrewID == null) {return;}
+
+  let sourceLink, sourceTextName;
+  if(homebrewID == null) {
+    sourceLink = getContentSourceLink(contentSrc);
+    sourceTextName = getContentSourceTextName(contentSrc);
+  } else {
+    sourceLink = '/homebrew/?view_id='+homebrewID;
+    sourceTextName = 'Bundle #'+homebrewID;
+  }
 
   $('#quickViewContent').parent().css('position','relative');
-  $('#quickViewContent').append('<div style="position: fixed; bottom: 5px; right: 12px;"><a class="is-size-7 has-text-grey is-italic" href="'+getContentSourceLink(contentSrc)+'" target="_blank">'+getContentSourceTextName(contentSrc)+'</a></div>');
+  $('#quickViewContent').append('<div style="position: fixed; bottom: 5px; right: 12px;"><a class="is-size-7 has-text-grey is-italic" href="'+sourceLink+'" target="_blank">'+sourceTextName+'</a></div>');
 
 }
