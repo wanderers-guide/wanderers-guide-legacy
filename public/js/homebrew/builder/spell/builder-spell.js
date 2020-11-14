@@ -15,6 +15,7 @@ $(function () {
         finishSpell(false);
     });
 
+    $('.pageloader').addClass("fadeout");
 });
 
 function finishSpell(isUpdate){

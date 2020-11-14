@@ -166,6 +166,7 @@ $(function () {
         finishClass(false);
     });
 
+    $('.pageloader').addClass("fadeout");
 });
 
 function finishClass(isUpdate){

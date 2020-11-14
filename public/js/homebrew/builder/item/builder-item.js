@@ -207,6 +207,7 @@ socket.on("returnHomebrewItemDetails", function(itemObject){
         finishItem(false);
     });
 
+    $('.pageloader').addClass("fadeout");
 });
 
 function finishItem(isUpdate){

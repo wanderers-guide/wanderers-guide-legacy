@@ -96,9 +96,12 @@ socket.on("returnBundleContents", function(REQUEST_TYPE, userHasBundle, allTags,
       });
 
       $('#bundleCollectionRemoveBtn').click(function() {
-        socket.emit('requestBundleChangeCollection', g_activeBundle.id, false);
-        $('#bundleCollectionRemoveBtn').addClass('is-hidden');
-        $('#bundleCollectionAddBtn').removeClass('is-hidden');
+        new ConfirmMessage('Remove from Collection', 'Are you sure you want to remove this bundle from your collection? Any content your characters are using from the bundle will be removed.', 'Remove', 'modal-remove-view-collection-bundle-'+g_activeBundle.id, 'modal-remove-view-collection-bundle-btn-'+g_activeBundle.id);
+        $('#modal-remove-view-collection-bundle-btn-'+g_activeBundle.id).click(function() {
+          socket.emit('requestBundleChangeCollection', g_activeBundle.id, false);
+          $('#bundleCollectionRemoveBtn').addClass('is-hidden');
+          $('#bundleCollectionAddBtn').removeClass('is-hidden');
+        });
       });
 
       ///

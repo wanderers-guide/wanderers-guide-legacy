@@ -37,11 +37,14 @@ socket.on("returnCollectedHomebrewBundles", function(hBundles){
         });
 
         $('#'+bundleRemoveID).click(function() {
-          socket.on("returnBundleChangeCollection", function(){
-            socket.off('returnBundleChangeCollection');
-            openUserCollection();
+          new ConfirmMessage('Remove from Collection', 'Are you sure you want to remove this bundle from your collection? Any content your characters are using from the bundle will be removed.', 'Remove', 'modal-remove-collection-bundle-'+homebrewBundle.id, 'modal-remove-collection-bundle-btn-'+homebrewBundle.id);
+          $('#modal-remove-collection-bundle-btn-'+homebrewBundle.id).click(function() {
+            socket.on("returnBundleChangeCollection", function(){
+              socket.off('returnBundleChangeCollection');
+              openUserCollection();
+            });
+            socket.emit('requestBundleChangeCollection', homebrewBundle.id, false);
           });
-          socket.emit('requestBundleChangeCollection', homebrewBundle.id, false);
         });
 
       }

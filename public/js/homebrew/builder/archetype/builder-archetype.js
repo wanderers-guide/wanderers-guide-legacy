@@ -62,6 +62,7 @@ $(function () {
         finishArchetype(false);
     });
 
+    $('.pageloader').addClass("fadeout");
 });
 
 function finishArchetype(isUpdate){

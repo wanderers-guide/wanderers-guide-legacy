@@ -25,6 +25,7 @@ socket.on("returnHomebrewHeritageDetails", function(heritageArray, ancestryArray
         finishHeritage(false);
     });
 
+    $('.pageloader').addClass("fadeout");
 });
 
 function finishHeritage(isUpdate){

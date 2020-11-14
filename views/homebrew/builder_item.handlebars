@@ -16,7 +16,7 @@
 {{/section}}
 
 {{#section 'nav_homebrew'}}
-    <li class="mx-lg-4 mx-md-3 my-md-0 my-2"><a href="/homebrew">Homebrew</a></li>
+    <li class="mx-lg-4 mx-md-3 my-md-0 my-2"><a href="/homebrew" class="active">Homebrew</a></li>
 {{/section}}
 
 {{#section 'nav_browse'}}
@@ -31,6 +31,9 @@
     <div class="banner_w3lspvt-2"></div>
 {{/section}}
 
+<div class="pageloader">
+    <div class="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+</div>
 
 <div class="pt-3">
     <h1 class="title is-2 has-text-grey-lighter has-text-centered">Item Builder</h1>
@@ -607,9 +610,9 @@
 <div class="field is-grouped is-grouped-centered pb-2">
     <div class="control">
         {{#if itemID}}
-            <button id="updateButton" class="button is-success">Save</button>
+            <button id="updateButton" class="button is-rounded is-success">Save</button>
         {{else}}
-            <button id="createButton" class="button is-success">Save</button>
+            <button id="createButton" class="button is-rounded is-success">Save</button>
         {{/if}}
     </div>
 </div>

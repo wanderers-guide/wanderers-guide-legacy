@@ -136,6 +136,7 @@ socket.on("returnHomebrewFeatDetailsPlus", function(featsObject, classObject, an
         finishFeat(false);
     });
 
+    $('.pageloader').addClass("fadeout");
 });
 
 function finishFeat(isUpdate){

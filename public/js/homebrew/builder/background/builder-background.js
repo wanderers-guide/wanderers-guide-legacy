@@ -13,6 +13,7 @@ $(function () {
         finishBackground(false);
     });
 
+    $('.pageloader').addClass("fadeout");
 });
 
 function finishBackground(isUpdate){

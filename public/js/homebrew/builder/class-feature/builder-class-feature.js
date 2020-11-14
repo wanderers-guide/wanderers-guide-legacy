@@ -15,6 +15,12 @@ $(function () {
 socket.on("returnHomebrewClassDetails", function(classObject, featsObject){
 
     let classMap = objToMap(classObject);
+    classMap = new Map([...classMap.entries()].sort(
+      function(a, b) {
+        return a[1].Class.name > b[1].Class.name ? 1 : -1;
+      })
+    );
+    
     $('#inputClassFor').html('');
     for(const [classID, classData] of classMap.entries()){
         if(classData.Class.isArchived == 0){
@@ -129,6 +135,7 @@ socket.on("returnHomebrewClassDetails", function(classObject, featsObject){
         finishClassFeature(false);
     });
 
+    $('.pageloader').addClass("fadeout");
 });
 
 function finishClassFeature(isUpdate){

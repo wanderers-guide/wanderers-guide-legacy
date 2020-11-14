@@ -50,6 +50,7 @@ $(function () {
         finishUniHeritage(false);
     });
 
+    $('.pageloader').addClass("fadeout");
 });
 
 function finishUniHeritage(isUpdate){

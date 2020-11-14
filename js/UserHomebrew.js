@@ -118,9 +118,16 @@ module.exports = class UserHomebrew {
   }
 
   static getHomebrewBundles(socket) {
-    return HomebrewBundle.findAll({ where: { userID: getUserID(socket) } })
-    .then((homebrewBundles) => {
-      return homebrewBundles;
+    HomebrewBundle.hasMany(UserHomebrewBundle, {foreignKey: 'homebrewID'});
+    UserHomebrewBundle.belongsTo(HomebrewBundle, {foreignKey: 'homebrewID'});
+    return HomebrewBundle.findAll({
+      where: { userID: getUserID(socket) },
+      include: {
+        model: UserHomebrewBundle,
+        attributes:['homebrewID'],
+      }
+    }).then(hBundles => {
+      return hBundles;
     });
   }
 

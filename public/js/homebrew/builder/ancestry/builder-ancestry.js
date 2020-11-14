@@ -88,6 +88,7 @@ $(function () {
         finishAncestry(false);
     });
 
+    $('.pageloader').addClass("fadeout");
 });
 
 function finishAncestry(isUpdate){
