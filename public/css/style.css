@@ -179,7 +179,8 @@ html,
 body {
     height: 100%;
     position: relative;
-    background-color: #1C1C1C;
+    background-color: rgb(28, 28, 28);
+    background-image: url('../images/background.png');
 }
 
 #main-container {
@@ -200,7 +201,6 @@ body {
 
 /* Main Body */
 #center-body {
-    background-color: #1C1C1C;
     position: relative;
 }
 
