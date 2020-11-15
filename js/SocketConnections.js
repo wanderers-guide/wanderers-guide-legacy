@@ -17,6 +17,7 @@ const CharStateUtils = require('./CharStateUtils');
 const GeneralUtils = require('./GeneralUtils');
 const UserHomebrew = require('./UserHomebrew');
 const HomeBackReport = require('../models/backgroundDB/HomeBackReport');
+const User = require('../models/contentDB/User');
 
 function mapToObj(strMap) {
   let obj = Object.create(null);
@@ -1613,6 +1614,22 @@ module.exports = class SocketConnections {
           });
         } else {
           socket.emit('returnBackgroundReport');
+        }
+      });
+
+      socket.on('requestProfileNameChange', function(newName){
+        if(GeneralUtils.validateProfileName(newName)) {
+          let userID = null;
+          if(socket.request.session.passport != null){
+            userID = socket.request.session.passport.user;
+          }
+          if(userID != null){
+            let updateValues = { username: newName };
+            User.update(updateValues, { where: { id: userID } })
+            .then((result) => {
+              socket.emit('returnProfileNameChange', newName);
+            });
+          }
         }
       });
 

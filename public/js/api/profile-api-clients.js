@@ -2,8 +2,6 @@
     By Aaron Cassar.
 */
 
-let socket = io();
-
 let g_allAPIClients = null;
 let g_openAPIClient = null;
 

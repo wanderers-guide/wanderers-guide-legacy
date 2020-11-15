@@ -17,6 +17,9 @@ const HomebrewBundle = db.define('homebrewBundles', {
   isPublished: {
     type: Sequelize.INTEGER
   },
+  authorName: {
+    type: Sequelize.STRING
+  },
 });
 
 module.exports = HomebrewBundle;

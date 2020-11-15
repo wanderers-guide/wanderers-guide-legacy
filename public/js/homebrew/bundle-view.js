@@ -79,7 +79,9 @@ socket.on("returnBundleContents", function(REQUEST_TYPE, userHasBundle, allTags,
 
       $('#bundleName').html(g_activeBundle.name);
       $('#bundleDescription').html(g_activeBundle.description);
-      $('#bundleContactInfo').html(g_activeBundle.contactInfo);
+
+      let contactInfoStr = (g_activeBundle.contactInfo != '') ? ', '+g_activeBundle.contactInfo : '';
+      $('#bundleContactInfo').html('<span class="is-thin has-text-grey-kinda-light">–</span> '+g_activeBundle.authorName+' <span class="is-thin has-text-grey-kinda-light is-size-7">#'+g_activeBundle.userID+'</span>'+contactInfoStr);
 
       ///
 

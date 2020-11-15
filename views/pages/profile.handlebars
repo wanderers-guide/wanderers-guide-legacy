@@ -1,6 +1,7 @@
 
 {{#section 'header'}}
     <link rel="stylesheet" href="/css/profile.css">
+    <script src="/js/profile-page.js"></script>
     <script src="/js/api/profile-api-clients.js"></script>
 {{/section}}
 
@@ -42,7 +43,7 @@
                     </figure>
                 </div>
                 <div class="column is-8">
-                    <p class="is-size-3">{{user.username}}'s Profile</p>
+                    <p class="is-size-3"><span id="profileName" data-profile-name="{{user.username}}" class="title-font has-text-grey-lighter is-bold">{{user.username}}</span><sup id="profileNameBtn" class="icon has-text-info is-size-6 pl-2 cursor-clickable"><i class="far fa-edit"></i></sup></p>
                     {{#ifEqual user.isDeveloper 1}}
                         <p class="is-italic is-size-6 pl-4">Developer</p>
                     {{/ifEqual}}

@@ -31,14 +31,18 @@ module.exports = class UserHomebrew {
     return AuthCheck.isMember(socket)
     .then((isMember) => {
       if(isMember){
-        return HomebrewBundle.create({
-          userID: getUserID(socket),
-          name: 'Homebrew Bundle',
-          description: '',
-          contactInfo: '',
-          isPublished: 0,
-        }).then((homebrewBundle) => {
-          return homebrewBundle;
+        return User.findOne({ where: { id: getUserID(socket) } })
+        .then((user) => {
+          return HomebrewBundle.create({
+            userID: user.id,
+            name: 'Homebrew Bundle',
+            description: '',
+            contactInfo: '',
+            isPublished: 0,
+            authorName: user.username
+          }).then((homebrewBundle) => {
+            return homebrewBundle;
+          });
         });
       } else {
         return;
@@ -178,13 +182,16 @@ module.exports = class UserHomebrew {
         return HomebrewBundle.findOne({ where: { id: homebrewID, userID: getUserID(socket) } })
         .then((homebrewBundle) => {
             if(homebrewBundle.isPublished === 0){
-              return HomebrewBundle.update({ isPublished: 1 }, {
-                where: {
-                  id: homebrewBundle.id,
-                  userID: getUserID(socket),
-                }
-              }).then((result) => {
-                return true;
+              return User.findOne({ where: { id: getUserID(socket) } })
+              .then((user) => {
+                return HomebrewBundle.update({ isPublished: 1, authorName: user.username }, {
+                  where: {
+                    id: homebrewBundle.id,
+                    userID: user.id,
+                  }
+                }).then((result) => {
+                  return true;
+                });
               });
             } else {
               return false;

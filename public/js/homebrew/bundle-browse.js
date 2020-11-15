@@ -42,6 +42,12 @@ socket.on("returnPublishedHomebrewBundles", function(homebrewBundles){
         } else {
           $('#filterDescInput').removeClass('is-info');
         }
+      });$("#filterAuthorInput").blur(function(){
+        if($('#filterAuthorInput').val() != ''){
+          $('#filterAuthorInput').addClass('is-info');
+        } else {
+          $('#filterAuthorInput').removeClass('is-info');
+        }
       });
       $("#filterRatingInput").blur(function(){
         if($('#filterRatingInput').val() != ''){
@@ -79,6 +85,7 @@ function filterBundleSearch(homebrewBundles){
 
   let nameFilter = $('#filterNameInput').val();
   let descFilter = $('#filterDescInput').val();
+  let authorFilter = $('#filterAuthorInput').val();
   let ratingRelationFilter = $('#filterRatingRelationInput').val();
   let ratingFilter = $('#filterRatingInput').val();
   let keyRequiredFilter = $('#filterKeyRequiredInput').val();
@@ -100,6 +107,16 @@ function filterBundleSearch(homebrewBundles){
     let parts = descFilter.toUpperCase().split(' ');
     for(const homebrewBundle of homebrewBundles){
       if(!textContainsWords(homebrewBundle.description, parts)){
+        homebrewBundles.delete(homebrewBundle);
+      }
+    }
+  }
+
+  if(authorFilter != ''){
+    console.log('Filtering by Author...');
+    let parts = authorFilter.toUpperCase().split(' ');
+    for(const homebrewBundle of homebrewBundles){
+      if(!textContainsWords(homebrewBundle.authorName, parts)){
         homebrewBundles.delete(homebrewBundle);
       }
     }
@@ -153,7 +170,7 @@ function displayBundleResults(homebrewBundles){
       ratingColor = 'has-text-warning';
     }
 
-    $('#browsingList').append('<div id="'+entryID+'" class="columns is-mobile border-bottom border-dark-lighter cursor-clickable"><div class="column is-8"><span class="is-size-5">'+homebrewBundle.name+'</span></div><div class="column is-4" style="position: relative;"><span class="is-size-6 pr-2 '+ratingColor+'" style="position: absolute; top: 1px; right: 0px;">'+rating+'</span></div></div>');
+    $('#browsingList').append('<div id="'+entryID+'" class="columns is-mobile border-bottom border-dark-lighter cursor-clickable"><div class="column is-7"><span class="is-size-5">'+homebrewBundle.name+'</span></div><div class="column is-3"><span class="is-size-6 has-text-grey is-italic">'+homebrewBundle.authorName+'</span></div><div class="column is-2" style="position: relative;"><span class="is-size-6 pr-2 '+ratingColor+'" style="position: absolute; top: 1px; right: 0px;">'+rating+'</span></div></div>');
 
     $('#'+entryID).click(function(){
       openBundleView(homebrewBundle);
