@@ -201,4 +201,5 @@ socket.on("returnHomebrewClassDetails", function(classObject, featsObject){
         finishClass(true);
     });
 
+    $('.pageloader').addClass("fadeout");
 });

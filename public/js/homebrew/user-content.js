@@ -55,7 +55,7 @@ socket.on("returnHomebrewBundles", function(homebrewBundles, canMakeHomebrew){
           }
 
           $('#'+bundleDeleteID).click(function() {
-            new ConfirmMessage('Delete “'+homebrewBundle.name+'”', '<p class="has-text-centered">Are you sure you want to delete this?</p><p class="has-text-centered">There are <span class="has-text-info">'+homebrewBundle.userHomebrewBundles.length+'</span> characters still using the bundle.</p>', 'Delete', 'modal-delete-in-progress-bundle-'+homebrewBundle.id, 'modal-delete-in-progress-bundle-btn-'+homebrewBundle.id);
+            new ConfirmMessage('Delete “'+homebrewBundle.name+'”', '<p class="has-text-centered">Are you sure you want to delete this?</p><p class="has-text-centered">There are <span class="has-text-info">'+homebrewBundle.userHomebrewBundles.length+'</span> users still using the bundle.</p>', 'Delete', 'modal-delete-in-progress-bundle-'+homebrewBundle.id, 'modal-delete-in-progress-bundle-btn-'+homebrewBundle.id);
             $('#modal-delete-in-progress-bundle-btn-'+homebrewBundle.id).click(function() {
               socket.emit('requestBundleDelete', homebrewBundle.id);
             });
@@ -78,7 +78,7 @@ socket.on("returnHomebrewBundles", function(homebrewBundles, canMakeHomebrew){
           }
 
           $('#'+bundleDeleteID).click(function() {
-            new ConfirmMessage('Delete “'+homebrewBundle.name+'”', '<p class="has-text-centered">Are you sure you want to delete this?</p><p class="has-text-centered">There are <span class="has-text-info">'+homebrewBundle.userHomebrewBundles.length+'</span> characters still using the bundle.</p>', 'Delete', 'modal-delete-published-bundle-'+homebrewBundle.id, 'modal-delete-published-bundle-btn-'+homebrewBundle.id);
+            new ConfirmMessage('Delete “'+homebrewBundle.name+'”', '<p class="has-text-centered">Are you sure you want to delete this?</p><p class="has-text-centered">There are <span class="has-text-info">'+homebrewBundle.userHomebrewBundles.length+'</span> users still using the bundle.</p>', 'Delete', 'modal-delete-published-bundle-'+homebrewBundle.id, 'modal-delete-published-bundle-btn-'+homebrewBundle.id);
             $('#modal-delete-published-bundle-btn-'+homebrewBundle.id).click(function() {
               socket.emit('requestBundleDelete', homebrewBundle.id);
             });

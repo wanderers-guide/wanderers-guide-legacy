@@ -207,7 +207,9 @@ socket.on("returnHomebrewItemDetails", function(itemObject){
         finishItem(false);
     });
 
-    $('.pageloader').addClass("fadeout");
+    if($("#createButton").length){// If button exists
+      $('.pageloader').addClass("fadeout");
+    }
 });
 
 function finishItem(isUpdate){

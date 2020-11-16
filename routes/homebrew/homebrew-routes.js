@@ -73,7 +73,7 @@ router.get('/create/class', bundleAuthCheck, (req, res) => {
 router.get('/edit/class', bundleAuthCheck, (req, res) => {
 
   let bundleID = parseInt(req.query.id); if(isNaN(bundleID)){bundleID=null;}
-  let classID = parseInt(req.query.class_id); if(isNaN(classID)){classID=null;}
+  let classID = parseInt(req.query.content_id); if(isNaN(classID)){classID=null;}
 
   Tag.findAll({
       where: { isArchived: 0, isHidden: 0, homebrewID: { [Op.or]: [null,bundleID] } },
@@ -134,7 +134,7 @@ router.get('/create/ancestry', bundleAuthCheck, (req, res) => {
 router.get('/edit/ancestry', bundleAuthCheck, (req, res) => {
 
   let bundleID = parseInt(req.query.id); if(isNaN(bundleID)){bundleID=null;}
-  let ancestryID = parseInt(req.query.ancestry_id); if(isNaN(ancestryID)){ancestryID=null;}
+  let ancestryID = parseInt(req.query.content_id); if(isNaN(ancestryID)){ancestryID=null;}
 
   Language.findAll({
     order: [['name', 'ASC'],]
@@ -189,7 +189,7 @@ router.get('/create/archetype', bundleAuthCheck, (req, res) => {
 router.get('/edit/archetype', bundleAuthCheck, (req, res) => {
 
   let bundleID = parseInt(req.query.id); if(isNaN(bundleID)){bundleID=null;}
-  let archetypeID = parseInt(req.query.archetype_id); if(isNaN(archetypeID)){archetypeID=null;}
+  let archetypeID = parseInt(req.query.content_id); if(isNaN(archetypeID)){archetypeID=null;}
 
   Tag.findAll({
     where: { isArchived: 0, isHidden: 0, homebrewID: { [Op.or]: [null,bundleID] } },
@@ -223,7 +223,7 @@ router.get('/create/background', bundleAuthCheck, (req, res) => {
 router.get('/edit/background', bundleAuthCheck, (req, res) => {
 
   let bundleID = parseInt(req.query.id); if(isNaN(bundleID)){bundleID=null;}
-  let backgroundID = parseInt(req.query.background_id); if(isNaN(backgroundID)){backgroundID=null;}
+  let backgroundID = parseInt(req.query.content_id); if(isNaN(backgroundID)){backgroundID=null;}
 
   res.render('homebrew/builder_background', {
     title: "Background Builder - Wanderer's Guide",
@@ -251,7 +251,7 @@ router.get('/create/class-feature', bundleAuthCheck, (req, res) => {
 router.get('/edit/class-feature', bundleAuthCheck, (req, res) => {
 
   let bundleID = parseInt(req.query.id); if(isNaN(bundleID)){bundleID=null;}
-  let classFeatureID = parseInt(req.query.class_feature_id); if(isNaN(classFeatureID)){classFeatureID=null;}
+  let classFeatureID = parseInt(req.query.content_id); if(isNaN(classFeatureID)){classFeatureID=null;}
 
   res.render('homebrew/builder_class-feature', {
     title: "Class Feature Builder - Wanderer's Guide",
@@ -290,7 +290,7 @@ router.get('/create/feat-activity', bundleAuthCheck, (req, res) => {
 router.get('/edit/feat-activity', bundleAuthCheck, (req, res) => {
 
   let bundleID = parseInt(req.query.id); if(isNaN(bundleID)){bundleID=null;}
-  let featID = parseInt(req.query.feat_id); if(isNaN(featID)){featID=null;}
+  let featID = parseInt(req.query.content_id); if(isNaN(featID)){featID=null;}
 
   Skill.findAll({
     order: [['name', 'ASC'],]
@@ -329,7 +329,7 @@ router.get('/create/heritage', bundleAuthCheck, (req, res) => {
 router.get('/edit/heritage', bundleAuthCheck, (req, res) => {
 
   let bundleID = parseInt(req.query.id); if(isNaN(bundleID)){bundleID=null;}
-  let heritageID = parseInt(req.query.heritage_id); if(isNaN(heritageID)){heritageID=null;}
+  let heritageID = parseInt(req.query.content_id); if(isNaN(heritageID)){heritageID=null;}
 
   res.render('homebrew/builder_heritage', {
     title: "Heritage Builder - Wanderer's Guide",
@@ -363,7 +363,7 @@ router.get('/create/uni-heritage', bundleAuthCheck, (req, res) => {
 router.get('/edit/uni-heritage', bundleAuthCheck, (req, res) => {
 
   let bundleID = parseInt(req.query.id); if(isNaN(bundleID)){bundleID=null;}
-  let uniHeritageID = parseInt(req.query.uni_heritage_id); if(isNaN(uniHeritageID)){uniHeritageID=null;}
+  let uniHeritageID = parseInt(req.query.content_id); if(isNaN(uniHeritageID)){uniHeritageID=null;}
 
   Tag.findAll({
     where: { isArchived: 0, isHidden: 0, homebrewID: { [Op.or]: [null,bundleID] } },
@@ -403,7 +403,7 @@ router.get('/create/item', bundleAuthCheck, (req, res) => {
 router.get('/edit/item', bundleAuthCheck, (req, res) => {
 
   let bundleID = parseInt(req.query.id); if(isNaN(bundleID)){bundleID=null;}
-  let itemID = parseInt(req.query.item_id); if(isNaN(itemID)){itemID=null;}
+  let itemID = parseInt(req.query.content_id); if(isNaN(itemID)){itemID=null;}
 
   Tag.findAll({
     where: { isArchived: 0, isHidden: 0, homebrewID: { [Op.or]: [null,bundleID] } },
@@ -443,7 +443,7 @@ router.get('/create/spell', bundleAuthCheck, (req, res) => {
 router.get('/edit/spell', bundleAuthCheck, (req, res) => {
 
   let bundleID = parseInt(req.query.id); if(isNaN(bundleID)){bundleID=null;}
-  let spellID = parseInt(req.query.spell_id); if(isNaN(spellID)){spellID=null;}
+  let spellID = parseInt(req.query.content_id); if(isNaN(spellID)){spellID=null;}
 
   Tag.findAll({
     where: { isArchived: 0, isHidden: 0, homebrewID: { [Op.or]: [null,bundleID] } },

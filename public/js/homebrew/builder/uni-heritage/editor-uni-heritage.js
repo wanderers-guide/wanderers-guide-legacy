@@ -90,4 +90,5 @@ socket.on("returnHomebrewUniHeritageDetails", function(uniHeritageArray, featsOb
         finishUniHeritage(true);
     });
 
+    $('.pageloader').addClass("fadeout");
 });

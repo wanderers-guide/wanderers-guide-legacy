@@ -64,6 +64,7 @@ socket.on("returnBundleContents", function(REQUEST_TYPE, userHasBundle, allTags,
     url: "/templates/homebrew/display-edit-bundle.html",
     success : function(text)
     {
+      initNewContentTemplating();
 
       $('#bundleName').html(g_activeBundle.name);
       $('#bundleDescription').val(g_activeBundle.description);
@@ -140,7 +141,7 @@ socket.on("returnBundleContents", function(REQUEST_TYPE, userHasBundle, allTags,
       ///
 
       $('#createClassBtn').click(function() {
-        window.location.href = '/homebrew/create/class/?id='+g_activeBundle.id;
+        createNewBundleContent('CLASS');
       });
 
       if(classes.length > 0){
@@ -154,10 +155,13 @@ socket.on("returnBundleContents", function(REQUEST_TYPE, userHasBundle, allTags,
             new DisplayClass('tabContent', cClass.id, featMap, g_activeBundle.id);
           });
           $('#'+editClassID).click(function() {
-            window.location.href = '/homebrew/edit/class/?id='+g_activeBundle.id+'&class_id='+cClass.id;
+            window.location.href = '/homebrew/edit/class/?id='+g_activeBundle.id+'&content_id='+cClass.id;
           });
           $('#'+deleteClassID).click(function() {
-            socket.emit('requestHomebrewRemoveClass', g_activeBundle.id, cClass.id);
+            new ConfirmMessage('Delete “'+cClass.name+'”', '<p class="has-text-centered">Are you sure you want to delete this class?</p>', 'Delete', 'modal-delete-content-class-'+cClass.id, 'modal-delete-content-class-btn-'+cClass.id);
+            $('#modal-delete-content-class-btn-'+cClass.id).click(function() {
+              socket.emit('requestHomebrewRemoveClass', g_activeBundle.id, cClass.id);
+            });
           });
         }
       }
@@ -165,7 +169,7 @@ socket.on("returnBundleContents", function(REQUEST_TYPE, userHasBundle, allTags,
       ///
 
       $('#createAncestryBtn').click(function() {
-        window.location.href = '/homebrew/create/ancestry/?id='+g_activeBundle.id;
+        createNewBundleContent('ANCESTRY');
       });
 
       if(ancestries.length > 0){
@@ -179,10 +183,13 @@ socket.on("returnBundleContents", function(REQUEST_TYPE, userHasBundle, allTags,
             new DisplayAncestry('tabContent', ancestry.id, featMap, g_activeBundle.id);
           });
           $('#'+editAncestryID).click(function() {
-            window.location.href = '/homebrew/edit/ancestry/?id='+g_activeBundle.id+'&ancestry_id='+ancestry.id;
+            window.location.href = '/homebrew/edit/ancestry/?id='+g_activeBundle.id+'&content_id='+ancestry.id;
           });
           $('#'+deleteAncestryID).click(function() {
-            socket.emit('requestHomebrewRemoveAncestry', g_activeBundle.id, ancestry.id);
+            new ConfirmMessage('Delete “'+ancestry.name+'”', '<p class="has-text-centered">Are you sure you want to delete this ancestry?</p>', 'Delete', 'modal-delete-content-ancestry-'+ancestry.id, 'modal-delete-content-ancestry-btn-'+ancestry.id);
+            $('#modal-delete-content-ancestry-btn-'+ancestry.id).click(function() {
+              socket.emit('requestHomebrewRemoveAncestry', g_activeBundle.id, ancestry.id);
+            });
           });
         }
       }
@@ -190,7 +197,7 @@ socket.on("returnBundleContents", function(REQUEST_TYPE, userHasBundle, allTags,
       ///
 
       $('#createArchetypeBtn').click(function() {
-        window.location.href = '/homebrew/create/archetype/?id='+g_activeBundle.id;
+        createNewBundleContent('ARCHETYPE');
       });
 
       if(archetypes.length > 0){
@@ -204,10 +211,13 @@ socket.on("returnBundleContents", function(REQUEST_TYPE, userHasBundle, allTags,
             new DisplayArchetype('tabContent', archetype.id, featMap, g_activeBundle.id);
           });
           $('#'+editArchetypeID).click(function() {
-            window.location.href = '/homebrew/edit/archetype/?id='+g_activeBundle.id+'&archetype_id='+archetype.id;
+            window.location.href = '/homebrew/edit/archetype/?id='+g_activeBundle.id+'&content_id='+archetype.id;
           });
           $('#'+deleteArchetypeID).click(function() {
-            socket.emit('requestHomebrewRemoveArchetype', g_activeBundle.id, archetype.id);
+            new ConfirmMessage('Delete “'+archetype.name+'”', '<p class="has-text-centered">Are you sure you want to delete this archetype?</p>', 'Delete', 'modal-delete-content-archetype-'+archetype.id, 'modal-delete-content-archetype-btn-'+archetype.id);
+            $('#modal-delete-content-archetype-btn-'+archetype.id).click(function() {
+              socket.emit('requestHomebrewRemoveArchetype', g_activeBundle.id, archetype.id);
+            });
           });
         }
       }
@@ -215,7 +225,7 @@ socket.on("returnBundleContents", function(REQUEST_TYPE, userHasBundle, allTags,
       ////
 
       $('#createBackgroundBtn').click(function() {
-        window.location.href = '/homebrew/create/background/?id='+g_activeBundle.id;
+        createNewBundleContent('BACKGROUND');
       });
 
       if(backgrounds.length > 0){
@@ -229,10 +239,13 @@ socket.on("returnBundleContents", function(REQUEST_TYPE, userHasBundle, allTags,
             new DisplayBackground('tabContent', background.id, g_activeBundle.id);
           });
           $('#'+editBackgroundID).click(function() {
-            window.location.href = '/homebrew/edit/background/?id='+g_activeBundle.id+'&background_id='+background.id;
+            window.location.href = '/homebrew/edit/background/?id='+g_activeBundle.id+'&content_id='+background.id;
           });
           $('#'+deleteBackgroundID).click(function() {
-            socket.emit('requestHomebrewRemoveBackground', g_activeBundle.id, background.id);
+            new ConfirmMessage('Delete “'+background.name+'”', '<p class="has-text-centered">Are you sure you want to delete this background?</p>', 'Delete', 'modal-delete-content-background-'+background.id, 'modal-delete-content-background-btn-'+background.id);
+            $('#modal-delete-content-background-btn-'+background.id).click(function() {
+              socket.emit('requestHomebrewRemoveBackground', g_activeBundle.id, background.id);
+            });
           });
         }
       }
@@ -240,7 +253,7 @@ socket.on("returnBundleContents", function(REQUEST_TYPE, userHasBundle, allTags,
       ////
 
       $('#createClassFeatureBtn').click(function() {
-        window.location.href = '/homebrew/create/class-feature/?id='+g_activeBundle.id;
+        createNewBundleContent('CLASS-FEATURE');
       });
 
       if(classFeatures.length > 0){
@@ -267,10 +280,13 @@ socket.on("returnBundleContents", function(REQUEST_TYPE, userHasBundle, allTags,
             });
           });
           $('#'+editClassFeatureID).click(function() {
-            window.location.href = '/homebrew/edit/class-feature/?id='+g_activeBundle.id+'&class_feature_id='+classFeature.id;
+            window.location.href = '/homebrew/edit/class-feature/?id='+g_activeBundle.id+'&content_id='+classFeature.id;
           });
           $('#'+deleteClassFeatureID).click(function() {
-            socket.emit('requestHomebrewRemoveClassFeature', g_activeBundle.id, classFeature.id);
+            new ConfirmMessage('Delete “'+classFeature.name+'”', '<p class="has-text-centered">Are you sure you want to delete this class feature?</p>', 'Delete', 'modal-delete-content-class-feature-'+classFeature.id, 'modal-delete-content-class-feature-btn-'+classFeature.id);
+            $('#modal-delete-content-class-feature-btn-'+classFeature.id).click(function() {
+              socket.emit('requestHomebrewRemoveClassFeature', g_activeBundle.id, classFeature.id);
+            });
           });
         }
       }
@@ -278,7 +294,7 @@ socket.on("returnBundleContents", function(REQUEST_TYPE, userHasBundle, allTags,
       ////
 
       $('#createFeatBtn').click(function() {
-        window.location.href = '/homebrew/create/feat-activity/?id='+g_activeBundle.id;
+        createNewBundleContent('FEAT-ACTIVITY');
       });
 
       if(feats.length > 0){
@@ -298,10 +314,13 @@ socket.on("returnBundleContents", function(REQUEST_TYPE, userHasBundle, allTags,
             });
           });
           $('#'+editFeatID).click(function() {
-            window.location.href = '/homebrew/edit/feat-activity/?id='+g_activeBundle.id+'&feat_id='+feat.id;
+            window.location.href = '/homebrew/edit/feat-activity/?id='+g_activeBundle.id+'&content_id='+feat.id;
           });
           $('#'+deleteFeatID).click(function() {
-            socket.emit('requestHomebrewRemoveFeat', g_activeBundle.id, feat.id);
+            new ConfirmMessage('Delete “'+feat.name+'”', '<p class="has-text-centered">Are you sure you want to delete this feat / activity?</p>', 'Delete', 'modal-delete-content-feat-'+feat.id, 'modal-delete-content-feat-btn-'+feat.id);
+            $('#modal-delete-content-feat-btn-'+feat.id).click(function() {
+              socket.emit('requestHomebrewRemoveFeat', g_activeBundle.id, feat.id);
+            });
           });
         }
       }
@@ -309,7 +328,7 @@ socket.on("returnBundleContents", function(REQUEST_TYPE, userHasBundle, allTags,
       ////
 
       $('#createHeritageBtn').click(function() {
-        window.location.href = '/homebrew/create/heritage/?id='+g_activeBundle.id;
+        createNewBundleContent('HERITAGE');
       });
 
       if(heritages.length > 0){
@@ -336,10 +355,13 @@ socket.on("returnBundleContents", function(REQUEST_TYPE, userHasBundle, allTags,
             });
           });
           $('#'+editHeritageID).click(function() {
-            window.location.href = '/homebrew/edit/heritage/?id='+g_activeBundle.id+'&heritage_id='+heritage.id;
+            window.location.href = '/homebrew/edit/heritage/?id='+g_activeBundle.id+'&content_id='+heritage.id;
           });
           $('#'+deleteHeritageID).click(function() {
-            socket.emit('requestHomebrewRemoveHeritage', g_activeBundle.id, heritage.id);
+            new ConfirmMessage('Delete “'+heritage.name+'”', '<p class="has-text-centered">Are you sure you want to delete this heritage?</p>', 'Delete', 'modal-delete-content-heritage-'+heritage.id, 'modal-delete-content-heritage-btn-'+heritage.id);
+            $('#modal-delete-content-heritage-btn-'+heritage.id).click(function() {
+              socket.emit('requestHomebrewRemoveHeritage', g_activeBundle.id, heritage.id);
+            });
           });
         }
       }
@@ -347,7 +369,7 @@ socket.on("returnBundleContents", function(REQUEST_TYPE, userHasBundle, allTags,
       ////
 
       $('#createUniHeritageBtn').click(function() {
-        window.location.href = '/homebrew/create/uni-heritage/?id='+g_activeBundle.id;
+        createNewBundleContent('UNI-HERITAGE');
       });
 
       if(uniheritages.length > 0){
@@ -361,10 +383,13 @@ socket.on("returnBundleContents", function(REQUEST_TYPE, userHasBundle, allTags,
             new DisplayUniHeritage('tabContent', uniheritage.id, featMap, g_activeBundle.id);
           });
           $('#'+editUniHeritageID).click(function() {
-            window.location.href = '/homebrew/edit/uni-heritage/?id='+g_activeBundle.id+'&uni_heritage_id='+uniheritage.id;
+            window.location.href = '/homebrew/edit/uni-heritage/?id='+g_activeBundle.id+'&content_id='+uniheritage.id;
           });
           $('#'+deleteUniHeritageID).click(function() {
-            socket.emit('requestHomebrewRemoveUniHeritage', g_activeBundle.id, uniheritage.id);
+            new ConfirmMessage('Delete “'+uniheritage.name+'”', '<p class="has-text-centered">Are you sure you want to delete this versatile heritage?</p>', 'Delete', 'modal-delete-content-uni-heritage-'+uniheritage.id, 'modal-delete-content-uni-heritage-btn-'+uniheritage.id);
+            $('#modal-delete-content-uni-heritage-btn-'+uniheritage.id).click(function() {
+              socket.emit('requestHomebrewRemoveUniHeritage', g_activeBundle.id, uniheritage.id);
+            });
           });
         }
       }
@@ -372,7 +397,7 @@ socket.on("returnBundleContents", function(REQUEST_TYPE, userHasBundle, allTags,
       ////
 
       $('#createItemBtn').click(function() {
-        window.location.href = '/homebrew/create/item/?id='+g_activeBundle.id;
+        createNewBundleContent('ITEM');
       });
 
       if(items.length > 0){
@@ -389,10 +414,13 @@ socket.on("returnBundleContents", function(REQUEST_TYPE, userHasBundle, allTags,
             });
           });
           $('#'+editItemID).click(function() {
-            window.location.href = '/homebrew/edit/item/?id='+g_activeBundle.id+'&item_id='+item.id;
+            window.location.href = '/homebrew/edit/item/?id='+g_activeBundle.id+'&content_id='+item.id;
           });
           $('#'+deleteItemID).click(function() {
-            socket.emit('requestHomebrewRemoveItem', g_activeBundle.id, item.id);
+            new ConfirmMessage('Delete “'+item.name+'”', '<p class="has-text-centered">Are you sure you want to delete this item?</p>', 'Delete', 'modal-delete-content-item-'+item.id, 'modal-delete-content-item-btn-'+item.id);
+            $('#modal-delete-content-item-btn-'+item.id).click(function() {
+              socket.emit('requestHomebrewRemoveItem', g_activeBundle.id, item.id);
+            });
           });
         }
       }
@@ -400,7 +428,7 @@ socket.on("returnBundleContents", function(REQUEST_TYPE, userHasBundle, allTags,
       ////
 
       $('#createSpellBtn').click(function() {
-        window.location.href = '/homebrew/create/spell/?id='+g_activeBundle.id;
+        createNewBundleContent('SPELL');
       });
 
       if(spells.length > 0){
@@ -417,10 +445,13 @@ socket.on("returnBundleContents", function(REQUEST_TYPE, userHasBundle, allTags,
             });
           });
           $('#'+editSpellID).click(function() {
-            window.location.href = '/homebrew/edit/spell/?id='+g_activeBundle.id+'&spell_id='+spell.id;
+            window.location.href = '/homebrew/edit/spell/?id='+g_activeBundle.id+'&content_id='+spell.id;
           });
           $('#'+deleteSpellID).click(function() {
-            socket.emit('requestHomebrewRemoveSpell', g_activeBundle.id, spell.id);
+            new ConfirmMessage('Delete “'+spell.name+'”', '<p class="has-text-centered">Are you sure you want to delete this spell?</p>', 'Delete', 'modal-delete-content-spell-'+spell.id, 'modal-delete-content-spell-btn-'+spell.id);
+            $('#modal-delete-content-spell-btn-'+spell.id).click(function() {
+              socket.emit('requestHomebrewRemoveSpell', g_activeBundle.id, spell.id);
+            });
           });
         }
       }

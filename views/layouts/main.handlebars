@@ -39,7 +39,7 @@
 	<script defer src="https://use.fontawesome.com/releases/v5.12.1/js/all.js"></script>
 
 	<!-- General Styles -->
-	<link rel="stylesheet" href="/css/style.css" type="text/css" media="all" />
+	<link rel="stylesheet" href="/css/core/system-styles.css" type="text/css" media="all" />
 	<link rel="stylesheet" href="/css/pageloader.css" type="text/css" media="all" />
   <link rel="stylesheet" href="/css/chosen/chosen.css" type="text/css" media="all" />
 
@@ -93,9 +93,13 @@
 
 						<div>
 							<nav>
-								<label for="drop" class="toggle">Menu</label>
-								<input type="checkbox" id="drop" />
-								<ul class="menu pt-1">
+
+                <a class="icon is-medium nav-menu-toggle">
+                  <i class="fa fa-2x fa-bars"></i>
+                </a>
+                <div id="mobile-nav-menu-container"></div>
+
+								<ul class="nav-menu pt-1">
 									{{{_sections.nav_home}}}
 					
 									<li class="mx-lg-4 mx-md-3 my-md-0 my-2"><a href="/#about_wanderers_guide">About Us</a></li>
@@ -142,8 +146,7 @@
 		</div>
 
 		<div class="top-border"></div>
-
-		<div id="mobile-warning-message"></div>
+    
 		<div id="center-body">
 			{{{body}}}
 		</div>

@@ -45,36 +45,38 @@
                 <a href="/wsc_docs/#description_fields">Description Fields</a>
             </p>
             <ul class="menu-list">
-                <li><a href="/wsc_docs/#typography">Typography</a></li>
-                <li><a href="/wsc_docs/#links">Links</a></li>
                 <li><a href="/wsc_docs/#actions">Actions</a></li>
+                <li><a href="/wsc_docs/#indexing">Indexing</a></li>
+                <li><a href="/wsc_docs/#links">Links</a></li>
+                <li><a href="/wsc_docs/#lists">Lists</a></li>
                 <li><a href="/wsc_docs/#tiers_of_success">Tiers of Success</a></li>
-                <li><a href="/wsc_docs/#bullet_lists">Bullet Lists</a></li>
-                <li><a href="/wsc_docs/#non_bullet_lists">Non-Bullet Lists</a></li>
+                <li><a href="/wsc_docs/#typography">Typography</a></li>
             </ul>
             <p class="menu-label">
                 <a href="/wsc_docs/#code_fields">Code Fields</a>
             </p>
             <ul class="menu-list">
-                <li><a href="/wsc_docs/#code_char_sheet_statements">Sheet Statements</a></li>
-                <li><a href="/wsc_docs/#code_if_else">If - Else</a></li>
-                <li><a href="/wsc_docs/#code_boosts">Boosts</a></li>
-                <li><a href="/wsc_docs/#code_feats">Feats</a></li>
-                <li><a href="/wsc_docs/#code_languages">Languages</a></li>
-                <li><a href="/wsc_docs/#code_lore">Lore</a></li>
-                <li><a href="/wsc_docs/#code_proficiencies">Proficiencies</a></li>
-                <li><a href="/wsc_docs/#code_skills">Skills</a></li>
-                <li><a href="/wsc_docs/#code_spells">Spells</a></li>
-                <li><a href="/wsc_docs/#code_domains">Domains</a></li>
-                <li><a href="/wsc_docs/#code_resist_and_weak">Resist / Weaks</a></li>
-                <li><a href="/wsc_docs/#code_speeds">Other Speeds</a></li>
-                <li><a href="/wsc_docs/#code_senses">Senses</a></li>
-                <li><a href="/wsc_docs/#code_phy_feats">Physical Features</a></li>
-                <li><a href="/wsc_docs/#code_specializations">Specializations</a></li>
-                <li><a href="/wsc_docs/#code_char_traits">Character Traits</a></li>
-                <li><a href="/wsc_docs/#code_notes_field">Notes Field</a></li>
-                <li><a href="/wsc_docs/#code_add_text">Add Text</a></li>
-                <li><a href="/wsc_docs/#code_miscellaneous">Miscellaneous</a></li>
+                <li class=""><a href="/wsc_docs/#code_basics">Basics</a></li>
+                <li class=""><a href="/wsc_docs/#code_if_else">If - Else</a></li>
+                <li class=""><a href="/wsc_docs/#code_builder_statements">Builder Statements</a></li>
+                <li class="pl-2"><a href="/wsc_docs/#code_boosts">- Boosts</a></li>
+                <li class="pl-2"><a href="/wsc_docs/#code_feats">- Feats</a></li>
+                <li class="pl-2"><a href="/wsc_docs/#code_languages">- Languages</a></li>
+                <li class="pl-2"><a href="/wsc_docs/#code_proficiencies">- Proficiencies</a></li>
+                <li class="pl-2"><a href="/wsc_docs/#code_skills">- Skills / Lore</a></li>
+                <li class="pl-2"><a href="/wsc_docs/#code_spells">- Spells</a></li>
+                <li class="pl-2"><a href="/wsc_docs/#code_resist_and_weak">- Resist / Weaks</a></li>
+                <li class="pl-2"><a href="/wsc_docs/#code_specializations">- Specializations</a></li>
+                <li class="pl-2"><a href="/wsc_docs/#code_builder_miscellaneous">- Miscellaneous</a></li>
+                <li class=""><a href="/wsc_docs/#code_sheet_statements">Sheet Statements</a></li>
+                <li class="pl-2"><a href="/wsc_docs/#code_conditions">- Conditions</a></li>
+                <li class="pl-2"><a href="/wsc_docs/#code_item_defaults">- Item Defaults</a></li>
+                <li class="pl-2"><a href="/wsc_docs/#code_stat_adjustments">- Stat Adjustments</a></li>
+                <li class="pl-2"><a href="/wsc_docs/#code_sheet_miscellaneous">- Miscellaneous</a></li>
+                <li class=""><a href="/wsc_docs/#code_universal_statements">Universal Statements</a></li>
+                <li class="pl-2"><a href="/wsc_docs/#code_notes_field">- Notes Field</a></li>
+                <li class="pl-2"><a href="/wsc_docs/#code_add_text">- Add Text</a></li>
+                <li class="pl-2"><a href="/wsc_docs/#code_misc_feats">- Misc. Feat</a></li>
             </ul>
         </aside>
     </div>
@@ -90,21 +92,29 @@
             <p class="subtitle is-size-6-5 has-text-grey-light has-text-centered is-italic">Wanderer's Styling Code (WSC), is used to format text in Wanderer's Guide and implement features for homebrew content.</p>
         </div>
         <div id="usage" class="tile is-child isHideable">
-            <h1 class="title is-size-4 is-marginless mb-1 pl-3">Usage</h1>
+            <h1 class="small-title is-size-4 is-marginless mb-1 pl-3">Usage</h1>
             <p>
-                WSC has two different forms, one is for description fields and the other is for code fields. Whenever something has an text area that is description for something, generally you can use WSC inside of it. Examples of this being: ancestry descriptions, heirtage descriptions, feat descriptions, and item descriptions. When making homebrew content, you will see that there are often fields that are labeled "Code" - these are code fields which is where you can input WSC to implement features. In addition, with these two different forms of WSC, some features are designed for the character sheet and others are designed for the character builder.
+              Wanderer's Styling Code has two different forms, one is for description fields and the other is for code fields. Each form is split into its own section and categorized by their sub-functionalities, as shown on the left sidebar.
             </p>
+            <p class="pt-3">
+              Description and code fields that can have WSC input in them will always have a blue book icon next to them; if a text field doesn't have that icon, it's safe to assume WSC will not function in that area.
+            </p>
+            <div class="info-block">
+              <p><i class="fas fa-info-circle"></i>
+                Need help? We have a homebrew-help channel on our <a class="has-text-info" href="https://discord.gg/kxCpa6G" target="_blank">Discord server</a>! Feel free to ask for help if you're ever stuck!
+              </p>
+            </div>
         </div>
         <div id="description_fields" class="tile is-child is-paddingless">
             <div class="isHideable">
                 <h1 class="main-title is-family-code is-size-3 has-text-centered is-marginless mb-2">Description Fields</h1>
-                <h1 class="title is-size-4 is-marginless mb-1 pl-3">Basics</h1>
+                <h1 class="small-title is-size-4 is-marginless mb-1 pl-3">Basics</h1>
                 <p>
-                    This is where the styling part of WSC comes into play. The following is numberous, relatively small styling systems you can apply to your text.
+                    This is where the styling part of WSC comes into play. The following is numberous, relatively small, styling rules you can apply to your text.
                 </p>
             </div>
             <div id="typography" class="mt-4 isHideable">
-                <h1 class="title is-size-4 is-marginless mb-1 pl-3">Typography</h1>
+                <h1 class="small-title is-size-4 is-marginless mb-1 pl-3">Typography</h1>
                 <div class="ml-4">
                     <div class="columns mb-3">
                         <div class="column is-6">
@@ -128,64 +138,101 @@
                                 <div class="column"><p>~~strikethrough~~</p></div>
                                 <div class="column text-processing">~~strikethrough~~</div>
                             </div>
+                            <div class="columns table-row-a is-mobile is-marginless">
+                                <div class="column"><p>:> pushed text that wraps</p></div>
+                                <div class="column text-processing">:> pushed text that wraps</div>
+                            </div>
+                            <div class="columns table-row-b is-mobile is-marginless">
+                                <div class="column is-mobile"><p>----</p></div>
+                                <div class="column text-processing">&#10;----</div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
             <div id="links" class="mt-4 isHideable">
-                <h1 class="title is-size-4 is-marginless mb-1 pl-3">Links</h1>
+                <h1 class="small-title is-size-3 is-marginless mb-1 pl-3">Links</h1>
                 <div class="ml-4">
-                    <div class="mt-1">
+                    <div class="mt-2">
                         <h1 class="small-title is-size-4 is-marginless mb-1 pl-3">Core Rulebook</h1>
                         <p>
-                            Stating the word "page" followed by some page number will generate a link to where you can purchase the Pathfinder 2e Core Rulebook.
+                            The word "page" followed by a number will automatically generate a link to where you can purchase the Pathfinder 2e Core Rulebook.
                         </p>
-                        <p class="pl-2">
-                            <strong>As show below, page 456 becomes a link:</strong>
-                        </p>
-                        <div class="text-processing">
-                            Hi! This is sample text, you should refer to page 456.
+                        <div class="code-block">
+                          <p class="pl-2">This is forced movement (see page 475 for more details).</p>
+                        </div>
+                        <p class="pl-4 is-italic">Becomes...</p>
+                        <div class="code-block">
+                          <div class="text-processing">This is forced movement (see page 475 for more details).</div>
                         </div>
                     </div>
-                    <div class="mt-1">
+                    <div class="mt-4">
                         <h1 class="small-title is-size-4 is-marginless mb-1 pl-3">Bestiary</h1>
                         <p>
-                            Stating the words "Pathfinder Bestiary" followed by some page number will generate a link to where you can purchase the Pathfinder 2e Bestiary.
+                            The words "Bestiary pg." followed by a number will automatically generate a link to where you can purchase the Pathfinder 2e Bestiary.
                         </p>
-                        <p class="pl-2">
-                            <strong>As show below, Pathfinder Bestiary 302 becomes a link:</strong>
-                        </p>
-                        <div class="text-processing">
-                            Hi! This is sample text, you should refer to Pathfinder Bestiary 302.
+                        <div class="code-block">
+                          <p class="pl-2">For more info on riding horses see Bestiary pg. 209!</p>
+                        </div>
+                        <p class="pl-4 is-italic">Becomes...</p>
+                        <div class="code-block">
+                          <div class="text-processing">For more info on riding horses see Bestiary pg. 209!</div>
                         </div>
                     </div>
-                    <div class="mt-1">
+                    <div class="mt-4">
                         <h1 class="small-title is-size-4 is-marginless mb-1 pl-3">External</h1>
                         <p>
-                            URLs to popular community resources can be turned into icons that function as links.
+                            URLs to popular community resources can be turned into icons that function as links, just place the URL in-between two brackets. The following domain names apply:
                         </p>
-                        <p>
-                            Any URL from a supported community resource surrounded in brackets will become and icon link.
-                        </p>
-                        <p>
-                            Supported resources include:
-                        </p>
-                        <p class="is-size-7 pb-1 pl-4">
+                        <p class="is-size-7 pb-2 pl-4">
                             'paizo.com', '2e.aonprd.com', 'pf2.easytool.es', 'pathfinder2.dragonlash.com', 'pf2srd.com', 'pf2.d20pfsrd.com', 'youtube.com'
                         </p>
-                        <p class="pl-2">
-                            <strong>As show below, [https://paizo.com/pathfinder] becomes an icon link:</strong>
+                        <div class="code-block">
+                          <p class="pl-2">An example of an external icon-link can be seen here [https://paizo.com/pathfinder]!</p>
+                        </div>
+                        <p class="pl-4 is-italic">Becomes...</p>
+                        <div class="code-block">
+                          <div class="text-processing">An example of an external icon-link can be seen here [https://paizo.com/pathfinder]!</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="indexing" class="mt-4 isHideable">
+                <h1 class="small-title is-size-3 is-marginless mb-1 pl-3">Indexing</h1>
+                <div class="ml-4">
+                    <div class="mt-2">
+                        <p>
+                            You can index an action, feat, item, language, spell, or trait within text. Conditions are also automatically indexed. Indexing won't work properly on this page like it does in the character builder or sheet, but the system will still know that text is attempting to be indexed and will underline the text in yellow.
                         </p>
-                        <div class="text-processing">
-                            Hi! This is sample text, check out Pathfinder at [https://paizo.com/pathfinder]!
+                        <div class="info-block">
+                          <p><i class="fas fa-info-circle"></i>
+                            On the character builder or sheet, any text that's been indexed will appear blue and can be clicked on to view the indexed content. If content of the indexed name is not found, it will be replaced with red text saying the indexed content was not found.
+                          </p>
+                        </div>
+                        <div class="code-block mt-4">
+                          <p class="pl-2">Make a (action: Strike) with a (item: dwarven waraxe).</p>
+                        </div>
+                        <p class="pl-4 is-italic">Becomes...</p>
+                        <div class="code-block">
+                          <div class="text-processing">Make a (action: Strike) with a (item: dwarven waraxe).</div>
+                        </div>
+                        <p class="mt-4">
+                          You can also index different words as something, this can be particularly useful with different verb tenses for activities. The below example will index 'Sustaining the Spell' as 'Sustain a Spell' but will still display it the same.
+                        </p>
+                        <div class="code-block">
+                          <p class="pl-2">You can command your undead (trait: minion) for as long as you continue (trait: Sustaining the Spell | Sustain a Spell).</p>
+                        </div>
+                        <p class="pl-4 is-italic">Becomes...</p>
+                        <div class="code-block">
+                          <div class="text-processing">You can command your undead (trait: minion) for as long as you continue (trait: Sustaining the Spell | Sustain a Spell).</div>
                         </div>
                     </div>
                 </div>
             </div>
             <div id="actions" class="mt-4 isHideable">
-                <h1 class="title is-size-4 is-marginless mb-1 pl-3">Actions</h1>
+                <h1 class="small-title is-size-4 is-marginless mb-1 pl-3">Actions</h1>
                 <p>
-                    Displaying actions is super easy. Just write the action codename and it will generate that action icon.
+                    Displaying action icons is super easy. Just write the action codename and it will generate the appropriate action icon.
                 </p>
                 <div class="code-block">
                     <p class="pl-2">
@@ -204,7 +251,7 @@
                     Three Actions: THREE-ACTIONS.
                     </p>
                 </div>
-                <p class="pl-4">Becomes...</p>
+                <p class="pl-4 is-italic">Becomes...</p>
                 <div class="code-block">
                     <div class="text-processing">
                         Free Action: FREE-ACTION.
@@ -224,92 +271,106 @@
                 </div>
             </div>
             <div id="tiers_of_success" class="mt-4 isHideable">
-                <h1 class="title is-size-4 is-marginless mb-1 pl-3">Tiers of Success</h1>
+                <h1 class="small-title is-size-4 is-marginless mb-1 pl-3">Tiers of Success</h1>
                 <p>
-                    Some simple formating for tiers of success can be very useful for actions, feats, and spells in homebrew content.
+                    Here's some easy formatting for tiers of success. Just use a colon after the word(s) of the tier.
                 </p>
                 <div class="code-block">
                     <p class="pl-2">
-                    Attempt an Intimidation check against that target's Will DC.
+                      To the target, your words are honey and your visage seems bathed in a dreamy haze. It must attempt a Will save, with a +4 circumstance bonus if you or your allies recently threatened it or used hostile actions against it.
                     </p>
                     <p class="pl-2">
-                        Critical Success: The target becomes frightened 2.
+                        Critical Success: The target is unaffected and aware you tried to charm it.
                     </p>
                     <p class="pl-2">
-                        Success: The target becomes frightened 1.
+                        Success: The target is unaffected but thinks your spell was something harmless instead of charm, unless it identifies the spell (Identifying Spells section on page 305).
                     </p>
                     <p class="pl-2">
-                        Failure: They're not really scared of you...
+                        Failure: The target’s attitude becomes friendly toward you. If it was friendly, it becomes helpful. It can’t use hostile actions against you.
                     </p>
                     <p class="pl-2">
-                        Critical Failure: They think you're weak, whoops.
+                        Critical Failure: The target’s attitude becomes helpful toward you, and it can’t use hostile actions against you.
                     </p>
                 </div>
-                <p class="pl-4">Becomes...</p>
+                <p class="pl-4 is-italic">Becomes...</p>
                 <div class="code-block text-processing">
-                    Attempt an Intimidation check against that target’s Will DC. Critical Success: The target becomes frightened 2. Success: The target becomes frightened 1. Failure: They're not really scared of you... Critical Failure: They think you're weak, whoops.
+                    To the target, your words are honey and your visage seems bathed in a dreamy haze. It must attempt a Will save, with a +4 circumstance bonus if you or your allies recently threatened it or used hostile actions against it.
+                    Critical Success: The target is unaffected and aware you tried to charm it.
+                    Success: The target is unaffected but thinks your spell was something harmless instead of charm, unless it identifies the spell (Identifying Spells section on page 305).
+                    Failure: The target’s attitude becomes friendly toward you. If it was friendly, it becomes helpful. It can’t use hostile actions against you.
+                    Critical Failure: The target’s attitude becomes helpful toward you, and it can’t use hostile actions against you.
                 </div>
-                <p class="pl-4">You do not need to include all four tiers of success. It will format whatever tiers you give it.</p>
-            </div>
-            <div id="bullet_lists" class="mt-4 isHideable">
-                <h1 class="title is-size-4 is-marginless mb-1 pl-3">Bullet Lists</h1>
-                <p>
-                    There are times when it's best to organize information using bullet points. Having a '*' followed by some text then a ':' will separate the inner text, making it bold and creating a bullet point.
-                </p>
-                <div class="code-block">
-                    <p class="pl-2">
-                    The effect depends on whether the target is living or undead.
-                    </p>
-                    <p class="pl-2">
-                        * Living Creature: The spell deals negative damage equal to 1d4 plus your spellcasting modifier. The target attempts a basic Fortitude save, but is also enfeebled 1 for 1 round on a critical failure.
-                    </p>
-                    <p class="pl-2">
-                        * Undead Creature: The target is flat-footed for 1 round on a failed Fortitude save. On a critical failure, the target is also fleeing for 1 round unless it succeeds at a Will save.
-                    </p>
-                </div>
-                <p class="pl-4">Becomes...</p>
-                <div class="code-block text-processing">
-                    The effect depends on whether the target is living or undead.
-                    * Living Creature: The spell deals negative damage equal to 1d4 plus your spellcasting modifier. The target attempts a basic Fortitude save, but is also enfeebled 1 for 1 round on a critical failure.
-                    * Undead Creature: The target is flat-footed for 1 round on a failed Fortitude save. On a critical failure, the target is also fleeing for 1 round unless it succeeds at a Will save.
+                <div class="info-block">
+                  <p><i class="fas fa-info-circle"></i>
+                    You also don't need to include all four tiers of success! The system will format whatever tiers you give it.
+                  </p>
                 </div>
             </div>
-            <div id="non_bullet_lists" class="mt-4 isHideable">
-                <h1 class="title is-size-4 is-marginless mb-1 pl-3">Non-Bullet Lists</h1>
-                <p>
-                    There are times when it's best to organize information using bullet points. Having a '~' followed by some text then a ':' will separate the inner text and make it bold.
-                </p>
-                <div class="code-block">
-                    <p class="pl-2">
-                    The effect depends on whether the target is living or undead.
-                    </p>
-                    <p class="pl-2">
-                        ~ Living Creature: The spell deals negative damage equal to 1d4 plus your spellcasting modifier. The target attempts a basic Fortitude save, but is also enfeebled 1 for 1 round on a critical failure.
-                    </p>
-                    <p class="pl-2">
-                        ~ Undead Creature: The target is flat-footed for 1 round on a failed Fortitude save. On a critical failure, the target is also fleeing for 1 round unless it succeeds at a Will save.
-                    </p>
+            <div id="lists" class="mt-4 isHideable">
+                <div>
+                  <h1 class="small-title is-size-4 is-marginless mb-1 pl-3">Bullet Lists</h1>
+                  <p>
+                    There are times when it's best to organize information using a bulleted list. Here's how you can do that.
+                  </p>
+                  <div class="code-block">
+                      <p class="pl-2">
+                      The effect depends on whether the target is living or undead.
+                      </p>
+                      <p class="pl-2">
+                          * Living Creature: The spell deals negative damage equal to 1d4 plus your spellcasting modifier. The target attempts a basic Fortitude save, but is also enfeebled 1 for 1 round on a critical failure.
+                      </p>
+                      <p class="pl-2">
+                          * Undead Creature: The target is flat-footed for 1 round on a failed Fortitude save. On a critical failure, the target is also fleeing for 1 round unless it succeeds at a Will save.
+                      </p>
+                  </div>
+                  <p class="pl-4 is-italic">Becomes...</p>
+                  <div class="code-block text-processing">
+                      The effect depends on whether the target is living or undead.
+                      * Living Creature: The spell deals negative damage equal to 1d4 plus your spellcasting modifier. The target attempts a basic Fortitude save, but is also enfeebled 1 for 1 round on a critical failure.
+                      * Undead Creature: The target is flat-footed for 1 round on a failed Fortitude save. On a critical failure, the target is also fleeing for 1 round unless it succeeds at a Will save.
+                  </div>
                 </div>
-                <p class="pl-4">Becomes...</p>
-                <div class="code-block text-processing">
-                    The effect depends on whether the target is living or undead.
-                    ~ Living Creature: The spell deals negative damage equal to 1d4 plus your spellcasting modifier. The target attempts a basic Fortitude save, but is also enfeebled 1 for 1 round on a critical failure.
-                    ~ Undead Creature: The target is flat-footed for 1 round on a failed Fortitude save. On a critical failure, the target is also fleeing for 1 round unless it succeeds at a Will save.
+                <div class="mt-4">
+                  <h1 class="small-title is-size-4 is-marginless mb-1 pl-3">Non-Bullet Lists</h1>
+                  <p>
+                    There are times when you want the stylistic benefits of a bulleted list but without the bullet.
+                  </p>
+                  <div class="code-block">
+                      <p class="pl-2">
+                      The effect depends on whether the target is living or undead.
+                      </p>
+                      <p class="pl-2">
+                          ~ Living Creature: The spell deals negative damage equal to 1d4 plus your spellcasting modifier. The target attempts a basic Fortitude save, but is also enfeebled 1 for 1 round on a critical failure.
+                      </p>
+                      <p class="pl-2">
+                          ~ Undead Creature: The target is flat-footed for 1 round on a failed Fortitude save. On a critical failure, the target is also fleeing for 1 round unless it succeeds at a Will save.
+                      </p>
+                  </div>
+                  <p class="pl-4 is-italic">Becomes...</p>
+                  <div class="code-block text-processing">
+                      The effect depends on whether the target is living or undead.
+                      ~ Living Creature: The spell deals negative damage equal to 1d4 plus your spellcasting modifier. The target attempts a basic Fortitude save, but is also enfeebled 1 for 1 round on a critical failure.
+                      ~ Undead Creature: The target is flat-footed for 1 round on a failed Fortitude save. On a critical failure, the target is also fleeing for 1 round unless it succeeds at a Will save.
+                  </div>
                 </div>
             </div>
         </div>
-        <div id="code_fields" class="tile is-child is-paddingless">         
+        <div id="code_fields" class="tile is-child is-paddingless">    
             <div class="isHideable">
                 <h1 class="main-title is-size-3 is-family-code has-text-centered is-marginless mb-2">Code Fields</h1>
-                <h1 class="title is-size-4 is-marginless mb-1 pl-3">Basics</h1>
+            </div>
+            <div id="code_basics" class="isHideable">
+                <h1 class="small-title is-size-4 is-marginless mb-1 pl-3">Basics</h1>
                 <p>
-                    Use a series of code statements to implement features for homebrew content. Split these statements up with a newline for each statement.
+                    With code fields, WSC uses a series of code statements to implement changes, generate selectors, and adjust stats. There are three different kinds of code statements: builder statements <span class="is-italic">(statements that are only executed in the character builder)</span>, sheet statements <span class="is-italic">(statements that are only executed on the character sheet)</span>, and universal statements <span class="is-italic">(statements that are executed on both the character builder and sheet)</span>. Each of these code statements is separated from each other by the newline character.
                 </p>
+                <div class="info-block">
+                  <p><i class="fas fa-info-circle"></i>
+                    Most of this code field documentation will be a series of examples on how to use each code statement. If something doesn't make sense or you need more clarification, feel free to ask in the homebrew-help channel on our <a class="has-text-info" href="https://discord.gg/kxCpa6G" target="_blank">Discord server</a>.
+                  </p>
+                </div>
                 <p>
-                    Code statements currently have a very strict syntax, as such, most of this documentation will be a series of examples.
-                </p>
-                <p>
-                    <strong>Example:</strong>
+                    Below is an example of what multiple individual statements would look like. Each statement is on its own line and thus distinct.
                 </p>
                 <div class="code-block">
                     GIVE-PROF-INCREASE-IN=Perception
@@ -317,109 +378,121 @@
                     GIVE-SKILL-FEAT=3
                 </div>
             </div>
-            <div id="code_char_sheet_statements" class="mt-4 isHideable">
-                <h1 class="title is-size-4 is-marginless mb-1 pl-3">Character Sheet Adjustment Statements</h1>
+            <div id="code_builder_statements" class="mt-4 isHideable">
+                <h1 class="small-title is-size-4 is-marginless mb-1 pl-3">Builder Statements</h1>
                 <p>
-                    These statements only do stuff in the character sheet, nothing in the builder. Each aspect of the character sheet has a codename associated with it.
+                  Builder statements are code statements that are only executed in the character builder. They tend to generate content when they're executed.
+                </p>
+            </div>
+            <div id="code_sheet_statements" class="mt-4 isHideable">
+                <h1 class="small-title is-size-4 is-marginless mb-1 pl-3">Sheet Statements</h1>
+                <p>
+                    Sheet statements are code statements that are only executed on the character sheet. They are frequently used to adjust character stats.
+                </p>
+            </div>
+            <div id="code_stat_adjustments" class="mt-4 isHideable">
+                <h1 class="small-title is-size-4 is-marginless mb-1 pl-3">Stat Adjustments</h1>
+                <p>
+                  These sheet statements use the following codenames to adjust certain statistics within the character sheet.
                 </p>
                 <div class="pl-3 py-2">
                     <p class="">
                         <strong>Ability Scores:</strong>
                     </p>
-                    <p class="pl-2">'SCORE_STR'</p>
-                    <p class="pl-2">'SCORE_DEX'</p>
-                    <p class="pl-2">'SCORE_CON'</p>
-                    <p class="pl-2">'SCORE_INT'</p>
-                    <p class="pl-2">'SCORE_WIS'</p>
-                    <p class="pl-2">'SCORE_CHA'</p>
+                    <p class="pl-2"><span class="code">SCORE_STR</span></p>
+                    <p class="pl-2"><span class="code">SCORE_DEX</span></p>
+                    <p class="pl-2"><span class="code">SCORE_CON</span></p>
+                    <p class="pl-2"><span class="code">SCORE_INT</span></p>
+                    <p class="pl-2"><span class="code">SCORE_WIS</span></p>
+                    <p class="pl-2"><span class="code">SCORE_CHA</span></p>
                 </div>
                 <div class="pl-3 py-2">
                     <p class="">
                         <strong>Health:</strong>
                     </p>
-                    <p class="pl-2">'MAX_HEALTH'</p>
-                    <p class="pl-2">'MAX_HEALTH_BONUS_PER_LEVEL'</p>
+                    <p class="pl-2"><span class="code">MAX_HEALTH</span></p>
+                    <p class="pl-2"><span class="code">MAX_HEALTH_BONUS_PER_LEVEL</span></p>
                 </div>
                 <div class="pl-3 py-2">
                     <p class="">
                         <strong>Saving Throws:</strong>
                     </p>
-                    <p class="pl-2">'SAVE_FORT'</p>
-                    <p class="pl-2">'SAVE_REFLEX'</p>
-                    <p class="pl-2">'SAVE_WILL'</p>
+                    <p class="pl-2"><span class="code">SAVE_FORT</span></p>
+                    <p class="pl-2"><span class="code">SAVE_REFLEX</span></p>
+                    <p class="pl-2"><span class="code">SAVE_WILL</span></p>
                 </div>
                 <div class="pl-3 py-2">
                     <p class="">
                         <strong>Skills:</strong>
                     </p>
-                    <p class="pl-2">'SKILL_' + skillName</p>
+                    <p class="pl-2"><span class="code">SKILL_</span> + skillName</p>
                     <p class="">
-                        For lore add '_LORE' to the end: 'SKILL_WARFARE_LORE'
+                        For lore add <span class="code">_LORE</span> to the end. Ex: <span class="code">SKILL_WARFARE_LORE</span>
                     </p>
                 </div>
                 <div class="pl-3 py-2">
                     <p class="">
                         <strong>Perception:</strong>
                     </p>
-                    <p class="pl-2">'PERCEPTION'</p>
+                    <p class="pl-2"><span class="code">PERCEPTION</span></p>
                 </div>
                 <div class="pl-3 py-2">
                     <p class="">
                         <strong>Class DC:</strong>
                     </p>
-                    <p class="pl-2">'CLASS_DC'</p>
+                    <p class="pl-2"><span class="code">CLASS_DC</span></p>
                 </div>
                 <div class="pl-3 py-2">
                     <p class="">
                         <strong>Spell Attacks:</strong>
                     </p>
-                    <p class="pl-2">'ARCANE_SPELL_ATTACK'</p>
-                    <p class="pl-2">'OCCULT_SPELL_ATTACK'</p>
-                    <p class="pl-2">'PRIMAL_SPELL_ATTACK'</p>
-                    <p class="pl-2">'DIVINE_SPELL_ATTACK'</p>
+                    <p class="pl-2"><span class="code">ARCANE_SPELL_ATTACK</span></p>
+                    <p class="pl-2"><span class="code">DIVINE_SPELL_ATTACK</span></p>
+                    <p class="pl-2"><span class="code">OCCULT_SPELL_ATTACK</span></p>
+                    <p class="pl-2"><span class="code">PRIMAL_SPELL_ATTACK</span></p>
                 </div>
                 <div class="pl-3 py-2">
                     <p class="">
                         <strong>Spell DCs:</strong>
                     </p>
-                    <p class="pl-2">'ARCANE_SPELL_DC'</p>
-                    <p class="pl-2">'OCCULT_SPELL_DC'</p>
-                    <p class="pl-2">'PRIMAL_SPELL_DC'</p>
-                    <p class="pl-2">'DIVINE_SPELL_DC'</p>
+                    <p class="pl-2"><span class="code">ARCANE_SPELL_DC</span></p>
+                    <p class="pl-2"><span class="code">DIVINE_SPELL_DC</span></p>
+                    <p class="pl-2"><span class="code">OCCULT_SPELL_DC</span></p>
+                    <p class="pl-2"><span class="code">PRIMAL_SPELL_DC</span></p>
                 </div>
                 <div class="pl-3 py-2">
                     <p class="">
                         <strong>Armor Class:</strong>
                     </p>
-                    <p class="pl-2">'AC'</p>
+                    <p class="pl-2"><span class="code">AC</span></p>
                 </div>
                 <div class="pl-3 py-2">
                     <p class="">
                         <strong>Armor Other:</strong>
                     </p>
-                    <p class="pl-2">'ARMOR_CHECK_PENALTY'</p>
-                    <p class="pl-2">'ARMOR_SPEED_PENALTY'</p>
+                    <p class="pl-2"><span class="code">ARMOR_CHECK_PENALTY</span></p>
+                    <p class="pl-2"><span class="code">ARMOR_SPEED_PENALTY</span></p>
                 </div>
                 <div class="pl-3 py-2">
                     <p class="">
                         <strong>Speed:</strong>
                     </p>
-                    <p class="pl-2">'SPEED'</p>
+                    <p class="pl-2"><span class="code">SPEED</span></p>
                     <p class="pl-2">
-                        For other Speeds, put 'SPEED_' and then the name of the speed. Ex: 'SPEED_CLIMB'
+                        For other Speeds, put <span class="code">SPEED_</span> and then the name of the speed. Ex: <span class="code">SPEED_CLIMB</span>
                     </p>
                 </div>
                 <div class="pl-3 py-2">
                     <p class="">
                         <strong>Bulk:</strong>
                     </p>
-                    <p class="pl-2">'BULK_LIMIT'</p>
+                    <p class="pl-2"><span class="code">BULK_LIMIT</span></p>
                 </div>
                 <div class="pl-3 py-2">
                     <p class="">
                         <strong>Investiture:</strong>
                     </p>
-                    <p class="pl-2">'INVEST_LIMIT'</p>
+                    <p class="pl-2"><span class="code">INVEST_LIMIT</span></p>
                 </div>
                 <div class="py-2">
                     <div class="code-block">
@@ -485,21 +558,36 @@
                         <strong class="has-text-danger">Warning: </strong><em>This statement is complicated. Like everything here, feel free to mess around with it and see how it affects a character, but it many change things in seemly unexpected ways if you don't know what you're doing!</em>
                     </p>
                     <p class="pl-3">
-                        - Replaces the character's Wisdom modifier with 2 only if 2 is higher than the character's current Wisdom modifier. For stats that are penalties (like 'ARMOR_CHECK_PENALTY'), treat the override number as negative. For example, 'OVERRIDE-ARMOR_CHECK_PENALTY=1-BASE' would be a -1 penalty, which would be greater than many other armor penalties that are -2 or -3.
+                        - Replaces the character's modifier from Perception (which is Wisdom) with 2 only if 2 is higher than the character's current Wisdom modifier. For stats that are penalties (like <span class="code">ARMOR_CHECK_PENALTY</span>), treat the override number as negative. For example, <span class="code">OVERRIDE-ARMOR_CHECK_PENALTY=1-BASE</span> would be a -1 penalty, which would be greater than many other armor penalties that are -2 or -3.
                     </p>
                 </div>
             </div>
             <div id="code_if_else" class="mt-4 isHideable">
-                <h1 class="title is-size-4 is-marginless mb-1 pl-3">If - Else Statements</h1>
+                <h1 class="small-title is-size-4 is-marginless mb-1 pl-3">Conditionals (If - Else)</h1>
                 <p>
-                    You can have an 'if statement' to execute a single WSC statement if the 'if statement' is true and you can also optionally include an 'else' for if that statement is not true.
+                    You can make certain code statements only execute if a certain condition is first met.
+                </p>
+                <p>
+                  The format is as follows:
+                </p>
+                <p>
+                  <span class="code">IF (Conditional) {Statement}</span>
+                </p>
+                <p>
+                  Optionally, you can include an ELSE for a given statement to execute if the conditional was NOT met:
+                </p>
+                <p>
+                  <span class="code">IF (Conditional) {Statement} ELSE {Other-Statement}</span>
+                </p>
+                <p class="pt-4">
+                  Below is a list of the types of conditionals that exist with a list of the types of boolean operators that can be applied to each.
                 </p>
                 <div class="py-2">
                     <div class="code-block">
                         IF (HAS-FEAT==Specialty Crafting) {Statement}
                     </div>
                     <p class="pl-3">
-                        - If the character has the Specialty Crafting feat, the statement inside the brackets will execute.
+                        - If the character has the 'Specialty Crafting' feat, the statement inside the braces will execute.
                     </p>
                     <p class="pl-3">
                         Boolean Operators: '==' or '!='
@@ -510,7 +598,7 @@
                         IF (HAS-CLASS-ABILITY==Cloistered Cleric) {Statement}
                     </div>
                     <p class="pl-3">
-                        - If the character has the Cloistered Cleric class ability, the statement inside the brackets will execute.
+                        - If the character has the 'Cloistered Cleric' class ability, the statement inside the braces will execute.
                     </p>
                     <p class="pl-3">
                         Boolean Operators: '==' or '!='
@@ -521,7 +609,7 @@
                         IF (HAS-HERITAGE==Treedweller) {Statement}
                     </div>
                     <p class="pl-3">
-                        - If the character has the Treedweller heritage, the statement inside the brackets will execute.
+                        - If the character has the 'Treedweller' heritage, the statement inside the braces will execute.
                     </p>
                     <p class="pl-3">
                         Boolean Operators: '==' or '!='
@@ -532,7 +620,7 @@
                         IF (HAS-VISION==Low-Light Vision) {Statement}
                     </div>
                     <p class="pl-3">
-                        - If the character has Low-Light Vision, the statement inside the brackets will execute.
+                        - If the character has the 'Low-Light Vision' vision type, the statement inside the braces will execute.
                     </p>
                     <p class="pl-3">
                         Boolean Operators: '==' or '!='
@@ -543,7 +631,7 @@
                         IF (HAS-LEVEL>=13) {Statement}
                     </div>
                     <p class="pl-3">
-                        - If the character is level 13 or greater, the statement inside the brackets will execute.
+                        - If the character is level 13 or greater, the statement inside the braces will execute.
                     </p>
                     <p class="pl-3">
                         - Any number between 0 and 20 for the level.
@@ -557,7 +645,7 @@
                         IF (HAS-PROF==Arcana:T) {Statement}
                     </div>
                     <p class="pl-3">
-                        - If the character is trained in Arcana, the statement inside the brackets will execute.
+                        - If the character is trained in Arcana, the statement inside the braces will execute.
                     </p>
                     <p class="pl-3">
                         Boolean Operators: '==', '!=', '>=', or '<='
@@ -568,7 +656,7 @@
                         IF (HAS-FOCUS-POINTS==0) {Statement}
                     </div>
                     <p class="pl-3">
-                        - If the character has zero Focus Points, the statement inside the brackets will execute.
+                        - If the character has zero Focus Points, the statement inside the braces will execute.
                     </p>
                     <p class="pl-3">
                         Boolean Operators: '==', '!=', '>=', or '<='
@@ -590,7 +678,7 @@
                         IF (HAS-FEAT==Goblin Song && HAS-FOCUS-POINTS==0) {Statement}
                     </div>
                     <p class="pl-3">
-                        - If the character has the Goblin Song feat and has zero Focus Points, the statement inside the brackets will execute.
+                        - If the character has the 'Goblin Song' feat and has zero Focus Points, the statement inside the braces will execute.
                     </p>
                     <p class="pl-3">
                         Boolean Operators: '==', '!=', '>=', or '<='
@@ -598,15 +686,15 @@
                 </div>
                 <div class="py-2">
                     <div class="code-block">
-                        IF-SHEET (Condition) {Statement}
+                        IF-SHEET (Conditional) {Statement}
                     </div>
                     <p class="pl-3">
-                        - If the character meets the condition, the statement inside the brackets will execute (like normal). But this if statement will only be tested in the character sheet (not in the character builder or anywhere else). In all other non-sheet contexts, the condition is essentially treats as true - executing the statement.
+                        - If the character meets the condition, the statement inside the braces will execute (like normal). Although, this if statement will only be tested in the character sheet (not in the character builder or anywhere else). In all other non-sheet contexts, the condition is essentially treats as true - executing the statement.
                     </p>
                 </div>
             </div>
             <div id="code_boosts" class="mt-4 isHideable">
-                <h1 class="title is-size-4 is-marginless mb-1 pl-3">Boosts</h1>
+                <h1 class="small-title is-size-4 is-marginless mb-1 pl-3">Boosts</h1>
                 <p>
                     Use the following code statements to give a character ability boosts. Ability boosts are special in that a character cannot select the same ability score as any other ABILITY-BOOST statement in the same code field.
                 </p>
@@ -640,12 +728,13 @@
                         - Can generate up to six ability boost selectors, any more would be unnecessary.
                     </p>
                 </div>
-                <div class="pt-4 pb-2">
+                <hr class="m-2">
+                <div class="pt-2 pb-2">
                     <p class="pl-3">
                         <strong>Warrior Background Example:</strong>
                     </p>
                     <p>
-                        The warrior background gives the character an ability boost of either Strength or Constitution and then another ability boost of any ability score. But, since these two boosts are both given from the same source, the character cannot select the same ability score for both. Hopefully this is review, anyone reading this would likely already know how the system works.
+                        The warrior background gives the character an ability boost of either Strength or Constitution and then another ability boost of any ability score. But, since these two boosts are both given from the same source, the character cannot select the same ability score for both.
                     </p>
                     <p>
                         You can implement something like this using the following code:
@@ -672,7 +761,7 @@
                 </div>
             </div>
             <div id="code_feats" class="mt-4 isHideable">
-                <h1 class="title is-size-4 is-marginless mb-1 pl-3">Feats</h1>
+                <h1 class="small-title is-size-4 is-marginless mb-1 pl-3">Feats</h1>
                 <p>
                     Use the following code statements to give a character feats.
                 </p>
@@ -681,7 +770,7 @@
                         GIVE-FEAT-NAME=Ancestral Paragon
                     </div>
                     <p class="pl-3">
-                        - Gives the character the Ancestral Paragon feat.
+                        - Gives the character the 'Ancestral Paragon' feat.
                     </p>
                 </div>
                 <div class="py-2">
@@ -766,7 +855,7 @@
                 </div>
             </div>
             <div id="code_languages" class="mt-4 isHideable">
-                <h1 class="title is-size-4 is-marginless mb-1 pl-3">Languages</h1>
+                <h1 class="small-title is-size-4 is-marginless mb-1 pl-3">Languages</h1>
                 <p>
                     Use the following code statements to give a character a langauge.
                 </p>
@@ -775,7 +864,7 @@
                         GIVE-LANG-NAME=Elven
                     </div>
                     <p class="pl-3">
-                        - Gives the character the Elven language.
+                        - Gives the character the 'Elven' language.
                     </p>
                     <p class="pl-3">
                         - Use an underscore in the place of spaces for names, if relevant.
@@ -794,34 +883,12 @@
                         GIVE-LANG-BONUS-ONLY
                     </div>
                     <p class="pl-3">
-                        - Generates a language selector, listing only their ancestry's bonus languages as options.
-                    </p>
-                </div>
-            </div>
-            <div id="code_lore" class="mt-4 isHideable">
-                <h1 class="title is-size-4 is-marginless mb-1 pl-3">Lore</h1>
-                <p>
-                    Use the following code statements to give a character a lore skill.
-                </p>
-                <div class="py-2">
-                    <div class="code-block">
-                        GIVE-LORE=Sailing
-                    </div>
-                    <p class="pl-3">
-                        - Gives the character Sailing Lore, by adding it to their skill list, and makes them trained in that Lore skill.
-                    </p>
-                </div>
-                <div class="py-2">
-                    <div class="code-block">
-                        GIVE-LORE-CHOOSE
-                    </div>
-                    <p class="pl-3">
-                        - Generates an input field. Text input into the field will be saved and give the character a Lore skill with that name. They will become trained in that Lore skill automatically.
+                        - Generates a language selector, listing the ancestry's bonus languages as options.
                     </p>
                 </div>
             </div>
             <div id="code_proficiencies" class="mt-4 isHideable">
-                <h1 class="title is-size-4 is-marginless mb-1 pl-3">Proficiencies</h1>
+                <h1 class="small-title is-size-4 is-marginless mb-1 pl-3">Proficiencies</h1>
                 <p class="pl-2 py-1">
                     <strong>Skills:</strong> 'Acrobatics', 'Arcana', 'Athletics', 'Crafting', 'Deception', 'Diplomacy', 'Intimidation', 'Medicine', 'Nature', 'Occultism', 'Performance', 'Religion', 'Society', 'Stealth', 'Survival', 'Thievery'
                 </p>
@@ -918,7 +985,7 @@
                 </div>
             </div>
             <div id="code_skills" class="mt-4 isHideable">
-                <h1 class="title is-size-4 is-marginless mb-1 pl-3">Skills</h1>
+                <h1 class="small-title is-size-4 is-marginless mb-1 pl-3">Skills</h1>
                 <p>
                     Use the following code statements to give a character a proficiency in a skill of their choice.
                 </p>
@@ -953,9 +1020,59 @@
                         (U = Untrained, T = Trained, E = Expert, M = Master, L = Legendary)
                     </p>
                 </div>
+                <div class="py-2">
+                <div class="code-block">
+                        GIVE-SKILL=T[Arcana,Deception,Crafting]
+                    </div>
+                    <p class="pl-3">
+                        - Generates a skill selector, listing only the Arcana, Deception, and Crafting skills as options.
+                    </p>
+                    <p class="pl-3">
+                        - Note: Separate skill names by only a single ","
+                    </p>
+                    <p class="pl-3">
+                        - The selected skill has its base proficiency set to trained.
+                    </p>
+                    <p class="pl-3">
+                        - Note: Any proficiency increases will stack on top of the base proficiency.
+                    </p>
+                    <p class="pl-3">
+                        (U = Untrained, T = Trained, E = Expert, M = Master, L = Legendary)
+                    </p>
+                </div>
+                <div class="mt-4"></div>
+                    <h1 class="small-title is-size-4 is-marginless mb-1 pl-3">Lore</h1>
+                    <p>
+                        Use the following code statements to give a character a lore skill.
+                    </p>
+                    <div class="py-2">
+                        <div class="code-block">
+                            GIVE-LORE=Sailing
+                        </div>
+                        <p class="pl-3">
+                            - Gives the character 'Sailing' Lore, by adding it to their skill list, and makes them trained in that Lore skill.
+                        </p>
+                    </div>
+                    <div class="py-2">
+                        <div class="code-block">
+                            GIVE-LORE-CHOOSE
+                        </div>
+                        <p class="pl-3">
+                            - Generates an input field. Text input into the field will be saved and give the character a Lore skill with that name. They will become trained in that Lore skill automatically.
+                        </p>
+                    </div>
+                    <div class="py-2">
+                        <div class="code-block">
+                            GIVE-LORE-CHOOSE-INCREASING
+                        </div>
+                        <p class="pl-3">
+                            - Generates an input field. Text input into the field will be saved and give the character a Lore skill with that name. They will become trained in that Lore skill automatically, which scales as the character's level increases. At 3rd level they become expert, at 7th they become master, and at 15th they become legendary.
+                        </p>
+                    </div>
+                </div>
             </div>
             <div id="code_spells" class="mt-4 isHideable">
-                <h1 class="title is-size-4 is-marginless mb-1 pl-3">Spells</h1>
+                <h1 class="small-title is-size-3 is-marginless mb-1 pl-3">Spells</h1>
                 <p>
                     Use the following code statements to give a character spells and spellcasting. With many of the statements it may require a spellcasting source, this can be any name you'd like but it should be consistant - it will be the unique identifier for that instance of spellcasting. If you're creating homebrew for a class, the spellcasting source should likely be the name of the class.
                 </p>
@@ -1022,7 +1139,8 @@
                         - Adds the Spirit Link spell at 1st-level to the spell list/repertoire for the Witch spellcasting source.
                     </p>
                 </div>
-                <h1 class="title is-size-5 is-marginless mt-2 mb-1 pl-3">Focus Spells</h1>
+                <hr class="m-2">
+                <h1 class="small-title is-size-4 is-marginless mt-2 mb-1 pl-3">Focus Spells</h1>
                 <div class="py-2">
                     <div class="code-block">
                         GIVE-FOCUS-SPELL=Shadowdancer:Dance of Darkness
@@ -1039,7 +1157,8 @@
                         - Increases the number of Focus Points in the character's focus pool.
                     </p>
                 </div>
-                <h1 class="title is-size-5 is-marginless mt-2 mb-1 pl-3">Innate Spells</h1>
+                <hr class="m-2">
+                <h1 class="small-title is-size-4 is-marginless mt-2 mb-1 pl-3">Innate Spells</h1>
                 <div class="py-2">
                     <div class="code-block">
                         GIVE-INNATE-SPELL-NAME=Meld into Stone:3:DIVINE:1
@@ -1074,30 +1193,8 @@
                     </p>
                 </div>
             </div>
-            <div id="code_domains" class="mt-4 isHideable">
-                <h1 class="title is-size-4 is-marginless mb-1 pl-3">Domains</h1>
-                <p>
-                    Use the following code statements to give or advance a character's domain.
-                </p>
-                <div class="py-2">
-                    <div class="code-block">
-                        GIVE-DOMAIN=Cleric
-                    </div>
-                    <p class="pl-3">
-                        - Generates a domain selector, using Cleric as the spellcasting source.
-                    </p>
-                </div>
-                <div class="py-2">
-                    <div class="code-block">
-                        GIVE-DOMAIN-ADVANCEMENT=Cleric
-                    </div>
-                    <p class="pl-3">
-                        - Generates a domain advancement selector, listing all the characters's current domains and using Cleric as the spellcasting source.
-                    </p>
-                </div>
-            </div>
             <div id="code_resist_and_weak" class="mt-4 isHideable">
-                <h1 class="title is-size-4 is-marginless mb-1 pl-3">Resistances and Weaknesses</h1>
+                <h1 class="small-title is-size-4 is-marginless mb-1 pl-3">Resistances and Weaknesses</h1>
                 <p>
                     Use the following code statements to give a character a resistance or weakness.
                 </p>
@@ -1129,58 +1226,8 @@
                     </p>
                 </div>
             </div>
-            <div id="code_speeds" class="mt-4 isHideable">
-                <h1 class="title is-size-4 is-marginless mb-1 pl-3">Other Speeds</h1>
-                <p>
-                    Use the following code statement to give a character other types of speeds.
-                </p>
-                <div class="py-2">
-                    <div class="code-block">
-                        GIVE-SPEED=Swim:15
-                    </div>
-                    <p class="pl-3">
-                        - Gives the character a swim speed of 15 feet.
-                    </p>
-                </div>
-                <div class="py-2">
-                    <div class="code-block">
-                        GIVE-SPEED=Climb:LAND_SPEED
-                    </div>
-                    <p class="pl-3">
-                        - Gives the character a climb speed equal to their land speed.
-                    </p>
-                </div>
-            </div>
-            <div id="code_senses" class="mt-4 isHideable">
-                <h1 class="title is-size-4 is-marginless mb-1 pl-3">Senses</h1>
-                <p>
-                    Use the following code statement to give a character a sense.
-                </p>
-                <div class="py-2">
-                    <div class="code-block">
-                        GIVE-SENSE-NAME=Darkvision
-                    </div>
-                    <p class="pl-3">
-                        - Gives the character darkvision.
-                    </p>
-                </div>
-            </div>
-            <div id="code_phy_feats" class="mt-4 isHideable">
-                <h1 class="title is-size-4 is-marginless mb-1 pl-3">Physical Features</h1>
-                <p>
-                    Use the following code statement to give a character a physical feature.
-                </p>
-                <div class="py-2">
-                    <div class="code-block">
-                        GIVE-PHYSICAL-FEATURE-NAME=Blunt Snout
-                    </div>
-                    <p class="pl-3">
-                        - Gives the character a physical feature with the name "Blunt Snout".
-                    </p>
-                </div>
-            </div>
             <div id="code_specializations" class="mt-4 isHideable">
-                <h1 class="title is-size-4 is-marginless mb-1 pl-3">Specializations</h1>
+                <h1 class="small-title is-size-4 is-marginless mb-1 pl-3">Specializations</h1>
                 <p>
                     Use the following code statements to give a character a specialization.
                 </p>
@@ -1208,7 +1255,7 @@
                         - Gives the character armor specialization in all light armor.
                     </p>
                     <p class="pl-3">
-                        - Options are any of the defenses proficiency options (see Proficiencies) and can give by armor name, trait, prof, or group (Ex: GIVE-ARMOR-SPECIALIZATION=PROF~E).
+                        - Options are any of the defenses proficiency options (see Proficiencies) and can give by armor name, trait, prof, or group (Ex: <span class="code">GIVE-ARMOR-SPECIALIZATION=PROF~E</span>).
                     </p>
                 </div>
                 <div class="py-2">
@@ -1219,36 +1266,20 @@
                         - Gives the character critical specialization in all simple weapons.
                     </p>
                     <p class="pl-3">
-                        - Options are any of the attacks proficiency options (see Proficiencies) and can give by weapon name, trait, prof, or group (Ex: GIVE-WEAPON-CRITICAL-SPECIALIZATION=TRAIT~Dwarf).
+                        - Options are any of the attacks proficiency options (see Proficiencies) and can give by weapon name, trait, prof, or group (Ex: <span class="code">GIVE-WEAPON-CRITICAL-SPECIALIZATION=TRAIT~Dwarf</span>).
                     </p>
                 </div>
             </div>
-            <div id="code_char_traits" class="mt-4 isHideable">
-                <h1 class="title is-size-4 is-marginless mb-1 pl-3">Character Traits</h1>
+            <div id="code_universal_statements" class="mt-4 isHideable">
+                <h1 class="small-title is-size-4 is-marginless mb-1 pl-3">Universal Statements</h1>
                 <p>
-                    Use the following code statement to add a trait to a character.
+                    Universal statements are code statements that are executed on both the character builder and sheet.
                 </p>
-                <div class="py-2">
-                    <div class="code-block">
-                        GIVE-CHAR-TRAIT-NAME=Fey
-                    </div>
-                    <p class="pl-3">
-                        - Adds the Fey trait to the character.
-                    </p>
-                </div>
-                <div class="py-2">
-                    <div class="code-block">
-                        GIVE-CHAR-TRAIT
-                    </div>
-                    <p class="pl-3">
-                        - Generates a character trait selector, listing all ancestry traits as options.
-                    </p>
-                </div>
             </div>
             <div id="code_notes_field" class="mt-4 isHideable">
-                <h1 class="title is-size-4 is-marginless mb-1 pl-3">Notes Field</h1>
+                <h1 class="small-title is-size-4 is-marginless mb-1 pl-3">Notes Field</h1>
                 <p>
-                    Sometimes a feat or class ability might need an area where the user can write some notes specific to that feature. In such a case, use the follow code statement to generate a notes field in the character sheet for that feature.
+                    Sometimes a feat or class ability might need an area where the user can write some notes specific to that feature. In such a case, use the following code statement to generate a notes field in the character builder or sheet for that feature.
                 </p>
                 <div class="py-2">
                     <div class="code-block">
@@ -1260,12 +1291,12 @@
                 </div>
             </div>
             <div id="code_add_text" class="mt-4 isHideable">
-                <h1 class="title is-size-4 is-marginless mb-1 pl-3">Add Text</h1>
+                <h1 class="small-title is-size-4 is-marginless mb-1 pl-3">Add Text</h1>
                 <p>
                     Occasionally a class feature or feat may need an extra sentence or two tacked on at the end if the character meets a certain condition. You can use the following statement to display text, usually displaying it below the description of something.
                 </p>
                 <p>
-                    This statement is usually used within an if statement, allowing certain text to be displayed if a character is at a certain level or has a certain class feature, for example.
+                    This statement is usually used within a conditional, allowing certain text to be displayed if a character is at a certain level or has a certain class feature, for example.
                 </p>
                 <div class="py-2">
                     <div class="code-block">
@@ -1276,41 +1307,258 @@
                     </p>
                 </div>
             </div>
-            <div id="code_miscellaneous" class="mt-4 isHideable">
-                <h1 class="title is-size-4 is-marginless mb-1 pl-3">Miscellaneous</h1>
+            <div id="code_builder_miscellaneous" class="mt-4 isHideable">
+                <h1 class="small-title is-size-3 is-marginless mb-1 pl-3">Miscellaneous</h1>
+
+                <div class="mt-4">
+                    <h1 class="small-title is-size-4 is-marginless mb-1 pl-3">Character Traits</h1>
+                    <p>
+                        Use the following code statement to add a trait to a character.
+                    </p>
+                    <div class="py-2">
+                        <div class="code-block">
+                            GIVE-CHAR-TRAIT-NAME=Fey
+                        </div>
+                        <p class="pl-3">
+                            - Adds the Fey trait to the character.
+                        </p>
+                    </div>
+                    <div class="py-2">
+                        <div class="code-block">
+                            GIVE-CHAR-TRAIT
+                        </div>
+                        <p class="pl-3">
+                            - Generates a character trait selector, listing all ancestry traits as options.
+                        </p>
+                    </div>
+                </div>
+                <hr class="m-2">
+                <div id="code_domains" class="mt-4 isHideable">
+                    <h1 class="small-title is-size-4 is-marginless mb-1 pl-3">Domains</h1>
+                    <p>
+                        Use the following code statements to give or advance a character's domain.
+                    </p>
+                    <div class="py-2">
+                        <div class="code-block">
+                            GIVE-DOMAIN=Cleric
+                        </div>
+                        <p class="pl-3">
+                            - Generates a domain selector, using 'Cleric' as the spellcasting source.
+                        </p>
+                    </div>
+                    <div class="py-2">
+                        <div class="code-block">
+                            GIVE-DOMAIN-ADVANCEMENT=Cleric
+                        </div>
+                        <p class="pl-3">
+                            - Generates a domain advancement selector, listing all the characters's current domains and using 'Cleric' as the spellcasting source.
+                        </p>
+                    </div>
+                </div>
+                <hr class="m-2">
+                <div class="mt-4">
+                    <h1 class="small-title is-size-4 is-marginless mb-1 pl-3">Physical Features</h1>
+                    <p>
+                        Use the following code statement to give a character a physical feature.
+                    </p>
+                    <div class="py-2">
+                        <div class="code-block">
+                            GIVE-PHYSICAL-FEATURE-NAME=Blunt Snout
+                        </div>
+                        <p class="pl-3">
+                            - Gives the character a physical feature with the name "Blunt Snout".
+                        </p>
+                    </div>
+                </div>
+                <hr class="m-2">
+                <div class="mt-4">
+                    <h1 class="small-title is-size-4 is-marginless mb-1 pl-3">Senses</h1>
+                    <p>
+                        Use the following code statement to give a character a sense.
+                    </p>
+                    <div class="py-2">
+                        <div class="code-block">
+                            GIVE-SENSE-NAME=Darkvision
+                        </div>
+                        <p class="pl-3">
+                            - Gives the character darkvision.
+                        </p>
+                    </div>
+                </div>
+                <hr class="m-2">
+                <div class="mt-4">
+                    <h1 class="small-title is-size-4 is-marginless mb-1 pl-3">Other Speeds</h1>
+                    <p>
+                        Use the following code statement to give a character other types of speeds.
+                    </p>
+                    <div class="py-2">
+                        <div class="code-block">
+                            GIVE-SPEED=Swim:15
+                        </div>
+                        <p class="pl-3">
+                            - Gives the character a swim speed of 15 feet.
+                        </p>
+                    </div>
+                    <div class="py-2">
+                        <div class="code-block">
+                            GIVE-SPEED=Climb:LAND_SPEED
+                        </div>
+                        <p class="pl-3">
+                            - Gives the character a climb speed equal to their land speed.
+                        </p>
+                    </div>
+                </div>
+                <hr class="m-2">
+                <div class="mt-4">
+                    <h1 class="small-title is-size-4 is-marginless mb-1 pl-3">Other</h1>
+                    <div class="py-2">
+                        <div class="code-block">
+                            CLEAR-DATA-FROM-CODE-BLOCK
+                        </div>
+                        <p class="pl-3">
+                            - Clears any stored data that has a source originating from this code block. Can be useful when using if-else logic with proficiencies: Ex. You want to check if the character would have the given proficiency if the code block wasn't executed.
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+
+            <div id="code_misc_feats" class="mt-4 isHideable">
+                <h1 class="small-title is-size-3 is-marginless mb-1 pl-3">Misc. Feat</h1>
+                <p>
+                    These universal statements have to do with feats and their management.
+                </p>
+                <div class="mt-4">
+                    <h1 class="small-title is-size-4 is-marginless mb-1 pl-3">Hide Feats</h1>
+                    <div class="py-2">
+                        <div class="code-block">
+                            HIDE-FEAT-NAME=Drain Bonded Item
+                        </div>
+                        <p class="pl-3">
+                            - Hides all feats with the name 'Drain Bonded Item'. Feats with that name are essentially treated as though they don't exist.
+                        </p>
+                    </div>
+                    <div class="py-2">
+                        <div class="code-block">
+                            UNHIDE-FEAT-NAME=Drain Bonded Item
+                        </div>
+                        <p class="pl-3">
+                            - Makes a feat that was made hidden by <span class="code">HIDE-FEAT-NAME</span> no longer hidden.
+                        </p>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <h1 class="small-title is-size-4 is-marginless mb-1 pl-3">Override Feats</h1>
+                    <div class="py-2">
+                        <div class="code-block">
+                            OVERRIDE-FEAT-LEVEL=Magical Trickster:2
+                        </div>
+                        <p class="pl-3">
+                            - Makes all feats with the name 'Magical Trickster' have their level set to 2nd instead of what levels they were before.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="code_conditions" class="mt-4 isHideable">
+                <h1 class="small-title is-size-4 is-marginless mb-1 pl-3">Conditions</h1>
+                <p>
+                    These sheet statements add a condition to the character.
+                </p>
                 <div class="py-2">
                     <div class="code-block">
-                        CLEAR-DATA-FROM-CODE-BLOCK
+                        GIVE-CONDITION=Clumsy:1
                     </div>
                     <p class="pl-3">
-                        - Clears any stored data that has a source originating from this code block. Can be useful when using if-else logic with proficiencies: Ex. You want to check if the character would have the given proficiency if the code block wasn't executed.
+                        - The character will be given the 'Clumsy' condition with the value 1.
                     </p>
                 </div>
                 <div class="py-2">
                     <div class="code-block">
-                        HIDE-FEAT-NAME=Drain Bonded Item
+                        GIVE-CONDITION=Flat-Footed
                     </div>
                     <p class="pl-3">
-                        - Hides all feats with the name Drain Bonded Item. Feats with that name are essentially treated as though they don't exist.
-                    </p>
-                </div>
-                <div class="py-2">
-                    <div class="code-block">
-                        UNHIDE-FEAT-NAME=Drain Bonded Item
-                    </div>
-                    <p class="pl-3">
-                        - Makes a feat that was made hidden by HIDE-FEAT-NAME no longer hidden.
-                    </p>
-                </div>
-                <div class="py-2">
-                    <div class="code-block">
-                        OVERRIDE-FEAT-LEVEL=Magical Trickster:2
-                    </div>
-                    <p class="pl-3">
-                        - Makes all feats with the name Magical Trickster have their level set to 2nd instead of what levels they were before.
+                        - The character will be given the 'Flat-Footed' condition.
                     </p>
                 </div>
             </div>
+
+            <div id="code_item_defaults" class="mt-4 isHideable">
+                <h1 class="small-title is-size-4 is-marginless mb-1 pl-3">Item Defaults</h1>
+                <p>
+                    All of these special sheet statements only work when they're written in the code field of an item and they're executed only once when the item is first added to the character's inventory.
+                </p>
+                <div class="py-2">
+                    <div class="code-block">
+                        DEFAULT-WEAPON-RUNE=+1 Weapon Potency
+                    </div>
+                    <p class="pl-3">
+                        - Adds a '+1 Weapon Potency' rune to the item, if the item is a weapon.
+                    </p>
+                </div>
+                <div class="py-2">
+                    <div class="code-block">
+                        DEFAULT-ARMOR-RUNE=Fortification
+                    </div>
+                    <p class="pl-3">
+                        - Adds a 'Fortification' rune to the item, if the item is armor and has an open property rune slot.
+                    </p>
+                </div>
+                <div class="py-2">
+                    <div class="code-block">
+                        DEFAULT-ADD-ITEM-TO-BAG=Bedroll
+                    </div>
+                    <p class="pl-3">
+                        - Adds the item 'Bedroll' to the contents of a storage item, if the item is a storage item.
+                    </p>
+                </div>
+            </div>
+
+            <div id="code_sheet_miscellaneous" class="mt-4 isHideable">
+                <h1 class="small-title is-size-3 is-marginless mb-1 pl-3">Miscellaneous</h1>
+                <div class="mt-4">
+                    <h1 class="small-title is-size-4 is-marginless mb-1 pl-3">Apex Ability Score</h1>
+                    <div class="py-2">
+                        <div class="code-block">
+                            SET-APEX-ABILITY-SCORE=DEX
+                        </div>
+                        <p class="pl-3">
+                            - Increases the given ability score to 18 or increases it by +2 if the ability score is already 18 or higher.
+                        </p>
+                        <p class="pl-3">
+                            - Options are: STR, DEX, CON, INT, WIS, and CHA.
+                        </p>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <h1 class="small-title is-size-4 is-marginless mb-1 pl-3">Other</h1>
+                    <div class="py-2">
+                        <div class="code-block">
+                            DISPLAY-COMPANION-TAB
+                        </div>
+                        <p class="pl-3">
+                            - Makes the Companions subtab, under the Details tab, visible.
+                        </p>
+                    </div>
+                    <div class="py-2">
+                        <div class="code-block">
+                            SET-FINESSE-MELEE-USE-DEX-DAMAGE
+                        </div>
+                        <p class="pl-3">
+                            - Makes melee weapons with the finesse trait use Dexterity for weapon damage.
+                        </p>
+                    </div>
+                    <div class="py-2">
+                        <div class="code-block">
+                            SET-ADD-LEVEL-TO-UNTRAINED-WEAPONS
+                        </div>
+                        <p class="pl-3">
+                            - Adds the character level to the proficiency to hit with all untrained weapons.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
     <div class="tile is-parent is-2">

@@ -67,4 +67,5 @@ socket.on("returnHomebrewSpellDetails", function(spellObject){
         finishSpell(true);
     });
 
+    $('.pageloader').addClass("fadeout");
 });

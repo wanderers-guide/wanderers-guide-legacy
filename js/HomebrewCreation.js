@@ -66,7 +66,7 @@ module.exports = class HomebrewCreation {
     }
 
     static deleteBackground(homebrewID, backgroundID){
-        if(backgroundID == null) {return;}
+        if(backgroundID == null || homebrewID == null) {return;}
         return Background.destroy({ // Delete Background
           where: { id: backgroundID, homebrewID: homebrewID }
         }).then((result) => {
@@ -210,9 +210,10 @@ module.exports = class HomebrewCreation {
     }
 
     static deleteClass(homebrewID, classID){
-        if(classID == null) {return;}
+        if(classID == null || homebrewID == null) {return;}
         return Class.findOne({where: { id: classID, homebrewID: homebrewID }})
         .then((cClass) => {
+            if(cClass == null) {return;}
             return FeatTag.findAll({where: { tagID: cClass.tagID }})
             .then((featTags) => {
                 let classFeatsPromises = []; // Delete Class Feats
@@ -287,7 +288,7 @@ module.exports = class HomebrewCreation {
     }
 
     static deleteClassFeature(homebrewID, classFeatureID){
-        if(classFeatureID == null) {return;}
+        if(classFeatureID == null || homebrewID == null) {return;}
         return ClassAbility.destroy({
             where: { id: classFeatureID, homebrewID: homebrewID }
         }).then((result) => { // Which will cascade to delect select options
@@ -374,9 +375,10 @@ module.exports = class HomebrewCreation {
     }
 
     static deleteArchetype(homebrewID, archetypeID){
-        if(archetypeID == null) {return;}
+        if(archetypeID == null || homebrewID == null) {return;}
         return Archetype.findOne({where: { id: archetypeID, homebrewID: homebrewID }})
         .then((archetype) => {
+            if(archetype == null) {return;}
             return FeatTag.findAll({where: { tagID: archetype.tagID }})
             .then((featTags) => {
                 let archetypeFeatsPromises = []; // Delete Archetype Feats
@@ -549,9 +551,10 @@ module.exports = class HomebrewCreation {
     }
 
     static deleteAncestry(homebrewID, ancestryID){
-        if(ancestryID == null) {return;}
+        if(ancestryID == null || homebrewID == null) {return;}
         return Ancestry.findOne({where: { id: ancestryID, homebrewID: homebrewID }})
         .then((ancestry) => {
+          if(ancestry == null) {return;}
           return AncestryBoost.destroy({ // Delete Ancestry Boosts
             where: { ancestryID: ancestry.id, homebrewID: homebrewID }
           }).then((result) => {
@@ -626,7 +629,7 @@ module.exports = class HomebrewCreation {
     }
 
     static deleteHeritage(homebrewID, heritageID) {
-        if(heritageID == null) {return;}
+        if(heritageID == null || homebrewID == null) {return;}
         return Heritage.destroy({
           where: { id: heritageID, homebrewID: homebrewID }
         }).then((result) => {
@@ -692,9 +695,10 @@ module.exports = class HomebrewCreation {
     }
 
     static deleteUniHeritage(homebrewID, uniHeritageID){
-        if(uniHeritageID == null) {return;}
+        if(uniHeritageID == null || homebrewID == null) {return;}
         return UniHeritage.findOne({where: { id: uniHeritageID, homebrewID: homebrewID }})
         .then((uniHeritage) => {
+          if(uniHeritage == null) {return;}
           return FeatTag.findAll({where: { tagID: uniHeritage.tagID }})
           .then((featTags) => {
               let heritageFeatsPromises = []; // Delete Heritage Feats
@@ -872,7 +876,7 @@ module.exports = class HomebrewCreation {
     }
 
     static deleteFeat(homebrewID, featID) {
-        if(featID == null) {return;}
+        if(featID == null || homebrewID == null) {return;}
         return Feat.destroy({ // Delete Feat (which will cascade to FeatTags)
             where: { id: featID, homebrewID: homebrewID }
         }).then((result) => {
@@ -1173,7 +1177,7 @@ module.exports = class HomebrewCreation {
     }
 
     static deleteItem(homebrewID, itemID) {
-        if(itemID == null) {return;}
+        if(itemID == null || homebrewID == null) {return;}
         return Item.destroy({ // Delete Item (which will cascade into cleaning up (deleting) everything else)
             where: { id: itemID, homebrewID: homebrewID }
         }).then((result) => {
@@ -1273,7 +1277,7 @@ module.exports = class HomebrewCreation {
     }
 
     static deleteSpell(homebrewID, spellID) {
-        if(spellID == null) {return;}
+        if(spellID == null || homebrewID == null) {return;}
         return Spell.destroy({ // Delete Spell (which will cascade into cleaning up (deleting) everything else)
             where: { id: spellID, homebrewID: homebrewID }
         }).then((result) => {

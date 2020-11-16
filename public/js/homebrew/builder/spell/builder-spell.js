@@ -15,7 +15,9 @@ $(function () {
         finishSpell(false);
     });
 
-    $('.pageloader').addClass("fadeout");
+    if($("#createButton").length){// If button exists
+      $('.pageloader').addClass("fadeout");
+    }
 });
 
 function finishSpell(isUpdate){

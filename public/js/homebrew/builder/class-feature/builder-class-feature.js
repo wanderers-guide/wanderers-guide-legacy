@@ -135,7 +135,9 @@ socket.on("returnHomebrewClassDetails", function(classObject, featsObject){
         finishClassFeature(false);
     });
 
-    $('.pageloader').addClass("fadeout");
+    if($("#createButton").length){// If button exists
+      $('.pageloader').addClass("fadeout");
+    }
 });
 
 function finishClassFeature(isUpdate){

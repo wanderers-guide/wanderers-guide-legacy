@@ -34,10 +34,10 @@ router.get('/license', (req, res) => {
 
 // create docs routes
 router.get('/wsc_docs', (req, res) => {
-    res.render('pages/wsc_docs', { title: "WSC Docs - Wanderer's Guide", user: req.user });
+    res.render('docs/wsc_docs', { title: "WSC Docs - Wanderer's Guide", user: req.user });
 });
 router.get('/api_docs', (req, res) => {
-  res.render('pages/api_docs', { title: "API Docs - Wanderer's Guide", user: req.user });
+  res.render('docs/api_docs', { title: "API Docs - Wanderer's Guide", user: req.user });
 });
 
 module.exports = router;

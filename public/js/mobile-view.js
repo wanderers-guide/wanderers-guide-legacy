@@ -2,27 +2,51 @@
     By Aaron Cassar.
 */
 
+let g_mobile_menu_active = false;
+
 $(function () {
 
-    checkViewportSize();
-    $(window).resize(function() {
-        checkViewportSize();
-    });
+  $('.nav-menu-toggle').click(function(){
+    g_mobile_menu_active = !g_mobile_menu_active;
+    updateMobileMenu();
+  });
+
+  $(window).resize(function() {
+    if($('.nav-menu-toggle').is(':hidden')){
+      g_mobile_menu_active = false;
+      updateMobileMenu();
+    }
+  });
 
 });
 
-function checkViewportSize(){
+function updateMobileMenu() {
+  $('#mobile-nav-menu-container').html('');
+  if(g_mobile_menu_active) {
+    $('.nav-menu-toggle').addClass('is-active');
 
-    if(window.location.pathname != '/' && window.location.pathname != '/auth/login') {
+    $('#mobile-nav-menu-container').html('<div id="mobile-nav-menu"></div>');
 
-        const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
+    $('.nav-menu > li').each(function() {
+      let aHTML = $(this).find('a').parent().html();
+      if(aHTML.includes('/browse')) {
+        aHTML = '<a href="/browse">Search <i class="fas fa-search"></i></a>';
+      }
+      if(aHTML.includes('profile-header-icon')) {
+        
+        $('#mobile-nav-menu').append('<hr class="m-1 border-light">');
+        $(this).find('li').each(function() {
+          let aSubHTML = $(this).find('a').parent().html();
+          $('#mobile-nav-menu').append(aSubHTML);
+        });
 
-        if(vw < 950){
-            $('#mobile-warning-message').html('<div class="hero is-danger"><div class="hero-body is-paddingless py-3"><div class="container"><p class="subtitle is-marginless has-text-centered has-text-weight-bold">Wanderer\'s Guide Currently Does Not Support Small Viewport Sizes</p><p class="has-text-grey-lighter has-text-centered is-size-8">If you\'re looking for a character manager on the phone, there\'s a great one in the <a class="has-text-light has-text-weight-bold" href="https://play.google.com/store/apps/details?id=com.redrazors.pathbuilder2e" target="_blank">Google Play Store</a>.</p></div></div></div>');
-        } else {
-            $('#mobile-warning-message').html('');
-        }
+      } else {
+        $('#mobile-nav-menu').append(aHTML);
+      }
+    });
 
-    }
+  } else {
+    $('.nav-menu-toggle').removeClass('is-active');
+  }
 
 }

@@ -75,6 +75,9 @@
 }
 
 /* Border */
+.border-dark-ish {
+  border-color: #262626!important;
+}
 .border-dark-lighter {
   border-color: #363636!important;/*hsl(210, 3%, 23%)!important;*/
 }
