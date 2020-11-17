@@ -2365,8 +2365,10 @@ module.exports = class SocketConnections {
                         HomebrewGathering.getAllItems(homebrewID).then((items) => {
                           HomebrewGathering.getAllSpells(homebrewID).then((spells) => {
                             UserHomebrew.hasHomebrewBundle(socket, homebrewID).then((userHasBundle) => {
-                              GeneralGathering.getAllTags(homebrewID).then((allTags) => {
-                                socket.emit('returnBundleContents', REQUEST_TYPE, userHasBundle, allTags, classes, ancestries, archetypes, backgrounds, classFeatures, feats, heritages, uniheritages, items, spells);
+                              UserHomebrew.ownsHomebrewBundle(socket, homebrewID).then((userOwnsBundle) => {
+                                GeneralGathering.getAllTags(homebrewID).then((allTags) => {
+                                  socket.emit('returnBundleContents', REQUEST_TYPE, userHasBundle, userOwnsBundle, allTags, classes, ancestries, archetypes, backgrounds, classFeatures, feats, heritages, uniheritages, items, spells);
+                                });
                               });
                             });
                           });
@@ -2387,16 +2389,43 @@ module.exports = class SocketConnections {
         });
       });
 
-      socket.on('requestBundleChangeCollection', function(homebrewID, toAdd){
+      socket.on('requestBundleChangeCollection', function(homebrewID, toAdd, keyCode='None'){
         if(toAdd){
-          UserHomebrew.addToHomebrewCollection(socket, homebrewID).then((result) => {
-            socket.emit('returnBundleChangeCollection');
+          if(keyCode.length > 50) {return;}
+          UserHomebrew.addToHomebrewCollection(socket, homebrewID, keyCode).then((isSuccess) => {
+            socket.emit('returnBundleChangeCollection', toAdd, isSuccess);
           });
         } else {
-          UserHomebrew.removeFromHomebrewCollection(socket, homebrewID).then((result) => {
-            socket.emit('returnBundleChangeCollection');
+          UserHomebrew.removeFromHomebrewCollection(socket, homebrewID).then((isSuccess) => {
+            socket.emit('returnBundleChangeCollection', toAdd, isSuccess);
           });
         }
+      });
+
+      socket.on('requestBundleUpdatePublished', function(homebrewID){
+        UserHomebrew.updateBundle(socket, homebrewID).then((result) => {
+          socket.emit('returnBundleUpdatePublished');
+        });
+      });
+
+      // Key Management //
+
+      socket.on('requestBundleKeys', function(homebrewID){
+        UserHomebrew.getBundleKeys(socket, homebrewID).then((bundleKeys) => {
+          socket.emit('returnBundleKeys', bundleKeys);
+        });
+      });
+
+      socket.on('requestBundleAddKeys', function(homebrewID, amount, isOneTimeUse){
+        UserHomebrew.addBundleKeys(socket, homebrewID, amount, isOneTimeUse).then((result) => {
+          socket.emit('returnBundleAddKeys');
+        });
+      });
+
+      socket.on('requestBundleRemoveKey', function(homebrewID, keyCode){
+        UserHomebrew.removeBundleKey(socket, homebrewID, keyCode).then((result) => {
+          socket.emit('returnBundleRemoveKey');
+        });
       });
 
     });

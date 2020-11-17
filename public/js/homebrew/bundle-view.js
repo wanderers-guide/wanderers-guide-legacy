@@ -8,7 +8,7 @@ function openBundleView(homebrewBundle){
   socket.emit('requestBundleContents', 'VIEW', homebrewBundle.id);
 }
 
-socket.on("returnBundleContents", function(REQUEST_TYPE, userHasBundle, allTags, classes, ancestries, archetypes, backgrounds, classFeatures, feats, heritages, uniheritages, items, spells){
+socket.on("returnBundleContents", function(REQUEST_TYPE, userHasBundle, userOwnsBundle, allTags, classes, ancestries, archetypes, backgrounds, classFeatures, feats, heritages, uniheritages, items, spells){
   if(REQUEST_TYPE !== 'VIEW') {return;}
 
   let featMap = new Map();
@@ -77,8 +77,8 @@ socket.on("returnBundleContents", function(REQUEST_TYPE, userHasBundle, allTags,
         $('#'+displayContainerID).remove();
       });
 
-      $('#bundleName').html(g_activeBundle.name);
-      $('#bundleDescription').html(g_activeBundle.description);
+      $('#bundleName').html(g_activeBundle.name+'<sup class="has-text-grey is-size-5 pl-1"><i class="fas fa-lock"></i></sup>');
+      $('#bundleDescription').html(processText(g_activeBundle.description, false, false, 'MEDIUM', false));
 
       let contactInfoStr = (g_activeBundle.contactInfo != '') ? ', '+g_activeBundle.contactInfo : '';
       $('#bundleContactInfo').html('<span class="is-thin has-text-grey-kinda-light">–</span> '+g_activeBundle.authorName+' <span class="is-thin has-text-grey-kinda-light is-size-7">#'+g_activeBundle.userID+'</span>'+contactInfoStr);
@@ -91,19 +91,65 @@ socket.on("returnBundleContents", function(REQUEST_TYPE, userHasBundle, allTags,
         $('#bundleCollectionAddBtn').removeClass('is-hidden');
       }
 
+      // Add Button //
       $('#bundleCollectionAddBtn').click(function() {
-        socket.emit('requestBundleChangeCollection', g_activeBundle.id, true);
-        $('#bundleCollectionAddBtn').addClass('is-hidden');
-        $('#bundleCollectionRemoveBtn').removeClass('is-hidden');
+        if(g_activeBundle.hasKeys === 1){
+          $('#add-locked-bundle-key-input').removeClass('is-danger');
+          $('#add-locked-bundle-modal').addClass('is-active');
+          $('html').addClass('is-clipped');
+        } else {
+          socket.emit('requestBundleChangeCollection', g_activeBundle.id, true);
+        }
       });
 
+      $('#add-locked-bundle-add-btn').click(function() {
+        let keyInput = $('#add-locked-bundle-key-input').val();
+        if(keyInput != ''){
+          socket.emit('requestBundleChangeCollection', g_activeBundle.id, true, keyInput);
+        }
+      });
+      $('#add-locked-bundle-modal-background,#add-locked-bundle-modal-close').click(function() {
+        $('#add-locked-bundle-modal').removeClass('is-active');
+        $('html').removeClass('is-clipped');
+      });
+
+      // Remove Button //
       $('#bundleCollectionRemoveBtn').click(function() {
         new ConfirmMessage('Remove from Collection', 'Are you sure you want to remove this bundle from your collection? Any content your characters are using from the bundle will be removed.', 'Remove', 'modal-remove-view-collection-bundle-'+g_activeBundle.id, 'modal-remove-view-collection-bundle-btn-'+g_activeBundle.id);
         $('#modal-remove-view-collection-bundle-btn-'+g_activeBundle.id).click(function() {
           socket.emit('requestBundleChangeCollection', g_activeBundle.id, false);
-          $('#bundleCollectionRemoveBtn').addClass('is-hidden');
-          $('#bundleCollectionAddBtn').removeClass('is-hidden');
         });
+      });
+
+      ///
+
+      socket.on("returnBundleChangeCollection", function(toAdd, isSuccess){
+        if(isSuccess){
+          $('#add-locked-bundle-modal').removeClass('is-active');
+          $('html').removeClass('is-clipped');
+          $('#add-locked-bundle-key-input').val('');
+          if(toAdd) {
+            $('#bundleCollectionAddBtn').addClass('is-hidden');
+            $('#bundleCollectionRemoveBtn').removeClass('is-hidden');
+          } else {
+            $('#bundleCollectionAddBtn').removeClass('is-hidden');
+            $('#bundleCollectionRemoveBtn').addClass('is-hidden');
+          }
+        } else {
+          if($('#add-locked-bundle-modal').hasClass('is-active')) {
+            $('#add-locked-bundle-key-input').addClass('is-danger');
+          }
+        }
+      });
+
+      ///
+
+      if(userOwnsBundle){
+        $('#bundleKeyManagementBtn').removeClass('is-hidden');
+      }
+
+      $('#bundleKeyManagementBtn').click(function() {
+        socket.emit('requestBundleKeys', g_activeBundle.id);
       });
 
       ///
@@ -165,10 +211,11 @@ socket.on("returnBundleContents", function(REQUEST_TYPE, userHasBundle, allTags,
       ////
 
       if(classFeatures.length > 0){
+        let foundContent = false;
         $('#bundleSectionClassFeatures').removeClass('is-hidden');
         $('#bundleContainerClassFeatures').html('');
         for(const classFeature of classFeatures){
-          if(classFeature.indivClassName == null || classFeature.selectOptionFor != null) {continue;}
+          if(classFeature.indivClassName == null || classFeature.selectOptionFor != null) {continue;} else {foundContent = true;}
 
           let viewClassFeatureID = 'entry-view-class-feature-'+classFeature.id;
           $('#bundleContainerClassFeatures').append('<div class="columns is-mobile is-marginless mt-1 sub-section-box"><div class="column"><p class="is-size-5">'+classFeature.name+'</p></div><div class="column"><div class="is-pulled-right buttons are-small"><button id="'+viewClassFeatureID+'" class="button is-info is-outlined">View</button></div></div></div>');
@@ -187,15 +234,20 @@ socket.on("returnBundleContents", function(REQUEST_TYPE, userHasBundle, allTags,
             });
           });
         }
+
+        if(!foundContent) {
+          $('#bundleSectionClassFeatures').addClass('is-hidden');
+        }
       }
 
       ////
 
       if(feats.length > 0){
+        let foundContent = false;
         $('#bundleSectionFeats').removeClass('is-hidden');
         $('#bundleContainerFeats').html('');
         for(const feat of feats){
-          if(feat.genericType == null) {continue;}
+          if(feat.genericType == null) {continue;} else {foundContent = true;}
 
           let viewFeatID = 'entry-view-feat-activity-'+feat.id;
           $('#bundleContainerFeats').append('<div class="columns is-mobile is-marginless mt-1 sub-section-box"><div class="column"><p class="is-size-5">'+feat.name+'</p></div><div class="column"><div class="is-pulled-right buttons are-small"><button id="'+viewFeatID+'" class="button is-info is-outlined">View</button></div></div></div>');
@@ -207,15 +259,20 @@ socket.on("returnBundleContents", function(REQUEST_TYPE, userHasBundle, allTags,
             });
           });
         }
+
+        if(!foundContent) {
+          $('#bundleSectionFeats').addClass('is-hidden');
+        }
       }
 
       ////
 
       if(heritages.length > 0){
+        let foundContent = false;
         $('#bundleSectionHeritages').removeClass('is-hidden');
         $('#bundleContainerHeritages').html('');
         for(const heritage of heritages){
-          if(heritage.indivAncestryName == null) {continue;}
+          if(heritage.indivAncestryName == null) {continue;} else {foundContent = true;}
 
           let viewHeritageID = 'entry-view-heritage-'+heritage.id;
           $('#bundleContainerHeritages').append('<div class="columns is-mobile is-marginless mt-1 sub-section-box"><div class="column"><p class="is-size-5">'+heritage.name+'</p></div><div class="column"><div class="is-pulled-right buttons are-small"><button id="'+viewHeritageID+'" class="button is-info is-outlined">View</button></div></div></div>');
@@ -233,6 +290,10 @@ socket.on("returnBundleContents", function(REQUEST_TYPE, userHasBundle, allTags,
               }
             });
           });
+        }
+
+        if(!foundContent) {
+          $('#bundleSectionHeritages').addClass('is-hidden');
         }
       }
 

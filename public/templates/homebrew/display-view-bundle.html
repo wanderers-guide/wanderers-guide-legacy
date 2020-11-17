@@ -3,18 +3,24 @@
   <span id="bundle-back-btn" style="position: absolute; top: 0px; left: 0px; z-index: 1;" class="icon is-large has-text-info cursor-clickable">
     <i class="fas fa-2x fa-arrow-left"></i>
   </span>
-  <button id="bundleCollectionAddBtn" style="position: absolute; top: 5px; right: 5px; z-index: 1;" class="is-hidden button is-rounded is-success is-outlined is-small">
-    <span>Add to Collection</span>
-    <span class="icon">
-      <i class="fas fa-plus"></i>
-    </span>
-  </button>
-  <button id="bundleCollectionRemoveBtn" style="position: absolute; top: 5px; right: 5px; z-index: 1;" class="is-hidden button is-rounded is-danger is-small">
-    <span>Remove from Collection</span>
-    <span class="icon">
-      <i class="fas fa-times"></i>
-    </span>
-  </button>
+
+  <div style="position: absolute; top: 5px; right: 5px; z-index: 1;">
+    <button id="bundleCollectionAddBtn" class="is-hidden button is-rounded is-success is-outlined is-small">
+      <span>Add to Collection</span>
+      <span class="icon">
+        <i class="fas fa-plus"></i>
+      </span>
+    </button>
+    <button id="bundleCollectionRemoveBtn" class="is-hidden button is-rounded is-danger is-small">
+      <span>Remove from Collection</span>
+      <span class="icon">
+        <i class="fas fa-times"></i>
+      </span>
+    </button>
+    <button id="bundleKeyManagementBtn" class="is-hidden button is-rounded is-link is-small">
+      <span>Manage Keys</span>
+    </button>
+  </div>
 
   <div style="max-width: 70%; margin: auto;">
     <p class="is-size-3 has-text-centered pb-2"><span id="bundleName" class="title-font has-text-grey-lighter is-bold"></span></p>
@@ -96,5 +102,26 @@
       </div>
       <hr class="m-2">
     </div>
+  </div>
+</div>
+
+<div id="add-locked-bundle-modal" class="modal">
+  <div id="add-locked-bundle-modal-background" class="modal-background"></div>
+  <div class="modal-card">
+      <header class="modal-card-head">
+          <p class="modal-card-title is-size-4 has-text-grey-lighter">Add to Collection<sup class="has-text-grey is-size-7 pl-1"><i class="fas fa-lock"></i></sup></p>
+          <button id="add-locked-bundle-modal-close" class="delete modal-card-close" aria-label="close"></button>
+      </header>
+      <section id="add-locked-bundle-modal-body" class="modal-card-body">
+        <p class="has-text-centered is-italic">This homebrew requires a key to use.</p>
+        <div class="field has-addons has-addons-centered pt-3">
+          <div class="control is-expanded" style="max-width: 400px;">
+            <input id="add-locked-bundle-key-input" class="input" type="text" maxlength="50" spellcheck="false" autocomplete="off" placeholder="Homebrew Key">
+          </div>
+          <div class="control">
+            <a id="add-locked-bundle-add-btn" class="button is-outlined is-link">Add</a>
+          </div>
+        </div>
+      </section>
   </div>
 </div>

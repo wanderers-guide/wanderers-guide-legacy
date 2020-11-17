@@ -8,7 +8,7 @@ function openBundleEditor(homebrewBundle){
   socket.emit('requestBundleContents', 'EDIT', homebrewBundle.id);
 }
 
-socket.on("returnBundleContents", function(REQUEST_TYPE, userHasBundle, allTags, classes, ancestries, archetypes, backgrounds, classFeatures, feats, heritages, uniheritages, items, spells){
+socket.on("returnBundleContents", function(REQUEST_TYPE, userHasBundle, userOwnsBundle, allTags, classes, ancestries, archetypes, backgrounds, classFeatures, feats, heritages, uniheritages, items, spells){
   if(REQUEST_TYPE !== 'EDIT') {return;}
 
   let featMap = new Map();
@@ -114,6 +114,28 @@ socket.on("returnBundleContents", function(REQUEST_TYPE, userHasBundle, allTags,
         });
 
       });
+
+      $("#bundleContactInfo").blur(function(){
+        if(g_activeBundle.contactInfo != $(this).val()) {
+          $('#bundleContactInfo').parent().addClass("is-loading");
+          socket.emit("requestBundleUpdate",
+              g_activeBundle.id,
+              {
+                ContactInfo: $(this).val()
+              }
+          );
+        }
+      });
+
+      $("#bundleRequireKeySwitch").change(function(){
+        socket.emit("requestBundleUpdate",
+            g_activeBundle.id,
+            {
+              HasKeys: (this.checked) ? 1 : 0,
+            }
+        );
+      });
+      $("#bundleRequireKeySwitch").prop('checked', (g_activeBundle.hasKeys === 1));
 
       ///
 
@@ -475,6 +497,7 @@ socket.on("returnBundleUpdate", function(homebrewBundle){
     $('#bundleDescription').val(g_activeBundle.description);
     $('#bundleContactInfo').parent().removeClass("is-loading");
     $('#bundleContactInfo').val(g_activeBundle.contactInfo);
+    $('#bundleRequireKeySwitch').blur();
   }
 });
 

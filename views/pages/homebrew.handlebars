@@ -16,7 +16,8 @@
     <script src="/js/libraries/display_uni_heritage/display-uni-heritage.js"></script>
 
     <script src="/js/homebrew/bundle-view.js"></script>
-    
+    <script src="/js/homebrew/bundle-manage-keys.js"></script>
+
     <script src="/js/homebrew/builder/bundle-editor.js"></script>
     <script src="/js/homebrew/builder/builder-templating.js"></script>
 
@@ -66,6 +67,7 @@
 <div id="homebrew-container" class="container" data-edit-homebrew-id="{{editHomebrewID}}" data-view-homebrew-id="{{viewHomebrewID}}" data-direct-to-tab="{{homebrewTabName}}">
 
     
+    <!--
     <h1 class="pt-3 is-size-1 has-text-light text-center">Homebrew</h1>
     <hr style="border-color: #5e5e5e;">
     <div>
@@ -74,9 +76,9 @@
             The plan for this page is for it to be the central hub for all things homebrew. This is where you would go to browse homebrew, manage homebrew you've collected, and create your own homebrew.
         </p>
     </div>
+    -->
     
-    
-  <!--
+  
   <div class="tabs is-centered is-boxed use-custom-scrollbar mb-2">
     <ul class="category-tabs">
       <li><a id="browseTab">Browse Homebrew</a></li>
@@ -84,8 +86,7 @@
       <li><a id="userContentTab">My Creations</a></li>
     </ul>
   </div>
-  <div id="tabContent" class="mx-3 mb-3"></div>
-  -->
+  <div id="tabContent" class="mx-3 mb-3"></div><!-- tabContent must be empty! -->
 
 </div>
 
@@ -105,3 +106,15 @@
         </div>
     </div>
 {{/section}}
+
+<div id="manage-keys-modal" class="modal">
+  <div id="manage-keys-modal-background" class="modal-background"></div>
+  <div class="modal-card">
+      <header class="modal-card-head">
+          <p class="modal-card-title is-size-4 has-text-grey-lighter">Key Management</p>
+          <button id="manage-keys-modal-close" class="delete modal-card-close" aria-label="close"></button>
+      </header>
+      <section id="manage-keys-modal-body" class="modal-card-body">
+      </section>
+  </div>
+</div>

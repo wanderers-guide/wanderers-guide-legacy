@@ -14,6 +14,10 @@ $(function () {
       // Hardcoded redirect to page 2
       window.location.href = '/profile/characters/builder/?id='+getCharIDFromURL()+'&page=2';
     });
+    $("#goToCharButton").click(function(){
+      // Hardcoded redirect
+      window.location.href ='/profile/characters/'+getCharIDFromURL();
+    });
     initBuilderSteps();
     
     // On load get basic character info
@@ -406,7 +410,13 @@ function displayHomebrewBundles(character, hBundles, progessBundles){
   for(let hBundle of hBundles) {
     let homebrewBundle = hBundle.homebrewBundle;
     let bundleSwitchID = 'homebrew-bundle-switch-'+homebrewBundle.id;
-    $('#homebrewCollectionContainer').append('<div class="field"><input id="'+bundleSwitchID+'" type="checkbox" name="'+bundleSwitchID+'" class="switch is-small is-rounded is-outlined is-info optionSwitch" value="1"><label for="'+bundleSwitchID+'">'+homebrewBundle.name+'</label></div>');
+
+    let bundleName = homebrewBundle.name;
+    if(homebrewBundle.isPublished === 0){
+      bundleName += '<sup class="has-text-info is-size-8 pl-1"><i class="fa fa-wrench"></i></sup>';
+    }
+
+    $('#homebrewCollectionContainer').append('<div class="field"><input id="'+bundleSwitchID+'" type="checkbox" name="'+bundleSwitchID+'" class="switch is-small is-rounded is-outlined is-info optionSwitch" value="1"><label for="'+bundleSwitchID+'">'+bundleName+'</label></div>');
 
     $('#'+bundleSwitchID).change(function(){
       socket.emit('requestCharacterHomebrewChange', 

@@ -1,6 +1,7 @@
 
 const Character = require('../models/contentDB/Character');
-const HomebrewBundle = require('../models/contentDB/HomebrewBundle');
+const HomebrewBundle = require('../models/contentDB/homebrewBundle');
+const UserHomebrewBundle = require('../models/contentDB/UserHomebrewBundle');
 
 // Returns UserID or -1 if not logged in.
 function getUserID(socket){
@@ -11,10 +12,6 @@ function getUserID(socket){
   }
 }
 
-function canAccessHomebrew(socket, homebrewBundle){
-  return homebrewBundle.isPublished === 1 || homebrewBundle.userID === getUserID(socket);
-}
-
 module.exports = class CharContentHomebrew {
 
     static getHomebrewArray(character){
@@ -22,20 +19,28 @@ module.exports = class CharContentHomebrew {
     }
 
     static addHomebrewBundle(socket, charID, homebrewID){
-      return HomebrewBundle.findOne({ where: { id: homebrewID } })
-      .then((homebrewBundle) => {
-        if(homebrewBundle != null && canAccessHomebrew(socket, homebrewBundle)) {
-          return Character.findOne({ where: { id: charID } })
-          .then((character) => {
-              let homebrewArray = CharContentHomebrew.getHomebrewArray(character);
-              homebrewArray.push(homebrewID);
-              let charUpVals = {enabledHomebrew: JSON.stringify(homebrewArray) };
-              return Character.update(charUpVals, { where: { id: character.id } })
-              .then((result) => {
-                  return;
-              });
-          });
-        }
+      return UserHomebrewBundle.findOne({
+        where: { userID: getUserID(socket), homebrewID: homebrewID },
+      }).then(userHomebrewBundle => {
+        return HomebrewBundle.findOne({ where: { id: homebrewID } })
+        .then((homebrewBundle) => {
+          
+          if(userHomebrewBundle != null || homebrewBundle.userID === getUserID(socket)){
+
+            return Character.findOne({ where: { id: charID } })
+            .then((character) => {
+                let homebrewArray = CharContentHomebrew.getHomebrewArray(character);
+                homebrewArray.push(homebrewID);
+                let charUpVals = {enabledHomebrew: JSON.stringify(homebrewArray) };
+                return Character.update(charUpVals, { where: { id: character.id } })
+                .then((result) => {
+                    return;
+                });
+            });
+  
+          }
+          
+        });
       });
     }
 

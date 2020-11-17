@@ -2,8 +2,16 @@
 const User = require('../models/contentDB/User');
 const HomebrewBundle = require('../models/contentDB/HomebrewBundle');
 const UserHomebrewBundle = require('../models/contentDB/UserHomebrewBundle');
+const HomebrewBundleKey = require('../models/contentDB/HomebrewBundleKey');
 
 const AuthCheck = require('./AuthCheck');
+
+function getUUIDv4() {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+    let r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+  });
+}
 
 // Returns UserID or -1 if not logged in.
 function getUserID(socket){
@@ -61,6 +69,7 @@ module.exports = class UserHomebrew {
               name: inUpdateValues.Name,
               description: inUpdateValues.Description,
               contactInfo: inUpdateValues.ContactInfo,
+              hasKeys: inUpdateValues.HasKeys,
             };
             return HomebrewBundle.update(updateValues, {
               where: {
@@ -161,6 +170,14 @@ module.exports = class UserHomebrew {
     });
   }
 
+  static ownsHomebrewBundle(socket, homebrewID) {
+    return HomebrewBundle.findOne({
+      where: { id: homebrewID, userID: getUserID(socket) }
+    }).then(homebrewBundle => {
+      return (homebrewBundle != null);
+    });
+  }
+
   static getCollectedHomebrewBundles(socket){
     User.hasMany(UserHomebrewBundle, {foreignKey: 'userID'});
     UserHomebrewBundle.belongsTo(User, {foreignKey: 'userID'});
@@ -205,19 +222,52 @@ module.exports = class UserHomebrew {
     });
   }
 
-  static addToHomebrewCollection(socket, homebrewID) {
+  static addToHomebrewCollection(socket, homebrewID, keyCode='None') {
     return User.findOne({ where: { id: getUserID(socket)} })
     .then((user) => {
       if(user != null){
         return HomebrewBundle.findOne({ where: { id: homebrewID } })
         .then((homebrewBundle) => {
           if(homebrewBundle.isPublished === 1){
-            return UserHomebrewBundle.create({
-              userID: user.id,
-              homebrewID: homebrewID,
-            }).then((userHomebrewBundle) => {
-                return true;
-            });
+            if(homebrewBundle.hasKeys === 1) {
+
+              return HomebrewBundleKey.findOne({ where: { homebrewID: homebrewID, keyCode: keyCode } })
+              .then((bundleKey) => {
+
+                if(bundleKey != null){
+                  return UserHomebrewBundle.create({
+                    userID: user.id,
+                    homebrewID: homebrewID,
+                  }).then((userHomebrewBundle) => {
+                    if(bundleKey.isOneTimeUse === 1){
+                      return HomebrewBundleKey.destroy({
+                        where: {
+                          homebrewID: bundleKey.homebrewID,
+                          keyCode: bundleKey.keyCode,
+                        }
+                      }).then((result) => {
+                        return true;
+                      });
+                    } else {
+                      return true;
+                    }
+                  });
+                } else {
+                  return false;
+                }
+
+              });
+
+            } else {
+
+              return UserHomebrewBundle.create({
+                userID: user.id,
+                homebrewID: homebrewID,
+              }).then((userHomebrewBundle) => {
+                  return true;
+              });
+
+            }
           } else {
             return false;
           }
@@ -261,5 +311,74 @@ module.exports = class UserHomebrew {
   }
 
   
+  // Key Management //
+
+  static addBundleKeys(socket, homebrewID, amount, isOneTimeUse){
+    return UserHomebrew.ownsHomebrewBundle(socket, homebrewID).then(ownsBundle => {
+      if(ownsBundle) {
+        let bundleKeyPromise = [];
+        for (let i = 0; i < amount; i++) {
+            let newPromise = HomebrewBundleKey.create({
+              homebrewID: homebrewID,
+              keyCode: getUUIDv4(),
+              isOneTimeUse: (isOneTimeUse) ? 1 : 0,
+            });
+            bundleKeyPromise.push(newPromise);
+        }
+        return Promise.all(bundleKeyPromise)
+        .then(function(result) {
+          return;
+        });
+      }
+    });
+  }
+
+  static removeBundleKey(socket, homebrewID, keyCode){
+    return UserHomebrew.ownsHomebrewBundle(socket, homebrewID).then(ownsBundle => {
+      if(ownsBundle) {
+        return HomebrewBundleKey.destroy({
+          where: {
+            homebrewID: homebrewID,
+            keyCode: keyCode,
+          }
+        }).then((result) => {
+          return;
+        });
+      }
+    });
+  }
+
+  static getBundleKeys(socket, homebrewID){
+    return UserHomebrew.ownsHomebrewBundle(socket, homebrewID).then(ownsBundle => {
+      if(ownsBundle) {
+        return HomebrewBundleKey.findAll({ where: { homebrewID: homebrewID } })
+        .then((bundleKeys) => {
+          return bundleKeys;
+        });
+      }
+    });
+  }
+
+  // Update Bundle //
+
+  static updateBundle(socket, homebrewID) {
+    return AuthCheck.isMember(socket)
+    .then((isMember) => {
+      if(isMember){
+        return UserHomebrew.ownsHomebrewBundle(socket, homebrewID).then(ownsBundle => {
+          if(ownsBundle) {
+            return HomebrewBundle.update({ isPublished: 0 }, {
+              where: {
+                id: homebrewID,
+                userID: getUserID(socket),
+              }
+            }).then((result) => {
+              return;
+            });
+          }
+        });
+      }
+    });
+  }
 
 };

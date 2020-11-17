@@ -3,7 +3,15 @@
   <span id="backToUserContentBtn" style="position: absolute; top: 0px; left: 0px; z-index: 1;" class="icon is-large has-text-info cursor-clickable">
     <i class="fas fa-2x fa-arrow-left"></i>
   </span>
-  <span id="bundlePublishBtn" style="position: absolute; top: 5px; right: 5px; z-index: 1;" class="button is-success is-outlined">Publish</span>
+  <div style="position: absolute; top: 5px; right: 5px; z-index: 1;">
+    <span id="bundlePublishBtn" class="button is-success is-outlined">Publish</span>
+    <div class="field pt-3 text-center has-tooltip-bottom has-tooltip-multiline" data-tooltip="A key will be required to add the bundle, you will be able to generate bundle keys once published.">
+      <input id="bundleRequireKeySwitch" type="checkbox" name="bundleRequireKeySwitch" class="switch is-small is-rounded is-outlined is-info" value="1">
+      <label for="bundleRequireKeySwitch">
+          Require Key
+      </label>
+    </div>
+  </div>
 
   <div style="max-width: 70%; margin: auto;">
     <p class="is-size-3 has-text-centered pb-2"><span id="bundleName" class="title-font has-text-grey-lighter is-bold"></span><sup id="bundleRenameBtn" class="icon has-text-info is-size-6 pl-2 cursor-clickable"><i class="far fa-edit"></i></sup></p>

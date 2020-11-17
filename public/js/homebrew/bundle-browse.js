@@ -142,7 +142,9 @@ function filterBundleSearch(homebrewBundles){
   if(keyRequiredFilter != 'ANY'){
     console.log('Filtering by Key Required...');
     for(const homebrewBundle of homebrewBundles){
-      // TO-DO
+      if(homebrewBundle.hasKeys != keyRequiredFilter){
+        homebrewBundles.delete(homebrewBundle);
+      }
     }
   }
 
@@ -157,7 +159,7 @@ function displayBundleResults(homebrewBundles){
     return;
   }
 
-  for(let homebrewBundle of homebrewBundles){
+  for(const homebrewBundle of homebrewBundles){
     let entryID = 'bundle-entry-'+homebrewBundle.id;
     let rating = homebrewBundle.userHomebrewBundles.length;
     let ratingColor = '';
@@ -170,7 +172,12 @@ function displayBundleResults(homebrewBundles){
       ratingColor = 'has-text-warning';
     }
 
-    $('#browsingList').append('<div id="'+entryID+'" class="columns is-mobile border-bottom border-dark-lighter cursor-clickable"><div class="column is-7"><span class="is-size-5">'+homebrewBundle.name+'</span></div><div class="column is-3"><span class="is-size-6 has-text-grey is-italic">'+homebrewBundle.authorName+'</span></div><div class="column is-2" style="position: relative;"><span class="is-size-6 pr-2 '+ratingColor+'" style="position: absolute; top: 1px; right: 0px;">'+rating+'</span></div></div>');
+    let bundleName = homebrewBundle.name;
+    if(homebrewBundle.hasKeys === 1){
+      bundleName += '<sup class="has-text-grey is-size-7 pl-1"><i class="fas fa-lock"></i></sup>';
+    }
+
+    $('#browsingList').append('<div id="'+entryID+'" class="columns is-mobile border-bottom border-dark-lighter cursor-clickable"><div class="column is-7"><span class="is-size-5">'+bundleName+'</span></div><div class="column is-3"><span class="is-size-6 has-text-grey is-italic">'+homebrewBundle.authorName+'</span></div><div class="column is-2" style="position: relative;"><span class="is-size-6 pr-2 '+ratingColor+'" style="position: absolute; top: 1px; right: 0px;">'+rating+'</span></div></div>');
 
     $('#'+entryID).click(function(){
       openBundleView(homebrewBundle);
