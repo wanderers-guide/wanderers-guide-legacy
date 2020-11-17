@@ -22,16 +22,16 @@ function getUserID(socket){
   }
 }
 
-function canAccessHomebrew(socket, homebrewBundle){
-  return homebrewBundle.isPublished === 1 || homebrewBundle.userID === getUserID(socket);
-}
-
 module.exports = class UserHomebrew {
 
   static canAccessHomebrewBundle(socket, homebrewID){
-    return HomebrewBundle.findOne({ where: { id: homebrewID } })
-    .then((homebrewBundle) => {
-      return canAccessHomebrew(socket, homebrewBundle);
+    return UserHomebrewBundle.findOne({
+      where: { userID: getUserID(socket), homebrewID: homebrewID },
+    }).then(userHomebrewBundle => {
+      return HomebrewBundle.findOne({ where: { id: homebrewID } })
+      .then((homebrewBundle) => {
+        return (userHomebrewBundle != null || homebrewBundle.userID === getUserID(socket));
+      });
     });
   }
 
@@ -154,11 +154,14 @@ module.exports = class UserHomebrew {
   static getHomebrewBundle(socket, homebrewID) {
     return HomebrewBundle.findOne({ where: { id: homebrewID } })
     .then((homebrewBundle) => {
-      if(homebrewBundle != null && canAccessHomebrew(socket, homebrewBundle)) {
-        return homebrewBundle;
-      } else {
-        return null;
-      }
+      return UserHomebrew.canAccessHomebrewBundle(socket, homebrewID)
+      .then((canAccess) => {
+        if(canAccess){
+          return homebrewBundle;
+        } else {
+          return null;
+        }
+      });
     });
   }
 
