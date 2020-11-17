@@ -104,6 +104,10 @@ function displayCurrentBackground(background) {
     let backgroundDescription = $('#backgroundDescription');
     backgroundDescription.html(processText(background.description, false, null, 'MEDIUM', false));
 
+    // Rarity //
+    $('#backgroundRarityContainer').html(convertRarityToHTML(background.rarity));
+
+
     // Code - Run General Code before Boosts Code, it's more likely to be delaying //
     $('#backgroundCodeOutput').html('');
     let srcStruct = {

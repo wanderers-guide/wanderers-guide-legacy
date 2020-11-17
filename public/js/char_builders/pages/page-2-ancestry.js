@@ -185,7 +185,8 @@ function displayCurrentAncestry(ancestryStruct, saving) {
     let ancestryDescription = $('#ancestryDescription');
     ancestryDescription.html(processText(ancestryStruct.Ancestry.description, false, null, 'MEDIUM', false));
 
-
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Rarity ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
+    $('#ancestryRarityContainer').html(convertRarityToHTML(ancestryStruct.Ancestry.rarity));
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Hit Points ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
     let ancestryHitPoints = $('#ancestryHitPoints');

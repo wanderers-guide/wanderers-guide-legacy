@@ -396,7 +396,7 @@ select {
     border-radius: 4px;
     line-height: 1.5;
     vertical-align: top;
-    width: 400px;
+    width: 100%;
     max-width: 400px;
     margin: 0 auto;
     padding: 0.5rem 0;
@@ -420,7 +420,7 @@ select {
     border-top: 0px;
     line-height: 1.5;
     vertical-align: top;
-    width: 400px;
+    width: 100%;
     max-width: 400px;
     max-height: 600px;
     overflow-y: auto;

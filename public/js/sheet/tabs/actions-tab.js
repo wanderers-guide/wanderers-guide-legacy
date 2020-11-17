@@ -22,8 +22,17 @@ function openActionsTab(data) {
     filterInnerHTML += '<option value="others">Miscellaneous</option>';
     filterInnerHTML += '<option value="all">All</option>';
     filterInnerHTML += '<optgroup label="── Skills ──"></optgroup>';
+
+    let foundLore = false;
     for(const [skillName, skillData] of data.SkillMap.entries()){
-        filterInnerHTML += '<option value="'+skillData.Skill.id+'">'+skillData.Skill.name+'</option>';
+      if(skillData.Skill.name == 'Lore'){
+        if(foundLore) {
+          continue;
+        } else {
+          foundLore = true;
+        }
+      }
+      filterInnerHTML += '<option value="'+skillData.Skill.id+'">'+skillData.Skill.name+'</option>';
     }
 
     filterInnerHTML += '</select></div></div><div class="column is-2"><div class="select is-small"><select id="actionFilterSelectByAction" class="pf-icon is-bold-very"><option value="chooseDefault" class="is-bold-very">By Action</option><optgroup label="───────"></optgroup><option value="OneAction" class="pf-icon">[one-action]</option><option value="TwoActions" class="pf-icon">[two-actions]</option><option value="ThreeActions" class="pf-icon">[three-actions]</option><option value="FreeAction" class="pf-icon">[free-action]</option><option value="Reaction" class="pf-icon">[reaction]</option></select></div></div></div>';

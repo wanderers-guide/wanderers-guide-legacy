@@ -134,7 +134,7 @@
                         <div class="tile pb-1">
                             <div class="tile is-child px-2 pt-2">
                                 <p class="is-size-6"><strong class="has-text-grey-lighter">Hit Points</strong></p>
-                                <div class="columns is-centered">
+                                <div class="columns is-mobile is-centered">
                                     <div class="column is-narrow is-paddingless py-2">
                                         <div id="char-current-health" class="cursor-clickable">
                                         </div>
@@ -165,7 +165,7 @@
                     </div>
                 </div>
                 <div class="tile is-3">
-                    <div class="tile ml-1 mr-4 mb-4 sheet-box">
+                    <div class="tile ml-1 mr-4 mb-4 mobile-is-marginless sheet-box">
                         <div class="tile is-child use-custom-scrollbar" style="max-height: 100px; overflow-y: auto;">
                             <div class="columns is-centered is-vcentered is-marginless">
                                 <div class="column is-paddingless"></div>
@@ -179,7 +179,7 @@
                     </div>
                 </div>
                 <div class="tile is-2">
-                    <div class="tile ml-2 mb-4 sheet-box">
+                    <div class="tile ml-2 mb-4 mobile-is-marginless mobile-apply-flex sheet-box">
                         <div class="tile is-child pt-2 is-paddingless cursor-clickable" id="classDCSection">
                             <p class="is-size-6 is-unselectable"><strong class="has-text-grey-lighter">Class DC</strong></p>
                             <p id="classDCContent" class="is-size-5 has-text-grey-light pl-2"></p>
@@ -198,7 +198,7 @@
                     </div>
                 </div>
                 <div class="tile is-1">
-                    <div class="tile ml-2 mt-2 mb-4">
+                    <div class="tile ml-2 mt-2 mb-4 mobile-is-marginless">
                         <div class="tile is-child">
                                 <a id="backToBuilderButton" class="button is-info is-rounded is-small has-text-white mb-2">
                                     <span>Edit</span>
@@ -213,7 +213,7 @@
             </div>
             <div class="tile is-parent is-paddingless">
                 <div class="tile is-3">
-                    <div class="tile my-2 mr-4">
+                    <div class="tile my-2 mr-4 mobile-is-marginless">
                         <div class="tile is-child is-paddingless sheet-box cursor-clickable" id="speedSection">
                             <p class="is-size-6 is-unselectable"><strong class="has-text-grey-lighter">Speed</strong></p>
                             <p id="speedContent" class="is-size-5 has-text-grey-light pl-2"></p>
@@ -235,9 +235,9 @@
                     </div>
                 </div>
                 <div class="tile is-6">
-                    <div class="tile my-2 mx-4">
+                    <div class="tile my-2 mx-4 mobile-is-marginless">
                         <!-- Ability Scores -->
-                        <div class="tile sheet-box">
+                        <div class="tile sheet-box mobile-apply-flex">
                             <div id="strSection" class="tile is-child pt-2 is-paddingless cursor-clickable">
                                 <div class="has-text-weight-semibold is-size-7 is-unselectable">Strength</div>
                                 <div id="strMod" class="is-size-4 pr-3"></div>
@@ -272,10 +272,10 @@
                     </div>
                 </div>
                 <div class="tile is-3">
-                    <div class="tile is-vertical my-2 ml-2 sheet-box">
+                    <div class="tile is-vertical my-2 ml-2 mobile-is-marginless sheet-box">
                         <!-- Saving Throws -->
                         <p class="is-size-6 has-text-centered has-text-grey-lighter">Saving Throws</p>
-                        <div class="tile is-centered is-paddingless">
+                        <div class="tile is-centered is-paddingless mobile-apply-flex">
                             <div id="fortSection" class="tile is-child is-paddingless cursor-clickable">
                                 <p class="has-text-grey-light">Fortitude</p>
                                 <div id="fortSave" class="is-size-5 pr-2"></div>
@@ -294,7 +294,7 @@
             </div>
         </div>
         <div class="tile m-2 pr-4">
-            <div class="tile is-parent is-vertical is-2 my-2 mr-4 is-paddingless">
+            <div class="tile is-parent is-vertical is-2 my-2 mr-4 mobile-is-marginless is-paddingless">
                 <div class="tile is-paddingless p-3">
                     <div id="acSection" class="tile is-child is-unselectable pt-4 background-ac has-tooltip-bottom" data-tooltip="">
                         <p id="acText" class="px-2"><strong class="has-text-grey-light">AC</strong></p>
@@ -348,7 +348,7 @@
 
             <div class="tile is-parent is-8 is-paddingless">
                 <div class="tile is-child">
-                    <div class="sheet-box use-custom-scrollbar my-2 ml-4" style="height: 700px; max-height: 700px;overflow-y: auto;">
+                    <div class="sheet-box use-custom-scrollbar my-2 ml-4 mobile-is-marginless" style="height: 700px; max-height: 700px;overflow-y: auto;">
                         <div class="tabs is-centered is-boxed is-medium is-marginless">
                             <ul class="sheet-tabs">
                                 <li><a id="actionsTab">Actions</a></li>

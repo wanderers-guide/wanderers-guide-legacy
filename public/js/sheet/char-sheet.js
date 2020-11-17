@@ -1319,16 +1319,16 @@ function initHealthAndTemp() {
     }
 
     if(g_character.tempHealth == 0){
-        tempHealth.html('<p class="is-size-5 is-unselectable text-center has-text-grey-lighter" style="width: 70px;">―</p>');
+        tempHealth.html('<p class="is-size-5 is-unselectable text-center has-text-grey-lighter" style="width: 70px; margin: auto;">―</p>');
     } else {
-        tempHealth.html('<p class="is-size-5 is-unselectable text-center has-text-info" style="width: 70px;">'+g_character.tempHealth+'</p>');
+        tempHealth.html('<p class="is-size-5 is-unselectable text-center has-text-info" style="width: 70px; margin: auto;">'+g_character.tempHealth+'</p>');
     }
 
     $(tempHealth).click(function(){
         if(!$(this).hasClass('is-in-input-mode')) {
 
             $(this).addClass('is-in-input-mode');
-            $(this).html('<input id="temp-health-input" class="input" type="number" min="0" max="999" style="width: 70px;" value="'+g_character.tempHealth+'">');
+            $(this).html('<input id="temp-health-input" class="input" type="number" min="0" max="999" style="width: 70px; margin: auto;" value="'+g_character.tempHealth+'">');
             $('#temp-health-input').focus();
 
             $('#temp-health-input').blur(function(){
