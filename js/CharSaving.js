@@ -8,6 +8,7 @@ const NoteField = require('../models/contentDB/NoteField');
 const Item = require('../models/contentDB/Item');
 const TaggedItem = require('../models/contentDB/TaggedItem');
 const Weapon = require('../models/contentDB/Weapon');
+const Storage = require('../models/contentDB/Storage');
 const Inventory = require('../models/contentDB/Inventory');
 const InvItem = require('../models/contentDB/InvItem');
 const InvItemRune = require('../models/contentDB/InvItemRune');
@@ -53,9 +54,23 @@ module.exports = class CharSaving {
             return;
         });
     }
-
     static saveTempHitPoints(charID, tempHealth) {
         let updateValues = { tempHealth: tempHealth };
+        return Character.update(updateValues, { where: { id: charID } })
+        .then((result) => {
+            return;
+        });
+    }
+
+    static saveCurrentStaminaPoints(charID, currentStamina) {
+        let updateValues = { currentStamina: currentStamina };
+        return Character.update(updateValues, { where: { id: charID } })
+        .then((result) => {
+            return;
+        });
+    }
+    static saveCurrentResolvePoints(charID, currentResolve) {
+        let updateValues = { currentResolve: currentResolve };
         return Character.update(updateValues, { where: { id: charID } })
         .then((result) => {
             return;
@@ -202,14 +217,23 @@ module.exports = class CharSaving {
         .then((chosenItem) => {
             return Weapon.findOne({ where: { itemID: chosenItem.id } })
             .then((chosenWeapon) => {
+              return Storage.findOne({ where: { itemID: chosenItem.id } })
+              .then((chosenStorage) => {
 
                 let isWeapon = 0;
                 let dieType = null;
                 let damageType = null;
                 if(chosenWeapon != null){
-                    isWeapon = 1;
-                    dieType = chosenWeapon.dieType;
-                    damageType = chosenWeapon.damageType;
+                  isWeapon = 1;
+                  dieType = chosenWeapon.dieType;
+                  damageType = chosenWeapon.damageType;
+                }
+
+                let isStorage = 0;
+                let maxBulkStorage = null;
+                if(chosenStorage != null){
+                  isStorage = 1;
+                  maxBulkStorage = chosenStorage.maxBulkStorage;
                 }
 
                 return InvItem.create({
@@ -233,10 +257,15 @@ module.exports = class CharSaving {
                     itemIsWeapon: isWeapon,
                     itemWeaponDieType: dieType,
                     itemWeaponDamageType: damageType,
+
+                    itemIsStorage: isStorage,
+                    itemStorageMaxBulk: maxBulkStorage,
+
                 }).then((invItem) => {
                     return invItem;
                 });
 
+              });
             });
         });
     }
@@ -297,6 +326,8 @@ module.exports = class CharSaving {
 
             itemWeaponDieType: inUpdateValues.weaponDieType,
             itemWeaponDamageType: inUpdateValues.weaponDamageType,
+
+            itemStorageMaxBulk: inUpdateValues.storageMaxBulk,
         };
         return InvItem.update(updateValues, { where: { id: invItemID } })
         .then((result) => {
@@ -498,6 +529,10 @@ module.exports = class CharSaving {
         } else if(optionName === 'variantAncestryParagon'){
           charUpVals = {
             variantAncestryParagon: value
+          };
+        } else if(optionName === 'variantStamina'){
+          charUpVals = {
+            variantStamina: value
           };
         }
 

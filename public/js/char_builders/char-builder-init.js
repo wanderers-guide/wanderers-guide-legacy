@@ -283,6 +283,19 @@ function handleCharacterOptions(character, hBundles, progessBundles) {
     });
     $("#variantProficiencyWithoutLevel").prop('checked', (character.variantProfWithoutLevel === 1));
 
+    $("#variantStamina").change(function(){
+      let optionTypeValue = (this.checked) ? 1 : 0;
+      socket.emit("requestCharacterOptionChange", 
+          getCharIDFromURL(), 
+          'variantStamina',
+          optionTypeValue);
+      socket.emit("requestCharacterSourceChange", 
+          getCharIDFromURL(), 
+          'STAMINA-VARIANT',
+          this.checked);
+    });
+    $("#variantStamina").prop('checked', (character.variantStamina === 1));
+
     // Options //
     $("#optionPublicCharacter").change(function(){
         let optionTypeValue = (this.checked) ? 1 : 0;

@@ -116,11 +116,29 @@ module.exports = class SocketConnections {
           }
         });
       });
-    
       socket.on('requestTempHitPointsSave', function(charID, tempHealth){
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
           if(ownsChar){
             CharSaving.saveTempHitPoints(charID, tempHealth).then((result) => {
+              // Return nothing
+            });
+          }
+        });
+      });
+
+      socket.on('requestCurrentStaminaPointsSave', function(charID, currentStamina){
+        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+          if(ownsChar){
+            CharSaving.saveCurrentStaminaPoints(charID, currentStamina).then((result) => {
+              // Return nothing
+            });
+          }
+        });
+      });
+      socket.on('requestCurrentResolvePointsSave', function(charID, currentResolve){
+        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+          if(ownsChar){
+            CharSaving.saveCurrentResolvePoints(charID, currentResolve).then((result) => {
               // Return nothing
             });
           }

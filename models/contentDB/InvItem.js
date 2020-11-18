@@ -73,6 +73,12 @@ const InvItem = db.define('invItems', {
   itemWeaponDamageType: {
     type: Sequelize.STRING
   },
+  itemIsStorage: {
+    type: Sequelize.INTEGER
+  },
+  itemStorageMaxBulk: {
+    type: Sequelize.DOUBLE
+  },
 });
 
 module.exports = InvItem;

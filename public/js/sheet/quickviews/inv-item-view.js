@@ -232,7 +232,8 @@ function openInvItemQuickview(data) {
 
     if(data.Item.StorageData != null){
         
-        let maxBagBulk = data.Item.StorageData.maxBulkStorage;
+        let maxBagBulk = data.InvItem.itemStorageMaxBulk;
+        if(maxBagBulk == null){ maxBagBulk = data.Item.StorageData.maxBulkStorage; }
         let bulkIgnored = data.Item.StorageData.bulkIgnored;
         let bulkIgnoredMessage = "-";
         if(bulkIgnored != 0.0){

@@ -131,8 +131,8 @@
                 </div>
                 <div class="tile is-3">
                     <div class="tile is-vertical mx-4 mb-4 sheet-box">
-                        <div class="tile pb-1">
-                            <div class="tile is-child px-2 pt-2">
+                        <div class="tile pb-1" style="position: relative;">
+                            <div id="healthPointsContainer" class="tile is-child px-2 pt-2">
                                 <p class="is-size-6"><strong class="has-text-grey-lighter">Hit Points</strong></p>
                                 <div class="columns is-mobile is-centered">
                                     <div class="column is-narrow is-paddingless py-2">
@@ -147,7 +147,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="tile is-child pt-3">
+                            <div id="tempPointsContainer" class="tile is-child pt-3">
                                 <p class="is-size-7"><strong class="has-text-grey-light">Temp. HP</strong></p>
                                 <div class="columns is-centered">
                                     <div class="column is-narrow is-paddingless py-2">
@@ -156,6 +156,42 @@
                                     </div>
                                 </div>
                             </div>
+
+                            <div id="staminaPointsContainer" class="tile is-child px-2 pt-2 is-hidden">
+                                <p class="is-size-6"><strong class="has-text-grey-lighter">Stamina</strong></p>
+                                <div class="columns is-mobile is-centered">
+                                    <div class="column is-narrow is-paddingless py-2">
+                                        <div id="char-current-stamina" class="cursor-clickable">
+                                        </div>
+                                    </div>
+                                    <div class="column is-narrow is-paddingless py-2">
+                                        <p class="is-size-5 text-center has-text-grey">/</p>
+                                    </div>
+                                    <div class="column is-narrow is-paddingless py-2" style="width: 40px;">
+                                        <p id="char-max-stamina" class="is-size-5 text-center has-text-light"></p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="resolvePointsContainer" class="tile is-child pt-3 is-hidden">
+                                <p class="is-size-7"><strong class="has-text-grey-light">Resolve</strong></p>
+                                <div class="columns is-mobile is-centered">
+                                    <div class="column is-narrow is-paddingless py-2">
+                                        <div id="char-current-resolve" class="cursor-clickable">
+                                        </div>
+                                    </div>
+                                    <div class="column is-narrow is-paddingless py-2">
+                                        <p class="is-size-5 text-center has-text-grey">/</p>
+                                    </div>
+                                    <div class="column is-narrow is-paddingless py-2" style="width: 40px;">
+                                        <p id="char-max-resolve" class="is-size-5 text-center has-text-light"></p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div id="pointSwitchOutContainer" class="is-hidden" style="position: absolute; top: 5px; left: 50%;">
+                              <span id="pointSwitchOutBtn" class="icon is-small has-text-info cursor-clickable"><i class="fas fa-lg fa-retweet"></i></span>
+                            </div>
+                            
                         </div>
                         <div class="tile">
                             <div id="resistAndVulnerContent" class="tile is-child cursor-clickable">

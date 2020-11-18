@@ -140,6 +140,8 @@ function addContentSource(contentSrc, homebrewID){
   if(homebrewID == null) {
     sourceLink = getContentSourceLink(contentSrc);
     sourceTextName = getContentSourceTextName(contentSrc);
+    if(sourceLink == null) { sourceLink = ''; }
+    if(sourceTextName == null) { sourceTextName = capitalizeWords(contentSrc); }
   } else {
     sourceLink = '/homebrew/?view_id='+homebrewID;
     sourceTextName = 'Bundle #'+homebrewID;

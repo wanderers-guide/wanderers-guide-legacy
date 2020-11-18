@@ -53,6 +53,12 @@ const Character = db.define('characters', {
   dataID: {
     type: Sequelize.INTEGER
   },
+  currentStamina: {
+    type: Sequelize.INTEGER
+  },
+  currentResolve: {
+    type: Sequelize.INTEGER
+  },
   // Character Options //
   optionAutoDetectPreReqs: {
     type: Sequelize.INTEGER
@@ -74,6 +80,9 @@ const Character = db.define('characters', {
     type: Sequelize.INTEGER
   },
   variantAncestryParagon: {
+    type: Sequelize.INTEGER
+  },
+  variantStamina: {
     type: Sequelize.INTEGER
   },
   // Character Enabled Sources //

@@ -202,7 +202,8 @@ function displayInventoryItem(invItem, openBagInvItemArray, data) {
         } else {
             bagBulk += bulkIgnored;
         }
-        let maxBagBulk = item.StorageData.maxBulkStorage;
+        let maxBagBulk = invItem.itemStorageMaxBulk;
+        if(maxBagBulk == null){ maxBagBulk = item.StorageData.maxBulkStorage; }
         let bulkIgnoredMessage = "";
         if(bulkIgnored != 0.0){
             if(bulkIgnored == maxBagBulk){

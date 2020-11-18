@@ -9,6 +9,7 @@ let isViewOnly = false;
 /* Character Options */
 let gOption_hasAutoHeightenSpells;
 let gOption_hasProfWithoutLevel;
+let gOption_hasStamina;
 /* ~~~~~~~~~~~~~~~~~ */
 
 /* Sheet-State Options */
@@ -97,6 +98,8 @@ let g_preConditions_chaScore = null;
 
 let g_totalACNum = null;
 
+let g_showHealthPanel = true; // For Stamina GMG Variant
+
 // ~~~~~~~~~~~~~~ // Run on Load // ~~~~~~~~~~~~~~ //
 $(function () {
 
@@ -145,6 +148,7 @@ socket.on("returnCharacterSheetInfo", function(charInfo, viewOnly){
     /* Character Options and Variants */
     gOption_hasAutoHeightenSpells = (g_character.optionAutoHeightenSpells === 1);
     gOption_hasProfWithoutLevel = (g_character.variantProfWithoutLevel === 1);
+    gOption_hasStamina = (g_character.variantStamina === 1);
 
     g_otherSpeeds = charInfo.OtherSpeeds;
 
@@ -386,7 +390,11 @@ function loadCharSheet(){
     }
 
     addStat('MAX_HEALTH', 'ANCESTRY', g_ancestry.hitPoints);
-    addStat('MAX_HEALTH_BONUS_PER_LEVEL', 'BASE', getModOfValue('CON'));
+    if(gOption_hasStamina){
+      addStat('MAX_HEALTH_BONUS_PER_LEVEL', 'BASE', 0);
+    } else {
+      addStat('MAX_HEALTH_BONUS_PER_LEVEL', 'BASE', getModOfValue('CON'));
+    }
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 
@@ -421,8 +429,8 @@ function loadCharSheet(){
     // Determine Bulk and Coins //
     determineBulkAndCoins(g_invStruct.InvItems, g_itemMap);
 
-    // Display Health and Temp //
-    initHealthAndTemp();
+    // Display Health and Temp -> Stamina and Resolve //
+    initHealthPointsAndMore();
 
     // Determine Armor //
     determineArmor(getModOfValue('DEX'), g_preConditions_strScore);
@@ -1272,11 +1280,45 @@ function displayInformation() {
 //////////////////////////////////////////// Health ////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
+function initHealthPointsAndMore() {
+
+  if(gOption_hasStamina){
+    
+    if(g_showHealthPanel){
+      initHealthAndTemp();
+    } else {
+      initStaminaAndResolve();
+    }
+
+    $('#pointSwitchOutContainer').removeClass('is-hidden');
+    $('#pointSwitchOutBtn').click(function(){
+      g_showHealthPanel = !g_showHealthPanel;
+      if(g_showHealthPanel){
+        initHealthAndTemp();
+      } else {
+        initStaminaAndResolve();
+      }
+    });
+  } else {
+    initHealthAndTemp();
+  }
+
+}
+
 function initHealthAndTemp() {
+    $('#healthPointsContainer').removeClass('is-hidden');
+    $('#tempPointsContainer').removeClass('is-hidden');
+    $('#staminaPointsContainer').addClass('is-hidden');
+    $('#resolvePointsContainer').addClass('is-hidden');
 
     let maxHealth = $('#char-max-health');
     let maxHealthNum = getStatTotal('MAX_HEALTH');
-    maxHealthNum += (g_classDetails.Class.hitPoints+getStatTotal('MAX_HEALTH_BONUS_PER_LEVEL'))*g_character.level;
+
+    if(gOption_hasStamina){
+      maxHealthNum += (Math.floor(g_classDetails.Class.hitPoints/2)+getStatTotal('MAX_HEALTH_BONUS_PER_LEVEL'))*g_character.level;
+    } else {
+      maxHealthNum += (g_classDetails.Class.hitPoints+getStatTotal('MAX_HEALTH_BONUS_PER_LEVEL'))*g_character.level;
+    }
     
     if(maxHealthNum < 0){ maxHealthNum = 0; }
     maxHealth.html(maxHealthNum);
@@ -1290,6 +1332,7 @@ function initHealthAndTemp() {
     let bulmaTextColor = getBulmaTextColorFromCurrentHP(g_character.currentHealth, maxHealthNum);
     currentHealth.html('<p class="is-size-5 is-unselectable text-center '+bulmaTextColor+'" style="width: 70px;">'+g_character.currentHealth+'</p>');
 
+    $(currentHealth).off('click');
     $(currentHealth).click(function(){
         if(!$(this).hasClass('is-in-input-mode')) {
 
@@ -1324,6 +1367,7 @@ function initHealthAndTemp() {
         tempHealth.html('<p class="is-size-5 is-unselectable text-center has-text-info" style="width: 70px; margin: auto;">'+g_character.tempHealth+'</p>');
     }
 
+    $(tempHealth).off('click');
     $(tempHealth).click(function(){
         if(!$(this).hasClass('is-in-input-mode')) {
 
@@ -1405,6 +1449,123 @@ function tempHealthConfirm(){
             getCharIDFromURL(),
             g_character.tempHealth);
     }
+}
+
+///////
+
+function initStaminaAndResolve() {
+  $('#staminaPointsContainer').removeClass('is-hidden');
+  $('#resolvePointsContainer').removeClass('is-hidden');
+  $('#healthPointsContainer').addClass('is-hidden');
+  $('#tempPointsContainer').addClass('is-hidden');
+
+  let maxStamina = $('#char-max-stamina');
+  let maxStaminaNum = (Math.floor(g_classDetails.Class.hitPoints/2)+getModOfValue('CON'))*g_character.level;
+  
+  if(maxStaminaNum < 0){ maxStaminaNum = 0; }
+  maxStamina.html(maxStaminaNum);
+
+  if(g_character.currentStamina == null){
+      g_character.currentStamina = maxStaminaNum;
+  }
+  g_character.currentStamina = (g_character.currentStamina > maxStaminaNum) ? maxStaminaNum : g_character.currentStamina;
+
+  let currentStamina = $('#char-current-stamina');
+  currentStamina.html('<p class="is-size-5 is-unselectable text-center has-text-primary" style="width: 40px;">'+g_character.currentStamina+'</p>');
+
+  $(currentStamina).off('click');
+  $(currentStamina).click(function(){
+      if(!$(this).hasClass('is-in-input-mode')) {
+
+          $(this).addClass('is-in-input-mode');
+          $(this).html('<input id="current-stamina-input" class="input" type="number" min="0" max="'+maxStaminaNum+'" style="width: 70px;" value="'+g_character.currentStamina+'">');
+          $('#current-stamina-input').focus();
+
+          $('#current-stamina-input').blur(function(){
+            staminaConfirm(maxStaminaNum);
+          });
+
+          // Press Enter Key
+          $('#current-stamina-input').on('keypress',function(e){
+              if(e.which == 13){
+                staminaConfirm(maxStaminaNum);
+              }
+          });
+
+      }
+  });
+
+
+  let maxResolve = $('#char-max-resolve');
+  let maxResolveNum = getModOfValue(g_classDetails.KeyAbility);
+  
+  if(maxResolveNum < 0){ maxResolveNum = 0; }
+  maxResolve.html(maxResolveNum);
+
+  if(g_character.currentResolve == null){
+      g_character.currentResolve = maxResolveNum;
+  }
+  g_character.currentResolve = (g_character.currentResolve > maxResolveNum) ? maxResolveNum : g_character.currentResolve;
+
+  let currentResolve = $('#char-current-resolve');
+  currentResolve.html('<p class="is-size-5 is-unselectable text-center has-text-link" style="width: 40px;">'+g_character.currentResolve+'</p>');
+
+  $(currentResolve).off('click');
+  $(currentResolve).click(function(){
+      if(!$(this).hasClass('is-in-input-mode')) {
+
+          $(this).addClass('is-in-input-mode');
+          $(this).html('<input id="current-resolve-input" class="input" type="number" min="0" max="'+maxResolveNum+'" style="width: 70px;" value="'+g_character.currentResolve+'">');
+          $('#current-resolve-input').focus();
+
+          $('#current-resolve-input').blur(function(){
+            resolveConfirm(maxResolveNum);
+          });
+
+          // Press Enter Key
+          $('#current-resolve-input').on('keypress',function(e){
+              if(e.which == 13){
+                resolveConfirm(maxResolveNum);
+              }
+          });
+
+      }
+  });
+
+}
+
+function staminaConfirm(maxStaminaNum){
+  let currentStaminaNum = $('#current-stamina-input').val();
+  if(currentStaminaNum == null || currentStaminaNum > maxStaminaNum || currentStaminaNum < 0 || currentStaminaNum == '') {
+      $('#current-stamina-input').addClass('is-danger');
+  } else {
+      let newCurrentStamina = parseInt(currentStaminaNum);
+
+      g_character.currentStamina = newCurrentStamina;
+      $('#char-current-stamina').html('<p class="is-size-5 is-unselectable text-center has-text-primary" style="width: 40px;">'+g_character.currentStamina+'</p>');
+      $('#char-current-stamina').removeClass('is-in-input-mode');
+      socket.emit("requestCurrentStaminaPointsSave",
+          getCharIDFromURL(),
+          g_character.currentStamina);
+
+  }
+}
+
+function resolveConfirm(maxResolveNum){
+  let currentResolveNum = $('#current-resolve-input').val();
+  if(currentResolveNum == null || currentResolveNum > maxResolveNum || currentResolveNum < 0 || currentResolveNum == '') {
+      $('#current-resolve-input').addClass('is-danger');
+  } else {
+      let newCurrentResolve = parseInt(currentResolveNum);
+
+      g_character.currentResolve = newCurrentResolve;
+      $('#char-current-resolve').html('<p class="is-size-5 is-unselectable text-center has-text-link" style="width: 40px;">'+g_character.currentResolve+'</p>');
+      $('#char-current-resolve').removeClass('is-in-input-mode');
+      socket.emit("requestCurrentResolvePointsSave",
+          getCharIDFromURL(),
+          g_character.currentResolve);
+
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -2046,6 +2207,18 @@ function takeRest(){
         getCharIDFromURL(),
         g_character.currentHealth);
 
+    // Regen Stamina and Resolve
+    if(gOption_hasStamina){
+      g_character.currentStamina = (Math.floor(g_classDetails.Class.hitPoints/2)+getModOfValue('CON'))*g_character.level;
+      socket.emit("requestCurrentStaminaPointsSave",
+          getCharIDFromURL(),
+          g_character.currentStamina);
+  
+      g_character.currentResolve = getModOfValue(g_classDetails.KeyAbility);
+      socket.emit("requestCurrentResolvePointsSave",
+          getCharIDFromURL(),
+          g_character.currentResolve);
+    }
 
     // Reset Innate Spells
     for(let innateSpell of g_innateSpellArray){

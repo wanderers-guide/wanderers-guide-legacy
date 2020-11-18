@@ -22,6 +22,14 @@ function openCustomizeItemQuickview(data) {
 
     }
 
+    if(data.InvItem.itemIsStorage == 1){
+
+      qContent.append('<hr class="m-2 mb-4">');
+
+      qContent.append('<div class="field is-horizontal"><div class="field-label is-normal"><label class="label">Storage</label></div><div class="field-body"><div class="field is-narrow"><div class="control"><input id="customizeStorageMaxBulk" class="input" type="number" min="0" max="9999" value="'+data.InvItem.itemStorageMaxBulk+'" step="0.1"></div></div></div></div>');
+
+    }
+
     qContent.append('<hr class="m-2 mb-4">');
 
     let tagsSelectOptions = '';
@@ -30,7 +38,9 @@ function openCustomizeItemQuickview(data) {
             tagsSelectOptions += '<option value="'+tag.id+'">'+tag.name+'</option>';
         }
     }
-    qContent.append('<div class="field is-horizontal"><div class="field-label is-normal"><label class="label">Traits</label></div><div class="field-body"><div class="field is-marginless"><div class="control"><div class="select is-small is-multiple"><select id="customizeItemTraits" class="use-custom-scrollbar" size="6" multiple>'+tagsSelectOptions+'</select></div></div></div><div class="field" id="selectedTraits"></div></div></div>');
+    qContent.append('<div class="field is-horizontal"><div class="field-label is-normal"><label class="label">Traits</label></div><div class="field-body"><select id="customizeItemTraits" data-placeholder="Select Traits" multiple>'+tagsSelectOptions+'</select></div></div>');
+
+    $("#customizeItemTraits").chosen({width: "100%"});
 
     qContent.append('<hr class="m-2 mb-4">');
 
@@ -64,14 +74,6 @@ function openCustomizeItemQuickview(data) {
     $('#customizeItemMaterial').val(data.InvItem.materialType);
 
     // Traits //
-    $("#customizeItemTraits").change(function(){
-        let tagNames = '';
-        $(this).find(":selected").each(function(){
-            tagNames += '<p class="is-size-6-5">- '+$(this).text()+'</p>';
-        });
-        $("#selectedTraits").html(tagNames);
-        
-    });
     try {
         let tagArray = JSON.parse(data.InvItem.itemTags);
         for(let tagID of tagArray){
@@ -82,7 +84,7 @@ function openCustomizeItemQuickview(data) {
             $("#customizeItemTraits").find('option[value='+tag.Tag.id+']').attr('selected','selected');
         }
     }
-    $("#customizeItemTraits").trigger("change");
+    $('#customizeItemTraits').trigger("chosen:updated");
 
     // Weapon //
     if(data.InvItem.itemIsWeapon == 1){
@@ -169,6 +171,12 @@ function openCustomizeItemQuickview(data) {
             weaponDamageType = $('#customizeWeaponDamageType').val();
         }
 
+        // Storage //
+        let storageMaxBulk = null;
+        if(data.InvItem.itemIsStorage == 1){
+          storageMaxBulk = $('#customizeStorageMaxBulk').val();
+        }
+
         if(isValid){
             socket.emit("requestCustomizeInvItem",
                 data.InvItem.id,
@@ -188,6 +196,8 @@ function openCustomizeItemQuickview(data) {
 
                     weaponDieType: weaponDieType,
                     weaponDamageType: weaponDamageType,
+
+                    storageMaxBulk: storageMaxBulk,
                 });
         }
 
