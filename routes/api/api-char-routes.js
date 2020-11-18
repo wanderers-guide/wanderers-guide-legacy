@@ -334,6 +334,21 @@ router.put('/inventory/drop-item', (req, res) => { // Update
   }
 });
 
+// Calculated Stats //
+router.get('/calculated-stats', (req, res) => { // Read
+  if(hasAccess(req.accessRights, 1)) {
+    CharGathering.getCalculatedStats(req.charID).then((calculatedStats) => {
+      if(calculatedStats != null){
+        res.send(calculatedStats);
+      } else {
+        res.sendStatus(204);
+      }
+    });
+  } else {
+    res.sendStatus(401);
+  }
+});
+
 ///
 
 router.get('/', (req, res) => {

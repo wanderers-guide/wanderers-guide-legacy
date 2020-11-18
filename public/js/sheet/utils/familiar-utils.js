@@ -115,7 +115,7 @@ function getFamiliarMaxHealth(charFamiliar){
 ////
 
 function getFamiliarAC(){
-  return g_totalACNum;
+  return g_calculatedStats.totalAC;
 }
 
 function getFamiliarSpellBonus(){

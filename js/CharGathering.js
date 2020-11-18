@@ -42,6 +42,7 @@ const CharAnimalCompanion = require('../models/contentDB/CharAnimalCompanion');
 const FamiliarAbility = require('../models/contentDB/FamiliarAbility');
 const CharFamiliar = require('../models/contentDB/CharFamiliar');
 const CharDataMappingModel = require('../models/contentDB/CharDataMapping');
+const CalculatedStat = require('../models/contentDB/CalculatedStat');
 
 const CharDataMapping = require('./CharDataMapping');
 const CharDataMappingExt = require('./CharDataMappingExt');
@@ -126,7 +127,14 @@ module.exports = class CharGathering {
     static getAllMetadata(charID){
       return CharDataMappingModel.findAll({ where: { charID: charID } })
       .then((charMetaDatas) => {
-          return charMetaDatas;
+        return charMetaDatas;
+      });
+    }
+
+    static getCalculatedStats(charID){
+      return CalculatedStat.findOne({ where: { charID: charID } })
+      .then((calculatedStats) => {
+        return calculatedStats;
       });
     }
 

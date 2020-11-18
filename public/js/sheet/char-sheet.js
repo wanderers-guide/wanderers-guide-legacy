@@ -20,6 +20,18 @@ let gState_addLevelToUntrainedWeaponAttack;
 let gState_displayCompanionTab;
 /* ~~~~~~~~~~~~~~~~~~~ */
 
+let g_calculatedStats = {
+  maxHP: null,
+  totalClassDC: null,
+  totalSpeed: null,
+  totalAC: null,
+  totalPerception: null,
+  totalSkills: [],
+  totalSaves: [],
+  totalAbilityScores: [],
+  weapons: [],
+};
+
 let g_character = null;
 let g_classDetails = null;
 let g_ancestry = null;
@@ -95,8 +107,6 @@ let g_preConditions_conScore = null;
 let g_preConditions_intScore = null;
 let g_preConditions_wisScore = null;
 let g_preConditions_chaScore = null;
-
-let g_totalACNum = null;
 
 let g_showHealthPanel = true; // For Stamina GMG Variant
 
@@ -441,6 +451,11 @@ function loadCharSheet(){
     // Display All Other Info //
     displayInformation();
 
+    // Open Weapons Tab Temporarily // -> To get data input for Calculated Stats
+    let prevSelectedTabID = g_selectedTabID;
+    $('#weaponsTab').trigger("click", [true]);
+    g_selectedTabID = prevSelectedTabID;
+
     // Set To Previous Tab //
     g_selectedSubTabLock = true;
     $('#'+g_selectedTabID).trigger("click", [true]);
@@ -449,6 +464,10 @@ function loadCharSheet(){
     }
     g_selectedSubTabLock = false;
 
+    // Submit Calculated Stats //
+    socket.emit("requestUpdateCalculatedStats",
+        getCharIDFromURL(),
+        g_calculatedStats);
 }
 
 function displayAbilityScores() {
@@ -460,6 +479,7 @@ function displayAbilityScores() {
     let strScore = getStatTotal('SCORE_STR');
     $("#strScore").html(strScore);
     $("#strMod").html(signNumber(getMod(strScore)));
+    g_calculatedStats.totalAbilityScores.push({Name: 'Strength', Score: strScore});// Calculated Stat
     $("#strSection").click(function(){
         openQuickView('abilityScoreView', {
             AbilityName : 'Strength',
@@ -477,6 +497,7 @@ function displayAbilityScores() {
     let dexScore = getStatTotal('SCORE_DEX');
     $("#dexScore").html(dexScore);
     $("#dexMod").html(signNumber(getMod(dexScore)));
+    g_calculatedStats.totalAbilityScores.push({Name: 'Dexterity', Score: dexScore});// Calculated Stat
     $("#dexSection").click(function(){
         openQuickView('abilityScoreView', {
             AbilityName : 'Dexterity',
@@ -494,6 +515,7 @@ function displayAbilityScores() {
     let conScore = getStatTotal('SCORE_CON');
     $("#conScore").html(conScore);
     $("#conMod").html(signNumber(getMod(conScore)));
+    g_calculatedStats.totalAbilityScores.push({Name: 'Constitution', Score: conScore});// Calculated Stat
     $("#conSection").click(function(){
         openQuickView('abilityScoreView', {
             AbilityName : 'Constitution',
@@ -511,6 +533,7 @@ function displayAbilityScores() {
     let intScore = getStatTotal('SCORE_INT');
     $("#intScore").html(intScore);
     $("#intMod").html(signNumber(getMod(intScore)));
+    g_calculatedStats.totalAbilityScores.push({Name: 'Intelligence', Score: intScore});// Calculated Stat
     $("#intSection").click(function(){
         openQuickView('abilityScoreView', {
             AbilityName : 'Intelligence',
@@ -528,6 +551,7 @@ function displayAbilityScores() {
     let wisScore = getStatTotal('SCORE_WIS');
     $("#wisScore").html(wisScore);
     $("#wisMod").html(signNumber(getMod(wisScore)));
+    g_calculatedStats.totalAbilityScores.push({Name: 'Wisdom', Score: wisScore});// Calculated Stat
     $("#wisSection").click(function(){
         openQuickView('abilityScoreView', {
             AbilityName : 'Wisdom',
@@ -545,6 +569,7 @@ function displayAbilityScores() {
     let chaScore = getStatTotal('SCORE_CHA');
     $("#chaScore").html(chaScore);
     $("#chaMod").html(signNumber(getMod(chaScore)));
+    g_calculatedStats.totalAbilityScores.push({Name: 'Charisma', Score: chaScore});// Calculated Stat
     $("#chaSection").click(function(){
         openQuickView('abilityScoreView', {
             AbilityName : 'Charisma',
@@ -664,6 +689,7 @@ function displayInformation() {
     let classDCBonusDisplayed = (hasConditionals('CLASS_DC')) 
             ? classDC+'<sup class="is-size-5 has-text-info">*</sup>' : classDC;
     classDCContent.html(classDCBonusDisplayed);
+    g_calculatedStats.totalClassDC = classDC;// Calculated Stat
 
     let classDCData = g_profMap.get("Class_DC");
     let classDCProfNum = getProfNumber(classDCData.NumUps, g_character.level);
@@ -726,6 +752,7 @@ function displayInformation() {
     let fortBonusContent = $("#fortSave");
     let fortBonusDisplayed = (hasConditionals('SAVE_FORT')) ? signNumber(fortBonus)+'<sup class="is-size-5 has-text-info">*</sup>' : signNumber(fortBonus);
     fortBonusContent.html(fortBonusDisplayed);
+    g_calculatedStats.totalSaves.push({Name: 'Fortitude', Bonus: fortBonus});// Calculated Stat
 
     let fortData = g_profMap.get("Fortitude");
     let fortProfNum = getProfNumber(fortData.NumUps, g_character.level);
@@ -751,6 +778,7 @@ function displayInformation() {
     let reflexBonusContent = $("#reflexSave");
     let reflexBonusDisplayed = (hasConditionals('SAVE_REFLEX')) ? signNumber(reflexBonus)+'<sup class="is-size-5 has-text-info">*</sup>' : signNumber(reflexBonus);
     reflexBonusContent.html(reflexBonusDisplayed);
+    g_calculatedStats.totalSaves.push({Name: 'Reflex', Bonus: reflexBonus});// Calculated Stat
 
     let reflexData = g_profMap.get("Reflex");
     let reflexProfNum = getProfNumber(reflexData.NumUps, g_character.level);
@@ -776,6 +804,7 @@ function displayInformation() {
     let willBonusContent = $("#willSave");
     let willBonusDisplayed = (hasConditionals('SAVE_WILL')) ? signNumber(willBonus)+'<sup class="is-size-5 has-text-info">*</sup>' : signNumber(willBonus);
     willBonusContent.html(willBonusDisplayed);
+    g_calculatedStats.totalSaves.push({Name: 'Will', Bonus: willBonus});// Calculated Stat
 
     let willData = g_profMap.get("Will");
     let willProfNum = getProfNumber(willData.NumUps, g_character.level);
@@ -808,6 +837,7 @@ function displayInformation() {
     let speedDisplayed = (hasConditionals('SPEED')) ?
             speedNum+' ft<sup class="is-size-5 has-text-info">*</sup>' : speedNum+' ft';
     speedContent.html(speedDisplayed);
+    g_calculatedStats.totalSpeed = speedNum;// Calculated Stat
 
     $("#speedSection").click(function(){
         openQuickView('speedView', {
@@ -858,6 +888,7 @@ function displayInformation() {
     let perceptionBonusDisplayed = (hasConditionals('PERCEPTION')) 
             ? signNumber(perceptionBonus)+'<sup class="is-size-5 has-text-info">*</sup>' : signNumber(perceptionBonus);
     perceptionBonusContent.html(perceptionBonusDisplayed);
+    g_calculatedStats.totalPerception = perceptionBonus;// Calculated Stat
 
     let perceptionData = g_profMap.get("Perception");
     let perceptionProfNum = getProfNumber(perceptionData.NumUps, g_character.level);
@@ -1076,6 +1107,7 @@ function displayInformation() {
         let conditionalStar = (hasConditionals('SKILL_'+skillName)) ? '<sup class="is-size-7 has-text-info">*</sup>' : '';
 
         skills.append('<a id="'+skillButtonID+'" class="panel-block skillButton border-dark-lighter"><span class="panel-icon has-text-grey-lighter">'+signNumber(totalBonus)+conditionalStar+'</span><span class="pl-3 has-text-grey-light">'+skillName+'</span></a>');
+        g_calculatedStats.totalSkills.push({Name: skillName, Bonus: totalBonus});// Calculated Stat
 
         $('#'+skillButtonID).click(function(){
             openQuickView('skillView', {
@@ -1322,6 +1354,7 @@ function initHealthAndTemp() {
     
     if(maxHealthNum < 0){ maxHealthNum = 0; }
     maxHealth.html(maxHealthNum);
+    g_calculatedStats.maxHP = maxHealthNum;// Calculated Stat
 
     if(g_character.currentHealth == null){
         g_character.currentHealth = maxHealthNum;
@@ -1744,10 +1777,10 @@ function determineArmor(dexMod, strScore) {
         }
 
         // Final Product
-        g_totalACNum = totalAC;
         let totalACDisplayed = (hasConditionals('AC')) ? totalAC+'<sup class="is-size-5 has-text-info">*</sup>' : totalAC;
         $('#acNumber').html(totalACDisplayed);
         $('#acSection').attr('data-tooltip', armorStruct.InvItem.name);
+        g_calculatedStats.totalAC = totalAC;// Calculated Stat
 
         // Apply conditional if the armor has the Bulwark trait
         let bulwarkTag = tagArray.find(tagStruct => {
@@ -1793,10 +1826,10 @@ function determineArmor(dexMod, strScore) {
         totalAC += getStatTotal('AC');
 
         // Final Product
-        g_totalACNum = totalAC;
         let totalACDisplayed = (hasConditionals('AC')) ? totalAC+'<sup class="is-size-5 has-text-info">*</sup>' : totalAC;
         $('#acNumber').html(totalACDisplayed);
         $('#acSection').attr('data-tooltip', 'Wearing Nothing');
+        g_calculatedStats.totalAC = totalAC;// Calculated Stat
 
         $("#acSection").click(function(){
             openQuickView('acView', {

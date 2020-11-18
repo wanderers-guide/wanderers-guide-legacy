@@ -17,6 +17,7 @@ const InnateSpellCasting = require('../models/contentDB/InnateSpellCasting');
 const AnimalCompanion = require('../models/contentDB/AnimalCompanion');
 const CharAnimalCompanion = require('../models/contentDB/CharAnimalCompanion');
 const CharFamiliar = require('../models/contentDB/CharFamiliar');
+const CalculatedStat = require('../models/contentDB/CalculatedStat');
 
 const CharDataMapping = require('./CharDataMapping');
 const CharDataMappingExt = require('./CharDataMappingExt');
@@ -38,6 +39,27 @@ function isPotencyRune(runeID){ // Hardcoded - Fund Runes IDs
 }
 
 module.exports = class CharSaving {
+
+    ///
+
+    static updateCalculatedStats(charID, calcStatsStruct) {
+      return CalculatedStat.upsert({
+        charID: charID,
+        maxHP: calcStatsStruct.maxHP,
+        totalClassDC: calcStatsStruct.totalClassDC,
+        totalSpeed: calcStatsStruct.totalSpeed,
+        totalAC: calcStatsStruct.totalAC,
+        totalPerception: calcStatsStruct.totalPerception,
+        totalSkills: JSON.stringify(calcStatsStruct.totalSkills),
+        totalSaves: JSON.stringify(calcStatsStruct.totalSaves),
+        totalAbilityScores: JSON.stringify(calcStatsStruct.totalAbilityScores),
+        weapons: JSON.stringify(calcStatsStruct.weapons),
+      }).then((result) => {
+        return;
+      });
+    }
+
+    ///
 
     static saveExp(charID, newExp) {
         let updateValues = { experience: newExp };

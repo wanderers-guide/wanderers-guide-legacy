@@ -59,8 +59,18 @@ module.exports = class SocketConnections {
           if(ownsChar){
             CharGathering.getFinalProfs(charID).then((profMap) => {
               CharGathering.getAllSkills(charID).then((skillObject) => {
-                socket.emit('requestFinalProfsAndSkills', mapToObj(profMap), skillObject);
+                socket.emit('returnFinalProfsAndSkills', mapToObj(profMap), skillObject);
               });
+            });
+          }
+        });
+      });
+
+      socket.on('requestUpdateCalculatedStats', function(charID, calcStatsStruct){
+        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+          if(ownsChar){
+            CharSaving.updateCalculatedStats(charID, calcStatsStruct).then((result) => {
+              socket.emit('returnUpdateCalculatedStats');
             });
           }
         });

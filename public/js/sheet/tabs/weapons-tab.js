@@ -17,6 +17,11 @@ function openWeaponsTab(data) {
         }
         $('#weaponsTabContent').append('<div id="'+weaponListEntryID+'" class="columns is-mobile pt-1 is-marginless"><div class="column is-paddingless is-4 border-bottom border-dark-lighter cursor-clickable"><p class="pl-3 has-text-left has-text-grey-light">'+invItem.name+'</p></div><div class="column is-paddingless is-1 border-bottom border-dark-lighter cursor-clickable"><p class="has-text-grey-light">'+calcStruct.AttackBonus+'</p></div><div class="column is-paddingless is-2 border-bottom border-dark-lighter cursor-clickable"><p class="has-text-grey-light">'+calcStruct.Damage+'</p></div><div class="column is-paddingless is-1 border-bottom border-dark-lighter cursor-clickable"></div><div class="column is-paddingless is-1 border-bottom border-dark-lighter cursor-clickable"><p class="has-text-grey-light">'+weaponRange+'</p></div><div class="column is-paddingless is-2 border-bottom border-dark-lighter cursor-clickable"><p class="has-text-grey-light">'+weaponReload+'</p></div><div class="column is-paddingless is-1 border-bottom border-dark-lighter cursor-clickable"></div></div>');
 
+        g_calculatedStats.weapons.push({
+            Name: invItem.name,
+            Bonus: calcStruct.AttackBonus,
+            Damage: calcStruct.Damage});// Calculated Stat
+
         $('#'+weaponListEntryID).click(function(){
             openQuickView('invItemView', {
                 InvItem : invItem,
