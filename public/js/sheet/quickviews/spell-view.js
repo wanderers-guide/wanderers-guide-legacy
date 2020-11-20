@@ -233,7 +233,8 @@ function openSpellQuickview(data){
         }
 
         qContent.append('<div class="columns is-mobile is-marginless text-center"><div class="column is-paddingless is-6"><strong>Attack</strong></div><div class="column is-paddingless is-6"><strong>DC</strong></div></div>');
-        qContent.append('<div class="columns is-mobile is-marginless text-center"><div class="column is-paddingless is-6"><p class="pr-1">'+spellAttack+'</p></div><div class="column is-paddingless is-6"><p>'+spellDC+'</p></div></div>');
+        qContent.append('<div class="columns is-mobile is-marginless text-center"><div class="column is-paddingless is-6"><p class="pr-1 stat-roll-btn">'+spellAttack+'</p></div><div class="column is-paddingless is-6"><p>'+spellDC+'</p></div></div>');
+        if(typeof gOption_hasDiceRoller !== 'undefined' && gOption_hasDiceRoller) { refreshStatRollButtons(); }
 
         qContent.append('<hr class="m-2">');
 

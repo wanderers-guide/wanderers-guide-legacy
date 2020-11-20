@@ -540,6 +540,10 @@ module.exports = class CharSaving {
           charUpVals = {
             optionCustomCodeBlock: value
           };
+        } else if(optionName === 'optionDiceRoller'){
+          charUpVals = {
+            optionDiceRoller: value
+          };
         } else if(optionName === 'variantProfWithoutLevel'){
           charUpVals = {
             variantProfWithoutLevel: value

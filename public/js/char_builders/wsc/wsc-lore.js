@@ -86,10 +86,9 @@ function giveLoreChoose(srcStruct, locationID, prof='T'){
 
     });
 
-    if(savedLoreData != null){
-        $('#'+inputLoreID).val(capitalizeWords(savedLoreData.value));
-        $('#'+inputLoreID).trigger("change", [true]);
-    }
+    //if(savedLoreData != null){}
+    $('#'+inputLoreID).val(capitalizeWords(savedLoreData.value));
+    $('#'+inputLoreID).trigger("change", [true]);
 
     statementComplete();
 

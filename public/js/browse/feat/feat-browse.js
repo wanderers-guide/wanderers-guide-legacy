@@ -121,6 +121,7 @@ function displayFeatResults(featMap){
     $('#browsingList').html('<p class="has-text-centered is-italic">No results found!</p>');
     return;
   }
+  $('#searchResultCountContainer').html('<p class="is-italic has-text-grey">('+featMap.size+' results found)</p>');
 
   featMap = new Map([...featMap.entries()].sort(
     function(a, b) {

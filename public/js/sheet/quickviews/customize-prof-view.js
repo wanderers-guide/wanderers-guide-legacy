@@ -24,6 +24,12 @@ function openCustomizeProfQuickview(data) {
         $('#customizeProf').val('chooseDefault');
     }
     
+    let noteFieldSrcStruct = {
+      sourceType: 'bonus-area',
+      sourceLevel: 0,
+      sourceCode: 'bonus-area-'+data.NoteFieldID,
+      sourceCodeSNum: 'a',
+    };
     let notesData = getNotesData(noteFieldSrcStruct);
     if(notesData != null){
         $('#customizeHasNoteField').prop('checked', true);
@@ -37,13 +43,6 @@ function openCustomizeProfQuickview(data) {
         let userBonus = $('#customizeBonus').val();
         let hasNoteField = $('#customizeHasNoteField').prop('checked');
 
-
-        let noteFieldSrcStruct = {
-            sourceType: 'bonus-area',
-            sourceLevel: 0,
-            sourceCode: 'bonus-area-'+data.NoteFieldID,
-            sourceCodeSNum: 'a',
-        };
         if(hasNoteField) {
             socket.emit("requestNotesFieldChange",
                 getCharIDFromURL(),

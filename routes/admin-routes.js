@@ -184,6 +184,7 @@ router.get('/manage/ancestry', adminAuthCheck, (req, res) => {
 router.get('/create/ancestry', adminAuthCheck, (req, res) => {
 
     Language.findAll({
+        where: { homebrewID: null },
         order: [['name', 'ASC'],]
     }).then((languages) => {
         Tag.findAll({

@@ -103,6 +103,7 @@ router.get('/create/ancestry', bundleAuthCheck, (req, res) => {
   let bundleID = parseInt(req.query.id); if(isNaN(bundleID)){bundleID=null;}
 
   Language.findAll({
+    homebrewID: { [Op.or]: [null,bundleID] },
     order: [['name', 'ASC'],]
   }).then((languages) => {
     Tag.findAll({
@@ -137,6 +138,7 @@ router.get('/edit/ancestry', bundleAuthCheck, (req, res) => {
   let ancestryID = parseInt(req.query.content_id); if(isNaN(ancestryID)){ancestryID=null;}
 
   Language.findAll({
+    homebrewID: { [Op.or]: [null,bundleID] },
     order: [['name', 'ASC'],]
   }).then((languages) => {
     Tag.findAll({
@@ -456,6 +458,34 @@ router.get('/edit/spell', bundleAuthCheck, (req, res) => {
       bundleID: bundleID,
       spellID: spellID,
     });
+  });
+
+});
+
+//// Language ////
+
+router.get('/create/language', bundleAuthCheck, (req, res) => {
+
+  let bundleID = parseInt(req.query.id); if(isNaN(bundleID)){bundleID=null;}
+
+  res.render('homebrew/builder_language', {
+    title: "Language Builder - Wanderer's Guide",
+    user: req.user,
+    bundleID: bundleID,
+  });
+
+});
+
+router.get('/edit/language', bundleAuthCheck, (req, res) => {
+
+  let bundleID = parseInt(req.query.id); if(isNaN(bundleID)){bundleID=null;}
+  let languageID = parseInt(req.query.content_id); if(isNaN(languageID)){languageID=null;}
+
+  res.render('homebrew/builder_language', {
+    title: "Language Builder - Wanderer's Guide",
+    user: req.user,
+    bundleID: bundleID,
+    languageID: languageID,
   });
 
 });

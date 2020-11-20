@@ -226,7 +226,7 @@ module.exports = class GeneralGathering {
               },
               order: [['name', 'ASC'],]
           }).then((heritages) => {
-              return Language.findAll()
+              return Language.findAll({ where: { homebrewID: { [Op.or]: [null,homebrewID] } } })
               .then((languages) => {
                   return AncestryLanguage.findAll({ where: { ancestryID: ancestryID } })
                   .then((ancestLangs) => {
@@ -467,8 +467,8 @@ module.exports = class GeneralGathering {
       });
     }
 
-    static getAllLanguages() {
-      return Language.findAll()
+    static getAllLanguages(homebrewID=null) {
+      return Language.findAll({ where: { homebrewID: { [Op.or]: [null,homebrewID] } } })
       .then((allLanguages) => {
         return allLanguages;
       });
@@ -609,7 +609,7 @@ module.exports = class GeneralGathering {
                 order: [['name', 'ASC'],]
             })
             .then((heritages) => {
-                return Language.findAll()
+                return Language.findAll({ where: { homebrewID: { [Op.or]: [null,homebrewID] } } })
                 .then((languages) => {
                     return AncestryLanguage.findAll({ where: { homebrewID: { [Op.or]: [null,homebrewID] } } })
                     .then((ancestLangs) => {

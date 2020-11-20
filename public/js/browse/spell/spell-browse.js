@@ -130,6 +130,7 @@ function displaySpellResults(spellMap){
     $('#browsingList').html('<p class="has-text-centered is-italic">No results found!</p>');
     return;
   }
+  $('#searchResultCountContainer').html('<p class="is-italic has-text-grey">('+spellMap.size+' results found)</p>');
 
   spellMap = new Map([...spellMap.entries()].sort(
     function(a, b) {

@@ -216,7 +216,7 @@ router.post('/inventory/add-item', (req, res) => { // Add
     if(!isNaN(itemID)){
       if(isNaN(itemQty)) { itemQty = 1; }
       CharGathering.getCharacter(req.charID).then((character) => {
-        CharGathering.getItem(itemID).then((itemData) => {
+        CharGathering.getItem(character.id, itemID).then((itemData) => {
           if(itemData != null){
             CharSaving.addItemToInv(character.inventoryID, itemID, itemQty).then((invItem) => {
               res.status(201).send(invItem);

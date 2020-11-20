@@ -22,8 +22,7 @@ const Shield = require('../models/contentDB/Shield');
 const ItemRune = require('../models/contentDB/ItemRune');
 const Spell = require('../models/contentDB/Spell');
 const TaggedSpell = require('../models/contentDB/TaggedSpell');
-
-const CharSaving = require('./CharSaving');
+const Language = require('../models/contentDB/Language');
 
 function becomeNegative(number){
     if(number > 0){
@@ -34,6 +33,42 @@ function becomeNegative(number){
 }
 
 module.exports = class HomebrewCreation {
+
+    static addLanguage(homebrewID, data) {
+      /* Data:
+          languageID,
+          languageName,
+          languageSpeakers,
+          languageScript,
+          languageDescription,
+      */
+      for(let d in data) { if(data[d] === ''){ data[d] = null; } }
+      if(data.languageName == null) { data.languageName = 'Unnamed Language'; }
+      data.languageName = data.languageName.replace(/’/g,"'");
+      if(data.languageDescription == null){ data.languageDescription = '__No Description__'; }
+      return Language.create({ // Create Language
+          name: data.languageName,
+          speakers: data.languageSpeakers,
+          script: data.languageScript,
+          description: data.languageDescription,
+          homebrewID: homebrewID,
+      }).then(language => {
+          return language;
+      });
+
+    }
+
+    static deleteLanguage(homebrewID, languageID){
+        if(languageID == null || homebrewID == null) {return;}
+        return Language.destroy({ // Delete Language
+          where: { id: languageID, homebrewID: homebrewID }
+        }).then((result) => {
+            return;
+        });
+    }
+
+
+
 
     static addBackground(homebrewID, data) {
         /* Data:

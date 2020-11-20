@@ -330,6 +330,15 @@ function handleCharacterOptions(character, hBundles, progessBundles) {
     });
     $("#optionAutoDetectPreReqs").prop('checked', (character.optionAutoDetectPreReqs === 1));
 
+    $("#optionDiceRoller").change(function(){
+      let optionTypeValue = (this.checked) ? 1 : 0;
+      socket.emit("requestCharacterOptionChange", 
+          getCharIDFromURL(), 
+          'optionDiceRoller',
+          optionTypeValue);
+    });
+    $("#optionDiceRoller").prop('checked', (character.optionDiceRoller === 1));
+
     $("#optionCustomCodeBlock").change(function(){
       let optionTypeValue = (this.checked) ? 1 : 0;
       if(optionTypeValue === 1) {

@@ -352,6 +352,7 @@ function openTab(tabName){
   if(searchOnTabOpen){
     filterSearch();
   } else {
+    $('#searchResultCountContainer').html('');
     displayDefaultResults();
   }
 }

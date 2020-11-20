@@ -49,6 +49,7 @@ function displayAncestryResults(allAncestries){
     $('#browsingList').html('<p class="has-text-centered is-italic">No results found!</p>');
     return;
   }
+  $('#searchResultCountContainer').html('<p class="is-italic has-text-grey">('+allAncestries.size+' results found)</p>');
 
   for(const ancestry of allAncestries){
     if(ancestry.isArchived == 1) {continue;}

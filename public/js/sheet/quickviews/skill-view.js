@@ -47,7 +47,8 @@ function openSkillQuickview(data) {
     qContent.append('<hr class="m-2">');
     qContent.append('<p class="has-text-centered"><strong>Bonus Breakdown</strong></p>');
 
-    let breakDownInnerHTML = '<p class="has-text-centered">'+signNumber(data.TotalBonus)+' = ';
+    if(gOption_hasDiceRoller) { refreshStatRollButtons(); }
+    let breakDownInnerHTML = '<p class="has-text-centered"><span class="stat-roll-btn">'+signNumber(data.TotalBonus)+'</span> = ';
 
     breakDownInnerHTML += '<a class="has-text-link has-tooltip-bottom has-tooltip-multiline" data-tooltip="This is your '+abilityScoreName+' modifier. Because '+data.Skill.name+' is a '+abilityScoreName+'-based skill, you add your '+abilityScoreName+' modifier to determine your skill bonus.">'+data.AbilMod+'</a>';
 

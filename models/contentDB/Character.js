@@ -72,6 +72,9 @@ const Character = db.define('characters', {
   optionCustomCodeBlock: {
     type: Sequelize.INTEGER
   },
+  optionDiceRoller: {
+    type: Sequelize.INTEGER
+  },
   // Character Variants //
   variantProfWithoutLevel: {
     type: Sequelize.INTEGER

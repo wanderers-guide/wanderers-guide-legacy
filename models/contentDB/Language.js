@@ -13,7 +13,10 @@ const Language = db.define('languages', {
   },
   description: {
     type: Sequelize.TEXT,
-  }
+  },
+  homebrewID: {
+    type: Sequelize.INTEGER,
+  },
 });
 
 module.exports = Language;

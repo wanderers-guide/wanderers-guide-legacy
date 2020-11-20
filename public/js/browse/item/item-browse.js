@@ -148,6 +148,7 @@ function displayItemResults(itemMap){
     $('#browsingList').html('<p class="has-text-centered is-italic">No results found!</p>');
     return;
   }
+  $('#searchResultCountContainer').html('<p class="is-italic has-text-grey">('+itemMap.size+' results found)</p>');
 
   itemMap = new Map([...itemMap.entries()].sort(
     function(a, b) {

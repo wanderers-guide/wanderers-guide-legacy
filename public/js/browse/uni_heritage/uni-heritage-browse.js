@@ -39,6 +39,7 @@ function displayUniHeritageResults(allUniHeritages){
     $('#browsingList').html('<p class="has-text-centered is-italic">No results found!</p>');
     return;
   }
+  $('#searchResultCountContainer').html('<p class="is-italic has-text-grey">('+allUniHeritages.size+' results found)</p>');
 
   for(const uniHeritage of allUniHeritages){
     if(uniHeritage.isArchived == 1) {continue;}

@@ -133,7 +133,8 @@ function openItemQuickview(data) {
             let damage = itemDataStruct.WeaponData.diceNum+""+itemDataStruct.WeaponData.dieType+" "+itemDataStruct.WeaponData.damageType;
 
             qContent.append('<div class="tile text-center"><div class="tile is-child"><strong>Damage</strong></div></div>');
-            qContent.append('<div class="tile text-center"><div class="tile is-child"><p>'+damage+'</p></div></div>');
+            qContent.append('<div class="tile text-center"><div class="tile is-child"><p class="damage-roll-btn">'+damage+'</p></div></div>');
+            if(typeof gOption_hasDiceRoller !== 'undefined' && gOption_hasDiceRoller) { refreshStatRollButtons(); }
 
             qContent.append('<hr class="m-2">');
 
@@ -144,7 +145,8 @@ function openItemQuickview(data) {
             let damage = itemDataStruct.WeaponData.diceNum+""+itemDataStruct.WeaponData.dieType+" "+itemDataStruct.WeaponData.damageType;
 
             qContent.append('<div class="tile text-center"><div class="tile is-child"><strong>Damage</strong></div></div>');
-            qContent.append('<div class="tile text-center"><div class="tile is-child"><p>'+damage+'</p></div></div>');
+            qContent.append('<div class="tile text-center"><div class="tile is-child"><p class="damage-roll-btn">'+damage+'</p></div></div>');
+            if(typeof gOption_hasDiceRoller !== 'undefined' && gOption_hasDiceRoller) { refreshStatRollButtons(); }
 
             qContent.append('<hr class="m-2">');
 

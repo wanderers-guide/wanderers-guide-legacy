@@ -9,6 +9,7 @@ function openAddItemQuickview(data) {
     $('#createCustomItemBtn').click(function(){
         $(this).addClass('is-loading');
         socket.emit("requestAddItemToInv",
+            getCharIDFromURL(),
             data.InvID,
             62, // Hardcoded New Item ID
             1);
@@ -39,7 +40,7 @@ function openAddItemQuickview(data) {
 
     $('#itemTabMagical').click(function(){
         $('#allItemsFilterBySubcategory').parent().parent().removeClass('is-hidden');
-        $('#allItemsFilterBySubcategory').html('<option value="ALL">Category</option><option value="ARTIFACT">Artifact</option><option value="AMMUNITION">Ammunition</option><option value="ARMOR">Armor</option><option value="BELT">Belt</option><option value="BOOK">Book</option><option value="BOOTS">Boots</option><option value="BRACERS">Bracers</option><option value="CIRCLET">Circlet</option><option value="CLOAK">Cloak</option><option value="COMPANION">Companion</option><option value="EYEPIECE">Eyepiece</option><option value="GLOVES">Gloves</option><option value="HAT">Hat</option><option value="INSTRUMENT">Instrument</option><option value="MASK">Mask</option><option value="NECKLACE">Necklace</option><option value="OIL">Oil</option><option value="POTION">Potion</option><option value="RING">Ring</option><option value="ROD">Rod</option><option value="RUNE">Runestone</option><option value="SCROLL">Scroll</option><option value="SHIELD">Shield</option><option value="STAFF">Staff</option><option value="STORAGE">Storage</option><option value="STRUCTURE">Structure</option><option value="TALISMAN">Talisman</option><option value="WAND">Wand</option><option value="WEAPON">Weapon</option><option value="OTHER">Other</option>');
+        $('#allItemsFilterBySubcategory').html('<option value="ALL">Category</option><option value="ARTIFACT">Artifact</option><option value="AMMUNITION">Ammunition</option><option value="ARMOR">Armor</option><option value="BELT">Belt</option><option value="BOOK">Book</option><option value="BOOTS">Boots</option><option value="BRACERS">Bracers</option><option value="CIRCLET">Circlet</option><option value="CLOAK">Cloak</option><option value="COMPANION">Companion</option><option value="EYEPIECE">Eyepiece</option><option value="GLOVES">Gloves</option><option value="HAT">Hat</option><option value="INSTRUMENT">Instrument</option><option value="MASK">Mask</option><option value="NECKLACE">Necklace</option><option value="OIL">Oil</option><option value="POTION">Potion</option><option value="RING">Ring</option><option value="ROD">Rod</option><option value="RUNE">Runestone</option><option value="SCROLL">Scroll</option><option value="SHIELD">Shield</option><option value="STAFF">Staff</option><option value="STORAGE">Storage</option><option value="STRUCTURE">Structure</option><option value="TALISMAN">Talisman</option><option value="TATTOO">Tattoo</option><option value="WAND">Wand</option><option value="WEAPON">Weapon</option><option value="OTHER">Other</option>');
         $('#allItemSearch').attr('placeholder', 'Search Magical Items');
         changeItemCategoryTab('itemTabMagical', data);
     });
@@ -227,6 +228,7 @@ function displayAddItem(itemID, itemDataStruct, data){
     $('#'+addItemAddItemID).click(function(){
         $(this).addClass('is-loading');
         socket.emit("requestAddItemToInv",
+            getCharIDFromURL(),
             data.InvID,
             itemID,
             itemDataStruct.Item.quantity);

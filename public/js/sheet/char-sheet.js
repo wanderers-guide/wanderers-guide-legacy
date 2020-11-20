@@ -10,6 +10,7 @@ let isViewOnly = false;
 let gOption_hasAutoHeightenSpells;
 let gOption_hasProfWithoutLevel;
 let gOption_hasStamina;
+let gOption_hasDiceRoller;
 /* ~~~~~~~~~~~~~~~~~ */
 
 /* Sheet-State Options */
@@ -159,6 +160,7 @@ socket.on("returnCharacterSheetInfo", function(charInfo, viewOnly){
     gOption_hasAutoHeightenSpells = (g_character.optionAutoHeightenSpells === 1);
     gOption_hasProfWithoutLevel = (g_character.variantProfWithoutLevel === 1);
     gOption_hasStamina = (g_character.variantStamina === 1);
+    gOption_hasDiceRoller = (g_character.optionDiceRoller === 1);
 
     g_otherSpeeds = charInfo.OtherSpeeds;
 
@@ -271,6 +273,10 @@ socket.on("returnCharacterSheetInfo", function(charInfo, viewOnly){
     });
 
     loadCharSheet();
+
+    if(gOption_hasDiceRoller){
+      initDiceRoller();
+    }
 
     // Turn off page loading
     $('.pageloader').addClass("fadeout");
@@ -2319,7 +2325,7 @@ function takeRest(){
 //////////////////////////////////////// Socket Returns ////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
-socket.on("requestFinalProfsAndSkills", function(profObject, skillObject){
+socket.on("returnFinalProfsAndSkills", function(profObject, skillObject){
     g_profMap = objToMap(profObject);
     g_skillMap = objToMap(skillObject);
     g_weaponProfMap = buildWeaponProfMap();

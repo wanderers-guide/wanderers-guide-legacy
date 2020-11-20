@@ -81,8 +81,8 @@
   <div id="tabContent" class="mx-3 mb-3">
 
     <div class="columns">
-      <div id="searchFilterSection" class="column is-4 m-1 is-paddingless use-custom-scrollbar" style="height: 650px; max-height: 650px;overflow-y: auto;">
-        <div class="section-box">
+      <div id="searchFilterSection" class="column is-4 m-1 is-paddingless use-custom-scrollbar" style="height: 650px; max-height: 650px; overflow-y: auto;">
+        <div class="section-box" style="position: relative;">
           <p id="browsingFilter" class="is-size-6 text-center"><strong class="has-text-grey-lighter">Search Filters</strong></p>
 
           <div id="filterNameSection" class="is-hidden filterFieldSection field">
@@ -356,6 +356,7 @@
                       <option value="STORAGE">Storage</option>
                       <option value="STRUCTURE">Structure</option>
                       <option value="TALISMAN">Talisman</option>
+                      <option value="TATTOO">Tattoo</option>
                       <option value="TOOL">Tool</option>
                       <option value="WAND">Wand</option>
                       <option value="WEAPON">Weapon</option>
@@ -391,6 +392,7 @@
             </div>
           </div>
 
+          <div id="searchResultCountContainer" style="position: absolute; bottom: -30px; right: 5px;"></div>
         </div>
       </div>
       <div id="browsingList" class="column section-box m-1 use-custom-scrollbar" style="height: 650px; max-height: 650px;overflow-y: auto;">

@@ -168,7 +168,8 @@ function openInvItemQuickview(data) {
             let calcStruct = getAttackAndDamage(data.Item, data.InvItem);
 
             qContent.append('<div class="tile text-center"><div class="tile is-child is-6"><strong>Attack Bonus</strong></div><div class="tile is-child is-6"><strong>Damage</strong></div></div>');
-            qContent.append('<div class="tile text-center"><div class="tile is-child is-6"><p class="pr-1">'+calcStruct.AttackBonus+'</p></div><div class="tile is-child is-6"><p>'+calcStruct.Damage+'</p></div></div>');
+            qContent.append('<div class="tile text-center"><div class="tile is-child is-6"><p class="pr-1 stat-roll-btn">'+calcStruct.AttackBonus+'</p></div><div class="tile is-child is-6"><p class="damage-roll-btn">'+calcStruct.Damage+'</p></div></div>');
+            if(gOption_hasDiceRoller) { refreshStatRollButtons(); }
 
             qContent.append('<hr class="m-2">');
 
@@ -179,7 +180,8 @@ function openInvItemQuickview(data) {
             let calcStruct = getAttackAndDamage(data.Item, data.InvItem);
 
             qContent.append('<div class="tile text-center"><div class="tile is-child is-6"><strong>Attack Bonus</strong></div><div class="tile is-child is-6"><strong>Damage</strong></div></div>');
-            qContent.append('<div class="tile text-center"><div class="tile is-child is-6"><p class="pr-1">'+calcStruct.AttackBonus+'</p></div><div class="tile is-child is-6"><p>'+calcStruct.Damage+'</p></div></div>');
+            qContent.append('<div class="tile text-center"><div class="tile is-child is-6"><p class="pr-1 stat-roll-btn">'+calcStruct.AttackBonus+'</p></div><div class="tile is-child is-6"><p class="damage-roll-btn">'+calcStruct.Damage+'</p></div></div>');
+            if(gOption_hasDiceRoller) { refreshStatRollButtons(); }
 
             qContent.append('<hr class="m-2">');
 
@@ -357,7 +359,7 @@ function openInvItemQuickview(data) {
 
         qContent.append('<div id="itemHealthSection" class="is-hidden"></div>');
 
-        $('#itemHealthSection').append('<div class="field has-addons has-addons-centered"><p class="control"><input id="'+invItemHPInputID+'" class="input is-small" type="number" min="0" max="'+maxHP+'" value="'+data.InvItem.currentHitPoints+'"></p><p class="control"><a class="button is-static is-small has-text-grey-light has-background-grey-darkest border-darker">/</a><p class="control"><a class="button is-static is-small has-text-grey-lighter has-background-grey-darklike border-darker">'+maxHP+'</a></p></div>');
+        $('#itemHealthSection').append('<div class="field has-addons has-addons-centered"><p class="control"><input id="'+invItemHPInputID+'" class="input is-small" type="number" min="0" max="'+maxHP+'" value="'+data.InvItem.currentHitPoints+'"></p><p class="control"><a class="button is-static is-small has-text-grey-light has-background-grey-darkest border-darker">/</a></p><p class="control"><a class="button is-static is-small has-text-grey-lighter has-background-grey-darklike border-darker">'+maxHP+'</a></p></div>');
         $('#itemHealthSection').append('<div class="columns is-centered is-marginless text-center"><div class="column is-4 is-paddingless"><p class="is-size-7 has-text-right pr-2"><strong>Hardness:</strong> '+data.InvItem.hardness+'</p></div><div class="column is-5 is-paddingless"><p class="is-size-7 has-text-left pl-2"><strong>Broken Threshold:</strong> '+brokenThreshold+'</p></div></div>');
 
         $('#itemHealthName').click(function() {

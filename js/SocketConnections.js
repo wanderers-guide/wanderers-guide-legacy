@@ -252,12 +252,12 @@ module.exports = class SocketConnections {
         });
       });
     
-      socket.on('requestAddItemToInv', function(invID, itemID, quantity){
+      socket.on('requestAddItemToInv', function(charID, invID, itemID, quantity){
         AuthCheck.ownsInv(socket, invID).then((ownsInv) => {
           if(ownsInv){
             CharSaving.addItemToInv(invID, itemID, quantity).then((invItem) => {
               CharGathering.getInventory(invID).then((invStruct) => {
-                CharGathering.getItem(itemID).then((item) => {
+                CharGathering.getItem(charID, itemID).then((item) => {
                   socket.emit('returnAddItemToInv', item, invItem, invStruct);
                 });
               });
@@ -816,7 +816,7 @@ module.exports = class SocketConnections {
           if(ownsChar){
             CharGathering.getCharacter(charID).then((character) => {
               CharGathering.getClass(charID, character.classID).then((classDetails) => {
-                CharGathering.getAncestry(character.ancestryID).then((ancestry) => {
+                CharGathering.getAncestry(character).then((ancestry) => {
                   socket.emit('returnBuilderPageFinalize', character, classDetails.Class, ancestry);
                 });
               });
@@ -1162,7 +1162,7 @@ module.exports = class SocketConnections {
       socket.on('requestFeatChangeByName', function(charID, featChangePacket){
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
           if(ownsChar){
-            CharGathering.getFeatByName(featChangePacket.featName)
+            CharGathering.getFeatByName(charID, featChangePacket.featName)
             .then((feat) => {
               if(feat != null){
                 let srcStruct = featChangePacket.srcStruct;
@@ -1183,7 +1183,7 @@ module.exports = class SocketConnections {
       socket.on('requestLanguageChangeByName', function(charID, srcStruct, langName){
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
           if(ownsChar){
-            CharGathering.getLanguageByName(langName)
+            CharGathering.getLanguageByName(charID, langName)
             .then((language) => {
               if(language != null){
                 CharDataMapping.setData(charID, 'languages', srcStruct, language.id)
@@ -1203,7 +1203,7 @@ module.exports = class SocketConnections {
       socket.on('requestSensesChangeByName', function(charID, srcStruct, senseName){
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
           if(ownsChar){
-            CharGathering.getSenseTypeByName(senseName)
+            CharGathering.getSenseTypeByName(charID, senseName)
             .then((senseType) => {
               if(senseType != null){
                 CharDataMapping.setData(charID, 'senses', srcStruct, senseType.id)
@@ -1221,7 +1221,7 @@ module.exports = class SocketConnections {
       socket.on('requestPhysicalFeaturesChangeByName', function(charID, srcStruct, physicalFeatureName){
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
           if(ownsChar){
-            CharGathering.gePhyFeatByName(physicalFeatureName)
+            CharGathering.getPhyFeatByName(charID, physicalFeatureName)
             .then((physicalFeature) => {
               if(physicalFeature != null){
                 CharDataMapping.setData(charID, 'phyFeats', srcStruct, physicalFeature.id)
@@ -1323,7 +1323,7 @@ module.exports = class SocketConnections {
           if(ownsChar){
             let sLevel = parseInt(spellLevel);
             if(!isNaN(sLevel)) {
-              CharGathering.getSpellByName(spellName)
+              CharGathering.getSpellByName(charID, spellName)
               .then((spell) => {
                 if(spell != null){
                   if(spell.level <= sLevel) {
@@ -1355,7 +1355,7 @@ module.exports = class SocketConnections {
               let tPd = parseInt(timesPerDay);
               let sLevel = parseInt(spellLevel);
               if(!isNaN(tPd) && !isNaN(sLevel)) {
-                CharGathering.getSpellByName(spellName)
+                CharGathering.getSpellByName(charID, spellName)
                 .then((spell) => {
                   if(spell != null){
                     if(spell.level <= sLevel) {
@@ -1386,7 +1386,7 @@ module.exports = class SocketConnections {
       socket.on('requestFocusSpellChange', function(charID, srcStruct, spellSRC, spellName){
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
           if(ownsChar){
-            CharGathering.getSpellByName(spellName)
+            CharGathering.getSpellByName(charID, spellName)
             .then((spell) => {
               if(spell != null){
                 if(spell.isFocusSpell === 1){
@@ -1573,7 +1573,7 @@ module.exports = class SocketConnections {
                 socket.emit('returnWSCInnateSpellChange', selectControlShellClass);
               });
             } else {
-              CharGathering.getSpellByName(innateSpellStruct.name)
+              CharGathering.getSpellByName(charID, innateSpellStruct.name)
               .then((spell) => {
                 if(spell != null){
                   CharDataMappingExt.setDataInnateSpell(charID, srcStruct, spell.id, innateSpellStruct.level, innateSpellStruct.tradition, innateSpellStruct.tPd)
@@ -2395,7 +2395,9 @@ module.exports = class SocketConnections {
                             UserHomebrew.hasHomebrewBundle(socket, homebrewID).then((userHasBundle) => {
                               UserHomebrew.ownsHomebrewBundle(socket, homebrewID).then((userOwnsBundle) => {
                                 GeneralGathering.getAllTags(homebrewID).then((allTags) => {
-                                  socket.emit('returnBundleContents', REQUEST_TYPE, userHasBundle, userOwnsBundle, allTags, classes, ancestries, archetypes, backgrounds, classFeatures, feats, heritages, uniheritages, items, spells);
+                                  HomebrewGathering.getAllLanguages(homebrewID).then((languages) => {
+                                    socket.emit('returnBundleContents', REQUEST_TYPE, userHasBundle, userOwnsBundle, allTags, classes, ancestries, archetypes, backgrounds, classFeatures, feats, heritages, uniheritages, items, spells, languages);
+                                  });
                                 });
                               });
                             });
@@ -2927,6 +2929,52 @@ module.exports = class SocketConnections {
           if(canEdit){
             GeneralGathering.getAllSpells(homebrewID).then((spellMap) => {
               socket.emit('returnHomebrewSpellDetails', mapToObj(spellMap));
+            });
+          }
+        });
+      });
+
+      ////
+
+      socket.on('requestHomebrewAddLanguage', function(homebrewID, data){
+        UserHomebrew.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+          if(canEdit){
+            HomebrewCreation.addLanguage(homebrewID, data).then((result) => {
+              socket.emit('returnHomebrewCompleteLanguage');
+            });
+          }
+        });
+      });
+  
+      socket.on('requestHomebrewUpdateLanguage', function(homebrewID, data){
+        UserHomebrew.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+          if(canEdit){
+            if(data != null && data.languageID != null) {
+              HomebrewCreation.deleteLanguage(homebrewID, data.languageID).then((result) => {
+                HomebrewCreation.addLanguage(homebrewID, data).then((result) => {
+                  socket.emit('returnHomebrewCompleteLanguage');
+                });
+              });
+            }
+          }
+        });
+      });
+    
+      socket.on('requestHomebrewRemoveLanguage', function(homebrewID, languageID){
+        UserHomebrew.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+          if(canEdit){
+            HomebrewCreation.deleteLanguage(homebrewID, languageID).then((result) => {
+              socket.emit('returnHomebrewRemoveContent');
+            });
+          }
+        });
+      });
+  
+      socket.on('requestHomebrewLanguageDetails', function(homebrewID){
+        UserHomebrew.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+          if(canEdit){
+            GeneralGathering.getAllLanguages(homebrewID).then((languages) => {
+              socket.emit('returnHomebrewLanguageDetails', languages);
             });
           }
         });

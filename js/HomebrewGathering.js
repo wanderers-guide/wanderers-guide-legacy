@@ -91,6 +91,13 @@ module.exports = class HomebrewGathering {
     });
   }
 
+  static getAllLanguages(homebrewID) {
+    return Language.findAll({ where: { homebrewID: homebrewID } })
+    .then((languages) => {
+      return languages;
+    });
+  }
+
   static getAllItems(homebrewID) {
     Item.hasMany(TaggedItem, {foreignKey: 'itemID'});
     TaggedItem.belongsTo(Item, {foreignKey: 'itemID'});

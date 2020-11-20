@@ -602,8 +602,13 @@ module.exports = class CharGathering {
                     order: [['name', 'ASC'],]
                 })
                 .then((heritages) => {
-                    return Language.findAll()
-                    .then((languages) => {
+                    return Language.findAll({
+                      where: {
+                          homebrewID: {
+                            [Op.or]: CharContentHomebrew.getHomebrewArray(character)
+                          },
+                      }
+                    }).then((languages) => {
                         return AncestryLanguage.findAll({
                           where: {
                               homebrewID: {
@@ -753,8 +758,13 @@ module.exports = class CharGathering {
         .then((character) => {
             return AncestryLanguage.findAll({ where: { ancestryID: character.ancestryID} })
             .then((ancestLangs) => {
-                return Language.findAll()
-                .then((languages) => {
+                return Language.findAll({
+                  where: {
+                      homebrewID: {
+                        [Op.or]: CharContentHomebrew.getHomebrewArray(character)
+                      },
+                  }
+                }).then((languages) => {
 
                     let langMap = new Map();
 
@@ -1032,9 +1042,9 @@ module.exports = class CharGathering {
       .then((character) => {
         return Background.findOne({ where: { id: character.backgroundID} })
         .then((background) => {
-          return CharGathering.getAncestry(character.ancestryID)
+          return CharGathering.getAncestry(character)
           .then((ancestry) => {
-            return CharGathering.getCharHeritage(character)
+            return CharGathering.getHeritage(character)
             .then((heritage) => {
               return CharGathering.getAllAncestriesBasic(character)
               .then((ancestries) => {
@@ -1134,7 +1144,7 @@ module.exports = class CharGathering {
                             .then((abilObject) => {
                                 return Condition.findAll()
                                 .then((allConditions) => {
-                                    return Language.findAll()
+                                    return CharGathering.getAllLanguagesBasic(charID)
                                     .then((allLanguages) => {
                                         return {
                                             FeatObject: featObject,
@@ -1178,28 +1188,40 @@ module.exports = class CharGathering {
     }
 
 
-    static getAncestry(ancestryID) {
-        return Ancestry.findOne({ where: { id: ancestryID } })
-        .then((ancestry) => {
+    static getAllLanguagesBasic(charID) {
+      return Character.findOne({ where: { id: charID } })
+      .then((character) => {
+        return Language.findAll({
+          where: {
+              homebrewID: {
+                [Op.or]: CharContentHomebrew.getHomebrewArray(character)
+              },
+          }
+        }).then((languages) => {
+          return languages;
+        });
+      });
+    }
+
+
+    static getAncestry(character) {
+        return Ancestry.findOne({
+          where: {
+            id: character.ancestryID,
+          } 
+        }).then((ancestry) => {
             return ancestry;
         });
     }
 
-    static getHeritage(heritageID) {
-        return Heritage.findOne({ where: { id: heritageID} })
-        .then((heritage) => {
-            return heritage;
-        });
-    }
-
-    static getCharHeritage(character) {
+    static getHeritage(character) {
         if(character.heritageID != null){
-            return Heritage.findOne({ where: { id: character.heritageID} })
+            return Heritage.findOne({ where: { id: character.heritageID } })
             .then((heritage) => {
                 return heritage;
             });
         } else if (character.uniHeritageID != null) {
-            return UniHeritage.findOne({ where: { id: character.uniHeritageID} })
+            return UniHeritage.findOne({ where: { id: character.uniHeritageID } })
             .then((uniHeritage) => {
                 return uniHeritage;
             });
@@ -1261,46 +1283,94 @@ module.exports = class CharGathering {
         });
     }
 
-    static getLanguageByName(langName) {
-        return Language.findOne({ where: { name: langName} })
-        .then((language) => {
-            return language;
+    static getLanguageByName(charID, langName) {
+      return Character.findOne({ where: { id: charID } })
+      .then((character) => {
+        return Language.findOne({
+          where: {
+            name: langName,
+            homebrewID: {
+              [Op.or]: CharContentHomebrew.getHomebrewArray(character)
+            },
+          }
+        }).then((language) => {
+          return language;
         });
+      });
     }
 
-    static getFeatByName(featName) {
-        return Feat.findOne({ where: { name: featName} })
-        .then((feat) => {
+    static getFeatByName(charID, featName) {
+      return Character.findOne({ where: { id: charID } })
+      .then((character) => {
+        return Feat.findOne({
+          where: {
+            name: featName,
+            homebrewID: {
+              [Op.or]: CharContentHomebrew.getHomebrewArray(character)
+            },
+          }
+        }).then((feat) => {
             return feat;
         });
+      });
     }
 
-    static getSpellByName(spellName) {
-        return Spell.findOne({ where: { name: spellName} })
-        .then((spell) => {
+    static getSpellByName(charID, spellName) {
+      return Character.findOne({ where: { id: charID } })
+      .then((character) => {
+        return Spell.findOne({
+          where: {
+            name: spellName,
+            homebrewID: {
+              [Op.or]: CharContentHomebrew.getHomebrewArray(character)
+            },
+          }
+        }).then((spell) => {
             return spell;
         });
+      });
     }
 
-    static getSenseTypeByName(senseTypeName) {
-        return SenseType.findOne({ where: { name: senseTypeName} })
-        .then((senseType) => {
+    static getSenseTypeByName(charID, senseTypeName) {
+      return Character.findOne({ where: { id: charID } })
+      .then((character) => {
+        return SenseType.findOne({
+          where: {
+            name: senseTypeName,
+          }
+        }).then((senseType) => {
             return senseType;
         });
+      });
     }
 
-    static gePhyFeatByName(phyFeatName) {
-        return PhysicalFeature.findOne({ where: { name: phyFeatName} })
-        .then((phyFeat) => {
+    static getPhyFeatByName(charID, phyFeatName) {
+      return Character.findOne({ where: { id: charID } })
+      .then((character) => {
+        return PhysicalFeature.findOne({
+          where: {
+            name: phyFeatName,
+          }
+        }).then((phyFeat) => {
             return phyFeat;
         });
+      });
     }
 
-    static getItem(itemID) {
-        return Item.findOne({ where: { id: itemID} })
-        .then((item) => {
+    static getItem(charID, itemID) {
+      return Character.findOne({ where: { id: charID } })
+      .then((character) => {
+        return Item.findOne({
+          where: {
+            id: itemID,
+            homebrewID: {
+              [Op.or]: CharContentHomebrew.getHomebrewArray(character)
+            },
+          }
+        }).then((item) => {
             return item;
         });
+      });
     }
 
     static getAllAnimalCompanions(charID) {
@@ -1549,9 +1619,9 @@ module.exports = class CharGathering {
       .then((character) => {
         return Background.findOne({ where: { id: character.backgroundID} })
         .then((background) => {
-          return CharGathering.getAncestry(character.ancestryID)
+          return CharGathering.getAncestry(character)
           .then((ancestry) => {
-            return CharGathering.getCharHeritage(character)
+            return CharGathering.getHeritage(character)
             .then((heritage) => {
               return Inventory.findOne({ where: { id: character.inventoryID} })
               .then((inventory) => {
@@ -1575,8 +1645,13 @@ module.exports = class CharGathering {
                                 .then( (conditionsObject) => {
                                   return Condition.findAll()
                                   .then((allConditions) => {
-                                    return Language.findAll()
-                                    .then((allLanguages) => {
+                                    return Language.findAll({
+                                      where: {
+                                          homebrewID: {
+                                            [Op.or]: CharContentHomebrew.getHomebrewArray(character)
+                                          },
+                                      }
+                                    }).then((allLanguages) => {
                                       return CharGathering.getInventory(character.inventoryID)
                                       .then( (invStruct) => {
                                         return CharGathering.getCompanionData(charID)

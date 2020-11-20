@@ -13,6 +13,7 @@ router.get('*', (req, res) => {
     let extraData = req.originalUrl.substring(PATH.length);
 
     Language.findAll({
+        where: { homebrewID: null },
         order: [['name', 'ASC'],]
     }).then((languages) => {
         Tag.findAll({

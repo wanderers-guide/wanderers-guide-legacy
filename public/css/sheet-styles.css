@@ -217,3 +217,11 @@ strong {
 .companion-bonus-offset {
     padding-right: 0.5rem!important;
 }
+
+/* Dice Roller Btn */
+#dice-roller-btn-container {
+  position: absolute;
+  z-index: 28;
+  top: 5px;
+  right: 5px;
+}

@@ -8,7 +8,7 @@ function openBundleEditor(homebrewBundle){
   socket.emit('requestBundleContents', 'EDIT', homebrewBundle.id);
 }
 
-socket.on("returnBundleContents", function(REQUEST_TYPE, userHasBundle, userOwnsBundle, allTags, classes, ancestries, archetypes, backgrounds, classFeatures, feats, heritages, uniheritages, items, spells){
+socket.on("returnBundleContents", function(REQUEST_TYPE, userHasBundle, userOwnsBundle, allTags, classes, ancestries, archetypes, backgrounds, classFeatures, feats, heritages, uniheritages, items, spells, languages){
   if(REQUEST_TYPE !== 'EDIT') {return;}
 
   let featMap = new Map();
@@ -442,6 +442,36 @@ socket.on("returnBundleContents", function(REQUEST_TYPE, userHasBundle, userOwns
             new ConfirmMessage('Delete “'+item.name+'”', '<p class="has-text-centered">Are you sure you want to delete this item?</p>', 'Delete', 'modal-delete-content-item-'+item.id, 'modal-delete-content-item-btn-'+item.id);
             $('#modal-delete-content-item-btn-'+item.id).click(function() {
               socket.emit('requestHomebrewRemoveItem', g_activeBundle.id, item.id);
+            });
+          });
+        }
+      }
+
+      ////
+
+      $('#createLanguageBtn').click(function() {
+        createNewBundleContent('LANGUAGE');
+      });
+
+      if(languages.length > 0){
+        $('#bundleContainerLanguages').html('');
+        for(const language of languages){
+          let viewLanguageID = 'entry-view-language-'+language.id;
+          let editLanguageID = 'entry-edit-language-'+language.id;
+          let deleteLanguageID = 'entry-delete-language-'+language.id;
+          $('#bundleContainerLanguages').append('<div class="columns is-mobile is-marginless mt-1 sub-section-box"><div class="column"><p class="is-size-5">'+language.name+'</p></div><div class="column"><div class="is-pulled-right buttons are-small"><button id="'+viewLanguageID+'" class="button is-info is-outlined">View</button><button id="'+editLanguageID+'" class="button is-success is-outlined"><span>Edit</span><span class="icon is-small"><i class="far fa-edit"></i></span></button><button id="'+deleteLanguageID+'" class="button is-danger is-outlined"><span>Delete</span><span class="icon is-small"><i class="fas fa-times"></i></span></button></div></div></div>');
+          $('#'+viewLanguageID).click(function() {
+            openQuickView('languageView', {
+              Language : language
+            });
+          });
+          $('#'+editLanguageID).click(function() {
+            window.location.href = '/homebrew/edit/language/?id='+g_activeBundle.id+'&content_id='+language.id;
+          });
+          $('#'+deleteLanguageID).click(function() {
+            new ConfirmMessage('Delete “'+language.name+'”', '<p class="has-text-centered">Are you sure you want to delete this language?</p>', 'Delete', 'modal-delete-content-language-'+language.id, 'modal-delete-content-language-btn-'+language.id);
+            $('#modal-delete-content-language-btn-'+language.id).click(function() {
+              socket.emit('requestHomebrewRemoveLanguage', g_activeBundle.id, language.id);
             });
           });
         }

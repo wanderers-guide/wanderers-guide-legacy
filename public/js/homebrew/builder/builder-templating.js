@@ -75,6 +75,14 @@ const TEMPLATE_MAP_ITEM = [
   { Name: 'Holy Avenger', ID: 1326 },
 ];
 
+const TEMPLATE_MAP_LANGUAGE = [
+  { Name: 'Abyssal', ID: 12 },
+  { Name: 'Celestial', ID: 16 },
+  { Name: 'Common', ID: 1 },
+  { Name: 'Shadowtongue', ID: 21 },
+  { Name: 'Tengu', ID: 28 },
+];
+
 const TEMPLATE_MAP_SPELL = [
   { Name: 'Armor of Bones', ID: 761 },
   { Name: 'Beastmaster Trance', ID: 872 },
@@ -115,6 +123,7 @@ function initNewContentTemplating() {
       case 'HERITAGE': TEMPLATES = TEMPLATE_MAP_HERITAGE; break;
       case 'UNI-HERITAGE': TEMPLATES = TEMPLATE_MAP_UNI_HERITAGE; break;
       case 'ITEM': TEMPLATES = TEMPLATE_MAP_ITEM; break;
+      case 'LANGUAGE': TEMPLATES = TEMPLATE_MAP_LANGUAGE; break;
       case 'SPELL': TEMPLATES = TEMPLATE_MAP_SPELL; break;
       default: break;
     }
@@ -152,6 +161,7 @@ function initNewContentTemplating() {
       case 'HERITAGE': window.location.href = '/homebrew/create/heritage/?id='+g_activeBundle.id; break;
       case 'UNI-HERITAGE': window.location.href = '/homebrew/create/uni-heritage/?id='+g_activeBundle.id; break;
       case 'ITEM': window.location.href = '/homebrew/create/item/?id='+g_activeBundle.id; break;
+      case 'LANGUAGE': window.location.href = '/homebrew/create/language/?id='+g_activeBundle.id; break;
       case 'SPELL': window.location.href = '/homebrew/create/spell/?id='+g_activeBundle.id; break;
       default: break;
     }

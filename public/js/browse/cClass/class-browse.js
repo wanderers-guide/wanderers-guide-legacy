@@ -39,6 +39,7 @@ function displayClassResults(allClasses){
     $('#browsingList').html('<p class="has-text-centered is-italic">No results found!</p>');
     return;
   }
+  $('#searchResultCountContainer').html('<p class="is-italic has-text-grey">('+allClasses.size+' results found)</p>');
 
   for(const cClass of allClasses){
     if(cClass.isArchived == 1) {continue;}

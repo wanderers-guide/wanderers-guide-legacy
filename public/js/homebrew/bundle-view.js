@@ -8,7 +8,7 @@ function openBundleView(homebrewBundle){
   socket.emit('requestBundleContents', 'VIEW', homebrewBundle.id);
 }
 
-socket.on("returnBundleContents", function(REQUEST_TYPE, userHasBundle, userOwnsBundle, allTags, classes, ancestries, archetypes, backgrounds, classFeatures, feats, heritages, uniheritages, items, spells){
+socket.on("returnBundleContents", function(REQUEST_TYPE, userHasBundle, userOwnsBundle, allTags, classes, ancestries, archetypes, backgrounds, classFeatures, feats, heritages, uniheritages, items, spells, languages){
   if(REQUEST_TYPE !== 'VIEW') {return;}
 
   let featMap = new Map();
@@ -77,7 +77,11 @@ socket.on("returnBundleContents", function(REQUEST_TYPE, userHasBundle, userOwns
         $('#'+displayContainerID).remove();
       });
 
-      $('#bundleName').html(g_activeBundle.name+'<sup class="has-text-grey is-size-5 pl-1"><i class="fas fa-lock"></i></sup>');
+      let bundleName = g_activeBundle.name;
+      if(g_activeBundle.hasKeys === 1){
+        bundleName += '<sup class="has-text-grey is-size-5 pl-1"><i class="fas fa-lock"></i></sup>';
+      }
+      $('#bundleName').html(bundleName);
       $('#bundleDescription').html(processText(g_activeBundle.description, false, false, 'MEDIUM', false));
 
       let contactInfoStr = (g_activeBundle.contactInfo != '') ? ', '+g_activeBundle.contactInfo : '';
@@ -144,7 +148,7 @@ socket.on("returnBundleContents", function(REQUEST_TYPE, userHasBundle, userOwns
 
       ///
 
-      if(userOwnsBundle){
+      if(userOwnsBundle && g_activeBundle.hasKeys === 1){
         $('#bundleKeyManagementBtn').removeClass('is-hidden');
       }
 
@@ -323,6 +327,22 @@ socket.on("returnBundleContents", function(REQUEST_TYPE, userHasBundle, userOwns
             let itemStruct = itemMap.get(item.id+'');
             openQuickView('itemView', {
               ItemDataStruct : itemStruct
+            });
+          });
+        }
+      }
+
+      ////
+
+      if(languages.length > 0){
+        $('#bundleSectionLanguages').removeClass('is-hidden');
+        $('#bundleContainerLanguages').html('');
+        for(const language of languages){
+          let viewLanguageID = 'entry-view-language-'+language.id;
+          $('#bundleContainerLanguages').append('<div class="columns is-mobile is-marginless mt-1 sub-section-box"><div class="column"><p class="is-size-5">'+language.name+'</p></div><div class="column"><div class="is-pulled-right buttons are-small"><button id="'+viewLanguageID+'" class="button is-info is-outlined">View</button></div></div></div>');
+          $('#'+viewLanguageID).click(function() {
+            openQuickView('languageView', {
+              Language : language
             });
           });
         }

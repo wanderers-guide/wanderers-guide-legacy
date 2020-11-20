@@ -69,6 +69,7 @@ function displayArchetypeResults(allArchetypes){
     $('#browsingList').html('<p class="has-text-centered is-italic">No results found!</p>');
     return;
   }
+  $('#searchResultCountContainer').html('<p class="is-italic has-text-grey">('+allArchetypes.size+' results found)</p>');
   
   allArchetypes = Array.from(allArchetypes).sort(
     function(a, b) {
