@@ -1606,7 +1606,7 @@ module.exports = class SocketConnections {
       socket.on('requestWSCSrcStructDataClear', function(charID, srcStruct){
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
           if(ownsChar){
-            CharDataMapping.deleteDataBySourceStruct(charID, srcStruct)
+            CharDataMapping.deleteDataSNumChildren(charID, srcStruct)
             .then((result) => {
               CharGathering.getCharChoices(charID)
               .then((choiceStruct) => {
