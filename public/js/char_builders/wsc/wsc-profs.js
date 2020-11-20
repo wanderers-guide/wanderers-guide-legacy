@@ -7,7 +7,7 @@ function processingProf(wscStatement, srcStruct, locationID){
 
     if(wscStatement.includes("GIVE-PROF-INCREASE-IN")){// GIVE-PROF-INCREASE-IN=Arcana
         let profName = wscStatement.split('=')[1];
-        giveProfIncrease(srcStruct, profName);
+        giveProfIncrease(srcStruct, profName, locationID);
     } else if(wscStatement.includes("GIVE-PROF-IN")){// GIVE-PROF-IN=Arcana:T
         let data = wscStatement.split('=')[1];
         let segments = data.split(':');
@@ -21,15 +21,15 @@ function processingProf(wscStatement, srcStruct, locationID){
 
 //////////////////////////////// Give Prof ///////////////////////////////////
 
-function giveProfIncrease(srcStruct, profName){
-    giveInProf(srcStruct, profName, 'UP');
+function giveProfIncrease(srcStruct, profName, locationID){
+    giveInProf(srcStruct, profName, 'UP', locationID);
 }
 
 function giveProf(srcStruct, profName, prof, locationID){
     if(prof === 'T'){
         giveProfSkillTraining(srcStruct, profName, prof, locationID);
     } else {
-        giveInProf(srcStruct, profName, prof);
+        giveInProf(srcStruct, profName, prof, locationID);
     }
 }
 
@@ -82,13 +82,13 @@ function giveProfSkillTraining(srcStruct, profName, prof, locationID){
         return;
 
     } else {
-        giveInProf(srcStruct, profName, prof);
+        giveInProf(srcStruct, profName, prof, locationID);
         return;
     }
 
 }
 
-function giveInProf(srcStruct, profName, prof){
+function giveInProf(srcStruct, profName, prof, locationID){
 
     let profProperName = null;
     let profCategory = null;
@@ -131,6 +131,9 @@ function giveInProf(srcStruct, profName, prof){
             getCharIDFromURL(),
             {srcStruct, isSkill : isSkill, isStatement : true},
             { For : profCategory, To : profProperName, Prof : prof });
+        window.setTimeout(() => {
+          $('#'+locationID).append('<p class="help is-info"><span class="is-bold">Proficiency Change:</span><span class="is-italic"> You become '+profToWord(prof).toLowerCase()+' in '+profProperName.toLowerCase().replace(/_/g,' ').replace('class dc', 'your class DC').replace('spellattacks', ' spell attacks').replace('spelldcs', ' spell DCs')+'.</span></p>');
+        }, 100);
     } else {
         displayError("Unknown proficiency: \'"+profName+"\'");
         statementComplete();

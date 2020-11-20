@@ -375,19 +375,28 @@ function expHasProf(expression, statement, elseStatement){
     let numUps = profToNumUp(profType);
     if(numUps === -1){return null;}
 
+    let foundProf = false;
     for(const [profMapName, profMapData] of g_expr_profMap.entries()){
         if(profData == null){
             let tempSkillName = profMapData.Name.toUpperCase();
             tempSkillName = tempSkillName.replace(/_|\s+/g,"");
-            if(tempSkillName === profName.toUpperCase() && expHasProfNumUpsCompare(profMapData.NumUps, boolOp, numUps)) {
+            if(tempSkillName === profName.toUpperCase()) {
+              foundProf = true;
+              if(expHasProfNumUpsCompare(profMapData.NumUps, boolOp, numUps)) {
                 return statement;
+              }
             }
+            
         } else {
-            if(profMapData.Name === profData.Name && expHasProfNumUpsCompare(profMapData.NumUps, boolOp, numUps)){
+            if(profMapData.Name === profData.Name) {
+              foundProf = true;
+              if (expHasProfNumUpsCompare(profMapData.NumUps, boolOp, numUps)){
                 return statement;
+              }
             }
         }
     }
+    if(numUps === 0 && !foundProf){ return statement; }
     
     return elseStatement;
 }
