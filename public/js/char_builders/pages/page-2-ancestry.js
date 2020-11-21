@@ -491,6 +491,9 @@ function displayCurrentHeritage(ancestryStruct, heritageID, isUniversal) {
             });
         }
         wscChoiceStruct.Heritage = heritage;
+
+        // Rarity //
+        $('#heritageRarityContainer').html(convertRarityToHTML(heritage.rarity, true));
     
         let heritageDescription = $('#heritageDescription');
         heritageDescription.html(processText(heritage.description, false, null, 'MEDIUM', false));
@@ -512,6 +515,8 @@ function displayCurrentHeritage(ancestryStruct, heritageID, isUniversal) {
     } else {
 
         wscChoiceStruct.Heritage = null;
+
+        $('#heritageRarityContainer').html('');
 
         let heritageDescription = $('#heritageDescription');
         heritageDescription.html('');

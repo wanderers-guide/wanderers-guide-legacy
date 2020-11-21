@@ -11,6 +11,8 @@ function openBundleEditor(homebrewBundle){
 socket.on("returnBundleContents", function(REQUEST_TYPE, userHasBundle, userOwnsBundle, allTags, classes, ancestries, archetypes, backgrounds, classFeatures, feats, heritages, uniheritages, items, spells, languages){
   if(REQUEST_TYPE !== 'EDIT') {return;}
 
+  g_allTags = allTags;
+
   let featMap = new Map();
   for(let feat of feats){
     let tags = [];
@@ -32,16 +34,17 @@ socket.on("returnBundleContents", function(REQUEST_TYPE, userHasBundle, userOwns
   }
 
   let itemMap = new Map();
-  for(let item of items){
+  for(let itemStruct of items){
     let tags = [];
     // Find tags by id
-    for(let itemTag of item.taggedItems){
+    for(let itemTag of itemStruct.Item.taggedItems){
       let tag = allTags.find(tag => {
         return tag.id === itemTag.tagID;
       });
       if(tag != null) {tags.push({Tag: tag});}
     }
-    itemMap.set(item.id+'', {Item : item, TagArray : tags});
+    itemStruct.TagArray = tags;
+    itemMap.set(itemStruct.Item.id+'', itemStruct);
   }
 
   let spellMap = new Map();
@@ -279,9 +282,10 @@ socket.on("returnBundleContents", function(REQUEST_TYPE, userHasBundle, userOwns
       });
 
       if(classFeatures.length > 0){
+        let foundContent = false;
         $('#bundleContainerClassFeatures').html('');
         for(const classFeature of classFeatures){
-          if(classFeature.indivClassName == null || classFeature.selectOptionFor != null) {continue;}
+          if(classFeature.indivClassName == null || classFeature.selectOptionFor != null) {continue;} else {foundContent = true;}
 
           let viewClassFeatureID = 'entry-view-class-feature-'+classFeature.id;
           let editClassFeatureID = 'entry-edit-class-feature-'+classFeature.id;
@@ -311,6 +315,10 @@ socket.on("returnBundleContents", function(REQUEST_TYPE, userHasBundle, userOwns
             });
           });
         }
+
+        if(!foundContent) {
+          $('#bundleContainerClassFeatures').html('<p class="is-size-7 has-text-grey is-italic">None</p>');
+        }
       }
 
       ////
@@ -320,9 +328,10 @@ socket.on("returnBundleContents", function(REQUEST_TYPE, userHasBundle, userOwns
       });
 
       if(feats.length > 0){
+        let foundContent = false;
         $('#bundleContainerFeats').html('');
         for(const feat of feats){
-          if(feat.genericType == null) {continue;}
+          if(feat.genericType == null) {continue;} else {foundContent = true;}
 
           let viewFeatID = 'entry-view-feat-activity-'+feat.id;
           let editFeatID = 'entry-edit-feat-activity-'+feat.id;
@@ -345,6 +354,10 @@ socket.on("returnBundleContents", function(REQUEST_TYPE, userHasBundle, userOwns
             });
           });
         }
+
+        if(!foundContent) {
+          $('#bundleContainerFeats').html('<p class="is-size-7 has-text-grey is-italic">None</p>');
+        }
       }
 
       ////
@@ -354,9 +367,10 @@ socket.on("returnBundleContents", function(REQUEST_TYPE, userHasBundle, userOwns
       });
 
       if(heritages.length > 0){
+        let foundContent = false;
         $('#bundleContainerHeritages').html('');
         for(const heritage of heritages){
-          if(heritage.indivAncestryName == null) {continue;}
+          if(heritage.indivAncestryName == null) {continue;} else {foundContent = true;}
 
           let viewHeritageID = 'entry-view-heritage-'+heritage.id;
           let editHeritageID = 'entry-edit-heritage-'+heritage.id;
@@ -385,6 +399,10 @@ socket.on("returnBundleContents", function(REQUEST_TYPE, userHasBundle, userOwns
               socket.emit('requestHomebrewRemoveHeritage', g_activeBundle.id, heritage.id);
             });
           });
+        }
+
+        if(!foundContent) {
+          $('#bundleContainerHeritages').html('<p class="is-size-7 has-text-grey is-italic">None</p>');
         }
       }
 
@@ -424,24 +442,24 @@ socket.on("returnBundleContents", function(REQUEST_TYPE, userHasBundle, userOwns
 
       if(items.length > 0){
         $('#bundleContainerItems').html('');
-        for(const item of items){
-          let viewItemID = 'entry-view-item-'+item.id;
-          let editItemID = 'entry-edit-item-'+item.id;
-          let deleteItemID = 'entry-delete-item-'+item.id;
-          $('#bundleContainerItems').append('<div class="columns is-mobile is-marginless mt-1 sub-section-box"><div class="column"><p class="is-size-5">'+item.name+'</p></div><div class="column"><div class="is-pulled-right buttons are-small"><button id="'+viewItemID+'" class="button is-info is-outlined">View</button><button id="'+editItemID+'" class="button is-success is-outlined"><span>Edit</span><span class="icon is-small"><i class="far fa-edit"></i></span></button><button id="'+deleteItemID+'" class="button is-danger is-outlined"><span>Delete</span><span class="icon is-small"><i class="fas fa-times"></i></span></button></div></div></div>');
+        for(const itemStruct of items){
+          let viewItemID = 'entry-view-item-'+itemStruct.Item.id;
+          let editItemID = 'entry-edit-item-'+itemStruct.Item.id;
+          let deleteItemID = 'entry-delete-item-'+itemStruct.Item.id;
+          $('#bundleContainerItems').append('<div class="columns is-mobile is-marginless mt-1 sub-section-box"><div class="column"><p class="is-size-5">'+itemStruct.Item.name+'</p></div><div class="column"><div class="is-pulled-right buttons are-small"><button id="'+viewItemID+'" class="button is-info is-outlined">View</button><button id="'+editItemID+'" class="button is-success is-outlined"><span>Edit</span><span class="icon is-small"><i class="far fa-edit"></i></span></button><button id="'+deleteItemID+'" class="button is-danger is-outlined"><span>Delete</span><span class="icon is-small"><i class="fas fa-times"></i></span></button></div></div></div>');
           $('#'+viewItemID).click(function() {
-            let itemStruct = itemMap.get(item.id+'');
+            let fullItemStruct = itemMap.get(itemStruct.Item.id+'');
             openQuickView('itemView', {
-              ItemDataStruct : itemStruct
+              ItemDataStruct : fullItemStruct
             });
           });
           $('#'+editItemID).click(function() {
-            window.location.href = '/homebrew/edit/item/?id='+g_activeBundle.id+'&content_id='+item.id;
+            window.location.href = '/homebrew/edit/item/?id='+g_activeBundle.id+'&content_id='+itemStruct.Item.id;
           });
           $('#'+deleteItemID).click(function() {
-            new ConfirmMessage('Delete “'+item.name+'”', '<p class="has-text-centered">Are you sure you want to delete this item?</p>', 'Delete', 'modal-delete-content-item-'+item.id, 'modal-delete-content-item-btn-'+item.id);
-            $('#modal-delete-content-item-btn-'+item.id).click(function() {
-              socket.emit('requestHomebrewRemoveItem', g_activeBundle.id, item.id);
+            new ConfirmMessage('Delete “'+itemStruct.Item.name+'”', '<p class="has-text-centered">Are you sure you want to delete this item?</p>', 'Delete', 'modal-delete-content-item-'+itemStruct.Item.id, 'modal-delete-content-item-btn-'+itemStruct.Item.id);
+            $('#modal-delete-content-item-btn-'+itemStruct.Item.id).click(function() {
+              socket.emit('requestHomebrewRemoveItem', g_activeBundle.id, itemStruct.Item.id);
             });
           });
         }
@@ -505,6 +523,44 @@ socket.on("returnBundleContents", function(REQUEST_TYPE, userHasBundle, userOwns
               socket.emit('requestHomebrewRemoveSpell', g_activeBundle.id, spell.id);
             });
           });
+        }
+      }
+
+      ////
+
+      $('#createTraitBtn').click(function() {
+        createNewBundleContent('TRAIT');
+      });
+
+      if(allTags.length > 0){
+        let foundContent = false;
+        $('#bundleContainerTraits').html('');
+        for(const trait of allTags){
+          if(trait.homebrewID == null || trait.isHidden == 1) {continue;} else {foundContent = true;}
+
+          let viewTraitID = 'entry-view-trait-'+trait.id;
+          let editTraitID = 'entry-edit-trait-'+trait.id;
+          let deleteTraitID = 'entry-delete-trait-'+trait.id;
+          $('#bundleContainerTraits').append('<div class="columns is-mobile is-marginless mt-1 sub-section-box"><div class="column"><p class="is-size-5">'+trait.name+'</p></div><div class="column"><div class="is-pulled-right buttons are-small"><button id="'+viewTraitID+'" class="button is-info is-outlined">View</button><button id="'+editTraitID+'" class="button is-success is-outlined"><span>Edit</span><span class="icon is-small"><i class="far fa-edit"></i></span></button><button id="'+deleteTraitID+'" class="button is-danger is-outlined"><span>Delete</span><span class="icon is-small"><i class="fas fa-times"></i></span></button></div></div></div>');
+          $('#'+viewTraitID).click(function() {
+            openQuickView('tagView', {
+              TagName : trait.name,
+              InputTag : trait,
+            });
+          });
+          $('#'+editTraitID).click(function() {
+            window.location.href = '/homebrew/edit/trait/?id='+g_activeBundle.id+'&content_id='+trait.id;
+          });
+          $('#'+deleteTraitID).click(function() {
+            new ConfirmMessage('Delete “'+trait.name+'”', '<p class="has-text-centered">Are you sure you want to delete this trait?</p>', 'Delete', 'modal-delete-content-trait-'+trait.id, 'modal-delete-content-trait-btn-'+trait.id);
+            $('#modal-delete-content-trait-btn-'+trait.id).click(function() {
+              socket.emit('requestHomebrewRemoveTrait', g_activeBundle.id, trait.id);
+            });
+          });
+        }
+
+        if(!foundContent) {
+          $('#bundleContainerTraits').html('<p class="is-size-7 has-text-grey is-italic">None</p>');
         }
       }
 

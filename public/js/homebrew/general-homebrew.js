@@ -5,6 +5,7 @@
 let socket = io();
 
 let g_activeBundle = null;
+let g_allTags = null;
 
 // ~~~~~~~~~~~~~~ // Run on Load // ~~~~~~~~~~~~~~ //
 $(function () {

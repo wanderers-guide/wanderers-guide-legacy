@@ -124,8 +124,7 @@ function openItemQuickview(data) {
     }
 
     qContent.append('<hr class="m-2">');
-
-        
+    
     if(itemDataStruct.WeaponData != null){
 
         if(itemDataStruct.WeaponData.isMelee == 1){

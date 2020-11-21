@@ -11,6 +11,8 @@ function openBundleView(homebrewBundle){
 socket.on("returnBundleContents", function(REQUEST_TYPE, userHasBundle, userOwnsBundle, allTags, classes, ancestries, archetypes, backgrounds, classFeatures, feats, heritages, uniheritages, items, spells, languages){
   if(REQUEST_TYPE !== 'VIEW') {return;}
 
+  g_allTags = allTags;
+
   let featMap = new Map();
   for(let feat of feats){
     let tags = [];
@@ -32,16 +34,17 @@ socket.on("returnBundleContents", function(REQUEST_TYPE, userHasBundle, userOwns
   }
 
   let itemMap = new Map();
-  for(let item of items){
+  for(let itemStruct of items){
     let tags = [];
     // Find tags by id
-    for(let itemTag of item.taggedItems){
+    for(let itemTag of itemStruct.Item.taggedItems){
       let tag = allTags.find(tag => {
         return tag.id === itemTag.tagID;
       });
       if(tag != null) {tags.push({Tag: tag});}
     }
-    itemMap.set(item.id+'', {Item : item, TagArray : tags});
+    itemStruct.TagArray = tags;
+    itemMap.set(itemStruct.Item.id+'', itemStruct);
   }
 
   let spellMap = new Map();
@@ -320,13 +323,13 @@ socket.on("returnBundleContents", function(REQUEST_TYPE, userHasBundle, userOwns
       if(items.length > 0){
         $('#bundleSectionItems').removeClass('is-hidden');
         $('#bundleContainerItems').html('');
-        for(const item of items){
-          let viewItemID = 'entry-view-item-'+item.id;
-          $('#bundleContainerItems').append('<div class="columns is-mobile is-marginless mt-1 sub-section-box"><div class="column"><p class="is-size-5">'+item.name+'</p></div><div class="column"><div class="is-pulled-right buttons are-small"><button id="'+viewItemID+'" class="button is-info is-outlined">View</button></div></div></div>');
+        for(const itemStruct of items){
+          let viewItemID = 'entry-view-item-'+itemStruct.Item.id;
+          $('#bundleContainerItems').append('<div class="columns is-mobile is-marginless mt-1 sub-section-box"><div class="column"><p class="is-size-5">'+itemStruct.Item.name+'</p></div><div class="column"><div class="is-pulled-right buttons are-small"><button id="'+viewItemID+'" class="button is-info is-outlined">View</button></div></div></div>');
           $('#'+viewItemID).click(function() {
-            let itemStruct = itemMap.get(item.id+'');
+            let fullItemStruct = itemMap.get(itemStruct.Item.id+'');
             openQuickView('itemView', {
-              ItemDataStruct : itemStruct
+              ItemDataStruct : fullItemStruct
             });
           });
         }
@@ -364,6 +367,32 @@ socket.on("returnBundleContents", function(REQUEST_TYPE, userHasBundle, userOwns
           });
         }
       }
+
+      ////
+
+      if(allTags.length > 0){
+        let foundContent = false;
+        $('#bundleSectionTraits').removeClass('is-hidden');
+        $('#bundleContainerTraits').html('');
+        for(const trait of allTags){
+          if(trait.homebrewID == null || trait.isHidden == 1) {continue;} else {foundContent = true;}
+
+          let viewTraitID = 'entry-view-trait-'+trait.id;
+          $('#bundleContainerTraits').append('<div class="columns is-mobile is-marginless mt-1 sub-section-box"><div class="column"><p class="is-size-5">'+trait.name+'</p></div><div class="column"><div class="is-pulled-right buttons are-small"><button id="'+viewTraitID+'" class="button is-info is-outlined">View</button></div></div></div>');
+          $('#'+viewTraitID).click(function() {
+            openQuickView('tagView', {
+              TagName : trait.name,
+              InputTag : trait,
+            });
+          });
+        }
+
+        if(!foundContent) {
+          $('#bundleSectionTraits').addClass('is-hidden');
+        }
+      }
+
+      ////
 
       $('#'+displayContainerID).removeClass('is-hidden');
     }

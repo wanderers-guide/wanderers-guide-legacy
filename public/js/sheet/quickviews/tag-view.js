@@ -9,11 +9,11 @@ function openTagQuickview(data) {
     let qContent = $('#quickViewContent');
 
     let tag = g_allTags.find(tag => {
-        if(tag.name != null){
-            return tag.name.toUpperCase() === data.TagName.toUpperCase();
-        } else {
-            return tag.Tag.name.toUpperCase() === data.TagName.toUpperCase();
-        }
+      if(tag.name != null){
+        return tag.name.toUpperCase() === data.TagName.toUpperCase();
+      } else {
+        return tag.Tag.name.toUpperCase() === data.TagName.toUpperCase();
+      }
     });
 
     if(tag != null){

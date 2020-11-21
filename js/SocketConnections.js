@@ -2980,6 +2980,54 @@ module.exports = class SocketConnections {
         });
       });
 
+      ////
+
+      socket.on('requestHomebrewAddTrait', function(homebrewID, data){
+        UserHomebrew.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+          if(canEdit){
+            HomebrewCreation.addTrait(homebrewID, data).then((result) => {
+              socket.emit('returnHomebrewCompleteTrait');
+            });
+          }
+        });
+      });
+  
+      socket.on('requestHomebrewUpdateTrait', function(homebrewID, data){
+        UserHomebrew.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+          if(canEdit){
+            if(data != null && data.traitID != null) {
+              HomebrewCreation.deleteTrait(homebrewID, data.traitID).then((result) => {
+                HomebrewCreation.addTrait(homebrewID, data).then((result) => {
+                  socket.emit('returnHomebrewCompleteTrait');
+                });
+              });
+            }
+          }
+        });
+      });
+    
+      socket.on('requestHomebrewRemoveTrait', function(homebrewID, traitID){
+        UserHomebrew.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+          if(canEdit){
+            HomebrewCreation.deleteTrait(homebrewID, traitID).then((result) => {
+              socket.emit('returnHomebrewRemoveContent');
+            });
+          }
+        });
+      });
+  
+      socket.on('requestHomebrewTraitDetails', function(homebrewID){
+        UserHomebrew.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+          if(canEdit){
+            GeneralGathering.getAllTags(homebrewID).then((traits) => {
+              socket.emit('returnHomebrewTraitDetails', traits);
+            });
+          }
+        });
+      });
+
+      ////
+
     });
 
   }

@@ -60,14 +60,21 @@ socket.on("returnHomebrewAncestryDetails", function(ancestryObject, featsObject)
     $('#inputBonusLangs').trigger("chosen:updated");
 
     // Ancestry Heritages
+    let filteredAncestryHeritages = [];
     for(let heritage of ancestry.Heritages){
-        $("#addHeritageButton").trigger("click");
+      if(heritage.indivAncestryName == null){
+        filteredAncestryHeritages.push(heritage);
+      }
+    }
+
+    for(let heritage of filteredAncestryHeritages){
+      $("#addHeritageButton").trigger("click");
     }
 
     let ancestryHeritageCount = 0;
     $(".ancestryHeritage").each(function(){
         if($(this).is(":visible")) {
-            let heritage = ancestry.Heritages[ancestryHeritageCount];
+            let heritage = filteredAncestryHeritages[ancestryHeritageCount];
             ancestryHeritageCount++;
 
             let heritageName = heritage.name.replace(" "+ancestry.Ancestry.name,"");

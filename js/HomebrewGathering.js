@@ -98,14 +98,63 @@ module.exports = class HomebrewGathering {
     });
   }
 
-  static getAllItems(homebrewID) {
+  static getAllItems(homebrewID){
     Item.hasMany(TaggedItem, {foreignKey: 'itemID'});
     TaggedItem.belongsTo(Item, {foreignKey: 'itemID'});
-    return Item.findAll({
-      where: { homebrewID: homebrewID },
-      include: [TaggedItem]
-    }).then((items) => {
-      return items;
+    return Item.findAll({ where: { homebrewID: homebrewID }, include: [TaggedItem] })
+    .then((items) => {
+      return Weapon.findAll()
+      .then((weapons) => {
+          return Armor.findAll()
+          .then((armors) => {
+              return Storage.findAll()
+              .then((storages) => {
+                  return Shield.findAll()
+                  .then((shields) => {
+                      return ItemRune.findAll()
+                      .then((runes) => {
+                                  
+                          let itemArray = [];
+
+                          for(const item of items){
+
+                              let weapon = weapons.find(weapon => {
+                                  return weapon.itemID == item.id;
+                              });
+
+                              let armor = armors.find(armor => {
+                                  return armor.itemID == item.id;
+                              });
+
+                              let storage = storages.find(storage => {
+                                  return storage.itemID == item.id;
+                              });
+
+                              let shield = shields.find(shield => {
+                                  return shield.itemID == item.id;
+                              });
+
+                              let rune = runes.find(rune => {
+                                  return rune.itemID == item.id;
+                              });
+
+                              itemArray.push({
+                                  Item : item,
+                                  WeaponData : weapon,
+                                  ArmorData : armor,
+                                  StorageData : storage,
+                                  ShieldData : shield,
+                                  RuneData : rune,
+                              });
+
+                          }
+
+                          return itemArray;
+                      });
+                  });
+              });
+          });
+      });
     });
   }
 

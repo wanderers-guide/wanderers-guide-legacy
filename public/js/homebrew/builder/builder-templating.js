@@ -90,6 +90,14 @@ const TEMPLATE_MAP_SPELL = [
   { Name: 'Object Reading', ID: 859 },
   { Name: 'Wyvern Sting', ID: 967 },
 ];
+
+const TEMPLATE_MAP_TRAIT = [
+  { Name: 'Alchemical', ID: 399 },
+  { Name: 'Fatal', ID: 567 },
+  { Name: 'Gnome - Item', ID: 638 },
+  { Name: 'Linguistic', ID: 37 },
+  { Name: 'Possession', ID: 368 },
+];
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 
 // ~~~~~~~~~~~~~~ // Run on Load // ~~~~~~~~~~~~~~ //
@@ -125,6 +133,7 @@ function initNewContentTemplating() {
       case 'ITEM': TEMPLATES = TEMPLATE_MAP_ITEM; break;
       case 'LANGUAGE': TEMPLATES = TEMPLATE_MAP_LANGUAGE; break;
       case 'SPELL': TEMPLATES = TEMPLATE_MAP_SPELL; break;
+      case 'TRAIT': TEMPLATES = TEMPLATE_MAP_TRAIT; break;
       default: break;
     }
     
@@ -163,6 +172,7 @@ function initNewContentTemplating() {
       case 'ITEM': window.location.href = '/homebrew/create/item/?id='+g_activeBundle.id; break;
       case 'LANGUAGE': window.location.href = '/homebrew/create/language/?id='+g_activeBundle.id; break;
       case 'SPELL': window.location.href = '/homebrew/create/spell/?id='+g_activeBundle.id; break;
+      case 'TRAIT': window.location.href = '/homebrew/create/trait/?id='+g_activeBundle.id; break;
       default: break;
     }
 

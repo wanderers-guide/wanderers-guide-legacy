@@ -490,4 +490,32 @@ router.get('/edit/language', bundleAuthCheck, (req, res) => {
 
 });
 
+//// Trait ////
+
+router.get('/create/trait', bundleAuthCheck, (req, res) => {
+
+  let bundleID = parseInt(req.query.id); if(isNaN(bundleID)){bundleID=null;}
+
+  res.render('homebrew/builder_trait', {
+    title: "Trait Builder - Wanderer's Guide",
+    user: req.user,
+    bundleID: bundleID,
+  });
+
+});
+
+router.get('/edit/trait', bundleAuthCheck, (req, res) => {
+
+  let bundleID = parseInt(req.query.id); if(isNaN(bundleID)){bundleID=null;}
+  let traitID = parseInt(req.query.content_id); if(isNaN(traitID)){traitID=null;}
+
+  res.render('homebrew/builder_trait', {
+    title: "Trait Builder - Wanderer's Guide",
+    user: req.user,
+    bundleID: bundleID,
+    traitID: traitID,
+  });
+
+});
+
 module.exports = router;

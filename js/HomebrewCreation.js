@@ -34,6 +34,37 @@ function becomeNegative(number){
 
 module.exports = class HomebrewCreation {
 
+    static addTrait(homebrewID, data) {
+      /* Data:
+          traitID,
+          traitName,
+          traitDescription,
+      */
+      for(let d in data) { if(data[d] === ''){ data[d] = null; } }
+      if(data.traitName == null) { data.traitName = 'Unnamed Trait'; }
+      data.traitName = data.traitName.replace(/’/g,"'");
+      if(data.traitDescription == null){ data.traitDescription = '__No Description__'; }
+      return Tag.create({ // Create Trait
+          name: data.traitName,
+          description: data.traitDescription,
+          homebrewID: homebrewID,
+      }).then(trait => {
+          return trait;
+      });
+    }
+
+    static deleteTrait(homebrewID, traitID){
+        if(traitID == null || homebrewID == null) {return;}
+        return Tag.destroy({ // Delete Trait
+          where: { id: traitID, homebrewID: homebrewID }
+        }).then((result) => {
+            return;
+        });
+    }
+
+
+
+
     static addLanguage(homebrewID, data) {
       /* Data:
           languageID,
@@ -55,7 +86,6 @@ module.exports = class HomebrewCreation {
       }).then(language => {
           return language;
       });
-
     }
 
     static deleteLanguage(homebrewID, languageID){
