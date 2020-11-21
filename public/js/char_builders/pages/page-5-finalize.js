@@ -98,7 +98,7 @@ function loadFinalizePage(character, cClass, ancestry) {
         sourceCodeSNum: 'a',
       };
       processCode(
-        character.customCode,
+        'CLEAR-DATA-FROM-CODE-BLOCK\n'+character.customCode,
         customCodeSrcStruct,
         'custom-code-block-results-container');
     }

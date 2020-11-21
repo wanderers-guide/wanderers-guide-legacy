@@ -368,9 +368,11 @@ socket.on("returnWSCUpdateArchetypes", function(archetypesArray){
 //////////////
 
 function clearDataFromSrcStruct(srcStruct){
+  let newSrcStruct = cloneObj(srcStruct);
+  newSrcStruct.sourceCodeSNum = newSrcStruct.sourceCodeSNum.substring(1);
   socket.emit("requestWSCSrcStructDataClear",
       getCharIDFromURL(),
-      srcStruct);
+      newSrcStruct);
 }
 
 socket.on("returnWSCSrcStructDataClear", function(choiceStruct){

@@ -68,7 +68,9 @@ class DisplayClass {
             }
           }
 
-          $('#class-skills').html('Trained in '+classStruct.class.tSkills);
+          if(classStruct.class.tSkills != null){
+            $('#class-skills').html('Trained in '+classStruct.class.tSkills);
+          }
           $('#class-skills-extra').html('Trained in a number of additional skills equal to '+classStruct.class.tSkillsMore+' plus your Intelligence modifier');
 
           $('#class-class-dc').html(profToWord(classStruct.class.tClassDC));

@@ -65,7 +65,7 @@ function giveProfSkillTraining(srcStruct, profName, prof, locationID){
                         srcStruct,
                         locationID);
                     window.setTimeout(() => {
-                      $('#'+locationID).append('<p class="help is-info is-italic">You are already trained in '+profMapData.Name+' which means you</p><p class="help is-info is-italic">get to select a new skill to become trained in instead.</p>');
+                      $('#'+locationID).append('<p class="help is-info is-italic">You are already trained in '+profMapData.Name+' which means you get to select a new skill to become trained in instead.</p>');
                     }, 100);
                     statementComplete();
                     return;

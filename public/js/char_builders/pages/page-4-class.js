@@ -198,6 +198,7 @@ function displayCurrentClass(classStruct, saving) {
     savingProfArray.push({ For : "Perception", To : "Perception", Prof : classStruct.Class.tPerception });
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Skills ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
+    $('#profSkillsCode').html('');
     let profSkills = $('#profSkills');
     profSkills.html('');
     profSkills.append('<ul id="profSkillsUL"></ul>');
