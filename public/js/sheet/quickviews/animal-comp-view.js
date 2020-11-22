@@ -18,9 +18,12 @@ function openAnimalCompQuickview(data) {
     // Remove Button //
     $('#quickViewTitleRight').html('<button id="removeAnimalBtn" class="button is-very-small is-danger is-outlined is-rounded is-pulled-right mr-1">Remove</button>');
     $('#removeAnimalBtn').click(function(){
+      new ConfirmMessage('Remove Animal Companion', 'Are you sure you want to permanently remove this animal companion?', 'Remove', 'modal-remove-animal-companion-'+charAnimal.id, 'modal-remove-animal-companion-btn-'+charAnimal.id);
+      $('#modal-remove-animal-companion-btn-'+charAnimal.id).click(function() {
         socket.emit("requestRemoveAnimalCompanion",
             getCharIDFromURL(),
             charAnimal.id);
+      });
     });
 
     // Init Specializations //

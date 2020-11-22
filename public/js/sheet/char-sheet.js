@@ -180,7 +180,11 @@ socket.on("returnCharacterSheetInfo", function(charInfo, viewOnly){
     g_langArray = charInfo.ChoicesStruct.LangArray;
     g_langArray = g_langArray.sort(
       function(a, b) {
-        return a.value.name > b.value.name ? 1 : -1;
+        if(a.value != null && b.value != null){
+          return a.value.name > b.value.name ? 1 : -1;
+        } else {
+          return 1;
+        }
       }
     );
     g_allLanguages = charInfo.AllLanguages;
@@ -1300,6 +1304,7 @@ function displayInformation() {
     languagesContent.html('');
     let langCount = 0;
     for(const lang of g_langArray){
+        if(lang.value == null) {continue;}
         if(langCount != 0){languagesContent.append(', ');}
         langCount++;
         let langID = 'langLink'+lang.value.id+"C"+langCount;

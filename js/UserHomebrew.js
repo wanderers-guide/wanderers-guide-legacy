@@ -30,7 +30,7 @@ module.exports = class UserHomebrew {
     }).then(userHomebrewBundle => {
       return HomebrewBundle.findOne({ where: { id: homebrewID } })
       .then((homebrewBundle) => {
-        return (userHomebrewBundle != null || homebrewBundle.userID === getUserID(socket));
+        return (userHomebrewBundle != null || homebrewBundle.userID === getUserID(socket) || homebrewBundle.isPublished === 1);
       });
     });
   }

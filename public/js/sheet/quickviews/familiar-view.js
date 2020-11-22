@@ -14,9 +14,12 @@ function openFamiliarQuickview(data) {
     // Remove Button //
     $('#quickViewTitleRight').html('<button id="removeFamiliarBtn" class="button is-very-small is-danger is-outlined is-rounded is-pulled-right mr-1">Remove</button>');
     $('#removeFamiliarBtn').click(function(){
+      new ConfirmMessage('Remove Familiar', 'Are you sure you want to permanently remove this familiar?', 'Remove', 'modal-remove-familiar-'+familiar.id, 'modal-remove-familiar-btn-'+familiar.id);
+      $('#modal-remove-familiar-btn-'+familiar.id).click(function() {
         socket.emit("requestRemoveFamiliar",
             getCharIDFromURL(),
             familiar.id);
+      });
     });
 
     // Familiar Traits //
