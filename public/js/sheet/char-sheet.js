@@ -114,6 +114,14 @@ let g_showHealthPanel = true; // For Stamina GMG Variant
 // ~~~~~~~~~~~~~~ // Run on Load // ~~~~~~~~~~~~~~ //
 $(function () {
 
+    window.setTimeout(() => {
+      if(!isSheetInit){
+        displayError('Sheet took too long to load. There may have been an issue when loading.');
+        $('#sheet-container').addClass('is-hidden');
+        $('.pageloader').addClass("fadeout");
+      }
+    }, 45000); // 45 seconds
+
     // Remove Footer //
     $('#wanderers-guide-footer').addClass('is-hidden');
     $('#main-container').addClass('is-paddingless');
@@ -125,7 +133,6 @@ $(function () {
 
 
 socket.on("returnCharacterSheetInfo", function(charInfo, viewOnly){
-    isSheetInit = true;
     isViewOnly = viewOnly;
 
     // View Only //
@@ -173,7 +180,7 @@ socket.on("returnCharacterSheetInfo", function(charInfo, viewOnly){
     );
 
     g_abilMap = objToMap(charInfo.AbilObject);
-    g_skillMap = objToMap(charInfo.SkillObject);
+    //g_skillMap = objToMap(charInfo.SkillObject);
     g_senseArray = charInfo.ChoicesStruct.SenseArray;
     g_phyFeatArray = charInfo.ChoicesStruct.PhyFeatArray;
 
@@ -284,7 +291,7 @@ socket.on("returnCharacterSheetInfo", function(charInfo, viewOnly){
 
     // Turn off page loading
     $('.pageloader').addClass("fadeout");
-
+    isSheetInit = true;
 });
 
 function loadCharSheet(){

@@ -92,7 +92,9 @@
   margin-left: auto;
   margin-right: auto;
 }
-
+.hero {
+  z-index: 20;
+}
 
 /* Rarities */
 .button.is-uncommon {

@@ -191,8 +191,9 @@ router.get('/create/ancestry', adminAuthCheck, (req, res) => {
             where: { isArchived: 0, isHidden: 0, homebrewID: null },
             order: [['name', 'ASC'],]
         }).then((tags) => {
-            SenseType.findAll()
-            .then((senseTypes) => {
+            SenseType.findAll({
+              order: [['name', 'ASC'],]
+            }).then((senseTypes) => {
                 PhysicalFeature.findAll()
                 .then((physicalFeatures) => {
 

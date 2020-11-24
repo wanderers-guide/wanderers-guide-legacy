@@ -110,8 +110,9 @@ router.get('/create/ancestry', bundleAuthCheck, (req, res) => {
         where: { isArchived: 0, isHidden: 0, homebrewID: { [Op.or]: [null,bundleID] } },
         order: [['name', 'ASC'],]
     }).then((tags) => {
-        SenseType.findAll()
-        .then((senseTypes) => {
+        SenseType.findAll({
+          order: [['name', 'ASC'],]
+        }).then((senseTypes) => {
             PhysicalFeature.findAll()
             .then((physicalFeatures) => {
 
@@ -145,8 +146,9 @@ router.get('/edit/ancestry', bundleAuthCheck, (req, res) => {
         where: { isArchived: 0, isHidden: 0, homebrewID: { [Op.or]: [null,bundleID] } },
         order: [['name', 'ASC'],]
     }).then((tags) => {
-        SenseType.findAll()
-        .then((senseTypes) => {
+        SenseType.findAll({
+          order: [['name', 'ASC'],]
+        }).then((senseTypes) => {
             PhysicalFeature.findAll()
             .then((physicalFeatures) => {
 
