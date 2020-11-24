@@ -86,7 +86,7 @@ class DisplayArchetype {
             let tag = featStruct.Tags.find(tag => {
               return tag.id === archetypeStruct.archetype.tagID;
             });
-            if(tag != null){
+            if(tag != null || featStruct.Feat.genTypeName == archetypeStruct.archetype.name+' Archetype'){
               if(featStruct.Feat.level <= 0) { continue; }
               if(featStruct.Feat.level > archetypeFeatLevel){
                 archetypeFeatLevel = featStruct.Feat.level;

@@ -123,7 +123,7 @@ function processSheetCode(wscCode, sourceName, isTest=false){
             continue;
         }
 
-        if(wscStatementUpper.includes("OVERRIDE-")){
+        if(wscStatementUpper.includes("OVERRIDE-") && !wscStatementUpper.includes("OVERRIDE-FEAT-LEVEL=")){
             if(isTest) {continue;}
             // OVERRIDE-X=5 (Ex. OVERRIDE-PERCEPTION=10-MODIFIER)
 
