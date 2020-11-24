@@ -180,7 +180,7 @@ socket.on("returnCharacterSheetInfo", function(charInfo, viewOnly){
     );
 
     g_abilMap = objToMap(charInfo.AbilObject);
-    //g_skillMap = objToMap(charInfo.SkillObject);
+    g_skillMap = objToMap(charInfo.SkillObject);
     g_senseArray = charInfo.ChoicesStruct.SenseArray;
     g_phyFeatArray = charInfo.ChoicesStruct.PhyFeatArray;
 
