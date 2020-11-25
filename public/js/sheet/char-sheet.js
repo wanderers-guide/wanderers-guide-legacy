@@ -275,6 +275,11 @@ socket.on("returnCharacterSheetInfo", function(charInfo, viewOnly){
         return a.name > b.name ? 1 : -1;
       }
     );
+    g_companionData.AllSpecificFamiliars = g_companionData.AllSpecificFamiliars.sort(
+      function(a, b) {
+        return a.name > b.name ? 1 : -1;
+      }
+    );
 
 
     g_notesFields = charInfo.NotesFields;

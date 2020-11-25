@@ -39,6 +39,7 @@ const Shield = require('../models/contentDB/Shield');
 const ItemRune = require('../models/contentDB/ItemRune');
 const AnimalCompanion = require('../models/contentDB/AnimalCompanion');
 const CharAnimalCompanion = require('../models/contentDB/CharAnimalCompanion');
+const SpecificFamiliar = require('../models/contentDB/SpecificFamiliar');
 const FamiliarAbility = require('../models/contentDB/FamiliarAbility');
 const CharFamiliar = require('../models/contentDB/CharFamiliar');
 const CharDataMappingModel = require('../models/contentDB/CharDataMapping');
@@ -1392,6 +1393,25 @@ module.exports = class CharGathering {
         });
     }
 
+    static getAllSpecificFamiliars(charID) {
+      return Character.findOne({ where: { id: charID} })
+      .then((character) => {
+          return SpecificFamiliar.findAll({
+              where: {
+                  contentSrc: {
+                    [Op.or]: CharContentSources.getSourceArray(character)
+                  },
+                  homebrewID: {
+                    [Op.or]: CharContentHomebrew.getHomebrewArray(character)
+                  },
+              }
+          })
+          .then((specificFamiliars) => {
+              return specificFamiliars;
+          });
+      });
+    }
+
     static getAllFamiliarAbilities(charID) {
       return Character.findOne({ where: { id: charID} })
       .then((character) => {
@@ -1416,18 +1436,22 @@ module.exports = class CharGathering {
       .then((allAnimalCompanions) => {
         return CharAnimalCompanion.findAll({ where: { charID: charID} })
         .then((charAnimalComps) => {
-          return CharGathering.getAllFamiliarAbilities(charID)
-          .then((allFamiliarAbilities) => {
-            return CharFamiliar.findAll({ where: { charID: charID} })
-            .then((charFamiliars) => {
+          return CharGathering.getAllSpecificFamiliars(charID)
+          .then((allSpecificFamiliars) => {
+            return CharGathering.getAllFamiliarAbilities(charID)
+            .then((allFamiliarAbilities) => {
+              return CharFamiliar.findAll({ where: { charID: charID} })
+              .then((charFamiliars) => {
 
-              return {
-                  AllAnimalCompanions : allAnimalCompanions,
-                  AnimalCompanions : charAnimalComps,
-                  AllFamiliarAbilities : allFamiliarAbilities,
-                  Familiars : charFamiliars,
-              };
+                return {
+                    AllAnimalCompanions : allAnimalCompanions,
+                    AnimalCompanions : charAnimalComps,
+                    AllSpecificFamiliars : allSpecificFamiliars,
+                    AllFamiliarAbilities : allFamiliarAbilities,
+                    Familiars : charFamiliars,
+                };
 
+              });
             });
           });
         });

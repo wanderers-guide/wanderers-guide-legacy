@@ -587,9 +587,9 @@ function displayCompanionsSection(){
     // Add Familiar //
     $('#selectFamiliar').append('<option value="Familiar">Familiar</option>');
 
-    $('#selectFamiliar').append('<option value="FAERIE-DRAGON">Faerie Dragon</option>');
-    $('#selectFamiliar').append('<option value="IMP">Imp</option>');
-    $('#selectFamiliar').append('<option value="SPELLSLIME">Spellslime</option>');
+    for(let specificFamiliar of g_companionData.AllSpecificFamiliars) {
+      $('#selectFamiliar').append('<option value="'+specificFamiliar.specificType+'">'+specificFamiliar.name+'</option>');
+    }
     
     $('#addFamiliar').click(function() {
         let specificType = $('#selectFamiliar').val();

@@ -204,58 +204,24 @@ function getFamiliarSpeed(charFamiliar){
 }
 
 
-/// Specific Familiars ///
 
 function getFamiliarSpecificStruct(specificType){
-  if(specificType == null) {return null;}
+  
+  let familiarStruct = g_companionData.AllSpecificFamiliars.find(struct => {
+    return struct.specificType === specificType;
+  });
+  if(familiarStruct == null) {return null;}
 
-  if(specificType == 'FAERIE-DRAGON'){
-    return {
-      SpecificType: specificType,
-      Name: 'Faerie Dragon',
-      Alignment: null,
-      Tags: ['Dragon'],
-      Description: 'These tiny, mischievous dragons make natural allies for benevolent or capricious characters.',
-      NumAbils: 6,
-      AbilsJSON: '["Amphibious","Darkvision","Flier","Manual Dexterity","Speech","Touch Telepathy"]',
-      ExtraAbils: [
-        '~ Breath Weapon: TWO-ACTIONS ((trait: arcane), (trait: evocation), (trait: poison)) **Frequency** once per hour; **Effect** The faerie dragon breathes euphoric gas in a 10-foot cone. Each creature in the area must attempt a Fortitude save against your class DC or spell DC, whichever is higher. A creature that fails its save is stupefied 2 and slowed 1 for 1d4 rounds; on a critical failure, the duration is 1 minute.'
-      ]
-    };
-  }
-
-  if(specificType == 'IMP'){
-    return {
-      SpecificType: specificType,
-      Name: 'Imp',
-      Alignment: 'An imp must be lawful evil.',
-      Tags: ['Devil','Fiend'],
-      Description: 'Imp familiars pretend to be subservient in order to trick their masters into losing their souls to Hell. Their resistance is in fire and poison and they\'re skilled in Deception.',
-      NumAbils: 8,
-      AbilsJSON: '["Darkvision","Flier","Manual Dexterity","Resistance","Skilled","Speech","Touch Telepathy"]',
-      ExtraAbils: [
-        '~ Imp Invisibility: Once per hour, your imp familiar can cast 2nd-level (spell: invisibility) on itself as a divine innate spell.',
-        '~ Infernal Temptation: ONE-ACTION ((trait: concentrate), (trait: divine), (trait: enchantment), (trait: evil), (trait: fortune)) **Frequency** once per day; **Effect** The imp offers a non-fiend within 15 feet a bargain, granting a boon of good luck if the creature accepts. The boon lasts for 1 hour once accepted. If the creature dies while the boon is in place, its soul travels to Hell, where it is bound for eternity and unable to be raised or resurrected except by wish or similar magic. Once during the hour, the creature can roll an attack roll or saving throw twice and use the higher result.'
-      ]
-    };
-  }
-
-  if(specificType == 'SPELLSLIME'){
-    return {
-      SpecificType: specificType,
-      Name: 'Spellslime',
-      Alignment: null,
-      Tags: ['Ooze'],
-      Description: 'These friendly, colorful oozes congeal from the essences left over from casting spells. They are extremely loyal to their masters. You can select a spellslime familiar only if you can cast spells using spell slots.',
-      NumAbils: 4,
-      AbilsJSON: '["Climber","Darkvision","Focused Rejuvenation","Tough"]',
-      ExtraAbils: [
-        '~ Magic Scent: Your spellslime familiar gains an imprecise sense with a range of 30 feet that enables it to smell magic of the same tradition as your own.',
-        '~ Ooze Defense: Your spellslime familiar is easy to hit, but it lacks weak points. It is immune to critical hits and precision damage, but its AC is only 10 + your level (instead of an AC equal to yours).',
-        '~ Slime Rejuvenation: Your spellslime familiar gains the focused rejuvenation ability, but it recovers 2 Hit Points per level when you (action: Refocus) instead of 1.'
-      ]
-    };
-  }
+  return {
+    SpecificType: familiarStruct.specificType,
+    Name: familiarStruct.name,
+    Alignment: familiarStruct.alignment,
+    Tags: JSON.parse(familiarStruct.tagsJSON),
+    Description: familiarStruct.description,
+    NumAbils: familiarStruct.numAbils,
+    AbilsJSON: familiarStruct.abilsJSON,
+    ExtraAbils: JSON.parse(familiarStruct.extraAbils)
+  };
 
 }
 
@@ -282,8 +248,8 @@ function displayFamiliarReqAbils(content, specificStruct){
 
 function displayFamiliarExtraAbils(content, specificStruct){
   if(specificStruct == null) {return;}
-  content.append('<hr class="m-2">');
   for(let extraAbil of specificStruct.ExtraAbils){
+    content.append('<hr class="m-2">');
     content.append('<div class="px-1">'+processText(extraAbil, true, true, 'MEDIUM')+'</div>');
   }
 }

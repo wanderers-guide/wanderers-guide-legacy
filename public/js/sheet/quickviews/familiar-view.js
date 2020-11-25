@@ -146,6 +146,7 @@ function openFamiliarQuickview(data) {
         } else {
           descriptionContent = $('#familiarAbilityDescriptions');
         }
+        descriptionContent.append('<hr class="m-2">');
         descriptionContent.append('<div class="px-3"><p class="is-bold-very">'+ability.name+'</p></div>');
         if(ability.prerequisites != null){
           descriptionContent.append('<div class="px-4 ml-2"><p class="negative-indent"><span><strong>Prerequisites </strong></span><span>'+ability.prerequisites+'</span></p></div>');
