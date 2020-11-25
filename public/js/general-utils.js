@@ -50,6 +50,7 @@ const g_contentSources = [
   {TextName: 'The Slithering', CodeName: 'SLITHERING', Link: 'https://paizo.com/products/btq023hg?Pathfinder-Adventure-The-Slithering'},
   {TextName: 'Bestiary', CodeName: 'BEST-1', Link: 'https://paizo.com/products/btq01zp4?Pathfinder-Bestiary'},
   {TextName: 'Bestiary 2', CodeName: 'BEST-2', Link: 'https://paizo.com/products/btq022yq?Pathfinder-Bestiary-2'},
+  {TextName: 'Pathfinder Society', CodeName: 'PATH-SOCIETY', Link: 'https://paizo.com/pathfindersociety'},
 ];
 
 const g_currentContentSource = 'AGENTS-OF-EDGEWATCH';

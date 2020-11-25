@@ -255,6 +255,14 @@ function handleCharacterOptions(character, hBundles, progessBundles) {
     });
     $("#contentSrc-SLITHERING").prop('checked', contentSourceArray.includes('SLITHERING'));
 
+    $("#contentSrc-PATH-SOCIETY").change(function(){
+      socket.emit("requestCharacterSourceChange", 
+          getCharIDFromURL(), 
+          'PATH-SOCIETY',
+          this.checked);
+    });
+    $("#contentSrc-PATH-SOCIETY").prop('checked', contentSourceArray.includes('PATH-SOCIETY'));
+
     // Variants //
     $("#variantAncestryParagon").change(function(){
       let optionTypeValue = (this.checked) ? 1 : 0;
