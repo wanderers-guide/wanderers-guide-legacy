@@ -13,6 +13,12 @@ const Domain = db.define('domains', {
   },
   advancedSpellID: {
     type: Sequelize.INTEGER
+  },
+  contentSrc: {
+    type: Sequelize.STRING
+  },
+  homebrewID: {
+    type: Sequelize.INTEGER
   }
 });
 

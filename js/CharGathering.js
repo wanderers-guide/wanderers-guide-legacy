@@ -854,9 +854,17 @@ module.exports = class CharGathering {
         });
     }
 
-    static getAllDomains() {
-        return Domain.findAll()
-        .then((domains) => {
+    static getAllDomains(character) {
+        return Domain.findAll({
+          where: {
+              contentSrc: {
+                [Op.or]: CharContentSources.getSourceArray(character)
+              },
+              homebrewID: {
+                [Op.or]: CharContentHomebrew.getHomebrewArray(character)
+              },
+          }
+        }).then((domains) => {
             return domains;
         });
     }
@@ -1075,7 +1083,7 @@ module.exports = class CharGathering {
                                       .then((focusPointDataArray) => {
                                         return CharGathering.getFinalProfs(charID)
                                         .then((profMap) => {
-                                          return CharGathering.getAllDomains()
+                                          return CharGathering.getAllDomains(character)
                                           .then((domains) => {
                                             return CharGathering.getChoicesDomains(charID)
                                             .then((domainDataArray) => {
