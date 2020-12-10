@@ -549,43 +549,51 @@ function createAncestryFeats(charLevel){
 
         locData1 = buildFeatStruct(1, '1-2');
       }
+      ancestryFeatsLocs.push(locData1);
+
       if(charLevel >= 3){
         locData3 = buildFeatStruct(3);
       }
+      ancestryFeatsLocs.push(locData3);
+
       if(charLevel >= 5){
         let locData = buildFeatStruct(5);
         ancestryFeatsLocs.push(locData);
       }
+
       if(charLevel >= 7){
         locData7 = buildFeatStruct(7);
       }
+      ancestryFeatsLocs.push(locData7);
+
       if(charLevel >= 9){
         let locData = buildFeatStruct(9);
         ancestryFeatsLocs.push(locData);
       }
+
       if(charLevel >= 11){
         locData11 = buildFeatStruct(11);
       }
+      ancestryFeatsLocs.push(locData11);
+
       if(charLevel >= 13){
         let locData = buildFeatStruct(13);
         ancestryFeatsLocs.push(locData);
       }
+
       if(charLevel >= 15){
         locData15 = buildFeatStruct(15);
       }
+      ancestryFeatsLocs.push(locData15);
+
       if(charLevel >= 17){
         let locData = buildFeatStruct(17);
         ancestryFeatsLocs.push(locData);
       }
+
       if(charLevel >= 19){
         locData19 = buildFeatStruct(19);
       }
-
-      ancestryFeatsLocs.push(locData1);
-      ancestryFeatsLocs.push(locData3);
-      ancestryFeatsLocs.push(locData7);
-      ancestryFeatsLocs.push(locData11);
-      ancestryFeatsLocs.push(locData15);
       ancestryFeatsLocs.push(locData19);
 
     } else { // Or else use normal...

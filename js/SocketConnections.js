@@ -645,7 +645,16 @@ module.exports = class SocketConnections {
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
           if(ownsChar){
             CharSaving.saveCharacterOption(charID, optionName, value).then((result) => {
-              socket.emit('returnCharacterOptionChange');
+
+              // Hardcoded - Clear ancestry feats for Ancestry Paragon variant
+              if(optionName == 'variantAncestryParagon') {
+                CharDataMapping.deleteDataBySourceAndType(charID, 'chosenFeats', 'ancestry')
+                .then((result) => {
+                  socket.emit('returnCharacterOptionChange');
+                });
+              } else {
+                socket.emit('returnCharacterOptionChange');
+              }
             });
           }
         });

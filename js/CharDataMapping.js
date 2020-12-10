@@ -199,6 +199,19 @@ module.exports = class CharDataMapping {
         });
     }
 
+    static deleteDataBySourceAndType(charID, source, sourceType){
+        console.log("Delete by Source and Type - "+source+" "+sourceType);
+        return CharDataMappingModel.destroy({
+            where: {
+                charID,
+                source,
+                sourceType,
+            }
+        }).then((result) => {
+            return;
+        });
+    }
+
     static deleteDataByGreaterThanSourceLevel(charID, level){
         console.log("Delete by Greater Than Level - "+level);
         return CharDataMappingModel.destroy({

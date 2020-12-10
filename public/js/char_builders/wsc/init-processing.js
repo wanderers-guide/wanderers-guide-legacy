@@ -407,6 +407,7 @@ function processCode_AncestryAbilities(ancestryFeatsLocs){
     temp_ancestryFeatsLocs = ancestryFeatsLocs;
     let ancestryFeatCount = 0;
     for(const ancestryFeatsLoc of ancestryFeatsLocs) {
+        if(ancestryFeatsLoc == null) {continue;}
         let srcStruct = {
             sourceType: 'ancestry',
             sourceLevel: ancestryFeatsLoc.Level,
