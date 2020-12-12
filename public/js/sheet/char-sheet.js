@@ -233,6 +233,14 @@ socket.on("returnCharacterSheetInfo", function(charInfo, viewOnly){
     );
     
     g_spellSlotsMap = objToMap(charInfo.SpellDataStruct.SpellSlotObject);
+    for(let [spellSRC, slotArray] of g_spellSlotsMap.entries()){
+      slotArray = slotArray.sort(
+        function(a, b) {
+            return a.slotLevel - b.slotLevel;
+        }
+      );
+    }
+
     g_spellBookArray = charInfo.SpellDataStruct.SpellBookArray;
 
     g_focusPointArray = charInfo.SpellDataStruct.FocusPointsArray;
