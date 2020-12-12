@@ -49,10 +49,11 @@ function displayBackgroundResults(allBackgrounds){
     $('#browsingList').html('<p class="has-text-centered is-italic">No results found!</p>');
     return;
   }
-  $('#searchResultCountContainer').html('<p class="is-italic has-text-grey">('+allBackgrounds.size+' results found)</p>');
 
+  let foundCount = 0;
   for(const background of allBackgrounds){
     if(background.isArchived == 1) {continue;}
+    foundCount++;
 
     let entryID = 'background-'+background.id;
     let name = background.name;
@@ -72,5 +73,6 @@ function displayBackgroundResults(allBackgrounds){
     });
 
   }
+  $('#searchResultCountContainer').html('<p class="is-italic has-text-grey">('+foundCount+' results found)</p>');
   $('#browsingList').scrollTop();
 }

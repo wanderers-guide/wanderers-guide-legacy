@@ -1267,8 +1267,6 @@ function displayInformation() {
             event.stopImmediatePropagation();
         }
         changeTab('inventoryTab', {
-            StrScore : getStatTotal('SCORE_STR'),
-            DexMod : getMod(getStatTotal('SCORE_DEX')),
             Size : g_ancestry.size,
         });
     });

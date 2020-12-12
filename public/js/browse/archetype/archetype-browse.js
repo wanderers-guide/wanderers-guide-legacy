@@ -69,7 +69,6 @@ function displayArchetypeResults(allArchetypes){
     $('#browsingList').html('<p class="has-text-centered is-italic">No results found!</p>');
     return;
   }
-  $('#searchResultCountContainer').html('<p class="is-italic has-text-grey">('+allArchetypes.size+' results found)</p>');
   
   allArchetypes = Array.from(allArchetypes).sort(
     function(a, b) {
@@ -83,8 +82,10 @@ function displayArchetypeResults(allArchetypes){
     }
   );
 
+  let foundCount = 0;
   for(const archetype of allArchetypes){
     if(archetype.isArchived == 1) {continue;}
+    foundCount++;
 
     let entryID = 'archetype-'+archetype.id;
     let name = archetype.name;
@@ -107,5 +108,6 @@ function displayArchetypeResults(allArchetypes){
     });
 
   }
+  $('#searchResultCountContainer').html('<p class="is-italic has-text-grey">('+foundCount+' results found)</p>');
   $('#browsingList').scrollTop();
 }

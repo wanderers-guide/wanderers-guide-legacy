@@ -1069,6 +1069,7 @@ module.exports = class CharGathering {
                         .then((choiceDataArray) => {
                           return CharDataMappingExt.getDataAllProficiencies(charID)
                           .then((profDataArray) => {
+                            console.log(profDataArray);
                             return CharDataMappingExt.getDataAllInnateSpell(charID)
                             .then((innateSpellDataArray) => {
                               return CharDataMapping.getDataAll(charID,"languages",Language)

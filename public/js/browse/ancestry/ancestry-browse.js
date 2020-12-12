@@ -49,10 +49,11 @@ function displayAncestryResults(allAncestries){
     $('#browsingList').html('<p class="has-text-centered is-italic">No results found!</p>');
     return;
   }
-  $('#searchResultCountContainer').html('<p class="is-italic has-text-grey">('+allAncestries.size+' results found)</p>');
 
+  let foundCount = 0;
   for(const ancestry of allAncestries){
     if(ancestry.isArchived == 1) {continue;}
+    foundCount++;
 
     let entryID = 'ancestry-'+ancestry.id;
     let name = ancestry.name;
@@ -72,5 +73,6 @@ function displayAncestryResults(allAncestries){
     });
 
   }
+  $('#searchResultCountContainer').html('<p class="is-italic has-text-grey">('+foundCount+' results found)</p>');
   $('#browsingList').scrollTop();
 }

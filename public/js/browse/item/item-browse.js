@@ -148,7 +148,6 @@ function displayItemResults(itemMap){
     $('#browsingList').html('<p class="has-text-centered is-italic">No results found!</p>');
     return;
   }
-  $('#searchResultCountContainer').html('<p class="is-italic has-text-grey">('+itemMap.size+' results found)</p>');
 
   itemMap = new Map([...itemMap.entries()].sort(
     function(a, b) {
@@ -160,8 +159,10 @@ function displayItemResults(itemMap){
     })
   );
 
+  let foundCount = 0;
   for(const [itemID, itemStruct] of itemMap.entries()){
     if(itemStruct.Item.hidden == 1 || itemStruct.Item.isArchived == 1) {continue;}
+    foundCount++;
 
     let entryID = 'item-'+itemID;
     let name = itemStruct.Item.name;
@@ -186,5 +187,6 @@ function displayItemResults(itemMap){
     });
 
   }
+  $('#searchResultCountContainer').html('<p class="is-italic has-text-grey">('+foundCount+' results found)</p>');
   $('#browsingList').scrollTop();
 }

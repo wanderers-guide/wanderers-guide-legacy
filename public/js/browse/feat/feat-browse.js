@@ -121,7 +121,6 @@ function displayFeatResults(featMap){
     $('#browsingList').html('<p class="has-text-centered is-italic">No results found!</p>');
     return;
   }
-  $('#searchResultCountContainer').html('<p class="is-italic has-text-grey">('+featMap.size+' results found)</p>');
 
   featMap = new Map([...featMap.entries()].sort(
     function(a, b) {
@@ -133,9 +132,11 @@ function displayFeatResults(featMap){
     })
   );
 
+  let foundCount = 0;
   for(const [featID, featStruct] of featMap.entries()){
     if(featStruct.Feat.genericType == 'BASIC-ACTION' || featStruct.Feat.genericType == 'SKILL-ACTION') {continue;}
     if(featStruct.Feat.isArchived == 1) {continue;}
+    foundCount++;
 
     let entryID = 'feat-'+featID;
     let name = featStruct.Feat.name;
@@ -162,6 +163,7 @@ function displayFeatResults(featMap){
     });
 
   }
+  $('#searchResultCountContainer').html('<p class="is-italic has-text-grey">('+foundCount+' results found)</p>');
   $('#browsingList').scrollTop();
 }
 

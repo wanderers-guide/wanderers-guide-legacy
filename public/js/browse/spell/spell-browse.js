@@ -130,7 +130,6 @@ function displaySpellResults(spellMap){
     $('#browsingList').html('<p class="has-text-centered is-italic">No results found!</p>');
     return;
   }
-  $('#searchResultCountContainer').html('<p class="is-italic has-text-grey">('+spellMap.size+' results found)</p>');
 
   spellMap = new Map([...spellMap.entries()].sort(
     function(a, b) {
@@ -142,8 +141,10 @@ function displaySpellResults(spellMap){
     })
   );
 
+  let foundCount = 0;
   for(const [spellID, spellStruct] of spellMap.entries()){
     if(spellStruct.Spell.isArchived == 1) {continue;}
+    foundCount++;
 
     let entryID = 'spell-'+spellID;
     let name = spellStruct.Spell.name;
@@ -173,5 +174,6 @@ function displaySpellResults(spellMap){
     });
 
   }
+  $('#searchResultCountContainer').html('<p class="is-italic has-text-grey">('+foundCount+' results found)</p>');
   $('#browsingList').scrollTop();
 }

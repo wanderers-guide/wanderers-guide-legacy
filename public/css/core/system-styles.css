@@ -184,6 +184,7 @@ color: hsl(0, 0%, 60%)!important;
 }
 hr {
   border-color: #363636!important;
+  background-color: #363636!important;
 }
 
 /* Cursors */

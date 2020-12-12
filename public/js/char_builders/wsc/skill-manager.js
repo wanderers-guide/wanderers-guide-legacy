@@ -304,8 +304,11 @@ function statsFinalSkillsAndLangs(){
   
   socket.emit("requestLangsAndTrainingsClear",
       getCharIDFromURL(),
-      srcStruct,
-      null);
+      srcStruct);
+
+}
+
+socket.on("returnLangsAndTrainingsClear", function(srcStruct){
 
   if(wscChoiceStruct.ClassDetails.Class != null){
 
@@ -340,4 +343,4 @@ function statsFinalSkillsAndLangs(){
 
   }
 
-}
+});

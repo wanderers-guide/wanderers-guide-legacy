@@ -39,10 +39,11 @@ function displayClassResults(allClasses){
     $('#browsingList').html('<p class="has-text-centered is-italic">No results found!</p>');
     return;
   }
-  $('#searchResultCountContainer').html('<p class="is-italic has-text-grey">('+allClasses.size+' results found)</p>');
 
+  let foundCount = 0;
   for(const cClass of allClasses){
     if(cClass.isArchived == 1) {continue;}
+    foundCount++;
 
     let entryID = 'class-'+cClass.id;
     let name = cClass.name;
@@ -62,5 +63,6 @@ function displayClassResults(allClasses){
     });
 
   }
+  $('#searchResultCountContainer').html('<p class="is-italic has-text-grey">('+foundCount+' results found)</p>');
   $('#browsingList').scrollTop();
 }

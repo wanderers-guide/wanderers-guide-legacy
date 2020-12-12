@@ -172,6 +172,7 @@ li {
 
 hr {
     border-color: hsl(0, 0%, 68%);
+    background-color: hsl(0, 0%, 68%);
 }
 
 #ability-scores-box {
@@ -241,6 +242,7 @@ hr {
 
 .ability-hr {
     border-color: hsl(0, 0%, 35%);
+    background-color: hsl(0, 0%, 35%);
     margin-left: 10rem;
     margin-right: 10rem;
     margin-top: 0.5rem;
@@ -291,6 +293,7 @@ select {
 /* Character Options */
 .char-options-hr {
     border-color: hsl(0, 0%, 35%);
+    background-color: hsl(0, 0%, 35%);
     width: 280px;
     margin: auto;
     margin-top: 0.5rem;

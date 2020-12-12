@@ -39,10 +39,11 @@ function displayUniHeritageResults(allUniHeritages){
     $('#browsingList').html('<p class="has-text-centered is-italic">No results found!</p>');
     return;
   }
-  $('#searchResultCountContainer').html('<p class="is-italic has-text-grey">('+allUniHeritages.size+' results found)</p>');
 
+  let foundCount = 0;
   for(const uniHeritage of allUniHeritages){
     if(uniHeritage.isArchived == 1) {continue;}
+    foundCount++;
 
     let entryID = 'uni-heritage-'+uniHeritage.id;
     let name = uniHeritage.name;
@@ -62,5 +63,6 @@ function displayUniHeritageResults(allUniHeritages){
     });
 
   }
+  $('#searchResultCountContainer').html('<p class="is-italic has-text-grey">('+foundCount+' results found)</p>');
   $('#browsingList').scrollTop();
 }
