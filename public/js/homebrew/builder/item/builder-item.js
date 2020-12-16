@@ -9,6 +9,13 @@ let g_itemMap = null;
 // ~~~~~~~~~~~~~~ // Run on Load // ~~~~~~~~~~~~~~ //
 $(function () {
 
+    // ~ Item Materials ~ //
+    $("#inputMaterial").append('<option value="">N/A</option>');
+    for(const [materialName, materialStruct] of g_materialsMap.entries()){
+      $("#inputMaterial").append('<option value="'+materialName+'">'+materialStruct.Name+'</option>');
+    }
+    // ~ ~~~~~~~~~~~~~~ ~ //
+
     $("#inputTags").chosen();
 
     socket.emit("requestHomebrewItemDetails", $('#builder-container').attr('data-bundle-id'));
