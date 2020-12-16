@@ -255,6 +255,14 @@ function handleCharacterOptions(character, hBundles, progessBundles) {
     });
     $("#contentSrc-SLITHERING").prop('checked', contentSourceArray.includes('SLITHERING'));
 
+    $("#contentSrc-TROUBLES-IN-OTARI").change(function(){
+      socket.emit("requestCharacterSourceChange", 
+          getCharIDFromURL(), 
+          'TROUBLES-IN-OTARI',
+          this.checked);
+    });
+    $("#contentSrc-TROUBLES-IN-OTARI").prop('checked', contentSourceArray.includes('TROUBLES-IN-OTARI'));
+
     $("#contentSrc-PATH-SOCIETY").change(function(){
       socket.emit("requestCharacterSourceChange", 
           getCharIDFromURL(), 
