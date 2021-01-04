@@ -194,8 +194,9 @@ router.get('/create/ancestry', adminAuthCheck, (req, res) => {
             SenseType.findAll({
               order: [['name', 'ASC'],]
             }).then((senseTypes) => {
-                PhysicalFeature.findAll()
-                .then((physicalFeatures) => {
+                PhysicalFeature.findAll({
+                  order: [['name', 'ASC'],]
+                }).then((physicalFeatures) => {
 
                     res.render('admin/admin_builder/builder_ancestry', {
                         title: "Ancestry Builder - Wanderer's Guide",

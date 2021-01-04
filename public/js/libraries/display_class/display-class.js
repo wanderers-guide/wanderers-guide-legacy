@@ -45,9 +45,14 @@ class DisplayClass {
 
           $('#class-source').html(sourceTextName);
           $('#class-description').html(processText(classStruct.class.description, false, null, 'MEDIUM', false));
-          $('#class-key-ability').html(classStruct.class.keyAbility);
-          $('#class-key-ability-desc').html('At 1st level, your class gives you an ability boost to '+classStruct.class.keyAbility+'.');
-          $('#class-hit-points').html(classStruct.class.hitPoints+' plus your Constitution modifier');
+          
+          if(classStruct.class.keyAbility == 'OTHER') {
+            $('#class-key-ability').html('Varies');
+            $('#class-key-ability-desc').html('At 1st level, your class gives you an ability boost - usually depending on one of your class features.');
+          } else {
+            $('#class-key-ability').html(classStruct.class.keyAbility);
+            $('#class-key-ability-desc').html('At 1st level, your class gives you an ability boost to '+classStruct.class.keyAbility+'.');
+          }
 
           $('#class-perception').html(profToWord(classStruct.class.tPerception));
           $('#class-saving-throw-fort').html(profToWord(classStruct.class.tPerception)+' in Fortitude');

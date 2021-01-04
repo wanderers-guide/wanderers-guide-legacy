@@ -102,6 +102,8 @@ socket.on("returnCharacterDetails", function(character, clientsWithAccess, hBund
 
     handleCharacterOptions(character, hBundles, progessBundles);
 
+    exportSheetOptions();
+
     // Turn off page loading
     $('.pageloader').addClass("fadeout");
 
@@ -563,3 +565,15 @@ function accessRightsToText(accessRights){
 socket.on("returnCharacterRemoveClientAccess", function(clientsWithAccess) {
   displayExternalCharacterAccess(clientsWithAccess);
 });
+
+
+function exportSheetOptions() {
+
+  /*
+  $('#pdfDownloadBtn').click(function(){
+    exportCharacterToPDF();
+    $(this).addClass('is-loading');
+  });
+  */
+
+}

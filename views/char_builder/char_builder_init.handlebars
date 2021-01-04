@@ -8,6 +8,9 @@
 
     <script type="text/javascript" src="/js/char_builders/top-stickies.js"></script>
     <script type="text/javascript" src="/js/char_builders/utils.js"></script>
+
+    <script type="text/javascript" src="/js/char_export/populate-pdf.js"></script>
+    <script type="application/pdf" src="/pdf/character_sheet.pdf"></script>
 {{/section}}
 
 {{#section 'nav_home'}}
@@ -201,7 +204,7 @@
     </div>
 
 
-    <div class="box p-2 is-marginless">
+    <div class="box p-2">
 
         <div class="columns is-centered">
             <div class="column is-4">
@@ -439,6 +442,26 @@
         </div>
 
     </div>
+
+    <!--
+    <div class="box p-2 character-export-container">
+
+      <div>
+        <h4>Export</h4>
+      </div>
+
+      <div class="columns">
+        <div class="column">
+
+          <button id="pdfDownloadBtn" class="button is-info is-outlined is-small">
+            <span>Export to PDF</span>
+          </button>
+
+        </div>
+      </div>
+
+    </div>
+    -->
 
     <div id="option-custom-code-block-container" class="box p-0 is-hidden">
       <div class="field">

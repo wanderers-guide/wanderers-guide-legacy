@@ -17,6 +17,9 @@ const User = db.define('users', {
   isPatreonMember: {
     type: Sequelize.TINYINT
   },
+  isPatreonLegend: {
+    type: Sequelize.TINYINT
+  },
   isAdmin: {
     type: Sequelize.TINYINT
   },

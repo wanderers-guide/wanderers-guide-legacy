@@ -67,11 +67,11 @@ function processText(text, isSheet, isJustified = false, size = 'MEDIUM', indexC
     text = text.replace(/\~\~(.+?)\~\~/g, '<s>$1</s>');
 
     // ~ Some Text Here: Other Text
-    let regexNonBulletList = /[\n]?\~(.+?)\:/g;
+    let regexNonBulletList = /[\n]?\~ (.+?)\:/g;
     text = text.replace(regexNonBulletList, '</p><p class="pl-2 pr-1 negative-indent has-text-left '+_s+'"><strong class="is-bold">$1</strong>');
 
     // * Some Text Here: Other Text
-    let regexBulletList = /[\n]?\*(.+?)\:/g;
+    let regexBulletList = /[\n]?\* (.+?)\:/g;
     text = text.replace(regexBulletList, '</p><p class="pl-2 pr-1 negative-indent has-text-left '+_s+'">&#x2022;<strong class="is-bold">$1</strong>');
 
     // :> Some Text

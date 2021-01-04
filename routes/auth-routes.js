@@ -43,6 +43,7 @@ router.get('/google/redirect', passport.authenticate('google'), (req, res) => {
             let updateValues = {
                 isPatreonSupporter: 0,
                 isPatreonMember: 0,
+                isPatreonLegend: 0,
                 patreonAccessToken: null
             };
             User.update(updateValues, { where: { id: req.user.id } })
@@ -138,6 +139,7 @@ router.get('/patreon/redirect', (req, res) => {
             updateValues = {
                 isPatreonSupporter: 1,
                 isPatreonMember: 1,
+                isPatreonLegend: 0,
                 patreonUserID: patreonUserID,
                 patreonFullName: patreonName,
                 patreonEmail: patreonEmail,
@@ -147,6 +149,7 @@ router.get('/patreon/redirect', (req, res) => {
             updateValues = {
                 isPatreonSupporter: 1,
                 isPatreonMember: 0,
+                isPatreonLegend: 0,
                 patreonUserID: patreonUserID,
                 patreonFullName: patreonName,
                 patreonEmail: patreonEmail,
@@ -156,6 +159,7 @@ router.get('/patreon/redirect', (req, res) => {
             updateValues = {
                 isPatreonSupporter: 0,
                 isPatreonMember: 0,
+                isPatreonLegend: 0,
                 patreonUserID: patreonUserID,
                 patreonFullName: patreonName,
                 patreonEmail: patreonEmail,

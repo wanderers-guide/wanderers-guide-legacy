@@ -702,6 +702,16 @@ module.exports = class SocketConnections {
         });
       });
 
+      socket.on('requestCharacterExportPDFInfo', function(charID){
+        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+          if(ownsChar){
+            CharGathering.getCharacterInfoExportToPDF(charID).then((characterInfo) => {
+              socket.emit('returnCharacterExportPDFInfo', characterInfo);
+            });
+          }
+        });
+      });
+
     });
     
   }

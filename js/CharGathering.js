@@ -1049,7 +1049,7 @@ module.exports = class CharGathering {
   
       return Character.findOne({ where: { id: charID } })
       .then((character) => {
-        return Background.findOne({ where: { id: character.backgroundID} })
+        return CharGathering.getBackground(character)
         .then((background) => {
           return CharGathering.getAncestry(character)
           .then((ancestry) => {
@@ -1224,6 +1224,16 @@ module.exports = class CharGathering {
         });
     }
 
+    static getBackground(character) {
+      return Background.findOne({
+        where: {
+          id: character.backgroundID,
+        } 
+      }).then((background) => {
+          return background;
+      });
+    }
+
     static getHeritage(character) {
         if(character.heritageID != null){
             return Heritage.findOne({ where: { id: character.heritageID } })
@@ -1238,6 +1248,16 @@ module.exports = class CharGathering {
         } else {
             return Promise.resolve();
         }
+    }
+
+    static getClassBasic(character) {
+      return Class.findOne({
+        where: {
+          id: character.classID,
+        } 
+      }).then((cClass) => {
+          return cClass;
+      });
     }
 
     static getClass(charID, classID) {
@@ -1650,7 +1670,7 @@ module.exports = class CharGathering {
 
       return Character.findOne({ where: { id: charID } })
       .then((character) => {
-        return Background.findOne({ where: { id: character.backgroundID} })
+        return CharGathering.getBackground(character)
         .then((background) => {
           return CharGathering.getAncestry(character)
           .then((ancestry) => {
@@ -1752,6 +1772,41 @@ module.exports = class CharGathering {
         });
       });
 
+    }
+
+    static getCharacterInfoExportToPDF(charID){
+      return Character.findOne({ where: { id: charID } })
+      .then((character) => {
+        return CharGathering.getCalculatedStats(charID).then((calculatedStats) => {
+          return CharGathering.getAllMetadata(charID).then((metaDatas) => {
+            return CharGathering.getAllCharConditions(charID).then((conditionsObject) => {
+              return CharTags.getTags(charID).then((charTags) => {
+                return CharGathering.getAncestry(character).then((ancestry) => {
+                  return CharGathering.getBackground(character).then((background) => {
+                    return CharGathering.getHeritage(character).then((heritage) => {
+                      return CharGathering.getClassBasic(character).then((cClass) => {
+
+                        return {
+                          Ancestry: ancestry,
+                          Background: background,
+                          Heritage: heritage,
+                          Class: cClass,
+                          Character: character,
+                          CalculatedStats: calculatedStats,
+                          MetaDatas: metaDatas,
+                          ConditionsObject: conditionsObject,
+                          CharTags: charTags,
+                        };
+
+                      });
+                    });
+                  });
+                });
+              });
+            });
+          });
+        });
+      });
     }
 
     static getBaseAbilityScores(charID) {

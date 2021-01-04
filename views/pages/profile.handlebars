@@ -51,11 +51,15 @@
                         <p class="is-italic is-size-6 pl-4">Admin</p>
                     {{/ifEqual}}
                     {{#ifEqual user.isPatreonSupporter 1}}
-                        {{#ifEqual user.isPatreonMember 1}}
-                            <p class="is-italic is-size-6 pl-4">Patron - Wanderer</p>
-                        {{/ifEqual}}
-                        {{#ifEqual user.isPatreonMember 0}}
-                            <p class="is-italic is-size-6 pl-4">Patron - Advocate</p>
+                        {{#ifEqual user.isPatreonLegend 1}}
+                            <p class="is-italic is-size-6 pl-4">Patron - Legend</p>
+                        {{else}}
+                          {{#ifEqual user.isPatreonMember 1}}
+                              <p class="is-italic is-size-6 pl-4">Patron - Wanderer</p>
+                          {{/ifEqual}}
+                          {{#ifEqual user.isPatreonMember 0}}
+                              <p class="is-italic is-size-6 pl-4">Patron - Advocate</p>
+                          {{/ifEqual}}
                         {{/ifEqual}}
                     {{/ifEqual}}
                     {{#ifEqual user.isPatreonSupporter 0}}

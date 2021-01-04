@@ -4,6 +4,18 @@
 
 let g_rollHistory = [];
 
+let g_mouse_drag = false;
+$(function () {
+
+  $(document).mousedown(function() {
+    g_mouse_drag = false;
+  });
+  $(document).mousemove(function() {
+    g_mouse_drag = true;
+  });
+
+});
+
 function initDiceRoller(){
 
   $('#dice-roller-btn-container').removeClass('is-hidden');
@@ -14,12 +26,8 @@ function initDiceRoller(){
   });
 
   // Init Roller Btn //
-  let drag = false;
-  document.addEventListener('mousedown', () => drag = false);
-  document.addEventListener('mousemove', () => drag = true);
-
   $('#dice-roller-btn').click(function() {
-    if(!drag){
+    if(!g_mouse_drag){
       openDiceRoller();
     }
   });
