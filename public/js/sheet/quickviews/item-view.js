@@ -220,5 +220,10 @@ function openItemQuickview(data) {
     if(isSheetPage()) {
         displayCriticalSpecialization(qContent, itemDataStruct);
     }
+    
+    if(itemDataStruct.ShieldData != null) { // If item is shield,
+      qContent.append('<div class="columns is-centered is-marginless text-center"><div class="column is-paddingless"><p><strong>Hardness</strong></p><p>'+itemDataStruct.Item.hardness+'</p></div><div class="column is-paddingless"><p><strong>Hit Points</strong></p><p>'+itemDataStruct.Item.hitPoints+'</p></div><div class="column is-paddingless"><p><strong>BT</strong></p><p>'+itemDataStruct.Item.brokenThreshold+'</p></div></div>');
+      qContent.append('<hr class="m-2">');
+    }
 
 }

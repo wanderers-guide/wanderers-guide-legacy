@@ -177,6 +177,14 @@ function handleCharacterOptions(character, hBundles, progessBundles) {
     });
     $("#contentSrc-SECRETS-OF-MAGIC").prop('checked', contentSourceArray.includes('SECRETS-OF-MAGIC'));
 
+    $("#contentSrc-GUNS-AND-GEARS").change(function(){
+        socket.emit("requestCharacterSourceChange", 
+            getCharIDFromURL(), 
+            'GUNS-AND-GEARS',
+            this.checked);
+    });
+    $("#contentSrc-GUNS-AND-GEARS").prop('checked', contentSourceArray.includes('GUNS-AND-GEARS'));
+
     $("#contentSrc-LOST-CHAR-GUIDE").change(function(){
         socket.emit("requestCharacterSourceChange", 
             getCharIDFromURL(), 
