@@ -27,7 +27,7 @@ const Weapon = db.define('weapons', {
   },
   meleeWeaponType: {
     type: Sequelize.ENUM,
-    values: ['SWORD', 'AXE', 'CLUB', 'FLAIL', 'POLEARM', 'PICK', 'KNIFE', 'SHIELD', 'HAMMER', 'SPEAR', 'BRAWLING']
+    values: ['SWORD', 'AXE', 'CLUB', 'FLAIL', 'POLEARM', 'PICK', 'KNIFE', 'SHIELD', 'HAMMER', 'SPEAR', 'BRAWLING', 'FIREARM']
   },
   isRanged: {
     type: Sequelize.TINYINT

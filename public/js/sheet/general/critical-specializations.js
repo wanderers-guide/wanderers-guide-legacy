@@ -181,6 +181,7 @@ g_critSpecialTextMap.set('SLING', 'The target must succeed at a Fortitude save a
 g_critSpecialTextMap.set('DART', 'The target takes 1d6 persistent bleed damage. You gain an item bonus to this bleed damage equal to the weapon’s item bonus to attack rolls.');
 g_critSpecialTextMap.set('BOW', 'If the target of the critical hit is adjacent to a surface, it gets stuck to that surface by the missile. The target is immobilized and must spend an (action: Interact) action to attempt a DC 10 Athletics check to pull the missile free; it can’t move from its space until it succeeds. The creature doesn’t become stuck if it is incorporeal, is liquid (like a water elemental or some oozes), or could otherwise escape without effort.');
 g_critSpecialTextMap.set('BOMB', 'Increase the radius of the bomb’s splash damage (if any) to 10 feet.');
+g_critSpecialTextMap.set('FIREARM', ' The target must succeed at a Fortitude save against your class DC or be stunned 1.');
 
 
 function criticalSpecializationTitle(item){
