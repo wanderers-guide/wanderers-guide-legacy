@@ -192,6 +192,14 @@ function processSheetCode(wscCode, sourceName, isTest=false){
             continue;
         }
 
+        if(wscStatementUpper == "SET-ADD-LEVEL-TO-UNTRAINED-SKILLS"){
+            if(isTest) {continue;}
+
+            gState_addLevelToUntrainedSkill = true;
+
+            continue;
+        }
+
         if(wscStatementUpper == "DISPLAY-COMPANION-TAB"){
             if(isTest) {continue;}
 

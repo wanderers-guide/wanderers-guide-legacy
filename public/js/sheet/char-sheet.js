@@ -18,6 +18,7 @@ let gState_hasFinesseMeleeUseDexDamage;
 let gState_armoredStealth;
 let gState_mightyBulwark;
 let gState_addLevelToUntrainedWeaponAttack;
+let gState_addLevelToUntrainedSkill;
 let gState_displayCompanionTab;
 /* ~~~~~~~~~~~~~~~~~~~ */
 
@@ -322,6 +323,7 @@ function loadCharSheet(){
     gState_armoredStealth = false;
     gState_mightyBulwark = false;
     gState_addLevelToUntrainedWeaponAttack = false;
+    gState_addLevelToUntrainedSkill = false;
     gState_displayCompanionTab = false;
 
     // Init Stats (set to new Map) //
@@ -1126,6 +1128,12 @@ function displayInformation() {
                     addStat('SKILL_'+skillName, 'PROFICIENCY_BONUS', g_character.level, 'Untrained Improvisation');
                 }
             }
+        }
+
+        if(gState_addLevelToUntrainedSkill) {
+          if(profData.NumUps === 0 && !gOption_hasProfWithoutLevel){
+            addStat('SKILL_'+skillName, 'PROFICIENCY_BONUS', g_character.level, 'Level to Untrained Skills');
+          }
         }
 
         if(hasFascinatedCondition){
