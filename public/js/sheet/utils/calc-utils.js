@@ -55,8 +55,14 @@ function getAttackAndDamage(itemData, invItem){
         });
         let dmgStrBonus = '';
         if(gState_hasFinesseMeleeUseDexDamage && finesseTag != null){
-            if(pre_dexMod != 0){
+            if(pre_dexMod > pre_strMod) {
+              if(pre_dexMod != 0){
                 dmgStrBonus = signNumber(pre_dexMod);
+              }
+            } else {
+              if(pre_strMod != 0){
+                dmgStrBonus = signNumber(pre_strMod);
+              }
             }
         } else {
             if(splashTag == null && pre_strMod != 0){
