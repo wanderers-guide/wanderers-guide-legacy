@@ -281,12 +281,14 @@ function openLeftSkillsQuickview(data) {
   if(wscChoiceStruct.ClassDetails.Class != null){
     let tSkillsMore = wscChoiceStruct.ClassDetails.Class.tSkillsMore;
     $('#finalSkillTrainingColumn').append('<p class="is-size-5 has-text-centered"><span class="has-tooltip-top has-tooltip-multiline" data-tooltip="You become trained in an additional number of skills equal to an amount determined by your class ('+tSkillsMore+') plus your Intelligence modifier ('+getMod(g_abilMap.get("INT"))+').">Skill Training</span></p>');
+    $('#finalSkillTrainingColumn').append('<div id="sideSkillSelection"></div>');
   }
 
   if(wscChoiceStruct.Ancestry != null){
     let humanExtraText = '';
     if(wscChoiceStruct.Ancestry.name == 'Human'){ humanExtraText = ' Being a human gives you another language as well.'; }
     $('#finalLanguagesColumn').append('<p class="is-size-5 has-text-centered"><span class="has-tooltip-top has-tooltip-multiline" data-tooltip="You learn an additional number of languages equal to your Intelligence modifier ('+getMod(g_abilMap.get("INT"))+').'+humanExtraText+' Your ancestry dictates what languages you can select from (the lighter options, listed at the top).">Languages</span></p>');
+    $('#finalLanguagesColumn').append('<div id="sideLangSelection"></div>');
   }
 
   statsFinalSkillsAndLangs();
@@ -304,43 +306,7 @@ function statsFinalSkillsAndLangs(){
   
   socket.emit("requestLangsAndTrainingsClear",
       getCharIDFromURL(),
-      srcStruct);
+      srcStruct,
+      {Character: null, SkillLocationID: 'sideSkillSelection', LangLocationID: 'sideLangSelection'});
 
 }
-
-socket.on("returnLangsAndTrainingsClear", function(srcStruct){
-
-  if(wscChoiceStruct.ClassDetails.Class != null){
-
-    let giveSkillTrainingCode = '';
-    for (let i = 0; i < getMod(g_abilMap.get("INT"))+wscChoiceStruct.ClassDetails.Class.tSkillsMore; i++) {
-        giveSkillTrainingCode += 'GIVE-SKILL=T\n';
-    }
-  
-    $('#finalSkillTrainingColumn').append('<div id="sideSkillSelection"></div>');
-    processCode(
-        giveSkillTrainingCode,
-        srcStruct,
-        'sideSkillSelection');
-
-
-  }
-
-  if(wscChoiceStruct.Ancestry != null){
-
-    let giveLanguageCode = '';
-    let additionalLangs = getMod(g_abilMap.get("INT"));
-    if(wscChoiceStruct.Ancestry.name == 'Human'){ additionalLangs++; } // Hardcoded - ancestry named Human gains +1 langs.  
-    for (let i = 0; i < additionalLangs; i++) {
-        giveLanguageCode += 'GIVE-LANG-BONUS-ONLY\n';
-    }
-  
-    $('#finalLanguagesColumn').append('<div id="sideLangSelection"></div>');
-    processCode(
-        giveLanguageCode,
-        srcStruct,
-        'sideLangSelection');
-
-  }
-
-});

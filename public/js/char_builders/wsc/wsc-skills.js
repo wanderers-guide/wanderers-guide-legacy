@@ -35,7 +35,7 @@ function giveSkillProf(srcStruct, locationID, prof, optionals){
 
 function giveSkill(srcStruct, locationID, profType, optionals=null){
 
-    let selectIncreaseID = "selectIncrease"+locationID+"-"+srcStruct.sourceCodeSNum;
+    let selectIncreaseID = "selectIncrease-"+locationID+"-"+srcStruct.sourceCodeSNum;
     let selectIncreaseControlShellClass = selectIncreaseID+'ControlShell';
     let increaseDescriptionID = "selectIncreaseDescription"+locationID+"-"+srcStruct.sourceCodeSNum;
     let increaseCodeID = "selectIncreaseCode"+locationID+"-"+srcStruct.sourceCodeSNum;

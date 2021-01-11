@@ -29,6 +29,9 @@ function giveLang(srcStruct, locationID, bonusOnly){
     let selectLangControlShellClass = selectLangID+'ControlShell';
     let langDescriptionID = selectLangID+"Description";
 
+    // If ID already exists, just return. This is a temporary fix - this shouldn't be an issue in the first place.
+    if($('#'+selectLangID).length != 0) { statementComplete(); return; }
+
     $('#'+locationID).append('<div class="field is-grouped is-grouped-centered is-marginless mt-1"><div class="select '+selectLangControlShellClass+'"><select id="'+selectLangID+'" class="selectLang"></select></div></div>');
 
     $('#'+locationID).append('<div class="columns is-centered is-marginless pb-2"><div id="'+langDescriptionID+'" class="column is-8 is-paddingless"></div></div>');

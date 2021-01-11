@@ -4,11 +4,7 @@
 
 // ~~~~~~~~~~~~~~ // Processings // ~~~~~~~~~~~~~~ //
 
-let g_finalize_character;
-
 function loadFinalizePage(character, cClass, ancestry) {
-
-    g_finalize_character = character;
 
     let strScore = g_abilMap.get("STR");
     $("#strScore").html(strScore);
@@ -45,7 +41,8 @@ function loadFinalizePage(character, cClass, ancestry) {
         
         socket.emit("requestLangsAndTrainingsClear",
             getCharIDFromURL(),
-            srcStruct);
+            srcStruct,
+            {Character: character, SkillLocationID: 'skillSelection', LangLocationID: 'langSelection'});
 
     } else {
 
@@ -53,7 +50,7 @@ function loadFinalizePage(character, cClass, ancestry) {
         $(".finalize-content").addClass("is-hidden");
         finishLoadingPage();
 
-        runCustomCodeBlock();
+        runCustomCodeBlock(character);
 
     }
 
@@ -101,42 +98,43 @@ function selectorUpdated() {
 }
 
 
-socket.on("returnLangsAndTrainingsClear", function(srcStruct){
+socket.on("returnLangsAndTrainingsClear", function(srcStruct, data){
 
     $(".finalize-content").removeClass("is-hidden");
-        
-    let giveSkillTrainingCode = '';
-    for (let i = 0; i < getMod(g_abilMap.get("INT"))+wscChoiceStruct.ClassDetails.Class.tSkillsMore; i++) {
-        giveSkillTrainingCode += 'GIVE-SKILL=T\n';
+    
+    if(wscChoiceStruct.ClassDetails.Class != null){
+      let giveSkillTrainingCode = '';
+      for (let i = 0; i < getMod(g_abilMap.get("INT"))+wscChoiceStruct.ClassDetails.Class.tSkillsMore; i++) {
+          giveSkillTrainingCode += 'GIVE-SKILL=T\n';
+      }
+      
+      processCode(
+          giveSkillTrainingCode,
+          srcStruct,
+          data.SkillLocationID);
     }
 
-    $('#trainSkills').html('<div id="skillSelection"></div>');
-    processCode(
-        giveSkillTrainingCode,
-        srcStruct,
-        'skillSelection');
-
-    let giveLanguageCode = '';
-    let additionalLangs = getMod(g_abilMap.get("INT"));
-    if(wscChoiceStruct.Ancestry.name == 'Human'){ additionalLangs++; } // Hardcoded - ancestry named Human gains +1 langs. 
-    for (let i = 0; i < additionalLangs; i++) {
-        giveLanguageCode += 'GIVE-LANG-BONUS-ONLY\n';
+    if(wscChoiceStruct.Ancestry != null){
+      let giveLanguageCode = '';
+      let additionalLangs = getMod(g_abilMap.get("INT"));
+      if(wscChoiceStruct.Ancestry.name == 'Human'){ additionalLangs++; } // Hardcoded - ancestry named Human gains +1 langs. 
+      for (let i = 0; i < additionalLangs; i++) {
+          giveLanguageCode += 'GIVE-LANG-BONUS-ONLY\n';
+      }
+      
+      processCode(
+          giveLanguageCode,
+          srcStruct,
+          data.LangLocationID);
     }
 
-    $('#learnLanguages').html('<div id="langSelection"></div>');
-    processCode(
-        giveLanguageCode,
-        srcStruct,
-        'langSelection');
-
-    runCustomCodeBlock();
+    if(data.Character != null){
+      runCustomCodeBlock(data.Character);
+    }
 
 });
 
-function runCustomCodeBlock() {
-  if(typeof g_finalize_character === 'undefined' || g_finalize_character == null){ return; }
-
-  let character = g_finalize_character;
+function runCustomCodeBlock(character) {
 
   // Custom Code Block Option - Results //
   if(character.optionCustomCodeBlock === 1){

@@ -844,14 +844,14 @@ module.exports = class SocketConnections {
         });
       });
 
-      socket.on('requestLangsAndTrainingsClear', function(charID, srcStruct){
+      socket.on('requestLangsAndTrainingsClear', function(charID, srcStruct, data){
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
           if(ownsChar){
             CharDataMapping.deleteData(charID, 'languages', srcStruct)
             .then((result) => {
               CharDataMapping.deleteData(charID, 'proficiencies', srcStruct)
               .then((result) => {
-                socket.emit('returnLangsAndTrainingsClear', srcStruct);
+                socket.emit('returnLangsAndTrainingsClear', srcStruct, data);
               });
             });
           }

@@ -79,6 +79,7 @@ function giveProfSkillTraining(srcStruct, profName, prof, locationID){
             getCharIDFromURL(),
             {srcStruct, isSkill : true, isStatement : true},
             { For : profCategory, To : profProperName, Prof : prof });
+        displayProfChange(locationID, prof, profProperName);
         return;
 
     } else {
@@ -131,12 +132,17 @@ function giveInProf(srcStruct, profName, prof, locationID){
             getCharIDFromURL(),
             {srcStruct, isSkill : isSkill, isStatement : true},
             { For : profCategory, To : profProperName, Prof : prof });
-        window.setTimeout(() => {
-          $('#'+locationID).append('<p class="help is-info"><span class="is-bold">Proficiency Change:</span><span class="is-italic"> You become '+profToWord(prof).toLowerCase()+' in '+profProperName.toLowerCase().replace(/_/g,' ').replace('class dc', 'your class DC').replace('spellattacks', ' spell attacks').replace('spelldcs', ' spell DCs')+'.</span></p>');
-        }, 100);
+        displayProfChange(locationID, prof, profProperName);
     } else {
         displayError("Unknown proficiency: \'"+profName+"\'");
         statementComplete();
     }
 
+}
+
+function displayProfChange(locationID, prof, profName){
+  if(locationID == 'profSkillsCode') { return; }// Skip for init skill profs from class
+  window.setTimeout(() => {
+    $('#'+locationID).append('<p class="help is-info"><span class="is-bold">Proficiency Change:</span><span class="is-italic"> You become '+profToWord(prof).toLowerCase()+' in '+profName.toLowerCase().replace(/_/g,' ').replace('class dc', 'your class DC').replace('spellattacks', ' spell attacks').replace('spelldcs', ' spell DCs')+'.</span></p>');
+  }, 100);
 }

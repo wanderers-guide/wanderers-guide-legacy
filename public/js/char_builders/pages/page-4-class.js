@@ -410,7 +410,7 @@ function displayCurrentClass(classStruct, saving) {
             sourceCodeSNum: 'a',
         };
         if(savingProf.For === 'Skill' && savingProf.Prof === 'T'){
-            processCode(
+            processCode( // Use WSC because if the character is already trained, it will give them a new skill.
                 'GIVE-PROF-IN='+savingProf.To+':T',
                 srcStruct,
                 'profSkillsCode');
