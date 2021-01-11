@@ -858,6 +858,17 @@ module.exports = class SocketConnections {
         });
       });
 
+      socket.on('requestCustomCodeBlockDataClear', function(charID){
+        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+          if(ownsChar){
+            CharDataMapping.deleteDataBySourceType(charID, 'custom-code')
+            .then((result) => {
+              socket.emit('returnCustomCodeBlockDataClear');
+            });
+          }
+        });
+      });
+
     });
     
   }

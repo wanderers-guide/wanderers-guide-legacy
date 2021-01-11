@@ -4,7 +4,11 @@
 
 // ~~~~~~~~~~~~~~ // Processings // ~~~~~~~~~~~~~~ //
 
+let g_finalize_character;
+
 function loadFinalizePage(character, cClass, ancestry) {
+
+    g_finalize_character = character;
 
     let strScore = g_abilMap.get("STR");
     $("#strScore").html(strScore);
@@ -49,6 +53,8 @@ function loadFinalizePage(character, cClass, ancestry) {
         $(".finalize-content").addClass("is-hidden");
         finishLoadingPage();
 
+        runCustomCodeBlock();
+
     }
 
     if (character.name == null || character.ancestryID == null || character.backgroundID == null || character.classID == null) {
@@ -87,21 +93,6 @@ function loadFinalizePage(character, cClass, ancestry) {
         $("#goToCharBigButton").removeClass("has-tooltip-left");
         $("#goToCharBigButton").attr("data-tooltip", null);
     }
-    
-    // Custom Code Block Option - Results //
-    if(character.optionCustomCodeBlock === 1){
-      $('#custom-code-block-results-section').removeClass('is-hidden');
-      let customCodeSrcStruct = {
-        sourceType: 'custom-code',
-        sourceLevel: 0,
-        sourceCode: 'custom-code',
-        sourceCodeSNum: 'a',
-      };
-      processCode(
-        'CLEAR-DATA-FROM-CODE-BLOCK\n'+character.customCode,
-        customCodeSrcStruct,
-        'custom-code-block-results-container');
-    }
 
 }
 
@@ -138,4 +129,31 @@ socket.on("returnLangsAndTrainingsClear", function(srcStruct){
         srcStruct,
         'langSelection');
 
+    runCustomCodeBlock();
+
 });
+
+function runCustomCodeBlock() {
+  if(typeof g_finalize_character === 'undefined' || g_finalize_character == null){ return; }
+
+  let character = g_finalize_character;
+
+  // Custom Code Block Option - Results //
+  if(character.optionCustomCodeBlock === 1){
+    $('#custom-code-block-results-section').removeClass('is-hidden');
+    let customCodeSrcStruct = {
+      sourceType: 'custom-code',
+      sourceLevel: 0,
+      sourceCode: 'custom-code',
+      sourceCodeSNum: 'a',
+    };
+    processCode(
+      character.customCode,
+      customCodeSrcStruct,
+      'custom-code-block-results-container');
+  } else {
+    socket.emit("requestCustomCodeBlockDataClear",
+        getCharIDFromURL());
+  }
+
+}
