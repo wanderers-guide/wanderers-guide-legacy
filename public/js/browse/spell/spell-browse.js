@@ -6,9 +6,13 @@ function filterSpellSearch(){
 
   let nameFilter = $('#filterNameInput').val();
   let tagsFilter = $('#filterTagsInput').val();
+  let areaFilter = $('#filterAreaInput').val();
+  let rangeFilter = $('#filterRangeInput').val();
+  let targetsFilter = $('#filterTargetsInput').val();
   let descFilter = $('#filterDescInput').val();
   let traditionFilter = $('#filterSpellTraditionInput').val();
-  let actionsFilter = $('#filterActionsInput').val();
+  let castTimeFilter = $('#filterCastTimeInput').val();
+  let componentsFilter = $('#filterComponentsInput').val();
   let levelRelationFilter = $('#filterLevelRelationInput').val();
   let levelFilter = $('#filterLevelInput').val();
   let savingThrowFilter = $('#filterSpellSavingThrowInput').val();
@@ -40,6 +44,36 @@ function filterSpellSearch(){
     }
   }
 
+  if(areaFilter != ''){
+    console.log('Filtering by Area...');
+    let parts = areaFilter.toUpperCase().split(' ');
+    for(const [spellID, spellStruct] of spellMap.entries()){
+      if(!textContainsWords(spellStruct.Spell.area, parts)){
+        spellMap.delete(spellID);
+      }
+    }
+  }
+
+  if(rangeFilter != ''){
+    console.log('Filtering by Range...');
+    let parts = rangeFilter.toUpperCase().split(' ');
+    for(const [spellID, spellStruct] of spellMap.entries()){
+      if(!textContainsWords(spellStruct.Spell.range, parts)){
+        spellMap.delete(spellID);
+      }
+    }
+  }
+
+  if(targetsFilter != ''){
+    console.log('Filtering by Targets...');
+    let parts = targetsFilter.toUpperCase().split(' ');
+    for(const [spellID, spellStruct] of spellMap.entries()){
+      if(!textContainsWords(spellStruct.Spell.targets, parts)){
+        spellMap.delete(spellID);
+      }
+    }
+  }
+
   if(descFilter != ''){
     console.log('Filtering by Description...');
     let parts = descFilter.toUpperCase().split(' ');
@@ -59,10 +93,19 @@ function filterSpellSearch(){
     }
   }
   
-  if(actionsFilter != 'ANY'){
-    console.log('Filtering by Actions...');
+  if(castTimeFilter != 'ANY'){
+    console.log('Filtering by Cast Time...');
     for(const [spellID, spellStruct] of spellMap.entries()){
-      if(spellStruct.Spell.cast !== actionsFilter){
+      if(spellStruct.Spell.cast !== castTimeFilter){
+        spellMap.delete(spellID);
+      }
+    }
+  }
+
+  if(componentsFilter != 'ANY'){
+    console.log('Filtering by Components...');
+    for(const [spellID, spellStruct] of spellMap.entries()){
+      if(!spellStruct.Spell.castingComponents.includes(componentsFilter)){
         spellMap.delete(spellID);
       }
     }

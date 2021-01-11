@@ -95,6 +95,27 @@ function initBrowse(featMap, skillMap, itemMap, spellMap, allLanguages, allCondi
       $('#filterItemUsageInput').removeClass('is-info');
     }
   });
+  $("#filterAreaInput").blur(function(){
+    if($('#filterAreaInput').val() != ''){
+      $('#filterAreaInput').addClass('is-info');
+    } else {
+      $('#filterAreaInput').removeClass('is-info');
+    }
+  });
+  $("#filterRangeInput").blur(function(){
+    if($('#filterRangeInput').val() != ''){
+      $('#filterRangeInput').addClass('is-info');
+    } else {
+      $('#filterRangeInput').removeClass('is-info');
+    }
+  });
+  $("#filterTargetsInput").blur(function(){
+    if($('#filterTargetsInput').val() != ''){
+      $('#filterTargetsInput').addClass('is-info');
+    } else {
+      $('#filterTargetsInput').removeClass('is-info');
+    }
+  });
   $("#filterDescInput").blur(function(){
     if($('#filterDescInput').val() != ''){
       $('#filterDescInput').addClass('is-info');
@@ -114,6 +135,20 @@ function initBrowse(featMap, skillMap, itemMap, spellMap, allLanguages, allCondi
       $('#filterActionsInput').parent().addClass('is-info');
     } else {
       $('#filterActionsInput').parent().removeClass('is-info');
+    }
+  });
+  $("#filterCastTimeInput").blur(function(){
+    if($('#filterCastTimeInput').val() != 'ANY'){
+      $('#filterCastTimeInput').parent().addClass('is-info');
+    } else {
+      $('#filterCastTimeInput').parent().removeClass('is-info');
+    }
+  });
+  $("#filterComponentsInput").blur(function(){
+    if($('#filterComponentsInput').val() != 'ANY'){
+      $('#filterComponentsInput').parent().addClass('is-info');
+    } else {
+      $('#filterComponentsInput').parent().removeClass('is-info');
     }
   });
   $("#filterSpellSavingThrowInput").blur(function(){
@@ -222,9 +257,14 @@ function openTab(tabName){
   $('#filterTagsInput').trigger("chosen:updated");
   $('#filterFeatPrereqInput').val('');
   $('#filterItemUsageInput').val('');
+  $('#filterAreaInput').val('');
+  $('#filterRangeInput').val('');
+  $('#filterTargetsInput').val('');
   $('#filterDescInput').val('');
   $('#filterSpellTraditionInput').val('ANY');
   $('#filterActionsInput').val('ANY');
+  $('#filterCastTimeInput').val('ANY');
+  $('#filterComponentsInput').val('ANY');
   $('#filterLevelRelationInput').val('EQUAL');
   $('#filterLevelInput').val('');
   $('#filterSpellSavingThrowInput').val('ANY');
@@ -320,7 +360,11 @@ function openTab(tabName){
       $('#filterTagsSection').removeClass('is-hidden');
       $('#filterDescSection').removeClass('is-hidden');
       $('#filterSpellTraditionSection').removeClass('is-hidden');
-      $('#filterActionsSection').removeClass('is-hidden');
+      $('#filterComponentsSection').removeClass('is-hidden');
+      $('#filterCastTimeSection').removeClass('is-hidden');
+      $('#filterAreaSection').removeClass('is-hidden');
+      $('#filterRangeSection').removeClass('is-hidden');
+      $('#filterTargetsSection').removeClass('is-hidden');
       $('#filterLevelSection').removeClass('is-hidden');
       $('#filterSpellSavingThrowSection').removeClass('is-hidden');
       $('#filterSpellFocusSection').removeClass('is-hidden');

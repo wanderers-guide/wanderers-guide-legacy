@@ -108,6 +108,24 @@
             </div>
           </div>
 
+          <div id="filterAreaSection" class="is-hidden filterFieldSection field">
+            <div class="control">
+              <input class="input" id="filterAreaInput" type="text" placeholder="Area" autocomplete="off">
+            </div>
+          </div>
+
+          <div id="filterRangeSection" class="is-hidden filterFieldSection field">
+            <div class="control">
+              <input class="input" id="filterRangeInput" type="text" placeholder="Range" autocomplete="off">
+            </div>
+          </div>
+
+          <div id="filterTargetsSection" class="is-hidden filterFieldSection field">
+            <div class="control">
+              <input class="input" id="filterTargetsInput" type="text" placeholder="Targets" autocomplete="off">
+            </div>
+          </div>
+
           <div id="filterDescSection" class="is-hidden filterFieldSection field">
             <div class="control">
               <input class="input" id="filterDescInput" type="text" placeholder="Description" autocomplete="off">
@@ -151,6 +169,57 @@
                       <option value="THREE_ACTIONS">[three-actions]</option>
                       <option value="FREE_ACTION">[free-action]</option>
                       <option value="REACTION">[reaction]</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div id="filterCastTimeSection" class="is-hidden filterFieldSection field is-horizontal">
+            <div class="field-label is-normal ml-2">
+              <label class="label" style="white-space: nowrap;">Cast Time</label>
+            </div>
+            <div class="field-body">
+              <div class="field">
+                <div class="control">
+                  <div class="select">
+                    <select id="filterCastTimeInput" class="pf-icon">
+                      <option value="ANY">Any</option>
+                      <option value="ACTION">[one-action]</option>
+                      <option value="TWO_ACTIONS">[two-actions]</option>
+                      <option value="THREE_ACTIONS">[three-actions]</option>
+                      <option value="FREE_ACTION">[free-action]</option>
+                      <option value="REACTION">[reaction]</option>
+                      <option value="ONE_TO_THREE_ACTIONS">[one-action] to [three-actions]</option>
+                      <option value="ONE_TO_TWO_ACTIONS">[one-action] to [two-actions]</option>
+                      <option value="TWO_TO_THREE_ACTIONS">[two-actions] to [three-actions]</option>
+                      <option value="ONE_MINUTE">1 minute</option>
+                      <option value="FIVE_MINUTES">5 minutes</option>
+                      <option value="TEN_MINUTES">10 minutes</option>
+                      <option value="ONE_HOUR">1 hour</option>
+                      <option value="EIGHT_HOURS">8 hours</option>
+                      <option value="ONE_DAY">24 hours</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div id="filterComponentsSection" class="is-hidden filterFieldSection field is-horizontal">
+            <div class="field-label is-normal ml-2">
+              <label class="label">Components</label>
+            </div>
+            <div class="field-body">
+              <div class="field">
+                <div class="control">
+                  <div class="select">
+                    <select id="filterComponentsInput">
+                      <option value="ANY">Any</option>
+                      <option value="verbal">Verbal</option>
+                      <option value="somatic">Somatic</option>
+                      <option value="material">Material</option>
                     </select>
                   </div>
                 </div>
