@@ -36,6 +36,10 @@ socket.on("returnNotesFieldChange", function(notesData, locationID){
     
     let notesFieldID = getCharIDFromURL()+'-notesField-'+notesData.sourceType+'-'+notesData.sourceLevel+'-'+notesData.sourceCode+'-'+notesData.sourceCodeSNum;
     let notesFieldControlShellID = notesFieldID+'ControlShell';
+
+    // If ID already exists, just return. This is a temporary fix - this shouldn't be an issue in the first place.
+    if($('#'+notesFieldID).length != 0) { return; }
+
     $('#'+locationID).append('<div id="'+notesFieldControlShellID+'" class="control my-1" style="max-width: 350px; margin: auto;"><textarea id="'+notesFieldID+'" class="textarea use-custom-scrollbar" rows="2" spellcheck="false" maxlength="3000" placeholder="'+placeholderText+'">'+notesText+'</textarea></div>');
 
     $("#"+notesFieldID).blur(function(){

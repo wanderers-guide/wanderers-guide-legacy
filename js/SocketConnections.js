@@ -1127,7 +1127,7 @@ module.exports = class SocketConnections {
                   });
 
                 } else {
-                  socket.emit('returnWSCStatementFailure', 'Unknown Class Feature \"'+type+'\"');
+                  socket.emit('returnWSCStatementFailure', 'Unknown Class Feature \"'+featureName+'\"');
                 }
               });
             }

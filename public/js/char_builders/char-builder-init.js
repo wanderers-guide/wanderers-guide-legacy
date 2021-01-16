@@ -225,6 +225,14 @@ function handleCharacterOptions(character, hBundles, progessBundles) {
     });
     $("#contentSrc-LOST-WORLD-GUIDE").prop('checked', contentSourceArray.includes('LOST-WORLD-GUIDE'));
 
+    $("#contentSrc-ABOMINATION-VAULTS").change(function(){
+      socket.emit("requestCharacterSourceChange", 
+          getCharIDFromURL(), 
+          'ABOMINATION-VAULTS',
+          this.checked);
+    });
+    $("#contentSrc-ABOMINATION-VAULTS").prop('checked', contentSourceArray.includes('ABOMINATION-VAULTS'));
+    
     $("#contentSrc-AGENTS-OF-EDGEWATCH").change(function(){
       socket.emit("requestCharacterSourceChange", 
           getCharIDFromURL(), 

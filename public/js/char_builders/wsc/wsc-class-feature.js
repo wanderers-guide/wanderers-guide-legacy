@@ -35,7 +35,7 @@ socket.on("returnAddClassFeature", function(srcStruct, classAbility, allClassAbi
   let classAbilityContentID = "classAbilityContent"+classAbility.id;
   let classAbilityCodeID = "classAbilityCode"+classAbility.id;
 
-  $('#'+locationID).append('<div id="'+classAbilityID+'" class="box lighter"></div>');
+  $('#'+locationID).append('<div id="'+classAbilityID+'" class="box lighter my-2"></div>');
 
   ///
   let classAbilitySection = $('#'+classAbilityID);
