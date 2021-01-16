@@ -185,6 +185,11 @@ function runNextStatement(){
             return 'WAIT';
         }
 
+        if(wscStatement.includes("-CLASS-FEATURE")){
+          processingClassFeatures(wscStatement, srcStruct, locationID);
+          return 'WAIT';
+        }
+
         if(wscStatement.includes("-FEAT")){
             processingFeats(wscStatement, srcStruct, locationID);
             return 'WAIT';

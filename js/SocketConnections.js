@@ -1099,6 +1099,44 @@ module.exports = class SocketConnections {
         });
       });
 
+      socket.on('requestAddClassFeature', function(charID, srcStruct, featureName, locationID){
+        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+          if(ownsChar){
+            if(featureName == null){
+
+              CharDataMapping.deleteData(charID, 'classAbilityExtra', srcStruct)
+              .then((result) => {
+                socket.emit('returnAddClassFeature', srcStruct, null, locationID);
+              });
+
+            } else {
+              CharGathering.getClassFeatureByName(charID, featureName)
+              .then((classFeature) => {
+                if(classFeature != null){
+
+                  CharDataMapping.setData(charID, 'classAbilityExtra', srcStruct, classFeature.id)
+                  .then((result) => {
+                    if(classFeature.selectType == 'SELECTOR'){
+                      CharGathering.getAllClassFeatureOptions(charID)
+                      .then((allOptions) => {
+                        socket.emit('returnAddClassFeature', srcStruct, classFeature, allOptions, locationID);
+                      });
+                    } else {
+                      socket.emit('returnAddClassFeature', srcStruct, classFeature, null, locationID);
+                    }
+                  });
+
+                } else {
+                  socket.emit('returnWSCStatementFailure', 'Unknown Class Feature \"'+type+'\"');
+                }
+              });
+            }
+          } else {
+            socket.emit('returnWSCStatementFailure', 'Incorrect Auth');
+          }
+        });
+      });
+
       socket.on('requestWeaponFamiliarityChange', function(charID, srcStruct, trait){
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
           if(ownsChar){

@@ -18,7 +18,7 @@ function openAbilityQuickview(data) {
         for(let classAbilChoice of g_classDetails.AbilityChoices){
             if(classAbilChoice.SelectorID == data.Ability.id){
 
-                let abilityOption = g_classDetails.Abilities.find(ability => {
+                let abilityOption = g_allClassAbilityOptions.find(ability => {
                     return ability.id == classAbilChoice.OptionID;
                 });
                 if(abilityOption == null){ break; }

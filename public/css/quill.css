@@ -1,0 +1,353 @@
+
+.ql-editor.ql-blank::before {
+  color: rgba(116, 116, 116, 0.8);
+}
+.ql-snow.ql-toolbar button:hover,
+.ql-snow .ql-toolbar button:hover,
+.ql-snow.ql-toolbar button:focus,
+.ql-snow .ql-toolbar button:focus,
+.ql-snow.ql-toolbar button.ql-active,
+.ql-snow .ql-toolbar button.ql-active,
+.ql-snow.ql-toolbar .ql-picker-label:hover,
+.ql-snow .ql-toolbar .ql-picker-label:hover,
+.ql-snow.ql-toolbar .ql-picker-label.ql-active,
+.ql-snow .ql-toolbar .ql-picker-label.ql-active,
+.ql-snow.ql-toolbar .ql-picker-item:hover,
+.ql-snow .ql-toolbar .ql-picker-item:hover,
+.ql-snow.ql-toolbar .ql-picker-item.ql-selected,
+.ql-snow .ql-toolbar .ql-picker-item.ql-selected {
+  color: #3298dc;
+}
+.ql-snow.ql-toolbar button:hover .ql-fill,
+.ql-snow .ql-toolbar button:hover .ql-fill,
+.ql-snow.ql-toolbar button:focus .ql-fill,
+.ql-snow .ql-toolbar button:focus .ql-fill,
+.ql-snow.ql-toolbar button.ql-active .ql-fill,
+.ql-snow .ql-toolbar button.ql-active .ql-fill,
+.ql-snow.ql-toolbar .ql-picker-label:hover .ql-fill,
+.ql-snow .ql-toolbar .ql-picker-label:hover .ql-fill,
+.ql-snow.ql-toolbar .ql-picker-label.ql-active .ql-fill,
+.ql-snow .ql-toolbar .ql-picker-label.ql-active .ql-fill,
+.ql-snow.ql-toolbar .ql-picker-item:hover .ql-fill,
+.ql-snow .ql-toolbar .ql-picker-item:hover .ql-fill,
+.ql-snow.ql-toolbar .ql-picker-item.ql-selected .ql-fill,
+.ql-snow .ql-toolbar .ql-picker-item.ql-selected .ql-fill,
+.ql-snow.ql-toolbar button:hover .ql-stroke.ql-fill,
+.ql-snow .ql-toolbar button:hover .ql-stroke.ql-fill,
+.ql-snow.ql-toolbar button:focus .ql-stroke.ql-fill,
+.ql-snow .ql-toolbar button:focus .ql-stroke.ql-fill,
+.ql-snow.ql-toolbar button.ql-active .ql-stroke.ql-fill,
+.ql-snow .ql-toolbar button.ql-active .ql-stroke.ql-fill,
+.ql-snow.ql-toolbar .ql-picker-label:hover .ql-stroke.ql-fill,
+.ql-snow .ql-toolbar .ql-picker-label:hover .ql-stroke.ql-fill,
+.ql-snow.ql-toolbar .ql-picker-label.ql-active .ql-stroke.ql-fill,
+.ql-snow .ql-toolbar .ql-picker-label.ql-active .ql-stroke.ql-fill,
+.ql-snow.ql-toolbar .ql-picker-item:hover .ql-stroke.ql-fill,
+.ql-snow .ql-toolbar .ql-picker-item:hover .ql-stroke.ql-fill,
+.ql-snow.ql-toolbar .ql-picker-item.ql-selected .ql-stroke.ql-fill,
+.ql-snow .ql-toolbar .ql-picker-item.ql-selected .ql-stroke.ql-fill {
+  fill: #3298dc;
+}
+.ql-snow.ql-toolbar button:hover .ql-stroke,
+.ql-snow .ql-toolbar button:hover .ql-stroke,
+.ql-snow.ql-toolbar button:focus .ql-stroke,
+.ql-snow .ql-toolbar button:focus .ql-stroke,
+.ql-snow.ql-toolbar button.ql-active .ql-stroke,
+.ql-snow .ql-toolbar button.ql-active .ql-stroke,
+.ql-snow.ql-toolbar .ql-picker-label:hover .ql-stroke,
+.ql-snow .ql-toolbar .ql-picker-label:hover .ql-stroke,
+.ql-snow.ql-toolbar .ql-picker-label.ql-active .ql-stroke,
+.ql-snow .ql-toolbar .ql-picker-label.ql-active .ql-stroke,
+.ql-snow.ql-toolbar .ql-picker-item:hover .ql-stroke,
+.ql-snow .ql-toolbar .ql-picker-item:hover .ql-stroke,
+.ql-snow.ql-toolbar .ql-picker-item.ql-selected .ql-stroke,
+.ql-snow .ql-toolbar .ql-picker-item.ql-selected .ql-stroke,
+.ql-snow.ql-toolbar button:hover .ql-stroke-miter,
+.ql-snow .ql-toolbar button:hover .ql-stroke-miter,
+.ql-snow.ql-toolbar button:focus .ql-stroke-miter,
+.ql-snow .ql-toolbar button:focus .ql-stroke-miter,
+.ql-snow.ql-toolbar button.ql-active .ql-stroke-miter,
+.ql-snow .ql-toolbar button.ql-active .ql-stroke-miter,
+.ql-snow.ql-toolbar .ql-picker-label:hover .ql-stroke-miter,
+.ql-snow .ql-toolbar .ql-picker-label:hover .ql-stroke-miter,
+.ql-snow.ql-toolbar .ql-picker-label.ql-active .ql-stroke-miter,
+.ql-snow .ql-toolbar .ql-picker-label.ql-active .ql-stroke-miter,
+.ql-snow.ql-toolbar .ql-picker-item:hover .ql-stroke-miter,
+.ql-snow .ql-toolbar .ql-picker-item:hover .ql-stroke-miter,
+.ql-snow.ql-toolbar .ql-picker-item.ql-selected .ql-stroke-miter,
+.ql-snow .ql-toolbar .ql-picker-item.ql-selected .ql-stroke-miter {
+  stroke: #3298dc;
+}
+@media (pointer: coarse) {
+  .ql-snow.ql-toolbar button:hover:not(.ql-active),
+  .ql-snow .ql-toolbar button:hover:not(.ql-active) {
+    color: #7c7c7c;
+  }
+  .ql-snow.ql-toolbar button:hover:not(.ql-active) .ql-fill,
+  .ql-snow .ql-toolbar button:hover:not(.ql-active) .ql-fill,
+  .ql-snow.ql-toolbar button:hover:not(.ql-active) .ql-stroke.ql-fill,
+  .ql-snow .ql-toolbar button:hover:not(.ql-active) .ql-stroke.ql-fill {
+    fill: #7c7c7c;
+  }
+  .ql-snow.ql-toolbar button:hover:not(.ql-active) .ql-stroke,
+  .ql-snow .ql-toolbar button:hover:not(.ql-active) .ql-stroke,
+  .ql-snow.ql-toolbar button:hover:not(.ql-active) .ql-stroke-miter,
+  .ql-snow .ql-toolbar button:hover:not(.ql-active) .ql-stroke-miter {
+    stroke: #7c7c7c;
+  }
+}
+.ql-snow .ql-stroke {
+  fill: none;
+  stroke: #7c7c7c;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2;
+}
+.ql-snow .ql-stroke-miter {
+  fill: none;
+  stroke: #7c7c7c;
+  stroke-miterlimit: 10;
+  stroke-width: 2;
+}
+.ql-snow .ql-fill,
+.ql-snow .ql-stroke.ql-fill {
+  fill: #7c7c7c;
+}
+.ql-snow .ql-editor blockquote {
+  border-left: 4px solid rgb(175, 175, 175);
+  margin-bottom: 5px;
+  margin-top: 5px;
+  padding-left: 16px;
+}
+.ql-snow .ql-editor code,
+.ql-snow .ql-editor pre {
+  background-color: #f0f0f0;
+  border-radius: 3px;
+}
+.ql-snow .ql-editor pre.ql-syntax {
+  background-color: #23241f;
+  color: #f8f8f2;
+  overflow: visible;
+}
+.ql-snow .ql-picker {
+  color: #7c7c7c;
+  display: inline-block;
+  float: left;
+  font-size: 14px;
+  font-weight: 500;
+  height: 24px;
+  position: relative;
+  vertical-align: middle;
+}
+.ql-snow .ql-picker-options {
+  background-color: hsl(0, 0%, 20%);
+  display: none;
+  min-width: 100%;
+  padding: 4px 8px;
+  position: absolute;
+  white-space: nowrap;
+}
+.ql-snow .ql-picker.ql-expanded .ql-picker-label {
+  color: #ccc;
+  z-index: 2;
+}
+.ql-snow .ql-picker.ql-expanded .ql-picker-label .ql-fill {
+  fill: #ccc;
+}
+.ql-snow .ql-picker.ql-expanded .ql-picker-label .ql-stroke {
+  stroke: #ccc;
+}
+.ql-snow .ql-color-picker.ql-background .ql-picker-item {
+  background-color: hsl(0, 0%, 20%);
+}
+.ql-snow .ql-color-picker.ql-color .ql-picker-item {
+  background-color: #000;
+}
+.ql-toolbar.ql-snow {
+  box-shadow: 0 1px 1px rgba(0,0,0,0.5);
+  border: 1px solid #282828;
+  box-sizing: border-box;
+  font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+  padding: 8px;
+}
+.ql-toolbar.ql-snow .ql-picker-options {
+  border: 1px solid transparent;
+  box-shadow: rgba(0,0,0,0.2) 0 2px 8px;
+}
+.ql-toolbar.ql-snow .ql-picker.ql-expanded .ql-picker-label {
+  border-color: #282828;
+}
+.ql-toolbar.ql-snow .ql-picker.ql-expanded .ql-picker-options {
+  border-color: #282828;
+}
+.ql-toolbar.ql-snow .ql-color-picker .ql-picker-item.ql-selected,
+.ql-toolbar.ql-snow .ql-color-picker .ql-picker-item:hover {
+  border-color: #000;
+}
+.ql-snow .ql-tooltip {
+  background-color: hsl(0, 0%, 20%);
+  box-shadow: 0 1px 1px rgba(0,0,0,0.5);
+  border: 1px solid #282828;
+  border-radius: 4px;
+  color: #444;
+  padding: 5px 12px;
+  white-space: nowrap;
+}
+.ql-snow .ql-tooltip input[type=text] {
+  display: none;
+  border: 1px solid #282828;
+  font-size: 13px;
+  height: 26px;
+  margin: 0px;
+  padding: 3px 5px;
+  width: 170px;
+}
+.ql-snow .ql-tooltip a.ql-action::after {
+  border-right: 1px solid #ccc;
+  content: 'Edit';
+  margin-left: 16px;
+  padding-right: 8px;
+}
+.ql-snow a {
+  color: #06c;
+}
+.ql-container.ql-snow {
+  box-shadow: 0 1px 1px rgba(0,0,0,0.5);
+  border: 1px solid #282828;
+  border-radius: 4px;
+}
+
+/* More Fonts */
+.ql-editor .ql-font-proza-libre {
+  font-family: 'Proza Libre', sans-serif;
+}
+.ql-snow .ql-picker.ql-font .ql-picker-label[data-value=proza-libre]::before,
+.ql-snow .ql-picker.ql-font .ql-picker-item[data-value=proza-libre]::before {
+  content: 'Proza Libre';
+  font-family: 'Proza Libre', sans-serif;
+}
+
+.ql-editor .ql-font-noto-sans {
+  font-family: 'Noto Sans', sans-serif;
+}
+.ql-snow .ql-picker.ql-font .ql-picker-label[data-value=noto-sans]::before,
+.ql-snow .ql-picker.ql-font .ql-picker-item[data-value=noto-sans]::before {
+  content: 'Noto Sans';
+  font-family: 'Noto Sans', sans-serif;
+}
+
+.ql-editor .ql-font-nanum-gothic {
+  font-family: 'Nanum Gothic Coding', monospace;
+}
+.ql-snow .ql-picker.ql-font .ql-picker-label[data-value=nanum-gothic]::before,
+.ql-snow .ql-picker.ql-font .ql-picker-item[data-value=nanum-gothic]::before {
+  content: 'Nanum Gothic';
+  font-family: 'Nanum Gothic Coding', monospace;
+}
+
+.ql-editor .ql-font-handwriting {
+  font-family: 'Common';
+}
+.ql-snow .ql-picker.ql-font .ql-picker-label[data-value=handwriting]::before,
+.ql-snow .ql-picker.ql-font .ql-picker-item[data-value=handwriting]::before {
+  content: 'Handwriting';
+  font-family: 'Common';
+}
+
+.ql-editor .ql-font-barazhad {
+  font-family: 'Barazhad';
+}
+.ql-snow .ql-picker.ql-font .ql-picker-label[data-value=barazhad]::before,
+.ql-snow .ql-picker.ql-font .ql-picker-item[data-value=barazhad]::before {
+  content: 'Barazhad';
+  font-family: 'Barazhad';
+}
+
+.ql-editor .ql-font-dethek {
+  font-family: 'Dethek';
+}
+.ql-snow .ql-picker.ql-font .ql-picker-label[data-value=dethek]::before,
+.ql-snow .ql-picker.ql-font .ql-picker-item[data-value=dethek]::before {
+  content: 'Dethek';
+  font-family: 'Dethek';
+}
+
+.ql-editor .ql-font-enochian {
+  font-family: 'Enochian';
+}
+.ql-snow .ql-picker.ql-font .ql-picker-label[data-value=enochian]::before,
+.ql-snow .ql-picker.ql-font .ql-picker-item[data-value=enochian]::before {
+  content: 'Enochian';
+  font-family: 'Enochian';
+}
+
+.ql-editor .ql-font-iokharic {
+  font-family: 'Iokharic';
+}
+.ql-snow .ql-picker.ql-font .ql-picker-label[data-value=iokharic]::before,
+.ql-snow .ql-picker.ql-font .ql-picker-item[data-value=iokharic]::before {
+  content: 'Iokharic';
+  font-family: 'Iokharic';
+}
+
+.ql-editor .ql-font-rellanic {
+  font-family: 'Rellanic';
+}
+.ql-snow .ql-picker.ql-font .ql-picker-label[data-value=rellanic]::before,
+.ql-snow .ql-picker.ql-font .ql-picker-item[data-value=rellanic]::before {
+  content: 'Rellanic';
+  font-family: 'Rellanic';
+}
+
+.ql-editor .ql-font-rlyehian {
+  font-family: 'Rlyehian';
+}
+.ql-snow .ql-picker.ql-font .ql-picker-label[data-value=rlyehian]::before,
+.ql-snow .ql-picker.ql-font .ql-picker-item[data-value=rlyehian]::before {
+  content: 'Rlyehian';
+  font-family: 'Rlyehian';
+}
+
+.ql-editor .ql-font-gnomish {
+  font-family: 'Gnomish';
+}
+.ql-snow .ql-picker.ql-font .ql-picker-label[data-value=gnomish]::before,
+.ql-snow .ql-picker.ql-font .ql-picker-item[data-value=gnomish]::before {
+  content: 'Gnomish';
+  font-family: 'Gnomish';
+}
+
+.ql-editor .ql-font-necril {
+  font-family: 'Necril';
+}
+.ql-snow .ql-picker.ql-font .ql-picker-label[data-value=necril]::before,
+.ql-snow .ql-picker.ql-font .ql-picker-item[data-value=necril]::before {
+  content: 'Necril';
+  font-family: 'Necril';
+}
+
+.ql-editor .ql-font-druidic {
+  font-family: 'Druidic';
+}
+.ql-snow .ql-picker.ql-font .ql-picker-label[data-value=druidic]::before,
+.ql-snow .ql-picker.ql-font .ql-picker-item[data-value=druidic]::before {
+  content: 'Druidic';
+  font-family: 'Druidic';
+}
+
+
+/* Quill Scrollbar */
+.ql-editor::-webkit-scrollbar {
+  width: 0.35em;
+}
+.ql-editor::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 6px rgba(0,0,0,0);
+  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0);
+}
+.ql-editor::-webkit-scrollbar-thumb {
+  background-color: #181818;
+  outline: 1px solid #181818;
+}
+.ql-editor::-webkit-scrollbar-corner {
+  background-color: #181818;
+}

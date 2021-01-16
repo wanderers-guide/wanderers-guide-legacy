@@ -489,8 +489,7 @@ function displayCurrentClass(classStruct, saving) {
             }
 
             let classAbilityContent = $('#'+classAbilityContentID);
-            let abilityDescription = processText(classAbility.description, false, null);
-            classAbilityContent.append('<div class="container ability-text-section" id="classAbility'+classAbility.id+'">'+abilityDescription+'</div>');
+            classAbilityContent.append('<div class="container ability-text-section">'+processText(classAbility.description, false, null)+'</div>');
 
             classAbilityContent.append('<div class="columns is-mobile is-centered is-marginless"><div id="'+classAbilityCodeID+'" class="column is-mobile is-11 is-paddingless"></div></div>');
 

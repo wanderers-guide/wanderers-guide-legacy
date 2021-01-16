@@ -168,6 +168,12 @@ body {
   color: #cccccc;
   border-radius: 4px;
 }
+.box.lighter {
+  background: #292929;
+}
+.box.darker {
+  background: #272727;
+}
 .input, .select select, .textarea, .button {
   background-color: hsl(0, 0%, 21%);
   border-color: hsl(0, 0%, 13%);

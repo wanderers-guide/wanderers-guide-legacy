@@ -71,6 +71,9 @@ let g_allLanguages = null;
 let g_featMap = null;
 let g_featChoiceArray = null;
 
+let g_extraClassAbilities = null;
+let g_allClassAbilityOptions = null;
+
 let g_spellMap = null;
 let g_spellSlotsMap = null;
 let g_spellBookArray = null;
@@ -221,6 +224,9 @@ socket.on("returnCharacterSheetInfo", function(charInfo, viewOnly){
             return a.value.level - b.value.level;
         }
     );
+
+    g_extraClassAbilities = charInfo.ChoicesStruct.ExtraClassFeaturesArray;
+    g_allClassAbilityOptions = charInfo.AllClassFeatureOptions;
 
     g_spellMap = objToMap(charInfo.SpellObject);
     g_spellMap = new Map([...g_spellMap.entries()].sort(
@@ -2199,7 +2205,10 @@ function runAllFeatsAndAbilitiesCode() {
         }
     }
 
-    for(let classAbil of g_classDetails.Abilities){
+    let totalClassAbilities = cloneObj(g_classDetails.Abilities);
+    for(let extraClassAbil of g_extraClassAbilities){ totalClassAbilities.push(extraClassAbil.value); }
+
+    for(let classAbil of totalClassAbilities){
         if(classAbil.selectType != 'SELECT_OPTION' && classAbil.level <= g_character.level) {
             processSheetCode(classAbil.code, classAbil.name);
 
@@ -2207,7 +2216,7 @@ function runAllFeatsAndAbilitiesCode() {
                 for(let classAbilChoice of g_classDetails.AbilityChoices){
                     if(classAbilChoice.SelectorID == classAbil.id){
 
-                        let abilityOption = g_classDetails.Abilities.find(ability => {
+                        let abilityOption = g_allClassAbilityOptions.find(ability => {
                             return ability.id == classAbilChoice.OptionID;
                         });
                         if(abilityOption != null){

@@ -47,6 +47,7 @@ function displayAncestryResults(allAncestries){
 
   if(allAncestries.size <= 0){
     $('#browsingList').html('<p class="has-text-centered is-italic">No results found!</p>');
+    $('#searchResultCountContainer').html('<p class="is-italic has-text-grey">(0 results found)</p>');
     return;
   }
 

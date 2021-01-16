@@ -83,6 +83,9 @@ function initExpressionProcessor(expDataStruct){
                     }
                 }
             }
+            for(let classAbility of expDataStruct.ChoiceStruct.ExtraClassFeaturesArray){
+              g_expr_classAbilityArray.push(classAbility.value.name.toUpperCase());
+            }
         }
     }
 

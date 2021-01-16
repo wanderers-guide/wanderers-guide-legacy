@@ -361,7 +361,11 @@ function displayOtherAbilities(data, abilitiesSearchValue){
     $('#abilitiesContent').append('<p class="is-size-5 has-text-grey-light has-text-weight-bold text-left pl-5">Other</p>');
     $('#abilitiesContent').append('<hr class="hr-light" style="margin-top:-0.5em; margin-bottom:0em;">');
     
-    // TO-DO: Display other ability content here?
+    let abilCount = 0;
+    for(let extraClassAbil of g_extraClassAbilities){
+        filterAbilitiesThroughSearch(extraClassAbil.value, 'ExtraClass'+abilCount, abilitiesSearchValue);
+        abilCount++;
+    }
 
 }
 
@@ -390,7 +394,7 @@ function displayAbility(ability, abilIdentifier){
     let abilityID = 'abilityDetailsEntry'+abilIdentifier;
 
     let abilityNameInnerHTML = '<span>'+ability.name+'</span>';
-    let abilityLevelInnerHTML = '<span>Level '+ability.level+'</span>';
+    let abilityLevelInnerHTML = (ability.level == 0 || ability.level == null) ? '' : '<span>Level '+ability.level+'</span>';
 
     $('#abilitiesContent').append('<div id="'+abilityID+'" class="columns is-mobile border-bottom border-dark-lighter cursor-clickable is-marginless mx-2"><div class="column is-paddingless pl-3"><p class="text-left pt-1">'+abilityNameInnerHTML+'</p></div><div class="column is-paddingless"><p class="pt-1">'+abilityLevelInnerHTML+'</p></div></div>');
     

@@ -197,6 +197,34 @@ module.exports = class CharGathering {
         });
     }
 
+    static getAllClassFeatureOptions(charID) {
+      return Character.findOne({ where: { id: charID} })
+      .then((character) => {
+        return ClassAbility.findAll({
+          order: [['level', 'ASC'],['name', 'ASC'],],
+          where: {
+              selectType: 'SELECT_OPTION',
+              contentSrc: {
+                [Op.or]: CharContentSources.getSourceArray(character)
+              },
+              homebrewID: {
+                [Op.or]: CharContentHomebrew.getHomebrewArray(character)
+              },
+          }
+        })
+        .then((allClassFeatureOptions) => {
+          return allClassFeatureOptions;
+        });
+      });
+    }
+
+    static getAllExtraClassFeatures(charID){
+      return CharDataMapping.getDataAll(charID, 'classAbilityExtra', ClassAbility)
+      .then((extraClassFeaturesArray) => {
+        return extraClassFeaturesArray;
+      });
+    }
+
     static getAllArchetypes(charID) {
         return Character.findOne({ where: { id: charID} })
         .then((character) => {
@@ -1069,7 +1097,6 @@ module.exports = class CharGathering {
                         .then((choiceDataArray) => {
                           return CharDataMappingExt.getDataAllProficiencies(charID)
                           .then((profDataArray) => {
-                            console.log(profDataArray);
                             return CharDataMappingExt.getDataAllInnateSpell(charID)
                             .then((innateSpellDataArray) => {
                               return CharDataMapping.getDataAll(charID,"languages",Language)
@@ -1090,32 +1117,36 @@ module.exports = class CharGathering {
                                             .then((domainDataArray) => {
                                               return CharDataMapping.getDataAll(charID, "advancedDomains",Domain)
                                               .then((advancedDomainDataArray) => {
+                                                return CharGathering.getAllExtraClassFeatures(charID)
+                                                .then((extraClassFeatures) => {
 
-                                                let choiceStruct = {
-                                                  Character: character,
-                                                  Heritage: heritage,
-                                                  Background: background,
-                                                  Ancestry: ancestry,
-                                                  ClassDetails: classDetails,
-                                                  CharTagsArray: charTagsArray,
-                                                  FeatArray: featDataArray,
-                                                  BonusArray: bonusDataArray,
-                                                  ChoiceArray: choiceDataArray,
-                                                  ProfArray: profDataArray,
-                                                  LangArray: langDataArray,
-                                                  SenseArray: senseDataArray,
-                                                  PhyFeatArray: phyFeatDataArray,
-                                                  InnateSpellArray: innateSpellDataArray,
-                                                  FinalProfObject: mapToObj(profMap),
-                                                  AllDomains: domains,
-                                                  AllAncestries: ancestries,
-                                                  DomainArray: domainDataArray,
-                                                  AdvancedDomainArray: advancedDomainDataArray,
-                                                  FocusPointArray: focusPointDataArray,
-                                                  LoreArray: loreDataArray,
-                                                };
-      
-                                                return choiceStruct;
+                                                  let choiceStruct = {
+                                                    Character: character,
+                                                    Heritage: heritage,
+                                                    Background: background,
+                                                    Ancestry: ancestry,
+                                                    ClassDetails: classDetails,
+                                                    CharTagsArray: charTagsArray,
+                                                    FeatArray: featDataArray,
+                                                    BonusArray: bonusDataArray,
+                                                    ChoiceArray: choiceDataArray,
+                                                    ProfArray: profDataArray,
+                                                    LangArray: langDataArray,
+                                                    SenseArray: senseDataArray,
+                                                    PhyFeatArray: phyFeatDataArray,
+                                                    InnateSpellArray: innateSpellDataArray,
+                                                    FinalProfObject: mapToObj(profMap),
+                                                    AllDomains: domains,
+                                                    AllAncestries: ancestries,
+                                                    DomainArray: domainDataArray,
+                                                    AdvancedDomainArray: advancedDomainDataArray,
+                                                    FocusPointArray: focusPointDataArray,
+                                                    LoreArray: loreDataArray,
+                                                    ExtraClassFeaturesArray: extraClassFeatures,
+                                                  };
+        
+                                                  return choiceStruct;
+                                                });
                                               });
                                             });
                                           });
@@ -1383,6 +1414,26 @@ module.exports = class CharGathering {
           }
         }).then((phyFeat) => {
             return phyFeat;
+        });
+      });
+    }
+
+    static getClassFeatureByName(charID, featureName) {
+      return Character.findOne({ where: { id: charID } })
+      .then((character) => {
+        return ClassAbility.findOne({
+          where: {
+            name: featureName,
+            contentSrc: {
+              [Op.or]: CharContentSources.getSourceArray(character)
+            },
+            homebrewID: {
+              [Op.or]: CharContentHomebrew.getHomebrewArray(character)
+            },
+          }
+        })
+        .then((classFeature) => {
+          return classFeature;
         });
       });
     }
@@ -1719,35 +1770,39 @@ module.exports = class CharGathering {
                                                 .then( (speedsDataArray) => {
                                                   return CharGathering.getWeaponFamiliarities(charID)
                                                   .then( (familiaritiesDataArray) => {
+                                                    return CharGathering.getAllClassFeatureOptions(charID)
+                                                    .then( (allClassFeatureOptions) => {
                                                                                                 
-                                                    let charInfo = {
-                                                      Character : character,
-                                                      Background : background,
-                                                      Ancestry : ancestry,
-                                                      Heritage : heritage,
-                                                      Inventory : inventory,
-                                                      AbilObject : abilObject,
-                                                      SkillObject : skillObject,
-                                                      FeatObject : featObject,
-                                                      ProfObject : choicesStruct.FinalProfObject,
-                                                      SpellObject : mapToObj(spellMap),
-                                                      ChoicesStruct : choicesStruct,
-                                                      SpellDataStruct: spellDataStruct,
-                                                      InvStruct : invStruct,
-                                                      ItemObject : mapToObj(itemMap),
-                                                      ConditionsObject : conditionsObject,
-                                                      AllConditions : allConditions,
-                                                      AllLanguages : allLanguages,
-                                                      ResistAndVulners : resistAndVulnerStruct,
-                                                      SpecializeStruct : specializeStruct,
-                                                      WeaponFamiliarities : familiaritiesDataArray,
-                                                      NotesFields : notesDataArray,
-                                                      OtherSpeeds : speedsDataArray,
-                                                      AllTags : tags,
-                                                      CompanionData : companionData,
-                                                    };
-                                                                    
-                                                    return charInfo;
+                                                      let charInfo = {
+                                                        Character : character,
+                                                        Background : background,
+                                                        Ancestry : ancestry,
+                                                        Heritage : heritage,
+                                                        Inventory : inventory,
+                                                        AbilObject : abilObject,
+                                                        SkillObject : skillObject,
+                                                        FeatObject : featObject,
+                                                        ProfObject : choicesStruct.FinalProfObject,
+                                                        SpellObject : mapToObj(spellMap),
+                                                        ChoicesStruct : choicesStruct,
+                                                        SpellDataStruct: spellDataStruct,
+                                                        InvStruct : invStruct,
+                                                        ItemObject : mapToObj(itemMap),
+                                                        ConditionsObject : conditionsObject,
+                                                        AllConditions : allConditions,
+                                                        AllLanguages : allLanguages,
+                                                        ResistAndVulners : resistAndVulnerStruct,
+                                                        SpecializeStruct : specializeStruct,
+                                                        WeaponFamiliarities : familiaritiesDataArray,
+                                                        NotesFields : notesDataArray,
+                                                        OtherSpeeds : speedsDataArray,
+                                                        AllTags : tags,
+                                                        CompanionData : companionData,
+                                                        AllClassFeatureOptions: allClassFeatureOptions,
+                                                      };
+                                                                      
+                                                      return charInfo;
+                                                    });
                                                   });
                                                 });
                                               });

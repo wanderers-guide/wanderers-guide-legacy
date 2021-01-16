@@ -366,5 +366,10 @@ function prereqFindClassAbility(abilityName){
       return ability;
     }
   }
+  for(let ability of wscChoiceStruct.ExtraClassFeaturesArray){
+    if(abilityName === ability.value.name.toLowerCase()) {
+      return ability;
+    }
+  }
   return null;
 }
