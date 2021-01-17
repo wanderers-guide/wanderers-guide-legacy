@@ -456,6 +456,7 @@ function displayCurrentClass(classStruct, saving) {
     $('#classAbilitiesTabs').html('<div class="tabs is-centered is-marginless"><ul class="ability-tabs">'+abilityTabHTML+'</ul></div>');
 
     for(const classAbility of classStruct.Abilities) {
+        if(classAbility.level == -1) {continue;}
 
         if(classAbility.selectType != 'SELECT_OPTION' && classAbility.level <= wscChoiceStruct.Character.level) {
 

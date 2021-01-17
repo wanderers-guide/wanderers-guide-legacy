@@ -133,21 +133,24 @@ function addBackFunctionality(quickViewData){
 
 }
 
-function addContentSource(contentSrc, homebrewID){
+function addContentSource(contentID, contentSrc, homebrewID){
   if(contentSrc == null && homebrewID == null) {return;}
+  if(contentID == null) {return;}
 
-  let sourceLink, sourceTextName;
+  let sourceTextName, sourceLink;
   if(homebrewID == null) {
-    sourceLink = getContentSourceLink(contentSrc);
     sourceTextName = getContentSourceTextName(contentSrc);
-    if(sourceLink == null) { sourceLink = ''; }
+    sourceLink = getContentSourceLink(contentSrc);
     if(sourceTextName == null) { sourceTextName = capitalizeWords(contentSrc); }
+    if(sourceLink == null) { sourceLink = ''; }
   } else {
-    sourceLink = '/homebrew/?view_id='+homebrewID;
     sourceTextName = 'Bundle #'+homebrewID;
+    sourceLink = '/homebrew/?view_id='+homebrewID;
   }
 
+  let contentIDStr = (contentID == null) ? '' : '<span class="is-size-7 has-text-grey-dark is-italic">, #'+contentID+'</span>';
+
   $('#quickViewContent').parent().css('position','relative');
-  $('#quickViewContent').append('<div style="position: fixed; bottom: 5px; right: 12px;"><a class="is-size-7 has-text-grey is-italic" href="'+sourceLink+'" target="_blank">'+sourceTextName+'</a></div>');
+  $('#quickViewContent').append('<div style="position: fixed; bottom: 5px; right: 12px;"><a class="is-size-7 has-text-grey is-italic" href="'+sourceLink+'" target="_blank">'+sourceTextName+'</a>'+contentIDStr+'</div>');
 
 }

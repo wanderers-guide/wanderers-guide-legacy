@@ -4,7 +4,7 @@
 
 function openItemQuickview(data) {
     addBackFunctionality(data);
-    addContentSource(data.ItemDataStruct.Item.contentSrc, data.ItemDataStruct.Item.homebrewID);
+    addContentSource(data.ItemDataStruct.Item.id, data.ItemDataStruct.Item.contentSrc, data.ItemDataStruct.Item.homebrewID);
 
     let qContent = $('#quickViewContent');
 

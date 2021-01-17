@@ -39,21 +39,16 @@ class DisplayAncestry {
           $('#ancestry-name').html(ancestryStruct.ancestry.name);
           $('#ancestry-description').html(processText(ancestryStruct.ancestry.description, false, null, 'MEDIUM', false));
 
-          let sourceStr = '';
-          let ancestryRarity = convertRarityToHTML(ancestryStruct.ancestry.rarity);
-          if(ancestryRarity == ''){
-            let sourceTextName = getContentSourceTextName(ancestryStruct.ancestry.contentSrc);
-            if(ancestryStruct.ancestry.homebrewID != null){
-              sourceTextName = 'Bundle #'+ancestryStruct.ancestry.homebrewID;
-            }
-            sourceStr = sourceTextName;
-          } else {
-            let sourceTextName = getContentSourceTextName(ancestryStruct.ancestry.contentSrc);
-            if(ancestryStruct.ancestry.homebrewID != null){
-              sourceTextName = 'Bundle #'+ancestryStruct.ancestry.homebrewID;
-            }
-            sourceStr = '<span class="pr-2">'+sourceTextName+'</span>';
+          let sourceTextName = getContentSourceTextName(ancestryStruct.ancestry.contentSrc);
+          let sourceLink = getContentSourceLink(ancestryStruct.ancestry.contentSrc);
+          if(ancestryStruct.ancestry.homebrewID != null){
+            sourceTextName = 'Bundle #'+ancestryStruct.ancestry.homebrewID;
+            sourceLink = '/homebrew/?view_id='+ancestryStruct.ancestry.homebrewID;
           }
+          let sourceStr = '<a class="has-text-grey" href="'+sourceLink+'" target="_blank">'+sourceTextName+'</a><span class="has-text-grey-dark">, #'+ancestryStruct.ancestry.id+'</span>';
+
+          let ancestryRarity = convertRarityToHTML(ancestryStruct.ancestry.rarity);
+          if(ancestryRarity != ''){ sourceStr = '<span class="pr-2">'+sourceStr+'</span>'; }
           $('#ancestry-source').html(sourceStr+ancestryRarity);
 
           let boostsStr = '';

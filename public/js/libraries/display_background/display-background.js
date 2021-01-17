@@ -30,21 +30,16 @@ class DisplayBackground {
           $('#background-name').html(backgroundStruct.background.name);
           $('#background-description').html(processText(backgroundStruct.background.description, false, null, 'MEDIUM', false));
 
-          let sourceStr = '';
-          let backgroundRarity = convertRarityToHTML(backgroundStruct.background.rarity);
-          if(backgroundRarity == ''){
-            let sourceTextName = getContentSourceTextName(backgroundStruct.background.contentSrc);
-            if(backgroundStruct.background.homebrewID != null){
-              sourceTextName = 'Bundle #'+backgroundStruct.background.homebrewID;
-            }
-            sourceStr = sourceTextName;
-          } else {
-            let sourceTextName = getContentSourceTextName(backgroundStruct.background.contentSrc);
-            if(backgroundStruct.background.homebrewID != null){
-              sourceTextName = 'Bundle #'+backgroundStruct.background.homebrewID;
-            }
-            sourceStr = '<span class="pr-2">'+sourceTextName+'</span>';
+          let sourceTextName = getContentSourceTextName(backgroundStruct.background.contentSrc);
+          let sourceLink = getContentSourceLink(backgroundStruct.background.contentSrc);
+          if(backgroundStruct.background.homebrewID != null){
+            sourceTextName = 'Bundle #'+backgroundStruct.background.homebrewID;
+            sourceLink = '/homebrew/?view_id='+backgroundStruct.background.homebrewID;
           }
+          let sourceStr = '<a class="has-text-grey" href="'+sourceLink+'" target="_blank">'+sourceTextName+'</a><span class="has-text-grey-dark">, #'+backgroundStruct.background.id+'</span>';
+
+          let backgroundRarity = convertRarityToHTML(backgroundStruct.background.rarity);
+          if(backgroundRarity != ''){ sourceStr = '<span class="pr-2">'+sourceStr+'</span>'; }
           $('#background-source').html(sourceStr+backgroundRarity);
 
           let boostStr = '';

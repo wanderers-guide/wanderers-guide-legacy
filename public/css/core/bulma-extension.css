@@ -40,6 +40,9 @@
 .has-text-grey-kinda-light {
   color: hsl(0, 0%, 60%)!important;
 }
+.has-text-grey-kinda-dark {
+  color: hsl(0, 0%, 38%)!important;
+}
 
 /* Background Colors */
 .has-background-black-like {

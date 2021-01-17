@@ -70,6 +70,7 @@ function initExpressionProcessor(expDataStruct){
         g_expr_classAbilityArray = [];
         if(expDataStruct.ChoiceStruct.ClassDetails.Abilities != null){
             for(let classAbility of expDataStruct.ChoiceStruct.ClassDetails.Abilities){
+                if(classAbility.level == -1) {continue;}
                 if(classAbility.level <= g_expr_level) {
                     if(classAbility.selectType != 'SELECT_OPTION'){
                         g_expr_classAbilityArray.push(classAbility.name.toUpperCase());

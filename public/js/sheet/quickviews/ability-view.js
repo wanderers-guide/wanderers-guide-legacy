@@ -4,7 +4,7 @@
 
 function openAbilityQuickview(data) {
     addBackFunctionality(data);
-    addContentSource(data.Ability.contentSrc, data.Ability.homebrewID);
+    addContentSource(null, data.Ability.contentSrc, data.Ability.homebrewID);
 
     $('#quickViewTitle').html(data.Ability.name);
     if(data.Ability.level != null && data.Ability.level > 0) {

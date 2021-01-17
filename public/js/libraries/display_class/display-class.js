@@ -39,20 +39,27 @@ class DisplayClass {
           $('#class-name').html(classStruct.class.name);
 
           let sourceTextName = getContentSourceTextName(classStruct.class.contentSrc);
+          let sourceLink = getContentSourceLink(classStruct.class.contentSrc);
           if(classStruct.class.homebrewID != null){
             sourceTextName = 'Bundle #'+classStruct.class.homebrewID;
+            sourceLink = '/homebrew/?view_id='+classStruct.class.homebrewID;
           }
+          let sourceStr = '<a class="has-text-grey" href="'+sourceLink+'" target="_blank">'+sourceTextName+'</a><span class="has-text-grey-dark">, #'+classStruct.class.id+'</span>';
+          //let classRarity = convertRarityToHTML(classStruct.class.rarity);
+          //if(classRarity != ''){ sourceStr = '<span class="pr-2">'+sourceStr+'</span>'; }
+          $('#class-source').html(sourceStr);
 
-          $('#class-source').html(sourceTextName);
           $('#class-description').html(processText(classStruct.class.description, false, null, 'MEDIUM', false));
           
           if(classStruct.class.keyAbility == 'OTHER') {
-            $('#class-key-ability').html('Varies');
+            $('#class-key-ability').html('<p class="pl-1">Varies</p>');
             $('#class-key-ability-desc').html('At 1st level, your class gives you an ability boost - usually depending on one of your class features.');
           } else {
-            $('#class-key-ability').html(classStruct.class.keyAbility);
+            $('#class-key-ability').html('<p class="pl-1">'+classStruct.class.keyAbility+'</p>');
             $('#class-key-ability-desc').html('At 1st level, your class gives you an ability boost to '+classStruct.class.keyAbility+'.');
           }
+
+          $('#class-hit-points').html('<p class="pl-1">'+classStruct.class.hitPoints+'</p>');
 
           $('#class-perception').html(profToWord(classStruct.class.tPerception));
           $('#class-saving-throw-fort').html(profToWord(classStruct.class.tPerception)+' in Fortitude');

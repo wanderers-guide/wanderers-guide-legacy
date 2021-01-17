@@ -41,21 +41,16 @@ class DisplayArchetype {
 
           let dedFeatStruct = featMap.get(archetypeStruct.archetype.dedicationFeatID+'');
 
-          let sourceStr = '';
-          let archetypeRarity = convertRarityToHTML(dedFeatStruct.Feat.rarity);
-          if(archetypeRarity == ''){
-            let sourceTextName = getContentSourceTextName(archetypeStruct.archetype.contentSrc);
-            if(archetypeStruct.archetype.homebrewID != null){
-              sourceTextName = 'Bundle #'+archetypeStruct.archetype.homebrewID;
-            }
-            sourceStr = sourceTextName;
-          } else {
-            let sourceTextName = getContentSourceTextName(archetypeStruct.archetype.contentSrc);
-            if(archetypeStruct.archetype.homebrewID != null){
-              sourceTextName = 'Bundle #'+archetypeStruct.archetype.homebrewID;
-            }
-            sourceStr = '<span class="pr-2">'+sourceTextName+'</span>';
+          let sourceTextName = getContentSourceTextName(archetypeStruct.archetype.contentSrc);
+          let sourceLink = getContentSourceLink(archetypeStruct.archetype.contentSrc);
+          if(archetypeStruct.archetype.homebrewID != null){
+            sourceTextName = 'Bundle #'+archetypeStruct.archetype.homebrewID;
+            sourceLink = '/homebrew/?view_id='+archetypeStruct.archetype.homebrewID;
           }
+          let sourceStr = '<a class="has-text-grey" href="'+sourceLink+'" target="_blank">'+sourceTextName+'</a><span class="has-text-grey-dark">, #'+archetypeStruct.archetype.id+'</span>';
+
+          let archetypeRarity = convertRarityToHTML(dedFeatStruct.Feat.rarity);
+          if(archetypeRarity != ''){ sourceStr = '<span class="pr-2">'+sourceStr+'</span>'; }
           $('#archetype-source').html(sourceStr+archetypeRarity);
 
           ///

@@ -39,21 +39,16 @@ class DisplayUniHeritage {
           $('#uni-heritage-name').html(uniHeritageStruct.heritage.name);
           $('#uni-heritage-description').html(processText(uniHeritageStruct.heritage.description, false, null, 'MEDIUM', false));
 
-          let sourceStr = '';
-          let uniHeritageRarity = convertRarityToHTML(uniHeritageStruct.heritage.rarity, true);
-          if(uniHeritageRarity == ''){
-            let sourceTextName = getContentSourceTextName(uniHeritageStruct.heritage.contentSrc);
-            if(uniHeritageStruct.heritage.homebrewID != null){
-              sourceTextName = 'Bundle #'+uniHeritageStruct.heritage.homebrewID;
-            }
-            sourceStr = sourceTextName;
-          } else {
-            let sourceTextName = getContentSourceTextName(uniHeritageStruct.heritage.contentSrc);
-            if(uniHeritageStruct.heritage.homebrewID != null){
-              sourceTextName = 'Bundle #'+uniHeritageStruct.heritage.homebrewID;
-            }
-            sourceStr = '<span class="pr-2">'+sourceTextName+'</span>';
+          let sourceTextName = getContentSourceTextName(uniHeritageStruct.heritage.contentSrc);
+          let sourceLink = getContentSourceLink(uniHeritageStruct.heritage.contentSrc);
+          if(uniHeritageStruct.heritage.homebrewID != null){
+            sourceTextName = 'Bundle #'+uniHeritageStruct.heritage.homebrewID;
+            sourceLink = '/homebrew/?view_id='+uniHeritageStruct.heritage.homebrewID;
           }
+          let sourceStr = '<a class="has-text-grey" href="'+sourceLink+'" target="_blank">'+sourceTextName+'</a><span class="has-text-grey-dark">, #'+uniHeritageStruct.heritage.id+'</span>';
+
+          let uniHeritageRarity = convertRarityToHTML(uniHeritageStruct.heritage.rarity);
+          if(uniHeritageRarity != ''){ sourceStr = '<span class="pr-2">'+sourceStr+'</span>'; }
           $('#uni-heritage-source').html(sourceStr+uniHeritageRarity);
 
           ///
