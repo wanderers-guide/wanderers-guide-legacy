@@ -140,17 +140,19 @@ function weaponProfDetermineNumUps(itemData){
     profNumUps = profData.NumUps;
   }
 
-  let reducedProfData = null;
-  if(itemData.WeaponData.category == "MARTIAL"){
-    reducedProfData = g_profMap.get('Simple_Weapons');
-  } else if (itemData.WeaponData.category == "ADVANCED"){
-    reducedProfData = g_profMap.get('Martial_Weapons');
-  } else {
-    reducedProfData = profData;
-  }
-
-  if(reducedProfData != null){
-    profNumUps = (reducedProfData.NumUps > profNumUps) ? reducedProfData.NumUps : profNumUps;
+  if(hasFamiliarityReduceProf(itemData)){
+    let reducedProfData = null;
+    if(itemData.WeaponData.category == "MARTIAL"){
+      reducedProfData = g_profMap.get('Simple_Weapons');
+    } else if (itemData.WeaponData.category == "ADVANCED"){
+      reducedProfData = g_profMap.get('Martial_Weapons');
+    } else {
+      reducedProfData = profData;
+    }
+  
+    if(reducedProfData != null){
+      profNumUps = (reducedProfData.NumUps > profNumUps) ? reducedProfData.NumUps : profNumUps;
+    }
   }
 
   return profNumUps;
