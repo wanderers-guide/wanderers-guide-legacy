@@ -4,6 +4,8 @@
 
 class DisplayArchetype {
   constructor(containerID, archetypeID, featMap, homebrewID=null) {
+    $('.subpageloader').removeClass('is-hidden');
+
     featMap = new Map([...featMap.entries()].sort(
       function(a, b) {
           if (a[1].Feat.level === b[1].Feat.level) {
@@ -26,6 +28,7 @@ class DisplayArchetype {
         url: "/templates/display-archetype.html",
         success : function(text)
         {
+          $('.subpageloader').addClass('is-hidden');
 
           $('#archetype-back-btn').click(function() {
             $('#'+archetypeDisplayContainerID).remove();

@@ -30,7 +30,7 @@ function openNotesTab(data) {
     },
     placeholder: 'Feel free to write information here about your character, campaign, or anything else you\'d like!',
     theme: 'snow'
-  });
+  }).root.setAttribute('spellcheck', false);
 
   ///  ///
 

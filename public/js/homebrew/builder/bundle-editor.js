@@ -6,6 +6,7 @@ function openBundleEditor(homebrewBundle){
   g_activeBundle = homebrewBundle;
   window.history.pushState('homebrew', '', '/homebrew/?edit_id='+g_activeBundle.id);// Update URL
   socket.emit('requestBundleContents', 'EDIT', homebrewBundle.id);
+  $('.subpageloader').removeClass('is-hidden');
 }
 
 socket.on("returnBundleContents", function(REQUEST_TYPE, userHasBundle, userOwnsBundle, allTags, classes, ancestries, archetypes, backgrounds, classFeatures, feats, heritages, uniheritages, items, spells, languages){
@@ -60,7 +61,7 @@ socket.on("returnBundleContents", function(REQUEST_TYPE, userHasBundle, userOwns
     spellMap.set(spell.id+'', {Spell : spell, Tags : tags});
   }
 
-
+  $('.subpageloader').addClass('is-hidden');
   $('#tabContent').html('');
   $('#tabContent').load("/templates/homebrew/display-edit-bundle.html");
   $.ajax({ type: "GET",

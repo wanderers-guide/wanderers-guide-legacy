@@ -132,6 +132,30 @@ function buildWeaponProfMap(){
     return weaponProfMap;
 }
 
+function weaponProfDetermineNumUps(itemData){
+
+  let profNumUps = 0;
+  let profData = g_weaponProfMap.get(itemData.WeaponData.profName);
+  if(profData != null){
+    profNumUps = profData.NumUps;
+  }
+
+  let reducedProfData = null;
+  if(itemData.WeaponData.category == "MARTIAL"){
+    reducedProfData = g_profMap.get('Simple_Weapons');
+  } else if (itemData.WeaponData.category == "ADVANCED"){
+    reducedProfData = g_profMap.get('Martial_Weapons');
+  } else {
+    reducedProfData = profData;
+  }
+
+  if(reducedProfData != null){
+    profNumUps = (reducedProfData.NumUps > profNumUps) ? reducedProfData.NumUps : profNumUps;
+  }
+
+  return profNumUps;
+
+}
 
 function buildArmorProfMap(){
 

@@ -56,27 +56,27 @@
                 <div class="card character-card" name="{{id}}">
                     <div class="card-content cursor-clickable pt-2">
                         <span class="is-size-8 has-text-grey char-id"># {{id}}</span>
-                        <p class="is-size-5 has-text-grey-lighter">{{name}}</p>
-                        <p class="is-size-7 pl-4"> Lvl {{level}} | {{heritageName}} {{className}}</p>
+                        <p class="is-size-5 has-text-grey-lighter" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{name}}</p>
+                        <p class="is-size-7 pl-4" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"> Lvl {{level}} | {{heritageName}} {{className}}</p>
                     </div>
                     <div class="card-footer is-paddingless">
                         <a class="card-footer-item character-card-edit has-text-grey-light">
                             {{#if isPlayable}}
-                                <span class="is-size-6 pr-2">Edit</span>
+                                <span class="is-size-6 pr-1">Edit</span>
                                 <span class="icon is-small">
-                                    <i class="fas fa-edit"></i>
+                                    <i class="fas fa-sm fa-edit"></i>
                                 </span>
                             {{else}}
                                 <span class="is-size-6 pr-1">Continue</span>
                                 <span class="icon is-small">
-                                    <i class="fas fa-wrench"></i>
+                                    <i class="fas fa-sm fa-wrench"></i>
                                 </span>
                             {{/if}}
                         </a>
                         <a class="card-footer-item character-card-delete has-text-grey-light">
                             <span class="is-size-6 pr-1">Delete</span>
                             <span class="icon is-small">
-                                <i class="fas fa-trash"></i>
+                                <i class="fas fa-sm fa-trash"></i>
                             </span>
                         </a>
                     </div>
@@ -91,7 +91,7 @@
 
 </div>
 
-<div class="modal">
+<div class="modal modal-char-delete">
     <div class="modal-background"></div>
     <div class="modal-card">
         <header class="modal-card-head">

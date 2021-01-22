@@ -21,6 +21,21 @@
     background: #161616;
 }
 
+.subpageloader {
+  position: fixed;
+  width: 100%;
+  height: 80%;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 100;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .lds-roller {
     display: inline-block;
     position: relative;

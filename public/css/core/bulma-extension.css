@@ -43,6 +43,9 @@
 .has-text-grey-kinda-dark {
   color: hsl(0, 0%, 38%)!important;
 }
+.has-text-grey-like {
+  color: hsl(0, 0%, 57%)!important;
+}
 
 /* Background Colors */
 .has-background-black-like {
@@ -98,6 +101,31 @@
 .hero {
   z-index: 20;
 }
+
+/* Relative and Absolute */
+.pos-relative { position: relative; }
+.pos-absolute { position: absolute; }
+
+.pos-absolute.pos-t-0 { top: 0px; }
+.pos-absolute.pos-t-1 { top: 1px; }
+.pos-absolute.pos-t-2 { top: 2px; }
+.pos-absolute.pos-t-3 { top: 3px; }
+.pos-absolute.pos-t-4 { top: 4px; }
+.pos-absolute.pos-t-5 { top: 5px; }
+
+.pos-absolute.pos-l-0 { left: 0px; }
+.pos-absolute.pos-l-1 { left: 1px; }
+.pos-absolute.pos-l-2 { left: 2px; }
+.pos-absolute.pos-l-3 { left: 3px; }
+.pos-absolute.pos-l-4 { left: 4px; }
+.pos-absolute.pos-l-5 { left: 5px; }
+
+.pos-absolute.pos-r-0 { right: 0px; }
+.pos-absolute.pos-r-1 { right: 1px; }
+.pos-absolute.pos-r-2 { right: 2px; }
+.pos-absolute.pos-r-3 { right: 3px; }
+.pos-absolute.pos-r-4 { right: 4px; }
+.pos-absolute.pos-r-5 { right: 5px; }
 
 /* Rarities */
 .button.is-uncommon {

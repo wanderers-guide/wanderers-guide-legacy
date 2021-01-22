@@ -42,26 +42,26 @@ $(function () {
             $(this).removeClass('card-footer-hover');
         });
         cardDelete.click(function() {
-            $('.modal').addClass('is-active');
+            $('.modal-char-delete').addClass('is-active');
             $('html').addClass('is-clipped');
             activeModalCharID = characterID;
-        });
-
-        $('.modal-card-close').click(function() {
-            $('.modal').removeClass('is-active');
-            $('html').removeClass('is-clipped');
-            activeModalCharID = -1;
-        });
-        $('.modal-background').click(function() {
-            $('.modal').removeClass('is-active');
-            $('html').removeClass('is-clipped');
-            activeModalCharID = -1;
         });
         
     }
 
+    $('.modal-card-close').click(function() {
+      $('.modal').removeClass('is-active');
+      $('html').removeClass('is-clipped');
+      activeModalCharID = -1;
+    });
+    $('.modal-background').click(function() {
+      $('.modal').removeClass('is-active');
+      $('html').removeClass('is-clipped');
+      activeModalCharID = -1;
+    });
+
     $('#delete-confirmation-btn').click(function() {
-        window.location.href = '/profile/characters/delete/'+activeModalCharID;
+      window.location.href = '/profile/characters/delete/'+activeModalCharID;
     });
 
 

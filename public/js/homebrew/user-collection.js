@@ -6,9 +6,11 @@
 function openUserCollection(){
   window.history.pushState('homebrew', '', '/homebrew/?sub_tab=collection');// Update URL
   socket.emit('requestCollectedHomebrewBundles');
+  $('.subpageloader').removeClass('is-hidden');
 }
 
 socket.on("returnCollectedHomebrewBundles", function(hBundles){
+  $('.subpageloader').addClass('is-hidden');
   $('#tabContent').html('');
   $('#tabContent').addClass('is-hidden');
   $('#tabContent').load("/templates/homebrew/display-user-collection.html");

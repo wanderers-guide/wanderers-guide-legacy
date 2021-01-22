@@ -4,6 +4,7 @@
 
 class DisplayBackground {
   constructor(containerID, backgroundID, homebrewID=null) {
+    $('.subpageloader').removeClass('is-hidden');
 
     let backgroundDisplayContainerID = 'background-container-'+backgroundID;
     $('#'+containerID).parent().append('<div id="'+backgroundDisplayContainerID+'" class="is-hidden"></div>');
@@ -17,6 +18,7 @@ class DisplayBackground {
         url: "/templates/display-background.html",
         success : function(text)
         {
+          $('.subpageloader').addClass('is-hidden');
 
           $('#background-back-btn').click(function() {
             $('#'+backgroundDisplayContainerID).remove();

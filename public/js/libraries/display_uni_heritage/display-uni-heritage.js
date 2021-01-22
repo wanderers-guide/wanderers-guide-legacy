@@ -4,6 +4,8 @@
 
 class DisplayUniHeritage {
   constructor(containerID, uniHeritageID, featMap, homebrewID=null) {
+    $('.subpageloader').removeClass('is-hidden');
+
     featMap = new Map([...featMap.entries()].sort(
       function(a, b) {
           if (a[1].Feat.level === b[1].Feat.level) {
@@ -26,6 +28,7 @@ class DisplayUniHeritage {
         url: "/templates/display-uni-heritage.html",
         success : function(text)
         {
+          $('.subpageloader').addClass('is-hidden');
 
           $('#uni-heritage-back-btn').click(function() {
             $('#'+uniHeritageDisplayContainerID).remove();

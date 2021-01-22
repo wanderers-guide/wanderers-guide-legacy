@@ -5,6 +5,7 @@
 function openBundleBrowse(){
   window.history.pushState('homebrew', '', '/homebrew/?sub_tab=browse');// Update URL
   socket.emit('requestPublishedHomebrewBundles');
+  $('.subpageloader').removeClass('is-hidden');
 }
 
 socket.on("returnPublishedHomebrewBundles", function(homebrewBundles){
@@ -21,6 +22,7 @@ socket.on("returnPublishedHomebrewBundles", function(homebrewBundles){
     }
   );
 
+  $('.subpageloader').addClass('is-hidden');
   $('#tabContent').html('');
   $('#tabContent').addClass('is-hidden');
   $('#tabContent').load("/templates/homebrew/display-browse.html");

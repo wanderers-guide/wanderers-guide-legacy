@@ -114,10 +114,11 @@
   fill: #7c7c7c;
 }
 .ql-snow .ql-editor blockquote {
-  border-left: 4px solid rgb(175, 175, 175);
+  border-left: 4px solid rgb(76, 77, 78);
+  color: rgb(182, 182, 182);
   margin-bottom: 5px;
   margin-top: 5px;
-  padding-left: 16px;
+  padding-left: 10px;
 }
 .ql-snow .ql-editor code,
 .ql-snow .ql-editor pre {

@@ -31,28 +31,28 @@ const ItemRune = require('../models/contentDB/ItemRune');
 module.exports = class HomebrewGathering {
 
   static getAllClasses(homebrewID) {
-    return Class.findAll({ where: { homebrewID: homebrewID } })
+    return Class.findAll({ order: [['name', 'ASC'],], where: { homebrewID: homebrewID } })
     .then((classes) => {
       return classes;
     });
   }
 
   static getAllAncestries(homebrewID) {
-    return Ancestry.findAll({ where: { homebrewID: homebrewID } })
+    return Ancestry.findAll({ order: [['name', 'ASC'],], where: { homebrewID: homebrewID } })
     .then((ancestries) => {
       return ancestries;
     });
   }
 
   static getAllArchetypes(homebrewID) {
-    return Archetype.findAll({ where: { homebrewID: homebrewID } })
+    return Archetype.findAll({ order: [['name', 'ASC'],], where: { homebrewID: homebrewID } })
     .then((archetypes) => {
       return archetypes;
     });
   }
 
   static getAllBackgrounds(homebrewID) {
-    return Background.findAll({ where: { homebrewID: homebrewID } })
+    return Background.findAll({ order: [['name', 'ASC'],], where: { homebrewID: homebrewID } })
     .then((backgrounds) => {
       return backgrounds;
     });
@@ -60,6 +60,7 @@ module.exports = class HomebrewGathering {
 
   static getAllClassFeatures(homebrewID) {
     return ClassAbility.findAll({
+      order: [['name', 'ASC'],],
       where: { homebrewID: homebrewID } // indivClassName: { [Op.ne]: null }, selectOptionFor: null
     }).then((classFeatures) => {
       return classFeatures;
@@ -70,6 +71,7 @@ module.exports = class HomebrewGathering {
     Feat.hasMany(FeatTag, {foreignKey: 'featID'});
     FeatTag.belongsTo(Feat, {foreignKey: 'featID'});
     return Feat.findAll({
+      order: [['name', 'ASC'],],
       where: { homebrewID: homebrewID }, // genericType: { [Op.ne]: null }
       include: [FeatTag]
     }).then((feats) => {
@@ -78,21 +80,23 @@ module.exports = class HomebrewGathering {
   }
 
   static getAllHeritages(homebrewID) {
-    return Heritage.findAll({ where: { homebrewID: homebrewID } }) // indivAncestryName: { [Op.ne]: null }
+    return Heritage.findAll({
+      order: [['name', 'ASC'],],
+      where: { homebrewID: homebrewID } }) // indivAncestryName: { [Op.ne]: null }
     .then((heritages) => {
       return heritages;
     });
   }
 
   static getAllUniHeritages(homebrewID) {
-    return UniHeritage.findAll({ where: { homebrewID: homebrewID } })
+    return UniHeritage.findAll({ order: [['name', 'ASC'],], where: { homebrewID: homebrewID } })
     .then((uniheritages) => {
       return uniheritages;
     });
   }
 
   static getAllLanguages(homebrewID) {
-    return Language.findAll({ where: { homebrewID: homebrewID } })
+    return Language.findAll({ order: [['name', 'ASC'],], where: { homebrewID: homebrewID } })
     .then((languages) => {
       return languages;
     });
@@ -101,8 +105,11 @@ module.exports = class HomebrewGathering {
   static getAllItems(homebrewID){
     Item.hasMany(TaggedItem, {foreignKey: 'itemID'});
     TaggedItem.belongsTo(Item, {foreignKey: 'itemID'});
-    return Item.findAll({ where: { homebrewID: homebrewID }, include: [TaggedItem] })
-    .then((items) => {
+    return Item.findAll({
+      order: [['name', 'ASC'],],
+      where: { homebrewID: homebrewID },
+      include: [TaggedItem]
+    }).then((items) => {
       return Weapon.findAll()
       .then((weapons) => {
           return Armor.findAll()
@@ -162,6 +169,7 @@ module.exports = class HomebrewGathering {
     Spell.hasMany(TaggedSpell, {foreignKey: 'spellID'});
     TaggedSpell.belongsTo(Spell, {foreignKey: 'spellID'});
     return Spell.findAll({
+      order: [['name', 'ASC'],],
       where: { homebrewID: homebrewID },
       include: [TaggedSpell]
     }).then((spells) => {

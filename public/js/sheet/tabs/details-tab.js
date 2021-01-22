@@ -393,7 +393,20 @@ function displayAbility(ability, abilIdentifier){
 
     let abilityID = 'abilityDetailsEntry'+abilIdentifier;
 
-    let abilityNameInnerHTML = '<span>'+ability.name+'</span>';
+    let abilityName = ability.name;
+    if(ability.selectType == "SELECTOR"){
+      for(let classAbilChoice of g_classDetails.AbilityChoices){
+        if(classAbilChoice.SelectorID == ability.id){
+          let abilityOption = g_allClassAbilityOptions.find(abil => {
+              return abil.id == classAbilChoice.OptionID;
+          });
+          if(abilityOption != null){ abilityName += ' - <span class="is-italic has-text-grey-like">'+abilityOption.name+'</span>'; }
+          break;
+        }
+      }
+    }
+
+    let abilityNameInnerHTML = '<span>'+abilityName+'</span>';
     let abilityLevelInnerHTML = (ability.level == 0 || ability.level == null) ? '' : '<span>Level '+ability.level+'</span>';
 
     $('#abilitiesContent').append('<div id="'+abilityID+'" class="columns is-mobile border-bottom border-dark-lighter cursor-clickable is-marginless mx-2"><div class="column is-paddingless pl-3"><p class="text-left pt-1">'+abilityNameInnerHTML+'</p></div><div class="column is-paddingless"><p class="pt-1">'+abilityLevelInnerHTML+'</p></div></div>');

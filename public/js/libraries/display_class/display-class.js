@@ -4,6 +4,8 @@
 
 class DisplayClass {
   constructor(containerID, classID, featMap, homebrewID=null) {
+    $('.subpageloader').removeClass('is-hidden');
+
     featMap = new Map([...featMap.entries()].sort(
       function(a, b) {
           if (a[1].Feat.level === b[1].Feat.level) {
@@ -26,6 +28,7 @@ class DisplayClass {
         url: "/templates/display-class.html",   
         success : function(text)
         {
+          $('.subpageloader').addClass('is-hidden');
 
           $('#class-back-btn').click(function() {
             $('#'+classDisplayContainerID).remove();

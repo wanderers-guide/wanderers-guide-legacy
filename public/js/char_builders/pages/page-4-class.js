@@ -324,7 +324,8 @@ function displayCurrentClass(classStruct, saving) {
     let profAttacksUL = $('#profAttacksUL');
 
 
-    let tWeaponsArray = classStruct.Class.tWeapons.split(',,, ');
+    let tWeaponsArray = [];
+    if(classStruct.Class.tWeapons != null) { tWeaponsArray = classStruct.Class.tWeapons.split(',,, '); }
     for(const tWeapons of tWeaponsArray){
         
         let sections = tWeapons.split(':::');
@@ -363,7 +364,8 @@ function displayCurrentClass(classStruct, saving) {
     let profDefensesUL = $('#profDefensesUL');
 
 
-    let tArmorArray = classStruct.Class.tArmor.split(',,, ');
+    let tArmorArray = [];
+    if(classStruct.Class.tArmor != null) { tArmorArray = classStruct.Class.tArmor.split(',,, '); }
     for(const tArmor of tArmorArray){
 
         let sections = tArmor.split(':::');

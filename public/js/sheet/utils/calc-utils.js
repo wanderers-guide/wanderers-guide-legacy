@@ -30,16 +30,14 @@ function getAttackAndDamage(itemData, invItem){
         if(finesseTag != null){
             abilMod = (pre_dexMod > abilMod) ? pre_dexMod : abilMod;
         } // Use preDex mod becuase Clumsy condition affects ranged attacks but not finesse melee attacks
-        
-        let profData = g_weaponProfMap.get(itemData.WeaponData.profName);
     
-        let profNumUps = null;
+        let profNumUps = weaponProfDetermineNumUps(itemData);
+
+        let profData = g_weaponProfMap.get(itemData.WeaponData.profName);
         let profBonus = null;
         if(profData != null){
-            profNumUps = profData.NumUps;
             profBonus = profData.UserBonus;
         } else {
-            profNumUps = 0;
             profBonus = 0;
         }
 
@@ -166,15 +164,13 @@ function getAttackAndDamage(itemData, invItem){
             dmgStr = pre_strMod;
         }
 
-        let profData = g_weaponProfMap.get(itemData.WeaponData.profName);
+        let profNumUps = weaponProfDetermineNumUps(itemData);
 
-        let profNumUps = null;
+        let profData = g_weaponProfMap.get(itemData.WeaponData.profName);
         let profBonus = null;
         if(profData != null){
-            profNumUps = profData.NumUps;
             profBonus = profData.UserBonus;
         } else {
-            profNumUps = 0;
             profBonus = 0;
         }
 
