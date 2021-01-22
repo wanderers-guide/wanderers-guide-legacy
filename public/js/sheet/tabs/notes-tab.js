@@ -14,7 +14,7 @@ function openNotesTab(data) {
   Font.whitelist = ['proza-libre', 'nanum-gothic', 'handwriting', 'dethek', 'iokharic', 'druidic'];
   Quill.register(Font, true);
 
-  var quill = new Quill('#'+notesAreaID, {
+  let quill = new Quill('#'+notesAreaID, {
     modules: {
       toolbar: [
         ['bold', 'italic', 'underline', 'strike'],
@@ -30,7 +30,9 @@ function openNotesTab(data) {
     },
     placeholder: 'Feel free to write information here about your character, campaign, or anything else you\'d like!',
     theme: 'snow'
-  }).root.setAttribute('spellcheck', false);
+  });
+
+  quill.root.setAttribute('spellcheck', false);
 
   ///  ///
 
@@ -47,6 +49,13 @@ function openNotesTab(data) {
 
     }
   });
+
+
+  // Pages
+
+  /*
+  $('#tabContent').append('<div id="notesPageSection"><div class="field has-addons"><div class="control"><span class="button is-small is-info">Page</span></div><div class="control"><span class="button is-small is-info">...</span></div></div></div>');
+  */
 
 }
 

@@ -4,11 +4,11 @@
 
 function openCharInfoQuickview(data) {
 
-    $('#quickViewTitle').html(g_character.name);
+    $('#quickViewTitle').html('Character Info');
 
     let qContent = $('#quickViewContent');
 
-    qContent.append('<div class="columns"><div class="column is-3"></div><div class="column is-6"></div><div class="column is-3"></div></div>');
+    qContent.append('<div class="columns"><div class="column is-8"><div class="column is-4"></div></div>');
 
     
 

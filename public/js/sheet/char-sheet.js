@@ -644,7 +644,7 @@ function displayInformation() {
     $('#character-type').html(heritageAndAncestryName+" "+g_classDetails.Class.name);
     $('#character-level').html("Lvl "+g_character.level);
 
-    /*
+    
     $("#charInfoContent").click(function(){
         openQuickView('charInfoView', {
         });
@@ -654,7 +654,7 @@ function displayInformation() {
     });
     $("#charInfoContent").mouseleave(function(){
         $(this).removeClass('has-background-grey-darker');
-    });*/
+    });
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////// Experience //////////////////////////////////////////

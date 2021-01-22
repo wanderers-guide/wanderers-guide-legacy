@@ -175,6 +175,8 @@ function displayInventoryItem(invItem, openBagInvItemArray, data) {
     let invItemHealthID = 'invItemHealth'+invItem.id;
     let invItemShoddyTagID = 'invItemShoddyTag'+invItem.id;
     let invItemBrokenTagID = 'invItemBrokenTag'+invItem.id;
+    let invItemInvestedTagID = 'invItemInvestedTag'+invItem.id;
+    let invItemNotInvestedTagID = 'invItemNotInvestedTag'+invItem.id;
 
     // Halve maxHP if it's shoddy
     let maxHP = (invItem.isShoddy == 1) ? Math.floor(invItem.hitPoints/2) : invItem.hitPoints;
@@ -191,7 +193,7 @@ function displayInventoryItem(invItem, openBagInvItemArray, data) {
         let invItemStorageSectionID = 'invItemStorageSection'+invItem.id;
         let invItemStorageBulkAmountID = 'invItemStorageBulkAmount'+invItem.id;
 
-        $('#inventoryContent').append('<div id="'+invItemSectionID+'" class="tile is-parent mobile-apply-flex is-paddingless pt-1 px-2 border-bottom border-dark-lighter cursor-clickable"><div class="tile is-child is-6"><p id="'+invItemNameID+'" class="has-text-left pl-3 is-size-6 has-text-grey-light"><a id="'+invItemStorageViewButtonID+'" class="button is-very-small is-info is-rounded is-outlined mb-1 ml-3">Open</a></p></div><div id="'+invItemQtyID+'" class="tile is-child is-1"><p></p></div><div id="'+invItemBulkID+'" class="tile is-child is-1"><p></p></div><div id="'+invItemHealthID+'" class="tile is-child is-1"><p></p></div><div class="tile is-child is-3"><div class="tags is-centered"><span id="'+invItemShoddyTagID+'" class="tag is-warning">Shoddy</span><span id="'+invItemBrokenTagID+'" class="tag is-danger">Broken</span></div></div></div>');
+        $('#inventoryContent').append('<div id="'+invItemSectionID+'" class="tile is-parent mobile-apply-flex is-paddingless pt-1 px-2 border-bottom border-dark-lighter cursor-clickable"><div class="tile is-child is-6"><p id="'+invItemNameID+'" class="has-text-left pl-3 is-size-6 has-text-grey-light"><a id="'+invItemStorageViewButtonID+'" class="button is-very-small is-info is-rounded is-outlined mb-1 ml-3">Open</a></p></div><div id="'+invItemQtyID+'" class="tile is-child is-1"><p></p></div><div id="'+invItemBulkID+'" class="tile is-child is-1"><p></p></div><div id="'+invItemHealthID+'" class="tile is-child is-1"><p></p></div><div class="tile is-child is-3"><div class="tags is-centered"><span id="'+invItemShoddyTagID+'" class="tag is-warning">Shoddy</span><span id="'+invItemBrokenTagID+'" class="tag is-danger">Broken</span><span id="'+invItemInvestedTagID+'" class="tag is-info">Invested</span><span id="'+invItemNotInvestedTagID+'" class="tag is-dark">Not Invested</span></div></div></div>');
 
         $('#inventoryContent').append('<div id="'+invItemStorageSectionID+'" class="tile is-vertical is-hidden"></div>');
 
@@ -243,6 +245,8 @@ function displayInventoryItem(invItem, openBagInvItemArray, data) {
                 let baggedInvItemHealthID = 'baggedInvItemHealth'+baggedInvItem.id;
                 let baggedInvItemShoddyTagID = 'baggedInvItemShoddyTag'+baggedInvItem.id;
                 let baggedInvItemBrokenTagID = 'baggedInvItemBrokenTag'+baggedInvItem.id;
+                let baggedInvItemInvestedTagID = 'baggedInvItemInvestedTag'+baggedInvItem.id;
+                let baggedInvItemNotInvestedTagID = 'baggedInvItemNotInvestedTag'+baggedInvItem.id;
 
 
                 // Halve maxHP if it's shoddy
@@ -254,7 +258,7 @@ function displayInventoryItem(invItem, openBagInvItemArray, data) {
                 // Reduce currentHP if it's over maxHP
                 baggedInvItem.currentHitPoints = (baggedInvItem.currentHitPoints > baggedInvItemMaxHP) ? baggedInvItemMaxHP : baggedInvItem.currentHitPoints;
 
-                $('#'+invItemStorageSectionID).append('<div id="'+baggedInvItemSectionID+'" class="tile is-parent mobile-apply-flex is-paddingless pt-1 px-2 cursor-clickable"><div id="'+baggedInvItemIndentID+'" class="tile is-child is-1"></div><div class="tile is-child is-5 border-bottom border-dark-lighter"><p id="'+baggedInvItemNameID+'" class="has-text-left pl-3 is-size-6 has-text-grey-light"></p></div><div id="'+baggedInvItemQtyID+'" class="tile is-child is-1 border-bottom border-dark-lighter"><p></p></div><div id="'+baggedInvItemBulkID+'" class="tile is-child is-1 border-bottom border-dark-lighter"><p></p></div><div id="'+baggedInvItemHealthID+'" class="tile is-child is-1 border-bottom border-dark-lighter"><p></p></div><div class="tile is-child is-3 border-bottom border-dark-lighter"><div class="tags is-centered"><span id="'+baggedInvItemShoddyTagID+'" class="tag is-warning">Shoddy</span><span id="'+baggedInvItemBrokenTagID+'" class="tag is-danger">Broken</span></div></div></div>');
+                $('#'+invItemStorageSectionID).append('<div id="'+baggedInvItemSectionID+'" class="tile is-parent mobile-apply-flex is-paddingless pt-1 px-2 cursor-clickable"><div id="'+baggedInvItemIndentID+'" class="tile is-child is-1"></div><div class="tile is-child is-5 border-bottom border-dark-lighter"><p id="'+baggedInvItemNameID+'" class="has-text-left pl-3 is-size-6 has-text-grey-light"></p></div><div id="'+baggedInvItemQtyID+'" class="tile is-child is-1 border-bottom border-dark-lighter"><p></p></div><div id="'+baggedInvItemBulkID+'" class="tile is-child is-1 border-bottom border-dark-lighter"><p></p></div><div id="'+baggedInvItemHealthID+'" class="tile is-child is-1 border-bottom border-dark-lighter"><p></p></div><div class="tile is-child is-3 border-bottom border-dark-lighter"><div class="tags is-centered"><span id="'+baggedInvItemShoddyTagID+'" class="tag is-warning">Shoddy</span><span id="'+baggedInvItemBrokenTagID+'" class="tag is-danger">Broken</span><span id="'+baggedInvItemInvestedTagID+'" class="tag is-info">Invested</span><span id="'+baggedInvItemNotInvestedTagID+'" class="tag is-dark">Not Invested</span></div></div></div>');
 
                 $('#'+baggedInvItemNameID).html(baggedInvItem.name);
 
@@ -292,6 +296,23 @@ function displayInventoryItem(invItem, openBagInvItemArray, data) {
                     $('#'+baggedInvItemBrokenTagID).addClass('is-hidden');
                 } else {
                     $('#'+baggedInvItemBrokenTagID).removeClass('is-hidden');
+                }
+
+                let baggedItemTagArray = getItemTraitsArray(baggedItem, baggedInvItem);
+                let investTag = baggedItemTagArray.find(tag => {
+                  return tag.Tag.id === 235; // Hardcoded Invested Tag ID
+                });
+                if(investTag != null){
+                  if(baggedInvItem.isInvested == 1){
+                    $('#'+baggedInvItemInvestedTagID).removeClass('is-hidden');
+                    $('#'+baggedInvItemNotInvestedTagID).addClass('is-hidden');
+                  } else {
+                    $('#'+baggedInvItemInvestedTagID).addClass('is-hidden');
+                    $('#'+baggedInvItemNotInvestedTagID).removeClass('is-hidden');
+                  }
+                } else {
+                  $('#'+baggedInvItemInvestedTagID).addClass('is-hidden');
+                  $('#'+baggedInvItemNotInvestedTagID).addClass('is-hidden');
                 }
 
                 $('#'+baggedInvItemSectionID).click(function(){
@@ -346,7 +367,7 @@ function displayInventoryItem(invItem, openBagInvItemArray, data) {
         }
 
     } else {
-        $('#inventoryContent').append('<div id="'+invItemSectionID+'" class="tile is-parent mobile-apply-flex is-paddingless pt-1 px-2 border-bottom border-dark-lighter cursor-clickable"><div class="tile is-child is-6"><p id="'+invItemNameID+'" class="has-text-left pl-3 is-size-6 has-text-grey-light"></p></div><div id="'+invItemQtyID+'" class="tile is-child is-1"><p></p></div><div id="'+invItemBulkID+'" class="tile is-child is-1"><p></p></div><div id="'+invItemHealthID+'" class="tile is-child is-1"><p></p></div><div class="tile is-child is-3"><div class="tags is-centered"><span id="'+invItemShoddyTagID+'" class="tag is-warning">Shoddy</span><span id="'+invItemBrokenTagID+'" class="tag is-danger">Broken</span></div></div></div>');
+        $('#inventoryContent').append('<div id="'+invItemSectionID+'" class="tile is-parent mobile-apply-flex is-paddingless pt-1 px-2 border-bottom border-dark-lighter cursor-clickable"><div class="tile is-child is-6"><p id="'+invItemNameID+'" class="has-text-left pl-3 is-size-6 has-text-grey-light"></p></div><div id="'+invItemQtyID+'" class="tile is-child is-1"><p></p></div><div id="'+invItemBulkID+'" class="tile is-child is-1"><p></p></div><div id="'+invItemHealthID+'" class="tile is-child is-1"><p></p></div><div class="tile is-child is-3"><div class="tags is-centered"><span id="'+invItemShoddyTagID+'" class="tag is-warning">Shoddy</span><span id="'+invItemBrokenTagID+'" class="tag is-danger">Broken</span><span id="'+invItemInvestedTagID+'" class="tag is-info">Invested</span><span id="'+invItemNotInvestedTagID+'" class="tag is-dark">Not Invested</span></div></div></div>');
     }
 
     
@@ -407,6 +428,23 @@ function displayInventoryItem(invItem, openBagInvItemArray, data) {
         $('#'+invItemBrokenTagID).addClass('is-hidden');
     } else {
         $('#'+invItemBrokenTagID).removeClass('is-hidden');
+    }
+
+    let itemTagArray = getItemTraitsArray(item, invItem);
+    let investTag = itemTagArray.find(tag => {
+      return tag.Tag.id === 235; // Hardcoded Invested Tag ID
+    });
+    if(investTag != null){
+      if(invItem.isInvested == 1){
+        $('#'+invItemInvestedTagID).removeClass('is-hidden');
+        $('#'+invItemNotInvestedTagID).addClass('is-hidden');
+      } else {
+        $('#'+invItemInvestedTagID).addClass('is-hidden');
+        $('#'+invItemNotInvestedTagID).removeClass('is-hidden');
+      }
+    } else {
+      $('#'+invItemInvestedTagID).addClass('is-hidden');
+      $('#'+invItemNotInvestedTagID).addClass('is-hidden');
     }
 
     $('#'+invItemSectionID).click(function(){

@@ -156,7 +156,7 @@ function displayConditionsList(){
     }
 
     if(!conditionFound){
-        $('#conditionsContent').append('<em class="has-text-grey-light is-unselectable">None</em>');
+        $('#conditionsContent').append('<em class="has-text-grey-kinda-light is-unselectable">None</em>');
     }
 
 }
