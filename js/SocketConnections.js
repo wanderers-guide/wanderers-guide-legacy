@@ -86,6 +86,16 @@ module.exports = class SocketConnections {
         });
       });
 
+      socket.on('requestCharInfoSave', function(charID, infoJSON){
+        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+          if(ownsChar){
+            CharSaving.saveInfoJSON(charID, infoJSON).then((result) => {
+              socket.emit('returnCharInfoSave');
+            });
+          }
+        });
+      });
+
       socket.on('requestDetailsSave', function(charID, details){
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
           if(ownsChar){

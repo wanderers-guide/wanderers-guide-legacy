@@ -1324,7 +1324,6 @@ function displayInformation() {
             event.stopImmediatePropagation();
         }
         changeTab('notesTab', {
-            Character : g_character,
         });
     });
 

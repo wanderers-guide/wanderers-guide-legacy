@@ -46,6 +46,9 @@
 .has-text-grey-like {
   color: hsl(0, 0%, 57%)!important;
 }
+.has-text-light-darker {
+  color: hsl(0, 0%, 85%)!important;
+}
 
 /* Background Colors */
 .has-background-black-like {
@@ -174,4 +177,9 @@ select .is-unique {
 }
 .feat-selection-list-entry.is-unique {
   background-color: hsl(282, 30%, 22%);
+}
+
+/* Field Label */
+.field-label.is-long {
+  flex-grow: 2 !important;
 }

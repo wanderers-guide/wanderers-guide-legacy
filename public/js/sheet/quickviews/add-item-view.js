@@ -222,7 +222,7 @@ function displayAddItem(itemID, itemDataStruct, data){
         itemName += ' ('+itemDataStruct.Item.quantity+')';
     }
 
-    $('#addItemListSection').append('<div class="tile is-parent is-paddingless border-bottom border-additems has-background-black-like cursor-clickable" data-item-id="'+itemID+'"><div class="tile is-child is-7 itemEntryPart"><p id="'+addItemNameID+'" class="has-text-left mt-1 pl-3 has-text-grey-lighter">'+itemName+'</p></div><div class="tile is-child is-2 itemEntryPart"><p class="has-text-centered is-size-7 mt-2">'+itemLevel+'</p></div><div class="tile is-child"><button id="'+addItemAddItemID+'" class="button my-1 is-small is-success is-outlined is-rounded">Add</button></div><div class="tile is-child is-1 itemEntryPart"><span class="icon has-text-grey mt-2"><i id="'+addItemChevronItemID+'" class="fas fa-chevron-down"></i></span></div></div><div id="'+addItemDetailsItemID+'"></div>');
+    $('#addItemListSection').append('<div class="tile is-parent is-flex is-paddingless border-bottom border-additems has-background-black-like cursor-clickable" data-item-id="'+itemID+'"><div class="tile is-child is-7 itemEntryPart"><p id="'+addItemNameID+'" class="has-text-left mt-1 pl-3 has-text-grey-lighter">'+itemName+'</p></div><div class="tile is-child is-2 itemEntryPart"><p class="has-text-centered is-size-7 mt-2">'+itemLevel+'</p></div><div class="tile is-child"><button id="'+addItemAddItemID+'" class="button my-1 is-small is-success is-outlined is-rounded">Add</button></div><div class="tile is-child is-1 itemEntryPart"><span class="icon has-text-grey mt-2"><i id="'+addItemChevronItemID+'" class="fas fa-chevron-down"></i></span></div></div><div id="'+addItemDetailsItemID+'"></div>');
 
 
     $('#'+addItemAddItemID).click(function(){
@@ -307,7 +307,7 @@ function displayItemDetails(itemDataStruct, addItemDetailsItemID){
         }
 
         let weapCategory = capitalizeWord(itemDataStruct.WeaponData.category);
-        itemDetails.append('<div class="tile"><div class="tile is-child is-6"><p><strong>Category:</strong> '+weapCategory+'</p></div><div class="tile is-child is-6"><p><strong>Group:</strong> '+weapGroup+'</p></div></div>');
+        itemDetails.append('<div class="tile is-flex"><div class="tile is-child is-6"><p><strong>Category:</strong> '+weapCategory+'</p></div><div class="tile is-child is-6"><p><strong>Group:</strong> '+weapGroup+'</p></div></div>');
 
         itemDetails.append('<hr class="m-2">');
 
@@ -317,7 +317,7 @@ function displayItemDetails(itemDataStruct, addItemDetailsItemID){
 
         let armorCategory = capitalizeWord(itemDataStruct.ArmorData.category);
         let armorGroup = (itemDataStruct.ArmorData.armorType == 'N/A') ? '-' : capitalizeWord(itemDataStruct.ArmorData.armorType);
-        itemDetails.append('<div class="tile"><div class="tile is-child is-6"><p><strong>Category:</strong> '+armorCategory+'</p></div><div class="tile is-child is-6"><p><strong>Group:</strong> '+armorGroup+'</p></div></div>');
+        itemDetails.append('<div class="tile is-flex"><div class="tile is-child is-6"><p><strong>Category:</strong> '+armorCategory+'</p></div><div class="tile is-child is-6"><p><strong>Group:</strong> '+armorGroup+'</p></div></div>');
 
         itemDetails.append('<hr class="m-2">');
 
@@ -333,8 +333,8 @@ function displayItemDetails(itemDataStruct, addItemDetailsItemID){
     let bulk = getConvertedBulkForSize(itemDataStruct.Item.size, itemDataStruct.Item.bulk);
     bulk = getBulkFromNumber(bulk);
 
-    itemDetails.append('<div class="tile"><div class="tile is-child is-4"><strong>Price</strong></div><div class="tile is-child is-4"><strong>Bulk</strong></div><div class="tile is-child is-4"><strong>Hands</strong></div></div>');
-    itemDetails.append('<div class="tile"><div class="tile is-child is-4"><p>'+price+'</p></div><div class="tile is-child is-4"><p>'+bulk+'</p></div><div class="tile is-child is-4"><p>'+getHandsToString(itemDataStruct.Item.hands)+'</p></div></div>');
+    itemDetails.append('<div class="tile is-flex"><div class="tile is-child is-4"><strong>Price</strong></div><div class="tile is-child is-4"><strong>Bulk</strong></div><div class="tile is-child is-4"><strong>Hands</strong></div></div>');
+    itemDetails.append('<div class="tile is-flex"><div class="tile is-child is-4"><p>'+price+'</p></div><div class="tile is-child is-4"><p>'+bulk+'</p></div><div class="tile is-child is-4"><p>'+getHandsToString(itemDataStruct.Item.hands)+'</p></div></div>');
     
     if(itemDataStruct.Item.usage != null){
         itemDetails.append('<hr class="m-2">');
@@ -355,8 +355,8 @@ function displayItemDetails(itemDataStruct, addItemDetailsItemID){
             let damage = itemDataStruct.WeaponData.diceNum+""+itemDataStruct.WeaponData.dieType+" "+itemDataStruct.WeaponData.damageType;
             damage = (consumableTag != null) ? 'See Text' : damage;
 
-            itemDetails.append('<div class="tile"><div class="tile is-child"><strong>Damage</strong></div></div>');
-            itemDetails.append('<div class="tile"><div class="tile is-child"><p>'+damage+'</p></div></div>');
+            itemDetails.append('<div class="tile is-flex"><div class="tile is-child"><strong>Damage</strong></div></div>');
+            itemDetails.append('<div class="tile is-flex"><div class="tile is-child"><p>'+damage+'</p></div></div>');
 
             itemDetails.append('<hr class="m-2">');
 
@@ -367,16 +367,16 @@ function displayItemDetails(itemDataStruct, addItemDetailsItemID){
             let damage = itemDataStruct.WeaponData.diceNum+""+itemDataStruct.WeaponData.dieType+" "+itemDataStruct.WeaponData.damageType;
             damage = (consumableTag != null) ? 'See Text' : damage;
 
-            itemDetails.append('<div class="tile"><div class="tile is-child"><strong>Damage</strong></div></div>');
-            itemDetails.append('<div class="tile"><div class="tile is-child"><p>'+damage+'</p></div></div>');
+            itemDetails.append('<div class="tile is-flex"><div class="tile is-child"><strong>Damage</strong></div></div>');
+            itemDetails.append('<div class="tile is-flex"><div class="tile is-child"><p>'+damage+'</p></div></div>');
 
             itemDetails.append('<hr class="m-2">');
 
             let reload = itemDataStruct.WeaponData.rangedReload;
             if(reload == 0){ reload = '-'; }
             let range = itemDataStruct.WeaponData.rangedRange+" ft";
-            itemDetails.append('<div class="tile"><div class="tile is-child is-6"><strong>Range</strong></div><div class="tile is-child is-6"><strong>Reload</strong></div></div>');
-            itemDetails.append('<div class="tile"><div class="tile is-child is-6"><p>'+range+'</p></div><div class="tile is-child is-6"><p>'+reload+'</p></div></div>');
+            itemDetails.append('<div class="tile is-flex"><div class="tile is-child is-6"><strong>Range</strong></div><div class="tile is-child is-6"><strong>Reload</strong></div></div>');
+            itemDetails.append('<div class="tile is-flex"><div class="tile is-child is-6"><p>'+range+'</p></div><div class="tile is-child is-6"><p>'+reload+'</p></div></div>');
 
             itemDetails.append('<hr class="m-2">');
 
@@ -386,16 +386,16 @@ function displayItemDetails(itemDataStruct, addItemDetailsItemID){
 
     if(itemDataStruct.ArmorData != null){
         
-        itemDetails.append('<div class="tile"><div class="tile is-child is-6"><strong>AC Bonus</strong></div><div class="tile is-child is-6"><strong>Dex Cap</strong></div></div>');
-        itemDetails.append('<div class="tile"><div class="tile is-child is-6"><p>'+signNumber(itemDataStruct.ArmorData.acBonus)+'</p></div><div class="tile is-child is-6"><p>'+signNumber(itemDataStruct.ArmorData.dexCap)+'</p></div></div>');
+        itemDetails.append('<div class="tile is-flex"><div class="tile is-child is-6"><strong>AC Bonus</strong></div><div class="tile is-child is-6"><strong>Dex Cap</strong></div></div>');
+        itemDetails.append('<div class="tile is-flex"><div class="tile is-child is-6"><p>'+signNumber(itemDataStruct.ArmorData.acBonus)+'</p></div><div class="tile is-child is-6"><p>'+signNumber(itemDataStruct.ArmorData.dexCap)+'</p></div></div>');
 
         itemDetails.append('<hr class="m-2">');
 
         let minStrength = (itemDataStruct.ArmorData.minStrength == 0) ? '-' : itemDataStruct.ArmorData.minStrength+'';
         let checkPenalty = (itemDataStruct.ArmorData.checkPenalty == 0) ? '-' : itemDataStruct.ArmorData.checkPenalty+'';
         let speedPenalty = (itemDataStruct.ArmorData.speedPenalty == 0) ? '-' : itemDataStruct.ArmorData.speedPenalty+' ft';
-        itemDetails.append('<div class="tile"><div class="tile is-child is-4"><strong>Strength</strong></div><div class="tile is-child is-4"><strong>Check Penalty</strong></div><div class="tile is-child is-4"><strong>Speed Penalty</strong></div></div>');
-        itemDetails.append('<div class="tile"><div class="tile is-child is-4"><p>'+minStrength+'</p></div><div class="tile is-child is-4"><p>'+checkPenalty+'</p></div><div class="tile is-child is-4"><p>'+speedPenalty+'</p></div></div>');
+        itemDetails.append('<div class="tile is-flex"><div class="tile is-child is-4"><strong>Strength</strong></div><div class="tile is-child is-4"><strong>Check Penalty</strong></div><div class="tile is-child is-4"><strong>Speed Penalty</strong></div></div>');
+        itemDetails.append('<div class="tile is-flex"><div class="tile is-child is-4"><p>'+minStrength+'</p></div><div class="tile is-child is-4"><p>'+checkPenalty+'</p></div><div class="tile is-child is-4"><p>'+speedPenalty+'</p></div></div>');
 
         itemDetails.append('<hr class="m-2">');
 
@@ -404,8 +404,8 @@ function displayItemDetails(itemDataStruct, addItemDetailsItemID){
     if(itemDataStruct.ShieldData != null){
 
         let speedPenalty = (itemDataStruct.ShieldData.speedPenalty == 0) ? '-' : itemDataStruct.ShieldData.speedPenalty+' ft';
-        itemDetails.append('<div class="tile"><div class="tile is-child is-6"><strong>AC Bonus</strong></div><div class="tile is-child is-6"><strong>Speed Penalty</strong></div></div>');
-        itemDetails.append('<div class="tile"><div class="tile is-child is-6"><p>'+signNumber(itemDataStruct.ShieldData.acBonus)+'</p></div><div class="tile is-child is-6"><p>'+speedPenalty+'</p></div></div>');
+        itemDetails.append('<div class="tile is-flex"><div class="tile is-child is-6"><strong>AC Bonus</strong></div><div class="tile is-child is-6"><strong>Speed Penalty</strong></div></div>');
+        itemDetails.append('<div class="tile is-flex"><div class="tile is-child is-6"><p>'+signNumber(itemDataStruct.ShieldData.acBonus)+'</p></div><div class="tile is-child is-6"><p>'+speedPenalty+'</p></div></div>');
 
         itemDetails.append('<hr class="m-2">');
 
@@ -424,8 +424,8 @@ function displayItemDetails(itemDataStruct, addItemDetailsItemID){
             }
         }
 
-        itemDetails.append('<div class="tile"><div class="tile is-child is-6"><strong>Bulk Storage</strong></div><div class="tile is-child is-6"><strong>Bulk Ignored</strong></div></div>');
-        itemDetails.append('<div class="tile"><div class="tile is-child is-6"><p>'+maxBagBulk+'</p></div><div class="tile is-child is-6"><p>'+bulkIgnoredMessage+'</p></div></div>');
+        itemDetails.append('<div class="tile is-flex"><div class="tile is-child is-6"><strong>Bulk Storage</strong></div><div class="tile is-child is-6"><strong>Bulk Ignored</strong></div></div>');
+        itemDetails.append('<div class="tile is-flex"><div class="tile is-child is-6"><p>'+maxBagBulk+'</p></div><div class="tile is-child is-6"><p>'+bulkIgnoredMessage+'</p></div></div>');
 
         itemDetails.append('<hr class="m-2">');
     }

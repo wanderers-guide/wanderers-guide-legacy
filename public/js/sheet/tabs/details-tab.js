@@ -59,7 +59,7 @@ function changeDetailsTab(type, data){
 
 function displayFeatsSection(data) {
 
-    $('#detailsTabContent').append('<div class="columns is-mobile is-marginless"><div class="column is-10"><p class="control has-icons-left"><input id="featsSearch" class="input" type="text" autocomplete="off" placeholder="Search Feats"><span class="icon is-left"><i class="fas fa-search" aria-hidden="true"></i></span></p></div><div class="column"><div class="select"><select id="featsFilterByType"><option value="All">All</option><option value="Class">Class</option><option value="Ancestry">Ancestry</option><option value="Other">Other</option></select></div></div></div><div id="featsContent" class="use-custom-scrollbar" style="height: 520px; max-height: 520px; overflow-y: auto;"></div>');
+    $('#detailsTabContent').append('<div class="columns is-mobile is-marginless"><div class="column"><p class="control has-icons-left"><input id="featsSearch" class="input" type="text" autocomplete="off" placeholder="Search Feats"><span class="icon is-left"><i class="fas fa-search" aria-hidden="true"></i></span></p></div><div class="column is-narrow"><div class="select"><select id="featsFilterByType"><option value="All">All</option><option value="Class">Class</option><option value="Ancestry">Ancestry</option><option value="Other">Other</option></select></div></div></div><div id="featsContent" class="use-custom-scrollbar" style="height: 505px; max-height: 505px; overflow-y: auto;"></div>');
 
     $('#featsFilterByType').val(g_selectedDetailsOptionValue);
     displayFeatContent(data);
@@ -271,7 +271,7 @@ function displayFeat(featData, featTags, featCount){
 
 function displayAbilitiesSection(data) {
 
-    $('#detailsTabContent').append('<div class="columns is-mobile is-marginless"><div class="column is-10"><p class="control has-icons-left"><input id="abilitiesSearch" class="input" autocomplete="off" type="text" placeholder="Search Abilities"><span class="icon is-left"><i class="fas fa-search" aria-hidden="true"></i></span></p></div><div class="column"><div class="select"><select id="abilitiesFilterByType"><option value="All">All</option><option value="Class">Class</option><option value="Ancestry">Ancestry</option><option value="Other">Other</option></select></div></div></div><div id="abilitiesContent" class="use-custom-scrollbar" style="height: 520px; max-height: 520px; overflow-y: auto;"></div>');
+    $('#detailsTabContent').append('<div class="columns is-mobile is-marginless"><div class="column"><p class="control has-icons-left"><input id="abilitiesSearch" class="input" autocomplete="off" type="text" placeholder="Search Abilities"><span class="icon is-left"><i class="fas fa-search" aria-hidden="true"></i></span></p></div><div class="column is-narrow"><div class="select"><select id="abilitiesFilterByType"><option value="All">All</option><option value="Class">Class</option><option value="Ancestry">Ancestry</option><option value="Other">Other</option></select></div></div></div><div id="abilitiesContent" class="use-custom-scrollbar" style="height: 505px; max-height: 505px; overflow-y: auto;"></div>');
 
     $('#abilitiesFilterByType').val(g_selectedDetailsOptionValue);
     displayAbilitiesContent(data);
@@ -430,7 +430,7 @@ function displayAbility(ability, abilIdentifier){
 
 
 function displayDescriptionSection(data){
-    $('#detailsTabContent').append('<div id="descriptionContent" class="use-custom-scrollbar" style="height: 570px; max-height: 570px; overflow-y: auto;"></div>');
+    $('#detailsTabContent').append('<div id="descriptionContent" class="use-custom-scrollbar" style="height: 555px; max-height: 555px; overflow-y: auto;"></div>');
 
     $('#descriptionContent').append('<p class="is-size-5 has-text-grey-light has-text-weight-bold text-left pl-5 pt-2">Background - '+data.Background.name+'</p>');
     $('#descriptionContent').append('<hr class="hr-light" style="margin-top:-0.5em; margin-bottom:0em;">');
@@ -506,7 +506,7 @@ socket.on("returnDetailsSave", function(){
 function displayCompanionsSection(){
 
     $('#detailsTabContent').html('');
-    $('#detailsTabContent').append('<div id="companionsContent" class="use-custom-scrollbar" style="height: 570px; max-height: 570px; overflow-y: auto;"></div>');
+    $('#detailsTabContent').append('<div id="companionsContent" class="use-custom-scrollbar" style="height: 555px; max-height: 555px; overflow-y: auto;"></div>');
 
 
     for(let charAnimalComp of g_companionData.AnimalCompanions){

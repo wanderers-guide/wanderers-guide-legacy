@@ -92,7 +92,7 @@ function openItemQuickview(data) {
         }
 
         let weapCategory = capitalizeWord(itemDataStruct.WeaponData.category);
-        qContent.append('<div class="tile text-center"><div class="tile is-child is-6"><p><strong>Category:</strong> '+weapCategory+'</p></div><div class="tile is-child is-6"><p><strong>Group:</strong> '+weapGroup+'</p></div></div>');
+        qContent.append('<div class="tile text-center is-flex"><div class="tile is-child is-6"><p><strong>Category:</strong> '+weapCategory+'</p></div><div class="tile is-child is-6"><p><strong>Group:</strong> '+weapGroup+'</p></div></div>');
 
         qContent.append('<hr class="m-2">');
 
@@ -102,7 +102,7 @@ function openItemQuickview(data) {
 
         let armorCategory = capitalizeWord(itemDataStruct.ArmorData.category);
         let armorGroup = (itemDataStruct.ArmorData.armorType == 'N/A') ? '-' : capitalizeWord(itemDataStruct.ArmorData.armorType);
-        qContent.append('<div class="tile text-center"><div class="tile is-child is-6"><p><strong>Category:</strong> '+armorCategory+'</p></div><div class="tile is-child is-6"><p><strong>Group:</strong> '+armorGroup+'</p></div></div>');
+        qContent.append('<div class="tile text-center is-flex"><div class="tile is-child is-6"><p><strong>Category:</strong> '+armorCategory+'</p></div><div class="tile is-child is-6"><p><strong>Group:</strong> '+armorGroup+'</p></div></div>');
 
         qContent.append('<hr class="m-2">');
 
@@ -113,10 +113,10 @@ function openItemQuickview(data) {
     if(itemDataStruct.Item.quantity > 1){
         price += ' for '+itemDataStruct.Item.quantity;
     }
-    qContent.append('<div class="tile text-center"><div class="tile is-child is-4"><strong>Price</strong></div><div class="tile is-child is-4"><strong>Bulk</strong></div><div class="tile is-child is-4"><strong>Hands</strong></div></div>');
+    qContent.append('<div class="tile text-center is-flex"><div class="tile is-child is-4"><strong>Price</strong></div><div class="tile is-child is-4"><strong>Bulk</strong></div><div class="tile is-child is-4"><strong>Hands</strong></div></div>');
     let bulk = getConvertedBulkForSize(itemDataStruct.Item.size, itemDataStruct.Item.bulk);
     bulk = getBulkFromNumber(bulk);
-    qContent.append('<div class="tile text-center"><div class="tile is-child is-4"><p>'+price+'</p></div><div class="tile is-child is-4"><p>'+bulk+'</p></div><div class="tile is-child is-4"><p>'+getHandsToString(itemDataStruct.Item.hands)+'</p></div></div>');
+    qContent.append('<div class="tile text-center is-flex"><div class="tile is-child is-4"><p>'+price+'</p></div><div class="tile is-child is-4"><p>'+bulk+'</p></div><div class="tile is-child is-4"><p>'+getHandsToString(itemDataStruct.Item.hands)+'</p></div></div>');
 
     if(itemDataStruct.Item.usage != null){
         qContent.append('<hr class="m-2">');
@@ -131,8 +131,8 @@ function openItemQuickview(data) {
 
             let damage = itemDataStruct.WeaponData.diceNum+""+itemDataStruct.WeaponData.dieType+" "+itemDataStruct.WeaponData.damageType;
 
-            qContent.append('<div class="tile text-center"><div class="tile is-child"><strong>Damage</strong></div></div>');
-            qContent.append('<div class="tile text-center"><div class="tile is-child"><p class="damage-roll-btn">'+damage+'</p></div></div>');
+            qContent.append('<div class="tile text-center is-flex"><div class="tile is-child"><strong>Damage</strong></div></div>');
+            qContent.append('<div class="tile text-center is-flex"><div class="tile is-child"><p class="damage-roll-btn">'+damage+'</p></div></div>');
             if(typeof gOption_hasDiceRoller !== 'undefined' && gOption_hasDiceRoller) { refreshStatRollButtons(); }
 
             qContent.append('<hr class="m-2">');
@@ -143,8 +143,8 @@ function openItemQuickview(data) {
 
             let damage = itemDataStruct.WeaponData.diceNum+""+itemDataStruct.WeaponData.dieType+" "+itemDataStruct.WeaponData.damageType;
 
-            qContent.append('<div class="tile text-center"><div class="tile is-child"><strong>Damage</strong></div></div>');
-            qContent.append('<div class="tile text-center"><div class="tile is-child"><p class="damage-roll-btn">'+damage+'</p></div></div>');
+            qContent.append('<div class="tile text-center is-flex"><div class="tile is-child"><strong>Damage</strong></div></div>');
+            qContent.append('<div class="tile text-center is-flex"><div class="tile is-child"><p class="damage-roll-btn">'+damage+'</p></div></div>');
             if(typeof gOption_hasDiceRoller !== 'undefined' && gOption_hasDiceRoller) { refreshStatRollButtons(); }
 
             qContent.append('<hr class="m-2">');
@@ -152,8 +152,8 @@ function openItemQuickview(data) {
             let reload = itemDataStruct.WeaponData.rangedReload;
             if(reload == 0){ reload = '-'; }
             let range = itemDataStruct.WeaponData.rangedRange+" ft";
-            qContent.append('<div class="tile text-center"><div class="tile is-child is-6"><strong>Range</strong></div><div class="tile is-child is-6"><strong>Reload</strong></div></div>');
-            qContent.append('<div class="tile text-center"><div class="tile is-child is-6"><p>'+range+'</p></div><div class="tile is-child is-6"><p>'+reload+'</p></div></div>');
+            qContent.append('<div class="tile text-center is-flex"><div class="tile is-child is-6"><strong>Range</strong></div><div class="tile is-child is-6"><strong>Reload</strong></div></div>');
+            qContent.append('<div class="tile text-center is-flex"><div class="tile is-child is-6"><p>'+range+'</p></div><div class="tile is-child is-6"><p>'+reload+'</p></div></div>');
 
             qContent.append('<hr class="m-2">');
 
@@ -163,16 +163,16 @@ function openItemQuickview(data) {
 
     if(itemDataStruct.ArmorData != null){
         
-        qContent.append('<div class="tile text-center"><div class="tile is-child is-6"><strong>AC Bonus</strong></div><div class="tile is-child is-6"><strong>Dex Cap</strong></div></div>');
-        qContent.append('<div class="tile text-center"><div class="tile is-child is-6"><p>'+signNumber(itemDataStruct.ArmorData.acBonus)+'</p></div><div class="tile is-child is-6"><p>'+signNumber(itemDataStruct.ArmorData.dexCap)+'</p></div></div>');
+        qContent.append('<div class="tile text-center is-flex"><div class="tile is-child is-6"><strong>AC Bonus</strong></div><div class="tile is-child is-6"><strong>Dex Cap</strong></div></div>');
+        qContent.append('<div class="tile text-center is-flex"><div class="tile is-child is-6"><p>'+signNumber(itemDataStruct.ArmorData.acBonus)+'</p></div><div class="tile is-child is-6"><p>'+signNumber(itemDataStruct.ArmorData.dexCap)+'</p></div></div>');
 
         qContent.append('<hr class="m-2">');
 
         let minStrength = (itemDataStruct.ArmorData.minStrength == 0) ? '-' : itemDataStruct.ArmorData.minStrength+'';
         let checkPenalty = (itemDataStruct.ArmorData.checkPenalty == 0) ? '-' : itemDataStruct.ArmorData.checkPenalty+'';
         let speedPenalty = (itemDataStruct.ArmorData.speedPenalty == 0) ? '-' : itemDataStruct.ArmorData.speedPenalty+' ft';
-        qContent.append('<div class="tile text-center"><div class="tile is-child is-4"><strong>Strength</strong></div><div class="tile is-child is-4"><strong>Check Penalty</strong></div><div class="tile is-child is-4"><strong>Speed Penalty</strong></div></div>');
-        qContent.append('<div class="tile text-center"><div class="tile is-child is-4"><p>'+minStrength+'</p></div><div class="tile is-child is-4"><p>'+checkPenalty+'</p></div><div class="tile is-child is-4"><p>'+speedPenalty+'</p></div></div>');
+        qContent.append('<div class="tile text-center is-flex"><div class="tile is-child is-4"><strong>Strength</strong></div><div class="tile is-child is-4"><strong>Check Penalty</strong></div><div class="tile is-child is-4"><strong>Speed Penalty</strong></div></div>');
+        qContent.append('<div class="tile text-center is-flex"><div class="tile is-child is-4"><p>'+minStrength+'</p></div><div class="tile is-child is-4"><p>'+checkPenalty+'</p></div><div class="tile is-child is-4"><p>'+speedPenalty+'</p></div></div>');
 
         qContent.append('<hr class="m-2">');
 
@@ -181,8 +181,8 @@ function openItemQuickview(data) {
     if(itemDataStruct.ShieldData != null){
 
         let speedPenalty = (itemDataStruct.ShieldData.speedPenalty == 0) ? '-' : itemDataStruct.ShieldData.speedPenalty+' ft';
-        qContent.append('<div class="tile text-center"><div class="tile is-child is-6"><strong>AC Bonus</strong></div><div class="tile is-child is-6"><strong>Speed Penalty</strong></div></div>');
-        qContent.append('<div class="tile text-center"><div class="tile is-child is-6"><p>'+signNumber(itemDataStruct.ShieldData.acBonus)+'</p></div><div class="tile is-child is-6"><p>'+speedPenalty+'</p></div></div>');
+        qContent.append('<div class="tile text-center is-flex"><div class="tile is-child is-6"><strong>AC Bonus</strong></div><div class="tile is-child is-6"><strong>Speed Penalty</strong></div></div>');
+        qContent.append('<div class="tile text-center is-flex"><div class="tile is-child is-6"><p>'+signNumber(itemDataStruct.ShieldData.acBonus)+'</p></div><div class="tile is-child is-6"><p>'+speedPenalty+'</p></div></div>');
 
         qContent.append('<hr class="m-2">');
 
@@ -201,8 +201,8 @@ function openItemQuickview(data) {
             }
         }
 
-        qContent.append('<div class="tile text-center"><div class="tile is-child is-6"><strong>Bulk Storage</strong></div><div class="tile is-child is-6"><strong>Bulk Ignored</strong></div></div>');
-        qContent.append('<div class="tile text-center"><div class="tile is-child is-6"><p>'+maxBagBulk+'</p></div><div class="tile is-child is-6"><p>'+bulkIgnoredMessage+'</p></div></div>');
+        qContent.append('<div class="tile text-center is-flex"><div class="tile is-child is-6"><strong>Bulk Storage</strong></div><div class="tile is-child is-6"><strong>Bulk Ignored</strong></div></div>');
+        qContent.append('<div class="tile text-center is-flex"><div class="tile is-child is-6"><p>'+maxBagBulk+'</p></div><div class="tile is-child is-6"><p>'+bulkIgnoredMessage+'</p></div></div>');
 
         qContent.append('<hr class="m-2">');
     }

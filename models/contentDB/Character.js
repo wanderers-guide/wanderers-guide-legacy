@@ -44,6 +44,9 @@ const Character = db.define('characters', {
   notes: {
     type: Sequelize.TEXT
   },
+  infoJSON: {
+    type: Sequelize.STRING
+  },
   details: {
     type: Sequelize.TEXT
   },

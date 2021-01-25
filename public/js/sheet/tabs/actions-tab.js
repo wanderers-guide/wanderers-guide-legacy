@@ -41,7 +41,7 @@ function openActionsTab(data) {
 
     $('#tabContent').append(filterInnerHTML);
 
-    $('#tabContent').append('<div id="actionTabContent" class="use-custom-scrollbar" style="height: 480px; max-height: 480px; overflow-y: auto;"></div>');
+    $('#tabContent').append('<div id="actionTabContent" class="use-custom-scrollbar" style="height: 465px; max-height: 465px; overflow-y: auto;"></div>');
 
 
     $('#actionTabEncounter').click(function(){

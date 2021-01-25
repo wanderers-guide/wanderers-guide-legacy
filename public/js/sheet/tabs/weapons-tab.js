@@ -41,7 +41,7 @@ function openWeaponsTab(data) {
 
     $('#tabContent').append('<div class="columns is-mobile pt-1 is-marginless"><div class="column is-paddingless is-4"><p class="pl-3 has-text-left"><strong class="has-text-grey-light">Name</strong></p></div><div class="column is-paddingless is-1"><p class=""><strong class="has-text-grey-light">Attack</strong></p></div><div class="column is-paddingless is-2"><p class=""><strong class="has-text-grey-light">Damage</strong></p></div><div class="column is-paddingless is-1"></div><div class="column is-paddingless is-1"><p class=""><strong class="has-text-grey-light">Range</strong></p></div><div class="column is-paddingless is-2"><p class=""><strong class="has-text-grey-light">Reload</strong></p></div><div class="column is-paddingless is-1"></div></div><div class="is-divider hr-light is-marginless"></div>');
 
-    $('#tabContent').append('<div id="weaponsTabContent" class="use-custom-scrollbar" style="height: 590px; max-height: 590px; overflow-y: auto;"></div>');
+    $('#tabContent').append('<div id="weaponsTabContent" class="use-custom-scrollbar" style="height: 580px; max-height: 580px; overflow-y: auto;"></div>');
 
     // Physical Features to Unarmed Attacks
     let phyFeatWeaponMap = new Map();

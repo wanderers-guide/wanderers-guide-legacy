@@ -107,6 +107,14 @@ module.exports = class CharSaving {
         });
     }
 
+    static saveInfoJSON(charID, infoJSON) {
+      let updateValues = { infoJSON: infoJSON };
+      return Character.update(updateValues, { where: { id: charID } })
+      .then((result) => {
+        return;
+      });
+    }
+
     static saveDetails(charID, details) {
         let updateValues = { details: details };
         return Character.update(updateValues, { where: { id: charID } })

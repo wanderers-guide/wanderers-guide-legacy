@@ -83,7 +83,7 @@ let g_hasCastingSpontaneous = false;
 
 function displaySpellsCore() {
 
-    $('#spellsTabContent').append('<div class="columns is-mobile is-marginless"><div class="column is-9"><p class="control has-icons-left"><input id="spellsSearch" class="input" type="text" autocomplete="off" placeholder="Search Spells"><span class="icon is-left"><i class="fas fa-search" aria-hidden="true"></i></span></p></div><div class="column is-3"><button id="manageSpellsBtn" class="button is-info is-rounded">Manage Spells</button></div></div><div id="spellsCoreContent" class="use-custom-scrollbar" style="height: 525px; max-height: 525px; overflow-y: auto;"></div>');
+    $('#spellsTabContent').append('<div class="columns is-mobile is-marginless"><div class="column"><p class="control has-icons-left"><input id="spellsSearch" class="input" type="text" autocomplete="off" placeholder="Search Spells"><span class="icon is-left"><i class="fas fa-search" aria-hidden="true"></i></span></p></div><div class="column is-narrow"><button id="manageSpellsBtn" class="button is-info is-rounded">Manage Spells</button></div></div><div id="spellsCoreContent" class="use-custom-scrollbar" style="height: 510px; max-height: 510px; overflow-y: auto;"></div>');
         
     prepDisplayOfSpellsAndSlots();
 
@@ -524,7 +524,7 @@ function displaySpellsFocus() {
         DivineSpellDC : getStatTotal('DIVINE_SPELL_DC'),
     };
 
-    $('#spellsTabContent').append('<div id="spellsFocusContent" class="use-custom-scrollbar" style="height: 595px; max-height: 595px; overflow-y: auto;"></div>');
+    $('#spellsTabContent').append('<div id="spellsFocusContent" class="use-custom-scrollbar" style="height: 580px; max-height: 580px; overflow-y: auto;"></div>');
 
     let isFirstLevel = true;
     let sourceCount = 0;
@@ -723,7 +723,7 @@ function displaySpellsInnate() {
     let innateSpellArray = g_innateSpellArray;
 
     $('#spellsTabContent').html('');
-    $('#spellsTabContent').append('<div id="spellsInnateContent" class="use-custom-scrollbar" style="height: 595px; max-height: 595px; overflow-y: auto;"></div>');
+    $('#spellsTabContent').append('<div id="spellsInnateContent" class="use-custom-scrollbar" style="height: 580px; max-height: 580px; overflow-y: auto;"></div>');
 
     let isFirstLevel = true;
     let prevLevel = -100;

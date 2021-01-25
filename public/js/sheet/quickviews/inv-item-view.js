@@ -169,8 +169,8 @@ function openInvItemQuickview(data) {
             
             let calcStruct = getAttackAndDamage(data.Item, data.InvItem);
 
-            qContent.append('<div class="tile text-center"><div class="tile is-child is-6"><strong>Attack Bonus</strong></div><div class="tile is-child is-6"><strong>Damage</strong></div></div>');
-            qContent.append('<div class="tile text-center"><div class="tile is-child is-6"><p class="pr-1 stat-roll-btn">'+calcStruct.AttackBonus+'</p></div><div class="tile is-child is-6"><p class="damage-roll-btn">'+calcStruct.Damage+'</p></div></div>');
+            qContent.append('<div class="tile text-center is-flex"><div class="tile is-child is-6"><strong>Attack Bonus</strong></div><div class="tile is-child is-6"><strong>Damage</strong></div></div>');
+            qContent.append('<div class="tile text-center is-flex"><div class="tile is-child is-6"><p class="pr-1 stat-roll-btn">'+calcStruct.AttackBonus+'</p></div><div class="tile is-child is-6"><p class="damage-roll-btn">'+calcStruct.Damage+'</p></div></div>');
             if(gOption_hasDiceRoller) { refreshStatRollButtons(); }
 
             qContent.append('<hr class="m-2">');
@@ -181,8 +181,8 @@ function openInvItemQuickview(data) {
             
             let calcStruct = getAttackAndDamage(data.Item, data.InvItem);
 
-            qContent.append('<div class="tile text-center"><div class="tile is-child is-6"><strong>Attack Bonus</strong></div><div class="tile is-child is-6"><strong>Damage</strong></div></div>');
-            qContent.append('<div class="tile text-center"><div class="tile is-child is-6"><p class="pr-1 stat-roll-btn">'+calcStruct.AttackBonus+'</p></div><div class="tile is-child is-6"><p class="damage-roll-btn">'+calcStruct.Damage+'</p></div></div>');
+            qContent.append('<div class="tile text-center is-flex"><div class="tile is-child is-6"><strong>Attack Bonus</strong></div><div class="tile is-child is-6"><strong>Damage</strong></div></div>');
+            qContent.append('<div class="tile text-center is-flex"><div class="tile is-child is-6"><p class="pr-1 stat-roll-btn">'+calcStruct.AttackBonus+'</p></div><div class="tile is-child is-6"><p class="damage-roll-btn">'+calcStruct.Damage+'</p></div></div>');
             if(gOption_hasDiceRoller) { refreshStatRollButtons(); }
 
             qContent.append('<hr class="m-2">');
@@ -190,8 +190,8 @@ function openInvItemQuickview(data) {
             let reload = data.Item.WeaponData.rangedReload;
             if(reload == 0){ reload = '-'; }
             let range = data.Item.WeaponData.rangedRange+" ft";
-            qContent.append('<div class="tile text-center"><div class="tile is-child is-6"><strong>Range</strong></div><div class="tile is-child is-6"><strong>Reload</strong></div></div>');
-            qContent.append('<div class="tile text-center"><div class="tile is-child is-6"><p>'+range+'</p></div><div class="tile is-child is-6"><p>'+reload+'</p></div></div>');
+            qContent.append('<div class="tile text-center is-flex"><div class="tile is-child is-6"><strong>Range</strong></div><div class="tile is-child is-6"><strong>Reload</strong></div></div>');
+            qContent.append('<div class="tile text-center is-flex"><div class="tile is-child is-6"><p>'+range+'</p></div><div class="tile is-child is-6"><p>'+reload+'</p></div></div>');
 
             qContent.append('<hr class="m-2">');
 
@@ -209,16 +209,16 @@ function openInvItemQuickview(data) {
         armorCheckPenalty += (isShoddy) ? -2 : 0;
         //
 
-        qContent.append('<div class="tile text-center"><div class="tile is-child is-6"><strong>AC Bonus</strong></div><div class="tile is-child is-6"><strong>Dex Cap</strong></div></div>');
-        qContent.append('<div class="tile text-center"><div class="tile is-child is-6"><p>'+signNumber(acBonus)+'</p></div><div class="tile is-child is-6"><p>'+signNumber(data.Item.ArmorData.dexCap)+'</p></div></div>');
+        qContent.append('<div class="tile text-center is-flex"><div class="tile is-child is-6"><strong>AC Bonus</strong></div><div class="tile is-child is-6"><strong>Dex Cap</strong></div></div>');
+        qContent.append('<div class="tile text-center is-flex"><div class="tile is-child is-6"><p>'+signNumber(acBonus)+'</p></div><div class="tile is-child is-6"><p>'+signNumber(data.Item.ArmorData.dexCap)+'</p></div></div>');
 
         qContent.append('<hr class="m-2">');
 
         let minStrength = (data.Item.ArmorData.minStrength == 0) ? '-' : data.Item.ArmorData.minStrength+'';
         let checkPenalty = (armorCheckPenalty == 0) ? '-' : armorCheckPenalty+'';
         let speedPenalty = (data.Item.ArmorData.speedPenalty == 0) ? '-' : data.Item.ArmorData.speedPenalty+' ft';
-        qContent.append('<div class="tile text-center"><div class="tile is-child is-4"><strong>Strength</strong></div><div class="tile is-child is-4"><strong>Check Penalty</strong></div><div class="tile is-child is-4"><strong>Speed Penalty</strong></div></div>');
-        qContent.append('<div class="tile text-center"><div class="tile is-child is-4"><p>'+minStrength+'</p></div><div class="tile is-child is-4"><p>'+checkPenalty+'</p></div><div class="tile is-child is-4"><p>'+speedPenalty+'</p></div></div>');
+        qContent.append('<div class="tile text-center is-flex"><div class="tile is-child is-4"><strong>Strength</strong></div><div class="tile is-child is-4"><strong>Check Penalty</strong></div><div class="tile is-child is-4"><strong>Speed Penalty</strong></div></div>');
+        qContent.append('<div class="tile text-center is-flex"><div class="tile is-child is-4"><p>'+minStrength+'</p></div><div class="tile is-child is-4"><p>'+checkPenalty+'</p></div><div class="tile is-child is-4"><p>'+speedPenalty+'</p></div></div>');
 
         qContent.append('<hr class="m-2">');
 
@@ -227,8 +227,8 @@ function openInvItemQuickview(data) {
     if(data.Item.ShieldData != null){
 
         let speedPenalty = (data.Item.ShieldData.speedPenalty == 0) ? '-' : data.Item.ShieldData.speedPenalty+' ft';
-        qContent.append('<div class="tile text-center"><div class="tile is-child is-6"><strong>AC Bonus</strong></div><div class="tile is-child is-6"><strong>Speed Penalty</strong></div></div>');
-        qContent.append('<div class="tile text-center"><div class="tile is-child is-6"><p>'+signNumber(data.Item.ShieldData.acBonus)+'</p></div><div class="tile is-child is-6"><p>'+speedPenalty+'</p></div></div>');
+        qContent.append('<div class="tile text-center is-flex"><div class="tile is-child is-6"><strong>AC Bonus</strong></div><div class="tile is-child is-6"><strong>Speed Penalty</strong></div></div>');
+        qContent.append('<div class="tile text-center is-flex"><div class="tile is-child is-6"><p>'+signNumber(data.Item.ShieldData.acBonus)+'</p></div><div class="tile is-child is-6"><p>'+speedPenalty+'</p></div></div>');
 
         qContent.append('<hr class="m-2">');
 
@@ -248,8 +248,8 @@ function openInvItemQuickview(data) {
             }
         }
 
-        qContent.append('<div class="tile text-center"><div class="tile is-child is-6"><strong>Bulk Storage</strong></div><div class="tile is-child is-6"><strong>Bulk Ignored</strong></div></div>');
-        qContent.append('<div class="tile text-center"><div class="tile is-child is-6"><p>'+maxBagBulk+'</p></div><div class="tile is-child is-6"><p>'+bulkIgnoredMessage+'</p></div></div>');
+        qContent.append('<div class="tile text-center is-flex"><div class="tile is-child is-6"><strong>Bulk Storage</strong></div><div class="tile is-child is-6"><strong>Bulk Ignored</strong></div></div>');
+        qContent.append('<div class="tile text-center is-flex"><div class="tile is-child is-6"><p>'+maxBagBulk+'</p></div><div class="tile is-child is-6"><p>'+bulkIgnoredMessage+'</p></div></div>');
 
         qContent.append('<hr class="m-2">');
     }
