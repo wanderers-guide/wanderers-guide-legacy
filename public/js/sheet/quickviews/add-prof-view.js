@@ -29,7 +29,7 @@ function openAddProfQuickview(data) {
             profSubType.append('<optgroup label="──────────"></optgroup>');
 
             for(const [itemID, itemDataStruct] of g_itemMap.entries()){
-                if(itemDataStruct.Item.itemType == 'WEAPON' && itemDataStruct.Item.level === 0 && itemDataStruct.Item.hidden === 0 && itemDataStruct.WeaponData != null){
+                if(itemDataStruct.Item.itemType == 'WEAPON' && itemDataStruct.Item.hidden === 0 && itemDataStruct.WeaponData != null && itemDataStruct.WeaponData.profName == itemDataStruct.Item.name){
 
                     let profValue = itemDataStruct.Item.name.replace(/\s/g,'_');
                     profSubType.append('<option value="'+profValue+'">'+itemDataStruct.Item.name+'</option>');
@@ -48,7 +48,7 @@ function openAddProfQuickview(data) {
 
             for(const [itemID, itemDataStruct] of g_itemMap.entries()){
                 
-                if(itemDataStruct.Item.itemType == 'ARMOR' && itemDataStruct.Item.level === 0 && itemDataStruct.Item.hidden === 0 && itemDataStruct.ArmorData != null){
+                if(itemDataStruct.Item.itemType == 'ARMOR' && itemDataStruct.Item.hidden === 0 && itemDataStruct.ArmorData != null && itemDataStruct.ArmorData.profName == itemDataStruct.Item.name){
                     
                     let profValue = itemDataStruct.Item.name.replace(/\s/g,'_');
                     profSubType.append('<option value="'+profValue+'">'+itemDataStruct.Item.name+'</option>');
