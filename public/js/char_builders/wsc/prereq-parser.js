@@ -80,7 +80,7 @@ function meetsPrereqs(feat){
   for(let resultData of resultArray){
     if(resultData.Result == 'TRUE') { continue; }
     if(resultData.Result == 'FALSE') { totalResult = 'FALSE'; continue; }
-    if(resultData.Result == 'UNKNOWN') { return 'UNKNOWN'; }
+    if(resultData.Result == 'UNKNOWN') { return (totalResult == 'FALSE') ? 'FALSE' : 'UNKNOWN'; }
   }
   return totalResult;
 }

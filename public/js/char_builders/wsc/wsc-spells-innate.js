@@ -5,10 +5,10 @@
 //------------------------- Processing Innate Spells -------------------------//
 function processingInnateSpells(wscStatement, srcStruct, locationID){
 
-    if(wscStatement.includes("GIVE-INNATE-SPELL=")){// GIVE-INNATE-SPELL=3:divine:1
+    if(wscStatement.includes("GIVE-INNATE-SPELL=")){// GIVE-INNATE-SPELL=3:divine:1(:ANY)
         let data = wscStatement.split('=')[1]; // Set cast times per day to 0 to cast an unlimited number
         let segments = data.split(':');// For cantrips just do: GIVE-INNATE-SPELL=0:divine:0
-        giveInnateSpell(srcStruct, locationID, segments[0], segments[1], segments[2], segments[3]);
+        giveInnateSpell(srcStruct, locationID, segments[0], segments[1], segments[2], segments[3], segments[4]);
     } else if(wscStatement.includes("GIVE-INNATE-SPELL-NAME=")){// GIVE-INNATE-SPELL-NAME=Meld_Into_Stone:3:divine:1
         let data = wscStatement.split('=')[1]; // Set cast times per day to 0 to cast an unlimited number
         let segments = data.split(':');// For cantrips just do: GIVE-INNATE-SPELL-NAME=Daze:0:divine:0
@@ -21,11 +21,12 @@ function processingInnateSpells(wscStatement, srcStruct, locationID){
 }
 
 //////////////////////////////// Give Innate Spell ///////////////////////////////////
-function giveInnateSpell(srcStruct, locationID, spellLevel, spellTradition, timesPerDay){
+function giveInnateSpell(srcStruct, locationID, spellLevel, spellTradition, timesPerDay, optionalSelectFromAnyTradition){
+    let selectFromAnyTradition = (optionalSelectFromAnyTradition != null);
     if(spellTradition != null){
         if(spellTradition === 'OCCULT' || spellTradition === 'ARCANE' || spellTradition === 'DIVINE' || spellTradition === 'PRIMAL') {
             if(!isNaN(parseInt(spellLevel))) {
-                displayInnateSpellChoice(srcStruct, locationID, spellLevel, spellTradition, timesPerDay);
+                displayInnateSpellChoice(srcStruct, locationID, spellLevel, spellTradition, timesPerDay, selectFromAnyTradition);
             } else {
                 displayError("Spell Level is Not a Number: \'"+spellLevel+"\'");
                 statementComplete();
@@ -40,7 +41,7 @@ function giveInnateSpell(srcStruct, locationID, spellLevel, spellTradition, time
     }
 }
 
-function displayInnateSpellChoice(srcStruct, locationID, spellLevel, spellTradition, timesPerDay){
+function displayInnateSpellChoice(srcStruct, locationID, spellLevel, spellTradition, timesPerDay, selectFromAnyTradition){
 
     let selectionName = (spellLevel == 0) ? 'Choose a Cantrip' : 'Choose a Level '+spellLevel+' Spell';
     let selectSpellID = "selectInnateSpell"+locationID+"-"+srcStruct.sourceCodeSNum;
@@ -50,6 +51,7 @@ function displayInnateSpellChoice(srcStruct, locationID, spellLevel, spellTradit
     $('#'+locationID).append('<div class="field is-grouped is-grouped-centered is-marginless mb-1"><div class="select '+selectSpellControlShellClass+'"><select id="'+selectSpellID+'" class="selectFeat"></select></div></div><div id="'+descriptionSpellID+'"></div>');
 
     $('#'+selectSpellID).append('<option value="chooseDefault">'+selectionName+'</option>');
+    $('#'+selectSpellID).append('<optgroup label="──────────"></optgroup>');
 
     let triggerChange = false;
     // Set saved spell choices
@@ -68,7 +70,12 @@ function displayInnateSpellChoice(srcStruct, locationID, spellLevel, spellTradit
 
     for(const [spellID, spellData] of g_spellMap.entries()){
         if(spellData.Spell.level != spellLevel){ continue; }
-        if(!spellData.Spell.traditions.includes(spellTradition.toLowerCase())){ continue; }
+
+        if(selectFromAnyTradition){
+          if(spellData.Spell.traditions == '[]'){ continue; }// If has no tradition,
+        } else {
+          if(!spellData.Spell.traditions.includes(spellTradition.toLowerCase())){ continue; }
+        }
 
         let spellName = spellData.Spell.name;
         if(spellData.Spell.isArchived === 1){

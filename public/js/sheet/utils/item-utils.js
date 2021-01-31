@@ -63,6 +63,21 @@ function getCoinToString(price) {
     }
   }
 
+  let cStr_sStr_ouput = reduceCoinStr(cStr, sStr);
+  cStr = cStr_sStr_ouput.current; sStr = cStr_sStr_ouput.upper;
+
+  let sStr_gStr_ouput = reduceCoinStr(sStr, gStr);
+  sStr = sStr_gStr_ouput.current; gStr = sStr_gStr_ouput.upper;
+
+  /*let gStr_pStr_ouput = reduceCoinStr(gStr, pStr); // Don't convert down to platinum //
+  gStr = gStr_pStr_ouput.current; pStr = gStr_pStr_ouput.upper;*/
+
+  // Add on currency type
+  if(pStr!='') {pStr += ' pp';}
+  if(gStr!='') {gStr += ' gp';}
+  if(sStr!='') {sStr += ' sp';}
+  if(cStr!='') {cStr += ' cp';}
+
   let str = numberWithCommas(pStr);
   if(str != "" && gStr != ""){str += ", ";}
   str += numberWithCommas(gStr);
@@ -76,31 +91,41 @@ function getCoinToString(price) {
 }
 
 function processCopper(priceObj) {
-  if(priceObj.Value == 0){return "";}
+  if(priceObj.Value == 0){return '';}
   let copperCount = Math.floor(priceObj.Value / 1);
   priceObj.Value -= copperCount;
-  return copperCount+" cp";
+  return copperCount+'';
 }
 
 function processSilver(priceObj) {
-  if(priceObj.Value == 0){return "";}
+  if(priceObj.Value == 0){return '';}
   let silverCount = Math.floor(priceObj.Value / 10);
   priceObj.Value -= silverCount*10;
-  return silverCount+" sp";
+  return silverCount+'';
 }
 
 function processGold(priceObj) {
-  if(priceObj.Value == 0){return "";}
+  if(priceObj.Value == 0){return '';}
   let goldCount = Math.floor(priceObj.Value / 100);
   priceObj.Value -= goldCount*100;
-  return goldCount+" gp";
+  return goldCount+'';
 }
 
 function processPlatinum(priceObj) {
-  if(priceObj.Value == 0){return "";}
+  if(priceObj.Value == 0){return '';}
   let platinumCount = Math.floor(priceObj.Value / 1000);
   priceObj.Value -= platinumCount*1000;
-  return platinumCount+" pp";
+  return platinumCount+'';
+}
+
+function reduceCoinStr(currentCoinStr, upperCoinStr){
+  let currentCoin = parseInt(currentCoinStr); if(isNaN(currentCoin)){ currentCoin = 0; }
+  let upperCoin = parseInt(upperCoinStr); if(isNaN(upperCoin)){ upperCoin = 0; }
+  if(currentCoin !== 0 && currentCoin % 10 === 0){
+    upperCoinStr = (upperCoin+(currentCoin/10))+'';
+    currentCoinStr = '';
+  }
+  return { current: currentCoinStr, upper: upperCoinStr };
 }
 
 function numberWithCommas(x) {

@@ -5,7 +5,7 @@
 
 function displaySpell(locationID, spell){
   let buttonClass = locationID+'-spellView-'+spell.Spell.id;
-  $('#'+locationID).html('<button class="'+buttonClass+' button is-small is-info is-rounded is-outlined">View Spell</button>');
+  $('#'+locationID).html('<button class="'+buttonClass+' button is-small is-info is-rounded is-outlined my-1">View Spell</button>');
 
   let inSpellName = spell.Spell.name.replace(/’/g,'\'').toUpperCase();
   for(const [spellID, spellDataStruct] of g_spellMap.entries()){

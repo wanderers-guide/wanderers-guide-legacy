@@ -491,7 +491,7 @@ function openSpellQuickview(data){
 
         let autoHeightenSpells = false;
         if(isSheetPage()){ autoHeightenSpells = gOption_hasAutoHeightenSpells; }
-        if(!autoHeightenSpells || spellHeightenLevel == null){
+        if(true){ // !autoHeightenSpells || spellHeightenLevel == null
 
             qContent.append('<hr class="m-2">');
 
@@ -503,65 +503,60 @@ function openSpellQuickview(data){
                 } else {
                     hText = '<strong>Heightened ('+heightenedTextName+')</strong> '+spellDataStruct.Spell.heightenedOneText;
                 }
-                if(spellKeyAbility != null){
-                    hText = spellViewTextProcessor(hText, spellKeyAbility);
+
+                // Auto Heighten Spell
+                if(autoHeightenSpells && spellHeightenLevel != null){
+                  let heightenedOneCount = getHeightenedCount(spellDataStruct.Spell.level, spellHeightenLevel, spellDataStruct.Spell.heightenedOneVal);
+                  hText = getAutoHeightenedSpellText(heightenedOneCount, spellDataStruct.Spell.heightenedOneText, heightenedTextName);
                 }
+
+                if(spellKeyAbility != null){ hText = spellViewTextProcessor(hText, spellKeyAbility);}
+
                 qContent.append('<div class="negative-indent">'+processText(hText, true, true, 'MEDIUM')+'</div>');
             }
     
             if(spellDataStruct.Spell.heightenedTwoVal != null){
                 let hText = '<strong>Heightened ('+getHeightenedTextFromCodeName(spellDataStruct.Spell.heightenedTwoVal)+')</strong> '+spellDataStruct.Spell.heightenedTwoText;
-                if(spellKeyAbility != null){
-                    hText = spellViewTextProcessor(hText, spellKeyAbility);
+
+                // Auto Heighten Spell
+                if(autoHeightenSpells && spellHeightenLevel != null){
+                  let heightenedTwoCount = getHeightenedCount(spellDataStruct.Spell.level, spellHeightenLevel, spellDataStruct.Spell.heightenedTwoVal);
+                  hText = getAutoHeightenedSpellText(heightenedTwoCount, spellDataStruct.Spell.heightenedTwoText, getHeightenedTextFromCodeName(spellDataStruct.Spell.heightenedTwoVal));
                 }
+
+                if(spellKeyAbility != null){ hText = spellViewTextProcessor(hText, spellKeyAbility);}
+
                 qContent.append('<div class="negative-indent">'+processText(hText, true, true, 'MEDIUM')+'</div>');
             }
     
             if(spellDataStruct.Spell.heightenedThreeVal != null){
                 let hText = '<strong>Heightened ('+getHeightenedTextFromCodeName(spellDataStruct.Spell.heightenedThreeVal)+')</strong> '+spellDataStruct.Spell.heightenedThreeText;
-                if(spellKeyAbility != null){
-                    hText = spellViewTextProcessor(hText, spellKeyAbility);
+
+                // Auto Heighten Spell
+                if(autoHeightenSpells && spellHeightenLevel != null){
+                  let heightenedThreeCount = getHeightenedCount(spellDataStruct.Spell.level, spellHeightenLevel, spellDataStruct.Spell.heightenedThreeVal);
+                  hText = getAutoHeightenedSpellText(heightenedThreeCount, spellDataStruct.Spell.heightenedThreeText, getHeightenedTextFromCodeName(spellDataStruct.Spell.heightenedThreeVal));
                 }
+
+                if(spellKeyAbility != null){ hText = spellViewTextProcessor(hText, spellKeyAbility);}
+
                 qContent.append('<div class="negative-indent">'+processText(hText, true, true, 'MEDIUM')+'</div>');
             }
     
             if(spellDataStruct.Spell.heightenedFourVal != null){
                 let hText = '<strong>Heightened ('+getHeightenedTextFromCodeName(spellDataStruct.Spell.heightenedFourVal)+')</strong> '+spellDataStruct.Spell.heightenedFourText;
-                if(spellKeyAbility != null){
-                    hText = spellViewTextProcessor(hText, spellKeyAbility);
+
+                // Auto Heighten Spell
+                if(autoHeightenSpells && spellHeightenLevel != null){
+                  let heightenedFourCount = getHeightenedCount(spellDataStruct.Spell.level, spellHeightenLevel, spellDataStruct.Spell.heightenedFourVal);
+                  hText = getAutoHeightenedSpellText(heightenedFourCount, spellDataStruct.Spell.heightenedFourText, getHeightenedTextFromCodeName(spellDataStruct.Spell.heightenedFourVal));
                 }
+
+                if(spellKeyAbility != null){ hText = spellViewTextProcessor(hText, spellKeyAbility);}
+
                 qContent.append('<div class="negative-indent">'+processText(hText, true, true, 'MEDIUM')+'</div>');
             }
 
-        } else {
-            if(spellHeightenLevel != -1){
-
-                let qContentToAdd = '<hr class="m-2">';
-
-                let hText = '<div><p><strong>Heightened</strong></p></div>';
-
-                let heightenedOneCount = getHeightenedCount(spellDataStruct.Spell.level, spellHeightenLevel, spellDataStruct.Spell.heightenedOneVal);
-                hText += getAutoHeightenedSpellText(heightenedOneCount, spellDataStruct.Spell.heightenedOneText);
-
-                let heightenedTwoCount = getHeightenedCount(spellDataStruct.Spell.level, spellHeightenLevel, spellDataStruct.Spell.heightenedTwoVal);
-                hText += getAutoHeightenedSpellText(heightenedTwoCount, spellDataStruct.Spell.heightenedTwoText);
-
-                let heightenedThreeCount = getHeightenedCount(spellDataStruct.Spell.level, spellHeightenLevel, spellDataStruct.Spell.heightenedThreeVal);
-                hText += getAutoHeightenedSpellText(heightenedThreeCount, spellDataStruct.Spell.heightenedThreeText);
-
-                let heightenedFourCount = getHeightenedCount(spellDataStruct.Spell.level, spellHeightenLevel, spellDataStruct.Spell.heightenedFourVal);
-                hText += getAutoHeightenedSpellText(heightenedFourCount, spellDataStruct.Spell.heightenedFourText);
-
-                if(spellKeyAbility != null){
-                    hText = spellViewTextProcessor(hText, spellKeyAbility);
-                }
-                qContentToAdd += '<div class="negative-indent">'+processText(hText, true, true, 'MEDIUM')+'</div>';
-
-                if(heightenedOneCount > 0 || heightenedTwoCount > 0 || heightenedThreeCount > 0 || heightenedFourCount > 0){
-                    qContent.append(qContentToAdd);
-                }
-
-            }
         }
 
     }
@@ -582,13 +577,14 @@ function spellViewTextProcessor(text, spellKeyAbility){
 }
 
 let g_tempAutoHeightenCount = null;
-function getAutoHeightenedSpellText(hCount, hText){
+function getAutoHeightenedSpellText(hCount, hText, hVal){
     if(hCount <= 0){ return ''; }
     g_tempAutoHeightenCount = hCount;
 
     let text = hText;
-    text = text.replace(/by (\d+)d(\d+)([ .]|$)/g, handleSpellAutoHeightenedIncrease);
-    text = text.replace(/by (\d+)d(\d+)\+(\d+)([ .]|$)/g, handleSpellAutoHeightenedIncreaseBonus);        
+    text = text.replace(/by (\d+)d(\d+)([ .,;]|$)/g, handleSpellAutoHeightenedIncrease);
+    text = text.replace(/by (\d+)d(\d+)\+(\d+)([ .,;]|$)/g, handleSpellAutoHeightenedIncreaseBonus);
+    text = text.replace(/by (\d+)([ .,;]|$)/g, handleSpellAutoHeightenedIncreaseAnyNumber);
 
     if(text === hText){
         text = '';
@@ -600,7 +596,12 @@ function getAutoHeightenedSpellText(hCount, hText){
     }
 
     g_tempAutoHeightenCount = null;
-    return text;
+    
+    let finalHeightenText = '\n**Heightened'+((hVal !== 'CUSTOM') ? ' ('+hVal+')' : '')+'**';
+    if(hCount > 1) {
+      finalHeightenText += '<span class="is-size-6-5"> <i class="fas fa-caret-right"></i><span class="is-italic"> Improved <span class="has-text-info-lighter">'+hCount+'</span> times</span></span>';
+    }
+    return finalHeightenText+'\n'+text;
 
 }
 
@@ -613,6 +614,11 @@ function handleSpellAutoHeightenedIncreaseBonus(match, dieAmount, dieType, bonus
     dieAmount = dieAmount*g_tempAutoHeightenCount;
     bonusAmount = bonusAmount*g_tempAutoHeightenCount;
     return 'by '+dieAmount+'d'+dieType+'+'+bonusAmount+''+endingChar;
+}
+
+function handleSpellAutoHeightenedIncreaseAnyNumber(match, numAmount, endingChar){
+  numAmount = numAmount*g_tempAutoHeightenCount;
+  return 'by '+numAmount+''+endingChar;
 }
 
 // Spell Utils //
@@ -637,6 +643,7 @@ function getHeightenedTextFromCodeName(codeName){
 }
   
 function getHeightenedCount(spellLevel, spellHeightenLevel, heightenName){
+    if(spellHeightenLevel == -1) { return 0; }
     if(spellLevel === 0){ spellLevel = 1; } // Cantrips are treated as 1st level
     switch(heightenName) {
       case "PLUS_ONE": return Math.floor(spellHeightenLevel-spellLevel);

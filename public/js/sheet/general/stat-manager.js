@@ -104,7 +104,7 @@ function getStatTotal(statName){
             } else if(source === 'MODIFIER') {
                 total += getModOfValue(value);
             } else {
-                total += value;
+                total += parseInt(value);
             }
         }
     }
