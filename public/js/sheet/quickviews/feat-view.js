@@ -171,6 +171,26 @@ function openFeatQuickview(data) {
         displayNotesField(qContent, data.SrcStruct);
     }
 
+    showFeatListOptions(qContent, data.Feat.code);
+
+}
+
+function showFeatListOptions(qContent, wscStatements){
+  for(let statement of wscStatements.split(/\n/)) {
+    if(statement.includes("GIVE-FEAT-FROM=")){ // GIVE-FEAT-FROM=Choose a Tradition:feat 1,feat 2,feat 2
+      let value = statement.split('=')[1];
+      let valueParts = value.split(':');
+      let selectorTitle = valueParts[0];
+      let featNameList = valueParts[1].split(',');
+
+      let listText = '**'+selectorTitle+'**\n';
+      for(let featName of featNameList){
+        listText += '* : (feat: '+featName+')\n';
+      }
+      qContent.append('<hr class="m-2">');
+      qContent.append('<div>'+processText(listText, true, true, 'MEDIUM')+'</div>');
+    }
+  }
 }
 
 function featViewTextProcessor(text){
