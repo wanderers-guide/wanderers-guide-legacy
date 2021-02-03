@@ -1716,6 +1716,13 @@ module.exports = class SocketConnections {
         });
       });
 
+      socket.on('requestCharImport', function(charExportData){
+        CharExport.getExportData(socket, charExportData)
+        .then((result) => {
+          socket.emit('returnCharImport');
+        });
+      });
+
     });
 
   }
