@@ -91,6 +91,9 @@ const Character = db.define('characters', {
   variantStamina: {
     type: Sequelize.INTEGER
   },
+  variantAutoBonusProgression: {
+    type: Sequelize.INTEGER
+  },
   // Character Enabled Sources //
   enabledSources: {
     type: Sequelize.STRING

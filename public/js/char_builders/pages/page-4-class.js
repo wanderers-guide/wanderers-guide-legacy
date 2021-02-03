@@ -93,6 +93,11 @@ function displayCurrentClass(classStruct, saving) {
       classStruct = addFreeArchetypeVariant(classStruct);
     }
 
+    // Add support for Auto Bonus Progression Variant if enabled...
+    if(wscChoiceStruct.Character.variantAutoBonusProgression == 1){
+      classStruct = addAutoBonusProgressionVariant(classStruct);
+    }
+
     let choiceArray = wscChoiceStruct.ChoiceArray;
 
     if(classStruct.Class.isArchived == 1){

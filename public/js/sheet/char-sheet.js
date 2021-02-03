@@ -303,6 +303,11 @@ socket.on("returnCharacterSheetInfo", function(charInfo, viewOnly){
         ChoiceStruct : charInfo.ChoicesStruct,
     });
 
+    // Automatic Progression Bonus variant, if enabled...
+    if(g_character.variantAutoBonusProgression == 1){
+      g_classDetails = addAutoBonusProgressionVariant(g_classDetails);
+    }
+
     loadCharSheet();
 
     if(gOption_hasDiceRoller){
@@ -1785,9 +1790,9 @@ function determineArmor(dexMod, strScore) {
         }
         
         // Apply armor's rune effects to character...
-        if(armorStruct.InvItem.itemRuneData != null){
+        if(armorStruct.InvItem.invItemRunes[0] != null){
 
-            let armorRuneData = armorStruct.InvItem.itemRuneData;
+            let armorRuneData = armorStruct.InvItem.invItemRunes[0];
 
             if(isArmorPotencyOne(armorRuneData.fundPotencyRuneID)){
                 addStat('AC', 'ITEM_BONUS', 1);

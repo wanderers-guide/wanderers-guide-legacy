@@ -105,15 +105,15 @@ function displayRunesForItem(qContent, invItem, isWeapon){
             if(weaponRuneItem.RuneData.isFundamental == 1) {
     
                  let dontDisplay = false;
-                if(invItem.itemRuneData != null){
+                if(invItem.invItemRunes[0] != null){
                     if(isWeaponPotencyRune(weaponRuneItem.RuneData.id)){
-                        let hasPotency = isWeaponPotencyRune(invItem.itemRuneData.fundPotencyRuneID);
+                        let hasPotency = isWeaponPotencyRune(invItem.invItemRunes[0].fundPotencyRuneID);
                         if(hasPotency) {
                             dontDisplay = true;
                         }
                     }
                     if(isStrikingRune(weaponRuneItem.RuneData.id)){
-                        let hasStriking = isStrikingRune(invItem.itemRuneData.fundRuneID);
+                        let hasStriking = isStrikingRune(invItem.invItemRunes[0].fundRuneID);
                         if(hasStriking) {
                             dontDisplay = true;
                         }
@@ -134,15 +134,15 @@ function displayRunesForItem(qContent, invItem, isWeapon){
             if(armorRuneItem.RuneData.isFundamental == 1) {
     
                  let dontDisplay = false;
-                if(invItem.itemRuneData != null){
+                if(invItem.invItemRunes[0] != null){
                     if(isArmorPotencyRune(armorRuneItem.RuneData.id)){
-                        let hasPotency = isArmorPotencyRune(invItem.itemRuneData.fundPotencyRuneID);
+                        let hasPotency = isArmorPotencyRune(invItem.invItemRunes[0].fundPotencyRuneID);
                         if(hasPotency) {
                             dontDisplay = true;
                         }
                     }
                     if(isResilientRune(armorRuneItem.RuneData.id)){
-                        let hasResilient = isResilientRune(invItem.itemRuneData.fundRuneID);
+                        let hasResilient = isResilientRune(invItem.invItemRunes[0].fundRuneID);
                         if(hasResilient) {
                             dontDisplay = true;
                         }
@@ -172,7 +172,7 @@ function displayRunesForItem(qContent, invItem, isWeapon){
         });
     }
 
-    if(invItem.itemRuneData != null){
+    if(invItem.invItemRunes[0] != null){
 
         displayRunesInQuickview(qContent, invItem, runeDataStruct);
                 
@@ -184,8 +184,8 @@ function displayRunesForItem(qContent, invItem, isWeapon){
 
 function displayRunesInQuickview(qContent, invItem, runeDataStruct){
 
-    if(invItem.itemRuneData.fundRuneID != null){
-        let fundRuneID = invItem.itemRuneData.fundRuneID;
+    if(invItem.invItemRunes[0].fundRuneID != null){
+        let fundRuneID = invItem.invItemRunes[0].fundRuneID;
         if(isStriking(fundRuneID)){
 
             let runeName = "Striking";
@@ -237,8 +237,8 @@ function displayRunesInQuickview(qContent, invItem, runeDataStruct){
         }
 
     }
-    if(invItem.itemRuneData.fundPotencyRuneID != null){
-        let potencyRuneID = invItem.itemRuneData.fundPotencyRuneID;
+    if(invItem.invItemRunes[0].fundPotencyRuneID != null){
+        let potencyRuneID = invItem.invItemRunes[0].fundPotencyRuneID;
         if(isWeaponPotencyOne(potencyRuneID)){
             
             let runeName = "+1 Weapon Potency";
@@ -328,11 +328,11 @@ function addFundamentalRuneEntry(qContent, invItem, runeID, runeName, runeDescri
 function getPropertyRuneIDBySlot(invItem, propertyRuneSlot){
     switch(propertyRuneSlot) {
         case 1:
-            return invItem.itemRuneData.propRune1ID;
+            return invItem.invItemRunes[0].propRune1ID;
         case 2:
-            return invItem.itemRuneData.propRune2ID;
+            return invItem.invItemRunes[0].propRune2ID;
         case 3:
-            return invItem.itemRuneData.propRune3ID;
+            return invItem.invItemRunes[0].propRune3ID;
         default:
             return null;
     }

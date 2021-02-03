@@ -7,6 +7,7 @@ const CharSpells = require('./CharSpells');
 const CharTags = require('./CharTags');
 const CharDataMapping = require('./CharDataMapping');
 const CharDataMappingExt = require('./CharDataMappingExt');
+const CharExport = require('./CharExport');
 const AuthCheck = require('./AuthCheck');
 const GeneralGathering = require('./GeneralGathering');
 const HomebrewGathering = require('./HomebrewGathering');
@@ -1697,6 +1698,26 @@ module.exports = class SocketConnections {
       
     });
     
+  }
+
+  static charDataManagement(io) {
+
+    // Socket.IO Connections
+    io.on('connection', function(socket){
+
+      socket.on('requestCharExport', function(charID){
+        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+          if(ownsChar){
+            CharExport.getExportData(charID)
+            .then((charExportData) => {
+              socket.emit('returnCharExport', charExportData);
+            });
+          }
+        });
+      });
+
+    });
+
   }
 
   static homePage(io) {

@@ -60,7 +60,7 @@ const InvItem = db.define('invItems', {
   bagInvItemID: {
     type: Sequelize.INTEGER
   },
-  itemRuneData: { // Injected with object data in CharGathering
+  itemRuneData: { // Injected with object data in CharGathering // REMOVE THIS (AND IN DB) AFTER 1.4 UPDATE //
     type: Sequelize.INTEGER
   },
   itemIsWeapon: {

@@ -146,7 +146,7 @@ function getStatMap(statName){
 
 function getModOfValue(valueModName){
     if(valueModName == null){ return 0; }
-    valueModName = valueModName+'';
+    valueModName = valueModName+''; // Convert to string, in case a num is passed
     valueModName = valueModName.toUpperCase();
     switch(valueModName) {
         case 'STR':

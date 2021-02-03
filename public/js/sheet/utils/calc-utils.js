@@ -8,7 +8,7 @@ function getAttackAndDamage(itemData, invItem){
     let dexMod = getMod(getStatTotal('SCORE_DEX'));
     let pre_strMod = getMod(g_preConditions_strScore);
     let pre_dexMod = getMod(g_preConditions_dexScore);
-    let itemRuneData = invItem.itemRuneData;
+    let itemRuneData = (invItem.invItemRunes != null) ? invItem.invItemRunes[0] : null;
 
     let tagArray = getItemTraitsArray(itemData, invItem);
 
@@ -96,6 +96,11 @@ function getAttackAndDamage(itemData, invItem){
                 diceNum = 4;
             }
         }
+
+        let overrideAttacksDmgDice = getStatTotal('ATTACKS_DMG_DICE');
+        if(overrideAttacksDmgDice != null) { diceNum = overrideAttacksDmgDice; }
+        let overrideMeleeDmgDice = getStatTotal('MELEE_ATTACKS_DMG_DICE');
+        if(overrideMeleeDmgDice != null) { diceNum = overrideMeleeDmgDice; }
 
         let weapSpecialBonus = 0; // Hardcoded Damage Amount to Weap Profs
         if(g_specializationStruct.WeaponSpecial){
@@ -209,6 +214,11 @@ function getAttackAndDamage(itemData, invItem){
                 diceNum = 4;
             }
         }
+
+        let overrideAttacksDmgDice = getStatTotal('ATTACKS_DMG_DICE');
+        if(overrideAttacksDmgDice != null) { diceNum = overrideAttacksDmgDice; }
+        let overrideRangedDmgDice = getStatTotal('RANGED_ATTACKS_DMG_DICE');
+        if(overrideRangedDmgDice != null) { diceNum = overrideRangedDmgDice; }
 
         let weapSpecialBonus = 0; // Hardcoded Damage Amount to Weap Profs
         if(g_specializationStruct.WeaponSpecial){

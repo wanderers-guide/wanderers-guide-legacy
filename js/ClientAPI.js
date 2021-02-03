@@ -14,7 +14,7 @@ function getUserID(socket){
 }
 
 // ID Generation //
-function getRandomClientID(){
+function getRandomClientID(){ /* Isn't a great, but good enough for now */
   return Math.floor(1000+Math.random()*9000) + '-' +
       Math.floor(10000+Math.random()*90000) + '-' +
       Math.floor(1000+Math.random()*9000) + '-' +
@@ -39,7 +39,7 @@ function getAccessToken(){
 // Single-Use Codes //
 let activeSingleUseCodes = new Map();
 
-function generateSingleUseCode(clientID, charID, accessRights){
+function generateSingleUseCode(clientID, charID, accessRights){ /*  */
   let code = Math.random().toString(36).substr(2); // remove `0.`
   activeSingleUseCodes.set(code, { clientID, charID, accessRights });
   return code;

@@ -499,39 +499,18 @@ module.exports = class CharGathering {
     static getInventory(inventoryID){
         return Inventory.findOne({ where: { id: inventoryID} })
         .then((inventory) => {
+
+            InvItem.hasMany(InvItemRune, {foreignKey: 'invItemID'});
+            InvItemRune.belongsTo(InvItem, {foreignKey: 'invItemID'});
             return InvItem.findAll({
                 where: { invID: inventory.id},
-                order: [['name', 'ASC'],]
+                order: [['name', 'ASC'],],
+                include: [InvItemRune]
             }).then((invItems) => {
-                return InvItemRune.findAll()
-                .then((invItemRunes) => {
-
-                    for(let invItem of invItems){
-                        let invItemRune = invItemRunes.find(invItemRune => {
-                            return invItemRune.invItemID == invItem.id;
-                        });
-                        if(invItemRune != null){
-                            invItem.itemRuneData = {
-                                id : invItemRune.id,
-                                invItemID : invItemRune.invItemID,
-                                fundRuneID : invItemRune.fundRuneID,
-                                fundPotencyRuneID : invItemRune.fundPotencyRuneID,
-                                propRune1ID : invItemRune.propRune1ID,
-                                propRune2ID : invItemRune.propRune2ID,
-                                propRune3ID : invItemRune.propRune3ID,
-                                propRune4ID : invItemRune.propRune4ID
-                            };
-                        } else {
-                            invItem.itemRuneData = null;
-                        }
-                    }
-
-                    return {
-                        Inventory : inventory,
-                        InvItems : invItems
-                    };
-                });
-
+              return {
+                Inventory : inventory,
+                InvItems : invItems
+              };
             });
         });
     }
@@ -1511,16 +1490,30 @@ module.exports = class CharGathering {
       });
   }
 
+  static getCharAnimalCompanions(charID) {
+    return CharAnimalCompanion.findAll({ where: { charID: charID} })
+    .then((charAnimalComps) => {
+      return charAnimalComps;
+    });
+  }
+
+  static getCharFamiliars(charID) {
+    return CharFamiliar.findAll({ where: { charID: charID} })
+    .then((charFamiliars) => {
+      return charFamiliars;
+    });
+  }
+
     static getCompanionData(charID){
       return CharGathering.getAllAnimalCompanions(charID)
       .then((allAnimalCompanions) => {
-        return CharAnimalCompanion.findAll({ where: { charID: charID} })
+        return CharGathering.getCharAnimalCompanions(charID)
         .then((charAnimalComps) => {
           return CharGathering.getAllSpecificFamiliars(charID)
           .then((allSpecificFamiliars) => {
             return CharGathering.getAllFamiliarAbilities(charID)
             .then((allFamiliarAbilities) => {
-              return CharFamiliar.findAll({ where: { charID: charID} })
+              return CharGathering.getCharFamiliars(charID)
               .then((charFamiliars) => {
 
                 return {

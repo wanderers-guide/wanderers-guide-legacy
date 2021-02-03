@@ -299,6 +299,15 @@ function handleCharacterOptions(character, hBundles, progessBundles) {
     });
     $("#variantAncestryParagon").prop('checked', (character.variantAncestryParagon === 1));
 
+    $("#variantAutoBonusProgression").change(function(){
+      let optionTypeValue = (this.checked) ? 1 : 0;
+      socket.emit("requestCharacterOptionChange", 
+          getCharIDFromURL(), 
+          'variantAutoBonusProgression',
+          optionTypeValue);
+    });
+    $("#variantAutoBonusProgression").prop('checked', (character.variantAutoBonusProgression === 1));
+
     $("#variantFreeArchetype").change(function(){
       let optionTypeValue = (this.checked) ? 1 : 0;
       socket.emit("requestCharacterOptionChange", 

@@ -568,6 +568,10 @@ module.exports = class CharSaving {
           charUpVals = {
             variantStamina: value
           };
+        } else if(optionName === 'variantAutoBonusProgression'){
+          charUpVals = {
+            variantAutoBonusProgression: value
+          };
         }
 
         if(charUpVals != null){
