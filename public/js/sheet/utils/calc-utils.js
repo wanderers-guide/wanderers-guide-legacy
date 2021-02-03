@@ -8,7 +8,6 @@ function getAttackAndDamage(itemData, invItem){
     let dexMod = getMod(getStatTotal('SCORE_DEX'));
     let pre_strMod = getMod(g_preConditions_strScore);
     let pre_dexMod = getMod(g_preConditions_dexScore);
-    let itemRuneData = (invItem.invItemRunes != null) ? invItem.invItemRunes[0] : null;
 
     let tagArray = getItemTraitsArray(itemData, invItem);
 
@@ -69,14 +68,12 @@ function getAttackAndDamage(itemData, invItem){
         }
 
         let potencyRuneBonus = 0;
-        if(itemRuneData != null){
-            if(isWeaponPotencyOne(itemRuneData.fundPotencyRuneID)){
-                potencyRuneBonus = 1;
-            } else if(isWeaponPotencyTwo(itemRuneData.fundPotencyRuneID)){
-                potencyRuneBonus = 2;
-            } else if(isWeaponPotencyThree(itemRuneData.fundPotencyRuneID)){
-                potencyRuneBonus = 3;
-            }
+        if(isWeaponPotencyOne(invItem.fundPotencyRuneID)){
+          potencyRuneBonus = 1;
+        } else if(isWeaponPotencyTwo(invItem.fundPotencyRuneID)){
+          potencyRuneBonus = 2;
+        } else if(isWeaponPotencyThree(invItem.fundPotencyRuneID)){
+          potencyRuneBonus = 3;
         }
 
         let shoddyPenalty = (invItem.isShoddy == 1) ? -2 : 0;
@@ -87,14 +84,12 @@ function getAttackAndDamage(itemData, invItem){
         let attackBonus = signNumber(abilMod+profAttackBonus+profBonus+potencyRuneBonus+shoddyPenalty+otherBonuses);
 
         let diceNum = itemData.WeaponData.diceNum;
-        if(itemRuneData != null){
-            if(isStriking(itemRuneData.fundRuneID)){
-                diceNum = 2;
-            } else if(isGreaterStriking(itemRuneData.fundRuneID)){
-                diceNum = 3;
-            } else if(isMajorStriking(itemRuneData.fundRuneID)){
-                diceNum = 4;
-            }
+        if(isStriking(invItem.fundRuneID)){
+          diceNum = 2;
+        } else if(isGreaterStriking(invItem.fundRuneID)){
+          diceNum = 3;
+        } else if(isMajorStriking(invItem.fundRuneID)){
+          diceNum = 4;
         }
 
         let overrideAttacksDmgDice = getStatTotal('ATTACKS_DMG_DICE');
@@ -187,14 +182,12 @@ function getAttackAndDamage(itemData, invItem){
         }
 
         let potencyRuneBonus = 0;
-        if(itemRuneData != null){
-            if(isWeaponPotencyOne(itemRuneData.fundPotencyRuneID)){
-                potencyRuneBonus = 1;
-            } else if(isWeaponPotencyTwo(itemRuneData.fundPotencyRuneID)){
-                potencyRuneBonus = 2;
-            } else if(isWeaponPotencyThree(itemRuneData.fundPotencyRuneID)){
-                potencyRuneBonus = 3;
-            }
+        if(isWeaponPotencyOne(invItem.fundPotencyRuneID)){
+          potencyRuneBonus = 1;
+        } else if(isWeaponPotencyTwo(invItem.fundPotencyRuneID)){
+          potencyRuneBonus = 2;
+        } else if(isWeaponPotencyThree(invItem.fundPotencyRuneID)){
+          potencyRuneBonus = 3;
         }
 
         let shoddyPenalty = (invItem.isShoddy == 1) ? -2 : 0;
@@ -205,14 +198,12 @@ function getAttackAndDamage(itemData, invItem){
         let attackBonus = signNumber(dexMod+profAttackBonus+profBonus+potencyRuneBonus+shoddyPenalty+otherBonuses);
 
         let diceNum = itemData.WeaponData.diceNum;
-        if(itemRuneData != null){
-            if(isStriking(itemRuneData.fundRuneID)){
-                diceNum = 2;
-            } else if(isGreaterStriking(itemRuneData.fundRuneID)){
-                diceNum = 3;
-            } else if(isMajorStriking(itemRuneData.fundRuneID)){
-                diceNum = 4;
-            }
+        if(isStriking(invItem.fundRuneID)){
+          diceNum = 2;
+        } else if(isGreaterStriking(invItem.fundRuneID)){
+          diceNum = 3;
+        } else if(isMajorStriking(invItem.fundRuneID)){
+          diceNum = 4;
         }
 
         let overrideAttacksDmgDice = getStatTotal('ATTACKS_DMG_DICE');

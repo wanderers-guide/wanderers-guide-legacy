@@ -60,9 +60,6 @@ const InvItem = db.define('invItems', {
   bagInvItemID: {
     type: Sequelize.INTEGER
   },
-  itemRuneData: { // Injected with object data in CharGathering // REMOVE THIS (AND IN DB) AFTER 1.4 UPDATE //
-    type: Sequelize.INTEGER
-  },
   itemIsWeapon: {
     type: Sequelize.INTEGER
   },
@@ -78,6 +75,24 @@ const InvItem = db.define('invItems', {
   },
   itemStorageMaxBulk: {
     type: Sequelize.DOUBLE
+  },
+  fundRuneID: {
+    type: Sequelize.INTEGER,
+  },
+  fundPotencyRuneID: {
+    type: Sequelize.INTEGER,
+  },
+  propRune1ID: {
+    type: Sequelize.INTEGER,
+  },
+  propRune2ID: {
+    type: Sequelize.INTEGER,
+  },
+  propRune3ID: {
+    type: Sequelize.INTEGER,
+  },
+  propRune4ID: {
+    type: Sequelize.INTEGER,
   },
 });
 

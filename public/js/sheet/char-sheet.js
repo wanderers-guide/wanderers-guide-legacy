@@ -1790,38 +1790,30 @@ function determineArmor(dexMod, strScore) {
         }
         
         // Apply armor's rune effects to character...
-        if(armorStruct.InvItem.invItemRunes[0] != null){
-
-            let armorRuneData = armorStruct.InvItem.invItemRunes[0];
-
-            if(isArmorPotencyOne(armorRuneData.fundPotencyRuneID)){
-                addStat('AC', 'ITEM_BONUS', 1);
-            } else if(isArmorPotencyTwo(armorRuneData.fundPotencyRuneID)){
-                addStat('AC', 'ITEM_BONUS', 2);
-            } else if(isArmorPotencyThree(armorRuneData.fundPotencyRuneID)){
-                addStat('AC', 'ITEM_BONUS', 3);
-            }
-
-            if(isResilient(armorRuneData.fundRuneID)){
-                addStat('SAVE_FORT', 'ITEM_BONUS', 1);
-                addStat('SAVE_WILL', 'ITEM_BONUS', 1);
-                addStat('SAVE_REFLEX', 'ITEM_BONUS', 1);
-            } else if(isGreaterResilient(armorRuneData.fundRuneID)){
-                addStat('SAVE_FORT', 'ITEM_BONUS', 2);
-                addStat('SAVE_WILL', 'ITEM_BONUS', 2);
-                addStat('SAVE_REFLEX', 'ITEM_BONUS', 2);
-            } else if(isMajorResilient(armorRuneData.fundRuneID)){
-                addStat('SAVE_FORT', 'ITEM_BONUS', 3);
-                addStat('SAVE_WILL', 'ITEM_BONUS', 3);
-                addStat('SAVE_REFLEX', 'ITEM_BONUS', 3);
-            }
-
-            runArmorPropertyRuneCode(armorRuneData.propRune1ID);
-            runArmorPropertyRuneCode(armorRuneData.propRune2ID);
-            runArmorPropertyRuneCode(armorRuneData.propRune3ID);
-            runArmorPropertyRuneCode(armorRuneData.propRune4ID);
-
+        if(isArmorPotencyOne(armorStruct.InvItem.fundPotencyRuneID)){
+          addStat('AC', 'ITEM_BONUS', 1);
+        } else if(isArmorPotencyTwo(armorStruct.InvItem.fundPotencyRuneID)){
+          addStat('AC', 'ITEM_BONUS', 2);
+        } else if(isArmorPotencyThree(armorStruct.InvItem.fundPotencyRuneID)){
+          addStat('AC', 'ITEM_BONUS', 3);
         }
+        if(isResilient(armorStruct.InvItem.fundRuneID)){
+          addStat('SAVE_FORT', 'ITEM_BONUS', 1);
+          addStat('SAVE_WILL', 'ITEM_BONUS', 1);
+          addStat('SAVE_REFLEX', 'ITEM_BONUS', 1);
+        } else if(isGreaterResilient(armorStruct.InvItem.fundRuneID)){
+          addStat('SAVE_FORT', 'ITEM_BONUS', 2);
+          addStat('SAVE_WILL', 'ITEM_BONUS', 2);
+          addStat('SAVE_REFLEX', 'ITEM_BONUS', 2);
+        } else if(isMajorResilient(armorStruct.InvItem.fundRuneID)){
+          addStat('SAVE_FORT', 'ITEM_BONUS', 3);
+          addStat('SAVE_WILL', 'ITEM_BONUS', 3);
+          addStat('SAVE_REFLEX', 'ITEM_BONUS', 3);
+        }
+        runArmorPropertyRuneCode(armorStruct.InvItem.propRune1ID);
+        runArmorPropertyRuneCode(armorStruct.InvItem.propRune2ID);
+        runArmorPropertyRuneCode(armorStruct.InvItem.propRune3ID);
+        runArmorPropertyRuneCode(armorStruct.InvItem.propRune4ID);
 
         // Final Product
         let totalACDisplayed = (hasConditionals('AC')) ? totalAC+'<sup class="is-size-5 has-text-info">*</sup>' : totalAC;

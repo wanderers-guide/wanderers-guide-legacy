@@ -3,7 +3,6 @@ const { Op } = require("sequelize");
 
 const Inventory = require('../models/contentDB/Inventory');
 const InvItem = require('../models/contentDB/InvItem');
-const InvItemRune = require('../models/contentDB/InvItemRune');
 const CharCondition = require('../models/contentDB/CharCondition');
 const NoteField = require('../models/contentDB/NoteField');
 const SpellBookSpell = require('../models/contentDB/SpellBookSpell');
@@ -34,14 +33,11 @@ module.exports = class CharExport {
 
     */
 
-   InvItem.hasMany(InvItemRune, {foreignKey: 'invItemID'});
-   InvItemRune.belongsTo(InvItem, {foreignKey: 'invItemID'});
-
     return CharGathering.getCharacter(charID)
     .then((character) => {
       return Inventory.findOne({ where: { id: character.inventoryID} })
       .then((inventory) => {
-        return InvItem.findAll({ where: { invID: inventory.id}, include: [InvItemRune] })
+        return InvItem.findAll({ where: { invID: inventory.id} })
         .then((invItems) => {
           return CharGathering.getAllMetadata(charID)
           .then((charMetaData) => {

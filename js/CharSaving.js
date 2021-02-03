@@ -11,7 +11,6 @@ const Weapon = require('../models/contentDB/Weapon');
 const Storage = require('../models/contentDB/Storage');
 const Inventory = require('../models/contentDB/Inventory');
 const InvItem = require('../models/contentDB/InvItem');
-const InvItemRune = require('../models/contentDB/InvItemRune');
 const CharCondition = require('../models/contentDB/CharCondition');
 const InnateSpellCasting = require('../models/contentDB/InnateSpellCasting');
 const AnimalCompanion = require('../models/contentDB/AnimalCompanion');
@@ -165,7 +164,7 @@ module.exports = class CharSaving {
     static addPropRune(invItemID, propRuneID, propRuneSlot) {
         let updateValues = new Object;
         updateValues['propRune'+propRuneSlot+'ID'] = propRuneID;
-        return InvItemRune.update(updateValues, { where: { invItemID: invItemID} })
+        return InvItem.update(updateValues, { where: { id: invItemID} })
         .then((result) => {
             return;
         });
@@ -174,7 +173,7 @@ module.exports = class CharSaving {
     static removePropRune(invItemID, propRuneSlot) {
         let updateValues = new Object;
         updateValues['propRune'+propRuneSlot+'ID'] = null;
-        return InvItemRune.update(updateValues, { where: { invItemID: invItemID} })
+        return InvItem.update(updateValues, { where: { id: invItemID} })
         .then((result) => {
             return;
         });
@@ -182,34 +181,28 @@ module.exports = class CharSaving {
 
     static addFundRune(invItemID, fundRuneID) {
         if(isPotencyRune(fundRuneID)){
-            return InvItemRune.upsert({
-                invItemID: invItemID,
-                fundPotencyRuneID: fundRuneID
-            });
+          return InvItem.update({ fundPotencyRuneID: fundRuneID }, { where: { id: invItemID} });
         } else {
-            return InvItemRune.upsert({
-                invItemID: invItemID,
-                fundRuneID: fundRuneID
-            });
+          return InvItem.update({ fundRuneID: fundRuneID }, { where: { id: invItemID} });
         }
     }
 
     static removeFundRune(invItemID, fundRuneID) {
 
-        return InvItemRune.findOne({ where: { invItemID: invItemID} })
-        .then((invItemRune) => {
+        return InvItem.findOne({ where: { id: invItemID} })
+        .then((invItem) => {
 
-            if(invItemRune.fundRuneID == fundRuneID){
+            if(invItem.fundRuneID == fundRuneID){
 
                 let updateValues = {
                     fundRuneID: null
                 };
-                return InvItemRune.update(updateValues, { where: { invItemID: invItemID} })
+                return InvItem.update(updateValues, { where: { id: invItemID} })
                 .then((result) => {
                     return;
                 });
 
-            } else if(invItemRune.fundPotencyRuneID == fundRuneID){
+            } else if(invItem.fundPotencyRuneID == fundRuneID){
 
                 let updateValues = {
                     fundPotencyRuneID: null,
@@ -218,7 +211,7 @@ module.exports = class CharSaving {
                     propRune3ID: null,
                     propRune4ID: null
                 };
-                return InvItemRune.update(updateValues, { where: { invItemID: invItemID} })
+                return InvItem.update(updateValues, { where: { id: invItemID} })
                 .then((result) => {
                     return;
                 });

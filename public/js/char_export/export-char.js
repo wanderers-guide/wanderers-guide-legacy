@@ -11,11 +11,13 @@ $(function () {
 
 function charExportBtn(qContent){
 
+  /*
   qContent.append('<button id="char-export-btn" class="button is-info">Export Character</button>');
 
   $('#char-export-btn').click(function() {
     socket.emit("requestCharExport", getCharIDFromURL());
   });
+  */
 
 }
 

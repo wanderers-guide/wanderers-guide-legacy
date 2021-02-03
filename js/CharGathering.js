@@ -29,7 +29,6 @@ const Condition = require('../models/contentDB/Condition');
 const CharCondition = require('../models/contentDB/CharCondition');
 const Item = require('../models/contentDB/Item');
 const InvItem = require('../models/contentDB/InvItem');
-const InvItemRune = require('../models/contentDB/InvItemRune');
 const Weapon = require('../models/contentDB/Weapon');
 const DamageType = require('../models/contentDB/DamageType');
 const TaggedItem = require('../models/contentDB/TaggedItem');
@@ -499,13 +498,9 @@ module.exports = class CharGathering {
     static getInventory(inventoryID){
         return Inventory.findOne({ where: { id: inventoryID} })
         .then((inventory) => {
-
-            InvItem.hasMany(InvItemRune, {foreignKey: 'invItemID'});
-            InvItemRune.belongsTo(InvItem, {foreignKey: 'invItemID'});
             return InvItem.findAll({
                 where: { invID: inventory.id},
-                order: [['name', 'ASC'],],
-                include: [InvItemRune]
+                order: [['name', 'ASC'],]
             }).then((invItems) => {
               return {
                 Inventory : inventory,

@@ -25,10 +25,9 @@ module.exports = class CharImport {
           
           let invItemPromises = [];
           for(let invItem of charExportData.invItems) {
+            delete invItem.id;
+            invItem.invID = inventory.id;
             invItemPromises.push(InvItem.create(invItem));
-            if(invItem.invItemRunes != null){
-              invItemPromises.push(InvItemRune.create(invItem));
-            }
           }
           return Promise.all(invItemPromises)
           .then(function(result) {
