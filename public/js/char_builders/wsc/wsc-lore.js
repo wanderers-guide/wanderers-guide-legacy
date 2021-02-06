@@ -7,11 +7,11 @@ function processingLore(wscStatement, srcStruct, locationID, sourceName){
 
     if(wscStatement.includes("GIVE-LORE=")){ // GIVE-LORE=Sailing
         let loreName = wscStatement.split('=')[1];
-        giveLore(srcStruct, loreName);
+        giveLore(srcStruct, loreName, sourceName);
     } else if(wscStatement.includes("GIVE-LORE-CHOOSE-INCREASING")){ // GIVE-LORE-CHOOSE-INCREASING
-        giveLoreChooseIncreasing(srcStruct, locationID);
+        giveLoreChooseIncreasing(srcStruct, locationID, sourceName);
     } else if(wscStatement.includes("GIVE-LORE-CHOOSE")){ // GIVE-LORE-CHOOSE
-        giveLoreChoose(srcStruct, locationID);
+        giveLoreChoose(srcStruct, locationID, sourceName);
     } else {
         displayError("Unknown statement (2-Lore): \'"+wscStatement+"\'");
         statementComplete();
@@ -21,21 +21,21 @@ function processingLore(wscStatement, srcStruct, locationID, sourceName){
 
 //////////////////////////////// Give Lore Choose ///////////////////////////////////
 
-function giveLoreChooseIncreasing(srcStruct, locationID){
+function giveLoreChooseIncreasing(srcStruct, locationID, sourceName){
   // At 3rd, 7th, and 15th level automatically increase lore
   let charLevel = wscChoiceStruct.Character.level;
   if(charLevel >= 15){
-    giveLoreChoose(srcStruct, locationID, 'L');
+    giveLoreChoose(srcStruct, locationID, sourceName, 'L');
   } else if(charLevel >= 7){
-    giveLoreChoose(srcStruct, locationID, 'M');
+    giveLoreChoose(srcStruct, locationID, sourceName, 'M');
   } else if(charLevel >= 3){
-    giveLoreChoose(srcStruct, locationID, 'E');
+    giveLoreChoose(srcStruct, locationID, sourceName, 'E');
   } else {
-    giveLoreChoose(srcStruct, locationID, 'T');
+    giveLoreChoose(srcStruct, locationID, sourceName, 'T');
   }
 }
 
-function giveLoreChoose(srcStruct, locationID, prof='T'){
+function giveLoreChoose(srcStruct, locationID, sourceName, prof='T'){
 
     let inputLoreID = "inputLore"+locationID+"-"+srcStruct.sourceCodeSNum;
     let inputLoreControlShell = inputLoreID+'ControlShell';
@@ -62,7 +62,8 @@ function giveLoreChoose(srcStruct, locationID, prof='T'){
                 srcStruct,
                 null,
                 { ControlShellID: inputLoreControlShell, isAutoLoad},
-                prof);
+                prof,
+                sourceName);
 
         } else {
 
@@ -76,7 +77,8 @@ function giveLoreChoose(srcStruct, locationID, prof='T'){
                     srcStruct,
                     $(this).val().toUpperCase(),
                     { ControlShellID: inputLoreControlShell, isAutoLoad},
-                    prof);
+                    prof,
+                    sourceName);
 
             } else {
                 $(this).addClass("is-danger");
@@ -97,12 +99,15 @@ function giveLoreChoose(srcStruct, locationID, prof='T'){
 
 //////////////////////////////// Give Lore ///////////////////////////////////
 
-function giveLore(srcStruct, loreName){
+function giveLore(srcStruct, loreName, sourceName){
 
     socket.emit("requestLoreChange",
         getCharIDFromURL(),
         srcStruct,
-        loreName);
+        loreName,
+        null,
+        'T',
+        sourceName);
 
 }
 

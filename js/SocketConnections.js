@@ -1084,7 +1084,7 @@ module.exports = class SocketConnections {
     // Socket.IO Connections
     io.on('connection', function(socket){
 
-      socket.on('requestLoreChange', function(charID, srcStruct, loreName, inputPacket=null, prof='T', sourceName=''){
+      socket.on('requestLoreChange', function(charID, srcStruct, loreName, inputPacket, prof, sourceName){
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
           if(ownsChar){
             if(loreName == null){

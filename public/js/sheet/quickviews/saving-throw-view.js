@@ -9,6 +9,7 @@ function openSavingThrowQuickview(data) {
     $('#quickViewTitleRight').html('<button id="customizeProfBtn" class="button is-very-small is-success is-outlined is-rounded is-pulled-right mr-1">Customize</button>');
     $('#customizeProfBtn').click(function(){
         openQuickView('customizeProfView', {
+            ProfSrcData : data.ProfSrcData,
             ProfData : data.ProfData,
             NoteFieldID : noteFieldID,
             _prevBackData: {Type: g_QViewLastType, Data: g_QViewLastData},

@@ -9,6 +9,7 @@ function openOtherProfsQuickview(data) {
     $('#quickViewTitleRight').html('<button id="customizeProfBtn" class="button is-very-small is-success is-outlined is-rounded is-pulled-right mr-1">Customize</button>');
     $('#customizeProfBtn').click(function(){
         openQuickView('customizeProfView', {
+            ProfSrcData : data.ProfSrcData,
             ProfData : data.ProfData,
             NoteFieldID : noteFieldID,
             _prevBackData: {Type: g_QViewLastType, Data: g_QViewLastData},
@@ -46,7 +47,7 @@ function openOtherProfsQuickview(data) {
             let srcStructAdded = {
                 sourceType: 'user-added',
                 sourceLevel: 0,
-                sourceCode: data.ProfData.OriginalData.To,
+                sourceCode: data.ProfSrcData.To,
                 sourceCodeSNum: 'a',
             };
             socket.emit("requestProficiencyChange",
@@ -58,7 +59,7 @@ function openOtherProfsQuickview(data) {
             let srcStructProf = {
                 sourceType: 'user-set',
                 sourceLevel: 0,
-                sourceCode: data.ProfData.OriginalData.To+",,,Prof",
+                sourceCode: data.ProfSrcData.To+",,,Prof",
                 sourceCodeSNum: 'a',
             };
             socket.emit("requestProficiencyChange",
@@ -70,7 +71,7 @@ function openOtherProfsQuickview(data) {
             let srcStructBonus = {
                 sourceType: 'user-set',
                 sourceLevel: 0,
-                sourceCode: data.ProfData.OriginalData.To+",,,Bonus",
+                sourceCode: data.ProfSrcData.To+",,,Bonus",
                 sourceCodeSNum: 'a',
             };
             socket.emit("requestProficiencyChange",

@@ -200,6 +200,16 @@ function getBetterProf(prof1, prof2){
   return (profNumber1 > profNumber2) ? prof1 : prof2;
 }
 
+function getUpAmt(profType){
+  if(profType == "UP"){
+      return 1;
+  }
+  if(profType == "DOWN"){
+      return -1;
+  }
+  return 0;
+}
+
 /* HTML */
 function convertActionToHTML(actionsType){
   switch(actionsType) {

@@ -19,7 +19,9 @@ function openCustomizeProfQuickview(data) {
     qContent.append('<div class="buttons is-centered pt-2"><button id="customizeSaveButton" class="button is-link is-rounded">Save</button></div>');
 
     if(data.ProfData.UserProfOverride != null && data.ProfData.UserProfOverride){
-        $('#customizeProf').val(data.ProfData.OriginalData.Prof);
+        let userSetProfData = getUserSetData(g_profMap.get(data.ProfSrcData.To));
+        console.log(userSetProfData);
+        $('#customizeProf').val(userSetProfData.Prof);
     } else {
         $('#customizeProf').val('chooseDefault');
     }
@@ -36,6 +38,8 @@ function openCustomizeProfQuickview(data) {
     }
 
     $('#customizeSaveButton').click(function(){
+
+        console.log(data);
 
         // Reloads character sheet twice, which is unnecessary.
 
@@ -59,7 +63,7 @@ function openCustomizeProfQuickview(data) {
         let srcStructProf = {
             sourceType: 'user-set',
             sourceLevel: 0,
-            sourceCode: data.ProfData.OriginalData.To+",,,Prof",
+            sourceCode: data.ProfSrcData.To+",,,Prof",
             sourceCodeSNum: 'a',
         };
         if(prof === 'chooseDefault'){
@@ -73,9 +77,10 @@ function openCustomizeProfQuickview(data) {
                 getCharIDFromURL(),
                 {srcStruct : srcStructProf},
                 {
-                    For : data.ProfData.OriginalData.For,
-                    To : data.ProfData.OriginalData.To,
-                    Prof : prof
+                    For : data.ProfSrcData.For,
+                    To : data.ProfSrcData.To,
+                    Prof : prof,
+                    SourceName: 'User-Set Prof',
                 }
             );
         }
@@ -83,7 +88,7 @@ function openCustomizeProfQuickview(data) {
         let srcStructBonus = {
             sourceType: 'user-set',
             sourceLevel: 0,
-            sourceCode: data.ProfData.OriginalData.To+",,,Bonus",
+            sourceCode: data.ProfSrcData.To+",,,Bonus",
             sourceCodeSNum: 'a',
         };
         if(userBonus == 0 || userBonus == ''){
@@ -97,9 +102,10 @@ function openCustomizeProfQuickview(data) {
                 getCharIDFromURL(),
                 {srcStruct : srcStructBonus},
                 {
-                    For : data.ProfData.OriginalData.For,
-                    To : data.ProfData.OriginalData.To,
-                    Prof : parseInt(userBonus)
+                    For : data.ProfSrcData.For,
+                    To : data.ProfSrcData.To,
+                    Prof : parseInt(userBonus),
+                    SourceName: 'User-Set Prof',
                 }
             );
         }

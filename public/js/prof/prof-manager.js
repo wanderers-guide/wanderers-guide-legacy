@@ -112,3 +112,23 @@ function getFinalProf(profDataArray) {
   };
 
 }
+
+function getUserSetData(profDataArray) {
+  if(profDataArray == null || profDataArray.length == 0) { return null; }
+  for(const profData of profDataArray){
+    if(profData.sourceType === 'user-set' && isNaN(profData.Prof)) {
+      return profData;
+    }
+  }
+  return null;
+}
+
+function getUserAddedData(profDataArray) {
+  if(profDataArray == null || profDataArray.length == 0) { return null; }
+  for(const profData of profDataArray){
+    if(profData.sourceType === 'user-added') {
+      return profData;
+    }
+  }
+  return null;
+}

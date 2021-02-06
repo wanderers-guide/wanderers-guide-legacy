@@ -80,7 +80,7 @@ function giveProfSkillTraining(srcStruct, profName, prof, locationID, sourceName
         socket.emit("requestProficiencyChange",
             getCharIDFromURL(),
             {srcStruct, isSkill : true, isStatement : true},
-            { For : profCategory, To : profProperName, Prof : prof,  });
+            { For : profCategory, To : profProperName, Prof : prof, SourceName : sourceName });
         displayProfChange(locationID, prof, profProperName);
         return;
 

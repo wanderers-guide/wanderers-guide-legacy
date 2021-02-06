@@ -196,16 +196,6 @@ function updateSkillMap(refreshLists){
 
 }
 
-function getUpAmt(profType){
-  if(profType == "UP"){
-      return 1;
-  }
-  if(profType == "DOWN"){
-      return -1;
-  }
-  return 0;
-}
-
 
 
 

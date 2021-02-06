@@ -176,6 +176,7 @@ function openFeatQuickview(data) {
 }
 
 function showFeatListOptions(qContent, wscStatements){
+  if(wscStatements == null) {return;}
   for(let statement of wscStatements.split(/\n/)) {
     if(statement.includes("GIVE-FEAT-FROM=")){ // GIVE-FEAT-FROM=Choose a Tradition:feat 1,feat 2,feat 2
       let value = statement.split('=')[1];

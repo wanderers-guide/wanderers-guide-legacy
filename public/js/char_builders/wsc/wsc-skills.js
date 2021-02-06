@@ -6,7 +6,7 @@
 function processingSkills(wscStatement, srcStruct, locationID, sourceName){
 
     if(wscStatement.includes("GIVE-SKILL-INCREASE")){// GIVE-SKILL-INCREASE
-        giveSkillIncrease(srcStruct, locationID);
+        giveSkillIncrease(srcStruct, locationID, sourceName);
     }
     else if(wscStatement.includes("GIVE-SKILL")){// GIVE-SKILL=T[arcana,deception]
         let value = wscStatement.split('=')[1];
@@ -15,7 +15,7 @@ function processingSkills(wscStatement, srcStruct, locationID, sourceName){
           value = value.split('[')[0];
           optionals = optionals[1].split(',');
         }
-        giveSkillProf(srcStruct, locationID, value, optionals);
+        giveSkillProf(srcStruct, locationID, sourceName, value, optionals);
     } else {
         displayError("Unknown statement (2-Skill): \'"+wscStatement+"\'");
         statementComplete();
@@ -25,15 +25,15 @@ function processingSkills(wscStatement, srcStruct, locationID, sourceName){
 
 //////////////////////////////// Skill Increase ///////////////////////////////////
 
-function giveSkillIncrease(srcStruct, locationID){
-    giveSkill(srcStruct, locationID, 'UP');
+function giveSkillIncrease(srcStruct, locationID, sourceName){
+    giveSkill(srcStruct, locationID, sourceName, 'UP');
 }
 
-function giveSkillProf(srcStruct, locationID, prof, optionals){
-    giveSkill(srcStruct, locationID, prof, optionals);
+function giveSkillProf(srcStruct, locationID, sourceName, prof, optionals){
+    giveSkill(srcStruct, locationID, sourceName, prof, optionals);
 }
 
-function giveSkill(srcStruct, locationID, profType, optionals=null){
+function giveSkill(srcStruct, locationID, sourceName, profType, optionals=null){
 
     let selectIncreaseID = "selectIncrease-"+locationID+"-"+srcStruct.sourceCodeSNum;
     let selectIncreaseControlShellClass = selectIncreaseID+'ControlShell';
@@ -84,7 +84,7 @@ function giveSkill(srcStruct, locationID, profType, optionals=null){
             socket.emit("requestProficiencyChange",
                 getCharIDFromURL(),
                 {srcStruct, isSkill : true, isAutoLoad},
-                { For : "Skill", To : 'addLore', Prof : profType });
+                { For : "Skill", To : 'addLore', Prof : profType, SourceName : sourceName });
             processCode(
                 'GIVE-LORE-CHOOSE',
                 srcStruct,
@@ -122,7 +122,7 @@ function giveSkill(srcStruct, locationID, profType, optionals=null){
                 socket.emit("requestProficiencyChange",
                     getCharIDFromURL(),
                     {srcStruct, isSkill : true, isAutoLoad},
-                    { For : "Skill", To : skillName, Prof : profType });
+                    { For : "Skill", To : skillName, Prof : profType, SourceName : sourceName });
             }
             
         }

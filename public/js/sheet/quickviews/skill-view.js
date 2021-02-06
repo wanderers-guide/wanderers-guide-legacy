@@ -6,19 +6,13 @@ let amalgamationBonusText = "This is a collection of any additional bonuses or p
 
 function openSkillQuickview(data) {
 
-    if(data.ProfData.OriginalData == null){
-        data.ProfData.OriginalData = {
-            For : 'Skill',
-            To : data.ProfData.Name,
-        };
-    }
-
     let noteFieldID = 'skill-'+data.SkillName.replace(/\s/g, "_");
 
     $('#quickViewTitle').html(data.SkillName);
     $('#quickViewTitleRight').html('<button id="customizeProfBtn" class="button is-very-small is-success is-outlined is-rounded is-pulled-right mr-1">Customize</button>');
     $('#customizeProfBtn').click(function(){
         openQuickView('customizeProfView', {
+            ProfSrcData : {For:'Skill',To:data.SkillName},
             ProfData : data.ProfData,
             NoteFieldID : noteFieldID,
             _prevBackData: {Type: g_QViewLastType, Data: g_QViewLastData},

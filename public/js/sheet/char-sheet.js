@@ -801,6 +801,7 @@ function displayInformation() {
     let fortProfNum = getProfNumber(fortData.NumUps, g_character.level);
     $("#fortSection").click(function(){
         openQuickView('savingThrowView', {
+            ProfSrcData : {For:'Save',To:'Fortitude'},
             ProfData : fortData,
             ProfNum : fortProfNum,
             AbilMod : getModOfValue('CON'),
@@ -827,6 +828,7 @@ function displayInformation() {
     let reflexProfNum = getProfNumber(reflexData.NumUps, g_character.level);
     $("#reflexSection").click(function(){
         openQuickView('savingThrowView', {
+            ProfSrcData : {For:'Save',To:'Reflex'},
             ProfData : reflexData,
             ProfNum : reflexProfNum,
             AbilMod : getModOfValue('DEX'),
@@ -853,6 +855,7 @@ function displayInformation() {
     let willProfNum = getProfNumber(willData.NumUps, g_character.level);
     $("#willSection").click(function(){
         openQuickView('savingThrowView', {
+            ProfSrcData : {For:'Save',To:'Will'},
             ProfData : willData,
             ProfNum : willProfNum,
             AbilMod : getModOfValue('WIS'),
@@ -975,25 +978,25 @@ function displayInformation() {
     if(profSimpleWeapons != null){
         let profWord = getProfNameFromNumUps(profSimpleWeapons.NumUps);
         otherProfsNum++;
-        otherProfBuild(attacks, profWord, 'Simple Weapons', otherProfsNum, profSimpleWeapons);
+        otherProfBuild(attacks, profWord, 'Simple Weapons', otherProfsNum, profSimpleWeapons, {For:'Attack',To:'Simple_Weapons'});
     }
     let profMartialWeapons = getFinalProf(g_profMap.get("Martial_Weapons"));
     if(profMartialWeapons != null){
         let profWord = getProfNameFromNumUps(profMartialWeapons.NumUps);
         otherProfsNum++;
-        otherProfBuild(attacks, profWord, 'Martial Weapons', otherProfsNum, profMartialWeapons);
+        otherProfBuild(attacks, profWord, 'Martial Weapons', otherProfsNum, profMartialWeapons, {For:'Attack',To:'Martial_Weapons'});
     }
     let profAdvancedWeapons = getFinalProf(g_profMap.get("Advanced_Weapons"));
     if(profAdvancedWeapons != null){
         let profWord = getProfNameFromNumUps(profAdvancedWeapons.NumUps);
         otherProfsNum++;
-        otherProfBuild(attacks, profWord, 'Advanced Weapons', otherProfsNum, profAdvancedWeapons);
+        otherProfBuild(attacks, profWord, 'Advanced Weapons', otherProfsNum, profAdvancedWeapons, {For:'Attack',To:'Advanced_Weapons'});
     }
     let profUnarmedAttacks = getFinalProf(g_profMap.get("Unarmed_Attacks"));
     if(profUnarmedAttacks != null){
         let profWord = getProfNameFromNumUps(profUnarmedAttacks.NumUps);
         otherProfsNum++;
-        otherProfBuild(attacks, profWord, 'Unarmed Attacks', otherProfsNum, profUnarmedAttacks);
+        otherProfBuild(attacks, profWord, 'Unarmed Attacks', otherProfsNum, profUnarmedAttacks, {For:'Attack',To:'Unarmed_Attacks'});
     }
     for(const [profName, profDataArray] of g_profMap.entries()){
         const finalProfData = getFinalProf(profDataArray);
@@ -1001,7 +1004,7 @@ function displayInformation() {
             let dProfName = profName.replace(/_/g,' ');
             let profWord = getProfNameFromNumUps(finalProfData.NumUps);
             otherProfsNum++;
-            otherProfBuild(attacks, profWord, capitalizeWords(dProfName), otherProfsNum, finalProfData);
+            otherProfBuild(attacks, profWord, capitalizeWords(dProfName), otherProfsNum, finalProfData, {For:'Attack',To:profName});
         }
     }
 
@@ -1013,25 +1016,25 @@ function displayInformation() {
     if(profLightArmor != null){
         let profWord = getProfNameFromNumUps(profLightArmor.NumUps);
         otherProfsNum++;
-        otherProfBuild(defenses, profWord, 'Light Armor', otherProfsNum, profLightArmor);
+        otherProfBuild(defenses, profWord, 'Light Armor', otherProfsNum, profLightArmor, {For:'Defense',To:'Light_Armor'});
     }
     let profMediumArmor = getFinalProf(g_profMap.get("Medium_Armor"));
     if(profMediumArmor != null){
         let profWord = getProfNameFromNumUps(profMediumArmor.NumUps);
         otherProfsNum++;
-        otherProfBuild(defenses, profWord, 'Medium Armor', otherProfsNum, profMediumArmor);
+        otherProfBuild(defenses, profWord, 'Medium Armor', otherProfsNum, profMediumArmor, {For:'Defense',To:'Medium_Armor'});
     }
     let profHeavyArmor = getFinalProf(g_profMap.get("Heavy_Armor"));
     if(profHeavyArmor != null){
         let profWord = getProfNameFromNumUps(profHeavyArmor.NumUps);
         otherProfsNum++;
-        otherProfBuild(defenses, profWord, 'Heavy Armor', otherProfsNum, profHeavyArmor);
+        otherProfBuild(defenses, profWord, 'Heavy Armor', otherProfsNum, profHeavyArmor, {For:'Defense',To:'Heavy_Armor'});
     }
     let profUnarmoredDefense = getFinalProf(g_profMap.get("Unarmored_Defense"));
     if(profUnarmoredDefense != null){
         let profWord = getProfNameFromNumUps(profUnarmoredDefense.NumUps);
         otherProfsNum++;
-        otherProfBuild(defenses, profWord, 'Unarmored Defense', otherProfsNum, profUnarmoredDefense);
+        otherProfBuild(defenses, profWord, 'Unarmored Defense', otherProfsNum, profUnarmoredDefense, {For:'Defense',To:'Unarmored_Defense'});
     }
     for(const [profName, profDataArray] of g_profMap.entries()){
         const finalProfData = getFinalProf(profDataArray);
@@ -1039,7 +1042,7 @@ function displayInformation() {
             let dProfName = profName.replace(/_/g,' ');
             let profWord = getProfNameFromNumUps(finalProfData.NumUps);
             otherProfsNum++;
-            otherProfBuild(defenses, profWord, capitalizeWords(dProfName), otherProfsNum, finalProfData);
+            otherProfBuild(defenses, profWord, capitalizeWords(dProfName), otherProfsNum, finalProfData, {For:'Defense',To:profName});
         }
     }
 
@@ -1054,56 +1057,56 @@ function displayInformation() {
     if(arcaneSpellAttack != null){
         let profWord = getProfNameFromNumUps(arcaneSpellAttack.NumUps);
         otherProfsNum++;
-        otherProfBuild(spells, profWord, 'Arcane Attacks', otherProfsNum, arcaneSpellAttack);
+        otherProfBuild(spells, profWord, 'Arcane Attacks', otherProfsNum, arcaneSpellAttack, {For:'SpellAttack',To:'ArcaneSpellAttacks'});
     }
 
     let arcaneSpellDC = getFinalProf(g_profMap.get("ArcaneSpellDCs"));
     if(arcaneSpellDC != null){
         let profWord = getProfNameFromNumUps(arcaneSpellDC.NumUps);
         otherProfsNum++;
-        otherProfBuild(spells, profWord, 'Arcane DCs', otherProfsNum, arcaneSpellDC);
+        otherProfBuild(spells, profWord, 'Arcane DCs', otherProfsNum, arcaneSpellDC, {For:'SpellDC',To:'ArcaneSpellDCs'});
     }
 
     let divineSpellAttack = getFinalProf(g_profMap.get("DivineSpellAttacks"));
     if(divineSpellAttack != null){
         let profWord = getProfNameFromNumUps(divineSpellAttack.NumUps);
         otherProfsNum++;
-        otherProfBuild(spells, profWord, 'Divine Attacks', otherProfsNum, divineSpellAttack);
+        otherProfBuild(spells, profWord, 'Divine Attacks', otherProfsNum, divineSpellAttack, {For:'SpellAttack',To:'DivineSpellAttacks'});
     }
 
     let divineSpellDC = getFinalProf(g_profMap.get("DivineSpellDCs"));
     if(divineSpellDC != null){
         let profWord = getProfNameFromNumUps(divineSpellDC.NumUps);
         otherProfsNum++;
-        otherProfBuild(spells, profWord, 'Divine DCs', otherProfsNum, divineSpellDC);
+        otherProfBuild(spells, profWord, 'Divine DCs', otherProfsNum, divineSpellDC, {For:'SpellDC',To:'DivineSpellDCs'});
     }
 
     let occultSpellAttack = getFinalProf(g_profMap.get("OccultSpellAttacks"));
     if(occultSpellAttack != null){
         let profWord = getProfNameFromNumUps(occultSpellAttack.NumUps);
         otherProfsNum++;
-        otherProfBuild(spells, profWord, 'Occult Attacks', otherProfsNum, occultSpellAttack);
+        otherProfBuild(spells, profWord, 'Occult Attacks', otherProfsNum, occultSpellAttack, {For:'SpellAttack',To:'OccultSpellAttacks'});
     }
 
     let occultSpellDC = getFinalProf(g_profMap.get("OccultSpellDCs"));
     if(occultSpellDC != null){
         let profWord = getProfNameFromNumUps(occultSpellDC.NumUps);
         otherProfsNum++;
-        otherProfBuild(spells, profWord, 'Occult DCs', otherProfsNum, occultSpellDC);
+        otherProfBuild(spells, profWord, 'Occult DCs', otherProfsNum, occultSpellDC, {For:'SpellDC',To:'OccultSpellDCs'});
     }
 
     let primalSpellAttack = getFinalProf(g_profMap.get("PrimalSpellAttacks"));
     if(primalSpellAttack != null){
         let profWord = getProfNameFromNumUps(primalSpellAttack.NumUps);
         otherProfsNum++;
-        otherProfBuild(spells, profWord, 'Primal Attacks', otherProfsNum, primalSpellAttack);
+        otherProfBuild(spells, profWord, 'Primal Attacks', otherProfsNum, primalSpellAttack, {For:'SpellAttack',To:'PrimalSpellAttacks'});
     }
 
     let primalSpellDC = getFinalProf(g_profMap.get("PrimalSpellDCs"));
     if(primalSpellDC != null){
         let profWord = getProfNameFromNumUps(primalSpellDC.NumUps);
         otherProfsNum++;
-        otherProfBuild(spells, profWord, 'Primal DCs', otherProfsNum, primalSpellDC);
+        otherProfBuild(spells, profWord, 'Primal DCs', otherProfsNum, primalSpellDC, {For:'SpellDC',To:'PrimalSpellDCs'});
     }
 
     if(spells.html() == ''){
@@ -2245,7 +2248,7 @@ function runAllFeatsAndAbilitiesCode() {
 ///////////////////////////////////////// Other Profs //////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
-function otherProfBuild(content, prof, name, otherProfsNum, profData){
+function otherProfBuild(content, prof, name, otherProfsNum, profData, profSrcData){
 
     if(profData.UserAdded){
         prof = '<span class="is-underlined">'+prof+'</span>';
@@ -2261,6 +2264,7 @@ function otherProfBuild(content, prof, name, otherProfsNum, profData){
 
     $("#otherProf"+otherProfsNum).click(function(){
         openQuickView('otherProfsView', {
+            ProfSrcData : profSrcData,
             ProfData : profData,
             Name : name,
         });
