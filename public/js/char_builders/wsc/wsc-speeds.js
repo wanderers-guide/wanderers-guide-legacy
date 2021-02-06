@@ -3,7 +3,7 @@
 */
 
 //--------------------- Processing Speeds --------------------//
-function processingSpeeds(wscStatement, srcStruct, locationID){
+function processingSpeeds(wscStatement, srcStruct, locationID, sourceName){
     
     if(wscStatement.includes("GIVE-SPEED")){ // GIVE-SPEED=Swim:15
         let data = wscStatement.split('=')[1]; // GIVE-SPEED=Swim:LAND_SPEED

@@ -119,7 +119,8 @@ function displayCurrentBackground(background) {
     processCode(
         background.code,
         srcStruct,
-        'backgroundCodeOutput');
+        'backgroundCodeOutput',
+        'Background');
 
     // Boosts //
     $('#backBoostSection').html('');
@@ -134,7 +135,8 @@ function displayCurrentBackground(background) {
         processCode(
             'GIVE-ABILITY-BOOST-SINGLE='+background.boostOne+'\n GIVE-ABILITY-BOOST-SINGLE='+background.boostTwo,
             boostSrcStruct,
-            'backBoostSection');
+            'backBoostSection',
+            'Background Boosts');
     }
 
 }

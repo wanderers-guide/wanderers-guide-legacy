@@ -3,7 +3,7 @@
 */
 
 //------------------------- Processing Skills -------------------------//
-function processingSkills(wscStatement, srcStruct, locationID){
+function processingSkills(wscStatement, srcStruct, locationID, sourceName){
 
     if(wscStatement.includes("GIVE-SKILL-INCREASE")){// GIVE-SKILL-INCREASE
         giveSkillIncrease(srcStruct, locationID);
@@ -88,7 +88,8 @@ function giveSkill(srcStruct, locationID, profType, optionals=null){
             processCode(
                 'GIVE-LORE-CHOOSE',
                 srcStruct,
-                increaseCodeID);
+                increaseCodeID,
+                'Skill Training');
 
         } else {
 

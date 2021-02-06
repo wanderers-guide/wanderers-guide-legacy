@@ -3,7 +3,7 @@
 */
 
 //------------------------- Processing Langs -------------------------//
-function processingLangs(wscStatement, srcStruct, locationID){
+function processingLangs(wscStatement, srcStruct, locationID, sourceName){
 
     if(wscStatement.includes("GIVE-LANG-NAME")){ // GIVE-LANG-NAME=Elven
         let langName = wscStatement.split('=')[1];

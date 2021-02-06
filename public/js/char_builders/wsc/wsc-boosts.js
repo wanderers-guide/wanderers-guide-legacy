@@ -3,7 +3,7 @@
 */
 
 //--------------------- Processing Ability Boosts --------------------//
-function processingAbilityBoosts(wscStatement, srcStruct, locationID){
+function processingAbilityBoosts(wscStatement, srcStruct, locationID, sourceName){
 
     // GIVE-ABILITY-BOOST-SINGLE=ALL
     // GIVE-ABILITY-BOOST-SINGLE=INT,WIS,CHA
@@ -12,7 +12,7 @@ function processingAbilityBoosts(wscStatement, srcStruct, locationID){
         giveAbilityBoostSingle(srcStruct, selectionOptions, locationID);
     } else if(wscStatement.includes("GIVE-ABILITY-BOOST-MULTIPLE")){// GIVE-ABILITY-BOOST-MULTIPLE=3
         let numberOfBoosts = wscStatement.split('=')[1];
-        giveAbilityBoostMultiple(srcStruct, numberOfBoosts, locationID);
+        giveAbilityBoostMultiple(srcStruct, numberOfBoosts, locationID, sourceName);
     } else {
         displayError("Unknown statement (2-Boost): \'"+wscStatement+"\'");
         statementComplete();
@@ -22,7 +22,7 @@ function processingAbilityBoosts(wscStatement, srcStruct, locationID){
 
 //////////////////////////////// Give Ability Boost - Single ///////////////////////////////////
 
-function giveAbilityBoostMultiple(srcStruct, numberOfBoosts, locationID) {
+function giveAbilityBoostMultiple(srcStruct, numberOfBoosts, locationID, sourceName) {
     statementComplete();
     if(numberOfBoosts > 6){
         displayError("Attempted to create more than 6 ability boosts!");
@@ -37,7 +37,8 @@ function giveAbilityBoostMultiple(srcStruct, numberOfBoosts, locationID) {
             processCode(
                 multiBoostCodeStr,
                 srcStruct,
-                newLocationID);
+                newLocationID,
+                sourceName);
         }
     }
 }

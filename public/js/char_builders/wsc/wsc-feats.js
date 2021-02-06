@@ -3,7 +3,7 @@
 */
 
 //------------------------- Processing Feats -------------------------//
-function processingFeats(wscStatement, srcStruct, locationID){
+function processingFeats(wscStatement, srcStruct, locationID, sourceName){
     
     if(wscStatement.includes("GIVE-GENERAL-FEAT=")){ // GIVE-GENERAL-FEAT=3[metamagic]
         let value = wscStatement.split('=')[1];
@@ -480,6 +480,7 @@ socket.on("returnFeatChangeByName", function(featChangePacket){
     processCode(
         featChangePacket.feat.Feat.code,
         featChangePacket.srcStruct,
-        featChangePacket.codeLocationID);
+        featChangePacket.codeLocationID,
+        featChangePacket.feat.Feat.name);
     statementComplete();
 });

@@ -3,7 +3,7 @@
 */
 
 //------------------------- Processing Class Features -------------------------//
-function processingClassFeatures(wscStatement, srcStruct, locationID){
+function processingClassFeatures(wscStatement, srcStruct, locationID, sourceName){
 
   if(wscStatement.includes("GIVE-CLASS-FEATURE-NAME")){ // GIVE-CLASS-FEATURE-NAME=Polymath
       let featureName = wscStatement.split('=')[1];
@@ -136,7 +136,8 @@ socket.on("returnAddClassFeature", function(srcStruct, classAbility, allClassAbi
             processCode(
                 chosenClassAbility.code,
                 srcStruct,
-                abilityCodeID);
+                abilityCodeID,
+                chosenClassAbility.name);
             
         }
         $(this).blur();
@@ -149,7 +150,8 @@ socket.on("returnAddClassFeature", function(srcStruct, classAbility, allClassAbi
   processCode(
       classAbility.code,
       srcStruct,
-      classAbilityCodeID);
+      classAbilityCodeID,
+      classAbility.name);
 
   extraClassFeaturesUpdateWSCChoiceStruct(classAbility);
 

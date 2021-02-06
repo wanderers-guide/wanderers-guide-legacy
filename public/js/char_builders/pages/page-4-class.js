@@ -251,7 +251,8 @@ function displayCurrentClass(classStruct, saving) {
                     processCode(
                         'GIVE-PROF-IN='+skillName+':T',
                         srcStruct,
-                        'profSkillsCode');
+                        'profSkillsCode',
+                        'Initial Class Profs - Skills');
                 } else {
                     $('.'+tSkillControlShellClass).addClass("is-info");
                     socket.emit("requestProficiencyChange",
@@ -420,9 +421,10 @@ function displayCurrentClass(classStruct, saving) {
             processCode( // Use WSC because if the character is already trained, it will give them a new skill.
                 'GIVE-PROF-IN='+savingProf.To+':T',
                 srcStruct,
-                'profSkillsCode');
+                'profSkillsCode',
+                'Initial Class Profs');
         } else {
-            savingProf.SourceName = 'Class Initial Profs';
+            savingProf.SourceName = 'Initial Class Profs';
             socket.emit("requestProficiencyChange",
                 getCharIDFromURL(),
                 {srcStruct, isSkill : false},
@@ -603,7 +605,8 @@ function displayCurrentClass(classStruct, saving) {
                 processCode(
                     chosenClassAbility.code,
                     srcStruct,
-                    abilityCodeID);
+                    abilityCodeID,
+                    chosenClassAbility.name);
                 
             }
             $(this).blur();

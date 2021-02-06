@@ -158,7 +158,8 @@ function generateFeatSelection(contentLocID, srcStruct, selectionName, featsArra
     processCode(
         selectedFeat.Feat.code,
         srcStruct,
-        featCodeSectionID);
+        featCodeSectionID,
+        selectedFeat.Feat.name);
   }
 
 }

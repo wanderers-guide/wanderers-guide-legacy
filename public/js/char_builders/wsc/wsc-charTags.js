@@ -3,7 +3,7 @@
 */
 
 //--------------------- Processing Char Tags --------------------//
-function processingCharTags(wscStatement, srcStruct, locationID){
+function processingCharTags(wscStatement, srcStruct, locationID, sourceName){
     
     if(wscStatement.includes("GIVE-CHAR-TRAIT-NAME")){ // GIVE-CHAR-TRAIT-NAME=Elf
         let charTagName = wscStatement.split('=')[1];

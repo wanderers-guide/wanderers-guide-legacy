@@ -111,7 +111,8 @@ socket.on("returnLangsAndTrainingsClear", function(srcStruct, data){
       processCode(
           giveSkillTrainingCode,
           srcStruct,
-          data.SkillLocationID);
+          data.SkillLocationID,
+          'Final - Skill Training');
     }
 
     if(wscChoiceStruct.Ancestry != null){
@@ -125,7 +126,8 @@ socket.on("returnLangsAndTrainingsClear", function(srcStruct, data){
       processCode(
           giveLanguageCode,
           srcStruct,
-          data.LangLocationID);
+          data.LangLocationID,
+          'Final - Languages');
     }
 
     if(data.Character != null){
@@ -148,7 +150,8 @@ function runCustomCodeBlock(character) {
     processCode(
       character.customCode,
       customCodeSrcStruct,
-      'custom-code-block-results-container');
+      'custom-code-block-results-container',
+      'Custom Code Block');
   } else {
     socket.emit("requestCustomCodeBlockDataClear",
         getCharIDFromURL());

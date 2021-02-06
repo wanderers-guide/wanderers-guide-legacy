@@ -3,7 +3,7 @@
 */
 
 //--------------------- Processing Familiarities --------------------//
-function processingFamiliarities(wscStatement, srcStruct, locationID){
+function processingFamiliarities(wscStatement, srcStruct, locationID, sourceName){
     
     if(wscStatement.includes("GIVE-WEAPON-FAMILIARITY")){ // GIVE-WEAPON-FAMILIARITY=Goblin
         let trait = wscStatement.split('=')[1];

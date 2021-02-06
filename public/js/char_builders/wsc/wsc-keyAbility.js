@@ -3,7 +3,7 @@
 */
 
 //--------------------- Processing Key Ability --------------------//
-function processingKeyAbilities(wscStatement, srcStruct, locationID){
+function processingKeyAbilities(wscStatement, srcStruct, locationID, sourceName){
     
     // SET-KEY-ABILITY=ALL
     // SET-KEY-ABILITY=INT,WIS,CHA

@@ -3,7 +3,7 @@
 */
 
 //------------------------- Processing Resistances ------------------------//
-function processingResistances(wscStatement, srcStruct, locationID){
+function processingResistances(wscStatement, srcStruct, locationID, sourceName){
 
     if(wscStatement.includes("GIVE-RESISTANCE")){// GIVE-RESISTANCE=cold:HALF_LEVEL/LEVEL/3
         let data = wscStatement.split('=')[1];

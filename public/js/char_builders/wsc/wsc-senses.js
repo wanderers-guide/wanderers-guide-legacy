@@ -3,7 +3,7 @@
 */
 
 //--------------------- Processing Senses --------------------//
-function processingSenses(wscStatement, srcStruct, locationID){
+function processingSenses(wscStatement, srcStruct, locationID, sourceName){
     
     if(wscStatement.includes("GIVE-SENSE-NAME")){ // GIVE-SENSE-NAME=Darkvision
         let senseName = wscStatement.split('=')[1];

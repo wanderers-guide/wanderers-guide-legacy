@@ -3,7 +3,7 @@
 */
 
 //--------------------- Processing Notes --------------------//
-function processingNotes(wscStatement, srcStruct, locationID){
+function processingNotes(wscStatement, srcStruct, locationID, sourceName){
 
     if(wscStatement.includes("GIVE-NOTES-FIELD")){ // GIVE-NOTES-FIELD=Placeholder Text
         let placeholderText = wscStatement.split('=')[1]; // - Displays notes field for feats and class abilities

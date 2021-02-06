@@ -3,15 +3,15 @@
 */
 
 //--------------------- Processing Lore --------------------//
-function processingProf(wscStatement, srcStruct, locationID){
+function processingProf(wscStatement, srcStruct, locationID, sourceName){
 
     if(wscStatement.includes("GIVE-PROF-INCREASE-IN")){// GIVE-PROF-INCREASE-IN=Arcana
         let profName = wscStatement.split('=')[1];
-        giveProfIncrease(srcStruct, profName, locationID);
+        giveProfIncrease(srcStruct, profName, locationID, sourceName);
     } else if(wscStatement.includes("GIVE-PROF-IN")){// GIVE-PROF-IN=Arcana:T
         let data = wscStatement.split('=')[1];
         let segments = data.split(':');
-        giveProf(srcStruct, segments[0], segments[1], locationID);
+        giveProf(srcStruct, segments[0], segments[1], locationID, sourceName);
     } else {
         displayError("Unknown statement (2-Prof): \'"+wscStatement+"\'");
         statementComplete();
@@ -21,19 +21,19 @@ function processingProf(wscStatement, srcStruct, locationID){
 
 //////////////////////////////// Give Prof ///////////////////////////////////
 
-function giveProfIncrease(srcStruct, profName, locationID){
-    giveInProf(srcStruct, profName, 'UP', locationID);
+function giveProfIncrease(srcStruct, profName, locationID, sourceName){
+    giveInProf(srcStruct, profName, 'UP', locationID, sourceName);
 }
 
-function giveProf(srcStruct, profName, prof, locationID){
+function giveProf(srcStruct, profName, prof, locationID, sourceName){
     if(prof === 'T'){
-        giveProfSkillTraining(srcStruct, profName, prof, locationID);
+        giveProfSkillTraining(srcStruct, profName, prof, locationID, sourceName);
     } else {
-        giveInProf(srcStruct, profName, prof, locationID);
+        giveInProf(srcStruct, profName, prof, locationID, sourceName);
     }
 }
 
-function giveProfSkillTraining(srcStruct, profName, prof, locationID){
+function giveProfSkillTraining(srcStruct, profName, prof, locationID, sourceName){
 
     let adjProfName = profName.replace(/_|\s+/g,"");
     let profProperName = null;
@@ -64,7 +64,8 @@ function giveProfSkillTraining(srcStruct, profName, prof, locationID){
                     processCode(
                         'GIVE-SKILL='+prof,
                         srcStruct,
-                        locationID);
+                        locationID,
+                        sourceName);
                     window.setTimeout(() => {
                       $('#'+locationID).append('<p class="help is-info is-italic">You are already trained in '+finalProfData.Name+' which means you can select a new skill to become trained in instead.</p>');
                     }, 100);
@@ -79,7 +80,7 @@ function giveProfSkillTraining(srcStruct, profName, prof, locationID){
         socket.emit("requestProficiencyChange",
             getCharIDFromURL(),
             {srcStruct, isSkill : true, isStatement : true},
-            { For : profCategory, To : profProperName, Prof : prof });
+            { For : profCategory, To : profProperName, Prof : prof,  });
         displayProfChange(locationID, prof, profProperName);
         return;
 
@@ -90,7 +91,7 @@ function giveProfSkillTraining(srcStruct, profName, prof, locationID){
 
 }
 
-function giveInProf(srcStruct, profName, prof, locationID){
+function giveInProf(srcStruct, profName, prof, locationID, sourceName){
 
     let profProperName = null;
     let profCategory = null;
@@ -132,7 +133,7 @@ function giveInProf(srcStruct, profName, prof, locationID){
         socket.emit("requestProficiencyChange",
             getCharIDFromURL(),
             {srcStruct, isSkill : isSkill, isStatement : true},
-            { For : profCategory, To : profProperName, Prof : prof });
+            { For : profCategory, To : profProperName, Prof : prof, SourceName : sourceName });
         displayProfChange(locationID, prof, profProperName);
     } else {
         displayError("Unknown proficiency: \'"+profName+"\'");

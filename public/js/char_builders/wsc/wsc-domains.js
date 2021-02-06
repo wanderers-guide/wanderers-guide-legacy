@@ -3,7 +3,7 @@
 */
 
 //--------------------- Processing Domains --------------------//
-function processingDomains(wscStatement, srcStruct, locationID){
+function processingDomains(wscStatement, srcStruct, locationID, sourceName){
 
     if(wscStatement.includes("GIVE-DOMAIN-ADVANCEMENT=")){ // GIVE-DOMAIN-ADVANCEMENT=Cleric
         let spellSRC = wscStatement.split('=')[1];

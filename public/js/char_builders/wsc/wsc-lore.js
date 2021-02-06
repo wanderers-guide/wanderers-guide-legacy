@@ -3,7 +3,7 @@
 */
 
 //--------------------- Processing Lore --------------------//
-function processingLore(wscStatement, srcStruct, locationID){
+function processingLore(wscStatement, srcStruct, locationID, sourceName){
 
     if(wscStatement.includes("GIVE-LORE=")){ // GIVE-LORE=Sailing
         let loreName = wscStatement.split('=')[1];

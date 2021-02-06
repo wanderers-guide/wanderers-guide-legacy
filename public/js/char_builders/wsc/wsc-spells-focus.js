@@ -3,7 +3,7 @@
 */
 
 //------------------------- Processing Focus Spells ------------------------//
-function processingFocusSpells(wscStatement, srcStruct, locationID){
+function processingFocusSpells(wscStatement, srcStruct, locationID, sourceName){
 
      if(wscStatement.includes("GIVE-FOCUS-SPELL")){// GIVE-FOCUS-SPELL=Bard:Meld_Into_Stone
         let data = wscStatement.split('=')[1];

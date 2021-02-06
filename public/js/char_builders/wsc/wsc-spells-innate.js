@@ -3,7 +3,7 @@
 */
 
 //------------------------- Processing Innate Spells -------------------------//
-function processingInnateSpells(wscStatement, srcStruct, locationID){
+function processingInnateSpells(wscStatement, srcStruct, locationID, sourceName){
 
     if(wscStatement.includes("GIVE-INNATE-SPELL=")){// GIVE-INNATE-SPELL=3:divine:1(:ANY)
         let data = wscStatement.split('=')[1]; // Set cast times per day to 0 to cast an unlimited number

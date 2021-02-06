@@ -404,7 +404,8 @@ function processCode_ClassAbilities(classAbilities){
             processCode(
                 classAbility.code,
                 srcStruct,
-                'classAbilityCode'+classAbility.id);
+                'classAbilityCode'+classAbility.id,
+                classAbility.name+' (Lvl '+classAbility.level+')');
         }
     }
 }
@@ -425,7 +426,8 @@ function processCode_AncestryAbilities(ancestryFeatsLocs){
         processCode(
             'GIVE-ANCESTRY-FEAT='+ancestryFeatsLoc.Level,
             srcStruct,
-            ancestryFeatsLoc.LocationID);
+            ancestryFeatsLoc.LocationID,
+            'Ancestry Feat (Lvl '+ancestryFeatsLoc.Level+')');
         ancestryFeatCount++;
     }
 }

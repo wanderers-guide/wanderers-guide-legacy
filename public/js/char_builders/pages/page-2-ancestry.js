@@ -300,7 +300,8 @@ function displayCurrentAncestry(ancestryStruct, saving) {
             processCode(
                 ancestryStruct.PhysicalFeatureOne.code,
                 srcStruct,
-                'physicalFeatureOneCodeOutput');
+                'physicalFeatureOneCodeOutput',
+                'Ancestry Feature');
             if(ancestryStruct.PhysicalFeatureOne.code != null){
                 $('#physicalFeatureOneCodeOutput').removeClass('is-hidden');
             }
@@ -319,7 +320,8 @@ function displayCurrentAncestry(ancestryStruct, saving) {
             processCode(
                 ancestryStruct.PhysicalFeatureTwo.code,
                 srcStruct,
-                'physicalFeatureTwoCodeOutput');
+                'physicalFeatureTwoCodeOutput',
+                'Ancestry Feature');
             if(ancestryStruct.PhysicalFeatureTwo.code != null){
                 $('#physicalFeatureTwoCodeOutput').removeClass('is-hidden');
             }
@@ -400,7 +402,8 @@ function displayCurrentAncestry(ancestryStruct, saving) {
         processCode(
             boostChooseCodeStr,
             srcStruct,
-            'boostsChoose');
+            'boostsChoose',
+            'Ancestry Boosts');
     }
 
 
@@ -510,7 +513,8 @@ function displayCurrentHeritage(ancestryStruct, heritageID, isUniversal) {
         processCode(
             heritage.code,
             srcStruct,
-            'heritageCodeOutput');
+            'heritageCodeOutput',
+            'Heritage');
 
     } else {
 
