@@ -55,12 +55,12 @@ module.exports = class SocketConnections {
         });
       });
 
-      socket.on('requestFinalProfsAndSkills', function(charID){
+      socket.on('requestProfsAndSkills', function(charID){
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
           if(ownsChar){
-            CharGathering.getFinalProfs(charID).then((profMap) => {
+            CharGathering.getProfs(charID).then((profMap) => {
               CharGathering.getAllSkills(charID).then((skillObject) => {
-                socket.emit('returnFinalProfsAndSkills', mapToObj(profMap), skillObject);
+                socket.emit('returnProfsAndSkills', mapToObj(profMap), skillObject);
               });
             });
           }
@@ -949,7 +949,7 @@ module.exports = class SocketConnections {
                 socket.emit('returnProficiencyChange', profChangePacket);
               });
             } else {
-              CharDataMappingExt.setDataProficiencies(charID, srcStruct, profStruct.For, profStruct.To, profStruct.Prof)
+              CharDataMappingExt.setDataProficiencies(charID, srcStruct, profStruct.For, profStruct.To, profStruct.Prof, profStruct.SourceName)
               .then((result) => {
                 socket.emit('returnProficiencyChange', profChangePacket);
               });
@@ -1084,7 +1084,7 @@ module.exports = class SocketConnections {
     // Socket.IO Connections
     io.on('connection', function(socket){
 
-      socket.on('requestLoreChange', function(charID, srcStruct, loreName, inputPacket=null, prof='T'){
+      socket.on('requestLoreChange', function(charID, srcStruct, loreName, inputPacket=null, prof='T', sourceName=''){
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
           if(ownsChar){
             if(loreName == null){
@@ -1098,7 +1098,7 @@ module.exports = class SocketConnections {
             } else {
               CharDataMapping.setData(charID, 'loreCategories', srcStruct, loreName)
               .then((result) => {
-                CharDataMappingExt.setDataProficiencies(charID, srcStruct, 'Skill', loreName+'_LORE', prof)
+                CharDataMappingExt.setDataProficiencies(charID, srcStruct, 'Skill', loreName+'_LORE', prof, sourceName)
                 .then((result) => {
                   socket.emit('returnLoreChange', srcStruct, loreName, inputPacket, prof);
                 });

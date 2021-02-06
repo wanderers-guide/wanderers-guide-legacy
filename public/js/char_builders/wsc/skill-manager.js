@@ -167,7 +167,7 @@ function updateSkillMap(refreshLists){
 
       skillMap.set(skillData.SkillName, {
           Name : skillData.SkillName,
-          NumUps : profTypeToNumber(bestProf)+numUps,
+          NumUps : profToNumUp(bestProf)+numUps,
           Skill : skillData.Skill
       });
   }
@@ -204,23 +204,6 @@ function getUpAmt(profType){
       return -1;
   }
   return 0;
-}
-
-function profTypeToNumber(profType){
-  switch(profType){
-      case 'U': return 0;
-      case 'T': return 1;
-      case 'E': return 2;
-      case 'M': return 3;
-      case 'L': return 4;
-      default: return -1; 
-  }
-}
-
-function getBetterProf(prof1, prof2){
-  let profNumber1 = profTypeToNumber(prof1);
-  let profNumber2 = profTypeToNumber(prof2);
-  return (profNumber1 > profNumber2) ? prof1 : prof2;
 }
 
 

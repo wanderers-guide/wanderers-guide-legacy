@@ -11,14 +11,14 @@ let processingDebug = false;
 // Global Variables //
 let codeQueue = [];
 let runningCodeQueue = false;
-let gCode_statements, gCode_srcStruct, gCode_locationID;
+let gCode_statements, gCode_srcStruct, gCode_locationID, gCode_sourceName;
 let wscChoiceStruct = null;
 let wscMapsInit = false;
 let g_langMap, g_archetypes, g_profMap = null;
 let temp_classAbilities, temp_ancestryFeatsLocs = null;
 //                  //
 
-function processCode(wscCode, srcStruct, locationID){
+function processCode(wscCode, srcStruct, locationID, sourceName=''){
     if(wscCode == null || wscCode == ''){ return; }
 
     // Process ADD-TEXT Statements
@@ -39,13 +39,13 @@ function processCode(wscCode, srcStruct, locationID){
         return;
     }
 
-    codeDecompiling(wscCode, newSrcStruct, locationID);
+    codeDecompiling(wscCode, newSrcStruct, locationID, sourceName);
 
 }
 
-function codeDecompiling(wscCode, srcStruct, locationID){
+function codeDecompiling(wscCode, srcStruct, locationID, sourceName){
 
-    codeQueue.push({ wscCode, srcStruct, locationID });
+    codeQueue.push({ wscCode, srcStruct, locationID, sourceName });
 
     if(!runningCodeQueue){
 
@@ -86,6 +86,7 @@ function shiftCodeQueue(){
     if(code != null){
         gCode_statements = code.wscCode.split(/\n/);
         gCode_locationID = code.locationID;
+        gCode_sourceName = code.sourceName;
 
         code.srcStruct.sourceCodeSNum = 'a'+code.srcStruct.sourceCodeSNum;
         gCode_srcStruct = code.srcStruct;
@@ -141,6 +142,7 @@ function runNextStatement(){
         sourceCodeSNum: gCode_srcStruct.sourceCodeSNum,
     };
     let locationID = gCode_locationID;
+    let sourceName = gCode_sourceName;
 
     if(processingDebug) {console.log('SRC-STRUCT');}
     if(processingDebug) {console.log(srcStruct);}
@@ -154,7 +156,7 @@ function runNextStatement(){
         if(wscStatement.endsWith(',')){ wscStatement = wscStatement.slice(0, -1); }
 
         // Test/Check Statement for Expressions //
-        wscStatement = testExpr(wscStatement);
+        wscStatement = testExpr(wscStatement, srcStruct);
         if(wscStatement === null) {return 'SKIP'; }
         //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
         
@@ -171,107 +173,107 @@ function runNextStatement(){
         }
 
         if(wscStatement.includes("-CHAR-TRAIT")){
-            processingCharTags(wscStatement, srcStruct, locationID);
+            processingCharTags(wscStatement, srcStruct, locationID, sourceName);
             return 'WAIT';
         }
 
         if(wscStatement.includes("-PHYSICAL-FEATURE")){
-            processingPhysicalFeatures(wscStatement, srcStruct, locationID);
+            processingPhysicalFeatures(wscStatement, srcStruct, locationID, sourceName);
             return 'WAIT';
         }
 
         if(wscStatement.includes("-SENSE")){
-            processingSenses(wscStatement, srcStruct, locationID);
+            processingSenses(wscStatement, srcStruct, locationID, sourceName);
             return 'WAIT';
         }
 
         if(wscStatement.includes("-CLASS-FEATURE")){
-          processingClassFeatures(wscStatement, srcStruct, locationID);
+          processingClassFeatures(wscStatement, srcStruct, locationID, sourceName);
           return 'WAIT';
         }
 
         if(wscStatement.includes("-FEAT")){
-            processingFeats(wscStatement, srcStruct, locationID);
+            processingFeats(wscStatement, srcStruct, locationID, sourceName);
             return 'WAIT';
         }
 
         if(wscStatement.includes("-PROF")){
-            processingProf(wscStatement, srcStruct, locationID);
+            processingProf(wscStatement, srcStruct, locationID, sourceName);
             return 'WAIT';
         }
 
         if(wscStatement.includes("-SKILL")){
-            processingSkills(wscStatement, srcStruct, locationID);
+            processingSkills(wscStatement, srcStruct, locationID, sourceName);
             return 'WAIT';
         }
 
         if(wscStatement.includes("-LANG")){
-            processingLangs(wscStatement, srcStruct, locationID);
+            processingLangs(wscStatement, srcStruct, locationID, sourceName);
             return 'WAIT';
         }
 
         if(wscStatement.includes("-ABILITY-BOOST")){
-            processingAbilityBoosts(wscStatement, srcStruct, locationID);
+            processingAbilityBoosts(wscStatement, srcStruct, locationID, sourceName);
             return 'WAIT';
         }
 
         if(wscStatement.includes("-INNATE")){
-            processingInnateSpells(wscStatement, srcStruct, locationID);
+            processingInnateSpells(wscStatement, srcStruct, locationID, sourceName);
             return 'WAIT';
         }
 
         if(wscStatement.includes("-FOCUS")){
-            processingFocusSpells(wscStatement, srcStruct, locationID);
+            processingFocusSpells(wscStatement, srcStruct, locationID, sourceName);
             return 'WAIT';
         }
 
         if(wscStatement.includes("-SPELL")){
-            processingSpells(wscStatement, srcStruct, locationID);
+            processingSpells(wscStatement, srcStruct, locationID, sourceName);
             return 'WAIT';
         }
 
         if(wscStatement.includes("-LORE")){
-            processingLore(wscStatement, srcStruct, locationID);
+            processingLore(wscStatement, srcStruct, locationID, sourceName);
             return 'WAIT';
         }
 
         if(wscStatement.includes("-RESISTANCE") || wscStatement.includes("-WEAKNESS")){
-            processingResistances(wscStatement, srcStruct, locationID);
+            processingResistances(wscStatement, srcStruct, locationID, sourceName);
             return 'WAIT';
         }
 
         if(wscStatement.includes("-DOMAIN")){
-            processingDomains(wscStatement, srcStruct, locationID);
+            processingDomains(wscStatement, srcStruct, locationID, sourceName);
             return 'WAIT';
         }
 
         if(wscStatement.includes("-SPECIALIZATION")){
-            processingSpecializations(wscStatement, srcStruct, locationID);
+            processingSpecializations(wscStatement, srcStruct, locationID, sourceName);
             return 'WAIT';
         }
 
         if(wscStatement.includes("-FAMILIARITY")){
-            processingFamiliarities(wscStatement, srcStruct, locationID);
+            processingFamiliarities(wscStatement, srcStruct, locationID, sourceName);
             return 'WAIT';
         }
 
         if(wscStatement.includes("-NOTES")){
-            processingNotes(wscStatement, srcStruct, locationID);
+            processingNotes(wscStatement, srcStruct, locationID, sourceName);
             return 'WAIT';
         }
 
         if(wscStatement.includes("-SPEED")){
-            processingSpeeds(wscStatement, srcStruct, locationID);
+            processingSpeeds(wscStatement, srcStruct, locationID, sourceName);
             return 'WAIT';
         }
 
         if(wscStatement.includes("-KEY-ABILITY")){
-            processingKeyAbilities(wscStatement, srcStruct, locationID);
+            processingKeyAbilities(wscStatement, srcStruct, locationID, sourceName);
             return 'WAIT';
         }
 
         if(wscStatement.includes("ADD-TEXT")){
-            processingAddText(wscStatement, srcStruct, locationID);
+            processingAddText(wscStatement, srcStruct, locationID, sourceName);
             return 'WAIT';
         }
 
@@ -298,7 +300,7 @@ socket.on("returnWSCStatementFailure", function(details){
 
 function injectWSCChoiceStruct(choiceStruct){
     wscChoiceStruct = choiceStruct;
-    g_profMap = objToMap(choiceStruct.FinalProfObject);
+    g_profMap = objToMap(choiceStruct.ProfObject);
     updateExpressionProcessor({
         ChoiceStruct : choiceStruct,
     });

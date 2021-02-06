@@ -61,7 +61,7 @@ let g_expr_level, g_expr_focusPoints, g_expr_profMap, g_expr_senseArray,
 function initExpressionProcessor(expDataStruct){
 
     g_expr_level = expDataStruct.ChoiceStruct.Character.level;
-    g_expr_profMap = objToMap(expDataStruct.ChoiceStruct.FinalProfObject);
+    g_expr_profMap = objToMap(expDataStruct.ChoiceStruct.ProfObject);
     g_expr_heritage = expDataStruct.ChoiceStruct.Heritage;
     g_expr_focusPoints = expDataStruct.ChoiceStruct.FocusPointArray.length;
     g_expr_senseArray = expDataStruct.ChoiceStruct.SenseArray;
@@ -110,7 +110,7 @@ function updateExpressionProcessor(expDataStruct){
 }
 
 
-function testExpr(wscCode){
+function testExpr(wscCode, srcStruct=null){
     if(!hasInit) {
         displayError("Expression Processor has not been init!");
         return null;
@@ -147,7 +147,7 @@ function testExpr(wscCode){
         
         let allTrue = true;
         for(let expPart of expParts){
-            let resultStatement = expHandleExpression(expPart, statement, elseStatement);
+            let resultStatement = expHandleExpression(expPart, statement, elseStatement, srcStruct);
             if(resultStatement != statement){
                 allTrue = false;
             }
@@ -161,7 +161,7 @@ function testExpr(wscCode){
         
     } else {
 
-        let result = expHandleExpression(expression, statement, elseStatement);
+        let result = expHandleExpression(expression, statement, elseStatement, srcStruct);
         if(result != -1){
             return result;
         } else {
@@ -173,7 +173,7 @@ function testExpr(wscCode){
 
 }
 
-function expHandleExpression(expression, statement, elseStatement){
+function expHandleExpression(expression, statement, elseStatement, srcStruct){
 
     if(expression.includes('HAS-LEVEL')){ // HAS-LEVEL==13
         return expHasLevel(expression, statement, elseStatement);
@@ -196,7 +196,7 @@ function expHandleExpression(expression, statement, elseStatement){
     }
 
     if(expression.includes('HAS-PROF')){ // HAS-PROF==Arcana:T
-        return expHasProf(expression, statement, elseStatement);
+        return expHasProf(expression, statement, elseStatement, srcStruct);
     }
 
     if(expression.includes('HAS-VISION')){ // HAS-VISION==Darkvision
@@ -351,7 +351,7 @@ function expHasVision(expression, statement, elseStatement){
     }
 }
 
-function expHasProf(expression, statement, elseStatement){
+function expHasProf(expression, statement, elseStatement, srcStruct){
     let data;
     let boolOp;
     if(expression.includes('==')){
@@ -382,21 +382,22 @@ function expHasProf(expression, statement, elseStatement){
     if(numUps === -1){return null;}
 
     let foundProf = false;
-    for(const [profMapName, profMapData] of g_expr_profMap.entries()){
+    for(const [profMapName, profMapDataArray] of g_expr_profMap.entries()){
+        const finalProfData = getFinalProf(cleanProfDataArrayOfStatementProfs(profMapDataArray, srcStruct));
+        if(finalProfData == null) { continue; }
         if(profData == null){
-            let tempSkillName = profMapData.Name.toUpperCase();
+            let tempSkillName = finalProfData.Name.toUpperCase();
             tempSkillName = tempSkillName.replace(/_|\s+/g,"");
             if(tempSkillName === profName.toUpperCase()) {
               foundProf = true;
-              if(expHasProfNumUpsCompare(profMapData.NumUps, boolOp, numUps)) {
+              if(expHasProfNumUpsCompare(finalProfData.NumUps, boolOp, numUps)) {
                 return statement;
               }
             }
-            
         } else {
-            if(profMapData.Name === profData.Name) {
+            if(finalProfData.Name === profData.Name) {
               foundProf = true;
-              if (expHasProfNumUpsCompare(profMapData.NumUps, boolOp, numUps)){
+              if (expHasProfNumUpsCompare(finalProfData.NumUps, boolOp, numUps)){
                 return statement;
               }
             }
@@ -415,5 +416,16 @@ function expHasProfNumUpsCompare(numUpsOne, boolOp, numUpsTwo){
         case 'LESSER-EQUALS': return numUpsOne <= numUpsTwo;
         default: return false;
     }
+}
+
+function cleanProfDataArrayOfStatementProfs(profDataArray, srcStruct){
+  if(srcStruct == null) {return profDataArray;}
+  let newProfDataArray = [];
+  for(let profData of profDataArray) {
+    if(!hasSameSrc(srcStruct, profData)){
+      newProfDataArray.push(profData);
+    }
+  }
+  return newProfDataArray;
 }
 

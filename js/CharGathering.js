@@ -91,10 +91,6 @@ function getUpAmt(profType){
     return 0;
 }
 
-function getUserBonus(profBonus){
-    let numBonus = parseInt(profBonus);
-    return (isNaN(numBonus) ? 0 : numBonus);
-}
 
 function profTypeToNumber(profType){
     switch(profType){
@@ -1083,7 +1079,7 @@ module.exports = class CharGathering {
                                     .then((loreDataArray) => {
                                       return CharSpells.getFocusPoints(charID)
                                       .then((focusPointDataArray) => {
-                                        return CharGathering.getFinalProfs(charID)
+                                        return CharGathering.getProfs(charID)
                                         .then((profMap) => {
                                           return CharGathering.getAllDomains(character)
                                           .then((domains) => {
@@ -1109,7 +1105,7 @@ module.exports = class CharGathering {
                                                     SenseArray: senseDataArray,
                                                     PhyFeatArray: phyFeatDataArray,
                                                     InnateSpellArray: innateSpellDataArray,
-                                                    FinalProfObject: mapToObj(profMap),
+                                                    ProfObject: mapToObj(profMap),
                                                     AllDomains: domains,
                                                     AllAncestries: ancestries,
                                                     DomainArray: domainDataArray,
@@ -1587,120 +1583,22 @@ module.exports = class CharGathering {
 
     
 
-    static getFinalProfs(charID) {
-
-        console.log('~~~~~~~~~~~ REQUESTING FINAL PROFS ~~~~~~~~~~~');
-
+    static getProfs(charID) {
         return CharDataMappingExt.getDataAllProficiencies(charID)
         .then((profDataArray) => {
-            let newProfMap = new Map();
+
+            let profMap = new Map();
             for(const profData of profDataArray){
-
-                let userAdded = false;
-                if(profData.sourceType === 'user-added') {
-                    userAdded = true;
-                }
-
-                if(profData.sourceType === 'user-set') { // Hardcoded User-Set Data
-
-                    let userBonus = getUserBonus(profData.Prof);
-                    let profOverride = (userBonus == 0);
-
-                    let profMapValue = newProfMap.get(profData.To);
-                    if(profMapValue != null){
-
-                        let bestProf = getBetterProf(profMapValue.BestProf, profData.Prof);
-                        let numIncreases = profMapValue.NumIncreases+getUpAmt(profData.Prof);
-                        if(profMapValue.UserProfOverride){
-                            bestProf = profMapValue.BestProf;
-                            numIncreases = profMapValue.NumIncreases;
-                        }
-                        if(profOverride){
-                            bestProf = getBetterProf('U', profData.Prof);
-                            numIncreases = getUpAmt(profData.Prof);
-                        }
-
-                        let userBonus = getUserBonus(profData.Prof);
-                        newProfMap.set(profData.To, {
-                            BestProf : bestProf,
-                            NumIncreases : numIncreases,
-                            For : profMapValue.For,
-                            UserBonus : ((profMapValue.UserBonus > userBonus) ? profMapValue.UserBonus : userBonus),
-                            UserProfOverride : profOverride,
-                            UserAdded : (userAdded || profMapValue.UserAdded),
-                            OriginalData : profData,
-                        });
-
-                    } else {
-
-                        newProfMap.set(profData.To, {
-                            BestProf : getBetterProf('U', profData.Prof),
-                            NumIncreases : getUpAmt(profData.Prof),
-                            For : profData.For,
-                            UserBonus : userBonus,
-                            UserProfOverride : profOverride,
-                            UserAdded : userAdded,
-                            OriginalData : profData,
-                        });
-
-                    }
-
-                } else {
-
-                    let profMapValue = newProfMap.get(profData.To);
-                    if(profMapValue != null){
-
-                        let bestProf = getBetterProf(profMapValue.BestProf, profData.Prof);
-                        let numIncreases = profMapValue.NumIncreases+getUpAmt(profData.Prof);
-                        if(profMapValue.UserProfOverride){
-                            bestProf = profMapValue.BestProf;
-                            numIncreases = profMapValue.NumIncreases;
-                        }
-
-                        let userBonus = getUserBonus(profData.Prof);
-                        newProfMap.set(profData.To, {
-                            BestProf : bestProf,
-                            NumIncreases : numIncreases,
-                            For : profMapValue.For,
-                            UserBonus : ((profMapValue.UserBonus > userBonus) ? profMapValue.UserBonus : userBonus),
-                            UserProfOverride : false,
-                            UserAdded : (userAdded || profMapValue.UserAdded),
-                            OriginalData : profData,
-                        });
-
-                    } else {
-
-                        newProfMap.set(profData.To, {
-                            BestProf : getBetterProf('U', profData.Prof),
-                            NumIncreases : getUpAmt(profData.Prof),
-                            For : profData.For,
-                            UserBonus : 0,
-                            UserProfOverride : false,
-                            UserAdded : userAdded,
-                            OriginalData : profData,
-                        });
-
-                    }
-
-                }
-
+              let profMapValue = profMap.get(profData.To);
+              if(profMapValue != null){
+                profMapValue.push(profData);
+                profMap.set(profData.To, profMapValue);
+              } else {
+                profMap.set(profData.To, [profData]);
+              }      
             }
 
-            for(const [profName, profMapData] of newProfMap.entries()){
-                
-                newProfMap.set(profName, {
-                    Name : profName,
-                    NumUps : profTypeToNumber(profMapData.BestProf)+profMapData.NumIncreases,
-                    For : profMapData.For,
-                    UserBonus : profMapData.UserBonus,
-                    UserProfOverride : profMapData.UserProfOverride,
-                    UserAdded : profMapData.UserAdded,
-                    OriginalData : profMapData.OriginalData,
-                });
-                        
-            }
-
-            return newProfMap;
+            return profMap;
         });
     }
 
@@ -1724,7 +1622,7 @@ module.exports = class CharGathering {
                     return CharGathering.getAllSkills(charID)
                     .then((skillObject) => {
                       return CharGathering.getCharChoices(charID)
-                      .then( (choicesStruct) => {
+                      .then( (choiceStruct) => {
                         return CharGathering.getSpellData(charID)
                         .then((spellDataStruct) => {
                           return CharGathering.getAllSpells(charID)
@@ -1770,9 +1668,8 @@ module.exports = class CharGathering {
                                                         AbilObject : abilObject,
                                                         SkillObject : skillObject,
                                                         FeatObject : featObject,
-                                                        ProfObject : choicesStruct.FinalProfObject,
                                                         SpellObject : mapToObj(spellMap),
-                                                        ChoicesStruct : choicesStruct,
+                                                        ChoiceStruct : choiceStruct,
                                                         SpellDataStruct: spellDataStruct,
                                                         InvStruct : invStruct,
                                                         ItemObject : mapToObj(itemMap),

@@ -17,8 +17,8 @@ function getSeparator(){
 
 module.exports = class CharDataMappingExt {
 
-    static setDataProficiencies(charID, srcStruct, fFor, tTo, prof){
-        let value = fFor+getSeparator()+tTo+getSeparator()+prof;
+    static setDataProficiencies(charID, srcStruct, fFor, tTo, prof, sourceName){
+        let value = fFor+getSeparator()+tTo+getSeparator()+prof+getSeparator()+sourceName;
         return CharDataMapping.setData(charID, 'proficiencies', srcStruct, value)
         .then((result) => {
             return;
@@ -33,6 +33,7 @@ module.exports = class CharDataMappingExt {
                 data.For = vParts[0];
                 data.To = vParts[1];
                 data.Prof = vParts[2];
+                if(vParts.length == 4){ data.SourceName = vParts[3]; }
             }
             return dataArray;
         });

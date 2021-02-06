@@ -276,7 +276,7 @@ function checkCustomSkillProfs(name, numUps){
   }
 
   if(name === 'PERCEPTION'){
-    let percepData = g_profMap.get('Perception');
+    let percepData = getFinalProf(g_profMap.get('Perception'));
     if(percepData != null && percepData.NumUps >= numUps){
       return 'TRUE';
     }

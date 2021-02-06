@@ -54,18 +54,19 @@ function giveProfSkillTraining(srcStruct, profName, prof, locationID){
 
     if(profCategory === 'Skill'){
         
-        for(const [profMapName, profMapData] of g_profMap.entries()){
-            let tempSkillName = profMapData.Name.toUpperCase();
+        for(const [profMapName, profDataArray] of g_profMap.entries()){
+            const finalProfData = getFinalProf(profDataArray);
+            let tempSkillName = finalProfData.Name.toUpperCase();
             tempSkillName = tempSkillName.replace(/_|\s+/g,"");
-            if(adjProfName === tempSkillName && profMapData.NumUps >= numUps){
+            if(adjProfName === tempSkillName && finalProfData.NumUps >= numUps){
 
-                if(!hasSameSrc(srcStruct, profMapData.OriginalData)){
+                if(!hasSameSrcIterate(srcStruct, profDataArray)){
                     processCode(
                         'GIVE-SKILL='+prof,
                         srcStruct,
                         locationID);
                     window.setTimeout(() => {
-                      $('#'+locationID).append('<p class="help is-info is-italic">You are already trained in '+profMapData.Name+' which means you can select a new skill to become trained in instead.</p>');
+                      $('#'+locationID).append('<p class="help is-info is-italic">You are already trained in '+finalProfData.Name+' which means you can select a new skill to become trained in instead.</p>');
                     }, 100);
                     statementComplete();
                     return;

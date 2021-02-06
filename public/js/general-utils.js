@@ -31,6 +31,13 @@ function hasSameSrc(dataStruct, srcStruct){
   return (dataStruct.sourceType == srcStruct.sourceType && dataStruct.sourceLevel == srcStruct.sourceLevel && dataStruct.sourceCode == srcStruct.sourceCode && dataStruct.sourceCodeSNum == srcStruct.sourceCodeSNum);
 }
 
+function hasSameSrcIterate(dataStruct, srcStructArray){
+  for(let srcStruct of srcStructArray){
+    if(hasSameSrc(dataStruct, srcStruct)){ return true; }
+  }
+  return false;
+}
+
 /* Content Sources */
 
 const g_contentSources = [
@@ -185,6 +192,12 @@ function profToLetter(prof){
     case "LEGENDARY": return "L";
     default: return "?";
   }
+}
+
+function getBetterProf(prof1, prof2){
+  let profNumber1 = profToNumUp(prof1);
+  let profNumber2 = profToNumUp(prof2);
+  return (profNumber1 > profNumber2) ? prof1 : prof2;
 }
 
 /* HTML */

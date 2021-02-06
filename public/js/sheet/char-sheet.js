@@ -185,10 +185,10 @@ socket.on("returnCharacterSheetInfo", function(charInfo, viewOnly){
 
     g_abilMap = objToMap(charInfo.AbilObject);
     g_skillMap = objToMap(charInfo.SkillObject);
-    g_senseArray = charInfo.ChoicesStruct.SenseArray;
-    g_phyFeatArray = charInfo.ChoicesStruct.PhyFeatArray;
+    g_senseArray = charInfo.ChoiceStruct.SenseArray;
+    g_phyFeatArray = charInfo.ChoiceStruct.PhyFeatArray;
 
-    g_langArray = charInfo.ChoicesStruct.LangArray;
+    g_langArray = charInfo.ChoiceStruct.LangArray;
     g_langArray = g_langArray.sort(
       function(a, b) {
         if(a.value != null && b.value != null){
@@ -203,7 +203,7 @@ socket.on("returnCharacterSheetInfo", function(charInfo, viewOnly){
     g_specializationStruct = charInfo.SpecializeStruct;
     g_weaponFamiliaritiesArray = charInfo.WeaponFamiliarities;
 
-    g_profMap = objToMap(charInfo.ProfObject);
+    g_profMap = objToMap(charInfo.ChoiceStruct.ProfObject);
     g_weaponProfMap = buildWeaponProfMap();
     g_armorProfMap = buildArmorProfMap();
 
@@ -211,7 +211,7 @@ socket.on("returnCharacterSheetInfo", function(charInfo, viewOnly){
 
     g_featMap = objToMap(charInfo.FeatObject);
     g_featMap = updateFeatMapWithMiscs(g_featMap);
-    g_featChoiceArray = charInfo.ChoicesStruct.FeatArray;
+    g_featChoiceArray = charInfo.ChoiceStruct.FeatArray;
     g_featChoiceArray = g_featChoiceArray.sort(
         function(a, b) {
             if(a.value == null || b.value == null){
@@ -225,7 +225,7 @@ socket.on("returnCharacterSheetInfo", function(charInfo, viewOnly){
         }
     );
 
-    g_extraClassAbilities = charInfo.ChoicesStruct.ExtraClassFeaturesArray;
+    g_extraClassAbilities = charInfo.ChoiceStruct.ExtraClassFeaturesArray;
     g_allClassAbilityOptions = charInfo.AllClassFeatureOptions;
 
     g_spellMap = objToMap(charInfo.SpellObject);
@@ -271,12 +271,12 @@ socket.on("returnCharacterSheetInfo", function(charInfo, viewOnly){
         }
     );
 
-    g_charTagsArray = charInfo.ChoicesStruct.CharTagsArray;
+    g_charTagsArray = charInfo.ChoiceStruct.CharTagsArray;
 
     g_allTags = charInfo.AllTags;
     
-    g_classDetails = charInfo.ChoicesStruct.ClassDetails;
-    g_classDetails.AbilityChoices = charInfo.ChoicesStruct.ChoiceArray;
+    g_classDetails = charInfo.ChoiceStruct.ClassDetails;
+    g_classDetails.AbilityChoices = charInfo.ChoiceStruct.ChoiceArray;
 
     g_ancestry = charInfo.Ancestry;
     g_heritage = charInfo.Heritage;
@@ -300,7 +300,7 @@ socket.on("returnCharacterSheetInfo", function(charInfo, viewOnly){
     g_notesFields = charInfo.NotesFields;
 
     initExpressionProcessor({
-        ChoiceStruct : charInfo.ChoicesStruct,
+        ChoiceStruct : charInfo.ChoiceStruct,
     });
 
     // Automatic Progression Bonus variant, if enabled...
@@ -354,7 +354,7 @@ function loadCharSheet(){
         addStat('SPEED_'+otherSpeed.Type, 'BASE', otherSpeed.Amount);
     }
 
-    let classDCData = g_profMap.get("Class_DC");
+    let classDCData = getFinalProf(g_profMap.get("Class_DC"));
     addStat('CLASS_DC', 'PROF_BONUS', classDCData.NumUps);
     addStat('CLASS_DC', 'USER_BONUS', classDCData.UserBonus);
     addStat('CLASS_DC', 'MODIFIER', g_classDetails.KeyAbility);
@@ -366,24 +366,24 @@ function loadCharSheet(){
     addStat('SCORE_WIS', 'BASE', g_abilMap.get("WIS"));
     addStat('SCORE_CHA', 'BASE', g_abilMap.get("CHA"));
 
-    let fortData = g_profMap.get("Fortitude");
+    let fortData = getFinalProf(g_profMap.get("Fortitude"));
     
     addStat('SAVE_FORT', 'PROF_BONUS', fortData.NumUps);
     addStat('SAVE_FORT', 'USER_BONUS', fortData.UserBonus);
     addStat('SAVE_FORT', 'MODIFIER', 'CON');
     
-    let reflexData = g_profMap.get("Reflex");
+    let reflexData = getFinalProf(g_profMap.get("Reflex"));
     addStat('SAVE_REFLEX', 'PROF_BONUS', reflexData.NumUps);
     addStat('SAVE_REFLEX', 'USER_BONUS', reflexData.UserBonus);
     addStat('SAVE_REFLEX', 'MODIFIER', 'DEX');
 
-    let willData = g_profMap.get("Will");
+    let willData = getFinalProf(g_profMap.get("Will"));
     addStat('SAVE_WILL', 'PROF_BONUS', willData.NumUps);
     addStat('SAVE_WILL', 'USER_BONUS', willData.UserBonus);
     addStat('SAVE_WILL', 'MODIFIER', 'WIS');
 
     for(const [skillName, skillData] of g_skillMap.entries()){
-        let profData = g_profMap.get(skillName);
+        let profData = getFinalProf(g_profMap.get(skillName));
         let skillCodeName = skillName.replace(/\s/g,'_');
         if(profData != null){
             addStat('SKILL_'+skillCodeName, 'PROF_BONUS', profData.NumUps);
@@ -394,49 +394,49 @@ function loadCharSheet(){
         addStat('SKILL_'+skillCodeName, 'MODIFIER', skillData.Skill.ability);
     }
 
-    let perceptionData = g_profMap.get("Perception");
+    let perceptionData = getFinalProf(g_profMap.get("Perception"));
     addStat('PERCEPTION', 'PROF_BONUS', perceptionData.NumUps);
     addStat('PERCEPTION', 'USER_BONUS', perceptionData.UserBonus);
     addStat('PERCEPTION', 'MODIFIER', 'WIS');
 
     // Spell Attacks and DCs
-    let arcaneSpellAttack = g_profMap.get("ArcaneSpellAttacks");
+    let arcaneSpellAttack = getFinalProf(g_profMap.get("ArcaneSpellAttacks"));
     if(arcaneSpellAttack != null){
         addStat('ARCANE_SPELL_ATTACK', 'PROF_BONUS', arcaneSpellAttack.NumUps);
         addStat('ARCANE_SPELL_ATTACK', 'USER_BONUS', arcaneSpellAttack.UserBonus);
     }
-    let occultSpellAttack = g_profMap.get("OccultSpellAttacks");
+    let occultSpellAttack = getFinalProf(g_profMap.get("OccultSpellAttacks"));
     if(occultSpellAttack != null){
         addStat('OCCULT_SPELL_ATTACK', 'PROF_BONUS', occultSpellAttack.NumUps);
         addStat('OCCULT_SPELL_ATTACK', 'USER_BONUS', occultSpellAttack.UserBonus);
     }
-    let primalSpellAttack = g_profMap.get("PrimalSpellAttacks");
+    let primalSpellAttack = getFinalProf(g_profMap.get("PrimalSpellAttacks"));
     if(primalSpellAttack != null){
         addStat('PRIMAL_SPELL_ATTACK', 'PROF_BONUS', primalSpellAttack.NumUps);
         addStat('PRIMAL_SPELL_ATTACK', 'USER_BONUS', primalSpellAttack.UserBonus);
     }
-    let divineSpellAttack = g_profMap.get("DivineSpellAttacks");
+    let divineSpellAttack = getFinalProf(g_profMap.get("DivineSpellAttacks"));
     if(divineSpellAttack != null){
         addStat('DIVINE_SPELL_ATTACK', 'PROF_BONUS', divineSpellAttack.NumUps);
         addStat('DIVINE_SPELL_ATTACK', 'USER_BONUS', divineSpellAttack.UserBonus);
     }
     
-    let arcaneSpellDC = g_profMap.get("ArcaneSpellDCs");
+    let arcaneSpellDC = getFinalProf(g_profMap.get("ArcaneSpellDCs"));
     if(arcaneSpellDC != null){
         addStat('ARCANE_SPELL_DC', 'PROF_BONUS', arcaneSpellDC.NumUps);
         addStat('ARCANE_SPELL_DC', 'USER_BONUS', arcaneSpellDC.UserBonus);
     }
-    let occultSpellDC = g_profMap.get("OccultSpellDCs");
+    let occultSpellDC = getFinalProf(g_profMap.get("OccultSpellDCs"));
     if(occultSpellDC != null){
         addStat('OCCULT_SPELL_DC', 'PROF_BONUS', occultSpellDC.NumUps);
         addStat('OCCULT_SPELL_DC', 'USER_BONUS', occultSpellDC.UserBonus);
     }
-    let primalSpellDC = g_profMap.get("PrimalSpellDCs");
+    let primalSpellDC = getFinalProf(g_profMap.get("PrimalSpellDCs"));
     if(primalSpellDC != null){
         addStat('PRIMAL_SPELL_DC', 'PROF_BONUS', primalSpellDC.NumUps);
         addStat('PRIMAL_SPELL_DC', 'USER_BONUS', primalSpellDC.UserBonus);
     }
-    let divineSpellDC = g_profMap.get("DivineSpellDCs");
+    let divineSpellDC = getFinalProf(g_profMap.get("DivineSpellDCs"));
     if(divineSpellDC != null){
         addStat('DIVINE_SPELL_DC', 'PROF_BONUS', divineSpellDC.NumUps);
         addStat('DIVINE_SPELL_DC', 'USER_BONUS', divineSpellDC.UserBonus);
@@ -734,7 +734,7 @@ function displayInformation() {
     classDCContent.html(classDCBonusDisplayed);
     g_calculatedStats.totalClassDC = classDC;// Calculated Stat
 
-    let classDCData = g_profMap.get("Class_DC");
+    let classDCData = getFinalProf(g_profMap.get("Class_DC"));
     let classDCProfNum = getProfNumber(classDCData.NumUps, g_character.level);
     $("#classDCSection").click(function(){
         openQuickView('classDCView', {
@@ -797,7 +797,7 @@ function displayInformation() {
     fortBonusContent.html(fortBonusDisplayed);
     g_calculatedStats.totalSaves.push({Name: 'Fortitude', Bonus: fortBonus});// Calculated Stat
 
-    let fortData = g_profMap.get("Fortitude");
+    let fortData = getFinalProf(g_profMap.get("Fortitude"));
     let fortProfNum = getProfNumber(fortData.NumUps, g_character.level);
     $("#fortSection").click(function(){
         openQuickView('savingThrowView', {
@@ -823,7 +823,7 @@ function displayInformation() {
     reflexBonusContent.html(reflexBonusDisplayed);
     g_calculatedStats.totalSaves.push({Name: 'Reflex', Bonus: reflexBonus});// Calculated Stat
 
-    let reflexData = g_profMap.get("Reflex");
+    let reflexData = getFinalProf(g_profMap.get("Reflex"));
     let reflexProfNum = getProfNumber(reflexData.NumUps, g_character.level);
     $("#reflexSection").click(function(){
         openQuickView('savingThrowView', {
@@ -849,7 +849,7 @@ function displayInformation() {
     willBonusContent.html(willBonusDisplayed);
     g_calculatedStats.totalSaves.push({Name: 'Will', Bonus: willBonus});// Calculated Stat
 
-    let willData = g_profMap.get("Will");
+    let willData = getFinalProf(g_profMap.get("Will"));
     let willProfNum = getProfNumber(willData.NumUps, g_character.level);
     $("#willSection").click(function(){
         openQuickView('savingThrowView', {
@@ -933,7 +933,7 @@ function displayInformation() {
     perceptionBonusContent.html(perceptionBonusDisplayed);
     g_calculatedStats.totalPerception = perceptionBonus;// Calculated Stat
 
-    let perceptionData = g_profMap.get("Perception");
+    let perceptionData = getFinalProf(g_profMap.get("Perception"));
     let perceptionProfNum = getProfNumber(perceptionData.NumUps, g_character.level);
     $("#perceptionBonusSection").click(function(){
         openQuickView('perceptionView', {
@@ -971,36 +971,37 @@ function displayInformation() {
     let attacks = $("#attacksContent");
     attacks.html('');
 
-    let profSimpleWeapons = g_profMap.get("Simple_Weapons");
+    let profSimpleWeapons = getFinalProf(g_profMap.get("Simple_Weapons"));
     if(profSimpleWeapons != null){
         let profWord = getProfNameFromNumUps(profSimpleWeapons.NumUps);
         otherProfsNum++;
         otherProfBuild(attacks, profWord, 'Simple Weapons', otherProfsNum, profSimpleWeapons);
     }
-    let profMartialWeapons = g_profMap.get("Martial_Weapons");
+    let profMartialWeapons = getFinalProf(g_profMap.get("Martial_Weapons"));
     if(profMartialWeapons != null){
         let profWord = getProfNameFromNumUps(profMartialWeapons.NumUps);
         otherProfsNum++;
         otherProfBuild(attacks, profWord, 'Martial Weapons', otherProfsNum, profMartialWeapons);
     }
-    let profAdvancedWeapons = g_profMap.get("Advanced_Weapons");
+    let profAdvancedWeapons = getFinalProf(g_profMap.get("Advanced_Weapons"));
     if(profAdvancedWeapons != null){
         let profWord = getProfNameFromNumUps(profAdvancedWeapons.NumUps);
         otherProfsNum++;
         otherProfBuild(attacks, profWord, 'Advanced Weapons', otherProfsNum, profAdvancedWeapons);
     }
-    let profUnarmedAttacks = g_profMap.get("Unarmed_Attacks");
+    let profUnarmedAttacks = getFinalProf(g_profMap.get("Unarmed_Attacks"));
     if(profUnarmedAttacks != null){
         let profWord = getProfNameFromNumUps(profUnarmedAttacks.NumUps);
         otherProfsNum++;
         otherProfBuild(attacks, profWord, 'Unarmed Attacks', otherProfsNum, profUnarmedAttacks);
     }
-    for(const [profName, profData] of g_profMap.entries()){
-        if(profData.For == "Attack" && profName != "Simple_Weapons" && profName != "Martial_Weapons" && profName != "Advanced_Weapons" && profName != "Unarmed_Attacks"){
+    for(const [profName, profDataArray] of g_profMap.entries()){
+        const finalProfData = getFinalProf(profDataArray);
+        if(finalProfData.For == "Attack" && profName != "Simple_Weapons" && profName != "Martial_Weapons" && profName != "Advanced_Weapons" && profName != "Unarmed_Attacks"){
             let dProfName = profName.replace(/_/g,' ');
-            let profWord = getProfNameFromNumUps(profData.NumUps);
+            let profWord = getProfNameFromNumUps(finalProfData.NumUps);
             otherProfsNum++;
-            otherProfBuild(attacks, profWord, capitalizeWords(dProfName), otherProfsNum, profData);
+            otherProfBuild(attacks, profWord, capitalizeWords(dProfName), otherProfsNum, finalProfData);
         }
     }
 
@@ -1008,36 +1009,37 @@ function displayInformation() {
     let defenses = $("#defensesContent");
     defenses.html('');
 
-    let profLightArmor = g_profMap.get("Light_Armor");
+    let profLightArmor = getFinalProf(g_profMap.get("Light_Armor"));
     if(profLightArmor != null){
         let profWord = getProfNameFromNumUps(profLightArmor.NumUps);
         otherProfsNum++;
         otherProfBuild(defenses, profWord, 'Light Armor', otherProfsNum, profLightArmor);
     }
-    let profMediumArmor = g_profMap.get("Medium_Armor");
+    let profMediumArmor = getFinalProf(g_profMap.get("Medium_Armor"));
     if(profMediumArmor != null){
         let profWord = getProfNameFromNumUps(profMediumArmor.NumUps);
         otherProfsNum++;
         otherProfBuild(defenses, profWord, 'Medium Armor', otherProfsNum, profMediumArmor);
     }
-    let profHeavyArmor = g_profMap.get("Heavy_Armor");
+    let profHeavyArmor = getFinalProf(g_profMap.get("Heavy_Armor"));
     if(profHeavyArmor != null){
         let profWord = getProfNameFromNumUps(profHeavyArmor.NumUps);
         otherProfsNum++;
         otherProfBuild(defenses, profWord, 'Heavy Armor', otherProfsNum, profHeavyArmor);
     }
-    let profUnarmoredDefense = g_profMap.get("Unarmored_Defense");
+    let profUnarmoredDefense = getFinalProf(g_profMap.get("Unarmored_Defense"));
     if(profUnarmoredDefense != null){
         let profWord = getProfNameFromNumUps(profUnarmoredDefense.NumUps);
         otherProfsNum++;
         otherProfBuild(defenses, profWord, 'Unarmored Defense', otherProfsNum, profUnarmoredDefense);
     }
-    for(const [profName, profData] of g_profMap.entries()){
-        if(profData.For == "Defense" && profName != "Light_Armor" && profName != "Medium_Armor" && profName != "Heavy_Armor" && profName != "Unarmored_Defense"){
+    for(const [profName, profDataArray] of g_profMap.entries()){
+        const finalProfData = getFinalProf(profDataArray);
+        if(finalProfData.For == "Defense" && profName != "Light_Armor" && profName != "Medium_Armor" && profName != "Heavy_Armor" && profName != "Unarmored_Defense"){
             let dProfName = profName.replace(/_/g,' ');
-            let profWord = getProfNameFromNumUps(profData.NumUps);
+            let profWord = getProfNameFromNumUps(finalProfData.NumUps);
             otherProfsNum++;
-            otherProfBuild(defenses, profWord, capitalizeWords(dProfName), otherProfsNum, profData);
+            otherProfBuild(defenses, profWord, capitalizeWords(dProfName), otherProfsNum, finalProfData);
         }
     }
 
@@ -1048,56 +1050,56 @@ function displayInformation() {
     let spells = $("#spellsContent");
     spells.html('');
 
-    let arcaneSpellAttack = g_profMap.get("ArcaneSpellAttacks");
+    let arcaneSpellAttack = getFinalProf(g_profMap.get("ArcaneSpellAttacks"));
     if(arcaneSpellAttack != null){
         let profWord = getProfNameFromNumUps(arcaneSpellAttack.NumUps);
         otherProfsNum++;
         otherProfBuild(spells, profWord, 'Arcane Attacks', otherProfsNum, arcaneSpellAttack);
     }
 
-    let arcaneSpellDC = g_profMap.get("ArcaneSpellDCs");
+    let arcaneSpellDC = getFinalProf(g_profMap.get("ArcaneSpellDCs"));
     if(arcaneSpellDC != null){
         let profWord = getProfNameFromNumUps(arcaneSpellDC.NumUps);
         otherProfsNum++;
         otherProfBuild(spells, profWord, 'Arcane DCs', otherProfsNum, arcaneSpellDC);
     }
 
-    let divineSpellAttack = g_profMap.get("DivineSpellAttacks");
+    let divineSpellAttack = getFinalProf(g_profMap.get("DivineSpellAttacks"));
     if(divineSpellAttack != null){
         let profWord = getProfNameFromNumUps(divineSpellAttack.NumUps);
         otherProfsNum++;
         otherProfBuild(spells, profWord, 'Divine Attacks', otherProfsNum, divineSpellAttack);
     }
 
-    let divineSpellDC = g_profMap.get("DivineSpellDCs");
+    let divineSpellDC = getFinalProf(g_profMap.get("DivineSpellDCs"));
     if(divineSpellDC != null){
         let profWord = getProfNameFromNumUps(divineSpellDC.NumUps);
         otherProfsNum++;
         otherProfBuild(spells, profWord, 'Divine DCs', otherProfsNum, divineSpellDC);
     }
 
-    let occultSpellAttack = g_profMap.get("OccultSpellAttacks");
+    let occultSpellAttack = getFinalProf(g_profMap.get("OccultSpellAttacks"));
     if(occultSpellAttack != null){
         let profWord = getProfNameFromNumUps(occultSpellAttack.NumUps);
         otherProfsNum++;
         otherProfBuild(spells, profWord, 'Occult Attacks', otherProfsNum, occultSpellAttack);
     }
 
-    let occultSpellDC = g_profMap.get("OccultSpellDCs");
+    let occultSpellDC = getFinalProf(g_profMap.get("OccultSpellDCs"));
     if(occultSpellDC != null){
         let profWord = getProfNameFromNumUps(occultSpellDC.NumUps);
         otherProfsNum++;
         otherProfBuild(spells, profWord, 'Occult DCs', otherProfsNum, occultSpellDC);
     }
 
-    let primalSpellAttack = g_profMap.get("PrimalSpellAttacks");
+    let primalSpellAttack = getFinalProf(g_profMap.get("PrimalSpellAttacks"));
     if(primalSpellAttack != null){
         let profWord = getProfNameFromNumUps(primalSpellAttack.NumUps);
         otherProfsNum++;
         otherProfBuild(spells, profWord, 'Primal Attacks', otherProfsNum, primalSpellAttack);
     }
 
-    let primalSpellDC = g_profMap.get("PrimalSpellDCs");
+    let primalSpellDC = getFinalProf(g_profMap.get("PrimalSpellDCs"));
     if(primalSpellDC != null){
         let profWord = getProfNameFromNumUps(primalSpellDC.NumUps);
         otherProfsNum++;
@@ -1122,7 +1124,7 @@ function displayInformation() {
     });
     let hasUntrainedImprovisationFeat = (untrainedImprovisation != null);
     for(const [skillName, skillData] of g_skillMap.entries()){
-        let profData = g_profMap.get(skillName);
+        let profData = getFinalProf(g_profMap.get(skillName));
         if(profData == null){ profData = skillData; }
 
         let skillButtonID = ("skillButton"+skillName).replace(/ /g,'_');
@@ -2361,7 +2363,7 @@ function takeRest(){
 //////////////////////////////////////// Socket Returns ////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
-socket.on("returnFinalProfsAndSkills", function(profObject, skillObject){
+socket.on("returnProfsAndSkills", function(profObject, skillObject){
     g_profMap = objToMap(profObject);
     g_skillMap = objToMap(skillObject);
     g_weaponProfMap = buildWeaponProfMap();
@@ -2374,7 +2376,7 @@ socket.on("returnHeroPointsSave", function(){
 });
 
 socket.on("returnProficiencyChange", function(profChangePacket){
-    socket.emit("requestFinalProfsAndSkills",
+    socket.emit("requestProfsAndSkills",
         getCharIDFromURL());
 });
 

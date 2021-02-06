@@ -422,6 +422,7 @@ function displayCurrentClass(classStruct, saving) {
                 srcStruct,
                 'profSkillsCode');
         } else {
+            savingProf.SourceName = 'Class Initial Profs';
             socket.emit("requestProficiencyChange",
                 getCharIDFromURL(),
                 {srcStruct, isSkill : false},
