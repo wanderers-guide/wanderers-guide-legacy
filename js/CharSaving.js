@@ -545,6 +545,10 @@ module.exports = class CharSaving {
           charUpVals = {
             optionDiceRoller: value
           };
+        } else if(optionName === 'optionIgnoreBulk'){
+          charUpVals = {
+            optionIgnoreBulk: value
+          };
         } else if(optionName === 'variantProfWithoutLevel'){
           charUpVals = {
             variantProfWithoutLevel: value

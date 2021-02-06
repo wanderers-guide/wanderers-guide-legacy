@@ -218,7 +218,7 @@ function displayInventoryItem(invItem, openBagInvItemArray, data) {
         itemStorageBulkAmt = round(bagBulk-bulkIgnored, 2);
         $('#'+invItemStorageSectionID).append('<div class="tile is-parent mobile-apply-flex is-paddingless pt-1 px-2"><div class="tile is-child is-1"></div><div class="tile is-child is-3 border-bottom border-dark-lighter"><p id="'+invItemStorageBulkAmountID+'" class="has-text-left pl-5 is-size-6 has-text-grey">Bulk '+roundedBagBulk+' / '+maxBagBulk+'</p></div><div class="tile is-child is-8 border-bottom border-dark-lighter"><p class="has-text-left pl-3 is-size-6 has-text-grey is-italic">'+bulkIgnoredMessage+'</p></div></div>');
 
-        if(bagBulk > maxBagBulk){
+        if(!gOption_hasIgnoreBulk && bagBulk > maxBagBulk){
             $('#'+invItemStorageBulkAmountID).removeClass('has-text-grey');
             $('#'+invItemStorageBulkAmountID).addClass('has-text-danger');
             $('#'+invItemStorageBulkAmountID).addClass('has-text-weight-bold');

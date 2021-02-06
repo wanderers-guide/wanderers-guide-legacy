@@ -102,8 +102,6 @@ socket.on("returnCharacterDetails", function(character, clientsWithAccess, hBund
 
     handleCharacterOptions(character, hBundles, progessBundles);
 
-    exportSheetOptions();
-
     // Turn off page loading
     $('.pageloader').addClass("fadeout");
 
@@ -395,20 +393,29 @@ function handleCharacterOptions(character, hBundles, progessBundles) {
           getCharIDFromURL(), 
           'optionCustomCodeBlock',
           optionTypeValue);
-  });
-  $("#optionCustomCodeBlock").prop('checked', (character.optionCustomCodeBlock === 1));
-  if(character.optionCustomCodeBlock === 1) {
-    $("#optionCustomCodeBlockInfo").removeClass('is-hidden');
-    $("#option-custom-code-block-container").removeClass('is-hidden');
-  }
-  $("#inputCustomCodeBlock").blur(function(){
-    let newCode = $(this).val();
-    if(character.customCode != newCode){
-      character.customCode = newCode;
-      $('#inputCustomCodeBlock').parent().addClass("is-loading");
-      socket.emit("requestCharacterCustomCodeBlockChange", getCharIDFromURL(), newCode);
+    });
+    $("#optionCustomCodeBlock").prop('checked', (character.optionCustomCodeBlock === 1));
+    if(character.optionCustomCodeBlock === 1) {
+      $("#optionCustomCodeBlockInfo").removeClass('is-hidden');
+      $("#option-custom-code-block-container").removeClass('is-hidden');
     }
-  });
+    $("#inputCustomCodeBlock").blur(function(){
+      let newCode = $(this).val();
+      if(character.customCode != newCode){
+        character.customCode = newCode;
+        $('#inputCustomCodeBlock').parent().addClass("is-loading");
+        socket.emit("requestCharacterCustomCodeBlockChange", getCharIDFromURL(), newCode);
+      }
+    });
+
+    $("#optionIgnoreBulk").change(function(){
+      let optionTypeValue = (this.checked) ? 1 : 0;
+      socket.emit("requestCharacterOptionChange", 
+          getCharIDFromURL(), 
+          'optionIgnoreBulk',
+          optionTypeValue);
+    });
+    $("#optionIgnoreBulk").prop('checked', (character.optionIgnoreBulk === 1));
 
 }
 
@@ -590,15 +597,3 @@ function accessRightsToText(accessRights){
 socket.on("returnCharacterRemoveClientAccess", function(clientsWithAccess) {
   displayExternalCharacterAccess(clientsWithAccess);
 });
-
-
-function exportSheetOptions() {
-
-  /*
-  $('#pdfDownloadBtn').click(function(){
-    exportCharacterToPDF();
-    $(this).addClass('is-loading');
-  });
-  */
-
-}

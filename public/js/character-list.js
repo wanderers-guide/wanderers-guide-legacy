@@ -81,6 +81,7 @@ $(function () {
     if($('#icon-character-import').length){ // If icon-character-import exists, AKA is advocate tier
       initCharacterImport();
       initCharacterExport();
+      //initCharacterExportToPDF();
     }
 
 });

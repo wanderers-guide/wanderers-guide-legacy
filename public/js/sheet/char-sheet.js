@@ -22,17 +22,7 @@ let gState_addLevelToUntrainedSkill;
 let gState_displayCompanionTab;
 /* ~~~~~~~~~~~~~~~~~~~ */
 
-let g_calculatedStats = {
-  maxHP: null,
-  totalClassDC: null,
-  totalSpeed: null,
-  totalAC: null,
-  totalPerception: null,
-  totalSkills: [],
-  totalSaves: [],
-  totalAbilityScores: [],
-  weapons: [],
-};
+let g_calculatedStats = null;
 
 let g_character = null;
 let g_classDetails = null;
@@ -172,6 +162,7 @@ socket.on("returnCharacterSheetInfo", function(charInfo, viewOnly){
     gOption_hasProfWithoutLevel = (g_character.variantProfWithoutLevel === 1);
     gOption_hasStamina = (g_character.variantStamina === 1);
     gOption_hasDiceRoller = (g_character.optionDiceRoller === 1);
+    gOption_hasIgnoreBulk = (g_character.optionIgnoreBulk === 1);
 
     g_otherSpeeds = charInfo.OtherSpeeds;
 
@@ -336,6 +327,19 @@ function loadCharSheet(){
     gState_addLevelToUntrainedWeaponAttack = false;
     gState_addLevelToUntrainedSkill = false;
     gState_displayCompanionTab = false;
+
+    // Init Calculated Stats
+    g_calculatedStats = {
+      maxHP: null,
+      totalClassDC: null,
+      totalSpeed: null,
+      totalAC: null,
+      totalPerception: null,
+      totalSkills: [],
+      totalSaves: [],
+      totalAbilityScores: [],
+      weapons: [],
+    };
 
     // Init Stats (set to new Map) //
     initStats();
@@ -1222,10 +1226,8 @@ function displayInformation() {
             });
     
             if(explorationTag != null){
-                featStruct.Feat.isCore = 1;
                 explorationFeatStructArray.push(featStruct);
             } else if(downtimeTag != null){
-                featStruct.Feat.isCore = 1;
                 downtimeFeatStructArray.push(featStruct);
             } else if(featStruct.Feat.actions != 'NONE'){
                 encounterFeatStructArray.push(featStruct);
@@ -2098,20 +2100,23 @@ function determineBulkAndCoins(invItems, itemMap){
     let cantMove = false;
 
     let encumberedSrcText = 'Exceeding the amount of Bulk you can even hold.';
-    if(totalBulk > weightMax) { // Hardcoded Condition IDs
+    let immobilizedSrcText = 'Holding more Bulk than you can carry.';
+    if(!gOption_hasIgnoreBulk){
+      if(totalBulk > weightMax) { // Hardcoded Condition IDs
         addCondition(13, null, encumberedSrcText);
         cantMove = true;
-    } else {
+      } else {
         removeCondition(13, encumberedSrcText);
-
-        let immobilizedSrcText = 'Holding more Bulk than you can carry.';
         if(totalBulk > weightEncumbered){
-            addCondition(1, null, immobilizedSrcText);
-            isEncumbered = true;
+          addCondition(1, null, immobilizedSrcText);
+          isEncumbered = true;
         } else {
-            removeCondition(1, immobilizedSrcText);
+          removeCondition(1, immobilizedSrcText);
         }
-        
+      }
+    } else { // Remove conditions if they did exist before,
+      removeCondition(13, encumberedSrcText);
+      removeCondition(1, immobilizedSrcText);
     }
 
     g_bulkAndCoinsStruct = {

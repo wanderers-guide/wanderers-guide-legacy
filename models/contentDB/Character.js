@@ -78,6 +78,9 @@ const Character = db.define('characters', {
   optionDiceRoller: {
     type: Sequelize.INTEGER
   },
+  optionIgnoreBulk: {
+    type: Sequelize.INTEGER
+  },
   // Character Variants //
   variantProfWithoutLevel: {
     type: Sequelize.INTEGER

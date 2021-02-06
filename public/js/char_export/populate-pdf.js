@@ -4,14 +4,37 @@
 
 const { PDFDocument } = PDFLib;
 
-function exportCharacterToPDF(){
+function getMod(abilScore) {
+  let mod = Math.floor((abilScore-10)/2);
+  return mod;
+}
 
-  socket.emit("requestCharacterExportPDFInfo", 
-      getCharIDFromURL());
+function getNumZeroIfNull(number) {
+  return (number != null) ? number : 0;
+}
+
+function initCharacterExportToPDF(){
+
+  $('#btn-export-to-pdf').click(function() {
+    socket.emit("requestCharExportPDFInfo", activeModalCharID);
+  });
 
 }
 
-socket.on("returnCharacterExportPDFInfo", async function(charInfo){
+socket.on("returnCharExportPDFInfo", function(charInfo){
+
+  try {
+    charExportGeneratePDF(charInfo);
+  } catch (err) {
+    console.error('Failed to generate character PDF:');
+    console.error(err);
+  }
+
+});
+
+async function charExportGeneratePDF(charInfo) {
+
+  console.log(charInfo);
 
   const formUrl = '/pdf/character_sheet.pdf';
   const formPdfBytes = await fetch(formUrl).then(res => res.arrayBuffer());
@@ -47,19 +70,85 @@ socket.on("returnCharacterExportPDFInfo", async function(charInfo){
   const wisScoreField = form.getTextField('WISDOM');
   const chaScoreField = form.getTextField('CHARISMA');
 
-  const totalACField = form.getTextField('Text3');
+  
 
   const totalSpeedField = form.getTextField('Text18');
 
   const totalClassDCField = form.getTextField('Text10');
 
-  const totalPerceptionField = form.getTextField('Text17');
+  // //
+  const totalACField = form.getTextField('Text3');
+  const acDexModField = form.getTextField('Text12');
+  const acCapField = form.getTextField('Text13');
+  const acProfBonusField = form.getTextField('PROF');
+  const acProfTrainedField = form.getTextField('Check Box4');
+  const acProfExpertField = form.getTextField('Check Box5');
+  const acProfMasterField = form.getTextField('Check Box6');
+  const acProfLegendaryField = form.getTextField('Check Box7');
+  const acItemBonusField = form.getTextField('ITEM');
 
-  const conditionsField = form.getTextField('CONDITIONS');
+  const unarmoredProfTrainedField = form.getTextField('Check Box28');
+  const unarmoredProfExpertField = form.getTextField('Check Box29');
+  const unarmoredProfMasterField = form.getTextField('Check Box30');
+  const unarmoredProfLegendaryField = form.getTextField('Check Box31');
 
+  const lightArmorProfTrainedField = form.getTextField('Check Box32');
+  const lightArmorProfExpertField = form.getTextField('Check Box33');
+  const lightArmorProfMasterField = form.getTextField('Check Box34');
+  const lightArmorProfLegendaryField = form.getTextField('Check Box35');
+
+  const mediumArmorProfTrainedField = form.getTextField('Check Box36');
+  const mediumArmorProfExpertField = form.getTextField('Check Box37');
+  const mediumArmorProfMasterField = form.getTextField('Check Box38');
+  const mediumArmorProfLegendaryField = form.getTextField('Check Box39');
+
+  const heavyArmorProfTrainedField = form.getTextField('Check Box40');
+  const heavyArmorProfExpertField = form.getTextField('Check Box41');
+  const heavyArmorProfMasterField = form.getTextField('Check Box42');
+  const heavyArmorProfLegendaryField = form.getTextField('Check Box43');
+  
+  const shieldACBonusField = form.getTextField('Text16');
+  const shieldHardnessField = form.getTextField('HARDNESS');
+  const shieldHealthAndBTField = form.getTextField('BT');
+  const shieldCurrentHPField = form.getTextField('CURRENT HP');
+
+  // //
+  const totalFortField = form.getTextField('Text11');
+  const fortConModField = form.getTextField('CON');
+  const fortProfBonusField = form.getTextField('PROF_2');
+  const fortItemBonusField = form.getTextField('ITEM_2');
+  
+  // Field names: https://www.pdfescape.com
+
+  // //
   const maxHPField = form.getTextField('Text1');
   const currentHPField = form.getTextField('CURRENT MAX');
   const tempHPField = form.getTextField('TEMPORARY');
+
+  const dyingField = form.getTextField('DYING');
+  const woundedField = form.getTextField('WOUNDED');
+
+  const resistancesField = form.getTextField('RESISTANCES AND IMMUNITIES');
+
+  const conditionsField = form.getTextField('CONDITIONS');
+
+
+  const totalPerceptionField = form.getTextField('Text17');
+  const perceptionWisModField = form.getTextField('WIS_2');
+  const perceptionProfBonusField = form.getTextField('PROF_5');
+  const perceptionProfTrainedField = form.getTextField('Check Box24');
+  const perceptionProfExpertField = form.getTextField('Check Box25');
+  const perceptionProfMasterField = form.getTextField('Check Box26');
+  const perceptionProfLegendaryField = form.getTextField('Check Box27');
+  const perceptionItemBonusField = form.getTextField('ITEM_5');
+  
+  const sensesField = form.getTextField('SENSES');
+
+
+
+
+
+
 
   console.log(charInfo);
 
@@ -93,19 +182,19 @@ socket.on("returnCharacterExportPDFInfo", async function(charInfo){
   totalSpeedField.setText(charInfo.CalculatedStats.totalSpeed+'');
 
   maxHPField.setText(charInfo.CalculatedStats.maxHP+'');
-  currentHPField.setText(charInfo.Character.currentHealth+'');
-  tempHPField.setText(charInfo.Character.tempHealth+'');
+  currentHPField.setText(getNumZeroIfNull(charInfo.Character.currentHealth)+'');
+  tempHPField.setText(getNumZeroIfNull(charInfo.Character.tempHealth)+'');
 
   heroPointsField.setText(charInfo.Character.heroPoints+'');
   levelField.setText(charInfo.Character.level+'');
-  xpField.setText(charInfo.Character.experience+'');
+  xpField.setText(getNumZeroIfNull(charInfo.Character.experience)+'');
 
   if(charInfo.Ancestry != null){
     sizeField.setText(charInfo.Ancestry.size.charAt(0));
   }
 
   totalClassDCField.setText(charInfo.CalculatedStats.totalClassDC+'');
-  totalPerceptionField.setText(charInfo.CalculatedStats.totalPerception+'');
+  totalPerceptionField.setText(signNumber(charInfo.CalculatedStats.totalPerception));
 
   let totalAbilityScores = JSON.parse(charInfo.CalculatedStats.totalAbilityScores);
   for(let abilityScore of totalAbilityScores){
@@ -164,5 +253,6 @@ socket.on("returnCharacterExportPDFInfo", async function(charInfo){
   // Trigger the browser to download the PDF document
   download(pdfBytes, charInfo.Character.name+" - Character Sheet.pdf", "application/pdf");
   
-  $('#pdfDownloadBtn').removeClass('is-loading');
-});
+  $('.modal-card-close').trigger('click');
+
+}

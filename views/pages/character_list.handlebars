@@ -2,6 +2,9 @@
 {{#section 'header'}}
     <script type="text/javascript" src="/js/character-list.js"></script>
     <link rel="stylesheet" href="/css/character-list.css">
+
+    <script type="text/javascript" src="/js/char_export/populate-pdf.js"></script>
+    <script type="application/pdf" src="/pdf/character_sheet.pdf"></script>
 {{/section}}
 
 {{#section 'nav_home'}}
@@ -142,9 +145,9 @@
 
       <div class="buttons is-centered">
         <button id="btn-export-character" class="button is-info"><span>Export Character</span><span class="icon"><i class="fas fa-download"></i></span></button>
-        <button id="btn-export-to-pdf" class="button is-info"><span>Export to PDF</span><span class="icon"><i class="fas fa-file-pdf"></i></span></button>
+        <!--<button id="btn-export-to-pdf" class="button is-info"><span>Export to PDF</span><span class="icon"><i class="fas fa-file-pdf"></i></span></button>-->
       </div>
-            
+      
     </section>
     <footer class="modal-card-foot">
     </footer>

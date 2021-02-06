@@ -714,16 +714,6 @@ module.exports = class SocketConnections {
         });
       });
 
-      socket.on('requestCharacterExportPDFInfo', function(charID){
-        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
-          if(ownsChar){
-            CharGathering.getCharacterInfoExportToPDF(charID).then((characterInfo) => {
-              socket.emit('returnCharacterExportPDFInfo', characterInfo);
-            });
-          }
-        });
-      });
-
     });
     
   }
@@ -1706,6 +1696,17 @@ module.exports = class SocketConnections {
     // Socket.IO Connections
     io.on('connection', function(socket){
 
+      socket.on('requestCharImport', function(charExportData){
+        AuthCheck.isSupporter(socket).then((isSupporter) => {
+          if(isSupporter){
+            CharImport.importData(socket, charExportData)
+            .then((result) => {
+              socket.emit('returnCharImport');
+            });
+          }
+        });
+      });
+
       socket.on('requestCharExport', function(charID){
         AuthCheck.isSupporter(socket).then((isSupporter) => {
           if(isSupporter){
@@ -1721,12 +1722,15 @@ module.exports = class SocketConnections {
         });
       });
 
-      socket.on('requestCharImport', function(charExportData){
+      socket.on('requestCharExportPDFInfo', function(charID){
         AuthCheck.isSupporter(socket).then((isSupporter) => {
           if(isSupporter){
-            CharImport.importData(socket, charExportData)
-            .then((result) => {
-              socket.emit('returnCharImport');
+            AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+              if(ownsChar){
+                CharGathering.getCharacterInfoExportToPDF(charID).then((characterInfo) => {
+                  socket.emit('returnCharExportPDFInfo', characterInfo);
+                });
+              }
             });
           }
         });
