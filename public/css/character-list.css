@@ -5,6 +5,10 @@
   top: 2px;
 }
 
+#icon-character-import>input {
+  display: none;
+}
+
 hr {
     border-color: #5e5e5e;
     background-color: #5e5e5e;

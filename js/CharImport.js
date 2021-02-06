@@ -39,6 +39,7 @@ module.exports = class CharImport {
 
     return User.findOne({ where: { id: getUserID(socket)} })
     .then((user) => {
+      if(user == null) { return; }
       return Character.findAll({ where: { userID: user.id} })
       .then((characters) => {
         if(CharStateUtils.canMakeCharacter(user, characters)){
@@ -50,7 +51,7 @@ module.exports = class CharImport {
   }
 
   static processImport(userID, charExportData){
-    charExportData.character.userID = userID;// Test this
+    charExportData.character.userID = userID;// User ID is current user.
 
     try {
 

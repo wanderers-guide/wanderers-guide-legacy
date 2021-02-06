@@ -8,6 +8,7 @@ const CharTags = require('./CharTags');
 const CharDataMapping = require('./CharDataMapping');
 const CharDataMappingExt = require('./CharDataMappingExt');
 const CharExport = require('./CharExport');
+const CharImport = require('./CharImport');
 const AuthCheck = require('./AuthCheck');
 const GeneralGathering = require('./GeneralGathering');
 const HomebrewGathering = require('./HomebrewGathering');
@@ -1706,20 +1707,28 @@ module.exports = class SocketConnections {
     io.on('connection', function(socket){
 
       socket.on('requestCharExport', function(charID){
-        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
-          if(ownsChar){
-            CharExport.getExportData(charID)
-            .then((charExportData) => {
-              socket.emit('returnCharExport', charExportData);
+        AuthCheck.isSupporter(socket).then((isSupporter) => {
+          if(isSupporter){
+            AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+              if(ownsChar){
+                CharExport.getExportData(charID)
+                .then((charExportData) => {
+                  socket.emit('returnCharExport', charExportData);
+                });
+              }
             });
           }
         });
       });
 
       socket.on('requestCharImport', function(charExportData){
-        CharExport.getExportData(socket, charExportData)
-        .then((result) => {
-          socket.emit('returnCharImport');
+        AuthCheck.isSupporter(socket).then((isSupporter) => {
+          if(isSupporter){
+            CharImport.importData(socket, charExportData)
+            .then((result) => {
+              socket.emit('returnCharImport');
+            });
+          }
         });
       });
 

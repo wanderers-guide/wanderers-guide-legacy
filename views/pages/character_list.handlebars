@@ -30,6 +30,8 @@
     <div class="banner_w3lspvt-2"></div>
 {{/section}}
 
+<div class="subpageloader is-hidden"><div class="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div></div>
+
 <div class="container">
 
     <div class="columns is-mobile is-centered is-vcentered pt-3 is-marginless">
@@ -40,10 +42,20 @@
             {{/ifEqual}}
         </div>
         <div class="column is-5 is-paddingless">
+            {{#ifEqual user.isPatreonSupporter 1}}
+              <a id="icon-character-import" class="is-size-3-5 is-pulled-right">
+                <label for="input-character-import">
+                  <span class="icon is-large has-text-info">
+                    <i class="fas fa-upload cursor-clickable"></i>
+                  </span>
+                </label>
+                <input id="input-character-import" type="file"/>
+              </a>
+            {{/ifEqual}}
             {{#if canMakeCharacter}}
-                <a class="is-size-3 is-pulled-right" href="/profile/characters/add"><span class="icon is-large has-text-info"><i class="fas fa-user-plus"></i></span></a>
+              <a class="is-size-3 is-pulled-right" href="/profile/characters/add"><span class="icon is-large has-text-info"><i class="fas fa-user-plus"></i></span></a>
             {{else}}
-                <a class="is-size-3 is-pulled-right"><span class="icon is-large has-text-danger"><i class="fas fa-user-times"></i></span></a>
+              <a class="is-size-3 is-pulled-right"><span class="icon is-large has-text-danger"><i class="fas fa-user-times"></i></span></a>
             {{/if}}
         </div>
     </div>
@@ -73,6 +85,14 @@
                                 </span>
                             {{/if}}
                         </a>
+                        {{#ifEqual ../user.isPatreonSupporter 1}}
+                          <a class="card-footer-item character-card-options has-text-grey-light">
+                              <span class="is-size-6 pr-1">Options</span>
+                              <span class="icon is-small">
+                                  <i class="fas fa-sm fa-ellipsis-h"></i>
+                              </span>
+                          </a>
+                        {{/ifEqual}}
                         <a class="card-footer-item character-card-delete has-text-grey-light">
                             <span class="is-size-6 pr-1">Delete</span>
                             <span class="icon is-small">
@@ -91,6 +111,7 @@
 
 </div>
 
+<!-- Character Delete Modal -->
 <div class="modal modal-char-delete">
     <div class="modal-background"></div>
     <div class="modal-card">
@@ -108,3 +129,25 @@
         </footer>
     </div>
 </div>
+
+<!-- Character Options Modal -->
+<div class="modal modal-char-options">
+  <div class="modal-background"></div>
+  <div class="modal-card">
+    <header class="modal-card-head">
+      <p class="modal-card-title is-size-4 has-text-grey-lighter">Character Options</p>
+      <button class="delete modal-card-close" aria-label="close"></button>
+    </header>
+    <section class="modal-card-body pb-3">
+
+      <div class="buttons is-centered">
+        <button id="btn-export-character" class="button is-info"><span>Export Character</span><span class="icon"><i class="fas fa-download"></i></span></button>
+        <button id="btn-export-to-pdf" class="button is-info"><span>Export to PDF</span><span class="icon"><i class="fas fa-file-pdf"></i></span></button>
+      </div>
+            
+    </section>
+    <footer class="modal-card-foot">
+    </footer>
+  </div>
+</div>
+

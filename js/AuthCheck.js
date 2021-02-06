@@ -51,21 +51,30 @@ module.exports = class AuthCheck {
     }
 
     static isAdmin(socket) {
-        return User.findOne({ where: { id: getUserID(socket)} })
-        .then((user) => {
-            return user.isAdmin === 1;
-        }).catch((error) => {
-            return false;
-        });
+      return User.findOne({ where: { id: getUserID(socket)} })
+      .then((user) => {
+          return user.isAdmin === 1;
+      }).catch((error) => {
+          return false;
+      });
     }
 
     static isMember(socket) {
-        return User.findOne({ where: { id: getUserID(socket)} })
-        .then((user) => {
-            return user.isPatreonMember === 1;
-        }).catch((error) => {
-            return false;
-        });
+      return User.findOne({ where: { id: getUserID(socket)} })
+      .then((user) => {
+          return user.isPatreonMember === 1;
+      }).catch((error) => {
+          return false;
+      });
+    }
+
+    static isSupporter(socket) {
+      return User.findOne({ where: { id: getUserID(socket)} })
+      .then((user) => {
+          return user.isPatreonSupporter === 1;
+      }).catch((error) => {
+          return false;
+      });
     }
 
 };

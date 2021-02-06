@@ -80,7 +80,7 @@ function openCustomizeProfQuickview(data) {
                     For : data.ProfSrcData.For,
                     To : data.ProfSrcData.To,
                     Prof : prof,
-                    SourceName: 'User-Set Prof',
+                    SourceName: 'User-Override',
                 }
             );
         }
@@ -105,7 +105,7 @@ function openCustomizeProfQuickview(data) {
                     For : data.ProfSrcData.For,
                     To : data.ProfSrcData.To,
                     Prof : parseInt(userBonus),
-                    SourceName: 'User-Set Prof',
+                    SourceName: 'User-Override',
                 }
             );
         }

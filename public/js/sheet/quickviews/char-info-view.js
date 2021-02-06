@@ -65,11 +65,6 @@ function openCharInfoQuickview(data) {
 
   qContent.append('<div class="control"><input id="charInfoInput-ImageURL" class="input isURL" type="text" spellcheck="false" autocomplete="off" placeholder="Image URL"></div>');
 
-  
-  // TEMP CODE //
-  qContent.append('<hr class="m-3">');
-  charExportBtn(qContent);
-
 
   // //
 

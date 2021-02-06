@@ -94,7 +94,7 @@ function openAddProfQuickview(data) {
                 For : type,
                 To : subType,
                 Prof : prof,
-                SourceName: 'User-Added Prof'
+                SourceName: 'User-Added'
             }
         );
 
