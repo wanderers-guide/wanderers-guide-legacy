@@ -252,7 +252,7 @@ function displayCurrentClass(classStruct, saving) {
                         'GIVE-PROF-IN='+skillName+':T',
                         srcStruct,
                         'profSkillsCode',
-                        'Initial Class Profs - Skills');
+                        'Initial Class');
                 } else {
                     $('.'+tSkillControlShellClass).addClass("is-info");
                     socket.emit("requestProficiencyChange",
@@ -422,9 +422,9 @@ function displayCurrentClass(classStruct, saving) {
                 'GIVE-PROF-IN='+savingProf.To+':T',
                 srcStruct,
                 'profSkillsCode',
-                'Initial Class Profs');
+                'Initial Class');
         } else {
-            savingProf.SourceName = 'Initial Class Profs';
+            savingProf.SourceName = 'Initial Class';
             socket.emit("requestProficiencyChange",
                 getCharIDFromURL(),
                 {srcStruct, isSkill : false},

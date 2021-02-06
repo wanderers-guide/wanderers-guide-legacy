@@ -321,7 +321,7 @@ socket.on("returnCharacterSheetInfo", function(charInfo, viewOnly){
 
 function loadCharSheet(){
 
-    console.log('~ LOADING CHAR SHEET ~');
+    console.log('~ LOADING SHEET ~');
 
     // Saving Scroll States //
     g_inventoryTabScroll = $('#inventoryContent').scrollTop();

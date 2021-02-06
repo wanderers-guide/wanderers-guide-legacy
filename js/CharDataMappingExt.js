@@ -33,7 +33,7 @@ module.exports = class CharDataMappingExt {
                 data.For = vParts[0];
                 data.To = vParts[1];
                 data.Prof = vParts[2];
-                if(vParts.length == 4){ data.SourceName = vParts[3]; }
+                if(vParts.length == 4){ data.SourceName = vParts[3]; } else { data.SourceName = 'Unknown'; }
             }
             return dataArray;
         });

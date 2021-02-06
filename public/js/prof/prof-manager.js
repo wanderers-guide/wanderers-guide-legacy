@@ -104,7 +104,7 @@ function getFinalProf(profDataArray) {
 
   return {
     Name : finalProfData.ProfName,
-    NumUps : profToNumUp(finalProfData.BestProf)+finalProfData.NumIncreases,
+    NumUps : profToNumUp(finalProfData.BestProf, true)+finalProfData.NumIncreases,
     For : finalProfData.For,
     UserBonus : finalProfData.UserBonus,
     UserProfOverride : finalProfData.UserProfOverride,

@@ -85,7 +85,7 @@ function giveProfSkillTraining(srcStruct, profName, prof, locationID, sourceName
         return;
 
     } else {
-        giveInProf(srcStruct, profName, prof, locationID);
+        giveInProf(srcStruct, profName, prof, locationID, sourceName);
         return;
     }
 

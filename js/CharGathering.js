@@ -1589,6 +1589,12 @@ module.exports = class CharGathering {
 
             let profMap = new Map();
             for(const profData of profDataArray){
+
+              // Convert lores to be the same
+              if(profData.To.includes('_LORE')){
+                profData.To = capitalizeWords(profData.To.replace('_LORE',' Lore'));
+              }
+
               let profMapValue = profMap.get(profData.To);
               if(profMapValue != null){
                 profMapValue.push(profData);

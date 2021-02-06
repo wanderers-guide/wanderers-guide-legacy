@@ -167,7 +167,7 @@ function updateSkillMap(refreshLists){
 
       skillMap.set(skillData.SkillName, {
           Name : skillData.SkillName,
-          NumUps : profToNumUp(bestProf)+numUps,
+          NumUps : profToNumUp(bestProf, true)+numUps,
           Skill : skillData.Skill
       });
   }

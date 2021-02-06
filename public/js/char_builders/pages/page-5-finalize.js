@@ -112,7 +112,7 @@ socket.on("returnLangsAndTrainingsClear", function(srcStruct, data){
           giveSkillTrainingCode,
           srcStruct,
           data.SkillLocationID,
-          'Final - Skill Training');
+          'Final Skill Trainings');
     }
 
     if(wscChoiceStruct.Ancestry != null){
@@ -127,7 +127,7 @@ socket.on("returnLangsAndTrainingsClear", function(srcStruct, data){
           giveLanguageCode,
           srcStruct,
           data.LangLocationID,
-          'Final - Languages');
+          'Final Languages');
     }
 
     if(data.Character != null){

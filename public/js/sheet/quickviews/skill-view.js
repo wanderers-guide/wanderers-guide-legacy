@@ -24,10 +24,11 @@ function openSkillQuickview(data) {
     let abilityScoreName = lengthenAbilityType(data.Skill.ability);
 
     let profName = getProfNameFromNumUps(data.ProfData.NumUps);
+    let profNameHTML = getProfHistoryHTML(data.SkillName);
     if(data.ProfData.UserProfOverride != null && data.ProfData.UserProfOverride){
-        qContent.append('<p><strong>Proficiency:</strong> '+profName+' <span class="is-inline pl-1 is-size-7 is-italic"> ( Override )</span></p>');
+        qContent.append('<p><strong>Proficiency:</strong> '+profNameHTML+' <span class="is-inline pl-1 is-size-7 is-italic"> ( Override )</span></p>');
     } else {
-        qContent.append('<p><strong>Proficiency:</strong> '+profName+'</p>');
+        qContent.append('<p><strong>Proficiency:</strong> '+profNameHTML+'</p>');
     }
     
     let userBonus = data.ProfData.UserBonus;
