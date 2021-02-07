@@ -39,8 +39,6 @@ function openCustomizeProfQuickview(data) {
 
     $('#customizeSaveButton').click(function(){
 
-        console.log(data);
-
         // Reloads character sheet twice, which is unnecessary.
 
         let prof = $('#customizeProf').val();

@@ -122,4 +122,30 @@ function openSkillQuickview(data) {
     };
     displayNotesField(qContent, noteFieldSrcStruct);
 
+    
+    let userAddedData = getUserAddedData(g_profMap.get(data.SkillName));
+    if(userAddedData != null){
+      qContent.append('<hr class="m-2">');
+      qContent.append('<div class="buttons is-centered is-marginless"><a id="removeUserAddedLoreButton" class="button is-small is-danger is-rounded is-outlined mt-3">Remove</a></div>');
+
+      $('#removeUserAddedLoreButton').click(function(){ // Remove User-Added Lore
+
+        let srcStruct = {
+          sourceType: 'user-added',
+          sourceLevel: 0,
+          sourceCode: data.SkillName,
+          sourceCodeSNum: 'a',
+        };
+        socket.emit("requestLoreChange",
+            getCharIDFromURL(),
+            srcStruct,
+            null,
+            null,
+            'T',
+            'User-Added'
+        );
+
+      });
+    }
+
 }

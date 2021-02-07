@@ -97,6 +97,10 @@ function openQuickView(type, data, noProtection=false) {
         openCustomizeProfQuickview(data);
     } else if(type == 'addProfView'){
         openAddProfQuickview(data);
+    } else if(type == 'addLoreView'){
+        openAddLoreQuickview(data);
+    } else if(type == 'addLangView'){
+        openAddLangQuickview(data);
     } else if(type == 'tagView'){
         openTagQuickview(data);
     } else if(type == 'classDCView'){

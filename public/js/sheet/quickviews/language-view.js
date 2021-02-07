@@ -10,9 +10,14 @@ function openLanguageQuickview(data) {
 
     qContent.append('<p class="negative-indent"><strong>Speakers</strong> '+data.Language.speakers+'</p>');
     qContent.append('<p class="negative-indent"><strong>Script</strong> '+data.Language.script+'</p>');
-    qContent.append('<hr class="m-2">');
-    qContent.append(processText(data.Language.description, true, true, 'MEDIUM'));
 
+    // Description
+    if(data.Language.description != null){
+      qContent.append('<hr class="m-2">');
+      qContent.append(processText(data.Language.description, true, true, 'MEDIUM'));
+    }
+
+    // Script
     let scriptClass = '';
     if(data.Language.script == 'Common'){
         scriptClass = 'font-common';
@@ -35,12 +40,40 @@ function openLanguageQuickview(data) {
     } else if(data.Language.script == 'Druidic'){
         scriptClass = 'font-druidic';
     }
-
     if(scriptClass != ''){
         qContent.append('<hr class="m-2">');
         qContent.append('<input id="scriptDisplayArea" class="input is-medium" spellcheck="false" type="text" autocomplete="off" placeholder="Script Display Area">');
         $('#scriptDisplayArea').addClass(scriptClass);
+    }
+    
+    // User Added, Remove Button
+    if(data.SourceType == 'user-added'){
+      qContent.append('<div class="buttons is-centered is-marginless"><a id="removeUserAddedLangButton" class="button is-small is-danger is-rounded is-outlined mt-3">Remove</a></div>');
 
+      $('#removeUserAddedLangButton').click(function(){ // Remove User-Added Lang
+
+        let srcStruct = {
+          sourceType: 'user-added',
+          sourceLevel: 0,
+          sourceCode: 'Lang #'+data.Language.id,
+          sourceCodeSNum: 'a',
+        };
+        socket.emit("requestLanguageChange",
+            getCharIDFromURL(),
+            srcStruct,
+            null
+        );
+
+        // Remove lang from character's lang array
+        let newLangArray = [];
+        for(const langData of g_langArray){
+          if(langData.value.id != data.Language.id){
+            newLangArray.push(langData);
+          }
+        }
+        g_langArray = newLangArray;
+
+      });
     }
 
 }

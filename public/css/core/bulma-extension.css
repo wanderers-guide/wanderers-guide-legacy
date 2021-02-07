@@ -28,6 +28,14 @@
   -webkit-text-decoration-color: hsl(48, 100%, 67%); /* Safari */  
   text-decoration-color: hsl(48, 100%, 67%);
 }
+.is-underlined-thin {
+  border-bottom: 1px solid;
+  border-color: inherit;
+}
+.is-underlined-thin-darker {
+  border-bottom: 1px solid;
+  border-color: #484848;
+}
 .has-text-center-justified {
   text-align: justify!important;
   text-align-last: center!important;

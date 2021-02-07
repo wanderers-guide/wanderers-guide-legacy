@@ -190,6 +190,11 @@ socket.on("returnCharacterSheetInfo", function(charInfo, viewOnly){
       }
     );
     g_allLanguages = charInfo.AllLanguages;
+    g_allLanguages = g_allLanguages.sort(
+      function(a, b) {
+        return a.name > b.name ? 1 : -1;
+      }
+    );
     
     g_specializationStruct = charInfo.SpecializeStruct;
     g_weaponFamiliaritiesArray = charInfo.WeaponFamiliarities;
@@ -1123,6 +1128,11 @@ function displayInformation() {
     //////////////////////////////////////////// Skills ////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
+    $("#addNewLoreButton").click(function(){
+      openQuickView('addLoreView', {
+      });
+    });
+
     let skills = $("#skills");
     skills.html('');
     let hasFascinatedCondition = hasCondition(14); // Hardcoded - Fascinated condition decreases all skills by -2
@@ -1164,7 +1174,18 @@ function displayInformation() {
 
         let conditionalStar = (hasConditionals('SKILL_'+skillName)) ? '<sup class="is-size-7 has-text-info">*</sup>' : '';
 
-        skills.append('<a id="'+skillButtonID+'" class="panel-block skillButton border-dark-lighter"><span class="panel-icon has-text-grey-lighter">'+signNumber(totalBonus)+conditionalStar+'</span><span class="pl-3 has-text-grey-light">'+skillName+'</span></a>');
+
+        let skillNameHTML = '<span class="has-text-grey-light">'+skillName+'</span>';
+
+        // Underline if lore is user-added
+        if(skillName.includes(' Lore')){
+          let userAddedData = getUserAddedData(g_profMap.get(skillName));
+          if(userAddedData != null){
+            skillNameHTML = '<span class="has-text-grey-light is-underlined-thin-darker">'+skillName+'</span>';
+          }
+        }
+
+        skills.append('<a id="'+skillButtonID+'" class="panel-block skillButton border-dark-lighter"><span class="panel-icon has-text-grey-lighter">'+signNumber(totalBonus)+conditionalStar+'</span><span class="pl-3">'+skillNameHTML+'</span></a>');
         g_calculatedStats.totalSkills.push({Name: skillName, Bonus: totalBonus});// Calculated Stat
 
         $('#'+skillButtonID).click(function(){
@@ -1343,6 +1364,11 @@ function displayInformation() {
     ////////////////////////////////////////// Languages ///////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
+    $("#addNewLangButton").click(function(){
+      openQuickView('addLangView', {
+      });
+    });
+
     let languagesContent = $('#languagesContent');
     languagesContent.html('');
     let langCount = 0;
@@ -1351,10 +1377,20 @@ function displayInformation() {
         if(langCount != 0){languagesContent.append(', ');}
         langCount++;
         let langID = 'langLink'+lang.value.id+"C"+langCount;
-        languagesContent.append('<a id="'+langID+'" class="is-size-6">'+lang.value.name+'</a>');
+        
+
+        let langNameHTML = '<span class="">'+lang.value.name+'</span>';
+
+        // Underline if lang is user-added
+        if(lang.sourceType == 'user-added'){
+          langNameHTML = '<span class="is-underlined-thin-darker">'+lang.value.name+'</span>';
+        }
+
+        languagesContent.append('<a id="'+langID+'" class="is-size-6">'+langNameHTML+'</a>');
         $('#'+langID).click(function(){
             openQuickView('languageView', {
-                Language : lang.value
+                Language : lang.value,
+                SourceType : lang.sourceType,
             });
         });
     }
@@ -2256,7 +2292,7 @@ function runAllFeatsAndAbilitiesCode() {
 function otherProfBuild(content, prof, name, otherProfsNum, profData, profSrcData){
 
     if(profData.UserAdded){
-        prof = '<span class="is-underlined">'+prof+'</span>';
+        prof = '<span class="is-underlined-thin-darker">'+prof+'</span>';
     } else {
         prof = '<span>'+prof+'</span>';
     }
@@ -2385,8 +2421,27 @@ socket.on("returnHeroPointsSave", function(){
 });
 
 socket.on("returnProficiencyChange", function(profChangePacket){
-    socket.emit("requestProfsAndSkills",
-        getCharIDFromURL());
+  socket.emit("requestProfsAndSkills",
+      getCharIDFromURL());
+});
+
+socket.on("returnLoreChange", function(srcStruct, loreName, inputPacket, prof){
+  socket.emit("requestProfsAndSkills",
+      getCharIDFromURL());
+});
+
+socket.on("returnLanguageChange", function(){
+  g_langArray = g_langArray.sort(
+    function(a, b) {
+      if(a.value != null && b.value != null){
+        return a.value.name > b.value.name ? 1 : -1;
+      } else {
+        return 1;
+      }
+    }
+  );
+  loadCharSheet();
+  closeQuickView();
 });
 
 socket.on("returnAddFundamentalRune", function(invItemID, invStruct){
