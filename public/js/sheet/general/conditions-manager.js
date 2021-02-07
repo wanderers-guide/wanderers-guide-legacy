@@ -100,7 +100,7 @@ socket.on("returnUpdateConditionsMap", function(conditionsObject, reloadSheet){
     g_conditionsMap = objToMap(conditionsObject);
 
     if(reloadSheet){
-      loadCharSheet();
+      reloadCharSheet();
 
       // Update armor and shield within the sheet, fixing a bug with AC and conditions
       determineArmor(getModOfValue('DEX'), g_preConditions_strScore);

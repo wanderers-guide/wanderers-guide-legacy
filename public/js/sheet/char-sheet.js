@@ -2400,7 +2400,7 @@ function takeRest(){
         }
     }
 
-    loadCharSheet();
+    reloadCharSheet();
     
 }
 
@@ -2413,7 +2413,7 @@ socket.on("returnProfsAndSkills", function(profObject, skillObject){
     g_skillMap = objToMap(skillObject);
     g_weaponProfMap = buildWeaponProfMap();
     g_armorProfMap = buildArmorProfMap();
-    loadCharSheet();
+    reloadCharSheet();
     closeQuickView();
 });
 
@@ -2440,14 +2440,14 @@ socket.on("returnLanguageChange", function(){
       }
     }
   );
-  loadCharSheet();
+  reloadCharSheet();
   closeQuickView();
 });
 
 socket.on("returnAddFundamentalRune", function(invItemID, invStruct){
     $('#invItemAddFundamentalRuneButton'+invItemID).removeClass('is-loading');
     g_invStruct = invStruct;
-    loadCharSheet();
+    reloadCharSheet();
     closeQuickView();
 });
 
@@ -2457,20 +2457,20 @@ socket.on("returnAddItemToInv", function(item, invItem, invStruct){
     $('#createCustomItemBtn').removeClass('is-loading');
     g_invStruct = invStruct;
     processDefaultItemRuneSheetCode(item.code, item.id, invItem.id);
-    loadCharSheet();
+    reloadCharSheet();
 });
 
 socket.on("returnRemoveItemFromInv", function(invItemID, invStruct){
     $('#invItemRemoveButton'+invItemID).removeClass('is-loading');
     g_invStruct = invStruct;
-    loadCharSheet();
+    reloadCharSheet();
     closeQuickView();
 });
 
 socket.on("returnInvItemMoveBag", function(invItemID, invStruct){
     $('#invItemMoveSelect'+invItemID).removeClass('is-loading');
     g_invStruct = invStruct;
-    loadCharSheet();
+    reloadCharSheet();
     closeQuickView();
 });
 
@@ -2480,13 +2480,13 @@ socket.on("returnAddItemToBag", function(){
 
 socket.on("returnInvItemUpdated", function(invStruct){
     g_invStruct = invStruct;
-    loadCharSheet();
+    reloadCharSheet();
     closeQuickView();
 });
 
 socket.on("returnInvUpdate", function(invStruct){
     g_invStruct = invStruct;
-    loadCharSheet();
+    reloadCharSheet();
 });
 
 ////

@@ -477,7 +477,7 @@ function handleArmorEquip(invID){
             $(this).click(function(event){
                 event.stopImmediatePropagation();
                 g_equippedArmorInvItemID = null;
-                loadCharSheet();
+                reloadCharSheet();
                 updateInventoryBackend(invID);
             });
         } else {
@@ -485,7 +485,7 @@ function handleArmorEquip(invID){
             $(this).click(function(event){
                 event.stopImmediatePropagation();
                 g_equippedArmorInvItemID = invItemID;
-                loadCharSheet();
+                reloadCharSheet();
                 updateInventoryBackend(invID);
             });
         }
@@ -500,7 +500,7 @@ function handleShieldEquip(invID){
             $(this).click(function(event){
                 event.stopImmediatePropagation();
                 g_equippedShieldInvItemID = null;
-                loadCharSheet();
+                reloadCharSheet();
                 updateInventoryBackend(invID);
             });
         } else {
@@ -508,7 +508,7 @@ function handleShieldEquip(invID){
             $(this).click(function(event){
                 event.stopImmediatePropagation();
                 g_equippedShieldInvItemID = invItemID;
-                loadCharSheet();
+                reloadCharSheet();
                 updateInventoryBackend(invID);
             });
         }
