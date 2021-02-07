@@ -222,10 +222,67 @@ function displayAddItem(itemID, itemDataStruct, data){
         itemName += ' ('+itemDataStruct.Item.quantity+')';
     }
 
-    $('#addItemListSection').append('<div class="tile is-parent is-flex is-paddingless border-bottom border-additems has-background-black-like cursor-clickable" data-item-id="'+itemID+'"><div class="tile is-child is-7 itemEntryPart"><p id="'+addItemNameID+'" class="has-text-left mt-1 pl-3 has-text-grey-lighter">'+itemName+'</p></div><div class="tile is-child is-2 itemEntryPart"><p class="has-text-centered is-size-7 mt-2">'+itemLevel+'</p></div><div class="tile is-child"><button id="'+addItemAddItemID+'" class="button my-1 is-small is-success is-outlined is-rounded">Add</button></div><div class="tile is-child is-1 itemEntryPart"><span class="icon has-text-grey mt-2"><i id="'+addItemChevronItemID+'" class="fas fa-chevron-down"></i></span></div></div><div id="'+addItemDetailsItemID+'"></div>');
+    
+    let isBuyableItem = (!(itemDataStruct.Item.itemType == 'CURRENCY' || itemDataStruct.Item.price == 0));
+    
+    let addItemHTML = null;
+    if(isBuyableItem){
+      addItemHTML = '<div class="select my-1 is-small is-success"><select id="'+addItemAddItemID+'"><option value="chooseDefault">Add</option><optgroup label="─────"></optgroup><option value="BUY">Buy</option><option value="GIVE">Give</option></select></div>';
+    } else {
+      addItemHTML = '<button id="'+addItemAddItemID+'" class="button my-1 is-small is-success is-outlined is-rounded">Give</button>';
+    }
 
+    $('#addItemListSection').append('<div class="tile is-parent is-flex is-paddingless border-bottom border-additems has-background-black-like cursor-clickable" data-item-id="'+itemID+'"><div class="tile is-child is-7 itemEntryPart"><p id="'+addItemNameID+'" class="has-text-left mt-1 pl-3 has-text-grey-lighter">'+itemName+'</p></div><div class="tile is-child is-2 itemEntryPart"><p class="has-text-centered is-size-7 mt-2">'+itemLevel+'</p></div><div class="tile is-child">'+addItemHTML+'</div><div class="tile is-child is-1 itemEntryPart"><span class="icon has-text-grey mt-2"><i id="'+addItemChevronItemID+'" class="fas fa-chevron-down"></i></span></div></div><div id="'+addItemDetailsItemID+'"></div>');
 
-    $('#'+addItemAddItemID).click(function(){
+    if(isBuyableItem){
+
+      $('#'+addItemAddItemID).change(function(){
+        let addItemType = $("#"+addItemAddItemID+" option:selected").val();
+        if(addItemType != 'chooseDefault') {
+          $(this).parent().addClass('is-loading');
+  
+          if(addItemType == 'GIVE') {
+            socket.emit("requestAddItemToInv",
+                getCharIDFromURL(),
+                data.InvID,
+                itemID,
+                itemDataStruct.Item.quantity);
+          }
+  
+          if(addItemType == 'BUY') {
+  
+            let itemPriceInCP = getConvertedPriceForSize(itemDataStruct.Item.size, itemDataStruct.Item.price);
+            let itemPriceStr = getCoinToString(itemPriceInCP);
+
+            if(hasCoins(itemPriceInCP)){
+
+              new ConfirmMessage('Buy “'+itemDataStruct.Item.name+'”', 'This item costs <span class="has-text-info">'+itemPriceStr+'</span>, purchasing it will automatically simplify your coins. Are you sure you want to buy this?', 'Buy Item', 'modal-buy-item', 'modal-buy-item-btn', 'is-success');
+              addQuickViewProtection();
+              $('#modal-buy-item-btn').click(function(event) {
+                reduceAndSimplifyCoins(itemPriceInCP);
+                socket.emit("requestAddItemToInv",
+                    getCharIDFromURL(),
+                    data.InvID,
+                    itemID,
+                    itemDataStruct.Item.quantity);
+              });
+
+            } else {
+              
+              $(this).parent().removeClass('is-loading');
+              new ConfirmMessage('Insufficient Funds', 'This item costs <span class="has-text-danger">'+itemPriceStr+'</span>, more than you have in your inventory.', 'Okay', 'modal-fail-to-buy-item', 'modal-fail-to-buy-item-btn');
+              addQuickViewProtection();
+              
+            }
+  
+          }
+          $("#"+addItemAddItemID).val('chooseDefault');
+        }
+      });
+
+    } else {
+
+      $('#'+addItemAddItemID).click(function(){
         $(this).addClass('is-loading');
         socket.emit("requestAddItemToInv",
             getCharIDFromURL(),
@@ -233,7 +290,9 @@ function displayAddItem(itemID, itemDataStruct, data){
             itemID,
             itemDataStruct.Item.quantity);
         $(this).blur();
-    });
+      });
+
+    }
 
 }
 

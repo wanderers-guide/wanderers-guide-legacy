@@ -2452,6 +2452,7 @@ socket.on("returnAddFundamentalRune", function(invItemID, invStruct){
 });
 
 socket.on("returnAddItemToInv", function(item, invItem, invStruct){
+    $('#addItemAddItem'+item.id).parent().removeClass('is-loading');
     $('#addItemAddItem'+item.id).removeClass('is-loading');
     $('#createCustomItemBtn').removeClass('is-loading');
     g_invStruct = invStruct;

@@ -124,6 +124,15 @@ function closeQuickView() {
   g_QViewLastData = null;
 }
 
+function addQuickViewProtection(){
+  $('#quickviewDefault').addClass('quickview-auto-close-protection');
+}
+
+function refreshQuickView() {
+  if($('#quickviewDefault').hasClass('is-active')) {
+    openQuickView(g_QViewLastType, g_QViewLastData, true);
+  }
+}
 
 
 function addBackFunctionality(quickViewData){
