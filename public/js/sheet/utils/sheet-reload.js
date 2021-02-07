@@ -15,5 +15,5 @@ function setDelayToReloadSheet(){
   setTimeout(() => {
     loadCharSheet();
     g_reloadingSheet = false;
-  }, 200);
+  }, 175);
 }
