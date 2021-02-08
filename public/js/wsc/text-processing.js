@@ -63,6 +63,9 @@ function processText(text, isSheet, isJustified = false, size = 'MEDIUM', indexC
     // __word__ - Makes word italicized
     text = text.replace(/\_\_(.+?)\_\_/g, '<em>$1</em>');
 
+    // $$grey:word$$ - Makes word italicized
+    text = text.replace(/\$\$grey:(.+?)\$\$/gi, '<span class="has-text-grey">$1</span>');
+
     // ~~word~~ - Makes word strikethrough
     text = text.replace(/\~\~(.+?)\~\~/g, '<s>$1</s>');
 

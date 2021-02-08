@@ -1101,14 +1101,14 @@ module.exports = class SocketConnections {
         });
       });
 
-      socket.on('requestAddClassFeature', function(charID, srcStruct, featureName, locationID){
+      socket.on('requestAddClassFeature', function(charID, srcStruct, featureName, inputPacket){
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
           if(ownsChar){
             if(featureName == null){
 
               CharDataMapping.deleteData(charID, 'classAbilityExtra', srcStruct)
               .then((result) => {
-                socket.emit('returnAddClassFeature', srcStruct, null, locationID);
+                socket.emit('returnAddClassFeature', srcStruct, null, inputPacket);
               });
 
             } else {
@@ -1121,10 +1121,10 @@ module.exports = class SocketConnections {
                     if(classFeature.selectType == 'SELECTOR'){
                       CharGathering.getAllClassFeatureOptions(charID)
                       .then((allOptions) => {
-                        socket.emit('returnAddClassFeature', srcStruct, classFeature, allOptions, locationID);
+                        socket.emit('returnAddClassFeature', srcStruct, classFeature, allOptions, inputPacket);
                       });
                     } else {
-                      socket.emit('returnAddClassFeature', srcStruct, classFeature, null, locationID);
+                      socket.emit('returnAddClassFeature', srcStruct, classFeature, null, inputPacket);
                     }
                   });
 

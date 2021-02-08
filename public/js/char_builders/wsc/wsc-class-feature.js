@@ -6,8 +6,14 @@
 function processingClassFeatures(wscStatement, srcStruct, locationID, sourceName){
 
   if(wscStatement.includes("GIVE-CLASS-FEATURE-NAME")){ // GIVE-CLASS-FEATURE-NAME=Polymath
-      let featureName = wscStatement.split('=')[1];
-      giveClassFeatureByName(srcStruct, locationID, featureName);
+      let value = wscStatement.split('=')[1];
+      let optionals = value.match(/^.+?\[(.+?)\]$/);
+      if(optionals != null){
+        value = value.split('[')[0];
+        optionals = optionals[1].split(',');
+      }
+      let dontRunCode = (optionals != null && optionals.length > 0 && optionals[0].toUpperCase() == 'NO-CODE');
+      giveClassFeatureByName(srcStruct, locationID, value, dontRunCode);
   } else {
       displayError("Unknown statement (2-ClassFeature): \'"+wscStatement+"\'");
       statementComplete();
@@ -15,19 +21,19 @@ function processingClassFeatures(wscStatement, srcStruct, locationID, sourceName
 
 }
 
-//////////////////////////////// Give CLass Feature ///////////////////////////////////
+//////////////////////////////// Give Class Feature ///////////////////////////////////
 
-function giveClassFeatureByName(srcStruct, locationID, featureName){
+function giveClassFeatureByName(srcStruct, locationID, featureName, dontRunCode=false){
 
   socket.emit("requestAddClassFeature",
       getCharIDFromURL(),
       srcStruct,
       featureName,
-      locationID);
+      { locationID, dontRunCode });
 
 }
 
-socket.on("returnAddClassFeature", function(srcStruct, classAbility, allClassAbilityOptions, locationID){
+socket.on("returnAddClassFeature", function(srcStruct, classAbility, allClassAbilityOptions, inputPacket){
   if(classAbility == null) { statementComplete(); return; }
 
   let classAbilityID = "classAbility"+classAbility.id;
@@ -35,7 +41,7 @@ socket.on("returnAddClassFeature", function(srcStruct, classAbility, allClassAbi
   let classAbilityContentID = "classAbilityContent"+classAbility.id;
   let classAbilityCodeID = "classAbilityCode"+classAbility.id;
 
-  $('#'+locationID).append('<div id="'+classAbilityID+'" class="box lighter my-2"></div>');
+  $('#'+inputPacket.locationID).append('<div id="'+classAbilityID+'" class="box lighter my-2"></div>');
 
   ///
   let classAbilitySection = $('#'+classAbilityID);
@@ -132,12 +138,20 @@ socket.on("returnAddClassFeature", function(srcStruct, classAbility, allClassAbi
                     { SelectorID : classAbility.id+'', OptionID : chosenAbilityID });
             }
 
-            // Run ability choice code
-            processCode(
-                chosenClassAbility.code,
-                srcStruct,
-                abilityCodeID,
-                chosenClassAbility.name);
+            if(inputPacket.dontRunCode) {
+              processCode(
+                  'ADD-TEXT=__$$grey:You don’t gain any of this option’s other effects, just the class feature option itself.$$__',
+                  srcStruct,
+                  abilityCodeID,
+                  chosenClassAbility.name);
+            } else {
+              // Run ability choice code
+              processCode(
+                  chosenClassAbility.code,
+                  srcStruct,
+                  abilityCodeID,
+                  chosenClassAbility.name);
+            }
             
         }
         $(this).blur();
@@ -147,11 +161,19 @@ socket.on("returnAddClassFeature", function(srcStruct, classAbility, allClassAbi
 
   }
 
-  processCode(
-      classAbility.code,
-      srcStruct,
-      classAbilityCodeID,
-      classAbility.name);
+  if(inputPacket.dontRunCode) {
+    processCode(
+        'ADD-TEXT=__$$grey:You don’t gain any of this class feature’s other effects, just the feature itself.$$__',
+        srcStruct,
+        classAbilityCodeID,
+        classAbility.name);
+  } else {
+    processCode(
+        classAbility.code,
+        srcStruct,
+        classAbilityCodeID,
+        classAbility.name);
+  }
 
   extraClassFeaturesUpdateWSCChoiceStruct(classAbility);
 
