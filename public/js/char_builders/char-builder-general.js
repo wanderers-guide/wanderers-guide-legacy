@@ -95,6 +95,7 @@ socket.on("returnBuilderPageAncestry", function(ancestryObject, uniHeritageArray
 
       window.history.pushState('profile/characters/builder', '', '/profile/characters/builder/?id='+getCharIDFromURL()+'&page=2');// Update URL
       loadAncestryPage(ancestryObject, uniHeritageArray);
+      timeOutFinishLoad();
     }
   });
 });
@@ -121,6 +122,7 @@ socket.on("returnBuilderPageBackground", function(backgrounds){
 
       window.history.pushState('profile/characters/builder', '', '/profile/characters/builder/?id='+getCharIDFromURL()+'&page=3');// Update URL
       loadBackgroundPage(backgrounds);
+      timeOutFinishLoad();
     }
   });
 });
@@ -147,6 +149,7 @@ socket.on("returnBuilderPageClass", function(classObject){
 
       window.history.pushState('profile/characters/builder', '', '/profile/characters/builder/?id='+getCharIDFromURL()+'&page=4');// Update URL
       loadClassPage(classObject);
+      timeOutFinishLoad();
     }
   });
 });
@@ -172,6 +175,7 @@ socket.on("returnBuilderPageFinalize", function(character, cClass, ancestry){
 
       window.history.pushState('profile/characters/builder', '', '/profile/characters/builder/?id='+getCharIDFromURL()+'&page=5');// Update URL
       loadFinalizePage(character, cClass, ancestry);
+      timeOutFinishLoad();
     }
   });
 });
@@ -203,4 +207,10 @@ function startLoadingPage() {
 function finishLoadingPage() {
   // Turn off page loading
   $('.pageloader').addClass("fadeout");
+}
+
+function timeOutFinishLoad(){
+  window.setTimeout(() => {
+    finishLoadingPage();
+  }, 15000); // 15 seconds
 }

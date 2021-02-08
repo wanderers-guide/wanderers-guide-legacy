@@ -134,6 +134,8 @@ socket.on("returnLangsAndTrainingsClear", function(srcStruct, data){
       runCustomCodeBlock(data.Character);
     }
 
+    finishLoadingPage();
+
 });
 
 function runCustomCodeBlock(character) {
