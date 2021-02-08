@@ -70,7 +70,7 @@ socket.on("returnAddClassFeature", function(srcStruct, classAbility, allClassAbi
       classAbilitySelectorInnerHTML += '<optgroup label="──────────"></optgroup>';
 
       let choice = wscChoiceStruct.ChoiceArray.find(choice => {
-          return choice.SelectorID == classAbility.id;
+          return choice.SelectorID == classAbility.id && hasSameSrc(choice, srcStruct);
       });
       for(const classSelectionOption of allClassAbilityOptions) {
           if(classSelectionOption.selectType === 'SELECT_OPTION' && (classSelectionOption.selectOptionFor === classAbility.id || classSelectionOption.indivClassAbilName === classAbility.name)) {
@@ -100,12 +100,13 @@ socket.on("returnAddClassFeature", function(srcStruct, classAbility, allClassAbi
         $('#'+descriptionID).html('');
         $('#'+abilityCodeID).html('');
 
+        /* Don't use the class ability's normal srcStruct, use the code block's
         let srcStruct = {
             sourceType: 'class',
             sourceLevel: classAbility.level,
             sourceCode: 'classAbilitySelector-'+classAbility.id,
             sourceCodeSNum: 'a',
-        };
+        };*/
 
         if($(this).val() == "chooseDefault"){
             $(this).parent().addClass("is-info");
@@ -124,6 +125,7 @@ socket.on("returnAddClassFeature", function(srcStruct, classAbility, allClassAbi
             $('#'+descriptionID).parent().parent().parent().parent().removeClass('is-hidden');
 
             let chosenAbilityID = $(this).val();
+            
             let chosenClassAbility = allClassAbilityOptions.find(classAbility => {
                 return classAbility.id == chosenAbilityID;
             });
