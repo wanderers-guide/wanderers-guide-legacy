@@ -5,6 +5,12 @@
 let socket = io();
 
 let g_activeBundle = null;
+
+let g_featMap = null;
+let g_itemMap = null;
+let g_spellMap = null;
+let g_allLanguages = null;
+let g_allConditions = null;
 let g_allTags = null;
 
 // ~~~~~~~~~~~~~~ // Run on Load // ~~~~~~~~~~~~~~ //

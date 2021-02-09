@@ -103,7 +103,7 @@ router.get('/create/ancestry', bundleAuthCheck, (req, res) => {
   let bundleID = parseInt(req.query.id); if(isNaN(bundleID)){bundleID=null;}
 
   Language.findAll({
-    homebrewID: { [Op.or]: [null,bundleID] },
+    where: {homebrewID: { [Op.or]: [null,bundleID] } },
     order: [['name', 'ASC'],]
   }).then((languages) => {
     Tag.findAll({
@@ -140,7 +140,7 @@ router.get('/edit/ancestry', bundleAuthCheck, (req, res) => {
   let ancestryID = parseInt(req.query.content_id); if(isNaN(ancestryID)){ancestryID=null;}
 
   Language.findAll({
-    homebrewID: { [Op.or]: [null,bundleID] },
+    where: {homebrewID: { [Op.or]: [null,bundleID] } },
     order: [['name', 'ASC'],]
   }).then((languages) => {
     Tag.findAll({

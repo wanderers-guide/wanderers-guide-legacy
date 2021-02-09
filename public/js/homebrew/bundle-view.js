@@ -12,7 +12,9 @@ function openBundleView(homebrewBundle){
 socket.on("returnBundleContents", function(REQUEST_TYPE, userHasBundle, userOwnsBundle, allTags, classes, ancestries, archetypes, backgrounds, classFeatures, feats, heritages, uniheritages, items, spells, languages){
   if(REQUEST_TYPE !== 'VIEW') {return;}
 
+  textProcess_warningOnUnknown = true;
   g_allTags = allTags;
+  g_allLanguages = languages;
 
   let featMap = new Map();
   for(let feat of feats){
@@ -33,6 +35,7 @@ socket.on("returnBundleContents", function(REQUEST_TYPE, userHasBundle, userOwns
     }
     featMap.set(feat.id+'', {Feat : feat, Tags : tags});
   }
+  g_featMap = featMap;
 
   let itemMap = new Map();
   for(let itemStruct of items){
@@ -47,6 +50,7 @@ socket.on("returnBundleContents", function(REQUEST_TYPE, userHasBundle, userOwns
     itemStruct.TagArray = tags;
     itemMap.set(itemStruct.Item.id+'', itemStruct);
   }
+  g_itemMap = itemMap;
 
   let spellMap = new Map();
   for(let spell of spells){
@@ -60,6 +64,7 @@ socket.on("returnBundleContents", function(REQUEST_TYPE, userHasBundle, userOwns
     }
     spellMap.set(spell.id+'', {Spell : spell, Tags : tags});
   }
+  g_spellMap = spellMap;
 
 
   let displayContainerID = 'bundle-container-'+g_activeBundle.id;
