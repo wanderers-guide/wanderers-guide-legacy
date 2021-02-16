@@ -493,8 +493,6 @@ function openSpellQuickview(data){
         if(isSheetPage()){ autoHeightenSpells = gOption_hasAutoHeightenSpells; }
         if(true){ // !autoHeightenSpells || spellHeightenLevel == null
 
-            qContent.append('<hr class="m-2">');
-
             if(spellDataStruct.Spell.heightenedOneVal != null){
                 let heightenedTextName = getHeightenedTextFromCodeName(spellDataStruct.Spell.heightenedOneVal);
                 let hText;
@@ -512,6 +510,7 @@ function openSpellQuickview(data){
 
                 if(spellKeyAbility != null){ hText = spellViewTextProcessor(hText, spellKeyAbility);}
 
+                qContent.append('<hr class="m-2">');
                 qContent.append('<div class="negative-indent">'+processText(hText, true, true, 'MEDIUM')+'</div>');
             }
     
@@ -526,6 +525,7 @@ function openSpellQuickview(data){
 
                 if(spellKeyAbility != null){ hText = spellViewTextProcessor(hText, spellKeyAbility);}
 
+                qContent.append('<hr class="m-2">');
                 qContent.append('<div class="negative-indent">'+processText(hText, true, true, 'MEDIUM')+'</div>');
             }
     
@@ -540,6 +540,7 @@ function openSpellQuickview(data){
 
                 if(spellKeyAbility != null){ hText = spellViewTextProcessor(hText, spellKeyAbility);}
 
+                qContent.append('<hr class="m-2">');
                 qContent.append('<div class="negative-indent">'+processText(hText, true, true, 'MEDIUM')+'</div>');
             }
     
@@ -554,6 +555,7 @@ function openSpellQuickview(data){
 
                 if(spellKeyAbility != null){ hText = spellViewTextProcessor(hText, spellKeyAbility);}
 
+                qContent.append('<hr class="m-2">');
                 qContent.append('<div class="negative-indent">'+processText(hText, true, true, 'MEDIUM')+'</div>');
             }
 

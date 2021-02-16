@@ -46,6 +46,7 @@ const g_contentSources = [
   {TextName: 'Gamemastery Guide', CodeName: 'GM-GUIDE', Link: 'https://paizo.com/products/btq022c1?Pathfinder-Gamemastery-Guide'},
   {TextName: 'Secrets of Magic', CodeName: 'SECRETS-OF-MAGIC', Link: 'https://paizo.com/products/btq026l5?Pathfinder-Secrets-of-Magic'},
   {TextName: 'Guns & Gears', CodeName: 'GUNS-AND-GEARS', Link: 'https://paizo.com/products/btq026mw?Pathfinder-Guns-Gears'},
+  {TextName: 'Lost Omens: Ancestry Guide', CodeName: 'LOST-ANCESTRY-GUIDE', Link: 'https://paizo.com/products/btq026k5?Pathfinder-Lost-Omens-Ancestry-Guide', Unreleased: true },
   {TextName: 'Lost Omens: Gods & Magic', CodeName: 'LOST-GOD-MAGIC', Link: ''},
   {TextName: 'Lost Omens: Character Guide', CodeName: 'LOST-CHAR-GUIDE', Link: 'https://paizo.com/products/btq01zt4?Pathfinder-Lost-Omens-Character-Guide'},
   {TextName: 'Lost Omens: Legends', CodeName: 'LOST-LEGENDS', Link: 'https://paizo.com/products/btq023gd?Pathfinder-Lost-Omens-Legends'},
@@ -63,7 +64,7 @@ const g_contentSources = [
   {TextName: 'Pathfinder Society', CodeName: 'PATH-SOCIETY', Link: 'https://paizo.com/pathfindersociety'},
 ];
 
-const g_currentContentSource = 'BEST-1';
+const g_currentContentSource = 'LOST-GOD-ANCESTRY';
 
 function getContentSourceTextName(codeName){
   let contentSourceData = g_contentSources.find(contentSourceData => {
@@ -84,6 +85,17 @@ function getContentSourceLink(codeName){
     return contentSourceData.Link;
   } else {
     return null;
+  }
+}
+
+function isContentSourceReleased(codeName){
+  let contentSourceData = g_contentSources.find(contentSourceData => {
+    return contentSourceData.CodeName === codeName;
+  });
+  if(contentSourceData != null){
+    return (contentSourceData.Unreleased == null) ? true : !contentSourceData.Unreleased;
+  } else {
+    return false;
   }
 }
 

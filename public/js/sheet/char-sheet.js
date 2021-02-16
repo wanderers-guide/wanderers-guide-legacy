@@ -31,6 +31,8 @@ let g_heritage = null;
 let g_background = null;
 let g_charTagsArray = null;
 
+let g_charSize = null;
+
 let g_allTags = null;
 
 let g_itemMap = null;
@@ -277,6 +279,8 @@ socket.on("returnCharacterSheetInfo", function(charInfo, viewOnly){
     g_ancestry = charInfo.Ancestry;
     g_heritage = charInfo.Heritage;
     g_background = charInfo.Background;
+
+    g_charSize = g_ancestry.size;
 
     g_resistAndVulners = charInfo.ResistAndVulners;
 
@@ -1298,7 +1302,6 @@ function displayInformation() {
         changeTab('weaponsTab', {
             StrMod : getMod(getStatTotal('SCORE_STR')),
             DexMod : getMod(getStatTotal('SCORE_DEX')),
-            Size : g_ancestry.size,
         });
     });
 
@@ -1322,7 +1325,6 @@ function displayInformation() {
             event.stopImmediatePropagation();
         }
         changeTab('inventoryTab', {
-            Size : g_ancestry.size,
         });
     });
 
@@ -2079,7 +2081,7 @@ function determineBulkAndCoins(invItems, itemMap){
                 if(bagInvItem != null){
                     let bagItem = itemMap.get(bagInvItem.itemID+"");
                     let invItemQuantity = (invItem.quantity == null) ? 1 : invItem.quantity;
-                    let invItemBulk = getConvertedBulkForSize(invItem.size, invItem.bulk);
+                    let invItemBulk = determineItemBulk(g_charSize, invItem.size, invItem.bulk);
                     invItemBulk = getWornArmorBulkAdjustment(invItem, invItemBulk);
                     invItemBulk = (invItemBulk == 0.0) ? 0.001 : invItemBulk;
                     let invItemTotalBulk = invItemBulk * invItemQuantity;
@@ -2087,7 +2089,7 @@ function determineBulkAndCoins(invItems, itemMap){
                 }
             } else {
                 let invItemQuantity = (invItem.quantity == null) ? 1 : invItem.quantity;
-                let invItemBulk = getConvertedBulkForSize(invItem.size, invItem.bulk);
+                let invItemBulk = determineItemBulk(g_charSize, invItem.size, invItem.bulk);
                 invItemBulk = getWornArmorBulkAdjustment(invItem, invItemBulk);
                 invItemBulk = (invItemBulk == 0.0) ? 0.001 : invItemBulk;
                 let invItemTotalBulk = invItemBulk * invItemQuantity;
@@ -2105,7 +2107,7 @@ function determineBulkAndCoins(invItems, itemMap){
 
             if(includeSelf){
                 let invItemQuantity = (invItem.quantity == null) ? 1 : invItem.quantity;
-                let invItemBulk = getConvertedBulkForSize(invItem.size, invItem.bulk);
+                let invItemBulk = determineItemBulk(g_charSize, invItem.size, invItem.bulk);
                 invItemBulk = getWornArmorBulkAdjustment(invItem, invItemBulk);
                 invItemBulk = (invItemBulk == 0.0) ? 0.001 : invItemBulk;
                 let invItemTotalBulk = invItemBulk * invItemQuantity;
@@ -2126,6 +2128,9 @@ function determineBulkAndCoins(invItems, itemMap){
     let weightEncumbered = 5+strMod;
     let weightMax = 10+strMod;
     
+    weightEncumbered = Math.floor(weightEncumbered*getBulkLimitModifierForSize(g_charSize));
+    weightMax = Math.floor(weightMax*getBulkLimitModifierForSize(g_charSize));
+
     let bulkLimitBonus = getStatTotal('BULK_LIMIT');
     if(bulkLimitBonus != null){
         weightEncumbered += bulkLimitBonus;

@@ -74,6 +74,7 @@ const myUserID = '32932027';
 
 const supporterTierID = '5612688';
 const memberTierID = '5628112';
+const legendTierID = '6299276';
 
 let patreonOAuthClient = patreonOAuth(process.env.PATREON_CLIENT_ID, process.env.PATREON_CLIENT_SECRET);
 let redirectURL;
@@ -108,7 +109,7 @@ router.get('/patreon/redirect', (req, res) => {
 
         // User Data //
         let userData = store.findAll('user').map(user => user.serialize());
-        console.log(userData);
+        //console.log(userData);
 
         let uData = findPatronData(userData);
         if(uData == null){
@@ -118,24 +119,34 @@ router.get('/patreon/redirect', (req, res) => {
             return;
         }
 
-        console.log(uData);
+        //console.log(uData);
 
         let patreonUserID = uData.id;
-        console.log(patreonUserID);
+        //console.log(patreonUserID);
         let patreonName = uData.attributes.full_name;
-        console.log(patreonName);
+        //console.log(patreonName);
         let patreonEmail = uData.attributes.email;
-        console.log(patreonEmail);
+        //console.log(patreonEmail);
 
         // Pledge Data //
         let pledgeData = store.findAll('pledge').map(pledge => pledge.serialize());
-        console.log(pledgeData);
-        console.log(pledgeData[0].data.relationships.reward);
+        //console.log(pledgeData);
+        //console.log(pledgeData[0].data.relationships.reward);
 
         let pledgeTier = findPatronTier(pledgeData);
 
         let updateValues;
-        if(pledgeTier === 'MEMBER'){
+        if(pledgeTier === 'LEGEND'){
+          updateValues = {
+              isPatreonSupporter: 1,
+              isPatreonMember: 1,
+              isPatreonLegend: 1,
+              patreonUserID: patreonUserID,
+              patreonFullName: patreonName,
+              patreonEmail: patreonEmail,
+              patreonAccessToken: token
+          };
+        } else if(pledgeTier === 'MEMBER'){
             updateValues = {
                 isPatreonSupporter: 1,
                 isPatreonMember: 1,
@@ -202,6 +213,8 @@ function findPatronTier(pledgeData){
                 return 'SUPPORTER';
             } else if(pData.data.relationships.reward.data.id == memberTierID){
                 return 'MEMBER';
+            } else if(pData.data.relationships.reward.data.id == legendTierID){
+              return 'LEGEND';
             }
         }
     }

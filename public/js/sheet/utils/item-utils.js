@@ -150,8 +150,55 @@ function getWornArmorBulkAdjustment(invItem, currentBulk){
 }
 
 /* Size Conversions */
-function getConvertedBulkForSize(size, bulk){
-  switch(size) {
+function bulkIsLight(bulk){
+  return bulk === 0.1;
+}
+function bulkIsNegligible(bulk){
+  return bulk === 0 || bulk === 0.001;
+}
+
+
+function getBulkLimitModifierForSize(creatureSize){
+  switch(creatureSize) {
+    case "TINY": return 0.5;
+    case "SMALL": return 1;
+    case "MEDIUM": return 1;
+    case "LARGE": return 2;
+    case "HUGE": return 4;
+    case "GARGANTUAN": return 8;
+    default: return 1;
+  }
+}
+
+function determineItemBulk(creatureSize, itemSize, itemBulk){
+  let newItemBulk = getConvertedBulkForSize(itemSize, itemBulk);
+  return convertItemTreatedBulkForCreature(creatureSize, newItemBulk);
+}
+
+function convertItemTreatedBulkForCreature(creatureSize, itemBulk){
+  switch(creatureSize) {
+    case "TINY":
+      if(bulkIsNegligible(itemBulk)) { return 0.1; }
+      return itemBulk;
+    case "SMALL":
+      return itemBulk;
+    case "MEDIUM":
+      return itemBulk;
+    case "LARGE":
+      if(itemBulk <= 0.1) { return 0; }
+      return itemBulk*0.1;
+    case "HUGE":
+      if(itemBulk <= 1) { return 0; }
+      return itemBulk*0.05;
+    case "GARGANTUAN":
+      if(itemBulk <= 2) { return 0; }
+      return itemBulk*0.025;
+    default: return itemBulk;
+  }
+}
+
+function getConvertedBulkForSize(itemSize, bulk){
+  switch(itemSize) {
     case "TINY":
       if(bulk == 0) {
         bulk = 0;
@@ -200,8 +247,8 @@ function getConvertedBulkForSize(size, bulk){
   }
 }
 
-function getConvertedPriceForSize(size, price){
-  switch(size) {
+function getConvertedPriceForSize(itemSize, price){
+  switch(itemSize) {
     case "TINY":
       return price;
     case "SMALL":

@@ -141,7 +141,7 @@ function openInvItemQuickview(data) {
     if(data.Item.Item.usage != null){
         usageBulkEntry += '<strong>Usage</strong> '+data.Item.Item.usage+'; ';
     }
-    let bulk = getConvertedBulkForSize(data.InvItem.size, data.InvItem.bulk);
+    let bulk = determineItemBulk(g_charSize, data.InvItem.size, data.InvItem.bulk);
 
     let armorAdjBulk = getWornArmorBulkAdjustment(data.InvItem, bulk);
     let armorAdjBulkText = null;

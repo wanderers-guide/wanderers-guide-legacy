@@ -160,6 +160,22 @@ function processSheetCode(wscCode, sourceName, isTest=false){
             continue;
         }
 
+        if(wscStatementUpper.includes("SET-SIZE=")){
+          if(isTest) {continue;}
+
+          // SET-SIZE=X (Ex. SET-SIZE=SMALL)
+          let sizeData = wscStatementUpper.split('=');
+          let newSize = sizeData[1];
+
+          if(newSize == 'TINY' || newSize == 'SMALL' || newSize == 'MEDIUM' || newSize == 'LARGE' || newSize == 'HUGE' || newSize == 'GARGANTUAN'){
+            g_charSize = newSize;
+          } else {
+            displayError('Attempted to set character size to unknown value "'+newSize+'"');
+          }
+
+          continue;
+        }
+
         if(wscStatementUpper == "SET-FINESSE-MELEE-USE-DEX-DAMAGE"){
             if(isTest) {continue;}
 

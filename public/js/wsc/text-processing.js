@@ -103,7 +103,7 @@ function processText(text, isSheet, isJustified = false, size = 'MEDIUM', indexC
 
     // (Feat: Striking | Strike)
     let regexFeatLinkExt = /\((Feat|Ability|Action|Activity):\s*([^(:]+?)\s*\|\s*(.+?)\s*\)/ig;
-    if(textProcess_canIndex(g_featMap)) {
+    if(typeof g_featMap !== 'undefined' && g_featMap != null) {
         text = text.replace(regexFeatLinkExt, handleFeatLinkExt);
     } else {
         text = text.replace(regexFeatLinkExt, '<span class="is-underlined-warning">$2</span>');
@@ -111,7 +111,7 @@ function processText(text, isSheet, isJustified = false, size = 'MEDIUM', indexC
 
     // (Feat: Strike)
     let regexFeatLink = /\((Feat|Ability|Action|Activity):\s*([^(:]+?)\s*\)/ig;
-    if(textProcess_canIndex(g_featMap)) {
+    if(typeof g_featMap !== 'undefined' && g_featMap != null) {
         text = text.replace(regexFeatLink, handleFeatLink);
     } else {
         text = text.replace(regexFeatLink, '<span class="is-underlined-warning">$2</span>');
@@ -119,7 +119,7 @@ function processText(text, isSheet, isJustified = false, size = 'MEDIUM', indexC
 
     // (Item: Striking | Strike)
     let regexItemLinkExt = /\((Item):\s*([^(:]+?)\s*\|\s*(.+?)\s*\)/ig;
-    if(textProcess_canIndex(g_itemMap)) {
+    if(typeof g_itemMap !== 'undefined' && g_itemMap != null) {
         text = text.replace(regexItemLinkExt, handleItemLinkExt);
     } else {
         text = text.replace(regexItemLinkExt, '<span class="is-underlined-warning">$2</span>');
@@ -127,7 +127,7 @@ function processText(text, isSheet, isJustified = false, size = 'MEDIUM', indexC
 
     // (Item: Strike)
     let regexItemLink = /\((Item):\s*([^(:]+?)\s*\)/ig;
-    if(textProcess_canIndex(g_itemMap)) {
+    if(typeof g_itemMap !== 'undefined' && g_itemMap != null) {
         text = text.replace(regexItemLink, handleItemLink);
     } else {
         text = text.replace(regexItemLink, '<span class="is-underlined-warning">$2</span>');
@@ -135,7 +135,7 @@ function processText(text, isSheet, isJustified = false, size = 'MEDIUM', indexC
 
     // (Spell: Striking | Strike)
     let regexSpellLinkExt = /\((Spell):\s*([^(:]+?)\s*\|\s*(.+?)\s*\)/ig;
-    if(textProcess_canIndex(g_spellMap)) {
+    if(typeof g_spellMap !== 'undefined' && g_spellMap != null) {
         text = text.replace(regexSpellLinkExt, handleSpellLinkExt);
     } else {
         text = text.replace(regexSpellLinkExt, '<span class="is-underlined-warning">$2</span>');
@@ -143,7 +143,7 @@ function processText(text, isSheet, isJustified = false, size = 'MEDIUM', indexC
 
     // (Spell: Strike)
     let regexSpellLink = /\((Spell):\s*([^(:]+?)\s*\)/ig;
-    if(textProcess_canIndex(g_spellMap)) {
+    if(typeof g_spellMap !== 'undefined' && g_spellMap != null) {
         text = text.replace(regexSpellLink, handleSpellLink);
     } else {
         text = text.replace(regexSpellLink, '<span class="is-underlined-warning">$2</span>');
@@ -151,7 +151,7 @@ function processText(text, isSheet, isJustified = false, size = 'MEDIUM', indexC
 
     // (Language: Gnomish-like | Gnomish)
     let regexLanguageLinkExt = /\((Language):\s*([^(:]+?)\s*\|\s*(.+?)\s*\)/ig;
-    if(textProcess_canIndex(g_allLanguages)) {
+    if(typeof g_allLanguages !== 'undefined' && g_allLanguages != null) {
         text = text.replace(regexLanguageLinkExt, handleLanguageLinkExt);
     } else {
         text = text.replace(regexLanguageLinkExt, '<span class="is-underlined-warning">$2</span>');
@@ -159,7 +159,7 @@ function processText(text, isSheet, isJustified = false, size = 'MEDIUM', indexC
 
     // (Language: Gnomish)
     let regexLanguageLink = /\((Language):\s*([^(:]+?)\s*\)/ig;
-    if(textProcess_canIndex(g_allLanguages)) {
+    if(typeof g_allLanguages !== 'undefined' && g_allLanguages != null) {
         text = text.replace(regexLanguageLink, handleLanguageLink);
     } else {
         text = text.replace(regexLanguageLink, '<span class="is-underlined-warning">$2</span>');
@@ -167,7 +167,7 @@ function processText(text, isSheet, isJustified = false, size = 'MEDIUM', indexC
 
     // (Trait: Infusing | Infused)
     let regexTraitLinkExt = /\((Trait):\s*([^(:]+?)\s*\|\s*(.+?)\s*\)/ig;
-    if(textProcess_canIndex(g_allTags)) {
+    if(typeof g_allTags !== 'undefined' && g_allTags != null) {
         text = text.replace(regexTraitLinkExt, handleTraitLinkExt);
     } else {
         text = text.replace(regexTraitLinkExt, '<span class="is-underlined-warning">$2</span>');
@@ -175,14 +175,14 @@ function processText(text, isSheet, isJustified = false, size = 'MEDIUM', indexC
 
     // (Trait: Infused)
     let regexTraitLink = /\((Trait):\s*([^(:]+?)\s*\)/ig;
-    if(textProcess_canIndex(g_allTags)) {
+    if(typeof g_allTags !== 'undefined' && g_allTags != null) {
         text = text.replace(regexTraitLink, handleTraitLink);
     } else {
         text = text.replace(regexTraitLink, '<span class="is-underlined-warning">$2</span>');
     }
 
     // Conditions Search and Replace
-    if(textProcess_canIndex(g_allConditions) && indexConditions) {
+    if(typeof g_allConditions !== 'undefined' && g_allConditions != null && indexConditions) {
         text = handleIndexConditions(text);
     }
 

@@ -389,7 +389,7 @@ function displayItemDetails(itemDataStruct, addItemDetailsItemID){
         price += ' for '+itemDataStruct.Item.quantity;
     }
 
-    let bulk = getConvertedBulkForSize(itemDataStruct.Item.size, itemDataStruct.Item.bulk);
+    let bulk = determineItemBulk(g_charSize, itemDataStruct.Item.size, itemDataStruct.Item.bulk);
     bulk = getBulkFromNumber(bulk);
 
     itemDetails.append('<div class="tile is-flex"><div class="tile is-child is-4"><strong>Price</strong></div><div class="tile is-child is-4"><strong>Bulk</strong></div><div class="tile is-child is-4"><strong>Hands</strong></div></div>');

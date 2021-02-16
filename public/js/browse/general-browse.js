@@ -63,7 +63,9 @@ function initBrowse(featMap, skillMap, itemMap, spellMap, allLanguages, allCondi
   // Sources
   $('#filterSourceInput').append('<option value="ANY">Any</option>');
   for(let source of g_contentSources){
-    $('#filterSourceInput').append('<option value="'+source.CodeName+'">'+source.TextName+'</option>');
+    if(source.Unreleased == null || !source.Unreleased) {
+      $('#filterSourceInput').append('<option value="'+source.CodeName+'">'+source.TextName+'</option>');
+    }
   }
 
   // Skill
