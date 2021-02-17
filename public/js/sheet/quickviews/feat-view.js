@@ -173,6 +173,10 @@ function openFeatQuickview(data) {
 
     showFeatListOptions(qContent, data.Feat.code);
 
+    if(!isSheetPage()){
+      showFeatPrerequisiteFor(qContent, data.Feat.name);
+    }
+
 }
 
 function showFeatListOptions(qContent, wscStatements){
@@ -191,6 +195,43 @@ function showFeatListOptions(qContent, wscStatements){
       qContent.append('<hr class="m-2">');
       qContent.append('<div>'+processText(listText, true, true, 'MEDIUM')+'</div>');
     }
+  }
+}
+
+function showFeatPrerequisiteFor(qContent, featName) {
+  if(typeof g_featMap == 'undefined') { return; }
+
+  let prereqFeatMap = new Map();
+  for(const [featID, featStruct] of g_featMap.entries()){
+    if(featStruct.Feat.prerequisites != null && featStruct.Feat.prerequisites.includes(featName) && !prereqFeatMap.has(featStruct.Feat.name)) {
+      prereqFeatMap.set(featStruct.Feat.name, featStruct);
+    }
+  }
+
+  let prereqFeatArray = Array.from(prereqFeatMap.values());
+  if(prereqFeatArray.length > 0){
+
+    let prereqForStr = '';
+    for (let i = 0; i < prereqFeatArray.length; i++) {
+      const preReqFeat = prereqFeatArray[i];
+
+      prereqForStr += '(feat: '+preReqFeat.Feat.name+')'
+      if(preReqFeat.Feat.level > 0){
+        prereqForStr += ' ('+preReqFeat.Feat.level+')';
+      }
+
+      if(i === prereqFeatArray.length-2) {
+        prereqForStr += ', and ';
+      } else if(i === prereqFeatArray.length-1) {
+        prereqForStr += '.';
+      } else {
+        prereqForStr += ', ';
+      }
+    }
+
+    qContent.append('<hr class="m-2">');
+    qContent.append('<div>'+processText('~ Prerequisite for: '+prereqForStr, true, true, 'MEDIUM')+'</div>');
+
   }
 }
 

@@ -64,7 +64,7 @@ const g_contentSources = [
   {TextName: 'Pathfinder Society', CodeName: 'PATH-SOCIETY', Link: 'https://paizo.com/pathfindersociety'},
 ];
 
-const g_currentContentSource = 'LOST-GOD-ANCESTRY';
+const g_currentContentSource = 'LOST-ANCESTRY-GUIDE';
 
 function getContentSourceTextName(codeName){
   let contentSourceData = g_contentSources.find(contentSourceData => {
