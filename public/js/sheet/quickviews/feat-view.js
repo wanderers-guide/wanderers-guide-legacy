@@ -203,7 +203,7 @@ function showFeatPrerequisiteFor(qContent, featName) {
 
   let prereqFeatMap = new Map();
   for(const [featID, featStruct] of g_featMap.entries()){
-    if(featStruct.Feat.prerequisites != null && featStruct.Feat.prerequisites.includes(featName) && !prereqFeatMap.has(featStruct.Feat.name)) {
+    if(featStruct.Feat.prerequisites != null && !prereqFeatMap.has(featStruct.Feat.name) && featNameIsFeatPrerequisite(featStruct.Feat.prerequisites, featName)) {
       prereqFeatMap.set(featStruct.Feat.name, featStruct);
     }
   }
@@ -225,7 +225,7 @@ function showFeatPrerequisiteFor(qContent, featName) {
     for (let i = 0; i < prereqFeatArray.length; i++) {
       const preReqFeat = prereqFeatArray[i];
 
-      prereqForStr += '(feat: '+preReqFeat.Feat.name+')'
+      prereqForStr += '(feat: '+preReqFeat.Feat.name+')';
       if(preReqFeat.Feat.level > 0){
         prereqForStr += ' ('+preReqFeat.Feat.level+')';
       }
@@ -243,6 +243,15 @@ function showFeatPrerequisiteFor(qContent, featName) {
     qContent.append('<div>'+processText('~ Prerequisite for: '+prereqForStr, true, true, 'MEDIUM')+'</div>');
 
   }
+}
+
+function featNameIsFeatPrerequisite(prerequisites, featName){
+  if(prerequisites == featName) { return true; }
+  if(prerequisites.includes(', '+featName) && prerequisites.endsWith(featName)) { return true; }
+  if(prerequisites.includes('; '+featName) && prerequisites.endsWith(featName)) { return true; }
+  if(prerequisites.startsWith(featName) && prerequisites.includes(featName+', ')) { return true; }
+  if(prerequisites.startsWith(featName) && prerequisites.includes(featName+'; ')) { return true; }
+  return false;
 }
 
 function featViewTextProcessor(text){
