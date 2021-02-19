@@ -59,6 +59,8 @@ function loadBackgroundPage(backgrounds) {
             $('.background-content').addClass("is-hidden");
             $('#selectBackgroundControlShell').addClass("is-info");
 
+            $('#backgroundRarityContainer').html('');
+
             // Delete background, set to null
             g_char_backgroundID = null;
             g_background = null;

@@ -62,6 +62,8 @@ function loadAncestryPage(ancestryObject, uniHeritageArray) {
             $('.ancestry-content').addClass("is-hidden");
             $('#selectAncestryControlShell').addClass("is-info");
 
+            $('#ancestryRarityContainer').html('');
+
             // Delete ancestry, set to null
             g_char_ancestryID = null;
             g_ancestry = null;
