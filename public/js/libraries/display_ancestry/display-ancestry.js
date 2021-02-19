@@ -96,25 +96,25 @@ class DisplayAncestry {
 
           let sensesStr = '';
           if(ancestryStruct.vision_sense != null){
-            sensesStr += '<a class="has-text-info has-tooltip-bottom has-tooltip-multiline" data-tooltip="'+ancestryStruct.vision_sense.description+'">'+ancestryStruct.vision_sense.name+'</a>';
+            sensesStr += '<a class="has-text-info has-tooltip-bottom has-tooltip-multiline" data-tooltip="'+processTextRemoveIndexing(ancestryStruct.vision_sense.description)+'">'+ancestryStruct.vision_sense.name+'</a>';
             if(ancestryStruct.additional_sense != null){
               sensesStr += ' and ';
             }
           }
           if(ancestryStruct.additional_sense != null){
-            sensesStr += '<a class="has-text-info has-tooltip-bottom has-tooltip-multiline" data-tooltip="'+ancestryStruct.additional_sense.description+'">'+ancestryStruct.additional_sense.name+'</a>';
+            sensesStr += '<a class="has-text-info has-tooltip-bottom has-tooltip-multiline" data-tooltip="'+processTextRemoveIndexing(ancestryStruct.additional_sense.description)+'">'+ancestryStruct.additional_sense.name+'</a>';
           }
           $('#ancestry-senses').html(sensesStr);
           
           let phyFeatsStr = '';
           if(ancestryStruct.physical_feature_one != null){
-            phyFeatsStr += '<a class="has-text-info has-tooltip-bottom has-tooltip-multiline" data-tooltip="'+ancestryStruct.physical_feature_one.description+'">'+ancestryStruct.physical_feature_one.name+'</a>';
+            phyFeatsStr += '<a class="has-text-info has-tooltip-bottom has-tooltip-multiline" data-tooltip="'+processTextRemoveIndexing(ancestryStruct.physical_feature_one.description)+'">'+ancestryStruct.physical_feature_one.name+'</a>';
             if(ancestryStruct.physical_feature_two != null){
               phyFeatsStr += ' and ';
             }
           }
           if(ancestryStruct.physical_feature_two != null){
-            phyFeatsStr += '<a class="has-text-info has-tooltip-bottom has-tooltip-multiline" data-tooltip="'+ancestryStruct.physical_feature_two.description+'">'+ancestryStruct.physical_feature_two.name+'</a>';
+            phyFeatsStr += '<a class="has-text-info has-tooltip-bottom has-tooltip-multiline" data-tooltip="'+processTextRemoveIndexing(ancestryStruct.physical_feature_two.description)+'">'+ancestryStruct.physical_feature_two.name+'</a>';
           }
           if(phyFeatsStr == ''){phyFeatsStr = 'None';}
           $('#ancestry-phyFeatures').html(phyFeatsStr);

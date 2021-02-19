@@ -45,7 +45,7 @@ module.exports = class HomebrewCreation {
       data.traitName = data.traitName.replace(/’/g,"'");
       if(data.traitDescription == null){ data.traitDescription = '__No Description__'; }
       return Tag.create({ // Create Trait
-          name: data.traitName,
+          name: data.traitName.trim(),
           description: data.traitDescription,
           homebrewID: homebrewID,
       }).then(trait => {
@@ -78,7 +78,7 @@ module.exports = class HomebrewCreation {
       data.languageName = data.languageName.replace(/’/g,"'");
       if(data.languageDescription == null){ data.languageDescription = '__No Description__'; }
       return Language.create({ // Create Language
-          name: data.languageName,
+          name: data.languageName.trim(),
           speakers: data.languageSpeakers,
           script: data.languageScript,
           description: data.languageDescription,
@@ -115,7 +115,7 @@ module.exports = class HomebrewCreation {
         if(data.backgroundDescription == null){ data.backgroundDescription = '__No Description__'; }
         data.backgroundVersion = 'Homebrew';
         return Background.create({ // Create Background
-            name: data.backgroundName,
+            name: data.backgroundName.trim(),
             version: null,
             rarity: data.backgroundRarity,
             description: data.backgroundDescription,
@@ -167,13 +167,13 @@ module.exports = class HomebrewCreation {
         data.classVersion = 'Homebrew';
         let tagDesc = 'This indicates content from the '+data.className.toLowerCase()+' class.';
         return Tag.create({ // Create Class Tag
-            name: data.className,
+            name: data.className.trim(),
             description: tagDesc,
             isHidden: 1,
             homebrewID: homebrewID,
         }).then(classTag => {
             return Class.create({ // Create Class
-                name: data.className,
+                name: data.className.trim(),
                 version: null,
                 hitPoints: data.classHitPoints,
                 keyAbility: data.classKeyAbility,
@@ -237,7 +237,7 @@ module.exports = class HomebrewCreation {
         }
         return ClassAbility.create({
             classID: classID,
-            name: classAbility.name,
+            name: classAbility.name.trim(),
             level: classAbility.level,
             description: classAbility.description,
             code: classAbility.code,
@@ -336,7 +336,7 @@ module.exports = class HomebrewCreation {
     static addClassAbilityOption(homebrewID, classAbility){
         return ClassAbility.create({
             classID: null,
-            name: classAbility.name,
+            name: classAbility.name.trim(),
             level: null,
             description: classAbility.description,
             code: classAbility.code,
@@ -401,7 +401,7 @@ module.exports = class HomebrewCreation {
             .then(dedicationFeat => {
 
                 return Archetype.create({ // Create Archetype
-                    name: data.archetypeName,
+                    name: data.archetypeName.trim(),
                     version: null,
                     description: data.archetypeDescription,
                     dedicationFeatID: dedicationFeat.id,
@@ -501,13 +501,13 @@ module.exports = class HomebrewCreation {
         if(data.ancestryDescription == null){ data.ancestryDescription = '__No Description__'; }
         let tagDesc = 'This indicates content from the '+data.ancestryName.toLowerCase()+' ancestry.';
         return Tag.create({ // Create Ancestry Tag
-            name: data.ancestryName,
+            name: data.ancestryName.trim(),
             description: tagDesc,
             isHidden: 1,
             homebrewID: homebrewID,
         }).then(ancestryTag => {
             return Ancestry.create({ // Create Ancestry
-                name: data.ancestryName,
+                name: data.ancestryName.trim(),
                 version: null,
                 rarity: data.ancestryRarity,
                 hitPoints: data.ancestryHitPoints,
@@ -680,7 +680,7 @@ module.exports = class HomebrewCreation {
         data.name = data.name.replace(/’/g,"'");
         if(data.description == null){ data.description = '__No Description__'; }
         return Heritage.create({
-            name: data.name,
+            name: data.name.trim(),
             ancestryID: ancestryID,
             rarity: data.rarity,
             description: data.description,
@@ -718,13 +718,13 @@ module.exports = class HomebrewCreation {
         if(data.heritageDescription == null){ data.heritageDescription = '__No Description__'; }
         let tagDesc = 'This indicates content from the '+data.heritageName.toLowerCase()+' versatile heritage.';
         return Tag.create({ // Create Heritage Tag
-            name: data.heritageName,
+            name: data.heritageName.trim(),
             description: tagDesc,
             isHidden: 1,
             homebrewID: homebrewID,
         }).then(heritageTag => {
             return UniHeritage.create({ // Create Versatile Heritage
-                name: data.heritageName,
+                name: data.heritageName.trim(),
                 version: null,
                 rarity: data.heritageRarity,
                 description: data.heritageDescription,
@@ -844,11 +844,11 @@ module.exports = class HomebrewCreation {
             return;
         }
         return HomebrewCreation.addFeatPreparedData(homebrewID, {
-            name: data.featName,
+            name: data.featName.trim(),
             actions: data.featActions,
             level: data.featLevel,
             rarity: data.featRarity,
-            prerequisites: data.featPrereq,
+            prerequisites: data.featPrereq.trim(),
             cost: data.featCost,
             frequency: data.featFreq,
             trigger: data.featTrigger,
@@ -900,11 +900,11 @@ module.exports = class HomebrewCreation {
         if(data.description == null){ data.description = '__No Description__'; }
         if(data.level == null){ data.level = -1; }
         return Feat.create({
-            name: data.name,
+            name: data.name.trim(),
             actions: data.actions,
             level: data.level,
             rarity: data.rarity,
-            prerequisites: data.prerequisites,
+            prerequisites: data.prerequisites.trim(),
             cost: data.cost,
             frequency: data.frequency,
             trigger: data.trigger,
@@ -1289,7 +1289,7 @@ module.exports = class HomebrewCreation {
         data.spellName = data.spellName.replace(/’/g,"'");
         if(data.spellDesc == null){ data.spellDesc = '__No Description__'; }
         return Spell.create({ // Create Spell
-            name: data.spellName,
+            name: data.spellName.trim(),
             version: null,
             level: data.spellLevel,
             rarity: data.spellRarity,

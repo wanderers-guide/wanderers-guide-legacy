@@ -50,7 +50,7 @@ function openItemQuickview(data) {
     if(itemDataStruct.Item.materialType != null){
         let itemMaterial = g_materialsMap.get(itemDataStruct.Item.materialType);
         if(itemMaterial != null){
-            tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-very-small is-link has-tooltip-bottom has-tooltip-multiline" data-tooltip="'+itemMaterial.Description+'">'+itemMaterial.Name+'</button>';
+            tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-very-small is-link has-tooltip-bottom has-tooltip-multiline" data-tooltip="'+processTextRemoveIndexing(itemMaterial.Description)+'">'+itemMaterial.Name+'</button>';
         }
     }
 
@@ -65,7 +65,7 @@ function openItemQuickview(data) {
             tagDescription = tagDescription.substring(0, g_tagStringLengthMax);
             tagDescription += '...';
         }
-        tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-very-small is-info has-tooltip-bottom has-tooltip-multiline tagButton" data-tooltip="'+tagDescription+'">'+tagStruct.Tag.name+'</button>';
+        tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-very-small is-info has-tooltip-bottom has-tooltip-multiline tagButton" data-tooltip="'+processTextRemoveIndexing(tagDescription)+'">'+tagStruct.Tag.name+'</button>';
     }
 
     if(tagsInnerHTML != ''){

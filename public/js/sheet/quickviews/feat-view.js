@@ -78,7 +78,7 @@ function openFeatQuickview(data) {
             tagDescription = tagDescription.substring(0, g_tagStringLengthMax);
             tagDescription += '...';
         }
-        featTagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-very-small is-info has-tooltip-bottom has-tooltip-multiline tagButton" data-tooltip="'+tagDescription+'">'+tag.name+'</button>';
+        featTagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-very-small is-info has-tooltip-bottom has-tooltip-multiline tagButton" data-tooltip="'+processTextRemoveIndexing(tagDescription)+'">'+tag.name+'</button>';
     }
     featTagsInnerHTML += '</div></div></div>';
 
@@ -181,14 +181,22 @@ function openFeatQuickview(data) {
 
 function showFeatListOptions(qContent, wscStatements){
   if(wscStatements == null) {return;}
-  for(let statement of wscStatements.split(/\n/)) {
+
+  let statementArray = wscStatements.split(/\n/);
+  
+  let statementCounts = {};
+  statementArray.forEach(function(x) { statementCounts[x] = (statementCounts[x] || 0)+1; });
+
+  for(let statement in statementCounts) {
     if(statement.includes("GIVE-FEAT-FROM=")){ // GIVE-FEAT-FROM=Choose a Tradition:feat 1,feat 2,feat 2
       let value = statement.split('=')[1];
       let valueParts = value.split(':');
       let selectorTitle = valueParts[0];
       let featNameList = valueParts[1].split(',');
 
-      let listText = '**'+selectorTitle+'**\n';
+      let repetitionWord = numToRepetitionWord(statementCounts[statement]);
+
+      let listText = '**'+selectorTitle+' '+repetitionWord+'**\n';
       for(let featName of featNameList){
         listText += '* : (feat: '+featName+')\n';
       }

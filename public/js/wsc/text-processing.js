@@ -221,6 +221,52 @@ function processText(text, isSheet, isJustified = false, size = 'MEDIUM', indexC
 
 }
 
+function processTextRemoveIndexing(text) {
+  if(text == null) {return text;}
+
+  // (Feat: Striking | Strike)
+  let regexFeatLinkExt = /\((Feat|Ability|Action|Activity):\s*([^(:]+?)\s*\|\s*(.+?)\s*\)/ig;
+  text = text.replace(regexFeatLinkExt, '$2');
+
+  // (Feat: Strike)
+  let regexFeatLink = /\((Feat|Ability|Action|Activity):\s*([^(:]+?)\s*\)/ig;
+  text = text.replace(regexFeatLink, '$2');
+
+  // (Item: Striking | Strike)
+  let regexItemLinkExt = /\((Item):\s*([^(:]+?)\s*\|\s*(.+?)\s*\)/ig;
+  text = text.replace(regexItemLinkExt, '$2');
+
+  // (Item: Strike)
+  let regexItemLink = /\((Item):\s*([^(:]+?)\s*\)/ig;
+  text = text.replace(regexItemLink, '$2');
+
+  // (Spell: Striking | Strike)
+  let regexSpellLinkExt = /\((Spell):\s*([^(:]+?)\s*\|\s*(.+?)\s*\)/ig;
+  text = text.replace(regexSpellLinkExt, '$2');
+
+  // (Spell: Strike)
+  let regexSpellLink = /\((Spell):\s*([^(:]+?)\s*\)/ig;
+  text = text.replace(regexSpellLink, '$2');
+
+  // (Language: Gnomish-like | Gnomish)
+  let regexLanguageLinkExt = /\((Language):\s*([^(:]+?)\s*\|\s*(.+?)\s*\)/ig;
+  text = text.replace(regexLanguageLinkExt, '$2');
+
+  // (Language: Gnomish)
+  let regexLanguageLink = /\((Language):\s*([^(:]+?)\s*\)/ig;
+  text = text.replace(regexLanguageLink, '$2');
+
+  // (Trait: Infusing | Infused)
+  let regexTraitLinkExt = /\((Trait):\s*([^(:]+?)\s*\|\s*(.+?)\s*\)/ig;
+  text = text.replace(regexTraitLinkExt, '$2');
+
+  // (Trait: Infused)
+  let regexTraitLink = /\((Trait):\s*([^(:]+?)\s*\)/ig;
+  text = text.replace(regexTraitLink, '$2');
+
+  return text;
+}
+
 /////
 
 function handleFeatLink(match, linkName, innerTextName) {

@@ -272,6 +272,17 @@ function rankLevel(level){
   }
 }
 
+function numToRepetitionWord(num){
+  switch(num) {
+    case 1: return "";
+    case 2: return "Twice";
+    case 3: return "Three Times";
+    case 4: return "Four Times";
+    case 5: return "Five Times";
+    default: return num+" Times";
+  }
+}
+
 function selectOptionRarity(rarity){
   switch(rarity) {
     case 'UNCOMMON': return 'is-uncommon';

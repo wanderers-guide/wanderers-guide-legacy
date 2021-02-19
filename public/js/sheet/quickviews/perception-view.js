@@ -123,10 +123,10 @@ function openPerceptionQuickview(data) {
 
     qContent.append('<p class="has-text-centered is-size-5"><strong>Senses</strong></p>');
 
-    qContent.append('<p class="has-text-centered has-tooltip-bottom has-tooltip-multiline" data-tooltip="'+data.PrimaryVisionSense.description+'">'+data.PrimaryVisionSense.name+'</p>');
+    qContent.append('<p class="has-text-centered has-tooltip-bottom has-tooltip-multiline" data-tooltip="'+processTextRemoveIndexing(data.PrimaryVisionSense.description)+'">'+data.PrimaryVisionSense.name+'</p>');
 
     for(let additionalSense of data.AdditionalSenseArray) {
-        qContent.append('<p class="has-text-centered has-tooltip-bottom has-tooltip-multiline" data-tooltip="'+additionalSense.description+'">'+additionalSense.name+'</p>');
+        qContent.append('<p class="has-text-centered has-tooltip-bottom has-tooltip-multiline" data-tooltip="'+processTextRemoveIndexing(additionalSense.description)+'">'+additionalSense.name+'</p>');
     }
 
 }

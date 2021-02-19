@@ -46,7 +46,7 @@ $(function () {
 
         let inputFeatName = $("#"+featID).find(".inputFeatName");
         inputFeatName.change(function(){
-            $("#"+featID).find(".card-header-title").html('Ancestry Feat - '+inputFeatName.val());
+            $("#"+featID).find(".card-header-title").html('Heritage Feat - '+inputFeatName.val());
         });
 
         $("#"+featID).find(".inputFeatTags").chosen();

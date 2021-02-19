@@ -75,7 +75,7 @@ function openInvItemQuickview(data) {
     if(data.InvItem.materialType != null){
         let itemMaterial = g_materialsMap.get(data.InvItem.materialType);
         if(itemMaterial != null){
-            tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-very-small is-link has-tooltip-bottom has-tooltip-multiline" data-tooltip="'+itemMaterial.Description+'">'+itemMaterial.Name+'</button>';
+            tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-very-small is-link has-tooltip-bottom has-tooltip-multiline" data-tooltip="'+processTextRemoveIndexing(itemMaterial.Description)+'">'+itemMaterial.Name+'</button>';
         }
     }
 
@@ -86,7 +86,7 @@ function openInvItemQuickview(data) {
             tagDescription = tagDescription.substring(0, g_tagStringLengthMax);
             tagDescription += '...';
         }
-        tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-very-small is-info has-tooltip-bottom has-tooltip-multiline tagButton" data-tooltip="'+tagDescription+'">'+tagStruct.Tag.name+'</button>';
+        tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-very-small is-info has-tooltip-bottom has-tooltip-multiline tagButton" data-tooltip="'+processTextRemoveIndexing(tagDescription)+'">'+tagStruct.Tag.name+'</button>';
         if(tagStruct.Tag.id === 235){ // Hardcoded Invested Tag ID
             if(maxInvests > currentInvests || (maxInvests == currentInvests && data.InvItem.isInvested == 1)) {
                 $('#quickViewTitleRight').html('<span class="pr-2"><span id="investedIconButton" class="button is-very-small is-info is-rounded has-tooltip-left" data-tooltip="Invest ('+currentInvests+'/'+maxInvests+')"><span id="investedIconName" class="pr-1 is-size-7">Invest</span><span class="icon is-small"><i class="fas fa-lg fa-hat-wizard"></i></span></span></span>');

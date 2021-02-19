@@ -247,14 +247,14 @@ function displayCurrentAncestry(ancestryStruct, saving) {
     ancestrySenses.html('');
     let senseIDArray = [];
     if(ancestryStruct.VisionSense != null){
-        ancestrySenses.append('<a class="has-text-info has-tooltip-bottom has-tooltip-multiline" data-tooltip="'+ancestryStruct.VisionSense.description+'">'+ancestryStruct.VisionSense.name+'</a>');
+        ancestrySenses.append('<a class="has-text-info has-tooltip-bottom has-tooltip-multiline" data-tooltip="'+processTextRemoveIndexing(ancestryStruct.VisionSense.description)+'">'+ancestryStruct.VisionSense.name+'</a>');
         senseIDArray.push(ancestryStruct.VisionSense.id);
         if(ancestryStruct.AdditionalSense != null){
             ancestrySenses.append(' and ');
         }
     }
     if(ancestryStruct.AdditionalSense != null){
-        ancestrySenses.append('<a class="has-text-info has-tooltip-bottom has-tooltip-multiline" data-tooltip="'+ancestryStruct.AdditionalSense.description+'">'+ancestryStruct.AdditionalSense.name+'</a>');
+        ancestrySenses.append('<a class="has-text-info has-tooltip-bottom has-tooltip-multiline" data-tooltip="'+processTextRemoveIndexing(ancestryStruct.AdditionalSense.description)+'">'+ancestryStruct.AdditionalSense.name+'</a>');
         senseIDArray.push(ancestryStruct.AdditionalSense.id);
     }
 
@@ -287,7 +287,7 @@ function displayCurrentAncestry(ancestryStruct, saving) {
         ancestryPhysicalFeatures.html('');
         let physicalFeatureIDArray = [];
         if(ancestryStruct.PhysicalFeatureOne != null){
-            ancestryPhysicalFeatures.append('<a class="has-text-info has-tooltip-bottom has-tooltip-multiline" data-tooltip="'+ancestryStruct.PhysicalFeatureOne.description+'">'+ancestryStruct.PhysicalFeatureOne.name+'</a>');
+            ancestryPhysicalFeatures.append('<a class="has-text-info has-tooltip-bottom has-tooltip-multiline" data-tooltip="'+processTextRemoveIndexing(ancestryStruct.PhysicalFeatureOne.description)+'">'+ancestryStruct.PhysicalFeatureOne.name+'</a>');
             physicalFeatureIDArray.push(ancestryStruct.PhysicalFeatureOne.id);
             if(ancestryStruct.PhysicalFeatureTwo != null){
                 ancestryPhysicalFeatures.append(' and ');
@@ -310,7 +310,7 @@ function displayCurrentAncestry(ancestryStruct, saving) {
         }
 
         if(ancestryStruct.PhysicalFeatureTwo != null){
-            ancestryPhysicalFeatures.append('<a class="has-text-info has-tooltip-bottom has-tooltip-multiline" data-tooltip="'+ancestryStruct.PhysicalFeatureTwo.description+'">'+ancestryStruct.PhysicalFeatureTwo.name+'</a>');
+            ancestryPhysicalFeatures.append('<a class="has-text-info has-tooltip-bottom has-tooltip-multiline" data-tooltip="'+processTextRemoveIndexing(ancestryStruct.PhysicalFeatureTwo.description)+'">'+ancestryStruct.PhysicalFeatureTwo.name+'</a>');
             physicalFeatureIDArray.push(ancestryStruct.PhysicalFeatureTwo.id);
 
             let srcStruct = {

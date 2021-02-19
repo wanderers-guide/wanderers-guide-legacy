@@ -139,7 +139,7 @@ function processingFeats(wscStatement, srcStruct, locationID, sourceName){
 
 function giveFeatCustomList(srcStruct, locationID, chooseTitle, customList){
 
-    chooseTitle = capitalizeWords(chooseTitle).replace(/( A )/,' a ').replace(/( An )/,' an ');
+    chooseTitle = capitalizeWords(chooseTitle).replace(/( The )/,' the ').replace(/( A )/,' a ').replace(/( An )/,' an ');
     displayFeatChoice(
         srcStruct,
         locationID,
