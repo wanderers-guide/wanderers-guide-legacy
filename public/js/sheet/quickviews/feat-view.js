@@ -211,11 +211,11 @@ function showFeatPrerequisiteFor(qContent, featName) {
   let prereqFeatArray = Array.from(prereqFeatMap.values());
   prereqFeatArray = prereqFeatArray.sort(
     function(a, b) {
-        if (a.level === b.level) {
+        if (a.Feat.level === b.Feat.level) {
             // Name is only important when levels are the same
-            return a.name > b.name ? 1 : -1;
+            return a.Feat.name > b.Feat.name ? 1 : -1;
         }
-        return a.level - b.level;
+        return a.Feat.level - b.Feat.level;
     }
   );
 

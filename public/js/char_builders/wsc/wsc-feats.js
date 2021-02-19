@@ -114,9 +114,19 @@ function processingFeats(wscStatement, srcStruct, locationID, sourceName){
         giveFeatCustomList(srcStruct, locationID, chooseTitle, customListParts);
     }
     else if(wscStatement.includes("GIVE-FEAT-NAME=")){ // GIVE-FEAT-NAME=Ancestral_Paragon
-        let featName = wscStatement.split('=')[1];
+        let value = wscStatement.split('=')[1];
+        
+        let featName = null;
+        let optionals = value.match(/^.+?\[(.+?)\]$/);
+        if(optionals != null){
+            optionals = optionals[1].split(',');
+            featName = value.split('[')[0];
+        } else {
+          featName = value;
+        }
+
         featName = featName.replace(/_/g," ");
-        giveFeatByName(srcStruct, featName, locationID);
+        giveFeatByName(srcStruct, featName, locationID, optionals);
     } else {
         displayError("Unknown statement (2-Feat): \'"+wscStatement+"\'");
         statementComplete();
@@ -446,21 +456,51 @@ function displayFeatChoice(srcStruct, locationID, selectionName, tagsArray, feat
 
 //////////////////////////////// Give Feat (by Name) ///////////////////////////////////
 
-function giveFeatByName(srcStruct, featName, locationID){
+function giveFeatByName(srcStruct, featName, locationID, optionalTags=null){
     featName = featName.replace(/_/g," ");
     featName = featName.replace(/’/g,"'");
+
+    // Make optional tags lowercase
+    if(optionalTags != null){
+      for (let i = 0; i < optionalTags.length; i++) {
+          optionalTags[i] = optionalTags[i].toLowerCase().trim();
+      }
+    }
+
     let featEntry = null;
     g_featMap.forEach(function(value, key, map){
         if(value.Feat.isArchived === 0) {
             if(value.Feat.name.toUpperCase() === featName){
+
+              if(optionalTags != null) {
+                let hasCorrectTags = false;
+                let sameOpsTagsArray = [];
+                for(let featTag of value.Tags){
+                    let featTagNameLower = featTag.name.toLowerCase();
+                    if(optionalTags.includes(featTagNameLower)){
+                        sameOpsTagsArray.push(featTagNameLower);
+                    }
+                }
+                hasCorrectTags = (optionalTags.sort().join(',') === sameOpsTagsArray.sort().join(','));
+
+                if(hasCorrectTags) {
+                  featEntry = value;
+                  return;
+                }
+              } else {
                 featEntry = value;
                 return;
+              }
             }
         }
     });
     if(featEntry == null){
         if(!isFeatHidden(featName)){
+          if(optionalTags != null) {
+            displayError("Cannot find feat with the given traits: \'"+featName+" ["+optionalTags+"]\'");
+          } else {
             displayError("Cannot find feat: \'"+featName+"\'");
+          }
         }
         statementComplete();
         return;
@@ -470,9 +510,10 @@ function giveFeatByName(srcStruct, featName, locationID){
     $('#'+locationID).append('<div id="'+featCodeSectionID+'"></div>');
 
     featsUpdateWSCChoiceStruct(srcStruct, featEntry.Feat);
+    console.log(featEntry);
     socket.emit("requestFeatChangeByName",
         getCharIDFromURL(),
-        {srcStruct, feat: featEntry, featName, codeLocationID: featCodeSectionID});
+        {srcStruct, feat: featEntry, codeLocationID: featCodeSectionID});
 
 }
 

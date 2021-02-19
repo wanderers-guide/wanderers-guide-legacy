@@ -1232,18 +1232,15 @@ module.exports = class SocketConnections {
       socket.on('requestFeatChangeByName', function(charID, featChangePacket){
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
           if(ownsChar){
-            CharGathering.getFeatByName(charID, featChangePacket.featName)
-            .then((feat) => {
-              if(feat != null){
-                let srcStruct = featChangePacket.srcStruct;
-                CharDataMapping.setData(charID, 'chosenFeats', srcStruct, feat.id)
-                .then((result) => {
-                  socket.emit('returnFeatChangeByName', featChangePacket);
-                });
-              } else {
-                socket.emit('returnWSCStatementFailure', 'Cannot find feat \"'+featChangePacket.featName+'\"');
-              }
-            });
+            if(featChangePacket.feat != null && featChangePacket.feat.Feat != null){
+              let srcStruct = featChangePacket.srcStruct;
+              CharDataMapping.setData(charID, 'chosenFeats', srcStruct, featChangePacket.feat.Feat.id)
+              .then((result) => {
+                socket.emit('returnFeatChangeByName', featChangePacket);
+              });
+            } else {
+              socket.emit('returnWSCStatementFailure', 'Cannot find feat passed to FeatChangeByName');
+            }
           } else {
             socket.emit('returnWSCStatementFailure', 'Incorrect Auth');
           }
