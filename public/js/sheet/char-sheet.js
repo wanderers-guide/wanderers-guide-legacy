@@ -353,13 +353,6 @@ function loadCharSheet(){
     // Init Stats (set to new Map) //
     initStats();
 
-    // Hide Spells Tab //
-    if(g_spellSlotsMap.size === 0 && g_focusSpellMap.size === 0 && g_innateSpellArray.length === 0){
-        $('#spellsTab').addClass('is-hidden');
-    } else {
-        $('#spellsTab').removeClass('is-hidden');
-    }
-
     // ~~~~~~~~~~~~~~~~~~~~~~~ Adding Stats To Map ~~~~~~~~~~~~~~~~~~~~~~~ //
 
     addStat('SPEED', 'BASE', g_ancestry.speed);
@@ -506,6 +499,20 @@ function loadCharSheet(){
 
     // Display All Other Info //
     displayInformation();
+
+    // Hide Spells Tab //
+    if(g_spellSlotsMap.size === 0 && g_focusSpellMap.size === 0 && g_innateSpellArray.length === 0){
+      $('#spellsTab').addClass('is-hidden');
+    } else {
+      $('#spellsTab').removeClass('is-hidden');
+    }
+
+    // Hide Companions Tab //
+    if(gState_displayCompanionTab){
+      $('#companionsTab').removeClass('is-hidden');
+    } else {
+      $('#companionsTab').addClass('is-hidden');
+    }
 
     // Open Weapons Tab Temporarily // -> To get data input for Calculated Stats
     let prevSelectedTabID = g_selectedTabID;
@@ -1325,6 +1332,18 @@ function displayInformation() {
             event.stopImmediatePropagation();
         }
         changeTab('inventoryTab', {
+        });
+    });
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////// Companions Tab /////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    $('#companionsTab').click(function(event, preventQuickviewClose){
+        if(preventQuickviewClose){
+            event.stopImmediatePropagation();
+        }
+        changeTab('companionsTab', {
         });
     });
 

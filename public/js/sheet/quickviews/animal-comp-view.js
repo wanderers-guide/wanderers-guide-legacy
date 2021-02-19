@@ -263,7 +263,7 @@ function displayAnimalCompanionAttack(qContent, animal, charAnimal, attackNum) {
 
     // Attack Bonus //
     let trainedProfBonus = getProfNumber(getAnimalUnarmedAttacksNumUps(animal, charAnimal), g_character.level);
-    let attackModToBonus = (isFinesse) ? animal.modDex : animal.modStr;
+    let attackModToBonus = (isFinesse) ? getAnimalModDex(animal, charAnimal) : getAnimalModStr(animal, charAnimal);
 
     let attackBonus = trainedProfBonus+attackModToBonus;
     attackBonus = '<span class="has-text-grey-lighter">'+signNumber(attackBonus)+'</span>';
@@ -274,7 +274,7 @@ function displayAnimalCompanionAttack(qContent, animal, charAnimal, attackNum) {
     let damageDie = animal['a'+attackNum+'DmgDie'];
 
     let damageBonus = 0;
-    if(attackType == 'Melee'){ damageBonus += animal.modStr; }
+    if(attackType == 'Melee'){ damageBonus += getAnimalModStr(animal, charAnimal); }
     damageBonus += getAnimalAdditionalDamage(animal, charAnimal);
     damageBonus = (damageBonus == 0) ? '' : signNumber(damageBonus);
     

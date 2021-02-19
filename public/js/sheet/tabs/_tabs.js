@@ -15,6 +15,7 @@ function changeTab(type, data) {
     $('#weaponsTab').parent().removeClass("is-active");
     $('#spellsTab').parent().removeClass("is-active");
     $('#inventoryTab').parent().removeClass("is-active");
+    $('#companionsTab').parent().removeClass("is-active");
     $('#detailsTab').parent().removeClass("is-active");
     $('#notesTab').parent().removeClass("is-active");
 
@@ -29,6 +30,8 @@ function changeTab(type, data) {
         openSpellTab(data);
     } else if(type == 'inventoryTab'){
         openInventoryTab(data);
+    } else if(type == 'companionsTab'){
+        openCompanionTab(data);
     } else if(type == 'detailsTab'){
         openDetailsTab(data);
     } else if(type == 'notesTab'){
