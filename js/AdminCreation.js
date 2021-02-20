@@ -33,6 +33,14 @@ function becomeNegative(number){
     }
 }
 
+function trimVal(value){
+  if(value == null) {
+    return null;
+  } else {
+    return value.trim();
+  }
+}
+
 module.exports = class AdminCreation {
 
     static addBackground(data) {
@@ -51,7 +59,7 @@ module.exports = class AdminCreation {
         if(data.backgroundDescription == null){ data.backgroundDescription = '__No Description__'; }
         if(data.backgroundVersion == null){ data.backgroundVersion = '1.0'; }
         return Background.create({ // Create Background
-            name: data.backgroundName.trim(),
+            name: trimVal(data.backgroundName),
             version: data.backgroundVersion,
             rarity: data.backgroundRarity,
             description: data.backgroundDescription,
@@ -127,12 +135,12 @@ module.exports = class AdminCreation {
         if(data.classVersion == null){ data.classVersion = '1.0'; }
         let tagDesc = 'This indicates content from the '+data.className.toLowerCase()+' class.';
         return Tag.create({ // Create Class Tag
-            name: data.className.trim(),
+            name: trimVal(data.className),
             description: tagDesc,
             isHidden: 1,
         }).then(classTag => {
             return Class.create({ // Create Class
-                name: data.className.trim(),
+                name: trimVal(data.className),
                 version: data.classVersion,
                 hitPoints: data.classHitPoints,
                 keyAbility: data.classKeyAbility,
@@ -196,7 +204,7 @@ module.exports = class AdminCreation {
         }
         return ClassAbility.create({
             classID: classID,
-            name: classAbility.name.trim(),
+            name: trimVal(classAbility.name),
             level: classAbility.level,
             description: classAbility.description,
             code: classAbility.code,
@@ -211,7 +219,7 @@ module.exports = class AdminCreation {
                 for(let classAbilityOption of classAbility.options){
                     let newPromise =  ClassAbility.create({
                         classID: classID,
-                        name: classAbilityOption.name.trim(),
+                        name: trimVal(classAbilityOption.name),
                         level: null,
                         description: classAbilityOption.description,
                         code: classAbilityOption.code,
@@ -336,7 +344,7 @@ module.exports = class AdminCreation {
     static addClassAbilityOption(classAbility){
         return ClassAbility.create({
             classID: null,
-            name: classAbility.name.trim(),
+            name: trimVal(classAbility.name),
             level: null,
             description: classAbility.description,
             code: classAbility.code,
@@ -410,7 +418,7 @@ module.exports = class AdminCreation {
             .then(dedicationFeat => {
 
                 return Archetype.create({ // Create Archetype
-                    name: data.archetypeName.trim(),
+                    name: trimVal(data.archetypeName),
                     version: data.archetypeVersion,
                     description: data.archetypeDescription,
                     dedicationFeatID: dedicationFeat.id,
@@ -543,12 +551,12 @@ module.exports = class AdminCreation {
         if(data.ancestryVersion == null){ data.ancestryVersion = '1.0'; }
         let tagDesc = 'This indicates content from the '+data.ancestryName.toLowerCase()+' ancestry.';
         return Tag.create({ // Create Ancestry Tag
-            name: data.ancestryName.trim(),
+            name: trimVal(data.ancestryName),
             description: tagDesc,
             isHidden: 1,
         }).then(ancestryTag => {
             return Ancestry.create({ // Create Ancestry
-                name: data.ancestryName.trim(),
+                name: trimVal(data.ancestryName),
                 version: data.ancestryVersion,
                 rarity: data.ancestryRarity,
                 hitPoints: data.ancestryHitPoints,
@@ -758,7 +766,7 @@ module.exports = class AdminCreation {
         data.name = data.name.replace(/’/g,"'");
         if(data.description == null){ data.description = '__No Description__'; }
         return Heritage.create({
-            name: data.name.trim(),
+            name: trimVal(data.name),
             ancestryID: ancestryID,
             rarity: data.rarity,
             description: data.description,
@@ -822,12 +830,12 @@ module.exports = class AdminCreation {
         if(data.heritageVersion == null){ data.heritageVersion = '1.0'; }
         let tagDesc = 'This indicates content from the '+data.heritageName.toLowerCase()+' heritage.';
         return Tag.create({ // Create Heritage Tag
-            name: data.heritageName.trim(),
+            name: trimVal(data.heritageName),
             description: tagDesc,
             isHidden: 1,
         }).then(heritageTag => {
             return UniHeritage.create({ // Create Heritage
-                name: data.heritageName.trim(),
+                name: trimVal(data.heritageName),
                 version: data.heritageVersion,
                 rarity: data.heritageRarity,
                 description: data.heritageDescription,
@@ -987,11 +995,11 @@ module.exports = class AdminCreation {
             return;
         }
         return AdminCreation.addFeatPreparedData({
-            name: data.featName.trim(),
+            name: trimVal(data.featName),
             actions: data.featActions,
             level: data.featLevel,
             rarity: data.featRarity,
-            prerequisites: data.featPrereq.trim(),
+            prerequisites: trimVal(data.featPrereq),
             cost: data.featCost,
             frequency: data.featFreq,
             trigger: data.featTrigger,
@@ -1046,11 +1054,11 @@ module.exports = class AdminCreation {
         if(data.version == null){ data.version = '1.0'; }
         if(data.level == null){ data.level = -1; }
         return Feat.create({
-            name: data.name.trim(),
+            name: trimVal(data.name),
             actions: data.actions,
             level: data.level,
             rarity: data.rarity,
-            prerequisites: data.prerequisites.trim(),
+            prerequisites: trimVal(data.prerequisites),
             cost: data.cost,
             frequency: data.frequency,
             trigger: data.trigger,
@@ -1455,7 +1463,7 @@ module.exports = class AdminCreation {
         if(data.spellDesc == null){ data.spellDesc = '__No Description__'; }
         if(data.spellVersion == null){ data.spellVersion = '1.0'; }
         return Spell.create({ // Create Spell
-            name: data.spellName.trim(),
+            name: trimVal(data.spellName),
             version: data.spellVersion,
             level: data.spellLevel,
             rarity: data.spellRarity,
