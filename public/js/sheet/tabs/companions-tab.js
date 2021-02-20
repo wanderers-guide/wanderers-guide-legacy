@@ -126,10 +126,10 @@ function openCompanionTab(data) {
 
 socket.on("returnAddAnimalCompanion", function(charAnimalComp){
   g_companionData.AnimalCompanions.push(charAnimalComp);
-  displayCompanionsSection();
+  openCompanionTab();
 });
 
 socket.on("returnAddFamiliar", function(charFamiliar){
   g_companionData.Familiars.push(charFamiliar);
-  displayCompanionsSection();
+  openCompanionTab();
 });

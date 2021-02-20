@@ -316,7 +316,7 @@ function updateAnimalCompanion(charAnimalComp) {
 }
 
 socket.on("returnUpdateAnimalCompanion", function(){
-    displayCompanionsSection();
+  openCompanionTab();
 });
 
 socket.on("returnRemoveAnimalCompanion", function(charAnimalCompID){
@@ -330,5 +330,5 @@ socket.on("returnRemoveAnimalCompanion", function(charAnimalCompID){
     g_companionData.AnimalCompanions = newAnimalCompanions;
 
     closeQuickView();
-    displayCompanionsSection();
+    openCompanionTab();
 });

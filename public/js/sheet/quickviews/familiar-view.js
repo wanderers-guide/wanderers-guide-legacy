@@ -224,7 +224,7 @@ function updateFamiliar(familiar) {
 }
 
 socket.on("returnUpdateFamiliar", function(){
-    displayCompanionsSection();
+  openCompanionTab();
 });
 
 socket.on("returnRemoveFamiliar", function(charFamiliarID){
@@ -238,5 +238,5 @@ socket.on("returnRemoveFamiliar", function(charFamiliarID){
     g_companionData.Familiars = newFamiliars;
 
     closeQuickView();
-    displayCompanionsSection();
+    openCompanionTab();
 });
