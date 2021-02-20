@@ -6,8 +6,7 @@ const SpellBookSpell = require('../models/contentDB/SpellBookSpell');
 const CharDataMapping = require('./CharDataMapping');
 
 // Hardcoded Spell Slots for Casting Type
-function getSpellSlots(spellcasting){
-    let SID = getRandomSID();
+function getSpellSlots(SID, spellcasting){
     if(spellcasting === 'THREE-QUARTERS'){
         return {
             cantrip: [
@@ -254,6 +253,11 @@ function getRandomSID() {
     return Math.floor(Math.random() * Number.MAX_SAFE_INTEGER);
 }
 
+function findSIDFromSlotData(spellSlotDataArray) {
+  if(spellSlotDataArray.length == 0) { return null; }
+  return JSON.parse(spellSlotDataArray[0]).slotID - 1;
+}
+
 function getKeyAbilityFromSpellSRC(spellKeyAbilityDataArray, spellSRC){
     spellSRC = spellSRC+"=";
     for(const spellKeyAbilityData of spellKeyAbilityDataArray){
@@ -432,10 +436,46 @@ module.exports = class CharSpells {
     // Actually adds a set of spell slots to character data
     static setSpellCasting(charID, srcStruct, spellSRC, spellcasting){
         spellcasting = spellcasting.toUpperCase();
-        let spellSlots = getSpellSlots(spellcasting);
-        return CharDataMapping.setData(charID, 'spellSlots', srcStruct, spellSRC+"="+JSON.stringify(spellSlots))
-        .then((result) => {
-          return spellSlots;
+
+        return CharDataMapping.getDataSingle(charID, 'spellSlots', srcStruct)
+        .then((oldSpellSlotsData) => {
+
+          const newSID = getRandomSID();
+          let spellSlots = getSpellSlots(newSID, spellcasting);
+
+          // Transfer old data to new spellSlots data
+          if(oldSpellSlotsData != null && oldSpellSlotsData.value != null){
+
+            // Regex which will extract spell slot data from JSON
+            const oldSpellSlotDataArray = [...oldSpellSlotsData.value.match(/\{\"slotID\"\:.+?\}/g)];
+            const oldSID = findSIDFromSlotData(oldSpellSlotDataArray);
+
+            for(let spellLevel in spellSlots) {
+              for(let slotData of spellSlots[spellLevel]) {
+
+                // Get old slot data by comparing relative SIDs 
+                let oldSlotDataJSON = oldSpellSlotDataArray.find(oldSlotData => {
+                  return (JSON.parse(oldSlotData).slotID - oldSID) == slotData.slotID - newSID;
+                });
+
+                if(oldSlotDataJSON != null) {
+                  let oldSlotData = JSON.parse(oldSlotDataJSON);
+                  
+                  slotData.used = oldSlotData.used;
+                  slotData.spellID = oldSlotData.spellID;
+                  slotData.type = oldSlotData.type;
+
+                }
+
+              }
+            }
+          }
+
+          return CharDataMapping.setData(charID, 'spellSlots', srcStruct, spellSRC+"="+JSON.stringify(spellSlots))
+          .then((result) => {
+            return spellSlots;
+          });
+
         });
     }
 
