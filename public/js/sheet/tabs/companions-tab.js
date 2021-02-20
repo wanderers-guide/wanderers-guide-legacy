@@ -4,7 +4,7 @@
 
 function openCompanionTab(data) {
 
-  $('#tabContent').append('<div id="companionsContent" class="use-custom-scrollbar" style="height: 555px; max-height: 555px; overflow-y: auto;"></div>');
+  $('#tabContent').html('<div id="companionsContent" class="use-custom-scrollbar" style="height: 555px; max-height: 555px; overflow-y: auto;"></div>');
 
 
   for(let charAnimalComp of g_companionData.AnimalCompanions){
