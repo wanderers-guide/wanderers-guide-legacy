@@ -171,7 +171,7 @@ function openFeatQuickview(data) {
         displayNotesField(qContent, data.SrcStruct);
     }
 
-    showFeatListOptions(qContent, data.Feat.code);
+    showFeatListOptions(qContent, data.Feat.code, data.Feat.name);
 
     if(!isSheetPage()){
       showFeatPrerequisiteFor(qContent, data.Feat.name);
@@ -179,7 +179,7 @@ function openFeatQuickview(data) {
 
 }
 
-function showFeatListOptions(qContent, wscStatements){
+function showFeatListOptions(qContent, wscStatements, sourceFeatName){
   if(wscStatements == null) {return;}
 
   let statementArray = wscStatements.split(/\n/);
@@ -198,7 +198,8 @@ function showFeatListOptions(qContent, wscStatements){
 
       let listText = '**'+selectorTitle+' '+repetitionWord+'**\n';
       for(let featName of featNameList){
-        listText += '* : (feat: '+featName+')\n';
+        let displayFeatName = featName.replace(sourceFeatName+' - ', '');
+        listText += '* : (feat: '+displayFeatName+' | '+featName+')\n';
       }
       qContent.append('<hr class="m-2">');
       qContent.append('<div>'+processText(listText, true, true, 'MEDIUM')+'</div>');
