@@ -17,7 +17,16 @@ function reduceAndSimplifyCoins(costInCP){
   let remainingCost = costInCP;
   let reduceCoinRecords = [];
 
-  for(const invItem of g_invStruct.InvItems){
+  let sortedInvItems = g_invStruct.InvItems.sort(
+    function(a, b) {
+      if (a.itemID === b.itemID) {
+        // bagInvItemID is only important when itemIDs are the same
+        return a.bagInvItemID - b.bagInvItemID;
+      }
+      return b.itemID - a.itemID;
+    }
+  );
+  for(const invItem of sortedInvItems){
 
     let itemValue = null;
     // Coins - Hardcoded IDs //

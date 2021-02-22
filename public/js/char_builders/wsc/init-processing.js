@@ -272,6 +272,11 @@ function runNextStatement(){
             return 'WAIT';
         }
 
+        if(wscStatement.includes("-HERITAGE-EFFECTS")){
+            processingHeritageEffects(wscStatement, srcStruct, locationID, sourceName);
+            return 'WAIT';
+        }
+
         if(wscStatement.includes("ADD-TEXT")){
             processingAddText(wscStatement, srcStruct, locationID, sourceName);
             return 'WAIT';

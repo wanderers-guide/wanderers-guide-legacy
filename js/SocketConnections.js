@@ -1139,6 +1139,23 @@ module.exports = class SocketConnections {
         });
       });
 
+      socket.on('requestAddHeritageEffect', function(charID, srcStruct, heritageName, inputPacket){
+        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+          if(ownsChar){
+            CharGathering.getHeritageByName(charID, heritageName)
+            .then((heritage) => {
+              if(heritage != null){
+                socket.emit('returnAddHeritageEffect', srcStruct, heritage, inputPacket);
+              } else {
+                socket.emit('returnWSCStatementFailure', 'Unknown Heritage \"'+heritageName+'\"');
+              }
+            });
+          } else {
+            socket.emit('returnWSCStatementFailure', 'Incorrect Auth');
+          }
+        });
+      });
+
       socket.on('requestWeaponFamiliarityChange', function(charID, srcStruct, trait){
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
           if(ownsChar){

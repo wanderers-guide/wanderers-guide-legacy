@@ -1288,7 +1288,23 @@
                         - Gives the character critical specialization in all simple weapons.
                     </p>
                     <p class="pl-3">
-                        - Options are any of the attacks proficiency options (see Proficiencies) and can give by weapon name, trait, prof, or group (Ex: <span class="code">GIVE-WEAPON-CRITICAL-SPECIALIZATION=TRAIT~Dwarf</span>).
+                        - Options are any of the attacks proficiency options (see Proficiencies) and can give by weapon name, trait, prof, or group.
+                    </p>
+                </div>
+                <div class="py-2">
+                    <div class="code-block">
+                        GIVE-WEAPON-CRITICAL-SPECIALIZATION=TRAIT~Dwarf
+                    </div>
+                    <p class="pl-3">
+                        - Gives the character critical specialization in all weapons with the 'Dwarf - Item' trait.
+                    </p>
+                </div>
+                <div class="py-2">
+                    <div class="code-block">
+                        GIVE-WEAPON-CRITICAL-SPECIALIZATION=WEAPON~Scimitar
+                    </div>
+                    <p class="pl-3">
+                        - Gives the character critical specialization with the weapon of the name 'Scimitar'.
                     </p>
                 </div>
             </div>
@@ -1412,7 +1428,7 @@
                 <div class="mt-4">
                     <h1 class="small-title is-size-4 is-marginless mb-1 pl-3">Physical Features</h1>
                     <p>
-                        Use the following code statement to give a character a physical feature.
+                        Use the following code statement to give a character a physical feature. Physical feature is the term Wanderer's Guide uses to indicate and categorize extra features ancestries often give characters that are innate to the ancestry.
                     </p>
                     <div class="py-2">
                         <div class="code-block">
@@ -1458,6 +1474,21 @@
                         </div>
                         <p class="pl-3">
                             - Gives the character a climb speed equal to their land speed.
+                        </p>
+                    </div>
+                </div>
+                <hr class="m-2">
+                <div class="mt-4">
+                    <h1 class="small-title is-size-4 is-marginless mb-1 pl-3">Heritage Effects</h1>
+                    <p>
+                        Occationally a feat may say that you gain the effects of a heritage. Use the following code statements to give a character the effects of a heritage.
+                    </p>
+                    <div class="py-2">
+                        <div class="code-block">
+                            GIVE-HERITAGE-EFFECTS-NAME=Ancient Elf
+                        </div>
+                        <p class="pl-3">
+                            - Gives the character the effects of the 'Ancient Elf' heritage.
                         </p>
                     </div>
                 </div>
@@ -1594,6 +1625,17 @@
                         </p>
                         <p class="pl-3">
                             - Options are: TINY, SMALL, MEDIUM, LARGE, HUGE, and GARGANTUAN.
+                        </p>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <h1 class="small-title is-size-4 is-marginless mb-1 pl-3">Familiarity</h1>
+                    <div class="py-2">
+                        <div class="code-block">
+                            GIVE-WEAPON-FAMILIARITY=Goblin
+                        </div>
+                        <p class="pl-3">
+                            - For the purpose of determining your weapon proficiency, all martial weapons with the 'Goblin - Item' trait are simple weapons and all advanced weapons with the 'Goblin - Item' trait are martial weapons.
                         </p>
                     </div>
                 </div>

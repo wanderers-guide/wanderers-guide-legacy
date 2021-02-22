@@ -335,7 +335,7 @@ router.get('/create/feat-action', adminAuthCheck, (req, res) => {
         order: [['name', 'ASC'],]
     }).then((skills) => {
         Tag.findAll({
-            where: { isArchived: 0, isHidden: 0, homebrewID: null },
+            where: { isArchived: 0, homebrewID: null }, // isHidden: 0
             order: [['name', 'ASC'],]
         }).then((tags) => {
             res.render('admin/admin_builder/builder_feat-action', {

@@ -13,10 +13,14 @@ router.get('*', (req, res) => {
     Character.findOne({ where: { id: charID} })
     .then((character) => {
         if(character != null){
-            if(CharStateUtils.isPublic(character) || (req.user != null && character.userID === req.user.id)){
+
+            let isPublicSheet = CharStateUtils.isPublic(character);
+            let isRestrictedView = (isPublicSheet && (req.user == null || character.userID != req.user.id));
+
+            if(isPublicSheet || (req.user != null && character.userID === req.user.id)){
 
                 if(CharStateUtils.isPlayable(character)) {
-                    goToCharSheet(character, req, res);
+                    goToCharSheet(character, req, res, isRestrictedView);
                 } else {
                     res.redirect('/profile/characters/builder/basics/?id='+character.id);
                 }
@@ -38,12 +42,19 @@ router.get('*', (req, res) => {
 });
 
 
-function goToCharSheet(character, req, res) {
+function goToCharSheet(character, req, res, isRestrictedView) {
 
-    res.render('sheet/charsheet', {
-        title: character.name+" - Wanderer's Guide",
-        user: req.user
-    });
+  let title;
+  if(isRestrictedView) {
+    title = "[View-Only] "+character.name+" - Wanderer's Guide";
+  } else {
+    title = character.name+" - Wanderer's Guide";
+  }
+
+  res.render('sheet/charsheet', {
+    title: title,
+    user: req.user
+  });
 
 }
 

@@ -1408,6 +1408,26 @@ module.exports = class CharGathering {
       });
     }
 
+    static getHeritageByName(charID, heritageName) {
+      return Character.findOne({ where: { id: charID } })
+      .then((character) => {
+        return Heritage.findOne({
+          where: {
+            name: heritageName,
+            contentSrc: {
+              [Op.or]: CharContentSources.getSourceArray(character)
+            },
+            homebrewID: {
+              [Op.or]: CharContentHomebrew.getHomebrewArray(character)
+            },
+          }
+        })
+        .then((heritage) => {
+          return heritage;
+        });
+      });
+    }
+
     static getItem(charID, itemID) {
       return Character.findOne({ where: { id: charID } })
       .then((character) => {
