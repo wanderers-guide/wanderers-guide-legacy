@@ -1156,6 +1156,43 @@ module.exports = class SocketConnections {
         });
       });
 
+      socket.on('requestHeritageEffectsChange', function(charID, srcStruct, heritageID){
+        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+          if(ownsChar){
+            if(heritageID == null){
+              CharDataMapping.deleteData(charID, 'heritageExtra', srcStruct)
+              .then((result) => {
+                socket.emit('returnHeritageEffectsChange');
+              });
+            } else {
+              CharDataMapping.setData(charID, 'heritageExtra', srcStruct, heritageID)
+              .then((result) => {
+                socket.emit('returnHeritageEffectsChange');
+              });
+            }
+          } else {
+            socket.emit('returnWSCStatementFailure', 'Incorrect Auth');
+          }
+        });
+      });
+
+      socket.on('requestFindHeritagesFromAncestryName', function(charID, srcStruct, ancestryName, inputPacket){
+        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+          if(ownsChar){
+            CharGathering.getHeritagesByAncestryName(charID, ancestryName)
+            .then((heritages) => {
+              if(heritages != null){
+                socket.emit('returnFindHeritagesFromAncestryName', srcStruct, heritages, inputPacket);
+              } else {
+                socket.emit('returnWSCStatementFailure', 'Unknown Ancestry \"'+ancestryName+'\"');
+              }
+            });
+          } else {
+            socket.emit('returnWSCStatementFailure', 'Incorrect Auth');
+          }
+        });
+      });
+
       socket.on('requestWeaponFamiliarityChange', function(charID, srcStruct, trait){
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
           if(ownsChar){

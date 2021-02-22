@@ -1085,37 +1085,42 @@ module.exports = class CharGathering {
                                           .then((domains) => {
                                             return CharGathering.getChoicesDomains(charID)
                                             .then((domainDataArray) => {
-                                              return CharDataMapping.getDataAll(charID, "advancedDomains",Domain)
+                                              return CharDataMapping.getDataAll(charID,"advancedDomains",Domain)
                                               .then((advancedDomainDataArray) => {
                                                 return CharGathering.getAllExtraClassFeatures(charID)
                                                 .then((extraClassFeatures) => {
+                                                  return CharDataMapping.getDataAll(charID, "heritageExtra",null)
+                                                  .then((heritageEffectsArray) => {
 
-                                                  let choiceStruct = {
-                                                    Character: character,
-                                                    Heritage: heritage,
-                                                    Background: background,
-                                                    Ancestry: ancestry,
-                                                    ClassDetails: classDetails,
-                                                    CharTagsArray: charTagsArray,
-                                                    FeatArray: featDataArray,
-                                                    BonusArray: bonusDataArray,
-                                                    ChoiceArray: choiceDataArray,
-                                                    ProfArray: profDataArray,
-                                                    LangArray: langDataArray,
-                                                    SenseArray: senseDataArray,
-                                                    PhyFeatArray: phyFeatDataArray,
-                                                    InnateSpellArray: innateSpellDataArray,
-                                                    ProfObject: mapToObj(profMap),
-                                                    AllDomains: domains,
-                                                    AllAncestries: ancestries,
-                                                    DomainArray: domainDataArray,
-                                                    AdvancedDomainArray: advancedDomainDataArray,
-                                                    FocusPointArray: focusPointDataArray,
-                                                    LoreArray: loreDataArray,
-                                                    ExtraClassFeaturesArray: extraClassFeatures,
-                                                  };
-        
-                                                  return choiceStruct;
+                                                    let choiceStruct = {
+                                                      Character: character,
+                                                      Heritage: heritage,
+                                                      Background: background,
+                                                      Ancestry: ancestry,
+                                                      ClassDetails: classDetails,
+                                                      CharTagsArray: charTagsArray,
+                                                      FeatArray: featDataArray,
+                                                      BonusArray: bonusDataArray,
+                                                      ChoiceArray: choiceDataArray,
+                                                      ProfArray: profDataArray,
+                                                      LangArray: langDataArray,
+                                                      SenseArray: senseDataArray,
+                                                      PhyFeatArray: phyFeatDataArray,
+                                                      InnateSpellArray: innateSpellDataArray,
+                                                      ProfObject: mapToObj(profMap),
+                                                      AllDomains: domains,
+                                                      AllAncestries: ancestries,
+                                                      DomainArray: domainDataArray,
+                                                      AdvancedDomainArray: advancedDomainDataArray,
+                                                      FocusPointArray: focusPointDataArray,
+                                                      LoreArray: loreDataArray,
+                                                      ExtraClassFeaturesArray: extraClassFeatures,
+                                                      HeritageEffectsArray: heritageEffectsArray,
+                                                    };
+          
+                                                    return choiceStruct;
+
+                                                  });
                                                 });
                                               });
                                             });
@@ -1424,6 +1429,41 @@ module.exports = class CharGathering {
         })
         .then((heritage) => {
           return heritage;
+        });
+      });
+    }
+
+    static getHeritagesByAncestryName(charID, ancestryName) {
+      return Character.findOne({ where: { id: charID } })
+      .then((character) => {
+        return Ancestry.findOne({
+          where: {
+            name: ancestryName,
+            contentSrc: {
+              [Op.or]: CharContentSources.getSourceArray(character)
+            },
+            homebrewID: {
+              [Op.or]: CharContentHomebrew.getHomebrewArray(character)
+            },
+          } 
+        }).then((ancestry) => {
+          if(ancestry == null) {return null;}
+          return Heritage.findAll({
+            where: {
+              [Op.or]: [
+                { ancestryID: ancestry.id },
+                { indivAncestryName: ancestry.name }
+              ],
+              contentSrc: {
+                [Op.or]: CharContentSources.getSourceArray(character)
+              },
+              homebrewID: {
+                [Op.or]: CharContentHomebrew.getHomebrewArray(character)
+              },
+            }
+          }).then((heritages) => {
+            return heritages;
+          });
         });
       });
     }
