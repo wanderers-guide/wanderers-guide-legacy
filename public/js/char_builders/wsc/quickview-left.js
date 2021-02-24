@@ -40,6 +40,8 @@ function closeQuickViewLeft() {
 
 // ~~~~~~~~~~ Stats Quickview ~~~~~~~~~~ //
 function openLeftStatsQuickview(data) {
+
+  $('#quickviewLeftDefault').addClass('is-active');
   
   $('#quickViewLeftTitle').html('Statistics');
   let qContent = $('#quickViewLeftContent');
@@ -146,9 +148,6 @@ socket.on("returnLangsAndTrainingsClear", function(srcStruct, data){
 
     // Scrolls to where it last was
     $('#quickViewLeftContent').parent().scrollTop(g_leftQuickViewScroll);
-
-    // Visually opens quickview
-    $('#quickviewLeftDefault').addClass('is-active');
 
   }, 10);
 });
