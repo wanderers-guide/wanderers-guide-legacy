@@ -153,7 +153,9 @@ app.use('/browse', browseRoutes);
 app.use('/', coreRoutes);
 app.use('*', errorRoutes); // 404 Route
 
-io.setMaxListeners(20);
+io.setMaxListeners(21);
+SocketConnections.basicConnection(io);
+
 SocketConnections.sheetItems(io);
 SocketConnections.sheetConditions(io);
 SocketConnections.sheetCompanions(io);

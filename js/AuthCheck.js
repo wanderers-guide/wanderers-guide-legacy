@@ -14,6 +14,10 @@ function getUserID(socket){
 
 module.exports = class AuthCheck {
 
+    static isLoggedIn(socket){
+      return (getUserID(socket) != -1);
+    }
+
     static ownsCharacterAPI(userID, charID) {
         return Character.findOne({ where: { id: charID, userID: userID } })
         .then((character) => {

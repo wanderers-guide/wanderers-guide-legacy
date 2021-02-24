@@ -517,10 +517,16 @@ function giveFeatByName(srcStruct, featName, locationID, optionalTags=null){
 }
 
 socket.on("returnFeatChangeByName", function(featChangePacket){
-    processCode(
-        featChangePacket.feat.Feat.code,
-        featChangePacket.srcStruct,
-        featChangePacket.codeLocationID,
-        featChangePacket.feat.Feat.name);
-    statementComplete();
+  // If leftStatsQuickview is open, refresh it
+  if($('#quickviewLeftDefault').hasClass('is-active')){
+    openLeftQuickView('skillsView', null);
+  }
+
+  processCode(
+      featChangePacket.feat.Feat.code,
+      featChangePacket.srcStruct,
+      featChangePacket.codeLocationID,
+      featChangePacket.feat.Feat.name);
+  
+  statementComplete();
 });

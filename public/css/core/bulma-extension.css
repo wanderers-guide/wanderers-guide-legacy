@@ -5,9 +5,15 @@
 }
 .is-bold-very {
   font-weight: 900;
+  filter: brightness(115%);
 }
 .is-bold {
   font-weight: 675;
+  filter: brightness(115%);
+}
+strong {
+  font-weight: 675;
+  filter: brightness(115%);
 }
 .is-weight-normal {
   font-weight: 400;

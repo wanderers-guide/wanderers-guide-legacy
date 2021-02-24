@@ -33,6 +33,21 @@ function mapToObj(strMap) {
 
 module.exports = class SocketConnections {
 
+  static basicConnection(io) {
+
+    io.on('connection', function(socket){
+
+      socket.onAny(function(){
+        if(!AuthCheck.isLoggedIn(socket)){
+          console.log('Not Logged in');
+          socket.emit('notLoggedIn', {});
+        }
+      });
+
+    });
+
+  }
+
   static sheetGeneral(io) {
 
     // Socket.IO Connections

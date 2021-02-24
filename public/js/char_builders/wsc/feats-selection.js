@@ -170,6 +170,10 @@ socket.on("returnFeatChange", function(featChangePacket){
   updateAllFeatSelections();
   selectorUpdated();
 
+  // If leftStatsQuickview is open, refresh it
+  if($('#quickviewLeftDefault').hasClass('is-active')){
+    openLeftQuickView('skillsView', null);
+  }
 
   // If dedication is switched, reload all class abilities //
   //if(featChangePacket.autoPageLoad != null && !featChangePacket.autoPageLoad){}
