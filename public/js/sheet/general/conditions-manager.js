@@ -101,9 +101,6 @@ socket.on("returnUpdateConditionsMap", function(conditionsObject, reloadSheet){
 
     if(reloadSheet){
       reloadCharSheet();
-
-      // Update armor and shield within the sheet, fixing a bug with AC and conditions
-      determineArmor(getModOfValue('DEX'), g_preConditions_strScore);
     }
 
 });

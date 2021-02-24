@@ -59,6 +59,15 @@ module.exports = class AuthCheck {
       });
     }
 
+    static isDeveloper(socket) {
+      return User.findOne({ where: { id: getUserID(socket)} })
+      .then((user) => {
+          return user.isDeveloper === 1;
+      }).catch((error) => {
+          return false;
+      });
+    }
+
     static isMember(socket) {
       return User.findOne({ where: { id: getUserID(socket)} })
       .then((user) => {

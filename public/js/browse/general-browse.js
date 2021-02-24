@@ -5,6 +5,8 @@
 let socket = io();
 
 // Core Quickview Data //
+let g_isDeveloper = false;
+
 let g_featMap = null;
 let g_skillMap = null;
 let g_itemMap = null;
@@ -28,7 +30,9 @@ $(function () {
 
 });
 
-socket.on("returnBrowse", function(featsObject, skillObject, itemObject, spellObject, allLanguages, allConditions, allTags, classes, ancestries, archetypes, backgrounds, uniHeritages) {
+socket.on("returnBrowse", function(isDeveloper, featsObject, skillObject, itemObject, spellObject, allLanguages, allConditions, allTags, classes, ancestries, archetypes, backgrounds, uniHeritages) {
+  g_isDeveloper = isDeveloper;
+  
   let featMap = objToMap(featsObject);
   let skillMap = objToMap(skillObject);
   let itemMap = objToMap(itemObject);

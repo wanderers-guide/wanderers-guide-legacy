@@ -2384,19 +2384,21 @@ module.exports = class SocketConnections {
     io.on('connection', function(socket){
 
       socket.on('requestBrowse', function(){
-        GeneralGathering.getAllFeats().then((featsObject) => {
-          GeneralGathering.getAllSkills().then((skillObject) => {
-            GeneralGathering.getAllItems().then((itemMap) => {
-              GeneralGathering.getAllSpells().then((spellMap) => {
-                GeneralGathering.getAllLanguages().then((allLanguages) => {
-                  GeneralGathering.getAllConditions().then((allConditions) => {
-                    GeneralGathering.getAllTags().then((allTags) => {
-                      GeneralGathering.getAllClassesBasic().then((classes) => {
-                        GeneralGathering.getAllAncestriesBasic().then((ancestries) => {
-                          GeneralGathering.getAllArchetypes().then((archetypes) => {
-                            GeneralGathering.getAllBackgrounds().then((backgrounds) => {
-                              GeneralGathering.getAllUniHeritages().then((uniHeritages) => {
-                                socket.emit('returnBrowse', featsObject, skillObject, mapToObj(itemMap), mapToObj(spellMap), allLanguages, allConditions, allTags, classes, ancestries, archetypes, backgrounds, uniHeritages);
+        AuthCheck.isDeveloper(socket).then((isDeveloper) => {
+          GeneralGathering.getAllFeats().then((featsObject) => {
+            GeneralGathering.getAllSkills().then((skillObject) => {
+              GeneralGathering.getAllItems().then((itemMap) => {
+                GeneralGathering.getAllSpells().then((spellMap) => {
+                  GeneralGathering.getAllLanguages().then((allLanguages) => {
+                    GeneralGathering.getAllConditions().then((allConditions) => {
+                      GeneralGathering.getAllTags().then((allTags) => {
+                        GeneralGathering.getAllClassesBasic().then((classes) => {
+                          GeneralGathering.getAllAncestriesBasic().then((ancestries) => {
+                            GeneralGathering.getAllArchetypes().then((archetypes) => {
+                              GeneralGathering.getAllBackgrounds().then((backgrounds) => {
+                                GeneralGathering.getAllUniHeritages().then((uniHeritages) => {
+                                  socket.emit('returnBrowse', isDeveloper, featsObject, skillObject, mapToObj(itemMap), mapToObj(spellMap), allLanguages, allConditions, allTags, classes, ancestries, archetypes, backgrounds, uniHeritages);
+                                });
                               });
                             });
                           });

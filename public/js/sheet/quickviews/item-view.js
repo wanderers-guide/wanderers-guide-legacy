@@ -214,16 +214,27 @@ function openItemQuickview(data) {
         qContent.append(processText('~ Craft Requirements: '+itemDataStruct.Item.craftRequirements, true, true, 'MEDIUM'));
     }
 
-    qContent.append('<hr class="m-2">');
-
     // Item Specializations
     if(isSheetPage()) {
-        displayCriticalSpecialization(qContent, itemDataStruct);
+      qContent.append('<hr class="m-2">');
+      displayCriticalSpecialization(qContent, itemDataStruct);
     }
     
     if(itemDataStruct.ShieldData != null) { // If item is shield,
-      qContent.append('<div class="columns is-centered is-marginless text-center"><div class="column is-paddingless"><p><strong>Hardness</strong></p><p>'+itemDataStruct.Item.hardness+'</p></div><div class="column is-paddingless"><p><strong>Hit Points</strong></p><p>'+itemDataStruct.Item.hitPoints+'</p></div><div class="column is-paddingless"><p><strong>BT</strong></p><p>'+itemDataStruct.Item.brokenThreshold+'</p></div></div>');
       qContent.append('<hr class="m-2">');
+      qContent.append('<div class="columns is-centered is-marginless text-center"><div class="column is-paddingless"><p><strong>Hardness</strong></p><p>'+itemDataStruct.Item.hardness+'</p></div><div class="column is-paddingless"><p><strong>Hit Points</strong></p><p>'+itemDataStruct.Item.hitPoints+'</p></div><div class="column is-paddingless"><p><strong>BT</strong></p><p>'+itemDataStruct.Item.brokenThreshold+'</p></div></div>');
+    }
+
+
+    if(typeof g_isDeveloper !== 'undefined' && g_isDeveloper && itemDataStruct.Item.code != null) {
+      qContent.append('<hr class="m-3">');
+      qContent.append('<p class="is-size-6 is-bold">WSC Statements</p>');
+      
+      let codeHTML = '';
+      for(let codeStatement of itemDataStruct.Item.code.split(/\n/)){
+        codeHTML += '<p class="is-size-7">'+codeStatement+'</p>';
+      }
+      qContent.append('<div class="code-block">'+codeHTML+'</div>');
     }
 
 }

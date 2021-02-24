@@ -177,7 +177,20 @@ function openFeatQuickview(data) {
       showFeatPrerequisiteFor(qContent, data.Feat.name);
     }
 
+    if(typeof g_isDeveloper !== 'undefined' && g_isDeveloper && data.Feat.code != null) {
+      qContent.append('<hr class="m-3">');
+      qContent.append('<p class="is-size-6 is-bold">WSC Statements</p>');
+      
+      let codeHTML = '';
+      for(let codeStatement of data.Feat.code.split(/\n/)){
+        codeHTML += '<p class="is-size-7">'+codeStatement+'</p>';
+      }
+      qContent.append('<div class="code-block">'+codeHTML+'</div>');
+    }
+
 }
+
+
 
 function showFeatListOptions(qContent, wscStatements, sourceFeatName){
   if(wscStatements == null) {return;}

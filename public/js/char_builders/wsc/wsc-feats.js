@@ -510,7 +510,6 @@ function giveFeatByName(srcStruct, featName, locationID, optionalTags=null){
     $('#'+locationID).append('<div id="'+featCodeSectionID+'"></div>');
 
     featsUpdateWSCChoiceStruct(srcStruct, featEntry.Feat);
-    console.log(featEntry);
     socket.emit("requestFeatChangeByName",
         getCharIDFromURL(),
         {srcStruct, feat: featEntry, codeLocationID: featCodeSectionID});

@@ -55,13 +55,6 @@ strong {
     font-weight: 800;
 }
 
-.code-block {
-    padding: 0.8rem;
-    background-color: #2f2f31;
-    font-family: 'Nanum Gothic Coding', monospace;
-    color: hsl(0, 0%, 77%);
-}
-
 .code {
   background-color: #2f2f31;
   font-family: 'Nanum Gothic Coding', monospace;

@@ -183,6 +183,14 @@ function handleCharacterOptions(character, hBundles, progessBundles) {
     });
     $("#contentSrc-GUNS-AND-GEARS").prop('checked', contentSourceArray.includes('GUNS-AND-GEARS'));
 
+    $("#contentSrc-LOST-ANCESTRY-GUIDE").change(function(){
+      socket.emit("requestCharacterSourceChange", 
+          getCharIDFromURL(), 
+          'LOST-ANCESTRY-GUIDE',
+          this.checked);
+    });
+    $("#contentSrc-LOST-ANCESTRY-GUIDE").prop('checked', contentSourceArray.includes('LOST-ANCESTRY-GUIDE'));
+    
     $("#contentSrc-LOST-CHAR-GUIDE").change(function(){
         socket.emit("requestCharacterSourceChange", 
             getCharIDFromURL(), 

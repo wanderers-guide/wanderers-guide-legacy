@@ -28,6 +28,7 @@ function cloneObj(obj){
 }
 
 function hasSameSrc(dataStruct, srcStruct){
+  if(dataStruct == null || srcStruct == null) { return false; }
   return (dataStruct.sourceType == srcStruct.sourceType && dataStruct.sourceLevel == srcStruct.sourceLevel && dataStruct.sourceCode == srcStruct.sourceCode && dataStruct.sourceCodeSNum == srcStruct.sourceCodeSNum);
 }
 
@@ -46,9 +47,9 @@ const g_contentSources = [
   {TextName: 'Gamemastery Guide', CodeName: 'GM-GUIDE', Link: 'https://paizo.com/products/btq022c1?Pathfinder-Gamemastery-Guide'},
   {TextName: 'Secrets of Magic', CodeName: 'SECRETS-OF-MAGIC', Link: 'https://paizo.com/products/btq026l5?Pathfinder-Secrets-of-Magic'},
   {TextName: 'Guns & Gears', CodeName: 'GUNS-AND-GEARS', Link: 'https://paizo.com/products/btq026mw?Pathfinder-Guns-Gears'},
-  {TextName: 'Lost Omens: Ancestry Guide', CodeName: 'LOST-ANCESTRY-GUIDE', Link: 'https://paizo.com/products/btq026k5?Pathfinder-Lost-Omens-Ancestry-Guide', Unreleased: true },
-  {TextName: 'Lost Omens: Gods & Magic', CodeName: 'LOST-GOD-MAGIC', Link: ''},
+  {TextName: 'Lost Omens: Ancestry Guide', CodeName: 'LOST-ANCESTRY-GUIDE', Link: 'https://paizo.com/products/btq026k5?Pathfinder-Lost-Omens-Ancestry-Guide' },
   {TextName: 'Lost Omens: Character Guide', CodeName: 'LOST-CHAR-GUIDE', Link: 'https://paizo.com/products/btq01zt4?Pathfinder-Lost-Omens-Character-Guide'},
+  {TextName: 'Lost Omens: Gods & Magic', CodeName: 'LOST-GOD-MAGIC', Link: 'https://paizo.com/products/btq021wf?Pathfinder-Lost-Omens-Gods-Magic'},
   {TextName: 'Lost Omens: Legends', CodeName: 'LOST-LEGENDS', Link: 'https://paizo.com/products/btq023gd?Pathfinder-Lost-Omens-Legends'},
   {TextName: 'Lost Omens: Pathfinder Society Guide', CodeName: 'LOST-SOCIETY-GUIDE', Link: 'https://paizo.com/products/btq0233q?Pathfinder-Lost-Omens-Pathfinder-Society-Guide'},
   {TextName: 'Lost Omens: World Guide', CodeName: 'LOST-WORLD-GUIDE', Link: 'https://paizo.com/products/btq01zoj?Pathfinder-Lost-Omens-World-Guide'},
@@ -64,7 +65,7 @@ const g_contentSources = [
   {TextName: 'Pathfinder Society', CodeName: 'PATH-SOCIETY', Link: 'https://paizo.com/pathfindersociety'},
 ];
 
-const g_currentContentSource = 'LOST-ANCESTRY-GUIDE';
+const g_currentContentSource = 'BEST-1';
 
 function getContentSourceTextName(codeName){
   let contentSourceData = g_contentSources.find(contentSourceData => {

@@ -448,13 +448,6 @@ function loadCharSheet(){
         addStat('DIVINE_SPELL_DC', 'USER_BONUS', divineSpellDC.UserBonus);
     }
 
-    addStat('MAX_HEALTH', 'ANCESTRY', g_ancestry.hitPoints);
-    if(gOption_hasStamina){
-      addStat('MAX_HEALTH_BONUS_PER_LEVEL', 'BASE', 0);
-    } else {
-      addStat('MAX_HEALTH_BONUS_PER_LEVEL', 'BASE', getModOfValue('CON'));
-    }
-
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 
     // Run Items Code (investitures and others) //
@@ -489,6 +482,13 @@ function loadCharSheet(){
     determineBulkAndCoins(g_invStruct.InvItems, g_itemMap);
 
     // Display Health and Temp -> Stamina and Resolve //
+    addStat('MAX_HEALTH', 'ANCESTRY', g_ancestry.hitPoints);
+    if(gOption_hasStamina){
+      addStat('MAX_HEALTH_BONUS_PER_LEVEL', 'BASE', 0);
+    } else {
+      addStat('MAX_HEALTH_BONUS_PER_LEVEL', 'BASE', getModOfValue('CON'));
+    }
+
     initHealthPointsAndMore();
 
     // Determine Armor //
@@ -1767,6 +1767,32 @@ function determineArmor(dexMod, strScore) {
         let newDexMod = (pre_dexMod > armorStruct.Item.ArmorData.dexCap) ? armorStruct.Item.ArmorData.dexCap : pre_dexMod;
         dexMod = newDexMod - (pre_dexMod-dexMod);
 
+        // Apply armor's rune effects to character...
+        if(isArmorPotencyOne(armorStruct.InvItem.fundPotencyRuneID)){
+          addStat('AC', 'ITEM_BONUS', 1);
+        } else if(isArmorPotencyTwo(armorStruct.InvItem.fundPotencyRuneID)){
+          addStat('AC', 'ITEM_BONUS', 2);
+        } else if(isArmorPotencyThree(armorStruct.InvItem.fundPotencyRuneID)){
+          addStat('AC', 'ITEM_BONUS', 3);
+        }
+        if(isResilient(armorStruct.InvItem.fundRuneID)){
+          addStat('SAVE_FORT', 'ITEM_BONUS', 1);
+          addStat('SAVE_WILL', 'ITEM_BONUS', 1);
+          addStat('SAVE_REFLEX', 'ITEM_BONUS', 1);
+        } else if(isGreaterResilient(armorStruct.InvItem.fundRuneID)){
+          addStat('SAVE_FORT', 'ITEM_BONUS', 2);
+          addStat('SAVE_WILL', 'ITEM_BONUS', 2);
+          addStat('SAVE_REFLEX', 'ITEM_BONUS', 2);
+        } else if(isMajorResilient(armorStruct.InvItem.fundRuneID)){
+          addStat('SAVE_FORT', 'ITEM_BONUS', 3);
+          addStat('SAVE_WILL', 'ITEM_BONUS', 3);
+          addStat('SAVE_REFLEX', 'ITEM_BONUS', 3);
+        }
+        runArmorPropertyRuneCode(armorStruct.InvItem.propRune1ID);
+        runArmorPropertyRuneCode(armorStruct.InvItem.propRune2ID);
+        runArmorPropertyRuneCode(armorStruct.InvItem.propRune3ID);
+        runArmorPropertyRuneCode(armorStruct.InvItem.propRune4ID);
+
         // Halve maxHP if it's shoddy
         let maxHP = (armorStruct.InvItem.isShoddy == 1) ? Math.floor(armorStruct.InvItem.hitPoints/2) : armorStruct.InvItem.hitPoints;
         // Reduce currentHP if it's over maxHP
@@ -1852,32 +1878,6 @@ function determineArmor(dexMod, strScore) {
         if(speedPenalty < 0){
             addStat('SPEED', 'PENALTY (ARMOR)', speedPenalty);
         }
-        
-        // Apply armor's rune effects to character...
-        if(isArmorPotencyOne(armorStruct.InvItem.fundPotencyRuneID)){
-          addStat('AC', 'ITEM_BONUS', 1);
-        } else if(isArmorPotencyTwo(armorStruct.InvItem.fundPotencyRuneID)){
-          addStat('AC', 'ITEM_BONUS', 2);
-        } else if(isArmorPotencyThree(armorStruct.InvItem.fundPotencyRuneID)){
-          addStat('AC', 'ITEM_BONUS', 3);
-        }
-        if(isResilient(armorStruct.InvItem.fundRuneID)){
-          addStat('SAVE_FORT', 'ITEM_BONUS', 1);
-          addStat('SAVE_WILL', 'ITEM_BONUS', 1);
-          addStat('SAVE_REFLEX', 'ITEM_BONUS', 1);
-        } else if(isGreaterResilient(armorStruct.InvItem.fundRuneID)){
-          addStat('SAVE_FORT', 'ITEM_BONUS', 2);
-          addStat('SAVE_WILL', 'ITEM_BONUS', 2);
-          addStat('SAVE_REFLEX', 'ITEM_BONUS', 2);
-        } else if(isMajorResilient(armorStruct.InvItem.fundRuneID)){
-          addStat('SAVE_FORT', 'ITEM_BONUS', 3);
-          addStat('SAVE_WILL', 'ITEM_BONUS', 3);
-          addStat('SAVE_REFLEX', 'ITEM_BONUS', 3);
-        }
-        runArmorPropertyRuneCode(armorStruct.InvItem.propRune1ID);
-        runArmorPropertyRuneCode(armorStruct.InvItem.propRune2ID);
-        runArmorPropertyRuneCode(armorStruct.InvItem.propRune3ID);
-        runArmorPropertyRuneCode(armorStruct.InvItem.propRune4ID);
 
         // Final Product
         let totalACDisplayed = (hasConditionals('AC')) ? totalAC+'<sup class="is-size-5 has-text-info">*</sup>' : totalAC;

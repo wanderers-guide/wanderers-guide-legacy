@@ -44,7 +44,8 @@ function getCoinToString(price) {
   } else if(price == 100){
     gStr = processGold(priceObj);
   } else if(price == 1000){
-    pStr = processPlatinum(priceObj);
+    //pStr = processPlatinum(priceObj);
+    gStr = processGold(priceObj);
   } else {
     if(price < 100) { // 99 or less
       cStr = processCopper(priceObj);
