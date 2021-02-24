@@ -114,6 +114,7 @@ a:hover {
 #main-top {
   color: #161616;
   position: relative;
+  flex: 0 1 auto;
 }
 header {
   position: absolute;
@@ -145,18 +146,17 @@ body {
 }
 
 #main-container {
+  display: flex;
+  flex-flow: column;
   min-height: 100vh; /* will cover the 100% of viewport */
-  overflow: hidden;
-  display: block;
   position: relative;
-  padding-bottom: 58px; /* height of footer */
+  overflow: hidden;
 }
 
 #wanderers-guide-footer {
-  position: absolute;
   background: #161616;
-  bottom: 0;
   width: 100%;
+  flex: 0 1 58px;
 }
 
 
@@ -218,6 +218,7 @@ cursor: not-allowed!important;
 /* Main Body */
 #center-body {
   position: relative;
+  flex: 1 1 auto;
 }
 
 .title, .modal-card-title, #quickViewTitle {
