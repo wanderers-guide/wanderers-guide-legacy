@@ -295,12 +295,13 @@ hr {
   height: 550px;
   max-height: 550px;
   overflow-y: auto;
+  position: relative;
 }
 
 /* Center Selected Option */
 
 select {
-    text-align-last:center;
+  text-align-last: center;
 }
 
 /* Character Options */
