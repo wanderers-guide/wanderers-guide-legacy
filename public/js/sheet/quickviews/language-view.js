@@ -8,8 +8,12 @@ function openLanguageQuickview(data) {
     $('#quickViewTitle').html(data.Language.name);
     let qContent = $('#quickViewContent');
 
-    qContent.append('<p class="negative-indent"><strong>Speakers</strong> '+data.Language.speakers+'</p>');
-    qContent.append('<p class="negative-indent"><strong>Script</strong> '+data.Language.script+'</p>');
+    if(data.Language.speakers != null){
+      qContent.append('<p class="negative-indent"><strong>Speakers</strong> '+data.Language.speakers+'</p>');
+    }
+    if(data.Language.script != null){
+      qContent.append('<p class="negative-indent"><strong>Script</strong> '+data.Language.script+'</p>');
+    }
 
     // Description
     if(data.Language.description != null){

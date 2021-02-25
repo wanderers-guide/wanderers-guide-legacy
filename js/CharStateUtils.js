@@ -8,7 +8,7 @@ module.exports = class CharStateUtils {
     }
 
     static isPublic(character) {
-        return character.optionPublicCharacter === 1;
+        return character != null && character.optionPublicCharacter === 1;
     }
 
     static canMakeCharacter(user, characters) {
