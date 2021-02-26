@@ -10,8 +10,8 @@ function openInvItemQuickview(data) {
     if(data.Item.Item.level > 0 && data.Item.Item.level != 999){
         invItemName += '<sup class="has-text-grey-light is-size-7 is-italic"> Lvl '+data.Item.Item.level+'</sup>';
     }
-    // Hardcoded New Item ID // If item isn't New Item and isn't an item with N/A level
-    if(data.InvItem.name != data.Item.Item.name && data.Item.Item.id != 62 && data.Item.Item.level != 999){
+    // Hardcoded New Item ID // If item isn't New Item, Paper, Parchment, and isn't an item with N/A level
+    if(data.InvItem.name != data.Item.Item.name && data.Item.Item.id != 62 && data.Item.Item.id != 94 && data.Item.Item.id != 95 && data.Item.Item.level != 999){
         invItemName += '<p class="is-inline pl-1 is-size-7 is-italic"> ( '+data.Item.Item.name+' )</p>';
     }
     $('#quickViewTitle').html(invItemName);

@@ -500,7 +500,7 @@
         <p id="manageSpellsModalTitle" class="modal-card-title has-text-centered is-size-4 has-text-grey-lighter">Manage Spells<span class="icon is-size-6 has-text-info has-tooltip-multiline has-tooltip-bottom" data-tooltip="For prepared spellcasters, drag spells from your spell list over to the appropriate slots to prepare them."><i class="far fa-question-circle"></i></span></p>
         <button id="manageSpellsModalCloseButton" class="delete" aria-label="close"></button>
         </div>
-        <section class="modal-card-body is-paddingless px-2 use-invisible-scrollbar">
+        <section class="modal-card-body is-paddingless px-2" style="overflow: hidden;">
             <div class="tabs is-boxed is-small is-marginless">
                 <ul id="manageSpellsTabs" class="sheet-tabs has-text-grey-lighter">
                 </ul>
@@ -523,11 +523,11 @@
                                 <span class="icon is-left"><i class="fas fa-search" aria-hidden="true"></i></span>
                             </p>
                         </div>
-                        <div id="manageSpellsSpellBook" class="use-custom-scrollbar" style="height: 500px; max-height: 500px; overflow-y: auto;">
+                        <div id="manageSpellsSpellBook" class="use-custom-scrollbar" style="max-height: 55vh; overflow-y: auto;">
                         </div>
                     </div>
                     <div class="tile is-child is-9">
-                        <div id="manageSpellsSlots" class="use-custom-scrollbar" style="height: 610px; max-height: 610px; overflow-y: auto;">
+                        <div id="manageSpellsSlots" class="use-custom-scrollbar" style="max-height: 70vh; overflow-y: auto;">
                         </div>
                     </div>
                 </div>

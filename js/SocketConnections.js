@@ -390,6 +390,23 @@ module.exports = class SocketConnections {
         });
       });
 
+
+      socket.on('requestAddItemCustomizeToInv', function(charID, invID, itemID, updateValues){
+        AuthCheck.ownsInv(socket, invID).then((ownsInv) => {
+          if(ownsInv){
+            CharSaving.addItemToInv(invID, itemID, updateValues.quantity).then((invItem) => {
+              CharSaving.saveInvItemCustomize(invItem.id, updateValues).then(() => {
+                CharGathering.getInventory(invID).then((invStruct) => {
+                  CharGathering.getItem(charID, itemID).then((item) => {
+                    socket.emit('returnAddItemToInv', item, invItem, invStruct);
+                  });
+                });
+              });
+            });
+          }
+        });
+      });
+
     });
 
   }

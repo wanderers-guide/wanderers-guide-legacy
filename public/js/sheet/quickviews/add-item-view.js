@@ -223,24 +223,53 @@ function displayAddItem(itemID, itemDataStruct, data){
     }
 
     
-    let isBuyableItem = (!(itemDataStruct.Item.itemType == 'CURRENCY' || itemDataStruct.Item.price == 0));
-    
     let addItemHTML = null;
-    if(isBuyableItem){
-      addItemHTML = '<div class="select my-1 is-small is-success"><select id="'+addItemAddItemID+'"><option value="chooseDefault">Add</option><optgroup label="─────"></optgroup><option value="BUY">Buy</option><option value="GIVE">Give</option></select></div>';
-    } else {
+    if (itemDataStruct.Item.itemType == 'CURRENCY'){
       addItemHTML = '<button id="'+addItemAddItemID+'" class="button my-1 is-small is-success is-outlined is-rounded">Give</button>';
+    } else if (itemDataStruct.Item.price == 0) {
+      addItemHTML = '<div class="select my-1 is-small is-success"><select id="'+addItemAddItemID+'"><option value="chooseDefault">Add</option><optgroup label="─────"></optgroup><option value="GIVE">Give</option><option value="FORMULA">Formula</option></select></div>';
+    } else {
+      addItemHTML = '<div class="select my-1 is-small is-success"><select id="'+addItemAddItemID+'"><option value="chooseDefault">Add</option><optgroup label="─────"></optgroup><option value="BUY">Buy</option><option value="GIVE">Give</option><option value="FORMULA">Formula</option></select></div>';
     }
 
     $('#addItemListSection').append('<div class="tile is-parent is-flex is-paddingless border-bottom border-additems has-background-black-like cursor-clickable" data-item-id="'+itemID+'"><div class="tile is-child is-7 itemEntryPart"><p id="'+addItemNameID+'" class="has-text-left mt-1 pl-3 has-text-grey-lighter">'+itemName+'</p></div><div class="tile is-child is-2 itemEntryPart"><p class="has-text-centered is-size-7 mt-2">'+itemLevel+'</p></div><div class="tile is-child">'+addItemHTML+'</div><div class="tile is-child is-1 itemEntryPart"><span class="icon has-text-grey mt-2"><i id="'+addItemChevronItemID+'" class="fas fa-chevron-down"></i></span></div></div><div id="'+addItemDetailsItemID+'"></div>');
 
-    if(isBuyableItem){
+    if(itemDataStruct.Item.itemType != 'CURRENCY'){
 
       $('#'+addItemAddItemID).change(function(){
         let addItemType = $("#"+addItemAddItemID+" option:selected").val();
         if(addItemType != 'chooseDefault') {
           $(this).parent().addClass('is-loading');
   
+          if(addItemType == 'FORMULA') {
+            socket.emit("requestAddItemCustomizeToInv",
+                getCharIDFromURL(),
+                data.InvID,
+                95, // Hardcoded - Parchment ID
+                {
+                  name: 'Formula - '+itemDataStruct.Item.name,
+                  price: 0,
+                  bulk: 0,
+                  description: 'This thin sheet of parchment is a schematic, containing the instructions for making the (item: '+itemDataStruct.Item.name.replaceAll(/[\(\)]/g, '')+') item.',
+                  size: 'MEDIUM',
+                  isShoddy: 0,
+                  materialType: null,
+                  hitPoints: 1,
+                  brokenThreshold: 0,
+                  hardness: 0,
+                  code: null,
+                  itemTagsData: null,
+
+                  weaponDieType: null,
+                  weaponDamageType: null,
+
+                  storageMaxBulk: null,
+
+                  quantity: 1
+                });
+            $(this).parent().removeClass('is-loading');
+          }
+
           if(addItemType == 'GIVE') {
             socket.emit("requestAddItemToInv",
                 getCharIDFromURL(),
