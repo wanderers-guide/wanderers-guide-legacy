@@ -11,7 +11,7 @@ function getBulkFromNumber(bulkNumber){
     case 0: return '-';
     case 0.1: return 'L';
     case 0.01: return 'L / 10';
-    default: return ''+bulkNumber;
+    default: return ''+round(bulkNumber, 2);
   }
 }
 
@@ -172,8 +172,8 @@ function getBulkLimitModifierForSize(creatureSize){
 }
 
 function determineItemBulk(creatureSize, itemSize, itemBulk){
-  let newItemBulk = getConvertedBulkForSize(itemSize, itemBulk);
-  return convertItemTreatedBulkForCreature(creatureSize, newItemBulk);
+  let newItemBulk = convertItemTreatedBulkForCreature(creatureSize, itemBulk);
+  return getConvertedBulkForSize(itemSize, newItemBulk);
 }
 
 function convertItemTreatedBulkForCreature(creatureSize, itemBulk){
