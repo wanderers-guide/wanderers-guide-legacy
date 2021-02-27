@@ -494,6 +494,7 @@ module.exports = class CharGathering {
     static getInventory(inventoryID){
         return Inventory.findOne({ where: { id: inventoryID} })
         .then((inventory) => {
+            if(inventory == null) { return {}; }
             return InvItem.findAll({
                 where: { invID: inventory.id},
                 order: [['name', 'ASC'],]

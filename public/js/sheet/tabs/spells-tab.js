@@ -687,7 +687,7 @@ function displayFocusCastingsSet(changeType){
     }
 
     $('.'+pointsButtonsClass).off('click');
-    $('.'+pointsButtonsClass).click(function(){
+    $('.'+pointsButtonsClass).click(function(event){
         event.stopImmediatePropagation();
         let focusPointData = g_focusPointArray[$(this).attr('name')];
 
