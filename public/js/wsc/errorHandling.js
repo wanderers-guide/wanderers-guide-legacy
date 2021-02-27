@@ -7,8 +7,9 @@ const IS_DEBUG = true;
 let errorMessages = [];
 
 function displayError(message){
-    errorMessages.push(message);
-    reloadErrorMessages();
+  console.error('Error: '+message);
+  errorMessages.push(message);
+  reloadErrorMessages();
 }
 
 function reloadErrorMessages(){
@@ -24,3 +25,7 @@ function reloadErrorMessages(){
         $('#errorDisplay').addClass('is-hidden');
     }
 }
+
+socket.on("returnErrorMessage", function(message){
+  displayError(message);
+});

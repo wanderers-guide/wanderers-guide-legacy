@@ -31,6 +31,8 @@ $(function () {
 socket.on("returnCharBuilderDetails", function(character, coreDataStruct, inChoiceStruct){
   isBuilderInit = true;
 
+  console.log('~ LOADING BUILDER ~');
+
   // Core Builder Data //
   g_abilMap = objToMap(coreDataStruct.AbilObject);
   g_featMap = objToMap(coreDataStruct.FeatObject);
@@ -79,6 +81,8 @@ socket.on("returnBuilderPageAncestry", function(ancestryObject, uniHeritageArray
     url: "/templates/char_builder/display-builder-page-2.html",
     success : function(text)
     {
+      console.log('PAGE: Ancestry');
+
       $("#prevButton").click(function(){
         goToBuilderPage(1);
       });
@@ -106,6 +110,8 @@ socket.on("returnBuilderPageBackground", function(backgrounds){
     url: "/templates/char_builder/display-builder-page-3.html",
     success : function(text)
     {
+      console.log('PAGE: Background');
+
       $("#prevButton").click(function(){
         goToBuilderPage(2);
       });
@@ -133,6 +139,8 @@ socket.on("returnBuilderPageClass", function(classObject){
     url: "/templates/char_builder/display-builder-page-4.html",
     success : function(text)
     {
+      console.log('PAGE: Class');
+
       $("#prevButton").click(function(){
         goToBuilderPage(3);
       });
@@ -160,6 +168,8 @@ socket.on("returnBuilderPageFinalize", function(character, cClass, ancestry){
     url: "/templates/char_builder/display-builder-page-5.html",
     success : function(text)
     {
+      console.log('PAGE: Finalize');
+
       $("#prevButton").click(function(){
         goToBuilderPage(4);
       });

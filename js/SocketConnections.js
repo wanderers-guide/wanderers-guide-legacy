@@ -64,6 +64,8 @@ module.exports = class SocketConnections {
                 CharGathering.getCharacterInfo(charID).then((charInfo) => {
                   socket.emit('returnCharacterSheetInfo', charInfo, true);
                 });
+              } else {
+                socket.emit('returnErrorMessage', 'Incorrect Auth - No access to this character.');
               }
             });
           }
@@ -762,6 +764,8 @@ module.exports = class SocketConnections {
                 socket.emit('returnBuilderPageAncestry', ancestriesObject, uniHeritageArray);
               });
             });
+          } else {
+            socket.emit('returnErrorMessage', 'Incorrect Auth - No access to this character.');
           }
         });
       });
@@ -806,6 +810,8 @@ module.exports = class SocketConnections {
             CharGathering.getAllBackgrounds(charID).then((backgrounds) => {
               socket.emit('returnBuilderPageBackground', backgrounds);
             });
+          } else {
+            socket.emit('returnErrorMessage', 'Incorrect Auth - No access to this character.');
           }
         });
       });
@@ -837,6 +843,8 @@ module.exports = class SocketConnections {
             CharGathering.getAllClasses(charID).then((classObject) => {
               socket.emit('returnBuilderPageClass', classObject);
             });
+          } else {
+            socket.emit('returnErrorMessage', 'Incorrect Auth - No access to this character.');
           }
         });
       });
@@ -873,6 +881,8 @@ module.exports = class SocketConnections {
                 });
               });
             });
+          } else {
+            socket.emit('returnErrorMessage', 'Incorrect Auth - No access to this character.');
           }
         });
       });
@@ -921,6 +931,8 @@ module.exports = class SocketConnections {
                 });
               });
             });
+          } else {
+            socket.emit('returnErrorMessage', 'Incorrect Auth - No access to this character.');
           }
         });
       });
