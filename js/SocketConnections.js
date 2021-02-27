@@ -37,11 +37,13 @@ module.exports = class SocketConnections {
 
     io.on('connection', function(socket){
 
+      /*
       socket.onAny((event, ...args) => {
         if(!AuthCheck.isLoggedIn(socket)){
           socket.emit('userNotLoggedIn', {});
         }
       });
+      */
 
     });
 

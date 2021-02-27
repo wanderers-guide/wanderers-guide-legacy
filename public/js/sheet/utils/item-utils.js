@@ -179,7 +179,7 @@ function determineItemBulk(creatureSize, itemSize, itemBulk){
 function convertItemTreatedBulkForCreature(creatureSize, itemBulk){
   switch(creatureSize) {
     case "TINY":
-      if(bulkIsNegligible(itemBulk)) { return 0.1; }
+      if(itemBulk >= 0 && itemBulk <= 0.1) { return 0.1; }
       return itemBulk;
     case "SMALL":
       return itemBulk;
