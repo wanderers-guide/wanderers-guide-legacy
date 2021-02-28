@@ -1764,7 +1764,8 @@ function determineArmor(dexMod, strScore) {
         let profNumber = getProfNumber(profNumUps, g_character.level);
 
         let pre_dexMod = getMod(g_preConditions_dexScore);
-        let newDexMod = (pre_dexMod > armorStruct.Item.ArmorData.dexCap) ? armorStruct.Item.ArmorData.dexCap : pre_dexMod;
+        let dexCap = (getStatTotal('DEX_CAP') != null) ? getStatTotal('DEX_CAP') : armorStruct.Item.ArmorData.dexCap;
+        let newDexMod = (pre_dexMod > dexCap) ? dexCap : pre_dexMod;
         dexMod = newDexMod - (pre_dexMod-dexMod);
 
         // Apply armor's rune effects to character...
@@ -1925,7 +1926,10 @@ function determineArmor(dexMod, strScore) {
 
         let totalArmorBonus = 0;
 
-        let totalAC = 10 + dexMod + profNumber + totalArmorBonus;
+        let dexCap = getStatTotal('DEX_CAP');
+        let dexModCapped = (dexCap != null) ? ((dexMod > dexCap) ? dexCap : dexMod) : dexMod;
+
+        let totalAC = 10 + dexModCapped + profNumber + totalArmorBonus;
         totalAC += getStatTotal('AC');
 
         // Final Product
@@ -1937,7 +1941,7 @@ function determineArmor(dexMod, strScore) {
         $("#acSection").click(function(){
             openQuickView('acView', {
                 TotalAC : totalAC,
-                DexMod : dexMod,
+                DexMod : dexModCapped,
                 ArmorItemName : 'Wearing Nothing',
                 ProfNum : profNumber,
                 CharLevel : g_character.level,

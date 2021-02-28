@@ -1818,6 +1818,24 @@ module.exports = class SocketConnections {
         });
       });
 
+      socket.on('requestCharCopy', function(charID){
+        AuthCheck.isSupporter(socket).then((isSupporter) => {
+          if(isSupporter){
+            AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+              if(ownsChar){
+                CharExport.getExportData(charID)
+                .then((charExportData) => {
+                  CharImport.importData(socket, JSON.parse(JSON.stringify(charExportData)))
+                  .then((result) => {
+                    socket.emit('returnCharCopy');
+                  });
+                });
+              }
+            });
+          }
+        });
+      });
+
       socket.on('requestCharExportPDFInfo', function(charID){
         AuthCheck.isSupporter(socket).then((isSupporter) => {
           if(isSupporter){

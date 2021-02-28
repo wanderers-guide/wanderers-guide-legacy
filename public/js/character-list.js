@@ -81,6 +81,7 @@ $(function () {
     if($('#icon-character-import').length){ // If icon-character-import exists, AKA is advocate tier
       initCharacterImport();
       initCharacterExport();
+      initCharacterCopy();
       //initCharacterExportToPDF();
     }
 
@@ -153,3 +154,20 @@ function charExportDataFileDownload(filename, text) {
 
   document.body.removeChild(element);
 }
+
+
+// ~~~~~ Character Copy ~~~~~ //
+function initCharacterCopy(){
+
+  $('#btn-duplicate-character').click(function() {
+    socket.emit("requestCharCopy", activeModalCharID);
+    $('.modal-card-close').trigger('click');
+    $('.subpageloader').removeClass('is-hidden');
+  });
+
+}
+
+socket.on("returnCharCopy", function(){
+  // Hardcoded redirect
+  window.location.href = '/profile/characters';
+});

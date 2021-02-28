@@ -30,6 +30,7 @@ passport.use(
             } else {
                 // Create new user in database
                 console.log('Created new user: '+profile.displayName);
+                console.log(profile);
                 User.create({
                     googleID: profile.id,
                     username: profile.displayName,

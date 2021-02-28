@@ -206,6 +206,11 @@ function expHandleExpression(expression, statement, elseStatement, srcStruct){
         return expHasVision(expression, statement, elseStatement);
     }
 
+    /* Sheet-Only Expressions */
+    if(expression.includes('IS-UNARMORED')){ // IS-UNARMORED
+      return expIsUnarmored(expression, statement, elseStatement);
+    }
+
     return -1;
 
 }
@@ -432,3 +437,13 @@ function cleanProfDataArrayOfStatementProfs(profDataArray, srcStruct){
   return newProfDataArray;
 }
 
+
+/*~ Sheet-Only Expressions ~*/
+
+function expIsUnarmored(expression, statement, elseStatement) {
+  if (typeof g_equippedArmorInvItemID !== 'undefined') {
+    return (g_equippedArmorInvItemID == null) ? statement : elseStatement;
+  } else {
+    return null;
+  }
+}

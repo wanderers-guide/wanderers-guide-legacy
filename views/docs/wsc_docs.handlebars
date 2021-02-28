@@ -483,6 +483,7 @@
                     </p>
                     <p class="pl-2"><span class="code">ARMOR_CHECK_PENALTY</span></p>
                     <p class="pl-2"><span class="code">ARMOR_SPEED_PENALTY</span></p>
+                    <p class="pl-2"><span class="code">DEX_CAP</span> (adjusting this at all will override any existing Dex Caps)</p>
                 </div>
                 <div class="pl-3 py-2">
                     <p class="">
@@ -566,7 +567,7 @@
                         OVERRIDE-PERCEPTION=2-MODIFIER
                     </div>
                     <p class="pl-3 pb-2">
-                        <strong class="has-text-danger">Warning: </strong><em>This statement is complicated. Like everything here, feel free to mess around with it and see how it affects a character, but it many change things in seemly unexpected ways if you don't know what you're doing!</em>
+                        <strong class="has-text-danger">Warning: </strong><em>Using this statement might result is strange, unpredictable results if used improperly. Like everything here, feel free to mess around with it and see how it affects a character, but it many change things in seemly unexpected ways if you don't know what you're doing!</em>
                     </p>
                     <p class="pl-3">
                         - Replaces the character's modifier from Perception (which is Wisdom) with 2 only if 2 is higher than the character's current Wisdom modifier. For stats that are penalties (like <span class="code">ARMOR_CHECK_PENALTY</span>), treat the override number as negative. For example, <span class="code">OVERRIDE-ARMOR_CHECK_PENALTY=1-BASE</span> would be a -1 penalty, which would be greater than many other armor penalties that are -2 or -3.
@@ -701,6 +702,17 @@
                     </div>
                     <p class="pl-3">
                         - If the character meets the condition, the statement inside the braces will execute (like normal). Although, this if statement will only be tested in the character sheet (not in the character builder or anywhere else). In all other non-sheet contexts, the condition is essentially treats as true - executing the statement.
+                    </p>
+                </div>
+                <div class="py-2">
+                    <div class="code-block">
+                        IF (IS-UNARMORED) {Statement}
+                    </div>
+                    <p class="pl-3">
+                        - If the character is currently not wearing armor.
+                    </p>
+                    <p class="pl-3">
+                        Can only contain sheet statements.
                     </p>
                 </div>
             </div>
