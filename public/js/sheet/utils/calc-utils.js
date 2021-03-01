@@ -52,18 +52,18 @@ function getAttackAndDamage(itemData, invItem){
         });
         let dmgStrBonus = '';
         if(gState_hasFinesseMeleeUseDexDamage && finesseTag != null){
-            if(pre_dexMod > pre_strMod) {
-              if(pre_dexMod != 0){
-                dmgStrBonus = signNumber(pre_dexMod);
+            if(dexMod > strMod) {
+              if(dexMod != 0){
+                dmgStrBonus = signNumber(dexMod);
               }
             } else {
-              if(pre_strMod != 0){
-                dmgStrBonus = signNumber(pre_strMod);
+              if(strMod != 0){
+                dmgStrBonus = signNumber(strMod);
               }
             }
         } else {
-            if(splashTag == null && pre_strMod != 0){
-                dmgStrBonus = signNumber(pre_strMod);
+            if(splashTag == null && strMod != 0){
+                dmgStrBonus = signNumber(strMod);
             }
         }
 
@@ -120,7 +120,7 @@ function getAttackAndDamage(itemData, invItem){
 
         let damage = '';
         if(damageDieType != 'NONE') {
-            let maxDamage = diceNum*dieTypeToNum(damageDieType)+pre_strMod+weapSpecialBonus;
+            let maxDamage = diceNum*dieTypeToNum(damageDieType)+strMod+weapSpecialBonus;
             if(maxDamage >= 1) {
                 damage = diceNum+""+damageDieType+dmgStrBonus+weapSpecial+" "+damageDamageType;
             } else {
@@ -148,20 +148,20 @@ function getAttackAndDamage(itemData, invItem){
         let dmgStr = 0;
 
         if(propulsiveTag != null){
-            if(pre_strMod >= 0){
-                let strAmt = Math.floor(pre_strMod/2);
+            if(strMod >= 0){
+                let strAmt = Math.floor(strMod/2);
                 if(strAmt != 0){
                     dmgStrSigned = signNumber(strAmt);
                     dmgStr = strAmt;
                 }
             } else {
-                dmgStrSigned = signNumber(pre_strMod);
-                dmgStr = pre_strMod;
+                dmgStrSigned = signNumber(strMod);
+                dmgStr = strMod;
             }
         }
-        if(thrownTag != null && splashTag == null && pre_strMod != 0){
-            dmgStrSigned = signNumber(pre_strMod);
-            dmgStr = pre_strMod;
+        if(thrownTag != null && splashTag == null && strMod != 0){
+            dmgStrSigned = signNumber(strMod);
+            dmgStr = strMod;
         }
 
         let profNumUps = weaponProfDetermineNumUps(itemData);
