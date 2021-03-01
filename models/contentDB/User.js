@@ -5,6 +5,9 @@ const User = db.define('users', {
   googleID: {
     type: Sequelize.STRING,
   },
+  redditID: {
+    type: Sequelize.STRING,
+  },
   username: {
     type: Sequelize.STRING
   },

@@ -17,33 +17,33 @@
     transition-duration: 150ms;
     transition-timing-function: ease-in-out;
     padding: 0;
-  }
+}
   
-  .google-button.active {
+.google-button.active {
     background-color: #e5e5e5;
      box-shadow: none;
      transition-duration: 10ms;
-  }
+}
   
-  .google-button:hover,
-  .google-button:focus {
+.google-button:hover,
+.google-button:focus {
     box-shadow: 1px 4px 5px 1px rgba(0,0,0,0.1);
-  }
+}
       
-  .google-button__icon {
+.google-button__icon {
     display: inline-block;
     vertical-align: middle;
     margin: 8px 0 8px 8px;
     width: 18px;
     height: 18px;
     box-sizing: border-box;
-  }
+}
   
-  .google-button__icon--plus {
+.google-button__icon--plus {
     width: 27px;
-  }
+}
   
-  .google-button__text {
+.google-button__text {
     display: inline-block;
     vertical-align: middle;
     padding: 0 24px;
@@ -51,5 +51,5 @@
     color: #6b6b6b;
     font-weight: 550;
     font-family: 'Roboto',arial,sans-serif;
-  }
+}
   

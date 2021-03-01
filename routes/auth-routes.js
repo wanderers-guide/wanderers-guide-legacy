@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const passport = require('passport');
+const crypto = require('crypto');
 
 const User = require('../models/contentDB/User');
 
@@ -18,49 +19,88 @@ router.get('/logout', (req, res) => {
     res.redirect('/');
 });
 
-// auth with google+
+
+// auth with Google+
 router.get('/google', passport.authenticate('google', {
     scope: ['profile']
 }));
-
-// callback route for google to redirect to
+// callback route for Google to redirect to
 // hand control to passport to use code to grab profile info
 router.get('/google/redirect', passport.authenticate('google'), (req, res) => {
     // User info is now stored in req.user
 
-    if(req.user.patreonAccessToken != null){
-        const apiClient = patreonAPI(req.user.patreonAccessToken);
-        apiClient('/current_user')
-        .then((result) => {
-
-            console.log('Patreon - Valid Access Token - OK');
-            res.redirect('/profile/characters');
-
-        }).catch((err) => {
-            console.error(err);
-
-            console.log('Patreon - Invalid Access Token - ISSUE');
-            let updateValues = {
-                isPatreonSupporter: 0,
-                isPatreonMember: 0,
-                isPatreonLegend: 0,
-                patreonAccessToken: null
-            };
-            User.update(updateValues, { where: { id: req.user.id } })
-            .then((result) => {
-                res.redirect('/profile');
-            });
-            
-        });
-    } else {
-
-        console.log('Patreon - No Access Token - OK');
-        res.redirect('/profile/characters');
-
-    }
-
+    // Check Patreon connection,
+    handlePatreonAccess(req, res);
 });
 
+
+// auth with Reddit
+router.get('/reddit', function(req, res, next){
+  req.session.state = crypto.randomBytes(32).toString('hex');
+  passport.authenticate('reddit', {
+    state: req.session.state,
+    duration: 'permanent',
+  })(req, res, next);
+});
+// callback route for Reddit to redirect to
+// hand control to passport to use code to grab profile info
+router.get('/reddit/redirect', function(req, res, next){
+  // Check for origin via state token
+  if (req.query.state == req.session.state){
+    passport.authenticate('reddit', {
+      successRedirect: '/auth/reddit/redirect/access',
+      failureRedirect: '/'
+    })(req, res, next);
+  }
+  else {
+    res.redirect('/');
+  }
+});
+router.get('/reddit/redirect/access', function(req, res){
+  // User info is now stored in req.user
+
+  // Check Patreon connection,
+  handlePatreonAccess(req, res);
+});
+
+
+// ================================================================================ //
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Patreon Access ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
+// ================================================================================ //
+function handlePatreonAccess(req, res){
+
+  if(req.user.patreonAccessToken != null){
+    const apiClient = patreonAPI(req.user.patreonAccessToken);
+    apiClient('/current_user')
+    .then((result) => {
+
+      console.log('Patreon - Valid Access Token - OK');
+      res.redirect('/profile/characters');
+
+    }).catch((err) => {
+      console.error(err);
+
+      console.log('Patreon - Invalid Access Token - ISSUE');
+      let updateValues = {
+          isPatreonSupporter: 0,
+          isPatreonMember: 0,
+          isPatreonLegend: 0,
+          patreonAccessToken: null
+      };
+      User.update(updateValues, { where: { id: req.user.id } })
+      .then((result) => {
+        res.redirect('/profile');
+      });
+        
+    });
+  } else {
+
+    console.log('Patreon - No Access Token - OK');
+    res.redirect('/profile/characters');
+
+  }
+
+}
 
 // ================================================================================ //
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Patreon Auth ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //

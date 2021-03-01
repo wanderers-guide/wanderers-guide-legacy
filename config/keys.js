@@ -4,6 +4,14 @@ module.exports = {
         clientID: process.env.GOOGLE_AUTH_CLIENT_ID,
         clientSecret: process.env.GOOGLE_AUTH_CLIENT_SECRET
     },
+    reddit: {
+      clientID: process.env.REDDIT_AUTH_CLIENT_ID,
+      clientSecret: process.env.REDDIT_AUTH_CLIENT_SECRET
+    },
+    reddit_dev: {
+      clientID: process.env.REDDIT_DEV_AUTH_CLIENT_ID,
+      clientSecret: process.env.REDDIT_DEV_AUTH_CLIENT_SECRET
+    },
     cloudSQL: {
         Username: process.env.CLOUD_SQL_USERNAME,
         Password: process.env.CLOUD_SQL_PASSWORD,
