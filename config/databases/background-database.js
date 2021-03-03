@@ -1,3 +1,4 @@
+/*
 const Sequelize = require('sequelize');
 const keys = require('../keys');
 
@@ -16,3 +17,4 @@ module.exports =  new Sequelize(keys.contentDB.DbName, keys.cloudSQL.Username, k
     idle: 10000
   },
 });
+*/

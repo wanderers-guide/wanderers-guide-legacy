@@ -110,13 +110,14 @@ app.use(passport.session());
 app.use(favicon('./public/images/favicon.ico'));
 
 // Databases
-const backgroundDB = require('./config/databases/background-database');
+//const backgroundDB = require('./config/databases/background-database');
 const contentDB = require('./config/databases/content-database');
 
 // Testing Database Connections
+/*
 backgroundDB.authenticate()
   .then(() => console.log('Background Database connected...'))
-  .catch(err => console.log('Database Connection Error: ' + err));
+  .catch(err => console.log('Database Connection Error: ' + err));*/
   
 contentDB.authenticate()
   .then(() => console.log('Content Database connected...'))

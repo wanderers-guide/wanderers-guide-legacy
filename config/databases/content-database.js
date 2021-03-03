@@ -9,9 +9,10 @@ module.exports =  new Sequelize(keys.contentDB.DbName, keys.cloudSQL.Username, k
   benchmark: true,
   dialectOptions: {
     socketPath: keys.cloudSQL.Instance,
+    multipleStatements: true,
   },
   pool: {
-    max: 5,
+    max: 90,
     min: 0,
     acquire: 30000,
     idle: 10000

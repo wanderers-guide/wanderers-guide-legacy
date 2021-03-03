@@ -1,5 +1,5 @@
 const Sequelize = require('sequelize');
-const db = require('../../config/databases/background-database');
+const db = require('../../config/databases/content-database');
 
 const HomeBackReport = db.define('homeBackReports', {
   userID: {

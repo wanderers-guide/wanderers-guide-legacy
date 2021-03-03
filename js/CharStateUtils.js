@@ -1,5 +1,5 @@
 
-function getUserCharacterLimit(){ return 3; }
+function getUserCharacterLimit(){ return 6; }
 
 module.exports = class CharStateUtils {
 

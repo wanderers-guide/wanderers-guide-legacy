@@ -203,7 +203,7 @@ function expHandleExpression(expression, statement, elseStatement, srcStruct){
     }
 
     if(expression.includes('HAS-VISION')){ // HAS-VISION==Darkvision
-        return expHasVision(expression, statement, elseStatement);
+        return expHasVision(expression, statement, elseStatement, srcStruct);
     }
 
     /* Sheet-Only Expressions */
@@ -325,12 +325,12 @@ function expHasFeat(expression, statement, elseStatement, srcStruct){
     }
 }
 
-function expHasVision(expression, statement, elseStatement){
+function expHasVision(expression, statement, elseStatement, srcStruct){
     if(expression.includes('==')){
         let visionName = expression.split('==')[1].toUpperCase();
         visionName = visionName.replace(/_/g," ");
         let vision = g_expr_senseArray.find(senseData => {
-            if(senseData.value != null){
+            if(senseData.value != null && !hasSameSrc(srcStruct, senseData)){
                 return visionName === senseData.value.name.toUpperCase();
             } else {
                 return false;
@@ -345,7 +345,7 @@ function expHasVision(expression, statement, elseStatement){
         let visionName = expression.split('!=')[1].toUpperCase();
         visionName = visionName.replace(/_/g," ");
         let vision = g_expr_senseArray.find(senseData => {
-            if(senseData.value != null){
+            if(senseData.value != null && !hasSameSrc(srcStruct, senseData)){
                 return visionName === senseData.value.name.toUpperCase();
             } else {
                 return false;
