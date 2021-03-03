@@ -319,6 +319,11 @@ select {
     width: 130px;
 }
 
+/* Resist / Weak Input */
+.resistInput, .weakInput {
+  width: 130px;
+}
+
 /* Loading Spinner */
 .wsc-statement-roller {
   display: inline-block;

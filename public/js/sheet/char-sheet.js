@@ -734,6 +734,13 @@ function displayInformation() {
         $('#resistAndVulnerContent').addClass('is-hidden');
     }
 
+    $('#resistAndVulnerViewAllBtn').click(function(){
+      openQuickView('resistListView',{
+        ResistAndVulners: g_resistAndVulners,
+        CharLevel : g_character.level,
+      });
+    });
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////// Conditions ///////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -2470,6 +2477,38 @@ socket.on("returnLanguageChange", function(){
   );
   reloadCharSheet();
   closeQuickView();
+});
+
+socket.on("returnResistanceChange", function(resistData){
+  if(resistData.Added){ // Add Resist
+    g_resistAndVulners.Resistances.push(resistData);
+  } else {
+    let newResistArray = []; // Remove Resist
+    for(let resists of g_resistAndVulners.Resistances){
+      if(!hasSameSrc(resists, resistData)){
+        newResistArray.push(resists);
+      }
+    }
+    g_resistAndVulners.Resistances = newResistArray;
+  }
+  closeQuickView();
+  reloadCharSheet();
+});
+
+socket.on("returnVulnerabilityChange", function(vulnerData){
+  if(vulnerData.Added){ // Add Weakness
+    g_resistAndVulners.Vulnerabilities.push(vulnerData);
+  } else {
+    let newVulnerArray = []; // Remove Weakness
+    for(let vulners of g_resistAndVulners.Vulnerabilities){
+      if(!hasSameSrc(vulners, vulnerData)){
+        newVulnerArray.push(vulners);
+      }
+    }
+    g_resistAndVulners.Vulnerabilities = newVulnerArray;
+  }
+  closeQuickView();
+  reloadCharSheet();
 });
 
 socket.on("returnAddFundamentalRune", function(invItemID, invStruct){

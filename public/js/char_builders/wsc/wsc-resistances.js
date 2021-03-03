@@ -29,7 +29,7 @@ function giveResistance(srcStruct, resistType, resistAmount){
       resistAmount);
 }
 
-socket.on("returnResistanceChange", function(){
+socket.on("returnResistanceChange", function(data){
     statementComplete();
 });
 
@@ -42,6 +42,6 @@ function giveVulnerability(srcStruct, vulnerableType, vulnerableAmount){
       vulnerableAmount);
 }
 
-socket.on("returnVulnerabilityChange", function(){
+socket.on("returnVulnerabilityChange", function(data){
     statementComplete();
 });

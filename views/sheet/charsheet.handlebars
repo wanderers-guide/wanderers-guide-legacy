@@ -40,6 +40,9 @@
     <script src="/js/sheet/quickviews/add-prof-view.js"></script>
     <script src="/js/sheet/quickviews/add-lang-view.js"></script>
     <script src="/js/sheet/quickviews/add-lore-view.js"></script>
+    <script src="/js/sheet/quickviews/add-resist-view.js"></script>
+    <script src="/js/sheet/quickviews/add-weak-view.js"></script>
+    <script src="/js/sheet/quickviews/resist-list-view.js"></script>
     <script src="/js/sheet/quickviews/tag-view.js"></script>
     <script src="/js/sheet/quickviews/condition-view.js"></script>
 
@@ -207,10 +210,13 @@
                             </div>
                             
                         </div>
-                        <div class="tile">
+                        <div class="tile" style="position: relative;">
                             <div id="resistAndVulnerContent" class="tile is-child cursor-clickable">
                                 <p id="resistAndVulnerText" class="text-center"></p>
                             </div>
+                            <span id="resistAndVulnerViewAllBtn" class="icon is-small has-text-info cursor-clickable" style="position: absolute; bottom: 7px; right: 7px;">
+                              <i class="fas fa-fire"></i>
+                            </span>
                         </div>
                     </div>
                 </div>

@@ -14,21 +14,25 @@ function openAddLoreQuickview(data) {
     $('#addLoreAddButton').click(function(){
 
         let loreName = $('#addLoreNewLoreName').val();
+        
+        if(loreName != null && loreName != ''){
 
-        let srcStruct = {
+          let srcStruct = {
             sourceType: 'user-added',
             sourceLevel: 0,
             sourceCode: loreName+' Lore',
             sourceCodeSNum: 'a',
-        };
-        socket.emit("requestLoreChange",
+          };
+          socket.emit("requestLoreChange",
             getCharIDFromURL(),
             srcStruct,
             loreName,
             null,
             'T',
             'User-Added'
-        );
+          );
+
+        }
 
     });
 

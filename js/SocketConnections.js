@@ -1590,23 +1590,49 @@ module.exports = class SocketConnections {
       socket.on('requestResistanceChange', function(charID, srcStruct, resistType, resistAmount){
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
           if(ownsChar){
-            CharDataMappingExt.setDataResistance(charID, srcStruct, resistType, resistAmount)
-            .then((result) => {
-              socket.emit('returnResistanceChange');
-            });
+            if(resistType == null || resistAmount == null){
+              CharDataMapping.deleteData(charID, 'resistance', srcStruct)
+              .then((result) => {
+                let data = srcStruct;
+                data.Added = false;
+                socket.emit('returnResistanceChange', data);
+              });
+            } else {
+              CharDataMappingExt.setDataResistance(charID, srcStruct, resistType, resistAmount)
+              .then((result) => {
+                let data = srcStruct;
+                data.Type = resistType;
+                data.Amount = resistAmount;
+                data.Added = true;
+                socket.emit('returnResistanceChange', data);
+              });
+            }
           } else {
             socket.emit('returnWSCStatementFailure', 'Incorrect Auth');
           }
         });
       });
 
-      socket.on('requestVulnerabilityChange', function(charID, srcStruct, vulnerableType, vulnerableAmount){
+      socket.on('requestVulnerabilityChange', function(charID, srcStruct, vulnerType, vulnerAmount){
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
           if(ownsChar){
-            CharDataMappingExt.setDataVulnerability(charID, srcStruct, vulnerableType, vulnerableAmount)
-            .then((result) => {
-              socket.emit('returnVulnerabilityChange');
-            });
+            if(vulnerType == null || vulnerAmount == null){
+              CharDataMapping.deleteData(charID, 'vulnerability', srcStruct)
+              .then((result) => {
+                let data = srcStruct;
+                data.Added = false;
+                socket.emit('returnVulnerabilityChange', data);
+              });
+            } else {
+              CharDataMappingExt.setDataVulnerability(charID, srcStruct, vulnerType, vulnerAmount)
+              .then((result) => {
+                let data = srcStruct;
+                data.Type = vulnerType;
+                data.Amount = vulnerAmount;
+                data.Added = true;
+                socket.emit('returnVulnerabilityChange', data);
+              });
+            }
           } else {
             socket.emit('returnWSCStatementFailure', 'Incorrect Auth');
           }

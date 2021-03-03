@@ -91,6 +91,8 @@ function openQuickView(type, data, noProtection=false) {
         openAbilityQuickview(data);
     } else if(type == 'resistView'){
         openResistancesQuickview(data);
+    } else if(type == 'resistListView'){
+        openResistancesListQuickview(data);
     } else if(type == 'otherProfsView'){
         openOtherProfsQuickview(data);
     } else if(type == 'customizeProfView'){
@@ -101,6 +103,10 @@ function openQuickView(type, data, noProtection=false) {
         openAddLoreQuickview(data);
     } else if(type == 'addLangView'){
         openAddLangQuickview(data);
+    } else if(type == 'addResistView'){
+        openAddResistQuickview(data);
+    } else if(type == 'addWeakView'){
+        openAddWeakQuickview(data);
     } else if(type == 'tagView'){
         openTagQuickview(data);
     } else if(type == 'classDCView'){

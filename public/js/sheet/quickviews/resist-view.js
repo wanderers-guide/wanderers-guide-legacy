@@ -23,35 +23,50 @@ function openResistancesQuickview(data) {
     qContent.append('<hr class="m-2">');
 
     if(data.ResistAndVulners.Resistances.length != 0){
-        qContent.append('<p class="has-text-centered is-size-5"><strong>Resistances</strong></p>');
-        for(let resist of data.ResistAndVulners.Resistances) {
-            let type = capitalizeWord(resist.Type);
-            let amount = resist.Amount;
-            if(amount.includes('HALF_LEVEL')){
-              let halfLevel = Math.floor(data.CharLevel/2);
-              if(halfLevel == 0) { halfLevel = 1; } // Round down, minimum of 1
-              amount = amount.replace('HALF_LEVEL', halfLevel);
-            } else if(amount.includes('LEVEL')){
-                amount = amount.replace('LEVEL', data.CharLevel);
-            }
-            qContent.append('<p class="has-text-centered is-size-5">'+type+' '+evalString(amount)+'</p>');
-        }
+      let resistMap = processResistsOrWeaksToMap(data.ResistAndVulners.Resistances, data.CharLevel);
+      qContent.append('<p class="has-text-centered is-size-5"><strong>Resistances</strong></p>');
+      for(const [type, amount] of resistMap.entries()){
+        qContent.append('<p class="has-text-centered is-size-5">'+type+' '+amount+'</p>');
+      }
     }
 
     if(data.ResistAndVulners.Vulnerabilities.length != 0){
-        qContent.append('<p class="has-text-centered is-size-5"><strong>Weaknesses</strong></p>');
-        for(let vulner of data.ResistAndVulners.Vulnerabilities) {
-            let type = capitalizeWord(vulner.Type);
-            let amount = vulner.Amount;
-            if(amount.includes('HALF_LEVEL')){
-              let halfLevel = Math.floor(data.CharLevel/2);
-              if(halfLevel == 0) { halfLevel = 1; } // Round down, minimum of 1
-              amount = amount.replace('HALF_LEVEL', halfLevel);
-            } else if(amount.includes('LEVEL')){
-                amount = amount.replace('LEVEL', data.CharLevel);
-            }
-            qContent.append('<p class="has-text-centered is-size-5">'+type+' '+evalString(amount)+'</p>');
-        }
+      let vulnerMap = processResistsOrWeaksToMap(data.ResistAndVulners.Vulnerabilities, data.CharLevel);
+      qContent.append('<p class="has-text-centered is-size-5"><strong>Weaknesses</strong></p>');
+      for(const [type, amount] of vulnerMap.entries()){
+        qContent.append('<p class="has-text-centered is-size-5">'+type+' '+amount+'</p>');
+      }
     }
 
+}
+
+function processResistsOrWeaksToMap(array, charLevel){
+  let map = new Map();
+  for(let entry of array) {
+
+    let type = capitalizeWords(entry.Type);
+    let amount = entry.Amount.toUpperCase();
+    if(amount.includes('HALF_LEVEL')){
+      let halfLevel = Math.floor(charLevel/2);
+      if(halfLevel == 0) { halfLevel = 1; } // Round down, minimum of 1
+      amount = amount.replace('HALF_LEVEL', halfLevel);
+    } else if(amount.includes('LEVEL')){
+      amount = amount.replace('LEVEL', charLevel);
+    }
+    try{
+      amount = parseInt(evalString(amount));
+    }catch(err){
+      amount = -1;
+    }
+
+    if(map.has(type)){
+      let existingAmount = map.get(type);
+      if(amount > existingAmount){
+        map.set(type, amount);
+      }
+    } else {
+      map.set(type, amount);
+    }
+  }
+  return map;
 }
