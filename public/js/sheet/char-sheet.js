@@ -1162,7 +1162,7 @@ function displayInformation() {
         let profData = getFinalProf(g_profMap.get(skillName));
         if(profData == null){ profData = skillData; }
 
-        let skillButtonID = ("skillButton"+skillName).replace(/ /g,'_');
+        let skillButtonID = ("skillButton"+skillName).replace(/ /g,'_').replace(/\W/g,'_');
 
         let abilMod = getModOfValue(skillData.Skill.ability);
         let profNum = getProfNumber(profData.NumUps, g_character.level);

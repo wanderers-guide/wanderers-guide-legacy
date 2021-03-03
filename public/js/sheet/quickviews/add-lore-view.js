@@ -15,7 +15,9 @@ function openAddLoreQuickview(data) {
 
         let loreName = $('#addLoreNewLoreName').val();
         
-        if(loreName != null && loreName != ''){
+        let validNameRegex = /^[A-Za-z0-9 \-_']+$/;
+        if(loreName != null && loreName != '' && validNameRegex.test(loreName)){
+          $('#addLoreNewLoreName').removeClass("is-danger");
 
           let srcStruct = {
             sourceType: 'user-added',
@@ -32,6 +34,8 @@ function openAddLoreQuickview(data) {
             'User-Added'
           );
 
+        } else {
+          $('#addLoreNewLoreName').addClass("is-danger");
         }
 
     });

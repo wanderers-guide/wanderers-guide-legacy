@@ -67,7 +67,7 @@ function giveLoreChoose(srcStruct, locationID, sourceName, prof='T'){
 
         } else {
 
-            let validNameRegex = /^[A-Za-z0-9 \-_]+$/;
+            let validNameRegex = /^[A-Za-z0-9 \-_']+$/;
             if(validNameRegex.test($(this).val())) {
                 $(this).removeClass("is-danger");
 
