@@ -258,7 +258,7 @@ function giveClassFeat(srcStruct, locationID, featLevel, className, optionalTags
             return archetype.dedicationFeatID == charArchetypeDedFeatID;
         });
         if(archetype != null){
-            tabsContent.append('<li><a class="'+archetypesTabClass+' '+archetypesTabClass+'-'+archetype.name+'" name="'+archetype.name+'">'+archetype.name+' Archetype</a></li>');
+            tabsContent.append('<li><a class="'+archetypesTabClass+' '+archetypesTabClass+'-'+archetype.name.replace(/\W/g,'_')+'" name="'+archetype.name+'">'+archetype.name+' Archetype</a></li>');
         }
     }
 
@@ -345,7 +345,7 @@ function giveClassFeat(srcStruct, locationID, featLevel, className, optionalTags
                 return archetype.dedicationFeatID == featData.value.id;
             });
             if(archetype != null) {
-                let selfArchetypeTabClass = archetypesTabClass+'-'+archetype.name;
+                let selfArchetypeTabClass = archetypesTabClass+'-'+archetype.name.replace(/\W/g,'_');
                 $('#'+classFeatTabsID).find('.'+selfArchetypeTabClass).parent().remove();
             }
         } else {
@@ -361,7 +361,7 @@ function giveClassFeat(srcStruct, locationID, featLevel, className, optionalTags
                         });
                         if(archetypeTag != null){
                             // Click Archetype Tab
-                            $('.'+archetypesTabClass+'-'+archetype.name).trigger("click", ['AUTO_PAGE_LOAD']);
+                            $('.'+archetypesTabClass+'-'+archetype.name.replace(/\W/g,'_')).trigger("click", ['AUTO_PAGE_LOAD']);
                             clickedTab = true;
                             break;
                         }
@@ -433,6 +433,13 @@ function displayFeatChoice(srcStruct, locationID, selectionName, tagsArray, feat
             if(customList.includes(feat.Feat.name.toLowerCase())){
                 hasCorrectTags = true;
             }
+        }
+
+        /* If feat is an archetype feat, has the skill trait, and tagsArray doesn't include the skill trait,
+          do not include feat. This follows the rule about archetype skill feats CRB pg. 219.
+        */
+        if(!tagsArray.includes('Skill') && feat.Tags.find(tag => { return tag.name.includes(' Archetype'); }) != null && feat.Tags.find(tag => { return tag.name == 'Skill'; }) != null){
+          hasCorrectTags = false;
         }
 
         if(feat.Feat.level <= featLevel && hasCorrectTags){

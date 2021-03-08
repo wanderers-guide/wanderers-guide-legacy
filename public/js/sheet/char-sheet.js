@@ -1162,7 +1162,7 @@ function displayInformation() {
         let profData = getFinalProf(g_profMap.get(skillName));
         if(profData == null){ profData = skillData; }
 
-        let skillButtonID = ("skillButton"+skillName).replace(/ /g,'_').replace(/\W/g,'_');
+        let skillButtonID = ("skillButton"+skillName).replace(/\W/g,'_');
 
         let abilMod = getModOfValue(skillData.Skill.ability);
         let profNum = getProfNumber(profData.NumUps, g_character.level);
@@ -1488,7 +1488,7 @@ function initHealthAndTemp() {
         if(!$(this).hasClass('is-in-input-mode')) {
 
             $(this).addClass('is-in-input-mode');
-            $(this).html('<input id="current-health-input" class="input" type="number" min="0" max="'+maxHealthNum+'" style="width: 70px;" value="'+g_character.currentHealth+'">');
+            $(this).html('<input id="current-health-input" class="input" type="text" min="0" max="'+maxHealthNum+'" style="width: 70px;" value="'+g_character.currentHealth+'">');
             $('#current-health-input').focus();
 
             $('#current-health-input').blur(function(){
@@ -1523,7 +1523,7 @@ function initHealthAndTemp() {
         if(!$(this).hasClass('is-in-input-mode')) {
 
             $(this).addClass('is-in-input-mode');
-            $(this).html('<input id="temp-health-input" class="input" type="number" min="0" max="999" style="width: 70px; margin: auto;" value="'+g_character.tempHealth+'">');
+            $(this).html('<input id="temp-health-input" class="input" type="text" min="0" max="999" style="width: 70px; margin: auto;" value="'+g_character.tempHealth+'">');
             $('#temp-health-input').focus();
 
             $('#temp-health-input').blur(function(){
@@ -1543,63 +1543,75 @@ function initHealthAndTemp() {
 }
 
 function healthConfirm(maxHealthNum){
-    let currentHealthNum = $('#current-health-input').val();
-    if(currentHealthNum == null || currentHealthNum > maxHealthNum || currentHealthNum < 0 || currentHealthNum == '') {
-        $('#current-health-input').addClass('is-danger');
+  let currentHealthNum = $('#current-health-input').val();
+
+  let newCurrentHealth;
+  try {
+    newCurrentHealth = parseInt(evalString(currentHealthNum));
+    if(newCurrentHealth > maxHealthNum) { newCurrentHealth = maxHealthNum; }
+    if(newCurrentHealth < 0) { newCurrentHealth = 0; }
+  } catch (err) {
+    $('#current-health-input').addClass('is-danger');
+    return;
+  }
+
+  if(g_character.currentHealth === 0 && newCurrentHealth > 0){
+    removeCondition(11); // Hardcoded ID - Remove Dying Condition
+    let woundedCondition = getCondition(35); // Hardcoded ID - Wounded
+    if(woundedCondition != null){
+        let woundedValue = woundedCondition.Value + 1;
+        addCondition(35,
+            woundedValue,
+            woundedCondition.SourceText,
+            woundedCondition.ParentID);
     } else {
-        let newCurrentHealth = parseInt(currentHealthNum);
-        
-        if(g_character.currentHealth === 0 && newCurrentHealth > 0){
-            removeCondition(11); // Hardcoded ID - Remove Dying Condition
-            let woundedCondition = getCondition(35); // Hardcoded ID - Wounded
-            if(woundedCondition != null){
-                let woundedValue = woundedCondition.Value + 1;
-                addCondition(35,
-                    woundedValue,
-                    woundedCondition.SourceText,
-                    woundedCondition.ParentID);
-            } else {
-                addCondition(35, 1, null);
-            }
-        }
-
-        g_character.currentHealth = newCurrentHealth;
-        let bulmaTextColor = getBulmaTextColorFromCurrentHP(g_character.currentHealth, maxHealthNum);
-        $('#char-current-health').html('<p class="is-size-5 is-unselectable text-center '+bulmaTextColor+'" style="width: 70px;">'+g_character.currentHealth+'</p>');
-        $('#char-current-health').removeClass('is-in-input-mode');
-        socket.emit("requestCurrentHitPointsSave",
-            getCharIDFromURL(),
-            g_character.currentHealth);
-
-        if(g_character.currentHealth === 0){
-            let dyingValue = 1;
-            let woundedCondition = getCondition(35); // Hardcoded ID - Wounded
-            if(woundedCondition != null){
-                dyingValue += woundedCondition.Value;
-            }
-            addCondition(11, dyingValue, null); // Hardcoded ID - Add Dying Condition
-        }
-
+        addCondition(35, 1, null);
     }
+  }
+
+  g_character.currentHealth = newCurrentHealth;
+  let bulmaTextColor = getBulmaTextColorFromCurrentHP(g_character.currentHealth, maxHealthNum);
+  $('#char-current-health').html('<p class="is-size-5 is-unselectable text-center '+bulmaTextColor+'" style="width: 70px;">'+g_character.currentHealth+'</p>');
+  $('#char-current-health').removeClass('is-in-input-mode');
+  socket.emit("requestCurrentHitPointsSave",
+      getCharIDFromURL(),
+      g_character.currentHealth);
+
+  if(g_character.currentHealth === 0){
+      let dyingValue = 1;
+      let woundedCondition = getCondition(35); // Hardcoded ID - Wounded
+      if(woundedCondition != null){
+          dyingValue += woundedCondition.Value;
+      }
+      addCondition(11, dyingValue, null); // Hardcoded ID - Add Dying Condition
+  }
 }
 
 function tempHealthConfirm(){
-    let tempHealth = $('#char-temp-health');
-    let tempHealthNum = $('#temp-health-input').val();
-    if(tempHealthNum == null || tempHealthNum > 999 || tempHealthNum < 0) {
-        $('#temp-health-input').addClass('is-danger');
-    } else {
-        g_character.tempHealth = (tempHealthNum == '') ? 0 : parseInt(tempHealthNum);
-        if(g_character.tempHealth == 0){
-            tempHealth.html('<p class="is-size-5 is-unselectable text-center has-text-grey-lighter" style="width: 70px;">―</p>');
-        } else {
-            tempHealth.html('<p class="is-size-5 is-unselectable text-center has-text-info" style="width: 70px;">'+g_character.tempHealth+'</p>');
-        }
-        $('#char-temp-health').removeClass('is-in-input-mode');
-        socket.emit("requestTempHitPointsSave",
-            getCharIDFromURL(),
-            g_character.tempHealth);
-    }
+  let tempHealth = $('#char-temp-health');
+  let tempHealthNum = $('#temp-health-input').val();
+
+  let newTempHealth;
+  try {
+    if(tempHealthNum == '') { tempHealthNum = '0'; }
+    newTempHealth = parseInt(evalString(tempHealthNum));
+    if(newTempHealth > 999) { newTempHealth = 999; }
+    if(newTempHealth < 0) { newTempHealth = 0; }
+  } catch (err) {
+    $('#temp-health-input').addClass('is-danger');
+    return;
+  }
+
+  g_character.tempHealth = newTempHealth;
+  if(g_character.tempHealth == 0){
+      tempHealth.html('<p class="is-size-5 is-unselectable text-center has-text-grey-lighter" style="width: 70px;">―</p>');
+  } else {
+      tempHealth.html('<p class="is-size-5 is-unselectable text-center has-text-info" style="width: 70px;">'+g_character.tempHealth+'</p>');
+  }
+  $('#char-temp-health').removeClass('is-in-input-mode');
+  socket.emit("requestTempHitPointsSave",
+      getCharIDFromURL(),
+      g_character.tempHealth);
 }
 
 ///////
@@ -1629,7 +1641,7 @@ function initStaminaAndResolve() {
       if(!$(this).hasClass('is-in-input-mode')) {
 
           $(this).addClass('is-in-input-mode');
-          $(this).html('<input id="current-stamina-input" class="input" type="number" min="0" max="'+maxStaminaNum+'" style="width: 70px;" value="'+g_character.currentStamina+'">');
+          $(this).html('<input id="current-stamina-input" class="input" type="text" min="0" max="'+maxStaminaNum+'" style="width: 70px;" value="'+g_character.currentStamina+'">');
           $('#current-stamina-input').focus();
 
           $('#current-stamina-input').blur(function(){
@@ -1666,7 +1678,7 @@ function initStaminaAndResolve() {
       if(!$(this).hasClass('is-in-input-mode')) {
 
           $(this).addClass('is-in-input-mode');
-          $(this).html('<input id="current-resolve-input" class="input" type="number" min="0" max="'+maxResolveNum+'" style="width: 70px;" value="'+g_character.currentResolve+'">');
+          $(this).html('<input id="current-resolve-input" class="input" type="text" min="0" max="'+maxResolveNum+'" style="width: 70px;" value="'+g_character.currentResolve+'">');
           $('#current-resolve-input').focus();
 
           $('#current-resolve-input').blur(function(){
@@ -1687,36 +1699,44 @@ function initStaminaAndResolve() {
 
 function staminaConfirm(maxStaminaNum){
   let currentStaminaNum = $('#current-stamina-input').val();
-  if(currentStaminaNum == null || currentStaminaNum > maxStaminaNum || currentStaminaNum < 0 || currentStaminaNum == '') {
-      $('#current-stamina-input').addClass('is-danger');
-  } else {
-      let newCurrentStamina = parseInt(currentStaminaNum);
 
-      g_character.currentStamina = newCurrentStamina;
-      $('#char-current-stamina').html('<p class="is-size-5 is-unselectable text-center has-text-primary" style="width: 40px;">'+g_character.currentStamina+'</p>');
-      $('#char-current-stamina').removeClass('is-in-input-mode');
-      socket.emit("requestCurrentStaminaPointsSave",
-          getCharIDFromURL(),
-          g_character.currentStamina);
-
+  let newCurrentStamina;
+  try {
+    newCurrentStamina = parseInt(evalString(currentStaminaNum));
+    if(newCurrentStamina > maxStaminaNum) { newCurrentStamina = maxStaminaNum; }
+    if(newCurrentStamina < 0) { newCurrentStamina = 0; }
+  } catch (err) {
+    $('#current-stamina-input').addClass('is-danger');
+    return;
   }
+
+  g_character.currentStamina = newCurrentStamina;
+  $('#char-current-stamina').html('<p class="is-size-5 is-unselectable text-center has-text-primary" style="width: 40px;">'+g_character.currentStamina+'</p>');
+  $('#char-current-stamina').removeClass('is-in-input-mode');
+  socket.emit("requestCurrentStaminaPointsSave",
+      getCharIDFromURL(),
+      g_character.currentStamina);
 }
 
 function resolveConfirm(maxResolveNum){
   let currentResolveNum = $('#current-resolve-input').val();
-  if(currentResolveNum == null || currentResolveNum > maxResolveNum || currentResolveNum < 0 || currentResolveNum == '') {
-      $('#current-resolve-input').addClass('is-danger');
-  } else {
-      let newCurrentResolve = parseInt(currentResolveNum);
 
-      g_character.currentResolve = newCurrentResolve;
-      $('#char-current-resolve').html('<p class="is-size-5 is-unselectable text-center has-text-link" style="width: 40px;">'+g_character.currentResolve+'</p>');
-      $('#char-current-resolve').removeClass('is-in-input-mode');
-      socket.emit("requestCurrentResolvePointsSave",
-          getCharIDFromURL(),
-          g_character.currentResolve);
-
+  let newCurrentResolve;
+  try {
+    newCurrentResolve = parseInt(evalString(currentResolveNum));
+    if(newCurrentResolve > maxResolveNum) { newCurrentResolve = maxResolveNum; }
+    if(newCurrentResolve < 0) { newCurrentResolve = 0; }
+  } catch (err) {
+    $('#current-resolve-input').addClass('is-danger');
+    return;
   }
+
+  g_character.currentResolve = newCurrentResolve;
+  $('#char-current-resolve').html('<p class="is-size-5 is-unselectable text-center has-text-link" style="width: 40px;">'+g_character.currentResolve+'</p>');
+  $('#char-current-resolve').removeClass('is-in-input-mode');
+  socket.emit("requestCurrentResolvePointsSave",
+      getCharIDFromURL(),
+      g_character.currentResolve);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////

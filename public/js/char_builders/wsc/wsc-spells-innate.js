@@ -48,6 +48,9 @@ function displayInnateSpellChoice(srcStruct, locationID, spellLevel, spellTradit
     let descriptionSpellID = "descriptionInnateSpell"+locationID+"-"+srcStruct.sourceCodeSNum;
     let selectSpellControlShellClass = selectSpellID+'ControlShell';
 
+    // If ID already exists, just return. This is a temporary fix - this shouldn't be an issue in the first place.
+    if($('#'+selectSpellID).length != 0) { statementComplete(); return; }
+
     $('#'+locationID).append('<div class="field is-grouped is-grouped-centered is-marginless mb-1"><div class="select '+selectSpellControlShellClass+'"><select id="'+selectSpellID+'" class="selectFeat"></select></div></div><div id="'+descriptionSpellID+'"></div>');
 
     $('#'+selectSpellID).append('<option value="chooseDefault">'+selectionName+'</option>');

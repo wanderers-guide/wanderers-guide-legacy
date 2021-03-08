@@ -77,9 +77,10 @@ function processSheetCode(wscCode, sourceName, isTest=false){
             if(isTest) {continue;}
             // Ex. CONDITIONAL-SAVE_FORT=When you roll a success, you get a critical success instead.
 
-            let adjustmentData = (wscStatement.split('-')[1]).split('=');
-            let adjustmentTowards = adjustmentData[0];
-            let adjustmentInfo = adjustmentData[1];
+            let dataSplit = wscStatement.split('=');
+
+            let adjustmentTowards = dataSplit[0].split('-')[1];
+            let adjustmentInfo = dataSplit[1];
             addConditionalStat(adjustmentTowards, adjustmentInfo, null);
 
             continue;

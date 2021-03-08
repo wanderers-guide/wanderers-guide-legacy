@@ -463,7 +463,7 @@ function displayCurrentClass(classStruct, saving) {
     }
     $('#classAbilitiesContent').append('<div id="abilityContentOther" class="is-hidden"></div>');
 
-    $('#classAbilitiesTabs').html('<div class="tabs is-centered is-marginless"><ul class="ability-tabs">'+abilityTabHTML+'</ul></div>');
+    $('#classAbilitiesTabs').html('<div class="tabs is-centered is-marginless use-custom-scrollbar"><ul class="ability-tabs">'+abilityTabHTML+'</ul></div>');
 
     for(const classAbility of classStruct.Abilities) {
         if(classAbility.level == -1) {continue;}

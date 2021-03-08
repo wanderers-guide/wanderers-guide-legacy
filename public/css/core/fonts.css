@@ -2,8 +2,8 @@
 /* Pathfinder 2e Icons */
 
 @font-face {
-    font-family: 'Pf-Icons';
-    src: url('/fonts/Pathfinder-Icons.ttf');
+  font-family: 'Pf-Icons';
+  src: url('/fonts/pathfinder-icons.ttf');
 }
 
 .pf-icon {

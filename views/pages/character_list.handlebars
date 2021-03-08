@@ -72,9 +72,11 @@
             <div class="column is-4">
                 <div class="card character-card is-unselectable" name="{{id}}">
                     <div class="card-content cursor-clickable pt-2">
+                      <a href="/profile/characters/{{id}}">
                         <span class="is-size-8 has-text-grey char-id"># {{id}}</span>
                         <p class="is-size-5 has-text-grey-lighter text-overflow-ellipsis">{{name}}</p>
                         <p class="is-size-7 pl-4 text-overflow-ellipsis"> Lvl {{level}} | {{heritageName}} {{className}}</p>
+                      </a>
                     </div>
                     <div class="card-footer is-paddingless">
                         <a class="card-footer-item character-card-edit has-text-grey-light">
