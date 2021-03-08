@@ -8,6 +8,8 @@ function processingCharTags(wscStatement, srcStruct, locationID, sourceName){
     if(wscStatement.includes("GIVE-CHAR-TRAIT-NAME")){ // GIVE-CHAR-TRAIT-NAME=Elf
         let charTagName = wscStatement.split('=')[1];
         giveCharTag(srcStruct, charTagName);
+    } else if(wscStatement.includes("GIVE-CHAR-TRAIT-COMMON")){ // GIVE-CHAR-TRAIT-COMMON
+        displayCharTagChoice(srcStruct, locationID, true);
     } else if(wscStatement.includes("GIVE-CHAR-TRAIT")){ // GIVE-CHAR-TRAIT
         displayCharTagChoice(srcStruct, locationID);
     } else {
@@ -39,14 +41,15 @@ socket.on("returnCharTagChange", function(charTagsArray){
 
 //////////////////////////////// Give Char Tag Selector ///////////////////////////////////
 
-function displayCharTagChoice(srcStruct, locationID){
+function displayCharTagChoice(srcStruct, locationID, commonOnly=false){
 
     let selectCharTagID = "selectCharTag"+locationID+"-"+srcStruct.sourceCodeSNum;
     let selectCharTagControlShellClass = selectCharTagID+'ControlShell';
 
     $('#'+locationID).append('<div class="field"><div class="select '+selectCharTagControlShellClass+'"><select id="'+selectCharTagID+'" class="selectCharTag"></select></div></div>');
 
-    $('#'+selectCharTagID).append('<option value="chooseDefault">Choose a Trait</option>');
+    $('#'+selectCharTagID).append('<option value="chooseDefault">Choose an Ancestry</option>');
+    $('#'+selectCharTagID).append('<optgroup label="──────────"></optgroup>');
 
     let triggerChange = false;
     // Set saved char trait choices
@@ -63,10 +66,34 @@ function displayCharTagChoice(srcStruct, locationID){
         triggerChange = true;
     }
 
-    for(const ancestry of wscChoiceStruct.AllAncestries){
-        if(ancestry.isArchived === 0){
-            $('#'+selectCharTagID).append('<option value="'+ancestry.name+'">'+ancestry.name+'</option>');
+    let sortedAncestries = wscChoiceStruct.AllAncestries.sort(
+      function(a, b) {
+        return a.name > b.name ? 1 : -1;
+      }
+    );
+
+    if(commonOnly) {
+
+      for(const ancestry of sortedAncestries){
+        if(ancestry.isArchived === 0 && ancestry.rarity === 'COMMON'){
+          $('#'+selectCharTagID).append('<option value="'+ancestry.name+'">'+ancestry.name+'</option>');
         }
+      }
+      $('#'+selectCharTagID).append('<optgroup label="──────────"></optgroup>');
+      for(const ancestry of sortedAncestries){
+        if(ancestry.isArchived === 0 && ancestry.rarity !== 'COMMON'){
+          $('#'+selectCharTagID).append('<option value="'+ancestry.name+'" class="is-non-available-very">'+ancestry.name+'</option>');
+        }
+      }
+
+    } else {
+
+      for(const ancestry of sortedAncestries){
+        if(ancestry.isArchived === 0){
+          $('#'+selectCharTagID).append('<option value="'+ancestry.name+'">'+ancestry.name+'</option>');
+        }
+      }
+
     }
 
     if(selectedCharTag != null){

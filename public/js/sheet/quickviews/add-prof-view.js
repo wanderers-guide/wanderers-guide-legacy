@@ -13,6 +13,12 @@ function openAddProfQuickview(data) {
 
     qContent.append('<div class="buttons is-centered pt-2"><button id="addProfAddButton" class="button is-link is-rounded">Add</button></div>');
 
+    let sortedItemMap = new Map([...g_itemMap.entries()].sort(
+      function(a, b) {
+        return a[1].Item.name > b[1].Item.name ? 1 : -1;
+      })
+    );
+
     $('#addProfType').change(function() {
         let profSubType = $('#addProfSubType');
         profSubType.html('');
@@ -28,7 +34,7 @@ function openAddProfQuickview(data) {
 
             profSubType.append('<optgroup label="──────────"></optgroup>');
 
-            for(const [itemID, itemDataStruct] of g_itemMap.entries()){
+            for(const [itemID, itemDataStruct] of sortedItemMap.entries()){
                 if(itemDataStruct.Item.itemType == 'WEAPON' && itemDataStruct.Item.hidden === 0 && itemDataStruct.WeaponData != null && itemDataStruct.WeaponData.profName == itemDataStruct.Item.name){
 
                     let profValue = itemDataStruct.Item.name.replace(/\s/g,'_');
@@ -46,7 +52,7 @@ function openAddProfQuickview(data) {
 
             profSubType.append('<optgroup label="──────────"></optgroup>');
 
-            for(const [itemID, itemDataStruct] of g_itemMap.entries()){
+            for(const [itemID, itemDataStruct] of sortedItemMap.entries()){
                 
                 if(itemDataStruct.Item.itemType == 'ARMOR' && itemDataStruct.Item.hidden === 0 && itemDataStruct.ArmorData != null && itemDataStruct.ArmorData.profName == itemDataStruct.Item.name){
                     
