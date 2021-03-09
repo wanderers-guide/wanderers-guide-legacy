@@ -18,7 +18,7 @@ function openResistancesListQuickview(data) {
     $('#'+addResistBtnID).click(function(){
       openQuickView('addResistView',{
         _prevBackData: {Type: g_QViewLastType, Data: g_QViewLastData},
-      });
+      }, $('#quickviewDefault').hasClass('is-active'));
     });
 
     if(data.ResistAndVulners.Resistances.length == 0){
@@ -64,7 +64,7 @@ function openResistancesListQuickview(data) {
     $('#'+addWeakBtnID).click(function(){
       openQuickView('addWeakView',{
         _prevBackData: {Type: g_QViewLastType, Data: g_QViewLastData},
-      });
+      }, $('#quickviewDefault').hasClass('is-active'));
     });
 
     if(data.ResistAndVulners.Vulnerabilities.length == 0){

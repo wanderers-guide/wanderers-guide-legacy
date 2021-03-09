@@ -3,6 +3,8 @@ const User = require('../models/contentDB/User');
 const Character = require('../models/contentDB/Character');
 const InvItem = require('../models/contentDB/InvItem');
 
+const CharStateUtils = require('./CharStateUtils');
+
 // Returns UserID or -1 if not logged in.
 function getUserID(socket){
     if(socket.request.session.passport != null){
@@ -36,6 +38,15 @@ module.exports = class AuthCheck {
         });
     }
 
+    static canViewCharacter(socket, charID) {
+        return Character.findOne({ where: { id: charID } })
+        .then((character) => {
+          return CharStateUtils.isPublic(character) || character.userID === getUserID(socket);
+        }).catch((error) => {
+          return false;
+        });
+    }
+
     static ownsInv(socket, invID) {
         return Character.findOne({ where: { inventoryID: invID } })
         .then((character) => {
@@ -54,39 +65,60 @@ module.exports = class AuthCheck {
         });
     }
 
-    static isAdmin(socket) {
+    /* -------- */
+
+    static getPermissions(socket){
       return User.findOne({ where: { id: getUserID(socket)} })
       .then((user) => {
-          return user.isAdmin === 1;
+        return {
+          admin: user.isAdmin === 1,
+          developer: user.isDeveloper === 1,
+          support: {
+            legend: user.isPatreonLegend === 1,
+            member: user.isPatreonMember === 1,
+            supporter: user.isPatreonSupporter === 1,
+          }
+        };
       }).catch((error) => {
-          return false;
+        return {
+          admin: false,
+          developer: false,
+          support: {
+            legend: false,
+            member: false,
+            supporter: false,
+          }
+        };
+      });
+    }
+
+    static isAdmin(socket) {
+      return AuthCheck.getPermissions(socket).then((perms) => {
+        return perms.support.admin;
       });
     }
 
     static isDeveloper(socket) {
-      return User.findOne({ where: { id: getUserID(socket)} })
-      .then((user) => {
-          return user.isDeveloper === 1;
-      }).catch((error) => {
-          return false;
+      return AuthCheck.getPermissions(socket).then((perms) => {
+        return perms.support.developer;
+      });
+    }
+
+    static isLegend(socket) {
+      return AuthCheck.getPermissions(socket).then((perms) => {
+        return perms.support.legend;
       });
     }
 
     static isMember(socket) {
-      return User.findOne({ where: { id: getUserID(socket)} })
-      .then((user) => {
-          return user.isPatreonMember === 1;
-      }).catch((error) => {
-          return false;
+      return AuthCheck.getPermissions(socket).then((perms) => {
+        return perms.support.member;
       });
     }
 
     static isSupporter(socket) {
-      return User.findOne({ where: { id: getUserID(socket)} })
-      .then((user) => {
-          return user.isPatreonSupporter === 1;
-      }).catch((error) => {
-          return false;
+      return AuthCheck.getPermissions(socket).then((perms) => {
+        return perms.support.supporter;
       });
     }
 

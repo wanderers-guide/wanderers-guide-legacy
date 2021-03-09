@@ -128,46 +128,18 @@ socket.on("returnCharImport", function(){
 function initCharacterExport() {
 
   $('#btn-export-character').click(function() {
-    socket.emit("requestCharExport", activeModalCharID);
+    exportCharacter(activeModalCharID);
   });
 
 }
-
-socket.on("returnCharExport", function(charExportData){
-  
-  let charExportDataJSON = JSON.stringify(charExportData);
-  let fileName = charExportData.character.name.replaceAll('[^a-zA-Z]', '').replaceAll(' ', '_');
-  charExportDataFileDownload(fileName+'.guidechar', charExportDataJSON);
-  $('.modal-card-close').trigger('click');
-
-});
-
-function charExportDataFileDownload(filename, text) {
-  let element = document.createElement('a');
-  element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
-  element.setAttribute('download', filename);
-
-  element.style.display = 'none';
-  document.body.appendChild(element);
-
-  element.click();
-
-  document.body.removeChild(element);
-}
-
 
 // ~~~~~ Character Copy ~~~~~ //
 function initCharacterCopy(){
 
   $('#btn-duplicate-character').click(function() {
-    socket.emit("requestCharCopy", activeModalCharID);
+    copyCharacter(activeModalCharID);
     $('.modal-card-close').trigger('click');
     $('.subpageloader').removeClass('is-hidden');
   });
 
 }
-
-socket.on("returnCharCopy", function(){
-  // Hardcoded redirect
-  window.location.href = '/profile/characters';
-});

@@ -128,13 +128,23 @@ $(function () {
 });
 
 
-socket.on("returnCharacterSheetInfo", function(charInfo, viewOnly){
+socket.on("returnCharacterSheetInfo", function(charInfo, userPermissions, viewOnly){
     isViewOnly = viewOnly;
 
     // View Only //
     if(isViewOnly){
+      if(userPermissions.support.supporter){ // Can copy and export characters on viewOnly
+
+        $('#backToBuilderButton').addClass('is-hidden');
+        $('#restButton').addClass('is-hidden');
+
+        $('#copyCharButton').removeClass('is-hidden');
+        $('#exportCharButton').removeClass('is-hidden');
+
+      } else {
         $('#backToBuilderButton').attr('disabled', true);
         $('#restButton').attr('disabled', true);
+      }
     }
 
     g_itemMap = objToMap(charInfo.ItemObject);
@@ -812,6 +822,18 @@ function displayInformation() {
         if(!isViewOnly){
             takeRest();
         }
+    });
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////// Copy and Export ////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    $('#copyCharButton').click(function() {
+      copyCharacter(getCharIDFromURL());
+      $('.subpageloader').removeClass('is-hidden');
+    });
+
+    $('#exportCharButton').click(function() {
+      exportCharacter(getCharIDFromURL());
     });
 
     ////////////////////////////////////////////////////////////////////////////////////////////////

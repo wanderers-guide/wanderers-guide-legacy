@@ -1,0 +1,40 @@
+/* Copyright (C) 2020, Wanderer's Guide, all rights reserved.
+    By Aaron Cassar.
+*/
+
+// ~~~~~ Character Export ~~~~~ //
+function exportCharacter(charID){
+  socket.emit("requestCharExport", charID);
+}
+
+socket.on("returnCharExport", function(charExportData){
+  let charExportDataJSON = JSON.stringify(charExportData);
+  let fileName = charExportData.character.name.replaceAll('[^a-zA-Z]', '').replaceAll(' ', '_');
+  charExportDataFileDownload(fileName+'.guidechar', charExportDataJSON);
+  $('.modal-card-close').trigger('click');
+});
+
+function charExportDataFileDownload(filename, text) {
+  let element = document.createElement('a');
+  element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+  element.setAttribute('download', filename);
+
+  element.style.display = 'none';
+  document.body.appendChild(element);
+
+  element.click();
+
+  document.body.removeChild(element);
+}
+
+
+
+// ~~~~~ Character Copy ~~~~~ //
+function copyCharacter(charID){
+  socket.emit("requestCharCopy", charID);
+}
+
+socket.on("returnCharCopy", function(){
+  // Hardcoded redirect
+  window.location.href = '/profile/characters';
+});

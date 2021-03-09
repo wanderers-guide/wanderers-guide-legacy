@@ -55,22 +55,24 @@ module.exports = class SocketConnections {
     io.on('connection', function(socket){
 
       socket.on('requestCharacterSheetInfo', function(charID){
-        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
-          if(ownsChar){
-            CharGathering.getCharacterInfo(charID).then((charInfo) => {
-              socket.emit('returnCharacterSheetInfo', charInfo, false);
-            });
-          } else {
-            CharGathering.getCharacter(charID).then((character) => {
-              if(CharStateUtils.isPublic(character)){
-                CharGathering.getCharacterInfo(charID).then((charInfo) => {
-                  socket.emit('returnCharacterSheetInfo', charInfo, true);
-                });
-              } else {
-                socket.emit('returnErrorMessage', 'Incorrect Auth - No access to this character.');
-              }
-            });
-          }
+        AuthCheck.getPermissions(socket).then((perms) => {
+          AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+            if(ownsChar){
+              CharGathering.getCharacterInfo(charID).then((charInfo) => {
+                socket.emit('returnCharacterSheetInfo', charInfo, perms, false);
+              });
+            } else {
+              CharGathering.getCharacter(charID).then((character) => {
+                if(CharStateUtils.isPublic(character)){
+                  CharGathering.getCharacterInfo(charID).then((charInfo) => {
+                    socket.emit('returnCharacterSheetInfo', charInfo, perms, true);
+                  });
+                } else {
+                  socket.emit('returnErrorMessage', 'Incorrect Auth - No access to this character.');
+                }
+              });
+            }
+          });
         });
       });
 
@@ -1832,8 +1834,8 @@ module.exports = class SocketConnections {
       socket.on('requestCharExport', function(charID){
         AuthCheck.isSupporter(socket).then((isSupporter) => {
           if(isSupporter){
-            AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
-              if(ownsChar){
+            AuthCheck.canViewCharacter(socket, charID).then((canViewChar) => {
+              if(canViewChar){
                 CharExport.getExportData(charID)
                 .then((charExportData) => {
                   socket.emit('returnCharExport', charExportData);
@@ -1847,8 +1849,8 @@ module.exports = class SocketConnections {
       socket.on('requestCharCopy', function(charID){
         AuthCheck.isSupporter(socket).then((isSupporter) => {
           if(isSupporter){
-            AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
-              if(ownsChar){
+            AuthCheck.canViewCharacter(socket, charID).then((canViewChar) => {
+              if(canViewChar){
                 CharExport.getExportData(charID)
                 .then((charExportData) => {
                   CharImport.importData(socket, JSON.parse(JSON.stringify(charExportData)))
@@ -1865,8 +1867,8 @@ module.exports = class SocketConnections {
       socket.on('requestCharExportPDFInfo', function(charID){
         AuthCheck.isSupporter(socket).then((isSupporter) => {
           if(isSupporter){
-            AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
-              if(ownsChar){
+            AuthCheck.canViewCharacter(socket, charID).then((canViewChar) => {
+              if(canViewChar){
                 CharGathering.getCharacterInfoExportToPDF(charID).then((characterInfo) => {
                   socket.emit('returnCharExportPDFInfo', characterInfo);
                 });

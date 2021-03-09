@@ -59,6 +59,8 @@
 
     <script src="/js/libraries/confirm_message/confirm-message.js"></script>
 
+    <script src="/js/char_export/export-handler.js"></script>
+
     <script src="/js/char_builders/variants/auto-bonus-progression.js"></script>
     
     <script src="/js/wsc/text-processing.js"></script>
@@ -110,6 +112,10 @@
 
 <div class="pageloader">
     <div class="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+</div>
+
+<div class="subpageloader is-hidden">
+  <div class="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
 </div>
 
 <section id="character-sheet-section" class="section text-center is-paddingless px-4 py-3">
@@ -263,6 +269,9 @@
                                     </span>
                                 </a>
                                 <a id="restButton" class="button is-info is-outlined">Rest</a>
+
+                                <a id="copyCharButton" class="button is-info is-outlined mb-2 is-hidden">Copy</a>
+                                <a id="exportCharButton" class="button is-info is-outlined is-hidden">Export</a>
                         </div>
                     </div>
                 </div>
