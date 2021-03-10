@@ -106,18 +106,18 @@ function buildWeaponProfMap(){
                     if(hasFamiliarityReduceProf(itemData)){
                         let reducedProfData = null;
                         if(itemData.WeaponData.category == "MARTIAL"){
-                            reducedProfData = getFinalProf(g_profMap.get('Simple_Weapons'));
+                          reducedProfData = getFinalProf(g_profMap.get('Simple_Weapons'));
                         } else if (itemData.WeaponData.category == "ADVANCED"){
-                            reducedProfData = getFinalProf(g_profMap.get('Martial_Weapons'));
+                          reducedProfData = getFinalProf(g_profMap.get('Martial_Weapons'));
                         } else {
-                            reducedProfData = finalProfData;
+                          reducedProfData = finalProfData;
                         }
 
+                        let famNumUps = 0;
                         if(reducedProfData != null){
-                            numUps = reducedProfData.NumUps;
-                        } else {
-                            numUps = 0;
+                          famNumUps = reducedProfData.NumUps;
                         }
+                        if(famNumUps > numUps){ numUps = famNumUps; }
                     }
 
                     weaponProfMap.set(itemData.WeaponData.profName, {
