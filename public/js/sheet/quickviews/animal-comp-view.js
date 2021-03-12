@@ -48,10 +48,24 @@ function openAnimalCompQuickview(data) {
     let currentHP = charAnimal.currentHP;
     if(currentHP == -1){ currentHP = maxHP; }
 
-    qContent.append('<div class="field has-addons has-addons-centered is-marginless"><p class="control"><input id="animalHealthInput" class="input" type="number" min="0" max="'+maxHP+'" value="'+currentHP+'"></p><p class="control"><a class="button is-static has-text-grey-light has-background-grey-darkest border-darker">/</a><p class="control"><a class="button is-static has-text-grey-lighter has-background-grey-darklike border-darker">'+maxHP+'</a></p></div>');
+    qContent.append('<div class="field has-addons has-addons-centered is-marginless"><p class="control"><input id="animalHealthInput" class="input" type="text" size="4" min="0" max="'+maxHP+'" value="'+currentHP+'"></p><p class="control"><a class="button is-static has-text-grey-light has-background-grey-darkest border-darker">/</a><p class="control"><a class="button is-static has-text-grey-lighter has-background-grey-darklike border-darker">'+maxHP+'</a></p></div>');
     $('#animalHealthInput').blur(function() {
         if($('#animalHealthInput').val() != charAnimal.currentHP){
-            updateAnimalCompanion(charAnimal);
+            try {
+              let newCurrentHP = parseInt(math.evaluate($('#animalHealthInput').val()));
+              if(newCurrentHP > maxHP) { newCurrentHP = maxHP; }
+              if(newCurrentHP < 0) { newCurrentHP = 0; }
+              if(isNaN(newCurrentHP)) { throw 'Value is not a number!'; }
+
+              charAnimal.currentHP = newCurrentHP;
+              $('#animalHealthInput').val(newCurrentHP);
+              $('#animalHealthInput').removeClass('is-danger');
+              updateAnimalCompanion(charAnimal);
+            } catch (err) {
+              $('#animalHealthInput').addClass('is-danger');
+            }
+        } else {
+          $('#animalHealthInput').removeClass('is-danger');
         }
     });
 

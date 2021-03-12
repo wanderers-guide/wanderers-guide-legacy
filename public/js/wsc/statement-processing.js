@@ -241,17 +241,23 @@ function processSheetCode(wscCode, sourceName, isTest=false){
 
 
 function getSheetProcNumber(strNum, sourceName){
-    if(strNum == null) {
-      displayError('Incorrect WSC syntax ('+sourceName+'): NaN error in sheet statement');
-      return 0;
-    }
-    
-    strNum = strNum.toUpperCase().trim();
-    if(strNum == 'LEVEL'){
-        return g_character.level;
-    } else if(strNum == 'HALF_LEVEL'){
-        return Math.floor(g_character.level/2);
-    } else {
-        return parseInt(strNum);
-    }
+  if(strNum == null) {
+    displayError('Incorrect WSC syntax ('+sourceName+'): NaN error in sheet statement');
+    return 0;
+  }
+  
+  strNum = strNum.toUpperCase().trim();
+
+  if(strNum.includes('HALF_LEVEL')) {
+    strNum = strNum.replace(/HALF_LEVEL/g, Math.floor(g_character.level/2)+'');
+  }
+  if(strNum.includes('LEVEL')) {
+    strNum = strNum.replace(/LEVEL/g, g_character.level+'');
+  }
+  try {
+    return parseInt(math.evaluate(strNum));
+  } catch (err) {
+    displayError('Incorrect WSC syntax ('+sourceName+'): NaN error in sheet statement');
+    return 0;
+  }
 }

@@ -71,7 +71,7 @@ function refreshStatRollButtons() {
         let dieSize = null;
         let bonus = null;
   
-        let lastPartResult = evalString(parts[1]);
+        let lastPartResult = parseInt(math.evaluate(parts[1]));
         if(lastPartResult == parts[1]){
           dieSize = lastPartResult;
           bonus = 0;

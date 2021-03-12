@@ -1106,56 +1106,56 @@ function displayInformation() {
     if(arcaneSpellAttack != null){
         let profWord = getProfNameFromNumUps(arcaneSpellAttack.NumUps);
         otherProfsNum++;
-        otherProfBuild(spells, profWord, 'Arcane Attacks', otherProfsNum, arcaneSpellAttack, {For:'SpellAttack',To:'ArcaneSpellAttacks'});
+        otherProfBuild(spells, profWord, 'Arcane Attacks', otherProfsNum, arcaneSpellAttack, {For:'SpellAttack',To:'ArcaneSpellAttacks'}, { SpellTradition: 'ARCANE', SpellPart: 'Attack' });
     }
 
     let arcaneSpellDC = getFinalProf(g_profMap.get("ArcaneSpellDCs"));
     if(arcaneSpellDC != null){
         let profWord = getProfNameFromNumUps(arcaneSpellDC.NumUps);
         otherProfsNum++;
-        otherProfBuild(spells, profWord, 'Arcane DCs', otherProfsNum, arcaneSpellDC, {For:'SpellDC',To:'ArcaneSpellDCs'});
+        otherProfBuild(spells, profWord, 'Arcane DCs', otherProfsNum, arcaneSpellDC, {For:'SpellDC',To:'ArcaneSpellDCs'}, { SpellTradition: 'ARCANE', SpellPart: 'DC' });
     }
 
     let divineSpellAttack = getFinalProf(g_profMap.get("DivineSpellAttacks"));
     if(divineSpellAttack != null){
         let profWord = getProfNameFromNumUps(divineSpellAttack.NumUps);
         otherProfsNum++;
-        otherProfBuild(spells, profWord, 'Divine Attacks', otherProfsNum, divineSpellAttack, {For:'SpellAttack',To:'DivineSpellAttacks'});
+        otherProfBuild(spells, profWord, 'Divine Attacks', otherProfsNum, divineSpellAttack, {For:'SpellAttack',To:'DivineSpellAttacks'}, { SpellTradition: 'DIVINE', SpellPart: 'Attack' });
     }
 
     let divineSpellDC = getFinalProf(g_profMap.get("DivineSpellDCs"));
     if(divineSpellDC != null){
         let profWord = getProfNameFromNumUps(divineSpellDC.NumUps);
         otherProfsNum++;
-        otherProfBuild(spells, profWord, 'Divine DCs', otherProfsNum, divineSpellDC, {For:'SpellDC',To:'DivineSpellDCs'});
+        otherProfBuild(spells, profWord, 'Divine DCs', otherProfsNum, divineSpellDC, {For:'SpellDC',To:'DivineSpellDCs'}, { SpellTradition: 'DIVINE', SpellPart: 'DC' });
     }
 
     let occultSpellAttack = getFinalProf(g_profMap.get("OccultSpellAttacks"));
     if(occultSpellAttack != null){
         let profWord = getProfNameFromNumUps(occultSpellAttack.NumUps);
         otherProfsNum++;
-        otherProfBuild(spells, profWord, 'Occult Attacks', otherProfsNum, occultSpellAttack, {For:'SpellAttack',To:'OccultSpellAttacks'});
+        otherProfBuild(spells, profWord, 'Occult Attacks', otherProfsNum, occultSpellAttack, {For:'SpellAttack',To:'OccultSpellAttacks'}, { SpellTradition: 'OCCULT', SpellPart: 'Attack' });
     }
 
     let occultSpellDC = getFinalProf(g_profMap.get("OccultSpellDCs"));
     if(occultSpellDC != null){
         let profWord = getProfNameFromNumUps(occultSpellDC.NumUps);
         otherProfsNum++;
-        otherProfBuild(spells, profWord, 'Occult DCs', otherProfsNum, occultSpellDC, {For:'SpellDC',To:'OccultSpellDCs'});
+        otherProfBuild(spells, profWord, 'Occult DCs', otherProfsNum, occultSpellDC, {For:'SpellDC',To:'OccultSpellDCs'}, { SpellTradition: 'OCCULT', SpellPart: 'DC' });
     }
 
     let primalSpellAttack = getFinalProf(g_profMap.get("PrimalSpellAttacks"));
     if(primalSpellAttack != null){
         let profWord = getProfNameFromNumUps(primalSpellAttack.NumUps);
         otherProfsNum++;
-        otherProfBuild(spells, profWord, 'Primal Attacks', otherProfsNum, primalSpellAttack, {For:'SpellAttack',To:'PrimalSpellAttacks'});
+        otherProfBuild(spells, profWord, 'Primal Attacks', otherProfsNum, primalSpellAttack, {For:'SpellAttack',To:'PrimalSpellAttacks'}, { SpellTradition: 'PRIMAL', SpellPart: 'Attack' });
     }
 
     let primalSpellDC = getFinalProf(g_profMap.get("PrimalSpellDCs"));
     if(primalSpellDC != null){
         let profWord = getProfNameFromNumUps(primalSpellDC.NumUps);
         otherProfsNum++;
-        otherProfBuild(spells, profWord, 'Primal DCs', otherProfsNum, primalSpellDC, {For:'SpellDC',To:'PrimalSpellDCs'});
+        otherProfBuild(spells, profWord, 'Primal DCs', otherProfsNum, primalSpellDC, {For:'SpellDC',To:'PrimalSpellDCs'}, { SpellTradition: 'PRIMAL', SpellPart: 'DC' });
     }
 
     if(spells.html() == ''){
@@ -1510,7 +1510,7 @@ function initHealthAndTemp() {
         if(!$(this).hasClass('is-in-input-mode')) {
 
             $(this).addClass('is-in-input-mode');
-            $(this).html('<input id="current-health-input" class="input" type="text" min="0" max="'+maxHealthNum+'" style="width: 70px;" value="'+g_character.currentHealth+'">');
+            $(this).html('<input id="current-health-input" class="input" type="text" min="0" max="'+maxHealthNum+'" style="width: 70px;" value="'+g_character.currentHealth+'" autofocus onfocus="var temp_value=this.value; this.value=null; this.value=temp_value">');
             $('#current-health-input').focus();
 
             $('#current-health-input').blur(function(){
@@ -1545,7 +1545,7 @@ function initHealthAndTemp() {
         if(!$(this).hasClass('is-in-input-mode')) {
 
             $(this).addClass('is-in-input-mode');
-            $(this).html('<input id="temp-health-input" class="input" type="text" min="0" max="999" style="width: 70px; margin: auto;" value="'+g_character.tempHealth+'">');
+            $(this).html('<input id="temp-health-input" class="input" type="text" min="0" max="999" style="width: 70px; margin: auto;" value="'+g_character.tempHealth+'" autofocus onfocus="var temp_value=this.value; this.value=null; this.value=temp_value">');
             $('#temp-health-input').focus();
 
             $('#temp-health-input').blur(function(){
@@ -1569,9 +1569,10 @@ function healthConfirm(maxHealthNum){
 
   let newCurrentHealth;
   try {
-    newCurrentHealth = parseInt(evalString(currentHealthNum));
+    newCurrentHealth = parseInt(math.evaluate(currentHealthNum));
     if(newCurrentHealth > maxHealthNum) { newCurrentHealth = maxHealthNum; }
     if(newCurrentHealth < 0) { newCurrentHealth = 0; }
+    if(isNaN(newCurrentHealth)) { throw 'Value is not a number!'; }
   } catch (err) {
     $('#current-health-input').addClass('is-danger');
     return;
@@ -1616,9 +1617,9 @@ function tempHealthConfirm(){
   let newTempHealth;
   try {
     if(tempHealthNum == '') { tempHealthNum = '0'; }
-    newTempHealth = parseInt(evalString(tempHealthNum));
+    newTempHealth = parseInt(math.evaluate(tempHealthNum));
     if(newTempHealth > 999) { newTempHealth = 999; }
-    if(newTempHealth < 0) { newTempHealth = 0; }
+    if(newTempHealth < 0 || isNaN(newTempHealth)) { newTempHealth = 0; }
   } catch (err) {
     $('#temp-health-input').addClass('is-danger');
     return;
@@ -1663,7 +1664,7 @@ function initStaminaAndResolve() {
       if(!$(this).hasClass('is-in-input-mode')) {
 
           $(this).addClass('is-in-input-mode');
-          $(this).html('<input id="current-stamina-input" class="input" type="text" min="0" max="'+maxStaminaNum+'" style="width: 70px;" value="'+g_character.currentStamina+'">');
+          $(this).html('<input id="current-stamina-input" class="input" type="text" min="0" max="'+maxStaminaNum+'" style="width: 70px;" value="'+g_character.currentStamina+'" autofocus onfocus="var temp_value=this.value; this.value=null; this.value=temp_value">');
           $('#current-stamina-input').focus();
 
           $('#current-stamina-input').blur(function(){
@@ -1700,7 +1701,7 @@ function initStaminaAndResolve() {
       if(!$(this).hasClass('is-in-input-mode')) {
 
           $(this).addClass('is-in-input-mode');
-          $(this).html('<input id="current-resolve-input" class="input" type="text" min="0" max="'+maxResolveNum+'" style="width: 70px;" value="'+g_character.currentResolve+'">');
+          $(this).html('<input id="current-resolve-input" class="input" type="text" min="0" max="'+maxResolveNum+'" style="width: 70px;" value="'+g_character.currentResolve+'" autofocus onfocus="var temp_value=this.value; this.value=null; this.value=temp_value">');
           $('#current-resolve-input').focus();
 
           $('#current-resolve-input').blur(function(){
@@ -1724,9 +1725,10 @@ function staminaConfirm(maxStaminaNum){
 
   let newCurrentStamina;
   try {
-    newCurrentStamina = parseInt(evalString(currentStaminaNum));
+    newCurrentStamina = parseInt(math.evaluate(currentStaminaNum));
     if(newCurrentStamina > maxStaminaNum) { newCurrentStamina = maxStaminaNum; }
     if(newCurrentStamina < 0) { newCurrentStamina = 0; }
+    if(isNaN(newCurrentStamina)) { throw 'Value is not a number!'; }
   } catch (err) {
     $('#current-stamina-input').addClass('is-danger');
     return;
@@ -1745,9 +1747,10 @@ function resolveConfirm(maxResolveNum){
 
   let newCurrentResolve;
   try {
-    newCurrentResolve = parseInt(evalString(currentResolveNum));
+    newCurrentResolve = parseInt(math.evaluate(currentResolveNum));
     if(newCurrentResolve > maxResolveNum) { newCurrentResolve = maxResolveNum; }
     if(newCurrentResolve < 0) { newCurrentResolve = 0; }
+    if(isNaN(newCurrentResolve)) { throw 'Value is not a number!'; }
   } catch (err) {
     $('#current-resolve-input').addClass('is-danger');
     return;
@@ -2366,7 +2369,7 @@ function runAllFeatsAndAbilitiesCode() {
 ///////////////////////////////////////// Other Profs //////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
-function otherProfBuild(content, prof, name, otherProfsNum, profData, profSrcData){
+function otherProfBuild(content, prof, name, otherProfsNum, profData, profSrcData, extraData={}){
 
     if(profData.UserAdded){
         prof = '<span class="is-underlined-thin-darker">'+prof+'</span>';
@@ -2385,6 +2388,7 @@ function otherProfBuild(content, prof, name, otherProfsNum, profData, profSrcDat
             ProfSrcData : profSrcData,
             ProfData : profData,
             Name : name,
+            ExtraData : extraData,
         });
     });
 

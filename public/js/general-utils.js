@@ -257,13 +257,6 @@ function signNumber(number) {
   return number < 0 ? `${number}` : `+${number}`;
 }
 
-function evalString(s) { // Evaluates a string of basic math: '5 + 30 - 25.1 + 11'
-  return (s.replace(/\s/g, '').match(/[+\-]?([0-9\.]+)/g) || [])
-      .reduce(function(sum, value) {
-          return parseFloat(sum) + parseFloat(value);
-      });
-}
-
 function rankLevel(level){
   switch(level) {
     case 1: return "1st";

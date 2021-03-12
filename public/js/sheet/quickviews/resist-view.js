@@ -54,7 +54,7 @@ function processResistsOrWeaksToMap(array, charLevel){
       amount = amount.replace('LEVEL', charLevel);
     }
     try{
-      amount = parseInt(evalString(amount));
+      amount = parseInt(math.evaluate(amount));
     }catch(err){
       amount = -1;
     }

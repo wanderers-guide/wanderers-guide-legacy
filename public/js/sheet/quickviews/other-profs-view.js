@@ -31,6 +31,32 @@ function openOtherProfsQuickview(data) {
         qContent.append('<p><strong>Extra Bonus:</strong> '+signNumber(userBonus)+'</p>');
     }
 
+    if(data.ExtraData.SpellTradition != null && data.ExtraData.SpellPart != null){
+      let spellBook = g_spellBookArray.find(spellBook => {
+        return (spellBook.SpellList == data.ExtraData.SpellTradition);
+      });
+      if(spellBook != null){
+        if(data.ExtraData.SpellPart == 'Attack') {
+
+          let spellAttack = getStatTotal(data.ExtraData.SpellTradition+'_SPELL_ATTACK');
+          let abilityMod = getModOfValue(spellBook.SpellKeyAbility);
+          spellAttack += abilityMod;
+
+          qContent.append('<p><strong>'+data.Name+':</strong> '+signNumber(spellAttack)+'</p>');
+
+        } else if(data.ExtraData.SpellPart == 'DC') {
+
+          let spellDC = getStatTotal(data.ExtraData.SpellTradition+'_SPELL_DC');
+          let abilityMod = getModOfValue(spellBook.SpellKeyAbility);
+          spellDC += abilityMod;
+          spellDC += 10;
+
+          qContent.append('<p><strong>'+data.Name+':</strong> '+spellDC+'</p>');
+
+        }
+      }
+    }
+
     // Display Note Field
     let noteFieldSrcStruct = {
         sourceType: 'bonus-area',
