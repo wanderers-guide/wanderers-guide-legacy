@@ -198,7 +198,8 @@ function openCustomizeItemQuickview(data) {
                     weaponDamageType: weaponDamageType,
 
                     storageMaxBulk: storageMaxBulk,
-                });
+                }
+            );
         }
 
     });

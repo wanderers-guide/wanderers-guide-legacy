@@ -103,10 +103,16 @@ function displayInventorySection(data){
     $('#inventoryContent').html('');
 
     for(const invItem of g_invStruct.InvItems){
+        const item = g_itemMap.get(invItem.itemID+"");
+        if(item == null) { continue; }
 
         let willDisplay = true;
         if(invItem.bagInvItemID != null){
-            willDisplay = false;
+          willDisplay = false;
+        }
+
+        if(isUnarmedAttack(item)){
+          willDisplay = false;
         }
 
         if(invSearchInput == 'weapons'){
@@ -147,7 +153,7 @@ function displayInventorySection(data){
         }
 
         if(willDisplay) {
-            displayInventoryItem(invItem, openBagInvItemArray, data);
+            displayInventoryItem(invItem, item, openBagInvItemArray, data);
         }
 
     }
@@ -157,10 +163,8 @@ function displayInventorySection(data){
 
 }
 
-function displayInventoryItem(invItem, openBagInvItemArray, data) {
+function displayInventoryItem(invItem, item, openBagInvItemArray, data) {
 
-    let item = g_itemMap.get(invItem.itemID+"");
-    if(item == null) { return; }
     let itemIsStorage = (item.StorageData != null);
     let itemIsStorageAndEmpty = false;
     let itemStorageBulkAmt = null;
@@ -328,7 +332,7 @@ function displayInventoryItem(invItem, openBagInvItemArray, data) {
                             ItemIsStorage : baggedItemIsStorage,
                             ItemIsStorageAndEmpty : true
                         },
-                        Data : data
+                        ExtraData : {}
                     });
                 });
 
@@ -460,7 +464,7 @@ function displayInventoryItem(invItem, openBagInvItemArray, data) {
                 ItemIsStorage : itemIsStorage,
                 ItemIsStorageAndEmpty : itemIsStorageAndEmpty
             },
-            Data : data
+            ExtraData : {}
         });
     });
 

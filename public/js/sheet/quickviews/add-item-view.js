@@ -266,7 +266,8 @@ function displayAddItem(itemID, itemDataStruct, data){
                   storageMaxBulk: null,
 
                   quantity: 1
-                });
+                }
+            );
             $(this).parent().removeClass('is-loading');
           }
 

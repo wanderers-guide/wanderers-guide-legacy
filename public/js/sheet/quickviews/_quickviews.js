@@ -107,6 +107,8 @@ function openQuickView(type, data, noProtection=false) {
         openAddResistQuickview(data);
     } else if(type == 'addWeakView'){
         openAddWeakQuickview(data);
+    } else if(type == 'addUnarmedAttackView'){
+        openAddUnarmedAttackQuickview(data);
     } else if(type == 'tagView'){
         openTagQuickview(data);
     } else if(type == 'classDCView'){
@@ -121,7 +123,7 @@ function openQuickView(type, data, noProtection=false) {
         openAnimalCompQuickview(data);
     } else if(type == 'familiarView'){
       openFamiliarQuickview(data);
-  }
+    }
 
 }
 
