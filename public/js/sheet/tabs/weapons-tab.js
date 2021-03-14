@@ -105,7 +105,7 @@ function openWeaponsTab(data) {
       if(itemID == FIST_ITEM_ID){ qty = 0; } else { qty = 1; }
       socket.emit("requestAddItemToInv",
           getCharIDFromURL(),
-          g_character.inventoryID,
+          g_invStruct.Inventory.id,
           itemID,
           qty);
 

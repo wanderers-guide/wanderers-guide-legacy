@@ -49,7 +49,7 @@ function changeDetailsTab(type, data){
 
 function displayFeatsSection(data) {
 
-    $('#detailsTabContent').append('<div class="columns is-mobile is-marginless"><div class="column"><p class="control has-icons-left"><input id="featsSearch" class="input" type="text" autocomplete="off" placeholder="Search Feats"><span class="icon is-left"><i class="fas fa-search" aria-hidden="true"></i></span></p></div><div class="column is-narrow"><div class="select"><select id="featsFilterByType"><option value="All">All</option><option value="Class">Class</option><option value="Ancestry">Ancestry</option><option value="Other">Other</option></select></div></div></div><div id="featsContent" class="use-custom-scrollbar" style="height: 505px; max-height: 505px; overflow-y: auto;"></div>');
+    $('#detailsTabContent').append('<div class="columns is-mobile is-marginless"><div class="column"><p class="control has-icons-left"><input id="featsSearch" class="input" type="text" autocomplete="off" placeholder="Search Feats"><span class="icon is-left"><i class="fas fa-search" aria-hidden="true"></i></span></p></div><div class="column is-narrow"><div class="select"><select id="featsFilterByType"><option value="All">All</option><option value="Class">Class</option><option value="Ancestry">Ancestry</option><option value="Skill">Skill</option><option value="Other">Other</option></select></div></div></div><div id="featsContent" class="use-custom-scrollbar" style="height: 505px; max-height: 505px; overflow-y: auto;"></div>');
 
     $('#featsFilterByType').val(g_selectedDetailsOptionValue);
     displayFeatContent(data);
@@ -92,11 +92,14 @@ function displayFeatContent(data){
     if(selectedFeatFilter === "All"){
         displayClassFeats(data, featsSearchValue);
         displayAncestryFeats(data, featsSearchValue);
+        displaySkillFeats(data, featsSearchValue);
         displayOtherFeats(data, featsSearchValue);
     } else if(selectedFeatFilter === "Class"){
         displayClassFeats(data, featsSearchValue);
     } else if(selectedFeatFilter === "Ancestry"){
         displayAncestryFeats(data, featsSearchValue);
+    } else if(selectedFeatFilter === "Skill"){
+        displaySkillFeats(data, featsSearchValue);
     } else if(selectedFeatFilter === "Other"){
         displayOtherFeats(data, featsSearchValue);
     }
@@ -119,6 +122,12 @@ function displayAncestryFeats(data, featsSearchValue){
     featDisplayByType(data, charTagsArray, featsSearchValue);
 }
 
+function displaySkillFeats(data, featsSearchValue){
+  $('#featsContent').append('<p class="is-size-5 has-text-grey-light has-text-weight-bold text-left pl-5">Skill</p>');
+  $('#featsContent').append('<hr class="hr-light" style="margin-top:-0.5em; margin-bottom:0em;">');
+  featDisplayByType(data, ['Skill'], featsSearchValue);
+}
+
 function displayOtherFeats(data, featsSearchValue){
     $('#featsContent').append('<p class="is-size-5 has-text-grey-light has-text-weight-bold text-left pl-5">Other</p>');
     $('#featsContent').append('<hr class="hr-light" style="margin-top:-0.5em; margin-bottom:0em;">');
@@ -134,12 +143,13 @@ function featDisplayByType(data, sortingTagNameArray, featsSearchValue){
         if(featData == null) { continue; }
         let featTags = featData.Tags;
         if(sortingTagNameArray == null){
-            // Is Other, display if feat is NOT ancestry or class
+            // Is Other, display if feat is NOT ancestry, class, or skill
             let sortingTagNameArray = [];
             for(let dataTag of data.AncestryTagsArray){
                 sortingTagNameArray.push(dataTag.value);
             }
             sortingTagNameArray.push(data.ClassDetails.Class.name);
+            sortingTagNameArray.push('Skill');
             let tag = featTags.find(tag => {
                 return sortingTagNameArray.includes(tag.name);
             });
@@ -263,7 +273,11 @@ function displayAbilitiesSection(data) {
 
     $('#detailsTabContent').append('<div class="columns is-mobile is-marginless"><div class="column"><p class="control has-icons-left"><input id="abilitiesSearch" class="input" autocomplete="off" type="text" placeholder="Search Abilities"><span class="icon is-left"><i class="fas fa-search" aria-hidden="true"></i></span></p></div><div class="column is-narrow"><div class="select"><select id="abilitiesFilterByType"><option value="All">All</option><option value="Class">Class</option><option value="Ancestry">Ancestry</option><option value="Other">Other</option></select></div></div></div><div id="abilitiesContent" class="use-custom-scrollbar" style="height: 505px; max-height: 505px; overflow-y: auto;"></div>');
 
-    $('#abilitiesFilterByType').val(g_selectedDetailsOptionValue);
+    if(g_selectedDetailsOptionValue === 'Skill'){
+      $('#abilitiesFilterByType').val('All');
+    } else {
+      $('#abilitiesFilterByType').val(g_selectedDetailsOptionValue);
+    }
     displayAbilitiesContent(data);
 
 }

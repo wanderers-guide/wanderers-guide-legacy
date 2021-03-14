@@ -39,6 +39,8 @@ function closeQuickViewLeft() {
 
 
 // ~~~~~~~~~~ Stats Quickview ~~~~~~~~~~ //
+let g_openFeatsDropDown = false;
+
 function openLeftStatsQuickview(data) {
 
   $('#quickviewLeftDefault').addClass('is-active');
@@ -90,7 +92,20 @@ function openLeftStatsQuickview(data) {
 
   qContent.append('<hr class="m-2">');
 
-  qContent.append('<p class="is-size-5 has-text-centered">My Feats</p>');
+  qContent.append('<p id="myFeatsQuickviewName" class="is-size-5 has-text-centered cursor-clickable">My Feats <sub class="icon is-small pl-1"><i id="myFeatsQuickviewChevron" class="fas fa-lg fa-chevron-down"></i></sub></p><div id="myFeatsQuickviewSection" class="mb-3 is-hidden"></div>');
+
+  $('#myFeatsQuickviewName').click(function() {
+    g_openFeatsDropDown = !g_openFeatsDropDown;
+    if(g_openFeatsDropDown) {
+      $("#myFeatsQuickviewSection").removeClass('is-hidden');
+      $("#myFeatsQuickviewChevron").removeClass('fa-chevron-down');
+      $("#myFeatsQuickviewChevron").addClass('fa-chevron-up');
+    } else {
+      $("#myFeatsQuickviewSection").addClass('is-hidden');
+      $("#myFeatsQuickviewChevron").removeClass('fa-chevron-up');
+      $("#myFeatsQuickviewChevron").addClass('fa-chevron-down');
+    }
+  });
 
   const sortedFeatArray = wscChoiceStruct.FeatArray.sort(
     function(a, b) {
@@ -106,7 +121,7 @@ function openLeftStatsQuickview(data) {
     if(featData.value.level <= 0) { continue; }
 
     let featButtonID = 'myFeatViewButton-'+i;
-    qContent.append('<button id="'+featButtonID+'" class="button is-small is-fullwidth my-1" style="max-width: 300px; margin: auto;">'+featData.value.name+'</button>');
+    $('#myFeatsQuickviewSection').append('<button id="'+featButtonID+'" class="button is-small is-fullwidth my-1 pos-relative" style="max-width: 300px; margin: auto;"><i class="pos-absolute pos-l-0 pl-2 is-size-7 has-text-grey">'+featData.value.level+'</i>'+featData.value.name+'</button>');
 
     $('#'+featButtonID).click(function(event) {
       let featStruct = g_featMap.get(featData.value.id+"");
@@ -120,7 +135,7 @@ function openLeftStatsQuickview(data) {
     
   }
 
-  qContent.append('<hr class="m-2 mt-4">');
+  qContent.append('<hr class="m-2">');
 
   qContent.append('<div class="columns is-centered is-marginless"><div id="finalSkillTrainingColumn" class="column pl-0"></div><div id="finalLanguagesColumn" class="column pr-0"></div></div>');
 

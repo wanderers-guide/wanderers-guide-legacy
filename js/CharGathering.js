@@ -1268,6 +1268,8 @@ module.exports = class CharGathering {
     }
 
     static getClass(charID, classID) {
+      return Character.findOne({ where: { id: charID} })
+      .then((character) => {
         return Class.findOne({
             where: { id: classID },
             raw: true,
@@ -1286,6 +1288,12 @@ module.exports = class CharGathering {
                     return ClassAbility.findAll({
                         order: [['level', 'ASC'],['name', 'ASC'],],
                         where: {
+                            contentSrc: {
+                              [Op.or]: CharContentSources.getSourceArray(character)
+                            },
+                            homebrewID: {
+                              [Op.or]: CharContentHomebrew.getHomebrewArray(character)
+                            },
                             [Op.or]: [
                                 { classID: cClass.id },
                                 { indivClassName: cClass.name }
@@ -1300,6 +1308,7 @@ module.exports = class CharGathering {
                 } 
             });
         });
+      });
     }
 
     static getCharacter(charID) {
