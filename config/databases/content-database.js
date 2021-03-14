@@ -14,7 +14,6 @@ module.exports =  new Sequelize(keys.contentDB.DbName, keys.cloudSQL.Username, k
   pool: {
     max: 90,
     min: 0,
-    acquire: 30000,
     idle: 10000
   },
 });

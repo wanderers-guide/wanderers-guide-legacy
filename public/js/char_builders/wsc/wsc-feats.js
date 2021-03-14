@@ -402,11 +402,15 @@ function displayFeatChoice(srcStruct, locationID, selectionName, tagsArray, feat
     }
 
     let featSelectionArray = [];
+    let className = (wscChoiceStruct.ClassDetails.Class != null) ? wscChoiceStruct.ClassDetails.Class.name : null;
 
     let prevLevel = 100;
     for(const featStruct of g_featMap){
         let feat = featStruct[1];
         if(feat.Feat.level < 1 && customList == null){ continue; }
+
+        // You cannot select the dedication for your own class
+        if(className != null && feat.Feat.name === className+' Dedication'){ continue; }
 
         let hasCorrectTags = false;
         if(customList == null) {
