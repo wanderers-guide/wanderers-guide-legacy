@@ -10,6 +10,8 @@ function openWeaponsTab(data) {
         let weaponListEntryID = 'weaponListEntry'+weaponEntryID;
 
         let calcStruct = getAttackAndDamage(item, invItem);
+        //let itemTagArray = getItemTraitsArray(item, invItem);
+
         let weaponRange = '-';
         let weaponReload = '-';
         if(item.WeaponData.isRanged == 1){
@@ -88,7 +90,7 @@ function openWeaponsTab(data) {
     }
     for(const invItem of g_invStruct.InvItems){
       const item = g_itemMap.get(invItem.itemID+"");
-      if(isUnarmedAttack(item) && item.id != FIST_ITEM_ID){ // Is Non-Custom Unarmed Attack
+      if(isUnarmedAttack(item) && item.Item.id != FIST_ITEM_ID){ // Is Non-Custom Unarmed Attack
         const itemWeaponID = Array.from(phyFeatWeaponMap.values()).find(itemWeaponID => {
           return itemWeaponID === invItem.itemID;
         });

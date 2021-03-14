@@ -177,6 +177,23 @@ function processSheetCode(wscCode, sourceName, isTest=false){
           continue;
         }
 
+        if(wscStatementUpper.includes("SET-MAP=")){
+          if(isTest) {continue;}
+          // TIER_1 = (5/10 or 4/8 agile)
+          // TIER_2 = (4/8 or 3/6 agile)
+          // TIER_3 = (3/6 or 2/4 agile)
+          // TIER_4 = (2/4 or 1/2 agile)
+          let mapTier = wscStatementUpper.split('=')[1];
+
+          if(mapTier == 'TIER_1' || mapTier == 'TIER_2' || mapTier == 'TIER_3' || mapTier == 'TIER_4'){
+            gState_MAP = mapTier;
+          } else {
+            displayError('Attempted to set multiple attack penalty to unknown tier "'+mapTier+'"');
+          }
+
+          continue;
+        }
+
         if(wscStatementUpper == "SET-FINESSE-MELEE-USE-DEX-DAMAGE"){
             if(isTest) {continue;}
 

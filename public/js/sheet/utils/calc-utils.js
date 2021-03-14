@@ -251,3 +251,40 @@ function getAttackAndDamage(itemData, invItem){
     }
 
 }
+
+
+// MAP Calc //
+function generateStringMAP(attackBonus, itemTagArray){
+
+  attackBonus = parseInt(attackBonus);
+  let agileTag = itemTagArray.find(tag => {
+    return tag.Tag.id == 43; // Hardcoded Agile Tag ID
+  });
+
+  if(gState_MAP == 'TIER_1'){
+    if(agileTag == null){
+      return signNumber(attackBonus)+'/'+signNumber(attackBonus-5)+'/'+signNumber(attackBonus-10);
+    } else {
+      return signNumber(attackBonus)+'/'+signNumber(attackBonus-4)+'/'+signNumber(attackBonus-8);
+    }
+  } else if(gState_MAP == 'TIER_2'){
+    if(agileTag == null){
+      return signNumber(attackBonus)+'/'+signNumber(attackBonus-4)+'/'+signNumber(attackBonus-8);
+    } else {
+      return signNumber(attackBonus)+'/'+signNumber(attackBonus-3)+'/'+signNumber(attackBonus-6);
+    }
+  } else if(gState_MAP == 'TIER_3'){
+    if(agileTag == null){
+      return signNumber(attackBonus)+'/'+signNumber(attackBonus-3)+'/'+signNumber(attackBonus-6);
+    } else {
+      return signNumber(attackBonus)+'/'+signNumber(attackBonus-2)+'/'+signNumber(attackBonus-4);
+    }
+  } else if(gState_MAP == 'TIER_4'){
+    if(agileTag == null){
+      return signNumber(attackBonus)+'/'+signNumber(attackBonus-2)+'/'+signNumber(attackBonus-4);
+    } else {
+      return signNumber(attackBonus)+'/'+signNumber(attackBonus-1)+'/'+signNumber(attackBonus-2);
+    }
+  }
+
+}

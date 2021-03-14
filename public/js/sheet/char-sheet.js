@@ -20,6 +20,11 @@ let gState_mightyBulwark;
 let gState_addLevelToUntrainedWeaponAttack;
 let gState_addLevelToUntrainedSkill;
 let gState_displayCompanionTab;
+let gState_MAP = 'TIER_1';
+// TIER_1 = (5/10 or 4/8 agile)
+// TIER_2 = (4/8 or 3/6 agile)
+// TIER_3 = (3/6 or 2/4 agile)
+// TIER_4 = (2/4 or 1/2 agile)
 /* ~~~~~~~~~~~~~~~~~~~ */
 
 let g_calculatedStats = null;

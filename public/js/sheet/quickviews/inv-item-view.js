@@ -170,7 +170,7 @@ function openInvItemQuickview(data) {
             let calcStruct = getAttackAndDamage(data.Item, data.InvItem);
 
             qContent.append('<div class="tile text-center is-flex"><div class="tile is-child is-6"><strong>Attack Bonus</strong></div><div class="tile is-child is-6"><strong>Damage</strong></div></div>');
-            qContent.append('<div class="tile text-center is-flex"><div class="tile is-child is-6"><p class="pr-1 stat-roll-btn">'+calcStruct.AttackBonus+'</p></div><div class="tile is-child is-6"><p class="damage-roll-btn">'+calcStruct.Damage+'</p></div></div>');
+            qContent.append('<div class="tile text-center is-flex"><div class="tile is-child is-6"><span class="has-text-grey-light pr-1 stat-roll-btn has-tooltip-top" data-tooltip="'+generateStringMAP(calcStruct.AttackBonus, tagArray)+'">'+calcStruct.AttackBonus+'</span></div><div class="tile is-child is-6"><span class="has-text-grey-light damage-roll-btn">'+calcStruct.Damage+'</span></div></div>');
             if(gOption_hasDiceRoller) { refreshStatRollButtons(); }
 
             qContent.append('<hr class="m-2">');
@@ -182,7 +182,7 @@ function openInvItemQuickview(data) {
             let calcStruct = getAttackAndDamage(data.Item, data.InvItem);
 
             qContent.append('<div class="tile text-center is-flex"><div class="tile is-child is-6"><strong>Attack Bonus</strong></div><div class="tile is-child is-6"><strong>Damage</strong></div></div>');
-            qContent.append('<div class="tile text-center is-flex"><div class="tile is-child is-6"><p class="pr-1 stat-roll-btn">'+calcStruct.AttackBonus+'</p></div><div class="tile is-child is-6"><p class="damage-roll-btn">'+calcStruct.Damage+'</p></div></div>');
+            qContent.append('<div class="tile text-center is-flex"><div class="tile is-child is-6"><span class="has-text-grey-light pr-1 stat-roll-btn has-tooltip-top" data-tooltip="'+generateStringMAP(calcStruct.AttackBonus, tagArray)+'">'+calcStruct.AttackBonus+'</span></div><div class="tile is-child is-6"><span class="has-text-grey-light damage-roll-btn">'+calcStruct.Damage+'</span></div></div>');
             if(gOption_hasDiceRoller) { refreshStatRollButtons(); }
 
             qContent.append('<hr class="m-2">');
