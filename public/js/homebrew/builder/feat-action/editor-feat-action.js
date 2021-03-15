@@ -73,7 +73,7 @@ socket.on("returnHomebrewFeatDetailsPlus", function(featsObject, classObject, an
         finishFeat(true);
     });
 
-    $('.pageloader').addClass("fadeout");
+    stopDiceLoader();
 });
 
 function getClassIDFromFeat(feat){

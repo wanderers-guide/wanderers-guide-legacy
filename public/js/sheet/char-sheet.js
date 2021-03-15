@@ -119,7 +119,7 @@ $(function () {
       if(!isSheetInit){
         displayError('Sheet took too long to load. There may have been an issue when loading.');
         $('#sheet-container').addClass('is-hidden');
-        $('.pageloader').addClass("fadeout");
+        stopDiceLoader();
       }
     }, 45000); // 45 seconds
 
@@ -130,11 +130,14 @@ $(function () {
     socket.emit("requestCharacterSheetInfo",
         getCharIDFromURL());
 
+    startDiceLoader();
+    upTickDiceLoaderToPercentage(85, 25);
 });
 
 
 socket.on("returnCharacterSheetInfo", function(charInfo, userPermissions, viewOnly){
     isViewOnly = viewOnly;
+    setDiceLoaderPercentage(85);
 
     // View Only //
     if(isViewOnly){
@@ -330,7 +333,8 @@ socket.on("returnCharacterSheetInfo", function(charInfo, userPermissions, viewOn
     }
 
     // Turn off page loading
-    $('.pageloader').addClass("fadeout");
+    setDiceLoaderPercentage(100);
+    stopDiceLoader();
     isSheetInit = true;
 });
 
@@ -834,7 +838,7 @@ function displayInformation() {
     ////////////////////////////////////////////////////////////////////////////////////////////////
     $('#copyCharButton').click(function() {
       copyCharacter(getCharIDFromURL());
-      $('.subpageloader').removeClass('is-hidden');
+      startSpinnerSubLoader();
     });
 
     $('#exportCharButton').click(function() {

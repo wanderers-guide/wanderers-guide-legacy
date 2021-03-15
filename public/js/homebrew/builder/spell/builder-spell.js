@@ -16,7 +16,7 @@ $(function () {
     });
 
     if($("#createButton").length){// If button exists
-      $('.pageloader').addClass("fadeout");
+      stopDiceLoader();
     }
 });
 

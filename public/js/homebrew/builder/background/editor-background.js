@@ -38,5 +38,5 @@ socket.on("returnHomebrewBackgroundDetails", function(backgrounds){
         finishBackground(true);
     });
 
-    $('.pageloader').addClass("fadeout");
+    stopDiceLoader();
 });

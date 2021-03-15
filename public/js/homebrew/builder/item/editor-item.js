@@ -157,7 +157,7 @@ socket.on("returnHomebrewItemDetails", function(itemObject){
         finishItem(true);
     });
 
-    $('.pageloader').addClass("fadeout");
+    stopDiceLoader();
 });
 
 function tagArrayDifference(arr1, arr2) {

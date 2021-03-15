@@ -84,5 +84,5 @@ socket.on("returnHomebrewClassDetails", function(classObject, featsObject){
         finishClassFeature(true);
     });
 
-    $('.pageloader').addClass("fadeout");
+    stopDiceLoader();
 });

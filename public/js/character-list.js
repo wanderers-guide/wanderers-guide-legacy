@@ -103,7 +103,7 @@ function initCharacterImport(){
             try {
               let charExportData = JSON.parse(e.target.result);
               socket.emit("requestCharImport", charExportData);
-              $('.subpageloader').removeClass('is-hidden');
+              startSpinnerSubLoader();
             } catch (err) {
               console.log(err);
               console.log('Failed to import "'+capturedFile.name+'"');
@@ -139,7 +139,7 @@ function initCharacterCopy(){
   $('#btn-duplicate-character').click(function() {
     copyCharacter(activeModalCharID);
     $('.modal-card-close').trigger('click');
-    $('.subpageloader').removeClass('is-hidden');
+    startSpinnerSubLoader();
   });
 
 }

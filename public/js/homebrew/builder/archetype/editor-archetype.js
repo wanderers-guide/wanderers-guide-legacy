@@ -127,5 +127,5 @@ socket.on("returnHomebrewArchetypeDetails", function(archetypeArray, featsObject
         finishArchetype(true);
     });
 
-    $('.pageloader').addClass("fadeout");
+    stopDiceLoader();
 });

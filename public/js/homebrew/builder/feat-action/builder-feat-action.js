@@ -137,7 +137,7 @@ socket.on("returnHomebrewFeatDetailsPlus", function(featsObject, classObject, an
     });
 
     if($("#createButton").length){// If button exists
-      $('.pageloader').addClass("fadeout");
+      stopDiceLoader();
     }
 });
 

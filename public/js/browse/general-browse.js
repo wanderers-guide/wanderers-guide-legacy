@@ -427,5 +427,5 @@ function displayDefaultResults(){
 
 function finishLoadingPage() {
   // Turn off page loading
-  $('.pageloader').addClass("fadeout");
+  stopDiceLoader();
 }

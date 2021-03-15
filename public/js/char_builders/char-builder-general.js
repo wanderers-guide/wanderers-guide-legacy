@@ -212,11 +212,11 @@ function initBuilderSteps(){
 
 function startLoadingPage() {
   // Turn on page loading
-  $('.pageloader').removeClass("fadeout");
+  startSpinnerLoader();
 }
 function finishLoadingPage() {
   // Turn off page loading
-  $('.pageloader').addClass("fadeout");
+  stopSpinnerLoader();
 }
 
 function timeOutFinishLoad(){

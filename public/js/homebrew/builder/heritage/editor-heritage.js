@@ -30,5 +30,5 @@ socket.on("returnHomebrewHeritageDetails", function(heritageArray, ancestryArray
         finishHeritage(true);
     });
 
-    $('.pageloader').addClass("fadeout");
+    stopDiceLoader();
 });

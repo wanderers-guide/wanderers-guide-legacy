@@ -7,13 +7,13 @@ let g_homebrewBundles = null;
 function openUserContent(){
   window.history.pushState('homebrew', '', '/homebrew/?sub_tab=content');// Update URL
   socket.emit('requestHomebrewBundles');
-  $('.subpageloader').removeClass('is-hidden');
+  startSpinnerSubLoader();
 }
 
 socket.on("returnHomebrewBundles", function(homebrewBundles, canMakeHomebrew){
   g_homebrewBundles = homebrewBundles;
   
-  $('.subpageloader').addClass('is-hidden');
+  stopSpinnerSubLoader();
   $('#tabContent').html('');
   $('#tabContent').addClass('is-hidden');
   $('#tabContent').load("/templates/homebrew/display-user-content.html");

@@ -4,7 +4,7 @@
 
 class DisplayAncestry {
   constructor(containerID, ancestryID, featMap, homebrewID=null) {
-    $('.subpageloader').removeClass('is-hidden');
+    startSpinnerSubLoader();
 
     featMap = new Map([...featMap.entries()].sort(
       function(a, b) {
@@ -28,7 +28,7 @@ class DisplayAncestry {
         url: "/templates/display-ancestry.html",   
         success : function(text)
         {
-          $('.subpageloader').addClass('is-hidden');
+          stopSpinnerSubLoader();
 
           $('#ancestry-back-btn').click(function() {
             $('#'+ancestryDisplayContainerID).remove();

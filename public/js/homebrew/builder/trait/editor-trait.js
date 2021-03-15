@@ -28,5 +28,5 @@ socket.on("returnHomebrewTraitDetails", function(traits){
         finishTrait(true);
     });
 
-    $('.pageloader').addClass("fadeout");
+    stopDiceLoader();
 });

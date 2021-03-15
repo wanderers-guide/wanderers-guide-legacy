@@ -26,7 +26,7 @@ socket.on("returnHomebrewHeritageDetails", function(heritageArray, ancestryArray
     });
 
     if($("#createButton").length){// If button exists
-      $('.pageloader').addClass("fadeout");
+      stopDiceLoader();
     }
 });
 

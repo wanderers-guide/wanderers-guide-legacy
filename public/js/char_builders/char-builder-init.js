@@ -103,7 +103,7 @@ socket.on("returnCharacterDetails", function(character, clientsWithAccess, hBund
     handleCharacterOptions(character, hBundles, progessBundles);
 
     // Turn off page loading
-    $('.pageloader').addClass("fadeout");
+    stopDiceLoader();
 
 });
 
