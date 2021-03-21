@@ -23,7 +23,7 @@ function getAttackAndDamage(itemData, invItem){
     if(itemData.WeaponData.isMelee == 1){
 
         let finesseTag = tagArray.find(tag => {
-            return tag.Tag.id == 42; // Hardcoded Finesse Tag ID
+            return tag.id == 42; // Hardcoded Finesse Tag ID
         });
         let abilMod = strMod;
         if(finesseTag != null){
@@ -48,7 +48,7 @@ function getAttackAndDamage(itemData, invItem){
         }
 
         let splashTag = tagArray.find(tag => {
-            return tag.Tag.id == 391; // Hardcoded Splash Tag ID
+            return tag.id == 391; // Hardcoded Splash Tag ID
         });
         let dmgStrBonus = '';
         if(gState_hasFinesseMeleeUseDexDamage && finesseTag != null){
@@ -135,13 +135,13 @@ function getAttackAndDamage(itemData, invItem){
     } else if(itemData.WeaponData.isRanged == 1){
 
         let thrownTag = tagArray.find(tag => {
-            return 47 <= tag.Tag.id && tag.Tag.id <= 54; // Hardcoded Thrown Tag ID Range (47-54)
+            return 47 <= tag.id && tag.id <= 54; // Hardcoded Thrown Tag ID Range (47-54)
         });
         let splashTag = tagArray.find(tag => {
-            return tag.Tag.id == 391; // Hardcoded Splash Tag ID
+            return tag.id == 391; // Hardcoded Splash Tag ID
         });
         let propulsiveTag = tagArray.find(tag => {
-            return tag.Tag.id == 653; // Hardcoded Propulsive Tag ID
+            return tag.id == 653; // Hardcoded Propulsive Tag ID
         });
 
         let dmgStrSigned = '';
@@ -258,7 +258,7 @@ function generateStringMAP(attackBonus, itemTagArray){
 
   attackBonus = parseInt(attackBonus);
   let agileTag = itemTagArray.find(tag => {
-    return tag.Tag.id == 43; // Hardcoded Agile Tag ID
+    return tag.id == 43; // Hardcoded Agile Tag ID
   });
 
   if(gState_MAP == 'TIER_1'){

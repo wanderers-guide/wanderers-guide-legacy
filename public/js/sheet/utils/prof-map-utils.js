@@ -22,7 +22,7 @@ function hasFamiliarityReduceProf(itemData){
         let traitName = weaponFamiliarity.value+' - ITEM';
         
         let tag = itemData.TagArray.find(tag => {
-            return tag.Tag.name.toUpperCase() == traitName;
+            return tag.name.toUpperCase() == traitName;
         });
         if(tag != null){
             return true;

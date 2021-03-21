@@ -35,7 +35,7 @@ function filterItemSearch(){
     console.log('Filtering by Traits...');
     for(const [itemID, itemStruct] of itemMap.entries()){
       let foundTags = itemStruct.TagArray.filter(tag => {
-        return tagsFilter.includes(tag.Tag.id+"");
+        return tagsFilter.includes(tag.id+"");
       });
       if(foundTags.length !== tagsFilter.length){
         itemMap.delete(itemID);

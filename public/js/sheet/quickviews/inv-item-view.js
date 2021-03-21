@@ -80,14 +80,14 @@ function openInvItemQuickview(data) {
     }
 
     let tagArray = getItemTraitsArray(data.Item, data.InvItem);
-    for(const tagStruct of tagArray){
-        let tagDescription = tagStruct.Tag.description;
+    for(const tag of tagArray){
+        let tagDescription = tag.description;
         if(tagDescription.length > g_tagStringLengthMax){
             tagDescription = tagDescription.substring(0, g_tagStringLengthMax);
             tagDescription += '...';
         }
-        tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-very-small is-info has-tooltip-bottom has-tooltip-multiline tagButton" data-tooltip="'+processTextRemoveIndexing(tagDescription)+'">'+tagStruct.Tag.name+'</button>';
-        if(tagStruct.Tag.id === 235){ // Hardcoded Invested Tag ID
+        tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-very-small is-info has-tooltip-bottom has-tooltip-multiline tagButton" data-tooltip="'+processTextRemoveIndexing(tagDescription)+'">'+tag.name+'</button>';
+        if(tag.id === 235){ // Hardcoded Invested Tag ID
             if(maxInvests > currentInvests || (maxInvests == currentInvests && data.InvItem.isInvested == 1)) {
                 $('#quickViewTitleRight').html('<span class="pr-2"><span id="investedIconButton" class="button is-very-small is-info is-rounded has-tooltip-left" data-tooltip="Invest ('+currentInvests+'/'+maxInvests+')"><span id="investedIconName" class="pr-1 is-size-7">Invest</span><span class="icon is-small"><i class="fas fa-lg fa-hat-wizard"></i></span></span></span>');
             } else {
@@ -265,7 +265,7 @@ function openInvItemQuickview(data) {
 
     // Item Runes
     let consumableTag = tagArray.find(tag => {
-        return tag.Tag.id == 402; // Hardcoded Consumable Tag ID
+        return tag.id == 402; // Hardcoded Consumable Tag ID
     });
     if(!viewOnly && consumableTag == null){ // In ViewOnly mode you cannot view weapon runes
         if(data.Item.WeaponData != null){

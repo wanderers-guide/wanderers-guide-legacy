@@ -26,19 +26,20 @@ let activeSearchTab = 'ancestry';
 // ~~~~~~~~~~~~~~ // Run on Load // ~~~~~~~~~~~~~~ //
 $(function () {
   
+  startDiceLoader();
   socket.emit("requestBrowse");
 
 });
 
-socket.on("returnBrowse", function(isDeveloper, featsObject, skillObject, itemObject, spellObject, allLanguages, allConditions, allTags, classes, ancestries, archetypes, backgrounds, uniHeritages) {
+socket.on("returnBrowse", function(isDeveloper, searchStruct) {
   g_isDeveloper = isDeveloper;
   
-  let featMap = objToMap(featsObject);
-  let skillMap = objToMap(skillObject);
-  let itemMap = objToMap(itemObject);
-  let spellMap = objToMap(spellObject);
+  let featMap = objToMap(searchStruct.featsObject);
+  let skillMap = objToMap(searchStruct.skillObject);
+  let itemMap = objToMap(searchStruct.itemObject);
+  let spellMap = objToMap(searchStruct.spellObject);
 
-  initBrowse(featMap, skillMap, itemMap, spellMap, allLanguages, allConditions, allTags, classes, ancestries, archetypes, backgrounds, uniHeritages);
+  initBrowse(featMap, skillMap, itemMap, spellMap, searchStruct.allLanguages, searchStruct.allConditions, searchStruct.allTags, searchStruct.classes, searchStruct.ancestries, searchStruct.archetypes, searchStruct.backgrounds, searchStruct.uniHeritages);
 });
 
 function initBrowse(featMap, skillMap, itemMap, spellMap, allLanguages, allConditions, allTags, classes, ancestries, archetypes, backgrounds, uniHeritages) {

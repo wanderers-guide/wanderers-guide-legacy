@@ -45,7 +45,7 @@ socket.on("returnBundleContents", function(REQUEST_TYPE, userHasBundle, userOwns
       let tag = allTags.find(tag => {
         return tag.id === itemTag.tagID;
       });
-      if(tag != null) {tags.push({Tag: tag});}
+      if(tag != null) {tags.push(tag);}
     }
     itemStruct.TagArray = tags;
     itemMap.set(itemStruct.Item.id+'', itemStruct);

@@ -148,7 +148,7 @@ socket.on("returnHomebrewItemDetails", function(itemObject){
     }
 
     for(let tag of item.TagArray){
-        $("#inputTags").find('option[value='+tag.Tag.id+']').attr('selected','selected');
+        $("#inputTags").find('option[value='+tag.id+']').attr('selected','selected');
     }
     $("#inputTags").trigger("chosen:updated");
 
@@ -157,24 +157,24 @@ socket.on("returnHomebrewItemDetails", function(itemObject){
         finishItem(true);
     });
 
-    stopDiceLoader();
+    stopSpinnerLoader();
 });
 
 function tagArrayDifference(arr1, arr2) {
     let newArr1 = [];
     for(let tag of arr1){
-        newArr1.push(tag.Tag.id);
+        newArr1.push(tag.id);
     }
     let newArr2 = [];
     for(let tag of arr2){
-        newArr2.push(tag.Tag.id);
+        newArr2.push(tag.id);
     }
     let diffArr = newArr1
       .filter(x => !newArr2.includes(x))
       .concat(newArr2.filter(x => !newArr1.includes(x)));
     let finalDiffArr = [];
     for(let tagID of diffArr){
-        finalDiffArr.push({Tag: {id: tagID}});
+        finalDiffArr.push({id: tagID});
     }
     return finalDiffArr;
   }

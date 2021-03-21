@@ -89,7 +89,7 @@ function openAddUnarmedAttackQuickview(data) {
       }
     } catch (err) {
       for(let tag of itemTagArray){
-        $("#customizeItemTraits").find('option[value='+tag.Tag.id+']').attr('selected','selected');
+        $("#customizeItemTraits").find('option[value='+tag.id+']').attr('selected','selected');
       }
     }
     $('#customizeItemTraits').trigger("chosen:updated");

@@ -17,3 +17,9 @@
 .ldBar.no-percent .ldBar-label:after {
   content: "";
 }
+
+.ldBar-message {
+  padding-top: 10rem;
+  font-size: 0.8rem;
+  color: #666666;
+}

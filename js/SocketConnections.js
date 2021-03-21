@@ -18,6 +18,12 @@ const ClientAPI = require('./ClientAPI');
 const CharStateUtils = require('./CharStateUtils');
 const GeneralUtils = require('./GeneralUtils');
 const UserHomebrew = require('./UserHomebrew');
+
+const CharSheetLoad = require('./loading/Load_CharSheet');
+const CharChoicesLoad = require('./loading/Load_CharChoices');
+const BuilderCoreLoad = require('./loading/Load_BuilderCore');
+const SearchLoad = require('./loading/Load_Search');
+
 const HomeBackReport = require('../models/backgroundDB/HomeBackReport');
 const User = require('../models/contentDB/User');
 
@@ -58,13 +64,13 @@ module.exports = class SocketConnections {
         AuthCheck.getPermissions(socket).then((perms) => {
           AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
             if(ownsChar){
-              CharGathering.getCharacterInfo(charID).then((charInfo) => {
+              CharSheetLoad(socket, charID).then((charInfo) => {
                 socket.emit('returnCharacterSheetInfo', charInfo, perms, false);
               });
             } else {
               CharGathering.getCharacter(charID).then((character) => {
                 if(CharStateUtils.isPublic(character)){
-                  CharGathering.getCharacterInfo(charID).then((charInfo) => {
+                  CharSheetLoad(socket, charID, character).then((charInfo) => {
                     socket.emit('returnCharacterSheetInfo', charInfo, perms, true);
                   });
                 } else {
@@ -778,7 +784,7 @@ module.exports = class SocketConnections {
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
           if(ownsChar){
             CharSaving.saveAncestry(charID, ancestryID).then((result) => {
-              CharGathering.getCharChoices(charID).then((choiceStruct) => {
+              CharChoicesLoad(charID).then((choiceStruct) => {
                 socket.emit('returnAncestryChange', choiceStruct);
               });
             });
@@ -824,7 +830,7 @@ module.exports = class SocketConnections {
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
           if(ownsChar){
             CharSaving.saveBackground(charID, backgroundID).then((result) => {
-              CharGathering.getCharChoices(charID).then((choiceStruct) => {
+              CharChoicesLoad(charID).then((choiceStruct) => {
                 socket.emit('returnBackgroundChange', choiceStruct);
               });
             });
@@ -857,7 +863,7 @@ module.exports = class SocketConnections {
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
           if(ownsChar){
             CharSaving.saveClass(charID, classID).then((result) => {
-              CharGathering.getCharChoices(charID).then((choiceStruct) => {
+              CharChoicesLoad(charID).then((choiceStruct) => {
                 socket.emit('returnClassChange', choiceStruct);
               });
             });
@@ -879,8 +885,8 @@ module.exports = class SocketConnections {
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
           if(ownsChar){
             CharGathering.getCharacter(charID).then((character) => {
-              CharGathering.getClass(charID, character.classID).then((classDetails) => {
-                CharGathering.getAncestry(character).then((ancestry) => {
+              CharGathering.getClass(charID, character.classID, character).then((classDetails) => {
+                CharGathering.getAncestry(charID, character).then((ancestry) => {
                   socket.emit('returnBuilderPageFinalize', character, classDetails.Class, ancestry);
                 });
               });
@@ -929,10 +935,8 @@ module.exports = class SocketConnections {
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
           if(ownsChar){
             CharGathering.getCharacter(charID).then((character) => {
-              CharGathering.getBuilderCore(charID).then((coreDataStruct) => {
-                CharGathering.getCharChoices(charID).then((choiceStruct) => {
-                  socket.emit('returnCharBuilderDetails', character, coreDataStruct, choiceStruct);
-                });
+              BuilderCoreLoad(socket, charID, character).then((bStruct) => {
+                socket.emit('returnCharBuilderDetails', character, bStruct.builderCore, bStruct.choiceStruct);
               });
             });
           } else {
@@ -1690,7 +1694,7 @@ module.exports = class SocketConnections {
       socket.on('requestWSCChoices', function(charID, wscCode, srcStruct, locationID){
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
           if(ownsChar){
-            CharGathering.getCharChoices(charID).then((choiceStruct) => {
+            CharChoicesLoad(charID).then((choiceStruct) => {
               socket.emit('returnWSCChoices', wscCode, srcStruct, locationID, choiceStruct);
             });
           }
@@ -1802,8 +1806,7 @@ module.exports = class SocketConnections {
           if(ownsChar){
             CharDataMapping.deleteDataSNumChildren(charID, srcStruct)
             .then((result) => {
-              CharGathering.getCharChoices(charID)
-              .then((choiceStruct) => {
+              CharChoicesLoad(charID).then((choiceStruct) => {
                 socket.emit('returnWSCSrcStructDataClear', choiceStruct);
               });
             });
@@ -2476,30 +2479,8 @@ module.exports = class SocketConnections {
 
       socket.on('requestBrowse', function(){
         AuthCheck.isDeveloper(socket).then((isDeveloper) => {
-          GeneralGathering.getAllFeats().then((featsObject) => {
-            GeneralGathering.getAllSkills().then((skillObject) => {
-              GeneralGathering.getAllItems().then((itemMap) => {
-                GeneralGathering.getAllSpells().then((spellMap) => {
-                  GeneralGathering.getAllLanguages().then((allLanguages) => {
-                    GeneralGathering.getAllConditions().then((allConditions) => {
-                      GeneralGathering.getAllTags().then((allTags) => {
-                        GeneralGathering.getAllClassesBasic().then((classes) => {
-                          GeneralGathering.getAllAncestriesBasic().then((ancestries) => {
-                            GeneralGathering.getAllArchetypes().then((archetypes) => {
-                              GeneralGathering.getAllBackgrounds().then((backgrounds) => {
-                                GeneralGathering.getAllUniHeritages().then((uniHeritages) => {
-                                  socket.emit('returnBrowse', isDeveloper, featsObject, skillObject, mapToObj(itemMap), mapToObj(spellMap), allLanguages, allConditions, allTags, classes, ancestries, archetypes, backgrounds, uniHeritages);
-                                });
-                              });
-                            });
-                          });
-                        });
-                      });
-                    });
-                  });
-                });
-              });
-            });
+          SearchLoad(socket).then((searchStruct) => {
+            socket.emit('returnBrowse', isDeveloper, searchStruct);
           });
         });
       });

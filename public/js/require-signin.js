@@ -3,7 +3,7 @@
 */
 
 $(function () {
-  setInterval(() => {
+  setTimeout(() => {
 
     if(typeof socket === 'undefined'){
       socket = io();

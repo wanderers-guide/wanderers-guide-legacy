@@ -81,7 +81,7 @@ function openCustomizeItemQuickview(data) {
         }
     } catch (err) {
         for(let tag of data.Item.TagArray){
-            $("#customizeItemTraits").find('option[value='+tag.Tag.id+']').attr('selected','selected');
+            $("#customizeItemTraits").find('option[value='+tag.id+']').attr('selected','selected');
         }
     }
     $('#customizeItemTraits').trigger("chosen:updated");

@@ -22,7 +22,7 @@ function hasWeaponCriticalSpecialization(item){
             traitName = traitName+' - ITEM';
 
             let tag = item.TagArray.find(tag => {
-                return tag.Tag.name.toUpperCase() == traitName;
+                return tag.name.toUpperCase() == traitName;
             });
             if(tag != null){
                 return true;
@@ -81,10 +81,10 @@ function hasArmorSpecialization(item){
             let traitName = armorCriticalData.value.replace(/TRAIT\~/g,'');
             traitName = traitName+' - ITEM';
 
-            let tagStruct = item.TagArray.find(tagStruct => {
-                return traitName == tagStruct.Tag.name.toUpperCase();
+            let tag = item.TagArray.find(tag => {
+                return traitName == tag.name.toUpperCase();
             });
-            if(tagStruct != null){
+            if(tag != null){
                 return true;
             }
     

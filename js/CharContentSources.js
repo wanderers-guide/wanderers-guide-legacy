@@ -4,7 +4,16 @@ const Character = require('../models/contentDB/Character');
 module.exports = class CharContentSources {
 
     static getSourceArray(character){
-        return JSON.parse(character.enabledSources);
+      return JSON.parse(character.enabledSources);
+    }
+
+    static getSourceArrayPrisma(character){
+      let array = JSON.parse(character.enabledSources);
+      let newArray = [];
+      for(let arr of array){
+        newArray.push({ contentSrc: arr });
+      }
+      return newArray;
     }
 
     static addSource(charID, sourceName){

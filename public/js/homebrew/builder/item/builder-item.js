@@ -215,7 +215,7 @@ socket.on("returnHomebrewItemDetails", function(itemObject){
     });
 
     if($("#createButton").length){// If button exists
-      stopDiceLoader();
+      stopSpinnerLoader();
     }
 });
 

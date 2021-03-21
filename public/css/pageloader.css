@@ -5,6 +5,22 @@
     transition: visibility 0s 0.5s, opacity 0.3s linear;
 }
 
+.dice-pageloader {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 100;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #161616;
+}
+
 .pageloader {
     position: fixed;
     width: 100%;

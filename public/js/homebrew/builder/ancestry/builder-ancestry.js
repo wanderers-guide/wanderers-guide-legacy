@@ -89,7 +89,7 @@ $(function () {
     });
 
     if($("#createButton").length){// If button exists
-      stopDiceLoader();
+      stopSpinnerLoader();
     }
 });
 

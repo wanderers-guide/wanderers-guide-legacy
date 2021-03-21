@@ -7,13 +7,19 @@ let g_diceLoaderPercentage = 0;
 
 function startDiceLoader(){
   $('.ldBar').removeClass('is-hidden');
-  $('.pageloader').removeClass("fadeout");
-  setDiceLoaderPercentage(5);
-}
+  $('.dice-pageloader').removeClass("fadeout");
 
-function upTickDiceLoaderToPercentage(maxPercentage, estimatedTime){
-  //$('.ldBar').attr('data-duration', estimatedTime);
-  setDiceLoaderPercentage(maxPercentage);
+  $('.ldBar-message').text('Initializing Load');
+  setDiceLoaderPercentage(5);
+
+  socket.off("updateLoadProgess");
+  socket.on("updateLoadProgess", function(data){
+
+    $('.ldBar-message').text(data.message+'...');
+    setDiceLoaderPercentage(g_diceLoaderPercentage+data.upVal);
+
+  });
+
 }
 
 function setDiceLoaderPercentage(percentage){
@@ -27,7 +33,7 @@ function getDiceLoaderPercentage(){
 }
 
 function stopDiceLoader(){
-  $('.pageloader').addClass("fadeout");
+  $('.dice-pageloader').addClass("fadeout");
 }
 
 

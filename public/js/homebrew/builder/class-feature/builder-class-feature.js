@@ -136,7 +136,7 @@ socket.on("returnHomebrewClassDetails", function(classObject, featsObject){
     });
 
     if($("#createButton").length){// If button exists
-      stopDiceLoader();
+      stopSpinnerLoader();
     }
 });
 

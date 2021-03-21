@@ -28,8 +28,8 @@ module.exports = class CharDataMapping {
     */
 
     static setData(charID, source, srcStruct, value){
-        console.log("Set and Delete SNum - Source:"+source+" Value:"+value);
-        console.log(srcStruct);
+        //console.log("Set and Delete SNum - Source:"+source+" Value:"+value);
+        //console.log(srcStruct);
         return CharDataMapping.deleteDataSNumChildren(charID, srcStruct)
         .then((result) => {
             return CharDataMappingModel.upsert({
@@ -47,7 +47,7 @@ module.exports = class CharDataMapping {
     }
 
     static getDataSingle(charID, source, srcStruct){
-        console.log("Get Single - "+source);
+        //console.log("Get Single - "+source);
         return CharDataMappingModel.findOne({
             where: {
                 charID,
@@ -59,7 +59,7 @@ module.exports = class CharDataMapping {
             },
             raw: true,
         }).then((charData) => {
-            console.log(charData);
+            //console.log(charData);
             if(charData != null){
                 return charData;
             } else {
@@ -69,7 +69,7 @@ module.exports = class CharDataMapping {
     }
 
     static getDataAll(charID, source, ModelForMap){
-      console.log("Get All - "+source);
+      //console.log("Get All - "+source);
       if(ModelForMap != null){
         ModelForMap.hasMany(CharDataMappingModel, {foreignKey: 'value'});
         CharDataMappingModel.belongsTo(ModelForMap, {foreignKey: 'value'});
@@ -122,8 +122,8 @@ module.exports = class CharDataMapping {
 
 
     static deleteData(charID, source, srcStruct){
-        console.log("Delete and Delete SNum - Source:"+source);
-        console.log(srcStruct);
+        //console.log("Delete and Delete SNum - Source:"+source);
+        //console.log(srcStruct);
         return CharDataMapping.deleteDataSNumChildren(charID, srcStruct)
         .then((result) => {
             return CharDataMappingModel.destroy({
@@ -142,7 +142,7 @@ module.exports = class CharDataMapping {
     }
 
     static deleteDataBySourceStruct(charID, srcStruct){
-        console.log("Delete by SrcStruct - "+srcStruct.sourceType+" "+srcStruct.sourceLevel+" "+srcStruct.sourceCode);
+        //console.log("Delete by SrcStruct - "+srcStruct.sourceType+" "+srcStruct.sourceLevel+" "+srcStruct.sourceCode);
         return CharDataMappingModel.destroy({
             where: {
                 charID,
@@ -176,7 +176,7 @@ module.exports = class CharDataMapping {
     }
 
     static deleteDataBySource(charID, source){
-        console.log("Delete by Source - "+source);
+        //console.log("Delete by Source - "+source);
         return CharDataMappingModel.destroy({
             where: {
                 charID,
@@ -188,7 +188,7 @@ module.exports = class CharDataMapping {
     }
 
     static deleteDataBySourceType(charID, sourceType){
-        console.log("Delete by SourceType - "+sourceType);
+        //console.log("Delete by SourceType - "+sourceType);
         return CharDataMappingModel.destroy({
             where: {
                 charID,
@@ -200,7 +200,7 @@ module.exports = class CharDataMapping {
     }
 
     static deleteDataBySourceAndType(charID, source, sourceType){
-        console.log("Delete by Source and Type - "+source+" "+sourceType);
+        //console.log("Delete by Source and Type - "+source+" "+sourceType);
         return CharDataMappingModel.destroy({
             where: {
                 charID,
@@ -213,7 +213,7 @@ module.exports = class CharDataMapping {
     }
 
     static deleteDataByGreaterThanSourceLevel(charID, level){
-        console.log("Delete by Greater Than Level - "+level);
+        //console.log("Delete by Greater Than Level - "+level);
         return CharDataMappingModel.destroy({
             where: {
                 charID,
@@ -227,7 +227,7 @@ module.exports = class CharDataMapping {
     }
 
     static deleteDataBySourceCode(charID, sourceCode){
-        console.log("Delete by SourceCode - "+sourceCode);
+        //console.log("Delete by SourceCode - "+sourceCode);
         return CharDataMappingModel.destroy({
             where: {
                 charID,

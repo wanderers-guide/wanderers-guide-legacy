@@ -112,22 +112,22 @@ function changeItemCategoryTab(type, data){
             let magical = itemDataStruct.TagArray.find(tag => {
                 // Hardcoded - Magical Trait ID 41;
                 // Primal Trait ID 304; Occult Trait ID 500; Divine Trait ID 265; Arcane Trait ID 2;
-                return tag.Tag.id === 41 || tag.Tag.id === 304 || tag.Tag.id === 500 || tag.Tag.id === 265 || tag.Tag.id === 2;
+                return tag.id === 41 || tag.id === 304 || tag.id === 500 || tag.id === 265 || tag.id === 2;
             });
             let alchemical = itemDataStruct.TagArray.find(tag => {
-                return tag.Tag.id === 399; // Hardcoded - Alchemical Trait ID 399
+                return tag.id === 399; // Hardcoded - Alchemical Trait ID 399
             });
             willDisplay = (magical == null && alchemical == null && itemDataStruct.Item.itemType != 'CURRENCY');
         } else if(type == 'itemTabMagical') {
             let magical = itemDataStruct.TagArray.find(tag => {
                 // Hardcoded - Magical Trait ID 41;
                 // Primal Trait ID 304; Occult Trait ID 500; Divine Trait ID 265; Arcane Trait ID 2;
-                return tag.Tag.id === 41 || tag.Tag.id === 304 || tag.Tag.id === 500 || tag.Tag.id === 265 || tag.Tag.id === 2;
+                return tag.id === 41 || tag.id === 304 || tag.id === 500 || tag.id === 265 || tag.id === 2;
             });
             willDisplay = (magical != null);
         } else if(type == 'itemTabAlchemical') {
             let alchemical = itemDataStruct.TagArray.find(tag => {
-                return tag.Tag.id === 399; // Hardcoded - Alchemical Trait ID 399
+                return tag.id === 399; // Hardcoded - Alchemical Trait ID 399
             });
             willDisplay = (alchemical != null);
         } else if(type == 'itemTabCurrency') {
@@ -363,13 +363,13 @@ function displayItemDetails(itemDataStruct, addItemDetailsItemID){
         default: break;
     }
 
-    for(const tagStruct of itemDataStruct.TagArray){
-        let tagDescription = tagStruct.Tag.description;
+    for(const tag of itemDataStruct.TagArray){
+        let tagDescription = tag.description;
         if(tagDescription.length > g_tagStringLengthMax){
             tagDescription = tagDescription.substring(0, g_tagStringLengthMax);
             tagDescription += '...';
         }
-        tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-very-small is-info has-tooltip-bottom has-tooltip-multiline tagButton" data-tooltip="'+processTextRemoveIndexing(tagDescription)+'">'+tagStruct.Tag.name+'</button>';
+        tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-very-small is-info has-tooltip-bottom has-tooltip-multiline tagButton" data-tooltip="'+processTextRemoveIndexing(tagDescription)+'">'+tag.name+'</button>';
     }
 
     if(tagsInnerHTML != ''){
@@ -436,7 +436,7 @@ function displayItemDetails(itemDataStruct, addItemDetailsItemID){
     if(itemDataStruct.WeaponData != null){
 
         let consumableTag = itemDataStruct.TagArray.find(tag => {
-            return tag.Tag.id == 402; // Hardcoded Consumable Tag ID
+            return tag.id == 402; // Hardcoded Consumable Tag ID
         });
 
         if(itemDataStruct.WeaponData.isMelee == 1){

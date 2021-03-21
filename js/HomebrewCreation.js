@@ -1019,7 +1019,7 @@ module.exports = class HomebrewCreation {
                 // Add traits from copy
                 for(let otherCopyTag of data.itemCopyOfOther.TagArray){
                     if(otherCopyTag != null){
-                        data.itemTagsArray.push(otherCopyTag.Tag.id);
+                        data.itemTagsArray.push(otherCopyTag.id);
                     }
                 }
 
@@ -1062,7 +1062,7 @@ module.exports = class HomebrewCreation {
                 // Add traits from copy
                 for(let otherCopyTag of data.itemCopyOfOther.TagArray){
                     if(otherCopyTag != null){
-                        data.itemTagsArray.push(otherCopyTag.Tag.id);
+                        data.itemTagsArray.push(otherCopyTag.id);
                     }
                 }
 
@@ -1094,7 +1094,7 @@ module.exports = class HomebrewCreation {
                 // Add traits from copy
                 for(let otherCopyTag of data.itemCopyOfOther.TagArray){
                     if(otherCopyTag != null){
-                        data.itemTagsArray.push(otherCopyTag.Tag.id);
+                        data.itemTagsArray.push(otherCopyTag.id);
                     }
                 }
                 

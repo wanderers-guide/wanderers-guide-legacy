@@ -276,14 +276,14 @@ function getItemTraitsArray(item, invItem){
     let tagIDArray = JSON.parse(invItem.itemTags);
     for(let tag of g_allTags){
       if(tagIDArray.includes(tag.id+"")){
-        tagArray.push({ Tag: tag });
+        tagArray.push(tag);
       }
     }
   } catch (err) {
     tagArray = item.TagArray;
     tagArray = tagArray.sort(
       function(a, b) {
-        return a.Tag.name > b.Tag.name ? 1 : -1;
+        return a.name > b.name ? 1 : -1;
       }
     );
   }

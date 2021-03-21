@@ -30,5 +30,5 @@ socket.on("returnHomebrewLanguageDetails", function(languages){
         finishLanguage(true);
     });
 
-    stopDiceLoader();
+    stopSpinnerLoader();
 });

@@ -6,7 +6,16 @@ const UserHomebrew = require('./UserHomebrew');
 module.exports = class CharContentHomebrew {
 
     static getHomebrewArray(character){
-        return JSON.parse(character.enabledHomebrew);
+      return JSON.parse(character.enabledHomebrew);
+    }
+
+    static getHomebrewArrayPrisma(character){
+      let array = JSON.parse(character.enabledHomebrew);
+      let newArray = [];
+      for(let arr of array){
+        newArray.push({ homebrewID: arr });
+      }
+      return newArray;
     }
 
     static addHomebrewBundle(socket, charID, homebrewID){

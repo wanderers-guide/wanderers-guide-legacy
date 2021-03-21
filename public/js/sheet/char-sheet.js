@@ -131,7 +131,6 @@ $(function () {
         getCharIDFromURL());
 
     startDiceLoader();
-    upTickDiceLoaderToPercentage(85, 25);
 });
 
 
@@ -333,7 +332,6 @@ socket.on("returnCharacterSheetInfo", function(charInfo, userPermissions, viewOn
     }
 
     // Turn off page loading
-    setDiceLoaderPercentage(100);
     stopDiceLoader();
     isSheetInit = true;
 });
@@ -776,7 +774,7 @@ function displayInformation() {
 
     let classDC = getStatTotal('CLASS_DC')+10;
     let classDCBonusDisplayed = (hasConditionals('CLASS_DC')) 
-            ? classDC+'<sup class="is-size-5 has-text-info">*</sup>' : classDC;
+            ? classDC+'<sup class="is-size-6 has-text-info">*</sup>' : classDC;
     classDCContent.html(classDCBonusDisplayed);
     g_calculatedStats.totalClassDC = classDC;// Calculated Stat
 
@@ -851,7 +849,7 @@ function displayInformation() {
 
     let fortBonus = getStatTotal('SAVE_FORT');
     let fortBonusContent = $("#fortSave");
-    let fortBonusDisplayed = (hasConditionals('SAVE_FORT')) ? signNumber(fortBonus)+'<sup class="is-size-5 has-text-info">*</sup>' : signNumber(fortBonus);
+    let fortBonusDisplayed = (hasConditionals('SAVE_FORT')) ? signNumber(fortBonus)+'<sup class="is-size-6 has-text-info">*</sup>' : signNumber(fortBonus);
     fortBonusContent.html(fortBonusDisplayed);
     g_calculatedStats.totalSaves.push({Name: 'Fortitude', Bonus: fortBonus});// Calculated Stat
 
@@ -878,7 +876,7 @@ function displayInformation() {
 
     let reflexBonus = getStatTotal('SAVE_REFLEX');
     let reflexBonusContent = $("#reflexSave");
-    let reflexBonusDisplayed = (hasConditionals('SAVE_REFLEX')) ? signNumber(reflexBonus)+'<sup class="is-size-5 has-text-info">*</sup>' : signNumber(reflexBonus);
+    let reflexBonusDisplayed = (hasConditionals('SAVE_REFLEX')) ? signNumber(reflexBonus)+'<sup class="is-size-6 has-text-info">*</sup>' : signNumber(reflexBonus);
     reflexBonusContent.html(reflexBonusDisplayed);
     g_calculatedStats.totalSaves.push({Name: 'Reflex', Bonus: reflexBonus});// Calculated Stat
 
@@ -905,7 +903,7 @@ function displayInformation() {
 
     let willBonus = getStatTotal('SAVE_WILL');
     let willBonusContent = $("#willSave");
-    let willBonusDisplayed = (hasConditionals('SAVE_WILL')) ? signNumber(willBonus)+'<sup class="is-size-5 has-text-info">*</sup>' : signNumber(willBonus);
+    let willBonusDisplayed = (hasConditionals('SAVE_WILL')) ? signNumber(willBonus)+'<sup class="is-size-6 has-text-info">*</sup>' : signNumber(willBonus);
     willBonusContent.html(willBonusDisplayed);
     g_calculatedStats.totalSaves.push({Name: 'Will', Bonus: willBonus});// Calculated Stat
 
@@ -939,7 +937,7 @@ function displayInformation() {
     speedNum = (speedNum > 5) ? speedNum : 5;
 
     let speedDisplayed = (hasConditionals('SPEED')) ?
-            speedNum+' ft<sup class="is-size-5 has-text-info">*</sup>' : speedNum+' ft';
+            speedNum+' ft<sup class="is-size-6 has-text-info">*</sup>' : speedNum+' ft';
     speedContent.html(speedDisplayed);
     g_calculatedStats.totalSpeed = speedNum;// Calculated Stat
 
@@ -990,7 +988,7 @@ function displayInformation() {
     let perceptionBonusContent = $("#perceptionBonusContent");
     let perceptionBonus = getStatTotal('PERCEPTION');
     let perceptionBonusDisplayed = (hasConditionals('PERCEPTION')) 
-            ? signNumber(perceptionBonus)+'<sup class="is-size-5 has-text-info">*</sup>' : signNumber(perceptionBonus);
+            ? signNumber(perceptionBonus)+'<sup class="is-size-6 has-text-info">*</sup>' : signNumber(perceptionBonus);
     perceptionBonusContent.html(perceptionBonusDisplayed);
     g_calculatedStats.totalPerception = perceptionBonus;// Calculated Stat
 
@@ -1783,8 +1781,8 @@ function determineArmor(dexMod, strScore) {
     if(shieldStruct != null){
 
         let tagArray = getItemTraitsArray(shieldStruct.Item, shieldStruct.InvItem);
-        let investedTag = tagArray.find(tagStruct => {
-            return tagStruct.Tag.id === 235; // Hardcoded Invested Tag ID
+        let investedTag = tagArray.find(tag => {
+            return tag.id === 235; // Hardcoded Invested Tag ID
         });
         if(investedTag == null){
             processSheetCode(shieldStruct.InvItem.code, shieldStruct.InvItem.name);
@@ -1805,8 +1803,8 @@ function determineArmor(dexMod, strScore) {
 
         let tagArray = getItemTraitsArray(armorStruct.Item, armorStruct.InvItem);
         
-        let investedTag = tagArray.find(tagStruct => {
-            return tagStruct.Tag.id === 235; // Hardcoded Invested Tag ID
+        let investedTag = tagArray.find(tag => {
+            return tag.id === 235; // Hardcoded Invested Tag ID
         });
         if(investedTag == null){
             processSheetCode(armorStruct.InvItem.code, armorStruct.InvItem.name);
@@ -1887,8 +1885,8 @@ function determineArmor(dexMod, strScore) {
 
         checkPenalty += (armorStruct.InvItem.isShoddy == 1) ? -2 : 0;
 
-        let noisyTag = tagArray.find(tagStruct => {
-            return tagStruct.Tag.id === 559; // Hardcoded Noisy Tag ID
+        let noisyTag = tagArray.find(tag => {
+            return tag.id === 559; // Hardcoded Noisy Tag ID
         });
         if(strScore >= armorStruct.Item.ArmorData.minStrength) {
 
@@ -1907,8 +1905,8 @@ function determineArmor(dexMod, strScore) {
         } else {
 
             if(checkPenalty != 0){
-                let flexibleTag = tagArray.find(tagStruct => {
-                    return tagStruct.Tag.id === 558; // Hardcoded Flexible Tag ID
+                let flexibleTag = tagArray.find(tag => {
+                    return tag.id === 558; // Hardcoded Flexible Tag ID
                 });
                 if(flexibleTag == null){
                     applyArmorCheckPenaltyToSkill('Acrobatics', checkPenalty);
@@ -1942,14 +1940,14 @@ function determineArmor(dexMod, strScore) {
         }
 
         // Final Product
-        let totalACDisplayed = (hasConditionals('AC')) ? totalAC+'<sup class="is-size-5 has-text-info">*</sup>' : totalAC;
+        let totalACDisplayed = (hasConditionals('AC')) ? totalAC+'<sup class="is-size-6 has-text-info">*</sup>' : totalAC;
         $('#acNumber').html(totalACDisplayed);
         $('#acSection').attr('data-tooltip', armorStruct.InvItem.name);
         g_calculatedStats.totalAC = totalAC;// Calculated Stat
 
         // Apply conditional if the armor has the Bulwark trait
-        let bulwarkTag = tagArray.find(tagStruct => {
-            return tagStruct.Tag.id === 560; // Hardcoded Bulwark Tag ID
+        let bulwarkTag = tagArray.find(tag => {
+            return tag.id === 560; // Hardcoded Bulwark Tag ID
         });
         if(bulwarkTag != null){
             if(gState_mightyBulwark) {
@@ -1994,7 +1992,7 @@ function determineArmor(dexMod, strScore) {
         totalAC += getStatTotal('AC');
 
         // Final Product
-        let totalACDisplayed = (hasConditionals('AC')) ? totalAC+'<sup class="is-size-5 has-text-info">*</sup>' : totalAC;
+        let totalACDisplayed = (hasConditionals('AC')) ? totalAC+'<sup class="is-size-6 has-text-info">*</sup>' : totalAC;
         $('#acNumber').html(totalACDisplayed);
         $('#acSection').attr('data-tooltip', 'Wearing Nothing');
         g_calculatedStats.totalAC = totalAC;// Calculated Stat
@@ -2310,8 +2308,8 @@ function runAllItemsCode() {
         if(item == null) { continue; }
 
         let tagArray = getItemTraitsArray(item, invItem);
-        let investedTag = tagArray.find(tagStruct => {
-            return tagStruct.Tag.id === 235; // Hardcoded Invested Tag ID
+        let investedTag = tagArray.find(tag => {
+            return tag.id === 235; // Hardcoded Invested Tag ID
         });
 
         if(investedTag == null && item.ArmorData == null && item.ShieldData == null){

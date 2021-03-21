@@ -153,5 +153,5 @@ socket.on("returnHomebrewAncestryDetails", function(ancestryObject, featsObject)
         finishAncestry(true);
     });
 
-    stopDiceLoader();
+    stopSpinnerLoader();
 });

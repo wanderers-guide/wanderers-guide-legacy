@@ -73,7 +73,7 @@ socket.on("returnHomebrewFeatDetailsPlus", function(featsObject, classObject, an
         finishFeat(true);
     });
 
-    stopDiceLoader();
+    stopSpinnerLoader();
 });
 
 function getClassIDFromFeat(feat){

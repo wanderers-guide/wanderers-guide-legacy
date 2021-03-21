@@ -90,5 +90,5 @@ socket.on("returnHomebrewUniHeritageDetails", function(uniHeritageArray, featsOb
         finishUniHeritage(true);
     });
 
-    stopDiceLoader();
+    stopSpinnerLoader();
 });

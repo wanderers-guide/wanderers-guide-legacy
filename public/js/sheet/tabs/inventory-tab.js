@@ -102,6 +102,7 @@ function displayInventorySection(data){
 
     $('#inventoryContent').html('');
 
+    let itemDisplayed = false;
     for(const invItem of g_invStruct.InvItems){
         const item = g_itemMap.get(invItem.itemID+"");
         if(item == null) { continue; }
@@ -153,13 +154,18 @@ function displayInventorySection(data){
         }
 
         if(willDisplay) {
-            displayInventoryItem(invItem, item, openBagInvItemArray, data);
+          itemDisplayed = true;
+          displayInventoryItem(invItem, item, openBagInvItemArray, data);
         }
 
     }
 
     handleArmorEquip(g_invStruct.Inventory.id);
     handleShieldEquip(g_invStruct.Inventory.id);
+
+    if(!itemDisplayed){
+      // Empty Inventory
+    }
 
 }
 
@@ -311,7 +317,7 @@ function displayInventoryItem(invItem, item, openBagInvItemArray, data) {
                 }
 
                 let investTag = baggedItemTagArray.find(tag => {
-                  return tag.Tag.id === 235; // Hardcoded Invested Tag ID
+                  return tag.id === 235; // Hardcoded Invested Tag ID
                 });
                 if(investTag != null){
                   if(baggedInvItem.isInvested == 1){
@@ -442,7 +448,7 @@ function displayInventoryItem(invItem, item, openBagInvItemArray, data) {
     }
 
     let investTag = itemTagArray.find(tag => {
-      return tag.Tag.id === 235; // Hardcoded Invested Tag ID
+      return tag.id === 235; // Hardcoded Invested Tag ID
     });
     if(investTag != null){
       if(invItem.isInvested == 1){

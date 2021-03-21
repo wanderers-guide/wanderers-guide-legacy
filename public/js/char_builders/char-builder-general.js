@@ -4,6 +4,7 @@
 
 let socket = io();
 let isBuilderInit = false;
+let isFirstLoad = true;
 
 // 
 let g_char_ancestryID = null;
@@ -24,6 +25,7 @@ let g_allTags = null;
 
 $(function () {
 
+  startDiceLoader();
   socket.emit("requestCharBuilderDetails", getCharIDFromURL());
 
 });
@@ -50,11 +52,12 @@ socket.on("returnCharBuilderDetails", function(character, coreDataStruct, inChoi
   injectWSCChoiceStruct(inChoiceStruct);
   // ~~~~~~~~~~~~~~~~~ //
 
-  goToBuilderPage($('#char-builder-container').attr('data-page-num'));
+  goToBuilderPage($('#char-builder-container').attr('data-page-num'), true);
 
 });
 
-function goToBuilderPage(pageNum){
+function goToBuilderPage(pageNum, firstLoad=false){
+  isFirstLoad = firstLoad;
   startLoadingPage();
   $("#prevButton").off();
   $("#nextButton").off();
@@ -212,11 +215,11 @@ function initBuilderSteps(){
 
 function startLoadingPage() {
   // Turn on page loading
-  startSpinnerLoader();
+  if(!isFirstLoad) { startSpinnerLoader(); }
 }
 function finishLoadingPage() {
   // Turn off page loading
-  stopSpinnerLoader();
+  if(!isFirstLoad) { stopSpinnerLoader(); } else { stopDiceLoader(); }
 }
 
 function timeOutFinishLoad(){

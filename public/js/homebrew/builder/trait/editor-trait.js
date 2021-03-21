@@ -28,5 +28,5 @@ socket.on("returnHomebrewTraitDetails", function(traits){
         finishTrait(true);
     });
 
-    stopDiceLoader();
+    stopSpinnerLoader();
 });

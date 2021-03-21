@@ -67,5 +67,5 @@ socket.on("returnHomebrewSpellDetails", function(spellObject){
         finishSpell(true);
     });
 
-    stopDiceLoader();
+    stopSpinnerLoader();
 });

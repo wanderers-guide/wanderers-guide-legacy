@@ -38,5 +38,5 @@ socket.on("returnHomebrewBackgroundDetails", function(backgrounds){
         finishBackground(true);
     });
 
-    stopDiceLoader();
+    stopSpinnerLoader();
 });

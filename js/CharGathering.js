@@ -53,6 +53,9 @@ const CharContentHomebrew = require('./CharContentHomebrew');
 const CharSpells = require('./CharSpells');
 const CharTags = require('./CharTags');
 
+const { Prisma } = require('./PrismaConnection');
+const { raw } = require("@prisma/client/runtime");
+
 function mapToObj(strMap) {
     let obj = Object.create(null);
     for (let [k,v] of strMap) {
@@ -192,25 +195,21 @@ module.exports = class CharGathering {
         });
     }
 
-    static getAllClassFeatureOptions(charID) {
-      return Character.findOne({ where: { id: charID} })
-      .then((character) => {
-        return ClassAbility.findAll({
-          order: [['level', 'ASC'],['name', 'ASC'],],
-          where: {
-              selectType: 'SELECT_OPTION',
-              contentSrc: {
-                [Op.or]: CharContentSources.getSourceArray(character)
-              },
-              homebrewID: {
-                [Op.or]: CharContentHomebrew.getHomebrewArray(character)
-              },
-          }
-        })
-        .then((allClassFeatureOptions) => {
-          return allClassFeatureOptions;
-        });
+    static async getAllClassFeatureOptions(charID, character=null) {
+
+      if(character==null){
+        character = await CharGathering.getCharacter(charID);
+      }
+
+      return await Prisma.classAbilities.findMany({
+        where: {
+          selectType: 'SELECT_OPTION',
+          OR: CharContentSources.getSourceArrayPrisma(character),
+          OR: CharContentHomebrew.getHomebrewArrayPrisma(character),
+        },
+        orderBy: [{ level: 'asc' },{ name: 'asc' }],
       });
+
     }
 
     static getAllExtraClassFeatures(charID){
@@ -259,224 +258,209 @@ module.exports = class CharGathering {
         });
     }
 
-    static getAllFeats(charID) {
-        return Character.findOne({ where: { id: charID} })
-        .then((character) => {
-            return Feat.findAll({
-                where: {
-                    contentSrc: {
-                      [Op.or]: CharContentSources.getSourceArray(character)
-                    },
-                    homebrewID: {
-                      [Op.or]: CharContentHomebrew.getHomebrewArray(character)
-                    },
-                }
-            })
-            .then((feats) => {
-                return FeatTag.findAll()
-                .then((featTags) => {
-                    return Tag.findAll({
-                      where: {
-                          homebrewID: {
-                            [Op.or]: CharContentHomebrew.getHomebrewArray(character)
-                          },
-                      }
-                    }).then((tags) => {
-        
-                        let featMap = new Map();
+    static async getAllFeats(charID, character=null, feats=null, tags=null) {
 
-                        for (const feat of feats) {
-                            let fTags = [];
-                            /*
-                                If a feat has a genTypeName then it's a single feat for a class, ancestry, or uniHeritage.
-                                Search and give it the trait for that class, ancestry, or uniHeritage.
-                            */
-                            if(feat.genTypeName != null){
-                                let tag = tags.find(tag => {
-                                    if(tag.isArchived == 0){
-                                        return tag.name === feat.genTypeName;
-                                    } else {
-                                        return false;
-                                    }
-                                });
-                                if(tag != null){
-                                    fTags.push(tag);
-                                }
-                            }
-                            featMap.set(feat.id, {Feat : feat, Tags : fTags});
-                        }
+      if(character==null) {
+        character = await CharGathering.getCharacter(charID);
+      }
 
-                        for (const featTag of featTags) {
-
-                            let tag = tags.find(tag => {
-                                return tag.id === featTag.tagID;
-                            });
-
-                            let featStruct = featMap.get(featTag.featID);
-                            if(featStruct != null){
-                                featStruct.Tags.push(tag);
-                            }
-
-                        }
-
-                        return mapToObj(featMap);
-        
-                    });
-                });
-            });
+      if(feats==null){
+        feats = await Prisma.feats.findMany({
+          where: {
+            OR: CharContentSources.getSourceArrayPrisma(character),
+            OR: CharContentHomebrew.getHomebrewArrayPrisma(character),
+          },
+          include: { featTags: true },
         });
-    }
+      }
 
-    static getAllSpells(charID) {
-        return Character.findOne({ where: { id: charID} })
-        .then((character) => {
-            return Spell.findAll({
-                where: {
-                    contentSrc: {
-                      [Op.or]: CharContentSources.getSourceArray(character)
-                    },
-                    homebrewID: {
-                      [Op.or]: CharContentHomebrew.getHomebrewArray(character)
-                    },
-                },
-                order: [['level', 'ASC'],['name', 'ASC'],]
-            })
-            .then((spells) => {
-                return TaggedSpell.findAll()
-                .then((taggedSpells) => {
-                    return Tag.findAll({
-                      where: {
-                          homebrewID: {
-                            [Op.or]: CharContentHomebrew.getHomebrewArray(character)
-                          },
-                      }
-                    }).then((tags) => {
-        
-                        let spellMap = new Map();
-    
-                        for (const spell of spells) {
-                            spellMap.set(spell.id, {Spell : spell, Tags : []});
-                        }
-    
-                        for (const taggedSpell of taggedSpells) {
-    
-                            let tag = tags.find(tag => {
-                                return tag.id === taggedSpell.tagID;
-                            });
-    
-                            let spellStruct = spellMap.get(taggedSpell.spellID);
-                            if(spellStruct != null){
-                                spellStruct.Tags.push(tag);
-                            }
-    
-                        }
-    
-                        return spellMap;
-        
-                    });
-                });
-            });
-        });
-    }
+      if(tags==null){
+        tags = await CharGathering.getAllTags(charID, character);
+      }
 
-    static getAllItems(charID){
 
-        console.log('~~~~~~~~~~~ REQUESTING ALL ITEMS ~~~~~~~~~~~');
+      let featMap = new Map();
 
-        return Character.findOne({ where: { id: charID} })
-        .then((character) => {
-            return Item.findAll({
-                where: {
-                    contentSrc: {
-                      [Op.or]: CharContentSources.getSourceArray(character)
-                    },
-                    homebrewID: {
-                      [Op.or]: CharContentHomebrew.getHomebrewArray(character)
-                    },
-                }
-            })
-            .then((items) => {
-                return Tag.findAll({
-                  where: {
-                      homebrewID: {
-                        [Op.or]: CharContentHomebrew.getHomebrewArray(character)
-                      },
+      for (const feat of feats) {
+          let fTags = [];
+          /*
+              If a feat has a genTypeName then it's a single feat for a class, ancestry, or uniHeritage.
+              Search and give it the trait for that class, ancestry, or uniHeritage.
+          */
+          if(feat.genTypeName != null){
+              let tag = tags.find(tag => {
+                  if(tag.isArchived == 0){
+                      return tag.name === feat.genTypeName;
+                  } else {
+                      return false;
                   }
-                }).then((tags) => {
-                    return TaggedItem.findAll()
-                    .then((taggedItems) => {
-                        return Weapon.findAll()
-                        .then((weapons) => {
-                            return Armor.findAll()
-                            .then((armors) => {
-                                return Storage.findAll()
-                                .then((storages) => {
-                                    return Shield.findAll()
-                                    .then((shields) => {
-                                        return ItemRune.findAll()
-                                        .then((runes) => {
-                                                    
-                                            let itemMap = new Map();
+              });
+              if(tag != null){
+                  fTags.push(tag);
+              }
+          }
 
-                                            for(const item of items){
-
-                                                let tagArray = [];
-                                                for(const taggedItem of taggedItems){
-                                                    if(taggedItem.itemID == item.id) {
-
-                                                        let tag = tags.find(tag => {
-                                                            return tag.id == taggedItem.tagID;
-                                                        });
-                
-                                                        tagArray.push({
-                                                            Tag : tag
-                                                        });
-
-                                                    }
-                                                }
-
-                                                let weapon = weapons.find(weapon => {
-                                                    return weapon.itemID == item.id;
-                                                });
-
-                                                let armor = armors.find(armor => {
-                                                    return armor.itemID == item.id;
-                                                });
-
-                                                let storage = storages.find(storage => {
-                                                    return storage.itemID == item.id;
-                                                });
-
-                                                let shield = shields.find(shield => {
-                                                    return shield.itemID == item.id;
-                                                });
-
-                                                let rune = runes.find(rune => {
-                                                    return rune.itemID == item.id;
-                                                });
-
-                                                itemMap.set(item.id, {
-                                                    Item : item,
-                                                    WeaponData : weapon,
-                                                    ArmorData : armor,
-                                                    StorageData : storage,
-                                                    ShieldData : shield,
-                                                    RuneData : rune,
-                                                    TagArray : tagArray
-                                                });
-
-                                            }
-
-                                            return itemMap;
-                                        });
-                                    });
-                                });
-                            });
-                        });
-                    });
-                });
+          // Add Tags from FeatTags
+          for(const featTag of feat.featTags) {
+            let tag = tags.find(tag => {
+              return tag.id === featTag.tagID;
             });
+            if(tag != null){
+              fTags.push(tag);
+            }
+          }
+
+          featMap.set(feat.id, {Feat : feat, Tags : fTags});
+
+      }
+
+      return mapToObj(featMap);
+
+    }
+
+    static async getAllSpells(charID, character=null, spells=null, taggedSpells=null, tags=null) {
+
+      if(character==null) {
+        character = await CharGathering.getCharacter(charID);
+      }
+
+      if(spells==null){
+        spells = await Prisma.spells.findMany({
+          where: {
+            OR: CharContentSources.getSourceArrayPrisma(character),
+            OR: CharContentHomebrew.getHomebrewArrayPrisma(character),
+          },
+          orderBy: [{ level: 'asc' },{ name: 'asc' }],
         });
+      }
+
+      if(taggedSpells==null){
+        taggedSpells = await TaggedSpell.findAll();
+      }
+
+      if(tags==null){
+        tags = await CharGathering.getAllTags(charID, character);
+      }
+
+      // Processing Spells Data //
+
+      let spellMap = new Map();
+    
+      for (const spell of spells) {
+        spellMap.set(spell.id, {Spell : spell, Tags : []});
+      }
+
+      for (const taggedSpell of taggedSpells) {
+
+        let tag = tags.find(tag => {
+          return tag.id === taggedSpell.tagID;
+        });
+
+        let spellStruct = spellMap.get(taggedSpell.spellID);
+        if(spellStruct != null){
+          spellStruct.Tags.push(tag);
+        }
+
+      }
+
+      return spellMap;
+
+    }
+
+    static async getAllItems(charID, character=null, items=null, tags=null, taggedItems=null, weapons=null, armors=null, storages=null, shields=null, runes=null){
+
+        if(character==null){
+          character = await CharGathering.getCharacter(charID);
+        }
+        
+        if(items==null){
+          items = await Prisma.items.findMany({
+            where: {
+              OR: CharContentSources.getSourceArrayPrisma(character),
+              OR: CharContentHomebrew.getHomebrewArrayPrisma(character),
+            }
+          });
+        }
+
+        if(tags==null){
+            tags = await CharGathering.getAllTags(charID, character);
+        }
+
+        if(taggedItems==null){
+          taggedItems = await Prisma.taggedItems.findMany();
+        }
+
+        if(weapons==null){
+          weapons = await Prisma.weapons.findMany();
+        }
+
+        if(armors==null){
+          armors = await Prisma.armors.findMany();
+        }
+
+        if(storages==null){
+          storages = await Prisma.storages.findMany();
+        }
+
+        if(shields==null){
+          shields = await Prisma.shields.findMany();
+        }
+        
+        if(runes==null){
+          runes = await Prisma.itemRunes.findMany();
+        }
+
+        // Processing Item Data //
+
+        let itemMap = new Map();
+        for(const item of items){
+
+          let tagArray = [];
+          for(const taggedItem of taggedItems){
+            if(taggedItem.itemID == item.id) {
+
+              let tag = tags.find(tag => {
+                return tag.id == taggedItem.tagID;
+              });
+
+              tagArray.push(tag);
+
+            }
+          }
+
+          let weapon = weapons.find(weapon => {
+            return weapon.itemID == item.id;
+          });
+
+          let armor = armors.find(armor => {
+            return armor.itemID == item.id;
+          });
+
+          let storage = storages.find(storage => {
+            return storage.itemID == item.id;
+          });
+
+          let shield = shields.find(shield => {
+            return shield.itemID == item.id;
+          });
+
+          let rune = runes.find(rune => {
+            return rune.itemID == item.id;
+          });
+
+          itemMap.set(item.id, {
+            Item : item,
+            WeaponData : weapon,
+            ArmorData : armor,
+            StorageData : storage,
+            ShieldData : shield,
+            RuneData : rune,
+            TagArray : tagArray
+          });
+
+        }
+
+        return itemMap;
         
     }
 
@@ -507,75 +491,74 @@ module.exports = class CharGathering {
         });
     }
 
-    static getAllSkills(charID) {
+    static async getAllSkills(charID, skills=null, profDataArray=null, loreDataArray=null) {
 
-        console.log('~~~~~~~~~~~ REQUESTING ALL SKILLS ~~~~~~~~~~~');
+        if(skills==null){
+          skills = await Prisma.skills.findMany();
+        }
 
-        return Skill.findAll()
-        .then((skills) => {
-            return CharDataMappingExt.getDataAllProficiencies(charID)
-            .then((profDataArray) => {
-                return CharDataMapping.getDataAll(charID, 'loreCategories', null)
-                .then((loreDataArray) => {
-                    
-                    let skillArray = [];
+        if(profDataArray==null){
+          profDataArray = await CharDataMappingExt.getDataAllProficiencies(charID);
+        }
 
-                    for(const skill of skills){
-                        if(skill.name != "Lore"){
-                            skillArray.push({ SkillName : skill.name, Skill : skill });
-                        }
-                    }
+        if(loreDataArray==null){
+          loreDataArray = await CharDataMapping.getDataAll(charID, 'loreCategories', null);
+        }
 
-                    let loreSkill = skills.find(skill => {
-                        return skill.name === "Lore";
-                    });
 
-                    for(const loreData of loreDataArray) {
-                        if(loreData.value != null){
-                            skillArray.push({ SkillName : capitalizeWords(loreData.value)+" Lore", Skill : loreSkill });
-                        }
-                    }
+        let skillArray = [];
 
-                    let skillMap = new Map();
+        for(const skill of skills){
+            if(skill.name != "Lore"){
+                skillArray.push({ SkillName : skill.name, Skill : skill });
+            }
+        }
 
-                    let tempCount = 0;
-                    for(const skillData of skillArray){
-                        let bestProf = 'U';
-                        let numUps = 0;
-                        for(const profData of profDataArray){
-                            tempCount++;
-
-                            if(profData.For == "Skill" && profData.To != null){
-                                let tempSkillName = skillData.SkillName.toUpperCase();
-                                tempSkillName = tempSkillName.replace(/_|\s+/g,"");
-                                let tempProfTo = profData.To.toUpperCase();
-                                tempProfTo = tempProfTo.replace(/_|\s+/g,"");
-                                if(tempProfTo === tempSkillName) {
-                                    numUps += getUpAmt(profData.Prof);
-                                    bestProf = getBetterProf(bestProf, profData.Prof);
-                                }
-                            }
-                        }
-
-                        skillMap.set(skillData.SkillName, {
-                            Name : skillData.SkillName,
-                            NumUps : profTypeToNumber(bestProf)+numUps,
-                            Skill : skillData.Skill
-                        });
-                    }
-
-                    console.log("SkillMap: Did "+tempCount+" comparisons.");
-
-                    return mapToObj(skillMap);
-
-                });
-            });
+        let loreSkill = skills.find(skill => {
+            return skill.name === "Lore";
         });
+
+        for(const loreData of loreDataArray) {
+            if(loreData.value != null){
+                skillArray.push({ SkillName : capitalizeWords(loreData.value)+" Lore", Skill : loreSkill });
+            }
+        }
+
+        let skillMap = new Map();
+
+        let tempCount = 0;
+        for(const skillData of skillArray){
+            let bestProf = 'U';
+            let numUps = 0;
+            for(const profData of profDataArray){
+                tempCount++;
+
+                if(profData.For == "Skill" && profData.To != null){
+                    let tempSkillName = skillData.SkillName.toUpperCase();
+                    tempSkillName = tempSkillName.replace(/_|\s+/g,"");
+                    let tempProfTo = profData.To.toUpperCase();
+                    tempProfTo = tempProfTo.replace(/_|\s+/g,"");
+                    if(tempProfTo === tempSkillName) {
+                        numUps += getUpAmt(profData.Prof);
+                        bestProf = getBetterProf(bestProf, profData.Prof);
+                    }
+                }
+            }
+
+            skillMap.set(skillData.SkillName, {
+                Name : skillData.SkillName,
+                NumUps : profTypeToNumber(bestProf)+numUps,
+                Skill : skillData.Skill
+            });
+        }
+
+        //console.log("SkillMap: Did "+tempCount+" comparisons.");
+
+        return mapToObj(skillMap);
+
     }
 
     static getAllAncestries(charID, includeTag) {
-
-        console.log('~~~~~~~~~~~ REQUESTING ALL ANCESTRIES ~~~~~~~~~~~');
 
         return Character.findOne({ where: { id: charID} })
         .then((character) => {
@@ -785,137 +768,118 @@ module.exports = class CharGathering {
         });
     }
 
-    static getAllCharConditions(charID) {
-        return Condition.findAll()
-        .then((conditions) => {
-            return CharCondition.findAll({ where: { charID: charID} })
-            .then((charConditions) => {
+    static async getAllCharConditions(charID, charConditions=null) {
 
-                let conditionMap = new Map();
-
-                for(const charCondition of charConditions){
-                    let condition = conditions.find(condition => {
-                        return charCondition.conditionID === condition.id;
-                    });
-                    conditionMap.set(charCondition.conditionID, {
-                        Condition : condition,
-                        EntryID : charCondition.id,
-                        Value : charCondition.value,
-                        SourceText : charCondition.sourceText,
-                        ParentID : charCondition.parentID,
-                    });
-                }
-
-                return mapToObj(conditionMap);
-
-            });
+      if(charConditions==null) {
+        Condition.hasMany(CharCondition, {foreignKey: 'conditionID'});
+        CharCondition.belongsTo(Condition, {foreignKey: 'conditionID'});
+        charConditions = await CharCondition.findAll({
+          where: { charID: charID },
+          include: [Condition],
         });
+      }
+
+      let conditionMap = new Map();
+
+      for(const charCondition of charConditions){
+        conditionMap.set(charCondition.conditionID, {
+          Condition : charCondition.condition,
+          EntryID : charCondition.id,
+          Value : charCondition.value,
+          SourceText : charCondition.sourceText,
+          ParentID : charCondition.parentID,
+        });
+      }
+
+      return mapToObj(conditionMap);
+
     }
 
-    static getAllAncestriesBasic(character) {
-      return Ancestry.findAll({
+    static async getAllAncestriesBasic(charID, character=null) {
+      if(character==null){
+        character = await CharGathering.getCharacter(charID);
+      }
+      return await Prisma.ancestries.findMany({
         where: {
-            contentSrc: {
-              [Op.or]: CharContentSources.getSourceArray(character)
-            },
-            homebrewID: {
-              [Op.or]: CharContentHomebrew.getHomebrewArray(character)
-            },
+          OR: CharContentSources.getSourceArrayPrisma(character),
+          OR: CharContentHomebrew.getHomebrewArrayPrisma(character),
         }
-      }).then((ancestries) => {
-          return ancestries;
       });
     }
 
-    static getAllBackgrounds(charID) {
-        return Character.findOne({ where: { id: charID} })
-        .then((character) => {
-            return Background.findAll({
-                where: {
-                    contentSrc: {
-                      [Op.or]: CharContentSources.getSourceArray(character)
-                    },
-                    homebrewID: {
-                      [Op.or]: CharContentHomebrew.getHomebrewArray(character)
-                    },
-                }
-            })
-            .then((backgrounds) => {
-                return backgrounds;
-            });
-        });
-    }
-
-    static getAllPhysicalFeatures() {
-        return PhysicalFeature.findAll()
-        .then((physicalFeatures) => {
-            return physicalFeatures;
-        });
-    }
-
-    static getAllDomains(character) {
-        return Domain.findAll({
-          where: {
-              contentSrc: {
-                [Op.or]: CharContentSources.getSourceArray(character)
-              },
-              homebrewID: {
-                [Op.or]: CharContentHomebrew.getHomebrewArray(character)
-              },
-          }
-        }).then((domains) => {
-            return domains;
-        });
-    }
-
-    static getAllTags(charID) {
-      return Character.findOne({ where: { id: charID} })
-      .then((character) => {
-        return Tag.findAll({
-          raw: true,
-          order: [['name', 'ASC'],],
-          where: {
-            homebrewID: {
-              [Op.or]: CharContentHomebrew.getHomebrewArray(character)
-            },
-          }
-        }).then((tags) => {
-            return tags;
-        });
+    static async getAllBackgrounds(charID, character=null) {
+      if(character==null){
+        character = await CharGathering.getCharacter(charID);
+      }
+      return await Prisma.backgrounds.findMany({
+        where: {
+          OR: CharContentSources.getSourceArrayPrisma(character),
+          OR: CharContentHomebrew.getHomebrewArrayPrisma(character),
+        }
       });
     }
 
-    static getResistancesAndVulnerabilities(charID) {
-        return CharDataMappingExt.getDataAllResistance(charID)
-        .then((resistancesDataArray) => {
-            return CharDataMappingExt.getDataAllVulnerability(charID)
-            .then((vulnerabilitiesDataArray) => {
-                return {Resistances: resistancesDataArray, Vulnerabilities: vulnerabilitiesDataArray};
-            });
-        });
+    static async getAllPhysicalFeatures() {
+      return await Prisma.physicalFeatures.findMany();
     }
 
-    static getNoteFields(charID) {
-        return CharDataMapping.getDataAll(charID, 'notesField', null)
-        .then((notesDataArray) => {
-            return NoteField.findAll({ where: { charID: charID } })
-            .then(function(noteFields) {
+    static async getAllDomains(charID, character=null) {
+      if(character==null){
+        character = await CharGathering.getCharacter(charID);
+      }
+      return await Prisma.domains.findMany({
+        where: {
+          OR: CharContentSources.getSourceArrayPrisma(character),
+          OR: CharContentHomebrew.getHomebrewArrayPrisma(character),
+        }
+      });
+    }
 
-                for(let notesData of notesDataArray){
-                    let noteFieldID = srcStructToCode(charID, 'notesField', notesData);
-                    let noteField = noteFields.find(noteField => {
-                        return noteField.id == noteFieldID;
-                    });
-                    if(noteField != null){
-                        notesData.text = noteField.text;
-                        notesData.placeholderText = noteField.placeholderText;
-                    }
-                }
+    static async getAllTags(charID, character=null) {
+      if(character==null){
+        character = await CharGathering.getCharacter(charID);
+      }
+      return await Prisma.tags.findMany({
+        where: {
+          OR: CharContentHomebrew.getHomebrewArrayPrisma(character),
+        },
+        orderBy: [{ name: 'asc' }],
+      });
+    }
 
-                return notesDataArray;
+    static async getResistancesAndVulnerabilities(charID, resistancesDataArray=null, vulnerabilitiesDataArray=null) {
 
-            });
+      if(resistancesDataArray==null){
+        resistancesDataArray = await CharDataMappingExt.getDataAllResistance(charID);
+      }
+
+      if(vulnerabilitiesDataArray==null){
+        vulnerabilitiesDataArray = await CharDataMappingExt.getDataAllVulnerability(charID);
+      }
+
+      return {Resistances: resistancesDataArray, Vulnerabilities: vulnerabilitiesDataArray};
+
+    }
+
+    static async getNoteFields(charID) {
+
+      let notesDataArray = await CharDataMapping.getDataAll(charID, 'notesField', null);
+
+      let noteFields = await NoteField.findAll({ where: { charID: charID } });
+
+      for(let notesData of notesDataArray){
+        let noteFieldID = srcStructToCode(charID, 'notesField', notesData);
+        let noteField = noteFields.find(noteField => {
+          return noteField.id == noteFieldID;
         });
+        if(noteField != null){
+          notesData.text = noteField.text;
+          notesData.placeholderText = noteField.placeholderText;
+        }
+      }
+
+      return notesDataArray;
+
     }
 
     static getNoteField(charID, notesData) {
@@ -930,257 +894,112 @@ module.exports = class CharGathering {
         });
     }
 
-    static getOtherSpeeds(charID) {
-        return CharDataMappingExt.getDataAllOtherSpeed(charID)
-        .then((speedsDataArray) => {
-            return speedsDataArray;
-        });
-    } 
+    static async getOtherSpeeds(charID) {
+      return await CharDataMappingExt.getDataAllOtherSpeed(charID);
+    }
 
     // Weapon, Armor, and Critical Specializations
-    static getSpecializations(charID) {
-        return CharDataMapping.getDataAll(charID, 'weaponSpecialization', null)
-        .then((specialsDataArray) => {
+    static async getSpecializations(charID, weapSpecialsDataArray=null, weapCriticalsDataArray=null, armorSpecialDataArray=null) {
 
-            let hasWeapSpecial = false;
-            let hasWeapSpecialGreater = false;
-            for(const specialsData of specialsDataArray){
-                if(specialsData.value == 1){
-                    hasWeapSpecial = true;
-                } else if(specialsData.value == 2){
-                    hasWeapSpecialGreater = true;
-                }
-            }
+      if(weapSpecialsDataArray==null){
+        weapSpecialsDataArray = await CharDataMapping.getDataAll(charID, 'weaponSpecialization', null);
+      }
 
-            return CharDataMapping.getDataAll(charID, 'weaponCriticalSpecialization', null)
-            .then((weapCriticalsDataArray) => {
-                return CharDataMapping.getDataAll(charID, 'armorSpecialization', null)
-                .then((armorSpecialDataArray) => {
+      if(weapCriticalsDataArray==null){
+        weapCriticalsDataArray = await CharDataMapping.getDataAll(charID, 'weaponCriticalSpecialization', null);
+      }
 
-                    return {
-                        WeaponSpecial: hasWeapSpecial,
-                        GreaterWeaponSpecial: hasWeapSpecialGreater,
-                        WeapCriticals: weapCriticalsDataArray,
-                        ArmorSpecial: armorSpecialDataArray,
-                    };
+      if(armorSpecialDataArray==null){
+        armorSpecialDataArray = await CharDataMapping.getDataAll(charID, 'armorSpecialization', null);
+      }
 
-                });
-            });
-        });
+      let hasWeapSpecial = false;
+      let hasWeapSpecialGreater = false;
+      for(const specialsData of weapSpecialsDataArray){
+        if(specialsData.value == 1){
+          hasWeapSpecial = true;
+        } else if(specialsData.value == 2){
+          hasWeapSpecialGreater = true;
+        }
+      }
+
+      return {
+        WeaponSpecial: hasWeapSpecial,
+        GreaterWeaponSpecial: hasWeapSpecialGreater,
+        WeapCriticals: weapCriticalsDataArray,
+        ArmorSpecial: armorSpecialDataArray,
+      };
+
     }
 
-    static getWeaponFamiliarities(charID) {
-        return CharDataMapping.getDataAll(charID, 'weaponFamiliarity', null)
-        .then((familiaritiesDataArray) => {
-            return familiaritiesDataArray;
-        });
+    static async getWeaponFamiliarities(charID) {
+      return await CharDataMapping.getDataAll(charID, 'weaponFamiliarity', null);
     }
 
 
-    static getSpellData(charID){
+    static async getSpellData(charID){
 
-        console.log('~~~~~~~~~~~ REQUESTING SPELL DATA ~~~~~~~~~~~');
+      // Normal Spells //
+      let spellSlotsMap = await CharSpells.getSpellSlotMap(charID);
 
-        return CharSpells.getSpellSlotMap(charID)
-        .then((spellSlotsMap) => {
+      let spellBookSlotPromises = [];
+      for(const [spellSRC, spellSlotArray] of spellSlotsMap.entries()){
+        let newPromise = CharSpells.getSpellBook(charID, spellSRC, false);
+        spellBookSlotPromises.push(newPromise);
+      }
+      let spellBookSlotArray = await Promise.all(spellBookSlotPromises);
 
-            let spellBookSlotPromises = [];
-            for(const [spellSRC, spellSlotArray] of spellSlotsMap.entries()){
-                let newPromise = CharSpells.getSpellBook(charID, spellSRC, false);
-                spellBookSlotPromises.push(newPromise);
-            }
-            return Promise.all(spellBookSlotPromises)
-            .then(function(spellBookSlotArray) {
 
-                return CharSpells.getFocusPoints(charID)
-                .then((focusPointsDataArray) => {
-                    return CharSpells.getFocusSpells(charID)
-                    .then((focusSpellMap) => {
-                        let spellBookFocusPromises = [];
-                        for(const [spellSRC, focusSpellDataArray] of focusSpellMap.entries()){
-                            let newPromise = CharSpells.getSpellBook(charID, spellSRC, true);
-                            spellBookFocusPromises.push(newPromise);
-                        }
-                        return Promise.all(spellBookFocusPromises)
-                        .then(function(spellBookFocusArray) {
-                            let spellBookArray = spellBookSlotArray
-                                .concat(spellBookFocusArray.filter((entry) => spellBookSlotArray.indexOf(entry) < 0));
+      // Focus Spells //
+      let focusSpellMap = await CharSpells.getFocusSpells(charID);
 
-                            return CharDataMappingExt.getDataAllInnateSpell(charID)
-                            .then((innateSpellArray) => {
-                                let innateSpellPromises = [];
-                                for(const innateSpell of innateSpellArray){
-                                    let innateSpellCastingsID = getInnateSpellCastingID(innateSpell);
-                                    let newPromise = InnateSpellCasting.findOrCreate({where: {innateSpellID: innateSpellCastingsID}, defaults: {timesCast: 0}, raw: true});
-                                    innateSpellPromises.push(newPromise);
-                                }
+      let spellBookFocusPromises = [];
+      for(const [spellSRC, focusSpellDataArray] of focusSpellMap.entries()){
+        let newPromise = CharSpells.getSpellBook(charID, spellSRC, true);
+        spellBookFocusPromises.push(newPromise);
+      }
+      let spellBookFocusArray = await Promise.all(spellBookFocusPromises);
 
-                                return Promise.all(innateSpellPromises)
-                                .then(function(innateSpellCastings) {
-                                    for(let innateSpell of innateSpellArray){
-                                        let innateSpellCastingsID = getInnateSpellCastingID(innateSpell);
-                                        let innateSpellData = innateSpellCastings.find(innateSpellData => {
-                                            return innateSpellData[0].innateSpellID === innateSpellCastingsID;
-                                        });
-                                        innateSpell.TimesCast = innateSpellData[0].timesCast;
-                                        innateSpell.TimesPerDay = parseInt(innateSpell.TimesPerDay);
-                                        innateSpell.SpellLevel = parseInt(innateSpell.SpellLevel);
-                                    }
-                                    return {
-                                        SpellSlotObject: mapToObj(spellSlotsMap),
-                                        SpellBookArray: spellBookArray,
-                                        InnateSpellArray: innateSpellArray,
-                                        FocusSpellObject: mapToObj(focusSpellMap),
-                                        FocusPointsArray: focusPointsDataArray,
-                                    };
-                                });
-                            });
-                        });
-                    });
-                });
-            });
+
+      // Combine Normal Spells with Focus Spells
+      let spellBookArray = spellBookSlotArray
+              .concat(spellBookFocusArray.filter((entry) => spellBookSlotArray.indexOf(entry) < 0));
+
+
+      // Innate Spells //
+      let innateSpellArray = await CharDataMappingExt.getDataAllInnateSpell(charID);
+
+      let innateSpellPromises = [];
+      for(const innateSpell of innateSpellArray){
+        let innateSpellCastingsID = getInnateSpellCastingID(innateSpell);
+        let newPromise = InnateSpellCasting.findOrCreate({where: {innateSpellID: innateSpellCastingsID}, defaults: {timesCast: 0}, raw: true});
+        innateSpellPromises.push(newPromise);
+      }
+
+      let innateSpellCastings = await Promise.all(innateSpellPromises);
+
+      for(let innateSpell of innateSpellArray){
+        let innateSpellCastingsID = getInnateSpellCastingID(innateSpell);
+        let innateSpellData = innateSpellCastings.find(innateSpellData => {
+            return innateSpellData[0].innateSpellID === innateSpellCastingsID;
         });
-    }
+        innateSpell.TimesCast = innateSpellData[0].timesCast;
+        innateSpell.TimesPerDay = parseInt(innateSpell.TimesPerDay);
+        innateSpell.SpellLevel = parseInt(innateSpell.SpellLevel);
+      }
     
+      // Focus Points //
+      let focusPointsDataArray = await CharSpells.getFocusPoints(charID);
 
-    static getCharChoices(charID) {
-      console.log("~~~~~~~~~~~ REQUESTING CHAR CHOICES ~~~~~~~~~~~");
-  
-      return Character.findOne({ where: { id: charID } })
-      .then((character) => {
-        return CharGathering.getBackground(character)
-        .then((background) => {
-          return CharGathering.getAncestry(character)
-          .then((ancestry) => {
-            return CharGathering.getHeritage(character)
-            .then((heritage) => {
-              return CharGathering.getAllAncestriesBasic(character)
-              .then((ancestries) => {
-                return CharTags.getTags(charID)
-                .then((charTagsArray) => {
-                  return CharGathering.getClass(charID, character.classID)
-                  .then((classDetails) => {
-                    return CharGathering.getChoicesFeats(charID)
-                    .then((featDataArray) => {
-                      return CharGathering.getChoicesAbilityBonus(charID)
-                      .then((bonusDataArray) => {
-                        return CharDataMappingExt.getDataAllClassChoice(charID)
-                        .then((choiceDataArray) => {
-                          return CharDataMappingExt.getDataAllProficiencies(charID)
-                          .then((profDataArray) => {
-                            return CharDataMappingExt.getDataAllInnateSpell(charID)
-                            .then((innateSpellDataArray) => {
-                              return CharDataMapping.getDataAll(charID,"languages",Language)
-                              .then((langDataArray) => {
-                                return CharDataMapping.getDataAll(charID,"senses",SenseType)
-                                .then((senseDataArray) => {
-                                  return CharDataMapping.getDataAll(charID,"phyFeats",PhysicalFeature)
-                                  .then((phyFeatDataArray) => {
-                                    return CharDataMapping.getDataAll(charID,"loreCategories",null)
-                                    .then((loreDataArray) => {
-                                      return CharSpells.getFocusPoints(charID)
-                                      .then((focusPointDataArray) => {
-                                        return CharGathering.getProfs(charID)
-                                        .then((profMap) => {
-                                          return CharGathering.getAllDomains(character)
-                                          .then((domains) => {
-                                            return CharGathering.getChoicesDomains(charID)
-                                            .then((domainDataArray) => {
-                                              return CharDataMapping.getDataAll(charID,"advancedDomains",Domain)
-                                              .then((advancedDomainDataArray) => {
-                                                return CharGathering.getAllExtraClassFeatures(charID)
-                                                .then((extraClassFeatures) => {
-                                                  return CharDataMapping.getDataAll(charID, "heritageExtra",null)
-                                                  .then((heritageEffectsArray) => {
 
-                                                    let choiceStruct = {
-                                                      Character: character,
-                                                      Heritage: heritage,
-                                                      Background: background,
-                                                      Ancestry: ancestry,
-                                                      ClassDetails: classDetails,
-                                                      CharTagsArray: charTagsArray,
-                                                      FeatArray: featDataArray,
-                                                      BonusArray: bonusDataArray,
-                                                      ChoiceArray: choiceDataArray,
-                                                      ProfArray: profDataArray,
-                                                      LangArray: langDataArray,
-                                                      SenseArray: senseDataArray,
-                                                      PhyFeatArray: phyFeatDataArray,
-                                                      InnateSpellArray: innateSpellDataArray,
-                                                      ProfObject: mapToObj(profMap),
-                                                      AllDomains: domains,
-                                                      AllAncestries: ancestries,
-                                                      DomainArray: domainDataArray,
-                                                      AdvancedDomainArray: advancedDomainDataArray,
-                                                      FocusPointArray: focusPointDataArray,
-                                                      LoreArray: loreDataArray,
-                                                      ExtraClassFeaturesArray: extraClassFeatures,
-                                                      HeritageEffectsArray: heritageEffectsArray,
-                                                    };
-          
-                                                    return choiceStruct;
+      return {
+        SpellSlotObject: mapToObj(spellSlotsMap),
+        SpellBookArray: spellBookArray,
+        InnateSpellArray: innateSpellArray,
+        FocusSpellObject: mapToObj(focusSpellMap),
+        FocusPointsArray: focusPointsDataArray,
+      };
 
-                                                  });
-                                                });
-                                              });
-                                            });
-                                          });
-                                        });
-                                      });
-                                    });
-                                  });
-                                });
-                              });
-                            });
-                          });
-                        });
-                      });
-                    });
-                  });
-                });
-              });
-            });
-          });
-        });
-      });
-    }
-
-    static getBuilderCore(charID) {
-        return CharGathering.getAllFeats(charID)
-        .then( (featObject) => {
-            return CharGathering.getAllItems(charID)
-            .then( (itemMap) => {
-                return CharGathering.getAllSpells(charID)
-                .then((spellMap) => {
-                    return CharGathering.getAllSkills(charID)
-                    .then((skillObject) => {
-                        return CharGathering.getAllTags(charID)
-                        .then( (tags) => {
-                            return CharGathering.getAbilityScores(charID)
-                            .then((abilObject) => {
-                                return Condition.findAll()
-                                .then((allConditions) => {
-                                    return CharGathering.getAllLanguagesBasic(charID)
-                                    .then((allLanguages) => {
-                                        return {
-                                            FeatObject: featObject,
-                                            SkillObject: skillObject,
-                                            ItemObject: mapToObj(itemMap),
-                                            SpellObject: mapToObj(spellMap),
-                                            AbilObject: abilObject,
-                                            AllTags: tags,
-                                            AllConditions: allConditions,
-                                            AllLanguages: allLanguages,
-                                        };
-                                    });
-                                });
-                            });
-                        });
-                    });
-                });
-            });
-        });
     }
 
     static getChoicesAbilityBonus(charID) {
@@ -1205,56 +1024,55 @@ module.exports = class CharGathering {
     }
 
 
-    static getAllLanguagesBasic(charID) {
-      return Character.findOne({ where: { id: charID } })
-      .then((character) => {
-        return Language.findAll({
-          where: {
-              homebrewID: {
-                [Op.or]: CharContentHomebrew.getHomebrewArray(character)
-              },
-          }
-        }).then((languages) => {
-          return languages;
-        });
-      });
-    }
-
-
-    static getAncestry(character) {
-        return Ancestry.findOne({
-          where: {
-            id: character.ancestryID,
-          } 
-        }).then((ancestry) => {
-            return ancestry;
-        });
-    }
-
-    static getBackground(character) {
-      return Background.findOne({
+    static async getAllLanguagesBasic(charID, character=null) {
+      if(character==null){
+        character = await CharGathering.getCharacter(charID);
+      }
+      return await Prisma.languages.findMany({
         where: {
-          id: character.backgroundID,
-        } 
-      }).then((background) => {
-          return background;
+          OR: CharContentHomebrew.getHomebrewArrayPrisma(character)
+        }
       });
     }
 
-    static getHeritage(character) {
-        if(character.heritageID != null){
-            return Heritage.findOne({ where: { id: character.heritageID } })
-            .then((heritage) => {
-                return heritage;
-            });
-        } else if (character.uniHeritageID != null) {
-            return UniHeritage.findOne({ where: { id: character.uniHeritageID } })
-            .then((uniHeritage) => {
-                return uniHeritage;
-            });
-        } else {
-            return Promise.resolve();
-        }
+    static async getAllConditions(){
+      return await Prisma.conditions.findMany();
+    }
+
+
+    static async getAncestry(charID, character=null) {
+      if(character==null){
+        character = await CharGathering.getCharacter(charID);
+      }
+      if(character.ancestryID != null){
+        return await Prisma.ancestries.findUnique({ where: { id: character.ancestryID } });
+      } else {
+        return Promise.resolve();
+      }
+    }
+
+    static async getBackground(charID, character=null) {
+      if(character==null){
+        character = await CharGathering.getCharacter(charID);
+      }
+      if(character.backgroundID != null){
+        return await Prisma.backgrounds.findUnique({ where: { id: character.backgroundID } });
+      } else {
+        return Promise.resolve();
+      }
+    }
+
+    static async getHeritage(charID, character=null) {
+      if(character==null){
+        character = await CharGathering.getCharacter(charID);
+      }
+      if(character.heritageID != null){
+        return await Prisma.heritages.findUnique({ where: { id: character.heritageID } });
+      } else if (character.uniHeritageID != null) {
+        return await Prisma.uniHeritages.findUnique({ where: { id: character.uniHeritageID } });
+      } else {
+        return Promise.resolve();
+      }
     }
 
     static getClassBasic(character) {
@@ -1267,55 +1085,64 @@ module.exports = class CharGathering {
       });
     }
 
-    static getClass(charID, classID) {
-      return Character.findOne({ where: { id: charID} })
-      .then((character) => {
-        return Class.findOne({
-            where: { id: classID },
-            raw: true,
-        }).then((cClass) => {
-            let srcStruct = {
-                sourceType: 'class',
-                sourceLevel: 1,
-                sourceCode: 'keyAbility',
-                sourceCodeSNum: 'a',
-            };
-            return CharDataMappingExt.getDataSingleAbilityBonus(charID, srcStruct)
-            .then((keyBoostData) => {
-               let keyAbility = null;
-               if(keyBoostData != null) { keyAbility = keyBoostData.Ability; }
-               if(cClass != null){
-                    return ClassAbility.findAll({
-                        order: [['level', 'ASC'],['name', 'ASC'],],
-                        where: {
-                            contentSrc: {
-                              [Op.or]: CharContentSources.getSourceArray(character)
-                            },
-                            homebrewID: {
-                              [Op.or]: CharContentHomebrew.getHomebrewArray(character)
-                            },
-                            [Op.or]: [
-                                { classID: cClass.id },
-                                { indivClassName: cClass.name }
-                            ],
-                        },
-                        raw: true,
-                    }).then((classAbilities) => {
-                        return {Class : cClass, Abilities : classAbilities, KeyAbility : keyAbility};
-                    });
-                } else {
-                    return {Class : null, Abilities: null, KeyAbility : null};
-                } 
-            });
+    static async getClass(charID, classID, character=null, cClass=null, keyBoostData=null) {
+
+      if(character==null){
+        character = await CharGathering.getCharacter(charID);
+      }
+
+      if(cClass==null && classID!=null){
+        cClass = await Prisma.classes.findUnique({ where: { id: parseInt(classID) } });
+      }
+
+      if(keyBoostData==null){
+        let srcStruct = {
+          sourceType: 'class',
+          sourceLevel: 1,
+          sourceCode: 'keyAbility',
+          sourceCodeSNum: 'a',
+        };
+        keyBoostData = await CharDataMappingExt.getDataSingleAbilityBonus(charID, srcStruct);
+      }
+
+      let keyAbility = null;
+      if(keyBoostData != null) { keyAbility = keyBoostData.Ability; }
+
+      if(cClass != null){
+
+        const classAbilities = await ClassAbility.findAll({
+          order: [['level', 'ASC'],['name', 'ASC'],],
+          where: {
+              contentSrc: {
+                [Op.or]: CharContentSources.getSourceArray(character)
+              },
+              homebrewID: {
+                [Op.or]: CharContentHomebrew.getHomebrewArray(character)
+              },
+              [Op.or]: [
+                  { classID: cClass.id },
+                  { indivClassName: cClass.name }
+              ],
+          },
+          raw: true,
         });
-      });
+
+        return {Class : cClass, Abilities : classAbilities, KeyAbility : keyAbility};
+
+      } else {
+
+        return {Class : null, Abilities: null, KeyAbility : null};
+
+      }
+
     }
 
-    static getCharacter(charID) {
-        return Character.findOne({ where: { id: charID } })
-        .then((character) => {
-            return character;
-        });
+    static async getCharacter(charID) {
+      console.log('( FINDING CHARACTER )');
+      return Character.findOne({ where: { id: charID } })
+      .then((character) => {
+        return character;
+      });
     }
 
     static getAllAbilityTypes() {
@@ -1565,89 +1392,95 @@ module.exports = class CharGathering {
     });
   }
 
-    static getCompanionData(charID){
-      return CharGathering.getAllAnimalCompanions(charID)
-      .then((allAnimalCompanions) => {
-        return CharGathering.getCharAnimalCompanions(charID)
-        .then((charAnimalComps) => {
-          return CharGathering.getAllSpecificFamiliars(charID)
-          .then((allSpecificFamiliars) => {
-            return CharGathering.getAllFamiliarAbilities(charID)
-            .then((allFamiliarAbilities) => {
-              return CharGathering.getCharFamiliars(charID)
-              .then((charFamiliars) => {
+    static async getCompanionData(charID, allAnimalCompanions=null, charAnimalComps=null, allSpecificFamiliars=null, allFamiliarAbilities=null, charFamiliars=null){
 
-                return {
-                    AllAnimalCompanions : allAnimalCompanions,
-                    AnimalCompanions : charAnimalComps,
-                    AllSpecificFamiliars : allSpecificFamiliars,
-                    AllFamiliarAbilities : allFamiliarAbilities,
-                    Familiars : charFamiliars,
-                };
+      if(allAnimalCompanions==null){
+        allAnimalCompanions = await CharGathering.getAllAnimalCompanions(charID);
+      }
 
-              });
-            });
-          });
-        });
-      });
+      if(charAnimalComps==null){
+        charAnimalComps = await CharGathering.getCharAnimalCompanions(charID);
+      }
+
+      if(allSpecificFamiliars==null){
+        allSpecificFamiliars = await CharGathering.getAllSpecificFamiliars(charID);
+      }
+
+      if(allFamiliarAbilities==null){
+        allFamiliarAbilities = await CharGathering.getAllFamiliarAbilities(charID);
+      }
+
+      if(charFamiliars==null){
+        charFamiliars = await CharGathering.getCharFamiliars(charID);
+      }
+
+      return {
+        AllAnimalCompanions : allAnimalCompanions,
+        AnimalCompanions : charAnimalComps,
+        AllSpecificFamiliars : allSpecificFamiliars,
+        AllFamiliarAbilities : allFamiliarAbilities,
+        Familiars : charFamiliars,
+      };
+
     }
 
-    static getAbilityScores(charID) {
+    static async getAbilityScores(charID, charAbilityScores=null, bonusDataArray=null) {
 
-        return CharGathering.getBaseAbilityScores(charID)
-        .then((charAbilityScores) => {
-            return CharDataMappingExt.getDataAllAbilityBonus(charID)
-            .then((bonusDataArray) => {
+        if(charAbilityScores==null){
+          charAbilityScores = await CharGathering.getBaseAbilityScores(charID);
+        }
 
-                let abilMap = new Map();
-                abilMap.set("STR", charAbilityScores.STR);
-                abilMap.set("DEX", charAbilityScores.DEX);
-                abilMap.set("CON", charAbilityScores.CON);
-                abilMap.set("INT", charAbilityScores.INT);
-                abilMap.set("WIS", charAbilityScores.WIS);
-                abilMap.set("CHA", charAbilityScores.CHA);
+        if(bonusDataArray==null){
+          bonusDataArray = await CharDataMappingExt.getDataAllAbilityBonus(charID);
+        }
 
-                let boostMap = new Map();
-                for(const bonusData of bonusDataArray){
-                    if(bonusData.Bonus == "Boost") {
-                        let boostNums = boostMap.get(bonusData.Ability);
-                        if(boostNums == null){
-                            boostMap.set(bonusData.Ability, 1);
-                        } else {
-                            boostMap.set(bonusData.Ability, boostNums+1);
-                        }
-                    } else if(bonusData.Bonus == "Flaw") {
-                        let boostNums = boostMap.get(bonusData.Ability);
-                        if(boostNums == null){
-                            boostMap.set(bonusData.Ability, -1);
-                        } else {
-                            boostMap.set(bonusData.Ability, boostNums-1);
-                        }
-                    } else {
-                        let abilBonus = abilMap.get(bonusData.Ability);
-                        abilMap.set(bonusData.Ability, abilBonus+parseInt(bonusData.Bonus));
-                    }
+  
+        let abilMap = new Map();
+        abilMap.set("STR", charAbilityScores.STR);
+        abilMap.set("DEX", charAbilityScores.DEX);
+        abilMap.set("CON", charAbilityScores.CON);
+        abilMap.set("INT", charAbilityScores.INT);
+        abilMap.set("WIS", charAbilityScores.WIS);
+        abilMap.set("CHA", charAbilityScores.CHA);
+
+        let boostMap = new Map();
+        for(const bonusData of bonusDataArray){
+            if(bonusData.Bonus == "Boost") {
+                let boostNums = boostMap.get(bonusData.Ability);
+                if(boostNums == null){
+                    boostMap.set(bonusData.Ability, 1);
+                } else {
+                    boostMap.set(bonusData.Ability, boostNums+1);
                 }
-
-                for(const [ability, boostNums] of boostMap.entries()){
-                    let abilityScore = abilMap.get(ability);
-                    for (let i = 0; i < boostNums; i++) {
-                        if(abilityScore < 18){
-                            abilityScore += 2;
-                        } else {
-                            abilityScore += 1;
-                        }
-                    }
-                    if(boostNums < 0) {
-                        abilityScore = abilityScore+boostNums*2;
-                    }
-                    abilMap.set(ability, abilityScore);
+            } else if(bonusData.Bonus == "Flaw") {
+                let boostNums = boostMap.get(bonusData.Ability);
+                if(boostNums == null){
+                    boostMap.set(bonusData.Ability, -1);
+                } else {
+                    boostMap.set(bonusData.Ability, boostNums-1);
                 }
+            } else {
+                let abilBonus = abilMap.get(bonusData.Ability);
+                abilMap.set(bonusData.Ability, abilBonus+parseInt(bonusData.Bonus));
+            }
+        }
 
-                return mapToObj(abilMap);
+        for(const [ability, boostNums] of boostMap.entries()){
+            let abilityScore = abilMap.get(ability);
+            for (let i = 0; i < boostNums; i++) {
+                if(abilityScore < 18){
+                    abilityScore += 2;
+                } else {
+                    abilityScore += 1;
+                }
+            }
+            if(boostNums < 0) {
+                abilityScore = abilityScore+boostNums*2;
+            }
+            abilMap.set(ability, abilityScore);
+        }
 
-            });
-        });
+        return mapToObj(abilMap);
 
     }
 
@@ -1678,117 +1511,7 @@ module.exports = class CharGathering {
         });
     }
 
-    static getCharacterInfo(charID){
-      console.log('~~~~~~~~~~~ REQUESTING CHAR INFO ~~~~~~~~~~~');
-
-      return Character.findOne({ where: { id: charID } })
-      .then((character) => {
-        return CharGathering.getBackground(character)
-        .then((background) => {
-          return CharGathering.getAncestry(character)
-          .then((ancestry) => {
-            return CharGathering.getHeritage(character)
-            .then((heritage) => {
-              return Inventory.findOne({ where: { id: character.inventoryID} })
-              .then((inventory) => {
-                return CharGathering.getAllTags(charID)
-                .then( (tags) => {
-                  return CharGathering.getAbilityScores(charID)
-                  .then((abilObject) => {
-                    return CharGathering.getAllSkills(charID)
-                    .then((skillObject) => {
-                      return CharGathering.getCharChoices(charID)
-                      .then( (choiceStruct) => {
-                        return CharGathering.getSpellData(charID)
-                        .then((spellDataStruct) => {
-                          return CharGathering.getAllSpells(charID)
-                          .then((spellMap) => {
-                            return CharGathering.getAllFeats(charID)
-                            .then( (featObject) => {
-                              return CharGathering.getAllItems(charID)
-                              .then( (itemMap) => {
-                                return CharGathering.getAllCharConditions(charID)
-                                .then( (conditionsObject) => {
-                                  return Condition.findAll()
-                                  .then((allConditions) => {
-                                    return Language.findAll({
-                                      where: {
-                                          homebrewID: {
-                                            [Op.or]: CharContentHomebrew.getHomebrewArray(character)
-                                          },
-                                      }
-                                    }).then((allLanguages) => {
-                                      return CharGathering.getInventory(character.inventoryID)
-                                      .then( (invStruct) => {
-                                        return CharGathering.getCompanionData(charID)
-                                        .then( (companionData) => {
-                                          return CharGathering.getResistancesAndVulnerabilities(charID)
-                                          .then( (resistAndVulnerStruct) => {
-                                            return CharGathering.getSpecializations(charID)
-                                            .then( (specializeStruct) => {
-                                              return CharGathering.getNoteFields(charID)
-                                              .then( (notesDataArray) => {
-                                                return CharGathering.getOtherSpeeds(charID)
-                                                .then( (speedsDataArray) => {
-                                                  return CharGathering.getWeaponFamiliarities(charID)
-                                                  .then( (familiaritiesDataArray) => {
-                                                    return CharGathering.getAllClassFeatureOptions(charID)
-                                                    .then( (allClassFeatureOptions) => {
-                                                                                                
-                                                      let charInfo = {
-                                                        Character : character,
-                                                        Background : background,
-                                                        Ancestry : ancestry,
-                                                        Heritage : heritage,
-                                                        Inventory : inventory,
-                                                        AbilObject : abilObject,
-                                                        SkillObject : skillObject,
-                                                        FeatObject : featObject,
-                                                        SpellObject : mapToObj(spellMap),
-                                                        ChoiceStruct : choiceStruct,
-                                                        SpellDataStruct: spellDataStruct,
-                                                        InvStruct : invStruct,
-                                                        ItemObject : mapToObj(itemMap),
-                                                        ConditionsObject : conditionsObject,
-                                                        AllConditions : allConditions,
-                                                        AllLanguages : allLanguages,
-                                                        ResistAndVulners : resistAndVulnerStruct,
-                                                        SpecializeStruct : specializeStruct,
-                                                        WeaponFamiliarities : familiaritiesDataArray,
-                                                        NotesFields : notesDataArray,
-                                                        OtherSpeeds : speedsDataArray,
-                                                        AllTags : tags,
-                                                        CompanionData : companionData,
-                                                        AllClassFeatureOptions: allClassFeatureOptions,
-                                                      };
-                                                                      
-                                                      return charInfo;
-                                                    });
-                                                  });
-                                                });
-                                              });
-                                            });
-                                          });
-                                        });
-                                      });
-                                    });
-                                  });
-                                });
-                              });
-                            });
-                          });
-                        });
-                      });
-                    });
-                  });
-                });
-              });
-            });
-          });
-        });
-      });
-
-    }
+    
 
     static getCharacterInfoExportToPDF(charID){
       return Character.findOne({ where: { id: charID } })
@@ -1797,9 +1520,9 @@ module.exports = class CharGathering {
           return CharGathering.getAllMetadata(charID).then((metaDatas) => {
             return CharGathering.getAllCharConditions(charID).then((conditionsObject) => {
               return CharTags.getTags(charID).then((charTags) => {
-                return CharGathering.getAncestry(character).then((ancestry) => {
-                  return CharGathering.getBackground(character).then((background) => {
-                    return CharGathering.getHeritage(character).then((heritage) => {
+                return CharGathering.getAncestry(charID, character).then((ancestry) => {
+                  return CharGathering.getBackground(charID, character).then((background) => {
+                    return CharGathering.getHeritage(charID, character).then((heritage) => {
                       return CharGathering.getClassBasic(character).then((cClass) => {
 
                         return {

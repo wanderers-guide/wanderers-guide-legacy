@@ -31,6 +31,8 @@ const ItemRune = require('../models/contentDB/ItemRune');
 
 const CharGathering = require('./CharGathering');
 
+const { Prisma } = require('./PrismaConnection');
+
 function mapToObj(strMap) {
     let obj = Object.create(null);
     for (let [k,v] of strMap) {
@@ -316,55 +318,66 @@ module.exports = class GeneralGathering {
       });
     }
 
-    static getAllFeats(homebrewID=null) {
-        return Feat.findAll({ where: { homebrewID: { [Op.or]: [null,homebrewID] } } })
-        .then((feats) => {
-            return FeatTag.findAll()
-            .then((featTags) => {
-                return Tag.findAll({ where: { homebrewID: { [Op.or]: [null,homebrewID] } } })
-                .then((tags) => {
-    
-                    let featMap = new Map();
+    static async getAllFeats(homebrewID=null, feats=null, tags=null) {
+      homebrewID = (homebrewID == null) ? null : parseInt(homebrewID);    
 
-                    for (const feat of feats) {
-                        let fTags = [];
-                        /*
-                            If a feat has a genTypeName then it's a single feat for a class, ancestry, or uniHeritage.
-                            Search and give it the trait for that class, ancestry, or uniHeritage.
-                        */
-                        if(feat.genTypeName != null){
-                            let tag = tags.find(tag => {
-                                if(tag.isArchived == 0){
-                                    return tag.name === feat.genTypeName;
-                                } else {
-                                    return false;
-                                }
-                            });
-                            if(tag != null){
-                                fTags.push(tag);
-                            }
-                        }
-                        featMap.set(feat.id, {Feat : feat, Tags : fTags});
-                    }
-
-                    for (const featTag of featTags) {
-
-                        let tag = tags.find(tag => {
-                            return tag.id === featTag.tagID;
-                        });
-
-                        let featStruct = featMap.get(featTag.featID);
-                        if(featStruct != null){
-                          featStruct.Tags.push(tag);
-                        }
-
-                    }
-
-                    return mapToObj(featMap);
-    
-                });
-            });
+      if(feats==null){
+        feats = await Prisma.feats.findMany({
+          where: {
+            OR: [{ homebrewID: null }, { homebrewID: homebrewID }],
+            NOT: (homebrewID==null)? undefined : {id:-1/*No-Cache*/},
+          },
+          include: { featTags: true },
         });
+      }
+
+      if(tags==null){
+        tags = await Prisma.tags.findMany({
+          where: {
+            OR: [{ homebrewID: null }, { homebrewID: homebrewID }],
+            NOT: (homebrewID==null)? undefined : {id:-1/*No-Cache*/},
+          }
+        });
+      }
+
+
+      let featMap = new Map();
+
+      for (const feat of feats) {
+          let fTags = [];
+          /*
+              If a feat has a genTypeName then it's a single feat for a class, ancestry, or uniHeritage.
+              Search and give it the trait for that class, ancestry, or uniHeritage.
+          */
+          if(feat.genTypeName != null){
+              let tag = tags.find(tag => {
+                  if(tag.isArchived == 0){
+                      return tag.name === feat.genTypeName;
+                  } else {
+                      return false;
+                  }
+              });
+              if(tag != null){
+                  fTags.push(tag);
+              }
+          }
+
+          // Add Tags from FeatTags
+          for(const featTag of feat.featTags) {
+            let tag = tags.find(tag => {
+              return tag.id === featTag.tagID;
+            });
+            if(tag != null){
+              fTags.push(tag);
+            }
+          }
+
+          featMap.set(feat.id, {Feat : feat, Tags : fTags});
+
+      }
+
+      return mapToObj(featMap);
+
     }
 
     static getFeat(featID, homebrewID=null) {
@@ -388,41 +401,55 @@ module.exports = class GeneralGathering {
       });
     }
 
-    static getAllSpells(homebrewID=null) {
-        return Spell.findAll({
-            order: [['level', 'ASC'],['name', 'ASC'],],
-            where: { homebrewID: { [Op.or]: [null,homebrewID] } }
-        })
-        .then((spells) => {
-            return TaggedSpell.findAll()
-            .then((taggedSpells) => {
-                return Tag.findAll({ where: { homebrewID: { [Op.or]: [null,homebrewID] } } })
-                .then((tags) => {
-    
-                    let spellMap = new Map();
+    static async getAllSpells(homebrewID=null, spells=null, taggedSpells=null, tags=null) {
+      homebrewID = (homebrewID == null) ? null : parseInt(homebrewID);
 
-                    for (const spell of spells) {
-                        spellMap.set(spell.id, {Spell : spell, Tags : []});
-                    }
-
-                    for (const taggedSpell of taggedSpells) {
-
-                        let tag = tags.find(tag => {
-                            return tag.id === taggedSpell.tagID;
-                        });
-
-                        let spellStruct = spellMap.get(taggedSpell.spellID);
-                        if(spellStruct != null){
-                          spellStruct.Tags.push(tag);
-                        }
-
-                    }
-
-                    return spellMap;
-    
-                });
-            });
+      if(spells==null){
+        spells = await Prisma.spells.findMany({
+          where: {
+            OR: [{ homebrewID: null }, { homebrewID: homebrewID }],
+            NOT: (homebrewID==null)? undefined : {id:-1/*No-Cache*/},
+          },
+          orderBy: [{ level: 'asc' },{ name: 'asc' }],
         });
+      }
+
+      if(taggedSpells==null){
+        taggedSpells = await TaggedSpell.findAll();
+      }
+
+      if(tags==null){
+        tags = await Prisma.tags.findMany({
+          where: {
+            OR: [{ homebrewID: null }, { homebrewID: homebrewID }],
+            NOT: (homebrewID==null)? undefined : {id:-1/*No-Cache*/},
+          }
+        });
+      }
+
+      // Processing Spells Data //
+
+      let spellMap = new Map();
+    
+      for (const spell of spells) {
+        spellMap.set(spell.id, {Spell : spell, Tags : []});
+      }
+
+      for (const taggedSpell of taggedSpells) {
+
+        let tag = tags.find(tag => {
+          return tag.id === taggedSpell.tagID;
+        });
+
+        let spellStruct = spellMap.get(taggedSpell.spellID);
+        if(spellStruct != null){
+          spellStruct.Tags.push(tag);
+        }
+
+      }
+
+      return spellMap;
+      
     }
 
     static getSpell(spellID, homebrewID=null) {
@@ -474,87 +501,105 @@ module.exports = class GeneralGathering {
       });
     }
 
-    static getAllItems(homebrewID=null){
+    static async getAllItems(homebrewID=null, items=null, tags=null, taggedItems=null, weapons=null, armors=null, storages=null, shields=null, runes=null){
+      homebrewID = (homebrewID == null) ? null : parseInt(homebrewID);
 
-        console.log('~~~~~~~~~~~ ADMIN - REQUESTING ALL ITEMS ~~~~~~~~~~~');
+      console.log('~~~~~~~~~~~ REQUESTING ALL ITEMS ~~~~~~~~~~~');
         
-        return Item.findAll({ where: { homebrewID: { [Op.or]: [null,homebrewID] } } })
-        .then((items) => {
-            return Tag.findAll({ where: { homebrewID: { [Op.or]: [null,homebrewID] } } })
-            .then((tags) => {
-                return TaggedItem.findAll()
-                .then((taggedItems) => {
-                    return Weapon.findAll()
-                    .then((weapons) => {
-                        return Armor.findAll()
-                        .then((armors) => {
-                            return Storage.findAll()
-                            .then((storages) => {
-                                return Shield.findAll()
-                                .then((shields) => {
-                                    return ItemRune.findAll()
-                                    .then((runes) => {
-                                                
-                                        let itemMap = new Map();
-
-                                        for(const item of items){
-
-                                            let tagArray = [];
-                                            for(const taggedItem of taggedItems){
-                                                if(taggedItem.itemID == item.id) {
-
-                                                    let tag = tags.find(tag => {
-                                                        return tag.id == taggedItem.tagID;
-                                                    });
-            
-                                                    tagArray.push({
-                                                        Tag : tag
-                                                    });
-
-                                                }
-                                            }
-
-                                            let weapon = weapons.find(weapon => {
-                                                return weapon.itemID == item.id;
-                                            });
-
-                                            let armor = armors.find(armor => {
-                                                return armor.itemID == item.id;
-                                            });
-
-                                            let storage = storages.find(storage => {
-                                                return storage.itemID == item.id;
-                                            });
-
-                                            let shield = shields.find(shield => {
-                                                return shield.itemID == item.id;
-                                            });
-
-                                            let rune = runes.find(rune => {
-                                                return rune.itemID == item.id;
-                                            });
-
-                                            itemMap.set(item.id, {
-                                                Item : item,
-                                                WeaponData : weapon,
-                                                ArmorData : armor,
-                                                StorageData : storage,
-                                                ShieldData : shield,
-                                                RuneData : rune,
-                                                TagArray : tagArray
-                                            });
-
-                                        }
-
-                                        return itemMap;
-                                    });
-                                });
-                            });
-                        });
-                    });
-                });
-            });
+      if(items==null){
+        items = await Prisma.items.findMany({
+          where: {
+            OR: [{ homebrewID: null }, { homebrewID: homebrewID }],
+            NOT: (homebrewID==null)? undefined : {id:-1/*No-Cache*/},
+          }
         });
+      }
+
+      if(tags==null){
+        tags = await Prisma.tags.findMany({
+          where: {
+            OR: [{ homebrewID: null }, { homebrewID: homebrewID }],
+            NOT: (homebrewID==null)? undefined : {id:-1/*No-Cache*/},
+          }
+        });
+      }
+
+      if(taggedItems==null){
+        taggedItems = await Prisma.taggedItems.findMany();
+      }
+
+      if(weapons==null){
+        weapons = await Prisma.weapons.findMany();
+      }
+
+      if(armors==null){
+        armors = await Prisma.armors.findMany();
+      }
+
+      if(storages==null){
+        storages = await Prisma.storages.findMany();
+      }
+
+      if(shields==null){
+        shields = await Prisma.shields.findMany();
+      }
+      
+      if(runes==null){
+        runes = await Prisma.itemRunes.findMany();
+      }
+
+      // Processing Item Data //
+
+      let itemMap = new Map();
+      for(const item of items){
+
+        let tagArray = [];
+        for(const taggedItem of taggedItems){
+          if(taggedItem.itemID == item.id) {
+
+            let tag = tags.find(tag => {
+              return tag.id == taggedItem.tagID;
+            });
+
+            tagArray.push(tag);
+
+          }
+        }
+
+        let weapon = weapons.find(weapon => {
+          return weapon.itemID == item.id;
+        });
+
+        let armor = armors.find(armor => {
+          return armor.itemID == item.id;
+        });
+
+        let storage = storages.find(storage => {
+          return storage.itemID == item.id;
+        });
+
+        let shield = shields.find(shield => {
+          return shield.itemID == item.id;
+        });
+
+        let rune = runes.find(rune => {
+          return rune.itemID == item.id;
+        });
+
+        itemMap.set(item.id, {
+          Item : item,
+          WeaponData : weapon,
+          ArmorData : armor,
+          StorageData : storage,
+          ShieldData : shield,
+          RuneData : rune,
+          TagArray : tagArray
+        });
+
+      }
+
+      return itemMap;
+
     }
 
     static getItem(itemID, homebrewID=null) {
@@ -606,7 +651,8 @@ module.exports = class GeneralGathering {
           where: { homebrewID: { [Op.or]: [null,homebrewID] } }
         }).then((ancestries) => {
             return Heritage.findAll({
-                order: [['name', 'ASC'],]
+              homebrewID: { [Op.or]: [null,homebrewID] },
+              order: [['name', 'ASC'],]
             })
             .then((heritages) => {
                 return Language.findAll({ where: { homebrewID: { [Op.or]: [null,homebrewID] } } })

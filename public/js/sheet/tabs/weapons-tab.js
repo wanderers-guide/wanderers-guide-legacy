@@ -92,7 +92,7 @@ function openWeaponsTab(data) {
       const item = g_itemMap.get(invItem.itemID+"");
       if(isUnarmedAttack(item) && item.Item.id != FIST_ITEM_ID){ // Is Non-Custom Unarmed Attack
         const itemWeaponID = Array.from(phyFeatWeaponMap.values()).find(itemWeaponID => {
-          return itemWeaponID === invItem.itemID;
+          return (itemWeaponID === invItem.itemID);
         });
         if(itemWeaponID == null){
           willRemoveUnarmedAttacks.push(invItem.id);

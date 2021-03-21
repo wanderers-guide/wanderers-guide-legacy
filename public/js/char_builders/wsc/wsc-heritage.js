@@ -73,6 +73,8 @@ socket.on("returnFindHeritagesFromAncestryName", function(srcStruct, heritages, 
               srcStruct,
               null);
 
+          heritageEffectsUpdateWSCChoiceStruct(srcStruct, null);
+
       } else {
 
           $('.'+selectHeritageEffectsControlShellClass).removeClass("is-info");
@@ -135,5 +137,34 @@ function displayAndProcessHeritageEffects(srcStruct, heritage, locationID, sourc
     srcStruct,
     heritageLocationCodeID,
     sourceName);
+
+  heritageEffectsUpdateWSCChoiceStruct(srcStruct, heritage.id);
+
+}
+
+function heritageEffectsUpdateWSCChoiceStruct(srcStruct, heritageID){
+
+  let heritageEffectsArray = wscChoiceStruct.HeritageEffectsArray;
+
+  let foundHeritageData = false;
+  for(let heritageData of heritageEffectsArray){
+      if(hasSameSrc(heritageData, srcStruct)){
+          foundHeritageData = true;
+          if(heritageID != null){
+            heritageData.value = heritageID+'';
+          } else {
+            heritageData.value = null;
+          }
+          break;
+      }
+  }
+
+  if(!foundHeritageData && heritageID != null){
+    let heritageData = cloneObj(srcStruct);
+    heritageData.value = heritageID+'';
+    heritageEffectsArray.push(heritageData);
+  }
+
+  wscChoiceStruct.HeritageEffectsArray = heritageEffectsArray;
 
 }
