@@ -109,6 +109,9 @@ function openLeftStatsQuickview(data) {
 
   const sortedFeatArray = wscChoiceStruct.FeatArray.sort(
     function(a, b) {
+      if(a.value == null || b.value == null){
+        return b.value != null ? 1 : -1;
+      }
       if (a.value.level === b.value.level) {
         // Name is only important when levels are the same
         return a.value.name > b.value.name ? 1 : -1;

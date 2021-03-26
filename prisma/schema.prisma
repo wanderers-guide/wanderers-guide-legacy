@@ -768,10 +768,11 @@ model specificFamiliars {
 
 model spellBookSpells {
   id              Int         @id @default(autoincrement())
-  spellSRC        String?     @db.VarChar(45)
+  spellSRC        String?     @db.VarChar(90)
   charID          Int?
   spellID         Int?
   spellLevel      Int?
+  spellType       String?     @db.VarChar(15)
   srcStructHashed Int?
   characters      characters? @relation(fields: [charID], references: [id])
   spells          spells?     @relation(fields: [spellID], references: [id])

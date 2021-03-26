@@ -65,4 +65,29 @@ function openSpellEmptyQuickview(data) {
     }
     qContent.append(processText(emptySlotText, true, true, 'MEDIUM'));
 
+    // User Added, Remove Button
+    if(data.SpellSlotData.Slot.srcStruct.sourceType == 'user-added'){
+      qContent.append('<div class="buttons is-centered is-marginless"><a id="removeUserAddedSlotButton" class="button is-small is-danger is-rounded is-outlined mt-3">Remove Slot</a></div>');
+
+      $('#removeUserAddedSlotButton').click(function(){ // Remove User-Added Spell Slot
+        
+        socket.emit("requestSpellSlotChange",
+            getCharIDFromURL(),
+            data.SpellSlotData.Slot.srcStruct,
+            data.SpellSlotData.Slot.SpellSRC,
+            null
+        );
+
+        // Remove spell slot from g_spellSlotsMap
+        let newSlotArray = [];
+        for(let slot of g_spellSlotsMap.get(data.SpellSlotData.Slot.SpellSRC)){
+          if(slot.slotID != data.SpellSlotData.Slot.slotID){
+            newSlotArray.push(slot);
+          }
+        }
+        g_spellSlotsMap.set(data.SpellSlotData.Slot.SpellSRC, newSlotArray);
+
+      });
+    }
+
 }

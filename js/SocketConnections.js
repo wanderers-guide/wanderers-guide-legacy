@@ -464,10 +464,10 @@ module.exports = class SocketConnections {
     // Socket.IO Connections
     io.on('connection', function(socket){
 
-      socket.on('requestSpellAddToSpellBook', function(charID, spellSRC, spellID, spellLevel){
+      socket.on('requestSpellAddToSpellBook', function(charID, spellSRC, spellID, spellLevel, spellType){
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
           if(ownsChar){
-            CharSpells.addToSpellBook(charID, spellSRC, spellID, spellLevel).then((result) => {
+            CharSpells.addToSpellBook(charID, spellSRC, spellID, spellLevel, spellType, true).then((result) => {
               CharSpells.getSpellBook(charID, spellSRC, false).then((spellBookStruct) => {
                 socket.emit('returnSpellBookUpdated', spellBookStruct);
               });
@@ -493,6 +493,16 @@ module.exports = class SocketConnections {
           if(ownsChar){
             CharSpells.getSpellBook(charID, spellSRC, false).then((spellBookStruct) => {
               socket.emit('returnSpellBookUpdated', spellBookStruct);
+            });
+          }
+        });
+      });
+
+      socket.on('requestSpellTypeUpdate', function(charID, spellBookSpellID, spellType){
+        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+          if(ownsChar){
+            CharSpells.changeSpellBookSpellType(charID, spellBookSpellID, spellType).then((result) => {
+              socket.emit('returnSpellTypeUpdate');
             });
           }
         });
@@ -1415,7 +1425,7 @@ module.exports = class SocketConnections {
             CharSpells.setSpellCasting(charID, srcStruct, spellSRC, spellcasting)
             .then((spellSlots) => {
               if(spellSlots != null){
-                socket.emit('returnSpellSlotChange');
+                socket.emit('returnSpellCastingSlotChange', spellSRC, spellSlots);
               } else {
                 socket.emit('returnWSCStatementFailure', 'Invalid Spellcasting \"'+spellcasting+'\"');
               }
@@ -1426,17 +1436,24 @@ module.exports = class SocketConnections {
         });
       });
 
-      socket.on('requestSpellSlotChange', function(charID, srcStruct, spellSRC, spellSlot){
+      socket.on('requestSpellSlotChange', function(charID, srcStruct, spellSRC, spellLevel){
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
           if(ownsChar){
-            CharSpells.setSpellSlot(charID, srcStruct, spellSRC, spellSlot)
-            .then((spellSlot) => {
-              if(spellSlot != null){
-                socket.emit('returnSpellSlotChange');
-              } else {
-                socket.emit('returnWSCStatementFailure', 'Invalid Spell Slot \"'+spellSlot+'\"');
-              }
-            });
+            if(spellLevel != null){
+              CharSpells.setSpellSlot(charID, srcStruct, spellSRC, spellLevel)
+              .then((spellSlot) => {
+                if(spellSlot != null){
+                  socket.emit('returnSpellSlotChange', spellSRC, spellSlot);
+                } else {
+                  socket.emit('returnWSCStatementFailure', 'Invalid Spell Slot \"'+spellLevel+'\"');
+                }
+              });
+            } else {
+              CharDataMapping.deleteData(charID, 'spellSlots', srcStruct)
+              .then((result) => {
+                socket.emit('returnSpellSlotChange', spellSRC, null);
+              });
+            }
           } else {
             socket.emit('returnWSCStatementFailure', 'Incorrect Auth');
           }

@@ -54,8 +54,12 @@ function giveSpellSlot(srcStruct, spellSRC, spellSlot){
         spellSlot);
 }
 
-socket.on("returnSpellSlotChange", function(){
-    statementComplete();
+socket.on("returnSpellCastingSlotChange", function(spellSRC, spellSlots){
+  statementComplete();
+});
+
+socket.on("returnSpellSlotChange", function(spellSRC, spellSlot){
+  statementComplete();
 });
 
 //////////////////////////////// Set Key Ability ///////////////////////////////////

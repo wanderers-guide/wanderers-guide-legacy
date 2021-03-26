@@ -114,15 +114,20 @@ function prepDisplayOfSpellsAndSlots(){
     // Reorganize SpellSlotMap to by Level //
     let spellSlotMap = new Map();
     for(const [spellSRC, spellSlotArray] of data.SpellSlotsMap.entries()){
-        for(let spellSlot of spellSlotArray) {
-            let spellSlotMapArray = [];
-            if(spellSlotMap.has(spellSlot.slotLevel)){
-                spellSlotMapArray = spellSlotMap.get(spellSlot.slotLevel);
-            }
-            spellSlot.SpellSRC = spellSRC;
-            spellSlotMapArray.push(spellSlot);
-            spellSlotMap.set(spellSlot.slotLevel, spellSlotMapArray);
+      const sortedSlotArray = spellSlotArray.sort(
+        function(a, b) {
+          return a.slotLevel - b.slotLevel;
         }
+      );
+      for(let spellSlot of sortedSlotArray) {
+        let spellSlotMapArray = [];
+        if(spellSlotMap.has(spellSlot.slotLevel)){
+          spellSlotMapArray = spellSlotMap.get(spellSlot.slotLevel);
+        }
+        spellSlot.SpellSRC = spellSRC;
+        spellSlotMapArray.push(spellSlot);
+        spellSlotMap.set(spellSlot.slotLevel, spellSlotMapArray);
+      }
     }
 
     displaySpellsAndSlots(spellSlotMap, data);
@@ -238,11 +243,34 @@ function displaySpellsInLevelPrepared(level, slotArray, data, spellsSearchInput)
         /// Display Spell Listing ///
         if(spellDataStruct != null) {
             
+            // SpellBookSpell Data
+            let spellData = spellBook.SpellBook.find(spellData => {
+              return spellData.SpellID == slot.spellID;
+            });
+
+
             // Name //
-            let spellName = '<strong class="has-text-grey-light">'+spellDataStruct.Spell.name+'</strong>';
+            let spellName = spellDataStruct.Spell.name;
+
+            // Get color from spellBookSpell
+            let bulmaColor = getSpellTypeBulmaColor(spellData.SpellType);
+            if(bulmaColor != '' && bulmaColor != 'has-text-info'){
+              spellName += '<span style="left:-25px; top:-5px;" class="pos-absolute icon is-medium '+bulmaColor+'"><i class="fas fa-xs fa-circle"></i></span>';
+            } else {
+
+              // Get color from spell slot
+              bulmaColor = getSpellTypeBulmaColor(slot.type);
+              if(bulmaColor != '' && bulmaColor != 'has-text-info'){
+                spellName += '<span style="left:-25px; top:-5px;" class="pos-absolute icon is-medium '+bulmaColor+'"><i class="fas fa-xs fa-circle"></i></span>';
+              }
+
+            }
+
+
+            let spellNameHTML = '<strong class="has-text-grey-light">'+spellName+'</strong>';
 
             if(spellDataStruct.Spell.isArchived === 1){
-                spellName += '<em class="pl-1">(archived)</em>';
+              spellNameHTML += '<em class="pl-1">(archived)</em>';
             }
             
             // Cast Actions //
@@ -269,12 +297,14 @@ function displaySpellsInLevelPrepared(level, slotArray, data, spellsSearchInput)
             }
             tagsInnerHTML += '</div>';
 
-            $('#spellsCoreContent').append('<div id="'+spellSlotID+'" class="columns is-mobile is-marginless cursor-clickable"><div class="column is-5 is-paddingless"><p class="has-text-left pl-3 pt-1">'+spellName+'</p></div><div class="column is-1 is-paddingless"><p class="text-center has-text-grey-light pt-1">'+spellCast+'</p></div><div class="column is-1 is-paddingless"><p class="text-center has-text-grey-light pt-1">'+spellRange+'</p></div><div class="column is-5 is-paddingless"><p class="text-center has-text-grey-light">'+tagsInnerHTML+'</p></div></div>');
+            $('#spellsCoreContent').append('<div id="'+spellSlotID+'" class="columns is-mobile is-marginless cursor-clickable"><div class="column is-5 is-paddingless"><p class="has-text-left pl-3 pt-1 pos-relative">'+spellNameHTML+'</p></div><div class="column is-1 is-paddingless"><p class="text-center has-text-grey-light pt-1">'+spellCast+'</p></div><div class="column is-1 is-paddingless"><p class="text-center has-text-grey-light pt-1">'+spellRange+'</p></div><div class="column is-5 is-paddingless"><p class="text-center has-text-grey-light">'+tagsInnerHTML+'</p></div></div>');
 
             $('#'+spellSlotID).click(function(){
                 openQuickView('spellView', {
                     SpellDataStruct: spellDataStruct,
-                    SheetData: {Slot: slot, Data: data},
+                    SheetData: {
+                      Slot: slot,
+                      Data: data},
                 });
             });
 
@@ -284,7 +314,15 @@ function displaySpellsInLevelPrepared(level, slotArray, data, spellsSearchInput)
             }
 
         } else {
-            $('#spellsCoreContent').append('<div id="'+spellSlotID+'" class="columns is-mobile is-marginless"><div class="column is-5 is-paddingless"><p class="has-text-left pl-4 has-text-grey-light">-</p></div><div class="column is-1 is-paddingless"><p class="text-center has-text-grey-light">-</p></div><div class="column is-1 is-paddingless"><p class="text-center has-text-grey-light">-</p></div><div class="column is-5 is-paddingless"><p class="text-center has-text-grey-light">-</p></div></div>');
+
+          // Get color from spell slot
+          let slotColorHTML = '';
+          let bulmaColor = getSpellTypeBulmaColor(slot.type);
+          if(bulmaColor != '' && bulmaColor != 'has-text-info'){
+            slotColorHTML = '<span style="left:-9px; top:0px;" class="pos-absolute icon is-medium '+bulmaColor+'"><i class="fas fa-xs fa-circle"></i></span>';
+          }
+
+          $('#spellsCoreContent').append('<div id="'+spellSlotID+'" class="columns is-mobile is-marginless"><div class="column is-5 is-paddingless"><p class="has-text-left pl-4 has-text-grey-light pos-relative">-'+slotColorHTML+'</p></div><div class="column is-1 is-paddingless"><p class="text-center has-text-grey-light">-</p></div><div class="column is-1 is-paddingless"><p class="text-center has-text-grey-light">-</p></div><div class="column is-5 is-paddingless"><p class="text-center has-text-grey-light">-</p></div></div>');
         }
 
         $('#'+spellSlotID).mouseenter(function(){
@@ -371,10 +409,18 @@ function displaySpellsInLevelSpontaneous(level, slotArray, data, spellsSearchInp
             if(spellDataStruct != null) {
                 
                 // Name //
-                let spellName = '<strong class="has-text-grey-light">'+spellDataStruct.Spell.name+'</strong>';
+                let spellName = spellDataStruct.Spell.name;
+
+                let bulmaColor = getSpellTypeBulmaColor(spellData.SpellType);
+                if(bulmaColor != '' && bulmaColor != 'has-text-info'){
+                  spellName += '<span style="left:-25px; top:-5px;" class="pos-absolute icon is-medium '+bulmaColor+'"><i class="fas fa-xs fa-circle"></i></span>';
+                }
+
+
+                let spellNameHTML = '<strong class="has-text-grey-light">'+spellName+'</strong>';
 
                 if(spellDataStruct.Spell.isArchived === 1){
-                    spellName += '<em class="pl-1">(archived)</em>';
+                  spellNameHTML += '<em class="pl-1">(archived)</em>';
                 }
                 
                 // Cast Actions //
@@ -401,7 +447,7 @@ function displaySpellsInLevelSpontaneous(level, slotArray, data, spellsSearchInp
                 }
                 tagsInnerHTML += '</div>';
 
-                $('#spellsCoreContent').append('<div id="'+spellSponListingID+'" class="'+spellListingSponClass+' columns is-mobile is-marginless cursor-clickable"><div class="column is-5 is-paddingless"><p class="has-text-left pl-3 pt-1">'+spellName+'</p></div><div class="column is-1 is-paddingless"><p class="text-center has-text-grey-light pt-1">'+spellCast+'</p></div><div class="column is-1 is-paddingless"><p class="text-center has-text-grey-light pt-1">'+spellRange+'</p></div><div class="column is-5 is-paddingless"><p class="text-center has-text-grey-light">'+tagsInnerHTML+'</p></div></div>');
+                $('#spellsCoreContent').append('<div id="'+spellSponListingID+'" class="'+spellListingSponClass+' columns is-mobile is-marginless cursor-clickable"><div class="column is-5 is-paddingless"><p class="has-text-left pl-3 pt-1 pos-relative">'+spellNameHTML+'</p></div><div class="column is-1 is-paddingless"><p class="text-center has-text-grey-light pt-1">'+spellCast+'</p></div><div class="column is-1 is-paddingless"><p class="text-center has-text-grey-light pt-1">'+spellRange+'</p></div><div class="column is-5 is-paddingless"><p class="text-center has-text-grey-light">'+tagsInnerHTML+'</p></div></div>');
 
                 let unusedSlot = filteredSlotArray.find(slot => {
                     return slot.used === false;
@@ -413,7 +459,9 @@ function displaySpellsInLevelSpontaneous(level, slotArray, data, spellsSearchInp
                     $('#'+spellSponListingID).click(function(){
                         openQuickView('spellView', {
                             SpellDataStruct: spellDataStruct,
-                            SheetData: {Slot: unusedSlot, Data: data},
+                            SheetData: {
+                              Slot: unusedSlot,
+                              Data: data},
                         });
                     });
                 }

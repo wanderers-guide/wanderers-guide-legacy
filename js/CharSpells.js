@@ -294,13 +294,14 @@ module.exports = class CharSpells {
         });
     }
 
-    static addToSpellBook(charID, spellSRC, spellID, spellLevel, noDuplicates=false){
+    static addToSpellBook(charID, spellSRC, spellID, spellLevel, spellType, noDuplicates=false){
         let createSpellBookSpell = function(charID, spellSRC, spellID, spellLevel) {
             return SpellBookSpell.create({ // Create SpellBookSpell
                 spellSRC: spellSRC,
                 charID: charID,
                 spellID: spellID,
                 spellLevel: spellLevel,
+                spellType: spellType,
             }).then(spellBookSpell => {
                 return spellBookSpell;
             }).catch(function(err) {
@@ -341,6 +342,7 @@ module.exports = class CharSpells {
                 charID: charID,
                 spellID: spellID,
                 spellLevel: spellLevel,
+                spellType: null,
                 srcStructHashed: srcStructHashed,
             }).then(spellBookSpell => {
                 return spellBookSpell;
@@ -366,7 +368,13 @@ module.exports = class CharSpells {
                         let keyAbility = getKeyAbilityFromSpellSRC(spellKeyAbilityDataArray, spellSRC);
                         let spellBookArray = [];
                         for(let spellBookSpell of spellBookSpells){
-                            spellBookArray.push({SpellID: spellBookSpell.spellID, SpellLevel: spellBookSpell.spellLevel});
+                          if(spellBookSpell.spellType == null) { spellBookSpell.spellType = 'R:0,G:0,B:0'; }
+                          spellBookArray.push({
+                            SpellBookSpellID: spellBookSpell.id,
+                            SpellID: spellBookSpell.spellID,
+                            SpellLevel: spellBookSpell.spellLevel,
+                            SpellType: spellBookSpell.spellType,
+                          });
                         }
                         return {
                             SpellSRC: spellSRC,
@@ -380,6 +388,14 @@ module.exports = class CharSpells {
                 });
             });
         });
+    }
+
+    static changeSpellBookSpellType(charID, spellBookSpellID, spellType) {
+      let updateValues = { spellType: spellType };
+      return SpellBookSpell.update(updateValues, { where: { id: spellBookSpellID, charID: charID, } })
+      .then((result) => {
+        return;
+      });
     }
 
     static getSpellList(charID, spellSRC) {
@@ -483,14 +499,24 @@ module.exports = class CharSpells {
     static setSpellSlot(charID, srcStruct, spellSRC, slotLevel){
         let rowName = levelToRowName(slotLevel);
         if(rowName == null) {return null;}
+
         let spellSlot = {};
-        spellSlot[rowName] = [{slotID: getRandomSID(), used: false, spellID: null, type: '', level_lock: -1}];
+        let spellSlotSubData = {
+          slotID: getRandomSID(),
+          used: false,
+          spellID: null,
+          type: '',
+          level_lock: -1};
+        spellSlot[rowName] = [spellSlotSubData];
+
         return CharDataMapping.getDataSingle(charID, 'spellSlots', srcStruct)
         .then((spellSlotData) => {
           if(spellSlotData == null){// If slot data doesn't already exist,
             return CharDataMapping.setData(charID, 'spellSlots', srcStruct, spellSRC+"="+JSON.stringify(spellSlot))
             .then((result) => {
-              return spellSlot;
+              spellSlotSubData.slotLevel = parseInt(slotLevel);
+              spellSlotSubData.srcStruct = srcStruct;
+              return spellSlotSubData;
             });
           } else {
             return false; // Returns not null but not the spellslot either.
@@ -564,6 +590,9 @@ module.exports = class CharSpells {
                                     spellSlotArray = spellSlotsMap.get(spellSRC);
                                 }
                                 
+                                let srcStruct = spellSlotData;
+                                srcStruct.value = null;
+
                                 let spellSlotEntry = {
                                   slotID: slotData.slotID,
                                   slotLevel: slotLevel,
@@ -571,6 +600,7 @@ module.exports = class CharSpells {
                                   spellID: slotData.spellID,
                                   type: slotData.type,
                                   level_lock: slotData.level_lock,
+                                  srcStruct: srcStruct,
                                 };
                                 if(slotData.level_cutoff != null){
                                   spellSlotEntry.level_cutoff = slotData.level_cutoff;

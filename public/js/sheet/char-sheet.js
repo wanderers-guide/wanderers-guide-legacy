@@ -230,11 +230,11 @@ socket.on("returnCharacterSheetInfo", function(charInfo, userPermissions, viewOn
     g_featChoiceArray = g_featChoiceArray.sort(
         function(a, b) {
             if(a.value == null || b.value == null){
-                return b.value != null ? 1 : -1;
+              return b.value != null ? 1 : -1;
             }
             if (a.value.level === b.value.level) {
-                // Name is only important when levels are the same
-                return a.value.name > b.value.name ? 1 : -1;
+              // Name is only important when levels are the same
+              return a.value.name > b.value.name ? 1 : -1;
             }
             return a.value.level - b.value.level;
         }
@@ -2516,6 +2516,20 @@ socket.on("returnProficiencyChange", function(profChangePacket){
 socket.on("returnLoreChange", function(srcStruct, loreName, inputPacket, prof){
   socket.emit("requestProfsAndSkills",
       getCharIDFromURL());
+});
+
+socket.on("returnSpellSlotChange", function(spellSRC, spellSlot){
+  if(spellSlot != null){ // Add Spell Slot
+    let slotArray = g_spellSlotsMap.get(spellSRC);
+    if(slotArray != null){
+      slotArray.push(spellSlot);
+      g_spellSlotsMap.set(spellSRC, slotArray);
+    }
+  }
+  current_spellSRC = null;
+  closeManageSpellsModal();
+  reloadCharSheet();
+  closeQuickView();
 });
 
 socket.on("returnLanguageChange", function(){

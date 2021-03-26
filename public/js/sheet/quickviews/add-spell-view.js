@@ -178,7 +178,8 @@ function displayAddSpell(spellDataStruct, data){
                     getCharIDFromURL(),
                     data.SpellBook.SpellSRC,
                     spellDataStruct.Spell.id,
-                    spellLevel);
+                    spellLevel,
+                    null);
                 data.SpellBook.SpellBook.push({SpellID: spellDataStruct.Spell.id, SpellLevel: spellLevel});
                 $("#"+spellTradAddSpellID).val('chooseDefault');
             }
@@ -202,7 +203,8 @@ function displayAddSpell(spellDataStruct, data){
                 getCharIDFromURL(),
                 data.SpellBook.SpellSRC,
                 spellDataStruct.Spell.id,
-                spellDataStruct.Spell.level);
+                spellDataStruct.Spell.level,
+                null);
             data.SpellBook.SpellBook.push({SpellID: spellDataStruct.Spell.id, SpellLevel: spellDataStruct.Spell.level});
             $('#'+spellTradAddSpellBtnWrapperID).html('<button class="button my-1 is-small is-primary is-rounded">Added</button>');
         });

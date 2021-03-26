@@ -40,6 +40,7 @@
     <script src="/js/sheet/quickviews/add-prof-view.js"></script>
     <script src="/js/sheet/quickviews/add-lang-view.js"></script>
     <script src="/js/sheet/quickviews/add-lore-view.js"></script>
+    <script src="/js/sheet/quickviews/add-spell-slot-view.js"></script>
     <script src="/js/sheet/quickviews/add-resist-view.js"></script>
     <script src="/js/sheet/quickviews/add-weak-view.js"></script>
     <script src="/js/sheet/quickviews/resist-list-view.js"></script>
@@ -80,6 +81,7 @@
     <script src="/js/sheet/utils/struct-utils.js"></script>
     <script src="/js/sheet/utils/material-utils.js"></script>
     <script src="/js/sheet/utils/item-utils.js"></script>
+    <script src="/js/sheet/utils/spell-utils.js"></script>
     <script src="/js/sheet/utils/utils.js"></script>
 
     <script src="/js/sheet/utils/dice-roller.js"></script>
@@ -554,8 +556,13 @@
                         <div id="manageSpellsSpellBook" class="use-custom-scrollbar" style="max-height: 55vh; overflow-y: auto;">
                         </div>
                     </div>
-                    <div class="tile is-child is-9">
+                    <div class="tile is-child is-9 pos-relative">
                         <div id="manageSpellsSlots" class="use-custom-scrollbar" style="max-height: 70vh; overflow-y: auto;">
+                        </div>
+                        <div class="pos-absolute pos-t-0 pos-r-4">
+                          <span id="manageSpellsAddNewSlotBtn" class="icon is-medium has-text-info cursor-clickable has-tooltip-left" data-tooltip="Add Spell Slot">
+                            <i class="fas fa-lg fa-shapes"></i>
+                          </span>
                         </div>
                     </div>
                 </div>

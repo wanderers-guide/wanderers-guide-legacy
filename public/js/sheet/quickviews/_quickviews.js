@@ -103,6 +103,8 @@ function openQuickView(type, data, noProtection=false) {
         openAddLoreQuickview(data);
     } else if(type == 'addLangView'){
         openAddLangQuickview(data);
+    } else if(type == 'addSpellSlotView'){
+        openAddSpellSlotQuickview(data);
     } else if(type == 'addResistView'){
         openAddResistQuickview(data);
     } else if(type == 'addWeakView'){

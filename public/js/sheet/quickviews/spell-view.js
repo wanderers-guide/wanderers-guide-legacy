@@ -66,6 +66,7 @@ function openSpellQuickview(data){
         $('#quickViewTitleRight').html('<span class="pr-2">'+spellLevel+'</span>');
     }
 
+    // Coloring Spell SLOT //
     if(data.SpellSlotData != null){ // Set Slot Color-Type //
         
         let typeStruct = getSpellTypeStruct(data.SpellSlotData.Slot.type);
@@ -111,6 +112,60 @@ function openSpellQuickview(data){
         displayColorTypes(typeStruct);
     
     }
+
+    // Coloring SPELL in Spellbook //
+    if(data.SRCTabData != null && data.SRCTabData.SpellBookSpellID != null && data.SRCTabData.SpellType != null){
+
+      let typeStruct = getSpellTypeStruct(data.SRCTabData.SpellType);
+
+      let displayColorTypes = function(typeStruct) {
+          let redTypeIcon = (typeStruct.Red) ? 'fas fa-xs fa-circle' : 'far fa-xs fa-circle';
+          let greenTypeIcon = (typeStruct.Green) ? 'fas fa-xs fa-circle' : 'far fa-xs fa-circle';
+          let blueTypeIcon = (typeStruct.Blue) ? 'fas fa-xs fa-circle' : 'far fa-xs fa-circle';
+  
+          $('#quickViewTitleRight').html('<span class="pr-2"><span class="icon has-text-danger is-small cursor-clickable spellSlotRedType"><i class="'+redTypeIcon+'"></i></span><span class="icon has-text-success is-small cursor-clickable spellSlotGreenType"><i class="'+greenTypeIcon+'"></i></span><span class="icon has-text-link is-small cursor-clickable spellSlotBlueType"><i class="'+blueTypeIcon+'"></i></span></span>');
+
+          $('.spellSlotRedType').click(function(){
+              typeStruct.Red = !typeStruct.Red;
+              data.SRCTabData.SpellType = getSpellTypeData(typeStruct);
+              updateSpellBookSpellType(data.SRCTabData.SpellBookSpellID, data.SRCTabData.SpellType);
+              socket.emit("requestSpellTypeUpdate",
+                  getCharIDFromURL(),
+                  data.SRCTabData.SpellBookSpellID,
+                  data.SRCTabData.SpellType);
+              displayColorTypes(typeStruct);
+              openSpellSRCTab(data.SRCTabData.SpellSRC, data.SRCTabData.Data);
+          });
+  
+          $('.spellSlotGreenType').click(function(){
+              typeStruct.Green = !typeStruct.Green;
+              data.SRCTabData.SpellType = getSpellTypeData(typeStruct);
+              updateSpellBookSpellType(data.SRCTabData.SpellBookSpellID, data.SRCTabData.SpellType);
+              socket.emit("requestSpellTypeUpdate",
+                  getCharIDFromURL(),
+                  data.SRCTabData.SpellBookSpellID,
+                  data.SRCTabData.SpellType);
+              displayColorTypes(typeStruct);
+              openSpellSRCTab(data.SRCTabData.SpellSRC, data.SRCTabData.Data);
+          });
+  
+          $('.spellSlotBlueType').click(function(){
+              typeStruct.Blue = !typeStruct.Blue;
+              data.SRCTabData.SpellType = getSpellTypeData(typeStruct);
+              updateSpellBookSpellType(data.SRCTabData.SpellBookSpellID, data.SRCTabData.SpellType);
+              socket.emit("requestSpellTypeUpdate",
+                  getCharIDFromURL(),
+                  data.SRCTabData.SpellBookSpellID,
+                  data.SRCTabData.SpellType);
+              displayColorTypes(typeStruct);
+              openSpellSRCTab(data.SRCTabData.SpellSRC, data.SRCTabData.Data);
+          });
+      };
+
+      displayColorTypes(typeStruct);
+  
+    }
+
 
     if(data.SRCTabData != null){ // Remove from SpellBook //
 
@@ -174,19 +229,7 @@ function openSpellQuickview(data){
             spellUsed = (data.SheetData.InnateSpell.TimesCast == data.SheetData.InnateSpell.TimesPerDay);
         }
         
-        if(data.SheetData.Slot != null){
-
-            let typeStruct = getSpellTypeStruct(data.SheetData.Slot.type);
-    
-            let redTypeIconHidden = (typeStruct.Red) ? '' : 'is-hidden';
-            let greenTypeIconHidden = (typeStruct.Green) ? '' : 'is-hidden';
-            let blueTypeIconHidden = (typeStruct.Blue) ? '' : 'is-hidden';
-    
-            $('#quickViewTitleRight').html('<span class="pr-2"><span class="icon has-text-danger is-small '+redTypeIconHidden+'"><i class="fas fa-xs fa-circle"></i></span><span class="icon has-text-success is-small '+greenTypeIconHidden+'"><i class="fas fa-xs fa-circle"></i></span><span class="icon has-text-link is-small '+blueTypeIconHidden+'"><i class="fas fa-xs fa-circle"></i></span><span class="pl-2">'+capitalizeWord(spellTradition)+'</span></span>');
-    
-        } else {
-            $('#quickViewTitleRight').html('<span class="pr-2">'+capitalizeWord(spellTradition)+'</span>');
-        }
+        $('#quickViewTitleRight').html('<span class="pr-2">'+capitalizeWord(spellTradition)+'</span>');
 
         let spellAttack = 0;
         let spellDC = 0;

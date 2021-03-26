@@ -40,8 +40,26 @@
   border-color: hsl(210, 3%, 23%)!important;
 }
 
-.is-filled-multiple-spell-slot {
+.is-filled-brown-spell-slot {
   background-color: hsl(53, 23%, 21%)!important;
+  color: #cccccc!important;
+  border-color: hsl(210, 3%, 23%)!important;
+}
+
+.is-filled-turquoise-spell-slot {
+  background-color: hsl(184, 63%, 19%)!important;
+  color: #cccccc!important;
+  border-color: hsl(210, 3%, 23%)!important;
+}
+
+.is-filled-purple-spell-slot {
+  background-color: hsl(286, 63%, 19%)!important;
+  color: #cccccc!important;
+  border-color: hsl(210, 3%, 23%)!important;
+}
+
+.is-filled-multiple-spell-slot {
+  background-color: hsl(53, 57%, 27%)!important;
   color: #cccccc!important;
   border-color: hsl(210, 3%, 23%)!important;
 }
@@ -70,8 +88,26 @@
   border-color: hsl(210, 3%, 23%)!important;
 }
 
+.is-empty-brown-spell-slot {
+  background-color: hsl(53, 19%, 33%)!important;
+  color: #cccccc!important;
+  border-color: hsl(210, 3%, 23%)!important;
+}
+
+.is-empty-turquoise-spell-slot {
+  background-color: hsl(184, 23%, 39%)!important;
+  color: #cccccc!important;
+  border-color: hsl(210, 3%, 23%)!important;
+}
+
+.is-empty-purple-spell-slot {
+  background-color: hsl(285, 23%, 35%)!important;
+  color: #cccccc!important;
+  border-color: hsl(210, 3%, 23%)!important;
+}
+
 .is-empty-multiple-spell-slot {
-  background-color: hsl(53, 23%, 35%)!important;
+  background-color: hsl(53, 47%, 35%)!important;
   color: #dddddd!important;
   border-color: hsl(210, 3%, 23%)!important;
 }

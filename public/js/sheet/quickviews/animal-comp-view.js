@@ -49,6 +49,12 @@ function openAnimalCompQuickview(data) {
     if(currentHP == -1){ currentHP = maxHP; }
 
     qContent.append('<div class="field has-addons has-addons-centered is-marginless"><p class="control"><input id="animalHealthInput" class="input" type="text" size="4" min="0" max="'+maxHP+'" value="'+currentHP+'"></p><p class="control"><a class="button is-static has-text-grey-light has-background-grey-darkest border-darker">/</a><p class="control"><a class="button is-static has-text-grey-lighter has-background-grey-darklike border-darker">'+maxHP+'</a></p></div>');
+    // Press Enter Key
+    $('#animalHealthInput').on('keypress',function(e){
+      if(e.which == 13){
+        $('#animalHealthInput').blur();
+      }
+    });
     $('#animalHealthInput').blur(function() {
         if($('#animalHealthInput').val() != charAnimal.currentHP){
             try {

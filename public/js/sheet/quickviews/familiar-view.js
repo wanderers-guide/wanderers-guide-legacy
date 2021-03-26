@@ -50,6 +50,12 @@ function openFamiliarQuickview(data) {
     if(currentHP == -1){ currentHP = maxHP; }
 
     qContent.append('<div class="field has-addons has-addons-centered is-marginless"><p class="control"><input id="familiarHealthInput" class="input" type="text" size="4" min="0" max="'+maxHP+'" value="'+currentHP+'"></p><p class="control"><a class="button is-static has-text-grey-light has-background-grey-darkest border-darker">/</a><p class="control"><a class="button is-static has-text-grey-lighter has-background-grey-darklike border-darker">'+maxHP+'</a></p></div>');
+    // Press Enter Key
+    $('#familiarHealthInput').on('keypress',function(e){
+      if(e.which == 13){
+        $('#familiarHealthInput').blur();
+      }
+    });
     $('#familiarHealthInput').blur(function() {
         if($('#familiarHealthInput').val() != familiar.currentHP){
             try {

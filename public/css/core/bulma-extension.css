@@ -64,6 +64,19 @@ strong {
   color: hsl(0, 0%, 85%)!important;
 }
 
+.has-text-gold {
+  color: #eec00b!important;
+}
+.has-text-brown {
+  color: #9D876E!important;
+}
+.has-text-turquoise {
+  color: #3D9DA8!important;
+}
+.has-text-purple {
+  color: #925DA2!important;
+}
+
 /* Background Colors */
 .has-background-black-like {
   background-color: hsl(0, 0%, 12%)!important;

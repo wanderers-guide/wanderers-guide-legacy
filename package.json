@@ -47,6 +47,6 @@
     },
     "devDependencies": {
         "nodemon": "^2.0.2",
-        "prisma": "^2.18.0"
+        "prisma": "^2.19.0"
     }
 }
