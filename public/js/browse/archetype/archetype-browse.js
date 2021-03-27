@@ -99,6 +99,7 @@ function displayArchetypeResults(allArchetypes){
 
     $('#'+entryID).click(function(){
       new DisplayArchetype('tabContent', archetype.id, g_featMap);
+      updateBrowseURL('id', archetype.id);
     });
 
     $('#'+entryID).mouseenter(function(){

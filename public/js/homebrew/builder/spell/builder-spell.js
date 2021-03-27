@@ -52,9 +52,9 @@ function finishSpell(isUpdate){
     g_homebrewID = $('#builder-container').attr('data-bundle-id');
     let spellID = $('#builder-container').attr('data-spell-id');
     if(isUpdate){
-        requestPacket = "requestHomebrewUpdateSpell";
+      requestPacket = "requestHomebrewUpdateSpell";
     } else {
-        requestPacket = "requestHomebrewAddSpell";
+      requestPacket = "requestHomebrewAddSpell";
     }
 
     socket.emit(requestPacket, g_homebrewID, {

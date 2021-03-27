@@ -54,6 +54,7 @@ function displayClassResults(allClasses){
 
     $('#'+entryID).click(function(){
       new DisplayClass('tabContent', cClass.id, g_featMap);
+      updateBrowseURL('id', cClass.id);
     });
 
     $('#'+entryID).mouseenter(function(){

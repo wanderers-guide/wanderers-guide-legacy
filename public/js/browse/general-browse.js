@@ -84,141 +84,181 @@ function initBrowse(featMap, skillMap, itemMap, spellMap, allLanguages, allCondi
   $("#filterNameInput").blur(function(){
     if($('#filterNameInput').val() != ''){
       $('#filterNameInput').addClass('is-info');
+      addToBrowseURL('filter', $('#filterNameInput').val(), 'Name');
     } else {
       $('#filterNameInput').removeClass('is-info');
+      removeFromBrowseURL('filter', 'Name');
     }
   });
   $("#filterFeatPrereqInput").blur(function(){
     if($('#filterFeatPrereqInput').val() != ''){
       $('#filterFeatPrereqInput').addClass('is-info');
+      addToBrowseURL('filter', $('#filterFeatPrereqInput').val(), 'FeatPrereq');
     } else {
       $('#filterFeatPrereqInput').removeClass('is-info');
+      removeFromBrowseURL('filter', 'FeatPrereq');
     }
   });
   $("#filterItemUsageInput").blur(function(){
     if($('#filterItemUsageInput').val() != ''){
       $('#filterItemUsageInput').addClass('is-info');
+      addToBrowseURL('filter', $('#filterItemUsageInput').val(), 'ItemUsage');
     } else {
       $('#filterItemUsageInput').removeClass('is-info');
+      removeFromBrowseURL('filter', 'ItemUsage');
     }
   });
   $("#filterAreaInput").blur(function(){
     if($('#filterAreaInput').val() != ''){
       $('#filterAreaInput').addClass('is-info');
+      addToBrowseURL('filter', $('#filterAreaInput').val(), 'Area');
     } else {
       $('#filterAreaInput').removeClass('is-info');
+      removeFromBrowseURL('filter', 'Area');
     }
   });
   $("#filterRangeInput").blur(function(){
     if($('#filterRangeInput').val() != ''){
       $('#filterRangeInput').addClass('is-info');
+      addToBrowseURL('filter', $('#filterRangeInput').val(), 'Range');
     } else {
       $('#filterRangeInput').removeClass('is-info');
+      removeFromBrowseURL('filter', 'Range');
     }
   });
   $("#filterTargetsInput").blur(function(){
     if($('#filterTargetsInput').val() != ''){
       $('#filterTargetsInput').addClass('is-info');
+      addToBrowseURL('filter', $('#filterTargetsInput').val(), 'Targets');
     } else {
       $('#filterTargetsInput').removeClass('is-info');
+      removeFromBrowseURL('filter', 'Targets');
     }
   });
   $("#filterDescInput").blur(function(){
     if($('#filterDescInput').val() != ''){
       $('#filterDescInput').addClass('is-info');
+      addToBrowseURL('filter', $('#filterDescInput').val(), 'Desc');
     } else {
       $('#filterDescInput').removeClass('is-info');
+      removeFromBrowseURL('filter', 'Desc');
     }
   });
   $("#filterSpellTraditionInput").blur(function(){
     if($('#filterSpellTraditionInput').val() != 'ANY'){
       $('#filterSpellTraditionInput').parent().addClass('is-info');
+      addToBrowseURL('filter', $('#filterSpellTraditionInput').val(), 'SpellTradition');
     } else {
       $('#filterSpellTraditionInput').parent().removeClass('is-info');
+      removeFromBrowseURL('filter', 'SpellTradition');
     }
   });
   $("#filterActionsInput").blur(function(){
     if($('#filterActionsInput').val() != 'ANY'){
       $('#filterActionsInput').parent().addClass('is-info');
+      addToBrowseURL('filter', $('#filterActionsInput').val(), 'Actions');
     } else {
       $('#filterActionsInput').parent().removeClass('is-info');
+      removeFromBrowseURL('filter', 'Actions');
     }
   });
   $("#filterCastTimeInput").blur(function(){
     if($('#filterCastTimeInput').val() != 'ANY'){
       $('#filterCastTimeInput').parent().addClass('is-info');
+      addToBrowseURL('filter', $('#filterCastTimeInput').val(), 'CastTime');
     } else {
       $('#filterCastTimeInput').parent().removeClass('is-info');
+      removeFromBrowseURL('filter', 'CastTime');
     }
   });
   $("#filterComponentsInput").blur(function(){
     if($('#filterComponentsInput').val() != 'ANY'){
       $('#filterComponentsInput').parent().addClass('is-info');
+      addToBrowseURL('filter', $('#filterComponentsInput').val(), 'Components');
     } else {
       $('#filterComponentsInput').parent().removeClass('is-info');
+      removeFromBrowseURL('filter', 'Components');
     }
   });
   $("#filterSpellSavingThrowInput").blur(function(){
     if($('#filterSpellSavingThrowInput').val() != 'ANY'){
       $('#filterSpellSavingThrowInput').parent().addClass('is-info');
+      addToBrowseURL('filter', $('#filterSpellSavingThrowInput').val(), 'SpellSavingThrow');
     } else {
       $('#filterSpellSavingThrowInput').parent().removeClass('is-info');
+      removeFromBrowseURL('filter', 'SpellSavingThrow');
     }
   });
   $("#filterSpellFocusInput").blur(function(){
     if($('#filterSpellFocusInput').val() != 'ANY'){
       $('#filterSpellFocusInput').parent().addClass('is-info');
+      addToBrowseURL('filter', $('#filterSpellFocusInput').val(), 'SpellFocus');
     } else {
       $('#filterSpellFocusInput').parent().removeClass('is-info');
+      removeFromBrowseURL('filter', 'SpellFocus');
     }
   });
   $("#filterLevelInput").blur(function(){
     if($('#filterLevelInput').val() != ''){
       $('#filterLevelInput').addClass('is-info');
+      addToBrowseURL('filter', $('#filterLevelInput').val(), 'Level');
     } else {
       $('#filterLevelInput').removeClass('is-info');
+      removeFromBrowseURL('filter', 'Level');
     }
   });
   $("#filterItemPriceInput").blur(function(){
     if($('#filterItemPriceInput').val() != ''){
       $('#filterItemPriceInput').addClass('is-info');
+      addToBrowseURL('filter', $('#filterItemPriceInput').val(), 'ItemPrice');
     } else {
       $('#filterItemPriceInput').removeClass('is-info');
+      removeFromBrowseURL('filter', 'ItemPrice');
     }
   });
   $("#filterItemBulkInput").blur(function(){
     if($('#filterItemBulkInput').val() != ''){
       $('#filterItemBulkInput').addClass('is-info');
+      addToBrowseURL('filter', $('#filterItemBulkInput').val(), 'ItemBulk');
     } else {
       $('#filterItemBulkInput').removeClass('is-info');
+      removeFromBrowseURL('filter', 'ItemBulk');
     }
   });
   $("#filterRarityInput").blur(function(){
     if($('#filterRarityInput').val() != 'ANY'){
       $('#filterRarityInput').parent().addClass('is-info');
+      addToBrowseURL('filter', $('#filterRarityInput').val(), 'Rarity');
     } else {
       $('#filterRarityInput').parent().removeClass('is-info');
+      removeFromBrowseURL('filter', 'Rarity');
     }
   });
   $("#filterFeatSkillInput").blur(function(){
     if($('#filterFeatSkillInput').val() != 'ANY'){
       $('#filterFeatSkillInput').parent().addClass('is-info');
+      addToBrowseURL('filter', $('#filterFeatSkillInput').val(), 'FeatSkill');
     } else {
       $('#filterFeatSkillInput').parent().removeClass('is-info');
+      removeFromBrowseURL('filter', 'FeatSkill');
     }
   });
   $("#filterItemCategoryInput").blur(function(){
     if($('#filterItemCategoryInput').val() != 'ANY'){
       $('#filterItemCategoryInput').parent().addClass('is-info');
+      addToBrowseURL('filter', $('#filterItemCategoryInput').val(), 'ItemCategory');
     } else {
       $('#filterItemCategoryInput').parent().removeClass('is-info');
+      removeFromBrowseURL('filter', 'ItemCategory');
     }
   });
   $("#filterSourceInput").blur(function(){
     if($('#filterSourceInput').val() != 'ANY'){
       $('#filterSourceInput').parent().addClass('is-info');
+      addToBrowseURL('filter', $('#filterSourceInput').val(), 'Source');
     } else {
       $('#filterSourceInput').parent().removeClass('is-info');
+      removeFromBrowseURL('filter', 'Source');
     }
   });
 
@@ -238,6 +278,9 @@ function initBrowse(featMap, skillMap, itemMap, spellMap, allLanguages, allCondi
       filterSearch();
     }
   });
+
+  // Check query parameters for search
+  queryBrowseContent();
 
 }
 
@@ -395,6 +438,10 @@ function openTab(tabName){
     default: break;
   }
 
+  // Update content (tab) query parameters
+  updateBrowseURL('content', tabName, true);
+  updateBrowseURL('id', null);
+
   // Triggers all blur events, updating highlights
   $('.input').blur();
   $('.select select').blur();
@@ -409,6 +456,11 @@ function openTab(tabName){
 }
 
 function filterSearch(){
+
+  // Triggers all blur events, updating highlights
+  $('.input').blur();
+  $('.select select').blur();
+
   switch(activeSearchTab){
     case 'ancestry': filterAncestrySearch(); return;
     case 'archetype': filterArchetypeSearch(); return;

@@ -64,6 +64,7 @@ function displayBackgroundResults(allBackgrounds){
 
     $('#'+entryID).click(function(){
       new DisplayBackground('tabContent', background.id);
+      updateBrowseURL('id', background.id);
     });
 
     $('#'+entryID).mouseenter(function(){

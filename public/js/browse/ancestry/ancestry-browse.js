@@ -64,6 +64,7 @@ function displayAncestryResults(allAncestries){
 
     $('#'+entryID).click(function(){
       new DisplayAncestry('tabContent', ancestry.id, g_featMap);
+      updateBrowseURL('id', ancestry.id);
     });
 
     $('#'+entryID).mouseenter(function(){

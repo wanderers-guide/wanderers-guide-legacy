@@ -178,6 +178,7 @@ function displayItemResults(itemMap){
       openQuickView('itemView', {
         ItemDataStruct : itemStruct
       });
+      updateBrowseURL('id', itemID);
     });
 
     $('#'+entryID).mouseenter(function(){

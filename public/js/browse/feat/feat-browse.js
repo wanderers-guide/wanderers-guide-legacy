@@ -154,6 +154,7 @@ function displayFeatResults(featMap){
         Feat : featStruct.Feat,
         Tags : featStruct.Tags
       });
+      updateBrowseURL('id', featID);
     });
 
     $('#'+entryID).mouseenter(function(){

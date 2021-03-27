@@ -208,6 +208,7 @@ function displaySpellResults(spellMap){
       openQuickView('spellView', {
         SpellDataStruct: spellStruct,
       });
+      updateBrowseURL('id', spellID);
     });
 
     $('#'+entryID).mouseenter(function(){

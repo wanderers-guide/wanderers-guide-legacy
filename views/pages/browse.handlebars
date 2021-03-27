@@ -2,6 +2,7 @@
 {{#section 'header'}}
     <link rel="stylesheet" href="/css/browse.css">
     <script src="/js/browse/general-browse.js"></script>
+    <script src="/js/browse/query-params.js"></script>
     <script src="/js/browse/browse-utils.js"></script>
 
     <script src="/js/libraries/display_class/display-class.js"></script>
@@ -91,7 +92,7 @@
       <li><a id="vHeritagesSearchTab" class="searchTab" data-tab-name="v-heritage">Versatile Heritages</a></li>
     </ul>
   </div>
-  <div id="tabContent" class="mx-3 mb-3">
+  <div id="tabContent" class="mx-3 mb-3" data-content-filter="{{contentFilter}}" data-content-section="{{contentSection}}" data-content-id="{{contentID}}">
 
     <div class="columns">
       <div id="searchFilterSection" class="column is-4 m-1 is-paddingless use-custom-scrollbar" style="height: 650px; max-height: 650px; overflow-y: auto;">

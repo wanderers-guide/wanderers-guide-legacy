@@ -54,6 +54,7 @@ function displayUniHeritageResults(allUniHeritages){
 
     $('#'+entryID).click(function(){
       new DisplayUniHeritage('tabContent', uniHeritage.id, g_featMap);
+      updateBrowseURL('id', uniHeritage.id);
     });
 
     $('#'+entryID).mouseenter(function(){
