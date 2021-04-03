@@ -22,7 +22,7 @@ function getSheetStateByID(stateID){
 
 function getSheetStateByName(stateName){
   return g_sheetStatesArray.find(sheetState => {
-    return sheetState.name == stateName;
+    return sheetState.name.toUpperCase() == stateName.toUpperCase();
   });
 }
 

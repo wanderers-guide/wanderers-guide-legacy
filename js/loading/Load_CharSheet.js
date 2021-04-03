@@ -45,8 +45,10 @@ module.exports = async function(socket, charID, character) {
   socket.emit('updateLoadProgess', { message: 'Bartering for Items', upVal: 10 }); // (31/100) //
   const items = await Prisma.items.findMany({
     where: {
-      OR: CharContentSources.getSourceArrayPrisma(character),
-      OR: CharContentHomebrew.getHomebrewArrayPrisma(character),
+      AND: [
+        {OR: CharContentSources.getSourceArrayPrisma(character)},
+        {OR: CharContentHomebrew.getHomebrewArrayPrisma(character)},
+      ],
     }
   });
 

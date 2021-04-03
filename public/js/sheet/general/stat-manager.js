@@ -43,6 +43,29 @@ function addStat(statName, source, value){
 
 function addStatAndSrc(statName, source, value, statSrc){
     statName = statName.replace(/\s/g, "_").toUpperCase();
+
+    // Don't add to map, just increase
+    if(statName == 'HEALTH') {
+      if(source.includes('_BONUS')) { g_character.currentHealth += value; }
+      if(source.includes('_PENALTY')) { g_character.currentHealth -= value; }
+      if(!source.includes('_BONUS') && !source.includes('_PENALTY')) { g_character.currentHealth = value; }
+      socket.emit("requestCurrentHitPointsSave",
+          getCharIDFromURL(),
+          g_character.currentHealth);
+      initHealthPointsAndMore();
+      return;
+    } else if(statName == 'TEMP_HEALTH'){
+      if(source.includes('_BONUS')) { g_character.tempHealth += value; }
+      if(source.includes('_PENALTY')) { g_character.tempHealth -= value; }
+      if(!source.includes('_BONUS') && !source.includes('_PENALTY')) { g_character.tempHealth = value; }
+      socket.emit("requestTempHitPointsSave",
+          getCharIDFromURL(),
+          g_character.tempHealth);
+      initHealthPointsAndMore();
+      return;
+    }
+
+    // Normal stat map
     let statDataMap = g_statManagerMap.get(statName);
     if(statDataMap != null){
         let existingData = statDataMap.get(source);

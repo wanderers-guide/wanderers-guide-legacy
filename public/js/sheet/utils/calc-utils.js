@@ -22,6 +22,9 @@ function getAttackAndDamage(itemData, invItem){
 
     if(itemData.WeaponData.isMelee == 1){
 
+        let agileTag = tagArray.find(tag => {
+          return tag.id == 43; // Hardcoded Agile Tag ID
+        });
         let finesseTag = tagArray.find(tag => {
             return tag.id == 42; // Hardcoded Finesse Tag ID
         });
@@ -118,13 +121,53 @@ function getAttackAndDamage(itemData, invItem){
         }
         let weapSpecial = (weapSpecialBonus != 0) ? signNumber(weapSpecialBonus) : '';
 
+        // Bonus for - Weapons //
+        let weapExtraBonus = getStatTotal('ATTACKS_DMG_BONUS');
+        let weapExtra = '';
+        if(weapExtraBonus != null) {
+          weapExtra = signNumber(weapExtraBonus);
+        } else {
+          weapExtraBonus = 0;
+        }
+
+        // Bonus for - Melee Weapons //
+        let weapMeleeExtraBonus = getStatTotal('MELEE_ATTACKS_DMG_BONUS');
+        let weapMeleeExtra = '';
+        if(weapMeleeExtraBonus != null) {
+          weapMeleeExtra = signNumber(weapMeleeExtraBonus);
+        } else {
+          weapMeleeExtraBonus = 0;
+        }
+
+        // Bonus for - Agile Melee Weapons //
+        let weapMeleeAgileExtraBonus = getStatTotal('AGILE_MELEE_ATTACKS_DMG_BONUS');
+        let weapMeleeAgileExtra = '';
+        let weapMeleeNonAgileExtraBonus = getStatTotal('NON_AGILE_MELEE_ATTACKS_DMG_BONUS');
+        let weapMeleeNonAgileExtra = '';
+        if(agileTag != null){
+          if(weapMeleeAgileExtraBonus != null) {
+            weapMeleeAgileExtra = signNumber(weapMeleeAgileExtraBonus);
+          } else {
+            weapMeleeAgileExtraBonus = 0;
+          }
+        } else {
+          if(weapMeleeNonAgileExtraBonus != null) {
+            weapMeleeNonAgileExtra = signNumber(weapMeleeNonAgileExtraBonus);
+          } else {
+            weapMeleeNonAgileExtraBonus = 0;
+          }
+        }
+
+        let damageBonusInt = strMod+weapSpecialBonus+weapExtraBonus+weapMeleeExtraBonus+weapMeleeAgileExtraBonus+weapMeleeNonAgileExtraBonus;
+        let damageBonusStr = dmgStrBonus+weapSpecial+weapExtra+weapMeleeExtra+weapMeleeAgileExtra+weapMeleeNonAgileExtra;
+
         let damage = '';
         if(damageDieType != 'NONE') {
-            let maxDamage = diceNum*dieTypeToNum(damageDieType)+strMod+weapSpecialBonus;
+            let maxDamage = diceNum*dieTypeToNum(damageDieType)+damageBonusInt;
             if(maxDamage >= 1) {
-                damage = diceNum+""+damageDieType+dmgStrBonus+weapSpecial+" "+damageDamageType;
+                damage = diceNum+""+damageDieType+damageBonusStr+" "+damageDamageType;
             } else {
-                damage = '<a class="has-text-grey" data-tooltip="'+diceNum+""+damageDieType+dmgStrBonus+weapSpecial+'">1</a> '+damageDamageType;
+                damage = '<a class="has-text-grey" data-tooltip="'+diceNum+""+damageDieType+damageBonusStr+'">1</a> '+damageDamageType;
             }
         } else {
             damage = '-';
@@ -232,13 +275,32 @@ function getAttackAndDamage(itemData, invItem){
         }
         let weapSpecial = (weapSpecialBonus != 0) ? signNumber(weapSpecialBonus) : '';
 
+        let weapExtraBonus = getStatTotal('ATTACKS_DMG_BONUS');
+        let weapExtra = '';
+        if(weapExtraBonus != null) {
+          weapExtra = signNumber(weapExtraBonus);
+        } else {
+          weapExtraBonus = 0;
+        }
+
+        let weapRangedExtraBonus = getStatTotal('RANGED_ATTACKS_DMG_BONUS');
+        let weapRangedExtra = '';
+        if(weapRangedExtraBonus != null) {
+          weapRangedExtra = signNumber(weapRangedExtraBonus);
+        } else {
+          weapRangedExtraBonus = 0;
+        }
+
+        let damageBonusInt = dmgStr+weapSpecialBonus+weapExtraBonus+weapRangedExtraBonus;
+        let damageBonusStr = dmgStrSigned+weapSpecial+weapExtra+weapRangedExtra;
+
         let damage = '';
         if(damageDieType != 'NONE') {
-            let maxDamage = diceNum*dieTypeToNum(damageDieType)+dmgStr+weapSpecialBonus;
+            let maxDamage = diceNum*dieTypeToNum(damageDieType)+damageBonusInt;
             if(maxDamage >= 1) {
-                damage = diceNum+""+damageDieType+dmgStrSigned+weapSpecial+" "+damageDamageType;
+                damage = diceNum+""+damageDieType+damageBonusStr+" "+damageDamageType;
             } else {
-                damage = '<a class="has-text-grey" data-tooltip="'+diceNum+""+damageDieType+dmgStrSigned+weapSpecial+'">1</a> '+damageDamageType;
+                damage = '<a class="has-text-grey" data-tooltip="'+diceNum+""+damageDieType+damageBonusStr+'">1</a> '+damageDamageType;
             }
         } else {
             damage = '-';

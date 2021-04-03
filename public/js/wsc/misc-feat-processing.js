@@ -14,7 +14,7 @@ function processMiscFeatStatements(code){
   for(let statementRaw of allStatements){
     // Test/Check Statement for Expressions //
     let wscStatement = testExpr(statementRaw);
-    if(wscStatement === null) {continue;}
+    if(wscStatement == null) {continue;}
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
     let wscStatementUpper = wscStatement.toUpperCase();
 

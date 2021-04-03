@@ -53,6 +53,12 @@ function setLeftQuickViewTab(subtabName){
 function leftQuickview_OpenToggleables(){
 
   let qContent = $('#quickViewLeftContent');
+
+  qContent.append(`
+    <div class="mb-3">
+      <p>The following are toggleable buttons that apply certain effects to the sheet when enabled. They can be useful for some abilities that tend to be either active or inactive.</p>
+    </div>
+  `);
   
   for(const sheetState of getSheetStates()){
 
@@ -85,7 +91,7 @@ function leftQuickview_OpenDiceRoller() {
   // Set HTML
   qContent.append(`
 
-      <div class="columns is-mobile is-narrow is-centered is-gapless">
+      <div class="columns is-mobile is-narrow is-centered is-gapless mt-2">
         <div class="column is-1"></div>
         <div class="column is-2">
           <div class="control">

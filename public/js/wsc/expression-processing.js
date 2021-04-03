@@ -211,6 +211,10 @@ function expHandleExpression(expression, statement, elseStatement, srcStruct){
       return expIsUnarmored(expression, statement, elseStatement);
     }
 
+    if(expression.includes('IS-TOGGLED')){ // IS-TOGGLED==Rage
+      return expIsToggled(expression, statement, elseStatement);
+    }
+
     return -1;
 
 }
@@ -445,5 +449,28 @@ function expIsUnarmored(expression, statement, elseStatement) {
     return (g_equippedArmorInvItemID == null) ? statement : elseStatement;
   } else {
     return null;
+  }
+}
+
+function expIsToggled(expression, statement, elseStatement) {
+  if(!isSheetPage()) { return null; }
+  if(expression.includes('==')){
+    let sheetStateName = expression.split('==')[1].toUpperCase();
+    let sheetState = getSheetStateByName(sheetStateName);
+    if(sheetState != null){
+      return (isSheetStateActive(sheetState.id)) ? statement : elseStatement;
+    } else {
+      displayError("Cannot find toggleable '"+sheetStateName+"'!");
+      return null;
+    }
+  } else if(expression.includes('!=')){
+    let sheetStateName = expression.split('!=')[1].toUpperCase();
+    let sheetState = getSheetStateByName(sheetStateName);
+    if(sheetState != null){
+      return (isSheetStateActive(sheetState.id)) ? elseStatement : statement;
+    } else {
+      displayError("Cannot find toggleable '"+sheetStateName+"'!");
+      return null;
+    }
   }
 }

@@ -204,8 +204,10 @@ module.exports = class CharGathering {
       return await Prisma.classAbilities.findMany({
         where: {
           selectType: 'SELECT_OPTION',
-          OR: CharContentSources.getSourceArrayPrisma(character),
-          OR: CharContentHomebrew.getHomebrewArrayPrisma(character),
+          AND: [
+            {OR: CharContentSources.getSourceArrayPrisma(character)},
+            {OR: CharContentHomebrew.getHomebrewArrayPrisma(character)},
+          ],
         },
         orderBy: [{ level: 'asc' },{ name: 'asc' }],
       });
@@ -267,8 +269,10 @@ module.exports = class CharGathering {
       if(feats==null){
         feats = await Prisma.feats.findMany({
           where: {
-            OR: CharContentSources.getSourceArrayPrisma(character),
-            OR: CharContentHomebrew.getHomebrewArrayPrisma(character),
+            AND: [
+              {OR: CharContentSources.getSourceArrayPrisma(character)},
+              {OR: CharContentHomebrew.getHomebrewArrayPrisma(character)},
+            ],
           },
           include: { featTags: true },
         });
@@ -327,8 +331,10 @@ module.exports = class CharGathering {
       if(spells==null){
         spells = await Prisma.spells.findMany({
           where: {
-            OR: CharContentSources.getSourceArrayPrisma(character),
-            OR: CharContentHomebrew.getHomebrewArrayPrisma(character),
+            AND: [
+              {OR: CharContentSources.getSourceArrayPrisma(character)},
+              {OR: CharContentHomebrew.getHomebrewArrayPrisma(character)},
+            ],
           },
           orderBy: [{ level: 'asc' },{ name: 'asc' }],
         });
@@ -376,8 +382,10 @@ module.exports = class CharGathering {
         if(items==null){
           items = await Prisma.items.findMany({
             where: {
-              OR: CharContentSources.getSourceArrayPrisma(character),
-              OR: CharContentHomebrew.getHomebrewArrayPrisma(character),
+              AND: [
+                {OR: CharContentSources.getSourceArrayPrisma(character)},
+                {OR: CharContentHomebrew.getHomebrewArrayPrisma(character)},
+              ],
             }
           });
         }
@@ -801,8 +809,10 @@ module.exports = class CharGathering {
       }
       return await Prisma.ancestries.findMany({
         where: {
-          OR: CharContentSources.getSourceArrayPrisma(character),
-          OR: CharContentHomebrew.getHomebrewArrayPrisma(character),
+          AND: [
+            {OR: CharContentSources.getSourceArrayPrisma(character)},
+            {OR: CharContentHomebrew.getHomebrewArrayPrisma(character)},
+          ],
         }
       });
     }
@@ -813,8 +823,10 @@ module.exports = class CharGathering {
       }
       return await Prisma.backgrounds.findMany({
         where: {
-          OR: CharContentSources.getSourceArrayPrisma(character),
-          OR: CharContentHomebrew.getHomebrewArrayPrisma(character),
+          AND: [
+            {OR: CharContentSources.getSourceArrayPrisma(character)},
+            {OR: CharContentHomebrew.getHomebrewArrayPrisma(character)},
+          ],
         }
       });
     }
@@ -833,8 +845,10 @@ module.exports = class CharGathering {
       }
       return await Prisma.domains.findMany({
         where: {
-          OR: CharContentSources.getSourceArrayPrisma(character),
-          OR: CharContentHomebrew.getHomebrewArrayPrisma(character),
+          AND: [
+            {OR: CharContentSources.getSourceArrayPrisma(character)},
+            {OR: CharContentHomebrew.getHomebrewArrayPrisma(character)},
+          ],
         }
       });
     }
@@ -1524,9 +1538,11 @@ module.exports = class CharGathering {
 
       return await Prisma.sheetStates.findMany({
         where: {
-          OR: CharContentSources.getSourceArrayPrisma(character),
-          OR: CharContentHomebrew.getHomebrewArrayPrisma(character),
-        },
+          AND: [
+            {OR: CharContentSources.getSourceArrayPrisma(character)},
+            {OR: CharContentHomebrew.getHomebrewArrayPrisma(character)},
+          ],
+        }
       });
 
     }

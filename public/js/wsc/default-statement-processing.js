@@ -16,7 +16,7 @@ function processDefaultItemRuneSheetCode(wscCode, itemID, invItemID){
     for(const wscStatementRaw of wscStatements) {
         // Test/Check Statement for Expressions //
         let wscStatement = testExpr(wscStatementRaw);
-        if(wscStatement === null) {continue;}
+        if(wscStatement == null) {continue;}
         //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
 
         if(wscStatement.includes("DEFAULT-WEAPON-RUNE")){

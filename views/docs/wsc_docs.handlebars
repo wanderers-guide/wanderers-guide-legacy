@@ -406,13 +406,18 @@
                     <p class="pl-2"><span class="code">SCORE_WIS</span></p>
                     <p class="pl-2"><span class="code">SCORE_CHA</span></p>
                 </div>
+                <hr class="m-1">
                 <div class="pl-3 py-2">
                     <p class="">
                         <strong>Health:</strong>
                     </p>
                     <p class="pl-2"><span class="code">MAX_HEALTH</span></p>
                     <p class="pl-2"><span class="code">MAX_HEALTH_BONUS_PER_LEVEL</span></p>
+                    <p class="m-1">-</p>
+                    <p class="pl-2"><span class="code">HEALTH</span> (updates current HP)</p>
+                    <p class="pl-2"><span class="code">TEMP_HEALTH</span> (updates current Temp HP)</p>
                 </div>
+                <hr class="m-1">
                 <div class="pl-3 py-2">
                     <p class="">
                         <strong>Saving Throws:</strong>
@@ -421,6 +426,7 @@
                     <p class="pl-2"><span class="code">SAVE_REFLEX</span></p>
                     <p class="pl-2"><span class="code">SAVE_WILL</span></p>
                 </div>
+                <hr class="m-1">
                 <div class="pl-3 py-2">
                     <p class="">
                         <strong>Skills:</strong>
@@ -430,29 +436,40 @@
                         For lore add <span class="code">_LORE</span> to the end. Ex: <span class="code">SKILL_WARFARE_LORE</span>
                     </p>
                 </div>
+                <hr class="m-1">
                 <div class="pl-3 py-2">
                     <p class="">
                         <strong>Perception:</strong>
                     </p>
                     <p class="pl-2"><span class="code">PERCEPTION</span></p>
                 </div>
+                <hr class="m-1">
                 <div class="pl-3 py-2">
                     <p class="">
                         <strong>Class DC:</strong>
                     </p>
                     <p class="pl-2"><span class="code">CLASS_DC</span></p>
                 </div>
+                <hr class="m-1">
                 <div class="pl-3 py-2">
                     <p class="">
-                        <strong>Weapon Attacks & Damage Dice:</strong>
+                        <strong>Weapon Attacks & Damage:</strong>
                     </p>
                     <p class="pl-2"><span class="code">ATTACKS</span></p>
                     <p class="pl-2"><span class="code">ATTACKS_DMG_DICE</span> (overrides all weapon damage dice)</p>
+                    <p class="pl-2"><span class="code">ATTACKS_DMG_BONUS</span></p>
+                    <p class="m-1">-</p>
                     <p class="pl-2"><span class="code">MELEE_ATTACKS</span></p>
                     <p class="pl-2"><span class="code">MELEE_ATTACKS_DMG_DICE</span> (overrides all melee weapon damage dice)</p>
+                    <p class="pl-2"><span class="code">MELEE_ATTACKS_DMG_BONUS</span></p>
+                    <p class="pl-2"><span class="code">AGILE_MELEE_ATTACKS_DMG_BONUS</span></p>
+                    <p class="pl-2"><span class="code">NON_AGILE_MELEE_ATTACKS_DMG_BONUS</span></p>
+                    <p class="m-1">-</p>
                     <p class="pl-2"><span class="code">RANGED_ATTACKS</span></p>
                     <p class="pl-2"><span class="code">RANGED_ATTACKS_DMG_DICE</span> (overrides all ranged weapon damage dice)</p>
+                    <p class="pl-2"><span class="code">RANGED_ATTACKS_DMG_BONUS</span></p>
                 </div>
+                <hr class="m-1">
                 <div class="pl-3 py-2">
                     <p class="">
                         <strong>Spell Attacks:</strong>
@@ -462,6 +479,7 @@
                     <p class="pl-2"><span class="code">OCCULT_SPELL_ATTACK</span></p>
                     <p class="pl-2"><span class="code">PRIMAL_SPELL_ATTACK</span></p>
                 </div>
+                <hr class="m-1">
                 <div class="pl-3 py-2">
                     <p class="">
                         <strong>Spell DCs:</strong>
@@ -471,12 +489,14 @@
                     <p class="pl-2"><span class="code">OCCULT_SPELL_DC</span></p>
                     <p class="pl-2"><span class="code">PRIMAL_SPELL_DC</span></p>
                 </div>
+                <hr class="m-1">
                 <div class="pl-3 py-2">
                     <p class="">
                         <strong>Armor Class:</strong>
                     </p>
                     <p class="pl-2"><span class="code">AC</span></p>
                 </div>
+                <hr class="m-1">
                 <div class="pl-3 py-2">
                     <p class="">
                         <strong>Armor Other:</strong>
@@ -485,6 +505,7 @@
                     <p class="pl-2"><span class="code">ARMOR_SPEED_PENALTY</span></p>
                     <p class="pl-2"><span class="code">DEX_CAP</span> (adjusting this at all will override any existing Dex Caps)</p>
                 </div>
+                <hr class="m-1">
                 <div class="pl-3 py-2">
                     <p class="">
                         <strong>Speed:</strong>
@@ -494,12 +515,14 @@
                         For other Speeds, put <span class="code">SPEED_</span> and then the name of the speed. Ex: <span class="code">SPEED_CLIMB</span>
                     </p>
                 </div>
+                <hr class="m-1">
                 <div class="pl-3 py-2">
                     <p class="">
                         <strong>Bulk:</strong>
                     </p>
                     <p class="pl-2"><span class="code">BULK_LIMIT</span></p>
                 </div>
+                <hr class="m-1">
                 <div class="pl-3 py-2">
                     <p class="">
                         <strong>Investiture:</strong>
@@ -710,6 +733,17 @@
                     </div>
                     <p class="pl-3">
                         - If the character is currently not wearing armor.
+                    </p>
+                    <p class="pl-3">
+                        Can only contain sheet statements.
+                    </p>
+                </div>
+                <div class="py-2">
+                    <div class="code-block">
+                        IF (IS-TOGGLED==Rage) {Statement}
+                    </div>
+                    <p class="pl-3">
+                        - If the character sheet currently has the 'Rage' toggleable active.
                     </p>
                     <p class="pl-3">
                         Can only contain sheet statements.
@@ -1591,6 +1625,14 @@
                     </div>
                     <p class="pl-3">
                         - The character will be given the 'Flat-Footed' condition.
+                    </p>
+                </div>
+                <div class="py-2">
+                    <div class="code-block">
+                        REMOVE-CONDITION=Flat-Footed
+                    </div>
+                    <p class="pl-3">
+                        - The character will lose the 'Flat-Footed' condition, if they have it.
                     </p>
                 </div>
             </div>

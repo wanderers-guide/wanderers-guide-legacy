@@ -218,7 +218,7 @@ model calculatedStats {
   totalSkills        String?    @db.VarChar(1000)
   totalSaves         String?    @db.VarChar(100)
   totalAbilityScores String?    @db.VarChar(250)
-  weapons            String?    @db.VarChar(2000)
+  weapons            String?    @db.VarChar(3000)
   characters         characters @relation(fields: [charID], references: [id])
 }
 

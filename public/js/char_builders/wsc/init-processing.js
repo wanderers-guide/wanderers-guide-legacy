@@ -157,7 +157,7 @@ function runNextStatement(){
 
         // Test/Check Statement for Expressions //
         wscStatement = testExpr(wscStatement, srcStruct);
-        if(wscStatement === null) {return 'SKIP'; }
+        if(wscStatement == null) {return 'SKIP'; }
         //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
         
         // Test/Check if Statement is a Sheet Statement //

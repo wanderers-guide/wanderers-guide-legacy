@@ -493,6 +493,9 @@ function loadCharSheet(){
     // Run Feats and Abilities Code //
     runAllFeatsAndAbilitiesCode();
 
+    // Run Toggleables (Sheet State) Code //
+    runAllSheetStateCode();
+
     // Run Custom Code Block Code //
     if(g_character.optionCustomCodeBlock === 1){
       processSheetCode(g_character.customCode, 'Custom Code');
@@ -1481,6 +1484,7 @@ function initHealthPointsAndMore() {
     }
 
     $('#pointSwitchOutContainer').removeClass('is-hidden');
+    $('#pointSwitchOutBtn').off();
     $('#pointSwitchOutBtn').click(function(){
       g_showHealthPanel = !g_showHealthPanel;
       if(g_showHealthPanel){
@@ -2380,6 +2384,16 @@ function runAllFeatsAndAbilitiesCode() {
         processSheetCode(g_heritage.code, g_heritage.name+' Heritage');
     }
     processSheetCode(g_background.code, g_background.name+' Background');
+
+}
+
+function runAllSheetStateCode() {
+
+  for(const sheetState of getSheetStates()){
+    if(sheetState.isActive){
+      processSheetCode(sheetState.code, sheetState.name+' (toggled)');
+    }
+  }
 
 }
 

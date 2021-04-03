@@ -19,7 +19,7 @@ function processSheetCode(wscCode, sourceName, isTest=false){
     for(const wscStatementRaw of wscStatements) {
         // Test/Check Statement for Expressions //
         let wscStatement = testExpr(wscStatementRaw);
-        if(wscStatement === null) {continue;}
+        if(wscStatement == null) {continue;}
         //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
         let wscStatementUpper = wscStatement.toUpperCase();
 
@@ -28,21 +28,32 @@ function processSheetCode(wscCode, sourceName, isTest=false){
         }
 
         if(wscStatementUpper.includes("GIVE-CONDITION=")){ // GIVE-CONDITION=Clumsy:1 OR GIVE-CONDITION=Clumsy
-            if(isTest) {continue;}
+          if(isTest) {continue;}
 
-            let conditionName = wscStatement.split('=')[1];
-            let conditionValue = null;
-            if(wscStatement.includes(":")){
-                let conditionNameData = conditionName.split(":");
-                conditionName = conditionNameData[0];
-                conditionValue = parseInt(conditionNameData[1]);
-            }
+          let conditionName = wscStatement.split('=')[1];
+          let conditionValue = null;
+          if(wscStatement.includes(":")){
+              let conditionNameData = conditionName.split(":");
+              conditionName = conditionNameData[0];
+              conditionValue = parseInt(conditionNameData[1]);
+          }
 
-            let conditionID = getConditionFromName(conditionName).id;
-            let conditionParentID = getCurrentConditionIDFromName(sourceName);
-            addCondition(conditionID+'', conditionValue, sourceName, conditionParentID);
+          let conditionID = getConditionFromName(conditionName).id;
+          let conditionParentID = getCurrentConditionIDFromName(sourceName);
+          addCondition(conditionID+'', conditionValue, sourceName, conditionParentID);
 
-            continue;
+          continue;
+        }
+
+        if(wscStatementUpper.includes("REMOVE-CONDITION=")){ // REMOVE-CONDITION=Clumsy
+          if(isTest) {continue;}
+
+          let conditionName = wscStatement.split('=')[1];
+
+          let conditionID = getConditionFromName(conditionName).id;
+          removeCondition(conditionID);
+
+          continue;
         }
 
         if(wscStatementUpper.includes("CONDITIONAL-INCREASE-")){
@@ -133,6 +144,8 @@ function processSheetCode(wscCode, sourceName, isTest=false){
 
             let overrideTowards = overrideData[0];
             let overrideSource = adjValData[2];
+            if(overrideSource == null) { overrideSource = ''; }
+
             let overrideNum = getSheetProcNumber(overrideData[1], sourceName);
 
             if(overrideTowards.endsWith('_PENALTY')){
@@ -271,6 +284,26 @@ function getSheetProcNumber(strNum, sourceName){
   if(strNum.includes('LEVEL')) {
     strNum = strNum.replace(/LEVEL/g, g_character.level+'');
   }
+
+  if(strNum.includes('STR_MOD')) {
+    strNum = strNum.replace(/STR_MOD/g, getModOfValue('STR'));
+  }
+  if(strNum.includes('DEX_MOD')) {
+    strNum = strNum.replace(/DEX_MOD/g, getModOfValue('DEX'));
+  }
+  if(strNum.includes('CON_MOD')) {
+    strNum = strNum.replace(/CON_MOD/g, getModOfValue('CON'));
+  }
+  if(strNum.includes('INT_MOD')) {
+    strNum = strNum.replace(/INT_MOD/g, getModOfValue('INT'));
+  }
+  if(strNum.includes('WIS_MOD')) {
+    strNum = strNum.replace(/WIS_MOD/g, getModOfValue('WIS'));
+  }
+  if(strNum.includes('CHA_MOD')) {
+    strNum = strNum.replace(/CHA_MOD/g, getModOfValue('CHA'));
+  }
+
   try {
     return parseInt(math.evaluate(strNum));
   } catch (err) {
