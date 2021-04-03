@@ -239,7 +239,6 @@ function displayAddItem(itemID, itemDataStruct, data){
       $('#'+addItemAddItemID).change(function(){
         let addItemType = $("#"+addItemAddItemID+" option:selected").val();
         if(addItemType != 'chooseDefault') {
-          $(this).parent().addClass('is-loading');
   
           if(addItemType == 'FORMULA') {
             socket.emit("requestAddItemCustomizeToInv",
@@ -268,10 +267,10 @@ function displayAddItem(itemID, itemDataStruct, data){
                   quantity: 1
                 }
             );
-            $(this).parent().removeClass('is-loading');
           }
 
           if(addItemType == 'GIVE') {
+            $(this).parent().addClass('is-loading');
             socket.emit("requestAddItemToInv",
                 getCharIDFromURL(),
                 data.InvID,
@@ -281,25 +280,61 @@ function displayAddItem(itemID, itemDataStruct, data){
   
           if(addItemType == 'BUY') {
   
-            let itemPriceInCP = getConvertedPriceForSize(itemDataStruct.Item.size, itemDataStruct.Item.price);
-            let itemPriceStr = getCoinToString(itemPriceInCP);
+            const itemPrice = getConvertedPriceForSize(itemDataStruct.Item.size, itemDataStruct.Item.price);
+            let itemPriceInCP = itemPrice;
+
+            const itemPriceSingleInCP = Math.ceil(itemPrice / itemDataStruct.Item.quantity);
+            const maxQtyForItem = Math.floor(getTotalCoinsInCP() / itemPriceSingleInCP);
 
             if(hasCoins(itemPriceInCP)){
 
-              new ConfirmMessage('Buy “'+itemDataStruct.Item.name+'”', 'This item costs <span class="has-text-info">'+itemPriceStr+'</span>, purchasing it will automatically simplify your coins. Are you sure you want to buy this?', 'Buy Item', 'modal-buy-item', 'modal-buy-item-btn', 'is-success');
-              addQuickViewProtection();
+              let buyQtyHTML = '';
+              if(itemDataStruct.Item.hasQuantity == 1){
+                buyQtyHTML = `
+                  <span class="is-pulled-right is-size-6">
+                    <span class="field is-horizontal">
+                      <label class="label pt-1 pr-1">Qty</label>
+                      <span class="control">
+                        <input id="modal-buy-item-qty-input" class="input is-inline is-small ml-1 mr-3" type="number" autocomplete="off" min="1" max="${maxQtyForItem}" value="${itemDataStruct.Item.quantity}">
+                      </span>
+                    </span>
+                  </span>`;
+              }
+
+              new ConfirmMessage('Buy “'+itemDataStruct.Item.name+'”'+buyQtyHTML, 'This purchase will cost <span id="modal-buy-item-price" class="has-text-info">'+getCoinToString(itemPriceInCP)+'</span>, buying it will automatically simplify your coins. Are you sure you want to buy this?', 'Buy Item', 'modal-buy-item', 'modal-buy-item-btn', 'is-success');
+
+              if(itemDataStruct.Item.hasQuantity == 1){
+                $('#modal-buy-item-qty-input').blur(function() {
+                  let itemQty = parseInt($(this).val());
+                  if(isNaN(itemQty) || itemQty < 1) { itemQty = 1; }
+                  if(itemQty > maxQtyForItem) { itemQty = maxQtyForItem; }
+                  $(this).val(itemQty);
+  
+                  itemPriceInCP = Math.ceil(itemPrice * (itemQty / itemDataStruct.Item.quantity));
+                  $('#modal-buy-item-price').text(getCoinToString(itemPriceInCP));
+  
+                });
+              }
+
               $('#modal-buy-item-btn').click(function(event) {
                 reduceAndSimplifyCoins(itemPriceInCP);
+
+                let itemQty = itemDataStruct.Item.quantity;
+                if(itemDataStruct.Item.hasQuantity == 1){
+                  itemQty = parseInt($('#modal-buy-item-qty-input').val());
+                  if(isNaN(itemQty) || itemQty < 1) { itemQty = 1; }
+                  if(itemQty > maxQtyForItem) { itemQty = maxQtyForItem; }
+                }
+
                 socket.emit("requestAddItemToInv",
                     getCharIDFromURL(),
                     data.InvID,
                     itemID,
-                    itemDataStruct.Item.quantity);
+                    itemQty);
               });
 
             } else {
               
-              $(this).parent().removeClass('is-loading');
               new ConfirmMessage('Insufficient Funds', 'This item costs <span class="has-text-danger">'+itemPriceStr+'</span>, more than you have in your inventory.', 'Okay', 'modal-fail-to-buy-item', 'modal-fail-to-buy-item-btn');
               addQuickViewProtection();
               

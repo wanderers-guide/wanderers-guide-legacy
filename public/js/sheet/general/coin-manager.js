@@ -2,12 +2,16 @@
     By Aaron Cassar.
 */
 
-function hasCoins(costInCP){
+function getTotalCoinsInCP(){
   let totalCP = g_bulkAndCoinsStruct.CopperCoins;
   totalCP += g_bulkAndCoinsStruct.SilverCoins*10;
   totalCP += g_bulkAndCoinsStruct.GoldCoins*100;
   totalCP += g_bulkAndCoinsStruct.PlatinumCoins*1000;
-  return totalCP >= costInCP;
+  return totalCP;
+}
+
+function hasCoins(costInCP){
+  return getTotalCoinsInCP() >= costInCP;
 }
 
 function reduceAndSimplifyCoins(costInCP){
