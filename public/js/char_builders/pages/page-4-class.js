@@ -678,19 +678,3 @@ socket.on("returnClassChoiceChange", function(srcStruct, selectorID, optionID){
     });
 
 });
-
-function selectorUpdated() {
-
-    $('.classAbility').each(function() {
-        if($(this).find('.select.is-info').length !== 0 || $(this).find('.feat-selection.is-default').length !== 0){
-            $(this).find('.classAbilityUnselectedOption').html('<span class="icon is-small has-text-info pl-3"><i class="fas fa-xs fa-circle"></i></span>');
-        } else {
-            $(this).find('.classAbilityUnselectedOption').html('');
-        }
-
-        // Make sure everything is centered
-        //$(this).find('.has-text-left').removeClass('has-text-left');
-        
-    });
-    
-}

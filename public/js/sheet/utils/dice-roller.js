@@ -4,51 +4,15 @@
 
 let g_rollHistory = [];
 
-let g_mouse_drag = false;
-$(function () {
-
-  $(document).mousedown(function() {
-    g_mouse_drag = false;
-  });
-  $(document).mousemove(function() {
-    g_mouse_drag = true;
-  });
-
-});
-
 function initDiceRoller(){
 
-  $('#dice-roller-btn-container').removeClass('is-hidden');
+  if(gOption_hasDiceRoller){
+    // Stat Roller Btns //
+    refreshStatRollButtons();
 
-  $('#dice-roller-modal-background,#dice-roller-modal-close').click(function() {
-    $('#dice-roller-modal').removeClass('is-active');
-    $('html').removeClass('is-clipped');
-  });
-
-  // Init Roller Btn //
-  $('#dice-roller-btn').click(function() {
-    if(!g_mouse_drag){
-      openDiceRoller();
-    }
-  });
-
-  $("#dice-roller-btn").draggable();
-
-  // Roll Btn //
-  $('#dice-roller-input-roll').click(function() {
-    let diceAmtStr = $('#dice-roller-input-dice-amt').val();
-    let dieSizeStr = $('#dice-roller-input-die-size').val();
-    let bonusStr = $('#dice-roller-input-bonus').val();
-    if(diceAmtStr != ''){
-      let diceAmt = parseInt(diceAmtStr);
-      let dieSize = parseInt(dieSizeStr);
-      let bonus = (bonusStr != '') ? parseInt(bonusStr) : 0;
-      makeDiceRoll(diceAmt, dieSize, bonus);
-    }
-  });
-
-  // Stat Roller Btns //
-  refreshStatRollButtons();
+    // Dice Notation Btns //
+    refreshDiceNotationButtons();
+  }
 
 }
 
@@ -71,7 +35,7 @@ function refreshStatRollButtons() {
         let dieSize = null;
         let bonus = null;
   
-        let lastPartResult = parseInt(math.evaluate(parts[1]));
+        let lastPartResult = parseInt(math.evaluate(parts[1].replace(/[^(\d|\W)]/g,'')));
         if(lastPartResult == parts[1]){
           dieSize = lastPartResult;
           bonus = 0;
@@ -86,59 +50,40 @@ function refreshStatRollButtons() {
   }, 100);
 }
 
-function openDiceRoller(){
-  $('#dice-roller-output-container').html('');
 
-  if(g_rollHistory.length > 0){
-    for (let i = 0; i < g_rollHistory.length; i++) {
-      let rollStruct = g_rollHistory[i];
+function refreshDiceNotationButtons(){
+  window.setTimeout(() => {
+    $('.dice-roll-btn').off();
+    $('.dice-roll-btn').click(function() {
+      let diceNum = $(this).attr('data-dice-num');
+      let diceType = $(this).attr('data-dice-type');
+      let bonus = parseInt(math.evaluate($(this).attr('data-dice-bonus').replace(/[^(\d|\W)]/g,'')));
+      if(isNaN(bonus)) { bonus = 0; }
 
-      if(i == g_rollHistory.length-1 && g_rollHistory.length > 1){
-        $('#dice-roller-output-container').append('<hr class="m-2">');
-      }
-
-      // Display Roll //
-      let resultLine = '<span class="has-text-grey-light">'+rollStruct.RollData.DiceNum+'</span><span class="has-text-grey is-thin">d</span><span class="has-text-grey-light">'+rollStruct.RollData.DieType+'</span>';
-      if(rollStruct.RollData.Bonus != 0){
-        resultLine += '<span class="has-text-grey">+</span><span class="has-text-grey-light">'+rollStruct.RollData.Bonus+'</span>';
-      }
-
-      if(rollStruct.RollData.DiceNum != 1 || rollStruct.RollData.Bonus != 0) {
-        resultLine += '<i class="fas fa-caret-right has-text-grey mx-2"></i>';
-        let resultSubParts = '';
-        let firstResult = true;
-        for(let result of rollStruct.ResultData){
-          if(firstResult) { firstResult = false; } else { resultSubParts += '<span class="has-text-grey">+</span>'; }
-  
-          let bulmaColor = 'has-text-grey-light';
-          if(result == rollStruct.RollData.DieType) { bulmaColor = 'has-text-success'; }
-          else if (result == 1) { bulmaColor = 'has-text-danger'; }
-  
-          resultSubParts += '<span class="has-text-grey">(</span><span class="'+bulmaColor+'">'+result+'</span><span class="has-text-grey">)</span>';
-        }
-        if(rollStruct.RollData.Bonus != 0){
-          resultSubParts += '<span class="has-text-grey">+</span><span class="has-text-grey-light">'+rollStruct.RollData.Bonus+'</span>';
-        }
-        resultLine += '<span class="is-size-5 is-thin">'+resultSubParts+'</span>';
-      }
-
-      resultLine += '<i class="fas fa-caret-right has-text-grey mx-2"></i><span class="has-text-info is-bold">'+rollStruct.Total+'</span>';
-      $('#dice-roller-output-container').append('<p class="is-size-4 negative-indent">'+resultLine+'</p>');
-    }
-  } else {
-    $('#dice-roller-output-container').html('<p class="is-size-5 is-italic">No roll history.</p>');
-  }
-
-  // Scroll to Bottom
-  $('#dice-roller-modal').addClass('is-active');
-  $('html').addClass('is-clipped');
-  $('#dice-roller-output-container').scrollTop($('#dice-roller-output-container')[0].scrollHeight);
+      makeDiceRoll(diceNum, diceType, bonus);
+      $(this).blur();
+    });
+  }, 100);
 }
+
+function processDiceNotation(text){
+
+  let notationRegex = /(^| )(\d+)+d(\d+)((\s*[+-]\s*\d+)*)/g;
+  return text.replace(notationRegex, function(match, startSpace, diceNum, diceType, bonus) {
+    return `${startSpace}<button class="button dice-roll-btn is-paddingless px-2 is-marginless mt-1 is-very-small is-outlined is-info"
+                data-dice-num="${diceNum}"
+                data-dice-type="${diceType}"
+                data-dice-bonus="${bonus}"
+            >${match}</button>`;
+  });
+
+}
+
 
 function makeDiceRoll(diceNum, dieType, bonus){
   let rollStruct = diceRoller_getDiceRoll(diceNum, dieType, bonus);
   g_rollHistory.push(rollStruct);
-  openDiceRoller();
+  openLeftQuickView('Dice Roller');
 }
 
 //// Math Rands ////

@@ -9,9 +9,9 @@ function processingCharTags(wscStatement, srcStruct, locationID, sourceName){
         let charTagName = wscStatement.split('=')[1];
         giveCharTag(srcStruct, charTagName);
     } else if(wscStatement.includes("GIVE-CHAR-TRAIT-COMMON")){ // GIVE-CHAR-TRAIT-COMMON
-        displayCharTagChoice(srcStruct, locationID, true);
+        displayCharTagChoice(srcStruct, locationID, sourceName, true);
     } else if(wscStatement.includes("GIVE-CHAR-TRAIT")){ // GIVE-CHAR-TRAIT
-        displayCharTagChoice(srcStruct, locationID);
+        displayCharTagChoice(srcStruct, locationID, sourceName);
     } else {
         displayError("Unknown statement (2-CharTrait): \'"+wscStatement+"\'");
         statementComplete();
@@ -41,12 +41,14 @@ socket.on("returnCharTagChange", function(charTagsArray){
 
 //////////////////////////////// Give Char Tag Selector ///////////////////////////////////
 
-function displayCharTagChoice(srcStruct, locationID, commonOnly=false){
+function displayCharTagChoice(srcStruct, locationID, sourceName, commonOnly=false){
 
     let selectCharTagID = "selectCharTag"+locationID+"-"+srcStruct.sourceCodeSNum;
     let selectCharTagControlShellClass = selectCharTagID+'ControlShell';
 
-    $('#'+locationID).append('<div class="field"><div class="select '+selectCharTagControlShellClass+'"><select id="'+selectCharTagID+'" class="selectCharTag"></select></div></div>');
+    const selectionTagInfo = getTagFromData(srcStruct, sourceName, 'Unselected Option', 'UNSELECTED');
+
+    $('#'+locationID).append('<div class="field"><div class="select '+selectCharTagControlShellClass+'" data-selection-info="'+selectionTagInfo+'"><select id="'+selectCharTagID+'" class="selectCharTag"></select></div></div>');
 
     $('#'+selectCharTagID).append('<option value="chooseDefault">Choose an Ancestry</option>');
     $('#'+selectCharTagID).append('<optgroup label="──────────"></optgroup>');

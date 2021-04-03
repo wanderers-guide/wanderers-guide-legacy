@@ -136,6 +136,16 @@
     border-bottom-color: #3298dc;
 }
 
+.quickViewLeft-Tabs li {
+  color: #dbdbdb;
+}
+.quickViewLeft-Tabs li:hover {
+  color: #3298dc;
+}
+.quickViewLeft-Tabs a:hover {
+  border-bottom-color: #3298dc;
+}
+
 .category-tabs li {
     color: #dbdbdb;
 }
@@ -230,10 +240,24 @@ strong {
     padding-right: 0.5rem!important;
 }
 
-/* Dice Roller Btn */
-#dice-roller-btn-container {
+/* Sticky Buttons */
+#main-container {
+  overflow: visible!important;
+}
+.sticky_button {
+  position: -webkit-sticky!important;
+  position: sticky!important;
+  top: 50%;
+  z-index: 10;
+}
+.sticky_button.is-upper {
+  top: 1rem;
+}
+.sticky_buttons_shell {
   position: absolute;
-  z-index: 28;
-  top: 5px;
-  right: 5px;
+  height:100%;
+}
+.sticky_button_leftest {
+  padding-left: 0.1rem;
+  padding-top: 1rem;
 }

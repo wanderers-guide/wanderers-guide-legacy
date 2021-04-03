@@ -17,7 +17,7 @@ function mapToObj(strMap) {
   return obj;
 }
 
-module.exports = async function(socket, charID, character=null, featObject=null, itemMap=null, spellMap=null, skillObject=null, tags=null, abilObject=null, allConditions=null, allLanguages=null) {
+module.exports = async function(socket, charID, character=null, featObject=null, itemMap=null, spellMap=null, skillObject=null, tags=null, abilObject=null, allConditions=null, allLanguages=null, unselectedDataArray=null) {
 
   console.log('~ STARTING BUILDER-CORE LOAD ~');
 
@@ -61,9 +61,14 @@ module.exports = async function(socket, charID, character=null, featObject=null,
     allConditions = await CharGathering.getAllConditions();
   }
 
-  socket.emit('updateLoadProgess', { message: 'Finding Languages', upVal: 3 }); // (83/100) //
+  socket.emit('updateLoadProgess', { message: 'Finding Languages', upVal: 2 }); // (82/100) //
   if(allLanguages==null){
     allLanguages = await CharGathering.getAllLanguagesBasic(charID, character);
+  }
+
+  socket.emit('updateLoadProgess', { message: 'Finding Unselected Options', upVal: 1 }); // (83/100) //
+  if(unselectedDataArray==null){
+    unselectedDataArray = await CharGathering.getAllUnselectedData(charID);
   }
 
   socket.emit('updateLoadProgess', { message: 'Considering Character Choices', upVal: 17 }); // (100/100) //
@@ -80,6 +85,7 @@ module.exports = async function(socket, charID, character=null, featObject=null,
     AllTags: tags,
     AllConditions: allConditions,
     AllLanguages: allLanguages,
+    UnselectedDataArray: unselectedDataArray,
   };
 
   let bStruct = {

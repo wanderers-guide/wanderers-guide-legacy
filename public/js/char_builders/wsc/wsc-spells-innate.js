@@ -8,11 +8,11 @@ function processingInnateSpells(wscStatement, srcStruct, locationID, sourceName)
     if(wscStatement.includes("GIVE-INNATE-SPELL=")){// GIVE-INNATE-SPELL=3:divine:1(:ANY)
         let data = wscStatement.split('=')[1]; // Set cast times per day to 0 to cast an unlimited number
         let segments = data.split(':');// For cantrips just do: GIVE-INNATE-SPELL=0:divine:0
-        giveInnateSpell(srcStruct, locationID, segments[0], segments[1], segments[2], segments[3], segments[4]);
+        giveInnateSpell(srcStruct, locationID, sourceName, segments[0], segments[1], segments[2], segments[3], segments[4]);
     } else if(wscStatement.includes("GIVE-INNATE-SPELL-NAME=")){// GIVE-INNATE-SPELL-NAME=Meld_Into_Stone:3:divine:1
         let data = wscStatement.split('=')[1]; // Set cast times per day to 0 to cast an unlimited number
         let segments = data.split(':');// For cantrips just do: GIVE-INNATE-SPELL-NAME=Daze:0:divine:0
-        giveInnateSpellByName(srcStruct, segments[0], segments[1], segments[2], segments[3]);
+        giveInnateSpellByName(srcStruct, sourceName, segments[0], segments[1], segments[2], segments[3]);
     } else {
         displayError("Unknown statement (2-SpellInnate): \'"+wscStatement+"\'");
         statementComplete();
@@ -21,12 +21,12 @@ function processingInnateSpells(wscStatement, srcStruct, locationID, sourceName)
 }
 
 //////////////////////////////// Give Innate Spell ///////////////////////////////////
-function giveInnateSpell(srcStruct, locationID, spellLevel, spellTradition, timesPerDay, optionalSelectFromAnyTradition){
+function giveInnateSpell(srcStruct, locationID, sourceName, spellLevel, spellTradition, timesPerDay, optionalSelectFromAnyTradition){
     let selectFromAnyTradition = (optionalSelectFromAnyTradition != null);
     if(spellTradition != null){
         if(spellTradition === 'OCCULT' || spellTradition === 'ARCANE' || spellTradition === 'DIVINE' || spellTradition === 'PRIMAL') {
             if(!isNaN(parseInt(spellLevel))) {
-                displayInnateSpellChoice(srcStruct, locationID, spellLevel, spellTradition, timesPerDay, selectFromAnyTradition);
+                displayInnateSpellChoice(srcStruct, locationID, sourceName, spellLevel, spellTradition, timesPerDay, selectFromAnyTradition);
             } else {
                 displayError("Spell Level is Not a Number: \'"+spellLevel+"\'");
                 statementComplete();
@@ -41,7 +41,7 @@ function giveInnateSpell(srcStruct, locationID, spellLevel, spellTradition, time
     }
 }
 
-function displayInnateSpellChoice(srcStruct, locationID, spellLevel, spellTradition, timesPerDay, selectFromAnyTradition){
+function displayInnateSpellChoice(srcStruct, locationID, sourceName, spellLevel, spellTradition, timesPerDay, selectFromAnyTradition){
 
     let selectionName = (spellLevel == 0) ? 'Choose a Cantrip' : 'Choose a Level '+spellLevel+' Spell';
     let selectSpellID = "selectInnateSpell"+locationID+"-"+srcStruct.sourceCodeSNum;
@@ -51,7 +51,9 @@ function displayInnateSpellChoice(srcStruct, locationID, spellLevel, spellTradit
     // If ID already exists, just return. This is a temporary fix - this shouldn't be an issue in the first place.
     if($('#'+selectSpellID).length != 0) { statementComplete(); return; }
 
-    $('#'+locationID).append('<div class="field is-grouped is-grouped-centered is-marginless mb-1"><div class="select '+selectSpellControlShellClass+'"><select id="'+selectSpellID+'" class="selectFeat"></select></div></div><div id="'+descriptionSpellID+'"></div>');
+    const selectionTagInfo = getTagFromData(srcStruct, sourceName, 'Unselected Spell', 'UNSELECTED');
+
+    $('#'+locationID).append('<div class="field is-grouped is-grouped-centered is-marginless mb-1"><div class="select '+selectSpellControlShellClass+'" data-selection-info="'+selectionTagInfo+'"><select id="'+selectSpellID+'" class="selectFeat"></select></div></div><div id="'+descriptionSpellID+'"></div>');
 
     $('#'+selectSpellID).append('<option value="chooseDefault">'+selectionName+'</option>');
     $('#'+selectSpellID).append('<optgroup label="──────────"></optgroup>');
@@ -156,7 +158,7 @@ socket.on("returnWSCInnateSpellChange", function(selectControlShellClass){
 
 
 //////////////////////////////// Give Innate Spell by Name ///////////////////////////////////
-function giveInnateSpellByName(srcStruct, spellName, spellLevel, spellTradition, timesPerDay){
+function giveInnateSpellByName(srcStruct, sourceName, spellName, spellLevel, spellTradition, timesPerDay){
     if(spellTradition != null){
         spellName = spellName.replace(/_/g," ");
         if(spellTradition === 'OCCULT' || spellTradition === 'ARCANE' || spellTradition === 'DIVINE' || spellTradition === 'PRIMAL') {

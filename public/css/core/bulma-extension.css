@@ -134,7 +134,7 @@ strong {
 
 /* Relative and Absolute */
 .pos-relative { position: relative; }
-.pos-absolute { position: absolute; }
+.pos-absolute { position: absolute!important; }
 
 .pos-absolute.pos-t-0 { top: 0px; }
 .pos-absolute.pos-t-1 { top: 1px; }
@@ -142,6 +142,9 @@ strong {
 .pos-absolute.pos-t-3 { top: 3px; }
 .pos-absolute.pos-t-4 { top: 4px; }
 .pos-absolute.pos-t-5 { top: 5px; }
+.pos-absolute.pos-t-10 { top: 10px; }
+.pos-absolute.pos-t-15 { top: 15px; }
+.pos-absolute.pos-t-20 { top: 20px; }
 
 .pos-absolute.pos-l-0 { left: 0px; }
 .pos-absolute.pos-l-1 { left: 1px; }
@@ -149,6 +152,9 @@ strong {
 .pos-absolute.pos-l-3 { left: 3px; }
 .pos-absolute.pos-l-4 { left: 4px; }
 .pos-absolute.pos-l-5 { left: 5px; }
+.pos-absolute.pos-l-10 { left: 10px; }
+.pos-absolute.pos-l-15 { left: 15px; }
+.pos-absolute.pos-l-20 { left: 20px; }
 
 .pos-absolute.pos-r-0 { right: 0px; }
 .pos-absolute.pos-r-1 { right: 1px; }
@@ -156,6 +162,9 @@ strong {
 .pos-absolute.pos-r-3 { right: 3px; }
 .pos-absolute.pos-r-4 { right: 4px; }
 .pos-absolute.pos-r-5 { right: 5px; }
+.pos-absolute.pos-r-10 { right: 10px; }
+.pos-absolute.pos-r-15 { right: 15px; }
+.pos-absolute.pos-r-20 { right: 20px; }
 
 /* Rarities */
 .button.is-uncommon {

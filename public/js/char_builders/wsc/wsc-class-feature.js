@@ -13,7 +13,7 @@ function processingClassFeatures(wscStatement, srcStruct, locationID, sourceName
         optionals = optionals[1].split(',');
       }
       let dontRunCode = (optionals != null && optionals.length > 0 && optionals[0].toUpperCase() == 'NO-CODE');
-      giveClassFeatureByName(srcStruct, locationID, value, dontRunCode);
+      giveClassFeatureByName(srcStruct, locationID, value, sourceName, dontRunCode);
   } else {
       displayError("Unknown statement (2-ClassFeature): \'"+wscStatement+"\'");
       statementComplete();
@@ -23,13 +23,13 @@ function processingClassFeatures(wscStatement, srcStruct, locationID, sourceName
 
 //////////////////////////////// Give Class Feature ///////////////////////////////////
 
-function giveClassFeatureByName(srcStruct, locationID, featureName, dontRunCode=false){
+function giveClassFeatureByName(srcStruct, locationID, featureName, sourceName, dontRunCode=false){
 
   socket.emit("requestAddClassFeature",
       getCharIDFromURL(),
       srcStruct,
       featureName,
-      { locationID, dontRunCode });
+      { locationID, sourceName, dontRunCode });
 
 }
 
@@ -61,9 +61,10 @@ socket.on("returnAddClassFeature", function(srcStruct, classAbility, allClassAbi
       let descriptionID = 'classAbilSelection'+classAbility.id+'Description';
       let abilityCodeID = 'classAbilSelection'+classAbility.id+'Code';
 
-      let classAbilitySelectorInnerHTML = '';
+      const selectionTagInfo = getTagFromData(srcStruct, inputPacket.sourceName, 'Unselected Option', 'UNSELECTED');
 
-      classAbilitySelectorInnerHTML += '<div class="field"><div class="select">';
+      let classAbilitySelectorInnerHTML = '';
+      classAbilitySelectorInnerHTML += '<div class="field"><div class="select" data-selection-info="'+selectionTagInfo+'">';
       classAbilitySelectorInnerHTML += '<select id="'+classAbilityOptionSelectorID+'" class="classAbilSelection">';
 
       classAbilitySelectorInnerHTML += '<option value="chooseDefault">Choose a '+classAbility.name+'</option>';

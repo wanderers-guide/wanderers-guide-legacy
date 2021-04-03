@@ -19,7 +19,7 @@ function processingFeats(wscStatement, srcStruct, locationID, sourceName){
         } else {
             level = parseInt(value);
         }
-        giveGeneralFeat(srcStruct, locationID, level, optionals);
+        giveGeneralFeat(srcStruct, locationID, level, optionals, sourceName);
     }
     else if(wscStatement.includes("GIVE-FEAT=")){ // GIVE-FEAT=3[metamagic]
         let value = wscStatement.split('=')[1];
@@ -35,7 +35,7 @@ function processingFeats(wscStatement, srcStruct, locationID, sourceName){
         } else {
             level = parseInt(value);
         }
-        giveFeat(srcStruct, locationID, level, optionals);
+        giveFeat(srcStruct, locationID, level, optionals, sourceName);
     }
     else if(wscStatement.includes("GIVE-ANCESTRY-FEAT=")){ // GIVE-ANCESTRY-FEAT=3[metamagic]
         let value = wscStatement.split('=')[1];
@@ -55,7 +55,7 @@ function processingFeats(wscStatement, srcStruct, locationID, sourceName){
         for(let dataTag of wscChoiceStruct.CharTagsArray){
             charTagsArray.push(dataTag.value);
         }
-        giveAncestryFeat(srcStruct, locationID, level, charTagsArray, optionals);
+        giveAncestryFeat(srcStruct, locationID, level, charTagsArray, optionals, sourceName);
     }
     else if(wscStatement.includes("GIVE-CLASS-FEAT=")){ // GIVE-CLASS-FEAT=3[metamagic]
         let value = wscStatement.split('=')[1];
@@ -72,7 +72,7 @@ function processingFeats(wscStatement, srcStruct, locationID, sourceName){
             level = parseInt(value);
         }
         let className = (wscChoiceStruct.ClassDetails.Class != null) ? wscChoiceStruct.ClassDetails.Class.name : null;
-        giveClassFeat(srcStruct, locationID, level, className, optionals);
+        giveClassFeat(srcStruct, locationID, level, className, optionals, sourceName);
     }
     else if(wscStatement.includes("GIVE-ARCHETYPE-FEAT=")){ // GIVE-ARCHETYPE-FEAT=3[metamagic]
         let value = wscStatement.split('=')[1];
@@ -88,7 +88,7 @@ function processingFeats(wscStatement, srcStruct, locationID, sourceName){
         } else {
             level = parseInt(value);
         }
-        giveArchetypeFeat(srcStruct, locationID, level, optionals);
+        giveArchetypeFeat(srcStruct, locationID, level, optionals, sourceName);
     }
     else if(wscStatement.includes("GIVE-SKILL-FEAT=")){ // GIVE-SKILL-FEAT=3[metamagic]
         let value = wscStatement.split('=')[1];
@@ -104,14 +104,14 @@ function processingFeats(wscStatement, srcStruct, locationID, sourceName){
         } else {
             level = parseInt(value);
         }
-        giveSkillFeat(srcStruct, locationID, level, optionals);
+        giveSkillFeat(srcStruct, locationID, level, optionals, sourceName);
     } 
     else if(wscStatement.includes("GIVE-FEAT-FROM=")){ // GIVE-FEAT-FROM=Choose a Tradition:feat 1,feat 2,feat 2
         let value = wscStatement.split('=')[1];
         let valueParts = value.split(':');
         let chooseTitle = valueParts[0];
         let customListParts = valueParts[1].split(',');
-        giveFeatCustomList(srcStruct, locationID, chooseTitle, customListParts);
+        giveFeatCustomList(srcStruct, locationID, chooseTitle, customListParts, sourceName);
     }
     else if(wscStatement.includes("GIVE-FEAT-NAME=")){ // GIVE-FEAT-NAME=Ancestral_Paragon
         let value = wscStatement.split('=')[1];
@@ -126,7 +126,7 @@ function processingFeats(wscStatement, srcStruct, locationID, sourceName){
         }
 
         featName = featName.replace(/_/g," ");
-        giveFeatByName(srcStruct, featName, locationID, optionals);
+        giveFeatByName(srcStruct, featName, locationID, optionals, sourceName);
     } else {
         displayError("Unknown statement (2-Feat): \'"+wscStatement+"\'");
         statementComplete();
@@ -137,7 +137,7 @@ function processingFeats(wscStatement, srcStruct, locationID, sourceName){
 
 ////////////////////////////////// Choose Feats /////////////////////////////////////////////
 
-function giveFeatCustomList(srcStruct, locationID, chooseTitle, customList){
+function giveFeatCustomList(srcStruct, locationID, chooseTitle, customList, sourceName){
 
     chooseTitle = capitalizeWords(chooseTitle).replace(/( The )/,' the ').replace(/( A )/,' a ').replace(/( An )/,' an ');
     displayFeatChoice(
@@ -147,6 +147,7 @@ function giveFeatCustomList(srcStruct, locationID, chooseTitle, customList){
         [],
         100,
         [],
+        sourceName,
         'AUTO_PAGE_LOAD',
         customList
     );
@@ -155,7 +156,7 @@ function giveFeatCustomList(srcStruct, locationID, chooseTitle, customList){
 
 }
 
-function giveFeat(srcStruct, locationID, featLevel, optionalTags){
+function giveFeat(srcStruct, locationID, featLevel, optionalTags, sourceName){
 
     displayFeatChoice(
         srcStruct,
@@ -163,14 +164,15 @@ function giveFeat(srcStruct, locationID, featLevel, optionalTags){
         "Choose a Feat",
         [],
         featLevel,
-        optionalTags
+        optionalTags,
+        sourceName
     );
 
     statementComplete();
 
 }
 
-function giveGeneralFeat(srcStruct, locationID, featLevel, optionalTags){
+function giveGeneralFeat(srcStruct, locationID, featLevel, optionalTags, sourceName){
 
     displayFeatChoice(
         srcStruct,
@@ -178,14 +180,15 @@ function giveGeneralFeat(srcStruct, locationID, featLevel, optionalTags){
         "Choose a General Feat",
         ["General"],
         featLevel,
-        optionalTags
+        optionalTags,
+        sourceName
     );
 
     statementComplete();
 
 }
 
-function giveSkillFeat(srcStruct, locationID, featLevel, optionalTags){
+function giveSkillFeat(srcStruct, locationID, featLevel, optionalTags, sourceName){
 
     displayFeatChoice(
         srcStruct,
@@ -193,14 +196,15 @@ function giveSkillFeat(srcStruct, locationID, featLevel, optionalTags){
         "Choose a Skill Feat",
         ["Skill"],
         featLevel,
-        optionalTags
+        optionalTags,
+        sourceName
     );
 
     statementComplete();
 
 }
 
-function giveAncestryFeat(srcStruct, locationID, featLevel, charTagsArray, optionalTags){
+function giveAncestryFeat(srcStruct, locationID, featLevel, charTagsArray, optionalTags, sourceName){
     
     displayFeatChoice(
         srcStruct,
@@ -208,20 +212,21 @@ function giveAncestryFeat(srcStruct, locationID, featLevel, charTagsArray, optio
         "Choose an Ancestry Feat",
         charTagsArray,
         featLevel,
-        optionalTags
+        optionalTags,
+        sourceName
     );
 
     statementComplete();
 
 }
 
-function giveArchetypeFeat(srcStruct, locationID, featLevel, optionalTags){
+function giveArchetypeFeat(srcStruct, locationID, featLevel, optionalTags, sourceName){
 
-    giveClassFeat(srcStruct, locationID, featLevel, null, optionalTags, true);
+    giveClassFeat(srcStruct, locationID, featLevel, null, optionalTags, sourceName, true);
 
 }
 
-function giveClassFeat(srcStruct, locationID, featLevel, className, optionalTags, isArchetypeOnlyFeat=false){
+function giveClassFeat(srcStruct, locationID, featLevel, className, optionalTags, sourceName, isArchetypeOnlyFeat=false){
 
     // Include sourceCodeSNum at the end for if a code field gives multiple class feats
     let classFeatTabsID = locationID+'-classFeatTabs-'+srcStruct.sourceCodeSNum;
@@ -283,6 +288,7 @@ function giveClassFeat(srcStruct, locationID, featLevel, className, optionalTags
             [className],
             featLevel,
             optionalTags,
+            sourceName,
             autoPageLoad
         );
 
@@ -306,6 +312,7 @@ function giveClassFeat(srcStruct, locationID, featLevel, className, optionalTags
             [archetypeName+' Archetype'],
             featLevel,
             optionalTags,
+            sourceName,
             autoPageLoad
         );
 
@@ -325,7 +332,8 @@ function giveClassFeat(srcStruct, locationID, featLevel, className, optionalTags
             "Choose a Dedication",
             ['Dedication'],
             featLevel,
-            optionalTags
+            optionalTags,
+            sourceName
         );
 
     });
@@ -385,7 +393,7 @@ function giveClassFeat(srcStruct, locationID, featLevel, className, optionalTags
 
 }
 
-function displayFeatChoice(srcStruct, locationID, selectionName, tagsArray, featLevel, optionalTags,
+function displayFeatChoice(srcStruct, locationID, selectionName, tagsArray, featLevel, optionalTags, sourceName,
         autoPageLoad = 'AUTO_PAGE_LOAD', customList = null) {
 
     // Make optional tags lowercase
@@ -460,14 +468,14 @@ function displayFeatChoice(srcStruct, locationID, selectionName, tagsArray, feat
 
     }
 
-    giveFeatSelection(locationID, srcStruct, selectionName, featSelectionArray);
+    giveFeatSelection(locationID, srcStruct, selectionName, featSelectionArray, sourceName);
 
 }
 
 
 //////////////////////////////// Give Feat (by Name) ///////////////////////////////////
 
-function giveFeatByName(srcStruct, featName, locationID, optionalTags=null){
+function giveFeatByName(srcStruct, featName, locationID, optionalTags, sourceName){
     featName = featName.replace(/_/g," ");
     featName = featName.replace(/’/g,"'");
 

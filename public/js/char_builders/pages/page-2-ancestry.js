@@ -641,7 +641,3 @@ function buildFeatStruct(featLevel, locID=null) {
   return { LocationID : locationID, Level : featLevel };
 
 }
-
-function selectorUpdated() {
-
-}

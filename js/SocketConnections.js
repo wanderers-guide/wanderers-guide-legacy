@@ -24,6 +24,8 @@ const CharChoicesLoad = require('./loading/Load_CharChoices');
 const BuilderCoreLoad = require('./loading/Load_BuilderCore');
 const SearchLoad = require('./loading/Load_Search');
 
+const { Prisma, MemCache } = require('./PrismaConnection');
+
 const HomeBackReport = require('../models/backgroundDB/HomeBackReport');
 const User = require('../models/contentDB/User');
 
@@ -895,10 +897,8 @@ module.exports = class SocketConnections {
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
           if(ownsChar){
             CharGathering.getCharacter(charID).then((character) => {
-              CharGathering.getClass(charID, character.classID, character).then((classDetails) => {
-                CharGathering.getAncestry(charID, character).then((ancestry) => {
-                  socket.emit('returnBuilderPageFinalize', character, classDetails.Class, ancestry);
-                });
+              CharGathering.getAllUnselectedData(charID).then((unselectedDataArray) => {
+                socket.emit('returnBuilderPageFinalize', character, unselectedDataArray);
               });
             });
           } else {
@@ -951,6 +951,24 @@ module.exports = class SocketConnections {
             });
           } else {
             socket.emit('returnErrorMessage', 'Incorrect Auth - No access to this character.');
+          }
+        });
+      });
+
+      socket.on('requestUnselectedDataChange', function(charID, srcStruct, unselectedData){
+        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+          if(ownsChar){
+            if(unselectedData == null){
+              CharDataMapping.deleteDataOnly(charID, 'unselectedData', srcStruct)
+              .then((result) => {
+                socket.emit('returnUnselectedDataChange', unselectedData);
+              });
+            } else {
+              CharDataMapping.setData(charID, 'unselectedData', srcStruct, unselectedData)
+              .then((result) => {
+                socket.emit('returnUnselectedDataChange', unselectedData);
+              });
+            }
           }
         });
       });
@@ -2657,6 +2675,17 @@ module.exports = class SocketConnections {
                               UserHomebrew.ownsHomebrewBundle(socket, homebrewID).then((userOwnsBundle) => {
                                 GeneralGathering.getAllTags(homebrewID).then((allTags) => {
                                   HomebrewGathering.getAllLanguages(homebrewID).then((languages) => {
+
+                                    if(userOwnsBundle && REQUEST_TYPE === 'EDIT') {
+                                      console.log('Clearing cache of homebrewID '+homebrewID);
+                                      // Delete all data cached with the homebrewID
+                                      for(const cacheKey of MemCache.keys()){
+                                        if(cacheKey.includes('{"homebrewID":'+homebrewID+'}')){
+                                          MemCache.del(cacheKey);
+                                        }
+                                      }
+                                    }
+
                                     socket.emit('returnBundleContents', REQUEST_TYPE, userHasBundle, userOwnsBundle, allTags, classes, ancestries, archetypes, backgrounds, classFeatures, feats, heritages, uniheritages, items, spells, languages);
                                   });
                                 });

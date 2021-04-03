@@ -561,6 +561,7 @@ model homebrewBundles {
   homebrewBundleKeys  homebrewBundleKeys[]
   items               items[]
   languages           languages[]
+  sheetStates         sheetStates[]
   specificFamiliars   specificFamiliars[]
   spells              spells[]
   tags                tags[]
@@ -727,6 +728,18 @@ model senseTypes {
   visionPrecedence                                    Int?
   ancestries_ancestries_additionalSenseIDTosenseTypes ancestries[] @relation("ancestries_additionalSenseIDTosenseTypes")
   ancestries_ancestries_visionSenseIDTosenseTypes     ancestries[] @relation("ancestries_visionSenseIDTosenseTypes")
+}
+
+model sheetStates {
+  id              Int                @id @default(autoincrement())
+  name            String?            @db.VarChar(45)
+  description     String?            @db.VarChar(1000)
+  code            String?            @db.VarChar(1000)
+  contentSrc      String             @default("CRB") @db.VarChar(45)
+  homebrewID      Int?
+  homebrewBundles homebrewBundles?   @relation(fields: [homebrewID], references: [id])
+
+  @@index([homebrewID], name: "sheetStates_homebrewID_idx")
 }
 
 model shields {

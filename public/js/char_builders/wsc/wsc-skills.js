@@ -43,8 +43,10 @@ function giveSkill(srcStruct, locationID, sourceName, profType, optionals=null){
     // If ID already exists, just return. This is a temporary fix - this shouldn't be an issue in the first place.
     if($('#'+selectIncreaseID).length != 0) { statementComplete(); return; }
 
+    const selectionTagInfo = getTagFromData(srcStruct, sourceName, 'Unselected Skill', 'UNSELECTED');
+
     let optionalsString = JSON.stringify(optionals).replace(/"/g, '`');
-    $('#'+locationID).append('<div class="field is-grouped is-grouped-centered is-marginless mt-1"><div class="select '+selectIncreaseControlShellClass+'"><select id="'+selectIncreaseID+'" class="selectIncrease" data-profType="'+profType+'" data-sourceType="'+srcStruct.sourceType+'" data-sourceLevel="'+srcStruct.sourceLevel+'" data-sourceCode="'+srcStruct.sourceCode+'" data-sourceCodeSNum="'+srcStruct.sourceCodeSNum+'" data-optionals="'+optionalsString+'"></select></div></div>');
+    $('#'+locationID).append('<div class="field is-grouped is-grouped-centered is-marginless mt-1"><div class="select '+selectIncreaseControlShellClass+'" data-selection-info="'+selectionTagInfo+'"><select id="'+selectIncreaseID+'" class="selectIncrease" data-profType="'+profType+'" data-sourceType="'+srcStruct.sourceType+'" data-sourceLevel="'+srcStruct.sourceLevel+'" data-sourceCode="'+srcStruct.sourceCode+'" data-sourceCodeSNum="'+srcStruct.sourceCodeSNum+'" data-optionals="'+optionalsString+'"></select></div></div>');
 
     $('#'+locationID).append('<div id="'+increaseCodeID+'" class=""></div>');
     $('#'+locationID).append('<div id="'+increaseDescriptionID+'" class="pb-1"></div>');

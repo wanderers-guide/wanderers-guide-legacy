@@ -32,6 +32,23 @@ $(function () {
         }
     });
 
+
+    // Press Esc key to close
+    $(document).on('keyup',function(e){
+      if(e.which == 27){
+        
+        if($('#quickviewDefault').hasClass('is-active')){
+          closeQuickView();
+        } else if($('#quickviewLeftDefault').hasClass('is-active')){
+          $('#quickviewLeftDefault').removeClass('is-active');
+        } else {
+          $('.modal').removeClass('is-active');
+          $('html').removeClass('is-clipped');
+        }
+
+      }
+    });
+
 });
 
 let g_QViewLastType = null;

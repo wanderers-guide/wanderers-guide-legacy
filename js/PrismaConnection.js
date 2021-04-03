@@ -1,4 +1,5 @@
 const { PrismaClient } = require('@prisma/client');
+const { find } = require('lodash');
 const NodeCache = require("node-cache");
 
 const memCache = new NodeCache();
@@ -51,3 +52,4 @@ prisma.$use(async (params, next) => {
 });
 
 module.exports.Prisma = prisma;
+module.exports.MemCache = memCache;

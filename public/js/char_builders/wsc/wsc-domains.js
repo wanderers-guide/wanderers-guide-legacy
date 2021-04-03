@@ -7,10 +7,10 @@ function processingDomains(wscStatement, srcStruct, locationID, sourceName){
 
     if(wscStatement.includes("GIVE-DOMAIN-ADVANCEMENT=")){ // GIVE-DOMAIN-ADVANCEMENT=Cleric
         let spellSRC = wscStatement.split('=')[1];
-        giveDomainAdvancement(srcStruct, locationID, spellSRC);
+        giveDomainAdvancement(srcStruct, locationID, spellSRC, sourceName);
     } else if(wscStatement.includes("GIVE-DOMAIN=")){ // GIVE-DOMAIN=Cleric
         let spellSRC = wscStatement.split('=')[1];
-        giveDomain(srcStruct, locationID, spellSRC);
+        giveDomain(srcStruct, locationID, spellSRC, sourceName);
     } else {
         displayError("Unknown statement (2-Domain): \'"+wscStatement+"\'");
         statementComplete();
@@ -20,13 +20,15 @@ function processingDomains(wscStatement, srcStruct, locationID, sourceName){
 
 //////////////////////////////// Give Domain ///////////////////////////////////
 
-function giveDomain(srcStruct, locationID, spellSRC){
+function giveDomain(srcStruct, locationID, spellSRC, sourceName){
 
     let selectID = "selectDomain"+locationID+"-"+srcStruct.sourceCodeSNum;
     let selectControlShellClass = selectID+'ControlShell';
     let descriptionID = "selectDomainDescription"+locationID+"-"+srcStruct.sourceCodeSNum;
 
-    $('#'+locationID).append('<div class="field is-grouped is-grouped-centered is-marginless mt-1"><div class="select '+selectControlShellClass+'"><select id="'+selectID+'"></select></div></div>');
+    const selectionTagInfo = getTagFromData(srcStruct, sourceName, 'Unselected Domain', 'UNSELECTED');
+
+    $('#'+locationID).append('<div class="field is-grouped is-grouped-centered is-marginless mt-1"><div class="select '+selectControlShellClass+'" data-selection-info="'+selectionTagInfo+'"><select id="'+selectID+'"></select></div></div>');
 
     $('#'+locationID).append('<div id="'+descriptionID+'"></div>');
 
@@ -98,13 +100,15 @@ socket.on("returnDomainChange", function(){
 
 //////////////////////////////// Give Domain Advancement ///////////////////////////////////
 
-function giveDomainAdvancement(srcStruct, locationID, spellSRC){
+function giveDomainAdvancement(srcStruct, locationID, spellSRC, sourceName){
 
     let selectID = "selectDomainAdvancement"+locationID+"-"+srcStruct.sourceCodeSNum;
     let selectControlShellClass = selectID+'ControlShell';
     let descriptionID = "selectDomainAdvancementDescription"+locationID+"-"+srcStruct.sourceCodeSNum;
 
-    $('#'+locationID).append('<div class="field is-grouped is-grouped-centered is-marginless mt-1"><div class="select '+selectControlShellClass+'"><select id="'+selectID+'"></select></div></div>');
+    const selectionTagInfo = getTagFromData(srcStruct, sourceName, 'Unselected Domain Advancement', 'UNSELECTED');
+
+    $('#'+locationID).append('<div class="field is-grouped is-grouped-centered is-marginless mt-1"><div class="select '+selectControlShellClass+'" data-selection-info="'+selectionTagInfo+'"><select id="'+selectID+'"></select></div></div>');
 
     $('#'+locationID).append('<div id="'+descriptionID+'"></div>');
 

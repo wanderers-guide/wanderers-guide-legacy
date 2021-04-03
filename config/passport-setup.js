@@ -1,6 +1,7 @@
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const RedditStrategy = require('passport-reddit').Strategy;
+//const AppleStrategy = require('passport-apple');
 const keys = require('./keys');
 const User = require('../models/contentDB/User');
 
@@ -54,6 +55,26 @@ passport.use(
         });
     })
 );
+
+/*
+passport.use(
+    new AppleStrategy({
+        clientID: "",
+        teamID: "",
+        callbackURL: "",
+        keyID: "",
+        privateKeyLocation: "",
+        passReqToCallback: true
+    }, function(req, accessToken, refreshToken, decodedIdToken, profile, cb) {
+        // Here, check if the decodedIdToken.sub exists in your database!
+        // decodedIdToken should contains email too if user authorized it but will not contain the name
+        // `profile` parameter is REQUIRED for the sake of passport implementation
+        // it should be profile in the future but apple hasn't implemented passing data
+        // in access token yet https://developer.apple.com/documentation/sign_in_with_apple/tokenresponse
+        cb(null, decodedIdToken);
+    })
+);
+*/
 
 passport.use(
     new RedditStrategy({

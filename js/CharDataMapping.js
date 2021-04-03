@@ -141,6 +141,23 @@ module.exports = class CharDataMapping {
         });
     }
 
+    static deleteDataOnly(charID, source, srcStruct){
+      //console.log("Delete Only - Source:"+source);
+      //console.log(srcStruct);
+      return CharDataMappingModel.destroy({
+        where: {
+            charID,
+            source,
+            sourceType: srcStruct.sourceType,
+            sourceLevel: srcStruct.sourceLevel,
+            sourceCode: srcStruct.sourceCode,
+            sourceCodeSNum: srcStruct.sourceCodeSNum,
+        }
+      }).then((result) => {
+        return;
+      });
+    }
+
     static deleteDataBySourceStruct(charID, srcStruct){
         //console.log("Delete by SrcStruct - "+srcStruct.sourceType+" "+srcStruct.sourceLevel+" "+srcStruct.sourceCode);
         return CharDataMappingModel.destroy({

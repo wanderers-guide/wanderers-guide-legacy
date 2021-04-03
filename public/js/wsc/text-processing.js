@@ -215,6 +215,12 @@ function processText(text, isSheet, isJustified = false, size = 'MEDIUM', indexC
     let regexBestiary = /Bestiary pg\.\s+(\d+)/g;
     text = text.replace(regexBestiary, '<a href="https://paizo.com/products/btq01zp4?Pathfinder-Bestiary" target="_blank" class="external-link">Bestiary $1</a>');
 
+    // Replace dice notation with roll button
+    if(typeof gOption_hasDiceRoller !== 'undefined' && gOption_hasDiceRoller){
+      text = processDiceNotation(text);
+      refreshDiceNotationButtons();
+    }
+
     // Clean up any random spaces that were created...
     text = text.replace('<p class="p-1 pl-2 '+_j+_s+'"></p>', '');
     return text;
@@ -223,6 +229,20 @@ function processText(text, isSheet, isJustified = false, size = 'MEDIUM', indexC
 
 function processTextRemoveIndexing(text) {
   if(text == null) {return text;}
+
+  // ~ : Some Text
+  let regexNonBullet = /\~\s*:/g;
+  text = text.replace(regexNonBullet, '');
+
+  // * : Some Text
+  let regexBullet = /\*\s*:/g;
+  text = text.replace(regexBullet, '&#8226;');
+
+  // :> Some Text
+  let regexNonBulletSpaced = /:\>/g;
+  text = text.replace(regexNonBulletSpaced, '');
+
+
 
   // (Feat: Striking | Strike)
   let regexFeatLinkExt = /\((Feat|Ability|Action|Activity):\s*([^(:]+?)\s*\|\s*(.+?)\s*\)/ig;

@@ -92,8 +92,11 @@ module.exports = async function(socket, charID, character) {
   socket.emit('updateLoadProgess', { message: 'Searching for Notebook', upVal: 2 }); // (95/100) //
   const notesDataArray = await CharGathering.getNoteFields(charID);
 
-  socket.emit('updateLoadProgess', { message: 'Gathering Speeds', upVal: 2 }); // (97/100) //
+  socket.emit('updateLoadProgess', { message: 'Gathering Speeds', upVal: 1 }); // (96/100) //
   const speedsDataArray = await CharGathering.getOtherSpeeds(charID);
+
+  socket.emit('updateLoadProgess', { message: 'Gathering Sheet States', upVal: 1 }); // (97/100) //
+  const sheetStatesArray = await CharGathering.getSheetStates(charID, character);
 
   socket.emit('updateLoadProgess', { message: 'Gathering Weapon Familiarities', upVal: 2 }); // (99/100) //
   const familiaritiesDataArray = await CharGathering.getWeaponFamiliarities(charID);
@@ -127,6 +130,7 @@ module.exports = async function(socket, charID, character) {
     AllTags : tags,
     CompanionData : companionData,
     AllClassFeatureOptions: allClassFeatureOptions,
+    SheetStatesArray: sheetStatesArray,
   };
 
   console.log('~ COMPLETE SHEET LOAD! ~');

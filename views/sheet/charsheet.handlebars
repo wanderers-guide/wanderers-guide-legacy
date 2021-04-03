@@ -12,6 +12,7 @@
     <script src="/js/sheet/tabs/companions-tab.js"></script>
     <script src="/js/sheet/tabs/weapons-tab.js"></script>
 
+    <script src="/js/sheet/quickviews/_left-quickview.js"></script>
     <script src="/js/sheet/quickviews/_quickviews.js"></script>
     <script src="/js/sheet/quickviews/ability-score-view.js"></script>
     <script src="/js/sheet/quickviews/add-item-view.js"></script>
@@ -52,6 +53,7 @@
     <script src="/js/sheet/general/conditions-manager.js"></script>
     <script src="/js/sheet/general/manage-spells.js"></script>
     <script src="/js/sheet/general/coin-manager.js"></script>
+    <script src="/js/sheet/general/sheet-states.js"></script>
     <script src="/js/sheet/general/item-runes.js"></script>
     <script src="/js/sheet/general/critical-specializations.js"></script>
     <script src="/js/sheet/general/notes-fields.js"></script>
@@ -131,6 +133,13 @@
 
 <div class="subpageloader is-hidden">
   <div class="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+</div>
+
+
+<div class="sticky_buttons_shell sticky_button_leftest">
+  <span class="icon is-small has-text-info cursor-clickable sticky_button is-upper has-tooltip-right" data-tooltip="Open Sheet Tools" id="leftQuickviewButton">
+      <i class="fas fa-2x fa-angle-right"></i>
+  </span>
 </div>
 
 <section id="character-sheet-section" class="section text-center is-paddingless px-4 py-3">
@@ -448,12 +457,6 @@
         </div>
     </div>
 
-    <div id="dice-roller-btn-container" class="is-hidden">
-      <div id="dice-roller-btn" class="cursor-clickable">
-        <span class="has-text-info"><i class="fas fa-4x fa-dice-d20"></i></span>
-      </div>
-    </div>
-
 </section>
 
 
@@ -474,6 +477,30 @@
             </div>
         </div>
     </div>
+
+    <!-- Left Quickview -->
+    <div id="quickviewLeftDefault" class="quickview is-left">
+        <div class="quickview-header">
+            <p id="quickViewLeftTitle" class="title is-size-5 has-text-grey-lighter">Sheet Tools</p>
+            <div class="is-inline-flex">
+                <p id="quickViewLeftTitleClose"></p>
+            </div>
+        </div>
+        <div class="quickview-body use-custom-scrollbar">
+            <div class="quickview-block pb-3 px-3">
+
+              <div class="tabs is-centered is-marginless">
+                <ul class="quickViewLeft-Tabs">
+                  <li><a id="quickViewLeftTab-Toggleables">Toggleables</a></li>
+                  <li><a id="quickViewLeftTab-DiceRoller">Dice Roller</a></li>
+                </ul>
+              </div>
+              <div id="quickViewLeftContent" class="pt-4 pos-relative"></div>
+
+            </div>
+        </div>
+    </div>
+
 
     <!-- Conditions Modal -->
     <div id="conditionsModalDefault" name="" class="modal" style="z-index:30;">
@@ -572,59 +599,6 @@
         </div>
     </div>
     </div>
-
-    <!-- Dice Roller Modal -->
-    <div id="dice-roller-modal" class="modal">
-      <div id="dice-roller-modal-background" class="modal-background"></div>
-      <div class="modal-card">
-          <header class="modal-card-head">
-              <p class="modal-card-title is-size-4 has-text-grey-lighter">Dice Roller<span class="has-text-info is-size-5 pl-2"><i class="fas fa-dice-d20"></i></span></p>
-              <button id="dice-roller-modal-close" class="delete modal-card-close" aria-label="close"></button>
-          </header>
-          <section id="dice-roller-modal-body" class="modal-card-body">
-
-            <div class="columns is-mobile is-narrow is-centered is-gapless">
-              <div class="column is-2"></div>
-              <div class="column is-2">
-                <div class="control">
-                  <a id="dice-roller-input-roll" class="button is-outlined is-info">Roll</a>
-                </div>
-              </div>
-              <div class="column is-6">
-                <div class="field has-addons">
-                  <p class="control">
-                    <input id="dice-roller-input-dice-amt" class="input is-info" type="number" value="1" min="1" max="99">
-                  </p>
-                  <p class="control">
-                    <span class="select is-info">
-                      <select id="dice-roller-input-die-size">
-                        <option value="2">d2</option>
-                        <option value="4">d4</option>
-                        <option value="6">d6</option>
-                        <option value="8">d8</option>
-                        <option value="10">d10</option>
-                        <option value="12">d12</option>
-                        <option value="20" selected>d20</option>
-                        <option value="100">d100</option>
-                      </select>
-                    </span>
-                  </p>
-                  <p class="control">
-                    <a class="button is-static has-text-grey-light has-background-grey-darkest is-info is-outlined">+</a>
-                  </p>
-                  <p class="control">
-                    <input id="dice-roller-input-bonus" class="input is-info" type="number" value="0" min="0" max="999">
-                  </p>
-                </div>
-              </div>
-              <div class="column is-2"></div>
-            </div>
-            <hr class="m-2">
-            <div id="dice-roller-output-container" class="px-5 use-custom-scrollbar" style="height: 300px; max-height: 300px; overflow-y: auto;"></div>
-          </section>
-      </div>
-    </div>
-
 
     <!-- Note Page More Modal -->
     <div id="note-page-more-modal" class="modal" data-page-id="">

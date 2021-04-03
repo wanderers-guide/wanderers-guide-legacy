@@ -819,6 +819,10 @@ module.exports = class CharGathering {
       });
     }
 
+    static async getAllUnselectedData(charID){
+      return await CharDataMapping.getDataAll(charID,"unselectedData",null);
+    }
+
     static async getAllPhysicalFeatures() {
       return await Prisma.physicalFeatures.findMany();
     }
@@ -1512,6 +1516,21 @@ module.exports = class CharGathering {
     }
 
     
+    static async getSheetStates(charID, character=null) {
+
+      if(character==null) {
+        character = await CharGathering.getCharacter(charID);
+      }
+
+      return await Prisma.sheetStates.findMany({
+        where: {
+          OR: CharContentSources.getSourceArrayPrisma(character),
+          OR: CharContentHomebrew.getHomebrewArrayPrisma(character),
+        },
+      });
+
+    }
+
 
     static getCharacterInfoExportToPDF(charID){
       return Character.findOne({ where: { id: charID } })

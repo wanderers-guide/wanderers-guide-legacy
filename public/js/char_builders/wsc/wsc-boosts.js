@@ -9,7 +9,7 @@ function processingAbilityBoosts(wscStatement, srcStruct, locationID, sourceName
     // GIVE-ABILITY-BOOST-SINGLE=INT,WIS,CHA
     if(wscStatement.includes("GIVE-ABILITY-BOOST-SINGLE")){
         let selectionOptions = wscStatement.split('=')[1];
-        giveAbilityBoostSingle(srcStruct, selectionOptions, locationID);
+        giveAbilityBoostSingle(srcStruct, selectionOptions, locationID, sourceName);
     } else if(wscStatement.includes("GIVE-ABILITY-BOOST-MULTIPLE")){// GIVE-ABILITY-BOOST-MULTIPLE=3
         let numberOfBoosts = wscStatement.split('=')[1];
         giveAbilityBoostMultiple(srcStruct, numberOfBoosts, locationID, sourceName);
@@ -43,12 +43,12 @@ function giveAbilityBoostMultiple(srcStruct, numberOfBoosts, locationID, sourceN
     }
 }
 
-function giveAbilityBoostSingle(srcStruct, selectionOptions, locationID){
+function giveAbilityBoostSingle(srcStruct, selectionOptions, locationID, sourceName){
 
     selectionOptions = selectionOptions.toUpperCase();
 
     if(selectionOptions == "ALL"){
-        displayAbilityBoostSingle(srcStruct, locationID, getAllAbilityTypes());
+        displayAbilityBoostSingle(srcStruct, locationID, getAllAbilityTypes(), sourceName);
     } else {
 
         let selectionOptionsArray = selectionOptions.split(",");
@@ -62,7 +62,7 @@ function giveAbilityBoostSingle(srcStruct, selectionOptions, locationID){
             }
             if(abilityTypes.length != 0){
                 if(abilityTypes.length != 1) {
-                    displayAbilityBoostSingle(srcStruct, locationID, abilityTypes);
+                    displayAbilityBoostSingle(srcStruct, locationID, abilityTypes, sourceName);
                 } else {
                     socket.emit("requestWSCAbilityBonusChange",
                         getCharIDFromURL(),
@@ -85,13 +85,15 @@ function giveAbilityBoostSingle(srcStruct, selectionOptions, locationID){
 
 }
 
-function displayAbilityBoostSingle(srcStruct, locationID, abilityTypes){
+function displayAbilityBoostSingle(srcStruct, locationID, abilityTypes, sourceName){
     
     let selectBoostID = "selectBoost"+locationID+"-"+srcStruct.sourceCodeSNum;
     let selectBoostSet = "selectBoostSet"+locationID;
     let selectBoostControlShellClass = selectBoostSet+'ControlShell';
 
-    $('#'+locationID).append('<span class="select mb-1 mx-1 '+selectBoostControlShellClass+'"><select id="'+selectBoostID+'" class="'+selectBoostSet+'"></select></span>');
+    const selectionTagInfo = getTagFromData(srcStruct, sourceName, 'Unselected Ability Boost', 'UNSELECTED');
+
+    $('#'+locationID).append('<span class="select mb-1 mx-1 '+selectBoostControlShellClass+'" data-selection-info="'+selectionTagInfo+'"><select id="'+selectBoostID+'" class="'+selectBoostSet+'"></select></span>');
 
     let selectBoost = $('#'+selectBoostID);
     selectBoost.append('<option value="chooseDefault">Choose an Ability</option>');

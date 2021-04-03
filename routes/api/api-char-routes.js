@@ -334,6 +334,25 @@ router.put('/inventory/drop-item', (req, res) => { // Update
   }
 });
 
+// Spell //
+router.get('/spell', (req, res) => { // Read
+  if(hasAccess(req.accessRights, 1)) {
+    CharGathering.getSpellData(req.charID).then((spellStruct) => {
+      res.send({
+        spell_slots_map: spellStruct.SpellSlotObject,
+        spell_books: spellStruct.SpellBookArray,
+        innate_spells: spellStruct.InnateSpellArray,
+        focus_spells_map: spellStruct.FocusSpellObject,
+        focus_points: spellStruct.FocusPointsArray,
+      });
+    });
+  } else {
+    res.sendStatus(401);
+  }
+});
+
+
+
 // Calculated Stats //
 router.get('/calculated-stats', (req, res) => { // Read
   if(hasAccess(req.accessRights, 1)) {

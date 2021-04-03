@@ -21,6 +21,7 @@ let g_spellMap = null;
 let g_allLanguages = null;
 let g_allConditions = null;
 let g_allTags = null;
+let g_unselectedData = null;
 // ~~~~~~~~~~~~~~~~~ //
 
 $(function () {
@@ -44,6 +45,7 @@ socket.on("returnCharBuilderDetails", function(character, coreDataStruct, inChoi
   g_allLanguages = coreDataStruct.AllLanguages;
   g_allConditions = coreDataStruct.AllConditions;
   g_allTags = coreDataStruct.AllTags;
+  g_unselectedData = coreDataStruct.UnselectedDataArray;
   //
   g_char_ancestryID = character.ancestryID;
   g_char_backgroundID = character.backgroundID;
@@ -165,7 +167,7 @@ socket.on("returnBuilderPageClass", function(classObject){
   });
 });
 
-socket.on("returnBuilderPageFinalize", function(character, cClass, ancestry){
+socket.on("returnBuilderPageFinalize", function(character, unselectedDataArray){
   $('#char-builder-container').load("/templates/char_builder/display-builder-page-5.html");
   $.ajax({ type: "GET",
     url: "/templates/char_builder/display-builder-page-5.html",
@@ -187,7 +189,7 @@ socket.on("returnBuilderPageFinalize", function(character, cClass, ancestry){
       initBuilderSteps();
 
       window.history.pushState('profile/characters/builder', '', '/profile/characters/builder/?id='+getCharIDFromURL()+'&page=5');// Update URL
-      loadFinalizePage(character, cClass, ancestry);
+      loadFinalizePage(character, unselectedDataArray);
       timeOutFinishLoad();
     }
   });

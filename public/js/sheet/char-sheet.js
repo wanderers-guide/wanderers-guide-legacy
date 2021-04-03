@@ -13,7 +13,7 @@ let gOption_hasStamina;
 let gOption_hasDiceRoller;
 /* ~~~~~~~~~~~~~~~~~ */
 
-/* Sheet-State Options */
+/* Internal Sheet-State Options */
 let gState_hasFinesseMeleeUseDexDamage;
 let gState_armoredStealth;
 let gState_mightyBulwark;
@@ -89,6 +89,8 @@ let g_notesFields = null;
 
 let currentInvests = null;
 let maxInvests = null;
+
+let g_sheetStatesArray = null;
 
 let g_inventoryTabScroll = null;
 let g_selectedTabID = 'inventoryTab';
@@ -316,6 +318,9 @@ socket.on("returnCharacterSheetInfo", function(charInfo, userPermissions, viewOn
 
     g_notesFields = charInfo.NotesFields;
 
+    g_sheetStatesArray = charInfo.SheetStatesArray;
+    initSheetStates();
+
     initExpressionProcessor({
         ChoiceStruct : charInfo.ChoiceStruct,
     });
@@ -327,9 +332,7 @@ socket.on("returnCharacterSheetInfo", function(charInfo, userPermissions, viewOn
 
     loadCharSheet();
 
-    if(gOption_hasDiceRoller){
-      initDiceRoller();
-    }
+    initDiceRoller();
 
     // Turn off page loading
     stopDiceLoader();
@@ -1452,6 +1455,14 @@ function displayInformation() {
         });
     }
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////// Left Quickview /////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    $('#leftQuickviewButton').click(function(event){
+      event.stopImmediatePropagation();
+      openLeftQuickView('Toggleables');
+    });
 
 }
 

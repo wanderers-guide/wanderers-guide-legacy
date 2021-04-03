@@ -142,7 +142,3 @@ function displayCurrentBackground(background) {
     }
 
 }
-
-function selectorUpdated() {
-
-}

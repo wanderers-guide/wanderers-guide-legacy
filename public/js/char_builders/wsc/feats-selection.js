@@ -4,19 +4,20 @@
 
 let g_featSelectionMap = new Map();
 
-function giveFeatSelection(locationID, srcStruct, selectionName, featsArray){
+function giveFeatSelection(locationID, srcStruct, selectionName, featsArray, sourceName){
 
   let featSelectionLocID = "featSelect-"+locationID+"-"+srcStruct.sourceCodeSNum;
   $('#'+locationID).append('<div id="'+featSelectionLocID+'"></div>');
-  generateFeatSelection(featSelectionLocID, srcStruct, selectionName, featsArray);
+  generateFeatSelection(featSelectionLocID, srcStruct, selectionName, featsArray, sourceName);
 
 }
 
-function generateFeatSelection(contentLocID, srcStruct, selectionName, featsArray){
+function generateFeatSelection(contentLocID, srcStruct, selectionName, featsArray, sourceName){
   g_featSelectionMap.set(contentLocID, {
     SrcStruct: srcStruct,
     SelectionName: selectionName,
-    FeatsArray: featsArray
+    FeatsArray: featsArray,
+    SourceName: sourceName,
   });
 
   // Find selectedFeat //
@@ -41,13 +42,17 @@ function generateFeatSelection(contentLocID, srcStruct, selectionName, featsArra
   let featRemoveButtonClass = "featRemoveBtn-"+contentLocID;
 
   if(selectedFeat == null) {
-    $('#'+contentLocID).html('<div class="mb-3"><div data-contentLoc-id="'+contentLocID+'" class="feat-selection is-default cursor-clickable columns is-mobile mb-0 p-0"><div class="column is-2 is-paddingless '+openFeatListClass+' py-2"></div><div class="column is-8 is-paddingless '+openFeatListClass+' py-2"><span class="">'+selectionName+'</span></div><div class="column is-2 is-paddingless '+openFeatListClass+' py-2"><span class="icon feat-selection-dropdown"><i class="fas fa-chevron-down '+featDropdownIconClass+'"></i></span></div></div><div class="'+featListSectionClass+' is-hidden"></div><div id="'+featCodeSectionID+'" class="py-2"></div></div>');
+    const selectionTagInfo = getTagFromData(srcStruct, sourceName, 'Unselected Feat', 'UNSELECTED');
+
+    $('#'+contentLocID).html('<div class="mb-3"><div data-contentLoc-id="'+contentLocID+'" class="feat-selection is-default cursor-clickable columns is-mobile mb-0 p-0" data-selection-info="'+selectionTagInfo+'"><div class="column is-2 is-paddingless '+openFeatListClass+' py-2"></div><div class="column is-8 is-paddingless '+openFeatListClass+' py-2"><span class="">'+selectionName+'</span></div><div class="column is-2 is-paddingless '+openFeatListClass+' py-2"><span class="icon feat-selection-dropdown"><i class="fas fa-chevron-down '+featDropdownIconClass+'"></i></span></div></div><div class="'+featListSectionClass+' is-hidden"></div><div id="'+featCodeSectionID+'" class="py-2"></div></div>');
   } else {
+    const selectionTagInfo = (meetsPrereqs(selectedFeat.Feat) == 'FALSE') ? getTagFromData(srcStruct, sourceName, 'Prerequisites Not Met', 'INCORRECT') : getTagFromData(srcStruct, sourceName, '', '');
+
     let featNameHTML = '<span class="">'+selectedFeat.Feat.name+'</span>';
     if(selectedFeat.Feat.isArchived === 1){ featNameHTML += '<span class="has-text-grey-kinda-light is-size-6-5"> - Archived</span>'; }
     let featLevelHTML = '';
     if(selectedFeat.Feat.level > 0){ featLevelHTML = '<sup class="is-size-7 has-text-grey is-italic"> Lvl '+selectedFeat.Feat.level+'</sup>'; }
-    $('#'+contentLocID).html('<div class="mb-3"><div data-contentLoc-id="'+contentLocID+'" class="feat-selection cursor-clickable columns is-mobile mb-0 p-0"><div class="column is-1 is-paddingless '+openFeatDetailsClass+' py-2"></div><div class="column is-10 is-paddingless '+openFeatDetailsClass+' py-2">'+featNameHTML+''+featLevelHTML+'</div><div class="column is-1 is-paddingless '+openFeatListClass+' py-2" style="border-left: 1px solid hsl(0, 0%, 13%);"><span class="icon feat-selection-dropdown"><i class="fas fa-chevron-down '+featDropdownIconClass+'"></i></span></div></div><div class="'+featListSectionClass+' is-hidden"></div><div id="'+featCodeSectionID+'" class="py-2"></div></div>');
+    $('#'+contentLocID).html('<div class="mb-3"><div data-contentLoc-id="'+contentLocID+'" class="feat-selection cursor-clickable columns is-mobile mb-0 p-0" data-selection-info="'+selectionTagInfo+'"><div class="column is-1 is-paddingless '+openFeatDetailsClass+' py-2"></div><div class="column is-10 is-paddingless '+openFeatDetailsClass+' py-2">'+featNameHTML+''+featLevelHTML+'</div><div class="column is-1 is-paddingless '+openFeatListClass+' py-2" style="border-left: 1px solid hsl(0, 0%, 13%);"><span class="icon feat-selection-dropdown"><i class="fas fa-chevron-down '+featDropdownIconClass+'"></i></span></div></div><div class="'+featListSectionClass+' is-hidden"></div><div id="'+featCodeSectionID+'" class="py-2"></div></div>');
   }
 
   let featListHTML = '';
@@ -232,7 +237,8 @@ function updateAllFeatSelections(){
       generateFeatSelection(contentLocID,
         featData.SrcStruct,
         featData.SelectionName,
-        featData.FeatsArray);
+        featData.FeatsArray,
+        featData.SourceName);
     }
 
   });
