@@ -44,6 +44,11 @@ function initBuilderSteps(){
     window.location.href = '/profile/characters/builder/?id='+getCharIDFromURL()+'&page=5';
   });
 
+  /*
+  $('.builder-class-two-page-btn').click(function(){
+    window.location.href = '/profile/characters/builder/?id='+getCharIDFromURL()+'&page=41';
+  });*/
+
 }
 
 // ~~~~~~~~~~~~~~ // Processings // ~~~~~~~~~~~~~~ //

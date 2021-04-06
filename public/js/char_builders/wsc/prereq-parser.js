@@ -79,8 +79,8 @@ function meetsPrereqs(feat){
   let totalResult = 'TRUE';
   for(let resultData of resultArray){
     if(resultData.Result == 'TRUE') { continue; }
-    if(resultData.Result == 'FALSE') { totalResult = 'FALSE'; continue; }
-    if(resultData.Result == 'UNKNOWN') { return (totalResult == 'FALSE') ? 'FALSE' : 'UNKNOWN'; }
+    if(resultData.Result == 'FALSE') { return 'FALSE'; }
+    if(resultData.Result == 'UNKNOWN') {  totalResult = 'UNKNOWN'; continue; }
   }
   return totalResult;
 }
@@ -257,7 +257,7 @@ function checkCustomSkillProfs(name, numUps){
     return 'FALSE';
   }
 
-  if(name === 'A SKILL WITH THE RECALL KNOWLEDGE ACTION'){
+  if(name === 'A SKILL WITH THE RECALL KNOWLEDGE ACTION' || name === 'A RECALL KNOWLEDGE SKILL'){
     for(const [skillName, skillData] of g_skillMap.entries()){
       if(skillData.NumUps >= numUps){
         if(skillData.Name.includes(' Lore') ||

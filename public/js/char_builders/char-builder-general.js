@@ -71,6 +71,9 @@ function goToBuilderPage(pageNum, firstLoad=false){
     case '3': socket.emit("requestBuilderPageBackground", getCharIDFromURL()); break;
     case '4': socket.emit("requestBuilderPageClass", getCharIDFromURL()); break;
     case '5': socket.emit("requestBuilderPageFinalize", getCharIDFromURL()); break;
+
+    //case '41': socket.emit("requestBuilderPageClassTwo", getCharIDFromURL()); break;
+
     default: break;
   }
 }
@@ -167,6 +170,37 @@ socket.on("returnBuilderPageClass", function(classObject){
   });
 });
 
+/*
+socket.on("returnBuilderPageClassTwo", function(classObject){
+  $('#char-builder-container').load("/templates/char_builder/display-builder-page-4.html");
+  $.ajax({ type: "GET",
+    url: "/templates/char_builder/display-builder-page-4.html",
+    success : function(text)
+    {
+      console.log('PAGE: Class Two');
+
+      $("#prevButton").click(function(){
+        goToBuilderPage(3);
+      });
+      $("#nextButton").parent().removeClass('is-hidden');
+      $("#nextButton").click(function(){
+        goToBuilderPage(5);
+      });
+      $("#goToCharButton").parent().removeClass('is-hidden');
+      $("#goToCharButton").click(function(){
+        goToSheet();
+      });
+      $("#goToCharBigButton").parent().addClass('is-hidden');
+      initBuilderSteps();
+
+      window.history.pushState('profile/characters/builder', '', '/profile/characters/builder/?id='+getCharIDFromURL()+'&page=4');// Update URL
+      loadClassTwoPage(classObject);
+      timeOutFinishLoad();
+    }
+  });
+});
+*/
+
 socket.on("returnBuilderPageFinalize", function(character, unselectedDataArray){
   $('#char-builder-container').load("/templates/char_builder/display-builder-page-5.html");
   $.ajax({ type: "GET",
@@ -212,6 +246,11 @@ function initBuilderSteps(){
   $('.builder-finalize-page-btn').click(function(){
     goToBuilderPage(5);
   });
+
+  /*
+  $('.builder-class-two-page-btn').click(function(){
+    goToBuilderPage(41);
+  });*/
 
 }
 

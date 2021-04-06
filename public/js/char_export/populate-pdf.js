@@ -13,7 +13,7 @@ function getNumZeroIfNull(number) {
   return (number != null) ? number : 0;
 }
 
-function initCharacterExportToPDF(){
+function old_initCharacterExportToPDF(){
 
   $('#btn-export-to-pdf').click(function() {
     socket.emit("requestCharExportPDFInfo", activeModalCharID);

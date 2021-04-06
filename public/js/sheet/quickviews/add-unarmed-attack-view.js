@@ -200,5 +200,5 @@ function openAddUnarmedAttackQuickview(data) {
 
 
 function isUnarmedAttack(item){
-  return (item.WeaponData != null && item.WeaponData.category.toUpperCase() == 'UNARMED');
+  return (item != null && item.WeaponData != null && item.WeaponData.category.toUpperCase() == 'UNARMED');
 }
