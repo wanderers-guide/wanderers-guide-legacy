@@ -16,6 +16,7 @@ module.exports = {
         Username: process.env.CLOUD_SQL_USERNAME,
         Password: process.env.CLOUD_SQL_PASSWORD,
         Host: process.env.CLOUD_DB_HOST,
+        Port: process.env.CLOUD_DB_PORT,
         Instance: process.env.CLOUD_DB_INSTANCE,
     },
     userDB: {

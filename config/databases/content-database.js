@@ -4,6 +4,7 @@ const keys = require('../keys');
 module.exports =  new Sequelize(keys.contentDB.DbName, keys.cloudSQL.Username, keys.cloudSQL.Password, {
   host: keys.cloudSQL.Host,
   dialect: 'mysql',
+  port: keys.cloudSQL.Port,
   operatorsAliases: '0',
   logging: false, // console.log // false
   benchmark: true,
