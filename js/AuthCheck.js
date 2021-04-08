@@ -94,13 +94,13 @@ module.exports = class AuthCheck {
 
     static isAdmin(socket) {
       return AuthCheck.getPermissions(socket).then((perms) => {
-        return perms.support.admin;
+        return perms.admin;
       });
     }
 
     static isDeveloper(socket) {
       return AuthCheck.getPermissions(socket).then((perms) => {
-        return perms.support.developer;
+        return perms.developer;
       });
     }
 
