@@ -373,7 +373,7 @@ module.exports = class CharGathering {
 
     }
 
-    static async getAllItems(charID, character=null, items=null, tags=null, taggedItems=null, weapons=null, armors=null, storages=null, shields=null, runes=null){
+    static async getAllItems(charID, character=null, items=null, tags=null){
 
         if(character==null){
           character = await CharGathering.getCharacter(charID);
@@ -386,36 +386,20 @@ module.exports = class CharGathering {
                 {OR: CharContentSources.getSourceArrayPrisma(character)},
                 {OR: CharContentHomebrew.getHomebrewArrayPrisma(character)},
               ],
-            }
+            },
+            include: {
+              taggedItems: true,
+              weapons: true,
+              armors: true,
+              storages: true,
+              shields: true,
+              itemRunes: true,
+            },
           });
         }
 
         if(tags==null){
             tags = await CharGathering.getAllTags(charID, character);
-        }
-
-        if(taggedItems==null){
-          taggedItems = await Prisma.taggedItems.findMany();
-        }
-
-        if(weapons==null){
-          weapons = await Prisma.weapons.findMany();
-        }
-
-        if(armors==null){
-          armors = await Prisma.armors.findMany();
-        }
-
-        if(storages==null){
-          storages = await Prisma.storages.findMany();
-        }
-
-        if(shields==null){
-          shields = await Prisma.shields.findMany();
-        }
-        
-        if(runes==null){
-          runes = await Prisma.itemRunes.findMany();
         }
 
         // Processing Item Data //
@@ -424,7 +408,7 @@ module.exports = class CharGathering {
         for(const item of items){
 
           let tagArray = [];
-          for(const taggedItem of taggedItems){
+          for(const taggedItem of item.taggedItems){
             if(taggedItem.itemID == item.id) {
 
               let tag = tags.find(tag => {
@@ -436,23 +420,23 @@ module.exports = class CharGathering {
             }
           }
 
-          let weapon = weapons.find(weapon => {
+          let weapon = item.weapons.find(weapon => {
             return weapon.itemID == item.id;
           });
 
-          let armor = armors.find(armor => {
+          let armor = item.armors.find(armor => {
             return armor.itemID == item.id;
           });
 
-          let storage = storages.find(storage => {
+          let storage = item.storages.find(storage => {
             return storage.itemID == item.id;
           });
 
-          let shield = shields.find(shield => {
+          let shield = item.shields.find(shield => {
             return shield.itemID == item.id;
           });
 
-          let rune = runes.find(rune => {
+          let rune = item.itemRunes.find(rune => {
             return rune.itemID == item.id;
           });
 

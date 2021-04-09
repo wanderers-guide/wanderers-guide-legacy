@@ -49,7 +49,15 @@ module.exports = async function(socket, charID, character) {
         {OR: CharContentSources.getSourceArrayPrisma(character)},
         {OR: CharContentHomebrew.getHomebrewArrayPrisma(character)},
       ],
-    }
+    },
+    include: {
+      taggedItems: true,
+      weapons: true,
+      armors: true,
+      storages: true,
+      shields: true,
+      itemRunes: true,
+    },
   });
 
   socket.emit('updateLoadProgess', { message: 'Keeping Inventory', upVal: 8 });
@@ -62,7 +70,7 @@ module.exports = async function(socket, charID, character) {
   const spellMap = await CharGathering.getAllSpells(charID, character, spells=null, taggedSpells=null, tags);
 
   socket.emit('updateLoadProgess', { message: 'Making Checklist for Items', upVal: 5 }); // (51/100) //
-  const itemMap = await CharGathering.getAllItems(charID, character, items, tags, taggedItems=null, weapons=null, armors=null, storages=null, shields=null, runes=null);
+  const itemMap = await CharGathering.getAllItems(charID, character, items, tags);
 
   socket.emit('updateLoadProgess', { message: 'Understanding Feats', upVal: 15 }); // (66/100) //
   const featObject = await CharGathering.getAllFeats(charID, character, feats=null, tags);

@@ -38,7 +38,7 @@ module.exports = async function(socket, charID, character=null, featObject=null,
 
   socket.emit('updateLoadProgess', { message: 'Bartering for Items', upVal: 20 }); // (53/100) //
   if(itemMap==null){
-    itemMap = await CharGathering.getAllItems(charID, character, items=null, tags, taggedItems=null, weapons=null, armors=null, storages=null, shields=null, runes=null);
+    itemMap = await CharGathering.getAllItems(charID, character, items=null, tags);
   }
 
   socket.emit('updateLoadProgess', { message: 'Discovering Spells', upVal: 15 }); // (68/100) //
