@@ -18,6 +18,9 @@ const UniHeritage = db.define('uniHeritages', {
   code: {
     type: Sequelize.STRING
   },
+  artworkURL: {
+    type: Sequelize.STRING
+  },
   isArchived: {
     type: Sequelize.INTEGER
   },

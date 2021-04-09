@@ -185,7 +185,15 @@ function displayCurrentAncestry(ancestryStruct, saving) {
     $('#physicalFeatureTwoCodeOutput').html('');
 
     let ancestryDescription = $('#ancestryDescription');
-    ancestryDescription.html(processText(ancestryStruct.Ancestry.description, false, null, 'MEDIUM', false));
+    ancestryDescription.html(processText(ancestryStruct.Ancestry.description, false, false, 'MEDIUM', false));
+
+    if(ancestryStruct.Ancestry.artworkURL != null){
+      $('#ancestryArtworkImg').removeClass('is-hidden');
+      $('#ancestryArtworkImg').attr('src', ancestryStruct.Ancestry.artworkURL);
+    } else {
+      $('#ancestryArtworkImg').addClass('is-hidden');
+      $('#ancestryArtworkImg').attr('src', '');
+    }
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Rarity ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
     $('#ancestryRarityContainer').html(convertRarityToHTML(ancestryStruct.Ancestry.rarity));
@@ -501,8 +509,16 @@ function displayCurrentHeritage(ancestryStruct, heritageID, isUniversal) {
         $('#heritageRarityContainer').html(convertRarityToHTML(heritage.rarity, true));
     
         let heritageDescription = $('#heritageDescription');
-        heritageDescription.html(processText(heritage.description, false, null, 'MEDIUM', false));
+        heritageDescription.html(processText(heritage.description, false, false, 'MEDIUM', false));
         heritageDescription.removeClass('is-hidden');
+
+        if(heritage.artworkURL != null){
+          $('#heritageArtworkImg').removeClass('is-hidden');
+          $('#heritageArtworkImg').attr('src', heritage.artworkURL);
+        } else {
+          $('#heritageArtworkImg').addClass('is-hidden');
+          $('#heritageArtworkImg').attr('src', '');
+        }
 
         $('#heritageCodeOutput').html('');
 
@@ -527,6 +543,8 @@ function displayCurrentHeritage(ancestryStruct, heritageID, isUniversal) {
         let heritageDescription = $('#heritageDescription');
         heritageDescription.html('');
         heritageDescription.addClass('is-hidden');
+        $('#heritageArtworkImg').addClass('is-hidden');
+        $('#heritageArtworkImg').attr('src', '');
         $('#heritageCodeOutput').html('');
 
     }

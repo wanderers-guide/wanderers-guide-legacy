@@ -107,7 +107,15 @@ function displayCurrentClass(classStruct, saving) {
     }
 
     let classDescription = $('#classDescription');
-    classDescription.html(processText(classStruct.Class.description, false, null, 'MEDIUM', false));
+    classDescription.html(processText(classStruct.Class.description, false, false, 'MEDIUM', false));
+
+    if(classStruct.Class.artworkURL != null){
+      $('#classArtworkImg').removeClass('is-hidden');
+      $('#classArtworkImg').attr('src', classStruct.Class.artworkURL);
+    } else {
+      $('#classArtworkImg').addClass('is-hidden');
+      $('#classArtworkImg').attr('src', '');
+    }
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Key Ability ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 

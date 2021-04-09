@@ -35,6 +35,7 @@ model ancestries {
   physicalFeatureOneID                                               Int?
   physicalFeatureTwoID                                               Int?
   tagID                                                              Int?
+  artworkURL                                                         String?          @db.VarChar(60)
   isArchived                                                         Int?           @default(0)
   contentSrc                                                         String            @default("CRB") @db.VarChar(45)
   homebrewID                                                         Int?
@@ -384,6 +385,7 @@ model classes {
   tWeapons        String?          @db.VarChar(300)
   tArmor          String?          @db.VarChar(300)
   tagID           Int?
+  artworkURL      String?          @db.VarChar(60)
   isArchived      Int?          @default(0)
   contentSrc      String           @default("CRB") @db.VarChar(45)
   homebrewID      Int?
@@ -689,6 +691,7 @@ model languages {
   speakers          String?             @db.VarChar(120)
   script            String?             @db.VarChar(45)
   description       String?             @db.Text
+  contentSrc        String              @default("CRB") @db.VarChar(45)
   homebrewID        Int?
   homebrewBundles   homebrewBundles?    @relation(fields: [homebrewID], references: [id])
   ancestryLanguages ancestryLanguages[]
@@ -895,7 +898,8 @@ model uniHeritages {
   description     String?             @db.Text
   tagID           Int?
   code            String?             @db.VarChar(1000)
-  isArchived      Int?             @default(0)
+  artworkURL      String?             @db.VarChar(60)
+  isArchived      Int?                @default(0)
   contentSrc      String              @default("CRB") @db.VarChar(45)
   homebrewID      Int?
   version         String?             @db.VarChar(90)

@@ -37,6 +37,9 @@ const Ancestry = db.define('ancestries', {
   tagID: {
     type: Sequelize.INTEGER
   },
+  artworkURL: {
+    type: Sequelize.STRING
+  },
   isArchived: {
     type: Sequelize.INTEGER
   },

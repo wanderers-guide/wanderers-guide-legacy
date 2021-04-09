@@ -44,6 +44,9 @@ const Class = db.define('classes', {
   tagID: {
     type: Sequelize.INTEGER
   },
+  artworkURL: {
+    type: Sequelize.STRING
+  },
   isArchived: {
     type: Sequelize.INTEGER
   },
