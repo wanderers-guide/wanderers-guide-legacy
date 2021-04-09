@@ -39,6 +39,7 @@ function loadAncestryPage(ancestryObject, uniHeritageArray) {
 
     // Ancestry Selection //
     selectAncestry.change(function(event, triggerSave) {
+        $('#ancestryArtworkImg').attr('src', '');
         let ancestryID = $("#selectAncestry option:selected").val();
         if(ancestryID != "chooseDefault"){
             $('.ancestry-content').removeClass("is-hidden");
@@ -76,6 +77,7 @@ function loadAncestryPage(ancestryObject, uniHeritageArray) {
 
     // Heritage Selection //
     $('#selectHeritage').change(function(event, triggerSave) {
+        $('#heritageArtworkImg').attr('src', '');
 
         let heritageID = $(this).val();
         let ancestryID = $("#selectAncestry option:selected").val();

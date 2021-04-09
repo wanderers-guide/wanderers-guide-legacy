@@ -34,6 +34,7 @@ function loadClassPage(classObject) {
 
     // Class Selection //
     $('#selectClass').change(function(event, triggerSave) {
+        $('#classArtworkImg').attr('src', '');
         let classID = $("#selectClass option:selected").val();
         if(classID != "chooseDefault"){
             $('.class-content').removeClass("is-hidden");
