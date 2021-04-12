@@ -40,7 +40,15 @@ class DisplayAncestry {
           });
 
           $('#ancestry-name').html(ancestryStruct.ancestry.name);
-          $('#ancestry-description').html(processText(ancestryStruct.ancestry.description, false, null, 'MEDIUM', false));
+          $('#ancestry-description').html(processText(ancestryStruct.ancestry.description, false, false, 'MEDIUM', false));
+
+          if(ancestryStruct.ancestry.artworkURL != null){
+            $('#ancestry-artwork-img').removeClass('is-hidden');
+            $('#ancestry-artwork-img').attr('src', ancestryStruct.ancestry.artworkURL);
+          } else {
+            $('#ancestry-artwork-img').addClass('is-hidden');
+            $('#ancestry-artwork-img').attr('src', '');
+          }
 
           let sourceTextName = getContentSourceTextName(ancestryStruct.ancestry.contentSrc);
           let sourceLink = getContentSourceLink(ancestryStruct.ancestry.contentSrc);

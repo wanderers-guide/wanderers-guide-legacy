@@ -93,6 +93,7 @@ function openSpellSRCTab(spellSRC, data){
             let bStruct = data.SpellMap.get(b.SpellID+"");
             if (a.SpellLevel === b.SpellLevel) {
                 // Name is only important when levels are the same
+                if(aStruct == null || bStruct == null) { return -1; }
                 return aStruct.Spell.name > bStruct.Spell.name ? 1 : -1;
             }
             return a.SpellLevel - b.SpellLevel;
@@ -164,6 +165,7 @@ function displaySpellSpontaneous(spellBook, data) {
 
         if(!willDisplay){continue;}
         // Display Spell in SpellBook //
+        if(spellDataStruct == null){continue;}
 
         let spellName = spellDataStruct.Spell.name;
         if(spellDataStruct.Spell.isArchived === 1){
@@ -325,6 +327,7 @@ function displaySpellBookPrepared(spellBook, data) {
 
         if(!willDisplay){continue;}
         // Display Spell in SpellBook //
+        if(spellDataStruct == null){continue;}
 
         let spellName = spellDataStruct.Spell.name;
         if(spellDataStruct.Spell.isArchived === 1){

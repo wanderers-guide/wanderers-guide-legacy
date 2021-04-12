@@ -40,7 +40,15 @@ class DisplayUniHeritage {
           });
 
           $('#uni-heritage-name').html(uniHeritageStruct.heritage.name);
-          $('#uni-heritage-description').html(processText(uniHeritageStruct.heritage.description, false, null, 'MEDIUM', false));
+          $('#uni-heritage-description').html(processText(uniHeritageStruct.heritage.description, false, false, 'MEDIUM', false));
+
+          if(uniHeritageStruct.heritage.artworkURL != null){
+            $('#uni-heritage-artwork-img').removeClass('is-hidden');
+            $('#uni-heritage-artwork-img').attr('src', uniHeritageStruct.heritage.artworkURL);
+          } else {
+            $('#uni-heritage-artwork-img').addClass('is-hidden');
+            $('#uni-heritage-artwork-img').attr('src', '');
+          }
 
           let sourceTextName = getContentSourceTextName(uniHeritageStruct.heritage.contentSrc);
           let sourceLink = getContentSourceLink(uniHeritageStruct.heritage.contentSrc);

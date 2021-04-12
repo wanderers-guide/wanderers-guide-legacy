@@ -15,6 +15,9 @@ strong {
   font-weight: 675;
   filter: brightness(115%);
 }
+em {
+  filter: brightness(80%);
+}
 .is-weight-normal {
   font-weight: 400;
 }

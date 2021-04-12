@@ -52,7 +52,15 @@ class DisplayClass {
           //if(classRarity != ''){ sourceStr = '<span class="pr-2">'+sourceStr+'</span>'; }
           $('#class-source').html(sourceStr);
 
-          $('#class-description').html(processText(classStruct.class.description, false, null, 'MEDIUM', false));
+          $('#class-description').html(processText(classStruct.class.description, false, false, 'MEDIUM', false));
+
+          if(classStruct.class.artworkURL != null){
+            $('#class-artwork-img').removeClass('is-hidden');
+            $('#class-artwork-img').attr('src', classStruct.class.artworkURL);
+          } else {
+            $('#class-artwork-img').addClass('is-hidden');
+            $('#class-artwork-img').attr('src', '');
+          }
           
           if(classStruct.class.keyAbility == 'OTHER') {
             $('#class-key-ability').html('<p class="pl-1">Varies</p>');
