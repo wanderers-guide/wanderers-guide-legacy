@@ -2413,7 +2413,19 @@ function otherProfBuild(content, prof, name, otherProfsNum, profData, profSrcDat
         prof += '<sup>*</sup>';
     }
 
-    content.append('<div id="otherProf'+otherProfsNum+'" class="cursor-clickable"><span class="is-size-7 is-italic">'+prof+' - </span><span class="is-size-7 has-text-weight-bold">'+name+'</span></div>');
+
+    content.append(`
+      <div id="otherProf${otherProfsNum}" class="cursor-clickable my-3">
+        <div class="columns is-mobile text-overflow-ellipsis">
+          <div class="column is-4 is-paddingless pr-1">
+            <p class="is-size-8 is-italic has-text-right pt-1">${prof}-</p>
+          </div>
+          <div class="column is-8 is-paddingless">
+            <p class="is-size-7 has-text-weight-bold has-text-left">${name}</p>
+          </div>
+        </div>
+      </div>
+    `);
 
     $("#otherProf"+otherProfsNum).click(function(){
         openQuickView('otherProfsView', {

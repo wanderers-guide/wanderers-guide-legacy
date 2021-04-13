@@ -269,6 +269,10 @@ body::-webkit-scrollbar-thumb {
   height: 0em;
 }
 
+.quickview-body.use-custom-scrollbar {
+  overflow-x: hidden;
+}
+
 /* Select Scrollbar */
 select::-webkit-scrollbar {
   width: 0.6em;

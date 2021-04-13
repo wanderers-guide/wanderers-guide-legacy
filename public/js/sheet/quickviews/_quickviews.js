@@ -7,31 +7,19 @@ $(function () {
 
     let quickviews = bulmaQuickview.attach();
 
-    $('#center-body').click(function(){
-        if($('#quickviewDefault').hasClass('quickview-auto-close-protection')){
-            $('#quickviewDefault').removeClass('quickview-auto-close-protection');
-        } else {
-            closeQuickView();
-        }
+    // Click will close right quickview (with protection)
+    $('#center-body, #main-top, #manageSpellsModalDefault').click(function(){
+      if($('#quickviewDefault').hasClass('quickview-auto-close-protection')){
+        $('#quickviewDefault').removeClass('quickview-auto-close-protection');
+      } else {
+        closeQuickView();
+      }
     });
 
-    $('#main-top').click(function(){
-        if($('#quickviewDefault').hasClass('quickview-auto-close-protection')){
-            $('#quickviewDefault').removeClass('quickview-auto-close-protection');
-        } else {
-            closeQuickView();
-        }
+    // Double click will close left quickview
+    $('#center-body, #main-top, #manageSpellsModalDefault').dblclick(function(){
+      $('#quickviewLeftDefault').removeClass('is-active');
     });
-
-    // So clicking the manage spells modal will auto-close the quickview
-    $('#manageSpellsModalDefault').click(function(){
-        if($('#quickviewDefault').hasClass('quickview-auto-close-protection')){
-            $('#quickviewDefault').removeClass('quickview-auto-close-protection');
-        } else {
-            closeQuickView();
-        }
-    });
-
 
     // Press Esc key to close
     $(document).on('keyup',function(e){
