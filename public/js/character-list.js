@@ -111,8 +111,7 @@ function initCharacterImport(){
           }
         };
       })(file);
-
-      // Read in the image file as a data URL.
+      
       fileReader.readAsText(file);
     }
   };

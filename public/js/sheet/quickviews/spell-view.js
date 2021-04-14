@@ -295,7 +295,7 @@ function openSpellQuickview(data){
                         spellSlotsArray = updateSlotUsed(spellSlotsArray, data.SheetData.Slot.slotID, true);
                     }
                     g_spellSlotsMap.set(spellSRC, spellSlotsArray);
-                    prepDisplayOfSpellsAndSlots();
+                    displaySpellsAndSlots();
                     closeQuickView();
                 }
             });
@@ -310,7 +310,7 @@ function openSpellQuickview(data){
                     spellSlotsArray = updateSlotUsed(spellSlotsArray, data.SheetData.Slot.slotID, false);
                 }
                 g_spellSlotsMap.set(spellSRC, spellSlotsArray);
-                prepDisplayOfSpellsAndSlots();
+                displaySpellsAndSlots();
                 closeQuickView();
             });
         }
