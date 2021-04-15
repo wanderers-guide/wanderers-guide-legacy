@@ -96,8 +96,11 @@ module.exports = async function(socket, charID, character) {
   socket.emit('updateLoadProgess', { message: 'Gathering Resistances and Weaknesses', upVal: 2 }); // (91/100) //
   const resistAndVulnerStruct = await CharGathering.getResistancesAndVulnerabilities(charID, resistancesDataArray=null, vulnerabilitiesDataArray=null);
 
-  socket.emit('updateLoadProgess', { message: 'Gathering Specializations', upVal: 2 }); // (93/100) //
+  socket.emit('updateLoadProgess', { message: 'Gathering Specializations', upVal: 1 }); // (93/100) //
   const specializeStruct = await CharGathering.getSpecializations(charID, weapSpecialsDataArray=null, weapCriticalsDataArray=null, armorSpecialDataArray=null);
+
+  socket.emit('updateLoadProgess', { message: 'Finding Unselected Options', upVal: 1 }); // (94/100) //
+  const unselectedDataArray = await CharGathering.getAllUnselectedData(charID);
 
   socket.emit('updateLoadProgess', { message: 'Searching for Notebook', upVal: 2 }); // (95/100) //
   const notesDataArray = await CharGathering.getNoteFields(charID);
@@ -141,6 +144,7 @@ module.exports = async function(socket, charID, character) {
     CompanionData : companionData,
     AllClassFeatureOptions: allClassFeatureOptions,
     SheetStatesArray: sheetStatesArray,
+    UnselectedDataArray: unselectedDataArray,
   };
 
   console.log('~ COMPLETE SHEET LOAD! ~');

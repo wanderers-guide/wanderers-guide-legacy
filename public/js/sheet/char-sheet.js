@@ -92,6 +92,8 @@ let maxInvests = null;
 
 let g_sheetStatesArray = null;
 
+let g_unselectedDataArray = null;
+
 let g_inventoryTabScroll = null;
 let g_selectedTabID = 'inventoryTab';
 let g_selectedSubTabID = null;
@@ -317,6 +319,8 @@ socket.on("returnCharacterSheetInfo", function(charInfo, userPermissions, viewOn
 
 
     g_notesFields = charInfo.NotesFields;
+
+    g_unselectedDataArray = charInfo.UnselectedDataArray;
 
     g_sheetStatesArray = charInfo.SheetStatesArray;
     initSheetStates();
@@ -848,6 +852,16 @@ function displayInformation() {
     $('#exportCharButton').click(function() {
       exportCharacter(getCharIDFromURL());
     });
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////// Unselected Data ////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    if(g_unselectedDataArray.length > 0){
+      $('#warnings-icon').removeClass('is-hidden');
+      $('#warnings-icon').click(function() {
+        openQuickView('warningsView', {});
+      });
+    }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //////////////////////////////////////////// Saves /////////////////////////////////////////////

@@ -129,7 +129,9 @@ function openQuickView(type, data, noProtection=false) {
     } else if(type == 'animalCompanionView'){
         openAnimalCompQuickview(data);
     } else if(type == 'familiarView'){
-      openFamiliarQuickview(data);
+        openFamiliarQuickview(data);
+    } else if(type == 'warningsView'){
+        openWarningsQuickview(data);
     }
 
 }

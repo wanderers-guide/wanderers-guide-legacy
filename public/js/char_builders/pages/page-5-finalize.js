@@ -118,7 +118,7 @@ function loadFinalizePage(character, unselectedDataArray) {
         </div>
         <div class="column is-8 pl-1">
           <span class="is-pulled-left">
-            <span class="has-text-light-grey">${unselectedData.details}</span>
+            <span class="has-text-grey-light">${unselectedData.details}</span>
             <span class="has-text-grey">- ${unselectedData.sourceName}</span>
           </span>
         </div>
