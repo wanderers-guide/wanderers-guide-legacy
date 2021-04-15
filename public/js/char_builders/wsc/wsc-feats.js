@@ -236,8 +236,9 @@ function giveClassFeat(srcStruct, locationID, featLevel, className, optionalTags
     let archetypesTabClass = locationID+'-classFeatArchetypesTab-'+srcStruct.sourceCodeSNum;
     let dedicationTabClass = locationID+'-classFeatDedicationTab-'+srcStruct.sourceCodeSNum;
 
-    $('#'+locationID).append('<div class="tabs is-small is-centered is-marginless"><ul id="'+classFeatTabsID+'" class="builder-tabs classFeatTabs" data-arch-tab-class="'+archetypesTabClass+'"></ul></div>');
+    $('#'+locationID).append('<div class="tabs is-small is-centered is-marginless use-custom-scrollbar"><ul id="'+classFeatTabsID+'" class="builder-tabs classFeatTabs" data-arch-tab-class="'+archetypesTabClass+'"></ul></div>');
     let tabsContent = $('#'+classFeatTabsID);
+    tabsContent.html(''); // <- Fixes bug with multiple tabs being created
 
     if(!isArchetypeOnlyFeat) {
       tabsContent.append('<li><a class="'+classTabClass+'">'+className+' Class</a></li>');
