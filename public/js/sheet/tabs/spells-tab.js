@@ -774,7 +774,25 @@ function displaySpellsFocus() {
                     $('#spellsFocusContent').append('<p class="is-size-5 has-text-grey-kinda-light has-text-weight-bold text-left pl-5 pt-2">'+sectionName+'</p>');
                 }
                 $('#spellsFocusContent').append('<hr class="hr-highlighted" style="margin-top:-0.5em; margin-bottom:0em;">');
-                $('#spellsFocusContent').append('<div class="columns is-mobile pt-1 is-marginless"><div class="column is-5 is-paddingless"><p class="has-text-left pl-3"><strong class="has-text-grey-kinda-light"><u>Name</u></strong></p></div><div class="column is-1 is-paddingless"><p class="text-center"><strong class="has-text-grey-kinda-light"><u>Cast</u></strong></p></div><div class="column is-1 is-paddingless"><p class="text-center"><strong class="has-text-grey-kinda-light"><u>Range</u></strong></p></div><div class="column is-5 is-paddingless"><p class="text-center"><strong class="has-text-grey-kinda-light"><u>Traits</u></strong></p></div></div>');
+                $('#spellsFocusContent').append(`
+                  <div class="columns is-mobile pt-1 is-marginless">
+                    <div class="column is-4 is-paddingless">
+                      <p class="has-text-left pl-3"><strong class="has-text-grey-kinda-light"><u>Name</u></strong></p>
+                    </div>
+                    <div class="column is-1 is-paddingless">
+                      <p class="text-center"><strong class="has-text-grey-kinda-light"><u>Cast</u></strong></p>
+                    </div>
+                    <div class="column is-1 is-paddingless">
+                      <p class="text-center"><strong class="has-text-grey-kinda-light"><u>Save</u></strong></p>
+                    </div>
+                    <div class="column is-1 is-paddingless">
+                      <p class="text-center"><strong class="has-text-grey-kinda-light"><u>Range</u></strong></p>
+                    </div>
+                    <div class="column is-5 is-paddingless">
+                      <p class="text-center"><strong class="has-text-grey-kinda-light"><u>Traits</u></strong></p>
+                    </div>
+                  </div>
+                `);
             }
 
             let spellListingID = 'focusSpellListing'+focusSpellCount;
@@ -800,6 +818,18 @@ function displaySpellsFocus() {
                 default: spellCast = '<em>see spell</em>'; break;
             }
 
+            // Save //
+            let spellSave = null;
+            switch(spellDataStruct.Spell.savingThrow) {
+              case 'WILL': spellSave = 'Will'; break;
+              case 'BASIC_WILL': spellSave = 'Will'; break;
+              case 'FORT': spellSave = 'Fort.'; break;
+              case 'BASIC_FORT': spellSave = 'Fort.'; break;
+              case 'REFLEX': spellSave = 'Reflex'; break;
+              case 'BASIC_REFLEX': spellSave = 'Reflex'; break;
+              default: spellSave = '-'; break;
+            }
+
             // Range //
             let spellRange = (spellDataStruct.Spell.range != null) ? spellDataStruct.Spell.range : '-';
 
@@ -811,7 +841,25 @@ function displaySpellsFocus() {
             tagsInnerHTML += '</div>';
 
             let focusListingClass = (spellDataStruct.Spell.level != 0) ? 'focusSpellListingClass' : 'focusCantripListingClass';
-            $('#spellsFocusContent').append('<div id="'+spellListingID+'" class="'+focusListingClass+' columns is-mobile is-marginless cursor-clickable"><div class="column is-5 is-paddingless"><p class="has-text-left pl-3 pt-1">'+spellName+'</p></div><div class="column is-1 is-paddingless"><p class="text-center has-text-grey-light pt-1">'+spellCast+'</p></div><div class="column is-1 is-paddingless"><p class="text-center has-text-grey-light pt-1">'+spellRange+'</p></div><div class="column is-5 is-paddingless"><p class="text-center has-text-grey-light">'+tagsInnerHTML+'</p></div></div>');
+            $('#spellsFocusContent').append(`
+              <div id="${spellListingID}" class="${focusListingClass} columns is-mobile is-marginless cursor-clickable">
+                <div class="column is-4 is-paddingless">
+                  <p class="has-text-left pl-3 pt-1">${spellName}</p>
+                </div>
+                <div class="column is-1 is-paddingless">
+                  <p class="text-center has-text-grey-light pt-1">${spellCast}</p>
+                </div>
+                <div class="column is-1 is-paddingless">
+                  <p class="text-center has-text-grey-light pt-1">${spellSave}</p>
+                </div>
+                <div class="column is-1 is-paddingless">
+                  <p class="text-center has-text-grey-light pt-1">${spellRange}</p>
+                </div>
+                <div class="column is-5 is-paddingless">
+                  <p class="text-center has-text-grey-light">${tagsInnerHTML}</p>
+                </div>
+              </div>
+            `);
 
             
             $('#'+spellListingID).click(function(){
@@ -950,7 +998,25 @@ function displaySpellsInnate() {
                 $('#spellsInnateContent').append('<p class="is-size-5 has-text-grey-kinda-light has-text-weight-bold text-left pl-5 pt-2">'+sectionName+'</p>');
             }
             $('#spellsInnateContent').append('<hr class="hr-highlighted" style="margin-top:-0.5em; margin-bottom:0em;">');
-            $('#spellsInnateContent').append('<div class="columns is-mobile pt-1 is-marginless"><div class="column is-4 is-paddingless"><p class="has-text-left pl-3"><strong class="has-text-grey-kinda-light"><u>Name</u></strong></p></div><div class="column is-2 is-paddingless"><p class="text-center"><strong class="is-size-6-5 has-text-grey-kinda-light"><u>Casts Per Day</u></strong></p></div><div class="column is-1 is-paddingless"><p class="text-center"><strong class="has-text-grey-kinda-light"><u>Cast</u></strong></p></div><div class="column is-1 is-paddingless"><p class="text-center"><strong class="has-text-grey-kinda-light"><u>Range</u></strong></p></div><div class="column is-4 is-paddingless"><p class="text-center"><strong class="has-text-grey-kinda-light"><u>Traits</u></strong></p></div></div>');
+            $('#spellsInnateContent').append(`
+              <div class="columns is-mobile pt-1 is-marginless">
+                <div class="column is-4 is-paddingless">
+                  <p class="has-text-left pl-3"><strong class="has-text-grey-kinda-light"><u>Name</u></strong></p>
+                </div>
+                <div class="column is-2 is-paddingless">
+                  <p class="text-center"><strong class="is-size-6-5 has-text-grey-kinda-light"><u>Casts Per Day</u></strong></p>
+                </div>
+                <div class="column is-1 is-paddingless">
+                  <p class="text-center"><strong class="has-text-grey-kinda-light"><u>Cast</u></strong></p>
+                </div>
+                <div class="column is-1 is-paddingless">
+                  <p class="text-center"><strong class="has-text-grey-kinda-light"><u>Range</u></strong></p>
+                </div>
+                <div class="column is-4 is-paddingless">
+                  <p class="text-center"><strong class="has-text-grey-kinda-light"><u>Traits</u></strong></p>
+                </div>
+              </div>
+            `);
         }
 
         let spellDataStruct = spellMap.get(innateSpell.SpellID+"");
@@ -992,7 +1058,25 @@ function displaySpellsInnate() {
             }
             tagsInnerHTML += '</div>';
 
-            $('#spellsInnateContent').append('<div id="'+spellListingID+'" class="columns is-mobile is-marginless cursor-clickable"><div class="column is-4 is-paddingless"><p class="has-text-left pl-3 pt-1">'+spellName+'</p></div><div class="column is-2 is-paddingless"><p id="'+spellCastingID+'" class="text-center has-text-grey-light pt-1 is-unselectable"></p></div><div class="column is-1 is-paddingless"><p class="text-center has-text-grey-light pt-1">'+spellCast+'</p></div><div class="column is-1 is-paddingless"><p class="text-center has-text-grey-light pt-1">'+spellRange+'</p></div><div class="column is-4 is-paddingless"><p class="text-center has-text-grey-light">'+tagsInnerHTML+'</p></div></div>');
+            $('#spellsInnateContent').append(`
+              <div id="${spellListingID}" class="columns is-mobile is-marginless cursor-clickable">
+                <div class="column is-4 is-paddingless">
+                  <p class="has-text-left pl-3 pt-1">${spellName}</p>
+                </div>
+                <div class="column is-2 is-paddingless">
+                  <p id="${spellCastingID}" class="text-center has-text-grey-light pt-1 is-unselectable"></p>
+                </div>
+                <div class="column is-1 is-paddingless">
+                  <p class="text-center has-text-grey-light pt-1">${spellCast}</p>
+                </div>
+                <div class="column is-1 is-paddingless">
+                  <p class="text-center has-text-grey-light pt-1">${spellRange}</p>
+                </div>
+                <div class="column is-4 is-paddingless">
+                  <p class="text-center has-text-grey-light">${tagsInnerHTML}</p>
+                </div>
+              </div>
+            `);
 
             if(spellDataStruct.Spell.level == 0 || innateSpell.TimesPerDay == 0){
                 $('#'+spellCastingID).html('Unlimited');
