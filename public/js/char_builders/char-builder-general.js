@@ -54,6 +54,10 @@ socket.on("returnCharBuilderDetails", function(character, coreDataStruct, inChoi
   injectWSCChoiceStruct(inChoiceStruct);
   // ~~~~~~~~~~~~~~~~~ //
 
+  for(const [featID, featStruct] of g_featMap.entries()){
+    g_featPrereqMap.set(featID+'', meetsPrereqs(featStruct.Feat));
+  }
+
   goToBuilderPage($('#char-builder-container').attr('data-page-num'), true);
 
 });

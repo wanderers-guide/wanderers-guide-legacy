@@ -2,21 +2,22 @@
     By Aaron Cassar.
 */
 
+let g_featPrereqMap = new Map();
 let g_featSelectionMap = new Map();
 
-function giveFeatSelection(locationID, srcStruct, selectionName, featsArray, sourceName){
+function giveFeatSelection(locationID, srcStruct, selectionName, selectionMap, sourceName){
 
   let featSelectionLocID = "featSelect-"+locationID+"-"+srcStruct.sourceCodeSNum;
   $('#'+locationID).append('<div id="'+featSelectionLocID+'"></div>');
-  generateFeatSelection(featSelectionLocID, srcStruct, selectionName, featsArray, sourceName);
+  generateFeatSelection(featSelectionLocID, srcStruct, selectionName, selectionMap, sourceName);
 
 }
 
-function generateFeatSelection(contentLocID, srcStruct, selectionName, featsArray, sourceName){
+function generateFeatSelection(contentLocID, srcStruct, selectionName, selectionMap, sourceName){
   g_featSelectionMap.set(contentLocID, {
     SrcStruct: srcStruct,
     SelectionName: selectionName,
-    FeatsArray: featsArray,
+    SelectionMap: selectionMap,
     SourceName: sourceName,
   });
 
@@ -56,12 +57,13 @@ function generateFeatSelection(contentLocID, srcStruct, selectionName, featsArra
   }
 
   let featListHTML = '';
-  for(let featData of featsArray){
-    if(featData.NewLevel != null){
-      if(featData.NewLevel > 0){
-        featListHTML += '<hr class="hr-feat-selection m-0"><div class="feat-selection-level"><span class="">Level '+featData.NewLevel+'</span></div>';
-      }
-    } else {
+  for(let [featLevel, featArray] of selectionMap.entries()){
+
+    if(featLevel > 0){
+      featListHTML += '<hr class="hr-feat-selection m-0"><div class="feat-selection-level"><span class="">Level '+featLevel+'</span></div>';
+    }
+    
+    for(let featData of featArray) {
 
       let featNameHTML = '<span class="">'+featData.Feat.name+'</span><span class="featPrereqIcon"></span>';
 
@@ -237,7 +239,7 @@ function updateAllFeatSelections(){
       generateFeatSelection(contentLocID,
         featData.SrcStruct,
         featData.SelectionName,
-        featData.FeatsArray,
+        featData.SelectionMap,
         featData.SourceName);
     }
 
@@ -304,6 +306,8 @@ function populatePrereqIcons(featListSectionClass){
       preReqIconHTML = ' '+preReqGetIconUnknown();
     }
     $(this).find(".featPrereqIcon").html(preReqIconHTML);
+
+    g_featPrereqMap.set(feat.Feat.id+'', preReqResult);
 
   });
 

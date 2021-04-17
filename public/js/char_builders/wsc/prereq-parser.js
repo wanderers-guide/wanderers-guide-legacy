@@ -85,6 +85,12 @@ function meetsPrereqs(feat){
   return totalResult;
 }
 
+function prereqToValue(prereq){
+  if(prereq == 'TRUE'){ return 1; }
+  if(prereq == 'UNKNOWN'){ return 0; }
+  if(prereq == 'FALSE'){ return -1; }
+  return 0;
+}
 
 // Prereq Ability Score Checking //
 function preReqCheckAbilityScores(prereq){

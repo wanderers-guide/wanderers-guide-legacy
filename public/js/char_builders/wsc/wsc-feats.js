@@ -410,10 +410,9 @@ function displayFeatChoice(srcStruct, locationID, selectionName, tagsArray, feat
         }
     }
 
-    let featSelectionArray = [];
     let className = (wscChoiceStruct.ClassDetails.Class != null) ? wscChoiceStruct.ClassDetails.Class.name : null;
-
-    let prevLevel = 100;
+    
+    let featSelectionMap = new Map();
     for(const featStruct of g_featMap){
         let feat = featStruct[1];
         if(feat.Feat.level < 1 && customList == null){ continue; }
@@ -457,19 +456,40 @@ function displayFeatChoice(srcStruct, locationID, selectionName, tagsArray, feat
 
         if(feat.Feat.level <= featLevel && hasCorrectTags){
 
-            if(feat.Feat.level < prevLevel){
-                featSelectionArray.push({NewLevel: feat.Feat.level});
-            }
-
-            featSelectionArray.push(feat);
-
-            prevLevel = feat.Feat.level;
+          let selectionArray = featSelectionMap.get(feat.Feat.level);
+          if(selectionArray == null) { selectionArray = []; }
+          selectionArray.push(feat);
+          featSelectionMap.set(feat.Feat.level, selectionArray);
 
         }
 
     }
 
-    giveFeatSelection(locationID, srcStruct, selectionName, featSelectionArray, sourceName);
+    if(wscChoiceStruct.Character.optionAutoDetectPreReqs === 1) {
+      for(let [featLevel, featArray] of featSelectionMap.entries()){
+
+        // Sort feat array by level -> prereq -> name
+        let sortedFeatArray = featArray.sort(
+          function(a, b) {
+            if (a.Feat.level === b.Feat.level) {
+              // Prereq is only important when levels are the same
+              let a_meets = prereqToValue(g_featPrereqMap.get(a.Feat.id+''));
+              let b_meets = prereqToValue(g_featPrereqMap.get(b.Feat.id+''));
+              if(a_meets === b_meets) {
+                // Name is only important when prereqs are the same
+                return a.Feat.name > b.Feat.name ? 1 : -1;
+              }
+              return b_meets - a_meets;
+            }
+            return a.Feat.level - b.Feat.level;
+          }
+        );
+        featSelectionMap.set(featLevel, sortedFeatArray);
+
+      }
+    }
+
+    giveFeatSelection(locationID, srcStruct, selectionName, featSelectionMap, sourceName);
 
 }
 
