@@ -15,6 +15,16 @@ const Condition = require('../../models/contentDB/Condition');
 
 const GeneralGathering = require('../../js/GeneralGathering');
 
+function mapToObj(strMap) {
+  let obj = Object.create(null);
+  for (let [k,v] of strMap) {
+    // We don’t escape the key '__proto__'
+    // which can cause problems on older engines
+    obj[k] = v;
+  }
+  return obj;
+}
+
 function getModelByNameOrID(ModelType, name, id){
   if(id != null){
     return ModelType.findOne({ where: { id: id } })
@@ -46,6 +56,11 @@ router.get('/item', (req, res) => {
     res.sendStatus(400);
   }
 });
+router.get('/item/all', (req, res) => {
+  GeneralGathering.getAllItems().then((itemMap) => {
+    res.send(mapToObj(itemMap));
+  });
+});
 
 router.get('/spell', (req, res) => {
   if(req.query.name != null || req.query.id != null){
@@ -62,6 +77,11 @@ router.get('/spell', (req, res) => {
   } else {
     res.sendStatus(400);
   }
+});
+router.get('/spell/all', (req, res) => {
+  GeneralGathering.getAllSpells().then((spellMap) => {
+    res.send(mapToObj(spellMap));
+  });
 });
 
 router.get('/feat', (req, res) => {
@@ -80,6 +100,11 @@ router.get('/feat', (req, res) => {
     res.sendStatus(400);
   }
 });
+router.get('/feat/all', (req, res) => {
+  GeneralGathering.getAllFeats().then((featObj) => {
+    res.send(featObj);
+  });
+});
 
 router.get('/class', (req, res) => {
   if(req.query.name != null || req.query.id != null){
@@ -96,6 +121,11 @@ router.get('/class', (req, res) => {
   } else {
     res.sendStatus(400);
   }
+});
+router.get('/class/all', (req, res) => {
+  GeneralGathering.getAllClasses().then((classObj) => {
+    res.send(classObj);
+  });
 });
 
 router.get('/ancestry', (req, res) => {
@@ -114,6 +144,11 @@ router.get('/ancestry', (req, res) => {
     res.sendStatus(400);
   }
 });
+router.get('/ancestry/all', (req, res) => {
+  GeneralGathering.getAllAncestries(true).then((ancestryObj) => {
+    res.send(ancestryObj);
+  });
+});
 
 router.get('/archetype', (req, res) => {
   if(req.query.name != null || req.query.id != null){
@@ -130,6 +165,11 @@ router.get('/archetype', (req, res) => {
   } else {
     res.sendStatus(400);
   }
+});
+router.get('/archetype/all', (req, res) => {
+  GeneralGathering.getAllArchetypes().then((archetypes) => {
+    res.send(archetypes);
+  });
 });
 
 router.get('/v-heritage', (req, res) => {
@@ -148,6 +188,11 @@ router.get('/v-heritage', (req, res) => {
     res.sendStatus(400);
   }
 });
+router.get('/v-heritage/all', (req, res) => {
+  GeneralGathering.getAllUniHeritages().then((uniHeritages) => {
+    res.send(uniHeritages);
+  });
+});
 
 router.get('/heritage', (req, res) => {
   if(req.query.name != null || req.query.id != null){
@@ -164,6 +209,11 @@ router.get('/heritage', (req, res) => {
   } else {
     res.sendStatus(400);
   }
+});
+router.get('/heritage/all', (req, res) => {
+  GeneralGathering.getAllHeritages().then((heritages) => {
+    res.send(heritages);
+  });
 });
 
 router.get('/background', (req, res) => {
@@ -182,6 +232,11 @@ router.get('/background', (req, res) => {
     res.sendStatus(400);
   }
 });
+router.get('/background/all', (req, res) => {
+  GeneralGathering.getAllBackgrounds().then((backgrounds) => {
+    res.send(backgrounds);
+  });
+});
 
 router.get('/trait', (req, res) => {
   if(req.query.name != null || req.query.id != null){    
@@ -199,6 +254,11 @@ router.get('/trait', (req, res) => {
     res.sendStatus(400);
   }
 });
+router.get('/trait/all', (req, res) => {
+  GeneralGathering.getAllTags().then((allTags) => {
+    res.send(allTags);
+  });
+});
 
 router.get('/condition', (req, res) => {
   if(req.query.name != null || req.query.id != null){    
@@ -215,6 +275,11 @@ router.get('/condition', (req, res) => {
   } else {
     res.sendStatus(400);
   }
+});
+router.get('/condition/all', (req, res) => {
+  GeneralGathering.getAllConditions().then((allConditions) => {
+    res.send(allConditions);
+  });
 });
 
 module.exports = router;

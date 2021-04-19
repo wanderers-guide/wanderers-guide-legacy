@@ -231,6 +231,14 @@ function processSheetCode(wscCode, sourceName, isTest=false){
             continue;
         }
 
+        if(wscStatementUpper == "SET-UNBURDENED-IRON"){
+          if(isTest) {continue;}
+
+          gState_unburdenedIron = true;
+
+          continue;
+        }
+
         if(wscStatementUpper == "SET-ADD-LEVEL-TO-UNTRAINED-WEAPONS"){
             if(isTest) {continue;}
 

@@ -17,6 +17,7 @@ let gOption_hasDiceRoller;
 let gState_hasFinesseMeleeUseDexDamage;
 let gState_armoredStealth;
 let gState_mightyBulwark;
+let gState_unburdenedIron;
 let gState_addLevelToUntrainedWeaponAttack;
 let gState_addLevelToUntrainedSkill;
 let gState_displayCompanionTab;
@@ -357,6 +358,7 @@ function loadCharSheet(){
     gState_hasFinesseMeleeUseDexDamage = false;
     gState_armoredStealth = false;
     gState_mightyBulwark = false;
+    gState_unburdenedIron = false;
     gState_addLevelToUntrainedWeaponAttack = false;
     gState_addLevelToUntrainedSkill = false;
     gState_displayCompanionTab = false;
@@ -1964,7 +1966,7 @@ function determineArmor(dexMod, strScore) {
 
         }
 
-        if(speedPenalty < 0){
+        if(speedPenalty < 0 && !gState_unburdenedIron){
             addStat('SPEED', 'PENALTY (ARMOR)', speedPenalty);
         }
 

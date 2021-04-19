@@ -284,7 +284,7 @@
                 <h1 class="main-title is-family-code is-size-3 has-text-centered is-marginless mb-2">General Endpoints</h1>
                 <h1 class="small-title is-size-4 is-marginless mb-1 pl-5">Example</h1>
                 <p class="pl-3" style="max-width: 800px;">
-                    If I wanted to get information about the item caltrops, I would make the following GET request: <span class="code">wanderersguide.app/api/item?id=caltrops</span> with my API key in the Authorization header. On a success, this would return a JSON object containing all the information about the caltrops item.
+                    If I wanted to get information about the item caltrops, I would make the following GET request: <span class="code">wanderersguide.app/api/item?name=caltrops</span> with my API key in the Authorization header. On a success, this would return a JSON object containing all the information about the caltrops item.
                 </p>
             </div>
             <div id="gen-req-feat" class="mt-4 isHideable">
@@ -294,6 +294,10 @@
                     <div class="columns is-mobile is-marginless">
                       <div class="column is-paddingless"><strong></strong></div>
                       <div class="column is-4 is-paddingless text-center"><strong>Returns</strong></div>
+                    </div>
+                    <div class="columns table-row-a is-mobile is-marginless">
+                      <div class="column"><p class="negative-indent"><span class="is-bold">GET</span> /api/feat/all</p></div>
+                      <div class="column is-4"><p class="text-center">JSON of all feats</p></div>
                     </div>
                     <div class="columns table-row-a is-mobile is-marginless">
                       <div class="column"><p class="negative-indent"><span class="is-bold">GET</span> /api/feat?id=<span class="has-text-info">&lt;feat ID&gt;</span></p></div>
@@ -315,6 +319,10 @@
                       <div class="column is-4 is-paddingless text-center"><strong>Returns</strong></div>
                     </div>
                     <div class="columns table-row-a is-mobile is-marginless">
+                      <div class="column"><p class="negative-indent"><span class="is-bold">GET</span> /api/item/all</p></div>
+                      <div class="column is-4"><p class="text-center">JSON of all items</p></div>
+                    </div>
+                    <div class="columns table-row-a is-mobile is-marginless">
                       <div class="column"><p class="negative-indent"><span class="is-bold">GET</span> /api/item?id=<span class="has-text-info">&lt;item ID&gt;</span></p></div>
                       <div class="column is-4"><p class="text-center">JSON of item data</p></div>
                     </div>
@@ -332,6 +340,10 @@
                     <div class="columns is-mobile is-marginless">
                       <div class="column is-paddingless"><strong></strong></div>
                       <div class="column is-4 is-paddingless text-center"><strong>Returns</strong></div>
+                    </div>
+                    <div class="columns table-row-a is-mobile is-marginless">
+                      <div class="column"><p class="negative-indent"><span class="is-bold">GET</span> /api/spell/all</p></div>
+                      <div class="column is-4"><p class="text-center">JSON of all spells</p></div>
                     </div>
                     <div class="columns table-row-a is-mobile is-marginless">
                       <div class="column"><p class="negative-indent"><span class="is-bold">GET</span> /api/spell?id=<span class="has-text-info">&lt;spell ID&gt;</span></p></div>
@@ -353,6 +365,10 @@
                       <div class="column is-4 is-paddingless text-center"><strong>Returns</strong></div>
                     </div>
                     <div class="columns table-row-a is-mobile is-marginless">
+                      <div class="column"><p class="negative-indent"><span class="is-bold">GET</span> /api/class/all</p></div>
+                      <div class="column is-4"><p class="text-center">JSON of all classes and class features</p></div>
+                    </div>
+                    <div class="columns table-row-a is-mobile is-marginless">
                       <div class="column"><p class="negative-indent"><span class="is-bold">GET</span> /api/class?id=<span class="has-text-info">&lt;class ID&gt;</span></p></div>
                       <div class="column is-4"><p class="text-center">JSON of class data and all class features</p></div>
                     </div>
@@ -370,6 +386,10 @@
                     <div class="columns is-mobile is-marginless">
                       <div class="column is-paddingless"><strong></strong></div>
                       <div class="column is-4 is-paddingless text-center"><strong>Returns</strong></div>
+                    </div>
+                    <div class="columns table-row-a is-mobile is-marginless">
+                      <div class="column"><p class="negative-indent"><span class="is-bold">GET</span> /api/archetype/all</p></div>
+                      <div class="column is-4"><p class="text-center">JSON of basic info on all archtypes</p></div>
                     </div>
                     <div class="columns table-row-a is-mobile is-marginless">
                       <div class="column"><p class="negative-indent"><span class="is-bold">GET</span> /api/archetype?id=<span class="has-text-info">&lt;archetype ID&gt;</span></p></div>
@@ -391,6 +411,10 @@
                       <div class="column is-4 is-paddingless text-center"><strong>Returns</strong></div>
                     </div>
                     <div class="columns table-row-a is-mobile is-marginless">
+                      <div class="column"><p class="negative-indent"><span class="is-bold">GET</span> /api/ancestry/all</p></div>
+                      <div class="column is-4"><p class="text-center">JSON of all ancestries</p></div>
+                    </div>
+                    <div class="columns table-row-a is-mobile is-marginless">
                       <div class="column"><p class="negative-indent"><span class="is-bold">GET</span> /api/ancestry?id=<span class="has-text-info">&lt;ancestry ID&gt;</span></p></div>
                       <div class="column is-4"><p class="text-center">JSON of ancestry data</p></div>
                     </div>
@@ -408,6 +432,10 @@
                     <div class="columns is-mobile is-marginless">
                       <div class="column is-paddingless"><strong></strong></div>
                       <div class="column is-4 is-paddingless text-center"><strong>Returns</strong></div>
+                    </div>
+                    <div class="columns table-row-a is-mobile is-marginless">
+                      <div class="column"><p class="negative-indent"><span class="is-bold">GET</span> /api/heritage/all</p></div>
+                      <div class="column is-4"><p class="text-center">JSON of all heritages</p></div>
                     </div>
                     <div class="columns table-row-a is-mobile is-marginless">
                       <div class="column"><p class="negative-indent"><span class="is-bold">GET</span> /api/heritage?id=<span class="has-text-info">&lt;heritage ID&gt;</span></p></div>
@@ -429,12 +457,16 @@
                       <div class="column is-4 is-paddingless text-center"><strong>Returns</strong></div>
                     </div>
                     <div class="columns table-row-a is-mobile is-marginless">
+                      <div class="column"><p class="negative-indent"><span class="is-bold">GET</span> /api/v-heritage/all</p></div>
+                      <div class="column is-4"><p class="text-center">JSON of all v-heritages</p></div>
+                    </div>
+                    <div class="columns table-row-a is-mobile is-marginless">
                       <div class="column"><p class="negative-indent"><span class="is-bold">GET</span> /api/v-heritage?id=<span class="has-text-info">&lt;versatile heritage ID&gt;</span></p></div>
-                      <div class="column is-4"><p class="text-center">JSON of heritage data</p></div>
+                      <div class="column is-4"><p class="text-center">JSON of v-heritage data</p></div>
                     </div>
                     <div class="columns table-row-b is-mobile is-marginless">
                       <div class="column"><p class="negative-indent"><span class="is-bold">GET</span> /api/v-heritage?name=<span class="has-text-info">&lt;versatile heritage name&gt;</span></p></div>
-                      <div class="column is-4"><p class="text-center">JSON of heritage data</p></div>
+                      <div class="column is-4"><p class="text-center">JSON of v-heritage data</p></div>
                     </div>
                   </div>
                 </div>
@@ -446,6 +478,10 @@
                     <div class="columns is-mobile is-marginless">
                       <div class="column is-paddingless"><strong></strong></div>
                       <div class="column is-4 is-paddingless text-center"><strong>Returns</strong></div>
+                    </div>
+                    <div class="columns table-row-a is-mobile is-marginless">
+                      <div class="column"><p class="negative-indent"><span class="is-bold">GET</span> /api/background/all</p></div>
+                      <div class="column is-4"><p class="text-center">JSON of all backgrounds</p></div>
                     </div>
                     <div class="columns table-row-a is-mobile is-marginless">
                       <div class="column"><p class="negative-indent"><span class="is-bold">GET</span> /api/background?id=<span class="has-text-info">&lt;background ID&gt;</span></p></div>
@@ -467,6 +503,10 @@
                       <div class="column is-4 is-paddingless text-center"><strong>Returns</strong></div>
                     </div>
                     <div class="columns table-row-a is-mobile is-marginless">
+                      <div class="column"><p class="negative-indent"><span class="is-bold">GET</span> /api/condition/all</p></div>
+                      <div class="column is-4"><p class="text-center">JSON of all conditions</p></div>
+                    </div>
+                    <div class="columns table-row-a is-mobile is-marginless">
                       <div class="column"><p class="negative-indent"><span class="is-bold">GET</span> /api/condition?id=<span class="has-text-info">&lt;condition ID&gt;</span></p></div>
                       <div class="column is-4"><p class="text-center">JSON of condition data</p></div>
                     </div>
@@ -484,6 +524,10 @@
                     <div class="columns is-mobile is-marginless">
                       <div class="column is-paddingless"><strong></strong></div>
                       <div class="column is-4 is-paddingless text-center"><strong>Returns</strong></div>
+                    </div>
+                    <div class="columns table-row-a is-mobile is-marginless">
+                      <div class="column"><p class="negative-indent"><span class="is-bold">GET</span> /api/trait/all</p></div>
+                      <div class="column is-4"><p class="text-center">JSON of all traits</p></div>
                     </div>
                     <div class="columns table-row-a is-mobile is-marginless">
                       <div class="column"><p class="negative-indent"><span class="is-bold">GET</span> /api/trait?id=<span class="has-text-info">&lt;trait ID&gt;</span></p></div>
