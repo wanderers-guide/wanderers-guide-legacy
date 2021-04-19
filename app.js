@@ -4,6 +4,10 @@ const express = require('express');
 const socket = require('socket.io');
 const expressSession = require('express-session');
 
+const redis = require('redis');
+let RedisStore = require('connect-redis')(expressSession);
+let redisClient = redis.createClient();
+
 const exphbs = require('express-handlebars');
 const bodyParser = require('body-parser');
 
@@ -63,14 +67,18 @@ app.engine('handlebars', exphbs({
 
 app.set('view engine', 'handlebars');
 
+// Set static folder
+app.use(express.static(path.join(__dirname, 'public')));
+
 // Body Parser
 app.use(bodyParser.urlencoded({ extended: false }));
 
 // Setup Express Session
 let sessionMiddleware = expressSession({
+  store: new RedisStore({ client: redisClient }),
   secret: keys.session.expressSecret,
   resave: false,
-  saveUninitialized: true,
+  saveUninitialized: false,
   cookie: {
     secure: (process.env.PRODUCTION == 'true') ? true : false,
     maxAge: 365 * 24 * 60 * 60 * 1000
@@ -123,9 +131,6 @@ backgroundDB.authenticate()
 contentDB.authenticate()
   .then(() => console.log('Content Database connected...'))
   .catch(err => console.log('Database Connection Error: ' + err));
-
-// Set static folder
-app.use(express.static(path.join(__dirname, 'public')));
 
 // Security Headers
 app.use(function(req, res, next) {

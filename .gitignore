@@ -3,3 +3,5 @@ node_modules
 .env
 app.yaml
 TO-DO.txt
+redis-server.exe
+redis.windows.conf

@@ -5,7 +5,7 @@
     "main": "app.js",
     "scripts": {
         "start": "node app.js",
-        "dev": "nodemon app.js"
+        "dev": "start redis-server.exe && nodemon app.js"
     },
     "author": "Aaron Cassar",
     "license": "ISC",
@@ -23,6 +23,7 @@
         "bulma-switch": "^2.0.0",
         "bulma-tagsinput": "^2.0.0",
         "bulma-tooltip": "^3.0.2",
+        "connect-redis": "^5.1.0",
         "cool-checkboxes-for-bulma.io": "^1.1.0",
         "crypto": "^1.0.1",
         "dotenv": "^8.2.0",
@@ -41,6 +42,7 @@
         "passport-reddit": "^0.2.4",
         "patreon": "^0.4.1",
         "rate-limiter-flexible": "^2.1.10",
+        "redis": "^3.1.1",
         "sequelize": "^5.21.6",
         "serve-favicon": "^2.5.0",
         "socket.io": "^2.3.0"
