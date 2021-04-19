@@ -48,6 +48,7 @@ function loadBackgroundPage(backgrounds) {
                 
                 g_char_backgroundID = backgroundID;
                 g_background = background;
+                stopCodeProcessing();
                 socket.emit("requestBackgroundChange",
                     getCharIDFromURL(),
                     backgroundID);
@@ -64,6 +65,7 @@ function loadBackgroundPage(backgrounds) {
             // Delete background, set to null
             g_char_backgroundID = null;
             g_background = null;
+            stopCodeProcessing();
             socket.emit("requestBackgroundChange",
                 getCharIDFromURL(),
                 null);

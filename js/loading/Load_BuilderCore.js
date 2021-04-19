@@ -17,7 +17,7 @@ function mapToObj(strMap) {
   return obj;
 }
 
-module.exports = async function(socket, charID, character=null, featObject=null, itemMap=null, spellMap=null, skillObject=null, tags=null, abilObject=null, allConditions=null, allLanguages=null, unselectedDataArray=null) {
+module.exports = async function(socket, charID, character=null, featObject=null, itemMap=null, spellMap=null, skillObject=null, tags=null, abilObject=null, allConditions=null, allLanguages=null, unselectedDataArray=null, metaDataArray=null) {
 
   console.log('~ STARTING BUILDER-CORE LOAD ~');
 
@@ -56,9 +56,14 @@ module.exports = async function(socket, charID, character=null, featObject=null,
     abilObject = await CharGathering.getAbilityScores(charID, charAbilityScores=null, bonusDataArray=null);
   }
 
-  socket.emit('updateLoadProgess', { message: 'Finding Conditions', upVal: 3 }); // (80/100) //
+  socket.emit('updateLoadProgess', { message: 'Finding Conditions', upVal: 1 }); // (78/100) //
   if(allConditions==null){
     allConditions = await CharGathering.getAllConditions();
+  }
+
+  socket.emit('updateLoadProgess', { message: 'Collecting Metadata', upVal: 2 }); // (80/100) //
+  if(metaDataArray==null){
+    metaDataArray = await CharGathering.getAllMetadata(charID);
   }
 
   socket.emit('updateLoadProgess', { message: 'Finding Languages', upVal: 2 }); // (82/100) //
@@ -86,6 +91,7 @@ module.exports = async function(socket, charID, character=null, featObject=null,
     AllConditions: allConditions,
     AllLanguages: allLanguages,
     UnselectedDataArray: unselectedDataArray,
+    RawMetaDataArray: metaDataArray,
   };
 
   let bStruct = {

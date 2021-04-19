@@ -45,6 +45,7 @@ function loadClassPage(classObject) {
 
                 g_char_classID = classID;
                 g_class = classMap.get(classID);
+                stopCodeProcessing();
                 socket.emit("requestClassChange",
                     getCharIDFromURL(),
                     classID);
@@ -60,6 +61,7 @@ function loadClassPage(classObject) {
             // Delete class, set to null
             g_char_classID = null;
             g_class = null;
+            stopCodeProcessing();
             socket.emit("requestClassChange",
                 getCharIDFromURL(),
                 null);

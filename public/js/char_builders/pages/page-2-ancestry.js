@@ -51,6 +51,7 @@ function loadAncestryPage(ancestryObject, uniHeritageArray) {
     
                 g_char_ancestryID = ancestryID;
                 g_ancestry = ancestryMap.get(ancestryID);
+                stopCodeProcessing();
                 socket.emit("requestAncestryChange",
                     getCharIDFromURL(),
                     ancestryID);
@@ -68,6 +69,7 @@ function loadAncestryPage(ancestryObject, uniHeritageArray) {
             // Delete ancestry, set to null
             g_char_ancestryID = null;
             g_ancestry = null;
+            stopCodeProcessing();
             socket.emit("requestAncestryChange",
                 getCharIDFromURL(),
                 null);

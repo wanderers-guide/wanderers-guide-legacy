@@ -36,10 +36,10 @@ function giveClassFeatureByName(srcStruct, locationID, featureName, sourceName, 
 socket.on("returnAddClassFeature", function(srcStruct, classAbility, allClassAbilityOptions, inputPacket){
   if(classAbility == null) { statementComplete(); return; }
 
-  let classAbilityID = "classAbility"+classAbility.id;
-  let classAbilityHeaderID = "classAbilityHeader"+classAbility.id;
-  let classAbilityContentID = "classAbilityContent"+classAbility.id;
-  let classAbilityCodeID = "classAbilityCode"+classAbility.id;
+  let classAbilityID = inputPacket.locationID+"-wsc-cf-"+srcStruct.sourceCodeSNum+"-classAbility"+classAbility.id;
+  let classAbilityHeaderID = inputPacket.locationID+"-wsc-cf-"+srcStruct.sourceCodeSNum+"-classAbilityHeader"+classAbility.id;
+  let classAbilityContentID = inputPacket.locationID+"-wsc-cf-"+srcStruct.sourceCodeSNum+"-classAbilityContent"+classAbility.id;
+  let classAbilityCodeID = inputPacket.locationID+"-wsc-cf-"+srcStruct.sourceCodeSNum+"-classAbilityCode"+classAbility.id;
 
   $('#'+inputPacket.locationID).append('<div id="'+classAbilityID+'" class="box lighter my-2"></div>');
 
@@ -57,9 +57,9 @@ socket.on("returnAddClassFeature", function(srcStruct, classAbility, allClassAbi
   ///
   if(classAbility.selectType === 'SELECTOR') {
 
-      let classAbilityOptionSelectorID = 'classAbilSelection'+classAbility.id;
-      let descriptionID = 'classAbilSelection'+classAbility.id+'Description';
-      let abilityCodeID = 'classAbilSelection'+classAbility.id+'Code';
+      let classAbilityOptionSelectorID = inputPacket.locationID+'-wsc-cf-'+srcStruct.sourceCodeSNum+'-classAbilSelection'+classAbility.id;
+      let descriptionID = classAbilityOptionSelectorID+'Description';
+      let abilityCodeID = classAbilityOptionSelectorID+'Code';
 
       const selectionTagInfo = getTagFromData(srcStruct, inputPacket.sourceName, 'Unselected Option', 'UNSELECTED');
 

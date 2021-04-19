@@ -63,6 +63,14 @@ function codeDecompiling(wscCode, srcStruct, locationID, sourceName){
 
 }
 
+function stopCodeProcessing(){
+  codeQueue = [];
+  gCode_statements = null;
+  gCode_srcStruct = null;
+  gCode_locationID = null;
+  gCode_sourceName = null;
+}
+
 socket.on("returnWSCMapsInit", function(){
     //if(processingDebug) {console.log("Setting WSC Maps...");}
     wscMapsInit = true;
@@ -107,6 +115,7 @@ function shiftCodeQueue(){
 }
 
 function statementComplete(){
+    if(gCode_srcStruct == null) { return; }
     if(processingDebug) {console.log("Statement Complete, onto next statement...");}
 
     if(processingDebug) {console.log(gCode_srcStruct.sourceCodeSNum);}

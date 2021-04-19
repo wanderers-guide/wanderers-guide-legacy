@@ -22,6 +22,7 @@ let g_allLanguages = null;
 let g_allConditions = null;
 let g_allTags = null;
 let g_unselectedData = null;
+let g_rawMetaData = null;
 // ~~~~~~~~~~~~~~~~~ //
 
 $(function () {
@@ -46,6 +47,7 @@ socket.on("returnCharBuilderDetails", function(character, coreDataStruct, inChoi
   g_allConditions = coreDataStruct.AllConditions;
   g_allTags = coreDataStruct.AllTags;
   g_unselectedData = coreDataStruct.UnselectedDataArray;
+  g_rawMetaData = coreDataStruct.RawMetaDataArray;
   //
   g_char_ancestryID = character.ancestryID;
   g_char_backgroundID = character.backgroundID;
