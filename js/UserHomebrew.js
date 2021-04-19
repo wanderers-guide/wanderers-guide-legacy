@@ -225,6 +225,13 @@ module.exports = class UserHomebrew {
     });
   }
 
+  static getValidKey(homebrewID, keyCode){
+    return HomebrewBundleKey.findOne({ where: { homebrewID: homebrewID, keyCode: keyCode } })
+    .then((bundleKey) => {
+      return bundleKey;
+    });
+  }
+
   static addToHomebrewCollection(socket, homebrewID, keyCode='None') {
     return User.findOne({ where: { id: getUserID(socket)} })
     .then((user) => {
@@ -234,10 +241,9 @@ module.exports = class UserHomebrew {
           if(homebrewBundle.isPublished === 1){
             if(homebrewBundle.hasKeys === 1) {
 
-              return HomebrewBundleKey.findOne({ where: { homebrewID: homebrewID, keyCode: keyCode } })
+              return UserHomebrew.getValidKey(homebrewID, keyCode)
               .then((bundleKey) => {
-
-                if(bundleKey != null){
+                if(bundleKey != null) {
                   return UserHomebrewBundle.create({
                     userID: user.id,
                     homebrewID: homebrewID,
@@ -258,7 +264,6 @@ module.exports = class UserHomebrew {
                 } else {
                   return false;
                 }
-
               });
 
             } else {

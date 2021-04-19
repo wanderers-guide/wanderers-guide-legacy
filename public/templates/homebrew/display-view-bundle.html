@@ -31,6 +31,18 @@
     <div class="px-1 pb-1"><p id="bundleContactInfo" class="has-text-grey-light is-bold is-pulled-right"></p></div>
   </div>
 
+  <div id="view-require-key-container" class="key-container is-hidden">
+    <p class="has-text-centered is-italic">This homebrew requires a key to view.</p>
+    <div class="field has-addons has-addons-centered pt-3">
+      <div class="control is-expanded" style="max-width: 400px;">
+        <input id="view-locked-bundle-key-input" class="input" type="text" maxlength="50" spellcheck="false" autocomplete="off" placeholder="Access Key">
+      </div>
+      <div class="control">
+        <a id="view-locked-bundle-view-btn" class="button is-outlined is-link">View</a>
+      </div>
+    </div>
+  </div>
+
   <div class="view-bundle-container">
     <div id="bundleSectionAncestries" class="is-hidden">
       <p class="pl-3 is-size-5 is-underlined">Ancestries</p>
@@ -130,7 +142,7 @@
         <p class="has-text-centered is-italic">This homebrew requires a key to use.</p>
         <div class="field has-addons has-addons-centered pt-3">
           <div class="control is-expanded" style="max-width: 400px;">
-            <input id="add-locked-bundle-key-input" class="input" type="text" maxlength="50" spellcheck="false" autocomplete="off" placeholder="Homebrew Key">
+            <input id="add-locked-bundle-key-input" class="input" type="text" maxlength="50" spellcheck="false" autocomplete="off" placeholder="Access Key">
           </div>
           <div class="control">
             <a id="add-locked-bundle-add-btn" class="button is-outlined is-link">Add</a>

@@ -10,7 +10,7 @@ function openBundleView(homebrewBundle){
 }
 
 socket.on("returnBundleContents", function(REQUEST_TYPE, userHasBundle, userOwnsBundle, allTags, classes, ancestries, archetypes, backgrounds, classFeatures, feats, heritages, uniheritages, items, spells, languages){
-  if(REQUEST_TYPE !== 'VIEW') {return;}
+  if(REQUEST_TYPE !== 'VIEW' && REQUEST_TYPE !== 'REQUIRE-KEY') {return;}
 
   textProcess_warningOnUnknown = true;
   g_allTags = allTags;
@@ -137,8 +137,12 @@ socket.on("returnBundleContents", function(REQUEST_TYPE, userHasBundle, userOwns
 
       ///
 
+      socket.off("returnBundleChangeCollection");
       socket.on("returnBundleChangeCollection", function(toAdd, isSuccess){
-        if(isSuccess){
+        startSpinnerSubLoader();
+        $('#'+displayContainerID).remove();
+        socket.emit('requestBundleContents', 'VIEW', g_activeBundle.id);
+        /*if(isSuccess){
           $('#add-locked-bundle-modal').removeClass('is-active');
           $('html').removeClass('is-clipped');
           $('#add-locked-bundle-key-input').val('');
@@ -153,7 +157,7 @@ socket.on("returnBundleContents", function(REQUEST_TYPE, userHasBundle, userOwns
           if($('#add-locked-bundle-modal').hasClass('is-active')) {
             $('#add-locked-bundle-key-input').addClass('is-danger');
           }
-        }
+        }*/
       });
 
       ///
@@ -165,6 +169,22 @@ socket.on("returnBundleContents", function(REQUEST_TYPE, userHasBundle, userOwns
       $('#bundleKeyManagementBtn').click(function() {
         socket.emit('requestBundleKeys', g_activeBundle.id);
       });
+
+      ///
+
+      if (REQUEST_TYPE === 'REQUIRE-KEY'){
+
+        $('#view-require-key-container').removeClass('is-hidden');
+        $('#view-locked-bundle-view-btn').click(function() {
+          let keyInput = $('#view-locked-bundle-key-input').val();
+          if(keyInput != ''){
+            startSpinnerSubLoader();
+            $('#'+displayContainerID).remove();
+            socket.emit('requestBundleContents', 'VIEW', g_activeBundle.id, keyInput);
+          }
+        });
+
+      }
 
       ///
 

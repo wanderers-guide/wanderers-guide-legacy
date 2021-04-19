@@ -2673,33 +2673,46 @@ module.exports = class SocketConnections {
         });
       });
       
-      socket.on('requestBundleContents', function(REQUEST_TYPE, homebrewID){
-        HomebrewGathering.getAllClasses(homebrewID).then((classes) => {
-          HomebrewGathering.getAllAncestries(homebrewID).then((ancestries) => {
-            HomebrewGathering.getAllArchetypes(homebrewID).then((archetypes) => {
-              HomebrewGathering.getAllBackgrounds(homebrewID).then((backgrounds) => {
-                HomebrewGathering.getAllClassFeatures(homebrewID).then((classFeatures) => {
-                  HomebrewGathering.getAllFeats(homebrewID).then((feats) => {
-                    HomebrewGathering.getAllHeritages(homebrewID).then((heritages) => {
-                      HomebrewGathering.getAllUniHeritages(homebrewID).then((uniheritages) => {
-                        HomebrewGathering.getAllItems(homebrewID).then((items) => {
-                          HomebrewGathering.getAllSpells(homebrewID).then((spells) => {
-                            UserHomebrew.hasHomebrewBundle(socket, homebrewID).then((userHasBundle) => {
-                              UserHomebrew.ownsHomebrewBundle(socket, homebrewID).then((userOwnsBundle) => {
-                                GeneralGathering.getAllTags(homebrewID).then((allTags) => {
-                                  HomebrewGathering.getAllLanguages(homebrewID).then((languages) => {
+      socket.on('requestBundleContents', function(REQUEST_TYPE, homebrewID, keyCode='None'){
 
-                                    if(userOwnsBundle && REQUEST_TYPE === 'EDIT') {
-                                      console.log('Clearing cache of homebrewID '+homebrewID);
-                                      // Delete all data cached with the homebrewID
-                                      for(const cacheKey of MemCache.keys()){
-                                        if(cacheKey.includes('{"homebrewID":'+homebrewID+'}')){
-                                          MemCache.del(cacheKey);
-                                        }
-                                      }
-                                    }
+        UserHomebrew.getHomebrewBundle(socket, homebrewID).then((homebrewBundle) => {
+          UserHomebrew.hasHomebrewBundle(socket, homebrewID).then((userHasBundle) => {
+            UserHomebrew.ownsHomebrewBundle(socket, homebrewID).then((userOwnsBundle) => {
+              UserHomebrew.getValidKey(homebrewID, keyCode).then((bundleKey) => {
 
-                                    socket.emit('returnBundleContents', REQUEST_TYPE, userHasBundle, userOwnsBundle, allTags, classes, ancestries, archetypes, backgrounds, classFeatures, feats, heritages, uniheritages, items, spells, languages);
+                if(homebrewBundle.hasKeys === 1 && !userHasBundle && bundleKey == null) {
+
+                  socket.emit('returnBundleContents', 'REQUIRE-KEY', userHasBundle, userOwnsBundle, [], [], [], [], [], [], [], [], [], [], [], []);
+
+                } else {
+
+                  HomebrewGathering.getAllClasses(homebrewID).then((classes) => {
+                    HomebrewGathering.getAllAncestries(homebrewID).then((ancestries) => {
+                      HomebrewGathering.getAllArchetypes(homebrewID).then((archetypes) => {
+                        HomebrewGathering.getAllBackgrounds(homebrewID).then((backgrounds) => {
+                          HomebrewGathering.getAllClassFeatures(homebrewID).then((classFeatures) => {
+                            HomebrewGathering.getAllFeats(homebrewID).then((feats) => {
+                              HomebrewGathering.getAllHeritages(homebrewID).then((heritages) => {
+                                HomebrewGathering.getAllUniHeritages(homebrewID).then((uniheritages) => {
+                                  HomebrewGathering.getAllItems(homebrewID).then((items) => {
+                                    HomebrewGathering.getAllSpells(homebrewID).then((spells) => {
+                                      GeneralGathering.getAllTags(homebrewID).then((allTags) => {
+                                        HomebrewGathering.getAllLanguages(homebrewID).then((languages) => {
+        
+                                          if(userOwnsBundle && REQUEST_TYPE === 'EDIT') {
+                                            console.log('Clearing cache of homebrewID '+homebrewID);
+                                            // Delete all data cached with the homebrewID
+                                            for(const cacheKey of MemCache.keys()){
+                                              if(cacheKey.includes('{"homebrewID":'+homebrewID+'}')){
+                                                MemCache.del(cacheKey);
+                                              }
+                                            }
+                                          }
+        
+                                          socket.emit('returnBundleContents', REQUEST_TYPE, userHasBundle, userOwnsBundle, allTags, classes, ancestries, archetypes, backgrounds, classFeatures, feats, heritages, uniheritages, items, spells, languages);
+                                        });
+                                      });
+                                    });
                                   });
                                 });
                               });
@@ -2709,7 +2722,9 @@ module.exports = class SocketConnections {
                       });
                     });
                   });
-                });
+
+                }
+
               });
             });
           });
