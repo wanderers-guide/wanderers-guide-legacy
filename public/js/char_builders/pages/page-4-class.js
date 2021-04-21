@@ -22,12 +22,12 @@ function loadClassPage(classObject) {
     for(const [key, value] of classMap.entries()){
         if(value.Class.id == g_char_classID){
             if(value.Class.isArchived == 0){
-                selectClass.append('<option value="'+value.Class.id+'" selected>'+value.Class.name+'</option>');
+                selectClass.append('<option value="'+value.Class.id+'" class="'+selectOptionRarity(value.Class.rarity)+'" selected>'+value.Class.name+'</option>');
             } else {
-                selectClass.append('<option value="'+value.Class.id+'" selected>'+value.Class.name+' (archived)</option>');
+                selectClass.append('<option value="'+value.Class.id+'" class="'+selectOptionRarity(value.Class.rarity)+'" selected>'+value.Class.name+' (archived)</option>');
             }
         } else if(value.Class.isArchived == 0){
-            selectClass.append('<option value="'+value.Class.id+'">'+value.Class.name+'</option>');
+            selectClass.append('<option value="'+value.Class.id+'" class="'+selectOptionRarity(value.Class.rarity)+'">'+value.Class.name+'</option>');
         }
     }
 
@@ -108,6 +108,9 @@ function displayCurrentClass(classStruct, saving) {
     } else {
         $('#isArchivedMessage').addClass('is-hidden');
     }
+
+    // Rarity //
+    $('#classRarityContainer').html(convertRarityToHTML(classStruct.Class.rarity));
 
     let classDescription = $('#classDescription');
     classDescription.html(processText(classStruct.Class.description, false, false, 'MEDIUM', false));

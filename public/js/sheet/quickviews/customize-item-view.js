@@ -20,6 +20,9 @@ function openCustomizeItemQuickview(data) {
         qContent.append('<div class="field is-horizontal"><div class="field-label is-normal"><label class="label">Dmg Die</label></div><div class="field-body"><div class="field"><div class="control"><div class="select"><select id="customizeWeaponDamageDie"><option value="">1</option><option value="d2">d2</option><option value="d4">d4</option><option value="d6">d6</option><option value="d8">d8</option><option value="d10">d10</option><option value="d12">d12</option><option value="d20">d20</option><option value="NONE">-</option></select></div></div></div></div></div>');
         qContent.append('<div class="field is-horizontal"><div class="field-label is-normal"><label class="label">Dmg Type</label></div><div class="field-body"><div class="field is-narrow"><div class="control"><input id="customizeWeaponDamageType" class="input" type="text" maxlength="40" spellcheck="false" autocomplete="off" value="'+data.InvItem.itemWeaponDamageType+'"></div></div></div></div>');
 
+        qContent.append('<div class="field is-horizontal"><div class="field-label is-normal"><label class="label">Range</label></div><div class="field-body"><div class="field is-narrow"><div class="control"><input id="customizeWeaponRange" class="input" type="number" min="0" max="10000" value="'+data.InvItem.itemWeaponRange+'" step="5"></div></div></div></div>');
+        qContent.append('<div class="field is-horizontal"><div class="field-label is-normal"><label class="label">Reload</label></div><div class="field-body"><div class="field is-narrow"><div class="control"><input id="customizeWeaponReload" class="input" type="number" min="0" max="6" value="'+data.InvItem.itemWeaponReload+'" step="1"></div></div></div></div>');
+
     }
 
     if(data.InvItem.itemIsStorage == 1){
@@ -164,11 +167,14 @@ function openCustomizeItemQuickview(data) {
         }
 
         // Weapon //
-        let weaponDieType = null;
-        let weaponDamageType = null;
+        let weaponDieType, weaponDamageType = null; 
+        let weaponRange = 0;
+        let weaponReload = 0;
         if(data.InvItem.itemIsWeapon == 1){
-            weaponDieType = $('#customizeWeaponDamageDie').val();
-            weaponDamageType = $('#customizeWeaponDamageType').val();
+          weaponDieType = $('#customizeWeaponDamageDie').val();
+          weaponDamageType = $('#customizeWeaponDamageType').val();
+          weaponRange = $('#customizeWeaponRange').val();
+          weaponReload = $('#customizeWeaponReload').val();
         }
 
         // Storage //
@@ -196,6 +202,8 @@ function openCustomizeItemQuickview(data) {
 
                     weaponDieType: weaponDieType,
                     weaponDamageType: weaponDamageType,
+                    weaponRange: weaponRange,
+                    weaponReload: weaponReload,
 
                     storageMaxBulk: storageMaxBulk,
                 }

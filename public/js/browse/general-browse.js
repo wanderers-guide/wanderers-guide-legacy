@@ -398,6 +398,7 @@ function openTab(tabName){
       break;
     case 'class':
       $('#filterNameSection').removeClass('is-hidden');
+      $('#filterRaritySection').removeClass('is-hidden');
       $('#filterSourceSection').removeClass('is-hidden');
 
       $('#classesSearchTab').parent().addClass("is-active");

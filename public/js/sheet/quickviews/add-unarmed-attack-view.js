@@ -16,6 +16,8 @@ function openAddUnarmedAttackQuickview(data) {
       itemDescription = itemData.description;
       itemDamageType = itemData.itemWeaponDamageType;
       itemDieType = itemData.itemWeaponDieType;
+      itemRange = itemData.itemWeaponRange;
+      itemReload = itemData.itemWeaponReload;
       itemCode = itemData.code;
       itemMaterialType = itemData.materialType;
       itemTagArray = itemData.itemTags;
@@ -46,6 +48,9 @@ function openAddUnarmedAttackQuickview(data) {
 
     qContent.append('<div class="field is-horizontal"><div class="field-label is-normal"><label class="label">Dmg Die</label></div><div class="field-body"><div class="field"><div class="control"><div class="select"><select id="customizeWeaponDamageDie"><option value="">1</option><option value="d2">d2</option><option value="d4">d4</option><option value="d6">d6</option><option value="d8">d8</option><option value="d10">d10</option><option value="d12">d12</option><option value="d20">d20</option><option value="NONE">-</option></select></div></div></div></div></div>');
     qContent.append('<div class="field is-horizontal"><div class="field-label is-normal"><label class="label">Dmg Type</label></div><div class="field-body"><div class="field is-narrow"><div class="control"><input id="customizeWeaponDamageType" class="input" type="text" maxlength="40" spellcheck="false" autocomplete="off" value="'+itemDamageType+'"></div></div></div></div>');
+
+    qContent.append('<div class="field is-horizontal"><div class="field-label is-normal"><label class="label">Range</label></div><div class="field-body"><div class="field is-narrow"><div class="control"><input id="customizeWeaponRange" class="input" type="number" min="0" max="10000" value="'+itemRange+'" step="5"></div></div></div></div>');
+    qContent.append('<div class="field is-horizontal"><div class="field-label is-normal"><label class="label">Reload</label></div><div class="field-body"><div class="field is-narrow"><div class="control"><input id="customizeWeaponReload" class="input" type="number" min="0" max="6" value="'+itemReload+'" step="1"></div></div></div></div>');
 
     qContent.append('<hr class="m-2 mb-4">');
 
@@ -128,10 +133,10 @@ function openAddUnarmedAttackQuickview(data) {
         }
 
         // Weapon //
-        let weaponDieType = null;
-        let weaponDamageType = null;
-        weaponDieType = $('#customizeWeaponDamageDie').val();
-        weaponDamageType = $('#customizeWeaponDamageType').val();
+        let weaponDieType = $('#customizeWeaponDamageDie').val();
+        let weaponDamageType = $('#customizeWeaponDamageType').val();
+        let weaponRange = $('#customizeWeaponRange').val();
+        let weaponReload = $('#customizeWeaponReload').val();
 
         if(isValid){
 
@@ -155,6 +160,8 @@ function openAddUnarmedAttackQuickview(data) {
 
                     weaponDieType: weaponDieType,
                     weaponDamageType: weaponDamageType,
+                    weaponRange: weaponRange,
+                    weaponReload: weaponReload,
 
                     storageMaxBulk: null,
                 }
@@ -182,6 +189,8 @@ function openAddUnarmedAttackQuickview(data) {
 
                   weaponDieType: weaponDieType,
                   weaponDamageType: weaponDamageType,
+                  weaponRange: weaponRange,
+                  weaponReload: weaponReload,
 
                   storageMaxBulk: null,
 

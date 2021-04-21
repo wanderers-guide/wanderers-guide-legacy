@@ -48,9 +48,10 @@ class DisplayClass {
             sourceLink = '/homebrew/?view_id='+classStruct.class.homebrewID;
           }
           let sourceStr = '<a class="has-text-grey" href="'+sourceLink+'" target="_blank">'+sourceTextName+'</a><span class="has-text-grey-dark">, #'+classStruct.class.id+'</span>';
-          //let classRarity = convertRarityToHTML(classStruct.class.rarity);
-          //if(classRarity != ''){ sourceStr = '<span class="pr-2">'+sourceStr+'</span>'; }
-          $('#class-source').html(sourceStr);
+
+          let classRarity = convertRarityToHTML(classStruct.class.rarity);
+          if(classRarity != ''){ sourceStr = '<span class="pr-2">'+sourceStr+'</span>'; }
+          $('#class-source').html(sourceStr+classRarity);
 
           $('#class-description').html(processText(classStruct.class.description, false, false, 'MEDIUM', false));
 

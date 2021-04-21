@@ -187,11 +187,21 @@ function openInvItemQuickview(data) {
 
             qContent.append('<hr class="m-2">');
 
-            let reload = data.Item.WeaponData.rangedReload;
-            if(reload == 0){ reload = '-'; }
-            let range = data.Item.WeaponData.rangedRange+" ft";
+
+            let weaponRange = '-';
+            let weaponReload = '-';
+            if(data.InvItem.itemWeaponRange == 0 && data.InvItem.itemWeaponReload == 0){
+              weaponRange = data.Item.WeaponData.rangedRange;
+              weaponReload = data.Item.WeaponData.rangedReload;
+            } else {
+              weaponRange = data.InvItem.itemWeaponRange;
+              weaponReload = data.InvItem.itemWeaponReload;
+            }
+            if(weaponReload == 0){ weaponReload = '-'; }
+            weaponRange += ' ft';
+
             qContent.append('<div class="tile text-center is-flex"><div class="tile is-child is-6"><strong>Range</strong></div><div class="tile is-child is-6"><strong>Reload</strong></div></div>');
-            qContent.append('<div class="tile text-center is-flex"><div class="tile is-child is-6"><p>'+range+'</p></div><div class="tile is-child is-6"><p>'+reload+'</p></div></div>');
+            qContent.append('<div class="tile text-center is-flex"><div class="tile is-child is-6"><p>'+weaponRange+'</p></div><div class="tile is-child is-6"><p>'+weaponReload+'</p></div></div>');
 
             qContent.append('<hr class="m-2">');
 

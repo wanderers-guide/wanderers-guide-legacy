@@ -31,7 +31,7 @@ function getAttackAndDamage(itemData, invItem){
         let abilMod = strMod;
         if(finesseTag != null){
           abilMod = (dexMod > abilMod) ? dexMod : abilMod;
-        } // Use preDex mod becuase Clumsy condition affects ranged attacks but not finesse melee attacks?
+        } // Use preDex mod because Clumsy condition affects ranged attacks but not finesse melee attacks?
     
         let profNumUps = weaponProfDetermineNumUps(itemData);
 

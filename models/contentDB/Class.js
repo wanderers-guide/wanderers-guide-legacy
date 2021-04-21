@@ -5,6 +5,10 @@ const Class = db.define('classes', {
   name: {
     type: Sequelize.STRING
   },
+  rarity: {
+    type: Sequelize.ENUM,
+    values: ['COMMON', 'UNCOMMON', 'RARE', 'UNIQUE']
+  },
   description: {
     type: Sequelize.TEXT
   },

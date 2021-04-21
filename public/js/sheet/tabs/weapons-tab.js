@@ -15,9 +15,15 @@ function openWeaponsTab(data) {
         let weaponRange = '-';
         let weaponReload = '-';
         if(item.WeaponData.isRanged == 1){
+          if(invItem.itemWeaponRange == 0 && invItem.itemWeaponReload == 0){
+            weaponRange = item.WeaponData.rangedRange;
             weaponReload = item.WeaponData.rangedReload;
-            if(weaponReload == 0){ weaponReload = '-'; }
-            weaponRange = item.WeaponData.rangedRange+" ft";
+          } else {
+            weaponRange = invItem.itemWeaponRange;
+            weaponReload = invItem.itemWeaponReload;
+          }
+          if(weaponReload == 0){ weaponReload = '-'; }
+          weaponRange += ' ft';
         }
 
         let unarmedIcon = '';

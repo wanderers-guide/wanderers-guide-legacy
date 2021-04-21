@@ -151,9 +151,9 @@ function openItemQuickview(data) {
 
             let reload = itemDataStruct.WeaponData.rangedReload;
             if(reload == 0){ reload = '-'; }
-            let range = itemDataStruct.WeaponData.rangedRange+" ft";
+            let range = itemDataStruct.WeaponData.rangedRange;
             qContent.append('<div class="tile text-center is-flex"><div class="tile is-child is-6"><strong>Range</strong></div><div class="tile is-child is-6"><strong>Reload</strong></div></div>');
-            qContent.append('<div class="tile text-center is-flex"><div class="tile is-child is-6"><p>'+range+'</p></div><div class="tile is-child is-6"><p>'+reload+'</p></div></div>');
+            qContent.append('<div class="tile text-center is-flex"><div class="tile is-child is-6"><p>'+range+' ft</p></div><div class="tile is-child is-6"><p>'+reload+'</p></div></div>');
 
             qContent.append('<hr class="m-2">');
 

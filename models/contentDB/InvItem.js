@@ -70,6 +70,12 @@ const InvItem = db.define('invItems', {
   itemWeaponDamageType: {
     type: Sequelize.STRING
   },
+  itemWeaponRange: {
+    type: Sequelize.INTEGER
+  },
+  itemWeaponReload: {
+    type: Sequelize.INTEGER
+  },
   itemIsStorage: {
     type: Sequelize.INTEGER
   },

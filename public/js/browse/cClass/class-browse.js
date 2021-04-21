@@ -5,6 +5,7 @@
 function filterClassSearch(){
 
   let nameFilter = $('#filterNameInput').val();
+  let rarityFilter = $('#filterRarityInput').val();
   let sourceFilter = $('#filterSourceInput').val();
 
 
@@ -15,6 +16,15 @@ function filterClassSearch(){
     let parts = nameFilter.toUpperCase().split(' ');
     for(const cClass of allClasses){
       if(!textContainsWords(cClass.name, parts)){
+        allClasses.delete(cClass);
+      }
+    }
+  }
+
+  if(rarityFilter != 'ANY'){
+    console.log('Filtering by Rarity...');
+    for(const cClass of allClasses){
+      if(cClass.rarity !== rarityFilter){
         allClasses.delete(cClass);
       }
     }
@@ -48,9 +58,9 @@ function displayClassResults(allClasses){
 
     let entryID = 'class-'+cClass.id;
     let name = cClass.name;
-    let contentSrc = cClass.contentSrc;
+    let rarity = cClass.rarity;
 
-    $('#browsingList').append('<div id="'+entryID+'" class="columns is-mobile border-bottom border-dark-lighter cursor-clickable"><div class="column is-8"><span class="is-size-5">'+name+'</span></div><div class="column is-4" style="position: relative;"><span class="is-pulled-right is-size-7 has-text-grey is-italic">'+getContentSourceTextName(contentSrc)+'</span></div></div>');
+    $('#browsingList').append('<div id="'+entryID+'" class="columns is-mobile border-bottom border-dark-lighter cursor-clickable"><div class="column is-8"><span class="is-size-5">'+name+'</span></div><div class="column is-4" style="position: relative;">'+convertRarityToHTML(rarity)+'</div></div>');
 
     $('#'+entryID).click(function(){
       new DisplayClass('tabContent', cClass.id, g_featMap);
