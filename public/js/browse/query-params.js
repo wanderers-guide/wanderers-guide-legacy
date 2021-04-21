@@ -6,7 +6,7 @@ let is_queryBrowseInit = false;
 
 function queryBrowseContent(){
 
-  //let contentFilter = $('#tabContent').attr('data-content-filter');
+  let contentFilter = $('#tabContent').attr('data-content-filter');
   let contentSection = $('#tabContent').attr('data-content-section');
   let contentID = $('#tabContent').attr('data-content-id');
 
@@ -59,26 +59,20 @@ function queryBrowseContent(){
 
   }
 
-  /*
   if(contentFilter != ''){
 
-    let filterParts = contentFilter.split('.');
-    for(const filterPart of filterParts) {
-
-      let filterPartEntry = filterPart.split('~');
-      const filterPartKey = filterPartEntry[0];
-      const filterPartValue = filterPartEntry[1];
-
-      $('#filter'+filterPartKey+'Input').val(filterPartValue);
-
+    let filterMap = getFilterMapFromURL();
+    for(const [key, value] of filterMap.entries()){
+      if(key == 'Traits'){
+        let tagArray = JSON.parse(value);
+        for(let tagID of tagArray){
+          $("#filterTagsInput").find('option[value='+tagID+']').attr('selected','selected');
+        }
+        $("#filterTagsInput").trigger("chosen:updated");
+      } else {
+        $('#filter'+key+'Input').val(value);
+      }
     }
-
-    
-    let filterArray = getFilterArrayFromURL();
-    for(let filterStruct of filterArray){
-      $('#filter'+filterStruct.k+'Input').val(filterStruct.v);
-    }
-    
 
     // Triggers all blur events, updating highlights
     $('.input').blur();
@@ -86,7 +80,6 @@ function queryBrowseContent(){
 
     filterSearch();
   }
-  */
 
   is_queryBrowseInit = true;
 }
@@ -103,109 +96,67 @@ function updateBrowseURL(paramKey, paramValue, override=false){
   window.history.pushState('browse', '', 'browse?'+urlParams.toString());
 }
 
-/*
-function getFilterArrayFromURL(){
+function filterIllegalURLCharacters(str){
+  return str.replace(/[\?\#\@\$\&\*\;\=\.\~]/g, '');
+}
+
+function getFilterMapFromURL(){
+  let filterMap = new Map();
   try{
     const urlParams = new URLSearchParams(location.search);
-    let filterArray = JSON.parse(decodeURIComponent(urlParams.get('filter')));
-    //console.log('Filtering via query <'+filterArray.length+'>...');
-    filterArray.length;
-    return filterArray;
+    let paramFilter = decodeURIComponent(urlParams.get('filter'));
+    if(!paramFilter.includes('~')) { return filterMap; }
+
+    let filterParts = paramFilter.split('.');
+    for(const filterPart of filterParts) {
+
+      let filterPartEntry = filterPart.split('~');
+      const filterPartKey = filterPartEntry[0];
+      const filterPartValue = filterPartEntry[1];
+
+      filterMap.set(filterPartKey, filterPartValue);
+
+    }
+
+    return filterMap;
   } catch (err) {
-    return [];
+    return filterMap;
   }
 }
 
-function setFilterArrayToURL(filterArray){
-  const urlParams = new URLSearchParams(location.search);
-  urlParams.set('filter', encodeURIComponent(JSON.stringify(filterArray)));
-  window.history.pushState('browse', '', 'browse?'+urlParams.toString());
-}
+function setFilterMapToURL(filterMap){
 
-function addToBrowseURL(paramKey, paramAddedValue, subKeyName=null){
+  let queryParam = '';
+  for(const [key, value] of filterMap.entries()){
 
-  let foundKey = false;
-  let filterArray = getFilterArrayFromURL();
-  for(let filterStruct of filterArray){
-    if(filterStruct.k == subKeyName){
-      filterStruct.v = paramAddedValue;
-      foundKey = true;
-    }
+    let newVal = filterIllegalURLCharacters(value);
+    queryParam += key+'~'+newVal+'.';
+
   }
-
-  if(!foundKey){
-    filterArray.push({ k: subKeyName, v: paramAddedValue });
-  }
-
-  setFilterArrayToURL(filterArray);
-
-}
-
-function removeFromBrowseURL(paramKey, subKeyName=null){
-
-  let newFilterArray = [];
-  let filterArray = getFilterArrayFromURL();
-  for(let filterStruct of filterArray){
-    if(filterStruct.k != subKeyName){
-      newFilterArray.push(filterStruct);
-    }
-  }
-
-  setFilterArrayToURL(newFilterArray);
-
-}
-*/
-
-
-function addToBrowseURL(paramKey, paramAddedValue, subKeyName=null){
-  /*
-  if(!is_queryBrowseInit) { return; }
+  queryParam = queryParam.slice(0, -1); // Remove last '.'
 
   const urlParams = new URLSearchParams(location.search);
-  let paramCurrentValue = urlParams.get(paramKey);
-  if(paramCurrentValue == null || paramCurrentValue == ''){
-    if(subKeyName != null){
-      urlParams.set(paramKey, subKeyName+'~'+paramAddedValue+'.');
-    } else {
-      urlParams.set(paramKey, paramAddedValue);
-    }
+  if(queryParam == '') {
+    urlParams.delete('filter');
   } else {
-    if(subKeyName != null){
-      if(paramCurrentValue.includes(subKeyName+'~')){
-        let regex = new RegExp(subKeyName+'~(.+?)(\.|$)','g');
-        paramCurrentValue = paramCurrentValue.replace(regex, '');
-      }
-      //paramCurrentValue = paramCurrentValue.replace(/\.$/, '');
-      if(paramCurrentValue == ''){
-        urlParams.set(paramKey, subKeyName+'~'+paramAddedValue+'.');
-      } else {
-        urlParams.set(paramKey, paramCurrentValue+subKeyName+'~'+paramAddedValue+'.');
-      }
-    } else {
-      urlParams.set(paramKey, paramCurrentValue+paramAddedValue+'.');
-    }
+    urlParams.set('filter', encodeURIComponent(queryParam));
   }
   window.history.pushState('browse', '', 'browse?'+urlParams.toString());
-  */
+
 }
 
-function removeFromBrowseURL(paramKey, subKeyName=null){
-  /*
+function addToBrowseURL(paramKey, paramAddedValue, subKeyName){
+  // Assumes paramKey='filter'
   if(!is_queryBrowseInit) { return; }
+  let filterMap = getFilterMapFromURL();
+  filterMap.set(subKeyName, paramAddedValue);
+  setFilterMapToURL(filterMap);
+}
 
-  const urlParams = new URLSearchParams(location.search);
-  let paramCurrentValue = urlParams.get(paramKey);
-  if(paramCurrentValue != null && paramCurrentValue != ''){
-    if(subKeyName != null){
-      let regex = new RegExp(subKeyName+'~(.+?)(\.|$)','g');
-      paramCurrentValue = paramCurrentValue.replace(regex, '');
-      urlParams.set(paramKey, paramCurrentValue);
-    } else {
-      urlParams.delete(paramKey);
-    }
-  } else {
-    urlParams.delete(paramKey);
-  }
-  window.history.pushState('browse', '', 'browse?'+urlParams.toString());
-  */
+function removeFromBrowseURL(paramKey, subKeyName){
+  // Assumes paramKey='filter'
+  if(!is_queryBrowseInit) { return; }
+  let filterMap = getFilterMapFromURL();
+  filterMap.delete(subKeyName);
+  setFilterMapToURL(filterMap);
 }

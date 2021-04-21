@@ -262,6 +262,41 @@ function initBrowse(featMap, skillMap, itemMap, spellMap, allLanguages, allCondi
     }
   });
 
+  //
+
+  $("#filterLevelRelationInput").blur(function(){
+    if($('#filterLevelRelationInput').val() != 'EQUAL'){
+      addToBrowseURL('filter', $('#filterLevelRelationInput').val(), 'LevelRelation');
+    } else {
+      removeFromBrowseURL('filter', 'LevelRelation');
+    }
+  });
+  $("#filterItemPriceRelationInput").blur(function(){
+    if($('#filterItemPriceRelationInput').val() != 'EQUAL'){
+      addToBrowseURL('filter', $('#filterItemPriceRelationInput').val(), 'ItemPriceRelation');
+    } else {
+      removeFromBrowseURL('filter', 'ItemPriceRelation');
+    }
+  });
+  $("#filterItemBulkRelationInput").blur(function(){
+    if($('#filterItemBulkRelationInput').val() != 'EQUAL'){
+      addToBrowseURL('filter', $('#filterItemBulkRelationInput').val(), 'ItemBulkRelation');
+    } else {
+      removeFromBrowseURL('filter', 'ItemBulkRelation');
+    }
+  });
+
+  //
+
+  $("#filterTagsInput").chosen().change(function(){
+    let traitsStr = JSON.stringify($('#filterTagsInput').val());
+    if(traitsStr != '[]'){
+      addToBrowseURL('filter', traitsStr, 'Traits');
+    } else {
+      removeFromBrowseURL('filter', 'Traits');
+    }
+  });
+
   // Changing Tabs //
   $('.searchTab').click(function(){
     let tabName = $(this).attr('data-tab-name');
@@ -305,6 +340,7 @@ function openTab(tabName){
   $('#filterNameInput').val('');
   $('#filterTagsInput').val('');
   $('#filterTagsInput').trigger("chosen:updated");
+  $('#filterTagsInput').trigger('change');
   $('#filterFeatPrereqInput').val('');
   $('#filterItemUsageInput').val('');
   $('#filterAreaInput').val('');
@@ -456,6 +492,8 @@ function openTab(tabName){
 }
 
 function filterSearch(){
+
+  updateBrowseURL('id', null);
 
   // Triggers all blur events, updating highlights
   $('.input').blur();

@@ -52,6 +52,7 @@ module.exports = class CharExport {
                     return SpellBookSpell.findAll({ where: { charID: charID } })
                     .then(function(spellBookSpells) {
                       return {
+                        version: 1,
                         character: character,
                         inventory: inventory,
                         invItems: invItems,
