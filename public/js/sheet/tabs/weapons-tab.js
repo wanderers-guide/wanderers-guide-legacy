@@ -12,19 +12,16 @@ function openWeaponsTab(data) {
         let calcStruct = getAttackAndDamage(item, invItem);
         //let itemTagArray = getItemTraitsArray(item, invItem);
 
-        let weaponRange = '-';
-        let weaponReload = '-';
-        if(item.WeaponData.isRanged == 1){
-          if(invItem.itemWeaponRange == 0 && invItem.itemWeaponReload == 0){
-            weaponRange = item.WeaponData.rangedRange;
-            weaponReload = item.WeaponData.rangedReload;
-          } else {
-            weaponRange = invItem.itemWeaponRange;
-            weaponReload = invItem.itemWeaponReload;
-          }
-          if(weaponReload == 0){ weaponReload = '-'; }
-          weaponRange += ' ft';
+        let weaponRange, weaponReload;
+        if(invItem.itemWeaponRange == null && invItem.itemWeaponReload == null){
+          weaponRange = item.WeaponData.rangedRange;
+          weaponReload = item.WeaponData.rangedReload;
+        } else {
+          weaponRange = invItem.itemWeaponRange;
+          weaponReload = invItem.itemWeaponReload;
         }
+        if(weaponReload == 0){ weaponReload = '-'; }
+        if(weaponRange == 0 || (item.WeaponData.isRanged == 0 && weaponRange == 20 && !extraData.IsCustomUnarmedAttack)){ weaponRange = '-'; } else { weaponRange += ' ft'; }
 
         let unarmedIcon = '';
         if(extraData.IsCustomUnarmedAttack) {

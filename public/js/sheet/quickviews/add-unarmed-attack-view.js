@@ -5,7 +5,7 @@
 function openAddUnarmedAttackQuickview(data) {
     addBackFunctionality(data);
 
-    let itemID,itemName,itemDescription,itemDamageType,itemDieType,itemCode,itemMaterialType,itemTagArray;
+    let itemID,itemName,itemDescription,itemDamageType,itemDieType,itemRange,itemReload,itemCode,itemMaterialType,itemTagArray;
     if(data.IsCustomize){ // Customize Unarmed Attack
       $('#quickViewTitle').html("Customize Unarmed Attack");
 
@@ -33,6 +33,8 @@ function openAddUnarmedAttackQuickview(data) {
       itemDescription = itemData.Item.description;
       itemDamageType = itemData.WeaponData.damageType;
       itemDieType = itemData.WeaponData.dieType;
+      itemRange = itemData.WeaponData.rangedRange;
+      itemReload = itemData.WeaponData.rangedReload;
       itemCode = itemData.Item.code;
       itemMaterialType = itemData.Item.materialType;
       itemTagArray = itemData.TagArray;

@@ -190,7 +190,7 @@ function openInvItemQuickview(data) {
 
             let weaponRange = '-';
             let weaponReload = '-';
-            if(data.InvItem.itemWeaponRange == 0 && data.InvItem.itemWeaponReload == 0){
+            if(data.InvItem.itemWeaponRange == null && data.InvItem.itemWeaponReload == null){
               weaponRange = data.Item.WeaponData.rangedRange;
               weaponReload = data.Item.WeaponData.rangedReload;
             } else {
