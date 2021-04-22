@@ -833,7 +833,8 @@ module.exports = class CharGathering {
             {OR: CharContentSources.getSourceArrayPrisma(character)},
             {OR: CharContentHomebrew.getHomebrewArrayPrisma(character)},
           ],
-        }
+        },
+        orderBy: [{ name: 'asc' }],
       });
     }
 

@@ -41,6 +41,9 @@ socket.on("returnAddClassFeature", function(srcStruct, classAbility, allClassAbi
   let classAbilityContentID = inputPacket.locationID+"-wsc-cf-"+srcStruct.sourceCodeSNum+"-classAbilityContent"+classAbility.id;
   let classAbilityCodeID = inputPacket.locationID+"-wsc-cf-"+srcStruct.sourceCodeSNum+"-classAbilityCode"+classAbility.id;
 
+  // If ID already exists, just return. This is a temporary fix - this shouldn't be an issue in the first place.
+  if($('#'+classAbilityID).length != 0) { statementComplete(); return; }
+
   $('#'+inputPacket.locationID).append('<div id="'+classAbilityID+'" class="box lighter my-2"></div>');
 
   ///
