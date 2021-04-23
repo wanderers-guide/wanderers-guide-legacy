@@ -297,12 +297,12 @@ function openInvItemQuickview(data) {
 
     // Item Quantity
     if(!viewOnly && data.Item.Item.hasQuantity == 1){
-        qContent.append('<div class="field has-addons has-addons-centered"><p class="control"><a class="button is-static has-text-grey-lighter has-background-grey-darkest border-darker">Quantity</a></p><p class="control"><input id="'+invItemQtyInputID+'" class="input" type="number" min="1" max="9999999" value="'+data.InvItem.quantity+'"></p></div>');
+        qContent.append('<div class="field has-addons has-addons-centered"><p class="control"><a class="button is-static has-text-grey-lighter has-background-grey-darkest border-darker">Quantity</a></p><p class="control"><input id="'+invItemQtyInputID+'" class="input" type="number" min="0" max="9999999" value="'+data.InvItem.quantity+'"></p></div>');
 
         $('#'+invItemQtyInputID).blur(function() {
             let newQty = $(this).val();
             if(newQty != data.InvItem.quantity && newQty != ''){
-                if(newQty <= 9999999 && newQty >= 1) {
+                if(newQty <= 9999999 && newQty >= 0) {
                     $(this).removeClass('is-danger');
                     socket.emit("requestInvItemQtyChange",
                         data.InvItem.id,
@@ -310,6 +310,10 @@ function openInvItemQuickview(data) {
                 } else {
                     $(this).addClass('is-danger');
                 }
+            } else {
+              if(newQty <= 9999999 && newQty >= 0) {
+                $(this).removeClass('is-danger');
+              }
             }
         });
     }
