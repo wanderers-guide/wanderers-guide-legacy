@@ -334,6 +334,66 @@ router.put('/inventory/drop-item', (req, res) => { // Update
   }
 });
 
+// InvItem //
+router.get('/item', (req, res) => { // Read
+  if(hasAccess(req.accessRights, 1)) {
+    let invItemID = parseInt(req.query.inv_item_id);
+    if(!isNaN(invItemID)){
+      CharGathering.getCharacter(req.charID).then((character) => {
+        CharGathering.getInvIDFromInvItemID(invItemID).then((invID) => {
+          if(character.inventoryID === invID) {
+            CharGathering.getInvItem(invItemID).then((invItem) => {
+              if(invItem != null){
+                res.send(invItem);
+              } else {
+                res.sendStatus(204);
+              }
+            });
+          } else {
+            if(invID == null){
+              res.sendStatus(404);
+            } else {
+              res.sendStatus(401);
+            }
+          }
+        });
+      });
+    } else {
+      res.sendStatus(400);
+    }
+  } else {
+    res.sendStatus(401);
+  }
+});
+
+router.put('/item/qty', (req, res) => { // Update
+  if(hasAccess(req.accessRights, 2)) {
+    let invItemID = parseInt(req.query.inv_item_id);
+    let newValue = parseInt(req.query.value);
+    if(!isNaN(invItemID) && !isNaN(newValue)){
+      CharGathering.getCharacter(req.charID).then((character) => {
+        CharGathering.getInvIDFromInvItemID(invItemID).then((invID) => {
+          if(character.inventoryID === invID) {
+            CharSaving.saveInvItemQty(invItemID, newValue).then((result) => {
+              res.sendStatus(200);
+            });
+          } else {
+            if(invID == null){
+              res.sendStatus(404);
+            } else {
+              res.sendStatus(401);
+            }
+          }
+        });
+      });
+    } else {
+      res.sendStatus(400);
+    }
+  } else {
+    res.sendStatus(401);
+  }
+});
+
 // Spell //
 router.get('/spell', (req, res) => { // Read
   if(hasAccess(req.accessRights, 1)) {

@@ -682,7 +682,25 @@
             </div>
             <div id="char-req-item" class="mt-4 isHideable">
                 <h1 class="title is-size-4 is-marginless pl-3">Item Requests</h1>
-                <p class="is-size-5 pl-3">TO-DO</p>
+                <div class="columns is-centered mb-3">
+                  <div class="column">
+                    <div class="columns is-mobile is-marginless">
+                      <div class="column is-6 is-paddingless"><strong></strong></div>
+                      <div class="column is-4 is-paddingless text-center"><strong>Returns</strong></div>
+                      <div class="column is-paddingless text-center"><strong>Access Rights</strong></div>
+                    </div>
+                    <div class="columns table-row-a is-mobile is-marginless">
+                      <div class="column is-6"><p class="negative-indent"><span class="is-bold">GET</span> /api/char/<span class="has-text-info">&lt;character ID&gt;</span>/item?inv_item_id=<span class="has-text-info">&lt;invItem ID&gt;</span></p></div>
+                      <div class="column is-4"><p class="text-center">JSON of invItem data</p></div>
+                      <div class="column"><p class="text-center">Read</p></div>
+                    </div>
+                    <div class="columns table-row-b is-mobile is-marginless">
+                      <div class="column is-6"><p class="negative-indent"><span class="is-bold">PUT</span> /api/char/<span class="has-text-info">&lt;character ID&gt;</span>/item/qty?inv_item_id=<span class="has-text-info">&lt;invItem ID&gt;</span>&value=<span class="has-text-info">&lt;new quantity&gt;</span></p></div>
+                      <div class="column is-4"><p class="text-center">OK</p></div>
+                      <div class="column"><p class="text-center">Update</p></div>
+                    </div>
+                  </div>
+                </div>
             </div>
             <div id="char-req-spellcasting" class="mt-4 isHideable">
                 <h1 class="title is-size-4 is-marginless pl-3">Spellcasting Requests</h1>

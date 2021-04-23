@@ -456,6 +456,13 @@ module.exports = class CharGathering {
         
     }
 
+    static getInvItem(invItemID){
+      return InvItem.findOne({ where: { id: invItemID } })
+      .then((invItem) => {
+        return invItem;
+      });
+    }
+
     static getInvIDFromInvItemID(invItemID){
       return InvItem.findOne({ where: { id: invItemID } })
       .then((invItem) => {
