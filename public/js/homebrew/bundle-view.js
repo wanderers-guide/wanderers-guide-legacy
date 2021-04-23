@@ -193,7 +193,7 @@ socket.on("returnBundleContents", function(REQUEST_TYPE, userHasBundle, userOwns
         $('#bundleContainerClasses').html('');
         for(const cClass of classes){
           let viewClassID = 'entry-view-class-'+cClass.id;
-          $('#bundleContainerClasses').append('<div class="columns is-mobile is-marginless mt-1 sub-section-box"><div class="column"><p class="is-size-5">'+cClass.name+'</p></div><div class="column"><div class="is-pulled-right buttons are-small"><button id="'+viewClassID+'" class="button is-info is-outlined">View</button></div></div></div>');
+          $('#bundleContainerClasses').append('<div class="columns is-mobile is-marginless mt-1 sub-section-box"><div class="column is-9"><p class="is-size-5">'+cClass.name+'</p></div><div class="column"><div class="is-pulled-right buttons are-small"><button id="'+viewClassID+'" class="button is-info is-outlined">View</button></div></div></div>');
           $('#'+viewClassID).click(function() {
             new DisplayClass(displayContainerID, cClass.id, featMap, g_activeBundle.id);
           });
@@ -207,7 +207,7 @@ socket.on("returnBundleContents", function(REQUEST_TYPE, userHasBundle, userOwns
         $('#bundleContainerAncestries').html('');
         for(const ancestry of ancestries){
           let viewAncestryID = 'entry-view-ancestry-'+ancestry.id;
-          $('#bundleContainerAncestries').append('<div class="columns is-mobile is-marginless mt-1 sub-section-box"><div class="column"><p class="is-size-5">'+ancestry.name+'</p></div><div class="column"><div class="is-pulled-right buttons are-small"><button id="'+viewAncestryID+'" class="button is-info is-outlined">View</button></div></div></div>');
+          $('#bundleContainerAncestries').append('<div class="columns is-mobile is-marginless mt-1 sub-section-box"><div class="column is-9"><p class="is-size-5">'+ancestry.name+'</p></div><div class="column"><div class="is-pulled-right buttons are-small"><button id="'+viewAncestryID+'" class="button is-info is-outlined">View</button></div></div></div>');
           $('#'+viewAncestryID).click(function() {
             new DisplayAncestry(displayContainerID, ancestry.id, featMap, g_activeBundle.id);
           });
@@ -221,7 +221,7 @@ socket.on("returnBundleContents", function(REQUEST_TYPE, userHasBundle, userOwns
         $('#bundleContainerArchetypes').html('');
         for(const archetype of archetypes){
           let viewArchetypeID = 'entry-view-archetype-'+archetype.id;
-          $('#bundleContainerArchetypes').append('<div class="columns is-mobile is-marginless mt-1 sub-section-box"><div class="column"><p class="is-size-5">'+archetype.name+'</p></div><div class="column"><div class="is-pulled-right buttons are-small"><button id="'+viewArchetypeID+'" class="button is-info is-outlined">View</button></div></div></div>');
+          $('#bundleContainerArchetypes').append('<div class="columns is-mobile is-marginless mt-1 sub-section-box"><div class="column is-9"><p class="is-size-5">'+archetype.name+'</p></div><div class="column"><div class="is-pulled-right buttons are-small"><button id="'+viewArchetypeID+'" class="button is-info is-outlined">View</button></div></div></div>');
           $('#'+viewArchetypeID).click(function() {
             new DisplayArchetype(displayContainerID, archetype.id, featMap, g_activeBundle.id);
           });
@@ -235,7 +235,7 @@ socket.on("returnBundleContents", function(REQUEST_TYPE, userHasBundle, userOwns
         $('#bundleContainerBackgrounds').html('');
         for(const background of backgrounds){
           let viewBackgroundID = 'entry-view-background-'+background.id;
-          $('#bundleContainerBackgrounds').append('<div class="columns is-mobile is-marginless mt-1 sub-section-box"><div class="column"><p class="is-size-5">'+background.name+'</p></div><div class="column"><div class="is-pulled-right buttons are-small"><button id="'+viewBackgroundID+'" class="button is-info is-outlined">View</button></div></div></div>');
+          $('#bundleContainerBackgrounds').append('<div class="columns is-mobile is-marginless mt-1 sub-section-box"><div class="column is-9"><p class="is-size-5">'+background.name+'</p></div><div class="column"><div class="is-pulled-right buttons are-small"><button id="'+viewBackgroundID+'" class="button is-info is-outlined">View</button></div></div></div>');
           $('#'+viewBackgroundID).click(function() {
             new DisplayBackground(displayContainerID, background.id, g_activeBundle.id);
           });
@@ -252,7 +252,7 @@ socket.on("returnBundleContents", function(REQUEST_TYPE, userHasBundle, userOwns
           if(classFeature.indivClassName == null || classFeature.selectOptionFor != null) {continue;} else {foundContent = true;}
 
           let viewClassFeatureID = 'entry-view-class-feature-'+classFeature.id;
-          $('#bundleContainerClassFeatures').append('<div class="columns is-mobile is-marginless mt-1 sub-section-box"><div class="column"><p class="is-size-5">'+classFeature.name+'</p></div><div class="column"><div class="is-pulled-right buttons are-small"><button id="'+viewClassFeatureID+'" class="button is-info is-outlined">View</button></div></div></div>');
+          $('#bundleContainerClassFeatures').append('<div class="columns is-mobile is-marginless mt-1 sub-section-box"><div class="column is-9"><p class="is-size-5">'+classFeature.name+'</p></div><div class="column"><div class="is-pulled-right buttons are-small"><button id="'+viewClassFeatureID+'" class="button is-info is-outlined">View</button></div></div></div>');
           $('#'+viewClassFeatureID).click(function() {
             let classText = (classFeature.indivClassName != null) ? '~ Class:: '+classFeature.indivClassName+'\n' : '';
             let classAbilText = (classFeature.indivClassAbilName != null) ? '~ Option For:: '+classFeature.indivClassAbilName+'\n' : '';
@@ -284,7 +284,7 @@ socket.on("returnBundleContents", function(REQUEST_TYPE, userHasBundle, userOwns
           if(feat.genericType == null) {continue;} else {foundContent = true;}
 
           let viewFeatID = 'entry-view-feat-activity-'+feat.id;
-          $('#bundleContainerFeats').append('<div class="columns is-mobile is-marginless mt-1 sub-section-box"><div class="column"><p class="is-size-5">'+feat.name+'</p></div><div class="column"><div class="is-pulled-right buttons are-small"><button id="'+viewFeatID+'" class="button is-info is-outlined">View</button></div></div></div>');
+          $('#bundleContainerFeats').append('<div class="columns is-mobile is-marginless mt-1 sub-section-box"><div class="column is-9"><p class="is-size-5">'+feat.name+'</p></div><div class="column"><div class="is-pulled-right buttons are-small"><button id="'+viewFeatID+'" class="button is-info is-outlined">View</button></div></div></div>');
           $('#'+viewFeatID).click(function() {
             let featStruct = featMap.get(feat.id+'');
             openQuickView('featView', {
@@ -309,7 +309,7 @@ socket.on("returnBundleContents", function(REQUEST_TYPE, userHasBundle, userOwns
           if(heritage.indivAncestryName == null) {continue;} else {foundContent = true;}
 
           let viewHeritageID = 'entry-view-heritage-'+heritage.id;
-          $('#bundleContainerHeritages').append('<div class="columns is-mobile is-marginless mt-1 sub-section-box"><div class="column"><p class="is-size-5">'+heritage.name+'</p></div><div class="column"><div class="is-pulled-right buttons are-small"><button id="'+viewHeritageID+'" class="button is-info is-outlined">View</button></div></div></div>');
+          $('#bundleContainerHeritages').append('<div class="columns is-mobile is-marginless mt-1 sub-section-box"><div class="column is-9"><p class="is-size-5">'+heritage.name+'</p></div><div class="column"><div class="is-pulled-right buttons are-small"><button id="'+viewHeritageID+'" class="button is-info is-outlined">View</button></div></div></div>');
           $('#'+viewHeritageID).click(function() {
             let ancestryText = (heritage.indivAncestryName != null) ? '~ Ancestry:: '+heritage.indivAncestryName+'\n' : '';
             let rarityText = (heritage.rarity != null) ? '~ Rarity:: '+capitalizeWord(heritage.rarity)+'\n' : '';
@@ -338,7 +338,7 @@ socket.on("returnBundleContents", function(REQUEST_TYPE, userHasBundle, userOwns
         $('#bundleContainerUniHeritages').html('');
         for(const uniheritage of uniheritages){
           let viewUniHeritageID = 'entry-view-uni-heritage-'+uniheritage.id;
-          $('#bundleContainerUniHeritages').append('<div class="columns is-mobile is-marginless mt-1 sub-section-box"><div class="column"><p class="is-size-5">'+uniheritage.name+'</p></div><div class="column"><div class="is-pulled-right buttons are-small"><button id="'+viewUniHeritageID+'" class="button is-info is-outlined">View</button></div></div></div>');
+          $('#bundleContainerUniHeritages').append('<div class="columns is-mobile is-marginless mt-1 sub-section-box"><div class="column is-9"><p class="is-size-5">'+uniheritage.name+'</p></div><div class="column"><div class="is-pulled-right buttons are-small"><button id="'+viewUniHeritageID+'" class="button is-info is-outlined">View</button></div></div></div>');
           $('#'+viewUniHeritageID).click(function() {
             new DisplayUniHeritage(displayContainerID, uniheritage.id, featMap, g_activeBundle.id);
           });
@@ -352,7 +352,7 @@ socket.on("returnBundleContents", function(REQUEST_TYPE, userHasBundle, userOwns
         $('#bundleContainerItems').html('');
         for(const itemStruct of items){
           let viewItemID = 'entry-view-item-'+itemStruct.Item.id;
-          $('#bundleContainerItems').append('<div class="columns is-mobile is-marginless mt-1 sub-section-box"><div class="column"><p class="is-size-5">'+itemStruct.Item.name+'</p></div><div class="column"><div class="is-pulled-right buttons are-small"><button id="'+viewItemID+'" class="button is-info is-outlined">View</button></div></div></div>');
+          $('#bundleContainerItems').append('<div class="columns is-mobile is-marginless mt-1 sub-section-box"><div class="column is-9"><p class="is-size-5">'+itemStruct.Item.name+'</p></div><div class="column"><div class="is-pulled-right buttons are-small"><button id="'+viewItemID+'" class="button is-info is-outlined">View</button></div></div></div>');
           $('#'+viewItemID).click(function() {
             let fullItemStruct = itemMap.get(itemStruct.Item.id+'');
             openQuickView('itemView', {
@@ -369,7 +369,7 @@ socket.on("returnBundleContents", function(REQUEST_TYPE, userHasBundle, userOwns
         $('#bundleContainerLanguages').html('');
         for(const language of languages){
           let viewLanguageID = 'entry-view-language-'+language.id;
-          $('#bundleContainerLanguages').append('<div class="columns is-mobile is-marginless mt-1 sub-section-box"><div class="column"><p class="is-size-5">'+language.name+'</p></div><div class="column"><div class="is-pulled-right buttons are-small"><button id="'+viewLanguageID+'" class="button is-info is-outlined">View</button></div></div></div>');
+          $('#bundleContainerLanguages').append('<div class="columns is-mobile is-marginless mt-1 sub-section-box"><div class="column is-9"><p class="is-size-5">'+language.name+'</p></div><div class="column"><div class="is-pulled-right buttons are-small"><button id="'+viewLanguageID+'" class="button is-info is-outlined">View</button></div></div></div>');
           $('#'+viewLanguageID).click(function() {
             openQuickView('languageView', {
               Language : language
@@ -385,7 +385,7 @@ socket.on("returnBundleContents", function(REQUEST_TYPE, userHasBundle, userOwns
         $('#bundleContainerSpells').html('');
         for(const spell of spells){
           let viewSpellID = 'entry-view-spell-'+spell.id;
-          $('#bundleContainerSpells').append('<div class="columns is-mobile is-marginless mt-1 sub-section-box"><div class="column"><p class="is-size-5">'+spell.name+'</p></div><div class="column"><div class="is-pulled-right buttons are-small"><button id="'+viewSpellID+'" class="button is-info is-outlined">View</button></div></div></div>');
+          $('#bundleContainerSpells').append('<div class="columns is-mobile is-marginless mt-1 sub-section-box"><div class="column is-9"><p class="is-size-5">'+spell.name+'</p></div><div class="column"><div class="is-pulled-right buttons are-small"><button id="'+viewSpellID+'" class="button is-info is-outlined">View</button></div></div></div>');
           $('#'+viewSpellID).click(function() {
             let spellStruct = spellMap.get(spell.id+'');
             openQuickView('spellView', {
@@ -405,7 +405,7 @@ socket.on("returnBundleContents", function(REQUEST_TYPE, userHasBundle, userOwns
           if(trait.homebrewID == null || trait.isHidden == 1) {continue;} else {foundContent = true;}
 
           let viewTraitID = 'entry-view-trait-'+trait.id;
-          $('#bundleContainerTraits').append('<div class="columns is-mobile is-marginless mt-1 sub-section-box"><div class="column"><p class="is-size-5">'+trait.name+'</p></div><div class="column"><div class="is-pulled-right buttons are-small"><button id="'+viewTraitID+'" class="button is-info is-outlined">View</button></div></div></div>');
+          $('#bundleContainerTraits').append('<div class="columns is-mobile is-marginless mt-1 sub-section-box"><div class="column is-9"><p class="is-size-5">'+trait.name+'</p></div><div class="column"><div class="is-pulled-right buttons are-small"><button id="'+viewTraitID+'" class="button is-info is-outlined">View</button></div></div></div>');
           $('#'+viewTraitID).click(function() {
             openQuickView('tagView', {
               TagName : trait.name,
