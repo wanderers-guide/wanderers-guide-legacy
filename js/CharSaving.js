@@ -245,6 +245,7 @@ module.exports = class CharSaving {
 
                 let isWeapon = 0;
                 let dieType, damageType, range, reload = null;
+                let atkBonus = 0; let dmgBonus = 0;
                 if(chosenWeapon != null){
                   isWeapon = 1;
                   dieType = chosenWeapon.dieType;
@@ -283,6 +284,8 @@ module.exports = class CharSaving {
                     itemWeaponDamageType: damageType,
                     itemWeaponRange: range,
                     itemWeaponReload: reload,
+                    itemWeaponAtkBonus: atkBonus,
+                    itemWeaponDmgBonus: dmgBonus,
 
                     itemIsStorage: isStorage,
                     itemStorageMaxBulk: maxBulkStorage,
@@ -354,6 +357,8 @@ module.exports = class CharSaving {
             itemWeaponDamageType: inUpdateValues.weaponDamageType,
             itemWeaponRange: inUpdateValues.weaponRange,
             itemWeaponReload: inUpdateValues.weaponReload,
+            itemWeaponAtkBonus: inUpdateValues.weaponAtkBonus,
+            itemWeaponDmgBonus: inUpdateValues.weaponDmgBonus,
 
             itemStorageMaxBulk: inUpdateValues.storageMaxBulk,
         };

@@ -19,6 +19,19 @@ function getAttackAndDamage(itemData, invItem){
     if(damageDamageType == null){
         damageDamageType = itemData.WeaponData.damageType;
     }
+    
+    // Bonuses from weapon custom bonus //
+    let weapAtkCustomBonus = invItem.itemWeaponAtkBonus;
+    if(weapAtkCustomBonus == null) {
+      weapAtkCustomBonus = 0;
+    }
+    let weapDmgCustomBonus = invItem.itemWeaponDmgBonus;
+    let weapDmgCustom = '';
+    if(weapDmgCustomBonus != null) {
+      weapDmgCustom = signNumber(weapDmgCustomBonus);
+    } else {
+      weapDmgCustomBonus = 0;
+    }
 
     if(itemData.WeaponData.isMelee == 1){
 
@@ -84,7 +97,7 @@ function getAttackAndDamage(itemData, invItem){
         let otherBonuses = getStatTotal('ATTACKS');
         otherBonuses += getStatTotal('MELEE_ATTACKS');
 
-        let attackBonus = signNumber(abilMod+profAttackBonus+profBonus+potencyRuneBonus+shoddyPenalty+otherBonuses);
+        let attackBonus = signNumber(abilMod+profAttackBonus+profBonus+potencyRuneBonus+shoddyPenalty+otherBonuses+weapAtkCustomBonus);
 
         let diceNum = itemData.WeaponData.diceNum;
         if(isStriking(invItem.fundRuneID)){
@@ -158,8 +171,8 @@ function getAttackAndDamage(itemData, invItem){
           }
         }
 
-        let damageBonusInt = strMod+weapSpecialBonus+weapExtraBonus+weapMeleeExtraBonus+weapMeleeAgileExtraBonus+weapMeleeNonAgileExtraBonus;
-        let damageBonusStr = dmgStrBonus+weapSpecial+weapExtra+weapMeleeExtra+weapMeleeAgileExtra+weapMeleeNonAgileExtra;
+        let damageBonusInt = strMod+weapSpecialBonus+weapExtraBonus+weapMeleeExtraBonus+weapMeleeAgileExtraBonus+weapMeleeNonAgileExtraBonus+weapDmgCustomBonus;
+        let damageBonusStr = dmgStrBonus+weapSpecial+weapExtra+weapMeleeExtra+weapMeleeAgileExtra+weapMeleeNonAgileExtra+weapDmgCustom;
 
         let damage = '';
         if(damageDieType != 'NONE') {
@@ -238,7 +251,7 @@ function getAttackAndDamage(itemData, invItem){
         let otherBonuses = getStatTotal('ATTACKS');
         otherBonuses += getStatTotal('RANGED_ATTACKS');
 
-        let attackBonus = signNumber(dexMod+profAttackBonus+profBonus+potencyRuneBonus+shoddyPenalty+otherBonuses);
+        let attackBonus = signNumber(dexMod+profAttackBonus+profBonus+potencyRuneBonus+shoddyPenalty+otherBonuses+weapAtkCustomBonus);
 
         let diceNum = itemData.WeaponData.diceNum;
         if(isStriking(invItem.fundRuneID)){
@@ -291,8 +304,8 @@ function getAttackAndDamage(itemData, invItem){
           weapRangedExtraBonus = 0;
         }
 
-        let damageBonusInt = dmgStr+weapSpecialBonus+weapExtraBonus+weapRangedExtraBonus;
-        let damageBonusStr = dmgStrSigned+weapSpecial+weapExtra+weapRangedExtra;
+        let damageBonusInt = dmgStr+weapSpecialBonus+weapExtraBonus+weapRangedExtraBonus+weapDmgCustomBonus;
+        let damageBonusStr = dmgStrSigned+weapSpecial+weapExtra+weapRangedExtra+weapDmgCustom;
 
         let damage = '';
         if(damageDieType != 'NONE') {

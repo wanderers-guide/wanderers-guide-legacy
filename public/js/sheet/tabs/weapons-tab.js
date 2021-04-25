@@ -23,6 +23,9 @@ function openWeaponsTab(data) {
         if(weaponReload == 0){ weaponReload = '-'; }
         if(weaponRange == 0 || (item.WeaponData.isRanged == 0 && weaponRange == 20 && !extraData.IsCustomUnarmedAttack)){ weaponRange = '-'; } else { weaponRange += ' ft'; }
 
+        if(weaponReload == null){ weaponReload = '-'; }
+        if(weaponRange == null){ weaponRange = '-'; }
+
         let unarmedIcon = '';
         if(extraData.IsCustomUnarmedAttack) {
           unarmedIcon = '<sup class="icon is-small has-text-info"><i class="fas fa-sm fa-fist-raised"></i></sup>';

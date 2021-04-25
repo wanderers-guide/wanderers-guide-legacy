@@ -618,6 +618,8 @@ model invItems {
   itemWeaponDamageType                                      String?                     @db.VarChar(45)
   itemWeaponRange                                           Int?                     @default(0)
   itemWeaponReload                                          Int?                     @default(0)
+  itemWeaponAtkBonus                                        Int?                     @default(0)
+  itemWeaponDmgBonus                                        Int?                     @default(0)
   itemIsStorage                                             Int?                     @default(0)
   itemStorageMaxBulk                                        Float?
   fundRuneID                                                Int?
