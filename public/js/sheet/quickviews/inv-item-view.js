@@ -168,9 +168,25 @@ function openInvItemQuickview(data) {
         if(data.Item.WeaponData.isMelee == 1){
             
             let calcStruct = getAttackAndDamage(data.Item, data.InvItem);
+            let map = generateMAP(calcStruct.AttackBonus, tagArray);
 
             qContent.append('<div class="tile text-center is-flex"><div class="tile is-child is-6"><strong>Attack Bonus</strong></div><div class="tile is-child is-6"><strong>Damage</strong></div></div>');
-            qContent.append('<div class="tile text-center is-flex"><div class="tile is-child is-6"><span class="has-text-grey-light pr-1 stat-roll-btn has-tooltip-top" data-tooltip="'+generateStringMAP(calcStruct.AttackBonus, tagArray)+'">'+calcStruct.AttackBonus+'</span></div><div class="tile is-child is-6"><span class="has-text-grey-light damage-roll-btn">'+calcStruct.Damage+'</span></div></div>');
+            qContent.append(`
+              <div class="tile text-center is-flex">
+                <div class="tile is-child is-6">
+                  <span class="has-text-grey-light">
+                    <span class="stat-roll-btn">${map.one}</span>
+                    <span class="has-text-grey">/</span>
+                    <span class="stat-roll-btn">${map.two}</span>
+                    <span class="has-text-grey">/</span>
+                    <span class="stat-roll-btn">${map.three}</span>
+                  </span>
+                </div>
+                <div class="tile is-child is-6">
+                  <span class="has-text-grey-light damage-roll-btn">${calcStruct.Damage}</span>
+                </div>
+              </div>
+            `);
             if(gOption_hasDiceRoller) { refreshStatRollButtons(); }
 
             qContent.append('<hr class="m-2">');
@@ -180,9 +196,25 @@ function openInvItemQuickview(data) {
         if(data.Item.WeaponData.isRanged == 1){
             
             let calcStruct = getAttackAndDamage(data.Item, data.InvItem);
+            let map = generateMAP(calcStruct.AttackBonus, tagArray);
 
             qContent.append('<div class="tile text-center is-flex"><div class="tile is-child is-6"><strong>Attack Bonus</strong></div><div class="tile is-child is-6"><strong>Damage</strong></div></div>');
-            qContent.append('<div class="tile text-center is-flex"><div class="tile is-child is-6"><span class="has-text-grey-light pr-1 stat-roll-btn has-tooltip-top" data-tooltip="'+generateStringMAP(calcStruct.AttackBonus, tagArray)+'">'+calcStruct.AttackBonus+'</span></div><div class="tile is-child is-6"><span class="has-text-grey-light damage-roll-btn">'+calcStruct.Damage+'</span></div></div>');
+            qContent.append(`
+              <div class="tile text-center is-flex">
+                <div class="tile is-child is-6">
+                  <span class="has-text-grey-light">
+                    <span class="stat-roll-btn">${map.one}</span>
+                    <span class="has-text-grey">/</span>
+                    <span class="stat-roll-btn">${map.two}</span>
+                    <span class="has-text-grey">/</span>
+                    <span class="stat-roll-btn">${map.three}</span>
+                  </span>
+                </div>
+                <div class="tile is-child is-6">
+                  <span class="has-text-grey-light damage-roll-btn">${calcStruct.Damage}</span>
+                </div>
+              </div>
+            `);
             if(gOption_hasDiceRoller) { refreshStatRollButtons(); }
 
             qContent.append('<hr class="m-2">');

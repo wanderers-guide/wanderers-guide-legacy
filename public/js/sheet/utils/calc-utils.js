@@ -329,7 +329,7 @@ function getAttackAndDamage(itemData, invItem){
 
 
 // MAP Calc //
-function generateStringMAP(attackBonus, itemTagArray){
+function generateMAP(attackBonus, itemTagArray) {
 
   attackBonus = parseInt(attackBonus);
   let agileTag = itemTagArray.find(tag => {
@@ -338,28 +338,35 @@ function generateStringMAP(attackBonus, itemTagArray){
 
   if(gState_MAP == 'TIER_1'){
     if(agileTag == null){
-      return signNumber(attackBonus)+'/'+signNumber(attackBonus-5)+'/'+signNumber(attackBonus-10);
+      return {one:signNumber(attackBonus),two:signNumber(attackBonus-5),three:signNumber(attackBonus-10)};
     } else {
-      return signNumber(attackBonus)+'/'+signNumber(attackBonus-4)+'/'+signNumber(attackBonus-8);
+      return {one:signNumber(attackBonus),two:signNumber(attackBonus-4),three:signNumber(attackBonus-8)};
     }
   } else if(gState_MAP == 'TIER_2'){
     if(agileTag == null){
-      return signNumber(attackBonus)+'/'+signNumber(attackBonus-4)+'/'+signNumber(attackBonus-8);
+      return {one:signNumber(attackBonus),two:signNumber(attackBonus-4),three:signNumber(attackBonus-8)};
     } else {
-      return signNumber(attackBonus)+'/'+signNumber(attackBonus-3)+'/'+signNumber(attackBonus-6);
+      return {one:signNumber(attackBonus),two:signNumber(attackBonus-3),three:signNumber(attackBonus-6)};
     }
   } else if(gState_MAP == 'TIER_3'){
     if(agileTag == null){
-      return signNumber(attackBonus)+'/'+signNumber(attackBonus-3)+'/'+signNumber(attackBonus-6);
+      return {one:signNumber(attackBonus),two:signNumber(attackBonus-3),three:signNumber(attackBonus-6)};
     } else {
-      return signNumber(attackBonus)+'/'+signNumber(attackBonus-2)+'/'+signNumber(attackBonus-4);
+      return {one:signNumber(attackBonus),two:signNumber(attackBonus-2),three:signNumber(attackBonus-4)};
     }
   } else if(gState_MAP == 'TIER_4'){
     if(agileTag == null){
-      return signNumber(attackBonus)+'/'+signNumber(attackBonus-2)+'/'+signNumber(attackBonus-4);
+      return {one:signNumber(attackBonus),two:signNumber(attackBonus-2),three:signNumber(attackBonus-4)};
     } else {
-      return signNumber(attackBonus)+'/'+signNumber(attackBonus-1)+'/'+signNumber(attackBonus-2);
+      return {one:signNumber(attackBonus),two:signNumber(attackBonus-1),three:signNumber(attackBonus-2)};
     }
   }
+
+}
+
+function generateStringMAP(attackBonus, itemTagArray){
+
+  let map = generateMAP(attackBonus, itemTagArray);
+  return `${map.one}/${map.two}/${map.three}`;
 
 }
