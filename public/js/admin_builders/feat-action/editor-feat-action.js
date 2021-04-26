@@ -20,6 +20,7 @@ socket.on("returnAdminFeatDetailsPlus", function(featsObject, classObject, ances
         return;
     }
 
+    feat.Feat.genericType = feat.Feat.genericType.replace(/_/g, '-');
     $("#inputBuilderType").val(feat.Feat.genericType);
     $("#inputFeatName").val(feat.Feat.name);
     $("#inputFeatVersion").val(feat.Feat.version);
