@@ -499,9 +499,6 @@ function loadCharSheet(){
     // Run Feats and Abilities Code //
     runAllFeatsAndAbilitiesCode();
 
-    // Run Toggleables (Sheet State) Code //
-    runAllSheetStateCode();
-
     // Run Custom Code Block Code //
     if(g_character.optionCustomCodeBlock === 1){
       processSheetCode(g_character.customCode, 'Custom Code');
@@ -517,6 +514,9 @@ function loadCharSheet(){
     } else {
       addStat('MAX_HEALTH_BONUS_PER_LEVEL', 'BASE', getModOfValue('CON'));
     }
+
+    // Run Toggleables (Sheet State) Code //
+    runAllSheetStateCode();
 
     initHealthPointsAndMore();
 

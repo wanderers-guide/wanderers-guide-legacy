@@ -33,12 +33,12 @@ let g_conditionalStatManagerMap = null;
 */
 
 function initStats(){
-    g_statManagerMap = new Map();
-    g_conditionalStatManagerMap = new Map();
+  g_statManagerMap = new Map();
+  g_conditionalStatManagerMap = new Map();
 }
 
 function addStat(statName, source, value){
-    addStatAndSrc(statName, source, value, 'CORE');
+  addStatAndSrc(statName, source, value, 'CORE');
 }
 
 function addStatAndSrc(statName, source, value, statSrc){
