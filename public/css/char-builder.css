@@ -472,6 +472,12 @@ select {
     font-weight: 800;
 }
 
+.feat-selection-none {
+  background-color: hsl(0, 0%, 19%);
+  color: hsl(0, 0%, 54%);
+  font-style: italic;
+}
+
 .hr-feat-selection {
     border-color: hsl(0, 0%, 17%)!important;
 }

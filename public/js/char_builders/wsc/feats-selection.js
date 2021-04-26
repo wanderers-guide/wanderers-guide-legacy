@@ -57,6 +57,7 @@ function generateFeatSelection(contentLocID, srcStruct, selectionName, selection
   }
 
   let featListHTML = '';
+  let displayedFeat = false;
   for(let [featLevel, featArray] of selectionMap.entries()){
 
     if(featLevel > 0){
@@ -98,8 +99,16 @@ function generateFeatSelection(contentLocID, srcStruct, selectionName, selection
       } else {
         featListHTML += '<hr class="hr-feat-selection m-0"><div class="cursor-clickable feat-selection-list-entry columns is-mobile m-0 p-0" data-feat-id="'+featData.Feat.id+'"><div class="column is-2 is-paddingless py-2 feat-selection-list-entry-view"></div><div class="column is-7 is-paddingless py-2 feat-selection-list-entry-view">'+featNameHTML+'</div><div class="column is-1 is-paddingless py-2 feat-selection-list-entry-view">'+rightInfoHTML+'</div><div class="column is-2 is-paddingless py-2 feat-selection-list-entry-choose"><button class="button is-very-small is-info is-outlined is-rounded '+featSelectButtonClass+'" data-feat-id="'+featData.Feat.id+'">Select</button></div></div>';
       }
+      displayedFeat = true;
 
     }
+  }
+  if(!displayedFeat){
+    // No feat displayed,
+    featListHTML = `
+      <hr class="hr-feat-selection m-0">
+      <div class="feat-selection-none"><span class="">None</span></div>
+    `;
   }
   $('.'+featListSectionClass).html('<div class="feat-selection-list use-feat-selection-scrollbar">'+featListHTML+'</div>');
 
