@@ -69,6 +69,7 @@ function giveAbilityBoostSingle(srcStruct, selectionOptions, locationID, sourceN
                         srcStruct,
                         {Ability: shortenAbilityType(abilityTypes[0]), Bonus: "Boost"},
                         null);
+                    removeUnselectedData(srcStruct); // Fixes bug with ability boost selector becoming no selector
                     statementComplete();
                 }
             } else {
