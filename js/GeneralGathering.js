@@ -28,6 +28,7 @@ const Armor = require('../models/contentDB/Armor');
 const Storage = require('../models/contentDB/Storage');
 const Shield = require('../models/contentDB/Shield');
 const ItemRune = require('../models/contentDB/ItemRune');
+const SheetState = require("../models/contentDB/SheetState");
 
 const CharGathering = require('./CharGathering');
 
@@ -60,6 +61,15 @@ module.exports = class GeneralGathering {
         order: [['name', 'ASC'],]
       }).then((allTags) => {
         return allTags;
+      });
+    }
+
+    static getAllToggleables(homebrewID=null) {
+      return SheetState.findAll({
+        where: { homebrewID: { [Op.or]: [null,homebrewID] } },
+        order: [['name', 'ASC'],]
+      }).then((allToggleables) => {
+        return allToggleables;
       });
     }
 

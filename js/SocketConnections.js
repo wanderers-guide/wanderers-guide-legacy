@@ -2684,34 +2684,39 @@ module.exports = class SocketConnections {
 
                   if(REQUEST_TYPE == 'VIEW' && homebrewBundle.hasKeys === 1 && !userHasBundle && bundleKey == null) {
 
-                    socket.emit('returnBundleContents', 'REQUIRE-KEY', userHasBundle, userOwnsBundle, [], [], [], [], [], [], [], [], [], [], [], []);
+                    socket.emit('returnBundleContents', 'REQUIRE-KEY', userHasBundle, userOwnsBundle, null, [], [], [], [], [], [], [], [], [], [], [], [], []);
 
                   } else {
 
-                    HomebrewGathering.getAllClasses(homebrewID).then((classes) => {
-                      HomebrewGathering.getAllAncestries(homebrewID).then((ancestries) => {
-                        HomebrewGathering.getAllArchetypes(homebrewID).then((archetypes) => {
-                          HomebrewGathering.getAllBackgrounds(homebrewID).then((backgrounds) => {
-                            HomebrewGathering.getAllClassFeatures(homebrewID).then((classFeatures) => {
-                              HomebrewGathering.getAllFeats(homebrewID).then((feats) => {
-                                HomebrewGathering.getAllHeritages(homebrewID).then((heritages) => {
-                                  HomebrewGathering.getAllUniHeritages(homebrewID).then((uniheritages) => {
-                                    HomebrewGathering.getAllItems(homebrewID).then((items) => {
-                                      HomebrewGathering.getAllSpells(homebrewID).then((spells) => {
-                                        GeneralGathering.getAllTags(homebrewID).then((allTags) => {
-                                          HomebrewGathering.getAllLanguages(homebrewID).then((languages) => {
-          
-                                            if(userOwnsBundle && REQUEST_TYPE === 'EDIT') {
-                                              console.log('Clearing cache of homebrewID '+homebrewID);
-                                              // Delete all data cached with the homebrewID
-                                              for(const cacheKey of MemCache.keys()){
-                                                if(cacheKey.includes('{"homebrewID":'+homebrewID+'}')){
-                                                  MemCache.del(cacheKey);
+                    GeneralGathering.getAllSkills().then((skillObject) => {
+                      HomebrewGathering.getAllClasses(homebrewID).then((classes) => {
+                        HomebrewGathering.getAllAncestries(homebrewID).then((ancestries) => {
+                          HomebrewGathering.getAllArchetypes(homebrewID).then((archetypes) => {
+                            HomebrewGathering.getAllBackgrounds(homebrewID).then((backgrounds) => {
+                              HomebrewGathering.getAllClassFeatures(homebrewID).then((classFeatures) => {
+                                HomebrewGathering.getAllFeats(homebrewID).then((feats) => {
+                                  HomebrewGathering.getAllHeritages(homebrewID).then((heritages) => {
+                                    HomebrewGathering.getAllUniHeritages(homebrewID).then((uniheritages) => {
+                                      HomebrewGathering.getAllItems(homebrewID).then((items) => {
+                                        HomebrewGathering.getAllSpells(homebrewID).then((spells) => {
+                                          GeneralGathering.getAllTags(homebrewID).then((allTags) => {
+                                            HomebrewGathering.getAllLanguages(homebrewID).then((languages) => {
+                                              HomebrewGathering.getAllToggleables(homebrewID).then((toggleables) => {
+                                                
+              
+                                                if(userOwnsBundle && REQUEST_TYPE === 'EDIT') {
+                                                  console.log('Clearing cache of homebrewID '+homebrewID);
+                                                  // Delete all data cached with the homebrewID
+                                                  for(const cacheKey of MemCache.keys()){
+                                                    if(cacheKey.includes('{"homebrewID":'+homebrewID+'}')){
+                                                      MemCache.del(cacheKey);
+                                                    }
+                                                  }
                                                 }
-                                              }
-                                            }
-          
-                                            socket.emit('returnBundleContents', REQUEST_TYPE, userHasBundle, userOwnsBundle, allTags, classes, ancestries, archetypes, backgrounds, classFeatures, feats, heritages, uniheritages, items, spells, languages);
+              
+                                                socket.emit('returnBundleContents', REQUEST_TYPE, userHasBundle, userOwnsBundle, skillObject, allTags, classes, ancestries, archetypes, backgrounds, classFeatures, feats, heritages, uniheritages, items, spells, languages,toggleables);
+                                              });
+                                            });
                                           });
                                         });
                                       });
@@ -3348,6 +3353,50 @@ module.exports = class SocketConnections {
       });
 
       ////
+
+      socket.on('requestHomebrewAddToggleable', function(homebrewID, data){
+        UserHomebrew.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+          if(canEdit){
+            HomebrewCreation.addToggleable(homebrewID, data).then((result) => {
+              socket.emit('returnHomebrewCompleteToggleable');
+            });
+          }
+        });
+      });
+  
+      socket.on('requestHomebrewUpdateToggleable', function(homebrewID, data){
+        UserHomebrew.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+          if(canEdit){
+            if(data != null && data.toggleableID != null) {
+              HomebrewCreation.deleteToggleable(homebrewID, data.toggleableID).then((result) => {
+                HomebrewCreation.addToggleable(homebrewID, data).then((result) => {
+                  socket.emit('returnHomebrewCompleteToggleable');
+                });
+              });
+            }
+          }
+        });
+      });
+    
+      socket.on('requestHomebrewRemoveToggleable', function(homebrewID, toggleableID){
+        UserHomebrew.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+          if(canEdit){
+            HomebrewCreation.deleteToggleable(homebrewID, toggleableID).then((result) => {
+              socket.emit('returnHomebrewRemoveContent');
+            });
+          }
+        });
+      });
+  
+      socket.on('requestHomebrewToggleableDetails', function(homebrewID){
+        UserHomebrew.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+          if(canEdit){
+            GeneralGathering.getAllToggleables(homebrewID).then((toggleables) => {
+              socket.emit('returnHomebrewToggleableDetails', toggleables);
+            });
+          }
+        });
+      });
 
     });
 

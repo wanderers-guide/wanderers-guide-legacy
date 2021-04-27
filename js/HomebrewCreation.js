@@ -23,6 +23,7 @@ const ItemRune = require('../models/contentDB/ItemRune');
 const Spell = require('../models/contentDB/Spell');
 const TaggedSpell = require('../models/contentDB/TaggedSpell');
 const Language = require('../models/contentDB/Language');
+const SheetState = require('../models/contentDB/SheetState');
 
 function becomeNegative(number){
     if(number > 0){
@@ -65,6 +66,38 @@ module.exports = class HomebrewCreation {
         if(traitID == null || homebrewID == null) {return;}
         return Tag.destroy({ // Delete Trait
           where: { id: traitID, homebrewID: homebrewID }
+        }).then((result) => {
+            return;
+        });
+    }
+
+
+
+    static addToggleable(homebrewID, data) {
+      /* Data:
+          toggleableID,
+          toggleableName,
+          toggleableDescription,
+          toggleableCode,
+      */
+      for(let d in data) { if(data[d] === ''){ data[d] = null; } }
+      if(data.toggleableName == null) { data.toggleableName = 'Unnamed Toggleable'; }
+      data.toggleableName = data.toggleableName.replace(/’/g,"'");
+      if(data.toggleableDescription == null){ data.toggleableDescription = '__No Description__'; }
+      return SheetState.create({ // Create Toggleable
+          name: trimVal(data.toggleableName),
+          description: data.toggleableDescription,
+          code: data.toggleableCode,
+          homebrewID: homebrewID,
+      }).then(toggleable => {
+          return toggleable;
+      });
+    }
+
+    static deleteToggleable(homebrewID, toggleableID){
+        if(toggleableID == null || homebrewID == null) {return;}
+        return SheetState.destroy({ // Delete Toggleable
+          where: { id: toggleableID, homebrewID: homebrewID }
         }).then((result) => {
             return;
         });

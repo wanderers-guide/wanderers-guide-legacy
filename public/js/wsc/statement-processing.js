@@ -111,7 +111,11 @@ function processSheetCode(wscCode, sourceName, isTest=false){
                 adjustmentSource = adjValData[2];
             }
 
-            addStatAndSrc(adjustmentTowards, adjustmentSource+'_BONUS', adjustmentNum, sourceName);
+            if(!adjustmentSource.endsWith('_BONUS') && !adjustmentSource.endsWith('_PENALTY')){
+              adjustmentSource += '_BONUS';
+            }
+
+            addStatAndSrc(adjustmentTowards, adjustmentSource, adjustmentNum, sourceName);
 
             continue;
         }
@@ -130,7 +134,11 @@ function processSheetCode(wscCode, sourceName, isTest=false){
                 adjustmentSource = adjValData[2];
             }
 
-            addStatAndSrc(adjustmentTowards, adjustmentSource+'_PENALTY', -1*adjustmentNum, sourceName);
+            if(!adjustmentSource.endsWith('_BONUS') && !adjustmentSource.endsWith('_PENALTY')){
+              adjustmentSource += '_PENALTY';
+            }
+
+            addStatAndSrc(adjustmentTowards, adjustmentSource, -1*adjustmentNum, sourceName);
 
             continue;
         }

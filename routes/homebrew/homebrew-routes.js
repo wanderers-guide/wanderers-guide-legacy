@@ -522,4 +522,32 @@ router.get('/edit/trait', bundleAuthCheck, (req, res) => {
 
 });
 
+//// Toggleable ////
+
+router.get('/create/toggleable', bundleAuthCheck, (req, res) => {
+
+  let bundleID = parseInt(req.query.id); if(isNaN(bundleID)){bundleID=null;}
+
+  res.render('homebrew/builder_toggleable', {
+    title: "Toggleable Builder - Wanderer's Guide",
+    user: req.user,
+    bundleID: bundleID,
+  });
+
+});
+
+router.get('/edit/toggleable', bundleAuthCheck, (req, res) => {
+
+  let bundleID = parseInt(req.query.id); if(isNaN(bundleID)){bundleID=null;}
+  let toggleableID = parseInt(req.query.content_id); if(isNaN(toggleableID)){toggleableID=null;}
+
+  res.render('homebrew/builder_toggleable', {
+    title: "Toggleable Builder - Wanderer's Guide",
+    user: req.user,
+    bundleID: bundleID,
+    toggleableID: toggleableID,
+  });
+
+});
+
 module.exports = router;

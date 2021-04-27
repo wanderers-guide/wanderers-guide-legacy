@@ -12,6 +12,7 @@ let g_spellMap = null;
 let g_allLanguages = null;
 let g_allConditions = null;
 let g_allTags = null;
+let g_skillMap = null;
 
 // ~~~~~~~~~~~~~~ // Run on Load // ~~~~~~~~~~~~~~ //
 $(function () {

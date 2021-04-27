@@ -9,10 +9,11 @@ function openBundleEditor(homebrewBundle){
   startSpinnerSubLoader();
 }
 
-socket.on("returnBundleContents", function(REQUEST_TYPE, userHasBundle, userOwnsBundle, allTags, classes, ancestries, archetypes, backgrounds, classFeatures, feats, heritages, uniheritages, items, spells, languages){
+socket.on("returnBundleContents", function(REQUEST_TYPE, userHasBundle, userOwnsBundle, skillObject, allTags, classes, ancestries, archetypes, backgrounds, classFeatures, feats, heritages, uniheritages, items, spells, languages, toggleables){
   if(REQUEST_TYPE !== 'EDIT') {return;}
 
   textProcess_warningOnUnknown = true;
+  g_skillMap = (skillObject != null) ? objToMap(skillObject) : null;
   g_allTags = allTags;
   g_allLanguages = languages;
 
@@ -569,6 +570,44 @@ socket.on("returnBundleContents", function(REQUEST_TYPE, userHasBundle, userOwns
           $('#bundleContainerTraits').html('<p class="is-size-7 has-text-grey is-italic">None</p>');
         }
       }
+
+      ////
+
+      $('#createToggleableBtn').click(function() {
+        createNewBundleContent('TOGGLEABLE');
+      });
+
+      if(toggleables.length > 0){
+        $('#bundleContainerToggleables').html('');
+        for(const toggleable of toggleables){
+          let viewToggleableID = 'entry-view-toggleable-'+toggleable.id;
+          let editToggleableID = 'entry-edit-toggleable-'+toggleable.id;
+          let deleteToggleableID = 'entry-delete-toggleable-'+toggleable.id;
+          $('#bundleContainerToggleables').append('<div class="columns is-mobile is-marginless mt-1 sub-section-box"><div class="column"><p class="is-size-5">'+toggleable.name+'</p></div><div class="column"><div class="is-pulled-right buttons are-small"><button id="'+viewToggleableID+'" class="button is-info is-outlined">View</button><button id="'+editToggleableID+'" class="button is-success is-outlined"><span>Edit</span><span class="icon is-small"><i class="far fa-edit"></i></span></button><button id="'+deleteToggleableID+'" class="button is-danger is-outlined"><span>Delete</span><span class="icon is-small"><i class="fas fa-times"></i></span></button></div></div></div>');
+          $('#'+viewToggleableID).click(function() {
+            openQuickView('abilityView', {
+              Ability : {
+                name: toggleable.name,
+                description: toggleable.description,
+                level: 0,
+                contentSrc: toggleable.contentSrc,
+                homebrewID: toggleable.homebrewID,
+              }
+            });
+          });
+          $('#'+editToggleableID).click(function() {
+            window.location.href = '/homebrew/edit/toggleable/?id='+g_activeBundle.id+'&content_id='+toggleable.id;
+          });
+          $('#'+deleteToggleableID).click(function() {
+            new ConfirmMessage('Delete “'+toggleable.name+'”', '<p class="has-text-centered">Are you sure you want to delete this toggleable?</p>', 'Delete', 'modal-delete-content-toggleable-'+toggleable.id, 'modal-delete-content-toggleable-btn-'+toggleable.id);
+            $('#modal-delete-content-toggleable-btn-'+toggleable.id).click(function() {
+              socket.emit('requestHomebrewRemoveToggleable', g_activeBundle.id, toggleable.id);
+            });
+          });
+        }
+      }
+
+      ////
 
     }
   });

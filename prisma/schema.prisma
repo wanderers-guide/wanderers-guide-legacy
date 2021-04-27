@@ -740,9 +740,9 @@ model senseTypes {
 
 model sheetStates {
   id              Int                @id @default(autoincrement())
-  name            String?            @db.VarChar(45)
-  description     String?            @db.VarChar(1000)
-  code            String?            @db.VarChar(1000)
+  name            String?            @db.VarChar(90)
+  description     String?            @db.VarChar(2000)
+  code            String?            @db.VarChar(2000)
   contentSrc      String             @default("CRB") @db.VarChar(45)
   homebrewID      Int?
   homebrewBundles homebrewBundles?   @relation(fields: [homebrewID], references: [id])

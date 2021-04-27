@@ -27,6 +27,7 @@ const Armor = require('../models/contentDB/Armor');
 const Storage = require('../models/contentDB/Storage');
 const Shield = require('../models/contentDB/Shield');
 const ItemRune = require('../models/contentDB/ItemRune');
+const SheetState = require("../models/contentDB/SheetState");
 
 module.exports = class HomebrewGathering {
 
@@ -174,6 +175,15 @@ module.exports = class HomebrewGathering {
       include: [TaggedSpell]
     }).then((spells) => {
       return spells;
+    });
+  }
+
+  static getAllToggleables(homebrewID) {
+    return SheetState.findAll({
+      order: [['name', 'ASC'],],
+      where: { homebrewID: homebrewID },
+    }).then((toggleables) => {
+      return toggleables;
     });
   }
 

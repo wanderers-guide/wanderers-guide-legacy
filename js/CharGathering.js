@@ -43,6 +43,7 @@ const FamiliarAbility = require('../models/contentDB/FamiliarAbility');
 const CharFamiliar = require('../models/contentDB/CharFamiliar');
 const CharDataMappingModel = require('../models/contentDB/CharDataMapping');
 const CalculatedStat = require('../models/contentDB/CalculatedStat');
+const SheetState = require("../models/contentDB/SheetState");
 
 const CharDataMapping = require('./CharDataMapping');
 const CharDataMappingExt = require('./CharDataMappingExt');
@@ -1528,12 +1529,15 @@ module.exports = class CharGathering {
         character = await CharGathering.getCharacter(charID);
       }
 
-      return await Prisma.sheetStates.findMany({
+      return SheetState.findAll({
+        order: [['name', 'ASC'],],
         where: {
-          AND: [
-            {OR: CharContentSources.getSourceArrayPrisma(character)},
-            {OR: CharContentHomebrew.getHomebrewArrayPrisma(character)},
-          ],
+          contentSrc: {
+            [Op.or]: CharContentSources.getSourceArray(character)
+          },
+          homebrewID: {
+            [Op.or]: CharContentHomebrew.getHomebrewArray(character)
+          },
         }
       });
 

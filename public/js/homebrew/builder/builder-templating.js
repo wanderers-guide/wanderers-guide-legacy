@@ -98,6 +98,11 @@ const TEMPLATE_MAP_TRAIT = [
   { Name: 'Linguistic', ID: 37 },
   { Name: 'Possession', ID: 368 },
 ];
+
+const TEMPLATE_MAP_TOGGLEABLE = [
+  { Name: 'Panache', ID: 2 },
+  { Name: 'Rage', ID: 1 },
+];
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 
 // ~~~~~~~~~~~~~~ // Run on Load // ~~~~~~~~~~~~~~ //
@@ -134,6 +139,7 @@ function initNewContentTemplating() {
       case 'LANGUAGE': TEMPLATES = TEMPLATE_MAP_LANGUAGE; break;
       case 'SPELL': TEMPLATES = TEMPLATE_MAP_SPELL; break;
       case 'TRAIT': TEMPLATES = TEMPLATE_MAP_TRAIT; break;
+      case 'TOGGLEABLE': TEMPLATES = TEMPLATE_MAP_TOGGLEABLE; break;
       default: break;
     }
     
@@ -173,6 +179,7 @@ function initNewContentTemplating() {
       case 'LANGUAGE': window.location.href = '/homebrew/create/language/?id='+g_activeBundle.id; break;
       case 'SPELL': window.location.href = '/homebrew/create/spell/?id='+g_activeBundle.id; break;
       case 'TRAIT': window.location.href = '/homebrew/create/trait/?id='+g_activeBundle.id; break;
+      case 'TOGGLEABLE': window.location.href = '/homebrew/create/toggleable/?id='+g_activeBundle.id; break;
       default: break;
     }
 

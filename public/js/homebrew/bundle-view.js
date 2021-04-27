@@ -9,10 +9,11 @@ function openBundleView(homebrewBundle){
   startSpinnerSubLoader();
 }
 
-socket.on("returnBundleContents", function(REQUEST_TYPE, userHasBundle, userOwnsBundle, allTags, classes, ancestries, archetypes, backgrounds, classFeatures, feats, heritages, uniheritages, items, spells, languages){
+socket.on("returnBundleContents", function(REQUEST_TYPE, userHasBundle, userOwnsBundle, skillObject, allTags, classes, ancestries, archetypes, backgrounds, classFeatures, feats, heritages, uniheritages, items, spells, languages, toggleables){
   if(REQUEST_TYPE !== 'VIEW' && REQUEST_TYPE !== 'REQUIRE-KEY') {return;}
 
   textProcess_warningOnUnknown = true;
+  g_skillMap = (skillObject != null) ? objToMap(skillObject) : null;
   g_allTags = allTags;
   g_allLanguages = languages;
 
@@ -416,6 +417,28 @@ socket.on("returnBundleContents", function(REQUEST_TYPE, userHasBundle, userOwns
 
         if(!foundContent) {
           $('#bundleSectionTraits').addClass('is-hidden');
+        }
+      }
+
+      ////
+
+      if(toggleables.length > 0){
+        $('#bundleSectionToggleables').removeClass('is-hidden');
+        $('#bundleContainerToggleables').html('');
+        for(const toggleable of toggleables){
+          let viewToggleableID = 'entry-view-toggleable-'+toggleable.id;
+          $('#bundleContainerToggleables').append('<div class="columns is-mobile is-marginless mt-1 sub-section-box"><div class="column is-9"><p class="is-size-5">'+toggleable.name+'</p></div><div class="column"><div class="is-pulled-right buttons are-small"><button id="'+viewToggleableID+'" class="button is-info is-outlined">View</button></div></div></div>');
+          $('#'+viewToggleableID).click(function() {
+            openQuickView('abilityView', {
+              Ability : {
+                name: toggleable.name,
+                description: toggleable.description,
+                level: 0,
+                contentSrc: toggleable.contentSrc,
+                homebrewID: toggleable.homebrewID,
+              }
+            });
+          });
         }
       }
 
