@@ -45,6 +45,7 @@ socket.on("returnAdminClassDetails", function(classObject, featsObject){
     $("#inputWill").val(cClass.Class.tWill);
     $("#inputClassDC").val(cClass.Class.tClassDC);
     $("#inputDescription").val(cClass.Class.description);
+    $("#inputImageURL").val(cClass.Class.artworkURL);
     $("#inputContentSource").val(cClass.Class.contentSrc);
 
     if(cClass.Class.tWeapons != null){

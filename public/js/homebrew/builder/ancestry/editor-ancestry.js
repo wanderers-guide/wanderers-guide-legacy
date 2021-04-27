@@ -30,6 +30,7 @@ socket.on("returnHomebrewAncestryDetails", function(ancestryObject, featsObject)
     $("#inputPhysicalFeatureOne").val(ancestry.Ancestry.physicalFeatureOneID);
     $("#inputPhysicalFeatureTwo").val(ancestry.Ancestry.physicalFeatureTwoID);
     $("#inputDescription").val(ancestry.Ancestry.description);
+    $("#inputImageURL").val(ancestry.Ancestry.artworkURL);
 
     // Ancestry Boosts and Flaws
     let firstFreeSelected = false;

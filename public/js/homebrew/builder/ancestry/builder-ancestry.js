@@ -105,6 +105,7 @@ function finishAncestry(isUpdate){
     let ancestryPhysicalFeatureOneID = $("#inputPhysicalFeatureOne").val();
     let ancestryPhysicalFeatureTwoID = $("#inputPhysicalFeatureTwo").val();
     let ancestryDescription = $("#inputDescription").val();
+    let ancestryImageURL = $("#inputImageURL").val();
     let ancestryBoostsArray = $("#inputBoosts").val();
     let ancestryFlawsArray = $("#inputFlaws").val();
     let ancestryLangsArray = $("#inputLangs").val();
@@ -181,6 +182,7 @@ function finishAncestry(isUpdate){
         ancestryPhysicalFeatureOneID,
         ancestryPhysicalFeatureTwoID,
         ancestryDescription,
+        ancestryImageURL,
         ancestryBoostsArray,
         ancestryFlawsArray,
         ancestryLangsArray,

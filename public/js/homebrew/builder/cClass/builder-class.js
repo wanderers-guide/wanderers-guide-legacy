@@ -216,6 +216,7 @@ function finishClass(isUpdate){
     classArmor = classArmor.slice(0, -4); // Trim off that last ',,, '
 
     let classDescription = $("#inputDescription").val();
+    let classImageURL = $("#inputImageURL").val();
 
 
     let classAbilitiesArray = [];
@@ -312,6 +313,7 @@ function finishClass(isUpdate){
         classWeapons,
         classArmor,
         classDescription,
+        classImageURL,
         classAbilitiesArray,
         classFeatsArray
     });

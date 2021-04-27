@@ -44,6 +44,7 @@ socket.on("returnHomebrewClassDetails", function(classObject, featsObject){
     $("#inputWill").val(cClass.Class.tWill);
     $("#inputClassDC").val(cClass.Class.tClassDC);
     $("#inputDescription").val(cClass.Class.description);
+    $("#inputImageURL").val(cClass.Class.artworkURL);
 
     if(cClass.Class.tWeapons != null){
         let classWeaponsArray = cClass.Class.tWeapons.split(',,, ');

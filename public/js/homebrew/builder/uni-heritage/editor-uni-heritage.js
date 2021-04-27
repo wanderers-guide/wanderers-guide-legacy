@@ -25,6 +25,7 @@ socket.on("returnHomebrewUniHeritageDetails", function(uniHeritageArray, featsOb
     $("#inputName").val(uniHeritage.name);
     $("#inputRarity").val(uniHeritage.rarity);
     $("#inputDescription").val(uniHeritage.description);
+    $("#inputImageURL").val(uniHeritage.artworkURL);
     $("#inputCode").val(uniHeritage.code);
 
     // Heritage Feats

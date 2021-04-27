@@ -67,6 +67,7 @@ function finishUniHeritage(isUpdate){
     let heritageVersion = $("#inputVersion").val();
     let heritageRarity = $("#inputRarity").val();
     let heritageDescription = $("#inputDescription").val();
+    let heritageImageURL = $("#inputImageURL").val();
     let heritageContentSrc = $("#inputContentSource").val();
     let heritageCode = $("#inputCode").val();
 
@@ -121,6 +122,7 @@ function finishUniHeritage(isUpdate){
         heritageVersion,
         heritageRarity,
         heritageDescription,
+        heritageImageURL,
         heritageContentSrc,
         heritageCode,
         heritageFeatsArray,

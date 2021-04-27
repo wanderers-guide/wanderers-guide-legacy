@@ -26,6 +26,7 @@ socket.on("returnAdminUniHeritageDetails", function(uniHeritageArray, featsObjec
     $("#inputVersion").val(uniHeritage.version);
     $("#inputRarity").val(uniHeritage.rarity);
     $("#inputDescription").val(uniHeritage.description);
+    $("#inputImageURL").val(uniHeritage.artworkURL);
     $("#inputContentSource").val(uniHeritage.contentSrc);
     $("#inputCode").val(uniHeritage.code);
 

@@ -31,6 +31,7 @@ socket.on("returnAdminAncestryDetails", function(ancestryObject, featsObject){
     $("#inputPhysicalFeatureOne").val(ancestry.Ancestry.physicalFeatureOneID);
     $("#inputPhysicalFeatureTwo").val(ancestry.Ancestry.physicalFeatureTwoID);
     $("#inputDescription").val(ancestry.Ancestry.description);
+    $("#inputImageURL").val(ancestry.Ancestry.artworkURL);
     $("#inputContentSource").val(ancestry.Ancestry.contentSrc);
 
     // Ancestry Boosts and Flaws
