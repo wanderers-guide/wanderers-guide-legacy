@@ -15,7 +15,7 @@ function processingKeyAbilities(wscStatement, srcStruct, locationID, sourceName)
             sourceCode: 'keyAbility',
             sourceCodeSNum: 'a'
         };
-        giveAbilityBoostSingle(keyAbilitySrcStruct, selectionOptions, locationID);
+        giveAbilityBoostSingle(keyAbilitySrcStruct, selectionOptions, locationID, sourceName);
     } else {
         displayError("Unknown statement (2-KeyAbility): \'"+wscStatement+"\'");
         statementComplete();
