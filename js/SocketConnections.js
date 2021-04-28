@@ -282,10 +282,10 @@ module.exports = class SocketConnections {
         });
       });
     
-      socket.on('requestUpdateInventory', function(invID, equippedArmorInvItemID, equippedShieldInvItemID){
+      socket.on('requestUpdateInventory', function(invID, equippedArmorInvItemID, equippedShieldInvItemID, equippedArmorCategory){
         AuthCheck.ownsInv(socket, invID).then((ownsInv) => {
           if(ownsInv){
-            CharSaving.updateInventory(invID, equippedArmorInvItemID, equippedShieldInvItemID).then(() => {
+            CharSaving.updateInventory(invID, equippedArmorInvItemID, equippedShieldInvItemID, equippedArmorCategory).then(() => {
               // Return nothing
             });
           }

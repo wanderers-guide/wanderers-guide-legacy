@@ -57,6 +57,7 @@ let g_armorProfMap = null;
 
 let g_equippedArmorInvItemID = null;
 let g_equippedShieldInvItemID = null;
+let g_equippedArmorCategory = null;
 
 let g_abilMap = null;
 let g_skillMap = null;
@@ -178,6 +179,7 @@ socket.on("returnCharacterSheetInfo", function(charInfo, userPermissions, viewOn
 
     g_equippedArmorInvItemID = g_invStruct.Inventory.equippedArmorInvItemID;
     g_equippedShieldInvItemID = g_invStruct.Inventory.equippedShieldInvItemID;
+    g_equippedArmorCategory = g_invStruct.Inventory.equippedArmorCategory;
 
     g_character = charInfo.Character;
 

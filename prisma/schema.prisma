@@ -583,6 +583,7 @@ model inventories {
   id                                                     Int          @id @default(autoincrement())
   equippedArmorInvItemID                                 Int?
   equippedShieldInvItemID                                Int?
+  equippedArmorCategory                                  armors_category?
   invItems_invItemsToinventories_equippedArmorInvItemID  invItems?    @relation("invItemsToinventories_equippedArmorInvItemID", fields: [equippedArmorInvItemID], references: [id])
   invItems_invItemsToinventories_equippedShieldInvItemID invItems?    @relation("invItemsToinventories_equippedShieldInvItemID", fields: [equippedShieldInvItemID], references: [id])
   characters                                             characters[]

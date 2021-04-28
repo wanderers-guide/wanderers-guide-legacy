@@ -224,10 +224,11 @@ module.exports = class CharSaving {
         
     }
 
-    static updateInventory(invID, equippedArmorInvItemID, equippedShieldInvItemID) {
+    static updateInventory(invID, equippedArmorInvItemID, equippedShieldInvItemID, equippedArmorCategory=null) {
         let updateValues = {
             equippedArmorInvItemID: equippedArmorInvItemID,
-            equippedShieldInvItemID: equippedShieldInvItemID
+            equippedShieldInvItemID: equippedShieldInvItemID,
+            equippedArmorCategory: equippedArmorCategory,
         };
         return Inventory.update(updateValues, { where: { id: invID} })
         .then((result) => {

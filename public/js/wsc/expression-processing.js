@@ -445,8 +445,8 @@ function cleanProfDataArrayOfStatementProfs(profDataArray, srcStruct){
 /*~ Sheet-Only Expressions ~*/
 
 function expIsUnarmored(expression, statement, elseStatement) {
-  if (typeof g_equippedArmorInvItemID !== 'undefined') {
-    return (g_equippedArmorInvItemID == null) ? statement : elseStatement;
+  if (typeof g_equippedArmorCategory !== 'undefined') {
+    return (g_equippedArmorCategory == null || g_equippedArmorCategory == 'UNARMORED') ? statement : elseStatement;
   } else {
     return null;
   }

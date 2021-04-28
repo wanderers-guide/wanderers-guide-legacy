@@ -397,7 +397,7 @@ function displayInventoryItem(invItem, item, openBagInvItemArray, data) {
     }
 
     if(item.ArmorData != null){
-        $('#'+invItemNameID).append('<button name="'+invItem.id+'" class="equipArmorButton button is-very-small is-info is-rounded is-outlined mb-1 ml-3"><span class="icon is-small"><i class="fas fa-tshirt"></i></span></button>');
+        $('#'+invItemNameID).append('<button data-invItemID="'+invItem.id+'" data-category="'+item.ArmorData.category+'" class="equipArmorButton button is-very-small is-info is-rounded is-outlined mb-1 ml-3"><span class="icon is-small"><i class="fas fa-tshirt"></i></span></button>');
     }
 
     if(item.ShieldData != null){
@@ -487,12 +487,14 @@ function displayInventoryItem(invItem, item, openBagInvItemArray, data) {
 
 function handleArmorEquip(invID){
     $('.equipArmorButton').each(function(i, obj) {
-        let invItemID = $(this).attr('name');
+        let invItemID = $(this).attr('data-invItemID');
+        let armorCategory = $(this).attr('data-category');
         if(g_equippedArmorInvItemID == invItemID) {
             $(this).removeClass('is-outlined');
             $(this).click(function(event){
                 event.stopImmediatePropagation();
                 g_equippedArmorInvItemID = null;
+                g_equippedArmorCategory = null;
                 reloadCharSheet();
                 updateInventoryBackend(invID);
             });
@@ -501,6 +503,7 @@ function handleArmorEquip(invID){
             $(this).click(function(event){
                 event.stopImmediatePropagation();
                 g_equippedArmorInvItemID = invItemID;
+                g_equippedArmorCategory = armorCategory;
                 reloadCharSheet();
                 updateInventoryBackend(invID);
             });
@@ -539,7 +542,8 @@ function updateInventoryBackend(invID){
             socket.emit("requestUpdateInventory",
                 invID,
                 g_equippedArmorInvItemID,
-                g_equippedShieldInvItemID);
+                g_equippedShieldInvItemID,
+                g_equippedArmorCategory);
             isUpdateInventoryAvailable = true;
         }, 5000);
     }

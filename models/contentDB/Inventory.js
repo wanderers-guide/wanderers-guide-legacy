@@ -7,6 +7,10 @@ const Inventory = db.define('inventories', {
     },
     equippedShieldInvItemID: {
         type: Sequelize.INTEGER
+    },
+    equippedArmorCategory: {
+      type: Sequelize.ENUM,
+      values: ['UNARMORED', 'LIGHT', 'MEDIUM', 'HEAVY']
     }
 });
 
