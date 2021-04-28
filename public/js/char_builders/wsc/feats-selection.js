@@ -56,6 +56,31 @@ function generateFeatSelection(contentLocID, srcStruct, selectionName, selection
     $('#'+contentLocID).html('<div class="mb-3"><div data-contentLoc-id="'+contentLocID+'" class="feat-selection cursor-clickable columns is-mobile mb-0 p-0" data-selection-info="'+selectionTagInfo+'"><div class="column is-1 is-paddingless '+openFeatDetailsClass+' py-2"></div><div class="column is-10 is-paddingless '+openFeatDetailsClass+' py-2">'+featNameHTML+''+featLevelHTML+'</div><div class="column is-1 is-paddingless '+openFeatListClass+' py-2" style="border-left: 1px solid hsl(0, 0%, 13%);"><span class="icon feat-selection-dropdown"><i class="fas fa-chevron-down '+featDropdownIconClass+'"></i></span></div></div><div class="'+featListSectionClass+' is-hidden"></div><div id="'+featCodeSectionID+'" class="py-2"></div></div>');
   }
 
+  let sortedSelectionMap = new Map();
+  if(wscChoiceStruct.Character.optionAutoDetectPreReqs === 1) {
+    for(let [featLevel, featArray] of selectionMap.entries()){
+
+      // Sort feat array by level -> prereq -> name
+      let sortedFeatArray = featArray.sort(
+        function(a, b) {
+          if (a.Feat.level === b.Feat.level) {
+            // Prereq is only important when levels are the same
+            let a_meets = prereqToValue(g_featPrereqMap.get(a.Feat.id+''));
+            let b_meets = prereqToValue(g_featPrereqMap.get(b.Feat.id+''));
+            if(a_meets === b_meets) {
+              // Name is only important when prereqs are the same
+              return a.Feat.name > b.Feat.name ? 1 : -1;
+            }
+            return b_meets - a_meets;
+          }
+          return a.Feat.level - b.Feat.level;
+        }
+      );
+      sortedSelectionMap.set(featLevel, sortedFeatArray);
+
+    }
+  }
+
   let featListHTML = '';
   let displayedFeat = false;
   for(let [featLevel, featArray] of selectionMap.entries()){

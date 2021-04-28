@@ -465,30 +465,6 @@ function displayFeatChoice(srcStruct, locationID, selectionName, tagsArray, feat
 
     }
 
-    if(wscChoiceStruct.Character.optionAutoDetectPreReqs === 1) {
-      for(let [featLevel, featArray] of featSelectionMap.entries()){
-
-        // Sort feat array by level -> prereq -> name
-        let sortedFeatArray = featArray.sort(
-          function(a, b) {
-            if (a.Feat.level === b.Feat.level) {
-              // Prereq is only important when levels are the same
-              let a_meets = prereqToValue(g_featPrereqMap.get(a.Feat.id+''));
-              let b_meets = prereqToValue(g_featPrereqMap.get(b.Feat.id+''));
-              if(a_meets === b_meets) {
-                // Name is only important when prereqs are the same
-                return a.Feat.name > b.Feat.name ? 1 : -1;
-              }
-              return b_meets - a_meets;
-            }
-            return a.Feat.level - b.Feat.level;
-          }
-        );
-        featSelectionMap.set(featLevel, sortedFeatArray);
-
-      }
-    }
-
     giveFeatSelection(locationID, srcStruct, selectionName, featSelectionMap, sourceName);
 
 }
