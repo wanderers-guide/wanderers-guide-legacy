@@ -38,7 +38,7 @@ const app = express();
 // Rate Limiter
 const rateLimiterFlexible = require('rate-limiter-flexible');
 const rateOptions = {
-  points: 6, // 6 points
+  points: 10, // 10 points
   duration: 1, // Per second
 };
 const rateLimiter = new rateLimiterFlexible.RateLimiterMemory(rateOptions);
