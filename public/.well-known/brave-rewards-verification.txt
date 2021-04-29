@@ -1,0 +1,4 @@
+This is a Brave Rewards publisher verification file.
+
+Domain: wanderersguide.app
+Token: 03461edf67fb6504cbb6ced276dc055105caf123564d7c56645b1b106a9610ac
