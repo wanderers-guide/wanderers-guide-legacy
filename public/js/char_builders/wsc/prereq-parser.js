@@ -53,7 +53,7 @@ function preReqResultArray(feat){
     result = preReqCheckProfs(uPreReq);
     if(result != null) { resultArray.push({Type: 'SKILL-PROF', Result: result, PreReqPart: prereq}); continue; }
 
-    result = preReqCheckAbilityScores(uPreReq);
+    result = prereqListChecking('ABILITY-SCORE', uPreReq, prereq);
     if(result != null) { resultArray.push({Type: 'ABILITY-SCORE', Result: result, PreReqPart: prereq}); continue; }
 
     result = preReqCheckHeritages(uPreReq, prereq);
@@ -162,6 +162,8 @@ function prereqListChecking(type, prereq, oData) {
       result = preReqCheckClassAbilities(subPre, oData);
     } else if(type == 'HERITAGE'){
       result = preReqConfirmHeritage(subPre);
+    } else if (type == 'ABILITY-SCORE'){
+      result = preReqCheckAbilityScores(subPre);
     } else {
       result = 'FALSE';
     }

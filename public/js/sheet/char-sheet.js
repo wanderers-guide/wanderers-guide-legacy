@@ -1256,7 +1256,13 @@ function displayInformation() {
           }
         }
 
-        skills.append('<a id="'+skillButtonID+'" class="panel-block skillButton border-dark-lighter"><span class="panel-icon has-text-grey-lighter">'+signNumber(totalBonus)+conditionalStar+'</span><span class="pl-3">'+skillNameHTML+'</span></a>');
+        skills.append(`
+          <a id="${skillButtonID}" class="panel-block skillButton border-dark-lighter pos-relative">
+            <span class="panel-icon has-text-grey-lighter">${signNumber(totalBonus)+conditionalStar}</span>
+            <span class="pl-3">${skillNameHTML}</span>
+            <span class="pos-absolute pos-t-5 pos-r-5 is-italic has-text-grey is-size-7-5">${getProfLetterFromNumUps(profData.NumUps)}</span>
+          </a>
+        `);
         g_calculatedStats.totalSkills.push({Name: skillName, Bonus: totalBonus});// Calculated Stat
 
         $('#'+skillButtonID).click(function(){
