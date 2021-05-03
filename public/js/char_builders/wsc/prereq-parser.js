@@ -193,7 +193,7 @@ function prereqListChecking(type, prereq, oData) {
 // Prereq Heritage Checking //
 function preReqCheckHeritages(prereq, normalPreReq){
   if(prereq.toLowerCase() === normalPreReq){
-    let rHeritage = prereq.match(/(.+) HERITAGE/);
+    let rHeritage = prereq.match(/(.+) HERITAGE$/);
     if(rHeritage != null){
       return prereqListChecking('HERITAGE', rHeritage[1], null);
     } else {
