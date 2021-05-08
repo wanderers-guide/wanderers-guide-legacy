@@ -2,14 +2,15 @@
     By Aaron Cassar.
 */
 
-function openPerceptionQuickview(data) {
-    let noteFieldID = 'perception-'+data.ProfData.Name.replace(/\s/g, "_");
+function openConditionalsQuickview(data) {
 
-    $('#quickViewTitle').html(data.ProfData.Name);
+    let noteFieldID = 'skill-'+data.SkillName.replace(/\s/g, "_");
+
+    $('#quickViewTitle').html(data.SkillName);
     $('#quickViewTitleRight').html('<button id="customizeProfBtn" class="button is-very-small is-success is-outlined is-rounded is-pulled-right mr-1">Customize</button>');
     $('#customizeProfBtn').click(function(){
         openQuickView('customizeProfView', {
-            ProfSrcData : {For:'Perception',To:'Perception'},
+            ProfSrcData : {For:'Skill',To:data.SkillName},
             ProfData : data.ProfData,
             NoteFieldID : noteFieldID,
             _prevBackData: {Type: g_QViewLastType, Data: g_QViewLastData},
@@ -18,37 +19,40 @@ function openPerceptionQuickview(data) {
 
     let qContent = $('#quickViewContent');
 
+    let abilityScoreName = lengthenAbilityType(data.Skill.ability);
+
     let profName = getProfNameFromNumUps(data.ProfData.NumUps);
-    let profNameHTML = getProfHistoryHTML('Perception');
-    if(data.ProfData.UserProfOverride){
+    let profNameHTML = getProfHistoryHTML(data.SkillName);
+    if(data.ProfData.UserProfOverride != null && data.ProfData.UserProfOverride){
         qContent.append('<p><strong>Proficiency:</strong> '+profNameHTML+' <span class="is-inline pl-1 is-size-7 is-italic"> ( Override )</span></p>');
     } else {
         qContent.append('<p><strong>Proficiency:</strong> '+profNameHTML+'</p>');
     }
     
     let userBonus = data.ProfData.UserBonus;
-    if(userBonus != 0){
+    if(data.ProfData.UserBonus != null && userBonus != 0){
         qContent.append('<p><strong>Extra Bonus:</strong> '+signNumber(userBonus)+'</p>');
     }
 
+    qContent.append('<p><strong>Ability Score:</strong> '+abilityScoreName+'</p>');
     qContent.append('<hr class="m-2">');
-    qContent.append('<p>Perception measures your character’s ability to notice hidden objects or unusual situations, and it usually determines how quickly the character springs into action in combat.</p>');
+    qContent.append(processText(data.Skill.description, true, true, 'MEDIUM'));
     qContent.append('<hr class="m-2">');
     qContent.append('<p class="has-text-centered"><strong>Bonus Breakdown</strong></p>');
 
     if(gOption_hasDiceRoller) { refreshStatRollButtons(); }
     let breakDownInnerHTML = '<p class="has-text-centered"><span class="stat-roll-btn">'+signNumber(data.TotalBonus)+'</span> = ';
 
-    breakDownInnerHTML += '<a class="has-text-link has-tooltip-bottom has-tooltip-multiline" data-tooltip="This is your Wisdom modifier. It is added when determining your total Perception bonus.">'+data.WisMod+'</a>';
+    breakDownInnerHTML += '<a class="has-text-link has-tooltip-bottom has-tooltip-multiline" data-tooltip="This is your '+abilityScoreName+' modifier. Because '+data.Skill.name+' is a '+abilityScoreName+'-based skill, you add your '+abilityScoreName+' modifier to determine your skill bonus.">'+data.AbilMod+'</a>';
 
     breakDownInnerHTML += ' + ';
-    
+
     if(profName == "Untrained") {
         let untrainedProfBonus = 0;
         if(gOption_hasProfWithoutLevel){
             untrainedProfBonus = -2;
         }
-        breakDownInnerHTML += '<a class="has-text-link has-tooltip-bottom has-tooltip-multiline" data-tooltip="This is your proficiency bonus. Because you are '+profName.toLowerCase()+' in Perception, your proficiency bonus is '+signNumber(untrainedProfBonus)+'.">'+data.ProfNum+'</a>';
+        breakDownInnerHTML += '<a class="has-text-link has-tooltip-bottom has-tooltip-multiline" data-tooltip="This is your proficiency bonus. Because you are '+profName.toLowerCase()+' in '+data.SkillName+', your proficiency bonus is '+signNumber(untrainedProfBonus)+'.">'+data.ProfNum+'</a>';
     } else {
         let extraBonus = 0;
         if(profName == "Trained"){
@@ -62,22 +66,22 @@ function openPerceptionQuickview(data) {
         }
 
         if(gOption_hasProfWithoutLevel){
-            breakDownInnerHTML += '<a class="has-text-link has-tooltip-bottom has-tooltip-multiline" data-tooltip="This is your proficiency bonus. Because you are '+profName.toLowerCase()+' in Perception, your proficiency bonus is '+signNumber(extraBonus)+'.">'+data.ProfNum+'</a>';
+            breakDownInnerHTML += '<a class="has-text-link has-tooltip-bottom has-tooltip-multiline" data-tooltip="This is your proficiency bonus. Because you are '+profName.toLowerCase()+' in '+data.SkillName+', your proficiency bonus is '+signNumber(extraBonus)+'.">'+data.ProfNum+'</a>';
         } else {
-            breakDownInnerHTML += '<a class="has-text-link has-tooltip-bottom has-tooltip-multiline" data-tooltip="This is your proficiency bonus. Because you are '+profName.toLowerCase()+' in Perception, your proficiency bonus is equal to your level ('+data.CharLevel+') plus '+extraBonus+'.">'+data.ProfNum+'</a>';
+            breakDownInnerHTML += '<a class="has-text-link has-tooltip-bottom has-tooltip-multiline" data-tooltip="This is your proficiency bonus. Because you are '+profName.toLowerCase()+' in '+data.SkillName+', your proficiency bonus is equal to your level ('+data.CharLevel+') plus '+extraBonus+'.">'+data.ProfNum+'</a>';
         }
     }
 
     breakDownInnerHTML += ' + ';
 
-    let amalgBonus = data.TotalBonus - (data.WisMod + data.ProfNum);
+    let amalgBonus = data.TotalBonus - (data.AbilMod + data.ProfNum);
     breakDownInnerHTML += '<a id="amalgBonusNum" class="has-text-link has-tooltip-bottom">'+amalgBonus+'</a>';
 
     breakDownInnerHTML += '</p>';
 
     qContent.append(breakDownInnerHTML);
 
-    let amalgBonuses = getStatExtraBonuses('PERCEPTION');
+    let amalgBonuses = getStatExtraBonuses('SKILL_'+data.SkillName);
     if(amalgBonuses != null && amalgBonuses.length > 0){
         $('#amalgBonusNum').removeClass('has-tooltip-multiline');
         let amalgTooltipText = 'Additional adjustments:';
@@ -90,8 +94,7 @@ function openPerceptionQuickview(data) {
         $('#amalgBonusNum').attr('data-tooltip', amalgamationBonusText);
     }
 
-    // Conditionals //
-    let conditionalStatMap = getConditionalStatMap('PERCEPTION');
+    let conditionalStatMap = getConditionalStatMap('SKILL_'+data.SkillName);
     if(conditionalStatMap != null){
 
         qContent.append('<hr class="m-2">');
@@ -116,17 +119,31 @@ function openPerceptionQuickview(data) {
         sourceCodeSNum: 'a',
     };
     displayNotesField(qContent, noteFieldSrcStruct);
+
     
+    let userAddedData = getUserAddedData(g_profMap.get(data.SkillName));
+    if(userAddedData != null){
+      qContent.append('<hr class="m-2">');
+      qContent.append('<div class="buttons is-centered is-marginless"><a id="removeUserAddedLoreButton" class="button is-small is-danger is-rounded is-outlined mt-3">Remove</a></div>');
 
-    // Senses //
-    qContent.append('<hr class="m-2">');
+      $('#removeUserAddedLoreButton').click(function(){ // Remove User-Added Lore
 
-    qContent.append('<p class="has-text-centered is-size-5"><strong>Senses</strong></p>');
+        let srcStruct = {
+          sourceType: 'user-added',
+          sourceLevel: 0,
+          sourceCode: data.SkillName,
+          sourceCodeSNum: 'a',
+        };
+        socket.emit("requestLoreChange",
+            getCharIDFromURL(),
+            srcStruct,
+            null,
+            null,
+            'T',
+            'User-Added'
+        );
 
-    qContent.append('<p class="has-text-centered has-tooltip-bottom has-tooltip-multiline" data-tooltip="'+processTextRemoveIndexing(data.PrimaryVisionSense.description)+'">'+data.PrimaryVisionSense.name+'</p>');
-
-    for(let additionalSense of data.AdditionalSenseArray) {
-        qContent.append('<p class="has-text-centered has-tooltip-bottom has-tooltip-multiline" data-tooltip="'+processTextRemoveIndexing(additionalSense.description)+'">'+additionalSense.name+'</p>');
+      });
     }
 
 }
