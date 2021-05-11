@@ -236,6 +236,7 @@ function getAttackAndDamage(itemData, invItem){
         for(const [source, amount] of weapStruct.damage.parts.entries()){
           totalDamageBonus += amount;
         }
+        let totalDamageBonusStr = (totalDamageBonus != 0) ? signNumber(totalDamageBonus) : '';
 
         // Finalizing Damage into Display String //
         let damage = '';
@@ -243,9 +244,9 @@ function getAttackAndDamage(itemData, invItem){
         if(damageDieType != 'NONE') {
             let maxDamage = diceNum*dieTypeToNum(damageDieType)+totalDamageBonus;
             if(maxDamage >= 1) {
-                damage = diceNum+""+damageDieType+signNumber(totalDamageBonus)+" "+damageDamageType;
+                damage = diceNum+""+damageDieType+totalDamageBonusStr+" "+damageDamageType;
             } else {
-                damage = '<a class="has-text-grey" data-tooltip="'+diceNum+""+damageDieType+signNumber(totalDamageBonus)+'">1</a> '+damageDamageType;
+                damage = '<a class="has-text-grey" data-tooltip="'+diceNum+""+damageDieType+totalDamageBonusStr+'">1</a> '+damageDamageType;
             }
             damageDice = diceNum+''+damageDieType;
         } else {
@@ -419,6 +420,7 @@ function getAttackAndDamage(itemData, invItem){
         for(const [source, amount] of weapStruct.damage.parts.entries()){
           totalDamageBonus += amount;
         }
+        let totalDamageBonusStr = (totalDamageBonus != 0) ? signNumber(totalDamageBonus) : '';
 
         // Finalizing Damage into Display String //
         let damage = '';
@@ -426,9 +428,9 @@ function getAttackAndDamage(itemData, invItem){
         if(damageDieType != 'NONE') {
             let maxDamage = diceNum*dieTypeToNum(damageDieType)+totalDamageBonus;
             if(maxDamage >= 1) {
-                damage = diceNum+""+damageDieType+signNumber(totalDamageBonus)+" "+damageDamageType;
+                damage = diceNum+""+damageDieType+totalDamageBonusStr+" "+damageDamageType;
             } else {
-                damage = '<a class="has-text-grey" data-tooltip="'+diceNum+""+damageDieType+signNumber(totalDamageBonus)+'">1</a> '+damageDamageType;
+                damage = '<a class="has-text-grey" data-tooltip="'+diceNum+""+damageDieType+totalDamageBonusStr+'">1</a> '+damageDamageType;
             }
             damageDice = diceNum+''+damageDieType;
         } else {
