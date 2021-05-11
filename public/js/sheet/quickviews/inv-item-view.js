@@ -170,7 +170,19 @@ function openInvItemQuickview(data) {
             let calcStruct = getAttackAndDamage(data.Item, data.InvItem);
             let map = generateMAP(calcStruct.AttackBonus, tagArray);
 
-            qContent.append('<div class="tile text-center is-flex"><div class="tile is-child is-6"><strong>Attack Bonus</strong></div><div class="tile is-child is-6"><strong>Damage</strong></div></div>');
+            let attackHasConditionals = (calcStruct.WeapStruct.attack.conditionals != null && calcStruct.WeapStruct.attack.conditionals.size != 0);
+            let damageHasConditionals = (calcStruct.WeapStruct.damage.conditionals != null && calcStruct.WeapStruct.damage.conditionals.size != 0);
+
+            qContent.append(`
+              <div class="tile text-center is-flex">
+                <div class="tile is-child is-6">
+                  <strong id="invWeapAttackView" class="cursor-clickable px-1">Attack Bonus${(attackHasConditionals) ? '<sup class="is-size-7 has-text-info">*</sup>' : ''}</strong>
+                </div>
+                <div class="tile is-child is-6">
+                  <strong id="invWeapDamageView" class="cursor-clickable px-1">Damage${(damageHasConditionals) ? '<sup class="is-size-7 has-text-info">*</sup>' : ''}</strong>
+                </div>
+              </div>
+            `);
             qContent.append(`
               <div class="tile text-center is-flex">
                 <div class="tile is-child is-6">
@@ -183,11 +195,51 @@ function openInvItemQuickview(data) {
                   </span>
                 </div>
                 <div class="tile is-child is-6">
-                  <span class="has-text-grey-light damage-roll-btn">${calcStruct.Damage}</span>
+                  <span class="has-text-grey-light">
+                    <span class="damage-roll-btn">${calcStruct.Damage}</span>
+                  </span>
                 </div>
               </div>
             `);
             if(gOption_hasDiceRoller) { refreshStatRollButtons(); }
+
+            $('#invWeapAttackView').click(function() {
+              openQuickView('breakdownView', {
+                title: data.InvItem.name+' - Attack Bonus',
+                breakdownTitle: 'Bonus',
+                breakdownTotal: calcStruct.AttackBonus,
+                breakdownStartStr: '',
+                breakdownMap: calcStruct.WeapStruct.attack.parts,
+                conditionalMap: calcStruct.WeapStruct.attack.conditionals,
+                isBonus: true,
+                _prevBackData: {Type: g_QViewLastType, Data: g_QViewLastData},
+              }, $('#quickviewDefault').hasClass('is-active'));
+            });
+            $('#invWeapAttackView').mouseenter(function(){
+              $(this).addClass('has-background-grey-darker');
+            });
+            $('#invWeapAttackView').mouseleave(function(){
+              $(this).removeClass('has-background-grey-darker');
+            });
+            
+            $('#invWeapDamageView').click(function() {
+              openQuickView('breakdownView', {
+                title: data.InvItem.name+' - Damage',
+                breakdownTitle: 'Damage',
+                breakdownTotal: calcStruct.Damage,
+                breakdownStartStr: calcStruct.DamageDice,
+                breakdownMap: calcStruct.WeapStruct.damage.parts,
+                conditionalMap: calcStruct.WeapStruct.damage.conditionals,
+                isBonus: false,
+                _prevBackData: {Type: g_QViewLastType, Data: g_QViewLastData},
+              }, $('#quickviewDefault').hasClass('is-active'));
+            });
+            $('#invWeapDamageView').mouseenter(function(){
+              $(this).addClass('has-background-grey-darker');
+            });
+            $('#invWeapDamageView').mouseleave(function(){
+              $(this).removeClass('has-background-grey-darker');
+            });
 
             qContent.append('<hr class="m-2">');
 
@@ -198,7 +250,19 @@ function openInvItemQuickview(data) {
             let calcStruct = getAttackAndDamage(data.Item, data.InvItem);
             let map = generateMAP(calcStruct.AttackBonus, tagArray);
 
-            qContent.append('<div class="tile text-center is-flex"><div class="tile is-child is-6"><strong>Attack Bonus</strong></div><div class="tile is-child is-6"><strong>Damage</strong></div></div>');
+            let attackHasConditionals = (calcStruct.WeapStruct.attack.conditionals != null && calcStruct.WeapStruct.attack.conditionals.size != 0);
+            let damageHasConditionals = (calcStruct.WeapStruct.damage.conditionals != null && calcStruct.WeapStruct.damage.conditionals.size != 0);
+
+            qContent.append(`
+              <div class="tile text-center is-flex">
+                <div class="tile is-child is-6">
+                  <strong id="invWeapAttackView" class="cursor-clickable px-1">Attack Bonus${(attackHasConditionals) ? '<sup class="is-size-7 has-text-info">*</sup>' : ''}</strong>
+                </div>
+                <div class="tile is-child is-6">
+                  <strong id="invWeapDamageView" class="cursor-clickable px-1">Damage${(damageHasConditionals) ? '<sup class="is-size-7 has-text-info">*</sup>' : ''}</strong>
+                </div>
+              </div>
+            `);
             qContent.append(`
               <div class="tile text-center is-flex">
                 <div class="tile is-child is-6">
@@ -211,11 +275,51 @@ function openInvItemQuickview(data) {
                   </span>
                 </div>
                 <div class="tile is-child is-6">
-                  <span class="has-text-grey-light damage-roll-btn">${calcStruct.Damage}</span>
+                  <span class="has-text-grey-light">
+                    <span class="damage-roll-btn">${calcStruct.Damage}</span>
+                  </span>
                 </div>
               </div>
             `);
             if(gOption_hasDiceRoller) { refreshStatRollButtons(); }
+            
+            $('#invWeapAttackView').click(function() {
+              openQuickView('breakdownView', {
+                title: data.InvItem.name+' - Attack Bonus',
+                breakdownTitle: 'Bonus',
+                breakdownTotal: calcStruct.AttackBonus,
+                breakdownStartStr: '',
+                breakdownMap: calcStruct.WeapStruct.attack.parts,
+                conditionalMap: calcStruct.WeapStruct.attack.conditionals,
+                isBonus: true,
+                _prevBackData: {Type: g_QViewLastType, Data: g_QViewLastData},
+              }, $('#quickviewDefault').hasClass('is-active'));
+            });
+            $('#invWeapAttackView').mouseenter(function(){
+              $(this).addClass('has-background-grey-darker');
+            });
+            $('#invWeapAttackView').mouseleave(function(){
+              $(this).removeClass('has-background-grey-darker');
+            });
+            
+            $('#invWeapDamageView').click(function() {
+              openQuickView('breakdownView', {
+                title: data.InvItem.name+' - Damage',
+                breakdownTitle: 'Damage',
+                breakdownTotal: calcStruct.Damage,
+                breakdownStartStr: calcStruct.DamageDice,
+                breakdownMap: calcStruct.WeapStruct.damage.parts,
+                conditionalMap: calcStruct.WeapStruct.damage.conditionals,
+                isBonus: false,
+                _prevBackData: {Type: g_QViewLastType, Data: g_QViewLastData},
+              }, $('#quickviewDefault').hasClass('is-active'));
+            });
+            $('#invWeapDamageView').mouseenter(function(){
+              $(this).addClass('has-background-grey-darker');
+            });
+            $('#invWeapDamageView').mouseleave(function(){
+              $(this).removeClass('has-background-grey-darker');
+            });
 
             qContent.append('<hr class="m-2">');
 
@@ -488,7 +592,7 @@ function openInvItemQuickview(data) {
             });
 
             $('#'+invItemCustomizeButtonID).click(function() {
-                openQuickView('customizeItem', {
+                openQuickView('customizeItemView', {
                     Item: data.Item,
                     InvItem: data.InvItem,
                     _prevBackData: {Type: g_QViewLastType, Data: g_QViewLastData},

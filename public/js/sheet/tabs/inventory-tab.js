@@ -282,7 +282,11 @@ function displayInventoryItem(invItem, item, openBagInvItemArray, data) {
 
                 if(baggedItem.WeaponData != null){
                     let calcStruct = getAttackAndDamage(baggedItem, baggedInvItem);
-                    $('#'+baggedInvItemNameID).append('<sup class="ml-2 has-text-weight-light">'+calcStruct.AttackBonus+'</sup><sup class="pl-3 has-text-weight-light has-text-grey">'+calcStruct.Damage+'</sup>');
+
+                    let attackHasConditionals = (calcStruct.WeapStruct.attack.conditionals != null && calcStruct.WeapStruct.attack.conditionals.size != 0);
+                    let damageHasConditionals = (calcStruct.WeapStruct.damage.conditionals != null && calcStruct.WeapStruct.damage.conditionals.size != 0);
+
+                    $('#'+baggedInvItemNameID).append('<sup class="ml-2 has-text-weight-light">'+calcStruct.AttackBonus+((attackHasConditionals) ? '<sup class="has-text-info">*</sup>' : '')+'</sup><sup class="pl-3 has-text-weight-light has-text-grey">'+calcStruct.Damage+((damageHasConditionals) ? '<sup class="has-text-info">*</sup>' : '')+'</sup>');
                 }
 
                 if(baggedItem.Item.hasQuantity == 1){
@@ -393,7 +397,11 @@ function displayInventoryItem(invItem, item, openBagInvItemArray, data) {
 
     if(item.WeaponData != null){
         let calcStruct = getAttackAndDamage(item, invItem);
-        $('#'+invItemNameID).append('<sup class="ml-2 has-text-weight-light">'+calcStruct.AttackBonus+'</sup><sup class="pl-3 has-text-weight-light has-text-grey">'+calcStruct.Damage+'</sup>');
+
+        let attackHasConditionals = (calcStruct.WeapStruct.attack.conditionals != null && calcStruct.WeapStruct.attack.conditionals.size != 0);
+        let damageHasConditionals = (calcStruct.WeapStruct.damage.conditionals != null && calcStruct.WeapStruct.damage.conditionals.size != 0);
+
+        $('#'+invItemNameID).append('<sup class="ml-2 has-text-weight-light">'+calcStruct.AttackBonus+((attackHasConditionals) ? '<sup class="has-text-info">*</sup>' : '')+'</sup><sup class="pl-3 has-text-weight-light has-text-grey">'+calcStruct.Damage+((damageHasConditionals) ? '<sup class="has-text-info">*</sup>' : '')+'</sup>');
     }
 
     if(item.ArmorData != null){

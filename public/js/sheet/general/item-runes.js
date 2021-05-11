@@ -342,9 +342,9 @@ function addPropertyRuneSelection(qContent, invItem, runeArray, propertyRuneSlot
         if(weaponRuneItem == null){ continue; }
         if(weaponRuneItem.RuneData.isFundamental == 0) {
             if(existingPropRuneID != null && existingPropRuneID == weaponRuneItem.RuneData.id){
-                $('#'+propertyRuneSelectionID).append('<option value="'+weaponRuneItem.RuneData.id+'" selected>'+runestoneNameToRuneName(weaponRuneItem.Item.name)+'</option>');
+                $('#'+propertyRuneSelectionID).append('<option value="'+weaponRuneItem.RuneData.id+'" selected>'+runestoneNameToRuneName(weaponRuneItem.Item.name)+' - Lvl '+weaponRuneItem.Item.level+'</option>');
             } else {
-                $('#'+propertyRuneSelectionID).append('<option value="'+weaponRuneItem.RuneData.id+'">'+runestoneNameToRuneName(weaponRuneItem.Item.name)+'</option>');
+                $('#'+propertyRuneSelectionID).append('<option value="'+weaponRuneItem.RuneData.id+'">'+runestoneNameToRuneName(weaponRuneItem.Item.name)+' - Lvl '+weaponRuneItem.Item.level+'</option>');
             }
         }
     }

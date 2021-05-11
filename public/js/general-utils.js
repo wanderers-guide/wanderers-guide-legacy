@@ -179,6 +179,17 @@ function getProfNameFromNumUps(numUps) {
   }
 }
 
+function getBonusFromProfName(profName) {
+  switch(profName) {
+    case 'Untrained': return 0;
+    case 'Trained': return 2;
+    case 'Expert': return 4;
+    case 'Master': return 6;
+    case 'Legendary': return 8;
+    default: return -1;
+  }
+}
+
 function profToWord(prof){
   if(prof != null) {prof = prof.toUpperCase();}
   switch(prof) {

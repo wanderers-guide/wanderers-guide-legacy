@@ -236,7 +236,12 @@ function getConditionalStat(statName, condition){
 
 function getConditionalStatMap(statName){
     statName = statName.replace(/\s/g, "_").toUpperCase();
-    return g_conditionalStatManagerMap.get(statName);
+    let map = g_conditionalStatManagerMap.get(statName);
+    if(map == null){
+      return new Map();
+    } else {
+      return map;
+    }
 }
 
 function hasConditionals(statName){

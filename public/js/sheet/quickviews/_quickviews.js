@@ -86,7 +86,7 @@ function openQuickView(type, data, noProtection=false) {
         openSpeedQuickview(data);
     } else if(type == 'invItemView'){
         openInvItemQuickview(data);
-    } else if(type == 'customizeItem'){
+    } else if(type == 'customizeItemView'){
         openCustomizeItemQuickview(data);
     } else if(type == 'addItemView'){
         openAddItemQuickview(data);
@@ -130,6 +130,8 @@ function openQuickView(type, data, noProtection=false) {
         openAnimalCompQuickview(data);
     } else if(type == 'familiarView'){
         openFamiliarQuickview(data);
+    } else if(type == 'breakdownView'){
+        openBreakdownQuickview(data);
     } else if(type == 'warningsView'){
         openWarningsQuickview(data);
     }

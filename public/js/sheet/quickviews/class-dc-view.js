@@ -53,21 +53,10 @@ function openClassDCQuickview(data) {
         }
         breakDownInnerHTML += '<a class="has-text-link has-tooltip-bottom has-tooltip-multiline" data-tooltip="This is your proficiency bonus. Because you are '+profName.toLowerCase()+' in your class DC, your proficiency bonus is '+signNumber(untrainedProfBonus)+'.">'+data.ProfNum+'</a>';
     } else {
-        let extraBonus = 0;
-        if(profName == "Trained"){
-            extraBonus = 2;
-        } else if(profName == "Expert"){
-            extraBonus = 4;
-        } else if(profName == "Master"){
-            extraBonus = 6;
-        } else if(profName == "Legendary"){
-            extraBonus = 8;
-        }
-
         if(gOption_hasProfWithoutLevel){
-            breakDownInnerHTML += '<a class="has-text-link has-tooltip-bottom has-tooltip-multiline" data-tooltip="This is your proficiency bonus. Because you are '+profName.toLowerCase()+' in your class DC, your proficiency bonus is '+signNumber(extraBonus)+'.">'+data.ProfNum+'</a>';
+            breakDownInnerHTML += '<a class="has-text-link has-tooltip-bottom has-tooltip-multiline" data-tooltip="This is your proficiency bonus. Because you are '+profName.toLowerCase()+' in your class DC, your proficiency bonus is '+signNumber(getBonusFromProfName(profName))+'.">'+data.ProfNum+'</a>';
         } else {
-            breakDownInnerHTML += '<a class="has-text-link has-tooltip-bottom has-tooltip-multiline" data-tooltip="This is your proficiency bonus. Because you are '+profName.toLowerCase()+' in your class DC, your proficiency bonus is equal to your level ('+data.CharLevel+') plus '+extraBonus+'.">'+data.ProfNum+'</a>';
+            breakDownInnerHTML += '<a class="has-text-link has-tooltip-bottom has-tooltip-multiline" data-tooltip="This is your proficiency bonus. Because you are '+profName.toLowerCase()+' in your class DC, your proficiency bonus is equal to your level ('+data.CharLevel+') plus '+getBonusFromProfName(profName)+'.">'+data.ProfNum+'</a>';
         }
     }
 
@@ -95,7 +84,7 @@ function openClassDCQuickview(data) {
 
     // Conditionals //
     let conditionalStatMap = getConditionalStatMap('CLASS_DC');
-    if(conditionalStatMap != null){
+    if(conditionalStatMap != null && conditionalStatMap.size != 0){
 
         qContent.append('<hr class="m-2">');
 

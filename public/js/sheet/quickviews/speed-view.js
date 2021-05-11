@@ -17,7 +17,7 @@ function openSpeedQuickview(data) {
 
     // Conditionals //
     let conditionalStatMap = getConditionalStatMap('SPEED');
-    if(conditionalStatMap != null){
+    if(conditionalStatMap != null && conditionalStatMap.size != 0){
 
         qContent.append('<hr class="m-2">');
 

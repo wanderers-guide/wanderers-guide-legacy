@@ -19,70 +19,73 @@ function getAttackAndDamage(itemData, invItem){
     if(damageDamageType == null){
         damageDamageType = itemData.WeaponData.damageType;
     }
+
+    const weapStruct = {
+      attack: {
+        parts: new Map(),
+        conditionals: new Map(),
+      },
+      damage: {
+        parts: new Map(),
+        conditionals: new Map(),
+      }
+    };
     
     // Bonuses from weapon custom bonus //
     let weapAtkCustomBonus = invItem.itemWeaponAtkBonus;
     if(weapAtkCustomBonus == null) {
       weapAtkCustomBonus = 0;
     }
+    weapStruct.attack.parts.set('Custom Attacks Bonus', weapAtkCustomBonus);
+
     let weapDmgCustomBonus = invItem.itemWeaponDmgBonus;
-    let weapDmgCustom = '';
-    if(weapDmgCustomBonus != null) {
-      weapDmgCustom = signNumber(weapDmgCustomBonus);
-    } else {
+    if(weapDmgCustomBonus == null) {
       weapDmgCustomBonus = 0;
     }
+    weapStruct.damage.parts.set('Custom Damage Bonus', weapDmgCustomBonus);
 
     if(itemData.WeaponData.isMelee == 1){
 
+        let splashTag = tagArray.find(tag => {
+          return tag.id == 391; // Hardcoded Splash Tag ID
+        });
         let agileTag = tagArray.find(tag => {
           return tag.id == 43; // Hardcoded Agile Tag ID
         });
         let finesseTag = tagArray.find(tag => {
             return tag.id == 42; // Hardcoded Finesse Tag ID
         });
-        let abilMod = strMod;
-        if(finesseTag != null){
-          abilMod = (dexMod > abilMod) ? dexMod : abilMod;
-        } // Use preDex mod because Clumsy condition affects ranged attacks but not finesse melee attacks?
     
+        ////////////////////////////////////////////////////////////////////////////////////
+        /////////////////////////////////// Attack Bonus ///////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////////////
+
+        let abilMod = strMod;
+        weapStruct.attack.parts.set('This is your Strength modifier. You add your Strength modifier to attack rolls with most melee weapons.', abilMod);
+
+        if(finesseTag != null){
+          if(dexMod > abilMod){
+            abilMod = dexMod;
+            weapStruct.attack.parts.set('This is your Dexterity modifier. Because this weapon is a finesse weapon, you can use your Dexterity modifier instead of Strength on attack rolls.', abilMod);
+          }
+        } // Use preDex mod because Clumsy condition affects ranged attacks but not finesse melee attacks?
+
+        // Proficiency Bonus //
         let profNumUps = weaponProfDetermineNumUps(itemData);
-
-        let profData = g_weaponProfMap.get(itemData.WeaponData.profName);
-        let profBonus = null;
-        if(profData != null){
-            profBonus = profData.UserBonus;
-        } else {
-            profBonus = 0;
-        }
-
-        let profAttackBonus;
+        let profName = getProfNameFromNumUps(profNumUps);
         if(profNumUps === 0 && gState_addLevelToUntrainedWeaponAttack && !gOption_hasProfWithoutLevel) {
-            profAttackBonus = g_character.level; // Sheet-State, adds level to untrained weapons
+          let profAttackBonus = g_character.level; // Sheet-State, adds level to untrained weapons
+          weapStruct.attack.parts.set('This is your proficiency bonus. You are '+profName.toLowerCase()+' in this weapon but have an ability that adds your level ('+g_character.level+') to your proficiency bonus, making it '+signNumber(getBonusFromProfName(profName))+'.', profAttackBonus);
         } else {
-            profAttackBonus = getProfNumber(profNumUps, g_character.level);
+          let profAttackBonus = getProfNumber(profNumUps, g_character.level);
+          if(gOption_hasProfWithoutLevel){
+            weapStruct.attack.parts.set('This is your proficiency bonus. Because you are '+profName.toLowerCase()+' in this weapon, your proficiency bonus is '+signNumber(getBonusFromProfName(profName))+'.', profAttackBonus);
+          } else {
+            weapStruct.attack.parts.set('This is your proficiency bonus. Because you are '+profName.toLowerCase()+' in this weapon, your proficiency bonus is equal to your level ('+g_character.level+') plus '+getBonusFromProfName(profName)+'.', profAttackBonus);
+          }
         }
 
-        let splashTag = tagArray.find(tag => {
-            return tag.id == 391; // Hardcoded Splash Tag ID
-        });
-        let dmgStrBonus = '';
-        if(gState_hasFinesseMeleeUseDexDamage && finesseTag != null){
-            if(dexMod > strMod) {
-              if(dexMod != 0){
-                dmgStrBonus = signNumber(dexMod);
-              }
-            } else {
-              if(strMod != 0){
-                dmgStrBonus = signNumber(strMod);
-              }
-            }
-        } else {
-            if(splashTag == null && strMod != 0){
-                dmgStrBonus = signNumber(strMod);
-            }
-        }
-
+        // Potency Bonus //
         let potencyRuneBonus = 0;
         if(isWeaponPotencyOne(invItem.fundPotencyRuneID)){
           potencyRuneBonus = 1;
@@ -91,14 +94,48 @@ function getAttackAndDamage(itemData, invItem){
         } else if(isWeaponPotencyThree(invItem.fundPotencyRuneID)){
           potencyRuneBonus = 3;
         }
+        weapStruct.attack.parts.set('This is the item bonus granted by this weapon\'s potency rune.', potencyRuneBonus);
 
+        // Shoddy Penalty //
         let shoddyPenalty = (invItem.isShoddy == 1) ? -2 : 0;
+        weapStruct.attack.parts.set('This is the item penalty applied due to this weapon being shoddy.', shoddyPenalty);
 
-        let otherBonuses = getStatTotal('ATTACKS');
-        otherBonuses += getStatTotal('MELEE_ATTACKS');
+        // Bonus for - Attacks //
+        let extraAttackBonus = getStatTotal('ATTACKS');
+        if(extraAttackBonus == null) { extraAttackBonus = 0; }
+        weapStruct.attack.parts.set('This bonus is being added by an effect that adds a bonus to all attacks.', extraAttackBonus);
+        weapStruct.attack.conditionals =
+              new Map([...weapStruct.attack.conditionals, ...getConditionalStatMap('ATTACKS')]);
 
-        let attackBonus = signNumber(abilMod+profAttackBonus+profBonus+potencyRuneBonus+shoddyPenalty+otherBonuses+weapAtkCustomBonus);
+        // Bonus for - Melee Attacks //
+        let extraAttackMeleeBonus = getStatTotal('MELEE_ATTACKS');
+        if(extraAttackMeleeBonus == null) { extraAttackMeleeBonus = 0; }
+        weapStruct.attack.parts.set('This bonus is being added by an effect that adds a bonus to all melee attacks.', extraAttackMeleeBonus);
+        weapStruct.attack.conditionals =
+              new Map([...weapStruct.attack.conditionals, ...getConditionalStatMap('MELEE_ATTACKS')]);
 
+        // User-Added Bonus //
+        let profData = g_weaponProfMap.get(itemData.WeaponData.profName);
+        let profUserBonus = null;
+        if(profData != null){
+          profUserBonus = profData.UserBonus;
+        } else {
+          profUserBonus = 0;
+        }
+        weapStruct.attack.parts.set('This is a custom bonus that\'s been added manually.', profUserBonus);
+
+        // Totaling Attack Bonus //
+        let totalAttackBonus = 0;
+        for(const [source, amount] of weapStruct.attack.parts.entries()){
+          totalAttackBonus += amount;
+        }
+        let attackBonus = signNumber(totalAttackBonus);
+
+        ////////////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////// Damage //////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////////////
+
+        // Number of Dice for Damage //
         let diceNum = itemData.WeaponData.diceNum;
         if(isStriking(invItem.fundRuneID)){
           diceNum = 2;
@@ -113,8 +150,41 @@ function getAttackAndDamage(itemData, invItem){
         let overrideMeleeDmgDice = getStatTotal('MELEE_ATTACKS_DMG_DICE');
         if(overrideMeleeDmgDice != null) { diceNum = overrideMeleeDmgDice; }
 
-        let weapSpecialBonus = 0; // Hardcoded Damage Amount to Weap Profs
-        if(g_specializationStruct.WeaponSpecial){
+        // Ability Score Modifier //
+        let dmgStrBonus = 0;
+        if(gState_hasFinesseMeleeUseDexDamage && finesseTag != null){
+            if(dexMod > strMod) {
+              if(dexMod != 0){
+                dmgStrBonus = dexMod;
+                weapStruct.damage.parts.set('This is your Dexterity modifier. You\'re adding Dexterity instead of Strength to your weapon\'s damage, because this weapon is a finesse weapon and you have an ability that allows you to use your Dexterity modifier instead of Strength for damage with finesse weapons.', dmgStrBonus);
+              }
+            } else {
+              if(strMod != 0){
+                dmgStrBonus = strMod;
+                weapStruct.damage.parts.set('This is your Strength modifier. You have an ability that allows you to use your Dexterity modifier instead of Strength for damage with finesse weapons. However, your Strength modifier is greater than your Dexterity so it is being used instead.', dmgStrBonus);
+              }
+            }
+        } else {
+            if(splashTag == null && strMod != 0){
+              dmgStrBonus = strMod;
+              weapStruct.damage.parts.set('This is your Strength modifier. You generally add your Strength modifier to damage with melee weapons.', dmgStrBonus);
+            }
+        }
+
+        // Weapon Specialization //
+        if(g_specializationStruct.GreaterWeaponSpecial){ // Hardcoded bonuses
+          let weapSpecialBonus = 0;
+          if(profNumUps === 2) {
+              weapSpecialBonus = 4;
+          } else if(profNumUps === 3) {
+              weapSpecialBonus = 6;
+          } else if(profNumUps === 4) {
+              weapSpecialBonus = 8;
+          }
+          weapStruct.damage.parts.set('This is the extra damage being added due to your Greater Weapon Specialization class feature.', weapSpecialBonus);
+        } else {
+          if(g_specializationStruct.WeaponSpecial){
+            let weapSpecialBonus = 0;
             if(profNumUps === 2) {
                 weapSpecialBonus = 2;
             } else if(profNumUps === 3) {
@@ -122,71 +192,68 @@ function getAttackAndDamage(itemData, invItem){
             } else if(profNumUps === 4) {
                 weapSpecialBonus = 4;
             }
+            weapStruct.damage.parts.set('This is the extra damage being added due to your Weapon Specialization class feature.', weapSpecialBonus);
+          }
         }
-        if(g_specializationStruct.GreaterWeaponSpecial){
-            if(profNumUps === 2) {
-                weapSpecialBonus = 4;
-            } else if(profNumUps === 3) {
-                weapSpecialBonus = 6;
-            } else if(profNumUps === 4) {
-                weapSpecialBonus = 8;
-            }
-        }
-        let weapSpecial = (weapSpecialBonus != 0) ? signNumber(weapSpecialBonus) : '';
 
         // Bonus for - Weapons //
         let weapExtraBonus = getStatTotal('ATTACKS_DMG_BONUS');
-        let weapExtra = '';
-        if(weapExtraBonus != null) {
-          weapExtra = signNumber(weapExtraBonus);
-        } else {
-          weapExtraBonus = 0;
-        }
+        if(weapExtraBonus == null) { weapExtraBonus = 0; }
+        weapStruct.damage.parts.set('This bonus is being added by an effect that adds a bonus to damage with all attacks.', weapExtraBonus);
+        weapStruct.damage.conditionals =
+              new Map([...weapStruct.damage.conditionals, ...getConditionalStatMap('ATTACKS_DMG_BONUS')]);
 
         // Bonus for - Melee Weapons //
         let weapMeleeExtraBonus = getStatTotal('MELEE_ATTACKS_DMG_BONUS');
-        let weapMeleeExtra = '';
-        if(weapMeleeExtraBonus != null) {
-          weapMeleeExtra = signNumber(weapMeleeExtraBonus);
-        } else {
+        if(weapMeleeExtraBonus == null) {
           weapMeleeExtraBonus = 0;
         }
+        weapStruct.damage.parts.set('This bonus is being added by an effect that adds a bonus to damage with all melee attacks.', weapMeleeExtraBonus);
+        weapStruct.damage.conditionals =
+              new Map([...weapStruct.damage.conditionals, ...getConditionalStatMap('MELEE_ATTACKS_DMG_BONUS')]);
 
         // Bonus for - Agile Melee Weapons //
         let weapMeleeAgileExtraBonus = getStatTotal('AGILE_MELEE_ATTACKS_DMG_BONUS');
-        let weapMeleeAgileExtra = '';
         let weapMeleeNonAgileExtraBonus = getStatTotal('NON_AGILE_MELEE_ATTACKS_DMG_BONUS');
-        let weapMeleeNonAgileExtra = '';
         if(agileTag != null){
-          if(weapMeleeAgileExtraBonus != null) {
-            weapMeleeAgileExtra = signNumber(weapMeleeAgileExtraBonus);
-          } else {
+          if(weapMeleeAgileExtraBonus == null) {
             weapMeleeAgileExtraBonus = 0;
           }
+          weapStruct.damage.parts.set('This bonus is being added by an effect that adds a bonus to damage with all agile, melee attacks.', weapMeleeAgileExtraBonus);
+          weapStruct.damage.conditionals =
+              new Map([...weapStruct.damage.conditionals, ...getConditionalStatMap('AGILE_MELEE_ATTACKS_DMG_BONUS')]);
         } else {
-          if(weapMeleeNonAgileExtraBonus != null) {
-            weapMeleeNonAgileExtra = signNumber(weapMeleeNonAgileExtraBonus);
-          } else {
+          if(weapMeleeNonAgileExtraBonus == null) {
             weapMeleeNonAgileExtraBonus = 0;
           }
+          weapStruct.damage.parts.set('This bonus is being added by an effect that adds a bonus to damage with all non-agile, melee attacks.', weapMeleeNonAgileExtraBonus);
+          weapStruct.damage.conditionals =
+              new Map([...weapStruct.damage.conditionals, ...getConditionalStatMap('NON_AGILE_MELEE_ATTACKS_DMG_BONUS')]);
         }
 
-        let damageBonusInt = strMod+weapSpecialBonus+weapExtraBonus+weapMeleeExtraBonus+weapMeleeAgileExtraBonus+weapMeleeNonAgileExtraBonus+weapDmgCustomBonus;
-        let damageBonusStr = dmgStrBonus+weapSpecial+weapExtra+weapMeleeExtra+weapMeleeAgileExtra+weapMeleeNonAgileExtra+weapDmgCustom;
+        // Totaling Damage //
+        let totalDamageBonus = 0;
+        for(const [source, amount] of weapStruct.damage.parts.entries()){
+          totalDamageBonus += amount;
+        }
 
+        // Finalizing Damage into Display String //
         let damage = '';
+        let damageDice = '';
         if(damageDieType != 'NONE') {
-            let maxDamage = diceNum*dieTypeToNum(damageDieType)+damageBonusInt;
+            let maxDamage = diceNum*dieTypeToNum(damageDieType)+totalDamageBonus;
             if(maxDamage >= 1) {
-                damage = diceNum+""+damageDieType+damageBonusStr+" "+damageDamageType;
+                damage = diceNum+""+damageDieType+signNumber(totalDamageBonus)+" "+damageDamageType;
             } else {
-                damage = '<a class="has-text-grey" data-tooltip="'+diceNum+""+damageDieType+damageBonusStr+'">1</a> '+damageDamageType;
+                damage = '<a class="has-text-grey" data-tooltip="'+diceNum+""+damageDieType+signNumber(totalDamageBonus)+'">1</a> '+damageDamageType;
             }
+            damageDice = diceNum+''+damageDieType;
         } else {
             damage = '-';
+            damageDice = '-';
         }
 
-        return { AttackBonus : attackBonus, Damage : damage };
+        return { AttackBonus : attackBonus, Damage : damage, DamageDice : damageDice, WeapStruct: weapStruct };
 
     } else if(itemData.WeaponData.isRanged == 1){
 
@@ -200,43 +267,28 @@ function getAttackAndDamage(itemData, invItem){
             return tag.id == 653; // Hardcoded Propulsive Tag ID
         });
 
-        let dmgStrSigned = '';
-        let dmgStr = 0;
+        ////////////////////////////////////////////////////////////////////////////////////
+        /////////////////////////////////// Attack Bonus ///////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////////////
 
-        if(propulsiveTag != null){
-            if(strMod >= 0){
-                let strAmt = Math.floor(strMod/2);
-                if(strAmt != 0){
-                    dmgStrSigned = signNumber(strAmt);
-                    dmgStr = strAmt;
-                }
-            } else {
-                dmgStrSigned = signNumber(strMod);
-                dmgStr = strMod;
-            }
-        }
-        if(thrownTag != null && splashTag == null && strMod != 0){
-            dmgStrSigned = signNumber(strMod);
-            dmgStr = strMod;
-        }
+        weapStruct.attack.parts.set('This is your Dexterity modifier. You add your Dexterity modifier to attack rolls with most ranged weapons.', dexMod);
 
+        // Proficiency Bonus //
         let profNumUps = weaponProfDetermineNumUps(itemData);
-
-        let profData = g_weaponProfMap.get(itemData.WeaponData.profName);
-        let profBonus = null;
-        if(profData != null){
-            profBonus = profData.UserBonus;
-        } else {
-            profBonus = 0;
-        }
-
-        let profAttackBonus;
+        let profName = getProfNameFromNumUps(profNumUps);
         if(profNumUps === 0 && gState_addLevelToUntrainedWeaponAttack && !gOption_hasProfWithoutLevel) {
-            profAttackBonus = g_character.level; // Sheet-State, adds level to untrained weapons
+          let profAttackBonus = g_character.level; // Sheet-State, adds level to untrained weapons
+          weapStruct.attack.parts.set('This is your proficiency bonus. You are '+profName.toLowerCase()+' in this weapon but have an ability that adds your level ('+g_character.level+') to your proficiency bonus, making it '+signNumber(getBonusFromProfName(profName))+'.', profAttackBonus);
         } else {
-            profAttackBonus = getProfNumber(profNumUps, g_character.level);
+          let profAttackBonus = getProfNumber(profNumUps, g_character.level);
+          if(gOption_hasProfWithoutLevel){
+            weapStruct.attack.parts.set('This is your proficiency bonus. Because you are '+profName.toLowerCase()+' in this weapon, your proficiency bonus is '+signNumber(getBonusFromProfName(profName))+'.', profAttackBonus);
+          } else {
+            weapStruct.attack.parts.set('This is your proficiency bonus. Because you are '+profName.toLowerCase()+' in this weapon, your proficiency bonus is equal to your level ('+g_character.level+') plus '+getBonusFromProfName(profName)+'.', profAttackBonus);
+          }
         }
 
+        // Potency Bonus //
         let potencyRuneBonus = 0;
         if(isWeaponPotencyOne(invItem.fundPotencyRuneID)){
           potencyRuneBonus = 1;
@@ -245,14 +297,49 @@ function getAttackAndDamage(itemData, invItem){
         } else if(isWeaponPotencyThree(invItem.fundPotencyRuneID)){
           potencyRuneBonus = 3;
         }
+        weapStruct.attack.parts.set('This is the item bonus granted by this weapon\'s potency rune.', potencyRuneBonus);
 
+        // Shoddy Penalty //
         let shoddyPenalty = (invItem.isShoddy == 1) ? -2 : 0;
+        weapStruct.attack.parts.set('This is the item penalty applied due to this weapon being shoddy.', shoddyPenalty);
 
-        let otherBonuses = getStatTotal('ATTACKS');
-        otherBonuses += getStatTotal('RANGED_ATTACKS');
+        // Bonus for - Attacks //
+        let extraAttackBonus = getStatTotal('ATTACKS');
+        if(extraAttackBonus == null) { extraAttackBonus = 0; }
+        weapStruct.attack.parts.set('This bonus is being added by an effect that adds a bonus to all attacks.', extraAttackBonus);
+        weapStruct.attack.conditionals =
+              new Map([...weapStruct.attack.conditionals, ...getConditionalStatMap('ATTACKS')]);
 
-        let attackBonus = signNumber(dexMod+profAttackBonus+profBonus+potencyRuneBonus+shoddyPenalty+otherBonuses+weapAtkCustomBonus);
+        // Bonus for - Ranged Attacks //
+        let extraAttackRangedBonus = getStatTotal('RANGED_ATTACKS');
+        if(extraAttackRangedBonus == null) { extraAttackRangedBonus = 0; }
+        weapStruct.attack.parts.set('This bonus is being added by an effect that adds a bonus to all ranged attacks.', extraAttackRangedBonus);
+        weapStruct.attack.conditionals =
+              new Map([...weapStruct.attack.conditionals, ...getConditionalStatMap('RANGED_ATTACKS')]);
 
+        // User-Added Bonus //
+        let profData = g_weaponProfMap.get(itemData.WeaponData.profName);
+        let profUserBonus = null;
+        if(profData != null){
+          profUserBonus = profData.UserBonus;
+        } else {
+          profUserBonus = 0;
+        }
+        weapStruct.attack.parts.set('This is a custom bonus that\'s been added manually.', profUserBonus);
+
+
+        // Totaling Attack Bonus //
+        let totalAttackBonus = 0;
+        for(const [source, amount] of weapStruct.attack.parts.entries()){
+          totalAttackBonus += amount;
+        }
+        let attackBonus = signNumber(totalAttackBonus);
+
+        ////////////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////// Damage //////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////////////
+
+        // Number of Dice for Damage //
         let diceNum = itemData.WeaponData.diceNum;
         if(isStriking(invItem.fundRuneID)){
           diceNum = 2;
@@ -264,11 +351,42 @@ function getAttackAndDamage(itemData, invItem){
 
         let overrideAttacksDmgDice = getStatTotal('ATTACKS_DMG_DICE');
         if(overrideAttacksDmgDice != null) { diceNum = overrideAttacksDmgDice; }
-        let overrideRangedDmgDice = getStatTotal('RANGED_ATTACKS_DMG_DICE');
-        if(overrideRangedDmgDice != null) { diceNum = overrideRangedDmgDice; }
+        let overrideMeleeDmgDice = getStatTotal('RANGED_ATTACKS_DMG_DICE');
+        if(overrideMeleeDmgDice != null) { diceNum = overrideMeleeDmgDice; }
 
-        let weapSpecialBonus = 0; // Hardcoded Damage Amount to Weap Profs
-        if(g_specializationStruct.WeaponSpecial){
+        // Ability Score Modifier //
+        let dmgStrBonus = 0;
+        if(propulsiveTag != null){
+            if(strMod >= 0){
+                let strAmt = Math.floor(strMod/2);
+                if(strAmt != 0){
+                    dmgStrBonus = strAmt;
+                    weapStruct.damage.parts.set('This is half of your Strength modifier. Because this weapon is a propulsive weapon and you have a positive Strength modifier, you add half of your Strength modifier (rounded down) to the damage.', dmgStrBonus);
+                }
+            } else {
+                dmgStrBonus = strMod;
+                weapStruct.damage.parts.set('This is your Strength modifier. Because this weapon is a propulsive weapon and you have a negative Strength modifier, you add your full Strength modifier to the damage.', dmgStrBonus);
+            }
+        }
+        if(thrownTag != null && splashTag == null && strMod != 0){
+            dmgStrBonus = strMod;
+            weapStruct.damage.parts.set('This is your Strength modifier. Because this is a thrown ranged weapon, you add your Strength modifier to the damage.', dmgStrBonus);
+        }
+
+        // Weapon Specialization // 
+        if(g_specializationStruct.GreaterWeaponSpecial){ // Hardcoded bonuses
+          let weapSpecialBonus = 0;
+          if(profNumUps === 2) {
+              weapSpecialBonus = 4;
+          } else if(profNumUps === 3) {
+              weapSpecialBonus = 6;
+          } else if(profNumUps === 4) {
+              weapSpecialBonus = 8;
+          }
+          weapStruct.damage.parts.set('This is the extra damage being added due to your Greater Weapon Specialization class feature.', weapSpecialBonus);
+        } else {
+          if(g_specializationStruct.WeaponSpecial){
+            let weapSpecialBonus = 0;
             if(profNumUps === 2) {
                 weapSpecialBonus = 2;
             } else if(profNumUps === 3) {
@@ -276,53 +394,52 @@ function getAttackAndDamage(itemData, invItem){
             } else if(profNumUps === 4) {
                 weapSpecialBonus = 4;
             }
+            weapStruct.damage.parts.set('This is the extra damage being added due to your Weapon Specialization class feature.', weapSpecialBonus);
+          }
         }
-        if(g_specializationStruct.GreaterWeaponSpecial){
-            if(profNumUps === 2) {
-                weapSpecialBonus = 4;
-            } else if(profNumUps === 3) {
-                weapSpecialBonus = 6;
-            } else if(profNumUps === 4) {
-                weapSpecialBonus = 8;
-            }
-        }
-        let weapSpecial = (weapSpecialBonus != 0) ? signNumber(weapSpecialBonus) : '';
 
+        // Bonus for - Weapons //
         let weapExtraBonus = getStatTotal('ATTACKS_DMG_BONUS');
-        let weapExtra = '';
-        if(weapExtraBonus != null) {
-          weapExtra = signNumber(weapExtraBonus);
-        } else {
-          weapExtraBonus = 0;
-        }
+        if(weapExtraBonus == null) { weapExtraBonus = 0; }
+        weapStruct.damage.parts.set('This bonus is being added by an effect that adds a bonus to damage with all attacks.', weapExtraBonus);
+        weapStruct.damage.conditionals =
+              new Map([...weapStruct.damage.conditionals, ...getConditionalStatMap('ATTACKS_DMG_BONUS')]);
 
+        // Bonus for - Ranged Weapons //
         let weapRangedExtraBonus = getStatTotal('RANGED_ATTACKS_DMG_BONUS');
-        let weapRangedExtra = '';
-        if(weapRangedExtraBonus != null) {
-          weapRangedExtra = signNumber(weapRangedExtraBonus);
-        } else {
+        if(weapRangedExtraBonus == null) {
           weapRangedExtraBonus = 0;
         }
+        weapStruct.damage.parts.set('This bonus is being added by an effect that adds a bonus to damage with all ranged attacks.', weapRangedExtraBonus);
+        weapStruct.damage.conditionals =
+              new Map([...weapStruct.damage.conditionals, ...getConditionalStatMap('RANGED_ATTACKS_DMG_BONUS')]);
 
-        let damageBonusInt = dmgStr+weapSpecialBonus+weapExtraBonus+weapRangedExtraBonus+weapDmgCustomBonus;
-        let damageBonusStr = dmgStrSigned+weapSpecial+weapExtra+weapRangedExtra+weapDmgCustom;
-
-        let damage = '';
-        if(damageDieType != 'NONE') {
-            let maxDamage = diceNum*dieTypeToNum(damageDieType)+damageBonusInt;
-            if(maxDamage >= 1) {
-                damage = diceNum+""+damageDieType+damageBonusStr+" "+damageDamageType;
-            } else {
-                damage = '<a class="has-text-grey" data-tooltip="'+diceNum+""+damageDieType+damageBonusStr+'">1</a> '+damageDamageType;
-            }
-        } else {
-            damage = '-';
+        // Totaling Damage //
+        let totalDamageBonus = 0;
+        for(const [source, amount] of weapStruct.damage.parts.entries()){
+          totalDamageBonus += amount;
         }
 
-        return { AttackBonus : attackBonus, Damage : damage };
+        // Finalizing Damage into Display String //
+        let damage = '';
+        let damageDice = '';
+        if(damageDieType != 'NONE') {
+            let maxDamage = diceNum*dieTypeToNum(damageDieType)+totalDamageBonus;
+            if(maxDamage >= 1) {
+                damage = diceNum+""+damageDieType+signNumber(totalDamageBonus)+" "+damageDamageType;
+            } else {
+                damage = '<a class="has-text-grey" data-tooltip="'+diceNum+""+damageDieType+signNumber(totalDamageBonus)+'">1</a> '+damageDamageType;
+            }
+            damageDice = diceNum+''+damageDieType;
+        } else {
+            damage = '-';
+            damageDice = '-';
+        }
+
+        return { AttackBonus : attackBonus, Damage : damage, DamageDice : damageDice, WeapStruct: weapStruct };
 
     } else {
-        return { AttackBonus : null, Damage : null };
+      return { AttackBonus : null, Damage : null, WeapStruct: null };
     }
 
 }
