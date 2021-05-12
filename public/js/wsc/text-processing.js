@@ -21,6 +21,17 @@ function textProcess_canIndex(dataCollection){
    return (typeof dataCollection !== 'undefined' && dataCollection != null);
 }
 
+const regexFeatLinkExt = /\((Feat|Ability|Action|Activity):\s*([^(:]+?)\s*\|\s*(.+?)\s*\)/ig;
+const regexFeatLink = /\((Feat|Ability|Action|Activity):\s*([^(:]+?)\s*\)/ig;
+const regexItemLinkExt = /\((Item):\s*([^(:]+?)\s*\|\s*(.+?)\s*\)/ig;
+const regexItemLink = /\((Item):\s*([^(:]+?)\s*\)/ig;
+const regexSpellLinkExt = /\((Spell):\s*([^(:]+?)\s*\|\s*(.+?)\s*\)/ig;
+const regexSpellLink = /\((Spell):\s*([^(:]+?)\s*\)/ig;
+const regexLanguageLinkExt = /\((Language):\s*([^(:]+?)\s*\|\s*(.+?)\s*\)/ig;
+const regexLanguageLink = /\((Language):\s*([^(:]+?)\s*\)/ig;
+const regexTraitLinkExt = /\((Trait):\s*([^(:]+?)\s*\|\s*(.+?)\s*\)/ig;
+const regexTraitLink = /\((Trait):\s*([^(:]+?)\s*\)/ig;
+
 /*
 Optional Requirements:
   - g_allConditions
@@ -102,7 +113,6 @@ function processText(text, isSheet, isJustified = false, size = 'MEDIUM', indexC
     }
 
     // (Feat: Striking | Strike)
-    let regexFeatLinkExt = /\((Feat|Ability|Action|Activity):\s*([^(:]+?)\s*\|\s*(.+?)\s*\)/ig;
     if(typeof g_featMap !== 'undefined' && g_featMap != null) {
         text = text.replace(regexFeatLinkExt, handleFeatLinkExt);
     } else {
@@ -110,7 +120,6 @@ function processText(text, isSheet, isJustified = false, size = 'MEDIUM', indexC
     }
 
     // (Feat: Strike)
-    let regexFeatLink = /\((Feat|Ability|Action|Activity):\s*([^(:]+?)\s*\)/ig;
     if(typeof g_featMap !== 'undefined' && g_featMap != null) {
         text = text.replace(regexFeatLink, handleFeatLink);
     } else {
@@ -118,7 +127,6 @@ function processText(text, isSheet, isJustified = false, size = 'MEDIUM', indexC
     }
 
     // (Item: Striking | Strike)
-    let regexItemLinkExt = /\((Item):\s*([^(:]+?)\s*\|\s*(.+?)\s*\)/ig;
     if(typeof g_itemMap !== 'undefined' && g_itemMap != null) {
         text = text.replace(regexItemLinkExt, handleItemLinkExt);
     } else {
@@ -126,7 +134,6 @@ function processText(text, isSheet, isJustified = false, size = 'MEDIUM', indexC
     }
 
     // (Item: Strike)
-    let regexItemLink = /\((Item):\s*([^(:]+?)\s*\)/ig;
     if(typeof g_itemMap !== 'undefined' && g_itemMap != null) {
         text = text.replace(regexItemLink, handleItemLink);
     } else {
@@ -134,7 +141,6 @@ function processText(text, isSheet, isJustified = false, size = 'MEDIUM', indexC
     }
 
     // (Spell: Striking | Strike)
-    let regexSpellLinkExt = /\((Spell):\s*([^(:]+?)\s*\|\s*(.+?)\s*\)/ig;
     if(typeof g_spellMap !== 'undefined' && g_spellMap != null) {
         text = text.replace(regexSpellLinkExt, handleSpellLinkExt);
     } else {
@@ -142,7 +148,6 @@ function processText(text, isSheet, isJustified = false, size = 'MEDIUM', indexC
     }
 
     // (Spell: Strike)
-    let regexSpellLink = /\((Spell):\s*([^(:]+?)\s*\)/ig;
     if(typeof g_spellMap !== 'undefined' && g_spellMap != null) {
         text = text.replace(regexSpellLink, handleSpellLink);
     } else {
@@ -150,7 +155,6 @@ function processText(text, isSheet, isJustified = false, size = 'MEDIUM', indexC
     }
 
     // (Language: Gnomish-like | Gnomish)
-    let regexLanguageLinkExt = /\((Language):\s*([^(:]+?)\s*\|\s*(.+?)\s*\)/ig;
     if(typeof g_allLanguages !== 'undefined' && g_allLanguages != null) {
         text = text.replace(regexLanguageLinkExt, handleLanguageLinkExt);
     } else {
@@ -158,7 +162,6 @@ function processText(text, isSheet, isJustified = false, size = 'MEDIUM', indexC
     }
 
     // (Language: Gnomish)
-    let regexLanguageLink = /\((Language):\s*([^(:]+?)\s*\)/ig;
     if(typeof g_allLanguages !== 'undefined' && g_allLanguages != null) {
         text = text.replace(regexLanguageLink, handleLanguageLink);
     } else {
@@ -166,7 +169,6 @@ function processText(text, isSheet, isJustified = false, size = 'MEDIUM', indexC
     }
 
     // (Trait: Infusing | Infused)
-    let regexTraitLinkExt = /\((Trait):\s*([^(:]+?)\s*\|\s*(.+?)\s*\)/ig;
     if(typeof g_allTags !== 'undefined' && g_allTags != null) {
         text = text.replace(regexTraitLinkExt, handleTraitLinkExt);
     } else {
@@ -174,7 +176,6 @@ function processText(text, isSheet, isJustified = false, size = 'MEDIUM', indexC
     }
 
     // (Trait: Infused)
-    let regexTraitLink = /\((Trait):\s*([^(:]+?)\s*\)/ig;
     if(typeof g_allTags !== 'undefined' && g_allTags != null) {
         text = text.replace(regexTraitLink, handleTraitLink);
     } else {

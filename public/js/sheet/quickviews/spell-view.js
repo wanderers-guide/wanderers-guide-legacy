@@ -443,6 +443,14 @@ function openSpellQuickview(data){
     if(wrapComponents && componentsString != ''){
         componentsString = '('+componentsString+')';
     }
+    componentsString = componentsString.replace(`somatic`, `(trait: somatic)`);
+    componentsString = componentsString.replace(`verbal`, `(trait: verbal)`);
+    componentsString = componentsString.replace(`material`, `(trait: material)`);
+    if(typeof g_allTags !== 'undefined' && g_allTags != null) {
+      componentsString = componentsString.replace(regexTraitLink, handleTraitLink);// From text-processing.js
+    } else {
+      componentsString = componentsString.replace(regexTraitLink, '<span class="is-underlined-warning">$2</span>');
+    }
 
     qContent.append('<div class="tile"><div class="tile is-child"><p class="text-left"><strong>Cast</strong> '+castActions+' '+componentsString+'</p></div></div>');
 

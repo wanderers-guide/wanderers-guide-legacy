@@ -2,10 +2,21 @@
     By Aaron Cassar.
 */
 
+/*
+  Use this for more than just traits
+*/
+let g_tagViewMapper = new Map();
+g_tagViewMapper.set('somatic', 'Spell Component');
+g_tagViewMapper.set('verbal', 'Spell Component');
+g_tagViewMapper.set('material', 'Spell Component');
+
 function openTagQuickview(data) {
     addBackFunctionality(data);
 
-    $('#quickViewTitle').html('Trait - '+capitalizeFirstLetterOfWord(data.TagName));
+    let tagType = g_tagViewMapper.get(data.TagName.toLowerCase());
+    if(tagType == null) { tagType = 'Trait'; }
+
+    $('#quickViewTitle').html(tagType+' - '+capitalizeFirstLetterOfWord(data.TagName));
     let qContent = $('#quickViewContent');
 
     let tag = g_allTags.find(tag => {
