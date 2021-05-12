@@ -60,15 +60,17 @@ function getAttackAndDamage(itemData, invItem){
         /////////////////////////////////// Attack Bonus ///////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////////////
 
-        let abilMod = strMod;
-        weapStruct.attack.parts.set('This is your Strength modifier. You add your Strength modifier to attack rolls with most melee weapons.', abilMod);
-
+        let useDexForAttack = false;
         if(finesseTag != null){
-          if(dexMod > abilMod){
-            abilMod = dexMod;
-            weapStruct.attack.parts.set('This is your Dexterity modifier. Because this weapon is a finesse weapon, you can use your Dexterity modifier instead of Strength on attack rolls.', abilMod);
+          if(dexMod > strMod){
+            weapStruct.attack.parts.set('This is your Dexterity modifier. Because this weapon is a finesse weapon, you can use your Dexterity modifier instead of Strength on attack rolls.', dexMod);
+            useDexForAttack = true;
           }
-        } // Use preDex mod because Clumsy condition affects ranged attacks but not finesse melee attacks?
+          // Use preDex mod because Clumsy condition affects ranged attacks but not finesse melee attacks?
+        }
+        if(!useDexForAttack){
+          weapStruct.attack.parts.set('This is your Strength modifier. You add your Strength modifier to attack rolls with most melee weapons.', strMod);
+        }
 
         // Proficiency Bonus //
         let profNumUps = weaponProfDetermineNumUps(itemData);
