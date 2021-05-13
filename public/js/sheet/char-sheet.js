@@ -339,7 +339,7 @@ socket.on("returnCharacterSheetInfo", function(charInfo, userPermissions, viewOn
 
     // Add support for Gradual Ability Boosts Variant if enabled...
     if(g_character.variantGradualAbilityBoosts == 1){
-      classStruct = addGradualAbilityBoostsVariant(classStruct);
+      g_classDetails = addGradualAbilityBoostsVariant(g_classDetails);
     }
 
     loadCharSheet();
