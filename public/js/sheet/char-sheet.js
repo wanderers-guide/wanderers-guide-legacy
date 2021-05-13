@@ -338,7 +338,7 @@ socket.on("returnCharacterSheetInfo", function(charInfo, userPermissions, viewOn
     }
 
     // Add support for Gradual Ability Boosts Variant if enabled...
-    if(wscChoiceStruct.Character.variantGradualAbilityBoosts == 1){
+    if(g_character.variantGradualAbilityBoosts == 1){
       classStruct = addGradualAbilityBoostsVariant(classStruct);
     }
 
