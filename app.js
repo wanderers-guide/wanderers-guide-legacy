@@ -105,7 +105,10 @@ if (process.env.PRODUCTION == 'true'){
 }
 
 // Socket IO
-const io = socket(server);
+const io = socket(server, {
+  maxHttpBufferSize: 10e8, // 10 mb
+  pingTimeout: 15000, // 15 sec
+});
 
 io.use(function(socket, next) {
   sessionMiddleware(socket.request, socket.request.res, next);
