@@ -337,6 +337,11 @@ socket.on("returnCharacterSheetInfo", function(charInfo, userPermissions, viewOn
       g_classDetails = addAutoBonusProgressionVariant(g_classDetails);
     }
 
+    // Add support for Gradual Ability Boosts Variant if enabled...
+    if(wscChoiceStruct.Character.variantGradualAbilityBoosts == 1){
+      classStruct = addGradualAbilityBoostsVariant(classStruct);
+    }
+
     loadCharSheet();
 
     initDiceRoller();

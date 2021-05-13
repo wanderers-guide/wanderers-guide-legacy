@@ -267,6 +267,7 @@ function startLoadingPage() {
 function finishLoadingPage() {
   // Turn off page loading
   if(!isFirstLoad) { stopSpinnerLoader(); } else { stopDiceLoader(); }
+  selectorUpdated();
 }
 
 function timeOutFinishLoad(){

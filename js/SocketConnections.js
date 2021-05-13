@@ -713,11 +713,21 @@ module.exports = class SocketConnections {
           if(ownsChar){
             CharSaving.saveCharacterOption(charID, optionName, value).then((result) => {
 
-              // Hardcoded - Clear ancestry feats for Ancestry Paragon variant
               if(optionName == 'variantAncestryParagon') {
+                // Hardcoded - Clear ancestry feats for Ancestry Paragon variant
                 CharDataMapping.deleteDataBySourceAndType(charID, 'chosenFeats', 'ancestry')
                 .then((result) => {
                   socket.emit('returnCharacterOptionChange');
+                });
+              } else if(optionName == 'variantGradualAbilityBoosts') {
+                // Hardcoded - Clear class ability boosts for Gradual Ability Boosts variant
+                CharDataMapping.deleteDataBySourceAndType(charID, 'abilityBonus', 'class')
+                .then((result) => {
+                  // Also clear unselectedData for class
+                  CharDataMapping.deleteDataBySourceAndType(charID, 'unselectedData', 'class')
+                  .then((result) => {
+                    socket.emit('returnCharacterOptionChange');
+                  });
                 });
               } else {
                 socket.emit('returnCharacterOptionChange');

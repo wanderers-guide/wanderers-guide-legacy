@@ -101,6 +101,11 @@ function displayCurrentClass(classStruct, saving) {
       classStruct = addAutoBonusProgressionVariant(classStruct);
     }
 
+    // Add support for Gradual Ability Boosts Variant if enabled...
+    if(wscChoiceStruct.Character.variantGradualAbilityBoosts == 1){
+      classStruct = addGradualAbilityBoostsVariant(classStruct);
+    }
+
     let choiceArray = wscChoiceStruct.ChoiceArray;
 
     if(classStruct.Class.isArchived == 1){

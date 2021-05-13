@@ -85,6 +85,7 @@ function loadAncestryPage(ancestryObject, uniHeritageArray) {
         let ancestryID = $("#selectAncestry option:selected").val();
 
         if(ancestryID != "chooseDefault" && heritageID != "chooseDefault"){
+            $('#heritageInfo').removeClass("is-hidden");
             $('#selectHeritageControlShell').removeClass("is-info");
 
             // Save heritage
@@ -103,6 +104,7 @@ function loadAncestryPage(ancestryObject, uniHeritageArray) {
             }
 
         } else {
+            $('#heritageInfo').addClass("is-hidden");
             $('#selectHeritageControlShell').addClass("is-info");
 
             g_ancestryForHeritage = null;

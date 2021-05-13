@@ -256,6 +256,7 @@ model characters {
   variantAncestryParagon      Int?                @default(0)
   variantStamina              Int?                @default(0)
   variantAutoBonusProgression Int?                @default(0)
+  variantGradualAbilityBoosts Int?                @default(0)
   enabledSources              String                 @default("[\"CRB\",\"ADV-PLAYER-GUIDE\",\"GM-GUIDE\"]") @db.VarChar(4000)
   enabledHomebrew             String                 @default("[null]") @db.VarChar(6000)
   ancestries                  ancestries?            @relation(fields: [ancestryID], references: [id])
@@ -743,7 +744,7 @@ model sheetStates {
   id              Int                @id @default(autoincrement())
   name            String?            @db.VarChar(90)
   description     String?            @db.VarChar(2000)
-  code            String?            @db.VarChar(2000)
+  code            String?            @db.VarChar(10000)
   contentSrc      String             @default("CRB") @db.VarChar(45)
   homebrewID      Int?
   homebrewBundles homebrewBundles?   @relation(fields: [homebrewID], references: [id])

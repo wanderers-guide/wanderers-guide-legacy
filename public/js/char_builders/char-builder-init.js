@@ -328,6 +328,15 @@ function handleCharacterOptions(character, hBundles, progessBundles) {
     });
     $("#variantFreeArchetype").prop('checked', (character.variantFreeArchetype === 1));
 
+    $("#variantGradualAbilityBoosts").change(function(){
+      let optionTypeValue = (this.checked) ? 1 : 0;
+      socket.emit("requestCharacterOptionChange", 
+          getCharIDFromURL(), 
+          'variantGradualAbilityBoosts',
+          optionTypeValue);
+    });
+    $("#variantGradualAbilityBoosts").prop('checked', (character.variantGradualAbilityBoosts === 1));
+
     $("#variantProficiencyWithoutLevel").change(function(){
       let optionTypeValue = (this.checked) ? 1 : 0;
       socket.emit("requestCharacterOptionChange", 

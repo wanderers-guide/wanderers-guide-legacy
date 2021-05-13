@@ -568,6 +568,10 @@ module.exports = class CharSaving {
           charUpVals = {
             variantFreeArchetype: value
           };
+        } else if(optionName === 'variantGradualAbilityBoosts'){
+          charUpVals = {
+            variantGradualAbilityBoosts: value
+          };
         } else if(optionName === 'variantAncestryParagon'){
           charUpVals = {
             variantAncestryParagon: value
