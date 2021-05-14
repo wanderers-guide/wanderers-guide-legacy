@@ -44,11 +44,16 @@ function openBreakdownQuickview(data) {
         qContent.append('<p class="has-text-centered"><strong>Conditionals</strong></p>');
         
         for(const [condition, value] of data.conditionalMap.entries()){
-            if(value == null){
-                qContent.append('<p class="has-text-centered">'+condition+'</p>');
-            } else {
-                qContent.append('<p class="has-text-centered">'+signNumber(value)+' '+condition+'</p>');
-            }
+          let conditional = condition;
+          if(gOption_hasDiceRoller){
+            conditional = processDiceNotation(conditional);
+            refreshDiceNotationButtons();
+          }
+          if(value == null){
+            qContent.append('<p class="has-text-centered">'+conditional+'</p>');
+          } else {
+            qContent.append('<p class="has-text-centered">'+signNumber(value)+' '+conditional+'</p>');
+          }
         }
 
     }
