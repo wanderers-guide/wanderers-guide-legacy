@@ -1515,7 +1515,7 @@ module.exports = class CharGathering {
                 profMap.set(profData.To, profMapValue);
               } else {
                 profMap.set(profData.To, [profData]);
-              }      
+              }
             }
 
             return profMap;

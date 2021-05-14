@@ -151,6 +151,7 @@ function isAbleToSelectIncrease(numUps, charLevel){
     }
 }
 
+// TODO - Might be unneeded due to now having proficienciesUpdateWSCChoiceStruct
 function skillsUpdateWSCChoiceStruct(srcStruct, profTo, profType){
     
     let profArray = wscChoiceStruct.ProfArray;
@@ -245,6 +246,8 @@ function similarSkills(savedSkillData, skillName){
 
 socket.on("returnProficiencyChange", function(profChangePacket){
 
+  proficienciesUpdateWSCChoiceStruct(profChangePacket);
+
   if(profChangePacket.isSkill){
 
     detectMultipleSkillTrainings();
@@ -259,3 +262,49 @@ socket.on("returnProficiencyChange", function(profChangePacket){
   }
 
 });
+
+function proficienciesUpdateWSCChoiceStruct(newProfChangePacket) {
+  
+  // Update profArray
+  if(newProfChangePacket.profStruct == null) {
+    // Delete prof
+    let newProfArray = [];
+    for(const profData of wscChoiceStruct.ProfArray){
+      if(!hasSameSrc(profData, newProfChangePacket.srcStruct)){
+        newProfArray.push(profData);
+      }
+    }
+    wscChoiceStruct.ProfArray = newProfArray;
+  } else {
+    // Add prof
+    let profData = newProfChangePacket.srcStruct;
+    profData.For = newProfChangePacket.profStruct.For;
+    profData.Prof = newProfChangePacket.profStruct.Prof;
+    profData.To = newProfChangePacket.profStruct.To;
+    profData.SourceName = newProfChangePacket.profStruct.SourceName;
+    profData.value = profData.For+':::'+profData.To+':::'+profData.Prof+':::'+profData.SourceName;
+    wscChoiceStruct.ProfArray.push(profData);
+  }
+
+  // Re-build prof map
+  let profMap = new Map();
+  for(const profData of wscChoiceStruct.ProfArray){
+
+    // Convert lores to be the same
+    if(profData.To.includes('_LORE')){
+      profData.To = capitalizeWords(profData.To.replace('_LORE',' Lore'));
+    }
+
+    let profMapValue = profMap.get(profData.To);
+    if(profMapValue != null){
+      profMapValue.push(profData);
+      profMap.set(profData.To, profMapValue);
+    } else {
+      profMap.set(profData.To, [profData]);
+    }
+  }
+  wscChoiceStruct.ProfObject = mapToObj(profMap);
+
+  injectWSCChoiceStruct(wscChoiceStruct);
+
+}
