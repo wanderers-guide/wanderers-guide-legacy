@@ -120,3 +120,19 @@ function removeUnselectedData(srcStruct){
 
   }
 }
+
+
+
+// Check for multiple skill trainings - TODO
+function detectMultipleSkillTrainings(){
+
+  /*
+  for(const profData of wscChoiceStruct.ProfArray){
+
+    if(profData.Prof == 'T') {
+
+    }
+
+  }*/
+
+}

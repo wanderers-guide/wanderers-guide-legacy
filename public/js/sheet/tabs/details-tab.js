@@ -370,6 +370,13 @@ function displayOtherAbilities(data, abilitiesSearchValue){
         filterAbilitiesThroughSearch(extraClassAbil.value, 'ExtraClass'+abilCount, abilitiesSearchValue);
         abilCount++;
     }
+    for(let heritageEffect of g_heritageEffects){
+      let ability = heritageEffect.value;
+      ability.level = heritageEffect.sourceLevel;
+      ability.name = 'Heritage Benefits - '+ability.name;
+      filterAbilitiesThroughSearch(ability, 'ExtraClass'+abilCount, abilitiesSearchValue);
+      abilCount++;
+    }
 
 }
 

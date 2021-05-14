@@ -1,6 +1,7 @@
 
 const Domain = require('./../../models/contentDB/Domain');
 const Language = require('./../../models/contentDB/Language');
+const Heritage = require('./../../models/contentDB/Heritage');
 const SenseType = require('./../../models/contentDB/SenseType');
 const PhysicalFeature = require('./../../models/contentDB/PhysicalFeature');
 
@@ -116,7 +117,7 @@ module.exports = async function(charID, character=null, background=null, ancestr
   }
 
   if(heritageEffectsArray==null){
-    heritageEffectsArray = await CharDataMapping.getDataAll(charID, "heritageExtra",null);
+    heritageEffectsArray = await CharDataMapping.getDataAll(charID, "heritageExtra",Heritage);
   }
 
 

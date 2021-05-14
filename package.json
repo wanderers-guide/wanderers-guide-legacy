@@ -30,10 +30,9 @@
         "express": "^4.17.1",
         "express-handlebars": "^3.0.0",
         "express-session": "^1.17.1",
-        "handlebars": "^4.5.0",
         "jshint": "^2.11.0",
         "jsonapi-datastore": "^0.4.0-beta",
-        "lodash": "^4.17.19",
+        "lodash": "^4.17.21",
         "mysql2": "^2.1.0",
         "node-cache": "^5.1.2",
         "npm-check-updates": "^4.1.1",
@@ -45,9 +44,10 @@
         "redis": "^3.1.1",
         "sequelize": "^5.21.6",
         "serve-favicon": "^2.5.0",
-        "socket.io": "^2.3.0"
+        "socket.io": "^4.1.1"
     },
     "devDependencies": {
+        "handlebars": "^4.5.3",
         "nodemon": "^2.0.2",
         "prisma": "^2.19.0"
     }

@@ -245,14 +245,17 @@ function similarSkills(savedSkillData, skillName){
 
 socket.on("returnProficiencyChange", function(profChangePacket){
 
-    if(profChangePacket.isSkill){
-        selectorUpdated();
-        if(profChangePacket.isAutoLoad == null || !profChangePacket.isAutoLoad) {
-          updateSkillMap(true);
-        }
+  if(profChangePacket.isSkill){
+
+    detectMultipleSkillTrainings();
+
+    selectorUpdated();
+    if(profChangePacket.isAutoLoad == null || !profChangePacket.isAutoLoad) {
+      updateSkillMap(true);
     }
-    if(profChangePacket.isStatement != null && profChangePacket.isStatement){
-        statementComplete();
-    }
+  }
+  if(profChangePacket.isStatement != null && profChangePacket.isStatement){
+    statementComplete();
+  }
 
 });

@@ -54,7 +54,7 @@ socket.on("returnFindHeritagesFromAncestryName", function(srcStruct, heritages, 
   });
 
   for(const heritage of heritages){
-    if(savedHeritage != null && savedHeritage.value == heritage.id) {
+    if(savedHeritage != null && savedHeritage.value != null && savedHeritage.value.id == heritage.id) {
       $('#'+selectHeritageEffectsID).append('<option value="'+heritage.id+'" selected>'+heritage.name+'</option>');
     } else {
       $('#'+selectHeritageEffectsID).append('<option value="'+heritage.id+'">'+heritage.name+'</option>');
@@ -70,10 +70,13 @@ socket.on("returnFindHeritagesFromAncestryName", function(srcStruct, heritages, 
 
           $('#'+selectHeritageEffectsDescriptionID).html('');
 
-          socket.emit("requestHeritageEffectsChange",
-              getCharIDFromURL(),
-              srcStruct,
-              null);
+          // Save heritage effects
+          if(triggerSave == null || triggerSave) {
+            socket.emit("requestHeritageEffectsChange",
+                getCharIDFromURL(),
+                srcStruct,
+                null);
+          }
 
           heritageEffectsUpdateWSCChoiceStruct(srcStruct, null);
 
@@ -81,18 +84,33 @@ socket.on("returnFindHeritagesFromAncestryName", function(srcStruct, heritages, 
 
           $('.'+selectHeritageEffectsControlShellClass).removeClass("is-info");
 
+          $('#'+selectHeritageEffectsDescriptionID).html('');
+
           let heritageID = $(this).val();
-          socket.emit("requestHeritageEffectsChange",
-              getCharIDFromURL(),
-              srcStruct,
-              heritageID);
 
           const heritage = heritages.find(heritage => {
             return heritage.id == heritageID;
           });
 
-          $('#'+selectHeritageEffectsDescriptionID).html('');
-          displayAndProcessHeritageEffects(srcStruct, heritage, selectHeritageEffectsDescriptionID, inputPacket.sourceName);
+          // Save heritage effects
+          if(triggerSave == null || triggerSave) {
+
+            socket.emit("requestHeritageEffectsChange",
+                getCharIDFromURL(),
+                srcStruct,
+                heritageID);
+
+            socket.once("returnHeritageEffectsChange", function(){
+              displayAndProcessHeritageEffects(
+                srcStruct, heritage, selectHeritageEffectsDescriptionID, inputPacket.sourceName);
+            });
+
+          } else {
+
+            displayAndProcessHeritageEffects(srcStruct, heritage, selectHeritageEffectsDescriptionID, inputPacket.sourceName);
+
+          }
+
           
       }
 
@@ -128,6 +146,7 @@ socket.on("returnAddHeritageEffect", function(srcStruct, heritage, inputPacket){
 
 });
 
+
 function displayAndProcessHeritageEffects(srcStruct, heritage, locationID, sourceName){
 
   let heritageLocationCodeID = locationID+'-heritageCode';
@@ -138,13 +157,13 @@ function displayAndProcessHeritageEffects(srcStruct, heritage, locationID, sourc
     heritage.code,
     srcStruct,
     heritageLocationCodeID,
-    sourceName);
+    heritage.name);
 
-  heritageEffectsUpdateWSCChoiceStruct(srcStruct, heritage.id);
+  heritageEffectsUpdateWSCChoiceStruct(srcStruct, heritage);
 
 }
 
-function heritageEffectsUpdateWSCChoiceStruct(srcStruct, heritageID){
+function heritageEffectsUpdateWSCChoiceStruct(srcStruct, heritage){
 
   let heritageEffectsArray = wscChoiceStruct.HeritageEffectsArray;
 
@@ -152,8 +171,8 @@ function heritageEffectsUpdateWSCChoiceStruct(srcStruct, heritageID){
   for(let heritageData of heritageEffectsArray){
       if(hasSameSrc(heritageData, srcStruct)){
           foundHeritageData = true;
-          if(heritageID != null){
-            heritageData.value = heritageID+'';
+          if(heritage != null){
+            heritageData.value = heritage;
           } else {
             heritageData.value = null;
           }
@@ -161,9 +180,9 @@ function heritageEffectsUpdateWSCChoiceStruct(srcStruct, heritageID){
       }
   }
 
-  if(!foundHeritageData && heritageID != null){
+  if(!foundHeritageData && heritage != null){
     let heritageData = cloneObj(srcStruct);
-    heritageData.value = heritageID+'';
+    heritageData.value = heritage;
     heritageEffectsArray.push(heritageData);
   }
 

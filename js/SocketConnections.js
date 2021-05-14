@@ -1036,6 +1036,7 @@ module.exports = class SocketConnections {
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
           if(ownsChar){
             let srcStruct = profChangePacket.srcStruct;
+            profChangePacket.profStruct = profStruct;
             if(profStruct == null){
               CharDataMapping.deleteData(charID, 'proficiencies', srcStruct)
               .then((result) => {

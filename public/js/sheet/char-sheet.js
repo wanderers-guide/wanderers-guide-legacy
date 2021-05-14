@@ -82,6 +82,8 @@ let g_companionData = null;
 
 let g_resistAndVulners = null;
 
+let g_heritageEffects = null;
+
 let g_specializationStruct = null;
 let g_weaponFamiliaritiesArray = null;
 
@@ -307,6 +309,8 @@ socket.on("returnCharacterSheetInfo", function(charInfo, userPermissions, viewOn
     g_charSize = g_ancestry.size;
 
     g_resistAndVulners = charInfo.ResistAndVulners;
+
+    g_heritageEffects = charInfo.ChoiceStruct.HeritageEffectsArray;
 
     g_companionData = charInfo.CompanionData;
     g_companionData.AllAnimalCompanions = g_companionData.AllAnimalCompanions.sort(

@@ -33,6 +33,7 @@ function hasSameSrc(dataStruct, srcStruct){
 }
 
 function hasSameSrcIterate(dataStruct, srcStructArray){
+  if(srcStructArray == null) { return false; }
   for(let srcStruct of srcStructArray){
     if(hasSameSrc(dataStruct, srcStruct)){ return true; }
   }
