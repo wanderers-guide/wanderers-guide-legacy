@@ -34,7 +34,7 @@ function hashCode(str) {
 }
 
 function isPotencyRune(runeID){ // Hardcoded - Fund Runes IDs
-    return runeID == 20 || runeID == 27 || runeID == 31 || runeID == 25 || runeID == 28 || runeID == 32;
+  return runeID == 20 || runeID == 27 || runeID == 31 || runeID == 25 || runeID == 28 || runeID == 32 || runeID == 112 || runeID == 113;
 }
 
 module.exports = class CharSaving {

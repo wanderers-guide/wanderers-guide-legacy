@@ -1882,6 +1882,8 @@ function determineArmor(dexMod, strScore) {
           addStat('AC', 'ITEM_BONUS', 2);
         } else if(isArmorPotencyThree(armorStruct.InvItem.fundPotencyRuneID)){
           addStat('AC', 'ITEM_BONUS', 3);
+        } else if(isArmorPotencyFour(armorStruct.InvItem.fundPotencyRuneID)){
+          addStat('AC', 'ITEM_BONUS', 4);
         }
         if(isResilient(armorStruct.InvItem.fundRuneID)){
           addStat('SAVE_FORT', 'ITEM_BONUS', 1);

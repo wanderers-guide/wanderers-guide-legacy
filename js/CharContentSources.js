@@ -1,14 +1,21 @@
 
 const Character = require('../models/contentDB/Character');
 
+function getConstantSources(){ // HARDCODED - Constant Content Sources
+  return ['BEST-1', 'BEST-2', 'BEST-3'];
+}
+
 module.exports = class CharContentSources {
 
     static getSourceArray(character){
-      return JSON.parse(character.enabledSources);
+      let array = JSON.parse(character.enabledSources);
+      array = array.concat(getConstantSources());
+      return array;
     }
 
     static getSourceArrayPrisma(character){
       let array = JSON.parse(character.enabledSources);
+      array = array.concat(getConstantSources());
       let newArray = [];
       for(let arr of array){
         newArray.push({ contentSrc: arr });

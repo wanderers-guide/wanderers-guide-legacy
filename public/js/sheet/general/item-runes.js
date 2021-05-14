@@ -2,66 +2,74 @@
     By Aaron Cassar.
 */
 
-// Note: The fundamental RuneIDs in here are hardcoded. //
+// HARDCODED - Note: The fundamental RuneIDs in here are hardcoded (itemRunes IDs, not itemIDs). //
 
 function isWeaponPotencyOne(runeID){
-    return runeID == 20;
+  return runeID == 20;
 }
 
 function isWeaponPotencyTwo(runeID){
-    return runeID == 27;
+  return runeID == 27;
 }
 
 function isWeaponPotencyThree(runeID){
-    return runeID == 31;
+  return runeID == 31;
+}
+
+function isWeaponPotencyFour(runeID){
+  return runeID == 112;
 }
 
 //
 
 function isStriking(runeID){
-    return runeID == 24;
+  return runeID == 24;
 }
 
 function isGreaterStriking(runeID){
-    return runeID == 29;
+  return runeID == 29;
 }
 
 function isMajorStriking(runeID){
-    return runeID == 33;
+  return runeID == 33;
 }
 
 //
 
 function isArmorPotencyOne(runeID){
-    return runeID == 25;
+  return runeID == 25;
 }
 
 function isArmorPotencyTwo(runeID){
-    return runeID == 28;
+  return runeID == 28;
 }
 
 function isArmorPotencyThree(runeID){
-    return runeID == 32;
+  return runeID == 32;
+}
+
+function isArmorPotencyFour(runeID){
+  return runeID == 113;
 }
 
 //
 
 function isResilient(runeID){
-    return runeID == 26;
+  return runeID == 26;
 }
 
 function isGreaterResilient(runeID){
-    return runeID == 30;
+  return runeID == 30;
 }
 
 function isMajorResilient(runeID){
-    return runeID == 34;
+  return runeID == 34;
 }
 
 //
 
 function isWeaponPotencyRune(runeID){
-    return isWeaponPotencyOne(runeID) || isWeaponPotencyTwo(runeID) || isWeaponPotencyThree(runeID);
+    return isWeaponPotencyOne(runeID) || isWeaponPotencyTwo(runeID) || isWeaponPotencyThree(runeID) || isWeaponPotencyFour(runeID);
 }
 
 function isStrikingRune(runeID){
@@ -71,7 +79,7 @@ function isStrikingRune(runeID){
 //
 
 function isArmorPotencyRune(runeID){
-    return isArmorPotencyOne(runeID) || isArmorPotencyTwo(runeID) || isArmorPotencyThree(runeID);
+    return isArmorPotencyOne(runeID) || isArmorPotencyTwo(runeID) || isArmorPotencyThree(runeID) || isArmorPotencyFour(runeID);
 }
 
 function isResilientRune(runeID){
@@ -263,6 +271,19 @@ function displayRunesInQuickview(qContent, invItem, runeDataStruct){
 
         }
 
+        if(isWeaponPotencyFour(potencyRuneID)){
+            
+          let runeName = "+4 Weapon Potency";
+          let runeDescription = "Magical enhancements make this weapon strike true. Attack rolls with this weapon gain a +4 item bonus, and the weapon can be etched with four property runes.";
+          addFundamentalRuneEntry(qContent, invItem, potencyRuneID, runeName, runeDescription);
+
+          addPropertyRuneSelection(qContent, invItem, runeDataStruct.WeaponArray, 1);
+          addPropertyRuneSelection(qContent, invItem, runeDataStruct.WeaponArray, 2);
+          addPropertyRuneSelection(qContent, invItem, runeDataStruct.WeaponArray, 3);
+          addPropertyRuneSelection(qContent, invItem, runeDataStruct.WeaponArray, 4);
+
+        }
+
         ////
 
         if(isArmorPotencyOne(potencyRuneID)){
@@ -298,6 +319,19 @@ function displayRunesInQuickview(qContent, invItem, runeDataStruct){
 
         }
 
+        if(isArmorPotencyFour(potencyRuneID)){
+            
+          let runeName = "+4 Armor Potency";
+          let runeDescription = "Magic wards deflect attacks. Increase the armor’s item bonus to AC by 4. The armor can be etched with four property rune.";
+          addFundamentalRuneEntry(qContent, invItem, potencyRuneID, runeName, runeDescription);
+
+          addPropertyRuneSelection(qContent, invItem, runeDataStruct.ArmorArray, 1);
+          addPropertyRuneSelection(qContent, invItem, runeDataStruct.ArmorArray, 2);
+          addPropertyRuneSelection(qContent, invItem, runeDataStruct.ArmorArray, 3);
+          addPropertyRuneSelection(qContent, invItem, runeDataStruct.ArmorArray, 4);
+
+      }
+
     }
 
 }
@@ -324,6 +358,8 @@ function getPropertyRuneIDBySlot(invItem, propertyRuneSlot){
             return invItem.propRune2ID;
         case 3:
             return invItem.propRune3ID;
+        case 4:
+            return invItem.propRune4ID;
         default:
             return null;
     }

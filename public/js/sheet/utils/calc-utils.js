@@ -95,6 +95,8 @@ function getAttackAndDamage(itemData, invItem){
           potencyRuneBonus = 2;
         } else if(isWeaponPotencyThree(invItem.fundPotencyRuneID)){
           potencyRuneBonus = 3;
+        } else if(isWeaponPotencyFour(invItem.fundPotencyRuneID)){
+          potencyRuneBonus = 4;
         }
         weapStruct.attack.parts.set('This is the item bonus granted by this weapon\'s potency rune.', potencyRuneBonus);
 
@@ -299,6 +301,8 @@ function getAttackAndDamage(itemData, invItem){
           potencyRuneBonus = 2;
         } else if(isWeaponPotencyThree(invItem.fundPotencyRuneID)){
           potencyRuneBonus = 3;
+        } else if(isWeaponPotencyFour(invItem.fundPotencyRuneID)){
+          potencyRuneBonus = 4;
         }
         weapStruct.attack.parts.set('This is the item bonus granted by this weapon\'s potency rune.', potencyRuneBonus);
 
