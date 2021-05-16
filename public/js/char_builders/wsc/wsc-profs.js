@@ -76,7 +76,7 @@ function giveProfSkillTraining(srcStruct, profName, prof, locationID, sourceName
             }
         }
 
-        skillsUpdateWSCChoiceStruct(srcStruct, profProperName, prof);
+        //skillsUpdateWSCChoiceStruct(srcStruct, profProperName, prof);
         socket.emit("requestProficiencyChange",
             getCharIDFromURL(),
             {srcStruct, isSkill : true, isStatement : true},
@@ -128,7 +128,7 @@ function giveInProf(srcStruct, profName, prof, locationID, sourceName){
 
     if(profProperName != null && profCategory != null){
         if(isSkill){
-            skillsUpdateWSCChoiceStruct(srcStruct, profProperName, prof);
+            //skillsUpdateWSCChoiceStruct(srcStruct, profProperName, prof);
         }
         socket.emit("requestProficiencyChange",
             getCharIDFromURL(),
@@ -148,4 +148,85 @@ function displayProfChange(locationID, prof, profName){
     let innerHTML = '<p class="help is-info"><span class="is-bold">Proficiency Change:</span><span class="is-italic"> You become '+profToWord(prof).toLowerCase()+' in '+profName.toLowerCase().replace(/_/g,' ').replace('class dc', 'your class DC').replace('spellattacks', ' spell attacks').replace('spelldcs', ' spell DCs')+'.</span></p>';
     if($('#'+locationID).html() != null && !$('#'+locationID).html().includes(innerHTML)) { $('#'+locationID).append(innerHTML); }
   }, 100);
+}
+
+
+
+
+socket.on("returnProficiencyChange", function(profChangePacket){
+
+  proficienciesUpdateWSCChoiceStruct(profChangePacket);
+
+  if(profChangePacket.isSkill){
+
+    detectMultipleSkillTrainings();
+
+    selectorUpdated();
+    if(profChangePacket.isAutoLoad == null || !profChangePacket.isAutoLoad) {
+      updateSkillMap(true);
+    }
+  }
+  if(profChangePacket.isStatement != null && profChangePacket.isStatement){
+    statementComplete();
+  }
+
+});
+
+function proficienciesUpdateWSCChoiceStruct(newProfChangePacket) {
+  
+  let removeProf = function(profChangePacket){
+    // Delete prof
+    let newProfArray = [];
+    for(const profData of wscChoiceStruct.ProfArray){
+      if(!hasSameSrc(profData, profChangePacket.srcStruct)){
+        newProfArray.push(profData);
+      }
+    }
+    wscChoiceStruct.ProfArray = newProfArray;
+  };
+  let addProf = function(profChangePacket){
+    // Add prof
+    let profData = profChangePacket.srcStruct;
+    profData.For = profChangePacket.profStruct.For;
+    profData.Prof = profChangePacket.profStruct.Prof;
+    profData.To = profChangePacket.profStruct.To;
+    profData.SourceName = profChangePacket.profStruct.SourceName;
+    profData.value = profData.For+':::'+profData.To+':::'+profData.Prof+':::'+profData.SourceName;
+    wscChoiceStruct.ProfArray.push(profData);
+  };
+
+  
+  // Update profArray
+  if(newProfChangePacket.profStruct == null) {
+    removeProf(newProfChangePacket);
+  } else {
+    if(hasSameSrcIterate(newProfChangePacket.srcStruct, wscChoiceStruct.ProfArray)){
+      removeProf(newProfChangePacket);
+      addProf(newProfChangePacket);
+    } else {
+      addProf(newProfChangePacket);
+    }
+  }
+
+  // Re-build prof map
+  let profMap = new Map();
+  for(const profData of wscChoiceStruct.ProfArray){
+
+    // Convert lores to be the same
+    if(profData.To.includes('_LORE')){
+      profData.To = capitalizeWords(profData.To.replace('_LORE',' Lore'));
+    }
+
+    let profMapValue = profMap.get(profData.To);
+    if(profMapValue != null){
+      profMapValue.push(profData);
+      profMap.set(profData.To, profMapValue);
+    } else {
+      profMap.set(profData.To, [profData]);
+    }
+  }
+  wscChoiceStruct.ProfObject = mapToObj(profMap);
+
+  injectWSCChoiceStruct(wscChoiceStruct);
+
 }

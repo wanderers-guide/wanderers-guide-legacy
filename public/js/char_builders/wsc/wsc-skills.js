@@ -67,7 +67,7 @@ function giveSkill(srcStruct, locationID, sourceName, profType, optionals=null){
                 $('#'+increaseDescriptionID).html('');
             }
 
-            skillsUpdateWSCChoiceStruct(srcStruct, null, null);
+            //skillsUpdateWSCChoiceStruct(srcStruct, null, null);
             socket.emit("requestProficiencyChange",
                 getCharIDFromURL(),
                 {srcStruct, isSkill : true, isAutoLoad},
@@ -82,7 +82,7 @@ function giveSkill(srcStruct, locationID, sourceName, profType, optionals=null){
                 $('#'+increaseDescriptionID).html('');
             }
 
-            skillsUpdateWSCChoiceStruct(srcStruct, 'addLore', profType);
+            //skillsUpdateWSCChoiceStruct(srcStruct, 'addLore', profType);
             socket.emit("requestProficiencyChange",
                 getCharIDFromURL(),
                 {srcStruct, isSkill : true, isAutoLoad},
@@ -101,12 +101,12 @@ function giveSkill(srcStruct, locationID, sourceName, profType, optionals=null){
             if(profType === 'UP') {
                 let skillName = $('#'+selectIncreaseID).val();
                 let numUps = g_skillMap.get(skillName).NumUps;
-                if(isAutoLoad || isAbleToSelectIncrease(numUps+1, wscChoiceStruct.Character.level)) {
+                if(isAutoLoad || isAbleToSelectIncrease(numUps+1, srcStruct.sourceLevel)) {
                     canSave = true;
                     $('#'+increaseDescriptionID).html('');
                 } else {
                     $('.'+selectIncreaseControlShellClass).addClass("is-danger");
-                    $('#'+increaseDescriptionID).html('<p class="help is-danger text-center">You cannot increase the proficiency of this skill any further at your current level!</p>');
+                    $('#'+increaseDescriptionID).html('<p class="help is-danger text-center">You cannot increase the proficiency of this skill any further at this level!</p>');
                 }
             } else {
                 canSave = true;
@@ -120,7 +120,7 @@ function giveSkill(srcStruct, locationID, sourceName, profType, optionals=null){
                     skillName = skillName.toUpperCase().replace(/ /g,'_');
                 }
 
-                skillsUpdateWSCChoiceStruct(srcStruct, skillName, profType);
+                //skillsUpdateWSCChoiceStruct(srcStruct, skillName, profType);
                 socket.emit("requestProficiencyChange",
                     getCharIDFromURL(),
                     {srcStruct, isSkill : true, isAutoLoad},
@@ -149,43 +149,6 @@ function isAbleToSelectIncrease(numUps, charLevel){
     } else {
         return true;
     }
-}
-
-// TODO - Might be unneeded due to now having proficienciesUpdateWSCChoiceStruct
-function skillsUpdateWSCChoiceStruct(srcStruct, profTo, profType){
-    
-    let profArray = wscChoiceStruct.ProfArray;
-
-    let foundProfData = false;
-    for(let profData of profArray){
-        if(hasSameSrc(profData, srcStruct)){
-            foundProfData = true;
-            if(profTo != null && profType != null){
-                profData.value = 'Skill:::'+profTo+':::'+profType;
-                profData.For = 'Skill';
-                profData.To = profTo;
-                profData.Prof = profType;
-            } else {
-                profData.value = null;
-                profData.For = null;
-                profData.To = null;
-                profData.Prof = null;
-            }
-            break;
-        }
-    }
-
-    if(!foundProfData && profTo != null && profType != null){
-        let profData = cloneObj(srcStruct);
-        profData.value = 'Skill:::'+profTo+':::'+profType;
-        profData.For = 'Skill';
-        profData.To = profTo;
-        profData.Prof = profType;
-        profArray.push(profData);
-    }
-
-    wscChoiceStruct.ProfArray = profArray;
-
 }
 
 function populateSkillLists(selectIncreaseID, srcStruct, profType, optionals){
@@ -242,69 +205,4 @@ function similarSkills(savedSkillData, skillName){
     let skillNameOne = savedSkillData.To.toUpperCase().replace(/ /g,"_");
     let skillNameTwo = skillName.toUpperCase().replace(/ /g,"_");
     return (skillNameOne === skillNameTwo);
-}
-
-socket.on("returnProficiencyChange", function(profChangePacket){
-
-  proficienciesUpdateWSCChoiceStruct(profChangePacket);
-
-  if(profChangePacket.isSkill){
-
-    detectMultipleSkillTrainings();
-
-    selectorUpdated();
-    if(profChangePacket.isAutoLoad == null || !profChangePacket.isAutoLoad) {
-      updateSkillMap(true);
-    }
-  }
-  if(profChangePacket.isStatement != null && profChangePacket.isStatement){
-    statementComplete();
-  }
-
-});
-
-function proficienciesUpdateWSCChoiceStruct(newProfChangePacket) {
-  
-  // Update profArray
-  if(newProfChangePacket.profStruct == null) {
-    // Delete prof
-    let newProfArray = [];
-    for(const profData of wscChoiceStruct.ProfArray){
-      if(!hasSameSrc(profData, newProfChangePacket.srcStruct)){
-        newProfArray.push(profData);
-      }
-    }
-    wscChoiceStruct.ProfArray = newProfArray;
-  } else {
-    // Add prof
-    let profData = newProfChangePacket.srcStruct;
-    profData.For = newProfChangePacket.profStruct.For;
-    profData.Prof = newProfChangePacket.profStruct.Prof;
-    profData.To = newProfChangePacket.profStruct.To;
-    profData.SourceName = newProfChangePacket.profStruct.SourceName;
-    profData.value = profData.For+':::'+profData.To+':::'+profData.Prof+':::'+profData.SourceName;
-    wscChoiceStruct.ProfArray.push(profData);
-  }
-
-  // Re-build prof map
-  let profMap = new Map();
-  for(const profData of wscChoiceStruct.ProfArray){
-
-    // Convert lores to be the same
-    if(profData.To.includes('_LORE')){
-      profData.To = capitalizeWords(profData.To.replace('_LORE',' Lore'));
-    }
-
-    let profMapValue = profMap.get(profData.To);
-    if(profMapValue != null){
-      profMapValue.push(profData);
-      profMap.set(profData.To, profMapValue);
-    } else {
-      profMap.set(profData.To, [profData]);
-    }
-  }
-  wscChoiceStruct.ProfObject = mapToObj(profMap);
-
-  injectWSCChoiceStruct(wscChoiceStruct);
-
 }

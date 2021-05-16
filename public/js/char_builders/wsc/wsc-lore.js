@@ -121,9 +121,9 @@ socket.on("returnLoreChange", function(srcStruct, loreName, inputPacket, prof){
 
     loreUpdateWSCChoiceStruct(srcStruct, loreName);
     if(loreName != null){
-        skillsUpdateWSCChoiceStruct(srcStruct, loreName+'_LORE', prof);
+        //skillsUpdateWSCChoiceStruct(srcStruct, loreName+'_LORE', prof);
     } else {
-        skillsUpdateWSCChoiceStruct(srcStruct, null, null);
+        //skillsUpdateWSCChoiceStruct(srcStruct, null, null);
     }
     if(inputPacket == null || inputPacket.isAutoLoad == null || !inputPacket.isAutoLoad) {
       updateSkillMap(true);

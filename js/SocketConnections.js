@@ -1181,19 +1181,30 @@ module.exports = class SocketConnections {
       socket.on('requestLoreChange', function(charID, srcStruct, loreName, inputPacket, prof, sourceName){
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
           if(ownsChar){
+            let profChangePacket = {
+              srcStruct: srcStruct,
+              profStruct: null,
+            };
             if(loreName == null){
               CharDataMapping.deleteData(charID, 'loreCategories', srcStruct)
               .then((result) => {
                 CharDataMapping.deleteData(charID, 'proficiencies', srcStruct)
                 .then((result) => {
+                  socket.emit('returnProficiencyChange', profChangePacket);
                   socket.emit('returnLoreChange', srcStruct, loreName, inputPacket, prof);
                 });
               });
             } else {
+              profChangePacket.profStruct = { For: 'Skill', To: loreName+'_LORE', Prof: prof, SourceName: sourceName };
               CharDataMapping.setData(charID, 'loreCategories', srcStruct, loreName)
               .then((result) => {
-                CharDataMappingExt.setDataProficiencies(charID, srcStruct, 'Skill', loreName+'_LORE', prof, sourceName)
+                CharDataMappingExt.setDataProficiencies(charID, srcStruct, 
+                  profChangePacket.profStruct.For,
+                  profChangePacket.profStruct.To,
+                  profChangePacket.profStruct.Prof,
+                  profChangePacket.profStruct.SourceName)
                 .then((result) => {
+                  socket.emit('returnProficiencyChange', profChangePacket);
                   socket.emit('returnLoreChange', srcStruct, loreName, inputPacket, prof);
                 });
               });
