@@ -37,7 +37,7 @@ function giveLoreChooseIncreasing(srcStruct, locationID, sourceName){
 
 function giveLoreChoose(srcStruct, locationID, sourceName, prof='T'){
 
-    let inputLoreID = "inputLore"+locationID+"-"+srcStruct.sourceCodeSNum;
+    let inputLoreID = "inputLore"+locationID+"-"+srcStruct.sourceCode+"-"+srcStruct.sourceCodeSNum;
     let inputLoreControlShell = inputLoreID+'ControlShell';
 
     // If ID already exists, just return. This is a temporary fix - this shouldn't be an issue in the first place.

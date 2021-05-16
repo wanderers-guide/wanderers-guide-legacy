@@ -32,7 +32,7 @@ function giveHeritageEffectsFindHeritages(srcStruct, locationID, ancestryName, s
 
 socket.on("returnFindHeritagesFromAncestryName", function(srcStruct, heritages, inputPacket){
 
-  let selectHeritageEffectsID = "selectHeritageEffects-"+inputPacket.locationID+"-"+srcStruct.sourceCodeSNum;
+  let selectHeritageEffectsID = "selectHeritageEffects-"+inputPacket.locationID+"-"+srcStruct.sourceCode+"-"+srcStruct.sourceCodeSNum;
   let selectHeritageEffectsControlShellClass = selectHeritageEffectsID+'-ControlShell';
   let selectHeritageEffectsDescriptionID = selectHeritageEffectsID+"-Description";
 

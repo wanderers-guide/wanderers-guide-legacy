@@ -22,9 +22,9 @@ function processingDomains(wscStatement, srcStruct, locationID, sourceName){
 
 function giveDomain(srcStruct, locationID, spellSRC, sourceName){
 
-    let selectID = "selectDomain"+locationID+"-"+srcStruct.sourceCodeSNum;
+    let selectID = "selectDomain-"+locationID+"-"+srcStruct.sourceCode+"-"+srcStruct.sourceCodeSNum;
     let selectControlShellClass = selectID+'ControlShell';
-    let descriptionID = "selectDomainDescription"+locationID+"-"+srcStruct.sourceCodeSNum;
+    let descriptionID = "selectDomainDescription-"+locationID+"-"+srcStruct.sourceCode+"-"+srcStruct.sourceCodeSNum;
 
     const selectionTagInfo = getTagFromData(srcStruct, sourceName, 'Unselected Domain', 'UNSELECTED');
 
@@ -102,9 +102,9 @@ socket.on("returnDomainChange", function(){
 
 function giveDomainAdvancement(srcStruct, locationID, spellSRC, sourceName){
 
-    let selectID = "selectDomainAdvancement"+locationID+"-"+srcStruct.sourceCodeSNum;
+    let selectID = "selectDomainAdvancement-"+locationID+"-"+srcStruct.sourceCode+"-"+srcStruct.sourceCodeSNum;
     let selectControlShellClass = selectID+'ControlShell';
-    let descriptionID = "selectDomainAdvancementDescription"+locationID+"-"+srcStruct.sourceCodeSNum;
+    let descriptionID = "selectDomainAdvancementDescription-"+locationID+"-"+srcStruct.sourceCode+"-"+srcStruct.sourceCodeSNum;
 
     const selectionTagInfo = getTagFromData(srcStruct, sourceName, 'Unselected Domain Advancement', 'UNSELECTED');
 

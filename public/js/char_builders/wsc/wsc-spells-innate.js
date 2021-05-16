@@ -44,8 +44,8 @@ function giveInnateSpell(srcStruct, locationID, sourceName, spellLevel, spellTra
 function displayInnateSpellChoice(srcStruct, locationID, sourceName, spellLevel, spellTradition, timesPerDay, selectFromAnyTradition){
 
     let selectionName = (spellLevel == 0) ? 'Choose a Cantrip' : 'Choose a Level '+spellLevel+' Spell';
-    let selectSpellID = "selectInnateSpell"+locationID+"-"+srcStruct.sourceCodeSNum;
-    let descriptionSpellID = "descriptionInnateSpell"+locationID+"-"+srcStruct.sourceCodeSNum;
+    let selectSpellID = "selectInnateSpell"+locationID+"-"+srcStruct.sourceCode+"-"+srcStruct.sourceCodeSNum;
+    let descriptionSpellID = "descriptionInnateSpell"+locationID+"-"+srcStruct.sourceCode+"-"+srcStruct.sourceCodeSNum;
     let selectSpellControlShellClass = selectSpellID+'ControlShell';
 
     // If ID already exists, just return. This is a temporary fix - this shouldn't be an issue in the first place.

@@ -229,12 +229,12 @@ function giveArchetypeFeat(srcStruct, locationID, featLevel, optionalTags, sourc
 function giveClassFeat(srcStruct, locationID, featLevel, className, optionalTags, sourceName, isArchetypeOnlyFeat=false){
 
     // Include sourceCodeSNum at the end for if a code field gives multiple class feats
-    let classFeatTabsID = locationID+'-classFeatTabs-'+srcStruct.sourceCodeSNum;
-    let containerLocationID = locationID+'-ClassFeatContainer-'+srcStruct.sourceCodeSNum;
+    let classFeatTabsID = locationID+'-classFeatTabs-'+srcStruct.sourceCode+'-'+srcStruct.sourceCodeSNum;
+    let containerLocationID = locationID+'-ClassFeatContainer-'+srcStruct.sourceCode+'-'+srcStruct.sourceCodeSNum;
 
-    let classTabClass = locationID+'-classFeatClassTab-'+srcStruct.sourceCodeSNum;
-    let archetypesTabClass = locationID+'-classFeatArchetypesTab-'+srcStruct.sourceCodeSNum;
-    let dedicationTabClass = locationID+'-classFeatDedicationTab-'+srcStruct.sourceCodeSNum;
+    let classTabClass = locationID+'-classFeatClassTab-'+srcStruct.sourceCode+'-'+srcStruct.sourceCodeSNum;
+    let archetypesTabClass = locationID+'-classFeatArchetypesTab-'+srcStruct.sourceCode+'-'+srcStruct.sourceCodeSNum;
+    let dedicationTabClass = locationID+'-classFeatDedicationTab-'+srcStruct.sourceCode+'-'+srcStruct.sourceCodeSNum;
 
     $('#'+locationID).append('<div class="tabs is-small is-centered is-marginless use-custom-scrollbar"><ul id="'+classFeatTabsID+'" class="builder-tabs classFeatTabs" data-arch-tab-class="'+archetypesTabClass+'"></ul></div>');
     let tabsContent = $('#'+classFeatTabsID);
@@ -522,7 +522,7 @@ function giveFeatByName(srcStruct, featName, locationID, optionalTags, sourceNam
         return;
     }
 
-    let featCodeSectionID = "featCode-"+locationID+"-"+srcStruct.sourceCodeSNum;
+    let featCodeSectionID = "featCode-"+locationID+"-"+srcStruct.sourceCode+"-"+srcStruct.sourceCodeSNum;
     $('#'+locationID).append('<div id="'+featCodeSectionID+'"></div>');
 
     featsUpdateWSCChoiceStruct(srcStruct, featEntry.Feat);

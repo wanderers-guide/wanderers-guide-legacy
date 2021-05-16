@@ -35,10 +35,10 @@ function giveSkillProf(srcStruct, locationID, sourceName, prof, optionals){
 
 function giveSkill(srcStruct, locationID, sourceName, profType, optionals=null){
 
-    let selectIncreaseID = "selectIncrease-"+locationID+"-"+srcStruct.sourceCodeSNum;
+    let selectIncreaseID = "selectIncrease-"+locationID+"-"+srcStruct.sourceCode+"-"+srcStruct.sourceCodeSNum;
     let selectIncreaseControlShellClass = selectIncreaseID+'ControlShell';
-    let increaseDescriptionID = "selectIncreaseDescription"+locationID+"-"+srcStruct.sourceCodeSNum;
-    let increaseCodeID = "selectIncreaseCode"+locationID+"-"+srcStruct.sourceCodeSNum;
+    let increaseDescriptionID = "selectIncreaseDescription-"+locationID+"-"+srcStruct.sourceCode+"-"+srcStruct.sourceCodeSNum;
+    let increaseCodeID = "selectIncreaseCode-"+locationID+"-"+srcStruct.sourceCode+"-"+srcStruct.sourceCodeSNum;
 
     // If ID already exists, just return. This is a temporary fix - this shouldn't be an issue in the first place.
     if($('#'+selectIncreaseID).length != 0) { statementComplete(); return; }

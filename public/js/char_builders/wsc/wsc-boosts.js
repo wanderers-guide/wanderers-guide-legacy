@@ -88,8 +88,8 @@ function giveAbilityBoostSingle(srcStruct, selectionOptions, locationID, sourceN
 
 function displayAbilityBoostSingle(srcStruct, locationID, abilityTypes, sourceName){
     
-    let selectBoostID = "selectBoost"+locationID+"-"+srcStruct.sourceCodeSNum;
-    let selectBoostSet = "selectBoostSet"+locationID;
+    let selectBoostID = "selectBoost-"+locationID+"-"+srcStruct.sourceCode+"-"+srcStruct.sourceCodeSNum;
+    let selectBoostSet = "selectBoostSet-"+locationID;
     let selectBoostControlShellClass = selectBoostSet+'ControlShell';
 
     const selectionTagInfo = getTagFromData(srcStruct, sourceName, 'Unselected Ability Boost', 'UNSELECTED');

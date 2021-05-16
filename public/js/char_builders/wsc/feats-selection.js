@@ -7,7 +7,7 @@ let g_featSelectionMap = new Map();
 
 function giveFeatSelection(locationID, srcStruct, selectionName, selectionMap, sourceName){
 
-  let featSelectionLocID = "featSelect-"+locationID+"-"+srcStruct.sourceCodeSNum;
+  let featSelectionLocID = "featSelect-"+locationID+"-"+srcStruct.sourceCode+"-"+srcStruct.sourceCodeSNum;
   $('#'+locationID).append('<div id="'+featSelectionLocID+'"></div>');
   generateFeatSelection(featSelectionLocID, srcStruct, selectionName, selectionMap, sourceName);
 

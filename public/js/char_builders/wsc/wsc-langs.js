@@ -25,7 +25,7 @@ function processingLangs(wscStatement, srcStruct, locationID, sourceName){
 
 function giveLang(srcStruct, locationID, sourceName, bonusOnly){
 
-    let selectLangID = "selectLang"+locationID+"-"+srcStruct.sourceCodeSNum;
+    let selectLangID = "selectLang"+locationID+"-"+srcStruct.sourceCode+"-"+srcStruct.sourceCodeSNum;
     let selectLangControlShellClass = selectLangID+'ControlShell';
     let langDescriptionID = selectLangID+"Description";
 

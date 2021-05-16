@@ -43,7 +43,7 @@ socket.on("returnCharTagChange", function(charTagsArray){
 
 function displayCharTagChoice(srcStruct, locationID, sourceName, commonOnly=false){
 
-    let selectCharTagID = "selectCharTag"+locationID+"-"+srcStruct.sourceCodeSNum;
+    let selectCharTagID = "selectCharTag"+locationID+"-"+srcStruct.sourceCode+"-"+srcStruct.sourceCodeSNum;
     let selectCharTagControlShellClass = selectCharTagID+'ControlShell';
 
     const selectionTagInfo = getTagFromData(srcStruct, sourceName, 'Unselected Option', 'UNSELECTED');

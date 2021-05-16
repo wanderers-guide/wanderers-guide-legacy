@@ -61,6 +61,8 @@ function giveProfSkillTraining(srcStruct, profName, prof, locationID, sourceName
             if(adjProfName === tempSkillName && finalProfData.NumUps >= numUps){
 
                 if(!hasSameSrcIterate(srcStruct, profDataArray)){
+                  console.log('GOT HERE');
+                  console.log(srcStruct);
                     processCode(
                         'GIVE-SKILL='+prof,
                         srcStruct,
