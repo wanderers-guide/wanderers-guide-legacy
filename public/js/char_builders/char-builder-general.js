@@ -148,11 +148,13 @@ socket.on("returnBuilderPageBackground", function(backgrounds){
 });
 
 socket.on("returnBuilderPageClass", function(classObject){
+  console.log('Logged 1');
   $('#char-builder-container').load("/templates/char_builder/display-builder-page-4.html");
   $.ajax({ type: "GET",
     url: "/templates/char_builder/display-builder-page-4.html",
     success : function(text)
     {
+      console.log('Logged 2');
       console.log('PAGE: Class');
 
       $("#prevButton").click(function(){

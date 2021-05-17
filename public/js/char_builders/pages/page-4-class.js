@@ -7,6 +7,7 @@ let g_class = null;
 // ~~~~~~~~~~~~~~ // Processings // ~~~~~~~~~~~~~~ //
 
 function loadClassPage(classObject) {
+  console.log('Logged 3');
 
     let classMap = objToMap(classObject);
     classMap = new Map([...classMap.entries()].sort(
@@ -88,6 +89,8 @@ socket.on("returnClassChange", function(inChoiceStruct){
 });
 
 function displayCurrentClass(classStruct, saving) {
+  console.log('Logged 4');
+  console.log(classStruct);
     g_class = null;
     $('#selectClass').blur();
 
