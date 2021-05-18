@@ -4,10 +4,12 @@
 
 // ~~~~~ Character Export ~~~~~ //
 function exportCharacter(charID){
+  startSpinnerSubLoader();
   socket.emit("requestCharExport", charID);
 }
 
 socket.on("returnCharExport", function(charExportData){
+  stopSpinnerSubLoader();
   let charExportDataJSON = JSON.stringify(charExportData);
   let fileName = charExportData.character.name.replaceAll('[^a-zA-Z]', '').replaceAll(' ', '_');
   charExportDataFileDownload(fileName+'.guidechar', charExportDataJSON);

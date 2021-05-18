@@ -59,21 +59,34 @@ module.exports = class CharExport {
                       .then(function(charBuildData) {
                         return CharGathering.getCalculatedStats(charID)
                         .then((calculatedStats) => {
-                          return {
-                            version: 2,
-                            character: character,
-                            build: charBuildData,
-                            stats: calculatedStats,
-                            metaData: charMetaData,
 
-                            inventory: inventory,
-                            invItems: invItems,
-                            animalCompanions: charAnimalCompanions,
-                            familiars: charFamiliars,
-                            conditions: charConditions,
-                            noteFields: noteFields,
-                            spellBookSpells: spellBookSpells,
-                          };
+                          return CharExport.processInvItems(charID, character, invItems)
+                          .then((p_invItems) => {
+                            return CharExport.processSpellBookSpells(charID, character, spellBookSpells)
+                            .then((p_spellBookSpells) => {
+                              return CharExport.processConditions(charID, character, charConditions)
+                              .then((p_charConditions) => {
+                          
+                                return {
+                                  version: 2,
+                                  character: character,
+                                  build: charBuildData,
+                                  stats: calculatedStats,
+                                  conditions: p_charConditions,
+
+                                  inventory: inventory,
+                                  invItems: p_invItems,
+                                  spellBookSpells: p_spellBookSpells,
+                                  animalCompanions: charAnimalCompanions,
+                                  familiars: charFamiliars,
+                                  noteFields: noteFields,
+
+                                  metaData: charMetaData,
+                                  
+                                };
+                              });
+                            });
+                          });
                         });
                       });
                     });
@@ -105,6 +118,47 @@ module.exports = class CharExport {
       proficiencies: chosenProfs,
       senses: chosenSenses,
     };
+
+  }
+
+  static async processInvItems(charID, character, invItems){
+
+    let allItems = await CharGathering.getAllItems(charID, character, null, null);
+    for(let invItem of invItems){
+      let itemData = allItems.get(invItem.itemID);
+      if(itemData == null) { itemData = { Item: {} }; }
+      invItem.dataValues._itemOriginalName = itemData.Item.name;
+    }
+
+    return invItems;
+
+  }
+
+  static async processSpellBookSpells(charID, character, spellBookSpells){
+
+    let allSpells = await CharGathering.getAllSpells(charID, character, null, null, null);
+    for(let spellBookSpell of spellBookSpells){
+      let spellData = allSpells.get(spellBookSpell.spellID);
+      if(spellData == null) { spellData = { Spell: {} }; }
+      spellBookSpell.dataValues._spellName = spellData.Spell.name;
+    }
+
+    return spellBookSpells;
+
+  }
+
+  static async processConditions(charID, character, charConditions){
+
+    let allConditions = await CharGathering.getAllConditions();
+    for(let charCondition of charConditions){
+      let condition = allConditions.find(condition => {
+        return charCondition.conditionID == condition.id;
+      });
+      if(condition == null) { condition = {}; }
+      charCondition.dataValues._conditionName = condition.name;
+    }
+
+    return charConditions;
 
   }
 
