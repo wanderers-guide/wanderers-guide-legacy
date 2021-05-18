@@ -6,8 +6,12 @@ const InvItem = require('../models/contentDB/InvItem');
 const CharCondition = require('../models/contentDB/CharCondition');
 const NoteField = require('../models/contentDB/NoteField');
 const SpellBookSpell = require('../models/contentDB/SpellBookSpell');
+const Language = require("../models/contentDB/Language");
+const SenseType = require("../models/contentDB/SenseType");
 
 const CharGathering = require('./CharGathering');
+const CharDataMapping = require('./CharDataMapping');
+const CharDataMappingExt = require('./CharDataMappingExt');
 
 module.exports = class CharExport {
 
@@ -26,9 +30,9 @@ module.exports = class CharExport {
       > charConditions
       > noteFields
       > spellBookSpells
+      > calculatedStats
 
       Don't Need:
-      > calculatedStats
       > accessTokens
 
     */
@@ -51,18 +55,27 @@ module.exports = class CharExport {
                   .then(function(noteFields) {
                     return SpellBookSpell.findAll({ where: { charID: charID } })
                     .then(function(spellBookSpells) {
-                      return {
-                        version: 1,
-                        character: character,
-                        inventory: inventory,
-                        invItems: invItems,
-                        metaData: charMetaData,
-                        animalCompanions: charAnimalCompanions,
-                        familiars: charFamiliars,
-                        conditions: charConditions,
-                        noteFields: noteFields,
-                        spellBookSpells: spellBookSpells,
-                      };
+                      return CharExport.getCharBuildData(charID)
+                      .then(function(charBuildData) {
+                        return CharGathering.getCalculatedStats(charID)
+                        .then((calculatedStats) => {
+                          return {
+                            version: 2,
+                            character: character,
+                            build: charBuildData,
+                            stats: calculatedStats,
+                            metaData: charMetaData,
+
+                            inventory: inventory,
+                            invItems: invItems,
+                            animalCompanions: charAnimalCompanions,
+                            familiars: charFamiliars,
+                            conditions: charConditions,
+                            noteFields: noteFields,
+                            spellBookSpells: spellBookSpells,
+                          };
+                        });
+                      });
                     });
                   });
                 });
@@ -72,6 +85,26 @@ module.exports = class CharExport {
         });
       });
     });
+
+  }
+
+  static async getCharBuildData(charID){
+
+    let chosenBoosts = await CharGathering.getChoicesAbilityBonus(charID);
+    let chosenDomains = await CharGathering.getChoicesDomains(charID);
+    let chosenFeats = await CharGathering.getChoicesFeats(charID);
+    let chosenLangs = await CharDataMapping.getDataAll(charID, 'languages', Language);
+    let chosenSenses = await CharDataMapping.getDataAll(charID, 'senses', SenseType);
+    let chosenProfs = await CharDataMappingExt.getDataAllProficiencies(charID);
+
+    return {
+      boosts: chosenBoosts,
+      domains: chosenDomains,
+      feats: chosenFeats,
+      languages: chosenLangs,
+      proficiencies: chosenProfs,
+      senses: chosenSenses,
+    };
 
   }
 

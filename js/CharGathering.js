@@ -620,7 +620,7 @@ module.exports = class CharGathering {
                                           },
                                       }
                                     }).then((tags) => {
-                                        return SenseType.findAll()
+                                        return CharGathering.getAllSenses()
                                         .then((senseTypes) => {
                                             return CharGathering.getAllPhysicalFeatures()
                                             .then((physicalFeatures) => {
@@ -829,6 +829,10 @@ module.exports = class CharGathering {
 
     static async getAllPhysicalFeatures() {
       return await Prisma.physicalFeatures.findMany();
+    }
+
+    static async getAllSenses() {
+      return await Prisma.senseTypes.findMany();
     }
 
     static async getAllDomains(charID, character=null) {

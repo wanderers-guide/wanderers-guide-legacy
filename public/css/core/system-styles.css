@@ -232,6 +232,11 @@ cursor: not-allowed!important;
   text-overflow: ellipsis;
 }
 
+.text-overflow-none {
+  white-space: nowrap;
+  overflow: hidden;
+}
+
 /* Main Body */
 #center-body {
   position: relative;
