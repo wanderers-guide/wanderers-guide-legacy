@@ -114,6 +114,14 @@ module.exports = class CharSaving {
       });
     }
 
+    static saveRollHistory(charID, rollHistoryJSON) {
+      let updateValues = { rollHistoryJSON: rollHistoryJSON };
+      return Character.update(updateValues, { where: { id: charID } })
+      .then((result) => {
+        return;
+      });
+    }
+
     static saveDetails(charID, details) {
         let updateValues = { details: details };
         return Character.update(updateValues, { where: { id: charID } })

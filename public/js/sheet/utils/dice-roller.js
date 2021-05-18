@@ -84,6 +84,10 @@ function makeDiceRoll(diceNum, dieType, bonus){
   let rollStruct = diceRoller_getDiceRoll(diceNum, dieType, bonus);
   g_rollHistory.push(rollStruct);
   openLeftQuickView('Dice Roller');
+
+  socket.emit("requestRollHistorySave",
+      getCharIDFromURL(),
+      JSON.stringify(g_rollHistory));
 }
 
 //// Math Rands ////

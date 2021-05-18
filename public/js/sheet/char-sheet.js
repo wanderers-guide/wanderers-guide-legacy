@@ -2697,7 +2697,7 @@ socket.on("returnInvUpdate", function(invStruct){
 
 ////
 
-socket.on("returnNotesFieldChange", function(newNotesData, locationID) {
+socket.on("returnNotesFieldChange", function(newNotesData, noteChangePacket) {
   let newNoteData = {
     charID: getCharIDFromURL(),
     placeholderText: newNotesData.placeholderText,

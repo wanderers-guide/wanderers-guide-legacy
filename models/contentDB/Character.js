@@ -47,6 +47,9 @@ const Character = db.define('characters', {
   infoJSON: {
     type: Sequelize.STRING
   },
+  rollHistoryJSON: {
+    type: Sequelize.STRING
+  },
   details: {
     type: Sequelize.TEXT
   },

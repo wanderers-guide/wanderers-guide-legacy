@@ -411,7 +411,25 @@ router.get('/spell', (req, res) => { // Read
   }
 });
 
-
+// Roll History //
+router.get('/roll-history', (req, res) => { // Read
+  if(hasAccess(req.accessRights, 1)) {
+    CharGathering.getCharacter(req.charID).then((character) => {
+      if(character != null){
+        let rollHistory = [];
+        try {
+          rollHistory = JSON.parse(character.rollHistoryJSON);
+          if(rollHistory == null) { rollHistory = []; }
+        } catch (err) {}
+        res.send(rollHistory);
+      } else {
+        res.sendStatus(204);
+      }
+    });
+  } else {
+    res.sendStatus(401);
+  }
+});
 
 // Calculated Stats //
 router.get('/calculated-stats', (req, res) => { // Read

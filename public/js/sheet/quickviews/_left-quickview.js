@@ -196,6 +196,10 @@ function leftQuickview_OpenDiceRoller() {
   $('#dice-roller-clear-btn').click(function() {
     g_rollHistory = [];
     openLeftQuickView('Dice Roller');
+
+    socket.emit("requestRollHistorySave",
+        getCharIDFromURL(),
+        JSON.stringify(g_rollHistory));
   });
 
 }

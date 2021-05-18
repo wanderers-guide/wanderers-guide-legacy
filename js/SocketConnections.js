@@ -205,6 +205,16 @@ module.exports = class SocketConnections {
         });
       });
 
+      socket.on('requestRollHistorySave', function(charID, rollHistoryJSON){
+        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+          if(ownsChar){
+            CharSaving.saveRollHistory(charID, rollHistoryJSON).then((result) => {
+              socket.emit('returnRollHistorySave');
+            });
+          }
+        });
+      });
+
     });
     
   }
@@ -1715,7 +1725,7 @@ module.exports = class SocketConnections {
         });
       });
 
-      socket.on('requestNotesFieldChange', function(charID, srcStruct, placeholderText, locationID){
+      socket.on('requestNotesFieldChange', function(charID, srcStruct, placeholderText, noteChangePacket){
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
           if(ownsChar){
             CharDataMapping.getDataSingle(charID, 'notesField', srcStruct)
@@ -1723,12 +1733,12 @@ module.exports = class SocketConnections {
               if(notesData == null) {
                 CharSaving.saveNoteField(charID, srcStruct, placeholderText, null)
                 .then((newNotesData) => {
-                  socket.emit('returnNotesFieldChange', newNotesData, locationID);
+                  socket.emit('returnNotesFieldChange', newNotesData, noteChangePacket);
                 });
               } else {
                 CharGathering.getNoteField(charID, notesData)
                 .then((newNotesData) => {
-                  socket.emit('returnNotesFieldChange', newNotesData, locationID);
+                  socket.emit('returnNotesFieldChange', newNotesData, noteChangePacket);
                 });
               }
             });

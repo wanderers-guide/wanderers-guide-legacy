@@ -243,6 +243,7 @@ model characters {
   inventoryID                 Int?
   notes                       String?                @db.MediumText
   infoJSON                    String?                @db.VarChar(3000)
+  rollHistoryJSON             String?                @db.VarChar(2000)
   details                     String?                @db.Text
   customCode                  String?                @db.VarChar(1000)
   optionAutoDetectPreReqs     Int?                @default(1)

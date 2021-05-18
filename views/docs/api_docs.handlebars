@@ -52,11 +52,12 @@
             </p>
             <ul class="menu-list">
                 <li class="pb-1"><a href="/api_docs/#char-req-basic">Basic Character Requests</a></li>
+                <li class="py-1"><a href="/api_docs/#char-req-companion">Companion Requests</a></li>
                 <li class="py-1"><a href="/api_docs/#char-req-conditions">Conditions Requests</a></li>
                 <li class="py-1"><a href="/api_docs/#char-req-inventory">Inventory Requests</a></li>
                 <li class="py-1"><a href="/api_docs/#char-req-item">Item Requests</a></li>
+                <li class="pt-1"><a href="/api_docs/#char-roll-history">Roll History Requests</a></li>
                 <li class="py-1"><a href="/api_docs/#char-req-spellcasting">Spellcasting Requests</a></li>
-                <li class="py-1"><a href="/api_docs/#char-req-companion">Companion Requests</a></li>
                 <li class="pt-1"><a href="/api_docs/#char-calculated-stats">Calculated Stats</a></li>
             </ul>
         </aside>
@@ -712,7 +713,7 @@
             </div>
             <div id="char-calculated-stats" class="mt-4 isHideable">
                 <p class="pb-3">
-                    Calculated stats is Wanderer's Guide's solution to being able to give API users an idea of what a character's stats look like without having to manually try to calculate them based off of the endless list of factors that could impact them.
+                    Calculated stats is Wanderer's Guide's solution to being able to give API users an idea of what a character's stats look like without having to manually try to calculate them based on the endless list of factors that could impact them.
                 </p>
                 <p class="">
                     Each time a character sheet is loaded and all the math to calculate the character's stats is complete, the final character stats will be sent back and updated (which is the information you would be requesting here).
@@ -733,6 +734,23 @@
                     <div class="columns table-row-a is-mobile is-marginless">
                       <div class="column is-6"><p class="negative-indent"><span class="is-bold">GET</span> /api/char/<span class="has-text-info">&lt;character ID&gt;</span>/calculated-stats</p></div>
                       <div class="column is-4"><p class="text-center">JSON of character's calculated stats</p></div>
+                      <div class="column"><p class="text-center">Read</p></div>
+                    </div>
+                  </div>
+                </div>
+            </div>
+            <div id="char-roll-history" class="mt-4 isHideable">
+                <h1 class="title is-size-4 is-marginless pl-3 pt-3">Roll History Requests</h1>
+                <div class="columns is-centered mb-3">
+                  <div class="column">
+                    <div class="columns is-mobile is-marginless">
+                      <div class="column is-6 is-paddingless"><strong></strong></div>
+                      <div class="column is-4 is-paddingless text-center"><strong>Returns</strong></div>
+                      <div class="column is-paddingless text-center"><strong>Access Rights</strong></div>
+                    </div>
+                    <div class="columns table-row-a is-mobile is-marginless">
+                      <div class="column is-6"><p class="negative-indent"><span class="is-bold">GET</span> /api/char/<span class="has-text-info">&lt;character ID&gt;</span>/roll-history</p></div>
+                      <div class="column is-4"><p class="text-center">JSON of character's dice roll history</p></div>
                       <div class="column"><p class="text-center">Read</p></div>
                     </div>
                   </div>
