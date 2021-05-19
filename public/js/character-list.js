@@ -78,7 +78,7 @@ $(function () {
       window.location.href = '/profile/characters/delete/'+activeModalCharID;
     });
 
-    if($('#icon-character-import').length){ // If icon-character-import exists, AKA is advocate tier
+    if($('#icon-character-import').length){ // If icon-character-import exists, AKA has permissions
       initCharacterImport();
       initCharacterExport();
       initCharacterCopy();

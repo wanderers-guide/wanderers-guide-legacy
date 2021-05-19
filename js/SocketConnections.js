@@ -1904,58 +1904,42 @@ module.exports = class SocketConnections {
     io.on('connection', function(socket){
 
       socket.on('requestCharImport', function(charExportData){
-        AuthCheck.isSupporter(socket).then((isSupporter) => {
-          if(isSupporter){
-            CharImport.importData(socket, charExportData)
-            .then((result) => {
-              socket.emit('returnCharImport');
-            });
-          }
+        CharImport.importData(socket, charExportData)
+        .then((result) => {
+          socket.emit('returnCharImport');
         });
       });
 
       socket.on('requestCharExport', function(charID){
-        AuthCheck.isSupporter(socket).then((isSupporter) => {
-          if(isSupporter){
-            AuthCheck.canViewCharacter(socket, charID).then((canViewChar) => {
-              if(canViewChar){
-                CharExport.getExportData(charID)
-                .then((charExportData) => {
-                  socket.emit('returnCharExport', charExportData);
-                });
-              }
+        AuthCheck.canViewCharacter(socket, charID).then((canViewChar) => {
+          if(canViewChar){
+            CharExport.getExportData(charID)
+            .then((charExportData) => {
+              socket.emit('returnCharExport', charExportData);
             });
           }
         });
       });
 
       socket.on('requestCharCopy', function(charID){
-        AuthCheck.isSupporter(socket).then((isSupporter) => {
-          if(isSupporter){
-            AuthCheck.canViewCharacter(socket, charID).then((canViewChar) => {
-              if(canViewChar){
-                CharExport.getExportData(charID)
-                .then((charExportData) => {
-                  CharImport.importData(socket, JSON.parse(JSON.stringify(charExportData)))
-                  .then((result) => {
-                    socket.emit('returnCharCopy');
-                  });
-                });
-              }
+        AuthCheck.canViewCharacter(socket, charID).then((canViewChar) => {
+          if(canViewChar){
+            CharExport.getExportData(charID)
+            .then((charExportData) => {
+              CharImport.importData(socket, JSON.parse(JSON.stringify(charExportData)))
+              .then((result) => {
+                socket.emit('returnCharCopy');
+              });
             });
           }
         });
       });
 
       socket.on('requestCharExportPDFInfo', function(charID){
-        AuthCheck.isSupporter(socket).then((isSupporter) => {
-          if(isSupporter){
-            AuthCheck.canViewCharacter(socket, charID).then((canViewChar) => {
-              if(canViewChar){
-                CharGathering.getCharacterInfoExportToPDF(charID).then((characterInfo) => {
-                  socket.emit('returnCharExportPDFInfo', characterInfo);
-                });
-              }
+        AuthCheck.canViewCharacter(socket, charID).then((canViewChar) => {
+          if(canViewChar){
+            CharGathering.getCharacterInfoExportToPDF(charID).then((characterInfo) => {
+              socket.emit('returnCharExportPDFInfo', characterInfo);
             });
           }
         });

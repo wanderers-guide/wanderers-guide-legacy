@@ -49,7 +49,7 @@
             {{/ifEqual}}
         </div>
         <div class="column is-5 is-paddingless">
-            {{#ifEqual user.isPatreonSupporter 1}}
+            {{#if canMakeCharacter}}
               <a id="icon-character-import" class="is-size-3-5 is-pulled-right">
                 <label for="input-character-import">
                   <span class="icon is-large has-text-info has-tooltip-bottom" data-tooltip="Import Character">
@@ -58,10 +58,15 @@
                 </label>
                 <input id="input-character-import" type="file" accept=".guidechar"/>
               </a>
-            {{/ifEqual}}
-            {{#if canMakeCharacter}}
               <a class="is-size-3 is-pulled-right" href="/profile/characters/add"><span class="icon is-large has-text-info has-tooltip-bottom" data-tooltip="Create Character"><i class="fas fa-user-plus"></i></span></a>
             {{else}}
+              <a class="is-size-3-5 is-pulled-right">
+                <label for="input-character-import">
+                  <span class="icon is-large has-text-danger has-tooltip-bottom" data-tooltip="Import Character">
+                    <i class="fas fa-upload cursor-clickable"></i>
+                  </span>
+                </label>
+              </a>
               <a class="is-size-3 is-pulled-right"><span class="icon is-large has-text-danger has-tooltip-bottom" data-tooltip="Create Character"><i class="fas fa-user-times"></i></span></a>
             {{/if}}
         </div>
@@ -94,14 +99,12 @@
                                 </span>
                             {{/if}}
                         </a>
-                        {{#ifEqual ../user.isPatreonSupporter 1}}
-                          <a class="card-footer-item character-card-options has-text-grey-light">
-                              <span class="is-size-6 pr-1">Options</span>
-                              <span class="icon is-small">
-                                  <i class="fas fa-sm fa-ellipsis-h"></i>
-                              </span>
-                          </a>
-                        {{/ifEqual}}
+                        <a class="card-footer-item character-card-options has-text-grey-light">
+                            <span class="is-size-6 pr-1">Options</span>
+                            <span class="icon is-small">
+                                <i class="fas fa-sm fa-ellipsis-h"></i>
+                            </span>
+                        </a>
                         <a class="card-footer-item character-card-delete has-text-grey-light" style="overflow: hidden;">
                             <span class="is-size-6 pr-1">Delete</span>
                             <span class="icon is-small">
@@ -150,7 +153,11 @@
     <section class="modal-card-body pb-3">
 
       <div class="buttons is-centered">
-        <button id="btn-duplicate-character" class="button is-info"><span>Create Copy</span><span class="icon"><i class="fas fa-user-friends"></i></span></button>
+        {{#if canMakeCharacter}}
+          <button id="btn-duplicate-character" class="button is-info"><span>Create Copy</span><span class="icon"><i class="fas fa-user-friends"></i></span></button>
+        {{else}}
+          <button class="button is-danger"><span>Create Copy</span><span class="icon"><i class="fas fa-user-friends"></i></span></button>
+        {{/if}}
         <button id="btn-export-character" class="button is-info"><span>Export</span><span class="icon"><i class="fas fa-download"></i></span></button>
         <button class="button is-info cursor-disabled" disabled><span>Export to PDF</span><span class="icon"><i class="fas fa-file-pdf"></i></span></button> <!-- id="btn-export-to-pdf" -->
       </div>
