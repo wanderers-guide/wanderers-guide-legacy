@@ -66,24 +66,27 @@ module.exports = class CharExport {
                             .then((p_spellBookSpells) => {
                               return CharExport.processConditions(charID, character, charConditions)
                               .then((p_charConditions) => {
+                                return CharExport.processBasicCharInfo(charID, character)
+                                .then((p_character) => {
                           
-                                return {
-                                  version: 2,
-                                  character: character,
-                                  build: charBuildData,
-                                  stats: calculatedStats,
-                                  conditions: p_charConditions,
+                                  return {
+                                    version: 2,
+                                    character: p_character,
+                                    build: charBuildData,
+                                    stats: calculatedStats,
+                                    conditions: p_charConditions,
 
-                                  inventory: inventory,
-                                  invItems: p_invItems,
-                                  spellBookSpells: p_spellBookSpells,
-                                  animalCompanions: charAnimalCompanions,
-                                  familiars: charFamiliars,
-                                  noteFields: noteFields,
+                                    inventory: inventory,
+                                    invItems: p_invItems,
+                                    spellBookSpells: p_spellBookSpells,
+                                    animalCompanions: charAnimalCompanions,
+                                    familiars: charFamiliars,
+                                    noteFields: noteFields,
 
-                                  metaData: charMetaData,
-                                  
-                                };
+                                    metaData: charMetaData,
+                                    
+                                  };
+                                });
                               });
                             });
                           });
@@ -159,6 +162,22 @@ module.exports = class CharExport {
     }
 
     return charConditions;
+
+  }
+
+  static async processBasicCharInfo(charID, character){
+
+    let cClass = await CharGathering.getClassBasic(character);
+    let background = await CharGathering.getBackground(charID, character);
+    let ancestry = await CharGathering.getAncestry(charID, character);
+    let heritage = await CharGathering.getHeritage(charID, character);
+
+    character.dataValues._class = cClass;
+    character.dataValues._background = background;
+    character.dataValues._ancestry = ancestry;
+    character.dataValues._heritage = heritage;
+
+    return character;
 
   }
 

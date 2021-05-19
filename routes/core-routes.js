@@ -52,5 +52,8 @@ router.get('/wsc_docs', (req, res) => {
 router.get('/api_docs', (req, res) => {
   res.render('docs/api_docs', { title: "API Docs - Wanderer's Guide", user: req.user });
 });
+router.get('/guidechar_docs', (req, res) => {
+  res.render('docs/guidechar_docs', { title: "Guidechar Docs - Wanderer's Guide", user: req.user });
+});
 
 module.exports = router;
