@@ -309,6 +309,7 @@ socket.on("returnBundleContents", function(REQUEST_TYPE, userHasBundle, userOwns
                 level: classFeature.level,
                 contentSrc: classFeature.contentSrc,
                 homebrewID: classFeature.homebrewID,
+                code: classFeature.code,
               }
             });
           });
@@ -394,6 +395,7 @@ socket.on("returnBundleContents", function(REQUEST_TYPE, userHasBundle, userOwns
                 level: 0,
                 contentSrc: heritage.contentSrc,
                 homebrewID: heritage.homebrewID,
+                code: heritage.code,
               }
             });
           });
@@ -592,6 +594,7 @@ socket.on("returnBundleContents", function(REQUEST_TYPE, userHasBundle, userOwns
                 level: 0,
                 contentSrc: toggleable.contentSrc,
                 homebrewID: toggleable.homebrewID,
+                code: toggleable.code,
               }
             });
           });
