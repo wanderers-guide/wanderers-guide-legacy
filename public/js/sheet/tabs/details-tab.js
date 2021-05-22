@@ -367,8 +367,10 @@ function displayOtherAbilities(data, abilitiesSearchValue){
     
     let abilCount = 0;
     for(let extraClassAbil of g_extraClassAbilities){
-        filterAbilitiesThroughSearch(extraClassAbil.value, 'ExtraClass'+abilCount, abilitiesSearchValue);
-        abilCount++;
+      let srcStruct = cloneObj(extraClassAbil); srcStruct.value = null;
+      extraClassAbil.value.srcStruct = srcStruct;
+      filterAbilitiesThroughSearch(extraClassAbil.value, 'ExtraClass'+abilCount, abilitiesSearchValue);
+      abilCount++;
     }
     for(let heritageEffect of g_heritageEffects){
       let ability = heritageEffect.value;
@@ -408,8 +410,15 @@ function displayAbility(ability, abilIdentifier){
     if(ability.selectType == "SELECTOR"){
       for(let classAbilChoice of g_classDetails.AbilityChoices){
         if(classAbilChoice.SelectorID == ability.id){
+
+          // If has srcStruct (is extra class feature), confirm it's the correct one
+          if(ability.srcStruct != null){
+            if(!hasSameSrc(ability.srcStruct, classAbilChoice)){ continue; }
+          }
+
+          // Find ability option
           let abilityOption = g_allClassAbilityOptions.find(abil => {
-              return abil.id == classAbilChoice.OptionID;
+            return abil.id == classAbilChoice.OptionID;
           });
           if(abilityOption != null){ abilityName += ' - <span class="is-italic has-text-grey-like">'+abilityOption.name+'</span>'; }
           break;

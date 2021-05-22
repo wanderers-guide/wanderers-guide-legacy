@@ -18,6 +18,12 @@ function openAbilityQuickview(data) {
         for(let classAbilChoice of g_classDetails.AbilityChoices){
             if(classAbilChoice.SelectorID == data.Ability.id){
 
+                // If has srcStruct (is extra class feature), confirm it's the correct one
+                if(data.Ability.srcStruct != null){
+                  if(!hasSameSrc(data.Ability.srcStruct, classAbilChoice)){ continue; }
+                }
+
+                // Find ability option
                 let abilityOption = g_allClassAbilityOptions.find(ability => {
                     return ability.id == classAbilChoice.OptionID;
                 });
