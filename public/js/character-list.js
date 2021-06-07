@@ -80,10 +80,11 @@ $(function () {
 
     if($('#icon-character-import').length){ // If icon-character-import exists, AKA has permissions
       initCharacterImport();
-      initCharacterExport();
       initCharacterCopy();
-      //initCharacterExportToPDF();
     }
+    
+    initCharacterExport();
+    //initCharacterExportToPDF();
 
 });
 

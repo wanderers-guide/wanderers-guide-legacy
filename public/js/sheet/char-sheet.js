@@ -394,7 +394,7 @@ function loadCharSheet(){
 
     addStat('SPEED', 'BASE', g_ancestry.speed);
     for(const otherSpeed of g_otherSpeeds){
-        addStat('SPEED_'+otherSpeed.Type, 'BASE', otherSpeed.Amount);
+      addStat('SPEED_'+otherSpeed.Type, 'BASE', otherSpeed.Amount);
     }
 
     let classDCData = getFinalProf(g_profMap.get("Class_DC"));
@@ -1986,7 +1986,7 @@ function determineArmor(dexMod, strScore) {
         }
 
         if(speedPenalty < 0 && !gState_unburdenedIron){
-            addStat('SPEED', 'PENALTY (ARMOR)', speedPenalty);
+          addStat('SPEED', 'PENALTY (ARMOR)', speedPenalty);
         }
 
         // Final Product

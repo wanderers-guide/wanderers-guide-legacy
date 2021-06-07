@@ -103,7 +103,7 @@ function getStat(statName, source){
     if(statDataMap != null){
         let value = statDataMap.get(source).Value;
         if(value === 'LAND_SPEED'){
-            value = getStatTotal('SPEED');
+          value = getStatTotal('SPEED');
         }
         return value;
     } else {
@@ -118,17 +118,17 @@ function getStatTotal(statName){
     if(statDataMap != null){
         total = 0;
         for(let [source, valueData] of statDataMap){
-            let value = valueData.Value;
-            if(value === 'LAND_SPEED'){
-                value = getStatTotal('SPEED');
-            }
-            if(source === 'PROF_BONUS'){
-                total += getProfNumber(value, g_character.level);
-            } else if(source === 'MODIFIER') {
-                total += getModOfValue(value);
-            } else {
-                total += parseInt(value);
-            }
+          let value = valueData.Value;
+          if(value === 'LAND_SPEED'){
+            value = getStatTotal('SPEED');
+          }
+          if(source === 'PROF_BONUS'){
+            total += getProfNumber(value, g_character.level);
+          } else if(source === 'MODIFIER') {
+            total += getModOfValue(value);
+          } else {
+            total += parseInt(value);
+          }
         }
     }
     return total;
