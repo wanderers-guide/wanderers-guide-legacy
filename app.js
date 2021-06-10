@@ -81,7 +81,7 @@ let sessionMiddleware = expressSession({
   saveUninitialized: false,
   cookie: {
     secure: (process.env.PRODUCTION == 'true') ? true : false,
-    maxAge: 365 * 24 * 60 * 60 * 1000
+    maxAge: 30 * 24 * 60 * 60 * 1000 // 30 days
   }
 });
 app.use(sessionMiddleware);

@@ -40,6 +40,9 @@ const User = db.define('users', {
   },
   patreonAccessToken: {
     type: Sequelize.STRING
+  },
+  patreonRefreshToken: {
+    type: Sequelize.STRING
   }
 });
 

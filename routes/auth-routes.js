@@ -78,19 +78,29 @@ function handlePatreonAccess(req, res){
       res.redirect('/profile/characters');
 
     }).catch((err) => {
-      console.error(err);
 
-      console.log('Patreon - Invalid Access Token - ISSUE');
-      let updateValues = {
+      if(req.user.patreonRefreshToken != null){
+        console.log('Patreon - Invalid Access Token - ISSUE - Attempting to Refresh');
+
+        attemptAccessTokenRefresh(res, req.user.id, req.user.patreonRefreshToken);
+
+      } else {
+        console.log('Patreon - Invalid Access Token - ISSUE - No RefreshToken, Ending');
+
+        let updateValues = {
           isPatreonSupporter: 0,
           isPatreonMember: 0,
           isPatreonLegend: 0,
-          patreonAccessToken: null
-      };
-      User.update(updateValues, { where: { id: req.user.id } })
-      .then((result) => {
-        res.redirect('/profile');
-      });
+          patreonAccessToken: null,
+          patreonRefreshToken: null
+        };
+        User.update(updateValues, { where: { id: req.user.id } })
+        .then((result) => {
+          res.status(403);
+          res.render('error/patreon_link_error', { title: "Account Linking Error - Wanderer's Guide", user: req.user });
+        });
+
+      }
         
     });
   } else {
@@ -132,10 +142,12 @@ router.get('/patreon/redirect', (req, res) => {
 
     const { code } = req.query;
     let token;
+    let refreshToken;
     
     return patreonOAuthClient.getTokens(code, redirectURL)
-    .then(({ access_token }) => {
+    .then(({ access_token, refresh_token }) => {
         token = access_token;
+        refreshToken = refresh_token;
         const apiClient = patreonAPI(token);
         return apiClient('/current_user');
     }).then(({ store }) => {
@@ -184,7 +196,8 @@ router.get('/patreon/redirect', (req, res) => {
               patreonUserID: patreonUserID,
               patreonFullName: patreonName,
               patreonEmail: patreonEmail,
-              patreonAccessToken: token
+              patreonAccessToken: token,
+              patreonRefreshToken: refreshToken
           };
         } else if(pledgeTier === 'MEMBER'){
             updateValues = {
@@ -194,7 +207,8 @@ router.get('/patreon/redirect', (req, res) => {
                 patreonUserID: patreonUserID,
                 patreonFullName: patreonName,
                 patreonEmail: patreonEmail,
-                patreonAccessToken: token
+                patreonAccessToken: token,
+                patreonRefreshToken: refreshToken
             };
         } else if(pledgeTier === 'SUPPORTER'){
             updateValues = {
@@ -204,7 +218,8 @@ router.get('/patreon/redirect', (req, res) => {
                 patreonUserID: patreonUserID,
                 patreonFullName: patreonName,
                 patreonEmail: patreonEmail,
-                patreonAccessToken: token
+                patreonAccessToken: token,
+                patreonRefreshToken: refreshToken
             };
         } else {
             updateValues = {
@@ -214,7 +229,8 @@ router.get('/patreon/redirect', (req, res) => {
                 patreonUserID: patreonUserID,
                 patreonFullName: patreonName,
                 patreonEmail: patreonEmail,
-                patreonAccessToken: token
+                patreonAccessToken: token,
+                patreonRefreshToken: refreshToken
             };
         }
         User.update(updateValues, { where: { id: req.user.id } })
@@ -260,5 +276,44 @@ function findPatronTier(pledgeData){
     }
     return 'NONE';
 }
+
+
+// Patreon Refresh Token //
+function attemptAccessTokenRefresh(res, userID, refreshToken){
+  
+  patreonOAuthClient.refreshToken(refreshToken)
+  .then(({ access_token, refresh_token }) => {
+    console.log('Patreon - Invalid Access Token - ISSUE - Refreshed Token');
+
+    let updateValues = {
+      patreonAccessToken: access_token,
+      patreonRefreshToken: refresh_token
+    };
+    User.update(updateValues, { where: { id: userID } })
+    .then((result) => {
+      res.redirect('/profile/characters');
+    });
+
+  }).catch((err) => {
+    console.error(err);
+    console.log('Patreon - Invalid Access Token - ISSUE - Failed to Refresh, Ending');
+
+    let updateValues = {
+      isPatreonSupporter: 0,
+      isPatreonMember: 0,
+      isPatreonLegend: 0,
+      patreonAccessToken: null,
+      patreonRefreshToken: null
+    };
+    User.update(updateValues, { where: { id: userID } })
+    .then((result) => {
+      res.status(403);
+      res.render('error/patreon_link_error', { title: "Account Linking Error - Wanderer's Guide", user: req.user });
+    });
+
+  });
+
+}
+
 
 module.exports = router;

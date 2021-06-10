@@ -944,6 +944,7 @@ model users {
   patreonFullName     String?               @db.VarChar(120)
   patreonEmail        String?               @db.VarChar(120)
   patreonAccessToken  String?               @db.VarChar(300)
+  patreonRefreshToken String?               @db.VarChar(300)
   apiClientApps       apiClientApps[]
   characters          characters[]
   homeBackReports     homeBackReports[]
