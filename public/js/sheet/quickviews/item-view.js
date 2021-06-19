@@ -127,6 +127,11 @@ function openItemQuickview(data) {
     
     if(itemDataStruct.WeaponData != null){
 
+        // Fixes Prisma empty enum for dieType, like for Blowguns
+        if(itemDataStruct.WeaponData.dieType == 'EMPTY_ENUM_VALUE'){
+          itemDataStruct.WeaponData.dieType = '';
+        }
+
         if(itemDataStruct.WeaponData.isMelee == 1){
 
             let damage = itemDataStruct.WeaponData.diceNum+""+itemDataStruct.WeaponData.dieType+" "+itemDataStruct.WeaponData.damageType;
