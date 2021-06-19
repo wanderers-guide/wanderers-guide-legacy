@@ -42,35 +42,17 @@ module.exports = async function(socket, charID, character) {
   socket.emit('updateLoadProgess', { message: 'Finding Languages', upVal: 3 }); // (18/100) //
   const allLanguages = await CharGathering.getAllLanguagesBasic(charID, character);
 
-  socket.emit('updateLoadProgess', { message: 'Bartering for Items', upVal: 10 }); // (31/100) //
-  const items = await Prisma.items.findMany({
-    where: {
-      AND: [
-        {OR: CharContentSources.getSourceArrayPrisma(character)},
-        {OR: CharContentHomebrew.getHomebrewArrayPrisma(character)},
-      ],
-    },
-    include: {
-      taggedItems: true,
-      weapons: true,
-      armors: true,
-      storages: true,
-      shields: true,
-      itemRunes: true,
-    },
-  });
-
-  socket.emit('updateLoadProgess', { message: 'Keeping Inventory', upVal: 8 });
+  socket.emit('updateLoadProgess', { message: 'Keeping Inventory', upVal: 8 }); // (26/100) //
   const invStruct = await CharGathering.getInventory(character.inventoryID);
 
-  socket.emit('updateLoadProgess', { message: 'Indexing Traits', upVal: 5 }); // (41/100) //
+  socket.emit('updateLoadProgess', { message: 'Indexing Traits', upVal: 5 }); // (31/100) //
   const tags = await CharGathering.getAllTags(charID, character);
 
-  socket.emit('updateLoadProgess', { message: 'Discovering Spells', upVal: 5 }); // (46/100) //
+  socket.emit('updateLoadProgess', { message: 'Discovering Spells', upVal: 5 }); // (36/100) //
   const spellMap = await CharGathering.getAllSpells(charID, character, spells=null, taggedSpells=null, tags);
 
-  socket.emit('updateLoadProgess', { message: 'Making Checklist for Items', upVal: 5 }); // (51/100) //
-  const itemMap = await CharGathering.getAllItems(charID, character, items, tags);
+  socket.emit('updateLoadProgess', { message: 'Bartering for Items', upVal: 15 }); // (51/100) //
+  const itemMap = await CharGathering.getAllItems(charID, character, items=null, tags);
 
   socket.emit('updateLoadProgess', { message: 'Understanding Feats', upVal: 15 }); // (66/100) //
   const featObject = await CharGathering.getAllFeats(charID, character, feats=null, tags);
