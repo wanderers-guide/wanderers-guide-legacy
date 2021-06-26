@@ -328,6 +328,16 @@ function preReqCheckClassAbilities(prereq, normalPreReq){
         let abilName = abilityName.toLowerCase().split('(')[0];
         if(normalPreReq === abilName){ return 'TRUE'; }
         if(normalPreReq.includes(abilName) || abilName.includes(normalPreReq)){
+
+          // For cases like ANTIPALADIN and PALADIN
+          if(normalPreReq.includes(abilName)){
+            let preReqWithoutAbilName = normalPreReq.replace(abilName,':::');
+            let lastChar = preReqWithoutAbilName.substring(0,preReqWithoutAbilName.indexOf(':::')).slice(-1);
+            if(!(/\s|(^$)/g.test(lastChar))){// Is whitespace or ''
+              return 'FALSE';
+            }
+          }
+
           let ability = prereqFindClassAbility(abilityName);
           if(ability != null){
             if(ability.selectType != 'SELECTOR'){
