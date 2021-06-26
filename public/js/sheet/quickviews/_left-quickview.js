@@ -170,7 +170,12 @@ function leftQuickview_OpenDiceRoller() {
       }
 
       resultLine += '<i class="fas fa-caret-right has-text-grey mx-2"></i><span class="has-text-info is-bold">'+rollStruct.Total+'</span>';
-      $('#dice-roller-output-container').append('<p class="is-size-4 negative-indent">'+resultLine+'</p>');
+      $('#dice-roller-output-container').append(`
+          <div class="pos-relative">
+            <p class="is-size-4 negative-indent">${resultLine}</p>
+            <p class="pos-absolute pos-t-1 pos-r-1 is-size-8 has-text-grey-dark is-italic">${rollStruct.Timestamp.Time}</p>
+          </div>
+      `);
     }
   } else {
     $('#dice-roller-output-container').html('<p class="is-size-5 is-italic">No roll history.</p>');

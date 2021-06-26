@@ -102,6 +102,13 @@ function diceRoller_getDiceRoll(diceNum, dieType, bonus){
   total += bonus;
   rollStruct.Total = total;
   rollStruct.ResultData = resultData;
+
+  let currentDate = new Date();
+  rollStruct.Timestamp = {
+    Date: currentDate.toLocaleDateString(),
+    Time: currentDate.toLocaleTimeString(),
+  };
+
   return rollStruct;
 }
 
