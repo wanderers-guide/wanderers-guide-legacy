@@ -255,8 +255,8 @@ socket.on("returnFeatChange", function(featChangePacket){
 
   // If they aren't the same amount, reload class abilities
   if(maxArchetypesLength != charArchetypesArray.length || featDedicationTag != null) {
-    if(temp_classAbilities != null){
-      processCode_ClassAbilities(temp_classAbilities);
+    if(temp_classAbilities != null && temp_classNum != null){
+      processCode_ClassAbilities(temp_classAbilities, temp_classNum);
     }
   }
 

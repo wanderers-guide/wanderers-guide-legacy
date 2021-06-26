@@ -240,6 +240,7 @@ model characters {
   uniHeritageID               Int?
   backgroundID                Int?
   classID                     Int?
+  classID_2                   Int?
   inventoryID                 Int?
   notes                       String?                @db.MediumText
   infoJSON                    String?                @db.VarChar(3000)

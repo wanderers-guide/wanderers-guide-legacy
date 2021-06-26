@@ -4,13 +4,13 @@
 
 //--------------------- Processing Key Ability --------------------//
 function processingKeyAbilities(wscStatement, srcStruct, locationID, sourceName){
-    
+
     // SET-KEY-ABILITY=ALL
     // SET-KEY-ABILITY=INT,WIS,CHA
     if(wscStatement.includes("SET-KEY-ABILITY")){
         let selectionOptions = wscStatement.split('=')[1];
         let keyAbilitySrcStruct = {
-            sourceType: 'class',
+            sourceType: getClassSourceType(temp_classNum),
             sourceLevel: 1,
             sourceCode: 'keyAbility',
             sourceCodeSNum: 'a'

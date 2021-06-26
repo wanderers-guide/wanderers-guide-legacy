@@ -106,7 +106,7 @@ socket.on("returnAddClassFeature", function(srcStruct, classAbility, allClassAbi
 
         /* Don't use the class ability's normal srcStruct, use the code block's
         let srcStruct = {
-            sourceType: 'class',
+            sourceType: 'class',// <- Issue here too with 2 classes
             sourceLevel: classAbility.level,
             sourceCode: 'classAbilitySelector-'+classAbility.id,
             sourceCodeSNum: 'a',

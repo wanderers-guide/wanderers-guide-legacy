@@ -38,6 +38,9 @@ const Character = db.define('characters', {
   classID: {
     type: Sequelize.INTEGER
   },
+  classID_2: {
+    type: Sequelize.INTEGER
+  },
   inventoryID: {
     type: Sequelize.INTEGER
   },

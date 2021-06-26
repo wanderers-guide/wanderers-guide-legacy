@@ -891,25 +891,24 @@ module.exports = class SocketConnections {
         });
       });
 
-      /*
-      socket.on('requestBuilderPageClassTwo', function(charID){
+      socket.on('requestBuilderPageClass2', function(charID){
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
           if(ownsChar){
             CharGathering.getAllClasses(charID).then((classObject) => {
-              socket.emit('returnBuilderPageClassTwo', classObject);
+              socket.emit('returnBuilderPageClass2', classObject);
             });
           } else {
             socket.emit('returnErrorMessage', 'Incorrect Auth - No access to this character.');
           }
         });
-      });*/
+      });
 
-      socket.on('requestClassChange', function(charID, classID){
+      socket.on('requestClassChange', function(charID, classID, classNum){
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
           if(ownsChar){
-            CharSaving.saveClass(charID, classID).then((result) => {
+            CharSaving.saveClass(charID, classID, classNum).then((result) => {
               CharChoicesLoad(charID).then((choiceStruct) => {
-                socket.emit('returnClassChange', choiceStruct);
+                socket.emit('returnClassChange', choiceStruct, classNum);
               });
             });
           }

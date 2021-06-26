@@ -15,7 +15,7 @@ let gCode_statements, gCode_srcStruct, gCode_locationID, gCode_sourceName;
 let wscChoiceStruct = null;
 let wscMapsInit = false;
 let g_langMap, g_archetypes, g_profMap = null;
-let temp_classAbilities, temp_ancestryFeatsLocs = null;
+let temp_classAbilities, temp_classNum, temp_ancestryFeatsLocs = null;
 //                  //
 
 function processCode(wscCode, srcStruct, locationID, sourceName=''){
@@ -403,22 +403,23 @@ socket.on("returnWSCSrcStructDataClear", function(choiceStruct){
 
 //////////////
 
-function processCode_ClassAbilities(classAbilities){
+function processCode_ClassAbilities(classAbilities, classNum){
     //if(processingDebug) {console.log("Starting to run class abilities code...");}
     temp_classAbilities = classAbilities;
+    temp_classNum = classNum;
     for(const classAbility of classAbilities) {
         if(classAbility.selectType != 'SELECT_OPTION' && classAbility.level <= wscChoiceStruct.Character.level) {
             let srcStruct = {
-                sourceType: 'class',
+                sourceType: getClassSourceType(classNum),
                 sourceLevel: classAbility.level,
                 sourceCode: 'classAbility-'+classAbility.id,
                 sourceCodeSNum: 'a',
             };
-            $('#classAbilityCode'+classAbility.id).html('');
+            $('#classAbilityCode-'+classNum+'-'+classAbility.id).html('');
             processCode(
                 classAbility.code,
                 srcStruct,
-                'classAbilityCode'+classAbility.id,
+                'classAbilityCode-'+classNum+'-'+classAbility.id,
                 classAbility.name+' (Lvl '+classAbility.level+')');
         }
     }

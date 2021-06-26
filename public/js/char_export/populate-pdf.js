@@ -81,31 +81,31 @@ async function charExportGeneratePDF(charInfo) {
   const acDexModField = form.getTextField('Text12');
   const acCapField = form.getTextField('Text13');
   const acProfBonusField = form.getTextField('PROF');
-  const acProfTrainedField = form.getTextField('Check Box4');
-  const acProfExpertField = form.getTextField('Check Box5');
-  const acProfMasterField = form.getTextField('Check Box6');
-  const acProfLegendaryField = form.getTextField('Check Box7');
+  const acProfTrainedField = form.getCheckBox('Check Box4');
+  const acProfExpertField = form.getCheckBox('Check Box5');
+  const acProfMasterField = form.getCheckBox('Check Box6');
+  const acProfLegendaryField = form.getCheckBox('Check Box7');
   const acItemBonusField = form.getTextField('ITEM');
 
-  const unarmoredProfTrainedField = form.getTextField('Check Box28');
-  const unarmoredProfExpertField = form.getTextField('Check Box29');
-  const unarmoredProfMasterField = form.getTextField('Check Box30');
-  const unarmoredProfLegendaryField = form.getTextField('Check Box31');
+  const unarmoredProfTrainedField = form.getCheckBox('Check Box28');
+  const unarmoredProfExpertField = form.getCheckBox('Check Box29');
+  const unarmoredProfMasterField = form.getCheckBox('Check Box30');
+  const unarmoredProfLegendaryField = form.getCheckBox('Check Box31');
 
-  const lightArmorProfTrainedField = form.getTextField('Check Box32');
-  const lightArmorProfExpertField = form.getTextField('Check Box33');
-  const lightArmorProfMasterField = form.getTextField('Check Box34');
-  const lightArmorProfLegendaryField = form.getTextField('Check Box35');
+  const lightArmorProfTrainedField = form.getCheckBox('Check Box32');
+  const lightArmorProfExpertField = form.getCheckBox('Check Box33');
+  const lightArmorProfMasterField = form.getCheckBox('Check Box34');
+  const lightArmorProfLegendaryField = form.getCheckBox('Check Box35');
 
-  const mediumArmorProfTrainedField = form.getTextField('Check Box36');
-  const mediumArmorProfExpertField = form.getTextField('Check Box37');
-  const mediumArmorProfMasterField = form.getTextField('Check Box38');
-  const mediumArmorProfLegendaryField = form.getTextField('Check Box39');
+  const mediumArmorProfTrainedField = form.getCheckBox('Check Box36');
+  const mediumArmorProfExpertField = form.getCheckBox('Check Box37');
+  const mediumArmorProfMasterField = form.getCheckBox('Check Box38');
+  const mediumArmorProfLegendaryField = form.getCheckBox('Check Box39');
 
-  const heavyArmorProfTrainedField = form.getTextField('Check Box40');
-  const heavyArmorProfExpertField = form.getTextField('Check Box41');
-  const heavyArmorProfMasterField = form.getTextField('Check Box42');
-  const heavyArmorProfLegendaryField = form.getTextField('Check Box43');
+  const heavyArmorProfTrainedField = form.getCheckBox('Check Box40');
+  const heavyArmorProfExpertField = form.getCheckBox('Check Box41');
+  const heavyArmorProfMasterField = form.getCheckBox('Check Box42');
+  const heavyArmorProfLegendaryField = form.getCheckBox('Check Box43');
   
   const shieldACBonusField = form.getTextField('Text16');
   const shieldHardnessField = form.getTextField('HARDNESS');
@@ -136,15 +136,15 @@ async function charExportGeneratePDF(charInfo) {
   const totalPerceptionField = form.getTextField('Text17');
   const perceptionWisModField = form.getTextField('WIS_2');
   const perceptionProfBonusField = form.getTextField('PROF_5');
-  const perceptionProfTrainedField = form.getTextField('Check Box24');
-  const perceptionProfExpertField = form.getTextField('Check Box25');
-  const perceptionProfMasterField = form.getTextField('Check Box26');
-  const perceptionProfLegendaryField = form.getTextField('Check Box27');
+  const perceptionProfTrainedField = form.getCheckBox('Check Box24');
+  const perceptionProfExpertField = form.getCheckBox('Check Box25');
+  const perceptionProfMasterField = form.getCheckBox('Check Box26');
+  const perceptionProfLegendaryField = form.getCheckBox('Check Box27');
   const perceptionItemBonusField = form.getTextField('ITEM_5');
   
   const sensesField = form.getTextField('SENSES');
 
-
+  
 
 
 

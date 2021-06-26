@@ -33,7 +33,7 @@ function loadFinalizePage(character, unselectedDataArray) {
     if(character.classID != null && character.ancestryID != null){
 
         let srcStruct = {
-            sourceType: 'class',
+            sourceType: 'class',// Class 1 is what gives the extra skills
             sourceLevel: 1,
             sourceCode: 'inits-bonus',
             sourceCodeSNum: 'a',

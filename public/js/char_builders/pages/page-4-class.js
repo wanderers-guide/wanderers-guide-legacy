@@ -6,7 +6,7 @@ let g_class = null;
 
 // ~~~~~~~~~~~~~~ // Processings // ~~~~~~~~~~~~~~ //
 
-function loadClassPage(classObject) {
+function loadClassPage(classObject, classNum) {
 
     let classMap = objToMap(classObject);
     classMap = new Map([...classMap.entries()].sort(
@@ -16,11 +16,11 @@ function loadClassPage(classObject) {
     );
 
     // Populate Class Selector
-    let selectClass = $('#selectClass');
+    let selectClass = $('#selectClass-'+classNum);
     selectClass.append('<option value="chooseDefault" name="chooseDefault">Choose a Class</option>');
     selectClass.append('<optgroup label="──────────"></optgroup>');
     for(const [key, value] of classMap.entries()){
-        if(value.Class.id == g_char_classID){
+        if(value.Class.id == getCharClassID(classNum)){
             if(value.Class.isArchived == 0){
                 selectClass.append('<option value="'+value.Class.id+'" class="'+selectOptionRarity(value.Class.rarity)+'" selected>'+value.Class.name+'</option>');
             } else {
@@ -33,63 +33,65 @@ function loadClassPage(classObject) {
 
 
     // Class Selection //
-    $('#selectClass').change(function(event, triggerSave) {
-        $('#classArtworkImg').attr('src', '');
-        let classID = $("#selectClass option:selected").val();
+    $('#selectClass-'+classNum).change(function(event, triggerSave) {
+        $('#classArtworkImg-'+classNum).attr('src', '');
+        let classID = $("#selectClass-"+classNum+" option:selected").val();
         if(classID != "chooseDefault"){
-            $('.class-content').removeClass("is-hidden");
-            $('#selectClassControlShell').removeClass("is-info");
+            $('.class-content-'+classNum).removeClass("is-hidden");
+            $('#selectClassControlShell-'+classNum).removeClass("is-info");
 
             if(triggerSave == null || triggerSave) {
-                $('#selectClassControlShell').addClass("is-loading");
+                $('#selectClassControlShell-'+classNum).addClass("is-loading");
 
-                g_char_classID = classID;
+                setCharClassID(classNum, classID);
                 g_class = classMap.get(classID);
                 stopCodeProcessing();
                 socket.emit("requestClassChange",
                     getCharIDFromURL(),
-                    classID);
+                    classID,
+                    classNum);
                 
             } else {
-                displayCurrentClass(classMap.get(classID), false);
+                displayCurrentClass(classMap.get(classID), classNum);
             }
 
         } else {
-            $('.class-content').addClass("is-hidden");
-            $('#selectClassControlShell').addClass("is-info");
+            $('.class-content-'+classNum).addClass("is-hidden");
+            $('#selectClassControlShell-'+classNum).addClass("is-info");
 
             // Delete class, set to null
-            g_char_classID = null;
+            setCharClassID(classNum, null);
             g_class = null;
             stopCodeProcessing();
             socket.emit("requestClassChange",
                 getCharIDFromURL(),
-                null);
+                null,
+                classNum);
         }
 
     });
  
-    $('#selectClass').trigger("change", [false]);
+    $('#selectClass-'+classNum).trigger("change", [false]);
     finishLoadingPage();
 
 }
 
-socket.on("returnClassChange", function(inChoiceStruct){
-    $('#selectClassControlShell').removeClass("is-loading");
+socket.on("returnClassChange", function(inChoiceStruct, classNum){
+    $('#selectClassControlShell-'+classNum).removeClass("is-loading");
 
     if(g_class != null){
         injectWSCChoiceStruct(inChoiceStruct);
         updateSkillMap(true);
-        displayCurrentClass(g_class, true);
+        displayCurrentClass(g_class, classNum);
     } else {
         finishLoadingPage();
     }
 
 });
 
-function displayCurrentClass(classStruct, saving) {
+function displayCurrentClass(classStruct, classNum) {
     g_class = null;
-    $('#selectClass').blur();
+    $('#selectClass-'+classNum).blur();
 
     // Add support for Free Archetype Variant if enabled...
     if(wscChoiceStruct.Character.variantFreeArchetype == 1){
@@ -109,28 +111,28 @@ function displayCurrentClass(classStruct, saving) {
     let choiceArray = wscChoiceStruct.ChoiceArray;
 
     if(classStruct.Class.isArchived == 1){
-        $('#isArchivedMessage').removeClass('is-hidden');
+        $('#isArchivedMessage-'+classNum).removeClass('is-hidden');
     } else {
-        $('#isArchivedMessage').addClass('is-hidden');
+        $('#isArchivedMessage-'+classNum).addClass('is-hidden');
     }
 
     // Rarity //
-    $('#classRarityContainer').html(convertRarityToHTML(classStruct.Class.rarity));
+    $('#classRarityContainer-'+classNum).html(convertRarityToHTML(classStruct.Class.rarity));
 
-    let classDescription = $('#classDescription');
+    let classDescription = $('#classDescription-'+classNum);
     classDescription.html(processText(classStruct.Class.description, false, false, 'MEDIUM', false));
 
     if(classStruct.Class.artworkURL != null){
-      $('#classArtworkImg').removeClass('is-hidden');
-      $('#classArtworkImg').attr('src', classStruct.Class.artworkURL);
+      $('#classArtworkImg-'+classNum).removeClass('is-hidden');
+      $('#classArtworkImg-'+classNum).attr('src', classStruct.Class.artworkURL);
     } else {
-      $('#classArtworkImg').addClass('is-hidden');
-      $('#classArtworkImg').attr('src', '');
+      $('#classArtworkImg-'+classNum).addClass('is-hidden');
+      $('#classArtworkImg-'+classNum).attr('src', '');
     }
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Key Ability ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 
-    let keyAbility = $('#keyAbility');
+    let keyAbility = $('#keyAbility-'+classNum);
     keyAbility.html('');
     
     if(classStruct.Class.keyAbility == 'OTHER'){
@@ -139,8 +141,8 @@ function displayCurrentClass(classStruct, saving) {
 
     } else if(classStruct.Class.keyAbility.includes(' or ')) {
 
-        let keyAbilitySelectID = 'keyAbilitySelect';
-        let keyAbilityControlShellClass = 'keyAbilityControlShell';
+        let keyAbilitySelectID = 'keyAbilitySelect-'+classNum;
+        let keyAbilityControlShellClass = 'keyAbilityControlShell-'+classNum;
         let keyAbilityOptionArray = classStruct.Class.keyAbility.split(' or ');
         keyAbility.append('<div class="select '+keyAbilityControlShellClass+'"><select id="'+keyAbilitySelectID+'"></select></div>');
 
@@ -157,20 +159,20 @@ function displayCurrentClass(classStruct, saving) {
                 $('.'+keyAbilityControlShellClass).removeClass("is-info");
                 socket.emit("requestAbilityBonusChange",
                     getCharIDFromURL(),
-                    {sourceType: 'class', sourceLevel: 1, sourceCode: 'keyAbility', sourceCodeSNum: 'a'},
+                    {sourceType: getClassSourceType(classNum), sourceLevel: 1, sourceCode: 'keyAbility', sourceCodeSNum: 'a'},
                     {Ability : shortenAbilityType(abilityName), Bonus : "Boost"});
             } else {
                 $('.'+keyAbilityControlShellClass).addClass("is-info");
                 socket.emit("requestAbilityBonusChange",
                     getCharIDFromURL(),
-                    {sourceType: 'class', sourceLevel: 1, sourceCode: 'keyAbility', sourceCodeSNum: 'a'},
+                    {sourceType: getClassSourceType(classNum), sourceLevel: 1, sourceCode: 'keyAbility', sourceCodeSNum: 'a'},
                     null);
             }
             $(this).blur();
         });
 
         let keyAbilitySrcStruct = {
-            sourceType: 'class',
+            sourceType: getClassSourceType(classNum),
             sourceLevel: 1,
             sourceCode: 'keyAbility',
             sourceCodeSNum: 'a'
@@ -193,14 +195,14 @@ function displayCurrentClass(classStruct, saving) {
         keyAbility.append('<p class="is-size-5">'+classStruct.Class.keyAbility+'</p>');
         socket.emit("requestAbilityBonusChange",
             getCharIDFromURL(),
-            {sourceType: 'class', sourceLevel: 1, sourceCode: 'keyAbility', sourceCodeSNum: 'a'},
+            {sourceType: getClassSourceType(classNum), sourceLevel: 1, sourceCode: 'keyAbility', sourceCodeSNum: 'a'},
             {Ability : shortenAbilityType(classStruct.Class.keyAbility), Bonus : "Boost"});
     }
 
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Hit Points ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 
-    let hitPoints = $('#hitPoints');
+    let hitPoints = $('#hitPoints-'+classNum);
     hitPoints.html('');
     hitPoints.append('<p class="is-inline is-size-5">'+classStruct.Class.hitPoints+'</p>');
 
@@ -209,25 +211,25 @@ function displayCurrentClass(classStruct, saving) {
     let savingProfArray = [];
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Perception ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
-    let profPerception = $('#profPerception');
+    let profPerception = $('#profPerception-'+classNum);
     profPerception.html('');
-    profPerception.append('<ul id="profPerceptionUL"></ul>');
+    profPerception.append('<ul id="profPerceptionUL-'+classNum+'"></ul>');
 
-    let profPerceptionUL = $('#profPerceptionUL');
-    profPerceptionUL.append('<li id="profPerceptionLI"></li>');
+    let profPerceptionUL = $('#profPerceptionUL-'+classNum);
+    profPerceptionUL.append('<li id="profPerceptionLI-'+classNum+'"></li>');
 
-    let profPerceptionLI = $('#profPerceptionLI');
+    let profPerceptionLI = $('#profPerceptionLI-'+classNum);
     profPerceptionLI.append(profToWord(classStruct.Class.tPerception));
 
     savingProfArray.push({ For : "Perception", To : "Perception", Prof : classStruct.Class.tPerception });
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Skills ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
-    $('#profSkillsCode').html('');
-    let profSkills = $('#profSkills');
+    $('#profSkillsCode-'+classNum).html('');
+    let profSkills = $('#profSkills-'+classNum);
     profSkills.html('');
-    profSkills.append('<ul id="profSkillsUL"></ul>');
+    profSkills.append('<ul id="profSkillsUL-'+classNum+'"></ul>');
     
-    let profSkillsUL = $('#profSkillsUL');
+    let profSkillsUL = $('#profSkillsUL-'+classNum);
 
     let tSkillsArray;
     if(classStruct.Class.tSkills != null){
@@ -238,16 +240,16 @@ function displayCurrentClass(classStruct, saving) {
     for(const tSkill of tSkillsArray){
 
         let tSkillID = tSkill.replace(/ /g,'_');
-        profSkillsUL.append('<li id="profSkillsLI'+tSkillID+'"></li>');
-        let profSkillsLI = $('#profSkillsLI'+tSkillID);
+        profSkillsUL.append('<li id="profSkillsLI-'+classNum+'-'+tSkillID+'"></li>');
+        let profSkillsLI = $('#profSkillsLI-'+classNum+'-'+tSkillID);
 
         if(tSkill.includes(' or ')){
 
-            let tSkillControlShellClass = tSkillID+'ControlShell';
+            let tSkillControlShellClass = tSkillID+'-'+classNum+'-ControlShell';
             let tSkillsOptionArray = tSkill.split(' or ');
-            profSkillsLI.append('Trained in <div class="select is-small '+tSkillControlShellClass+'"><select id="'+tSkillID+'"></select></div>');
+            profSkillsLI.append('Trained in <div class="select is-small '+tSkillControlShellClass+'"><select id="'+tSkillID+'-'+classNum+'"></select></div>');
 
-            let tSkillSelect = $('#'+tSkillID);
+            let tSkillSelect = $('#'+tSkillID+'-'+classNum);
 
             tSkillSelect.append('<option value="chooseDefault">Choose a Skill</option>');
             tSkillSelect.append('<optgroup label="──────────"></optgroup>');
@@ -255,11 +257,11 @@ function displayCurrentClass(classStruct, saving) {
             tSkillSelect.append('<option value="'+tSkillsOptionArray[0]+'">'+tSkillsOptionArray[0]+'</option>');
             tSkillSelect.append('<option value="'+tSkillsOptionArray[1]+'">'+tSkillsOptionArray[1]+'</option>');
 
-            $('#'+tSkillID).change(function() {
+            $('#'+tSkillID+'-'+classNum).change(function() {
                 let skillName = $(this).val();
 
                 let srcStruct = {
-                    sourceType: 'class',
+                    sourceType: getClassSourceType(classNum),
                     sourceLevel: 1,
                     sourceCode: 'inits-misc-'+tSkillID,
                     sourceCodeSNum: 'a',
@@ -283,7 +285,7 @@ function displayCurrentClass(classStruct, saving) {
             });
 
             let tSkillSrcStruct = {
-                sourceType: 'class',
+                sourceType: getClassSourceType(classNum),
                 sourceLevel: 1,
                 sourceCode: 'inits-misc-'+tSkillID,
                 sourceCodeSNum: 'aa',
@@ -311,29 +313,29 @@ function displayCurrentClass(classStruct, saving) {
 
     }
 
-    profSkillsUL.append('<li id="profSkillsLIAdditionalTrained"></li>');
-    let profSkillsLIAddTrained = $('#profSkillsLIAdditionalTrained');
+    profSkillsUL.append('<li id="profSkillsLIAdditionalTrained-'+classNum+'"></li>');
+    let profSkillsLIAddTrained = $('#profSkillsLIAdditionalTrained-'+classNum);
 
     profSkillsLIAddTrained.append('Trained in <a class="has-text-info has-tooltip-bottom has-tooltip-multiline" data-tooltip="You will get to select training in an additional number of skills equal to '+classStruct.Class.tSkillsMore+' plus your Intelligence modifer in the Finalize step">'+classStruct.Class.tSkillsMore+'*</a> more skills');
 
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Saving Throws ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
-    let profSavingThrows = $('#profSavingThrows');
+    let profSavingThrows = $('#profSavingThrows-'+classNum);
     profSavingThrows.html('');
-    profSavingThrows.append('<ul id="profSavingThrowsUL"></ul>');
+    profSavingThrows.append('<ul id="profSavingThrowsUL-'+classNum+'"></ul>');
 
-    let profSavingThrowsUL = $('#profSavingThrowsUL');
-    profSavingThrowsUL.append('<li id="profSavingThrowsLIFort"></li>');
-    profSavingThrowsUL.append('<li id="profSavingThrowsLIReflex"></li>');
-    profSavingThrowsUL.append('<li id="profSavingThrowsLIWill"></li>');
+    let profSavingThrowsUL = $('#profSavingThrowsUL-'+classNum);
+    profSavingThrowsUL.append('<li id="profSavingThrowsLIFort-'+classNum+'"></li>');
+    profSavingThrowsUL.append('<li id="profSavingThrowsLIReflex-'+classNum+'"></li>');
+    profSavingThrowsUL.append('<li id="profSavingThrowsLIWill-'+classNum+'"></li>');
 
-    let profSavingThrowsLIFort = $('#profSavingThrowsLIFort');
+    let profSavingThrowsLIFort = $('#profSavingThrowsLIFort-'+classNum);
     profSavingThrowsLIFort.append(profToWord(classStruct.Class.tFortitude)+" in Fortitude");
 
-    let profSavingThrowsLIReflex = $('#profSavingThrowsLIReflex');
+    let profSavingThrowsLIReflex = $('#profSavingThrowsLIReflex-'+classNum);
     profSavingThrowsLIReflex.append(profToWord(classStruct.Class.tReflex)+" in Reflex");
 
-    let profSavingThrowsLIWill = $('#profSavingThrowsLIWill');
+    let profSavingThrowsLIWill = $('#profSavingThrowsLIWill-'+classNum);
     profSavingThrowsLIWill.append(profToWord(classStruct.Class.tWill)+" in Will");
 
     savingProfArray.push({ For : "Save", To : 'Fortitude', Prof : classStruct.Class.tFortitude });
@@ -342,11 +344,11 @@ function displayCurrentClass(classStruct, saving) {
 
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Attacks ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
-    let profAttacks = $('#profAttacks');
+    let profAttacks = $('#profAttacks-'+classNum);
     profAttacks.html('');
 
-    profAttacks.append('<ul id="profAttacksUL"></ul>');
-    let profAttacksUL = $('#profAttacksUL');
+    profAttacks.append('<ul id="profAttacksUL-'+classNum+'"></ul>');
+    let profAttacksUL = $('#profAttacksUL-'+classNum);
 
 
     let tWeaponsArray = [];
@@ -365,8 +367,8 @@ function displayCurrentClass(classStruct, saving) {
             weapID = weaponName.replace(/\s+/g,'_').toUpperCase();
         }
 
-        profAttacksUL.append('<li id="profAttacksLI'+weapID+'"></li>');
-        let profAttacksLI = $('#profAttacksLI'+weapID);
+        profAttacksUL.append('<li id="profAttacksLI-'+classNum+'-'+weapID+'"></li>');
+        let profAttacksLI = $('#profAttacksLI-'+classNum+'-'+weapID);
 
         if(weaponName.slice(-1) === 's'){
             // is plural
@@ -382,11 +384,11 @@ function displayCurrentClass(classStruct, saving) {
 
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Defenses ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
-    let profDefenses = $('#profDefenses');
+    let profDefenses = $('#profDefenses-'+classNum);
     profDefenses.html('');
 
-    profDefenses.append('<ul id="profDefensesUL"></ul>');
-    let profDefensesUL = $('#profDefensesUL');
+    profDefenses.append('<ul id="profDefensesUL-'+classNum+'"></ul>');
+    let profDefensesUL = $('#profDefensesUL-'+classNum);
 
 
     let tArmorArray = [];
@@ -405,8 +407,8 @@ function displayCurrentClass(classStruct, saving) {
             armorID = armorName.replace(/\s+/g,'_').toUpperCase();
         }
 
-        profDefensesUL.append('<li id="profDefensesLI'+armorID+'"></li>');
-        let profDefensesLI = $('#profDefensesLI'+armorID);
+        profDefensesUL.append('<li id="profDefensesLI-'+classNum+'-'+armorID+'"></li>');
+        let profDefensesLI = $('#profDefensesLI-'+classNum+'-'+armorID);
 
         profDefensesLI.append(profToWord(armorTraining)+" in all "+armorName);
 
@@ -415,14 +417,14 @@ function displayCurrentClass(classStruct, saving) {
     }
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Class DC ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
-    let profClassDC = $('#profClassDC');
+    let profClassDC = $('#profClassDC-'+classNum);
     profClassDC.html('');
-    profClassDC.append('<ul id="profClassDCUL"></ul>');
+    profClassDC.append('<ul id="profClassDCUL-'+classNum+'"></ul>');
 
-    let profClassDCUL = $('#profClassDCUL');
-    profClassDCUL.append('<li id="profClassDCLI"></li>');
+    let profClassDCUL = $('#profClassDCUL-'+classNum);
+    profClassDCUL.append('<li id="profClassDCLI-'+classNum+'"></li>');
 
-    let profClassDCLI = $('#profClassDCLI');
+    let profClassDCLI = $('#profClassDCLI-'+classNum);
     profClassDCLI.append(profToWord(classStruct.Class.tClassDC));
 
     savingProfArray.push({ For : "Class_DC", To : "Class_DC", Prof : classStruct.Class.tClassDC });
@@ -431,7 +433,7 @@ function displayCurrentClass(classStruct, saving) {
     let savingProfCount = 0;
     for(let savingProf of savingProfArray){
         let srcStruct = {
-            sourceType: 'class',
+            sourceType: getClassSourceType(classNum),
             sourceLevel: 1,
             sourceCode: 'inits-'+savingProfCount,
             sourceCodeSNum: 'a',
@@ -453,7 +455,7 @@ function displayCurrentClass(classStruct, saving) {
     }
 
 
-    $('#classAbilities').html('<div id="classAbilitiesTabs"></div><div id="classAbilitiesContent"></div>');
+    $('#classAbilities-'+classNum).html('<div id="classAbilitiesTabs-'+classNum+'"></div><div id="classAbilitiesContent-'+classNum+'"></div>');
 
     let abilityTabsTempSet = new Set();
     let abilityNameSet = new Set();
@@ -474,31 +476,31 @@ function displayCurrentClass(classStruct, saving) {
         }
     }
 
-    let abilityTabHTML = '<li><a id="abilityTabOther">Core Features</a></li>';
+    let abilityTabHTML = '<li><a id="abilityTab-'+classNum+'-Other">Core Features</a></li>';
     for(const abilityTab of abilityTabsSet){
         let hashOfName = hashCode(abilityTab);
-        abilityTabHTML += '<li><a id="abilityTab'+hashOfName+'">'+abilityTab+'</a></li>';
-        $('#classAbilitiesContent').append('<div id="abilityContent'+hashOfName+'" class="is-hidden"></div>');
+        abilityTabHTML += '<li><a id="abilityTab-'+classNum+'-'+hashOfName+'">'+abilityTab+'</a></li>';
+        $('#classAbilitiesContent-'+classNum).append('<div id="abilityContent-'+classNum+'-'+hashOfName+'" class="is-hidden"></div>');
     }
-    $('#classAbilitiesContent').append('<div id="abilityContentOther" class="is-hidden"></div>');
+    $('#classAbilitiesContent-'+classNum).append('<div id="abilityContent-'+classNum+'-Other" class="is-hidden"></div>');
 
-    $('#classAbilitiesTabs').html('<div class="tabs is-centered is-marginless use-custom-scrollbar"><ul class="ability-tabs">'+abilityTabHTML+'</ul></div>');
+    $('#classAbilitiesTabs-'+classNum).html('<div class="tabs is-centered is-marginless use-custom-scrollbar"><ul class="ability-tabs">'+abilityTabHTML+'</ul></div>');
 
     for(const classAbility of classStruct.Abilities) {
         if(classAbility.level == -1) {continue;}
 
         if(classAbility.selectType != 'SELECT_OPTION' && classAbility.level <= wscChoiceStruct.Character.level) {
 
-            let classAbilityID = "classAbility"+classAbility.id;
-            let classAbilityHeaderID = "classAbilityHeader"+classAbility.id;
-            let classAbilityContentID = "classAbilityContent"+classAbility.id;
-            let classAbilityCodeID = "classAbilityCode"+classAbility.id;
+            let classAbilityID = "classAbility-"+classNum+"-"+classAbility.id;
+            let classAbilityHeaderID = "classAbilityHeader-"+classNum+"-"+classAbility.id;
+            let classAbilityContentID = "classAbilityContent-"+classNum+"-"+classAbility.id;
+            let classAbilityCodeID = "classAbilityCode-"+classNum+"-"+classAbility.id;
 
             let tabContent = null;
             if(abilityTabsSet.has(classAbility.name)){
 
                 let hashOfName = hashCode(classAbility.name);
-                tabContent = $('#abilityContent'+hashOfName);
+                tabContent = $('#abilityContent-'+classNum+'-'+hashOfName);
                 tabContent.append('<div id="'+classAbilityID+'" class="classAbility pt-1"></div>');
 
                 let classAbilitySection = $('#'+classAbilityID);
@@ -508,7 +510,7 @@ function displayCurrentClass(classStruct, saving) {
 
             } else {
 
-                tabContent = $('#abilityContentOther');
+                tabContent = $('#abilityContent-'+classNum+'-Other');
                 tabContent.append('<div id="'+classAbilityID+'" class="classAbility pt-1"></div>');
 
                 let classAbilitySection = $('#'+classAbilityID);
@@ -525,9 +527,9 @@ function displayCurrentClass(classStruct, saving) {
 
             if(classAbility.selectType === 'SELECTOR') {
 
-                let selectorID = 'classAbilSelection'+classAbility.id;
-                let descriptionID = 'classAbilSelection'+classAbility.id+'Description';
-                let abilityCodeID = 'classAbilSelection'+classAbility.id+'Code';
+                let selectorID = 'classAbilSelection-'+classNum+'-'+classAbility.id;
+                let descriptionID = 'classAbilSelection-'+classNum+'-'+classAbility.id+'Description';
+                let abilityCodeID = 'classAbilSelection-'+classNum+'-'+classAbility.id+'Code';
 
                 let classAbilitySelectorInnerHTML = '';
 
@@ -583,7 +585,7 @@ function displayCurrentClass(classStruct, saving) {
             });
 
             let srcStruct = {
-                sourceType: 'class',
+                sourceType: getClassSourceType(classNum),
                 sourceLevel: classAbility.level,
                 sourceCode: 'classAbilitySelector-'+classAbilityID,
                 sourceCodeSNum: 'a',
@@ -636,13 +638,13 @@ function displayCurrentClass(classStruct, saving) {
 
     $('.classAbilSelection').trigger("change", [false]);
 
-    processCode_ClassAbilities(classStruct.Abilities);
+    processCode_ClassAbilities(classStruct.Abilities, classNum);
 
 
     
     for(let abilityTab of $('.ability-tabs a')){
-        let tabNameHash = $(abilityTab).attr('id').replace('abilityTab', '');
-        if($('#abilityContent'+tabNameHash).html() == ''){
+        let tabNameHash = $(abilityTab).attr('id').replace('abilityTab-'+classNum+'-', '');
+        if($('#abilityContent-'+classNum+'-'+tabNameHash).html() == ''){
             $(abilityTab).parent().addClass('is-hidden');
         } else {
             $(abilityTab).parent().removeClass('is-hidden');
@@ -650,12 +652,12 @@ function displayCurrentClass(classStruct, saving) {
     }
 
     $('.ability-tabs a').click(function(){
-        $('#classAbilitiesContent > div').addClass('is-hidden');
+        $('#classAbilitiesContent-'+classNum+' > div').addClass('is-hidden');
         $('.ability-tabs > li').removeClass("is-active");
 
-        let tabNameHash = $(this).attr('id').replace('abilityTab', '');
-        $('#abilityContent'+tabNameHash).removeClass('is-hidden');
-        $('#abilityTab'+tabNameHash).parent().addClass("is-active");
+        let tabNameHash = $(this).attr('id').replace('abilityTab-'+classNum+'-', '');
+        $('#abilityContent-'+classNum+'-'+tabNameHash).removeClass('is-hidden');
+        $('#abilityTab-'+classNum+'-'+tabNameHash).parent().addClass("is-active");
     });
 
     $('.ability-tabs a:first').click();
@@ -697,3 +699,31 @@ socket.on("returnClassChoiceChange", function(srcStruct, selectorID, optionID){
     });
 
 });
+
+
+function getCharClassID(classNum){
+  if(classNum == 1){
+    return g_char_classID_1;
+  } else if(classNum == 2){
+    return g_char_classID_2;
+  } else {
+    return null;
+  }
+}
+function setCharClassID(classNum, char_classID){
+  if(classNum == 1){
+    g_char_classID_1 = char_classID;
+  } else if(classNum == 2){
+    g_char_classID_2 = char_classID;
+  }
+}
+
+function getClassSourceType(classNum){
+  if(classNum == 1){
+    return 'class';
+  } else if(classNum == 2){
+    return 'class-2';
+  } else {
+    return 'class';
+  }
+}

@@ -9,7 +9,8 @@ let isFirstLoad = true;
 // 
 let g_char_ancestryID = null;
 let g_char_backgroundID = null;
-let g_char_classID = null;
+let g_char_classID_1 = null;
+let g_char_classID_2 = null;
 //
 
 // Core Builder Data //
@@ -51,7 +52,8 @@ socket.on("returnCharBuilderDetails", function(character, coreDataStruct, inChoi
   //
   g_char_ancestryID = character.ancestryID;
   g_char_backgroundID = character.backgroundID;
-  g_char_classID = character.classID;
+  g_char_classID_1 = character.classID;
+  g_char_classID_2 = null;
   //
   injectWSCChoiceStruct(inChoiceStruct);
   // ~~~~~~~~~~~~~~~~~ //
@@ -76,10 +78,8 @@ function goToBuilderPage(pageNum, firstLoad=false){
     case '2': socket.emit("requestBuilderPageAncestry", getCharIDFromURL()); break;
     case '3': socket.emit("requestBuilderPageBackground", getCharIDFromURL()); break;
     case '4': socket.emit("requestBuilderPageClass", getCharIDFromURL()); break;
+    case '42': socket.emit("requestBuilderPageClass2", getCharIDFromURL()); break;
     case '5': socket.emit("requestBuilderPageFinalize", getCharIDFromURL()); break;
-
-    //case '41': socket.emit("requestBuilderPageClassTwo", getCharIDFromURL()); break;
-
     default: break;
   }
 }
@@ -160,7 +160,11 @@ socket.on("returnBuilderPageClass", function(classObject){
       });
       $("#nextButton").parent().removeClass('is-hidden');
       $("#nextButton").click(function(){
-        goToBuilderPage(5);
+        if(hasDualClassVariant()){
+          goToBuilderPage(42);
+        } else {
+          goToBuilderPage(5);
+        }
       });
       $("#goToCharButton").parent().removeClass('is-hidden');
       $("#goToCharButton").click(function(){
@@ -170,23 +174,22 @@ socket.on("returnBuilderPageClass", function(classObject){
       initBuilderSteps();
 
       window.history.pushState('profile/characters/builder', '', '/profile/characters/builder/?id='+getCharIDFromURL()+'&page=4');// Update URL
-      loadClassPage(classObject);
+      loadClassPage(classObject, 1);
       timeOutFinishLoad();
     }
   });
 });
 
-/*
-socket.on("returnBuilderPageClassTwo", function(classObject){
-  $('#char-builder-container').load("/templates/char_builder/display-builder-page-4.html");
+socket.on("returnBuilderPageClass2", function(classObject){
+  $('#char-builder-container').load("/templates/char_builder/display-builder-page-4-2.html");
   $.ajax({ type: "GET",
-    url: "/templates/char_builder/display-builder-page-4.html",
+    url: "/templates/char_builder/display-builder-page-4-2.html",
     success : function(text)
     {
-      console.log('PAGE: Class Two');
+      console.log('PAGE: Class 2');
 
       $("#prevButton").click(function(){
-        goToBuilderPage(3);
+        goToBuilderPage(4);
       });
       $("#nextButton").parent().removeClass('is-hidden');
       $("#nextButton").click(function(){
@@ -199,13 +202,12 @@ socket.on("returnBuilderPageClassTwo", function(classObject){
       $("#goToCharBigButton").parent().addClass('is-hidden');
       initBuilderSteps();
 
-      window.history.pushState('profile/characters/builder', '', '/profile/characters/builder/?id='+getCharIDFromURL()+'&page=4');// Update URL
-      loadClassTwoPage(classObject);
+      window.history.pushState('profile/characters/builder', '', '/profile/characters/builder/?id='+getCharIDFromURL()+'&page=42');// Update URL
+      loadClassPage(classObject, 2);
       timeOutFinishLoad();
     }
   });
 });
-*/
 
 socket.on("returnBuilderPageFinalize", function(character, unselectedDataArray){
   $('#char-builder-container').load("/templates/char_builder/display-builder-page-5.html");
@@ -249,14 +251,12 @@ function initBuilderSteps(){
   $('.builder-class-page-btn').click(function(){
     goToBuilderPage(4);
   });
+  $('.builder-class-2-page-btn').click(function(){
+    goToBuilderPage(42);
+  });
   $('.builder-finalize-page-btn').click(function(){
     goToBuilderPage(5);
   });
-
-  /*
-  $('.builder-class-two-page-btn').click(function(){
-    goToBuilderPage(41);
-  });*/
 
 }
 
@@ -268,6 +268,9 @@ function finishLoadingPage() {
   // Turn off page loading
   if(!isFirstLoad) { stopSpinnerLoader(); } else { stopDiceLoader(); }
   selectorUpdated();
+  if(hasDualClassVariant()){
+    $('#class-2-page-icon').removeClass('is-hidden');
+  }
 }
 
 function timeOutFinishLoad(){

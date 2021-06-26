@@ -730,17 +730,35 @@ module.exports = class CharSaving {
     }
 
 
-    static saveClass(charID, classID) {
+    static saveClass(charID, classID, classNum) {
 
-        let charUpVals = {classID: classID };
+        if(classNum == 1){
 
-        return Character.update(charUpVals, { where: { id: charID } })
-        .then((result) => {
-            return CharDataMapping.deleteDataBySourceType(charID, 'class')
-            .then((result) => {
-                return;
-            });
-        });
+          let charUpVals = {classID: classID };
+
+          return Character.update(charUpVals, { where: { id: charID } })
+          .then((result) => {
+              return CharDataMapping.deleteDataBySourceType(charID, 'class')
+              .then((result) => {
+                  return;
+              });
+          });
+
+        } else if(classNum == 2){
+
+          let charUpVals = {classID_2: classID };
+
+          return Character.update(charUpVals, { where: { id: charID } })
+          .then((result) => {
+              return CharDataMapping.deleteDataBySourceType(charID, 'class_2')
+              .then((result) => {
+                  return;
+              });
+          });
+
+        } else {
+          return Promise.resolve();
+        }
 
     }
 

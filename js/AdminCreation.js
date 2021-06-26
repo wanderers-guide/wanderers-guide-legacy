@@ -250,8 +250,11 @@ module.exports = class AdminCreation {
             .then((charactersWithClass) => {
                 let characterClassClearPromises = [];
                 for(const charWithClass of charactersWithClass) {
-                    let newPromise = CharSaving.saveClass(charWithClass.id, null);
-                    characterClassClearPromises.push(newPromise);
+                    let newPromise_1 = CharSaving.saveClass(charWithClass.id, null, 1);
+                    characterClassClearPromises.push(newPromise_1);
+
+                    let newPromise_2 = CharSaving.saveClass(charWithClass.id, null, 2);
+                    characterClassClearPromises.push(newPromise_2);
                 }
                 return Promise.all(characterClassClearPromises)
                 .then(function(result) {

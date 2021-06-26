@@ -84,7 +84,7 @@ $(function () {
     }
     
     initCharacterExport();
-    //initCharacterExportToPDF();
+    old_initCharacterExportToPDF(); // <- PDF
 
 });
 
