@@ -35,6 +35,8 @@ function processAddText(code, locationID, centerText=false){
         expression = expression.replace(/\s*>=\s*/g, ' greater than or equal to ');
         expression = expression.replace(/\s*<=\s*/g, ' lesser than or equal to ');
         expression = expression.replace(/\s*&&\s*/g, ' and ');
+
+        expression = expression.toLowerCase().replace('class ability', 'class feature');
         
         if (exprData.statement != null && exprData.statement.includes("ADD-TEXT=")){
           statement = exprData.statement;

@@ -16,13 +16,10 @@ function openActionsTab(data) {
     }
     actionsCount = (actionsCount < 0) ? 0 : actionsCount;
 
-    let filterInnerHTML = '<div class="columns is-mobile is-marginless"><div class="column is-4"><p id="stateNumberOfActions" class="is-size-7 has-text-left">'+actionsCount+' Actions per Turn</p></div><div class="column is-1"><p class="is-size-6 has-text-grey-lighter">Filter</p></div>';
-    filterInnerHTML += '<div class="column is-2"><div class="select is-small"><select id="actionFilterSelectBySkill"><option value="core">Core</option>';
-
-    filterInnerHTML += '<option value="others">Miscellaneous</option>';
-    filterInnerHTML += '<option value="all">All</option>';
-    filterInnerHTML += '<optgroup label="── Skills ──"></optgroup>';
-
+    let skillsOptionsHTML = `
+      <option value="chooseDefault" class="is-bold-very">All Skills</option>
+      <optgroup label="───────"></optgroup>
+    `;
     let foundLore = false;
     for(const [skillName, skillData] of data.SkillMap.entries()){
       if(skillData.Skill.name == 'Lore'){
@@ -32,14 +29,75 @@ function openActionsTab(data) {
           foundLore = true;
         }
       }
-      filterInnerHTML += '<option value="'+skillData.Skill.id+'">'+skillData.Skill.name+'</option>';
+      skillsOptionsHTML += `<option value="${skillData.Skill.id}">${skillData.Skill.name}</option>`;
     }
 
-    filterInnerHTML += '</select></div></div><div class="column is-2"><div class="select is-small"><select id="actionFilterSelectByAction" class="pf-icon is-bold-very"><option value="chooseDefault" class="is-bold-very">By Action</option><optgroup label="───────"></optgroup><option value="OneAction" class="pf-icon">[one-action]</option><option value="TwoActions" class="pf-icon">[two-actions]</option><option value="ThreeActions" class="pf-icon">[three-actions]</option><option value="FreeAction" class="pf-icon">[free-action]</option><option value="Reaction" class="pf-icon">[reaction]</option></select></div></div></div>';
+    $('#tabContent').append(`
+      <p id="stateNumberOfActions" class="is-size-7 has-text-left is-italic pos-absolute pos-t-10 pos-l-5">${actionsCount} Actions per Turn</p>
+      <div class="columns is-mobile is-marginless">
 
-    filterInnerHTML += '<div class="mb-1"><p class="control has-icons-left"><input id="actionFilterSearch" class="input" type="text" autocomplete="off" placeholder="Search"><span class="icon is-left"><i class="fas fa-search" aria-hidden="true"></i></span></p></div>';
+        <div class="column is-1 is-narrow pb-1">
+          <p class="is-size-6 has-text-grey-lighter is-bold">Filter</p>
+        </div>
 
-    $('#tabContent').append(filterInnerHTML);
+        <div class="column is-narrow pb-1">
+          
+          <div class="is-inline-flex">
+            <div class="field is-unselectable">
+              <input class="is-checkradio is-small has-background-color is-info" id="actionsTabCheckBox-Basic" type="checkbox" name="actionsTabCheckBox-Basic" checked="checked">
+              <label for="actionsTabCheckBox-Basic" class="is-size-6 pt-0">Basic</label>
+            </div>
+
+            <div class="field is-unselectable">
+              <input class="is-checkradio is-small has-background-color is-info" id="actionsTabCheckBox-Feats" type="checkbox" name="actionsTabCheckBox-Feats" checked="checked">
+              <label for="actionsTabCheckBox-Feats" class="is-size-6 pt-0">Feats</label>
+            </div>
+
+            <div class="field is-unselectable">
+              <input class="is-checkradio is-small has-background-color is-info" id="actionsTabCheckBox-Items" type="checkbox" name="actionsTabCheckBox-Items" checked="checked">
+              <label for="actionsTabCheckBox-Items" class="is-size-6 pt-0">Items</label>
+            </div>
+
+            <div class="field is-unselectable">
+              <input class="is-checkradio is-small has-background-color is-info" id="actionsTabCheckBox-Skills" type="checkbox" name="actionsTabCheckBox-Skills" checked="checked">
+              <label for="actionsTabCheckBox-Skills" class="is-size-6 pt-0">Skills</label>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="column is-narrow pb-1">
+
+          <div class="select is-small is-info mr-4">
+            <select id="actionFilterSelectBySkill">
+              ${skillsOptionsHTML}
+            </select>
+          </div>
+
+          <div class="select is-small is-info">
+            <select id="actionFilterSelectByAction" class="pf-icon">
+              <option value="chooseDefault" class="is-bold-very">All Actions</option>
+              <optgroup label="───────"></optgroup>
+              <option value="OneAction" class="pf-icon">[one-action]</option>
+              <option value="TwoActions" class="pf-icon">[two-actions]</option>
+              <option value="ThreeActions" class="pf-icon">[three-actions]</option>
+              <option value="FreeAction" class="pf-icon">[free-action]</option>
+              <option value="Reaction" class="pf-icon">[reaction]</option>
+            </select>
+          </div>
+
+        </div>
+
+      </div>
+      <div class="mb-1">
+        <p class="control has-icons-left">
+          <input id="actionFilterSearch" class="input" type="text" autocomplete="off" placeholder="Search">
+          <span class="icon is-left">
+            <i class="fas fa-search" aria-hidden="true"></i>
+          </span>
+        </p>
+      </div>
+    `);
 
     $('#tabContent').append('<div id="actionTabContent" class="use-custom-scrollbar" style="height: 465px; max-height: 465px; overflow-y: auto;"></div>');
 
@@ -54,6 +112,50 @@ function openActionsTab(data) {
 
     $('#actionTabDowntime').click(function(){
         changeActionTab('actionTabDowntime', data);
+    });
+
+
+    $('#actionsTabCheckBox-Basic, #actionsTabCheckBox-Feats, #actionsTabCheckBox-Items, #actionsTabCheckBox-Skills').change(function(event, loadActionTab){
+      if ($(this).is(':checked')) {
+        $(this).removeClass('is-dark');
+        $(this).addClass('is-info');
+        $(this).blur();
+
+        if($(this).prop('id') == 'actionsTabCheckBox-Skills'){
+          g_selectedAction_SkillsEnabled = true;
+          $('#actionFilterSelectBySkill').parent().removeClass('is-hidden');
+        } else if($(this).prop('id') == 'actionsTabCheckBox-Basic'){
+          g_selectedAction_BasicEnabled = true;
+        } else if($(this).prop('id') == 'actionsTabCheckBox-Feats'){
+          g_selectedAction_FeatsEnabled = true;
+        } else if($(this).prop('id') == 'actionsTabCheckBox-Items'){
+          g_selectedAction_ItemsEnabled = true;
+        }
+
+        if(loadActionTab == null || loadActionTab){
+          changeActionTab(g_selectedActionSubTabID, data);
+        }
+      } else {
+        $(this).removeClass('is-info');
+        $(this).addClass('is-dark');
+        $(this).blur();
+
+        if($(this).prop('id') == 'actionsTabCheckBox-Skills'){
+          g_selectedAction_SkillsEnabled = false;
+          g_selectedAction_SkillOption = 'chooseDefault';
+          $('#actionFilterSelectBySkill').parent().addClass('is-hidden');
+        } else if($(this).prop('id') == 'actionsTabCheckBox-Basic'){
+          g_selectedAction_BasicEnabled = false;
+        } else if($(this).prop('id') == 'actionsTabCheckBox-Feats'){
+          g_selectedAction_FeatsEnabled = false;
+        } else if($(this).prop('id') == 'actionsTabCheckBox-Items'){
+          g_selectedAction_ItemsEnabled = false;
+        }
+
+        if(loadActionTab == null || loadActionTab){
+          changeActionTab(g_selectedActionSubTabID, data);
+        }
+      }
     });
 
     $('#'+g_selectedActionSubTabID).click();
@@ -75,7 +177,18 @@ function changeActionTab(type, data){
     $('#actionFilterSelectBySkill').off('change');
     $('#actionFilterSearch').off('change');
 
-    $('#actionFilterSelectBySkill').val(g_selectedActionOptionValue);
+    $('#actionFilterSelectBySkill').val(g_selectedAction_SkillOption);
+    $('#actionFilterSelectByAction').val(g_selectedAction_ActionOption);
+    $('#actionFilterSearch').val(g_selectedAction_SearchText);
+
+    $('#actionsTabCheckBox-Basic').prop('checked', g_selectedAction_BasicEnabled)
+        .trigger("change", [false]);
+    $('#actionsTabCheckBox-Feats').prop('checked', g_selectedAction_FeatsEnabled)
+        .trigger("change", [false]);
+    $('#actionsTabCheckBox-Items').prop('checked', g_selectedAction_ItemsEnabled)
+        .trigger("change", [false]);
+    $('#actionsTabCheckBox-Skills').prop('checked', g_selectedAction_SkillsEnabled)
+        .trigger("change", [false]);
 
     $('#actionTabContent').html('');
 
@@ -87,15 +200,9 @@ function changeActionTab(type, data){
 
 
     let actionFilterSelectByAction = $('#actionFilterSelectByAction');
-    if(actionFilterSelectByAction.val() == "chooseDefault"){
-        actionFilterSelectByAction.parent().removeClass('is-info');
-    } else {
-        actionFilterSelectByAction.parent().addClass('is-info');
-    }
     actionFilterSelectByAction.blur();
 
     let actionFilterSelectBySkill = $('#actionFilterSelectBySkill');
-    actionFilterSelectBySkill.parent().addClass('is-info');
     actionFilterSelectBySkill.blur();
 
     let actionFilterSearch = $('#actionFilterSearch');
@@ -103,22 +210,22 @@ function changeActionTab(type, data){
         actionFilterSearch.removeClass('is-info');
     } else {
         actionFilterSearch.addClass('is-info');
-        actionFilterSelectByAction.parent().removeClass('is-info');
-        actionFilterSelectBySkill.parent().removeClass('is-info');
     }
 
     $('#actionFilterSelectByAction').change(function(){
         actionFilterSearch.val('');
+        g_selectedAction_ActionOption = $(this).val();
         changeActionTab(type, data);
     });
 
     $('#actionFilterSelectBySkill').change(function(){
         actionFilterSearch.val('');
-        g_selectedActionOptionValue = $(this).val();
+        g_selectedAction_SkillOption = $(this).val();
         changeActionTab(type, data);
     });
 
     $('#actionFilterSearch').change(function(){
+        g_selectedAction_SearchText = $(this).val();
         changeActionTab(type, data);
     });
 
@@ -131,82 +238,222 @@ function changeActionTab(type, data){
         actionFilterSelectByAction.parent().removeClass('is-hidden');
     }
 
+    let featStructArray = null;
     switch(type) {
-        case 'actionTabEncounter': filterActionArray(data, data.EncounterFeatStructArray); break;
-        case 'actionTabExploration': filterActionArray(data, data.ExplorationFeatStructArray); break;
-        case 'actionTabDowntime': filterActionArray(data, data.DowntimeFeatStructArray); break;
-        default: break;
+      case 'actionTabEncounter': featStructArray = cloneObj(data.EncounterFeatStructArray); break;
+      case 'actionTabExploration': featStructArray = cloneObj(data.ExplorationFeatStructArray); break;
+      case 'actionTabDowntime': featStructArray = cloneObj(data.DowntimeFeatStructArray); break;
+      default: break;
     }
+
+    filterActionArray(data, featStructArray, type);
 
 }
 
-function filterActionArray(data, featStructArray){
+function filterActionArray(data, featStructArray, tabType){
+
+    // Add class, acnestry, etc feats to featStructArray, if enabled
+    if(g_selectedAction_FeatsEnabled){
+      for(const feat of g_featChoiceArray){
+        if(feat.value == null) { continue; }
+        let featStruct = g_featMap.get(feat.value.id+"");
+        if(featStruct == null) { continue; }
+  
+        // Hardcoded Exploration and Downtime Tag IDs
+        let explorationTag = featStruct.Tags.find(tag => {return tag.id === 15;});
+        let downtimeTag = featStruct.Tags.find(tag => {return tag.id === 218;});
+        
+        if(tabType == 'actionTabExploration' && explorationTag != null){
+          featStructArray.push(featStruct);
+        } else if(tabType == 'actionTabDowntime' && downtimeTag != null){
+          featStructArray.push(featStruct);
+        } else if(tabType == 'actionTabEncounter' && feat.value.actions != 'NONE'){
+          featStructArray.push(featStruct);
+        }
+      }
+    }
+    
+    // Convert featStructArray to actionStructArray
+    let actionStructArray = [];
+    for(const featStruct of featStructArray){
+      if(featStruct.Feat.isArchived === 1){continue;}
+
+      actionStructArray.push({
+        name: featStruct.Feat.name,
+        actions: featStruct.Feat.actions,
+        Tags: featStruct.Tags,
+        
+        skillID: featStruct.Feat.skillID,
+        genericType: featStruct.Feat.genericType,
+        rarity: featStruct.Feat.rarity,
+        level: featStruct.Feat.level,
+        isCore: featStruct.Feat.isCore,
+        Feat: featStruct.Feat,
+        InvItem: null,
+        Item: null,
+      });
+
+    }
+
+    // Add itemActionStructArray to actionStructArray
+    if(g_selectedAction_ItemsEnabled && tabType == 'actionTabEncounter'){
+      let itemActionStructArray = findItemActionsFromInvItems();
+
+      for(let itemActionStruct of itemActionStructArray){
+
+        let free_action = itemActionStruct.Actions.free_action;
+        if(free_action != null){
+          actionStructArray.push({
+            name: itemActionStruct.Name,
+            actions: free_action.actions,
+            Tags: free_action.traits,
+            
+            skillID: null,
+            genericType: null,
+            rarity: null,
+            Feat: null,
+            InvItem: itemActionStruct.InvItem,
+            Item: itemActionStruct.Item,
+          });
+        }
+
+        let reaction = itemActionStruct.Actions.reaction;
+        if(reaction != null){
+          actionStructArray.push({
+            name: itemActionStruct.Name,
+            actions: reaction.actions,
+            Tags: reaction.traits,
+            
+            skillID: null,
+            genericType: null,
+            rarity: null,
+            Feat: null,
+            InvItem: itemActionStruct.InvItem,
+            Item: itemActionStruct.Item,
+          });
+        }
+
+        let one_action = itemActionStruct.Actions.one_action;
+        if(one_action != null){
+          actionStructArray.push({
+            name: itemActionStruct.Name,
+            actions: one_action.actions,
+            Tags: one_action.traits,
+            
+            skillID: null,
+            genericType: null,
+            rarity: null,
+            Feat: null,
+            InvItem: itemActionStruct.InvItem,
+            Item: itemActionStruct.Item,
+          });
+        }
+
+        let two_actions = itemActionStruct.Actions.two_actions;
+        if(two_actions != null){
+          actionStructArray.push({
+            name: itemActionStruct.Name,
+            actions: two_actions.actions,
+            Tags: two_actions.traits,
+            
+            skillID: null,
+            genericType: null,
+            rarity: null,
+            Feat: null,
+            InvItem: itemActionStruct.InvItem,
+            Item: itemActionStruct.Item,
+          });
+        }
+
+        let three_actions = itemActionStruct.Actions.three_actions;
+        if(three_actions != null){
+          actionStructArray.push({
+            name: itemActionStruct.Name,
+            actions: three_actions.actions,
+            Tags: three_actions.traits,
+            
+            skillID: null,
+            genericType: null,
+            rarity: null,
+            Feat: null,
+            InvItem: itemActionStruct.InvItem,
+            Item: itemActionStruct.Item,
+          });
+        }
+
+      }
+
+    }
 
     let actionCount = 0;
-    for(const featStruct of featStructArray){
-        if(featStruct.Feat.isArchived === 1){continue;}
+    for(const actionStruct of actionStructArray){
 
         let willDisplay = true;
 
-        let actionFilterSearch = $('#actionFilterSearch');
-        if(actionFilterSearch.val() == ''){
-
-            let actionFilterSelectByAction = $('#actionFilterSelectByAction');
-            if(actionFilterSelectByAction.val() != "chooseDefault" && actionFilterSelectByAction.is(":visible")){
-                if(actionFilterSelectByAction.val() == "OneAction"){
-                    if(featStruct.Feat.actions != 'ACTION'){
-                        willDisplay = false;
-                    }
-                } else if(actionFilterSelectByAction.val() == "OneAction"){
-                    if(featStruct.Feat.actions != 'ACTION'){
-                        willDisplay = false;
-                    }
-                } else if(actionFilterSelectByAction.val() == "TwoActions"){
-                    if(featStruct.Feat.actions != 'TWO_ACTIONS'){
-                        willDisplay = false;
-                    }
-                } else if(actionFilterSelectByAction.val() == "ThreeActions"){
-                    if(featStruct.Feat.actions != 'THREE_ACTIONS'){
-                        willDisplay = false;
-                    }
-                } else if(actionFilterSelectByAction.val() == "FreeAction"){
-                    if(featStruct.Feat.actions != 'FREE_ACTION'){
-                        willDisplay = false;
-                    }
-                } else if(actionFilterSelectByAction.val() == "Reaction"){
-                    if(featStruct.Feat.actions != 'REACTION'){
-                        willDisplay = false;
-                    }
+        // Filter by Action
+        let actionFilterSelectByAction = $('#actionFilterSelectByAction');
+        if(actionFilterSelectByAction.val() != "chooseDefault" && actionFilterSelectByAction.is(":visible")){
+            if(actionFilterSelectByAction.val() == "OneAction"){
+                if(actionStruct.actions != 'ACTION'){
+                    willDisplay = false;
+                }
+            } else if(actionFilterSelectByAction.val() == "OneAction"){
+                if(actionStruct.actions != 'ACTION'){
+                    willDisplay = false;
+                }
+            } else if(actionFilterSelectByAction.val() == "TwoActions"){
+                if(actionStruct.actions != 'TWO_ACTIONS'){
+                    willDisplay = false;
+                }
+            } else if(actionFilterSelectByAction.val() == "ThreeActions"){
+                if(actionStruct.actions != 'THREE_ACTIONS'){
+                    willDisplay = false;
+                }
+            } else if(actionFilterSelectByAction.val() == "FreeAction"){
+                if(actionStruct.actions != 'FREE_ACTION'){
+                    willDisplay = false;
+                }
+            } else if(actionFilterSelectByAction.val() == "Reaction"){
+                if(actionStruct.actions != 'REACTION'){
+                    willDisplay = false;
                 }
             }
-
-            let actionFilterSelectBySkill = $('#actionFilterSelectBySkill');
-            if(actionFilterSelectBySkill.val() != "chooseDefault"){
-                let filterVal = actionFilterSelectBySkill.val();
-                if(filterVal === 'core') {
-                    if(featStruct.Feat.isCore !== 1){
-                        willDisplay = false;
-                    }
-                } else if(filterVal === 'others') {
-                    if(featStruct.Feat.isCore === 1 || featStruct.Feat.skillID != null){
-                        willDisplay = false;
-                    }
-                } else if(filterVal === 'all') {
-
-                } else {
-                    if(featStruct.Feat.skillID != filterVal){
-                        willDisplay = false;
-                    }
-                }
-            }
-
         }
 
+        // Filter by Skill
+        let actionFilterSelectBySkill = $('#actionFilterSelectBySkill');
+        if(actionFilterSelectBySkill.is(":visible")) {
+          let filterVal = actionFilterSelectBySkill.val();
+          if(filterVal != "chooseDefault"){
+            if(actionStruct.skillID != filterVal){
+              willDisplay = false;
+            }
+          } else {
+            // Hide none-Core Exploration and Downtime activities unless a skill is picked
+            if(tabType == 'actionTabExploration' || tabType == 'actionTabDowntime'){
+              if(actionStruct.isCore != null && !actionStruct.isCore){
+                willDisplay = false;
+              }
+            }
+          }
+        } else {
+          // If skill selection is hidden, hide all skill actions
+          if(actionStruct.skillID != null){
+            willDisplay = false;
+          }
+        }
+
+        // Filter by is Basic
+        if(actionStruct.genericType == 'BASIC-ACTION' && !g_selectedAction_BasicEnabled) {
+          willDisplay = false;
+        }
+
+        let actionFilterSearch = $('#actionFilterSearch');
         if(actionFilterSearch.val() != ''){
             let actionSearchInput = actionFilterSearch.val().toLowerCase();
-            let featName = featStruct.Feat.name.toLowerCase();
-            if(!featName.includes(actionSearchInput)){
-                let nameOfTag = featStruct.Tags.find(tag => {
+            let actionName = actionStruct.name.toLowerCase();
+            if(!actionName.includes(actionSearchInput)){
+                let nameOfTag = actionStruct.Tags.find(tag => {
                     return tag.name.toLowerCase().includes(actionSearchInput);
                 });
                 if(nameOfTag == null){
@@ -216,7 +463,7 @@ function filterActionArray(data, featStructArray){
         }
 
         if(willDisplay){
-            displayAction(featStruct, actionCount, data.SkillMap);
+            displayAction(actionStruct, actionCount, data.SkillMap);
         }
 
         actionCount++;
@@ -224,14 +471,14 @@ function filterActionArray(data, featStructArray){
 
 }
 
-function displayAction(featStruct, actionCount, skillMap) {
+function displayAction(actionStruct, actionCount, skillMap) {
 
-    let actionID = 'actionLink'+featStruct.Feat.id+"C"+actionCount;
+    let actionID = 'actionLink-C'+actionCount;
                 
-    let actionNameInnerHTML = '<span class="is-size-5">'+featStruct.Feat.name+'</span>';
+    let actionNameInnerHTML = '<span class="is-size-5">'+actionStruct.name+'</span>';
 
     let actionActionInnerHTML = '';
-    switch(featStruct.Feat.actions) {
+    switch(actionStruct.actions) {
         case 'FREE_ACTION': actionActionInnerHTML += '<div class="column is-paddingless is-1 p-1 pt-2"><span class="pf-icon is-size-5">[free-action]</span></div>'; break;
         case 'REACTION': actionActionInnerHTML += '<div class="column is-paddingless is-1 p-1 pt-2"><span class="pf-icon is-size-5">[reaction]</span></div>'; break;
         case 'ACTION': actionActionInnerHTML += '<div class="column is-paddingless is-1 p-1 pt-2"><span class="pf-icon is-size-5">[one-action]</span></div>'; break;
@@ -241,7 +488,7 @@ function displayAction(featStruct, actionCount, skillMap) {
     }
 
     let actionTagsInnerHTML = '<div class="buttons is-marginless is-right">';
-    switch(featStruct.Feat.rarity) {
+    switch(actionStruct.rarity) {
         case 'UNCOMMON': actionTagsInnerHTML += '<button class="button is-marginless mr-2 my-1 is-very-small is-uncommon">Uncommon</button>';
             break;
         case 'RARE': actionTagsInnerHTML += '<button class="button is-marginless mr-2 my-1 is-very-small is-rare">Rare</button>';
@@ -250,10 +497,10 @@ function displayAction(featStruct, actionCount, skillMap) {
             break;
         default: break;
     }
-    if(featStruct.Feat.skillID != null){
+    if(actionStruct.skillID != null){
         let skill = null;
         for(const [skillName, skillData] of skillMap.entries()){
-            if(skillData.Skill.id == featStruct.Feat.skillID) {
+            if(skillData.Skill.id == actionStruct.skillID) {
                 skill = skillData.Skill;
                 break;
             }
@@ -261,12 +508,13 @@ function displayAction(featStruct, actionCount, skillMap) {
         actionTagsInnerHTML += '<button class="button is-marginless mr-2 my-1 is-very-small is-info">'+skill.name+'</button>';
     }
 
-    featStruct.Tags = featStruct.Tags.sort(
+    actionStruct.Tags = actionStruct.Tags.sort(
         function(a, b) {
             return a.name > b.name ? 1 : -1;
         }
     );
-    for(const tag of featStruct.Tags){
+    for(const tag of actionStruct.Tags){
+        if(actionStruct.level == -1 && tag.name == 'General'){ continue; }
         actionTagsInnerHTML += '<button class="button is-marginless mr-2 my-1 is-very-small is-info">'+tag.name+'</button>';
     }
     actionTagsInnerHTML += '</div>';
@@ -277,13 +525,24 @@ function displayAction(featStruct, actionCount, skillMap) {
     if(actionCount == 0){
         $('#'+actionID).addClass('border-top');
     }
-                
-    $('#'+actionID).click(function(){
+    
+    if(actionStruct.Feat != null){
+      $('#'+actionID).click(function(){
         openQuickView('featView', {
-            Feat : featStruct.Feat,
-            Tags : featStruct.Tags
+            Feat : actionStruct.Feat,
+            Tags : actionStruct.Tags
         });
-    });
+      });
+    } else if(actionStruct.Item != null){
+      $('#'+actionID).click(function(){
+        openQuickView('invItemView', {
+            InvItem : actionStruct.InvItem,
+            Item : actionStruct.Item,
+            InvData : null,
+            ExtraData : {}
+        });
+      });
+    }
 
     $('#'+actionID).mouseenter(function(){
         $(this).addClass('has-background-grey-darker');

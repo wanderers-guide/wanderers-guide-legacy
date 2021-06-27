@@ -104,7 +104,13 @@ let g_selectedSubTabID = null;
 let g_selectedSubTabLock = false;
 
 let g_selectedActionSubTabID = 'actionTabEncounter';
-let g_selectedActionOptionValue = 'core';
+let g_selectedAction_SkillOption = 'chooseDefault';
+let g_selectedAction_ActionOption = 'chooseDefault';
+let g_selectedAction_SearchText = '';
+let g_selectedAction_BasicEnabled = true;
+let g_selectedAction_FeatsEnabled = true;
+let g_selectedAction_ItemsEnabled = true;
+let g_selectedAction_SkillsEnabled = true;
 
 let g_selectedSpellSubTabID = null;
 
@@ -1296,29 +1302,6 @@ function displayInformation() {
     let encounterFeatStructArray = [];
     let explorationFeatStructArray = [];
     let downtimeFeatStructArray = [];
-
-    for(const feat of g_featChoiceArray){
-        if(feat.value == null) { continue; }
-        let featStruct = g_featMap.get(feat.value.id+"");
-        if(featStruct == null) { continue; }
-
-        // Hardcoded Exploration and Downtime Tag IDs
-        let explorationTag = featStruct.Tags.find(tag => {
-            return tag.id === 15;
-        });
-        let downtimeTag = featStruct.Tags.find(tag => {
-            return tag.id === 218;
-        });
-
-        featStruct.Feat.isCore = 1;
-        if(explorationTag != null){
-            explorationFeatStructArray.push(featStruct);
-        } else if(downtimeTag != null){
-            downtimeFeatStructArray.push(featStruct);
-        } else if(feat.value.actions != 'NONE'){
-            encounterFeatStructArray.push(featStruct);
-        }
-    }
 
     for(const [featID, featStruct] of g_featMap.entries()){
 

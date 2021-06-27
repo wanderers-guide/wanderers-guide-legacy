@@ -382,6 +382,11 @@ module.exports = class GeneralGathering {
             }
           }
 
+          // Fix Prisma @map issue
+          if(feat.genericType != null){
+            feat.genericType = feat.genericType.replace('_','-');
+          }
+
           featMap.set(feat.id, {Feat : feat, Tags : fTags});
 
       }
@@ -579,6 +584,11 @@ module.exports = class GeneralGathering {
         let rune = item.itemRunes.find(rune => {
           return rune.itemID == item.id;
         });
+
+        // Fix Prisma @map issue
+        if(armor != null && armor.armorType == 'N_A'){
+          armor.armorType = 'N/A';
+        }
 
         itemMap.set(item.id, {
           Item : item,
