@@ -309,6 +309,10 @@ select::-webkit-scrollbar-corner {
   background-color: #181818;
 }
 
+.has-back-to-top {
+  position: relative;
+}
+
 /* Code Block */
 .code-block {
   padding: 0.8rem;
