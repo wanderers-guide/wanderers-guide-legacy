@@ -200,10 +200,10 @@ function displayFeat(featData, featTags, featCount){
     } else if(feat.level > 0){
         featNameInnerHTML += '<span class="is-size-7 has-text-grey pl-2">'+feat.level+' - </span>';
     } else {
-        featNameInnerHTML += '<span class="is-size-7 has-text-grey pl-4 ml-2"></span>';
+        featNameInnerHTML += '<span class="is-size-7 has-text-grey pl-4 ml-1"></span>';
     }
 
-    featNameInnerHTML += '<span>'+feat.name+'</span>';
+    featNameInnerHTML += '<span class="has-text-grey-light">'+feat.name+'</span>';
 
     switch(feat.actions) {
         case 'FREE_ACTION': featNameInnerHTML += '<span class="px-2 pf-icon">[free-action]</span>'; break;
@@ -426,7 +426,7 @@ function displayAbility(ability, abilIdentifier){
       }
     }
 
-    let abilityNameInnerHTML = '<span>'+abilityName+'</span>';
+    let abilityNameInnerHTML = '<span class="has-text-grey-light">'+abilityName+'</span>';
     let abilityLevelInnerHTML = (ability.level == 0 || ability.level == null) ? '' : '<span>Level '+ability.level+'</span>';
 
     $('#abilitiesContent').append('<div id="'+abilityID+'" class="columns is-mobile border-bottom border-dark-lighter cursor-clickable is-marginless mx-2"><div class="column is-paddingless pl-3"><p class="text-left pt-1">'+abilityNameInnerHTML+'</p></div><div class="column is-paddingless"><p class="pt-1">'+abilityLevelInnerHTML+'</p></div></div>');

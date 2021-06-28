@@ -20,7 +20,7 @@ function openAddItemQuickview(data) {
 
     qContent.append('<div class="tabs is-small is-centered is-marginless mb-1"><ul class="category-tabs"><li><a id="itemTabAll">All</a></li><li><a id="itemTabGeneral">General</a></li><li><a id="itemTabMagical">Magical</a></li><li><a id="itemTabAlchemical">Alchemical</a></li><li><a id="itemTabCurrency">Currency</a></li></ul></div>');
 
-    qContent.append('<div class="columns is-mobile is-marginless mb-3"><div class="column py-1 pr-1"><p class="control has-icons-left"><input id="allItemSearch" class="input" type="text"><span class="icon is-left"><i class="fas fa-search" aria-hidden="true"></i></span></p></div><div class="column is-3 py-1 mt-1"><div class="select is-small is-info"><select id="allItemsFilterBySubcategory"></select></div></div></div>');
+    qContent.append('<div class="columns is-mobile is-marginless mb-3"><div class="column py-1 pr-1"><p class="control has-icons-left"><input id="allItemSearch" class="input" type="text" autocomplete="off"><span class="icon is-left"><i class="fas fa-search" aria-hidden="true"></i></span></p></div><div class="column is-3 py-1 mt-1"><div class="select is-small is-info"><select id="allItemsFilterBySubcategory"></select></div></div></div>');
 
     qContent.append('<div id="addItemListSection" class="tile is-ancestor is-vertical"></div>');
 

@@ -290,7 +290,7 @@ function displaySpellsInLevelPrepared(spellBook, level, slotArray, spellBookSect
           }
 
 
-          let spellNameHTML = '<strong class="has-text-grey-light">'+spellName+'</strong>';
+          let spellNameHTML = '<p class="has-text-left pl-3 has-text-grey-light">'+spellName+'</p>';
 
           if(spellDataStruct.Spell.isArchived === 1){
             spellNameHTML += '<em class="pl-1">(archived)</em>';
@@ -334,19 +334,19 @@ function displaySpellsInLevelPrepared(spellBook, level, slotArray, spellBookSect
 
           $('#'+spellBookSectionID).append(`
             <div id="${spellSlotID}" class="columns is-mobile is-marginless cursor-clickable">
-              <div class="column is-4 is-paddingless">
+              <div class="column is-4 is-paddingless border-bottom border-dark-lighter">
                 <p class="has-text-left pl-3 pt-1 pos-relative">${spellNameHTML}</p>
               </div>
-              <div class="column is-1 is-paddingless">
+              <div class="column is-1 is-paddingless border-bottom border-dark-lighter">
                 <p class="text-center has-text-grey-light pt-1">${spellCast}</p>
               </div>
-              <div class="column is-1 is-paddingless">
+              <div class="column is-1 is-paddingless border-bottom border-dark-lighter">
                 <p class="text-center has-text-grey-light pt-1">${spellSave}</p>
               </div>
-              <div class="column is-1 is-paddingless">
+              <div class="column is-1 is-paddingless border-bottom border-dark-lighter">
                 <p class="text-center has-text-grey-light pt-1">${spellRange}</p>
               </div>
-              <div class="column is-5 is-paddingless">
+              <div class="column is-5 is-paddingless border-bottom border-dark-lighter">
                 <p class="text-center has-text-grey-light">${tagsInnerHTML}</p>
               </div>
             </div>
@@ -377,19 +377,19 @@ function displaySpellsInLevelPrepared(spellBook, level, slotArray, spellBookSect
 
         $('#'+spellBookSectionID).append(`
           <div id="${spellSlotID}" class="columns is-mobile is-marginless">
-            <div class="column is-4 is-paddingless">
+            <div class="column is-4 is-paddingless border-bottom border-dark-lighter">
               <p class="has-text-left pl-4 has-text-grey-light pos-relative">-${slotColorHTML}</p>
             </div>
-            <div class="column is-1 is-paddingless">
+            <div class="column is-1 is-paddingless border-bottom border-dark-lighter">
               <p class="text-center has-text-grey-light">-</p>
             </div>
-            <div class="column is-1 is-paddingless">
+            <div class="column is-1 is-paddingless border-bottom border-dark-lighter">
               <p class="text-center has-text-grey-light">-</p>
             </div>
-            <div class="column is-1 is-paddingless">
+            <div class="column is-1 is-paddingless border-bottom border-dark-lighter">
               <p class="text-center has-text-grey-light">-</p>
             </div>
-            <div class="column is-5 is-paddingless">
+            <div class="column is-5 is-paddingless border-bottom border-dark-lighter">
               <p class="text-center has-text-grey-light">-</p>
             </div>
           </div>
@@ -407,25 +407,25 @@ function displaySpellsInLevelPrepared(spellBook, level, slotArray, spellBookSect
 
   if(didDisplaySpellAtLevel){
       $('#'+spellBookTitleSectionID).append('<p class="is-size-5 has-text-grey-kinda-light has-text-weight-bold text-left pl-5">'+sectionName+'</p>');
-      $('#'+spellBookTitleSectionID).append('<hr class="hr-highlighted" style="margin-top:-0.5em; margin-bottom:0em;">');
       $('#'+spellBookTitleSectionID).append(`
-        <div class="columns is-mobile pt-1 is-marginless">
+        <div class="columns is-mobile is-marginless">
           <div class="column is-4 is-paddingless">
-            <p class="has-text-left pl-3"><strong class="has-text-grey-kinda-light"><u>Name</u></strong></p>
+            <p class="has-text-left pl-3"><strong class="has-text-grey-light">Name</strong></p>
           </div>
           <div class="column is-1 is-paddingless">
-            <p class="text-center"><strong class="has-text-grey-kinda-light"><u>Cast</u></strong></p>
+            <p class="text-center"><strong class="has-text-grey-light">Cast</strong></p>
           </div>
           <div class="column is-1 is-paddingless">
-            <p class="text-center"><strong class="has-text-grey-kinda-light"><u>Save</u></strong></p>
+            <p class="text-center"><strong class="has-text-grey-light">Save</strong></p>
           </div>
           <div class="column is-1 is-paddingless">
-            <p class="text-center"><strong class="has-text-grey-kinda-light"><u>Range</u></strong></p>
+            <p class="text-center"><strong class="has-text-grey-light">Range</strong></p>
           </div>
           <div class="column is-5 is-paddingless">
-            <p class="text-center"><strong class="has-text-grey-kinda-light"><u>Traits</u></strong></p>
+            <p class="text-center"><strong class="has-text-grey-light">Traits</strong></p>
           </div>
         </div>
+        <div class="is-divider hr-light is-marginless"></div>
       `);
   }
 
@@ -493,7 +493,7 @@ function displaySpellsInLevelSpontaneous(spellBook, level, slotArray, spellBookS
         }
 
 
-        let spellNameHTML = '<strong class="has-text-grey-light">'+spellName+'</strong>';
+        let spellNameHTML = '<p class="has-text-left pl-3 has-text-grey-light">'+spellName+'</p>';
 
         if(spellDataStruct.Spell.isArchived === 1){
           spellNameHTML += '<em class="pl-1">(archived)</em>';
@@ -537,19 +537,19 @@ function displaySpellsInLevelSpontaneous(spellBook, level, slotArray, spellBookS
 
         $('#'+spellBookSectionID).append(`
           <div id="${spellSponListingID}" class="${spellListingSponClass} columns is-mobile is-marginless cursor-clickable">
-            <div class="column is-4 is-paddingless">
+            <div class="column is-4 is-paddingless border-bottom border-dark-lighter">
               <p class="has-text-left pl-3 pt-1 pos-relative">${spellNameHTML}</p>
             </div>
-            <div class="column is-1 is-paddingless">
+            <div class="column is-1 is-paddingless border-bottom border-dark-lighter">
               <p class="text-center has-text-grey-light pt-1">${spellCast}</p>
             </div>
-            <div class="column is-1 is-paddingless">
+            <div class="column is-1 is-paddingless border-bottom border-dark-lighter">
               <p class="text-center has-text-grey-light pt-1">${spellSave}</p>
             </div>
-            <div class="column is-1 is-paddingless">
+            <div class="column is-1 is-paddingless border-bottom border-dark-lighter">
               <p class="text-center has-text-grey-light pt-1">${spellRange}</p>
             </div>
-            <div class="column is-5 is-paddingless">
+            <div class="column is-5 is-paddingless border-bottom border-dark-lighter">
               <p class="text-center has-text-grey-light">${tagsInnerHTML}</p>
             </div>
           </div>
@@ -575,19 +575,19 @@ function displaySpellsInLevelSpontaneous(spellBook, level, slotArray, spellBookS
     } else {
         $('#'+spellBookSectionID).append(`
           <div id="${spellSponListingID}" class="${spellListingSponClass} columns is-mobile is-marginless">
-            <div class="column is-4 is-paddingless">
+            <div class="column is-4 is-paddingless border-bottom border-dark-lighter">
               <p class="has-text-left pl-4 has-text-grey-light">-</p>
             </div>
-            <div class="column is-1 is-paddingless">
+            <div class="column is-1 is-paddingless border-bottom border-dark-lighter">
               <p class="text-center has-text-grey-light">-</p>
             </div>
-            <div class="column is-1 is-paddingless">
+            <div class="column is-1 is-paddingless border-bottom border-dark-lighter">
               <p class="text-center has-text-grey-light">-</p>
             </div>
-            <div class="column is-1 is-paddingless">
+            <div class="column is-1 is-paddingless border-bottom border-dark-lighter">
               <p class="text-center has-text-grey-light">-</p>
             </div>
-            <div class="column is-5 is-paddingless">
+            <div class="column is-5 is-paddingless border-bottom border-dark-lighter">
               <p class="text-center has-text-grey-light">-</p>
             </div>
           </div>
@@ -612,19 +612,19 @@ function displaySpellsInLevelSpontaneous(spellBook, level, slotArray, spellBookS
     let spellSponListingID = spellBookSectionID+'-spellSponListingNoSpellsL'+level;
     $('#'+spellBookSectionID).append(`
       <div id="'+spellSponListingID+'" class="'+spellListingSponClass+' spellSponListing columns is-mobile is-marginless">
-        <div class="column is-4 is-paddingless">
+        <div class="column is-4 is-paddingless border-bottom border-dark-lighter">
           <p class="has-text-left pl-4 has-text-grey-light">-</p>
         </div>
-        <div class="column is-1 is-paddingless">
+        <div class="column is-1 is-paddingless border-bottom border-dark-lighter">
           <p class="text-center has-text-grey-light">-</p>
         </div>
-        <div class="column is-1 is-paddingless">
+        <div class="column is-1 is-paddingless border-bottom border-dark-lighter">
           <p class="text-center has-text-grey-light">-</p>
         </div>
-        <div class="column is-1 is-paddingless">
+        <div class="column is-1 is-paddingless border-bottom border-dark-lighter">
           <p class="text-center has-text-grey-light">-</p>
         </div>
-        <div class="column is-5 is-paddingless">
+        <div class="column is-5 is-paddingless border-bottom border-dark-lighter">
           <p class="text-center has-text-grey-light">-</p>
         </div>
       </div>
@@ -641,25 +641,25 @@ function displaySpellsInLevelSpontaneous(spellBook, level, slotArray, spellBookS
   if(didDisplaySpellAtLevel || (!didDisplaySpellAtLevel && spellsSearchInput == null)){
     let spellSponCastingSetID = spellBookSectionID+'-spellSponCastingSet'+level;
     $('#'+spellBookTitleSectionID).append('<p class="text-left pl-5"><span class="has-text-grey-kinda-light has-text-weight-bold is-size-5 pr-2">'+sectionName+'</span><span id="'+spellSponCastingSetID+'" class="is-unselectable cursor-clickable"></span></p>');
-    $('#'+spellBookTitleSectionID).append('<hr class="hr-highlighted" style="margin-top:-0.5em; margin-bottom:0em;">');
     $('#'+spellBookTitleSectionID).append(`
-      <div class="columns is-mobile pt-1 is-marginless">
+      <div class="columns is-mobile is-marginless">
         <div class="column is-4 is-paddingless">
-          <p class="has-text-left pl-3"><strong class="has-text-grey-kinda-light"><u>Name</u></strong></p>
+          <p class="has-text-left pl-3"><strong class="has-text-grey-light">Name</strong></p>
         </div>
         <div class="column is-1 is-paddingless">
-          <p class="text-center"><strong class="has-text-grey-kinda-light"><u>Cast</u></strong></p>
+          <p class="text-center"><strong class="has-text-grey-light">Cast</strong></p>
         </div>
         <div class="column is-1 is-paddingless">
-          <p class="text-center"><strong class="has-text-grey-kinda-light"><u>Save</u></strong></p>
+          <p class="text-center"><strong class="has-text-grey-light">Save</strong></p>
         </div>
         <div class="column is-1 is-paddingless">
-          <p class="text-center"><strong class="has-text-grey-kinda-light"><u>Range</u></strong></p>
+          <p class="text-center"><strong class="has-text-grey-light">Range</strong></p>
         </div>
         <div class="column is-5 is-paddingless">
-          <p class="text-center"><strong class="has-text-grey-kinda-light"><u>Traits</u></strong></p>
+          <p class="text-center"><strong class="has-text-grey-light">Traits</strong></p>
         </div>
       </div>
+      <div class="is-divider hr-light is-marginless"></div>
     `);
     if(level != 0){    
         displaySpontaneousCastingsSet(spellSponCastingSetID, filteredSlotArray, spellListingSponClass);
@@ -773,32 +773,32 @@ function displaySpellsFocus() {
                 } else {
                     $('#spellsFocusContent').append('<p class="is-size-5 has-text-grey-kinda-light has-text-weight-bold text-left pl-5 pt-2">'+sectionName+'</p>');
                 }
-                $('#spellsFocusContent').append('<hr class="hr-highlighted" style="margin-top:-0.5em; margin-bottom:0em;">');
                 $('#spellsFocusContent').append(`
-                  <div class="columns is-mobile pt-1 is-marginless">
+                  <div class="columns is-mobile is-marginless">
                     <div class="column is-4 is-paddingless">
-                      <p class="has-text-left pl-3"><strong class="has-text-grey-kinda-light"><u>Name</u></strong></p>
+                      <p class="has-text-left pl-3"><strong class="has-text-grey-light">Name</strong></p>
                     </div>
                     <div class="column is-1 is-paddingless">
-                      <p class="text-center"><strong class="has-text-grey-kinda-light"><u>Cast</u></strong></p>
+                      <p class="text-center"><strong class="has-text-grey-light">Cast</strong></p>
                     </div>
                     <div class="column is-1 is-paddingless">
-                      <p class="text-center"><strong class="has-text-grey-kinda-light"><u>Save</u></strong></p>
+                      <p class="text-center"><strong class="has-text-grey-light">Save</strong></p>
                     </div>
                     <div class="column is-1 is-paddingless">
-                      <p class="text-center"><strong class="has-text-grey-kinda-light"><u>Range</u></strong></p>
+                      <p class="text-center"><strong class="has-text-grey-light">Range</strong></p>
                     </div>
                     <div class="column is-5 is-paddingless">
-                      <p class="text-center"><strong class="has-text-grey-kinda-light"><u>Traits</u></strong></p>
+                      <p class="text-center"><strong class="has-text-grey-light">Traits</strong></p>
                     </div>
                   </div>
+                  <div class="is-divider hr-light is-marginless"></div>
                 `);
             }
 
             let spellListingID = 'focusSpellListing'+focusSpellCount;
             
             // Name //
-            let spellName = '<strong class="has-text-grey-light">'+spellDataStruct.Spell.name+'</strong>';
+            let spellName = '<p class="has-text-left pl-3 has-text-grey-light">'+spellDataStruct.Spell.name+'</p>';
 
             if(spellDataStruct.Spell.isArchived === 1){
                 spellName += '<em class="pl-1">(archived)</em>';
@@ -843,19 +843,19 @@ function displaySpellsFocus() {
             let focusListingClass = (spellDataStruct.Spell.level != 0) ? 'focusSpellListingClass' : 'focusCantripListingClass';
             $('#spellsFocusContent').append(`
               <div id="${spellListingID}" class="${focusListingClass} columns is-mobile is-marginless cursor-clickable">
-                <div class="column is-4 is-paddingless">
+                <div class="column is-4 is-paddingless border-bottom border-dark-lighter">
                   <p class="has-text-left pl-3 pt-1">${spellName}</p>
                 </div>
-                <div class="column is-1 is-paddingless">
+                <div class="column is-1 is-paddingless border-bottom border-dark-lighter">
                   <p class="text-center has-text-grey-light pt-1">${spellCast}</p>
                 </div>
-                <div class="column is-1 is-paddingless">
+                <div class="column is-1 is-paddingless border-bottom border-dark-lighter">
                   <p class="text-center has-text-grey-light pt-1">${spellSave}</p>
                 </div>
-                <div class="column is-1 is-paddingless">
+                <div class="column is-1 is-paddingless border-bottom border-dark-lighter">
                   <p class="text-center has-text-grey-light pt-1">${spellRange}</p>
                 </div>
-                <div class="column is-5 is-paddingless">
+                <div class="column is-5 is-paddingless border-bottom border-dark-lighter">
                   <p class="text-center has-text-grey-light">${tagsInnerHTML}</p>
                 </div>
               </div>
@@ -997,25 +997,25 @@ function displaySpellsInnate() {
             } else {
                 $('#spellsInnateContent').append('<p class="is-size-5 has-text-grey-kinda-light has-text-weight-bold text-left pl-5 pt-2">'+sectionName+'</p>');
             }
-            $('#spellsInnateContent').append('<hr class="hr-highlighted" style="margin-top:-0.5em; margin-bottom:0em;">');
             $('#spellsInnateContent').append(`
-              <div class="columns is-mobile pt-1 is-marginless">
+              <div class="columns is-mobile is-marginless">
                 <div class="column is-4 is-paddingless">
-                  <p class="has-text-left pl-3"><strong class="has-text-grey-kinda-light"><u>Name</u></strong></p>
+                  <p class="has-text-left pl-3"><strong class="has-text-grey-light">Name</strong></p>
                 </div>
                 <div class="column is-2 is-paddingless">
-                  <p class="text-center"><strong class="is-size-6-5 has-text-grey-kinda-light"><u>Casts Per Day</u></strong></p>
+                  <p class="text-center"><strong class="is-size-6-5 has-text-grey-light">Casts Per Day</strong></p>
                 </div>
                 <div class="column is-1 is-paddingless">
-                  <p class="text-center"><strong class="has-text-grey-kinda-light"><u>Cast</u></strong></p>
+                  <p class="text-center"><strong class="has-text-grey-light">Cast</strong></p>
                 </div>
                 <div class="column is-1 is-paddingless">
-                  <p class="text-center"><strong class="has-text-grey-kinda-light"><u>Range</u></strong></p>
+                  <p class="text-center"><strong class="has-text-grey-light">Range</strong></p>
                 </div>
                 <div class="column is-4 is-paddingless">
-                  <p class="text-center"><strong class="has-text-grey-kinda-light"><u>Traits</u></strong></p>
+                  <p class="text-center"><strong class="has-text-grey-light">Traits</strong></p>
                 </div>
               </div>
+              <div class="is-divider hr-light is-marginless"></div>
             `);
         }
 
@@ -1028,7 +1028,7 @@ function displaySpellsInnate() {
             let spellCastingID = 'innateSpellCastings'+spellIndex;
             
             // Name //
-            let spellName = '<strong class="has-text-grey-light">'+spellDataStruct.Spell.name+'</strong>';
+            let spellName = '<p class="has-text-left pl-3 has-text-grey-light">'+spellDataStruct.Spell.name+'</p>';
 
             if(spellDataStruct.Spell.isArchived === 1){
                 spellName += '<em class="pl-1">(archived)</em>';
@@ -1060,19 +1060,19 @@ function displaySpellsInnate() {
 
             $('#spellsInnateContent').append(`
               <div id="${spellListingID}" class="columns is-mobile is-marginless cursor-clickable">
-                <div class="column is-4 is-paddingless">
+                <div class="column is-4 is-paddingless border-bottom border-dark-lighter">
                   <p class="has-text-left pl-3 pt-1">${spellName}</p>
                 </div>
-                <div class="column is-2 is-paddingless">
+                <div class="column is-2 is-paddingless border-bottom border-dark-lighter">
                   <p id="${spellCastingID}" class="text-center has-text-grey-light pt-1 is-unselectable"></p>
                 </div>
-                <div class="column is-1 is-paddingless">
+                <div class="column is-1 is-paddingless border-bottom border-dark-lighter">
                   <p class="text-center has-text-grey-light pt-1">${spellCast}</p>
                 </div>
-                <div class="column is-1 is-paddingless">
+                <div class="column is-1 is-paddingless border-bottom border-dark-lighter">
                   <p class="text-center has-text-grey-light pt-1">${spellRange}</p>
                 </div>
-                <div class="column is-4 is-paddingless">
+                <div class="column is-4 is-paddingless border-bottom border-dark-lighter">
                   <p class="text-center has-text-grey-light">${tagsInnerHTML}</p>
                 </div>
               </div>

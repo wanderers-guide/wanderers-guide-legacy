@@ -89,7 +89,7 @@ function openActionsTab(data) {
         </div>
 
       </div>
-      <div class="mb-1">
+      <div class="">
         <p class="control has-icons-left">
           <input id="actionFilterSearch" class="input" type="text" autocomplete="off" placeholder="Search">
           <span class="icon is-left">
@@ -521,10 +521,6 @@ function displayAction(actionStruct, actionCount, skillMap) {
 
     
     $('#actionTabContent').append('<div id="'+actionID+'" class="columns is-mobile border-bottom border-dark-lighter cursor-clickable is-marginless mx-2">'+actionActionInnerHTML+'<div class="column is-paddingless"><p class="text-left pl-2 pt-1">'+actionNameInnerHTML+'</p></div><div class="column is-paddingless"><p class="pt-1">'+actionTagsInnerHTML+'</p></div></div>');
-
-    if(actionCount == 0){
-        $('#'+actionID).addClass('border-top');
-    }
     
     if(actionStruct.Feat != null){
       $('#'+actionID).click(function(){
