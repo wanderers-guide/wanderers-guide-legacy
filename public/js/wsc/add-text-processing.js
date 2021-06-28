@@ -29,15 +29,12 @@ function processAddText(code, locationID, centerText=false){
         const exprData = readExpr(statementRaw);
 
         let expression = exprData.expression;
-        expression = expression.replace(/-/g, ' ');
-        expression = expression.replace(/\s*==\s*/g, ' equal to ');
-        expression = expression.replace(/\s*!=\s*/g, ' not equal to ');
-        expression = expression.replace(/\s*>=\s*/g, ' greater than or equal to ');
-        expression = expression.replace(/\s*<=\s*/g, ' lesser than or equal to ');
-        expression = expression.replace(/\s*&&\s*/g, ' and ');
 
-        expression = expression.toLowerCase().replace('class ability', 'class feature');
-        
+        expression = expression.replace(/-/g, ' ');
+        expression = expression.toLowerCase();
+
+        expression = exp_cleaner(expression);
+
         if (exprData.statement != null && exprData.statement.includes("ADD-TEXT=")){
           statement = exprData.statement;
           expression = 'If '+expression;
@@ -52,7 +49,7 @@ function processAddText(code, locationID, centerText=false){
 
         $('#'+locationID).append(`
           <div class="box">
-            <p class="is-size-5-5 is-bold">${capitalizeWord(expression)}:</p>
+            <p class="is-size-5-5 is-italic">${expression}:</p>
             <hr class="mt-1 mb-2">
             <div class="py-1 ${centerStyle}">${processText(text, false, true, 'MEDIUM')}</div>
           </div>
@@ -67,4 +64,116 @@ function processAddText(code, locationID, centerText=false){
     }
   }
 
+}
+
+
+function exp_cleaner(expression){
+
+  expression = expression.replace('class ability', 'class feature');
+        
+  expression = exp_convertLevelTextToNumRange(expression);
+
+  expression = expression.replace(/\s*&&\s*/g, ' and ');
+  expression = expression.replace(/\s*==\s*/g, ' equal to ');
+  expression = expression.replace(/\s*!=\s*/g, ' not equal to ');
+  expression = expression.replace(/\s*>=\s*/g, ' greater than or equal to ');
+  expression = expression.replace(/\s*<=\s*/g, ' lesser than or equal to ');
+
+  expression = exp_makeClassFeaturePretty(expression);
+
+  return expression;
+}
+
+
+function exp_convertLevelTextToNumRange(expression){
+
+  // Hardcoded - Min and max character levels
+  let lowerBound = 1;
+  let upperBound = 20;
+
+  if(expression.includes('&&')){
+    // Multi condition
+
+    // Is num range,
+    let expressionParts = expression.split('&&');
+    if(expressionParts.length != 2) { return expression; }
+    if(expressionParts[0].trim().startsWith('has level') && expressionParts[1].trim().startsWith('has level')){
+    } else { return expression; }
+
+    // Convert,
+    let expr0 = expressionParts[0].replace('has level', '');
+    let expr1 = expressionParts[1].replace('has level', '');
+    let expr0Num = 0;
+    let expr1Num = 0;
+
+    if(expr0.includes('>=')){
+      expr0 = expr0.replace('>=','').trim();
+      expr0Num = parseInt(expr0);
+    }
+    if(expr1.includes('>=')){
+      expr1 = expr1.replace('>=','').trim();
+      expr1Num = parseInt(expr1);
+    }
+
+    if(expr0.includes('<=')){
+      expr0 = expr0.replace('<=','').trim();
+      expr0Num = parseInt(expr0);
+    }
+    if(expr1.includes('<=')){
+      expr1 = expr1.replace('<=','').trim();
+      expr1Num = parseInt(expr1);
+    }
+
+    if(expr0.includes('==')){
+      expr0 = expr0.replace('==','').trim();
+      expr0Num = parseInt(expr0);
+    }
+    if(expr1.includes('==')){
+      expr1 = expr1.replace('==','').trim();
+      expr1Num = parseInt(expr1);
+    }
+
+    lowerBound = (expr0 < expr1) ? expr0 : expr1;
+    upperBound = (expr0 < expr1) ? expr1 : expr0;
+
+    if(lowerBound == upperBound) { return `is level ${lowerBound}`; }
+    return `is level ${lowerBound} - ${upperBound}`;
+
+  } else {
+    // Single condition
+
+    // Is num range,
+    if(expression.startsWith('has level')){
+    } else { return expression; }
+    if(expression.includes('==')){
+      return expression;
+    }
+
+    // Convert,
+    expression = expression.replace('has level', '');
+
+    if(expression.includes('>=')){
+      expression = expression.replace('>=','').trim();
+      lowerBound = parseInt(expression);
+    }
+
+    if(expression.includes('<=')){
+      expression = expression.replace('<=','').trim();
+      upperBound = parseInt(expression);
+    }
+
+    if(lowerBound == upperBound) { return `is level ${lowerBound}`; }
+    return `is level ${lowerBound} - ${upperBound}`;
+  }
+
+}
+
+function exp_makeClassFeaturePretty(expression){
+
+  if(expression.startsWith('has class feature equal to')){
+    expression = expression.replace('has class feature equal to', '');
+    return `has ${capitalizeWords(expression)} class feature`;
+  }
+
+  return expression;
 }
