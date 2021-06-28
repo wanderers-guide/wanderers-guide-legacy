@@ -1825,6 +1825,16 @@ function determineArmor(dexMod, strScore) {
         $('#shieldSection').removeClass('is-hidden');
         $('#shieldBonus').html('+'+shieldStruct.Item.ShieldData.acBonus);
         $('#shieldSection').attr('data-tooltip', shieldStruct.InvItem.name+'\nHardness: '+shieldStruct.InvItem.hardness+'\nHealth: '+shieldStruct.InvItem.currentHitPoints+'/'+maxHP);
+
+        $("#shieldSection").click(function(){
+          openQuickView('invItemView', {
+              InvItem : shieldStruct.InvItem,
+              Item : shieldStruct.Item,
+              InvData : null,
+              ExtraData : {}
+          });
+        });
+
     } else {
         $('#shieldSection').addClass('is-hidden');
     }
