@@ -115,7 +115,42 @@ function getFamiliarMaxHealth(charFamiliar){
 ////
 
 function getFamiliarAC(){
-  return g_calculatedStats.totalAC;
+  // Remove circumstance or status bonuses / penalties
+  /*
+    CIRCUM_BONUS, STATUS_BONUS, CIRCUM_PENALTY, STATUS_PENALTY
+  */
+  let totalAC = g_calculatedStats.totalAC;
+  let statMap = getStatMap('AC');
+
+  let removalMod = 0;
+
+  let stat_circumBonus = statMap.get('CIRCUM_BONUS');
+  if(stat_circumBonus != null) { removalMod += stat_circumBonus.Value; }
+
+  let stat_statusBonus = statMap.get('STATUS_BONUS');
+  if(stat_statusBonus != null) { removalMod += stat_statusBonus.Value; }
+
+  let stat_circumPenalty = statMap.get('CIRCUM_PENALTY');
+  if(stat_circumPenalty != null) { removalMod += stat_circumPenalty.Value; }
+
+  let stat_statusPenalty = statMap.get('STATUS_PENALTY');
+  if(stat_statusPenalty != null) { removalMod += stat_statusPenalty.Value; }
+
+  // Account for clumsy condition which could lower AC
+  let dexModChange = 0;
+  if(getStatTotal('SCORE_DEX') != g_preConditions_dexScore){
+    let dexCap = getStatTotal('DEX_CAP');
+
+    let pre_dexMod = getMod(g_preConditions_dexScore);
+    let pre_dexModCapped = (dexCap != null) ? ((pre_dexMod > dexCap) ? dexCap : pre_dexMod) : pre_dexMod;
+
+    let dexMod = getMod(getStatTotal('SCORE_DEX'));
+    let dexModCapped = (dexCap != null) ? ((dexMod > dexCap) ? dexCap : dexMod) : dexMod;
+
+    dexModChange = pre_dexModCapped - dexModCapped;
+  }
+
+  return totalAC - removalMod + dexModChange;
 }
 
 function getFamiliarSpellBonus(){
