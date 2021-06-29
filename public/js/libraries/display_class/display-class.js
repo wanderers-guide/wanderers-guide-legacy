@@ -74,9 +74,9 @@ class DisplayClass {
           $('#class-hit-points').html('<p class="pl-1">'+classStruct.class.hitPoints+'</p>');
 
           $('#class-perception').html(profToWord(classStruct.class.tPerception));
-          $('#class-saving-throw-fort').html(profToWord(classStruct.class.tPerception)+' in Fortitude');
-          $('#class-saving-throws-reflex').html(profToWord(classStruct.class.tPerception)+' in Reflex');
-          $('#class-saving-throws-will').html(profToWord(classStruct.class.tPerception)+' in Will');
+          $('#class-saving-throw-fort').html(profToWord(classStruct.class.tFortitude)+' in Fortitude');
+          $('#class-saving-throws-reflex').html(profToWord(classStruct.class.tReflex)+' in Reflex');
+          $('#class-saving-throws-will').html(profToWord(classStruct.class.tWill)+' in Will');
 
           let tWeaponsArray = classStruct.class.tWeapons.split(',,, ');
           for(const tWeapons of tWeaponsArray){
