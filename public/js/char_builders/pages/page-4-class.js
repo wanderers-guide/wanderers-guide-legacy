@@ -272,7 +272,7 @@ function displayCurrentClass(classStruct, classNum) {
                     processCode(
                         'GIVE-PROF-IN='+skillName+':T',
                         srcStruct,
-                        'profSkillsCode',
+                        'profSkillsCode-'+classNum,
                         'Initial Class');
                 } else {
                     $('.'+tSkillControlShellClass).addClass("is-info");
@@ -442,7 +442,7 @@ function displayCurrentClass(classStruct, classNum) {
             processCode( // Use WSC because if the character is already trained, it will give them a new skill.
                 'GIVE-PROF-IN='+savingProf.To+':T',
                 srcStruct,
-                'profSkillsCode',
+                'profSkillsCode-'+classNum,
                 'Initial Class');
         } else {
             savingProf.SourceName = 'Initial Class';
