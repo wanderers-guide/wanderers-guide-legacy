@@ -20,6 +20,7 @@ socket.on("returnHomebrewFeatDetailsPlus", function(featsObject, classObject, an
         return;
     }
 
+    if(feat.Feat.genericType == null) { feat.Feat.genericType = ''; }
     feat.Feat.genericType = feat.Feat.genericType.replace(/_/g, '-');
     $("#inputBuilderType").val(feat.Feat.genericType);
     $("#inputFeatName").val(feat.Feat.name);
