@@ -54,6 +54,7 @@ function displayBackgroundResults(allBackgrounds){
   let foundCount = 0;
   for(const background of allBackgrounds){
     if(background.isArchived == 1) {continue;}
+    if(g_hiddenFromBrowseContentSources.includes(background.contentSrc)) {continue;}
     foundCount++;
 
     let entryID = 'background-'+background.id;

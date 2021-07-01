@@ -86,6 +86,7 @@ function displayArchetypeResults(allArchetypes){
   let foundCount = 0;
   for(const archetype of allArchetypes){
     if(archetype.isArchived == 1) {continue;}
+    if(g_hiddenFromBrowseContentSources.includes(archetype.contentSrc)) {continue;}
     foundCount++;
 
     let entryID = 'archetype-'+archetype.id;

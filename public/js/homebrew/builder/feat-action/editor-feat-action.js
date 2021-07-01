@@ -20,6 +20,8 @@ socket.on("returnHomebrewFeatDetailsPlus", function(featsObject, classObject, an
         return;
     }
 
+    // FIX genericType so it fills accordingly
+
     if(feat.Feat.genericType == null) { feat.Feat.genericType = ''; }
     feat.Feat.genericType = feat.Feat.genericType.replace(/_/g, '-');
     $("#inputBuilderType").val(feat.Feat.genericType);

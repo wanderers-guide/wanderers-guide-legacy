@@ -215,6 +215,14 @@ function handleCharacterOptions(character, hBundles, progessBundles) {
     });
     $("#contentSrc-LOST-LEGENDS").prop('checked', contentSourceArray.includes('LOST-LEGENDS'));
 
+    $("#contentSrc-LOST-MWANGI").change(function(){
+      socket.emit("requestCharacterSourceChange", 
+          getCharIDFromURL(), 
+          'LOST-MWANGI',
+          this.checked);
+    });
+    $("#contentSrc-LOST-MWANGI").prop('checked', contentSourceArray.includes('LOST-MWANGI'));
+
     $("#contentSrc-LOST-SOCIETY-GUIDE").change(function(){
       socket.emit("requestCharacterSourceChange", 
           getCharIDFromURL(), 

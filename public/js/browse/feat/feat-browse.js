@@ -137,6 +137,7 @@ function displayFeatResults(featMap){
   for(const [featID, featStruct] of featMap.entries()){
     if(featStruct.Feat.genericType == 'BASIC-ACTION' || featStruct.Feat.genericType == 'SKILL-ACTION') {continue;}
     if(featStruct.Feat.isArchived == 1) {continue;}
+    if(g_hiddenFromBrowseContentSources.includes(featStruct.Feat.contentSrc)) {continue;}
     foundCount++;
 
     let entryID = 'feat-'+featID;

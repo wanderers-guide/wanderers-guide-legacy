@@ -188,6 +188,7 @@ function displaySpellResults(spellMap){
   let foundCount = 0;
   for(const [spellID, spellStruct] of spellMap.entries()){
     if(spellStruct.Spell.isArchived == 1) {continue;}
+    if(g_hiddenFromBrowseContentSources.includes(spellStruct.Spell.contentSrc)) {continue;}
     foundCount++;
 
     let entryID = 'spell-'+spellID;

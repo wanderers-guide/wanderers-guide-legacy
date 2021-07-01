@@ -54,6 +54,7 @@ function displayAncestryResults(allAncestries){
   let foundCount = 0;
   for(const ancestry of allAncestries){
     if(ancestry.isArchived == 1) {continue;}
+    if(g_hiddenFromBrowseContentSources.includes(ancestry.contentSrc)) {continue;}
     foundCount++;
 
     let entryID = 'ancestry-'+ancestry.id;

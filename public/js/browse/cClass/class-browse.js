@@ -54,6 +54,7 @@ function displayClassResults(allClasses){
   let foundCount = 0;
   for(const cClass of allClasses){
     if(cClass.isArchived == 1) {continue;}
+    if(g_hiddenFromBrowseContentSources.includes(cClass.contentSrc)) {continue;}
     foundCount++;
 
     let entryID = 'class-'+cClass.id;

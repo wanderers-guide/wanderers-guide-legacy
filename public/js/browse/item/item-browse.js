@@ -163,6 +163,7 @@ function displayItemResults(itemMap){
   let foundCount = 0;
   for(const [itemID, itemStruct] of itemMap.entries()){
     if(itemStruct.Item.hidden == 1 || itemStruct.Item.isArchived == 1) {continue;}
+    if(g_hiddenFromBrowseContentSources.includes(itemStruct.Item.contentSrc)) {continue;}
     foundCount++;
 
     let entryID = 'item-'+itemID;

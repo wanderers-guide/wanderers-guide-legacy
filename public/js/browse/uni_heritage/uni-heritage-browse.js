@@ -44,6 +44,7 @@ function displayUniHeritageResults(allUniHeritages){
   let foundCount = 0;
   for(const uniHeritage of allUniHeritages){
     if(uniHeritage.isArchived == 1) {continue;}
+    if(g_hiddenFromBrowseContentSources.includes(uniHeritage.contentSrc)) {continue;}
     foundCount++;
 
     let entryID = 'uni-heritage-'+uniHeritage.id;

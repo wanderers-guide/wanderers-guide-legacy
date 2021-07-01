@@ -52,6 +52,7 @@ const g_contentSources = [
   {TextName: 'Lost Omens: Character Guide', CodeName: 'LOST-CHAR-GUIDE', Link: 'https://paizo.com/products/btq01zt4?Pathfinder-Lost-Omens-Character-Guide'},
   {TextName: 'Lost Omens: Gods & Magic', CodeName: 'LOST-GOD-MAGIC', Link: 'https://paizo.com/products/btq021wf?Pathfinder-Lost-Omens-Gods-Magic'},
   {TextName: 'Lost Omens: Legends', CodeName: 'LOST-LEGENDS', Link: 'https://paizo.com/products/btq023gd?Pathfinder-Lost-Omens-Legends'},
+  {TextName: 'Lost Omens: The Mwangi Expanse', CodeName: 'LOST-MWANGI', Link: 'https://paizo.com/products/btq027ot?Pathfinder-Lost-Omens-The-Mwangi-Expanse'},
   {TextName: 'Lost Omens: Pathfinder Society Guide', CodeName: 'LOST-SOCIETY-GUIDE', Link: 'https://paizo.com/products/btq0233q?Pathfinder-Lost-Omens-Pathfinder-Society-Guide'},
   {TextName: 'Lost Omens: World Guide', CodeName: 'LOST-WORLD-GUIDE', Link: 'https://paizo.com/products/btq01zoj?Pathfinder-Lost-Omens-World-Guide'},
   {TextName: 'Abomination Vaults', CodeName: 'ABOMINATION-VAULTS', Link: 'https://paizo.com/store/pathfinder/adventures/adventurePath/abominationVaults'},
@@ -67,7 +68,8 @@ const g_contentSources = [
   {TextName: 'Pathfinder Society', CodeName: 'PATH-SOCIETY', Link: 'https://paizo.com/pathfindersociety'},
 ];
 
-const g_currentContentSource = 'BEST-1';
+const g_currentContentSource = 'LOST-MWANGI';
+const g_hiddenFromBrowseContentSources = ['LOST-MWANGI'];// TODO - Temp solution
 
 function getContentSourceTextName(codeName){
   let contentSourceData = g_contentSources.find(contentSourceData => {
