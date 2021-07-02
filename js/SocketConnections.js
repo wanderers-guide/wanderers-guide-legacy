@@ -2035,7 +2035,7 @@ module.exports = class SocketConnections {
         AuthCheck.isAdmin(socket).then((isAdmin) => {
           if(isAdmin){
             GeneralGathering.getAllAncestries(true).then((ancestriesObject) => {
-              GeneralGathering.getAllFeats().then((featsObject) => {
+              GeneralGathering.getAllFeats(null, null, null, false).then((featsObject) => {
                 socket.emit('returnAdminAncestryDetails', ancestriesObject, featsObject);
               });
             });
@@ -2082,7 +2082,7 @@ module.exports = class SocketConnections {
       socket.on('requestAdminFeatDetails', function(){
         AuthCheck.isAdmin(socket).then((isAdmin) => {
           if(isAdmin){
-            GeneralGathering.getAllFeats().then((featsObject) => {
+            GeneralGathering.getAllFeats(null, null, null, false).then((featsObject) => {
               socket.emit('returnAdminFeatDetails', featsObject);
             });
           }
@@ -2092,7 +2092,7 @@ module.exports = class SocketConnections {
       socket.on('requestAdminFeatDetailsPlus', function(){
         AuthCheck.isAdmin(socket).then((isAdmin) => {
           if(isAdmin){
-            GeneralGathering.getAllFeats().then((featsObject) => {
+            GeneralGathering.getAllFeats(null, null, null, false).then((featsObject) => {
               GeneralGathering.getAllClasses().then((classObject) => {
                 GeneralGathering.getAllAncestries(true).then((ancestriesObject) => {
                   GeneralGathering.getAllUniHeritages().then((uniHeritageArray) => {
@@ -2146,7 +2146,7 @@ module.exports = class SocketConnections {
       socket.on('requestAdminItemDetails', function(){
         AuthCheck.isAdmin(socket).then((isAdmin) => {
           if(isAdmin){
-            GeneralGathering.getAllItems().then((itemMap) => {
+            GeneralGathering.getAllItems(null, null, null, false).then((itemMap) => {
               socket.emit('returnAdminItemDetails', mapToObj(itemMap));
             });
           }
@@ -2192,7 +2192,7 @@ module.exports = class SocketConnections {
       socket.on('requestAdminSpellDetails', function(){
         AuthCheck.isAdmin(socket).then((isAdmin) => {
           if(isAdmin){
-            GeneralGathering.getAllSpells().then((spellMap) => {
+            GeneralGathering.getAllItems(null, null, null, null, false).then((spellMap) => {
               socket.emit('returnAdminSpellDetails', mapToObj(spellMap));
             });
           }
@@ -2239,7 +2239,7 @@ module.exports = class SocketConnections {
         AuthCheck.isAdmin(socket).then((isAdmin) => {
           if(isAdmin){
             GeneralGathering.getAllClasses().then((classObject) => {
-              GeneralGathering.getAllFeats().then((featsObject) => {
+              GeneralGathering.getAllFeats(null, null, null, false).then((featsObject) => {
                 socket.emit('returnAdminClassDetails', classObject, featsObject);
               });
             });
@@ -2334,7 +2334,7 @@ module.exports = class SocketConnections {
         AuthCheck.isAdmin(socket).then((isAdmin) => {
           if(isAdmin){
             GeneralGathering.getAllArchetypes().then((archetypeArray) => {
-              GeneralGathering.getAllFeats().then((featsObject) => {
+              GeneralGathering.getAllFeats(null, null, null, false).then((featsObject) => {
                 socket.emit('returnAdminArchetypeDetails', archetypeArray, featsObject);
               });
             });
@@ -2382,7 +2382,7 @@ module.exports = class SocketConnections {
         AuthCheck.isAdmin(socket).then((isAdmin) => {
           if(isAdmin){
             GeneralGathering.getAllUniHeritages().then((uniHeritageArray) => {
-              GeneralGathering.getAllFeats().then((featsObject) => {
+              GeneralGathering.getAllFeats(null, null, null, false).then((featsObject) => {
                 socket.emit('returnAdminUniHeritageDetails', uniHeritageArray, featsObject);
               });
             });

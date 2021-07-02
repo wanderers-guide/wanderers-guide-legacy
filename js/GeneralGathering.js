@@ -328,14 +328,14 @@ module.exports = class GeneralGathering {
       });
     }
 
-    static async getAllFeats(homebrewID=null, feats=null, tags=null) {
+    static async getAllFeats(homebrewID=null, feats=null, tags=null, cache=true) {
       homebrewID = (homebrewID == null) ? null : parseInt(homebrewID);    
 
       if(feats==null){
         feats = await Prisma.feats.findMany({
           where: {
             OR: [{ homebrewID: null }, { homebrewID: homebrewID }],
-            NOT: (homebrewID==null)? undefined : {id:-1/*No-Cache*/},
+            NOT: (homebrewID==null && cache)? undefined : {id:-1/*No-Cache*/},
           },
           include: { featTags: true },
         });
@@ -345,7 +345,7 @@ module.exports = class GeneralGathering {
         tags = await Prisma.tags.findMany({
           where: {
             OR: [{ homebrewID: null }, { homebrewID: homebrewID }],
-            NOT: (homebrewID==null)? undefined : {id:-1/*No-Cache*/},
+            NOT: (homebrewID==null && cache)? undefined : {id:-1/*No-Cache*/},
           }
         });
       }
@@ -416,14 +416,14 @@ module.exports = class GeneralGathering {
       });
     }
 
-    static async getAllSpells(homebrewID=null, spells=null, taggedSpells=null, tags=null) {
+    static async getAllSpells(homebrewID=null, spells=null, taggedSpells=null, tags=null, cache=true) {
       homebrewID = (homebrewID == null) ? null : parseInt(homebrewID);
 
       if(spells==null){
         spells = await Prisma.spells.findMany({
           where: {
             OR: [{ homebrewID: null }, { homebrewID: homebrewID }],
-            NOT: (homebrewID==null)? undefined : {id:-1/*No-Cache*/},
+            NOT: (homebrewID==null && cache)? undefined : {id:-1/*No-Cache*/},
           },
           orderBy: [{ level: 'asc' },{ name: 'asc' }],
         });
@@ -437,7 +437,7 @@ module.exports = class GeneralGathering {
         tags = await Prisma.tags.findMany({
           where: {
             OR: [{ homebrewID: null }, { homebrewID: homebrewID }],
-            NOT: (homebrewID==null)? undefined : {id:-1/*No-Cache*/},
+            NOT: (homebrewID==null && cache)? undefined : {id:-1/*No-Cache*/},
           }
         });
       }
@@ -516,7 +516,7 @@ module.exports = class GeneralGathering {
       });
     }
 
-    static async getAllItems(homebrewID=null, items=null, tags=null){
+    static async getAllItems(homebrewID=null, items=null, tags=null, cache=true){
       homebrewID = (homebrewID == null) ? null : parseInt(homebrewID);
 
       console.log('~~~~~~~~~~~ REQUESTING ALL ITEMS ~~~~~~~~~~~');
@@ -525,7 +525,7 @@ module.exports = class GeneralGathering {
         items = await Prisma.items.findMany({
           where: {
             OR: [{ homebrewID: null }, { homebrewID: homebrewID }],
-            NOT: (homebrewID==null)? undefined : {id:-1/*No-Cache*/},
+            NOT: (homebrewID==null && cache)? undefined : {id:-1/*No-Cache*/},
           },
           include: {
             taggedItems: true,
@@ -542,7 +542,7 @@ module.exports = class GeneralGathering {
         tags = await Prisma.tags.findMany({
           where: {
             OR: [{ homebrewID: null }, { homebrewID: homebrewID }],
-            NOT: (homebrewID==null)? undefined : {id:-1/*No-Cache*/},
+            NOT: (homebrewID==null && cache)? undefined : {id:-1/*No-Cache*/},
           }
         });
       }
