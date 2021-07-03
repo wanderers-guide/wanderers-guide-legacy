@@ -107,6 +107,7 @@ function diceRoller_getDiceRoll(diceNum, dieType, bonus){
   rollStruct.Timestamp = {
     Date: currentDate.toLocaleDateString(),
     Time: currentDate.toLocaleTimeString(),
+    UTC_Time: currentDate.toUTCString(),
   };
 
   return rollStruct;
