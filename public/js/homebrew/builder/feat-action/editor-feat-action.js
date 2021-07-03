@@ -20,11 +20,11 @@ socket.on("returnHomebrewFeatDetailsPlus", function(featsObject, classObject, an
         return;
     }
 
-    // FIX genericType so it fills accordingly
-
-    if(feat.Feat.genericType == null) { feat.Feat.genericType = ''; }
+    if(feat.Feat.genericType == null) {
+      determineGenericType(feat);
+    }
     feat.Feat.genericType = feat.Feat.genericType.replace(/_/g, '-');
-    $("#inputBuilderType").val(feat.Feat.genericType);
+      $("#inputBuilderType").val(feat.Feat.genericType);
     $("#inputFeatName").val(feat.Feat.name);
     $("#inputFeatLevel").val(feat.Feat.level);
     let minProf = (feat.Feat.minProf != null) ? feat.Feat.minProf : $("#inputFeatMinProf option:first").val();
@@ -110,4 +110,50 @@ function getArchetypeIDFromFeat(feat){
       }
   }
   return null;
+}
+
+
+function determineGenericType(feat){
+  if(feat.Feat.genericType != null) { return; }
+
+  for(let tag of feat.Tags){
+
+    for(const [ancestryID, ancestryData] of g_ancestryMap.entries()){
+      if(ancestryData.Ancestry.tagID == tag.id){
+        feat.Feat.genericType = 'ANCESTRY-FEAT';
+        feat.Feat.genTypeName = ancestryData.Ancestry.name;
+        return;
+      }
+    }
+
+    for(const uniHeritage of g_uniHeritageArray){
+      if(uniHeritage.tagID == tag.id){
+        feat.Feat.genericType = 'ANCESTRY-FEAT';
+        feat.Feat.genTypeName = uniHeritage.name;
+        return;
+      }
+    }
+
+    for(const [classID, classData] of g_classMap.entries()){
+      if(classData.Class.tagID == tag.id){
+        feat.Feat.genericType = 'CLASS-FEAT';
+        feat.Feat.genTypeName = classData.Class.name;
+        return;
+      }
+    }
+
+    for(const archetype of g_archetypeArray){
+      if(archetype.tagID == tag.id){
+        feat.Feat.genericType = 'ARCHETYPE-FEAT';
+        feat.Feat.genTypeName = archetype.name;
+        return;
+      }
+    }
+
+  }
+
+  feat.Feat.genericType = '';
+  feat.Feat.genTypeName = '';
+  console.error('Failed to find a genericType for feat!');
+
 }

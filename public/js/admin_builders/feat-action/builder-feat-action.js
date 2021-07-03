@@ -66,12 +66,13 @@ socket.on("returnAdminFeatDetailsPlus", function(featsObject, classObject, ances
     $('#inputAncestryOptions').html('');
     for(const [ancestryID, ancestryData] of g_ancestryMap.entries()){
         if(ancestryData.Ancestry.isArchived === 0){
-            $('#inputAncestryOptions').append('<option value="'+ancestryID+'">'+ancestryData.Ancestry.name+'</option>');
+          $('#inputAncestryOptions').append('<option value="'+ancestryID+'">'+ancestryData.Ancestry.name+'</option>');
         }
     }
+    $('#inputAncestryOptions').append('<optgroup label="──────────"></optgroup>');
     for(const uniHeritage of g_uniHeritageArray){
         if(uniHeritage.isArchived === 0){
-            $('#inputAncestryOptions').append('<option value="'+uniHeritage.name+'">'+uniHeritage.name+'</option>');
+          $('#inputAncestryOptions').append('<option value="'+uniHeritage.name+'">'+uniHeritage.name+'</option>');
         }
     }
 
