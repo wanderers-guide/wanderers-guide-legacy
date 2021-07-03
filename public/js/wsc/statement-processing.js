@@ -206,7 +206,7 @@ function processSheetCode(wscCode, sourceName, isTest=false){
           // TIER_4 = (2/4 or 1/2 agile)
           let mapTier = wscStatementUpper.split('=')[1];
 
-          if(mapTier == 'TIER_1' || mapTier == 'TIER_2' || mapTier == 'TIER_3' || mapTier == 'TIER_4'){
+          if(mapTier == 'TIER_1' || mapTier == 'TIER_2' || mapTier == 'TIER_2_AGILE' || mapTier == 'TIER_3' || mapTier == 'TIER_4'){
             gState_MAP = mapTier;
           } else {
             displayError('Attempted to set multiple attack penalty to unknown tier "'+mapTier+'"');

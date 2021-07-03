@@ -473,6 +473,12 @@ function generateMAP(attackBonus, itemTagArray) {
     } else {
       return {one:signNumber(attackBonus),two:signNumber(attackBonus-3),three:signNumber(attackBonus-6)};
     }
+  } else if(gState_MAP == 'TIER_2_AGILE'){
+    if(agileTag == null){
+      return {one:signNumber(attackBonus),two:signNumber(attackBonus-5),three:signNumber(attackBonus-10)};
+    } else {
+      return {one:signNumber(attackBonus),two:signNumber(attackBonus-3),three:signNumber(attackBonus-6)};
+    }
   } else if(gState_MAP == 'TIER_3'){
     if(agileTag == null){
       return {one:signNumber(attackBonus),two:signNumber(attackBonus-3),three:signNumber(attackBonus-6)};
