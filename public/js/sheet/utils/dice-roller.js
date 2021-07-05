@@ -22,7 +22,7 @@ function refreshStatRollButtons() {
     $('.stat-roll-btn').addClass('button is-outlined is-info is-small');
     $('.stat-roll-btn').click(function() {
       let bonus = parseInt($(this).text());
-      makeDiceRoll(1, 20, bonus);
+      makeDiceRoll(1, 20, bonus, diceRoller_getQuickViewLabel());
     });
 
     $('.damage-roll-btn').addClass('button is-outlined is-info is-small');
@@ -44,7 +44,7 @@ function refreshStatRollButtons() {
           bonus = lastPartResult-dieSize;
         }
         
-        makeDiceRoll(diceNum, dieSize, bonus);
+        makeDiceRoll(diceNum, dieSize, bonus, diceRoller_getQuickViewLabel());
       }
     });
   }, 100);
@@ -60,7 +60,7 @@ function refreshDiceNotationButtons(){
       let bonus = parseInt(math.evaluate($(this).attr('data-dice-bonus').replace(/[^(\d|\W)]/g,'')));
       if(isNaN(bonus)) { bonus = 0; }
 
-      makeDiceRoll(diceNum, diceType, bonus);
+      makeDiceRoll(diceNum, diceType, bonus, diceRoller_getQuickViewLabel());
       $(this).blur();
     });
   }, 100);
@@ -80,8 +80,8 @@ function processDiceNotation(text){
 }
 
 
-function makeDiceRoll(diceNum, dieType, bonus){
-  let rollStruct = diceRoller_getDiceRoll(diceNum, dieType, bonus);
+function makeDiceRoll(diceNum, dieType, bonus, label){
+  let rollStruct = diceRoller_getDiceRoll(diceNum, dieType, bonus, label);
   g_rollHistory.push(rollStruct);
   openLeftQuickView('Dice Roller');
 
@@ -91,7 +91,7 @@ function makeDiceRoll(diceNum, dieType, bonus){
 }
 
 //// Math Rands ////
-function diceRoller_getDiceRoll(diceNum, dieType, bonus){
+function diceRoller_getDiceRoll(diceNum, dieType, bonus, label){
   let rollStruct = {Total: null, ResultData: null, RollData: {DiceNum: diceNum, DieType: dieType, Bonus: bonus} };
   let total = 0; let resultData = [];
   for (let i = 0; i < diceNum; i++) {
@@ -102,6 +102,8 @@ function diceRoller_getDiceRoll(diceNum, dieType, bonus){
   total += bonus;
   rollStruct.Total = total;
   rollStruct.ResultData = resultData;
+  rollStruct.Label = { Name: label };
+
 
   let currentDate = new Date();
   rollStruct.Timestamp = {
@@ -117,3 +119,10 @@ function diceRoller_getRandomNumber(max) {
   return Math.floor(Math.random()*Math.floor(max))+1;
 }
 
+function diceRoller_getQuickViewLabel(){
+  let label = null;
+  if($('#quickviewDefault').hasClass('is-active')){
+    label = $('#quickViewTitle').html().split('<')[0];
+  }
+  return label;
+}

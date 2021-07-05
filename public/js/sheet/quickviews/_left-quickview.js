@@ -173,7 +173,8 @@ function leftQuickview_OpenDiceRoller() {
       $('#dice-roller-output-container').append(`
           <div class="pos-relative">
             <p class="is-size-4 negative-indent">${resultLine}</p>
-            <p class="pos-absolute pos-t-1 pos-r-1 is-size-8 has-text-grey-dark is-italic">${rollStruct.Timestamp.Time}</p>
+            <p class="pos-absolute pos-t-10 pos-r-1 is-size-8 has-text-grey">${rollStruct.Label.Name}</p>
+            <p class="pos-absolute pos-b-1 pos-r-1 is-size-8 has-text-grey-dark is-italic">${rollStruct.Timestamp.Time}</p>
           </div>
       `);
     }
@@ -193,7 +194,7 @@ function leftQuickview_OpenDiceRoller() {
       let diceAmt = parseInt(diceAmtStr);
       let dieSize = parseInt(dieSizeStr);
       let bonus = (bonusStr != '') ? parseInt(bonusStr) : 0;
-      makeDiceRoll(diceAmt, dieSize, bonus);
+      makeDiceRoll(diceAmt, dieSize, bonus, '');
     }
   });
 
