@@ -32,7 +32,6 @@ function getActionsInText(text){
 
     let textParts = actionsRegex[1].split(',');
     for(let textPart of textParts){
-      console.log(textPart);
       textPart = textPart.toLowerCase();
       if(textPart.includes('(action: interact') || textPart.includes('(action:interact')){
         traitsArray.push({ name: 'Manipulate' });
@@ -44,7 +43,6 @@ function getActionsInText(text){
       } else if(textPart.includes('envision')){
         traitsArray.push({ name: 'Concentrate' });
       } else if(textPart.includes('(trait:')){
-        console.log(textPart);
         traitsArray.push({ name:
           capitalizeFirstLetterOfWord(textPart.replace('(trait:','').replace(/\W/g,'').trim()) });
       }
