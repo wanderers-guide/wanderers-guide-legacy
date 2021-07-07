@@ -89,6 +89,7 @@ function openWeaponsTab(data) {
 
     let willAddUnarmedAttacks = [];
     let willRemoveUnarmedAttacks = [];
+    
     for(const [pfWeaponID, itemWeaponID] of phyFeatWeaponMap.entries()){
       const invItem = g_invStruct.InvItems.find(invItem => {
         return invItem.itemID === itemWeaponID;
@@ -97,6 +98,8 @@ function openWeaponsTab(data) {
         willAddUnarmedAttacks.push(itemWeaponID);
       }
     }
+
+    let checkDuplicateUnarmedAttacks = [];
     for(const invItem of g_invStruct.InvItems){
       const item = g_itemMap.get(invItem.itemID+"");
       if(isUnarmedAttack(item) && item.Item.id != FIST_ITEM_ID){ // Is Non-Custom Unarmed Attack
@@ -105,6 +108,13 @@ function openWeaponsTab(data) {
         });
         if(itemWeaponID == null){
           willRemoveUnarmedAttacks.push(invItem.id);
+        } else {
+          // If there's a duplicate unarmed attack entry, remove it
+          if(checkDuplicateUnarmedAttacks.includes(itemWeaponID)){
+            willRemoveUnarmedAttacks.push(invItem.id);
+          } else {
+            checkDuplicateUnarmedAttacks.push(itemWeaponID);
+          }
         }
       }
     }
