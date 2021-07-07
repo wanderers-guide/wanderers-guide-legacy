@@ -40,6 +40,11 @@ function hasSameSrcIterate(dataStruct, srcStructArray){
   return false;
 }
 
+function hasSameSrcAnySNum(dataStruct, srcStruct){
+  if(dataStruct == null || srcStruct == null) { return false; }
+  return (dataStruct.sourceType == srcStruct.sourceType && dataStruct.sourceLevel == srcStruct.sourceLevel && dataStruct.sourceCode == srcStruct.sourceCode);
+}
+
 /* Content Sources */
 
 const g_contentSources = [

@@ -298,6 +298,23 @@ function featsUpdateWSCChoiceStruct(srcStruct, feat){
       wscChoiceStruct.FeatArray.push(featData);
   }
 
+  injectWSCChoiceStruct(wscChoiceStruct);
+
+}
+
+function featsRemoveFromWSCChoiceStruct(srcStruct, ignoreSNum){
+
+  for(let featData of wscChoiceStruct.FeatArray){
+    if(ignoreSNum) {
+      if(!hasSameSrcAnySNum(featData, srcStruct)){ continue; }
+    } else {
+      if(!hasSameSrc(featData, srcStruct)){ continue; }
+    }
+    featData.value = null;
+  }
+
+  injectWSCChoiceStruct(wscChoiceStruct);
+
 }
 
 function updateFeatSelectionEntryEvents(){
