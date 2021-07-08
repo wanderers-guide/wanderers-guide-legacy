@@ -287,6 +287,14 @@ function handleCharacterOptions(character, hBundles, progessBundles) {
     });
     $("#contentSrc-FIST-PHOENIX").prop('checked', contentSourceArray.includes('FIST-PHOENIX'));
 
+    $("#contentSrc-MALEVOLENCE").change(function(){
+      socket.emit("requestCharacterSourceChange", 
+          getCharIDFromURL(), 
+          'MALEVOLENCE',
+          this.checked);
+    });
+    $("#contentSrc-MALEVOLENCE").prop('checked', contentSourceArray.includes('MALEVOLENCE'));
+
     $("#contentSrc-SLITHERING").change(function(){
       socket.emit("requestCharacterSourceChange", 
           getCharIDFromURL(), 
