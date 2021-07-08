@@ -76,7 +76,7 @@ const g_contentSources = [
 ];
 
 const g_currentContentSource = 'FIST-PHOENIX';
-const g_hiddenFromBrowseContentSources = ['FIST-PHOENIX','MALEVOLENCE'];// TODO - Temp solution
+const g_hiddenFromBrowseContentSources = ['FIST-PHOENIX'];// TODO - Temp solution
 
 function getContentSourceTextName(codeName){
   let contentSourceData = g_contentSources.find(contentSourceData => {
