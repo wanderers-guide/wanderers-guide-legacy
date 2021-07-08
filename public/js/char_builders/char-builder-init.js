@@ -279,6 +279,14 @@ function handleCharacterOptions(character, hBundles, progessBundles) {
     });
     $("#contentSrc-FALL-OF-PLAGUE").prop('checked', contentSourceArray.includes('FALL-OF-PLAGUE'));
 
+    $("#contentSrc-FIST-PHOENIX").change(function(){
+      socket.emit("requestCharacterSourceChange", 
+          getCharIDFromURL(), 
+          'FIST-PHOENIX',
+          this.checked);
+    });
+    $("#contentSrc-FIST-PHOENIX").prop('checked', contentSourceArray.includes('FIST-PHOENIX'));
+
     $("#contentSrc-SLITHERING").change(function(){
       socket.emit("requestCharacterSourceChange", 
           getCharIDFromURL(), 
