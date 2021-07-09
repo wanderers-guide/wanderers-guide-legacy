@@ -121,7 +121,7 @@ function leftQuickview_OpenDiceRoller() {
               <a class="button is-static has-text-grey-light has-background-grey-darkest is-info is-outlined">+</a>
             </p>
             <p class="control">
-              <input id="dice-roller-input-bonus" class="input is-info" type="number" value="0" min="0" max="999">
+              <input id="dice-roller-input-bonus" class="input is-info" type="number" value="0" min="-999" max="999">
             </p>
           </div>
         </div>
