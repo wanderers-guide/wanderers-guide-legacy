@@ -124,6 +124,8 @@ socket.on("returnAddClassFeature", function(srcStruct, classAbility, allClassAbi
                     null);
             }
 
+            extraClassFeatureOptionsUpdateWSCChoiceStruct(null, srcStruct, false);
+
         } else {
             $(this).parent().removeClass("is-info");
             $('#'+descriptionID).parent().parent().parent().parent().removeClass('is-hidden');
@@ -158,6 +160,8 @@ socket.on("returnAddClassFeature", function(srcStruct, classAbility, allClassAbi
                   abilityCodeID,
                   chosenClassAbility.name);
             }
+
+            extraClassFeatureOptionsUpdateWSCChoiceStruct(chosenClassAbility, srcStruct, true);
             
         }
         $(this).blur();
@@ -193,7 +197,51 @@ function extraClassFeaturesUpdateWSCChoiceStruct(newClassFeature){
   });
   if(existingClassFeature == null){
     wscChoiceStruct.ExtraClassFeaturesArray.push({ value: newClassFeature });
-    g_expr_classAbilityArray.push(newClassFeature.name.toUpperCase());
+    g_expr_classAbilityArray.push(newClassFeature.name.toUpperCase().replace(/\(|\)/g,""));
+  }
+
+}
+
+function extraClassFeatureOptionsUpdateWSCChoiceStruct(newClassFeatureOption, srcStruct, isAdd){
+
+  if(isAdd){
+    // Is Add
+
+    let existingClassFeature = wscChoiceStruct.ExtraClassFeaturesArray.find(classFeature => {
+      return classFeature.value.selectType == 'SELECT_OPTION' && hasSameSrc(classFeature.value.srcStruct, srcStruct);
+    });
+
+    if(existingClassFeature == null){
+      newClassFeatureOption.srcStruct = srcStruct;
+
+      wscChoiceStruct.ExtraClassFeaturesArray.push({ value: newClassFeatureOption });
+      g_expr_classAbilityArray.push(newClassFeatureOption.name.toUpperCase().replace(/\(|\)/g,""));
+    }
+
+  } else {
+    // Is Remove
+
+    let newExtraClassFeaturesArray = [];
+    let removedClassFeatureNamesArray = [];
+    for(let classFeature of wscChoiceStruct.ExtraClassFeaturesArray){
+      if(classFeature.value.selectType == 'SELECT_OPTION' && hasSameSrc(classFeature.value.srcStruct, srcStruct)){
+        // Is classFeatureOption, skip. Add to removed array.
+        removedClassFeatureNamesArray.push(classFeature.value.name.toUpperCase());
+      } else {
+        newExtraClassFeaturesArray.push(classFeature);
+      }
+    }
+
+    wscChoiceStruct.ExtraClassFeaturesArray = newExtraClassFeaturesArray;
+
+    let new_expr_classAbilityArray = [];
+    for(let abilityName of g_expr_classAbilityArray){
+      if(!removedClassFeatureNamesArray.includes(abilityName)){
+        new_expr_classAbilityArray.push(abilityName);
+      }
+    }
+    g_expr_classAbilityArray = new_expr_classAbilityArray;
+
   }
 
 }

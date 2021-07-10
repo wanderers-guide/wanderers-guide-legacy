@@ -73,20 +73,20 @@ function initExpressionProcessor(expDataStruct){
                 if(classAbility.level == -1) {continue;}
                 if(classAbility.level <= g_expr_level) {
                     if(classAbility.selectType != 'SELECT_OPTION'){
-                        g_expr_classAbilityArray.push(classAbility.name.toUpperCase());
+                        g_expr_classAbilityArray.push(classAbility.name.toUpperCase().replace(/\(|\)/g,""));
                     } else {
                         let choiceData = expDataStruct.ChoiceStruct.ChoiceArray.find(choiceData => {
                             return classAbility.id == choiceData.OptionID;
                         });
                         if(choiceData != null){
-                            g_expr_classAbilityArray.push(classAbility.name.toUpperCase());
+                            g_expr_classAbilityArray.push(classAbility.name.toUpperCase().replace(/\(|\)/g,""));
                         }
                     }
                 }
             }
             for(let classAbility of expDataStruct.ChoiceStruct.ExtraClassFeaturesArray){
               if(classAbility.value.name != null){
-                g_expr_classAbilityArray.push(classAbility.value.name.toUpperCase());
+                g_expr_classAbilityArray.push(classAbility.value.name.toUpperCase().replace(/\(|\)/g,""));
               }
             }
         }

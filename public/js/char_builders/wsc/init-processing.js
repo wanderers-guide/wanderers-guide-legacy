@@ -6,7 +6,7 @@
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Wanderer's Guide Code ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 // ========================================================================================= //
 
-let processingDebug = false;
+const processingDebug = false;
 
 // Global Variables //
 let codeQueue = [];
