@@ -31,7 +31,26 @@ function openCharInfoQuickview(data) {
 
   $('#charInfoBasicInfoSection').append('<div class="field is-horizontal is-marginless"><div class="field-label"><label class="label">Background</label></div><div class="field-label"><p class="is-size-6 has-text-left has-text-light-darker">'+g_background.name+'</p></div></div>');
 
-  $('#charInfoPictureSection').append('<figure class="image is-128x128"><img id="charInfoPicture" class="is-rounded character-icon" src=""></figure>');
+  $('#charInfoPictureSection').append('<figure class="image is-128x128 is-marginless"><img id="charInfoPicture" class="is-rounded character-icon" src=""></figure>');
+
+  ///         ///
+
+  let charTags = cloneObj(g_charTagsArray);
+  charTags.push({value: 'Humanoid'});
+  charTags = charTags.sort(
+      function(a, b) {
+          return a.value > b.value ? 1 : -1;
+      }
+  );
+  let tagsInnerHTML = '';
+  for(const charTag of charTags){
+    if(charTag.value != null && charTag.value != ''){
+      tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-1 mb-1 is-very-small is-info tagButton">'+charTag.value+'</button>';
+    }
+  }
+  if(tagsInnerHTML != ''){
+    $('#charInfoPictureSection').append('<div class="buttons is-marginless mt-1">'+tagsInnerHTML+'</div>');
+  }
 
   ///         ///
 
