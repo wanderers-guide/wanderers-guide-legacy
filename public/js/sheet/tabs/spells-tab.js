@@ -135,7 +135,7 @@ function displaySpellsAndSlots(){
 
   $('#spellsSearch').off('change');
   $('#spellsSearch').change(function(){
-      displaySpellsAndSlots(data);
+    displaySpellsAndSlots(data);
   });
   
   $('#spellsCoreContent').html('');
@@ -278,19 +278,19 @@ function displaySpellsInLevelPrepared(spellBook, level, slotArray, spellBookSect
           // Get color from spellBookSpell
           let bulmaColor = getSpellTypeBulmaColor(spellData.SpellType);
           if(bulmaColor != '' && bulmaColor != 'has-text-info'){
-            spellName += '<span style="left:-25px; top:-5px;" class="pos-absolute icon is-medium '+bulmaColor+'"><i class="fas fa-xs fa-circle"></i></span>';
+            spellName += '<span class="pos-absolute pos-l-1 pos-t-2 icon is-medium '+bulmaColor+'"><i class="fas fa-xs fa-circle"></i></span>';
           } else {
 
             // Get color from spell slot
             bulmaColor = getSpellTypeBulmaColor(slot.type);
             if(bulmaColor != '' && bulmaColor != 'has-text-info'){
-              spellName += '<span style="left:-25px; top:-5px;" class="pos-absolute icon is-medium '+bulmaColor+'"><i class="fas fa-xs fa-circle"></i></span>';
+              spellName += '<span class="pos-absolute pos-l-1 pos-t-2 icon is-medium '+bulmaColor+'"><i class="fas fa-xs fa-circle"></i></span>';
             }
 
           }
 
 
-          let spellNameHTML = '<p class="has-text-left pl-3 has-text-grey-light">'+spellName+'</p>';
+          let spellNameHTML = '<span class="has-text-left pl-3 has-text-grey-light">'+spellName+'</span>';
 
           if(spellDataStruct.Spell.isArchived === 1){
             spellNameHTML += '<em class="pl-1">(archived)</em>';
@@ -489,11 +489,11 @@ function displaySpellsInLevelSpontaneous(spellBook, level, slotArray, spellBookS
 
         let bulmaColor = getSpellTypeBulmaColor(spellData.SpellType);
         if(bulmaColor != '' && bulmaColor != 'has-text-info'){
-          spellName += '<span style="left:-25px; top:-5px;" class="pos-absolute icon is-medium '+bulmaColor+'"><i class="fas fa-xs fa-circle"></i></span>';
+          spellName += '<span class="pos-absolute pos-l-1 pos-t-2 icon is-medium '+bulmaColor+'"><i class="fas fa-xs fa-circle"></i></span>';
         }
 
 
-        let spellNameHTML = '<p class="has-text-left pl-3 has-text-grey-light">'+spellName+'</p>';
+        let spellNameHTML = '<span class="has-text-left pl-3 has-text-grey-light">'+spellName+'</span>';
 
         if(spellDataStruct.Spell.isArchived === 1){
           spellNameHTML += '<em class="pl-1">(archived)</em>';
@@ -677,9 +677,9 @@ function displaySpontaneousCastingsSet(locationID, slotsArray, spellListingSponC
   for(let slot of slotsArray){
       if(slot.used){
           slotsUsedCount++;
-          spellCastingsHTML += '<span name="'+slot.slotID+'" class="icon has-text-info '+castingButtonsClass+'"><i class="fas fa-lg fa-square"></i></span>';
+          spellCastingsHTML += '<span name="'+slot.slotID+'" class="pl-1 has-text-info '+castingButtonsClass+'"><i class="fas fa-lg fa-square"></i></span>';
       } else {
-          spellCastingsHTML += '<span name="'+slot.slotID+'" class="icon has-text-info '+castingButtonsClass+'"><i class="far fa-lg fa-square"></i></span>';
+          spellCastingsHTML += '<span name="'+slot.slotID+'" class="pl-1 has-text-info '+castingButtonsClass+'"><i class="far fa-lg fa-square"></i></span>';
       }
   }
   $('#'+locationID).html(spellCastingsHTML);
@@ -798,7 +798,7 @@ function displaySpellsFocus() {
             let spellListingID = 'focusSpellListing'+focusSpellCount;
             
             // Name //
-            let spellName = '<p class="has-text-left pl-3 has-text-grey-light">'+spellDataStruct.Spell.name+'</p>';
+            let spellName = '<span class="has-text-left pl-3 has-text-grey-light">'+spellDataStruct.Spell.name+'</span>';
 
             if(spellDataStruct.Spell.isArchived === 1){
                 spellName += '<em class="pl-1">(archived)</em>';
@@ -1028,7 +1028,7 @@ function displaySpellsInnate() {
             let spellCastingID = 'innateSpellCastings'+spellIndex;
             
             // Name //
-            let spellName = '<p class="has-text-left pl-3 has-text-grey-light">'+spellDataStruct.Spell.name+'</p>';
+            let spellName = '<span class="has-text-left pl-3 has-text-grey-light">'+spellDataStruct.Spell.name+'</span>';
 
             if(spellDataStruct.Spell.isArchived === 1){
                 spellName += '<em class="pl-1">(archived)</em>';
