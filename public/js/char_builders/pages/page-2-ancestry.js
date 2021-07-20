@@ -536,7 +536,7 @@ function displayCurrentHeritage(ancestryStruct, heritageID, isUniversal) {
         };
         
         // Clear wscChoiceStruct.FeatArray of feats with srcStruct
-        featsRemoveFromWSCChoiceStruct(srcStruct, true);
+        //featsRemoveFromWSCChoiceStruct(srcStruct, true);
 
         processCode(
             heritage.code,

@@ -325,8 +325,15 @@ function preReqCheckClassAbilities(prereq, normalPreReq){
     if(prereq.toLowerCase() === normalPreReq){
 
       for(let abilityName of g_expr_classAbilityArray){
-        let abilName = abilityName.toLowerCase().split('(')[0];
+        let abilName = abilityName.toLowerCase();
         if(normalPreReq === abilName){ return 'TRUE'; }
+
+        if(normalPreReq.endsWith(' cause')){
+          if(abilName.startsWith(normalPreReq.replace(' cause', ''))){
+            return 'TRUE';
+          }
+        }
+
         if(normalPreReq.includes(abilName) || abilName.includes(normalPreReq)){
 
           // For cases like ANTIPALADIN and PALADIN
