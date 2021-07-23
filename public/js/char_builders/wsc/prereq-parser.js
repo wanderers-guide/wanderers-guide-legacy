@@ -299,6 +299,9 @@ function checkCustomSkillProfs(name, numUps){
 
 // Prereq Feats Checking //
 function preReqCheckFeats(prereq, normalPreReq){
+  // Feats aren't all lowercase, that'd likely be a class feature
+  if(normalPreReq == normalPreReq.toLowerCase()) { return null; }
+  
   for(let featData of wscChoiceStruct.FeatArray){
     if(featData.value != null){
       if(featData.value.name.toUpperCase() === prereq){
@@ -330,6 +333,11 @@ function preReqCheckClassAbilities(prereq, normalPreReq){
 
         if(normalPreReq.endsWith(' cause')){
           if(abilName.startsWith(normalPreReq.replace(' cause', ''))){
+            return 'TRUE';
+          }
+        }
+        if(normalPreReq.startsWith('divine ally (')){
+          if(normalPreReq == 'divine ally ('+abilName+')'){
             return 'TRUE';
           }
         }
