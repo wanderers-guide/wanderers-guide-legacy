@@ -7,6 +7,7 @@ const PATH = '/profile/characters/'; // <- Change this if routes are ever change
 router.get('*', (req, res) => {
 
     let charID = parseInt(req.originalUrl.substring(PATH.length));
+    let sheetType = req.query.type;
 
     /* The way this is designed allows someone to acquire data from all the character sheets. 
     If privatizing character data ever becomes important, we may want to change this. */
@@ -20,7 +21,7 @@ router.get('*', (req, res) => {
             if(isPublicSheet || (req.user != null && character.userID === req.user.id)){
 
                 if(CharStateUtils.isPlayable(character)) {
-                    goToCharSheet(character, req, res, isRestrictedView);
+                    goToCharSheet(character, req, res, isRestrictedView, sheetType);
                 } else {
                     res.redirect('/profile/characters/builder/basics/?id='+character.id);
                 }
@@ -42,9 +43,20 @@ router.get('*', (req, res) => {
 });
 
 
-function goToCharSheet(character, req, res, isRestrictedView) {
+function goToCharSheet(character, req, res, isRestrictedView, sheetType) {
+  // IN-PROGRESS
 
   let title;
+
+  if(sheetType == 'export_to_pdf'){
+    title = "[Export-to-PDF] "+character.name+" - Wanderer's Guide";
+    res.render('sheet/sheet_to_pdf', {
+      title: title,
+      user: req.user
+    });
+    return;
+  }
+
   if(isRestrictedView) {
     title = "[View-Only] "+character.name+" - Wanderer's Guide";
   } else {

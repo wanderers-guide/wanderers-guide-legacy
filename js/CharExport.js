@@ -12,6 +12,17 @@ const SenseType = require("../models/contentDB/SenseType");
 const CharGathering = require('./CharGathering');
 const CharDataMapping = require('./CharDataMapping');
 const CharDataMappingExt = require('./CharDataMappingExt');
+const CharTags = require('./CharTags');
+
+function mapToObj(strMap) {
+  let obj = Object.create(null);
+  for (let [k,v] of strMap) {
+    // We don’t escape the key '__proto__'
+    // which can cause problems on older engines
+    obj[k] = v;
+  }
+  return obj;
+}
 
 module.exports = class CharExport {
 
@@ -59,33 +70,40 @@ module.exports = class CharExport {
                       .then(function(charBuildData) {
                         return CharGathering.getCalculatedStats(charID)
                         .then((calculatedStats) => {
+                          return CharGathering.getFinalProfs(charID)
+                          .then((profMap) => {
+                            return CharTags.getTags(charID).then((charTags) => {
 
-                          return CharExport.processInvItems(charID, character, invItems)
-                          .then((p_invItems) => {
-                            return CharExport.processSpellBookSpells(charID, character, spellBookSpells)
-                            .then((p_spellBookSpells) => {
-                              return CharExport.processConditions(charID, character, charConditions)
-                              .then((p_charConditions) => {
-                                return CharExport.processBasicCharInfo(charID, character)
-                                .then((p_character) => {
-                          
-                                  return {
-                                    version: 2,
-                                    character: p_character,
-                                    build: charBuildData,
-                                    stats: calculatedStats,
-                                    conditions: p_charConditions,
+                              return CharExport.processInvItems(charID, character, invItems)
+                              .then((p_invItems) => {
+                                return CharExport.processSpellBookSpells(charID, character, spellBookSpells)
+                                .then((p_spellBookSpells) => {
+                                  return CharExport.processConditions(charID, character, charConditions)
+                                  .then((p_charConditions) => {
+                                    return CharExport.processBasicCharInfo(charID, character)
+                                    .then((p_character) => {
+                              
+                                      return {
+                                        version: 3,
+                                        character: p_character,
+                                        charTraits: charTags,
+                                        build: charBuildData,
+                                        stats: calculatedStats,
+                                        conditions: p_charConditions,
+                                        profs: mapToObj(profMap),
 
-                                    inventory: inventory,
-                                    invItems: p_invItems,
-                                    spellBookSpells: p_spellBookSpells,
-                                    animalCompanions: charAnimalCompanions,
-                                    familiars: charFamiliars,
-                                    noteFields: noteFields,
+                                        inventory: inventory,
+                                        invItems: p_invItems,
+                                        spellBookSpells: p_spellBookSpells,
+                                        animalCompanions: charAnimalCompanions,
+                                        familiars: charFamiliars,
+                                        noteFields: noteFields,
 
-                                    metaData: charMetaData,
-                                    
-                                  };
+                                        metaData: charMetaData,
+                                        
+                                      };
+                                    });
+                                  });
                                 });
                               });
                             });

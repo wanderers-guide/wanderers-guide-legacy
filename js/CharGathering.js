@@ -97,14 +97,25 @@ function getUpAmt(profType){
 
 
 function profTypeToNumber(profType){
-    switch(profType){
-        case 'U': return 0;
-        case 'T': return 1;
-        case 'E': return 2;
-        case 'M': return 3;
-        case 'L': return 4;
-        default: return -1; 
-    }
+  switch(profType){
+    case 'U': return 0;
+    case 'T': return 1;
+    case 'E': return 2;
+    case 'M': return 3;
+    case 'L': return 4;
+    default: return -1; 
+  }
+}
+
+function profTypeFromNumber(numUps) {
+  switch(numUps) {
+    case 0: return "U";
+    case 1: return "T";
+    case 2: return "E";
+    case 3: return "M";
+    case 4: return "L";
+    default: return "?";
+  }
 }
 
 function getBetterProf(prof1, prof2){
@@ -1536,6 +1547,37 @@ module.exports = class CharGathering {
         });
     }
 
+    static getFinalProfs(charID){
+      return CharGathering.getProfs(charID)
+      .then((profMap) => {
+
+        let finalProfMap = new Map();
+
+        for(const [profName, dataArray] of profMap.entries()){
+
+          let increaseNumUps = 0;
+          let highestNumUps = 0;
+
+          for(let srcData of dataArray){
+            if(srcData.Prof == 'UP' || srcData.Prof == 'DOWN'){
+              increaseNumUps += getUpAmt(srcData.Prof);
+            } else {
+              let currentNumUps = profTypeToNumber(srcData.Prof);
+              if(currentNumUps > highestNumUps){
+                highestNumUps = currentNumUps;
+              }
+            }
+          }
+
+          finalProfMap.set(profName, profTypeFromNumber(highestNumUps+increaseNumUps));
+
+        }
+
+        return finalProfMap;
+
+      });
+    }
+
     
     static async getSheetStates(charID, character=null) {
 
@@ -1555,42 +1597,6 @@ module.exports = class CharGathering {
         }
       });
 
-    }
-
-
-    static getCharacterInfoExportToPDF(charID){
-      return Character.findOne({ where: { id: charID } })
-      .then((character) => {
-        return CharGathering.getCalculatedStats(charID).then((calculatedStats) => {
-          return CharGathering.getAllMetadata(charID).then((metaDatas) => {
-            return CharGathering.getAllCharConditions(charID).then((conditionsObject) => {
-              return CharTags.getTags(charID).then((charTags) => {
-                return CharGathering.getAncestry(charID, character).then((ancestry) => {
-                  return CharGathering.getBackground(charID, character).then((background) => {
-                    return CharGathering.getHeritage(charID, character).then((heritage) => {
-                      return CharGathering.getClassBasic(character).then((cClass) => {
-
-                        return {
-                          Ancestry: ancestry,
-                          Background: background,
-                          Heritage: heritage,
-                          Class: cClass,
-                          Character: character,
-                          CalculatedStats: calculatedStats,
-                          MetaDatas: metaDatas,
-                          ConditionsObject: conditionsObject,
-                          CharTags: charTags,
-                        };
-
-                      });
-                    });
-                  });
-                });
-              });
-            });
-          });
-        });
-      });
     }
 
     static getBaseAbilityScores(charID) {

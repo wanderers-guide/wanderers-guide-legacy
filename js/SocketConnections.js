@@ -1937,8 +1937,11 @@ module.exports = class SocketConnections {
       socket.on('requestCharExportPDFInfo', function(charID){
         AuthCheck.canViewCharacter(socket, charID).then((canViewChar) => {
           if(canViewChar){
-            CharGathering.getCharacterInfoExportToPDF(charID).then((characterInfo) => {
-              socket.emit('returnCharExportPDFInfo', characterInfo);
+            CharExport.getExportData(charID)
+            .then((charExportData) => {
+              CharGathering.getAllFeats(charID).then((featsObject) => {
+                socket.emit('returnCharExportPDFInfo', charExportData, { featsObject });
+              });
             });
           }
         });
