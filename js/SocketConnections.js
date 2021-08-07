@@ -1262,6 +1262,54 @@ module.exports = class SocketConnections {
         });
       });
 
+      socket.on('requestSCFSChange', function(charID, srcStruct, classFeatureID, inputPacket){
+        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+          if(ownsChar){
+            if(classFeatureID == null){
+              CharDataMapping.deleteData(charID, 'scfs', srcStruct)
+              .then((result) => {
+                socket.emit('returnSCFSChange', inputPacket);
+              });
+            } else {
+              CharDataMapping.setData(charID, 'scfs', srcStruct, classFeatureID)
+              .then((result) => {
+                socket.emit('returnSCFSChange', inputPacket);
+              });
+            }
+          } else {
+            socket.emit('returnWSCStatementFailure', 'Incorrect Auth');
+          }
+        });
+      });
+
+      socket.on('requestFindClassFeatureForSCFS', function(charID, featureName, inputPacket){
+        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+          if(ownsChar){
+
+            CharGathering.getClassFeatureByName(charID, featureName)
+            .then((classFeature) => {
+              if(classFeature != null){
+
+                if(classFeature.selectType == 'SELECTOR'){
+                  CharGathering.getAllClassFeatureOptions(charID)
+                  .then((allOptions) => {
+                    socket.emit('returnFindClassFeatureForSCFS', classFeature, allOptions, inputPacket);
+                  });
+                } else {
+                  socket.emit('returnWSCStatementFailure', 'Class Feature must have selection options for a SCFS!');
+                }
+
+              } else {
+                socket.emit('returnWSCStatementFailure', 'Unknown Class Feature \"'+featureName+'\"');
+              }
+            });
+
+          } else {
+            socket.emit('returnWSCStatementFailure', 'Incorrect Auth');
+          }
+        });
+      });
+
       socket.on('requestAddHeritageEffect', function(charID, srcStruct, heritageName, inputPacket){
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
           if(ownsChar){

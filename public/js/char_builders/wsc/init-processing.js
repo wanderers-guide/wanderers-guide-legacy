@@ -181,6 +181,11 @@ function runNextStatement(){
             return 'WAIT';
         }
 
+        if(wscStatement.includes("-SCFS")){ // Needs to come before the rest
+          processingSCFS(wscStatement, srcStruct, locationID, sourceName);
+          return 'WAIT';
+        }
+
         if(wscStatement.includes("-CHAR-TRAIT")){
             processingCharTags(wscStatement, srcStruct, locationID, sourceName);
             return 'WAIT';

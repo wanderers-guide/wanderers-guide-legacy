@@ -24,7 +24,7 @@ function mapToObj(strMap) {
   return obj;
 }
 
-module.exports = async function(charID, character=null, background=null, ancestry=null, heritage=null, ancestries=null, charTagsArray=null, classDetails=null, featDataArray=null, bonusDataArray=null, choiceDataArray=null, profDataArray=null, innateSpellDataArray=null, langDataArray=null, senseDataArray=null, phyFeatDataArray=null, loreDataArray=null, focusPointDataArray=null, profMap=null, domains=null, domainDataArray=null, advancedDomainDataArray=null, extraClassFeatures=null, heritageEffectsArray=null) {
+module.exports = async function(charID, character=null, background=null, ancestry=null, heritage=null, ancestries=null, charTagsArray=null, classDetails=null, featDataArray=null, bonusDataArray=null, choiceDataArray=null, profDataArray=null, innateSpellDataArray=null, langDataArray=null, senseDataArray=null, phyFeatDataArray=null, loreDataArray=null, scfsDataArray=null, focusPointDataArray=null, profMap=null, domains=null, domainDataArray=null, advancedDomainDataArray=null, extraClassFeatures=null, heritageEffectsArray=null) {
 
   console.log('~ STARTING CHAR-CHOICES LOAD ~');
 
@@ -92,6 +92,10 @@ module.exports = async function(charID, character=null, background=null, ancestr
     loreDataArray = await CharDataMapping.getDataAll(charID,"loreCategories",null);
   }
 
+  if(scfsDataArray==null){
+    scfsDataArray = await CharDataMapping.getDataAll(charID,"scfs",null);
+  }
+
   if(focusPointDataArray==null){
     focusPointDataArray = await CharSpells.getFocusPoints(charID);
   }
@@ -117,7 +121,7 @@ module.exports = async function(charID, character=null, background=null, ancestr
   }
 
   if(heritageEffectsArray==null){
-    heritageEffectsArray = await CharDataMapping.getDataAll(charID, "heritageExtra",Heritage);
+    heritageEffectsArray = await CharDataMapping.getDataAll(charID,"heritageExtra",Heritage);
   }
 
 
@@ -141,6 +145,7 @@ module.exports = async function(charID, character=null, background=null, ancestr
     AllAncestries: ancestries,
     DomainArray: domainDataArray,
     AdvancedDomainArray: advancedDomainDataArray,
+    SCFSDataArray: scfsDataArray,
     FocusPointArray: focusPointDataArray,
     LoreArray: loreDataArray,
     ExtraClassFeaturesArray: extraClassFeatures,
