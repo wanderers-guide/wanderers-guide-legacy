@@ -71,6 +71,7 @@ function processText(text, isSheet, isJustified = false, size = 'MEDIUM', indexC
     temp_textProcess_s = _s;
 
     // Table detection comes first
+    console.log(text);
     text = text.replace(regexTableDetection, handleTableCreation);
 
     // Wrap in a paragraph
@@ -302,7 +303,7 @@ function processTextRemoveIndexing(text) {
 
 /////
 
-const regexTableDetection = /((^((.+)\|(.+))$)(\n|$)){3,}/ig;
+const regexTableDetection = /((^((.+)\|(.+))$)(\n|$)){3,}/igm;
 function handleTableCreation(match) {
 
   let rows = match.split(/\n/);
