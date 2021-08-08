@@ -338,7 +338,7 @@ function handleTableCreation(match) {
   }
 
   if(!validTable){
-    return '***- Invalid Table -***\n'+match+'\n***-----------------***\n'; 
+    return match;
   }
 
   // Construct table
