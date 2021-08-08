@@ -302,7 +302,7 @@ function processTextRemoveIndexing(text) {
 
 /////
 
-const regexTableDetection = /(((.+?)\|(.+?))+?(\n|$)){3,}/ig;
+const regexTableDetection = /((^((.+)\|(.+))$)(\n|$)){3,}/ig;
 function handleTableCreation(match) {
 
   let rows = match.split(/\n/);
