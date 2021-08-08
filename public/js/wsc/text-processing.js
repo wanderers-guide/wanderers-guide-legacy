@@ -85,6 +85,9 @@ function processText(text, isSheet, isJustified = false, size = 'MEDIUM', indexC
     // **word** - Makes word bold
     text = text.replace(/\*\*(.+?)\*\*/g, '<strong class="is-bold">$1</strong>');
 
+    // ^^word^^ - Makes word superscript
+    text = text.replace(/\^\^(.+?)\^\^/g, '<sup>$1</sup>');
+
     // __word__ - Makes word italicized
     text = text.replace(/\_\_(.+?)\_\_/g, '<em>$1</em>');
 
