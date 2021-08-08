@@ -238,3 +238,22 @@ select .is-unique {
 .field-label.is-long {
   flex-grow: 2 !important;
 }
+
+/* Tables */
+.table-bck {
+  background-color: hsl(240, 2%, 13%);
+}
+.table-row-a {
+  background-color: hsl(240, 2%, 17%);
+}
+.table-row-b {
+  background-color: hsl(240, 2%, 15%);
+}
+.wsc-table {
+  width:100%;
+  box-shadow: 0 1px 2px rgb(0 0 0 / 30%);
+}
+.wsc-table, .wsc-th, .wsc-td {
+  border: 1px solid hsl(240, 2%, 12%);
+  border-collapse: collapse;
+}

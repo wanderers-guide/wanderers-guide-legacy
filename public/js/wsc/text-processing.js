@@ -41,6 +41,9 @@ Optional Requirements:
   - g_itemMap
   - g_spellMap
 */
+let temp_textProcess_j = '';
+let temp_textProcess_s = '';
+
 function processText(text, isSheet, isJustified = false, size = 'MEDIUM', indexConditions = true) {
     if(text == null) {return text;}
 
@@ -63,6 +66,12 @@ function processText(text, isSheet, isJustified = false, size = 'MEDIUM', indexC
         default:
             break;
     }
+
+    temp_textProcess_j = _j;
+    temp_textProcess_s = _s;
+
+    // Table detection comes first
+    text = text.replace(regexTableDetection, handleTableCreation);
 
     // Wrap in a paragraph
     text = '<p class="p-1 pl-2 '+_j+_s+'">'+text+'</p>';
@@ -286,6 +295,103 @@ function processTextRemoveIndexing(text) {
   text = text.replace(regexTraitLink, '$2');
 
   return text;
+}
+
+/////
+
+const regexTableDetection = /(((.+?)\|(.+?))+?(\n|$)){3,}/ig;
+function handleTableCreation(match) {
+
+  let rows = match.split(/\n/);
+
+  // Verify table
+  let validTable = true;
+  let prevColumnNum = -1;
+  for (let i = 0; i < rows.length; i++) {
+    let row = rows[i];
+    if(row == '') { continue; }
+
+    // Check alignment row
+    if(i == 1){
+      let columns = row.split(/\|/g);
+      for(let column of columns){
+        let columnTrimmed = column.trim();
+        if(columnTrimmed != ':--' && columnTrimmed != ':-:' && columnTrimmed != '--:'){
+          validTable = false;
+          break;
+        }
+      }
+    }
+
+    let columnNum = row.split(/\|/g).length;
+    if(prevColumnNum != -1){
+      if(prevColumnNum != columnNum){
+        validTable = false;
+        break;
+      }
+    } else {
+      prevColumnNum = columnNum;
+    }
+  }
+  if(prevColumnNum == -1){
+    validTable = false;
+  }
+
+  if(!validTable){
+    return '***- Invalid Table -***\n'+match+'\n***-----------------***\n'; 
+  }
+
+  // Construct table
+  let tableAlignMap = new Map();
+  let tableHTML = '</p><table class="wsc-table table-bck">';
+  for (let i = 0; i < rows.length; i++) {
+    let row = rows[i];
+    if(row == '') { continue; }
+
+    let columns = row.split(/\|/g);
+
+    if(i == 1){
+
+      tableAlignMap.clear();
+      for (let j = 0; j < columns.length; j++) {
+        let column = columns[j].trim();
+        if(column == ':--'){
+          tableAlignMap.set(j, 'has-text-left');
+        } else if(column == ':-:'){
+          tableAlignMap.set(j, 'has-text-centered');
+        } else if(column == '--:'){
+          tableAlignMap.set(j, 'has-text-right');
+        }
+      }
+
+    }
+
+    if(i == 0){
+      
+      tableHTML += '<tr class="">';
+      for (let j = 0; j < columns.length; j++) {
+        let column = columns[j].trim();
+        tableHTML += '<th class="wsc-th has-text-centered p-1 is-bold" style="color: #b9b9b9;">'+column+'</th>';
+      }
+      tableHTML += '</tr>';
+
+    } else if(i != 1) {
+
+      let rowBackgroundClass = (i % 2 == 0) ? 'table-row-a' : 'table-row-b';
+      tableHTML += '<tr class="'+rowBackgroundClass+'">';
+      for (let j = 0; j < columns.length; j++) {
+        let column = columns[j].trim();
+        let textAlignClass = tableAlignMap.get(j);
+        tableHTML += '<td class="wsc-td px-2 py-1 has-text-grey-light '+textAlignClass+'">'+column+'</td>';
+      }
+      tableHTML += '</tr>';
+
+    }
+
+  }
+  tableHTML += '</table><p class="p-1 pl-2 '+temp_textProcess_j+temp_textProcess_s+'">';
+
+  return tableHTML;
 }
 
 /////
