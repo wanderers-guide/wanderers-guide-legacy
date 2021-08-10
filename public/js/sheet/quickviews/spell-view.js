@@ -620,11 +620,11 @@ function openSpellQuickview(data){
 function spellViewTextProcessor(text, spellKeyAbility){
     if(!isSheetPage()) { return text; }
 
-    text = text.replace('plus your spellcasting modifier', '+ {'+spellKeyAbility+'_MOD|'+lengthenAbilityType(spellKeyAbility)+' Modifier}');
-    text = text.replace('plus your spellcasting ability modifier', '+ {'+spellKeyAbility+'_MOD|'+lengthenAbilityType(spellKeyAbility)+' Modifier}');
+    text = text.replace('plus your spellcasting modifier', '+ {pre_'+spellKeyAbility+'_MOD|'+lengthenAbilityType(spellKeyAbility)+' Modifier}');
+    text = text.replace('plus your spellcasting ability modifier', '+ {pre_'+spellKeyAbility+'_MOD|'+lengthenAbilityType(spellKeyAbility)+' Modifier}');
 
-    text = text.replace('equal to your spellcasting ability modifier', '{'+spellKeyAbility+'_MOD|'+lengthenAbilityType(spellKeyAbility)+' Modifier}');
-    text = text.replace('your spellcasting ability modifier', '{'+spellKeyAbility+'_MOD|'+lengthenAbilityType(spellKeyAbility)+' Modifier}');
+    text = text.replace('equal to your spellcasting ability modifier', '{pre_'+spellKeyAbility+'_MOD|'+lengthenAbilityType(spellKeyAbility)+' Modifier}');
+    text = text.replace('your spellcasting ability modifier', '{pre_'+spellKeyAbility+'_MOD|'+lengthenAbilityType(spellKeyAbility)+' Modifier}');
 
     return text;
 }

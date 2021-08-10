@@ -70,10 +70,19 @@ function addStatAndSrc(statName, source, value, statSrc){
     if(statDataMap != null){
         let existingData = statDataMap.get(source);
         if(existingData != null){
-            if(existingData.Value > value) {
-                value = existingData.Value;
-                statSrc = existingData.Src;
+          // If both are negative, take the lowest
+          if(existingData.Value < 0 && value < 0){
+            if(existingData.Value < value) {
+              value = existingData.Value;
+              statSrc = existingData.Src;
             }
+          } else {
+            // Take the highest
+            if(existingData.Value > value) {
+              value = existingData.Value;
+              statSrc = existingData.Src;
+            }
+          }
         }
         statDataMap.set(source, {Value: value, Src: statSrc});
         g_statManagerMap.set(statName, statDataMap);
@@ -184,6 +193,19 @@ function getModOfValue(valueModName){
             return getMod(getStatTotal('SCORE_WIS'));
         case 'CHA':
             return getMod(getStatTotal('SCORE_CHA'));
+
+        case 'PRE_STR':
+            return getMod(g_preConditions_strScore);
+        case 'PRE_DEX':
+            return getMod(g_preConditions_dexScore);
+        case 'PRE_CON':
+            return getMod(g_preConditions_conScore);
+        case 'PRE_INT':
+            return getMod(g_preConditions_intScore);
+        case 'PRE_WIS':
+            return getMod(g_preConditions_wisScore);
+        case 'PRE_CHA':
+            return getMod(g_preConditions_chaScore);
         default:
             return null;
     }

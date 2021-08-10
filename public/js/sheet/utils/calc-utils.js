@@ -6,8 +6,29 @@ function getAttackAndDamage(itemData, invItem){
 
     let strMod = getMod(getStatTotal('SCORE_STR'));
     let dexMod = getMod(getStatTotal('SCORE_DEX'));
+    let strModDamage = strMod;
+    let dexModDamage = dexMod;
+
     let pre_strMod = getMod(g_preConditions_strScore);
     let pre_dexMod = getMod(g_preConditions_dexScore);
+
+    // Undo frightened & sickened condition penalty
+    let frightenedCondition = getCondition(18);// Hardcoded frightened condition ID
+    if(frightenedCondition != null){
+      strModDamage += frightenedCondition.Value;
+      dexModDamage += frightenedCondition.Value;
+    }
+    let sickenedCondition = getCondition(28);// Hardcoded sickened condition ID
+    if(sickenedCondition != null){
+      strModDamage += sickenedCondition.Value;
+      dexModDamage += sickenedCondition.Value;
+    }
+    if(strModDamage > pre_strMod){
+      strModDamage = pre_strMod;
+    }
+    if(dexModDamage > pre_dexMod){
+      dexModDamage = pre_dexMod;
+    }
 
     let tagArray = getItemTraitsArray(itemData, invItem);
 
@@ -157,20 +178,20 @@ function getAttackAndDamage(itemData, invItem){
         // Ability Score Modifier //
         let dmgStrBonus = 0;
         if(gState_hasFinesseMeleeUseDexDamage && finesseTag != null){
-            if(dexMod > strMod) {
-              if(dexMod != 0){
-                dmgStrBonus = dexMod;
+            if(dexModDamage > strModDamage) {
+              if(dexModDamage != 0){
+                dmgStrBonus = dexModDamage;
                 weapStruct.damage.parts.set('This is your Dexterity modifier. You\'re adding Dexterity instead of Strength to your weapon\'s damage, because this weapon is a finesse weapon and you have an ability that allows you to use your Dexterity modifier instead of Strength for damage with finesse weapons.', dmgStrBonus);
               }
             } else {
-              if(strMod != 0){
-                dmgStrBonus = strMod;
+              if(strModDamage != 0){
+                dmgStrBonus = strModDamage;
                 weapStruct.damage.parts.set('This is your Strength modifier. You have an ability that allows you to use your Dexterity modifier instead of Strength for damage with finesse weapons. However, your Strength modifier is greater than your Dexterity so it is being used instead.', dmgStrBonus);
               }
             }
         } else {
-            if(splashTag == null && strMod != 0){
-              dmgStrBonus = strMod;
+            if(splashTag == null && strModDamage != 0){
+              dmgStrBonus = strModDamage;
               weapStruct.damage.parts.set('This is your Strength modifier. You generally add your Strength modifier to damage with melee weapons.', dmgStrBonus);
             }
         }
@@ -364,19 +385,19 @@ function getAttackAndDamage(itemData, invItem){
         // Ability Score Modifier //
         let dmgStrBonus = 0;
         if(propulsiveTag != null){
-            if(strMod >= 0){
-                let strAmt = Math.floor(strMod/2);
+            if(strModDamage >= 0){
+                let strAmt = Math.floor(strModDamage/2);
                 if(strAmt != 0){
                     dmgStrBonus = strAmt;
                     weapStruct.damage.parts.set('This is half of your Strength modifier. Because this weapon is a propulsive weapon and you have a positive Strength modifier, you add half of your Strength modifier (rounded down) to the damage.', dmgStrBonus);
                 }
             } else {
-                dmgStrBonus = strMod;
+                dmgStrBonus = strModDamage;
                 weapStruct.damage.parts.set('This is your Strength modifier. Because this weapon is a propulsive weapon and you have a negative Strength modifier, you add your full Strength modifier to the damage.', dmgStrBonus);
             }
         }
-        if(thrownTag != null && splashTag == null && strMod != 0){
-            dmgStrBonus = strMod;
+        if(thrownTag != null && splashTag == null && strModDamage != 0){
+            dmgStrBonus = strModDamage;
             weapStruct.damage.parts.set('This is your Strength modifier. Because this is a thrown ranged weapon, you add your Strength modifier to the damage.', dmgStrBonus);
         }
 
