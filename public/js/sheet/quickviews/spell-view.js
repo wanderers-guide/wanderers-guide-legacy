@@ -642,22 +642,22 @@ function openSpellQuickview(data){
             }
 
             // Display hText
-            if(hOneText != null){
+            if(hOneText != null && hOneText != ''){
               hOneText = post_spellModTextProcessor(hOneText);
               qContent.append('<hr class="m-2">');
               qContent.append('<div class="negative-indent">'+processText(hOneText, true, true, 'MEDIUM')+'</div>');
             }
-            if(hTwoText != null){
+            if(hTwoText != null && hTwoText != ''){
               hTwoText = post_spellModTextProcessor(hTwoText);
               qContent.append('<hr class="m-2">');
               qContent.append('<div class="negative-indent">'+processText(hTwoText, true, true, 'MEDIUM')+'</div>');
             }
-            if(hThreeText != null){
+            if(hThreeText != null && hThreeText != ''){
               hThreeText = post_spellModTextProcessor(hThreeText);
               qContent.append('<hr class="m-2">');
               qContent.append('<div class="negative-indent">'+processText(hThreeText, true, true, 'MEDIUM')+'</div>');
             }
-            if(hFourText != null){
+            if(hFourText != null && hFourText != ''){
               hFourText = post_spellModTextProcessor(hFourText);
               qContent.append('<hr class="m-2">');
               qContent.append('<div class="negative-indent">'+processText(hFourText, true, true, 'MEDIUM')+'</div>');

@@ -5,6 +5,7 @@
 let socket = io();
 let isBuilderInit = false;
 let isFirstLoad = true;
+let g_pageNum;
 
 // 
 let g_char_ancestryID = null;
@@ -73,6 +74,7 @@ function goToBuilderPage(pageNum, firstLoad=false){
   $("#nextButton").off();
   $("#goToCharButton").off();
   $("#goToCharBigButton").off();
+  g_pageNum = pageNum;
   switch(pageNum+''){
     case '1': window.location.href = '/profile/characters/builder/basics/?id='+getCharIDFromURL(); break;
     case '2': socket.emit("requestBuilderPageAncestry", getCharIDFromURL()); break;

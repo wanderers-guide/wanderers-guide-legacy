@@ -307,6 +307,12 @@ function displaySpellsInLevelPrepared(spellBook, level, slotArray, spellBookSect
               case 'ONE_TO_THREE_ACTIONS': spellCast = '<span class="pf-icon">[one-action]</span><span> to </span><span class="pf-icon">[three-actions]</span>'; break;
               case 'ONE_TO_TWO_ACTIONS': spellCast = '<span class="pf-icon">[one-action]</span><span> to </span><span class="pf-icon">[two-actions]</span>'; break;
               case 'TWO_TO_THREE_ACTIONS': spellCast = '<span class="pf-icon">[two-actions]</span><span> to </span><span class="pf-icon">[three-actions]</span>'; break;
+              case 'ONE_MINUTE': spellCast = '<span>1 minute</span>'; break;
+              case 'FIVE_MINUTES': spellCast = '<span>5 minutes</span>'; break;
+              case 'TEN_MINUTES': spellCast = '<span>10 minutes</span>'; break;
+              case 'ONE_HOUR': spellCast = '<span>1 hour</span>'; break;
+              case 'EIGHT_HOURS': spellCast = '<span>8 hours</span>'; break;
+              case 'ONE_DAY': spellCast = '<span>24 hours</span>'; break;
               default: spellCast = '<em>see spell</em>'; break;
           }
 
@@ -338,13 +344,13 @@ function displaySpellsInLevelPrepared(spellBook, level, slotArray, spellBookSect
                 <p class="has-text-left pl-3 pt-1 pos-relative">${spellNameHTML}</p>
               </div>
               <div class="column is-1 is-paddingless border-bottom border-dark-lighter">
-                <p class="text-center has-text-grey-light pt-1">${spellCast}</p>
+                <p class="text-center has-text-grey-light is-size-6-5 pt-1">${spellCast}</p>
               </div>
               <div class="column is-1 is-paddingless border-bottom border-dark-lighter">
-                <p class="text-center has-text-grey-light pt-1">${spellSave}</p>
+                <p class="text-center has-text-grey-light is-size-6-5 pt-1">${spellSave}</p>
               </div>
               <div class="column is-1 is-paddingless border-bottom border-dark-lighter">
-                <p class="text-center has-text-grey-light pt-1">${spellRange}</p>
+                <p class="text-center has-text-grey-light is-size-6-5 pt-1">${spellRange}</p>
               </div>
               <div class="column is-5 is-paddingless border-bottom border-dark-lighter">
                 <p class="text-center has-text-grey-light">${tagsInnerHTML}</p>
@@ -510,6 +516,12 @@ function displaySpellsInLevelSpontaneous(spellBook, level, slotArray, spellBookS
             case 'ONE_TO_THREE_ACTIONS': spellCast = '<span class="pf-icon">[one-action]</span><span> to </span><span class="pf-icon">[three-actions]</span>'; break;
             case 'ONE_TO_TWO_ACTIONS': spellCast = '<span class="pf-icon">[one-action]</span><span> to </span><span class="pf-icon">[two-actions]</span>'; break;
             case 'TWO_TO_THREE_ACTIONS': spellCast = '<span class="pf-icon">[two-actions]</span><span> to </span><span class="pf-icon">[three-actions]</span>'; break;
+            case 'ONE_MINUTE': spellCast = '<span>1 minute</span>'; break;
+            case 'FIVE_MINUTES': spellCast = '<span>5 minutes</span>'; break;
+            case 'TEN_MINUTES': spellCast = '<span>10 minutes</span>'; break;
+            case 'ONE_HOUR': spellCast = '<span>1 hour</span>'; break;
+            case 'EIGHT_HOURS': spellCast = '<span>8 hours</span>'; break;
+            case 'ONE_DAY': spellCast = '<span>24 hours</span>'; break;
             default: spellCast = '<em>see spell</em>'; break;
         }
 
@@ -541,13 +553,13 @@ function displaySpellsInLevelSpontaneous(spellBook, level, slotArray, spellBookS
               <p class="has-text-left pl-3 pt-1 pos-relative">${spellNameHTML}</p>
             </div>
             <div class="column is-1 is-paddingless border-bottom border-dark-lighter">
-              <p class="text-center has-text-grey-light pt-1">${spellCast}</p>
+              <p class="text-center has-text-grey-light is-size-6-5 pt-1">${spellCast}</p>
             </div>
             <div class="column is-1 is-paddingless border-bottom border-dark-lighter">
-              <p class="text-center has-text-grey-light pt-1">${spellSave}</p>
+              <p class="text-center has-text-grey-light is-size-6-5 pt-1">${spellSave}</p>
             </div>
             <div class="column is-1 is-paddingless border-bottom border-dark-lighter">
-              <p class="text-center has-text-grey-light pt-1">${spellRange}</p>
+              <p class="text-center has-text-grey-light is-size-6-5 pt-1">${spellRange}</p>
             </div>
             <div class="column is-5 is-paddingless border-bottom border-dark-lighter">
               <p class="text-center has-text-grey-light">${tagsInnerHTML}</p>
@@ -815,6 +827,12 @@ function displaySpellsFocus() {
                 case 'ONE_TO_THREE_ACTIONS': spellCast = '<span class="pf-icon">[one-action]</span><span> to </span><span class="pf-icon">[three-actions]</span>'; break;
                 case 'ONE_TO_TWO_ACTIONS': spellCast = '<span class="pf-icon">[one-action]</span><span> to </span><span class="pf-icon">[two-actions]</span>'; break;
                 case 'TWO_TO_THREE_ACTIONS': spellCast = '<span class="pf-icon">[two-actions]</span><span> to </span><span class="pf-icon">[three-actions]</span>'; break;
+                case 'ONE_MINUTE': spellCast = '<span>1 minute</span>'; break;
+                case 'FIVE_MINUTES': spellCast = '<span>5 minutes</span>'; break;
+                case 'TEN_MINUTES': spellCast = '<span>10 minutes</span>'; break;
+                case 'ONE_HOUR': spellCast = '<span>1 hour</span>'; break;
+                case 'EIGHT_HOURS': spellCast = '<span>8 hours</span>'; break;
+                case 'ONE_DAY': spellCast = '<span>24 hours</span>'; break;
                 default: spellCast = '<em>see spell</em>'; break;
             }
 
@@ -847,13 +865,13 @@ function displaySpellsFocus() {
                   <p class="has-text-left pl-3 pt-1">${spellName}</p>
                 </div>
                 <div class="column is-1 is-paddingless border-bottom border-dark-lighter">
-                  <p class="text-center has-text-grey-light pt-1">${spellCast}</p>
+                  <p class="text-center has-text-grey-light is-size-6-5 pt-1">${spellCast}</p>
                 </div>
                 <div class="column is-1 is-paddingless border-bottom border-dark-lighter">
-                  <p class="text-center has-text-grey-light pt-1">${spellSave}</p>
+                  <p class="text-center has-text-grey-light is-size-6-5 pt-1">${spellSave}</p>
                 </div>
                 <div class="column is-1 is-paddingless border-bottom border-dark-lighter">
-                  <p class="text-center has-text-grey-light pt-1">${spellRange}</p>
+                  <p class="text-center has-text-grey-light is-size-6-5 pt-1">${spellRange}</p>
                 </div>
                 <div class="column is-5 is-paddingless border-bottom border-dark-lighter">
                   <p class="text-center has-text-grey-light">${tagsInnerHTML}</p>
@@ -1045,6 +1063,12 @@ function displaySpellsInnate() {
                 case 'ONE_TO_THREE_ACTIONS': spellCast = '<span class="pf-icon">[one-action]</span><span> to </span><span class="pf-icon">[three-actions]</span>'; break;
                 case 'ONE_TO_TWO_ACTIONS': spellCast = '<span class="pf-icon">[one-action]</span><span> to </span><span class="pf-icon">[two-actions]</span>'; break;
                 case 'TWO_TO_THREE_ACTIONS': spellCast = '<span class="pf-icon">[two-actions]</span><span> to </span><span class="pf-icon">[three-actions]</span>'; break;
+                case 'ONE_MINUTE': spellCast = '<span>1 minute</span>'; break;
+                case 'FIVE_MINUTES': spellCast = '<span>5 minutes</span>'; break;
+                case 'TEN_MINUTES': spellCast = '<span>10 minutes</span>'; break;
+                case 'ONE_HOUR': spellCast = '<span>1 hour</span>'; break;
+                case 'EIGHT_HOURS': spellCast = '<span>8 hours</span>'; break;
+                case 'ONE_DAY': spellCast = '<span>24 hours</span>'; break;
                 default: spellCast = '<em>see spell</em>'; break;
             }
 
@@ -1067,10 +1091,10 @@ function displaySpellsInnate() {
                   <p id="${spellCastingID}" class="text-center has-text-grey-light pt-1 is-unselectable"></p>
                 </div>
                 <div class="column is-1 is-paddingless border-bottom border-dark-lighter">
-                  <p class="text-center has-text-grey-light pt-1">${spellCast}</p>
+                  <p class="text-center has-text-grey-light is-size-6-5 pt-1">${spellCast}</p>
                 </div>
                 <div class="column is-1 is-paddingless border-bottom border-dark-lighter">
-                  <p class="text-center has-text-grey-light pt-1">${spellRange}</p>
+                  <p class="text-center has-text-grey-light is-size-6-5 pt-1">${spellRange}</p>
                 </div>
                 <div class="column is-4 is-paddingless border-bottom border-dark-lighter">
                   <p class="text-center has-text-grey-light">${tagsInnerHTML}</p>

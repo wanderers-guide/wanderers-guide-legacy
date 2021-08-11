@@ -48,7 +48,7 @@ function displayCharTagChoice(srcStruct, locationID, sourceName, commonOnly=fals
 
     const selectionTagInfo = getTagFromData(srcStruct, sourceName, 'Unselected Option', 'UNSELECTED');
 
-    $('#'+locationID).append('<div class="field"><div class="select '+selectCharTagControlShellClass+'" data-selection-info="'+selectionTagInfo+'"><select id="'+selectCharTagID+'" class="selectCharTag"></select></div></div>');
+    $('#'+locationID).append('<div class="field my-2"><div class="select '+selectCharTagControlShellClass+'" data-selection-info="'+selectionTagInfo+'"><select id="'+selectCharTagID+'" class="selectCharTag"></select></div></div>');
 
     $('#'+selectCharTagID).append('<option value="chooseDefault">Choose an Ancestry</option>');
     $('#'+selectCharTagID).append('<optgroup label="──────────"></optgroup>');
@@ -107,7 +107,8 @@ function displayCharTagChoice(srcStruct, locationID, sourceName, commonOnly=fals
     }
 
     // On char tag choice change
-    $('#'+selectCharTagID).change(function(event, triggerSave) {
+    $('#'+selectCharTagID).change(function(event, triggerSave, triggerReload) {
+        if(triggerReload == null){ triggerReload = true; }
 
         let charTagName = $(this).val();
 
@@ -118,7 +119,8 @@ function displayCharTagChoice(srcStruct, locationID, sourceName, commonOnly=fals
                 getCharIDFromURL(),
                 srcStruct,
                 null,
-                selectCharTagControlShellClass);
+                selectCharTagControlShellClass,
+                triggerReload);
 
         } else {
             $('.'+selectCharTagControlShellClass).removeClass("is-info");
@@ -130,20 +132,21 @@ function displayCharTagChoice(srcStruct, locationID, sourceName, commonOnly=fals
                     getCharIDFromURL(),
                     srcStruct,
                     charTagName,
-                    selectCharTagControlShellClass);
+                    selectCharTagControlShellClass,
+                    triggerReload);
             }
 
         }
         
     });
 
-    $('#'+selectCharTagID).trigger("change", [triggerChange]);
+    $('#'+selectCharTagID).trigger("change", [triggerChange, false]);
 
     statementComplete();
 
 }
 
-socket.on("returnWSCCharTagChange", function(charTagsArray, selectControlShellClass){
+socket.on("returnWSCCharTagChange", function(charTagsArray, selectControlShellClass, triggerReload){
     wscChoiceStruct.CharTagsArray = charTagsArray;
     if(selectControlShellClass != null) {
         $('.'+selectControlShellClass).removeClass("is-loading");
@@ -153,4 +156,12 @@ socket.on("returnWSCCharTagChange", function(charTagsArray, selectControlShellCl
         openLeftQuickView('skillsView', null);
     }
     selectorUpdated();
+
+    // If on ancestry page, reload ancestry feats
+    if(triggerReload && g_pageNum == 2){
+      window.setTimeout(() => {
+        createAncestryFeats(wscChoiceStruct.Character.level);
+      }, 250);
+    }
+
 });

@@ -1912,14 +1912,14 @@ module.exports = class SocketConnections {
         });
       });
 
-      socket.on('requestWSCCharTagChange', function(charID, srcStruct, charTag, selectControlShellClass){
+      socket.on('requestWSCCharTagChange', function(charID, srcStruct, charTag, selectControlShellClass, triggerReload){
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
           if(ownsChar){
             CharTags.setTag(charID, srcStruct, charTag)
             .then((result) => {
               return CharTags.getTags(charID)
               .then((charTagsArray) => {
-                socket.emit('returnWSCCharTagChange', charTagsArray, selectControlShellClass);
+                socket.emit('returnWSCCharTagChange', charTagsArray, selectControlShellClass, triggerReload);
               });
             });
           } else {

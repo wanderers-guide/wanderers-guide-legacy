@@ -68,13 +68,12 @@ function refreshDiceNotationButtons(){
 
 function processDiceNotation(text){
 
+  text = processTextBakeSheetVariables(text);
+  text = processTextRemoveTooltips(text, /((\d+)+d(\d+)|\+(\d+)|\+ (\d+))/g);
+
   let notationRegex = /(^| )(\d+)+d(\d+)((\s*[+-]\s*\d+)*)/g;
   return text.replace(notationRegex, function(match, startSpace, diceNum, diceType, bonus) {
-    return `${startSpace}<button class="button dice-roll-btn is-paddingless px-2 is-marginless mt-1 is-very-small is-outlined is-info"
-                data-dice-num="${diceNum}"
-                data-dice-type="${diceType}"
-                data-dice-bonus="${bonus}"
-            >${match}</button>`;
+    return `${startSpace}<button class="button dice-roll-btn is-paddingless px-2 is-marginless mt-1 is-very-small is-outlined is-info" data-dice-num="${diceNum}" data-dice-type="${diceType}" data-dice-bonus="${bonus}">${match}</button>`;
   });
 
 }

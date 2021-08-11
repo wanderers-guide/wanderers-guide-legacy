@@ -70,6 +70,14 @@ function processText(text, isSheet, isJustified = false, size = 'MEDIUM', indexC
     temp_textProcess_j = _j;
     temp_textProcess_s = _s;
 
+    // Replace dice notation with roll button
+    if(typeof gOption_hasDiceRoller !== 'undefined' && gOption_hasDiceRoller){
+      text = processDiceNotation(text);
+      refreshDiceNotationButtons();
+    }
+
+    //////////////////////////////
+
     // Table detection comes first
     text = text.replace(regexTableDetection, handleTableCreation);
 
@@ -228,12 +236,6 @@ function processText(text, isSheet, isJustified = false, size = 'MEDIUM', indexC
     // Bestiary pg. ### -> Bestiary Link
     let regexBestiary = /Bestiary pg\.\s+(\d+)/g;
     text = text.replace(regexBestiary, '<a href="https://paizo.com/products/btq01zp4?Pathfinder-Bestiary" target="_blank" class="external-link">Bestiary $1</a>');
-
-    // Replace dice notation with roll button
-    if(typeof gOption_hasDiceRoller !== 'undefined' && gOption_hasDiceRoller){
-      text = processDiceNotation(text);
-      refreshDiceNotationButtons();
-    }
 
     // Clean up any random spaces that were created...
     text = text.replace('<p class="p-1 pl-2 '+_j+_s+'"></p>', '');
@@ -687,10 +689,41 @@ function acquireSheetVariable(variableName){
     }
 }
 
-function processTextRemoveTooltips(text){
+function processTextBakeSheetVariables(text){
+  if(text == null){ return null; }
+
+  let handleVariables = function(match, innerText){
+    if(innerText.includes("|")){
+        let innerTextData = innerText.split("|");
+        innerTextVariable = innerTextData[0].replace(/\s/g, "").toUpperCase();
+        let sheetVar = acquireSheetVariable(innerTextVariable);
+        if(sheetVar == null){ return match; }
+        return sheetVar;
+    } else {
+        innerText = innerText.replace(/\s/g, "").toUpperCase();
+        let sheetVar = acquireSheetVariable(innerText);
+        if(sheetVar == null){ return match; }
+        return sheetVar;
+    }
+  };
+
+  const regexSheetVariables = /\{(.+?)\}/g;
+  text = text.replace(regexSheetVariables, handleVariables);
+
+  return text;
+}
+
+function processTextRemoveTooltips(text, removeOnlyIfMatches=null){
   if(text == null){ return null; }
 
   let handleRemoval = function(match, word, tooltipWords){
+    if(removeOnlyIfMatches != null){
+      // Doesn't match, don't remove
+      if(word.match(removeOnlyIfMatches) == null){
+        return match;
+      }
+    }
+
     if(word.toUpperCase().startsWith('NORMAL:')){
       word = word.replace(/NORMAL:/i, '');
     } else if(word.toUpperCase().startsWith('BLUE:')){
