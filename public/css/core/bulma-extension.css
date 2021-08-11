@@ -55,6 +55,11 @@ em {
   -webkit-text-decoration-color: hsl(348, 100%, 61%)!important; /* Safari */  
   text-decoration-color: hsl(348, 100%, 61%)!important;
 }
+.is-underlined-link {
+  text-decoration: underline!important;
+  -webkit-text-decoration-color: #3273dc!important; /* Safari */  
+  text-decoration-color: #3273dc!important;
+}
 
 .is-underlined-thin {
   border-bottom: 1px solid;

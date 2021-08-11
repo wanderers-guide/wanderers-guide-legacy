@@ -173,6 +173,20 @@ function openInvItemQuickview(data) {
             let attackHasConditionals = (calcStruct.WeapStruct.attack.conditionals != null && calcStruct.WeapStruct.attack.conditionals.size != 0);
             let damageHasConditionals = (calcStruct.WeapStruct.damage.conditionals != null && calcStruct.WeapStruct.damage.conditionals.size != 0);
 
+            let weapDamageModHTML = '';
+            let weapDamageModTotal = '';
+            for(const onHitDmgMod of calcStruct.WeapStruct.damage.modifications.on_hit_damage){
+              let modification = onHitDmgMod.mod;
+              if(modification.startsWith('-')){
+                modification = modification.slice(1);
+                weapDamageModHTML += ` - <span class="damage-roll-btn">${modification}</span>`;
+                weapDamageModTotal += ` - ${modification}`;
+              } else {
+                weapDamageModHTML += ` + <span class="damage-roll-btn">${modification}</span>`;
+                weapDamageModTotal += ` + ${modification}`;
+              }
+            }
+
             qContent.append(`
               <div class="tile text-center is-flex">
                 <div class="tile is-child is-6">
@@ -196,7 +210,7 @@ function openInvItemQuickview(data) {
                 </div>
                 <div class="tile is-child is-6">
                   <span class="has-text-grey-light">
-                    <span class="damage-roll-btn">${calcStruct.Damage}</span>
+                    <span class="damage-roll-btn">${calcStruct.Damage}</span>${weapDamageModHTML}
                   </span>
                 </div>
               </div>
@@ -230,6 +244,8 @@ function openInvItemQuickview(data) {
                 breakdownStartStr: calcStruct.DamageDice,
                 breakdownMap: calcStruct.WeapStruct.damage.parts,
                 conditionalMap: calcStruct.WeapStruct.damage.conditionals,
+                modifications: calcStruct.WeapStruct.damage.modifications,
+                breakdownTotalWeapMod: weapDamageModTotal,
                 isBonus: false,
                 _prevBackData: {Type: g_QViewLastType, Data: g_QViewLastData},
               }, $('#quickviewDefault').hasClass('is-active'));
@@ -253,6 +269,20 @@ function openInvItemQuickview(data) {
             let attackHasConditionals = (calcStruct.WeapStruct.attack.conditionals != null && calcStruct.WeapStruct.attack.conditionals.size != 0);
             let damageHasConditionals = (calcStruct.WeapStruct.damage.conditionals != null && calcStruct.WeapStruct.damage.conditionals.size != 0);
 
+            let weapDamageModHTML = '';
+            let weapDamageModTotal = '';
+            for(const onHitDmgMod of calcStruct.WeapStruct.damage.modifications.on_hit_damage){
+              let modification = onHitDmgMod.mod;
+              if(modification.startsWith('-')){
+                modification = modification.slice(1);
+                weapDamageModHTML += ` - <span class="damage-roll-btn">${modification}</span>`;
+                weapDamageModTotal += ` - ${modification}`;
+              } else {
+                weapDamageModHTML += ` + <span class="damage-roll-btn">${modification}</span>`;
+                weapDamageModTotal += ` + ${modification}`;
+              }
+            }
+
             qContent.append(`
               <div class="tile text-center is-flex">
                 <div class="tile is-child is-6">
@@ -276,7 +306,7 @@ function openInvItemQuickview(data) {
                 </div>
                 <div class="tile is-child is-6">
                   <span class="has-text-grey-light">
-                    <span class="damage-roll-btn">${calcStruct.Damage}</span>
+                    <span class="damage-roll-btn">${calcStruct.Damage}</span>${weapDamageModHTML}
                   </span>
                 </div>
               </div>
@@ -310,6 +340,8 @@ function openInvItemQuickview(data) {
                 breakdownStartStr: calcStruct.DamageDice,
                 breakdownMap: calcStruct.WeapStruct.damage.parts,
                 conditionalMap: calcStruct.WeapStruct.damage.conditionals,
+                modifications: calcStruct.WeapStruct.damage.modifications,
+                breakdownTotalWeapMod: weapDamageModTotal,
                 isBonus: false,
                 _prevBackData: {Type: g_QViewLastType, Data: g_QViewLastData},
               }, $('#quickviewDefault').hasClass('is-active'));

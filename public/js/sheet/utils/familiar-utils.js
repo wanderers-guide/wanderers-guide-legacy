@@ -46,7 +46,12 @@ function processFamiliarAbilityCode(charFamiliarID, abilitiesArray){
     let regexFamMaxHP = /FAMILIAR-GIVE-MAX-HP=(\d+)/ig; // FAMILIAR-GIVE-MAX-HP=2
     abilCode = abilCode.replace(regexFamMaxHP, handleFamiliarMaxHP);
 
-    processSheetCode(abilCode, ability.name+' Familiar Ability');
+    processSheetCode(abilCode, {
+      source: 'Familiar',
+      sourceName: ability.name+' Familiar Ability',
+      charFamiliarID: charFamiliarID,
+      familiarAbilityID: ability.id,
+    });
 
     // Handle NoteField Statements //
     let noteFieldSrcStruct = {

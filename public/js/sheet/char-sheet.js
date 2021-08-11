@@ -393,8 +393,10 @@ function loadCharSheet(){
       weapons: [],
     };
 
-    // Init Stats (set to new Map) //
+    // Init StatsManager (set to new Map) //
     initStats();
+    // Init WeapModManager (set to new Map) //
+    initWeapModManager();
 
     // ~~~~~~~~~~~~~~~~~~~~~~~ Adding Stats To Map ~~~~~~~~~~~~~~~~~~~~~~~ //
 
@@ -518,7 +520,10 @@ function loadCharSheet(){
 
     // Run Custom Code Block Code //
     if(g_character.optionCustomCodeBlock === 1){
-      processSheetCode(g_character.customCode, 'Custom Code');
+      processSheetCode(g_character.customCode, {
+        source: 'CustomCode',
+        sourceName: 'Custom Code',
+      });
     }
 
     // Determine Bulk and Coins //
@@ -1816,7 +1821,11 @@ function determineArmor(dexMod, strScore) {
             return tag.id === 235; // Hardcoded Invested Tag ID
         });
         if(investedTag == null){
-            processSheetCode(shieldStruct.InvItem.code, shieldStruct.InvItem.name);
+            processSheetCode(shieldStruct.InvItem.code, {
+              source: 'InvItem',
+              sourceName: shieldStruct.InvItem.name,
+              invItemID: shieldStruct.InvItem.id,
+            });
         }
 
         // Halve maxHP if it's shoddy
@@ -1848,7 +1857,11 @@ function determineArmor(dexMod, strScore) {
             return tag.id === 235; // Hardcoded Invested Tag ID
         });
         if(investedTag == null){
-            processSheetCode(armorStruct.InvItem.code, armorStruct.InvItem.name);
+            processSheetCode(armorStruct.InvItem.code, {
+              source: 'InvItem',
+              sourceName: armorStruct.InvItem.name,
+              invItemID: armorStruct.InvItem.id,
+            });
         }
 
         let profData = g_armorProfMap.get(armorStruct.Item.ArmorData.profName);
@@ -1891,10 +1904,10 @@ function determineArmor(dexMod, strScore) {
           addStat('SAVE_WILL', 'ITEM_BONUS', 3);
           addStat('SAVE_REFLEX', 'ITEM_BONUS', 3);
         }
-        runArmorPropertyRuneCode(armorStruct.InvItem.propRune1ID);
-        runArmorPropertyRuneCode(armorStruct.InvItem.propRune2ID);
-        runArmorPropertyRuneCode(armorStruct.InvItem.propRune3ID);
-        runArmorPropertyRuneCode(armorStruct.InvItem.propRune4ID);
+        runPropertyRuneCode(armorStruct.InvItem.propRune1ID, armorStruct.InvItem.id);
+        runPropertyRuneCode(armorStruct.InvItem.propRune2ID, armorStruct.InvItem.id);
+        runPropertyRuneCode(armorStruct.InvItem.propRune3ID, armorStruct.InvItem.id);
+        runPropertyRuneCode(armorStruct.InvItem.propRune4ID, armorStruct.InvItem.id);
 
         // Halve maxHP if it's shoddy
         let maxHP = (armorStruct.InvItem.isShoddy == 1) ? Math.floor(armorStruct.InvItem.hitPoints/2) : armorStruct.InvItem.hitPoints;
@@ -2056,7 +2069,7 @@ function determineArmor(dexMod, strScore) {
 
 }
 
-function runArmorPropertyRuneCode(propertyRuneID){
+function runPropertyRuneCode(propertyRuneID, invItemID){
 
     if(propertyRuneID == null){ return; }
 
@@ -2064,7 +2077,11 @@ function runArmorPropertyRuneCode(propertyRuneID){
         if(itemData.RuneData != null && itemData.RuneData.id == propertyRuneID){
             let propertyRuneCode = itemData.Item.code;
             if(propertyRuneCode != null){
-                processSheetCode(propertyRuneCode, 'ARMOR_PROPERTY_RUNE');
+                processSheetCode(propertyRuneCode, {
+                  source: 'PropertyRune',
+                  sourceName: 'Property Rune',
+                  invItemID: invItemID,
+                });
             }
             return;
         }
@@ -2332,7 +2349,15 @@ function determineInvestitures(){
 
             currentInvests++;
             
-            processSheetCode(invItem.code, invItem.name);
+            processSheetCode(invItem.code, {
+              source: 'InvItem',
+              sourceName: invItem.name,
+              invItemID: invItem.id,
+            });
+            runPropertyRuneCode(invItem.propRune1ID, invItem.id);
+            runPropertyRuneCode(invItem.propRune2ID, invItem.id);
+            runPropertyRuneCode(invItem.propRune3ID, invItem.id);
+            runPropertyRuneCode(invItem.propRune4ID, invItem.id);
 
         }
     }
@@ -2356,7 +2381,15 @@ function runAllItemsCode() {
         });
 
         if(investedTag == null && item.ArmorData == null && item.ShieldData == null){
-            processSheetCode(invItem.code, invItem.name);
+            processSheetCode(invItem.code, {
+              source: 'InvItem',
+              sourceName: invItem.name,
+              invItemID: invItem.id,
+            });
+            runPropertyRuneCode(invItem.propRune1ID, invItem.id);
+            runPropertyRuneCode(invItem.propRune2ID, invItem.id);
+            runPropertyRuneCode(invItem.propRune3ID, invItem.id);
+            runPropertyRuneCode(invItem.propRune4ID, invItem.id);
         }
         
     }
@@ -2367,13 +2400,21 @@ function runAllFeatsAndAbilitiesCode() {
 
     for(const feat of g_featChoiceArray){
         if(feat != null && feat.value != null){
-            processSheetCode(feat.value.code, feat.value.name);
+            processSheetCode(feat.value.code, {
+              source: 'Feat',
+              sourceName: feat.value.name,
+              featID: feat.value.id,
+            });
         }
     }
 
     for(const [featID, featStruct] of g_featMap.entries()){
         if(featStruct.Feat.isDefault == 1){
-            processSheetCode(featStruct.Feat.code, featStruct.Feat.name);
+            processSheetCode(featStruct.Feat.code, {
+              source: 'Feat',
+              sourceName: featStruct.Feat.name,
+              featID: featStruct.Feat.id,
+            });
         }
     }
 
@@ -2382,7 +2423,13 @@ function runAllFeatsAndAbilitiesCode() {
 
     for(let classAbil of totalClassAbilities){
         if(classAbil.selectType != 'SELECT_OPTION' && classAbil.level <= g_character.level) {
-            processSheetCode(classAbil.code, classAbil.name);
+            processSheetCode(classAbil.code, {
+              source: 'ClassAbility',
+              sourceName: classAbil.name,
+              abilityID: classAbil.id,
+              abilityLevel: classAbil.level,
+              selectType: classAbil.selectType,
+            });
 
             if(classAbil.selectType == "SELECTOR"){
                 for(let classAbilChoice of g_classDetails.AbilityChoices){
@@ -2392,7 +2439,12 @@ function runAllFeatsAndAbilitiesCode() {
                             return ability.id == classAbilChoice.OptionID;
                         });
                         if(abilityOption != null){
-                            processSheetCode(abilityOption.code, abilityOption.name);
+                            processSheetCode(abilityOption.code, {
+                              source: 'ClassAbilityOption',
+                              sourceName: abilityOption.name,
+                              abilityID: abilityOption.id,
+                              abilityLevel: abilityOption.level,
+                            });
                         }
                         break;
 
@@ -2405,13 +2457,25 @@ function runAllFeatsAndAbilitiesCode() {
 
     for(let phyFeat of g_phyFeatArray){
         if(phyFeat.value == null) { continue; }
-        processSheetCode(phyFeat.value.code, phyFeat.value.name);
+        processSheetCode(phyFeat.value.code, {
+          source: 'PhyFeat',
+          sourceName: phyFeat.value.name,
+          phyFeatID: phyFeat.value.id,
+        });
     }
     
     if(g_heritage != null){
-        processSheetCode(g_heritage.code, g_heritage.name+' Heritage');
+        processSheetCode(g_heritage.code, {
+          source: 'Heritage',
+          sourceName: g_heritage.name+' Heritage',
+          heritageID: g_heritage.id,
+        });
     }
-    processSheetCode(g_background.code, g_background.name+' Background');
+    processSheetCode(g_background.code, {
+      source: 'Background',
+      sourceName: g_background.name+' Background',
+      backgroundID: g_background.id,
+    });
 
 }
 
@@ -2419,7 +2483,11 @@ function runAllSheetStateCode() {
 
   for(const sheetState of getSheetStates()){
     if(sheetState.isActive){
-      processSheetCode(sheetState.code, sheetState.name+' (toggled)');
+      processSheetCode(sheetState.code, {
+        source: 'SheetState',
+        sourceName: sheetState.name+' (toggled)',
+        sheetStateID: sheetState.id,
+      });
     }
   }
 

@@ -7,11 +7,12 @@
 // ========================================================================================= //
 
 function testSheetCode(wscCode){
-    return processSheetCode(wscCode, 'TEST', true);
+    return processSheetCode(wscCode, { source: 'TEST' }, true);
 }
 
-function processSheetCode(wscCode, sourceName, isTest=false){
+function processSheetCode(wscCode, extraData=null, isTest=false){
     if(wscCode == null) {return false;}
+    if(extraData == null){ extraData = {source: 'Unknown', sourceName: ''}; }
 
     let wscStatements = wscCode.split(/\n/);
 
@@ -39,8 +40,8 @@ function processSheetCode(wscCode, sourceName, isTest=false){
           }
 
           let conditionID = getConditionFromName(conditionName).id;
-          let conditionParentID = getCurrentConditionIDFromName(sourceName);
-          addCondition(conditionID+'', conditionValue, sourceName, conditionParentID);
+          let conditionParentID = getCurrentConditionIDFromName(extraData.sourceName);
+          addCondition(conditionID+'', conditionValue, extraData.sourceName, conditionParentID);
 
           continue;
         }
@@ -63,7 +64,7 @@ function processSheetCode(wscCode, sourceName, isTest=false){
             let adjustmentData = (wscStatement.split('-')[2]).split('=');
             let adjustmentTowards = adjustmentData[0];
             let adjustmentNumInfoData = (adjustmentData[1]).split('~');
-            let adjustmentNum = getSheetProcNumber(adjustmentNumInfoData[0], sourceName);
+            let adjustmentNum = getSheetProcNumber(adjustmentNumInfoData[0], extraData.sourceName);
             let adjustmentCondition = adjustmentNumInfoData[1];
             addConditionalStat(adjustmentTowards, adjustmentCondition, adjustmentNum);
 
@@ -77,7 +78,7 @@ function processSheetCode(wscCode, sourceName, isTest=false){
             let adjustmentData = (wscStatement.split('-')[2]).split('=');
             let adjustmentTowards = adjustmentData[0];
             let adjustmentNumInfoData = (adjustmentData[1]).split('~');
-            let adjustmentNum = getSheetProcNumber(adjustmentNumInfoData[0], sourceName);
+            let adjustmentNum = getSheetProcNumber(adjustmentNumInfoData[0], extraData.sourceName);
             let adjustmentCondition = adjustmentNumInfoData[1];
             addConditionalStat(adjustmentTowards, adjustmentCondition, -1*adjustmentNum);
 
@@ -105,8 +106,8 @@ function processSheetCode(wscCode, sourceName, isTest=false){
             let adjustmentData = adjValData[1].split('=');
             let adjustmentTowards = adjustmentData[0];
 
-            let adjustmentNum = getSheetProcNumber(adjustmentData[1], sourceName);
-            let adjustmentSource = 'OTHER-'+sourceName;
+            let adjustmentNum = getSheetProcNumber(adjustmentData[1], extraData.sourceName);
+            let adjustmentSource = 'OTHER-'+extraData.sourceName;
             if(adjValData[2] != null) {
                 adjustmentSource = adjValData[2];
             }
@@ -115,7 +116,7 @@ function processSheetCode(wscCode, sourceName, isTest=false){
               adjustmentSource += '_BONUS';
             }
 
-            addStatAndSrc(adjustmentTowards, adjustmentSource, adjustmentNum, sourceName);
+            addStatAndSrc(adjustmentTowards, adjustmentSource, adjustmentNum, extraData.sourceName);
 
             continue;
         }
@@ -128,8 +129,8 @@ function processSheetCode(wscCode, sourceName, isTest=false){
             let adjustmentData = adjValData[1].split('=');
             let adjustmentTowards = adjustmentData[0];
 
-            let adjustmentNum = getSheetProcNumber(adjustmentData[1], sourceName);
-            let adjustmentSource = 'OTHER-'+sourceName;
+            let adjustmentNum = getSheetProcNumber(adjustmentData[1], extraData.sourceName);
+            let adjustmentSource = 'OTHER-'+extraData.sourceName;
             if(adjValData[2] != null) {
                 adjustmentSource = adjValData[2];
             }
@@ -138,7 +139,7 @@ function processSheetCode(wscCode, sourceName, isTest=false){
               adjustmentSource += '_PENALTY';
             }
 
-            addStatAndSrc(adjustmentTowards, adjustmentSource, -1*adjustmentNum, sourceName);
+            addStatAndSrc(adjustmentTowards, adjustmentSource, -1*adjustmentNum, extraData.sourceName);
 
             continue;
         }
@@ -154,7 +155,7 @@ function processSheetCode(wscCode, sourceName, isTest=false){
             let overrideSource = adjValData[2];
             if(overrideSource == null) { overrideSource = ''; }
 
-            let overrideNum = getSheetProcNumber(overrideData[1], sourceName);
+            let overrideNum = getSheetProcNumber(overrideData[1], extraData.sourceName);
 
             if(overrideTowards.endsWith('_PENALTY')){
                 overrideNum = -1*overrideNum;
@@ -214,6 +215,77 @@ function processSheetCode(wscCode, sourceName, isTest=false){
 
           continue;
         }
+
+
+        if(wscStatementUpper.startsWith("DEFAULT-ON-HIT-DAMAGE=")){
+          if(isTest) {continue;} //DEFAULT-ON-HIT-DAMAGE=+5d6+6 fire
+
+          let invItemID = null;
+          if(extraData.source == 'InvItem' || extraData.source == 'PropertyRune'){
+            invItemID = extraData.invItemID;
+          } else {
+            displayError('Attempted to execute "DEFAULT-ON-HIT-DAMAGE" from a non-item source');
+            continue;
+          }
+
+          let dataParts = wscStatement.split('=');
+          console.log(wscStatementUpper);
+          addWeapMod(invItemID, dataParts[1], 'DAMAGE-ON-HIT', extraData.source);
+
+          continue;
+        }
+
+        if(wscStatementUpper.startsWith("DEFAULT-ON-CRIT-DAMAGE=")){
+          if(isTest) {continue;} //DEFAULT-ON-CRIT-DAMAGE=+5d6+6 fire
+
+          let invItemID = null;
+          if(extraData.source == 'InvItem' || extraData.source == 'PropertyRune'){
+            invItemID = extraData.invItemID;
+          } else {
+            displayError('Attempted to execute "DEFAULT-ON-CRIT-DAMAGE" from a non-item source');
+            continue;
+          }
+
+          let dataParts = wscStatement.split('=');
+          addWeapMod(invItemID, dataParts[1], 'DAMAGE-ON-CRIT', extraData.source);
+
+          continue;
+        }
+
+        if(wscStatementUpper.startsWith("DEFAULT-ON-HIT-OTHER=")){
+          if(isTest) {continue;} //DEFAULT-ON-HIT-OTHER=Flat-footed until next turn
+
+          let invItemID = null;
+          if(extraData.source == 'InvItem' || extraData.source == 'PropertyRune'){
+            invItemID = extraData.invItemID;
+          } else {
+            displayError('Attempted to execute "DEFAULT-ON-HIT-OTHER" from a non-item source');
+            continue;
+          }
+
+          let dataParts = wscStatement.split('=');
+          addWeapMod(invItemID, dataParts[1], 'OTHER-ON-HIT', extraData.source);
+
+          continue;
+        }
+
+        if(wscStatementUpper.startsWith("DEFAULT-ON-CRIT-OTHER=")){
+          if(isTest) {continue;} //DEFAULT-ON-CRIT-OTHER=Flat-footed forever
+
+          let invItemID = null;
+          if(extraData.source == 'InvItem' || extraData.source == 'PropertyRune'){
+            invItemID = extraData.invItemID;
+          } else {
+            displayError('Attempted to execute "DEFAULT-ON-CRIT-OTHER" from a non-item source');
+            continue;
+          }
+
+          let dataParts = wscStatement.split('=');
+          addWeapMod(invItemID, dataParts[1], 'OTHER-ON-CRIT', extraData.source);
+
+          continue;
+        }
+
 
         if(wscStatementUpper == "SET-FINESSE-MELEE-USE-DEX-DAMAGE"){
             if(isTest) {continue;}

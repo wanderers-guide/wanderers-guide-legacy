@@ -24,7 +24,13 @@ function openBreakdownQuickview(data) {
 
       if(gOption_hasDiceRoller) { refreshStatRollButtons(); }
       let rollerClass = (data.isBonus) ? 'stat-roll-btn' : 'damage-roll-btn';
-      let breakDownInnerHTML = '<p class="has-text-centered"><span class="'+rollerClass+'">'+data.breakdownTotal+'</span> = ';
+
+      let breakdownTotal = data.breakdownTotal;
+      if(data.breakdownTotalWeapMod != null){
+        breakdownTotal += data.breakdownTotalWeapMod;
+      }
+
+      let breakDownInnerHTML = '<p class="has-text-centered"><span class="'+rollerClass+'">'+breakdownTotal+'</span> = ';
       if(data.breakdownStartStr != '') { breakDownInnerHTML += data.breakdownStartStr + ' + '; }
       for(const [source, amount] of data.breakdownMap.entries()){
         if(amount != 0){
@@ -32,9 +38,53 @@ function openBreakdownQuickview(data) {
           breakDownInnerHTML += ' + ';
         }
       }
+
+      if(data.modifications != null){
+        for(const onHitDmgMod of data.modifications.on_hit_damage){
+          
+          let modification = onHitDmgMod.mod;
+          if(modification.startsWith('-')){
+            modification = modification.slice(1);
+            breakDownInnerHTML = breakDownInnerHTML.slice(0, -3);// Trim off that last ' + '
+            breakDownInnerHTML += ' - ';
+          }
+
+          let source = '';
+          if(onHitDmgMod.info == 'InvItem'){
+            source = 'From Item';
+          } else if(onHitDmgMod.info == 'PropertyRune'){
+            source = 'From Propery Rune';
+          }
+
+          breakDownInnerHTML += `
+              <a class="has-text-link has-tooltip-bottom" data-tooltip="${source}">${modification}</a>`;
+          breakDownInnerHTML += ' + ';
+
+        }
+      }
+
       breakDownInnerHTML = breakDownInnerHTML.slice(0, -3);// Trim off that last ' + '
       breakDownInnerHTML += '</p>';
       qContent.append(breakDownInnerHTML);
+    }
+
+    if(data.modifications != null && data.modifications.on_hit_other.length > 0){
+
+      qContent.append('<hr class="m-2">');
+
+      for(const onHitOtherMod of data.modifications.on_hit_other){
+
+        let source = '';
+        if(onHitOtherMod.info == 'InvItem'){
+          source = 'From Item';
+        } else if(onHitOtherMod.info == 'PropertyRune'){
+          source = 'From Propery Rune';
+        }
+
+        qContent.append(`<p class="has-text-centered"><a class="is-underlined-link has-tooltip-bottom" data-tooltip="${source}">${onHitOtherMod.mod}</a></p>`);
+
+      }
+
     }
 
     if(data.conditionalMap != null && data.conditionalMap.size != 0){

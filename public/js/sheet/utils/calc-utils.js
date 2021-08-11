@@ -49,6 +49,12 @@ function getAttackAndDamage(itemData, invItem){
       damage: {
         parts: new Map(),
         conditionals: new Map(),
+        modifications: {
+          on_hit_damage: getWeapMod(invItem.id, 'DAMAGE-ON-HIT'),
+          on_crit_damage: getWeapMod(invItem.id, 'DAMAGE-ON-CRIT'),
+          on_hit_other: getWeapMod(invItem.id, 'OTHER-ON-HIT'),
+          on_crit_other: getWeapMod(invItem.id, 'OTHER-ON-CRIT'),
+        }
       }
     };
     
