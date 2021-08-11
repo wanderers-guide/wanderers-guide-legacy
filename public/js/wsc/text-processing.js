@@ -116,12 +116,13 @@ function processText(text, isSheet, isJustified = false, size = 'MEDIUM', indexC
     let regexURL = /\[(.+?)\]/g;
     text = text.replace(regexURL, handleLink);
 
+    // Sheet variables & tooltips
     if(isSheet){
         // {WIS_MOD} -> Character Wisdom Modifier (unsigned)
         // {WIS_MOD|Wisdom Modifier} -> Character Wisdom Modifier (unsigned). Can hover over to reveal text.
         // {+WIS_MOD} ->  Character Wisdom Modifier (signed)
         let regexSheetVariables = /\{(.+?)\}/g;
-        text = text.replace(regexSheetVariables, handleSheetVariables);
+        text = text.replace(regexSheetVariables, handleSheetVariablesAndTooltips);
     }
 
     // (Feat: Striking | Strike)
@@ -597,18 +598,66 @@ function handleLink(match, innerTextURL) {
 }
 
 
-/////////////// SHEET VARIABLES ///////////////
-function handleSheetVariables(match, innerText){
+/////////////// SHEET VARIABLES & TOOLTIPS ///////////////
+function processTextOnlyVariablesAndTooltips(text){
+  if(text == null){ return null; }
+
+  let regexSheetVariables = /\{(.+?)\}/g;
+  text = text.replace(regexSheetVariables, handleSheetVariablesAndTooltips);
+
+  return text;
+}
+
+function handleSheetVariablesAndTooltips(match, innerText){
     if(innerText.includes("|")){
         let innerTextData = innerText.split("|");
         innerTextVariable = innerTextData[0].replace(/\s/g, "").toUpperCase();
         let sheetVar = acquireSheetVariable(innerTextVariable);
-        sheetVar = (sheetVar != null) ? sheetVar : '<span class="has-text-danger">Unknown Variable</span>';
-        return '<a class="has-text-info has-tooltip-top" data-tooltip="'+innerTextData[1]+'">'+sheetVar+'</a>';
+        if(sheetVar == null){ sheetVar = innerTextData[0]; }
+
+        let bulmaColor = 'has-text-info';
+        if(typeof sheetVar === "string"){
+          if(sheetVar.toUpperCase().startsWith('NORMAL:')){
+            bulmaColor = '';
+            sheetVar = sheetVar.replace(/NORMAL:/i, '');
+          } else if(sheetVar.toUpperCase().startsWith('BLUE:')){
+            bulmaColor = 'has-text-info';
+            sheetVar = sheetVar.replace(/BLUE:/i, '');
+          } else if(sheetVar.toUpperCase().startsWith('GREEN:')){
+            bulmaColor = 'has-text-success';
+            sheetVar = sheetVar.replace(/GREEN:/i, '');
+          } else if(sheetVar.toUpperCase().startsWith('CYAN:')){
+            bulmaColor = 'has-text-cyan';
+            sheetVar = sheetVar.replace(/CYAN:/i, '');
+          } else if(sheetVar.toUpperCase().startsWith('RED:')){
+            bulmaColor = 'has-text-danger';
+            sheetVar = sheetVar.replace(/RED:/i, '');
+          } else if(sheetVar.toUpperCase().startsWith('YELLOW:')){
+            bulmaColor = 'has-text-warning';
+            sheetVar = sheetVar.replace(/YELLOW:/i, '');
+          }
+          else if(sheetVar.toUpperCase().startsWith('BLUE_UNDERLINE:')){
+            bulmaColor = 'is-underlined-info';
+            sheetVar = sheetVar.replace(/BLUE_UNDERLINE:/i, '');
+          } else if(sheetVar.toUpperCase().startsWith('GREEN_UNDERLINE:')){
+            bulmaColor = 'is-underlined-success';
+            sheetVar = sheetVar.replace(/GREEN_UNDERLINE:/i, '');
+          } else if(sheetVar.toUpperCase().startsWith('CYAN_UNDERLINE:')){
+            bulmaColor = 'is-underlined-cyan';
+            sheetVar = sheetVar.replace(/CYAN_UNDERLINE:/i, '');
+          } else if(sheetVar.toUpperCase().startsWith('RED_UNDERLINE:')){
+            bulmaColor = 'is-underlined-danger';
+            sheetVar = sheetVar.replace(/RED_UNDERLINE:/i, '');
+          } else if(sheetVar.toUpperCase().startsWith('YELLOW_UNDERLINE:')){
+            bulmaColor = 'is-underlined-warning';
+            sheetVar = sheetVar.replace(/YELLOW_UNDERLINE:/i, '');
+          }
+        }
+        return '<a class="'+bulmaColor+' has-tooltip-top" data-tooltip="'+innerTextData[1]+'">'+sheetVar+'</a>';
     } else {
         innerText = innerText.replace(/\s/g, "").toUpperCase();
         let sheetVar = acquireSheetVariable(innerText);
-        sheetVar = (sheetVar != null) ? sheetVar : '<span class="has-text-danger">Unknown Variable</span>';
+        sheetVar = (sheetVar != null) ? sheetVar : '<span class="has-text-danger has-tooltip-top" data-tooltip="'+innerText+'">Unknown Variable</span>';
         return '<span class="has-text-info">'+sheetVar+'</span>';
     }
 }
@@ -638,3 +687,39 @@ function acquireSheetVariable(variableName){
     }
 }
 
+function processTextRemoveTooltips(text){
+  if(text == null){ return null; }
+
+  let handleRemoval = function(match, word, tooltipWords){
+    if(word.toUpperCase().startsWith('NORMAL:')){
+      word = word.replace(/NORMAL:/i, '');
+    } else if(word.toUpperCase().startsWith('BLUE:')){
+      word = word.replace(/BLUE:/i, '');
+    } else if(word.toUpperCase().startsWith('GREEN:')){
+      word = word.replace(/GREEN:/i, '');
+    } else if(word.toUpperCase().startsWith('CYAN:')){
+      word = word.replace(/CYAN:/i, '');
+    } else if(word.toUpperCase().startsWith('RED:')){
+      word = word.replace(/RED:/i, '');
+    } else if(word.toUpperCase().startsWith('YELLOW:')){
+      word = word.replace(/YELLOW:/i, '');
+    }
+    else if(word.toUpperCase().startsWith('BLUE_UNDERLINE:')){
+      word = word.replace(/BLUE_UNDERLINE:/i, '');
+    } else if(word.toUpperCase().startsWith('GREEN_UNDERLINE:')){
+      word = word.replace(/GREEN_UNDERLINE:/i, '');
+    } else if(word.toUpperCase().startsWith('CYAN_UNDERLINE:')){
+      word = word.replace(/CYAN_UNDERLINE:/i, '');
+    } else if(word.toUpperCase().startsWith('RED_UNDERLINE:')){
+      word = word.replace(/RED_UNDERLINE:/i, '');
+    } else if(word.toUpperCase().startsWith('YELLOW_UNDERLINE:')){
+      word = word.replace(/YELLOW_UNDERLINE:/i, '');
+    }
+    return word;
+  };
+
+  const regexSheetTooltips = /\{([^\|]+?)\|([^\|]+?)\}/g;
+  text = text.replace(regexSheetTooltips, handleRemoval);
+
+  return text;
+}

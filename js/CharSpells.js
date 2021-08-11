@@ -542,6 +542,7 @@ module.exports = class CharSpells {
             let updatedSpellSlotJSON = JSON.stringify(spellSlotEntry);
 
             // Regex which will manually replace spell slot directly through JSON
+            // TODO: might need to double escape these. Since the string will remove the escapes before regex applies
             let spellSlotRegex = '(\{\"slotID\"\:'+updateSlotObject.slotID+'\,.+?\})';
             let re = new RegExp(spellSlotRegex, 'g');
 

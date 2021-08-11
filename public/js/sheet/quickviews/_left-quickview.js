@@ -35,7 +35,7 @@ function setLeftQuickViewTab(subtabName){
 
   $('#quickViewLeftTab-DiceRoller').parent().removeClass("is-active");
   $('#quickViewLeftTab-Toggleables').parent().removeClass("is-active");
-  $('#quickViewLeftTab-'+(subtabName.replace(' ',''))).parent().addClass("is-active");
+  $('#quickViewLeftTab-'+(subtabName.replace(/ /g,''))).parent().addClass("is-active");
 
   if(subtabName == 'Toggleables'){
     leftQuickview_OpenToggleables();

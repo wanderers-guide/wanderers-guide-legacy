@@ -31,15 +31,31 @@ em {
   font-weight: 100;
 }
 .is-underlined-info {
-  text-decoration: underline;
-  -webkit-text-decoration-color: hsl(204, 86%, 53%); /* Safari */  
-  text-decoration-color: hsl(204, 86%, 53%);
+  text-decoration: underline!important;
+  -webkit-text-decoration-color: hsl(204, 86%, 53%)!important; /* Safari */  
+  text-decoration-color: hsl(204, 86%, 53%)!important;
 }
 .is-underlined-warning {
-  text-decoration: underline;
-  -webkit-text-decoration-color: hsl(48, 100%, 67%); /* Safari */  
-  text-decoration-color: hsl(48, 100%, 67%);
+  text-decoration: underline!important;
+  -webkit-text-decoration-color: hsl(48, 100%, 67%)!important; /* Safari */  
+  text-decoration-color: hsl(48, 100%, 67%)!important;
 }
+.is-underlined-cyan {
+  text-decoration: underline!important;
+  -webkit-text-decoration-color: #35D4C7!important; /* Safari */  
+  text-decoration-color: #35D4C7!important;
+}
+.is-underlined-success {
+  text-decoration: underline!important;
+  -webkit-text-decoration-color: hsl(141, 71%, 48%)!important; /* Safari */  
+  text-decoration-color: hsl(141, 71%, 48%)!important;
+}
+.is-underlined-danger {
+  text-decoration: underline!important;
+  -webkit-text-decoration-color: hsl(348, 100%, 61%)!important; /* Safari */  
+  text-decoration-color: hsl(348, 100%, 61%)!important;
+}
+
 .is-underlined-thin {
   border-bottom: 1px solid;
   border-color: inherit;
@@ -81,6 +97,9 @@ em {
 }
 .has-text-purple {
   color: #925DA2!important;
+}
+.has-text-cyan {
+  color: #35D4C7!important;
 }
 
 /* Background Colors */
