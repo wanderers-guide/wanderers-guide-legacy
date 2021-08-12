@@ -590,7 +590,7 @@ function displayExternalCharacterAccess(clientsWithAccess){
 
     $('#character-access-content').append('<div id="'+connectionID+'" class="px-3 text-left"></div>');
 
-    $('#'+connectionID).append('<div class="columns is-mobile is-gapless is-marginless"><div class="column is-narrow is-11"><p class="is-bold is-size-5-5">'+client.appName+'</p></div><div class="column is-narrow is-1"><span id="'+connectionDeleteIconID+'" class="icon cursor-clickable has-text-danger text-right"><i class="fas fa-sm fa-minus-circle"></i></span></div></div>');
+    $('#'+connectionID).append('<div class="columns is-mobile is-gapless is-marginless"><div class="column is-narrow is-11"><p class="is-bold is-size-5-5">'+client.appName+'</p></div><div class="column is-narrow is-1"><span id="'+connectionDeleteIconID+'" class="icon cursor-clickable has-text-danger text-right"><i class="fal fa-minus-circle fa-sm"></i></span></div></div>');
     if(client.description != null && client.description != ''){
       $('#'+connectionID).append('<div class=""><p>'+client.description+'</p></div>');
     }

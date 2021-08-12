@@ -218,7 +218,10 @@ hr {
   cursor: default!important;
 }
 .cursor-disabled {
-cursor: not-allowed!important;
+  cursor: not-allowed!important;
+}
+.cursor-remove-overrides {
+  cursor: auto!important;
 }
 
 /* Misc */

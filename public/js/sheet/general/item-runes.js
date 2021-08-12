@@ -340,7 +340,7 @@ function addFundamentalRuneEntry(qContent, invItem, runeID, runeName, runeDescri
 
     let runeEntryID = 'runeEntry'+runeID;
     let runeEntryDeleteID = runeEntryID+'Delete';
-    qContent.append('<div class="has-text-centered mt-1"><p class="is-inline"><a class="has-text-grey-lighter has-tooltip-bottom has-tooltip-multiline" data-tooltip="'+processTextRemoveIndexing(runeDescription)+'">'+runeName+'</a></p><a id="'+runeEntryDeleteID+'" class="is-size-6"><span class="icon is-small has-text-danger ml-3"><i class="fas fa-sm fa-minus-circle"></i></span></a></div>');
+    qContent.append('<div class="has-text-centered mt-1"><p class="is-inline"><a class="has-text-grey-lighter has-tooltip-bottom has-tooltip-multiline" data-tooltip="'+processTextRemoveIndexing(runeDescription)+'">'+runeName+'</a></p><a id="'+runeEntryDeleteID+'" class="is-size-6"><span class="icon is-small has-text-danger ml-3"><i class="fal fa-minus-circle fa-sm"></i></span></a></div>');
 
     $('#'+runeEntryDeleteID).click(function() {
         socket.emit("requestRemoveFundamentalRune",
@@ -391,8 +391,27 @@ function addPropertyRuneSelection(qContent, invItem, runeArray, propertyRuneSlot
             return itemDataStruct.RuneData.id == existingPropRuneID;
         }).Item;
 
+        let propertyRuneDescriptionNameID = 'propertyRuneDescriptionName'+propertyRuneSlot;
+        let propertyRuneDescriptionChevronID = 'propertyRuneDescriptionChevron'+propertyRuneSlot;
+        let propertyRuneDescriptionSectionID = 'propertyRuneDescriptionSection'+propertyRuneSlot;
+
+        qContent.append(`<p id="${propertyRuneDescriptionNameID}" class="has-text-centered is-size-7"><strong class="cursor-clickable">Description</strong><sub class="icon is-small pl-1 cursor-clickable"><i id="${propertyRuneDescriptionChevronID}" class="fas fa-lg fa-chevron-down"></i></sub></p>`);
+        qContent.append(`<div class="columns is-marginless"><div class="column is-paddingless is-8 is-offset-2"><hr class="mx-1 my-0"><div id="${propertyRuneDescriptionSectionID}" class="is-hidden"></div></div></div>`);
+
         let usageText = (runeItem.usage != null) ? '<p class="has-text-centered is-size-7"><strong>Usage: </strong>'+runeItem.usage+'</p>' : '';
-        qContent.append('<div class="columns is-marginless"><div class="column is-paddingless is-8 is-offset-2"><hr class="m-0">'+usageText+processText(runeItem.description, true, true, 'SMALL')+'<hr class="m-1"></div></div>');
+        $('#'+propertyRuneDescriptionSectionID).append(usageText+processText(runeItem.description, true, true, 'SMALL')+'<hr class="m-1">');
+
+        $('#'+propertyRuneDescriptionNameID).click(function() {
+          if($("#"+propertyRuneDescriptionSectionID).hasClass("is-hidden")) {
+            $("#"+propertyRuneDescriptionSectionID).removeClass('is-hidden');
+            $("#"+propertyRuneDescriptionChevronID).removeClass('fa-chevron-down');
+            $("#"+propertyRuneDescriptionChevronID).addClass('fa-chevron-up');
+          } else {
+            $("#"+propertyRuneDescriptionSectionID).addClass('is-hidden');
+            $("#"+propertyRuneDescriptionChevronID).removeClass('fa-chevron-up');
+            $("#"+propertyRuneDescriptionChevronID).addClass('fa-chevron-down');
+          }
+        });
 
         /* If existingPropRuneID isn't null, a property rune is active */
         $('#'+propertyRuneSelectionID).parent().removeClass('is-success');

@@ -32,9 +32,43 @@ function openWeaponsTab(data) {
         }
 
         let attackHasConditionals = (calcStruct.WeapStruct.attack.conditionals != null && calcStruct.WeapStruct.attack.conditionals.size != 0);
-        let damageHasConditionals = (calcStruct.WeapStruct.damage.conditionals != null && calcStruct.WeapStruct.damage.conditionals.size != 0);
+        let damageHasConditionals = ((calcStruct.WeapStruct.damage.conditionals != null && calcStruct.WeapStruct.damage.conditionals.size != 0) || calcStruct.WeapStruct.damage.modifications.on_hit_other.length != 0);
 
-        $('#weaponsTabContent').append('<div id="'+weaponListEntryID+'" class="columns is-mobile pt-1 is-marginless"><div class="column is-paddingless is-4 border-bottom border-dark-lighter cursor-clickable"><p class="pl-3 has-text-left has-text-grey-light">'+invItem.name+unarmedIcon+'</p></div><div class="column is-paddingless is-1 border-bottom border-dark-lighter cursor-clickable"><p class="has-text-grey-light">'+calcStruct.AttackBonus+((attackHasConditionals) ? '<sup class="has-text-info">*</sup>' : '')+'</p></div><div class="column is-paddingless is-2 border-bottom border-dark-lighter cursor-clickable"><p class="has-text-grey-light">'+calcStruct.Damage+((damageHasConditionals) ? '<sup class="has-text-info">*</sup>' : '')+'</p></div><div class="column is-paddingless is-1 border-bottom border-dark-lighter cursor-clickable"></div><div class="column is-paddingless is-1 border-bottom border-dark-lighter cursor-clickable"><p class="has-text-grey-light">'+weaponRange+'</p></div><div class="column is-paddingless is-2 border-bottom border-dark-lighter cursor-clickable"><p class="has-text-grey-light">'+weaponReload+'</p></div><div class="column is-paddingless is-1 border-bottom border-dark-lighter cursor-clickable"></div></div>');
+        let weapDamageMod = '';
+        for(const onHitDmgMod of calcStruct.WeapStruct.damage.modifications.on_hit_damage){
+          let modification = onHitDmgMod.mod;
+          if(modification.startsWith('-')){
+            modification = modification.slice(1);
+            weapDamageMod += ` - ${modification}`;
+          } else {
+            weapDamageMod += ` + ${modification}`;
+          }
+        }
+
+        $('#weaponsTabContent').append(`
+          <div id="${weaponListEntryID}" class="columns is-mobile pt-1 is-marginless">
+            <div class="column is-paddingless is-4 border-bottom border-dark-lighter cursor-clickable">
+              <p class="pl-3 has-text-left has-text-grey-light">${invItem.name+unarmedIcon}</p>
+            </div>
+            <div class="column is-paddingless is-1 border-bottom border-dark-lighter cursor-clickable">
+              <p class="has-text-grey-light">
+                ${calcStruct.AttackBonus+((attackHasConditionals) ? '<sup class="has-text-info">*</sup>' : '')}
+              </p>
+            </div>
+            <div class="column is-paddingless is-3 border-bottom border-dark-lighter cursor-clickable">
+              <p class="has-text-grey-light">
+                ${calcStruct.Damage+weapDamageMod+((damageHasConditionals) ? '<sup class="has-text-info">*</sup>' : '')}
+              </p>
+            </div>
+            <div class="column is-paddingless is-2 border-bottom border-dark-lighter cursor-clickable">
+              <p class="has-text-grey-light">${weaponRange}</p>
+            </div>
+            <div class="column is-paddingless is-1 border-bottom border-dark-lighter cursor-clickable">
+              <p class="has-text-grey-light">${weaponReload}</p>
+            </div>
+            <div class="column is-paddingless is-1 border-bottom border-dark-lighter cursor-clickable"></div>
+          </div>
+        `);
 
         g_calculatedStats.weapons.push({
             Name: invItem.name,
@@ -58,7 +92,27 @@ function openWeaponsTab(data) {
         });
     };
 
-    $('#tabContent').append('<div class="columns is-mobile pt-1 is-marginless"><div class="column is-paddingless is-4"><p class="pl-3 has-text-left"><strong class="has-text-grey-light">Name</strong></p></div><div class="column is-paddingless is-1"><p class=""><strong class="has-text-grey-light">Attack</strong></p></div><div class="column is-paddingless is-2"><p class=""><strong class="has-text-grey-light">Damage</strong></p></div><div class="column is-paddingless is-1"></div><div class="column is-paddingless is-1"><p class=""><strong class="has-text-grey-light">Range</strong></p></div><div class="column is-paddingless is-2"><p class=""><strong class="has-text-grey-light">Reload</strong></p></div><div class="column is-paddingless is-1"></div></div><div class="is-divider hr-light is-marginless"></div>');
+    $('#tabContent').append(`
+      <div class="columns is-mobile pt-1 is-marginless">
+        <div class="column is-paddingless is-4">
+          <p class="pl-3 has-text-left"><strong class="has-text-grey-light">Name</strong></p>
+        </div>
+        <div class="column is-paddingless is-1">
+          <p class=""><strong class="has-text-grey-light">Attack</strong></p>
+        </div>
+        <div class="column is-paddingless is-3">
+          <p class=""><strong class="has-text-grey-light">Damage</strong></p>
+        </div>
+        <div class="column is-paddingless is-2">
+          <p class=""><strong class="has-text-grey-light">Range</strong></p>
+        </div>
+        <div class="column is-paddingless is-1">
+          <p class=""><strong class="has-text-grey-light">Reload</strong></p>
+        </div>
+        <div class="column is-paddingless is-1"></div>
+      </div>
+      <div class="is-divider hr-light is-marginless"></div>
+    `);
 
     $('#tabContent').append('<div id="weaponsTabContent" class="use-custom-scrollbar" style="height: 580px; max-height: 580px; overflow-y: auto;"></div>');
 

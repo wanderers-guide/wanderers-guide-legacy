@@ -16,6 +16,9 @@ function initWeapModManager(){
 
     - OTHER-ON-HIT
     - OTHER-ON-CRIT
+
+    - CONDITIONAL-ON-HIT
+    - CONDITIONAL-ON-CRIT
 */
 
 /* Layout:
@@ -24,7 +27,7 @@ function initWeapModManager(){
 
 function addWeapMod(invItemID, weapMod, weapModType, extraInfo=''){
   if(invItemID == null) { return; }
-  if(weapModType == 'DAMAGE-ON-HIT' || weapModType == 'DAMAGE-ON-CRIT' || weapModType == 'OTHER-ON-HIT' || weapModType == 'OTHER-ON-CRIT') {
+  if(weapModType == 'DAMAGE-ON-HIT' || weapModType == 'DAMAGE-ON-CRIT' || weapModType == 'OTHER-ON-HIT' || weapModType == 'OTHER-ON-CRIT' || weapModType == 'CONDITIONAL-ON-HIT' || weapModType == 'CONDITIONAL-ON-CRIT') {
     // Good, weapModType is a valid type
     if(weapModType.includes('DAMAGE-')){
       let weapModMatch = weapMod.match(g_weapMod_damageRegex);
@@ -66,7 +69,12 @@ function getWeapMod(invItemID, weapModType){
   if(invItemID == null){ return []; }
   let weapModDataMap = g_weapModManagerMap.get(invItemID+'');
   if(weapModDataMap != null){
-    return weapModDataMap.get(weapModType);
+    let modArray = weapModDataMap.get(weapModType);
+    if(modArray == null){
+      return [];
+    } else {
+      return cloneObj(modArray);
+    }
   } else {
     return [];
   }

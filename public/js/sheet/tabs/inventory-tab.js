@@ -284,9 +284,20 @@ function displayInventoryItem(invItem, item, openBagInvItemArray, data) {
                     let calcStruct = getAttackAndDamage(baggedItem, baggedInvItem);
 
                     let attackHasConditionals = (calcStruct.WeapStruct.attack.conditionals != null && calcStruct.WeapStruct.attack.conditionals.size != 0);
-                    let damageHasConditionals = (calcStruct.WeapStruct.damage.conditionals != null && calcStruct.WeapStruct.damage.conditionals.size != 0);
+                    let damageHasConditionals = ((calcStruct.WeapStruct.damage.conditionals != null && calcStruct.WeapStruct.damage.conditionals.size != 0) || calcStruct.WeapStruct.damage.modifications.on_hit_other.length != 0);
 
-                    $('#'+baggedInvItemNameID).append('<sup class="ml-2 has-text-weight-light">'+calcStruct.AttackBonus+((attackHasConditionals) ? '<sup class="has-text-info">*</sup>' : '')+'</sup><sup class="pl-3 has-text-weight-light has-text-grey">'+calcStruct.Damage+((damageHasConditionals) ? '<sup class="has-text-info">*</sup>' : '')+'</sup>');
+                    let weapDamageMod = '';
+                    for(const onHitDmgMod of calcStruct.WeapStruct.damage.modifications.on_hit_damage){
+                      let modification = onHitDmgMod.mod;
+                      if(modification.startsWith('-')){
+                        modification = modification.slice(1);
+                        weapDamageMod += ` - ${modification}`;
+                      } else {
+                        weapDamageMod += ` + ${modification}`;
+                      }
+                    }
+
+                    $('#'+baggedInvItemNameID).append('<sup class="ml-2 has-text-weight-light">'+calcStruct.AttackBonus+((attackHasConditionals) ? '<sup class="has-text-info">*</sup>' : '')+'</sup><sup class="pl-3 has-text-weight-light has-text-grey">'+calcStruct.Damage+weapDamageMod+((damageHasConditionals) ? '<sup class="has-text-info">*</sup>' : '')+'</sup>');
                 }
 
                 if(baggedItem.Item.hasQuantity == 1){
@@ -399,9 +410,20 @@ function displayInventoryItem(invItem, item, openBagInvItemArray, data) {
         let calcStruct = getAttackAndDamage(item, invItem);
 
         let attackHasConditionals = (calcStruct.WeapStruct.attack.conditionals != null && calcStruct.WeapStruct.attack.conditionals.size != 0);
-        let damageHasConditionals = (calcStruct.WeapStruct.damage.conditionals != null && calcStruct.WeapStruct.damage.conditionals.size != 0);
+        let damageHasConditionals = ((calcStruct.WeapStruct.damage.conditionals != null && calcStruct.WeapStruct.damage.conditionals.size != 0) || calcStruct.WeapStruct.damage.modifications.on_hit_other.length != 0);
 
-        $('#'+invItemNameID).append('<sup class="ml-2 has-text-weight-light">'+calcStruct.AttackBonus+((attackHasConditionals) ? '<sup class="has-text-info">*</sup>' : '')+'</sup><sup class="pl-3 has-text-weight-light has-text-grey">'+calcStruct.Damage+((damageHasConditionals) ? '<sup class="has-text-info">*</sup>' : '')+'</sup>');
+        let weapDamageMod = '';
+        for(const onHitDmgMod of calcStruct.WeapStruct.damage.modifications.on_hit_damage){
+          let modification = onHitDmgMod.mod;
+          if(modification.startsWith('-')){
+            modification = modification.slice(1);
+            weapDamageMod += ` - ${modification}`;
+          } else {
+            weapDamageMod += ` + ${modification}`;
+          }
+        }
+
+        $('#'+invItemNameID).append('<sup class="ml-2 has-text-weight-light">'+calcStruct.AttackBonus+((attackHasConditionals) ? '<sup class="has-text-info">*</sup>' : '')+'</sup><sup class="pl-3 has-text-weight-light has-text-grey">'+calcStruct.Damage+weapDamageMod+((damageHasConditionals) ? '<sup class="has-text-info">*</sup>' : '')+'</sup>');
     }
 
     if(item.ArmorData != null){
@@ -412,9 +434,9 @@ function displayInventoryItem(invItem, item, openBagInvItemArray, data) {
         let notBroken = (invItem.currentHitPoints > brokenThreshold);
         if(doesntHaveItemHealth(invItem)) {notBroken = true;}
         if(notBroken){
-            $('#'+invItemNameID).append('<button name="'+invItem.id+'" class="equipShieldButton button is-very-small is-info is-rounded is-outlined mb-1 ml-3"><span class="icon is-small"><i class="fas fa-shield-alt"></i></span></button>');
+            $('#'+invItemNameID).append('<button name="'+invItem.id+'" class="equipShieldButton button is-very-small is-info is-rounded is-outlined mb-1 ml-3"><span class="icon is-small"><i class="far fa-shield-alt"></i></span></button>');
         } else {
-            $('#'+invItemNameID).append('<button class="button is-very-small is-danger is-rounded mb-1 ml-3"><span class="icon is-small"><i class="fas fa-shield-alt"></i></span></button>');
+            $('#'+invItemNameID).append('<button class="button is-very-small is-danger is-rounded mb-1 ml-3"><span class="icon is-small"><i class="far fa-shield-alt"></i></span></button>');
         }
     }
 

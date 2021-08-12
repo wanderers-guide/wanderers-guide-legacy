@@ -2,6 +2,8 @@
     By Aaron Cassar.
 */
 
+let g_invItemView_isCriticalHit = false;
+
 function openInvItemQuickview(data) {
 
     let viewOnly = (data.InvItem.viewOnly != null) ? true : false;
@@ -165,215 +167,201 @@ function openInvItemQuickview(data) {
 
     if(data.Item.WeaponData != null){
 
-        if(data.Item.WeaponData.isMelee == 1){
-            
-            let calcStruct = getAttackAndDamage(data.Item, data.InvItem);
-            let map = generateMAP(calcStruct.AttackBonus, tagArray);
+      qContent.append('<div id="qContent-invItem-attackBonusAndDamage"></div>');
 
-            let attackHasConditionals = (calcStruct.WeapStruct.attack.conditionals != null && calcStruct.WeapStruct.attack.conditionals.size != 0);
-            let damageHasConditionals = (calcStruct.WeapStruct.damage.conditionals != null && calcStruct.WeapStruct.damage.conditionals.size != 0);
+      let populateAttackBonusAndDamage = function(){
 
-            let weapDamageModHTML = '';
-            let weapDamageModTotal = '';
-            for(const onHitDmgMod of calcStruct.WeapStruct.damage.modifications.on_hit_damage){
-              let modification = onHitDmgMod.mod;
-              if(modification.startsWith('-')){
-                modification = modification.slice(1);
-                weapDamageModHTML += ` - <span class="damage-roll-btn">${modification}</span>`;
-                weapDamageModTotal += ` - ${modification}`;
-              } else {
-                weapDamageModHTML += ` + <span class="damage-roll-btn">${modification}</span>`;
-                weapDamageModTotal += ` + ${modification}`;
-              }
-            }
+        let attackBonusAndDamageContent = $('#qContent-invItem-attackBonusAndDamage');
+        attackBonusAndDamageContent.html('');
 
-            qContent.append(`
-              <div class="tile text-center is-flex">
-                <div class="tile is-child is-6">
-                  <strong id="invWeapAttackView" class="cursor-clickable px-1">Attack Bonus${(attackHasConditionals) ? '<sup class="is-size-7 has-text-info">*</sup>' : ''}</strong>
-                </div>
-                <div class="tile is-child is-6">
-                  <strong id="invWeapDamageView" class="cursor-clickable px-1">Damage${(damageHasConditionals) ? '<sup class="is-size-7 has-text-info">*</sup>' : ''}</strong>
-                </div>
-              </div>
-            `);
-            qContent.append(`
-              <div class="tile text-center is-flex">
-                <div class="tile is-child is-6">
-                  <span class="has-text-grey-light">
-                    <span class="stat-roll-btn">${map.one}</span>
-                    <span class="has-text-grey">/</span>
-                    <span class="stat-roll-btn">${map.two}</span>
-                    <span class="has-text-grey">/</span>
-                    <span class="stat-roll-btn">${map.three}</span>
-                  </span>
-                </div>
-                <div class="tile is-child is-6">
-                  <span class="has-text-grey-light">
-                    <span class="damage-roll-btn">${calcStruct.Damage}</span>${weapDamageModHTML}
-                  </span>
-                </div>
-              </div>
-            `);
-            if(gOption_hasDiceRoller) { refreshStatRollButtons(); }
+        let calcStruct = getAttackAndDamage(data.Item, data.InvItem);
+        let map = generateMAP(calcStruct.AttackBonus, tagArray);
 
-            $('#invWeapAttackView').click(function() {
-              openQuickView('breakdownView', {
-                title: data.InvItem.name+' - Attack Bonus',
-                breakdownTitle: 'Bonus',
-                breakdownTotal: calcStruct.AttackBonus,
-                breakdownStartStr: '',
-                breakdownMap: calcStruct.WeapStruct.attack.parts,
-                conditionalMap: calcStruct.WeapStruct.attack.conditionals,
-                isBonus: true,
-                _prevBackData: {Type: g_QViewLastType, Data: g_QViewLastData},
-              }, $('#quickviewDefault').hasClass('is-active'));
-            });
-            $('#invWeapAttackView').mouseenter(function(){
-              $(this).addClass('has-background-grey-darker');
-            });
-            $('#invWeapAttackView').mouseleave(function(){
-              $(this).removeClass('has-background-grey-darker');
-            });
-            
-            $('#invWeapDamageView').click(function() {
-              openQuickView('breakdownView', {
-                title: data.InvItem.name+' - Damage',
-                breakdownTitle: 'Damage',
-                breakdownTotal: calcStruct.Damage,
-                breakdownStartStr: calcStruct.DamageDice,
-                breakdownMap: calcStruct.WeapStruct.damage.parts,
-                conditionalMap: calcStruct.WeapStruct.damage.conditionals,
-                modifications: calcStruct.WeapStruct.damage.modifications,
-                breakdownTotalWeapMod: weapDamageModTotal,
-                isBonus: false,
-                _prevBackData: {Type: g_QViewLastType, Data: g_QViewLastData},
-              }, $('#quickviewDefault').hasClass('is-active'));
-            });
-            $('#invWeapDamageView').mouseenter(function(){
-              $(this).addClass('has-background-grey-darker');
-            });
-            $('#invWeapDamageView').mouseleave(function(){
-              $(this).removeClass('has-background-grey-darker');
-            });
-
-            qContent.append('<hr class="m-2">');
-
+        if(g_invItemView_isCriticalHit && hasCriticalSpecialization(data.Item)){
+          calcStruct.WeapStruct.damage.modifications.on_crit_other.push({
+            mod: criticalSpecializationText(data.Item),
+            info: 'CriticalSpecialization'
+          });
         }
-        
-        if(data.Item.WeaponData.isRanged == 1){
-            
-            let calcStruct = getAttackAndDamage(data.Item, data.InvItem);
-            let map = generateMAP(calcStruct.AttackBonus, tagArray);
 
-            let attackHasConditionals = (calcStruct.WeapStruct.attack.conditionals != null && calcStruct.WeapStruct.attack.conditionals.size != 0);
-            let damageHasConditionals = (calcStruct.WeapStruct.damage.conditionals != null && calcStruct.WeapStruct.damage.conditionals.size != 0);
-
-            let weapDamageModHTML = '';
-            let weapDamageModTotal = '';
-            for(const onHitDmgMod of calcStruct.WeapStruct.damage.modifications.on_hit_damage){
-              let modification = onHitDmgMod.mod;
-              if(modification.startsWith('-')){
-                modification = modification.slice(1);
-                weapDamageModHTML += ` - <span class="damage-roll-btn">${modification}</span>`;
-                weapDamageModTotal += ` - ${modification}`;
-              } else {
-                weapDamageModHTML += ` + <span class="damage-roll-btn">${modification}</span>`;
-                weapDamageModTotal += ` + ${modification}`;
-              }
+        if(g_invItemView_isCriticalHit){
+          let deadlyTag = tagArray.find(tag => {
+            return tag.name.match(/^Deadly d(\d+)$/m) != null;
+          });
+          if(deadlyTag != null){
+            const die_type = deadlyTag.name.replace('Deadly ', '');
+            let diceNum = 1;
+            if(isGreaterStriking(data.InvItem.fundRuneID)){
+              diceNum = 2;
+            } else if(isMajorStriking(data.InvItem.fundRuneID)){
+              diceNum = 3;
             }
+            calcStruct.WeapStruct.damage.modifications.on_crit_damage.push({
+              mod: diceNum+''+die_type+' '+calcStruct.WeapStruct.damage.type,
+              info: 'DeadlyTrait'
+            });
+          }
 
-            qContent.append(`
-              <div class="tile text-center is-flex">
-                <div class="tile is-child is-6">
-                  <strong id="invWeapAttackView" class="cursor-clickable px-1">Attack Bonus${(attackHasConditionals) ? '<sup class="is-size-7 has-text-info">*</sup>' : ''}</strong>
-                </div>
-                <div class="tile is-child is-6">
-                  <strong id="invWeapDamageView" class="cursor-clickable px-1">Damage${(damageHasConditionals) ? '<sup class="is-size-7 has-text-info">*</sup>' : ''}</strong>
-                </div>
-              </div>
-            `);
-            qContent.append(`
-              <div class="tile text-center is-flex">
-                <div class="tile is-child is-6">
-                  <span class="has-text-grey-light">
-                    <span class="stat-roll-btn">${map.one}</span>
-                    <span class="has-text-grey">/</span>
-                    <span class="stat-roll-btn">${map.two}</span>
-                    <span class="has-text-grey">/</span>
-                    <span class="stat-roll-btn">${map.three}</span>
-                  </span>
-                </div>
-                <div class="tile is-child is-6">
-                  <span class="has-text-grey-light">
-                    <span class="damage-roll-btn">${calcStruct.Damage}</span>${weapDamageModHTML}
-                  </span>
-                </div>
-              </div>
-            `);
-            if(gOption_hasDiceRoller) { refreshStatRollButtons(); }
-            
-            $('#invWeapAttackView').click(function() {
-              openQuickView('breakdownView', {
-                title: data.InvItem.name+' - Attack Bonus',
-                breakdownTitle: 'Bonus',
-                breakdownTotal: calcStruct.AttackBonus,
-                breakdownStartStr: '',
-                breakdownMap: calcStruct.WeapStruct.attack.parts,
-                conditionalMap: calcStruct.WeapStruct.attack.conditionals,
-                isBonus: true,
-                _prevBackData: {Type: g_QViewLastType, Data: g_QViewLastData},
-              }, $('#quickviewDefault').hasClass('is-active'));
-            });
-            $('#invWeapAttackView').mouseenter(function(){
-              $(this).addClass('has-background-grey-darker');
-            });
-            $('#invWeapAttackView').mouseleave(function(){
-              $(this).removeClass('has-background-grey-darker');
-            });
-            
-            $('#invWeapDamageView').click(function() {
-              openQuickView('breakdownView', {
-                title: data.InvItem.name+' - Damage',
-                breakdownTitle: 'Damage',
-                breakdownTotal: calcStruct.Damage,
-                breakdownStartStr: calcStruct.DamageDice,
-                breakdownMap: calcStruct.WeapStruct.damage.parts,
-                conditionalMap: calcStruct.WeapStruct.damage.conditionals,
-                modifications: calcStruct.WeapStruct.damage.modifications,
-                breakdownTotalWeapMod: weapDamageModTotal,
-                isBonus: false,
-                _prevBackData: {Type: g_QViewLastType, Data: g_QViewLastData},
-              }, $('#quickviewDefault').hasClass('is-active'));
-            });
-            $('#invWeapDamageView').mouseenter(function(){
-              $(this).addClass('has-background-grey-darker');
-            });
-            $('#invWeapDamageView').mouseleave(function(){
-              $(this).removeClass('has-background-grey-darker');
-            });
+          let fatalTag = tagArray.find(tag => {
+            return tag.name.match(/^Fatal d(\d+)$/m) != null;
+          });
+          if(fatalTag != null){
+            const die_type = fatalTag.name.replace('Fatal ', '');
+            const old_die_type = calcStruct.WeapStruct.damage.die_type;
 
-            qContent.append('<hr class="m-2">');
+            calcStruct.WeapStruct.damage.die_type = die_type;
+            calcStruct.Damage = calcStruct.Damage.replace(old_die_type, die_type);
+            calcStruct.DamageDice = calcStruct.DamageDice.replace(old_die_type, die_type);
 
+            calcStruct.WeapStruct.damage.modifications.on_crit_damage.push({
+              mod: '1'+die_type+' '+calcStruct.WeapStruct.damage.type,
+              info: 'FatalTrait'
+            });
+          }
+        }
 
-            let weaponRange = '-';
-            let weaponReload = '-';
-            if(data.InvItem.itemWeaponRange == null && data.InvItem.itemWeaponReload == null){
-              weaponRange = data.Item.WeaponData.rangedRange;
-              weaponReload = data.Item.WeaponData.rangedReload;
+        let attackHasConditionals = (calcStruct.WeapStruct.attack.conditionals != null && calcStruct.WeapStruct.attack.conditionals.size != 0);
+        let damageHasConditionals = ((calcStruct.WeapStruct.damage.conditionals != null && calcStruct.WeapStruct.damage.conditionals.size != 0) || calcStruct.WeapStruct.damage.modifications.on_hit_other.length != 0);
+
+        let doubleDamageClass = (g_invItemView_isCriticalHit) ? 'damage-roll-double-result' : '';
+
+        let weapDamageModHTML = '';
+        for(const onHitDmgMod of calcStruct.WeapStruct.damage.modifications.on_hit_damage){
+          let modification = onHitDmgMod.mod;
+          if(modification.startsWith('-')){
+            modification = modification.slice(1);
+            weapDamageModHTML += ` - `;
+          } else {
+            weapDamageModHTML += ` + `;
+          }
+          weapDamageModHTML += `<span class="damage-roll-btn ${doubleDamageClass}">${modification}</span>`;
+        }
+
+        let damageHTML = `<span class="damage-roll-btn ${doubleDamageClass}">${calcStruct.Damage}</span>
+                          ${weapDamageModHTML}`;
+        if(g_invItemView_isCriticalHit) {
+          damageHTML = `<span class="has-text-grey-lighter">2×( </span>${damageHTML}<span class="has-text-grey-lighter"> )</span>`;
+
+          if(calcStruct.WeapStruct.damage.modifications.on_crit_other.length != 0){
+            damageHasConditionals = true;
+          }
+
+          for(const onCritDmgMod of calcStruct.WeapStruct.damage.modifications.on_crit_damage){
+            let modification = onCritDmgMod.mod;
+            if(modification.startsWith('-')){
+              modification = modification.slice(1);
+              damageHTML += ` - `;
             } else {
-              weaponRange = data.InvItem.itemWeaponRange;
-              weaponReload = data.InvItem.itemWeaponReload;
+              damageHTML += ` + `;
             }
-            if(weaponReload == 0){ weaponReload = '-'; }
-            weaponRange += ' ft';
-
-            qContent.append('<div class="tile text-center is-flex"><div class="tile is-child is-6"><strong>Range</strong></div><div class="tile is-child is-6"><strong>Reload</strong></div></div>');
-            qContent.append('<div class="tile text-center is-flex"><div class="tile is-child is-6"><p>'+weaponRange+'</p></div><div class="tile is-child is-6"><p>'+weaponReload+'</p></div></div>');
-
-            qContent.append('<hr class="m-2">');
+            damageHTML += `<span class="damage-roll-btn">${modification}</span>`;
+          }
 
         }
+
+        attackBonusAndDamageContent.append(`
+          <div class="tile text-center is-flex">
+            <div class="tile is-child is-6">
+              <strong id="invWeapAttackView" class="cursor-clickable px-1">Attack Bonus${(attackHasConditionals) ? ('<sup class="is-size-7 has-text-info">*</sup>') : ('')}</strong>
+            </div>
+            <div class="tile is-child is-6 pos-relative">
+              <span id="damageCriticalHit" class="pos-absolute pos-t-0 pos-r-0 icon is-small has-text-info cursor-clickable has-tooltip-left" data-tooltip="${g_invItemView_isCriticalHit ? ('Disable') : ('Enable')} Critical Hit">
+                <i class="${g_invItemView_isCriticalHit ? ('fad') : ('fal')} fa-sparkles"></i>
+              </span>
+              
+              <strong id="invWeapDamageView" class="cursor-clickable px-1">${g_invItemView_isCriticalHit ? ('Crit. ') : ('')}Damage${(damageHasConditionals) ? ('<sup class="is-size-7 has-text-info">*</sup>') : ('')}</strong>
+            </div>
+          </div>
+        `);
+        attackBonusAndDamageContent.append(`
+          <div class="tile text-center is-flex">
+            <div class="tile is-child is-6">
+              <span class="has-text-grey-light">
+                <span class="stat-roll-btn">${map.one}</span>
+                <span class="has-text-grey">/</span>
+                <span class="stat-roll-btn">${map.two}</span>
+                <span class="has-text-grey">/</span>
+                <span class="stat-roll-btn">${map.three}</span>
+              </span>
+            </div>
+            <div class="tile is-child is-6">
+              <span class="has-text-grey-light">
+                ${damageHTML}
+              </span>
+            </div>
+          </div>
+        `);
+        if(gOption_hasDiceRoller) { refreshStatRollButtons(); }
+
+        $('#damageCriticalHit').click(function() {
+          g_invItemView_isCriticalHit = !g_invItemView_isCriticalHit;
+          populateAttackBonusAndDamage();
+        });
+
+        $('#invWeapAttackView').click(function() {
+          openQuickView('breakdownView', {
+            title: data.InvItem.name+' - Attack Bonus',
+            breakdownTitle: 'Bonus',
+            breakdownTotal: calcStruct.AttackBonus,
+            breakdownMap: calcStruct.WeapStruct.attack.parts,
+            conditionalMap: calcStruct.WeapStruct.attack.conditionals,
+            isBonus: true,
+            _prevBackData: {Type: g_QViewLastType, Data: g_QViewLastData},
+          }, $('#quickviewDefault').hasClass('is-active'));
+        });
+        $('#invWeapAttackView').mouseenter(function(){
+          $(this).addClass('has-background-grey-darker');
+        });
+        $('#invWeapAttackView').mouseleave(function(){
+          $(this).removeClass('has-background-grey-darker');
+        });
+
+        $('#invWeapDamageView').click(function() {
+          openQuickView('breakdownView', {
+            title: data.InvItem.name+(g_invItemView_isCriticalHit ? ' - Crit. Damage' : ' - Damage'),
+            breakdownTitle: 'Damage',
+            breakdownTotal: calcStruct.Damage,
+            breakdownDamageDice: calcStruct.DamageDice,
+            breakdownDamageType: calcStruct.WeapStruct.damage.type,
+            breakdownMap: calcStruct.WeapStruct.damage.parts,
+            conditionalMap: calcStruct.WeapStruct.damage.conditionals,
+            modifications: calcStruct.WeapStruct.damage.modifications,
+            isBonus: false,
+            _prevBackData: {Type: g_QViewLastType, Data: g_QViewLastData},
+          }, $('#quickviewDefault').hasClass('is-active'));
+        });
+        $('#invWeapDamageView').mouseenter(function(){
+          $(this).addClass('has-background-grey-darker');
+        });
+        $('#invWeapDamageView').mouseleave(function(){
+          $(this).removeClass('has-background-grey-darker');
+        });
+
+      };
+      populateAttackBonusAndDamage();
+
+      qContent.append('<hr class="m-2">');
+      
+      if(data.Item.WeaponData.isRanged == 1){
+  
+        let weaponRange = '-';
+        let weaponReload = '-';
+        if(data.InvItem.itemWeaponRange == null && data.InvItem.itemWeaponReload == null){
+          weaponRange = data.Item.WeaponData.rangedRange;
+          weaponReload = data.Item.WeaponData.rangedReload;
+        } else {
+          weaponRange = data.InvItem.itemWeaponRange;
+          weaponReload = data.InvItem.itemWeaponReload;
+        }
+        if(weaponReload == 0){ weaponReload = '-'; }
+        weaponRange += ' ft';
+
+        qContent.append('<div class="tile text-center is-flex"><div class="tile is-child is-6"><strong>Range</strong></div><div class="tile is-child is-6"><strong>Reload</strong></div></div>');
+        qContent.append('<div class="tile text-center is-flex"><div class="tile is-child is-6"><p>'+weaponRange+'</p></div><div class="tile is-child is-6"><p>'+weaponReload+'</p></div></div>');
+
+        qContent.append('<hr class="m-2">');
+
+      }
 
     }
 

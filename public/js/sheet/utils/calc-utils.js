@@ -32,15 +32,6 @@ function getAttackAndDamage(itemData, invItem){
 
     let tagArray = getItemTraitsArray(itemData, invItem);
 
-    let damageDieType = invItem.itemWeaponDieType;
-    if(damageDieType == null){
-        damageDieType = itemData.WeaponData.dieType;
-    }
-    let damageDamageType = invItem.itemWeaponDamageType;
-    if(damageDamageType == null){
-        damageDamageType = itemData.WeaponData.damageType;
-    }
-
     const weapStruct = {
       attack: {
         parts: new Map(),
@@ -54,9 +45,27 @@ function getAttackAndDamage(itemData, invItem){
           on_crit_damage: getWeapMod(invItem.id, 'DAMAGE-ON-CRIT'),
           on_hit_other: getWeapMod(invItem.id, 'OTHER-ON-HIT'),
           on_crit_other: getWeapMod(invItem.id, 'OTHER-ON-CRIT'),
-        }
+        },
+        die_type: '',
+        type: '',
       }
     };
+
+    for(const onHitWeapMod of getWeapMod(invItem.id, 'CONDITIONAL-ON-HIT')){
+      weapStruct.damage.conditionals.set(onHitWeapMod.mod, 'WEAP-MOD:ON-HIT');
+    }
+    for(const onCritWeapMod of getWeapMod(invItem.id, 'CONDITIONAL-ON-CRIT')){
+      weapStruct.damage.conditionals.set(onCritWeapMod.mod, 'WEAP-MOD:ON-CRIT');
+    }
+
+    weapStruct.damage.die_type = invItem.itemWeaponDieType;
+    if(weapStruct.damage.die_type == null){
+      weapStruct.damage.die_type = itemData.WeaponData.dieType;
+    }
+    weapStruct.damage.type = invItem.itemWeaponDamageType;
+    if(weapStruct.damage.type == null){
+      weapStruct.damage.type = itemData.WeaponData.damageType;
+    }
     
     // Bonuses from weapon custom bonus //
     let weapAtkCustomBonus = invItem.itemWeaponAtkBonus;
@@ -90,7 +99,7 @@ function getAttackAndDamage(itemData, invItem){
         let useDexForAttack = false;
         if(finesseTag != null){
           if(dexMod > strMod){
-            weapStruct.attack.parts.set('This is your Dexterity modifier. Because this weapon is a finesse weapon, you can use your Dexterity modifier instead of Strength on attack rolls.', dexMod);
+            weapStruct.attack.parts.set('This is your Dexterity modifier. Because this weapon has the finesse trait, you can use your Dexterity modifier instead of Strength on attack rolls.', dexMod);
             useDexForAttack = true;
           }
           // Use preDex mod because Clumsy condition affects ranged attacks but not finesse melee attacks?
@@ -187,7 +196,7 @@ function getAttackAndDamage(itemData, invItem){
             if(dexModDamage > strModDamage) {
               if(dexModDamage != 0){
                 dmgStrBonus = dexModDamage;
-                weapStruct.damage.parts.set('This is your Dexterity modifier. You\'re adding Dexterity instead of Strength to your weapon\'s damage, because this weapon is a finesse weapon and you have an ability that allows you to use your Dexterity modifier instead of Strength for damage with finesse weapons.', dmgStrBonus);
+                weapStruct.damage.parts.set('This is your Dexterity modifier. You\'re adding Dexterity instead of Strength to your weapon\'s damage, because this weapon has the finesse trait and you have an ability that allows you to use your Dexterity modifier instead of Strength for damage with finesse weapons.', dmgStrBonus);
               }
             } else {
               if(strModDamage != 0){
@@ -272,14 +281,14 @@ function getAttackAndDamage(itemData, invItem){
         // Finalizing Damage into Display String //
         let damage = '';
         let damageDice = '';
-        if(damageDieType != 'NONE') {
-            let maxDamage = diceNum*dieTypeToNum(damageDieType)+totalDamageBonus;
+        if(weapStruct.damage.die_type != 'NONE') {
+            let maxDamage = diceNum*dieTypeToNum(weapStruct.damage.die_type)+totalDamageBonus;
             if(maxDamage >= 1) {
-                damage = diceNum+""+damageDieType+totalDamageBonusStr+" "+damageDamageType;
+                damage = diceNum+""+weapStruct.damage.die_type+totalDamageBonusStr+" "+weapStruct.damage.type;
             } else {
-                damage = '<a class="has-text-grey" data-tooltip="'+diceNum+""+damageDieType+totalDamageBonusStr+'">1</a> '+damageDamageType;
+                damage = '<a class="has-text-grey" data-tooltip="'+diceNum+""+weapStruct.damage.die_type+totalDamageBonusStr+'">1</a> '+weapStruct.damage.type;
             }
-            damageDice = diceNum+''+damageDieType;
+            damageDice = diceNum+''+weapStruct.damage.die_type;
         } else {
             damage = '-';
             damageDice = '-';
@@ -287,23 +296,30 @@ function getAttackAndDamage(itemData, invItem){
 
         return { AttackBonus : attackBonus, Damage : damage, DamageDice : damageDice, WeapStruct: weapStruct };
 
-    } else if(itemData.WeaponData.isRanged == 1){
+    } else if(itemData.WeaponData.isRanged == 1){///////////////////////////////////////////////////////////////////////////
 
         let thrownTag = tagArray.find(tag => {
-            return 47 <= tag.id && tag.id <= 54; // Hardcoded Thrown Tag ID Range (47-54)
+          return 47 <= tag.id && tag.id <= 54; // Hardcoded Thrown Tag ID Range (47-54)
         });
         let splashTag = tagArray.find(tag => {
-            return tag.id == 391; // Hardcoded Splash Tag ID
+          return tag.id == 391; // Hardcoded Splash Tag ID
         });
         let propulsiveTag = tagArray.find(tag => {
-            return tag.id == 653; // Hardcoded Propulsive Tag ID
+          return tag.id == 653; // Hardcoded Propulsive Tag ID
+        });
+        let brutalTag = tagArray.find(tag => {
+          return tag.id == 2223; // Hardcoded Brutal Tag ID
         });
 
         ////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////// Attack Bonus ///////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////////////
 
-        weapStruct.attack.parts.set('This is your Dexterity modifier. You add your Dexterity modifier to attack rolls with most ranged weapons.', dexMod);
+        if(brutalTag != null){
+          weapStruct.attack.parts.set('This is your Strength modifier. Because this weapon has the brutal trait, you use your Strength modifier instead of Dexterity on attack rolls.', strMod);
+        } else {
+          weapStruct.attack.parts.set('This is your Dexterity modifier. You add your Dexterity modifier to attack rolls with most ranged weapons.', dexMod);
+        }
 
         // Proficiency Bonus //
         let profNumUps = weaponProfDetermineNumUps(itemData);
@@ -395,11 +411,11 @@ function getAttackAndDamage(itemData, invItem){
                 let strAmt = Math.floor(strModDamage/2);
                 if(strAmt != 0){
                     dmgStrBonus = strAmt;
-                    weapStruct.damage.parts.set('This is half of your Strength modifier. Because this weapon is a propulsive weapon and you have a positive Strength modifier, you add half of your Strength modifier (rounded down) to the damage.', dmgStrBonus);
+                    weapStruct.damage.parts.set('This is half of your Strength modifier. Because this weapon has the propulsive trait and you have a positive Strength modifier, you add half of your Strength modifier (rounded down) to the damage.', dmgStrBonus);
                 }
             } else {
                 dmgStrBonus = strModDamage;
-                weapStruct.damage.parts.set('This is your Strength modifier. Because this weapon is a propulsive weapon and you have a negative Strength modifier, you add your full Strength modifier to the damage.', dmgStrBonus);
+                weapStruct.damage.parts.set('This is your Strength modifier. Because this weapon has the propulsive trait and you have a negative Strength modifier, you add your full Strength modifier to the damage.', dmgStrBonus);
             }
         }
         if(thrownTag != null && splashTag == null && strModDamage != 0){
@@ -458,14 +474,14 @@ function getAttackAndDamage(itemData, invItem){
         // Finalizing Damage into Display String //
         let damage = '';
         let damageDice = '';
-        if(damageDieType != 'NONE') {
-            let maxDamage = diceNum*dieTypeToNum(damageDieType)+totalDamageBonus;
+        if(weapStruct.damage.die_type != 'NONE') {
+            let maxDamage = diceNum*dieTypeToNum(weapStruct.damage.die_type)+totalDamageBonus;
             if(maxDamage >= 1) {
-                damage = diceNum+""+damageDieType+totalDamageBonusStr+" "+damageDamageType;
+                damage = diceNum+""+weapStruct.damage.die_type+totalDamageBonusStr+" "+weapStruct.damage.type;
             } else {
-                damage = '<a class="has-text-grey" data-tooltip="'+diceNum+""+damageDieType+totalDamageBonusStr+'">1</a> '+damageDamageType;
+                damage = '<a class="has-text-grey" data-tooltip="'+diceNum+""+weapStruct.damage.die_type+totalDamageBonusStr+'">1</a> '+weapStruct.damage.type;
             }
-            damageDice = diceNum+''+damageDieType;
+            damageDice = diceNum+''+weapStruct.damage.die_type;
         } else {
             damage = '-';
             damageDice = '-';

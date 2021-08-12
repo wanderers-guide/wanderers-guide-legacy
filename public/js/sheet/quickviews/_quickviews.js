@@ -141,6 +141,11 @@ function openQuickView(type, data, noProtection=false) {
 function closeQuickView() {
   $('#quickviewDefault').removeClass('is-active');
   g_QViewLastData = null;
+
+  // For toggle critical hit in invItem quickview
+  if(typeof g_invItemView_isCriticalHit !== 'undefined'){
+    g_invItemView_isCriticalHit = false;
+  }
 }
 
 function addQuickViewProtection(){

@@ -169,11 +169,16 @@ function leftQuickview_OpenDiceRoller() {
         resultLine += '<span class="is-size-5 is-thin">'+resultSubParts+'</span>';
       }
 
-      resultLine += '<i class="fas fa-caret-right has-text-grey mx-2"></i><span class="has-text-info is-bold">'+rollStruct.Total+'</span>';
+      if(rollStruct.DoubleResult){
+        resultLine += `<span class="is-size-5 is-thin"><i class="fas fa-caret-right has-text-grey mx-2"></i><span class="has-text-primary">2</span><span class="has-text-grey">×</span><span class="has-text-grey-light">${rollStruct.Total}</span></span><i class="fas fa-caret-right has-text-grey mx-2"></i><span class="has-text-info is-bold">${(rollStruct.Total*2)}<span class="has-text-grey-kinda-light is-size-6 is-thin is-italic"> ${rollStruct.ResultSuffix}</span></span>`;
+      } else {
+        resultLine += `<i class="fas fa-caret-right has-text-grey mx-2"></i><span class="has-text-info is-bold">${rollStruct.Total}<span class="has-text-grey-kinda-light is-size-6 is-thin is-italic"> ${rollStruct.ResultSuffix}</span></span>`;
+      }
+
       $('#dice-roller-output-container').append(`
           <div class="pos-relative">
             <p class="is-size-4 negative-indent">${resultLine}</p>
-            <p class="pos-absolute pos-t-10 pos-r-1 is-size-8 has-text-grey">${rollStruct.Label.Name}</p>
+            <p class="pos-absolute pos-t-1 pos-r-1 is-size-8 has-text-grey">${rollStruct.Label.Name}</p>
             <p class="pos-absolute pos-b-1 pos-r-1 is-size-8 has-text-grey-dark is-italic">${rollStruct.Timestamp.Time}</p>
           </div>
       `);
@@ -183,7 +188,9 @@ function leftQuickview_OpenDiceRoller() {
   }
 
   // Scroll to Bottom
-  $('#dice-roller-output-container').scrollTop($('#dice-roller-output-container')[0].scrollHeight);
+  window.setTimeout(() => {
+    $('#dice-roller-output-container').scrollTop($('#dice-roller-output-container')[0].scrollHeight);
+  }, 100);
 
   // Roll Btn Listener //
   $('#dice-roller-input-roll').click(function() {

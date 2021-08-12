@@ -228,9 +228,13 @@ function processSheetCode(wscCode, extraData=null, isTest=false){
             continue;
           }
 
+          let modInfo = extraData.source;
+          if(extraData.source == 'PropertyRune'){
+            modInfo = extraData.sourceName;
+          }
+
           let dataParts = wscStatement.split('=');
-          console.log(wscStatementUpper);
-          addWeapMod(invItemID, dataParts[1], 'DAMAGE-ON-HIT', extraData.source);
+          addWeapMod(invItemID, dataParts[1], 'DAMAGE-ON-HIT', modInfo);
 
           continue;
         }
@@ -246,8 +250,13 @@ function processSheetCode(wscCode, extraData=null, isTest=false){
             continue;
           }
 
+          let modInfo = extraData.source;
+          if(extraData.source == 'PropertyRune'){
+            modInfo = extraData.sourceName;
+          }
+
           let dataParts = wscStatement.split('=');
-          addWeapMod(invItemID, dataParts[1], 'DAMAGE-ON-CRIT', extraData.source);
+          addWeapMod(invItemID, dataParts[1], 'DAMAGE-ON-CRIT', modInfo);
 
           continue;
         }
@@ -263,8 +272,13 @@ function processSheetCode(wscCode, extraData=null, isTest=false){
             continue;
           }
 
+          let modInfo = extraData.source;
+          if(extraData.source == 'PropertyRune'){
+            modInfo = extraData.sourceName;
+          }
+
           let dataParts = wscStatement.split('=');
-          addWeapMod(invItemID, dataParts[1], 'OTHER-ON-HIT', extraData.source);
+          addWeapMod(invItemID, dataParts[1], 'OTHER-ON-HIT', modInfo);
 
           continue;
         }
@@ -280,8 +294,57 @@ function processSheetCode(wscCode, extraData=null, isTest=false){
             continue;
           }
 
+          let modInfo = extraData.source;
+          if(extraData.source == 'PropertyRune'){
+            modInfo = extraData.sourceName;
+          }
+
           let dataParts = wscStatement.split('=');
-          addWeapMod(invItemID, dataParts[1], 'OTHER-ON-CRIT', extraData.source);
+          addWeapMod(invItemID, dataParts[1], 'OTHER-ON-CRIT', modInfo);
+
+          continue;
+        }
+
+        if(wscStatementUpper.startsWith("DEFAULT-ON-HIT-CONDITIONAL=")){
+          if(isTest) {continue;} //DEFAULT-ON-HIT-CONDITIONAL=Flat-footed only at dawn
+
+          let invItemID = null;
+          if(extraData.source == 'InvItem' || extraData.source == 'PropertyRune'){
+            invItemID = extraData.invItemID;
+          } else {
+            displayError('Attempted to execute "DEFAULT-ON-HIT-CONDITIONAL" from a non-item source');
+            continue;
+          }
+
+          let modInfo = extraData.source;
+          if(extraData.source == 'PropertyRune'){
+            modInfo = extraData.sourceName;
+          }
+
+          let dataParts = wscStatement.split('=');
+          addWeapMod(invItemID, dataParts[1], 'CONDITIONAL-ON-HIT', modInfo);
+
+          continue;
+        }
+
+        if(wscStatementUpper.startsWith("DEFAULT-ON-CRIT-CONDITIONAL=")){
+          if(isTest) {continue;} //DEFAULT-ON-CRIT-CONDITIONAL=Flat-footed forever only at dawn
+
+          let invItemID = null;
+          if(extraData.source == 'InvItem' || extraData.source == 'PropertyRune'){
+            invItemID = extraData.invItemID;
+          } else {
+            displayError('Attempted to execute "DEFAULT-ON-CRIT-CONDITIONAL" from a non-item source');
+            continue;
+          }
+
+          let modInfo = extraData.source;
+          if(extraData.source == 'PropertyRune'){
+            modInfo = extraData.sourceName;
+          }
+
+          let dataParts = wscStatement.split('=');
+          addWeapMod(invItemID, dataParts[1], 'CONDITIONAL-ON-CRIT', modInfo);
 
           continue;
         }

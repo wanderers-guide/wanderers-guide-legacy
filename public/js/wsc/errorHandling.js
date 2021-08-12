@@ -12,6 +12,10 @@ function displayError(message){
   reloadErrorMessages();
 }
 
+function clearErrorMessages() {
+  errorMessages = [];
+}
+
 function reloadErrorMessages(){
     if(errorMessages.length > 0) {
         let errorHTML = '<p class="subtitle is-marginless has-text-weight-bold">Errors</p>';

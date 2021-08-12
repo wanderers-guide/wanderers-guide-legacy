@@ -13,7 +13,7 @@ function openResistancesListQuickview(data) {
     // // //
 
     let addResistBtnID = 'resistListAddBtn';
-    qContent.append('<p class="has-text-centered"><span class="is-size-5"><strong>Resistances</strong></span> <span id="'+addResistBtnID+'" class="icon has-text-info cursor-clickable"><i class="fas fa-plus-circle"></i></span></p>');
+    qContent.append('<p class="has-text-centered"><span class="is-size-5"><strong>Resistances</strong></span> <span id="'+addResistBtnID+'" class="icon has-text-info cursor-clickable"><i class="fal fa-plus-circle"></i></span></p>');
 
     $('#'+addResistBtnID).click(function(){
       openQuickView('addResistView',{
@@ -33,7 +33,7 @@ function openResistancesListQuickview(data) {
       if(resists.sourceType == 'user-added'){
 
         let removeBtnID = 'resistListRemoveBtn-'+i;
-        qContent.append('<p class="has-text-centered"><span class="is-size-5">'+type+' : '+amount+'</span> <span id="'+removeBtnID+'" class="icon has-text-danger is-pulled-right cursor-clickable mt-2 has-tooltip-left" data-tooltip="Remove '+type+'"><i class="fas fa-minus-circle"></i></span></p>');
+        qContent.append('<p class="has-text-centered"><span class="is-size-5">'+type+' : '+amount+'</span> <span id="'+removeBtnID+'" class="icon has-text-danger is-pulled-right cursor-clickable mt-2 has-tooltip-left" data-tooltip="Remove '+type+'"><i class="fal fa-minus-circle"></i></span></p>');
 
         $('#'+removeBtnID).click(function(){
           let srcStruct = {
@@ -59,7 +59,7 @@ function openResistancesListQuickview(data) {
     // // //
 
     let addWeakBtnID = 'weakListAddBtn';
-    qContent.append('<p class="has-text-centered"><span class="is-size-5"><strong>Weaknesses</strong></span> <span id="'+addWeakBtnID+'" class="icon has-text-info cursor-clickable"><i class="fas fa-plus-circle"></i></span></p>');
+    qContent.append('<p class="has-text-centered"><span class="is-size-5"><strong>Weaknesses</strong></span> <span id="'+addWeakBtnID+'" class="icon has-text-info cursor-clickable"><i class="fal fa-plus-circle"></i></span></p>');
 
     $('#'+addWeakBtnID).click(function(){
       openQuickView('addWeakView',{
@@ -79,7 +79,7 @@ function openResistancesListQuickview(data) {
       if(vulners.sourceType == 'user-added'){
 
         let removeBtnID = 'vulnerListRemoveBtn-'+i;
-        qContent.append('<p class="has-text-centered"><span class="is-size-5">'+type+' : '+amount+'</span> <span id="'+removeBtnID+'" class="icon has-text-danger is-pulled-right cursor-clickable mt-2 has-tooltip-left" data-tooltip="Remove '+type+'"><i class="fas fa-minus-circle"></i></span></p>');
+        qContent.append('<p class="has-text-centered"><span class="is-size-5">'+type+' : '+amount+'</span> <span id="'+removeBtnID+'" class="icon has-text-danger is-pulled-right cursor-clickable mt-2 has-tooltip-left" data-tooltip="Remove '+type+'"><i class="fal fa-minus-circle"></i></span></p>');
 
         $('#'+removeBtnID).click(function(){
           let srcStruct = {

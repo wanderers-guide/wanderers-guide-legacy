@@ -371,6 +371,10 @@ function loadCharSheet(){
     // Unbind All jQuery Events //
     $('#character-sheet-section').find("*").off();
 
+    // Clear and Reload Error Messages
+    clearErrorMessages();
+    reloadErrorMessages();
+
     // Init Sheet-States //
     gState_hasFinesseMeleeUseDexDamage = false;
     gState_armoredStealth = false;
@@ -2079,7 +2083,7 @@ function runPropertyRuneCode(propertyRuneID, invItemID){
             if(propertyRuneCode != null){
                 processSheetCode(propertyRuneCode, {
                   source: 'PropertyRune',
-                  sourceName: 'Property Rune',
+                  sourceName: itemData.Item.name,
                   invItemID: invItemID,
                 });
             }
@@ -2335,6 +2339,8 @@ function determineInvestitures(){
     for(const invItem of g_invStruct.InvItems){
         if(invItem.isInvested == 1) {
 
+            currentInvests++;
+
             const item = g_itemMap.get(invItem.itemID+"");
             if(item == null){ continue; }
             if(item.ArmorData != null){
@@ -2346,8 +2352,6 @@ function determineInvestitures(){
                     continue;
                 }
             }
-
-            currentInvests++;
             
             processSheetCode(invItem.code, {
               source: 'InvItem',

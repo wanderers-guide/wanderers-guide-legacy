@@ -49,10 +49,10 @@ function addSpeedContent(qContent, speedStatName, speedName){
     if(amalgBonuses != null && amalgBonuses.length > 0){
 
         let breakDownInnerHTML = '<p class="has-text-centered is-size-5-5">'+speedTotal+' = ';
-        breakDownInnerHTML += '<a class="has-text-link has-tooltip-bottom" data-tooltip="This is your base speed.">'+speedBase+'</a>';
+        breakDownInnerHTML += '<a class="has-text-info has-tooltip-bottom" data-tooltip="This is your base speed.">'+speedBase+'</a>';
         breakDownInnerHTML += ' + ';
         let amalgBonus = speedTotal-speedBase;
-        breakDownInnerHTML += '<a id="'+speedAmalgBonusNumID+'" class="has-text-link has-tooltip-bottom">'+amalgBonus+'</a>';
+        breakDownInnerHTML += '<a id="'+speedAmalgBonusNumID+'" class="has-text-info has-tooltip-bottom">'+amalgBonus+'</a>';
         breakDownInnerHTML += '</p>';
         qContent.append(breakDownInnerHTML);
 
