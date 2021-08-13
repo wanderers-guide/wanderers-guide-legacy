@@ -6,7 +6,7 @@ function openCustomizeProfQuickview(data) {
     addBackFunctionality(data);
 
     let profName = data.ProfData.Name.replace(/_/g,' ');
-    $('#quickViewTitle').html("Customize - "+capitalizeWords(profName));
+    $('#quickViewTitle').html("Customize - "+capitalizeWords(profName).replace('Class Dc', 'Class DC'));
     let qContent = $('#quickViewContent');
 
     qContent.append('<div class="field is-horizontal"><div class="field-label is-normal is-long"><label class="label">Proficiency</label></div><div class="field-body"><div class="field"><div class="control"><div class="select"><select id="customizeProf"><option value="chooseDefault">Default</option><option value="U">Untrained</option><option value="T">Trained</option><option value="E">Expert</option><option value="M">Master</option><option value="L">Legendary</option></select></div></div></div></div></div>');

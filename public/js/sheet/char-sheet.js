@@ -2241,13 +2241,15 @@ function determineBulkAndCoins(invItems, itemMap){
                     return searchInvItem.id == invItem.bagInvItemID;
                 });
                 if(bagInvItem != null){
-                    let bagItem = itemMap.get(bagInvItem.itemID+"");
+                  let bagItem = itemMap.get(bagInvItem.itemID+"");
+                  if(bagItem != null){
                     let invItemQuantity = (invItem.quantity == null) ? 1 : invItem.quantity;
                     let invItemBulk = determineItemBulk(g_charSize, invItem.size, invItem.bulk);
                     invItemBulk = getWornArmorBulkAdjustment(invItem, invItemBulk);
                     invItemBulk = (invItemBulk == 0.0) ? 0.001 : invItemBulk;
                     let invItemTotalBulk = invItemBulk * invItemQuantity;
                     bagBulkMap.set(invItem.bagInvItemID, invItemTotalBulk-bagItem.StorageData.bulkIgnored);
+                  }
                 }
             } else {
                 let invItemQuantity = (invItem.quantity == null) ? 1 : invItem.quantity;
