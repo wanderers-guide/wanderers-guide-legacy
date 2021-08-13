@@ -295,12 +295,17 @@
                     <div class="mobile-box tile ml-2 mt-2 mb-4 mobile-is-marginless">
                         <div class="tile is-child">
                                 <a id="backToBuilderButton" class="button is-info is-rounded is-small has-text-white mb-2">
-                                    <span>Edit</span>
-                                    <span class="icon">
-                                        <i class="fas fa-cog"></i>
-                                    </span>
+                                  <span>Edit</span>
+                                  <span class="icon">
+                                    <i class="fas fa-cog"></i>
+                                  </span>
                                 </a>
-                                <a id="restButton" class="button is-info is-outlined"><span>Rest</span></a>
+                                <a id="restButton" class="button is-info is-outlined">
+                                  <span>Rest</span>
+                                  <span class="icon is-very-small">
+                                    <i class="far fa-snooze fa-xs"></i>
+                                  </span>
+                                </a>
 
                                 <a id="copyCharButton" class="button is-info is-outlined mb-2 is-hidden"><span>Copy</span><span class="icon"><i class="fas fa-user-friends"></i></span></a>
                                 <a id="exportCharButton" class="button is-info is-outlined is-hidden"><span>Export</span><span class="icon"><i class="fas fa-download"></i></span></a>
@@ -436,7 +441,7 @@
                     <nav class="mobile-box panel is-dark is-shadowless sheet-box my-2 mx-1">
                         <p class="is-size-5"><strong class="has-text-grey-lighter pl-4">Skills</strong><a id="addNewLoreButton" class="is-pulled-right is-size-6 is-paddingless"><span class="icon has-text-info"><i class="fal fa-plus-circle"></i></span></a></p>
                         <hr class="border-secondary is-marginless">
-                        <div id="skills" class="use-custom-scrollbar" style="height: 660px; max-height: 660px; overflow-y: auto;">
+                        <div id="skills" class="use-custom-scrollbar" style="max-height: 660px; overflow-y: auto;">
 
                         </div>
                     </nav>
@@ -444,17 +449,17 @@
             </div>
 
             <div class="tile is-parent is-8 is-paddingless">
-                <div class="tile is-child">
-                    <div class="sheet-box use-custom-scrollbar my-2 ml-4 mobile-is-marginless" style="height: 700px; max-height: 700px; overflow-y: auto; overflow-x: scroll;">
-                        <div class="tabs is-centered is-boxed is-medium is-marginless">
+                <div class="tile is-child" style="width: 100%;">
+                    <div class="sheet-box use-custom-scrollbar my-2 ml-4 mobile-is-marginless" style="min-height: 700px; overflow-y: auto; overflow-x: scroll;">
+                        <div id="char-sheet-tabs" class="tabs is-centered is-boxed is-medium is-marginless use-custom-scrollbar">
                             <ul class="sheet-tabs">
-                                <li><a id="actionsTab">Actions</a></li>
-                                <li><a id="weaponsTab">Weapons</a></li>
-                                <li><a id="spellsTab">Spells</a></li>
-                                <li><a id="inventoryTab">Inventory</a></li>
-                                <li><a id="companionsTab">Companions</a></li>
-                                <li><a id="detailsTab">Details</a></li>
-                                <li><a id="notesTab">Notes</a></li>
+                                <li><a id="actionsTab"><span class="pf-icon">[free-action]</span><span class="pl-2">Actions</span></a></li>
+                                <li><a id="weaponsTab"><i class="far fa-swords"></i><span class="pl-2">Weapons</span></a></li>
+                                <li><a id="spellsTab"><i class="far fa-wand-magic"></i><span class="pl-2">Spells</span></a></li>
+                                <li><a id="inventoryTab"><i class="far fa-backpack"></i><span class="pl-2">Inventory</span></a></li>
+                                <li><a id="companionsTab"><i class="far fa-paw-claws"></i><span class="pl-2">Companions</span></i></a></li>
+                                <li><a id="detailsTab"><i class="far fa-file-search"></i><span class="pl-2">Details</span></i></a></li>
+                                <li><a id="notesTab"><i class="far fa-scroll"></i><span class="pl-2">Notes</span></a></li>
                             </ul>
                         </div>
                         <div id="tabContent" class="mx-3 mb-3 pos-relative">

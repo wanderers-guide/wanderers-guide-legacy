@@ -289,3 +289,92 @@ function getItemTraitsArray(item, invItem){
   }
   return tagArray;
 }
+
+////////
+
+function getItemIcon(item, invItem){
+
+  let fa_icon = null;
+
+  if(item.Item.itemType != null){
+    let itemType = capitalizeWords(item.Item.itemType);
+
+    if(itemType === 'Artifact'){ fa_icon = 'fas fa-star-christmas'; }
+    if(itemType === 'Ammunition'){ fa_icon = 'fad fa-bow-arrow'; }
+    if(itemType === 'Armor'){ fa_icon = 'fas fa-tshirt'; }
+    if(itemType === 'Belt'){ fa_icon = 'fas fa-circle-notch'; }
+    if(itemType === 'Bomb'){ fa_icon = 'fas fa-bomb'; }
+    if(itemType === 'Book'){ fa_icon = 'fas fa-book'; }
+    if(itemType === 'Boots'){ fa_icon = 'fas fa-boot'; }
+    // Bracers
+    // Circlet
+    if(itemType === 'Cloak'){ fa_icon = 'fas fa-hood-cloak'; }
+    if(itemType === 'Companion'){ fa_icon = 'fas fa-paw'; }
+    if(itemType === 'Currency'){ fa_icon = 'fas fa-coins'; }
+    if(itemType === 'Drug'){ fa_icon = 'fas fa-cannabis'; }
+    if(itemType === 'Elixir'){ fa_icon = 'fas fa-vial'; }
+    if(itemType === 'Eyepiece'){ fa_icon = 'far fa-glasses-alt'; }
+    if(itemType === 'Gloves'){ fa_icon = 'fad fa-boxing-glove'; }
+    if(itemType === 'Hat'){ fa_icon = 'fas fa-hat-witch'; }
+    if(itemType === 'Ingredient'){ fa_icon = 'fad fa-cauldron'; }
+    if(itemType === 'Instrument'){ fa_icon = 'fas fa-mandolin'; }
+    if(itemType === 'Kit'){ fa_icon = 'fas fa-briefcase'; }
+    if(itemType === 'Mask'){ fa_icon = 'fas fa-mask'; }
+    // Necklace
+    if(itemType === 'Oil'){ fa_icon = 'fas fa-jug'; }
+    if(itemType === 'Poison'){ fa_icon = 'fas fa-flask-poison'; }
+    if(itemType === 'Potion'){ fa_icon = 'fas fa-flask-potion'; }
+    if(itemType === 'Ring'){ fa_icon = 'fas fa-ring'; }
+    if(itemType === 'Rod'){ fa_icon = 'far fa-window-minimize'; }
+    if(itemType === 'Rune'){ fa_icon = 'fas fa-tombstone-alt'; }
+    if(itemType === 'Scroll'){ fa_icon = 'fas fa-scroll-old'; }
+    if(itemType === 'Shield'){ fa_icon = 'far fa-shield-alt'; }
+    if(itemType === 'Staff'){ fa_icon = 'far fa-staff'; }
+    if(itemType === 'Storage'){ fa_icon = 'fas fa-backpack'; }
+    if(itemType === 'Structure'){ fa_icon = 'fas fa-home-alt'; }
+    if(itemType === 'Talisman'){ fa_icon = 'fas fa-ankh'; }
+    if(itemType === 'Tattoo'){ fa_icon = 'far fa-signature'; }
+    // Tool (probably don't want to set one)
+    if(itemType === 'Wand'){ fa_icon = 'fas fa-wand'; }
+    // Weapon (don't want to set one)
+    // Other (probably don't want to set one)
+
+  }
+
+
+  if(item.WeaponData != null){
+    let weaponType = (item.WeaponData.isMelee == 1) ? item.WeaponData.meleeWeaponType : item.WeaponData.rangedWeaponType;
+    weaponType = capitalizeWords(weaponType);
+
+    if(weaponType === 'Bomb'){ fa_icon = 'fas fa-bomb'; }
+    if(weaponType === 'Bow'){ fa_icon = 'fas fa-bow-arrow'; }
+    if(weaponType === 'Brawling'){ fa_icon = 'fas fa-fist-raised'; }
+    if(weaponType === 'Club'){ fa_icon = 'fas fa-mace'; }
+    // Dart
+    if(weaponType === 'Flail'){ fa_icon = 'fad fa-mace'; }
+    if(weaponType === 'Hammer'){ fa_icon = 'fas fa-hammer-war'; }
+    if(weaponType === 'Knife'){ fa_icon = 'fas fa-dagger'; }
+    // Pick
+    if(weaponType === 'Polearm'){ fa_icon = 'fas fa-scythe'; }
+    if(weaponType === 'Shield'){ fa_icon = 'far fa-shield-alt'; }
+    // Sling
+    if(weaponType === 'Spear'){ fa_icon = 'far fa-slash'; }
+    if(weaponType === 'Sword'){ fa_icon = 'fas fa-sword'; }
+    if(weaponType === 'Axe'){ fa_icon = 'fas fa-axe'; }
+
+  }
+
+
+  // For if someone adds a trait to a custom item, it'll override it to be accurate
+  let tagArray = getItemTraitsArray(item, invItem);
+  if(tagArray.find(tag => { return tag.name === 'Wand'; }) != null){ fa_icon = 'fas fa-wand'; }
+  if(tagArray.find(tag => { return tag.name === 'Staff'; }) != null){ fa_icon = 'far fa-staff'; }
+
+
+  if(fa_icon != null){
+    return `<span class="icon is-small mr-2 has-text-grey-kinda-dark"><i class="${fa_icon} fa-sm"></i></span>`;
+  } else {
+    return '<span class="icon is-small mr-2"></span>';
+  }
+
+}

@@ -98,6 +98,8 @@ let g_sheetStatesArray = null;
 
 let g_unselectedDataArray = null;
 
+let g_sheetTabSizeLock = false;
+
 let g_inventoryTabScroll = null;
 let g_selectedTabID = 'inventoryTab';
 let g_selectedSubTabID = null;
@@ -567,6 +569,20 @@ function loadCharSheet(){
       $('#companionsTab').removeClass('is-hidden');
     } else {
       $('#companionsTab').addClass('is-hidden');
+    }
+
+    // Make tabs smaller if too big
+    if(isOverflown($('#char-sheet-tabs'))){
+      $('#char-sheet-tabs').removeClass('is-small-medium');
+      $('#char-sheet-tabs').removeClass('is-medium');
+      $('#char-sheet-tabs').addClass('is-small-medium');
+      g_sheetTabSizeLock = true;
+    } else {
+      if(!g_sheetTabSizeLock){
+        $('#char-sheet-tabs').removeClass('is-small-medium');
+        $('#char-sheet-tabs').removeClass('is-medium');
+        $('#char-sheet-tabs').addClass('is-medium');
+      }
     }
 
     // Open Weapons Tab Temporarily // -> To get data input for Calculated Stats

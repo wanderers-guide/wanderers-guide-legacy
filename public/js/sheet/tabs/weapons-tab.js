@@ -48,7 +48,7 @@ function openWeaponsTab(data) {
         $('#weaponsTabContent').append(`
           <div id="${weaponListEntryID}" class="columns is-mobile pt-1 is-marginless">
             <div class="column is-paddingless is-4 border-bottom border-dark-lighter cursor-clickable">
-              <p class="pl-3 has-text-left has-text-grey-light">${invItem.name+unarmedIcon}</p>
+              <p class="has-text-left has-text-grey-light">${getItemIcon(item, invItem)+invItem.name+unarmedIcon}</p>
             </div>
             <div class="column is-paddingless is-1 border-bottom border-dark-lighter cursor-clickable">
               <p class="has-text-grey-light">
@@ -95,7 +95,7 @@ function openWeaponsTab(data) {
     $('#tabContent').append(`
       <div class="columns is-mobile pt-1 is-marginless">
         <div class="column is-paddingless is-4">
-          <p class="pl-3 has-text-left"><strong class="has-text-grey-light">Name</strong></p>
+          <p class="pl-4 has-text-left"><strong class="has-text-grey-light">Name</strong></p>
         </div>
         <div class="column is-paddingless is-1">
           <p class=""><strong class="has-text-grey-light">Attack</strong></p>

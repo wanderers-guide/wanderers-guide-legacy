@@ -138,6 +138,17 @@ em {
   font-size: 1.75rem!important;
 }
 
+/* Tab Sizes */
+.tabs.is-small-medium {
+  font-size: 0.9rem;
+}
+
+/* Icon Sizes */
+.icon.is-very-small {
+  height:1em;
+  width:1em;
+}
+
 /* Button Sizes */
 .button.is-very-small {
   font-size: 0.6rem!important;

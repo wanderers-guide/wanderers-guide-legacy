@@ -313,6 +313,11 @@ function round(value, precision) {
   return Math.floor(value * multiplier) / multiplier;
 }
 
+function isOverflown(jQueryElement) {
+  let element = jQueryElement[0];
+  return element.scrollHeight > element.clientHeight || element.scrollWidth > element.clientWidth;
+}
+
 function isSheetPage(){
   return typeof isSheetInit !== 'undefined';
 }
