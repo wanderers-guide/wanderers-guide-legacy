@@ -156,6 +156,9 @@ em {
 .button.is-very-small {
   font-size: 0.6rem!important;
 }
+.button.is-tiny {
+  font-size: 0.5rem!important;
+}
 
 /* Border */
 .border-dark-ish {

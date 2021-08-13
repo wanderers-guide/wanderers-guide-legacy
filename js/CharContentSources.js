@@ -52,4 +52,21 @@ module.exports = class CharContentSources {
         });
     }
 
+    static setSources(charID, inputSourceArray){
+      return Character.findOne({ where: { id: charID} })
+      .then((character) => {
+        let sourceArray = [];
+        try{
+          for(let source of inputSourceArray){
+            sourceArray.push(source+'');
+          }
+        } catch (err){}
+        let charUpVals = {enabledSources: JSON.stringify(sourceArray) };
+        return Character.update(charUpVals, { where: { id: character.id } })
+        .then((result) => {
+          return;
+        });
+      });
+    }
+
 };

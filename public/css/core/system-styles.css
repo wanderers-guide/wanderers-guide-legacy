@@ -295,6 +295,14 @@ body::-webkit-scrollbar-thumb {
   overflow-x: hidden;
 }
 
+@media screen and (max-width:768px){
+  /* Mobile View */
+  .use-custom-scrollbar::-webkit-scrollbar {
+    width: 0.75em;
+    height: 0.75em;
+  }
+}
+
 /* Select Scrollbar */
 select::-webkit-scrollbar {
   width: 0.6em;

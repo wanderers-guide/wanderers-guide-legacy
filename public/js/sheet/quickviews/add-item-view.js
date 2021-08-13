@@ -232,7 +232,21 @@ function displayAddItem(itemID, itemDataStruct, data){
       addItemHTML = '<div class="select my-1 is-small is-success"><select id="'+addItemAddItemID+'"><option value="chooseDefault">Add</option><optgroup label="─────"></optgroup><option value="BUY">Buy</option><option value="GIVE">Give</option><option value="FORMULA">Formula</option></select></div>';
     }
 
-    $('#addItemListSection').append('<div class="tile is-parent is-flex is-paddingless border-bottom border-additems has-background-black-like cursor-clickable" data-item-id="'+itemID+'"><div class="tile is-child is-7 itemEntryPart"><p id="'+addItemNameID+'" class="has-text-left mt-1 pl-3 has-text-grey-lighter">'+itemName+'</p></div><div class="tile is-child is-2 itemEntryPart"><p class="has-text-centered is-size-7 mt-2">'+itemLevel+'</p></div><div class="tile is-child">'+addItemHTML+'</div><div class="tile is-child is-1 itemEntryPart"><span class="icon has-text-grey mt-2"><i id="'+addItemChevronItemID+'" class="fas fa-chevron-down"></i></span></div></div><div id="'+addItemDetailsItemID+'"></div>');
+    $('#addItemListSection').append(`
+      <div class="tile is-parent is-flex is-paddingless border-bottom border-additems has-background-black-like cursor-clickable" data-item-id="${itemID}">
+        <div class="tile is-child is-7 itemEntryPart">
+          <p id="${addItemNameID}" class="has-text-left mt-1 has-text-grey-lighter"><span class="ml-2">${getItemIcon(itemDataStruct, null)}</span>${itemName}</p>
+        </div>
+        <div class="tile is-child is-2 itemEntryPart">
+          <p class="has-text-centered is-size-7 mt-2">${itemLevel}</p>
+        </div>
+        <div class="tile is-child">${addItemHTML}</div>
+        <div class="tile is-child is-1 itemEntryPart">
+          <span class="icon has-text-grey mt-2"><i id="${addItemChevronItemID}" class="fas fa-chevron-down"></i></span>
+        </div>
+      </div>
+      <div id="${addItemDetailsItemID}" class="pos-relative"></div>
+    `);
 
     if(itemDataStruct.Item.itemType != 'CURRENCY'){
 
@@ -555,5 +569,13 @@ function displayItemDetails(itemDataStruct, addItemDetailsItemID){
     }
 
     itemDetails.append(processText(itemDataStruct.Item.description, true, true, 'MEDIUM'));
+
+    if(itemDataStruct.ShieldData != null) { // If item is shield,
+      itemDetails.append('<hr class="m-2">');
+      itemDetails.append('<div class="columns is-centered is-marginless text-center"><div class="column is-paddingless"><p><strong>Hardness</strong></p><p>'+itemDataStruct.Item.hardness+'</p></div><div class="column is-paddingless"><p><strong>Hit Points</strong></p><p>'+itemDataStruct.Item.hitPoints+'</p></div><div class="column is-paddingless"><p><strong>BT</strong></p><p>'+itemDataStruct.Item.brokenThreshold+'</p></div></div>');
+    }
+
+    let contentSourceHTML = getContentSource(itemDataStruct.Item.id, itemDataStruct.Item.contentSrc, itemDataStruct.Item.homebrewID).replace('position: fixed;', 'position: absolute;');
+    itemDetails.append(contentSourceHTML);
 
 }

@@ -292,10 +292,24 @@ hr {
 
 /* First Page Containers */
 .first-page-container {
-  height: 550px;
-  max-height: 550px;
+  height: 600px;
+  max-height: 600px;
   overflow-y: auto;
   position: relative;
+  border-top: 1px solid #363636;
+  border-bottom: 1px solid #363636;
+}
+.first-page-split-container {
+  height: 277.5px;
+  max-height: 277.5px;
+  overflow-y: auto;
+  position: relative;
+}
+.first-page-split-container.is-top {
+  border-top: 1px solid #363636;
+}
+.first-page-split-container.is-bottom {
+  border-bottom: 1px solid #363636;
 }
 
 /* Center Selected Option */

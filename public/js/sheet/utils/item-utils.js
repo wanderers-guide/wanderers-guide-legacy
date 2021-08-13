@@ -366,9 +366,11 @@ function getItemIcon(item, invItem){
 
 
   // For if someone adds a trait to a custom item, it'll override it to be accurate
-  let tagArray = getItemTraitsArray(item, invItem);
-  if(tagArray.find(tag => { return tag.name === 'Wand'; }) != null){ fa_icon = 'fas fa-wand'; }
-  if(tagArray.find(tag => { return tag.name === 'Staff'; }) != null){ fa_icon = 'far fa-staff'; }
+  if(invItem != null){
+    let tagArray = getItemTraitsArray(item, invItem);
+    if(tagArray.find(tag => { return tag.name === 'Wand'; }) != null){ fa_icon = 'fas fa-wand'; }
+    if(tagArray.find(tag => { return tag.name === 'Staff'; }) != null){ fa_icon = 'far fa-staff'; }
+  }
 
 
   if(fa_icon != null){

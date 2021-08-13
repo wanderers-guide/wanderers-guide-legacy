@@ -170,9 +170,7 @@ function addBackFunctionality(quickViewData){
 
 }
 
-function addContentSource(contentID, contentSrc, homebrewID){
-  if(contentSrc == null && homebrewID == null) {return;}
-  if(contentID == null) {return;}
+function getContentSource(contentID, contentSrc, homebrewID){
 
   let sourceTextName, sourceLink;
   if(homebrewID == null) {
@@ -186,8 +184,15 @@ function addContentSource(contentID, contentSrc, homebrewID){
   }
 
   let contentIDStr = (contentID == null) ? '' : '<span class="is-size-7 has-text-grey-dark is-italic">, #'+contentID+'</span>';
+  return '<div style="position: fixed; bottom: 5px; right: 12px;"><a class="is-size-7 has-text-grey is-italic" href="'+sourceLink+'" target="_blank">'+sourceTextName+'</a>'+contentIDStr+'</div>';
+
+}
+
+function addContentSource(contentID, contentSrc, homebrewID){
+  if(contentSrc == null && homebrewID == null) {return;}
+  if(contentID == null) {return;}
 
   $('#quickViewContent').parent().css('position','relative');
-  $('#quickViewContent').append('<div style="position: fixed; bottom: 5px; right: 12px;"><a class="is-size-7 has-text-grey is-italic" href="'+sourceLink+'" target="_blank">'+sourceTextName+'</a>'+contentIDStr+'</div>');
+  $('#quickViewContent').append(getContentSource(contentID, contentSrc, homebrewID));
 
 }

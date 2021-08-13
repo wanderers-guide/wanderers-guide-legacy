@@ -327,6 +327,19 @@ function handleCharacterOptions(character, hBundles, progessBundles) {
     });
     $("#contentSrc-PATH-SOCIETY").prop('checked', contentSourceArray.includes('PATH-SOCIETY'));
 
+    // Enable All Books Button //
+    $('#enableAllBooksBtn').click(function() {
+      let newContentSourceArray = [];
+      $('.bookSwitch').each(function() {
+        newContentSourceArray.push($(this).attr('name').replace('contentSrc-',''));
+        $(this).prop('checked', true);
+      });
+      socket.emit("requestCharacterSetSources", 
+          getCharIDFromURL(), 
+          newContentSourceArray);
+      $('#enableAllBooksBtn').blur();
+    });
+
     // Variants //
     $("#variantAncestryParagon").change(function(){
       let optionTypeValue = (this.checked) ? 1 : 0;

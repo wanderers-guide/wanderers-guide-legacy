@@ -763,6 +763,16 @@ module.exports = class SocketConnections {
         });
       });
 
+      socket.on('requestCharacterSetSources', function(charID, contentSourceArray){
+        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+          if(ownsChar){
+            CharContentSources.setSources(charID, contentSourceArray).then((result) => {
+              socket.emit('returnCharacterSetSources');
+            });
+          }
+        });
+      });
+
       socket.on('requestCharacterHomebrewChange', function(charID, homebrewID, isAdd){
         AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
           if(ownsChar){
