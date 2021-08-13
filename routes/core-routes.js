@@ -56,4 +56,9 @@ router.get('/guidechar_docs', (req, res) => {
   res.render('docs/guidechar_docs', { title: "Guidechar Docs - Wanderer's Guide", user: req.user });
 });
 
+// Material Stats Route
+router.get('/material_stats', (req, res) => {
+  res.render('pages/material_stats', { title: "Material Stats - Wanderer's Guide", user: req.user });
+});
+
 module.exports = router;

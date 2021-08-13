@@ -303,6 +303,14 @@ function handleCharacterOptions(character, hBundles, progessBundles) {
     });
     $("#contentSrc-SLITHERING").prop('checked', contentSourceArray.includes('SLITHERING'));
 
+    $("#contentSrc-STRENGTH-THOUSANDS").change(function(){
+      socket.emit("requestCharacterSourceChange", 
+          getCharIDFromURL(), 
+          'STRENGTH-THOUSANDS',
+          this.checked);
+    });
+    $("#contentSrc-STRENGTH-THOUSANDS").prop('checked', contentSourceArray.includes('STRENGTH-THOUSANDS'));
+
     $("#contentSrc-TROUBLES-IN-OTARI").change(function(){
       socket.emit("requestCharacterSourceChange", 
           getCharIDFromURL(), 

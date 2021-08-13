@@ -68,6 +68,7 @@ const g_contentSources = [
   {TextName: 'Fists of the Ruby Phoenix', CodeName: 'FIST-PHOENIX', Link: 'https://paizo.com/store/pathfinder/adventures/adventurePath/fistsOfTheRubyPhoenix'},
   {TextName: 'Malevolence', CodeName: 'MALEVOLENCE', Link: 'https://paizo.com/products/btq027qf?Pathfinder-Adventure-Malevolence'},
   {TextName: 'The Slithering', CodeName: 'SLITHERING', Link: 'https://paizo.com/products/btq023hg?Pathfinder-Adventure-The-Slithering'},
+  {TextName: 'Strength of Thousands', CodeName: 'STRENGTH-THOUSANDS', Link: 'https://paizo.com/store/pathfinder/adventures/adventurePath/strengthOfThousands'},
   {TextName: 'Troubles in Otari', CodeName: 'TROUBLES-IN-OTARI', Link: 'https://paizo.com/products/btq026k1?Pathfinder-Adventure-Troubles-in-Otari'},
   {TextName: 'Bestiary', CodeName: 'BEST-1', Link: 'https://paizo.com/products/btq01zp4?Pathfinder-Bestiary'},
   {TextName: 'Bestiary 2', CodeName: 'BEST-2', Link: 'https://paizo.com/products/btq022yq?Pathfinder-Bestiary-2'},
@@ -75,7 +76,7 @@ const g_contentSources = [
   {TextName: 'Pathfinder Society', CodeName: 'PATH-SOCIETY', Link: 'https://paizo.com/pathfindersociety'},
 ];
 
-const g_currentContentSource = 'BEST-1';
+const g_currentContentSource = 'STRENGTH-THOUSANDS';
 const g_hiddenFromBrowseContentSources = [];// TODO - Temp solution
 
 function getContentSourceTextName(codeName){

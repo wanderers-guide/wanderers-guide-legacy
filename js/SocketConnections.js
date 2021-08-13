@@ -2243,7 +2243,7 @@ module.exports = class SocketConnections {
       socket.on('requestAdminSpellDetails', function(){
         AuthCheck.isAdmin(socket).then((isAdmin) => {
           if(isAdmin){
-            GeneralGathering.getAllItems(null, null, null, null, false).then((spellMap) => {
+            GeneralGathering.getAllSpells(null, null, null, null, false).then((spellMap) => {
               socket.emit('returnAdminSpellDetails', mapToObj(spellMap));
             });
           }

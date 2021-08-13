@@ -90,6 +90,9 @@ em {
 .has-text-light-darker {
   color: hsl(0, 0%, 85%)!important;
 }
+.has-text-bold-color {
+  color: hsl(0, 0%, 68%)!important;
+}
 
 .has-text-gold {
   color: #eec00b!important;

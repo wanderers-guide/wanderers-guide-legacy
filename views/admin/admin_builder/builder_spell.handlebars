@@ -79,6 +79,15 @@
                     </label>
                 </div>
 
+                <div class="tile is-child">
+                    <label class="label">Traits</label>
+                    <select id="inputTags" data-placeholder="Select Traits" multiple>
+                        {{#each tags}}
+                            <option value="{{id}}">{{name}}</option>
+                        {{/each}}
+                    </select>
+                </div>
+
                 <div class="tile is-child columns">
 
                     <div class="column field">
@@ -188,15 +197,6 @@
                             <input class="input" id="inputRequirements" type="text" maxlength="290" placeholder="">
                         </div>
                     </div>
-                </div>
-
-                <div class="tile is-child">
-                    <label class="label">Traits</label>
-                    <select id="inputTags" data-placeholder="Select Traits" multiple>
-                        {{#each tags}}
-                            <option value="{{id}}">{{name}}</option>
-                        {{/each}}
-                    </select>
                 </div>
 
                 <div class="tile is-child field">
