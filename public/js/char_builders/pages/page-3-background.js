@@ -120,7 +120,7 @@ function displayCurrentBackground(background) {
         sourceCode: 'background',
         sourceCodeSNum: 'a',
     };
-    processCode(
+    processBuilderCode(
         background.code,
         srcStruct,
         'backgroundCodeOutput',
@@ -136,7 +136,7 @@ function displayCurrentBackground(background) {
         sourceCodeSNum: 'a',
     };
     if(background.boostOne != null && background.boostTwo != null) {
-        processCode(
+      processBuilderCode(
             'GIVE-ABILITY-BOOST-SINGLE='+background.boostOne+'\n GIVE-ABILITY-BOOST-SINGLE='+background.boostTwo,
             boostSrcStruct,
             'backBoostSection',

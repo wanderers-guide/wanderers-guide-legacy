@@ -309,6 +309,11 @@ function selectOptionRarity(rarity){
   }
 }
 
+function getMod(abilScore) {
+  let mod = Math.floor((abilScore-10)/2);
+  return mod;
+}
+
 function round(value, precision) {
   let multiplier = Math.pow(10, precision || 0);
   return Math.floor(value * multiplier) / multiplier;

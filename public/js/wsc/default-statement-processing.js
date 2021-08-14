@@ -5,6 +5,9 @@
 let g_defaultItemPropRuneSlotNum = null;
 function processDefaultItemRuneSheetCode(wscCode, itemID, invItemID){
     if(wscCode == null) {return false;}
+
+    // Process Variables
+    wscCode = processVariables(wscCode);
     
     wscCode = wscCode.toUpperCase();
     let wscStatements = wscCode.split(/\n/);

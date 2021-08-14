@@ -60,7 +60,7 @@ function giveProfSkillTraining(srcStruct, profName, prof, locationID, sourceName
             tempSkillName = tempSkillName.replace(/_|\s+/g,"");
             if(adjProfName === tempSkillName && finalProfData.NumUps >= numUps){
                 if(!hasSameSrcIterate(srcStruct, profDataArray)){
-                    processCode(
+                    processBuilderCode(
                         'GIVE-SKILL='+prof,
                         srcStruct,
                         locationID,

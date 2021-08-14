@@ -18,8 +18,11 @@ let g_langMap, g_archetypes, g_profMap = null;
 let temp_classAbilities, temp_classNum, temp_ancestryFeatsLocs = null;
 //                  //
 
-function processCode(wscCode, srcStruct, locationID, sourceName=''){
+function processBuilderCode(wscCode, srcStruct, locationID, sourceName=''){
     if(wscCode == null || wscCode == ''){ return; }
+
+    // Process Variables
+    wscCode = processVariables(wscCode);
 
     // Process ADD-TEXT Statements
     processAddText(wscCode, locationID, true);
@@ -408,7 +411,7 @@ socket.on("returnWSCSrcStructDataClear", function(choiceStruct){
 
 //////////////
 
-function processCode_ClassAbilities(classAbilities, classNum){
+function processBuilderCode_ClassAbilities(classAbilities, classNum){
     //if(processingDebug) {console.log("Starting to run class abilities code...");}
     temp_classAbilities = classAbilities;
     temp_classNum = classNum;
@@ -421,7 +424,7 @@ function processCode_ClassAbilities(classAbilities, classNum){
                 sourceCodeSNum: 'a',
             };
             $('#classAbilityCode-'+classNum+'-'+classAbility.id).html('');
-            processCode(
+            processBuilderCode(
                 classAbility.code,
                 srcStruct,
                 'classAbilityCode-'+classNum+'-'+classAbility.id,
@@ -430,7 +433,7 @@ function processCode_ClassAbilities(classAbilities, classNum){
     }
 }
 
-function processCode_AncestryAbilities(ancestryFeatsLocs){
+function processBuilderCode_AncestryAbilities(ancestryFeatsLocs){
     //if(processingDebug) {console.log("Starting to run ancestry feats code...");}
     temp_ancestryFeatsLocs = ancestryFeatsLocs;
     let ancestryFeatCount = 0;
@@ -443,7 +446,7 @@ function processCode_AncestryAbilities(ancestryFeatsLocs){
             sourceCodeSNum: 'a',
         };
         $('#'+ancestryFeatsLoc.LocationID).html('');
-        processCode(
+        processBuilderCode(
             'GIVE-ANCESTRY-FEAT='+ancestryFeatsLoc.Level,
             srcStruct,
             ancestryFeatsLoc.LocationID,

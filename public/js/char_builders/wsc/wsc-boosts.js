@@ -34,7 +34,7 @@ function giveAbilityBoostMultiple(srcStruct, numberOfBoosts, locationID, sourceN
         if(multiBoostCodeStr != ''){
             let newLocationID = locationID+'-BoostContent';
             $('#'+locationID).append('<div class="field is-grouped is-grouped-centered"><div class="" id="'+newLocationID+'"></div></div>');
-            processCode(
+            processBuilderCode(
                 multiBoostCodeStr,
                 srcStruct,
                 newLocationID,

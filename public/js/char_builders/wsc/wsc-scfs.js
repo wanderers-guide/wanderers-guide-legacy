@@ -149,7 +149,7 @@ socket.on("returnSCFSChange", function(inputPacket){
     selectorUpdated();
   }
   if(inputPacket.wscStatement != null){
-    processCode(
+    processBuilderCode(
         inputPacket.wscStatement,
         inputPacket.srcStruct,
         inputPacket.locationID,

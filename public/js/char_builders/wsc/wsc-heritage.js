@@ -153,7 +153,7 @@ function displayAndProcessHeritageEffects(srcStruct, heritage, locationID, sourc
 
   $('#'+locationID).append('<div class="box lighter my-2"><span class="is-size-4 has-text-weight-semibold">'+heritage.name+'</span><div class="container ability-text-section">'+processText(heritage.description, false, null)+'</div><div id="'+heritageLocationCodeID+'"></div></div>');
 
-  processCode(
+  processBuilderCode(
     heritage.code,
     srcStruct,
     heritageLocationCodeID,

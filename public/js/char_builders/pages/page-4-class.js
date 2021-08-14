@@ -269,7 +269,7 @@ function displayCurrentClass(classStruct, classNum) {
 
                 if(skillName != "chooseDefault"){
                     $('.'+tSkillControlShellClass).removeClass("is-info");
-                    processCode(
+                    processBuilderCode(
                         'GIVE-PROF-IN='+skillName+':T',
                         srcStruct,
                         'profSkillsCode-'+classNum,
@@ -439,7 +439,7 @@ function displayCurrentClass(classStruct, classNum) {
             sourceCodeSNum: 'a',
         };
         if(savingProf.For === 'Skill' && savingProf.Prof === 'T'){
-            processCode( // Use WSC because if the character is already trained, it will give them a new skill.
+          processBuilderCode( // Use WSC because if the character is already trained, it will give them a new skill.
                 'GIVE-PROF-IN='+savingProf.To+':T',
                 srcStruct,
                 'profSkillsCode-'+classNum,
@@ -623,7 +623,7 @@ function displayCurrentClass(classStruct, classNum) {
                 }
 
                 // Run ability choice code
-                processCode(
+                processBuilderCode(
                     chosenClassAbility.code,
                     srcStruct,
                     abilityCodeID,
@@ -638,7 +638,7 @@ function displayCurrentClass(classStruct, classNum) {
 
     $('.classAbilSelection').trigger("change", [false]);
 
-    processCode_ClassAbilities(classStruct.Abilities, classNum);
+    processBuilderCode_ClassAbilities(classStruct.Abilities, classNum);
 
 
     

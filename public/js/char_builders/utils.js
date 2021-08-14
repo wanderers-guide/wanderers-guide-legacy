@@ -10,11 +10,6 @@ function getAllAbilityTypes() {
   return ['Strength','Dexterity','Constitution','Intelligence','Wisdom','Charisma'];
 }
 
-function getMod(abilScore) {
-  let mod = Math.floor((abilScore-10)/2);
-  return mod;
-}
-
 /* Duplicate Checking */
 function hasDuplicateSelected(selectOptions) {
   let optionValArray = [];

@@ -142,7 +142,7 @@ socket.on("returnLangsAndTrainingsClear", function(srcStruct, data){
           giveSkillTrainingCode += 'GIVE-SKILL=T\n';
       }
       
-      processCode(
+      processBuilderCode(
           giveSkillTrainingCode,
           srcStruct,
           data.SkillLocationID,
@@ -157,7 +157,7 @@ socket.on("returnLangsAndTrainingsClear", function(srcStruct, data){
           giveLanguageCode += 'GIVE-LANG-BONUS-ONLY\n';
       }
       
-      processCode(
+      processBuilderCode(
           giveLanguageCode,
           srcStruct,
           data.LangLocationID,
@@ -183,7 +183,7 @@ function runCustomCodeBlock(character) {
       sourceCode: 'custom-code',
       sourceCodeSNum: 'a',
     };
-    processCode(
+    processBuilderCode(
       character.customCode,
       customCodeSrcStruct,
       'custom-code-block-results-container',

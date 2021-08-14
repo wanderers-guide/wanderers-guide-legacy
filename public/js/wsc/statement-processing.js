@@ -14,6 +14,9 @@ function processSheetCode(wscCode, extraData=null, isTest=false){
     if(wscCode == null) {return false;}
     if(extraData == null){ extraData = {source: 'Unknown', sourceName: ''}; }
 
+    // Process Variables
+    wscCode = processVariables(wscCode);
+
     let wscStatements = wscCode.split(/\n/);
 
     let success = true;

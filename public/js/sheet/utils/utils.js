@@ -5,11 +5,6 @@
 function getCharIDFromURL(){
     return window.location.pathname.split("characters/")[1];
 }
-  
-function getMod(abilScore) {
-    let mod = Math.floor((abilScore-10)/2);
-    return mod;
-}
 
 function getBulmaTextColorFromCurrentHP(currentHP, maxHP) {
   if(currentHP >= maxHP*0.8){

@@ -538,7 +538,7 @@ socket.on("returnFeatChangeByName", function(featChangePacket){
     openLeftQuickView('skillsView', null);
   }
 
-  processCode(
+  processBuilderCode(
       featChangePacket.feat.Feat.code,
       featChangePacket.srcStruct,
       featChangePacket.codeLocationID,

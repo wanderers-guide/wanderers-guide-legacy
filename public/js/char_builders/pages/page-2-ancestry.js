@@ -313,7 +313,7 @@ function displayCurrentAncestry(ancestryStruct, saving) {
                 sourceCode: 'inits-phyFeat-1',
                 sourceCodeSNum: 'a',
             };
-            processCode(
+            processBuilderCode(
                 ancestryStruct.PhysicalFeatureOne.code,
                 srcStruct,
                 'physicalFeatureOneCodeOutput',
@@ -333,7 +333,7 @@ function displayCurrentAncestry(ancestryStruct, saving) {
                 sourceCode: 'inits-phyFeat-2',
                 sourceCodeSNum: 'a',
             };
-            processCode(
+            processBuilderCode(
                 ancestryStruct.PhysicalFeatureTwo.code,
                 srcStruct,
                 'physicalFeatureTwoCodeOutput',
@@ -415,7 +415,7 @@ function displayCurrentAncestry(ancestryStruct, saving) {
         boostChooseCodeStr += 'GIVE-ABILITY-BOOST-SINGLE='+boostChooseString+'\n';
     }
     if(boostChooseCodeStr != ''){
-        processCode(
+      processBuilderCode(
             boostChooseCodeStr,
             srcStruct,
             'boostsChoose',
@@ -538,7 +538,7 @@ function displayCurrentHeritage(ancestryStruct, heritageID, isUniversal) {
         // Clear wscChoiceStruct.FeatArray of feats with srcStruct
         //featsRemoveFromWSCChoiceStruct(srcStruct, true);
 
-        processCode(
+        processBuilderCode(
             heritage.code,
             srcStruct,
             'heritageCodeOutput',
@@ -655,7 +655,7 @@ function createAncestryFeats(charLevel){
 
     }
 
-    processCode_AncestryAbilities(ancestryFeatsLocs);
+    processBuilderCode_AncestryAbilities(ancestryFeatsLocs);
 
 }
 

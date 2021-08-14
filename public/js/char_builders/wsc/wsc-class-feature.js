@@ -147,14 +147,14 @@ socket.on("returnAddClassFeature", function(srcStruct, classAbility, allClassAbi
             }
 
             if(inputPacket.dontRunCode) {
-              processCode(
+              processBuilderCode(
                   'ADD-TEXT=__$$grey:You don’t gain any of this option’s other effects, just the class feature option itself.$$__',
                   srcStruct,
                   abilityCodeID,
                   chosenClassAbility.name);
             } else {
               // Run ability choice code
-              processCode(
+              processBuilderCode(
                   chosenClassAbility.code,
                   srcStruct,
                   abilityCodeID,
@@ -172,13 +172,13 @@ socket.on("returnAddClassFeature", function(srcStruct, classAbility, allClassAbi
   }
 
   if(inputPacket.dontRunCode) {
-    processCode(
+    processBuilderCode(
         'ADD-TEXT=__$$grey:You don’t gain any of this class feature’s other effects, just the feature itself.$$__',
         srcStruct,
         classAbilityCodeID,
         classAbility.name);
   } else {
-    processCode(
+    processBuilderCode(
         classAbility.code,
         srcStruct,
         classAbilityCodeID,

@@ -87,7 +87,7 @@ function giveSkill(srcStruct, locationID, sourceName, profType, optionals=null){
                 getCharIDFromURL(),
                 {srcStruct, isSkill : true, isAutoLoad},
                 { For : "Skill", To : 'addLore', Prof : profType, SourceName : sourceName });
-            processCode(
+            processBuilderCode(
                 'GIVE-LORE-CHOOSE',
                 srcStruct,
                 increaseCodeID,
