@@ -42,6 +42,18 @@ class DisplayUniHeritage {
           $('#uni-heritage-name').html(uniHeritageStruct.heritage.name);
           $('#uni-heritage-description').html(processText(uniHeritageStruct.heritage.description, false, false, 'MEDIUM', false));
 
+          if(typeof g_isDeveloper !== 'undefined' && g_isDeveloper && uniHeritageStruct.heritage.code != null && uniHeritageStruct.heritage.code.trim() != '') {
+            $('#uni-heritage-code').html('');
+            $('#uni-heritage-code').append('<hr class="m-3">');
+            $('#uni-heritage-code').append('<p class="is-size-6 is-bold pl-2">WSC Statements</p>');
+            
+            let codeHTML = '';
+            for(let codeStatement of uniHeritageStruct.heritage.code.split(/\n/)){
+              codeHTML += '<p class="is-size-7">'+codeStatement+'</p>';
+            }
+            $('#uni-heritage-code').append('<div class="code-block">'+codeHTML+'</div>');
+          }
+
           if(uniHeritageStruct.heritage.artworkURL != null){
             $('#uni-heritage-artwork-img').removeClass('is-hidden');
             $('#uni-heritage-artwork-img').attr('src', uniHeritageStruct.heritage.artworkURL);

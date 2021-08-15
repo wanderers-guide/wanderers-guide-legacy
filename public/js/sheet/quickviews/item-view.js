@@ -231,9 +231,9 @@ function openItemQuickview(data) {
     }
 
 
-    if(typeof g_isDeveloper !== 'undefined' && g_isDeveloper && itemDataStruct.Item.code != null) {
+    if(typeof g_isDeveloper !== 'undefined' && g_isDeveloper && itemDataStruct.Item.code != null && itemDataStruct.Item.code.trim() != '') {
       qContent.append('<hr class="m-3">');
-      qContent.append('<p class="is-size-6 is-bold">WSC Statements</p>');
+      qContent.append('<p class="is-size-6 is-bold pl-2">WSC Statements</p>');
       
       let codeHTML = '';
       for(let codeStatement of itemDataStruct.Item.code.split(/\n/)){

@@ -151,6 +151,17 @@ class DisplayClass {
                 }
               }
 
+              
+              if(typeof g_isDeveloper !== 'undefined' && g_isDeveloper && classFeature.code != null && classFeature.code.trim() != '') {
+                $('#class-features').append('<p class="is-size-6 is-bold pl-2">WSC Statements</p>');
+                
+                let codeHTML = '';
+                for(let codeStatement of classFeature.code.split(/\n/)){
+                  codeHTML += '<p class="is-size-7">'+codeStatement+'</p>';
+                }
+                $('#class-features').append('<div class="code-block">'+codeHTML+'</div>');
+              }
+
             }
           });
           $('#class-features-level-select').trigger('change');

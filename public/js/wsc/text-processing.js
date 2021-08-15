@@ -618,6 +618,10 @@ function handleSheetVariablesAndTooltips(match, innerText){
         let sheetVar = null;
         if(temp_textProcess_isSheet){
           sheetVar = acquireSheetVariable(innerTextVariable);
+          if(sheetVar == null){
+            let varValue = getVariableValue(innerTextVariable, false);
+            if(varValue != 'Error'){ sheetVar = varValue; }
+          }
         }
         if(sheetVar == null){ sheetVar = innerTextData[0]; }
 
@@ -664,6 +668,10 @@ function handleSheetVariablesAndTooltips(match, innerText){
       if(temp_textProcess_isSheet){
         innerText = innerText.replace(/\s/g, "").toUpperCase();
         let sheetVar = acquireSheetVariable(innerText);
+        if(sheetVar == null){
+          let varValue = getVariableValue(innerText, false);
+          if(varValue != 'Error'){ sheetVar = varValue; }
+        }
         sheetVar = (sheetVar != null) ? sheetVar : '<span class="has-text-danger has-tooltip-top" data-tooltip="'+innerText+'">Unknown Variable</span>';
         return '<span class="has-text-info">'+sheetVar+'</span>';
       } else {

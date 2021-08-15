@@ -27,8 +27,30 @@ $(function () {
   
   });
 
+  $('#developerModeBtn').change(function(){
+    if ($(this).is(':checked')) {
+      $(this).removeClass('is-dark');
+      $(this).addClass('is-info');
+      $(this).blur();
+      socket.emit("requestDeveloperStatusChange", true);
+    } else {
+      $(this).removeClass('is-info');
+      $(this).addClass('is-dark');
+      $(this).blur();
+      socket.emit("requestDeveloperStatusChange", false);
+    }
+  });
+
 });
 
 socket.on("returnProfileNameChange", function(newName){
   g_profileName = newName;
+});
+
+socket.on("requestDeveloperStatusChange", function(isDeveloper){
+  if(isDeveloper){
+    $('#developerStatusListing').removeClass('is-hidden');
+  } else {
+    $('#developerStatusListing').addClass('is-hidden');
+  }
 });

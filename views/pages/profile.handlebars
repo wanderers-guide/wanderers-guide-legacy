@@ -37,7 +37,7 @@
 
 <div class="container profile-container mt-5 pt-3">
     <div class="columns is-centered is-mobile">
-        <div class="column is-8 box p-4">
+        <div class="column is-8 box p-4 pos-relative">
             <div class="columns is-centered is-mobile">
                 <div class="column is-4">
                     <figure class="image is-128x128 is-pulled-right">
@@ -47,9 +47,8 @@
                 </div>
                 <div class="column is-8">
                     <p class="is-size-3"><span id="profileName" data-profile-name="{{user.username}}" class="title-font has-text-grey-lighter is-bold">{{user.username}}</span><sup id="profileNameBtn" class="icon has-text-info is-size-6 pl-2 cursor-clickable"><i class="far fa-edit"></i></sup></p>
-                    {{#ifEqual user.isDeveloper 1}}
-                        <p class="is-italic is-size-6 pl-4">Developer</p>
-                    {{/ifEqual}}
+
+                    <p id="developerStatusListing" class="is-italic is-size-6 pl-4 {{#ifEqual user.isDeveloper 0}}is-hidden{{/ifEqual}}">Developer</p>
                     {{#ifEqual user.isAdmin 1}}
                         <p class="is-italic is-size-6 pl-4">Admin</p>
                     {{/ifEqual}}
@@ -68,6 +67,13 @@
                     {{#ifEqual user.isPatreonSupporter 0}}
                         <p class="is-italic is-size-6 pl-4">Non-Patron</p>
                     {{/ifEqual}}
+
+
+                    <div class="field pos-absolute pos-t-10 pos-r-10 is-unselectable">
+                      <input class="is-checkradio is-rtl is-small has-background-color {{#ifEqual user.isDeveloper 1}}is-info{{else}}is-dark{{/ifEqual}}" id="developerModeBtn" type="checkbox" name="developerModeBtn" {{#ifEqual user.isDeveloper 1}}checked="checked"{{/ifEqual}}>
+                      <label for="developerModeBtn" class="is-size-6 pt-0 has-text-grey-kinda-light">Developer Mode</label>
+                    </div>
+
                 </div>
             </div>
 

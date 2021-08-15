@@ -343,7 +343,7 @@ function handleVariableText(varText){
 
 }
 
-function getVariableValue(variableStr){
+function getVariableValue(variableStr, errorOnFailure=true){
 
   if(variableStr.includes('.')){
     // Variable with .
@@ -352,7 +352,9 @@ function getVariableValue(variableStr){
 
     let variable = g_variableMap.get(parts[0]);
     if(variable == null){
-      displayError("Variable Processing (2-1): Unknown variable \'"+variableStr+"\'!");
+      if(errorOnFailure){
+        displayError("Variable Processing (2-1): Unknown variable \'"+variableStr+"\'!");
+      }
       return 'Error';
     }
 
@@ -364,7 +366,9 @@ function getVariableValue(variableStr){
     try {
       return parseInt(math.evaluate(variableStr));
     } catch (err){
-      displayError("Variable Processing (2-0): Error doing math \'"+variableStr+"\'!");
+      if(errorOnFailure){
+        displayError("Variable Processing (2-0): Error doing math \'"+variableStr+"\'!");
+      }
       console.error(err);
       return 'Error';
     }
@@ -374,12 +378,17 @@ function getVariableValue(variableStr){
 
     let variable = g_variableMap.get(variableStr);
     if(variable == null){
-      displayError("Variable Processing (2-2): Unknown variable \'"+variableStr+"\'!");
+      if(errorOnFailure){
+        displayError("Variable Processing (2-2): Unknown variable \'"+variableStr+"\'!");
+      }
       return 'Error';
     }
 
     return getVariableValueFromMethod(variable, variableStr, 'GET_VALUE');
 
+  } else {
+    // Doesn't match anything
+    return 'Error';
   }
 
 }

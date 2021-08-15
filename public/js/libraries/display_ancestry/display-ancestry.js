@@ -139,6 +139,18 @@ class DisplayAncestry {
             }
 
             $('#ancestry-heritages').append('<div style="position: relative;"><div class="pb-2"><p><span id="ancestry-name" class="is-size-5 is-bold has-text-grey-light pl-3">'+heritage.name+'</span>'+convertRarityToHTML(heritage.rarity)+'</p>'+processText(heritage.description, false, null)+'</div><span class="is-size-7 has-text-grey is-italic pr-2" style="position: absolute; bottom: 0px; right: 0px;">'+sourceTextName+'</span></div>');
+
+
+            if(typeof g_isDeveloper !== 'undefined' && g_isDeveloper && heritage.code != null && heritage.code.trim() != '') {
+              $('#ancestry-heritages').append('<p class="is-size-6 is-bold pl-2">WSC Statements</p>');
+                
+              let codeHTML = '';
+              for(let codeStatement of heritage.code.split(/\n/)){
+                codeHTML += '<p class="is-size-7">'+codeStatement+'</p>';
+              }
+              $('#ancestry-heritages').append('<div class="code-block">'+codeHTML+'</div>');
+            }
+
           }
 
           ///

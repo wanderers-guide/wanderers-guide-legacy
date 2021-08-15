@@ -70,4 +70,16 @@ function openAbilityQuickview(data) {
       displayNotesField(qContent, srcStruct);
     }
 
+
+    if(typeof g_isDeveloper !== 'undefined' && g_isDeveloper && data.Ability.code != null && data.Ability.code.trim() != '') {
+      qContent.append('<hr class="m-3">');
+      qContent.append('<p class="is-size-6 is-bold pl-2">WSC Statements</p>');
+      
+      let codeHTML = '';
+      for(let codeStatement of data.Ability.code.split(/\n/)){
+        codeHTML += '<p class="is-size-7">'+codeStatement+'</p>';
+      }
+      qContent.append('<div class="code-block">'+codeHTML+'</div>');
+    }
+
 }

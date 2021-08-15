@@ -2049,6 +2049,20 @@ module.exports = class SocketConnections {
         }
       });
 
+      socket.on('requestDeveloperStatusChange', function(developer){
+        let userID = null;
+        if(socket.request.session.passport != null){
+          userID = socket.request.session.passport.user;
+        }
+        if(userID != null){
+          let updateValues = { isDeveloper: ((developer) ? 1 : 0) };
+          User.update(updateValues, { where: { id: userID } })
+          .then((result) => {
+            socket.emit('requestDeveloperStatusChange', developer);
+          });
+        }
+      });
+
     });
     
   }

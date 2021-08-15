@@ -358,6 +358,15 @@ socket.on("returnCharacterSheetInfo", function(charInfo, userPermissions, viewOn
       g_classDetails = addGradualAbilityBoostsVariant(g_classDetails);
     }
 
+    // Run All SourceBook Code as Sheet Statements //
+    for(let enabledSource of g_enabledSources){
+      processSheetCode(enabledSource.code, {
+        source: 'SourceBook',
+        sourceName: enabledSource.name,
+      });
+    }
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
+
     loadCharSheet();
 
     initDiceRoller();
@@ -519,15 +528,6 @@ function loadCharSheet(){
     }
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
-
-    // Run All SourceBook Code as Sheet Statements //
-    for(let enabledSource of g_enabledSources){
-      console.log(enabledSource);
-      processSheetCode(enabledSource.code, {
-        source: 'SourceBook',
-        sourceName: enabledSource.name,
-      });
-    }
 
     // Run Items Code (investitures and others) //
     // -- armor and shield item code runs when equipped

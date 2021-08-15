@@ -62,6 +62,18 @@ class DisplayBackground {
           }
           $('#background-boost-one').html(boostStr);
           $('#background-boost-two').html('Free');
+
+          if(typeof g_isDeveloper !== 'undefined' && g_isDeveloper && backgroundStruct.background.code != null && backgroundStruct.background.code.trim() != '') {
+            $('#background-code').html('');
+            $('#background-code').append('<hr class="m-3">');
+            $('#background-code').append('<p class="is-size-6 is-bold pl-2">WSC Statements</p>');
+            
+            let codeHTML = '';
+            for(let codeStatement of backgroundStruct.background.code.split(/\n/)){
+              codeHTML += '<p class="is-size-7">'+codeStatement+'</p>';
+            }
+            $('#background-code').append('<div class="code-block">'+codeHTML+'</div>');
+          }
           
           $('#'+backgroundDisplayContainerID).removeClass('is-hidden');
         }

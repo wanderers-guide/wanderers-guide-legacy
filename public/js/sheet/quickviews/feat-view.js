@@ -177,9 +177,9 @@ function openFeatQuickview(data) {
       showFeatPrerequisiteFor(qContent, data.Feat.name);
     }
 
-    if(typeof g_isDeveloper !== 'undefined' && g_isDeveloper && data.Feat.code != null) {
+    if(typeof g_isDeveloper !== 'undefined' && g_isDeveloper && data.Feat.code != null && data.Feat.code.trim() != '') {
       qContent.append('<hr class="m-3">');
-      qContent.append('<p class="is-size-6 is-bold">WSC Statements</p>');
+      qContent.append('<p class="is-size-6 is-bold pl-2">WSC Statements</p>');
       
       let codeHTML = '';
       for(let codeStatement of data.Feat.code.split(/\n/)){
