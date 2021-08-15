@@ -27,11 +27,11 @@ function processSheetCode(wscCode, extraData=null, isTest=false){
         //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
         let wscStatementUpper = wscStatement.toUpperCase();
 
-        if(wscStatementUpper.includes("ADD-TEXT=")){
+        if(wscStatementUpper.startsWith("ADD-TEXT=")){
             continue; // Ignore ADD-TEXT statements, they're processed separately
         }
 
-        if(wscStatementUpper.includes("GIVE-CONDITION=")){ // GIVE-CONDITION=Clumsy:1 OR GIVE-CONDITION=Clumsy
+        if(wscStatementUpper.startsWith("GIVE-CONDITION=")){ // GIVE-CONDITION=Clumsy:1 OR GIVE-CONDITION=Clumsy
           if(isTest) {continue;}
 
           let conditionName = wscStatement.split('=')[1];
@@ -49,7 +49,7 @@ function processSheetCode(wscCode, extraData=null, isTest=false){
           continue;
         }
 
-        if(wscStatementUpper.includes("REMOVE-CONDITION=")){ // REMOVE-CONDITION=Clumsy
+        if(wscStatementUpper.startsWith("REMOVE-CONDITION=")){ // REMOVE-CONDITION=Clumsy
           if(isTest) {continue;}
 
           let conditionName = wscStatement.split('=')[1];
@@ -60,7 +60,7 @@ function processSheetCode(wscCode, extraData=null, isTest=false){
           continue;
         }
 
-        if(wscStatementUpper.includes("CONDITIONAL-INCREASE-")){
+        if(wscStatementUpper.startsWith("CONDITIONAL-INCREASE-")){
             if(isTest) {continue;}
             // Ex. CONDITIONAL-INCREASE-PERCEPTION=2~status bonus to checks for initiative
 
@@ -74,7 +74,7 @@ function processSheetCode(wscCode, extraData=null, isTest=false){
             continue;
         }
 
-        if(wscStatementUpper.includes("CONDITIONAL-DECREASE-")){
+        if(wscStatementUpper.startsWith("CONDITIONAL-DECREASE-")){
             if(isTest) {continue;}
             // Ex. CONDITIONAL-DECREASE-PERCEPTION=2~status penalty to checks for initiative
 
@@ -88,7 +88,7 @@ function processSheetCode(wscCode, extraData=null, isTest=false){
             continue;
         }
 
-        if(wscStatementUpper.includes("CONDITIONAL-")){
+        if(wscStatementUpper.startsWith("CONDITIONAL-")){
             if(isTest) {continue;}
             // Ex. CONDITIONAL-SAVE_FORT=When you roll a success, you get a critical success instead.
 
@@ -101,7 +101,7 @@ function processSheetCode(wscCode, extraData=null, isTest=false){
             continue;
         }
 
-        if(wscStatementUpper.includes("INCREASE-")){
+        if(wscStatementUpper.startsWith("INCREASE-")){
             if(isTest) {continue;}
             // INCREASE-X=5 (Ex. INCREASE-SCORE_STR=2, INCREASE-SPEED=10-STATUS)
 
@@ -124,7 +124,7 @@ function processSheetCode(wscCode, extraData=null, isTest=false){
             continue;
         }
 
-        if(wscStatementUpper.includes("DECREASE-")){
+        if(wscStatementUpper.startsWith("DECREASE-")){
             if(isTest) {continue;}
             // DECREASE-X=5 (Ex. DECREASE-SCORE_STR=2, DECREASE-SPEED=10-STATUS)
 
@@ -147,7 +147,7 @@ function processSheetCode(wscCode, extraData=null, isTest=false){
             continue;
         }
 
-        if(wscStatementUpper.includes("OVERRIDE-") && !wscStatementUpper.includes("OVERRIDE-FEAT-LEVEL=")){
+        if(wscStatementUpper.startsWith("OVERRIDE-") && !wscStatementUpper.startsWith("OVERRIDE-FEAT-LEVEL=")){
             if(isTest) {continue;}
             // OVERRIDE-X=5 (Ex. OVERRIDE-PERCEPTION=10-MODIFIER)
 
@@ -169,7 +169,7 @@ function processSheetCode(wscCode, extraData=null, isTest=false){
             continue;
         }
 
-        if(wscStatementUpper.includes("SET-APEX-ABILITY-SCORE=")){
+        if(wscStatementUpper.startsWith("SET-APEX-ABILITY-SCORE=")){
             if(isTest) {continue;}
             // SET-APEX-ABILITY-SCORE=X (Ex. SET-APEX-ABILITY-SCORE=DEX)
 
@@ -186,7 +186,7 @@ function processSheetCode(wscCode, extraData=null, isTest=false){
             continue;
         }
 
-        if(wscStatementUpper.includes("SET-SIZE=")){
+        if(wscStatementUpper.startsWith("SET-SIZE=")){
           if(isTest) {continue;}
 
           // SET-SIZE=X (Ex. SET-SIZE=SMALL)
@@ -202,7 +202,7 @@ function processSheetCode(wscCode, extraData=null, isTest=false){
           continue;
         }
 
-        if(wscStatementUpper.includes("SET-MAP=")){
+        if(wscStatementUpper.startsWith("SET-MAP=")){
           if(isTest) {continue;}
           // TIER_1 = (5/10 or 4/8 agile)
           // TIER_2 = (4/8 or 3/6 agile)
@@ -426,7 +426,7 @@ function processSheetCode(wscCode, extraData=null, isTest=false){
 
 function getSheetProcNumber(strNum, sourceName){
   if(strNum == null) {
-    displayError('Incorrect WSC syntax ('+sourceName+'): NaN error in sheet statement');
+    displayError('Incorrect WSC syntax ('+sourceName+')(1-1): NaN error in sheet statement');
     return 0;
   }
   
@@ -461,7 +461,7 @@ function getSheetProcNumber(strNum, sourceName){
   try {
     return parseInt(math.evaluate(strNum));
   } catch (err) {
-    displayError('Incorrect WSC syntax ('+sourceName+'): NaN error in sheet statement');
+    displayError('Incorrect WSC syntax ('+sourceName+')(1-2): NaN error in sheet statement');
     return 0;
   }
 }

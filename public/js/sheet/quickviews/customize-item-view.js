@@ -70,7 +70,24 @@ function openCustomizeItemQuickview(data) {
     qContent.append('<hr class="m-2 mb-4">');
     
     data.InvItem.code = (data.InvItem.code == null) ? '' : data.InvItem.code;
-    qContent.append('<div class="field is-horizontal"><div class="field-label is-normal"><label class="label">Code <a href="/wsc_docs/#code_fields" target="_blank"><span class="icon is-small has-text-info has-tooltip-top" data-tooltip="WSC Docs"><i class="fas fa-book"></i></span></a></label></div><div class="field-body"><div class="field"><div class="control"><textarea id="customizeItemCode" class="textarea nanum-coding use-custom-scrollbar" rows="1" spellcheck="false" maxlength="990">'+data.InvItem.code+'</textarea></div></div></div></div>');
+    qContent.append(`
+      <div class="field is-horizontal pos-relative">
+        <div class="field-label is-normal">
+          <label class="label">
+            Code 
+            <a href="/wsc_docs/#code_basics" target="_blank"><span class="icon is-small has-text-info has-tooltip-top" data-tooltip="WSC Docs"><i class="fas fa-book"></i></span></a>
+            <span class="code-block-statement-display in-quickview">Sheet Statements Only</span>
+          </label>
+        </div>
+        <div class="field-body">
+          <div class="field">
+            <div class="control">
+              <textarea id="customizeItemCode" class="textarea nanum-coding use-custom-scrollbar" rows="1" spellcheck="false" maxlength="990">${data.InvItem.code}</textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+    `);
 
     qContent.append('<div class="buttons is-centered pt-2"><button id="customizeItemSaveButton" class="button is-link">Save</button></div>');
 

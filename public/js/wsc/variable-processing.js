@@ -170,13 +170,17 @@ function processVariables(wscCode){
 
   for(let wscStatementRaw of wscStatements) {
 
-    // Replace variable names with their values //
-    wscStatementRaw = handleVariableText(wscStatementRaw);
-
     // Test/Check Statement for Expressions //
     let wscStatement = testExpr(wscStatementRaw);
     if(wscStatement == null) {continue;}
-    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
+
+    // Replace variable names with their values //
+    let processedWscStatement = handleVariableText(wscStatement);
+    wscStatementRaw = wscStatementRaw.replace(wscStatement, processedWscStatement);
+    wscStatement = processedWscStatement;
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
+
     let wscStatementUpper = wscStatement.toUpperCase();
 
     if(wscStatementUpper.includes("DEFINE-VARIABLE=")){ // DEFINE-VARIABLE=Crembo:INTEGER
@@ -449,7 +453,7 @@ function getVariableValueFromMethod(variable, varName, method) {
       let digit = parseInt(methodUpper.replace('GET_INDEX_', ''));
       return variable.Value[digit];
     } else if(methodUpper == 'GET_VALUE'){
-      return '['+variable.Value+']';
+      return ''+variable.Value;
     } else {
       displayError("Variable Processing: Unknown getting method \'"+method+"\' for variable \'"+varName+"\' ("+variable.Type+")!");
       return 'Error';

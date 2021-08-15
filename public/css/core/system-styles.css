@@ -342,6 +342,21 @@ select::-webkit-scrollbar-corner {
   color: hsl(0, 0%, 77%);
 }
 
+.code-block-statement-display {
+  position: absolute;
+  top: 35px;
+  right: 10px;
+  z-index: 10;
+  font-weight: 200;
+  color: #7a7a7a;
+  font-style: italic;
+  user-select: none;
+}
+.code-block-statement-display.in-quickview {
+  top: 3px;
+  font-size: small;
+}
+
 /* Banners */
 
 .w3ls_banner_txt {

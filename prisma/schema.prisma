@@ -547,6 +547,7 @@ model homebrewBundles {
   name                String                @default("Homebrew Bundle") @db.VarChar(45)
   description         String?               @db.Text
   contactInfo         String?               @db.VarChar(120)
+  code                String?               @db.VarChar(1000)
   hasKeys             Int?               @default(0)
   isPublished         Int?               @default(0)
   authorName          String                @default("Unknown") @db.VarChar(45)
@@ -771,6 +772,14 @@ model skills {
   ability     skills_ability? @default(INT)
   description String?         @db.Text
   feats       feats[]
+}
+
+model books {
+  codeName    String          @id @db.VarChar(45)
+  name        String?         @db.VarChar(180)
+  url         String?         @db.VarChar(300)
+  description String?         @db.Text
+  code        String?         @db.VarChar(1000)
 }
 
 model specificFamiliars {

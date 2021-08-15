@@ -243,6 +243,10 @@ function expHandleExpression(expression, statement, elseStatement, srcStruct){
         return expHasVision(expression, statement, elseStatement, srcStruct);
     }
 
+    if(expression.includes('HAS-ENABLED-SOURCE')){ // HAS-ENABLED-SOURCE==Advanced Player's Guide
+      return expHasSource(expression, statement, elseStatement);
+    }
+
     /* Sheet-Only Expressions */
     if(expression.includes('IS-UNARMORED')){ // IS-UNARMORED
       return expIsUnarmored(expression, statement, elseStatement);
@@ -362,6 +366,30 @@ function expHasFeat(expression, statement, elseStatement, srcStruct){
             return statement;
         } else {
             return elseStatement;
+        }
+    }
+}
+
+function expHasSource(expression, statement, elseStatement){
+    if(expression.includes('==')){
+        let sourceName = expression.split('==')[1].toUpperCase().trim();
+        let source = g_enabledSources.find(source => {
+          return source.name.toUpperCase().trim() == sourceName;
+        });
+        if(source != null){
+          return statement;
+        } else {
+          return elseStatement;
+        }
+    } else if(expression.includes('!=')){
+        let sourceName = expression.split('!=')[1].toUpperCase().trim();
+        let source = g_enabledSources.find(source => {
+          return source.name.toUpperCase().trim() == sourceName;
+        });
+        if(source != null){
+          return elseStatement;
+        } else {
+          return statement;
         }
     }
 }

@@ -26,12 +26,15 @@ module.exports = async function(socket, charID, character=null, featObject=null,
     character = await CharGathering.getCharacter(charID);
   }
 
-  socket.emit('updateLoadProgess', { message: 'Indexing Traits', upVal: 5 }); // (8/100) //
+  socket.emit('updateLoadProgess', { message: 'Opening Books', upVal: 2 }); // (5/100) //
+  const sourcesArray = await CharGathering.getSourceBooks(socket, character);
+
+  socket.emit('updateLoadProgess', { message: 'Indexing Traits', upVal: 5 }); // (10/100) //
   if(tags==null){
     tags = await CharGathering.getAllTags(charID, character);
   }
 
-  socket.emit('updateLoadProgess', { message: 'Understanding Feats', upVal: 25 }); // (33/100) //
+  socket.emit('updateLoadProgess', { message: 'Understanding Feats', upVal: 23 }); // (33/100) //
   if(featObject==null){
     featObject = await CharGathering.getAllFeats(charID, character, feats=null, tags);
   }
@@ -90,6 +93,7 @@ module.exports = async function(socket, charID, character=null, featObject=null,
     AllTags: tags,
     AllConditions: allConditions,
     AllLanguages: allLanguages,
+    EnabledSources: sourcesArray,
     UnselectedDataArray: unselectedDataArray,
     RawMetaDataArray: metaDataArray,
   };

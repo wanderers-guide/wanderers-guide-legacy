@@ -30,6 +30,8 @@ let gState_MAP = 'TIER_1';
 
 let g_calculatedStats = null;
 
+let g_enabledSources = null;
+
 let g_character = null;
 let g_classDetails = null;
 let g_ancestry = null;
@@ -169,6 +171,8 @@ socket.on("returnCharacterSheetInfo", function(charInfo, userPermissions, viewOn
         $('#restButton').attr('disabled', true);
       }
     }
+
+    g_enabledSources = charInfo.EnabledSources;
 
     g_itemMap = objToMap(charInfo.ItemObject);
     g_itemMap = new Map([...g_itemMap.entries()].sort(
@@ -515,6 +519,15 @@ function loadCharSheet(){
     }
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
+
+    // Run All SourceBook Code as Sheet Statements //
+    for(let enabledSource of g_enabledSources){
+      console.log(enabledSource);
+      processSheetCode(enabledSource.code, {
+        source: 'SourceBook',
+        sourceName: enabledSource.name,
+      });
+    }
 
     // Run Items Code (investitures and others) //
     // -- armor and shield item code runs when equipped

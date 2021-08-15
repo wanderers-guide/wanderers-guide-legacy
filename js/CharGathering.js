@@ -36,6 +36,7 @@ const Armor = require('../models/contentDB/Armor');
 const Storage = require('../models/contentDB/Storage');
 const Shield = require('../models/contentDB/Shield');
 const ItemRune = require('../models/contentDB/ItemRune');
+const Book = require('../models/contentDB/Book');
 const AnimalCompanion = require('../models/contentDB/AnimalCompanion');
 const CharAnimalCompanion = require('../models/contentDB/CharAnimalCompanion');
 const SpecificFamiliar = require('../models/contentDB/SpecificFamiliar');
@@ -50,6 +51,8 @@ const CharDataMappingExt = require('./CharDataMappingExt');
 
 const CharContentSources = require('./CharContentSources');
 const CharContentHomebrew = require('./CharContentHomebrew');
+
+const UserHomebrew = require('./UserHomebrew');
 
 const CharSpells = require('./CharSpells');
 const CharTags = require('./CharTags');
@@ -146,6 +149,41 @@ module.exports = class CharGathering {
       return CalculatedStat.findOne({ where: { charID: charID } })
       .then((calculatedStats) => {
         return calculatedStats;
+      });
+    }
+
+    static getSourceBooks(socket, character){
+      return Book.findAll({
+        where: {
+          codeName: {
+            [Op.or]: CharContentSources.getSourceArray(character)
+          },
+        }
+      }).then((books) => {
+        return UserHomebrew.getCollectedHomebrewBundles(socket).then((hBundles) => {
+          return UserHomebrew.getIncompleteHomebrewBundles(socket).then((progessBundles) => {
+            try {
+              const homebrewBundleArray = JSON.parse(character.enabledHomebrew);
+              for(const hBundle of hBundles) {
+                if(homebrewBundleArray.includes(hBundle.homebrewBundle.id)) {
+                  books.push({
+                    name: hBundle.homebrewBundle.name,
+                    code: hBundle.homebrewBundle.code
+                  });
+                }
+              }
+              for(const progressBundle of progessBundles) {
+                if(homebrewBundleArray.includes(progressBundle.id)) {
+                  books.push({
+                    name: progressBundle.name,
+                    code: progressBundle.code
+                  });
+                }
+              }
+            } catch (err) {}
+            return books;
+          });
+        });
       });
     }
 

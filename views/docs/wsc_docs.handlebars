@@ -55,7 +55,7 @@
                 <li><a href="/wsc_docs/#typography">Typography</a></li>
             </ul>
             <p class="menu-label">
-                <a href="/wsc_docs/#code_fields">Code Fields</a>
+                <a href="/wsc_docs/#code_basics">Code Fields</a>
             </p>
             <ul class="menu-list">
                 <li class=""><a href="/wsc_docs/#code_basics">Basics</a></li>
@@ -462,7 +462,7 @@
                     Below is an example of what multiple individual statements would look like. Each statement is on its own line and thus distinct.
                 </p>
                 <div class="code-block">
-                    GIVE-PROF-INCREASE-IN=Perception
+                    GIVE-PROF-IN=LIGHT_ARMOR:M
                     <br/>
                     GIVE-SKILL-FEAT=3
                 </div>
@@ -661,6 +661,20 @@
                     </p>
                     <p class="pl-3">
                         Boolean Operators: '==', '!=', '>=', or '<='
+                    </p>
+                </div>
+                <div class="py-2">
+                    <div class="code-block">
+                        IF (HAS-ENABLED-SOURCE==Advanced Player's Guide) {Statement}
+                    </div>
+                    <p class="pl-3">
+                        - If the character has the source book 'Advanced Player's Guide' enabled, the statement inside the braces will execute.
+                    </p>
+                    <p class="pl-3">
+                        - The name of a homebrew bundle will also work as a source.
+                    </p>
+                    <p class="pl-3">
+                        Boolean Operators: '==' or '!='
                     </p>
                 </div>
                 <div class="py-2">
@@ -1827,13 +1841,13 @@
                       Example.
                     </p>
                     <p class="pl-3">
-                      Here's my list of feats {FeatNames}. The second element is {FeatNames.GET_INDEX_1}. I have a +{SCORE_AGILITY.GET_MOD} in my Agility ability score. My pet is named {Animal_Friend_Name}, I love her very much.
+                      Here's my list of feats: {FeatNames}. The second element is {FeatNames.GET_INDEX_1}. I have a +{SCORE_AGILITY.GET_MOD} in my Agility ability score. My pet is named {Animal_Friend_Name}, I love her very much.
                     </p>
                     <p class="pl-2 is-italic">
                       Based on the previous examples, this becomes...
                     </p>
                     <p class="pl-3">
-                      Here's my list of feats [Lie to Me,Diehard,Very Sneaky,Juggle,Whirling Throw]. The second element is Diehard. I have a +2 in my Agility ability score. My pet is named Vienna, I love her very much.
+                      Here's my list of feats: Lie to Me,Diehard,Very Sneaky,Juggle,Whirling Throw. The second element is Diehard. I have a +2 in my Agility ability score. My pet is named Vienna, I love her very much.
                     </p>
                 </div>
             </div>

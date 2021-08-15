@@ -14,6 +14,9 @@ const HomebrewBundle = db.define('homebrewBundles', {
   contactInfo: {
     type: Sequelize.STRING
   },
+  code: {
+    type: Sequelize.TEXT
+  },
   hasKeys: {
     type: Sequelize.INTEGER
   },

@@ -26,8 +26,11 @@ module.exports = async function(socket, charID, character) {
   if(character==null){
     character = await CharGathering.getCharacter(charID);
   }
+
+  socket.emit('updateLoadProgess', { message: 'Opening Books', upVal: 1 }); // (4/100) //
+  const sourcesArray = await CharGathering.getSourceBooks(socket, character);
   
-  socket.emit('updateLoadProgess', { message: 'Discovering Backstory', upVal: 3 }); // (6/100) //
+  socket.emit('updateLoadProgess', { message: 'Discovering Backstory', upVal: 2 }); // (6/100) //
   const background = await CharGathering.getBackground(charID, character);
 
   socket.emit('updateLoadProgess', { message: 'Examining Ancestry', upVal: 3 }); // (9/100) //
@@ -117,6 +120,7 @@ module.exports = async function(socket, charID, character) {
     ConditionsObject : conditionsObject,
     AllConditions : allConditions,
     AllLanguages : allLanguages,
+    EnabledSources: sourcesArray,
     ResistAndVulners : resistAndVulnerStruct,
     SpecializeStruct : specializeStruct,
     WeaponFamiliarities : familiaritiesDataArray,

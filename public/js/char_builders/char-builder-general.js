@@ -23,6 +23,7 @@ let g_spellMap = null;
 let g_allLanguages = null;
 let g_allConditions = null;
 let g_allTags = null;
+let g_enabledSources = null;
 let g_unselectedData = null;
 let g_rawMetaData = null;
 // ~~~~~~~~~~~~~~~~~ //
@@ -48,6 +49,7 @@ socket.on("returnCharBuilderDetails", function(character, coreDataStruct, inChoi
   g_allLanguages = coreDataStruct.AllLanguages;
   g_allConditions = coreDataStruct.AllConditions;
   g_allTags = coreDataStruct.AllTags;
+  g_enabledSources = coreDataStruct.EnabledSources;
   g_unselectedData = coreDataStruct.UnselectedDataArray;
   g_rawMetaData = coreDataStruct.RawMetaDataArray;
   //
@@ -62,6 +64,15 @@ socket.on("returnCharBuilderDetails", function(character, coreDataStruct, inChoi
   // Temp Solution to Predefined Variables in the Builder
   builderTempInitializeVariables();
   //
+
+  // Run All SourceBook Code as Sheet Statements //
+  for(let enabledSource of g_enabledSources){
+    processSheetCode(enabledSource.code, {
+      source: 'SourceBook',
+      sourceName: enabledSource.name,
+    });
+  }
+  // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 
   for(const [featID, featStruct] of g_featMap.entries()){
     g_featPrereqMap.set(featID+'', meetsPrereqs(featStruct.Feat));
