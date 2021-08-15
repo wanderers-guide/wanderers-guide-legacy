@@ -10,7 +10,7 @@ function openCharInfoQuickview(data) {
 
   let qContent = $('#quickViewContent');
 
-  qContent.append('<div class="columns is-marginless"><div id="charInfoBasicInfoSection" class="column is-8 is-paddingless"></div><div id="charInfoPictureSection" class="column is-4 is-paddingless"></div></div>');
+  qContent.append('<div class="columns is-marginless"><div id="charInfoBasicInfoSection" class="column is-8 is-paddingless"></div><div id="charInfoPictureSection" class="column is-4 is-paddingless pt-2"></div></div>');
 
   /// Basic Info ///
   $('#charInfoBasicInfoSection').append('<p class="is-size-4 has-text-centered has-text-light text-overflow-ellipsis">'+g_character.name+'</p>');
@@ -43,13 +43,14 @@ function openCharInfoQuickview(data) {
       }
   );
   let tagsInnerHTML = '';
+  tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-1 mb-1 is-very-small is-link tagButton">'+capitalizeWord(g_charSize)+'</button>';
   for(const charTag of charTags){
     if(charTag.value != null && charTag.value != ''){
       tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-1 mb-1 is-very-small is-info tagButton">'+charTag.value+'</button>';
     }
   }
   if(tagsInnerHTML != ''){
-    $('#charInfoPictureSection').append('<div class="buttons is-marginless mt-1">'+tagsInnerHTML+'</div>');
+    qContent.append('<div class="mb-4 pb-1"><div class="buttons is-marginless is-pulled-right">'+tagsInnerHTML+'</div></div>');
   }
 
   ///         ///

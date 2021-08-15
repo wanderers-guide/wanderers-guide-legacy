@@ -2,7 +2,7 @@
     By Aaron Cassar.
 */
 
-const variableProcessingDebug = true;
+const variableProcessingDebug = false;
 const variableRegex = /^[\w]+$/;
 
 /*
@@ -315,7 +315,6 @@ function handleVariableText(varText){
   
       if(lastBrace != null && lastBrace.Type === '{' && char === '}'){
         
-        console.log(getVariableValue(varText.substring(lastBrace.Index+1, i)));
         return varText.replace(varText.substring(lastBrace.Index, i+1), getVariableValue(varText.substring(lastBrace.Index+1, i)));
   
       } else {
@@ -544,7 +543,6 @@ function setVariableValueIntoMethod(variable, varName, method, value) {
       variable.Value[digit] = value;
     } else if(methodUpper == 'SET_VALUE'){
       try {
-        console.log(value);
         let newArray = JSON.parse(value);
         if(typeof newArray === 'object') {
           variable.Value = newArray;
