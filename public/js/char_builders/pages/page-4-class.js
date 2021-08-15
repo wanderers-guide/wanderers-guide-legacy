@@ -360,7 +360,7 @@ function displayCurrentClass(classStruct, classNum) {
         let weaponName = sections[1];
 
         let weapID;
-        let profConvertData = g_profConversionMap.get(weaponName.replace(/_|\s+/g,'').toUpperCase());
+        let profConvertData = g_profConversionMap.get(weaponName.replace(/\s+/g,'').toUpperCase());
         if(profConvertData != null){
             weapID = profConvertData.Name;
         } else {
@@ -400,7 +400,7 @@ function displayCurrentClass(classStruct, classNum) {
         let armorName = sections[1];
 
         let armorID;
-        let profConvertData = g_profConversionMap.get(armorName.replace(/_|\s+/g,'').toUpperCase());
+        let profConvertData = g_profConversionMap.get(armorName.replace(/\s+/g,'').toUpperCase());
         if(profConvertData != null){
             armorID = profConvertData.Name;
         } else {

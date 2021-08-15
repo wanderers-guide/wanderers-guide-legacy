@@ -43,6 +43,7 @@ Optional Requirements:
 */
 let temp_textProcess_j = '';
 let temp_textProcess_s = '';
+let temp_textProcess_isSheet = false;
 
 function processText(text, isSheet, isJustified = false, size = 'MEDIUM', indexConditions = true) {
     if(text == null) {return text;}
@@ -69,6 +70,7 @@ function processText(text, isSheet, isJustified = false, size = 'MEDIUM', indexC
 
     temp_textProcess_j = _j;
     temp_textProcess_s = _s;
+    temp_textProcess_isSheet = isSheet;
 
     // Replace dice notation with roll button
     if(typeof gOption_hasDiceRoller !== 'undefined' && gOption_hasDiceRoller){
@@ -125,13 +127,11 @@ function processText(text, isSheet, isJustified = false, size = 'MEDIUM', indexC
     text = text.replace(regexURL, handleLink);
 
     // Sheet variables & tooltips
-    if(isSheet){
-        // {WIS_MOD} -> Character Wisdom Modifier (unsigned)
-        // {WIS_MOD|Wisdom Modifier} -> Character Wisdom Modifier (unsigned). Can hover over to reveal text.
-        // {+WIS_MOD} ->  Character Wisdom Modifier (signed)
-        let regexSheetVariables = /\{(.+?)\}/g;
-        text = text.replace(regexSheetVariables, handleSheetVariablesAndTooltips);
-    }
+    // {WIS_MOD} -> Character Wisdom Modifier (unsigned)
+    // {WIS_MOD|Wisdom Modifier} -> Character Wisdom Modifier (unsigned). Can hover over to reveal text.
+    // {+WIS_MOD} ->  Character Wisdom Modifier (signed)
+    let regexSheetVariables = /\{(.+?)\}/g;
+    text = text.replace(regexSheetVariables, handleSheetVariablesAndTooltips);
 
     // (Feat: Striking | Strike)
     if(typeof g_featMap !== 'undefined' && g_featMap != null) {
@@ -614,7 +614,11 @@ function handleSheetVariablesAndTooltips(match, innerText){
     if(innerText.includes("|")){
         let innerTextData = innerText.split("|");
         innerTextVariable = innerTextData[0].replace(/\s/g, "").toUpperCase();
-        let sheetVar = acquireSheetVariable(innerTextVariable);
+
+        let sheetVar = null;
+        if(temp_textProcess_isSheet){
+          sheetVar = acquireSheetVariable(innerTextVariable);
+        }
         if(sheetVar == null){ sheetVar = innerTextData[0]; }
 
         let bulmaColor = 'has-text-info';
@@ -657,10 +661,14 @@ function handleSheetVariablesAndTooltips(match, innerText){
         }
         return '<a class="'+bulmaColor+' has-tooltip-top" data-tooltip="'+innerTextData[1]+'">'+sheetVar+'</a>';
     } else {
+      if(temp_textProcess_isSheet){
         innerText = innerText.replace(/\s/g, "").toUpperCase();
         let sheetVar = acquireSheetVariable(innerText);
         sheetVar = (sheetVar != null) ? sheetVar : '<span class="has-text-danger has-tooltip-top" data-tooltip="'+innerText+'">Unknown Variable</span>';
         return '<span class="has-text-info">'+sheetVar+'</span>';
+      } else {
+        return innerText;
+      }
     }
 }
 

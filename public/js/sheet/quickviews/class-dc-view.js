@@ -69,7 +69,7 @@ function openClassDCQuickview(data) {
 
     qContent.append(breakDownInnerHTML);
 
-    let amalgBonuses = getStatExtraBonuses('CLASS_DC');
+    let amalgBonuses = getStatExtraBonuses(VARIABLE.CLASS_DC);
     if(amalgBonuses != null && amalgBonuses.length > 0){
         $('#amalgBonusNum').removeClass('has-tooltip-multiline');
         let amalgTooltipText = 'Additional adjustments:';
@@ -83,7 +83,7 @@ function openClassDCQuickview(data) {
     }
 
     // Conditionals //
-    let conditionalStatMap = getConditionalStatMap('CLASS_DC');
+    let conditionalStatMap = getConditionalStatMap(VARIABLE.CLASS_DC);
     if(conditionalStatMap != null && conditionalStatMap.size != 0){
 
         qContent.append('<hr class="m-2">');

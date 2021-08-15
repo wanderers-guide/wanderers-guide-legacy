@@ -209,6 +209,9 @@ hr {
   border-color: #363636!important;
   background-color: #363636!important;
 }
+a {
+  color: hsl(204, 86%, 53%);
+}
 
 /* Cursors */
 .cursor-clickable {
@@ -284,6 +287,13 @@ body::-webkit-scrollbar-thumb {
 }
 .use-custom-scrollbar::-webkit-scrollbar-corner {
   background-color: #181818;
+}
+.use-custom-scrollbar.is-darker::-webkit-scrollbar-thumb {
+  background-color: #111111;
+  outline: 1px solid #111111;
+}
+.use-custom-scrollbar.is-darker::-webkit-scrollbar-corner {
+  background-color: #111111;
 }
 
 .use-invisible-scrollbar::-webkit-scrollbar {

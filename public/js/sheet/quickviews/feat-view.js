@@ -279,7 +279,7 @@ function featNameIsFeatPrerequisite(prerequisites, featName){
 function featViewTextProcessor(text){
     if(!isSheetPage()) { return text; }
 
-    let speedNum = getStatTotal('SPEED');
+    let speedNum = getStatTotal(VARIABLE.SPEED);
     speedNum = (speedNum > 5) ? speedNum : 5;
 
     text = text.replace('for 5 feet plus 5 feet per 20 feet of your land Speed', '<span class="has-text-info has-tooltip-top" data-tooltip="5+5 per 20ft of land Speed">'+(5+5*Math.floor(speedNum/20))+' feet</span>');

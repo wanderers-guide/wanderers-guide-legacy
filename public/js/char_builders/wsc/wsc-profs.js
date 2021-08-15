@@ -35,7 +35,7 @@ function giveProf(srcStruct, profName, prof, locationID, sourceName){
 
 function giveProfSkillTraining(srcStruct, profName, prof, locationID, sourceName){
 
-    let adjProfName = profName.replace(/_|\s+/g,"");
+    let adjProfName = profName.replace(/\s+/g,"");
     let profProperName = null;
     let profCategory = null;
 
@@ -113,7 +113,7 @@ function giveInProf(srcStruct, profName, prof, locationID, sourceName){
         profCategory = 'Defense';
     }
 
-    profName = profName.replace(/_|\s+/g,'');
+    profName = profName.replace(/\s+/g,'');
     let profData = g_profConversionMap.get(profName);
     if(profData != null){
         profProperName = profData.Name;

@@ -7,10 +7,158 @@ const variableRegex = /^[\w]+$/;
 
 /*
   (Variable_Name) -> ({ Type: Array, Value: [], })
-  Types: INTEGER, STRING, ABILITY-SCORE, LIST, PROFICIENCY
+  Types: INTEGER, STRING, ABILITY_SCORE, LIST, PROFICIENCY
 */
 
 let g_variableMap = new Map();
+
+const VARIABLE = {
+	SCORE_STR: 'SCORE_STR',
+	SCORE_DEX: 'SCORE_DEX',
+	SCORE_CON: 'SCORE_CON',
+	SCORE_INT: 'SCORE_INT',
+  SCORE_WIS: 'SCORE_WIS',
+  SCORE_CHA: 'SCORE_CHA',
+  SCORE_NONE: 'SCORE_NONE',
+
+  SAVE_FORT: 'SAVE_FORT',
+  SAVE_REFLEX: 'SAVE_REFLEX',
+  SAVE_WILL: 'SAVE_WILL',
+
+  SKILL_ACROBATICS: 'SKILL_ACROBATICS',
+  SKILL_ARCANA: 'SKILL_ARCANA',
+  SKILL_ATHLETICS: 'SKILL_ATHLETICS',
+  SKILL_CRAFTING: 'SKILL_CRAFTING',
+  SKILL_DECEPTION: 'SKILL_DECEPTION',
+  SKILL_DIPLOMACY: 'SKILL_DIPLOMACY',
+  SKILL_INTIMIDATION: 'SKILL_INTIMIDATION',
+  SKILL_MEDICINE: 'SKILL_MEDICINE',
+  SKILL_NATURE: 'SKILL_NATURE',
+  SKILL_OCCULTISM: 'SKILL_OCCULTISM',
+  SKILL_PERFORMANCE: 'SKILL_PERFORMANCE',
+  SKILL_RELIGION: 'SKILL_RELIGION',
+  SKILL_SOCIETY: 'SKILL_SOCIETY',
+  SKILL_STEALTH: 'SKILL_STEALTH',
+  SKILL_SURVIVAL: 'SKILL_SURVIVAL',
+  SKILL_THIEVERY: 'SKILL_THIEVERY',
+  SKILL_XXX_LORE: 'SKILL_XXX_LORE',
+
+  ARCANE_SPELL_ATTACK: 'ARCANE_SPELL_ATTACK',
+  DIVINE_SPELL_ATTACK: 'DIVINE_SPELL_ATTACK',
+  OCCULT_SPELL_ATTACK: 'OCCULT_SPELL_ATTACK',
+  PRIMAL_SPELL_ATTACK: 'PRIMAL_SPELL_ATTACK',
+
+  ARCANE_SPELL_DC: 'ARCANE_SPELL_DC',
+  DIVINE_SPELL_DC: 'DIVINE_SPELL_DC',
+  OCCULT_SPELL_DC: 'OCCULT_SPELL_DC',
+  PRIMAL_SPELL_DC: 'PRIMAL_SPELL_DC',
+
+  LIGHT_ARMOR: 'LIGHT_ARMOR',
+  MEDIUM_ARMOR: 'MEDIUM_ARMOR',
+  HEAVY_ARMOR: 'HEAVY_ARMOR',
+  UNARMORED_DEFENSE: 'UNARMORED_DEFENSE',
+
+  SIMPLE_WEAPONS: 'SIMPLE_WEAPONS',
+  MARTIAL_WEAPONS: 'MARTIAL_WEAPONS',
+  ADVANCED_WEAPONS: 'ADVANCED_WEAPONS',
+  UNARMED_ATTACKS: 'UNARMED_ATTACKS',
+
+  PERCEPTION: 'PERCEPTION',
+  CLASS_DC: 'CLASS_DC',
+
+  MAX_HEALTH: 'MAX_HEALTH',
+  MAX_HEALTH_BONUS_PER_LEVEL: 'MAX_HEALTH_BONUS_PER_LEVEL',
+  HEALTH: 'HEALTH',
+  TEMP_HEALTH: 'TEMP_HEALTH',
+
+  AC: 'AC',
+  ARMOR_CHECK_PENALTY: 'ARMOR_CHECK_PENALTY',
+  ARMOR_SPEED_PENALTY: 'ARMOR_SPEED_PENALTY',
+  DEX_CAP: 'DEX_CAP',
+
+  SPEED: 'SPEED',
+  SPEED_XXX: 'SPEED_XXX',
+
+  BULK_LIMIT: 'BULK_LIMIT',
+  INVEST_LIMIT: 'INVEST_LIMIT',
+
+  ATTACKS: 'ATTACKS',
+  ATTACKS_DMG_DICE: 'ATTACKS_DMG_DICE',
+  ATTACKS_DMG_BONUS: 'ATTACKS_DMG_BONUS',
+
+  MELEE_ATTACKS: 'MELEE_ATTACKS',
+  MELEE_ATTACKS_DMG_DICE: 'MELEE_ATTACKS_DMG_DICE',
+  MELEE_ATTACKS_DMG_BONUS: 'MELEE_ATTACKS_DMG_BONUS',
+  AGILE_MELEE_ATTACKS_DMG_BONUS: 'AGILE_MELEE_ATTACKS_DMG_BONUS',
+  NON_AGILE_MELEE_ATTACKS_DMG_BONUS: 'NON_AGILE_MELEE_ATTACKS_DMG_BONUS',
+
+  RANGED_ATTACKS: 'RANGED_ATTACKS',
+  RANGED_ATTACKS_DMG_DICE: 'RANGED_ATTACKS_DMG_DICE',
+  RANGED_ATTACKS_DMG_BONUS: 'RANGED_ATTACKS_DMG_BONUS',
+
+};
+
+const VAR_TYPE = {
+  INTEGER: 'INTEGER',
+  STRING: 'STRING',
+  ABILITY_SCORE: 'ABILITY_SCORE',
+  LIST: 'LIST',
+  PROFICIENCY: 'PROFICIENCY',
+};
+
+function initializeVariable(variableName, variableType, statSource, value){
+  if(typeof g_statManagerMap === 'undefined') { return; }
+
+  if(variableType == VAR_TYPE.INTEGER){
+    g_variableMap.set(variableName, { Type: VAR_TYPE.INTEGER, Value: value });
+  } else if(variableType == VAR_TYPE.STRING){
+    g_variableMap.set(variableName, { Type: VAR_TYPE.STRING, Value: value });
+  } else if(variableType == VAR_TYPE.ABILITY_SCORE){
+    g_variableMap.set(variableName, { Type: VAR_TYPE.ABILITY_SCORE, Value: { Score: value } });
+  } else if(variableType == VAR_TYPE.LIST){
+    g_variableMap.set(variableName, { Type: VAR_TYPE.LIST, Value: value });
+  } else if(variableType == VAR_TYPE.PROFICIENCY){
+    displayError("Variable Initialization: For PROFICIENCY variables, use initializeVariableProf() instead!");
+    return;
+  } else {
+    displayError("Variable Initialization: Unknown variable type \'"+variableType+"\'!");
+    return;
+  }
+
+  // Add stat to stat manager
+  if(statSource != null){
+    addStat(variableName, statSource, value);
+  }
+
+}
+
+function initializeVariableProf(variableName, abilityScoreName, numUps){
+  g_variableMap.set(variableName, { Type: VAR_TYPE.PROFICIENCY, Value: { AbilityScore: abilityScoreName, Rank: getProfLetterFromNumUps(numUps) } });
+}
+
+function builderTempInitializeVariables(){
+
+  if(variableProcessingDebug) { console.log(`Initializing predefined variables in builder.`); }
+
+  // Ability Scores
+  g_variableMap.set(VARIABLE.SCORE_STR, { Type: VAR_TYPE.ABILITY_SCORE, Value: { Score: 10 } });
+  g_variableMap.set(VARIABLE.SCORE_DEX, { Type: VAR_TYPE.ABILITY_SCORE, Value: { Score: 10 } });
+  g_variableMap.set(VARIABLE.SCORE_CON, { Type: VAR_TYPE.ABILITY_SCORE, Value: { Score: 10 } });
+  g_variableMap.set(VARIABLE.SCORE_INT, { Type: VAR_TYPE.ABILITY_SCORE, Value: { Score: 10 } });
+  g_variableMap.set(VARIABLE.SCORE_WIS, { Type: VAR_TYPE.ABILITY_SCORE, Value: { Score: 10 } });
+  g_variableMap.set(VARIABLE.SCORE_CHA, { Type: VAR_TYPE.ABILITY_SCORE, Value: { Score: 10 } });
+  g_variableMap.set(VARIABLE.SCORE_NONE, { Type: VAR_TYPE.ABILITY_SCORE, Value: { Score: 10 } });
+
+  // Proficiencies
+  for(const [variableName, data] of g_profConversionMap.entries()){
+    if(data.AbilScore != null){
+      g_variableMap.set(variableName, { Type: VAR_TYPE.PROFICIENCY, Value: { AbilityScore: 'SCORE_'+data.AbilScore, Rank: 'U' } });
+    }
+  }
+
+}
+
+///////////////
 
 function processVariables(wscCode){
   if(wscCode == null) {return;}
@@ -48,48 +196,47 @@ function processVariables(wscCode){
         let variableType = match[3];
 
         let variableTypeUpper = variableType.toUpperCase();
-        if(variableTypeUpper == 'INTEGER'){
+        if(variableTypeUpper == VAR_TYPE.INTEGER){
 
-          if(variableProcessingDebug) { console.log(`Defining new variable: '${variableName}' as 'INTEGER'`); }
-          g_variableMap.set(variableName, { Type: 'INTEGER', Value: 0 });
-
-          continue;
-        } else if(variableTypeUpper == 'STRING'){
-
-          if(variableProcessingDebug) { console.log(`Defining new variable: '${variableName}' as 'STRING'`); }
-          g_variableMap.set(variableName, { Type: 'STRING', Value: '' });
+          if(variableProcessingDebug) { console.log(`Defining new variable: '${variableName}' as '${VAR_TYPE.INTEGER}'`); }
+          g_variableMap.set(variableName, { Type: VAR_TYPE.INTEGER, Value: 0 });
 
           continue;
-        } else if(variableTypeUpper == 'ABILITY-SCORE'){
+        } else if(variableTypeUpper == VAR_TYPE.STRING){
 
-          if(variableProcessingDebug) { console.log(`Defining new variable: '${variableName}' as 'ABILITY-SCORE'`); }
-          g_variableMap.set(variableName, { Type: 'ABILITY-SCORE', Value: { Score: 0 } });
-
-          continue;
-        } else if(variableTypeUpper == 'LIST'){
-
-          if(variableProcessingDebug) { console.log(`Defining new variable: '${variableName}' as 'LIST'`); }
-          g_variableMap.set(variableName, { Type: 'LIST', Value: [] });
+          if(variableProcessingDebug) { console.log(`Defining new variable: '${variableName}' as '${VAR_TYPE.STRING}'`); }
+          g_variableMap.set(variableName, { Type: VAR_TYPE.STRING, Value: '' });
 
           continue;
-        } else if(variableTypeUpper.startsWith('PROFICIENCY')){
+        } else if(variableTypeUpper == VAR_TYPE.ABILITY_SCORE){
+
+          if(variableProcessingDebug) { console.log(`Defining new variable: '${variableName}' as '${VAR_TYPE.ABILITY_SCORE}'`); }
+          g_variableMap.set(variableName, { Type: VAR_TYPE.ABILITY_SCORE, Value: { Score: 0 } });
+
+          continue;
+        } else if(variableTypeUpper == VAR_TYPE.LIST){
+
+          if(variableProcessingDebug) { console.log(`Defining new variable: '${variableName}' as '${VAR_TYPE.LIST}'`); }
+          g_variableMap.set(variableName, { Type: VAR_TYPE.LIST, Value: [] });
+
+          continue;
+        } else if(variableTypeUpper.startsWith(VAR_TYPE.PROFICIENCY)){
           const typeMatch = variableType.trim().match(/^PROFICIENCY\((.+)\)$/im);
           if(typeMatch != null){
             const abilityScoreVariableName = typeMatch[1];
 
-            // TODO - Check if 
             let abilityScoreVariable = g_variableMap.get(abilityScoreVariableName);
-            if(abilityScoreVariable != null && abilityScoreVariable.Type == 'ABILITY-SCORE'){
+            if(abilityScoreVariable != null && abilityScoreVariable.Type == VAR_TYPE.ABILITY_SCORE){
 
-              if(variableProcessingDebug) { console.log(`Defining new variable: '${variableName}' as 'PROFICIENCY'`); }
-              g_variableMap.set(variableName, { Type: 'PROFICIENCY', Value: { AbilityScore: '', Rank: 'U' } });
+              if(variableProcessingDebug) { console.log(`Defining new variable: '${variableName}' as '${VAR_TYPE.PROFICIENCY}'`); }
+              g_variableMap.set(variableName, { Type: VAR_TYPE.PROFICIENCY, Value: { AbilityScore: abilityScoreVariableName, Rank: 'U' } });
 
             } else {
-              displayError("Variable Processing: Could not find \'"+abilityScoreVariableName+"\' as an ABILITY-SCORE variable!");
+              displayError(`Variable Processing: Could not find \'${abilityScoreVariableName}\' as an ${VAR_TYPE.ABILITY_SCORE} variable!`);
               continue;
             }
           } else {
-            displayError("Variable Processing: \'"+variableType+"\' does not follow the following format: PROFICIENCY(Ability Score Variable Name)!");
+            displayError(`Variable Processing: \'${variableType}\' does not follow the following format: PROFICIENCY(Ability Score Variable Name)!`);
             continue;
           }
         } else {
@@ -236,7 +383,7 @@ function getVariableValue(variableStr){
 function getVariableValueFromMethod(variable, varName, method) {
   let methodUpper = method.toUpperCase();
 
-  if(variable.Type == 'INTEGER'){
+  if(variable.Type == VAR_TYPE.INTEGER){
 
     if(methodUpper == 'GET_VALUE'){
       return variable.Value;
@@ -245,7 +392,7 @@ function getVariableValueFromMethod(variable, varName, method) {
       return 'Error';
     }
 
-  } else if(variable.Type == 'STRING'){
+  } else if(variable.Type == VAR_TYPE.STRING){
 
     if(methodUpper == 'GET_VALUE'){
       return variable.Value;
@@ -254,7 +401,7 @@ function getVariableValueFromMethod(variable, varName, method) {
       return 'Error';
     }
 
-  } else if(variable.Type == 'PROFICIENCY'){
+  } else if(variable.Type == VAR_TYPE.PROFICIENCY){
 
     // TODO - Doesn't add char_level or account for level-less prof being enabled (untrained is -2)
     // temp solution
@@ -281,7 +428,7 @@ function getVariableValueFromMethod(variable, varName, method) {
       return 'Error';
     }
 
-  } else if(variable.Type == 'ABILITY-SCORE'){
+  } else if(variable.Type == VAR_TYPE.ABILITY_SCORE){
 
     if(methodUpper == 'GET_MOD'){
       return getMod(variable.Value.Score);
@@ -294,7 +441,7 @@ function getVariableValueFromMethod(variable, varName, method) {
       return 'Error';
     }
 
-  } else if(variable.Type == 'LIST'){
+  } else if(variable.Type == VAR_TYPE.LIST){
 
     if(methodUpper == 'GET_LENGTH'){
       return variable.Value.length;
@@ -315,11 +462,10 @@ function getVariableValueFromMethod(variable, varName, method) {
 
 }
 
-
 function setVariableValueIntoMethod(variable, varName, method, value) {
   let methodUpper = method.toUpperCase();
 
-  if(variable.Type == 'INTEGER'){
+  if(variable.Type == VAR_TYPE.INTEGER){
 
     if(methodUpper == 'SET_VALUE'){
       let intValue = parseInt(value);
@@ -332,7 +478,7 @@ function setVariableValueIntoMethod(variable, varName, method, value) {
       displayError("Variable Processing: Unknown setting method \'"+method+"\' for variable \'"+varName+"\' ("+variable.Type+")!");
     }
 
-  } else if(variable.Type == 'STRING'){
+  } else if(variable.Type == VAR_TYPE.STRING){
 
     if(methodUpper == 'SET_VALUE'){
       if(typeof value === 'string') {
@@ -344,17 +490,26 @@ function setVariableValueIntoMethod(variable, varName, method, value) {
       displayError("Variable Processing: Unknown setting method \'"+method+"\' for variable \'"+varName+"\' ("+variable.Type+")!");
     }
 
-  } else if(variable.Type == 'PROFICIENCY'){
+  } else if(variable.Type == VAR_TYPE.PROFICIENCY){
 
     if(methodUpper == 'SET_ABILITY'){
-      variable.Value.AbilityScore = value; // TODO - Confirm is ability score
+      let abilityScoreVariable = g_variableMap.get(value);
+      if(abilityScoreVariable != null && abilityScoreVariable.Type == VAR_TYPE.ABILITY_SCORE){
+        variable.Value.AbilityScore = value;
+      } else {
+        displayError(`Variable Processing (set): The value \'${value}\' for \'${varName}\' is not an ${VAR_TYPE.ABILITY_SCORE} variable!`);
+      }
     } else if(methodUpper == 'SET_VALUE'){
-      variable.Value.Rank = value; // TODO - confirm is valid rank
+      if(value == 'U' || value == 'T' || value == 'E' || value == 'M' || value == 'L'){
+        variable.Value.Rank = value;
+      } else {
+        displayError("Variable Processing (set): The value \'"+value+"\' for \'"+varName+"\' is not a proficiency rank! (options: U, T, E, M, and L)");
+      }
     } else {
       displayError("Variable Processing: Unknown setting method \'"+method+"\' for variable \'"+varName+"\' ("+variable.Type+")!");
     }
 
-  } else if(variable.Type == 'ABILITY-SCORE'){
+  } else if(variable.Type == VAR_TYPE.ABILITY_SCORE){
 
     if(methodUpper == 'SET_SCORE' || methodUpper == 'SET_VALUE'){
       let intValue = parseInt(value);
@@ -367,7 +522,7 @@ function setVariableValueIntoMethod(variable, varName, method, value) {
       displayError("Variable Processing: Unknown setting method \'"+method+"\' for variable \'"+varName+"\' ("+variable.Type+")!");
     }
 
-  } else if(variable.Type == 'LIST'){
+  } else if(variable.Type == VAR_TYPE.LIST){
 
     if(methodUpper == 'SET_INDEX_NEXT'){
       variable.Value.push(value);
@@ -376,14 +531,16 @@ function setVariableValueIntoMethod(variable, varName, method, value) {
       variable.Value[digit] = value;
     } else if(methodUpper == 'SET_VALUE'){
       try {
+        console.log(value);
         let newArray = JSON.parse(value);
         if(typeof newArray === 'object') {
           variable.Value = newArray;
         } else {
-          displayError("Variable Processing (set): The value \'"+value+"\' for \'"+varName+"\' is not a list!");
+          displayError("Variable Processing (set-1): The value \'"+value+"\' for \'"+varName+"\' is not a list!");
         }
       } catch(err){
-        displayError("Variable Processing (set): The value \'"+value+"\' for \'"+varName+"\' is not a list!");
+        displayError("Variable Processing (set-2): The value \'"+value+"\' for \'"+varName+"\' is not a list!");
+        console.error(err);
       }
     } else {
       displayError("Variable Processing: Unknown setting method \'"+method+"\' for variable \'"+varName+"\' ("+variable.Type+")!");

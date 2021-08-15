@@ -33,8 +33,8 @@
 
 
 <div id="doc_nav_shell">
-    <div id="docs_nav" class="ml-2 mt-2">
-        <aside class="menu">
+    <div id="docs_nav" class="pl-2 pt-2">
+        <aside class="menu use-custom-scrollbar is-darker">
             <p class="menu-label">
                 <a href="/wsc_docs/#wsc_docs">WSC Documentation</a>
             </p>
@@ -51,6 +51,7 @@
                 <li><a href="/wsc_docs/#lists">Lists</a></li>
                 <li><a href="/wsc_docs/#tables">Tables</a></li>
                 <li><a href="/wsc_docs/#tiers_of_success">Tiers of Success</a></li>
+                <li><a href="/wsc_docs/#tooltips">Tooltips</a></li>
                 <li><a href="/wsc_docs/#typography">Typography</a></li>
             </ul>
             <p class="menu-label">
@@ -75,9 +76,10 @@
                 <li class="pl-2"><a href="/wsc_docs/#code_stat_adjustments">- Stat Adjustments</a></li>
                 <li class="pl-2"><a href="/wsc_docs/#code_sheet_miscellaneous">- Miscellaneous</a></li>
                 <li class=""><a href="/wsc_docs/#code_universal_statements">Universal Statements</a></li>
-                <li class="pl-2"><a href="/wsc_docs/#code_notes_field">- Notes Field</a></li>
                 <li class="pl-2"><a href="/wsc_docs/#code_add_text">- Add Text</a></li>
                 <li class="pl-2"><a href="/wsc_docs/#code_misc_feats">- Misc. Feat</a></li>
+                <li class="pl-2"><a href="/wsc_docs/#code_notes_field">- Notes Field</a></li>
+                <li class="pl-2"><a href="/wsc_docs/#code_variables">- Variables</a></li>
             </ul>
         </aside>
     </div>
@@ -354,6 +356,45 @@
                   </p>
                 </div>
             </div>
+            <div id="tooltips" class="mt-4 isHideable">
+                <h1 class="small-title is-size-3 is-marginless mb-1 pl-3">Tooltips</h1>
+                <p>
+                    Sometimes you might want to hide text away until someone hovers over something. Using tooltips you can make just that!
+                </p>
+                <div class="code-block">
+                  <p class="pl-2">All you need to do is make something like this: {Text to display|Text that will be revealed on hover!}. This will create a normal tooltip.</p>
+                </div>
+                <p class="pl-4 is-italic">This becomes...</p>
+                <div class="code-block">
+                  <div class="text-processing">All you need to do is make something like this: {Text to display|Text that will be revealed on hover!}. This will create a normal tooltip.</div>
+                </div>
+                <hr class="m-3">
+                <p>
+                  You can also customize the color of the displayed text.
+                </p>
+                <div class="code-block">
+                  <p class="pl-2">By writing 'color:' before the displayed text, that text will be that color. For example, {green:This text will be green.|And the text is green!}</p>
+                </div>
+                <p class="pl-4 is-italic">This becomes...</p>
+                <div class="code-block">
+                  <div class="text-processing">By writing 'color:' before the displayed text, that text will be that color. For example, {green:This text will be green.|And the text is green!}</div>
+                </div>
+                <p class="pt-3"> Here are all the different color options: </p>
+                <div class="code-block text-processing">
+                    **Color Options**
+                    normal: 🠖 This is {normal:normal|How hidden!} text.
+                    blue: 🠖 This is {blue:blue|How it looks by default!} text.
+                    green: 🠖 This is {green:green|Quite green!} text.
+                    cyan: 🠖 This is {cyan:cyan|Nice color!} text.
+                    red: 🠖 This is {red:red|Uh oh!} text.
+                    yellow: 🠖 This is {yellow:yellow|Yellow!} text.
+                    blue_underline: 🠖 This is {blue_underline:blue underlined|Woah!} text.
+                    green_underline: 🠖 This is {green_underline:green underlined|Look at all these options!} text.
+                    cyan_underline: 🠖 This is {cyan_underline:cyan underlined|More subtle!} text.
+                    red_underline: 🠖 This is {red_underline:red underlined|Oooooo!} text.
+                    yellow_underline: 🠖 This is {yellow_underline:yellow underlined|Look! It's yellow again!} text.
+                </div>
+            </div>
             <div id="lists" class="mt-4 isHideable">
                 <div>
                   <h1 class="small-title is-size-4 is-marginless mb-1 pl-3">Bullet Lists</h1>
@@ -441,142 +482,8 @@
             <div id="code_stat_adjustments" class="mt-4 isHideable">
                 <h1 class="small-title is-size-4 is-marginless mb-1 pl-3">Stat Adjustments</h1>
                 <p>
-                  These sheet statements use the following codenames to adjust certain statistics within the character sheet.
+                  These sheet statements use variable names to adjust certain statistics within the character sheet. The <a href="/wsc_docs/#code_variables">Variables</a> page has the full table of all the variables with their names and descriptions.
                 </p>
-                <div class="pl-3 py-2">
-                    <p class="">
-                        <strong>Ability Scores:</strong>
-                    </p>
-                    <p class="pl-2"><span class="code">SCORE_STR</span></p>
-                    <p class="pl-2"><span class="code">SCORE_DEX</span></p>
-                    <p class="pl-2"><span class="code">SCORE_CON</span></p>
-                    <p class="pl-2"><span class="code">SCORE_INT</span></p>
-                    <p class="pl-2"><span class="code">SCORE_WIS</span></p>
-                    <p class="pl-2"><span class="code">SCORE_CHA</span></p>
-                </div>
-                <hr class="m-1">
-                <div class="pl-3 py-2">
-                    <p class="">
-                        <strong>Health:</strong>
-                    </p>
-                    <p class="pl-2"><span class="code">MAX_HEALTH</span></p>
-                    <p class="pl-2"><span class="code">MAX_HEALTH_BONUS_PER_LEVEL</span></p>
-                    <p class="m-1">-</p>
-                    <p class="pl-2"><span class="code">HEALTH</span> (updates current HP)</p>
-                    <p class="pl-2"><span class="code">TEMP_HEALTH</span> (updates current Temp HP)</p>
-                </div>
-                <hr class="m-1">
-                <div class="pl-3 py-2">
-                    <p class="">
-                        <strong>Saving Throws:</strong>
-                    </p>
-                    <p class="pl-2"><span class="code">SAVE_FORT</span></p>
-                    <p class="pl-2"><span class="code">SAVE_REFLEX</span></p>
-                    <p class="pl-2"><span class="code">SAVE_WILL</span></p>
-                </div>
-                <hr class="m-1">
-                <div class="pl-3 py-2">
-                    <p class="">
-                        <strong>Skills:</strong>
-                    </p>
-                    <p class="pl-2"><span class="code">SKILL_</span> + skillName</p>
-                    <p class="">
-                        For lore add <span class="code">_LORE</span> to the end. Ex: <span class="code">SKILL_WARFARE_LORE</span>
-                    </p>
-                </div>
-                <hr class="m-1">
-                <div class="pl-3 py-2">
-                    <p class="">
-                        <strong>Perception:</strong>
-                    </p>
-                    <p class="pl-2"><span class="code">PERCEPTION</span></p>
-                </div>
-                <hr class="m-1">
-                <div class="pl-3 py-2">
-                    <p class="">
-                        <strong>Class DC:</strong>
-                    </p>
-                    <p class="pl-2"><span class="code">CLASS_DC</span></p>
-                </div>
-                <hr class="m-1">
-                <div class="pl-3 py-2">
-                    <p class="">
-                        <strong>Weapon Attacks & Damage:</strong>
-                    </p>
-                    <p class="pl-2"><span class="code">ATTACKS</span></p>
-                    <p class="pl-2"><span class="code">ATTACKS_DMG_DICE</span> (overrides all weapon damage dice)</p>
-                    <p class="pl-2"><span class="code">ATTACKS_DMG_BONUS</span></p>
-                    <p class="m-1">-</p>
-                    <p class="pl-2"><span class="code">MELEE_ATTACKS</span></p>
-                    <p class="pl-2"><span class="code">MELEE_ATTACKS_DMG_DICE</span> (overrides all melee weapon damage dice)</p>
-                    <p class="pl-2"><span class="code">MELEE_ATTACKS_DMG_BONUS</span></p>
-                    <p class="pl-2"><span class="code">AGILE_MELEE_ATTACKS_DMG_BONUS</span></p>
-                    <p class="pl-2"><span class="code">NON_AGILE_MELEE_ATTACKS_DMG_BONUS</span></p>
-                    <p class="m-1">-</p>
-                    <p class="pl-2"><span class="code">RANGED_ATTACKS</span></p>
-                    <p class="pl-2"><span class="code">RANGED_ATTACKS_DMG_DICE</span> (overrides all ranged weapon damage dice)</p>
-                    <p class="pl-2"><span class="code">RANGED_ATTACKS_DMG_BONUS</span></p>
-                </div>
-                <hr class="m-1">
-                <div class="pl-3 py-2">
-                    <p class="">
-                        <strong>Spell Attacks:</strong>
-                    </p>
-                    <p class="pl-2"><span class="code">ARCANE_SPELL_ATTACK</span></p>
-                    <p class="pl-2"><span class="code">DIVINE_SPELL_ATTACK</span></p>
-                    <p class="pl-2"><span class="code">OCCULT_SPELL_ATTACK</span></p>
-                    <p class="pl-2"><span class="code">PRIMAL_SPELL_ATTACK</span></p>
-                </div>
-                <hr class="m-1">
-                <div class="pl-3 py-2">
-                    <p class="">
-                        <strong>Spell DCs:</strong>
-                    </p>
-                    <p class="pl-2"><span class="code">ARCANE_SPELL_DC</span></p>
-                    <p class="pl-2"><span class="code">DIVINE_SPELL_DC</span></p>
-                    <p class="pl-2"><span class="code">OCCULT_SPELL_DC</span></p>
-                    <p class="pl-2"><span class="code">PRIMAL_SPELL_DC</span></p>
-                </div>
-                <hr class="m-1">
-                <div class="pl-3 py-2">
-                    <p class="">
-                        <strong>Armor Class:</strong>
-                    </p>
-                    <p class="pl-2"><span class="code">AC</span></p>
-                </div>
-                <hr class="m-1">
-                <div class="pl-3 py-2">
-                    <p class="">
-                        <strong>Armor Other:</strong>
-                    </p>
-                    <p class="pl-2"><span class="code">ARMOR_CHECK_PENALTY</span></p>
-                    <p class="pl-2"><span class="code">ARMOR_SPEED_PENALTY</span></p>
-                    <p class="pl-2"><span class="code">DEX_CAP</span> (adjusting this at all will override any existing Dex Caps)</p>
-                </div>
-                <hr class="m-1">
-                <div class="pl-3 py-2">
-                    <p class="">
-                        <strong>Speed:</strong>
-                    </p>
-                    <p class="pl-2"><span class="code">SPEED</span></p>
-                    <p class="pl-2">
-                        For other Speeds, put <span class="code">SPEED_</span> and then the name of the speed. Ex: <span class="code">SPEED_CLIMB</span>
-                    </p>
-                </div>
-                <hr class="m-1">
-                <div class="pl-3 py-2">
-                    <p class="">
-                        <strong>Bulk:</strong>
-                    </p>
-                    <p class="pl-2"><span class="code">BULK_LIMIT</span></p>
-                </div>
-                <hr class="m-1">
-                <div class="pl-3 py-2">
-                    <p class="">
-                        <strong>Investiture:</strong>
-                    </p>
-                    <p class="pl-2"><span class="code">INVEST_LIMIT</span></p>
-                </div>
                 <div class="py-2">
                     <div class="code-block">
                         INCREASE-SKILL_SURVIVAL=5-STATUS
@@ -1005,29 +912,11 @@
             </div>
             <div id="code_proficiencies" class="mt-4 isHideable">
                 <h1 class="small-title is-size-4 is-marginless mb-1 pl-3">Proficiencies</h1>
-                <p class="pl-2 py-1">
-                    <strong>Skills:</strong> 'Acrobatics', 'Arcana', 'Athletics', 'Crafting', 'Deception', 'Diplomacy', 'Intimidation', 'Medicine', 'Nature', 'Occultism', 'Performance', 'Religion', 'Society', 'Stealth', 'Survival', 'Thievery'
+                <p>
+                  These builder statements are used to adjust the character's proficiencies. Most of these statements use the variable name of the appropriate proficiency to adjust, to find these names see the <a href="/wsc_docs/#code_variables">Variables</a> page. On it there is a full table with all of the variables used by both the builder and character sheet, you can use the variables with the type <span class="code">PROFICIENCY</span>.
                 </p>
-                <p class="pl-2 py-1">
-                    <strong>Attacks:</strong> 'Simple_Weapons', 'Martial_Weapons', 'Advanced_Weapons', 'Unarmed_Attacks'
-                </p>
-                <p class="pl-2 py-1">
-                    <strong>Defenses:</strong> 'Light_Armor', 'Medium_Armor', 'Heavy_Armor', 'Unarmored_Defense'
-                </p>
-                <p class="pl-2 py-1">
-                    <strong>Saving Throws:</strong> 'Fortitude', 'Reflex', 'Will'
-                </p>
-                <p class="pl-2 py-1">
-                    <strong>Perception:</strong> 'Perception'
-                </p>
-                <p class="pl-2 py-1">
-                    <strong>Class DC:</strong> 'Class_DC'
-                </p>
-                <p class="pl-2 py-1">
-                    <strong>Spell Attacks:</strong> 'ArcaneSpellAttacks', 'OccultSpellAttacks', 'PrimalSpellAttacks', 'DivineSpellAttacks'
-                </p>
-                <p class="pl-2 py-1">
-                    <strong>Spell DCs:</strong> 'ArcaneSpellDCs', 'OccultSpellDCs', 'PrimalSpellDCs', 'DivineSpellDCs'
+                <p>
+                  You can also add the proficiency of a specific lore, weapon, or armor by name. To do this, write <span class="code">TYPE~Name</span> in place of the proficiency variable name.
                 </p>
                 <div class="pl-3 py-2">
                     <p class="">
@@ -1043,12 +932,13 @@
                         ARMOR~Name
                     </p>
                 </div>
+                <hr class="m-3">
                 <p>
                     Use the following code statements to give a character a proficiency.
                 </p>
                 <div class="py-2">
                     <div class="code-block">
-                        GIVE-PROF-INCREASE-IN=Arcana
+                        GIVE-PROF-INCREASE-IN=SKILL_ARCANA
                     </div>
                     <p class="pl-3">
                         - Increases the character's proficiency in Arcana by one tier.
@@ -1059,7 +949,7 @@
                 </div>
                 <div class="py-2">
                     <div class="code-block">
-                        GIVE-PROF-IN=Diplomacy:T
+                        GIVE-PROF-IN=SKILL_DIPLOMACY:T
                     </div>
                     <p class="pl-3">
                         - Sets the character's base proficiency in Diplomacy to trained.
@@ -1073,7 +963,7 @@
                 </div>
                 <div class="py-2">
                     <div class="code-block">
-                        GIVE-PROF-IN=Light_Armor:M
+                        GIVE-PROF-IN=LIGHT_ARMOR:M
                     </div>
                     <p class="pl-3">
                         - Sets the character's base proficiency in Light Armor to master.
@@ -1099,6 +989,10 @@
                         (U = Untrained, T = Trained, E = Expert, M = Master, L = Legendary)
                     </p>
                 </div>
+                <hr class="m-3">
+                <p class="is-italic">
+                  The old proficiency codenames from pre-1.6 update have been deprecated and should no longer be used. However, a large amount of content within Wanderer's Guide still uses those old codenames in their code. These codenames will still work, however, they won't be supported forever.
+                </p>
             </div>
             <div id="code_skills" class="mt-4 isHideable">
                 <h1 class="small-title is-size-4 is-marginless mb-1 pl-3">Skills</h1>
@@ -1663,6 +1557,284 @@
                             - Makes all feats with the name 'Magical Trickster' have their level set to 2nd instead of what levels they were before.
                         </p>
                     </div>
+                </div>
+            </div>
+
+            <div id="code_variables" class="mt-4 isHideable">
+                <h1 class="small-title is-size-3 is-marginless mb-1 pl-3">Variables</h1>
+                <p>
+                    In both the character builder and sheet there are a set of predefined variables that you can make use of. You can also defined your own custom variables and assign value to them! <span class="is-italic">(The variable system is still in development with the plan to eventually phase out <a href="/wsc_docs/#code_stat_adjustments">Stat Adjustments</a> and combine everything into just Variables.)</span>
+                </p>
+                <p class="is-size-5 is-bold has-text-centered">PREDEFINED VARIABLES</p>
+                <div class="code-block text-processing">
+                  Variable Name|Variable Type|Details
+                  :--|:-:|:--
+                  **Ability Scores**||
+                  SCORE_STR|ABILITY_SCORE|Strength ability score.
+                  SCORE_DEX|ABILITY_SCORE|Dexterity ability score.
+                  SCORE_CON|ABILITY_SCORE|Constitution ability score.
+                  SCORE_INT|ABILITY_SCORE|Intelligence ability score.
+                  SCORE_WIS|ABILITY_SCORE|Wisdom ability score.
+                  SCORE_CHA|ABILITY_SCORE|Charisma ability score.
+                  **Saving Throws**||
+                  SAVE_FORT|PROFICIENCY|Fortitude saving throw. Ability score: SCORE_CON.
+                  SAVE_REFLEX|PROFICIENCY|Reflex saving throw. Ability score: SCORE_DEX.
+                  SAVE_WILL|PROFICIENCY|Will saving throw. Ability score: SCORE_WIS.
+                  **Skills**||
+                  SKILL_ACROBATICS|PROFICIENCY|Acrobatics skill. Ability score: SCORE_DEX.
+                  SKILL_ARCANA|PROFICIENCY|Arcana skill. Ability score: SCORE_INT.
+                  SKILL_ATHLETICS|PROFICIENCY|Athletics skill. Ability score: SCORE_STR.
+                  SKILL_CRAFTING|PROFICIENCY|Crafting skill. Ability score: SCORE_INT.
+                  SKILL_DECEPTION|PROFICIENCY|Deception skill. Ability score: SCORE_CHA.
+                  SKILL_DIPLOMACY|PROFICIENCY|Diplomacy skill. Ability score: SCORE_CHA.
+                  SKILL_INTIMIDATION|PROFICIENCY|Intimidation skill. Ability score: SCORE_CHA.
+                  SKILL_MEDICINE|PROFICIENCY|Medicine skill. Ability score: SCORE_WIS.
+                  SKILL_NATURE|PROFICIENCY|Nature skill. Ability score: SCORE_WIS.
+                  SKILL_OCCULTISM|PROFICIENCY|Occultism skill. Ability score: SCORE_INT.
+                  SKILL_PERFORMANCE|PROFICIENCY|Performance skill. Ability score: SCORE_CHA.
+                  SKILL_RELIGION|PROFICIENCY|Religion skill. Ability score: SCORE_WIS.
+                  SKILL_SOCIETY|PROFICIENCY|Society skill. Ability score: SCORE_INT.
+                  SKILL_STEALTH|PROFICIENCY|Stealth skill. Ability score: SCORE_DEX.
+                  SKILL_SURVIVAL|PROFICIENCY|Survival skill. Ability score: SCORE_WIS.
+                  SKILL_THIEVERY|PROFICIENCY|Thievery skill. Ability score: SCORE_DEX.
+                  SKILL_XXX_LORE|PROFICIENCY|Lore skill, replace XXX with the lore name. Ability score: SCORE_INT.
+                  **Perception**||
+                  PERCEPTION|PROFICIENCY|Perception. Ability score: SCORE_WIS.
+                  **Class DC**||
+                  CLASS_DC|PROFICIENCY|Class DC. Ability score: Varies.
+                  **Spell Attacks**||
+                  ARCANE_SPELL_ATTACK|PROFICIENCY|Arcane spell attack. Ability score: Varies.
+                  DIVINE_SPELL_ATTACK|PROFICIENCY|Divine spell attack. Ability score: Varies.
+                  OCCULT_SPELL_ATTACK|PROFICIENCY|Occult spell attack. Ability score: Varies.
+                  PRIMAL_SPELL_ATTACK|PROFICIENCY|Primal spell attack. Ability score: Varies.
+                  **Spell DCs**||
+                  ARCANE_SPELL_DC|PROFICIENCY|Arcane spell DC. Ability score: Varies.
+                  DIVINE_SPELL_DC|PROFICIENCY|Divine spell DC. Ability score: Varies.
+                  OCCULT_SPELL_DC|PROFICIENCY|Occult spell DC. Ability score: Varies.
+                  PRIMAL_SPELL_DC|PROFICIENCY|Primal spell DC. Ability score: Varies.
+                  **Armor**||
+                  LIGHT_ARMOR|PROFICIENCY|Light armor. Ability score: SCORE_DEX.
+                  MEDIUM_ARMOR|PROFICIENCY|Medium armor. Ability score: SCORE_DEX.
+                  HEAVY_ARMOR|PROFICIENCY|Heavy armor. Ability score: SCORE_DEX.
+                  UNARMORED_DEFENSE|PROFICIENCY|Unarmored defense. Ability score: SCORE_DEX.
+                  **Weapons**||
+                  SIMPLE_WEAPONS|PROFICIENCY|Simple weapons. Ability score: Varies.
+                  MARTIAL_WEAPONS|PROFICIENCY|Martial weapons. Ability score: Varies.
+                  ADVANCED_WEAPONS|PROFICIENCY|Advanced weapons. Ability score: Varies.
+                  UNARMED_ATTACKS|PROFICIENCY|Unarmed attacks. Ability score: Varies.
+                  **Health**||
+                  MAX_HEALTH|INTEGER|Max health, not including MAX_HEALTH_BONUS_PER_LEVEL.
+                  MAX_HEALTH_BONUS_PER_LEVEL|INTEGER|Added max HP at each level.
+                  HEALTH|INTEGER|Changing this will simply update the current HP once.
+                  TEMP_HEALTH|INTEGER|Changing this will simply update the current temp HP once.
+                  **AC**||
+                  AC|INTEGER|Used to add bonuses or penalties to AC.
+                  ARMOR_CHECK_PENALTY|INTEGER|Used to adjust the armor check penalty.
+                  ARMOR_SPEED_PENALTY|INTEGER|Used to adjust the armor speed penalty.
+                  DEX_CAP|INTEGER|Adjusting this at all will override any existing Dex Cap.
+                  **Speed**||
+                  SPEED|INTEGER|Used to adjust land Speed.
+                  SPEED_XXX|INTEGER|Used to adjust given Speed, replace XXX with the speed type.
+                  **Limits**||
+                  BULK_LIMIT|INTEGER|Used to adjust Bulk limit.
+                  INVEST_LIMIT|INTEGER|Used to adjust Investiture limit.
+                  **Global Attacks**||
+                  ATTACKS|INTEGER|Used to adjust attack bonus to all attacks.
+                  ATTACKS_DMG_DICE|INTEGER|Used to adjust damage dice to all attacks.
+                  ATTACKS_DMG_BONUS|INTEGER|Used to adjust damage bonus to all attacks.
+                  **Global Melee Attacks**||
+                  MELEE_ATTACKS|INTEGER|Used to adjust attack bonus to all melee attacks.
+                  MELEE_ATTACKS_DMG_DICE|INTEGER|Used to adjust damage dice to all melee attacks.
+                  MELEE_ATTACKS_DMG_BONUS|INTEGER|Used to adjust damage bonus to all melee attacks.
+                  AGILE_MELEE_ATTACKS_DMG_BONUS|INTEGER|Used to adjust damage bonus to all agile melee attacks.
+                  NON_AGILE_MELEE_ATTACKS_DMG_BONUS|INTEGER|Used to adjust damage bonus to all non-agile melee attacks.
+                  **Global Ranged Attacks**||
+                  RANGED_ATTACKS|INTEGER|Used to adjust attack bonus to all ranged attacks.
+                  RANGED_ATTACKS_DMG_DICE|INTEGER|Used to adjust damage dice to all ranged attacks.
+                  RANGED_ATTACKS_DMG_BONUS|INTEGER|Used to adjust damage bonus to all ranged attacks.
+                </div>
+
+                <hr class="m-3">
+
+                <h1 class="small-title is-size-3 is-marginless mb-1 pl-3 pt-3">Custom Variables</h1>
+                <p>
+                  If you're doing something particularly advanced, you might want to create your own variables. When making your own variables, you need to make sure that your variable name is unique and that you define your variable before you attempt to set it to anything.
+                </p>
+                <p>
+                  When you want to use a variable, you can just write the name and surround it in braces (like so, <span class="code">{Variable_Name}</span>). The variable will then be replaced by its value at runtime. Variables can be used in both description fields <span class="is-italic">and</span> code fields. And in code fields, the variable is replaced with its value before each statement is executed. This means that you could use variables to dynamically change a WSC statement from anywhere. Variables can also be chained within other variables, where the most internal variable is replaced first.
+                </p>
+                <p class=" is-bold pt-3">
+                  You can use the DEFINE-VARIABLE statement to create or initialize a variable.
+                </p>
+                <div class="py-2">
+                    <div class="code-block">
+                        DEFINE-VARIABLE=MyVariable:INTEGER
+                    </div>
+                    <p class="pl-3">
+                        - A new variable will be defined by the name 'MyVariable'. It is an integer, meaning it can only be assigned to equal a whole number.
+                    </p>
+                </div>
+                <div class="py-2">
+                    <div class="code-block">
+                        DEFINE-VARIABLE=Animal_Friend_Name:STRING
+                    </div>
+                    <p class="pl-3">
+                        - A new variable will be defined by the name 'Animal_Friend_Name'. It is a string, meaning it can only be assigned to equal a line of text.
+                    </p>
+                </div>
+                <div class="py-2">
+                    <div class="code-block">
+                        DEFINE-VARIABLE=Investigation:PROFICIENCY(SCORE_INT)
+                    </div>
+                    <p class="pl-3">
+                        - A new variable will be defined by the name 'Investigation'. It is a proficiency, meaning it can only be assigned to equal a proficiency rank (U, T, E, M, or L). In the parentheses is the name of an ABILITY_SCORE variable (in this case Intelligence aka SCORE_INT).
+                    </p>
+                </div>
+                <div class="py-2">
+                    <div class="code-block">
+                        DEFINE-VARIABLE=SCORE_AGILITY:ABILITY_SCORE
+                    </div>
+                    <p class="pl-3">
+                        - A new variable will be defined by the name 'SCORE_AGILITY'. It is an ability score, meaning it can only be assigned to equal a whole number.
+                    </p>
+                </div>
+                <div class="py-2">
+                    <div class="code-block">
+                        DEFINE-VARIABLE=FeatNames:LIST
+                    </div>
+                    <p class="pl-3">
+                        - A new variable will be defined by the name 'FeatNames'. It is a list, meaning it can only be assigned to equal an array or list of values (following JSON formatting).
+                    </p>
+                </div>
+
+                <hr class="m-3">
+
+                <p class="is-bold pt-3">
+                  You can use the SET-VARIABLE statement to set a defined variable or one of its set methods to a value.
+                </p>
+                <p class="is-italic">
+                  Not specifying a method when setting a variable is the same as using .SET_VALUE
+                </p>
+                <p class="is-bold is-size-6 has-text-centered">SET METHODS BY VARIABLE TYPE</p>
+                <div class="code-block text-processing">
+                  Method Name|Details|
+                  :--|:--|:--
+                  **INTEGER**||
+                  SET_VALUE|Sets the variable to the given input.|
+                  **STRING**||
+                  SET_VALUE|Sets the variable to the given input.|
+                  **PROFICIENCY**||
+                  SET_ABILITY|Sets the ability score to the ABILITY_SCORE variable with the given name.|
+                  SET_VALUE|Sets the proficiency rank to the given input.|
+                  **ABILITY_SCORE**||
+                  SET_SCORE|Sets the variable to the given input.|
+                  SET_VALUE|Sets the variable to the given input.|
+                  **LIST**||
+                  SET_INDEX_XXX|Sets the XXXth element in the list to the given input, starting at 0th.|
+                  SET_INDEX_NEXT|Sets the next element in the list to the given input.|
+                  SET_VALUE|Sets the variable to the given input, it must be an array following JSON formatting.|
+                </div>
+                <div class="py-2">
+                    <div class="code-block">
+                        SET-VARIABLE=MyVariable.SET_VALUE:67
+                    </div>
+                    <p class="pl-3">
+                        - The variable by the name of 'MyVariable' will be assigned to the value of '67'.
+                    </p>
+                </div>
+                <div class="py-2">
+                    <div class="code-block">
+                        SET-VARIABLE=Animal_Friend_Name:Vienna
+                    </div>
+                    <p class="pl-3">
+                        - The variable by the name of 'Animal_Friend_Name' will be assigned to the value of 'Vienna'. This is equivalent to 'Animal_Friend_Name.SET_VALUE:Vienna'.
+                    </p>
+                </div>
+                <div class="py-2">
+                    <div class="code-block">
+                        SET-VARIABLE=Investigation.SET_ABILITY:SCORE_WIS
+                    </div>
+                    <p class="pl-3">
+                        - The variable by the name of 'Investigation' will have its ability score assigned to a new ABILITY_SCORE variable by the name of 'SCORE_WIS' (aka Wisdom).
+                    </p>
+                </div>
+                <div class="py-2">
+                    <div class="code-block">
+                        SET-VARIABLE=SCORE_AGILITY.SET_SCORE:14
+                    </div>
+                    <p class="pl-3">
+                        - The variable by the name of 'SCORE_AGILITY' will be assigned to the value of '14'.
+                    </p>
+                </div>
+                <div class="py-2">
+                    <div class="code-block">
+                        SET-VARIABLE=FeatNames.SET_VALUE:["Lie to Me","Diehard","Risky Surgery","Juggle"]
+                    </div>
+                    <p class="pl-3">
+                        - The variable by the name of 'FeatNames' will be assigned to the array ["Lie to Me","Diehard","Risky Surgery","Juggle"].
+                    </p>
+                </div>
+                <div class="py-2">
+                    <div class="code-block">
+                        SET-VARIABLE=FeatNames.SET_INDEX_2:Very Sneaky
+                    </div>
+                    <p class="pl-3">
+                        - The variable by the name of 'FeatNames' will have its 3rd element (index 2) be replaced with the value 'Very Sneaky'.
+                    </p>
+                </div>
+                <div class="py-2">
+                    <div class="code-block">
+                        SET-VARIABLE=FeatNames.SET_INDEX_NEXT:Whirling Throw
+                    </div>
+                    <p class="pl-3">
+                        - The variable by the name of 'FeatNames' will have a new element added to the end of it with the value 'Whirling Throw'.
+                    </p>
+                </div>
+
+                <hr class="m-3">
+
+                <p class="is-bold pt-3">
+                  Once you have defined and set some variables, you will want to be able to use them. Here's how:
+                </p>
+                <p>
+                  Variables can be written in description fields and code fields by writing the variable name then surrounding it in braces, like so: {VariableName}. You can also include one of the variable's get methods to get other variable information. <span class="is-italic">Not specifying a method when writing a variable is the same as using the .GET_VALUE method</span>
+                </p>
+                <p class="is-bold is-size-6 has-text-centered">GET METHODS BY VARIABLE TYPE</p>
+                <div class="code-block text-processing">
+                  Method Name|Details|
+                  :--|:--|:--
+                  **INTEGER**||
+                  GET_VALUE|Gets the value of the variable.|
+                  **STRING**||
+                  GET_VALUE|Gets the value of the variable.|
+                  **PROFICIENCY**||
+                  GET_TOTAL|Gets the total bonus. Currently doesn't add character level.|
+                  GET_BONUS_RANK|Gets the proficiency bonus. Currently doesn't add character level.|
+                  GET_BONUS_ABILITY|Gets the ability score bonus.|
+                  GET_ABILITY|Gets the associated ABILITY_SCORE variable.|
+                  GET_VALUE|Gets the value of the variable.|
+                  **ABILITY_SCORE**||
+                  GET_SCORE|Gets the value of the variable.|
+                  GET_MOD|Gets the calculated modifier of the score.|
+                  GET_VALUE|Gets the value of the variable.|
+                  **LIST**||
+                  GET_INDEX_XXX|Gets the value of the XXXth element, starting at 0th.|
+                  GET_LENGTH|Gets the length of the list.|
+                  GET_VALUE|Gets the value of the variable.|
+                </div>
+                <div class="py-2">
+                    <p class="is-bold">
+                      Example.
+                    </p>
+                    <p class="pl-3">
+                      Here's my list of feats {FeatNames}. The second element is {FeatNames.GET_INDEX_1}. I have a +{SCORE_AGILITY.GET_MOD} in my Agility ability score. My pet is named {Animal_Friend_Name}, I love her very much.
+                    </p>
+                    <p class="pl-2 is-italic">
+                      Based on the previous examples, this becomes...
+                    </p>
+                    <p class="pl-3">
+                      Here's my list of feats [Lie to Me,Diehard,Very Sneaky,Juggle,Whirling Throw]. The second element is Diehard. I have a +2 in my Agility ability score. My pet is named Vienna, I love her very much.
+                    </p>
                 </div>
             </div>
             

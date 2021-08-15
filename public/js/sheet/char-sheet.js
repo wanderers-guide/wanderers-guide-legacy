@@ -406,97 +406,112 @@ function loadCharSheet(){
 
     // ~~~~~~~~~~~~~~~~~~~~~~~ Adding Stats To Map ~~~~~~~~~~~~~~~~~~~~~~~ //
 
-    addStat('SPEED', 'BASE', g_ancestry.speed);
+    initializeVariable(VARIABLE.SCORE_STR, VAR_TYPE.ABILITY_SCORE, 'BASE', g_abilMap.get("STR"));
+    initializeVariable(VARIABLE.SCORE_DEX, VAR_TYPE.ABILITY_SCORE, 'BASE', g_abilMap.get("DEX"));
+    initializeVariable(VARIABLE.SCORE_CON, VAR_TYPE.ABILITY_SCORE, 'BASE', g_abilMap.get("CON"));
+    initializeVariable(VARIABLE.SCORE_INT, VAR_TYPE.ABILITY_SCORE, 'BASE', g_abilMap.get("INT"));
+    initializeVariable(VARIABLE.SCORE_WIS, VAR_TYPE.ABILITY_SCORE, 'BASE', g_abilMap.get("WIS"));
+    initializeVariable(VARIABLE.SCORE_CHA, VAR_TYPE.ABILITY_SCORE, 'BASE', g_abilMap.get("CHA"));
+    initializeVariable(VARIABLE.SCORE_NONE, VAR_TYPE.ABILITY_SCORE, null, 10);
+
+    initializeVariable('SPEED', VAR_TYPE.INTEGER, 'BASE', g_ancestry.speed);
     for(const otherSpeed of g_otherSpeeds){
-      addStat('SPEED_'+otherSpeed.Type, 'BASE', otherSpeed.Amount);
+      initializeVariable('SPEED_'+otherSpeed.Type, VAR_TYPE.INTEGER, 'BASE', otherSpeed.Amount);
     }
 
     let classDCData = getFinalProf(g_profMap.get("Class_DC"));
-    addStat('CLASS_DC', 'PROF_BONUS', classDCData.NumUps);
-    addStat('CLASS_DC', 'USER_BONUS', classDCData.UserBonus);
-    addStat('CLASS_DC', 'MODIFIER', g_classDetails.KeyAbility);
-
-    addStat('SCORE_STR', 'BASE', g_abilMap.get("STR"));
-    addStat('SCORE_DEX', 'BASE', g_abilMap.get("DEX"));
-    addStat('SCORE_CON', 'BASE', g_abilMap.get("CON"));
-    addStat('SCORE_INT', 'BASE', g_abilMap.get("INT"));
-    addStat('SCORE_WIS', 'BASE', g_abilMap.get("WIS"));
-    addStat('SCORE_CHA', 'BASE', g_abilMap.get("CHA"));
+    initializeVariableProf(VARIABLE.CLASS_DC, 'SCORE_'+g_classDetails.KeyAbility, classDCData.NumUps);
+    addStat(VARIABLE.CLASS_DC, 'PROF_BONUS', classDCData.NumUps);
+    addStat(VARIABLE.CLASS_DC, 'USER_BONUS', classDCData.UserBonus);
+    addStat(VARIABLE.CLASS_DC, 'MODIFIER', g_classDetails.KeyAbility);
 
     let fortData = getFinalProf(g_profMap.get("Fortitude"));
-    
-    addStat('SAVE_FORT', 'PROF_BONUS', fortData.NumUps);
-    addStat('SAVE_FORT', 'USER_BONUS', fortData.UserBonus);
-    addStat('SAVE_FORT', 'MODIFIER', 'CON');
+    initializeVariableProf(VARIABLE.SAVE_FORT, VARIABLE.SCORE_CON, fortData.NumUps);
+    addStat(VARIABLE.SAVE_FORT, 'PROF_BONUS', fortData.NumUps);
+    addStat(VARIABLE.SAVE_FORT, 'USER_BONUS', fortData.UserBonus);
+    addStat(VARIABLE.SAVE_FORT, 'MODIFIER', 'CON');
     
     let reflexData = getFinalProf(g_profMap.get("Reflex"));
-    addStat('SAVE_REFLEX', 'PROF_BONUS', reflexData.NumUps);
-    addStat('SAVE_REFLEX', 'USER_BONUS', reflexData.UserBonus);
-    addStat('SAVE_REFLEX', 'MODIFIER', 'DEX');
+    initializeVariableProf(VARIABLE.SAVE_REFLEX, VARIABLE.SCORE_DEX, reflexData.NumUps);
+    addStat(VARIABLE.SAVE_REFLEX, 'PROF_BONUS', reflexData.NumUps);
+    addStat(VARIABLE.SAVE_REFLEX, 'USER_BONUS', reflexData.UserBonus);
+    addStat(VARIABLE.SAVE_REFLEX, 'MODIFIER', 'DEX');
 
     let willData = getFinalProf(g_profMap.get("Will"));
-    addStat('SAVE_WILL', 'PROF_BONUS', willData.NumUps);
-    addStat('SAVE_WILL', 'USER_BONUS', willData.UserBonus);
-    addStat('SAVE_WILL', 'MODIFIER', 'WIS');
+    initializeVariableProf(VARIABLE.SAVE_WILL, VARIABLE.SCORE_WIS, willData.NumUps);
+    addStat(VARIABLE.SAVE_WILL, 'PROF_BONUS', willData.NumUps);
+    addStat(VARIABLE.SAVE_WILL, 'USER_BONUS', willData.UserBonus);
+    addStat(VARIABLE.SAVE_WILL, 'MODIFIER', 'WIS');
 
     for(const [skillName, skillData] of g_skillMap.entries()){
         let profData = getFinalProf(g_profMap.get(skillName));
         let skillCodeName = skillName.replace(/\s/g,'_');
         if(profData != null){
-            addStat('SKILL_'+skillCodeName, 'PROF_BONUS', profData.NumUps);
-            addStat('SKILL_'+skillCodeName, 'USER_BONUS', profData.UserBonus);
+          initializeVariableProf('SKILL_'+skillCodeName, 'SCORE_'+skillData.Skill.ability, profData.NumUps);
+          addStat('SKILL_'+skillCodeName, 'PROF_BONUS', profData.NumUps);
+          addStat('SKILL_'+skillCodeName, 'USER_BONUS', profData.UserBonus);
         } else {
-            addStat('SKILL_'+skillCodeName, 'PROF_BONUS', skillData.NumUps);
+          initializeVariableProf('SKILL_'+skillCodeName, 'SCORE_'+skillData.Skill.ability, skillData.NumUps);
+          addStat('SKILL_'+skillCodeName, 'PROF_BONUS', skillData.NumUps);
         }
         addStat('SKILL_'+skillCodeName, 'MODIFIER', skillData.Skill.ability);
     }
 
     let perceptionData = getFinalProf(g_profMap.get("Perception"));
-    addStat('PERCEPTION', 'PROF_BONUS', perceptionData.NumUps);
-    addStat('PERCEPTION', 'USER_BONUS', perceptionData.UserBonus);
-    addStat('PERCEPTION', 'MODIFIER', 'WIS');
+    initializeVariableProf(VARIABLE.PERCEPTION, VARIABLE.SCORE_WIS, perceptionData.NumUps);
+    addStat(VARIABLE.PERCEPTION, 'PROF_BONUS', perceptionData.NumUps);
+    addStat(VARIABLE.PERCEPTION, 'USER_BONUS', perceptionData.UserBonus);
+    addStat(VARIABLE.PERCEPTION, 'MODIFIER', 'WIS');
 
     // Spell Attacks and DCs
     let arcaneSpellAttack = getFinalProf(g_profMap.get("ArcaneSpellAttacks"));
     if(arcaneSpellAttack != null){
-        addStat('ARCANE_SPELL_ATTACK', 'PROF_BONUS', arcaneSpellAttack.NumUps);
-        addStat('ARCANE_SPELL_ATTACK', 'USER_BONUS', arcaneSpellAttack.UserBonus);
+      initializeVariableProf(VARIABLE.ARCANE_SPELL_ATTACK, VARIABLE.SCORE_NONE, arcaneSpellAttack.NumUps);
+      addStat(VARIABLE.ARCANE_SPELL_ATTACK, 'PROF_BONUS', arcaneSpellAttack.NumUps);
+      addStat(VARIABLE.ARCANE_SPELL_ATTACK, 'USER_BONUS', arcaneSpellAttack.UserBonus);
     }
     let occultSpellAttack = getFinalProf(g_profMap.get("OccultSpellAttacks"));
     if(occultSpellAttack != null){
-        addStat('OCCULT_SPELL_ATTACK', 'PROF_BONUS', occultSpellAttack.NumUps);
-        addStat('OCCULT_SPELL_ATTACK', 'USER_BONUS', occultSpellAttack.UserBonus);
+      initializeVariableProf(VARIABLE.OCCULT_SPELL_ATTACK, VARIABLE.SCORE_NONE, occultSpellAttack.NumUps);
+      addStat(VARIABLE.OCCULT_SPELL_ATTACK, 'PROF_BONUS', occultSpellAttack.NumUps);
+      addStat(VARIABLE.OCCULT_SPELL_ATTACK, 'USER_BONUS', occultSpellAttack.UserBonus);
     }
     let primalSpellAttack = getFinalProf(g_profMap.get("PrimalSpellAttacks"));
     if(primalSpellAttack != null){
-        addStat('PRIMAL_SPELL_ATTACK', 'PROF_BONUS', primalSpellAttack.NumUps);
-        addStat('PRIMAL_SPELL_ATTACK', 'USER_BONUS', primalSpellAttack.UserBonus);
+      initializeVariableProf(VARIABLE.PRIMAL_SPELL_ATTACK, VARIABLE.SCORE_NONE, primalSpellAttack.NumUps);
+      addStat(VARIABLE.PRIMAL_SPELL_ATTACK, 'PROF_BONUS', primalSpellAttack.NumUps);
+      addStat(VARIABLE.PRIMAL_SPELL_ATTACK, 'USER_BONUS', primalSpellAttack.UserBonus);
     }
     let divineSpellAttack = getFinalProf(g_profMap.get("DivineSpellAttacks"));
     if(divineSpellAttack != null){
-        addStat('DIVINE_SPELL_ATTACK', 'PROF_BONUS', divineSpellAttack.NumUps);
-        addStat('DIVINE_SPELL_ATTACK', 'USER_BONUS', divineSpellAttack.UserBonus);
+      initializeVariableProf(VARIABLE.DIVINE_SPELL_ATTACK, VARIABLE.SCORE_NONE, divineSpellAttack.NumUps);
+      addStat(VARIABLE.DIVINE_SPELL_ATTACK, 'PROF_BONUS', divineSpellAttack.NumUps);
+      addStat(VARIABLE.DIVINE_SPELL_ATTACK, 'USER_BONUS', divineSpellAttack.UserBonus);
     }
     
     let arcaneSpellDC = getFinalProf(g_profMap.get("ArcaneSpellDCs"));
     if(arcaneSpellDC != null){
-        addStat('ARCANE_SPELL_DC', 'PROF_BONUS', arcaneSpellDC.NumUps);
-        addStat('ARCANE_SPELL_DC', 'USER_BONUS', arcaneSpellDC.UserBonus);
+      initializeVariableProf(VARIABLE.ARCANE_SPELL_DC, VARIABLE.SCORE_NONE, arcaneSpellDC.NumUps);
+      addStat(VARIABLE.ARCANE_SPELL_DC, 'PROF_BONUS', arcaneSpellDC.NumUps);
+      addStat(VARIABLE.ARCANE_SPELL_DC, 'USER_BONUS', arcaneSpellDC.UserBonus);
     }
     let occultSpellDC = getFinalProf(g_profMap.get("OccultSpellDCs"));
     if(occultSpellDC != null){
-        addStat('OCCULT_SPELL_DC', 'PROF_BONUS', occultSpellDC.NumUps);
-        addStat('OCCULT_SPELL_DC', 'USER_BONUS', occultSpellDC.UserBonus);
+      initializeVariableProf(VARIABLE.OCCULT_SPELL_DC, VARIABLE.SCORE_NONE, occultSpellDC.NumUps);
+      addStat(VARIABLE.OCCULT_SPELL_DC, 'PROF_BONUS', occultSpellDC.NumUps);
+      addStat(VARIABLE.OCCULT_SPELL_DC, 'USER_BONUS', occultSpellDC.UserBonus);
     }
     let primalSpellDC = getFinalProf(g_profMap.get("PrimalSpellDCs"));
     if(primalSpellDC != null){
-        addStat('PRIMAL_SPELL_DC', 'PROF_BONUS', primalSpellDC.NumUps);
-        addStat('PRIMAL_SPELL_DC', 'USER_BONUS', primalSpellDC.UserBonus);
+      initializeVariableProf(VARIABLE.PRIMAL_SPELL_DC, VARIABLE.SCORE_NONE, primalSpellDC.NumUps);
+      addStat(VARIABLE.PRIMAL_SPELL_DC, 'PROF_BONUS', primalSpellDC.NumUps);
+      addStat(VARIABLE.PRIMAL_SPELL_DC, 'USER_BONUS', primalSpellDC.UserBonus);
     }
     let divineSpellDC = getFinalProf(g_profMap.get("DivineSpellDCs"));
     if(divineSpellDC != null){
-        addStat('DIVINE_SPELL_DC', 'PROF_BONUS', divineSpellDC.NumUps);
-        addStat('DIVINE_SPELL_DC', 'USER_BONUS', divineSpellDC.UserBonus);
+      initializeVariableProf(VARIABLE.DIVINE_SPELL_DC, VARIABLE.SCORE_NONE, divineSpellDC.NumUps);
+      addStat(VARIABLE.DIVINE_SPELL_DC, 'PROF_BONUS', divineSpellDC.NumUps);
+      addStat(VARIABLE.DIVINE_SPELL_DC, 'USER_BONUS', divineSpellDC.UserBonus);
     }
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
@@ -511,12 +526,12 @@ function loadCharSheet(){
     displayAbilityScores();
 
     // Get STR and DEX score before conditions code runs (in the case of Enfeebled)
-    g_preConditions_strScore = getStatTotal('SCORE_STR');
-    g_preConditions_dexScore = getStatTotal('SCORE_DEX');
-    g_preConditions_conScore = getStatTotal('SCORE_CON');
-    g_preConditions_intScore = getStatTotal('SCORE_INT');
-    g_preConditions_wisScore = getStatTotal('SCORE_WIS');
-    g_preConditions_chaScore = getStatTotal('SCORE_CHA');
+    g_preConditions_strScore = getStatTotal(VARIABLE.SCORE_STR);
+    g_preConditions_dexScore = getStatTotal(VARIABLE.SCORE_DEX);
+    g_preConditions_conScore = getStatTotal(VARIABLE.SCORE_CON);
+    g_preConditions_intScore = getStatTotal(VARIABLE.SCORE_INT);
+    g_preConditions_wisScore = getStatTotal(VARIABLE.SCORE_WIS);
+    g_preConditions_chaScore = getStatTotal(VARIABLE.SCORE_CHA);
 
     // Run All Conditions Code //
     runAllConditionsCode();
@@ -536,11 +551,11 @@ function loadCharSheet(){
     determineBulkAndCoins(g_invStruct.InvItems, g_itemMap);
 
     // Display Health and Temp -> Stamina and Resolve //
-    addStat('MAX_HEALTH', 'ANCESTRY', g_ancestry.hitPoints);
+    initializeVariable(VARIABLE.MAX_HEALTH, VAR_TYPE.INTEGER, 'ANCESTRY', g_ancestry.hitPoints);
     if(gOption_hasStamina){
-      addStat('MAX_HEALTH_BONUS_PER_LEVEL', 'BASE', 0);
+      initializeVariable(VARIABLE.MAX_HEALTH_BONUS_PER_LEVEL, VAR_TYPE.INTEGER, 'BASE', 0);
     } else {
-      addStat('MAX_HEALTH_BONUS_PER_LEVEL', 'BASE', getModOfValue('CON'));
+      initializeVariable(VARIABLE.MAX_HEALTH_BONUS_PER_LEVEL, VAR_TYPE.INTEGER, 'BASE', getModOfValue('CON'));
     }
 
     // Run Toggleables (Sheet State) Code //
@@ -610,7 +625,7 @@ function displayAbilityScores() {
     //////////////////////////////////////// Ability Scores ////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
-    let strScore = getStatTotal('SCORE_STR');
+    let strScore = getStatTotal(VARIABLE.SCORE_STR);
     $("#strScore").html(strScore);
     $("#strMod").html(signNumber(getMod(strScore)));
     g_calculatedStats.totalAbilityScores.push({Name: 'Strength', Score: strScore});// Calculated Stat
@@ -628,7 +643,7 @@ function displayAbilityScores() {
         $(this).removeClass('has-background-grey-darker');
     });
 
-    let dexScore = getStatTotal('SCORE_DEX');
+    let dexScore = getStatTotal(VARIABLE.SCORE_DEX);
     $("#dexScore").html(dexScore);
     $("#dexMod").html(signNumber(getMod(dexScore)));
     g_calculatedStats.totalAbilityScores.push({Name: 'Dexterity', Score: dexScore});// Calculated Stat
@@ -646,7 +661,7 @@ function displayAbilityScores() {
         $(this).removeClass('has-background-grey-darker');
     });
 
-    let conScore = getStatTotal('SCORE_CON');
+    let conScore = getStatTotal(VARIABLE.SCORE_CON);
     $("#conScore").html(conScore);
     $("#conMod").html(signNumber(getMod(conScore)));
     g_calculatedStats.totalAbilityScores.push({Name: 'Constitution', Score: conScore});// Calculated Stat
@@ -664,7 +679,7 @@ function displayAbilityScores() {
         $(this).removeClass('has-background-grey-darker');
     });
 
-    let intScore = getStatTotal('SCORE_INT');
+    let intScore = getStatTotal(VARIABLE.SCORE_INT);
     $("#intScore").html(intScore);
     $("#intMod").html(signNumber(getMod(intScore)));
     g_calculatedStats.totalAbilityScores.push({Name: 'Intelligence', Score: intScore});// Calculated Stat
@@ -682,7 +697,7 @@ function displayAbilityScores() {
         $(this).removeClass('has-background-grey-darker');
     });
 
-    let wisScore = getStatTotal('SCORE_WIS');
+    let wisScore = getStatTotal(VARIABLE.SCORE_WIS);
     $("#wisScore").html(wisScore);
     $("#wisMod").html(signNumber(getMod(wisScore)));
     g_calculatedStats.totalAbilityScores.push({Name: 'Wisdom', Score: wisScore});// Calculated Stat
@@ -700,7 +715,7 @@ function displayAbilityScores() {
         $(this).removeClass('has-background-grey-darker');
     });
 
-    let chaScore = getStatTotal('SCORE_CHA');
+    let chaScore = getStatTotal(VARIABLE.SCORE_CHA);
     $("#chaScore").html(chaScore);
     $("#chaMod").html(signNumber(getMod(chaScore)));
     g_calculatedStats.totalAbilityScores.push({Name: 'Charisma', Score: chaScore});// Calculated Stat
@@ -826,8 +841,8 @@ function displayInformation() {
 
     let classDCContent = $("#classDCContent");
 
-    let classDC = getStatTotal('CLASS_DC')+10;
-    let classDCBonusDisplayed = (hasConditionals('CLASS_DC')) 
+    let classDC = getStatTotal(VARIABLE.CLASS_DC)+10;
+    let classDCBonusDisplayed = (hasConditionals(VARIABLE.CLASS_DC)) 
             ? classDC+'<sup class="is-size-6 has-text-info">*</sup>' : classDC;
     classDCContent.html(classDCBonusDisplayed);
     g_calculatedStats.totalClassDC = classDC;// Calculated Stat
@@ -911,9 +926,9 @@ function displayInformation() {
     //////////////////////////////////////////// Saves /////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
-    let fortBonus = getStatTotal('SAVE_FORT');
+    let fortBonus = getStatTotal(VARIABLE.SAVE_FORT);
     let fortBonusContent = $("#fortSave");
-    let fortBonusDisplayed = (hasConditionals('SAVE_FORT')) ? signNumber(fortBonus)+'<sup class="is-size-6 has-text-info">*</sup>' : signNumber(fortBonus);
+    let fortBonusDisplayed = (hasConditionals(VARIABLE.SAVE_FORT)) ? signNumber(fortBonus)+'<sup class="is-size-6 has-text-info">*</sup>' : signNumber(fortBonus);
     fortBonusContent.html(fortBonusDisplayed);
     g_calculatedStats.totalSaves.push({Name: 'Fortitude', Bonus: fortBonus});// Calculated Stat
 
@@ -938,9 +953,9 @@ function displayInformation() {
         $(this).removeClass('has-background-grey-darker');
     });
 
-    let reflexBonus = getStatTotal('SAVE_REFLEX');
+    let reflexBonus = getStatTotal(VARIABLE.SAVE_REFLEX);
     let reflexBonusContent = $("#reflexSave");
-    let reflexBonusDisplayed = (hasConditionals('SAVE_REFLEX')) ? signNumber(reflexBonus)+'<sup class="is-size-6 has-text-info">*</sup>' : signNumber(reflexBonus);
+    let reflexBonusDisplayed = (hasConditionals(VARIABLE.SAVE_REFLEX)) ? signNumber(reflexBonus)+'<sup class="is-size-6 has-text-info">*</sup>' : signNumber(reflexBonus);
     reflexBonusContent.html(reflexBonusDisplayed);
     g_calculatedStats.totalSaves.push({Name: 'Reflex', Bonus: reflexBonus});// Calculated Stat
 
@@ -965,9 +980,9 @@ function displayInformation() {
         $(this).removeClass('has-background-grey-darker');
     });
 
-    let willBonus = getStatTotal('SAVE_WILL');
+    let willBonus = getStatTotal(VARIABLE.SAVE_WILL);
     let willBonusContent = $("#willSave");
-    let willBonusDisplayed = (hasConditionals('SAVE_WILL')) ? signNumber(willBonus)+'<sup class="is-size-6 has-text-info">*</sup>' : signNumber(willBonus);
+    let willBonusDisplayed = (hasConditionals(VARIABLE.SAVE_WILL)) ? signNumber(willBonus)+'<sup class="is-size-6 has-text-info">*</sup>' : signNumber(willBonus);
     willBonusContent.html(willBonusDisplayed);
     g_calculatedStats.totalSaves.push({Name: 'Will', Bonus: willBonus});// Calculated Stat
 
@@ -997,10 +1012,10 @@ function displayInformation() {
     ////////////////////////////////////////////////////////////////////////////////////////////////
     
     let speedContent = $("#speedContent");
-    let speedNum = getStatTotal('SPEED');
+    let speedNum = getStatTotal(VARIABLE.SPEED);
     speedNum = (speedNum > 5) ? speedNum : 5;
 
-    let speedDisplayed = (hasConditionals('SPEED')) ?
+    let speedDisplayed = (hasConditionals(VARIABLE.SPEED)) ?
             speedNum+' ft<sup class="is-size-6 has-text-info">*</sup>' : speedNum+' ft';
     speedContent.html(speedDisplayed);
     g_calculatedStats.totalSpeed = speedNum;// Calculated Stat
@@ -1050,8 +1065,8 @@ function displayInformation() {
     }
 
     let perceptionBonusContent = $("#perceptionBonusContent");
-    let perceptionBonus = getStatTotal('PERCEPTION');
-    let perceptionBonusDisplayed = (hasConditionals('PERCEPTION')) 
+    let perceptionBonus = getStatTotal(VARIABLE.PERCEPTION);
+    let perceptionBonusDisplayed = (hasConditionals(VARIABLE.PERCEPTION)) 
             ? signNumber(perceptionBonus)+'<sup class="is-size-6 has-text-info">*</sup>' : signNumber(perceptionBonus);
     perceptionBonusContent.html(perceptionBonusDisplayed);
     g_calculatedStats.totalPerception = perceptionBonus;// Calculated Stat
@@ -1390,8 +1405,8 @@ function displayInformation() {
             event.stopImmediatePropagation();
         }
         changeTab('weaponsTab', {
-            StrMod : getMod(getStatTotal('SCORE_STR')),
-            DexMod : getMod(getStatTotal('SCORE_DEX')),
+            StrMod : getMod(getStatTotal(VARIABLE.SCORE_STR)),
+            DexMod : getMod(getStatTotal(VARIABLE.SCORE_DEX)),
         });
     });
 
@@ -1547,12 +1562,12 @@ function initHealthAndTemp() {
     $('#resolvePointsContainer').addClass('is-hidden');
 
     let maxHealth = $('#char-max-health');
-    let maxHealthNum = getStatTotal('MAX_HEALTH');
+    let maxHealthNum = getStatTotal(VARIABLE.MAX_HEALTH);
 
     if(gOption_hasStamina){
-      maxHealthNum += (Math.floor(g_classDetails.Class.hitPoints/2)+getStatTotal('MAX_HEALTH_BONUS_PER_LEVEL'))*g_character.level;
+      maxHealthNum += (Math.floor(g_classDetails.Class.hitPoints/2)+getStatTotal(VARIABLE.MAX_HEALTH_BONUS_PER_LEVEL))*g_character.level;
     } else {
-      maxHealthNum += (g_classDetails.Class.hitPoints+getStatTotal('MAX_HEALTH_BONUS_PER_LEVEL'))*g_character.level;
+      maxHealthNum += (g_classDetails.Class.hitPoints+getStatTotal(VARIABLE.MAX_HEALTH_BONUS_PER_LEVEL))*g_character.level;
     }
     
     if(maxHealthNum < 0){ maxHealthNum = 0; }
@@ -1889,7 +1904,7 @@ function determineArmor(dexMod, strScore) {
         let profNumUps = null;
         if(profData != null){
             profNumUps = profData.NumUps;
-            addStat('AC', 'USER_BONUS', profData.UserBonus);
+            addStat(VARIABLE.AC, 'USER_BONUS', profData.UserBonus);
         } else {
             profNumUps = 0;
         }
@@ -1897,32 +1912,32 @@ function determineArmor(dexMod, strScore) {
         let profNumber = getProfNumber(profNumUps, g_character.level);
 
         let pre_dexMod = getMod(g_preConditions_dexScore);
-        let dexCap = (getStatTotal('DEX_CAP') != null) ? getStatTotal('DEX_CAP') : armorStruct.Item.ArmorData.dexCap;
+        let dexCap = (getStatTotal(VARIABLE.DEX_CAP) != null) ? getStatTotal(VARIABLE.DEX_CAP) : armorStruct.Item.ArmorData.dexCap;
         let newDexMod = (pre_dexMod > dexCap) ? dexCap : pre_dexMod;
         dexMod = newDexMod - (pre_dexMod-dexMod);
 
         // Apply armor's rune effects to character...
         if(isArmorPotencyOne(armorStruct.InvItem.fundPotencyRuneID)){
-          addStat('AC', 'ITEM_BONUS', 1);
+          addStat(VARIABLE.AC, 'ITEM_BONUS', 1);
         } else if(isArmorPotencyTwo(armorStruct.InvItem.fundPotencyRuneID)){
-          addStat('AC', 'ITEM_BONUS', 2);
+          addStat(VARIABLE.AC, 'ITEM_BONUS', 2);
         } else if(isArmorPotencyThree(armorStruct.InvItem.fundPotencyRuneID)){
-          addStat('AC', 'ITEM_BONUS', 3);
+          addStat(VARIABLE.AC, 'ITEM_BONUS', 3);
         } else if(isArmorPotencyFour(armorStruct.InvItem.fundPotencyRuneID)){
-          addStat('AC', 'ITEM_BONUS', 4);
+          addStat(VARIABLE.AC, 'ITEM_BONUS', 4);
         }
         if(isResilient(armorStruct.InvItem.fundRuneID)){
-          addStat('SAVE_FORT', 'ITEM_BONUS', 1);
-          addStat('SAVE_WILL', 'ITEM_BONUS', 1);
-          addStat('SAVE_REFLEX', 'ITEM_BONUS', 1);
+          addStat(VARIABLE.SAVE_FORT, 'ITEM_BONUS', 1);
+          addStat(VARIABLE.SAVE_WILL, 'ITEM_BONUS', 1);
+          addStat(VARIABLE.SAVE_REFLEX, 'ITEM_BONUS', 1);
         } else if(isGreaterResilient(armorStruct.InvItem.fundRuneID)){
-          addStat('SAVE_FORT', 'ITEM_BONUS', 2);
-          addStat('SAVE_WILL', 'ITEM_BONUS', 2);
-          addStat('SAVE_REFLEX', 'ITEM_BONUS', 2);
+          addStat(VARIABLE.SAVE_FORT, 'ITEM_BONUS', 2);
+          addStat(VARIABLE.SAVE_WILL, 'ITEM_BONUS', 2);
+          addStat(VARIABLE.SAVE_REFLEX, 'ITEM_BONUS', 2);
         } else if(isMajorResilient(armorStruct.InvItem.fundRuneID)){
-          addStat('SAVE_FORT', 'ITEM_BONUS', 3);
-          addStat('SAVE_WILL', 'ITEM_BONUS', 3);
-          addStat('SAVE_REFLEX', 'ITEM_BONUS', 3);
+          addStat(VARIABLE.SAVE_FORT, 'ITEM_BONUS', 3);
+          addStat(VARIABLE.SAVE_WILL, 'ITEM_BONUS', 3);
+          addStat(VARIABLE.SAVE_REFLEX, 'ITEM_BONUS', 3);
         }
         runPropertyRuneCode(armorStruct.InvItem.propRune1ID, armorStruct.InvItem.id);
         runPropertyRuneCode(armorStruct.InvItem.propRune2ID, armorStruct.InvItem.id);
@@ -1951,13 +1966,13 @@ function determineArmor(dexMod, strScore) {
         let totalArmorBonus = armorStruct.Item.ArmorData.acBonus + brokenPenalty + shoddyPenalty;
 
         let totalAC = 10 + dexMod + profNumber + totalArmorBonus;
-        totalAC += getStatTotal('AC');
+        totalAC += getStatTotal(VARIABLE.AC);
 
         // Apply armor penalties to character...
-        addStat('ARMOR_CHECK_PENALTY', 'BASE', armorStruct.Item.ArmorData.checkPenalty);
-        addStat('ARMOR_SPEED_PENALTY', 'BASE', armorStruct.Item.ArmorData.speedPenalty);
-        let checkPenalty = getStatTotal('ARMOR_CHECK_PENALTY');
-        let speedPenalty = getStatTotal('ARMOR_SPEED_PENALTY');
+        addStat(VARIABLE.ARMOR_CHECK_PENALTY, 'BASE', armorStruct.Item.ArmorData.checkPenalty);
+        addStat(VARIABLE.ARMOR_SPEED_PENALTY, 'BASE', armorStruct.Item.ArmorData.speedPenalty);
+        let checkPenalty = getStatTotal(VARIABLE.ARMOR_CHECK_PENALTY);
+        let speedPenalty = getStatTotal(VARIABLE.ARMOR_SPEED_PENALTY);
 
         checkPenalty += (armorStruct.InvItem.isShoddy == 1) ? -2 : 0;
 
@@ -1993,7 +2008,7 @@ function determineArmor(dexMod, strScore) {
                         ignore noisy trait and reduce Stealth penalty if no noisy trait.
                     */
                     let stealthCheckPenalty = checkPenalty;
-                    let stealthNumUps = getStat('SKILL_STEALTH', 'PROF_BONUS');
+                    let stealthNumUps = getStat(VARIABLE.SKILL_STEALTH, 'PROF_BONUS');
                     if(stealthNumUps == 4){ // Legendary
                         stealthCheckPenalty += 3;
                     } else if(stealthNumUps == 3){ // Master
@@ -2012,11 +2027,11 @@ function determineArmor(dexMod, strScore) {
         }
 
         if(speedPenalty < 0 && !gState_unburdenedIron){
-          addStat('SPEED', 'PENALTY (ARMOR)', speedPenalty);
+          addStat(VARIABLE.SPEED, 'PENALTY (ARMOR)', speedPenalty);
         }
 
         // Final Product
-        let totalACDisplayed = (hasConditionals('AC')) ? totalAC+'<sup class="is-size-6 has-text-info">*</sup>' : totalAC;
+        let totalACDisplayed = (hasConditionals(VARIABLE.AC)) ? totalAC+'<sup class="is-size-6 has-text-info">*</sup>' : totalAC;
         $('#acNumber').html(totalACDisplayed);
         $('#acSection').attr('data-tooltip', armorStruct.InvItem.name);
         g_calculatedStats.totalAC = totalAC;// Calculated Stat
@@ -2027,9 +2042,9 @@ function determineArmor(dexMod, strScore) {
         });
         if(bulwarkTag != null){
             if(gState_mightyBulwark) {
-                addConditionalStat('SAVE_REFLEX', 'You add a +4 modifier instead of your Dexterity modifier.', null);
+                addConditionalStat(VARIABLE.SAVE_REFLEX, 'You add a +4 modifier instead of your Dexterity modifier.', null);
             } else {
-                addConditionalStat('SAVE_REFLEX', 'On saves to avoid a damaging effect, you add a +3 modifier instead of your Dexterity modifier.', null);
+                addConditionalStat(VARIABLE.SAVE_REFLEX, 'On saves to avoid a damaging effect, you add a +3 modifier instead of your Dexterity modifier.', null);
             }
         }
 
@@ -2052,7 +2067,7 @@ function determineArmor(dexMod, strScore) {
         let profNumUps = null;
         if(profData != null){
             profNumUps = profData.NumUps;
-            addStat('AC', 'USER_BONUS', profData.UserBonus);
+            addStat(VARIABLE.AC, 'USER_BONUS', profData.UserBonus);
         } else {
             profNumUps = 0;
         }
@@ -2061,14 +2076,14 @@ function determineArmor(dexMod, strScore) {
 
         let totalArmorBonus = 0;
 
-        let dexCap = getStatTotal('DEX_CAP');
+        let dexCap = getStatTotal(VARIABLE.DEX_CAP);
         let dexModCapped = (dexCap != null) ? ((dexMod > dexCap) ? dexCap : dexMod) : dexMod;
 
         let totalAC = 10 + dexModCapped + profNumber + totalArmorBonus;
-        totalAC += getStatTotal('AC');
+        totalAC += getStatTotal(VARIABLE.AC);
 
         // Final Product
-        let totalACDisplayed = (hasConditionals('AC')) ? totalAC+'<sup class="is-size-6 has-text-info">*</sup>' : totalAC;
+        let totalACDisplayed = (hasConditionals(VARIABLE.AC)) ? totalAC+'<sup class="is-size-6 has-text-info">*</sup>' : totalAC;
         $('#acNumber').html(totalACDisplayed);
         $('#acSection').attr('data-tooltip', 'Wearing Nothing');
         g_calculatedStats.totalAC = totalAC;// Calculated Stat
@@ -2295,7 +2310,7 @@ function determineBulkAndCoins(invItems, itemMap){
     weightEncumbered = Math.floor(weightEncumbered*getBulkLimitModifierForSize(g_charSize));
     weightMax = Math.floor(weightMax*getBulkLimitModifierForSize(g_charSize));
 
-    let bulkLimitBonus = getStatTotal('BULK_LIMIT');
+    let bulkLimitBonus = getStatTotal(VARIABLE.BULK_LIMIT);
     if(bulkLimitBonus != null){
         weightEncumbered += bulkLimitBonus;
         weightMax += bulkLimitBonus;
@@ -2348,7 +2363,7 @@ function determineInvestitures(){
 
     maxInvests = 10;
 
-    let investLimitBonus = getStatTotal('INVEST_LIMIT');
+    let investLimitBonus = getStatTotal(VARIABLE.INVEST_LIMIT);
     if(investLimitBonus != null){
         maxInvests += investLimitBonus;
     }

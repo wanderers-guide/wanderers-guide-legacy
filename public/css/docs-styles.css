@@ -7,10 +7,19 @@
     position: -webkit-sticky;
     position: sticky;
     top: 0;
+    border: 2px solid #282828;
 }
 #doc_nav_shell {
     position: absolute;
     height: 100%;
+}
+
+.menu {
+
+  max-height: 600px;
+  height: 600px;
+  overflow: auto;
+
 }
 
 .menu-label a {

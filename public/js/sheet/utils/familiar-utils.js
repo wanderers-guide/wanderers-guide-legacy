@@ -125,7 +125,7 @@ function getFamiliarAC(){
     CIRCUM_BONUS, STATUS_BONUS, CIRCUM_PENALTY, STATUS_PENALTY
   */
   let totalAC = g_calculatedStats.totalAC;
-  let statMap = getStatMap('AC');
+  let statMap = getStatMap(VARIABLE.AC);
 
   let removalMod = 0;
 
@@ -143,13 +143,13 @@ function getFamiliarAC(){
 
   // Account for clumsy condition which could lower AC
   let dexModChange = 0;
-  if(getStatTotal('SCORE_DEX') != g_preConditions_dexScore){
-    let dexCap = getStatTotal('DEX_CAP');
+  if(getStatTotal(VARIABLE.SCORE_DEX) != g_preConditions_dexScore){
+    let dexCap = getStatTotal(VARIABLE.DEX_CAP);
 
     let pre_dexMod = getMod(g_preConditions_dexScore);
     let pre_dexModCapped = (dexCap != null) ? ((pre_dexMod > dexCap) ? dexCap : pre_dexMod) : pre_dexMod;
 
-    let dexMod = getMod(getStatTotal('SCORE_DEX'));
+    let dexMod = getMod(getStatTotal(VARIABLE.SCORE_DEX));
     let dexModCapped = (dexCap != null) ? ((dexMod > dexCap) ? dexCap : dexMod) : dexMod;
 
     dexModChange = pre_dexModCapped - dexModCapped;
@@ -189,13 +189,13 @@ function getFamiliarMiscBonus(){
 }
 
 function getFamiliarFortBonus(){
-  return getStatTotal('SAVE_FORT');
+  return getStatTotal(VARIABLE.SAVE_FORT);
 }
 function getFamiliarReflexBonus(){
-  return getStatTotal('SAVE_REFLEX');
+  return getStatTotal(VARIABLE.SAVE_REFLEX);
 }
 function getFamiliarWillBonus(){
-  return getStatTotal('SAVE_WILL');
+  return getStatTotal(VARIABLE.SAVE_WILL);
 }
 
 function getFamiliarPerception(){

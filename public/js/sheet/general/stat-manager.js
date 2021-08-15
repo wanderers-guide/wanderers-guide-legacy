@@ -112,7 +112,7 @@ function getStat(statName, source){
     if(statDataMap != null){
         let value = statDataMap.get(source).Value;
         if(value === 'LAND_SPEED'){
-          value = getStatTotal('SPEED');
+          value = getStatTotal(VARIABLE.SPEED);
         }
         return value;
     } else {
@@ -129,7 +129,7 @@ function getStatTotal(statName){
         for(let [source, valueData] of statDataMap){
           let value = valueData.Value;
           if(value === 'LAND_SPEED'){
-            value = getStatTotal('SPEED');
+            value = getStatTotal(VARIABLE.SPEED);
           }
           if(source === 'PROF_BONUS'){
             total += getProfNumber(value, g_character.level);
@@ -182,17 +182,17 @@ function getModOfValue(valueModName){
     valueModName = valueModName.toUpperCase();
     switch(valueModName) {
         case 'STR':
-            return getMod(getStatTotal('SCORE_STR'));
+            return getMod(getStatTotal(VARIABLE.SCORE_STR));
         case 'DEX':
-            return getMod(getStatTotal('SCORE_DEX'));
+            return getMod(getStatTotal(VARIABLE.SCORE_DEX));
         case 'CON':
-            return getMod(getStatTotal('SCORE_CON'));
+            return getMod(getStatTotal(VARIABLE.SCORE_CON));
         case 'INT':
-            return getMod(getStatTotal('SCORE_INT'));
+            return getMod(getStatTotal(VARIABLE.SCORE_INT));
         case 'WIS':
-            return getMod(getStatTotal('SCORE_WIS'));
+            return getMod(getStatTotal(VARIABLE.SCORE_WIS));
         case 'CHA':
-            return getMod(getStatTotal('SCORE_CHA'));
+            return getMod(getStatTotal(VARIABLE.SCORE_CHA));
 
         case 'PRE_STR':
             return getMod(g_preConditions_strScore);

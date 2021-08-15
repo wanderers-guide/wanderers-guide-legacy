@@ -105,14 +105,14 @@ function displaySpellsCore() {
 function displaySpellsAndSlots(){
 
   let data = {
-    ArcaneSpellAttack : getStatTotal('ARCANE_SPELL_ATTACK'),
-    OccultSpellAttack : getStatTotal('OCCULT_SPELL_ATTACK'),
-    PrimalSpellAttack : getStatTotal('PRIMAL_SPELL_ATTACK'),
-    DivineSpellAttack : getStatTotal('DIVINE_SPELL_ATTACK'),
-    ArcaneSpellDC : getStatTotal('ARCANE_SPELL_DC'),
-    OccultSpellDC : getStatTotal('OCCULT_SPELL_DC'),
-    PrimalSpellDC : getStatTotal('PRIMAL_SPELL_DC'),
-    DivineSpellDC : getStatTotal('DIVINE_SPELL_DC'),
+    ArcaneSpellAttack : getStatTotal(VARIABLE.ARCANE_SPELL_ATTACK),
+    OccultSpellAttack : getStatTotal(VARIABLE.OCCULT_SPELL_ATTACK),
+    PrimalSpellAttack : getStatTotal(VARIABLE.PRIMAL_SPELL_ATTACK),
+    DivineSpellAttack : getStatTotal(VARIABLE.DIVINE_SPELL_ATTACK),
+    ArcaneSpellDC : getStatTotal(VARIABLE.ARCANE_SPELL_DC),
+    OccultSpellDC : getStatTotal(VARIABLE.OCCULT_SPELL_DC),
+    PrimalSpellDC : getStatTotal(VARIABLE.PRIMAL_SPELL_DC),
+    DivineSpellDC : getStatTotal(VARIABLE.DIVINE_SPELL_DC),
     SpellSlotsMap : g_spellSlotsMap,
     SpellMap : g_spellMap,
   };
@@ -737,14 +737,14 @@ let g_focusOpenPoint = false;
 function displaySpellsFocus() {
 
     let data = {
-        ArcaneSpellAttack : getStatTotal('ARCANE_SPELL_ATTACK'),
-        OccultSpellAttack : getStatTotal('OCCULT_SPELL_ATTACK'),
-        PrimalSpellAttack : getStatTotal('PRIMAL_SPELL_ATTACK'),
-        DivineSpellAttack : getStatTotal('DIVINE_SPELL_ATTACK'),
-        ArcaneSpellDC : getStatTotal('ARCANE_SPELL_DC'),
-        OccultSpellDC : getStatTotal('OCCULT_SPELL_DC'),
-        PrimalSpellDC : getStatTotal('PRIMAL_SPELL_DC'),
-        DivineSpellDC : getStatTotal('DIVINE_SPELL_DC'),
+      ArcaneSpellAttack : getStatTotal(VARIABLE.ARCANE_SPELL_ATTACK),
+      OccultSpellAttack : getStatTotal(VARIABLE.OCCULT_SPELL_ATTACK),
+      PrimalSpellAttack : getStatTotal(VARIABLE.PRIMAL_SPELL_ATTACK),
+      DivineSpellAttack : getStatTotal(VARIABLE.DIVINE_SPELL_ATTACK),
+      ArcaneSpellDC : getStatTotal(VARIABLE.ARCANE_SPELL_DC),
+      OccultSpellDC : getStatTotal(VARIABLE.OCCULT_SPELL_DC),
+      PrimalSpellDC : getStatTotal(VARIABLE.PRIMAL_SPELL_DC),
+      DivineSpellDC : getStatTotal(VARIABLE.DIVINE_SPELL_DC),
     };
 
     $('#spellsTabContent').append('<div id="spellsFocusContent" class="use-custom-scrollbar" style="height: 580px; max-height: 580px; overflow-y: auto;"></div>');
@@ -986,14 +986,14 @@ function displayFocusCastingsSet(changeType){
 function displaySpellsInnate() {
 
     let data = {
-        ArcaneSpellAttack : getStatTotal('ARCANE_SPELL_ATTACK'),
-        OccultSpellAttack : getStatTotal('OCCULT_SPELL_ATTACK'),
-        PrimalSpellAttack : getStatTotal('PRIMAL_SPELL_ATTACK'),
-        DivineSpellAttack : getStatTotal('DIVINE_SPELL_ATTACK'),
-        ArcaneSpellDC : getStatTotal('ARCANE_SPELL_DC'),
-        OccultSpellDC : getStatTotal('OCCULT_SPELL_DC'),
-        PrimalSpellDC : getStatTotal('PRIMAL_SPELL_DC'),
-        DivineSpellDC : getStatTotal('DIVINE_SPELL_DC'),
+      ArcaneSpellAttack : getStatTotal(VARIABLE.ARCANE_SPELL_ATTACK),
+      OccultSpellAttack : getStatTotal(VARIABLE.OCCULT_SPELL_ATTACK),
+      PrimalSpellAttack : getStatTotal(VARIABLE.PRIMAL_SPELL_ATTACK),
+      DivineSpellAttack : getStatTotal(VARIABLE.DIVINE_SPELL_ATTACK),
+      ArcaneSpellDC : getStatTotal(VARIABLE.ARCANE_SPELL_DC),
+      OccultSpellDC : getStatTotal(VARIABLE.OCCULT_SPELL_DC),
+      PrimalSpellDC : getStatTotal(VARIABLE.PRIMAL_SPELL_DC),
+      DivineSpellDC : getStatTotal(VARIABLE.DIVINE_SPELL_DC),
     };
 
     let spellMap = g_spellMap;

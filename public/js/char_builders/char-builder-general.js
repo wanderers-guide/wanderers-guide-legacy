@@ -59,6 +59,10 @@ socket.on("returnCharBuilderDetails", function(character, coreDataStruct, inChoi
   injectWSCChoiceStruct(inChoiceStruct);
   // ~~~~~~~~~~~~~~~~~ //
 
+  // Temp Solution to Predefined Variables in the Builder
+  builderTempInitializeVariables();
+  //
+
   for(const [featID, featStruct] of g_featMap.entries()){
     g_featPrereqMap.set(featID+'', meetsPrereqs(featStruct.Feat));
   }

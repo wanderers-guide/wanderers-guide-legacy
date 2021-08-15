@@ -4,8 +4,8 @@
 
 function getAttackAndDamage(itemData, invItem){
 
-    let strMod = getMod(getStatTotal('SCORE_STR'));
-    let dexMod = getMod(getStatTotal('SCORE_DEX'));
+    let strMod = getMod(getStatTotal(VARIABLE.SCORE_STR));
+    let dexMod = getMod(getStatTotal(VARIABLE.SCORE_DEX));
     let strModDamage = strMod;
     let dexModDamage = dexMod;
 
@@ -141,18 +141,18 @@ function getAttackAndDamage(itemData, invItem){
         weapStruct.attack.parts.set('This is the item penalty applied due to this weapon being shoddy.', shoddyPenalty);
 
         // Bonus for - Attacks //
-        let extraAttackBonus = getStatTotal('ATTACKS');
+        let extraAttackBonus = getStatTotal(VARIABLE.ATTACKS);
         if(extraAttackBonus == null) { extraAttackBonus = 0; }
         weapStruct.attack.parts.set('This bonus is being added by an effect that adds a bonus to all attacks.', extraAttackBonus);
         weapStruct.attack.conditionals =
-              new Map([...weapStruct.attack.conditionals, ...getConditionalStatMap('ATTACKS')]);
+              new Map([...weapStruct.attack.conditionals, ...getConditionalStatMap(VARIABLE.ATTACKS)]);
 
         // Bonus for - Melee Attacks //
-        let extraAttackMeleeBonus = getStatTotal('MELEE_ATTACKS');
+        let extraAttackMeleeBonus = getStatTotal(VARIABLE.MELEE_ATTACKS);
         if(extraAttackMeleeBonus == null) { extraAttackMeleeBonus = 0; }
         weapStruct.attack.parts.set('This bonus is being added by an effect that adds a bonus to all melee attacks.', extraAttackMeleeBonus);
         weapStruct.attack.conditionals =
-              new Map([...weapStruct.attack.conditionals, ...getConditionalStatMap('MELEE_ATTACKS')]);
+              new Map([...weapStruct.attack.conditionals, ...getConditionalStatMap(VARIABLE.MELEE_ATTACKS)]);
 
         // User-Added Bonus //
         let profData = g_weaponProfMap.get(itemData.WeaponData.profName);
@@ -185,9 +185,9 @@ function getAttackAndDamage(itemData, invItem){
           diceNum = 4;
         }
 
-        let overrideAttacksDmgDice = getStatTotal('ATTACKS_DMG_DICE');
+        let overrideAttacksDmgDice = getStatTotal(VARIABLE.ATTACKS_DMG_DICE);
         if(overrideAttacksDmgDice != null) { diceNum = overrideAttacksDmgDice; }
-        let overrideMeleeDmgDice = getStatTotal('MELEE_ATTACKS_DMG_DICE');
+        let overrideMeleeDmgDice = getStatTotal(VARIABLE.MELEE_ATTACKS_DMG_DICE);
         if(overrideMeleeDmgDice != null) { diceNum = overrideMeleeDmgDice; }
 
         // Ability Score Modifier //
@@ -237,38 +237,38 @@ function getAttackAndDamage(itemData, invItem){
         }
 
         // Bonus for - Weapons //
-        let weapExtraBonus = getStatTotal('ATTACKS_DMG_BONUS');
+        let weapExtraBonus = getStatTotal(VARIABLE.ATTACKS_DMG_BONUS);
         if(weapExtraBonus == null) { weapExtraBonus = 0; }
         weapStruct.damage.parts.set('This bonus is being added by an effect that adds a bonus to damage with all attacks.', weapExtraBonus);
         weapStruct.damage.conditionals =
-              new Map([...weapStruct.damage.conditionals, ...getConditionalStatMap('ATTACKS_DMG_BONUS')]);
+              new Map([...weapStruct.damage.conditionals, ...getConditionalStatMap(VARIABLE.ATTACKS_DMG_BONUS)]);
 
         // Bonus for - Melee Weapons //
-        let weapMeleeExtraBonus = getStatTotal('MELEE_ATTACKS_DMG_BONUS');
+        let weapMeleeExtraBonus = getStatTotal(VARIABLE.MELEE_ATTACKS_DMG_BONUS);
         if(weapMeleeExtraBonus == null) {
           weapMeleeExtraBonus = 0;
         }
         weapStruct.damage.parts.set('This bonus is being added by an effect that adds a bonus to damage with all melee attacks.', weapMeleeExtraBonus);
         weapStruct.damage.conditionals =
-              new Map([...weapStruct.damage.conditionals, ...getConditionalStatMap('MELEE_ATTACKS_DMG_BONUS')]);
+              new Map([...weapStruct.damage.conditionals, ...getConditionalStatMap(VARIABLE.MELEE_ATTACKS_DMG_BONUS)]);
 
         // Bonus for - Agile Melee Weapons //
-        let weapMeleeAgileExtraBonus = getStatTotal('AGILE_MELEE_ATTACKS_DMG_BONUS');
-        let weapMeleeNonAgileExtraBonus = getStatTotal('NON_AGILE_MELEE_ATTACKS_DMG_BONUS');
+        let weapMeleeAgileExtraBonus = getStatTotal(VARIABLE.AGILE_MELEE_ATTACKS_DMG_BONUS);
+        let weapMeleeNonAgileExtraBonus = getStatTotal(VARIABLE.NON_AGILE_MELEE_ATTACKS_DMG_BONUS);
         if(agileTag != null){
           if(weapMeleeAgileExtraBonus == null) {
             weapMeleeAgileExtraBonus = 0;
           }
           weapStruct.damage.parts.set('This bonus is being added by an effect that adds a bonus to damage with all agile, melee attacks.', weapMeleeAgileExtraBonus);
           weapStruct.damage.conditionals =
-              new Map([...weapStruct.damage.conditionals, ...getConditionalStatMap('AGILE_MELEE_ATTACKS_DMG_BONUS')]);
+              new Map([...weapStruct.damage.conditionals, ...getConditionalStatMap(VARIABLE.AGILE_MELEE_ATTACKS_DMG_BONUS)]);
         } else {
           if(weapMeleeNonAgileExtraBonus == null) {
             weapMeleeNonAgileExtraBonus = 0;
           }
           weapStruct.damage.parts.set('This bonus is being added by an effect that adds a bonus to damage with all non-agile, melee attacks.', weapMeleeNonAgileExtraBonus);
           weapStruct.damage.conditionals =
-              new Map([...weapStruct.damage.conditionals, ...getConditionalStatMap('NON_AGILE_MELEE_ATTACKS_DMG_BONUS')]);
+              new Map([...weapStruct.damage.conditionals, ...getConditionalStatMap(VARIABLE.NON_AGILE_MELEE_ATTACKS_DMG_BONUS)]);
         }
 
         // Totaling Damage //
@@ -354,18 +354,18 @@ function getAttackAndDamage(itemData, invItem){
         weapStruct.attack.parts.set('This is the item penalty applied due to this weapon being shoddy.', shoddyPenalty);
 
         // Bonus for - Attacks //
-        let extraAttackBonus = getStatTotal('ATTACKS');
+        let extraAttackBonus = getStatTotal(VARIABLE.ATTACKS);
         if(extraAttackBonus == null) { extraAttackBonus = 0; }
         weapStruct.attack.parts.set('This bonus is being added by an effect that adds a bonus to all attacks.', extraAttackBonus);
         weapStruct.attack.conditionals =
-              new Map([...weapStruct.attack.conditionals, ...getConditionalStatMap('ATTACKS')]);
+              new Map([...weapStruct.attack.conditionals, ...getConditionalStatMap(VARIABLE.ATTACKS)]);
 
         // Bonus for - Ranged Attacks //
-        let extraAttackRangedBonus = getStatTotal('RANGED_ATTACKS');
+        let extraAttackRangedBonus = getStatTotal(VARIABLE.RANGED_ATTACKS);
         if(extraAttackRangedBonus == null) { extraAttackRangedBonus = 0; }
         weapStruct.attack.parts.set('This bonus is being added by an effect that adds a bonus to all ranged attacks.', extraAttackRangedBonus);
         weapStruct.attack.conditionals =
-              new Map([...weapStruct.attack.conditionals, ...getConditionalStatMap('RANGED_ATTACKS')]);
+              new Map([...weapStruct.attack.conditionals, ...getConditionalStatMap(VARIABLE.RANGED_ATTACKS)]);
 
         // User-Added Bonus //
         let profData = g_weaponProfMap.get(itemData.WeaponData.profName);
@@ -399,9 +399,9 @@ function getAttackAndDamage(itemData, invItem){
           diceNum = 4;
         }
 
-        let overrideAttacksDmgDice = getStatTotal('ATTACKS_DMG_DICE');
+        let overrideAttacksDmgDice = getStatTotal(VARIABLE.ATTACKS_DMG_DICE);
         if(overrideAttacksDmgDice != null) { diceNum = overrideAttacksDmgDice; }
-        let overrideMeleeDmgDice = getStatTotal('RANGED_ATTACKS_DMG_DICE');
+        let overrideMeleeDmgDice = getStatTotal(VARIABLE.RANGED_ATTACKS_DMG_DICE);
         if(overrideMeleeDmgDice != null) { diceNum = overrideMeleeDmgDice; }
 
         // Ability Score Modifier //
@@ -449,20 +449,20 @@ function getAttackAndDamage(itemData, invItem){
         }
 
         // Bonus for - Weapons //
-        let weapExtraBonus = getStatTotal('ATTACKS_DMG_BONUS');
+        let weapExtraBonus = getStatTotal(VARIABLE.ATTACKS_DMG_BONUS);
         if(weapExtraBonus == null) { weapExtraBonus = 0; }
         weapStruct.damage.parts.set('This bonus is being added by an effect that adds a bonus to damage with all attacks.', weapExtraBonus);
         weapStruct.damage.conditionals =
-              new Map([...weapStruct.damage.conditionals, ...getConditionalStatMap('ATTACKS_DMG_BONUS')]);
+              new Map([...weapStruct.damage.conditionals, ...getConditionalStatMap(VARIABLE.ATTACKS_DMG_BONUS)]);
 
         // Bonus for - Ranged Weapons //
-        let weapRangedExtraBonus = getStatTotal('RANGED_ATTACKS_DMG_BONUS');
+        let weapRangedExtraBonus = getStatTotal(VARIABLE.RANGED_ATTACKS_DMG_BONUS);
         if(weapRangedExtraBonus == null) {
           weapRangedExtraBonus = 0;
         }
         weapStruct.damage.parts.set('This bonus is being added by an effect that adds a bonus to damage with all ranged attacks.', weapRangedExtraBonus);
         weapStruct.damage.conditionals =
-              new Map([...weapStruct.damage.conditionals, ...getConditionalStatMap('RANGED_ATTACKS_DMG_BONUS')]);
+              new Map([...weapStruct.damage.conditionals, ...getConditionalStatMap(VARIABLE.RANGED_ATTACKS_DMG_BONUS)]);
 
         // Totaling Damage //
         let totalDamageBonus = 0;

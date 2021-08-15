@@ -31,6 +31,7 @@ function openPerceptionQuickview(data) {
         qContent.append('<p><strong>Extra Bonus:</strong> '+signNumber(userBonus)+'</p>');
     }
 
+    qContent.append('<p><strong>Ability Score:</strong> Wisdom</p>');
     qContent.append('<hr class="m-2">');
     qContent.append('<p>Perception measures your character’s ability to notice hidden objects or unusual situations, and it usually determines how quickly the character springs into action in combat.</p>');
     qContent.append('<hr class="m-2">');
@@ -66,7 +67,7 @@ function openPerceptionQuickview(data) {
 
     qContent.append(breakDownInnerHTML);
 
-    let amalgBonuses = getStatExtraBonuses('PERCEPTION');
+    let amalgBonuses = getStatExtraBonuses(VARIABLE.PERCEPTION);
     if(amalgBonuses != null && amalgBonuses.length > 0){
         $('#amalgBonusNum').removeClass('has-tooltip-multiline');
         let amalgTooltipText = 'Additional adjustments:';
@@ -80,7 +81,7 @@ function openPerceptionQuickview(data) {
     }
 
     // Conditionals //
-    let conditionalStatMap = getConditionalStatMap('PERCEPTION');
+    let conditionalStatMap = getConditionalStatMap(VARIABLE.PERCEPTION);
     if(conditionalStatMap != null && conditionalStatMap.size != 0){
 
         qContent.append('<hr class="m-2">');

@@ -49,7 +49,7 @@ function openACQuickview(data) {
 
     qContent.append(breakDownInnerHTML);
 
-    let amalgBonuses = getStatExtraBonuses('AC');
+    let amalgBonuses = getStatExtraBonuses(VARIABLE.AC);
     if(amalgBonuses != null && amalgBonuses.length > 0){
         $('#amalgBonusNum').removeClass('has-tooltip-multiline');
         let amalgTooltipText = 'Additional adjustments:';
@@ -63,7 +63,7 @@ function openACQuickview(data) {
     }
 
     // Conditionals //
-    let conditionalStatMap = getConditionalStatMap('AC');
+    let conditionalStatMap = getConditionalStatMap(VARIABLE.AC);
     if(conditionalStatMap != null && conditionalStatMap.size != 0){
 
         qContent.append('<hr class="m-2">');

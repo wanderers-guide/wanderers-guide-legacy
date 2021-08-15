@@ -4,29 +4,64 @@
 
 let g_profConversionMap = new Map();
 
+g_profConversionMap.set(VARIABLE.LIGHT_ARMOR, {Name: 'Light_Armor', Category: 'Defense', AbilScore: 'NONE'});
+g_profConversionMap.set(VARIABLE.MEDIUM_ARMOR, {Name: 'Medium_Armor', Category: 'Defense', AbilScore: 'NONE'});
+g_profConversionMap.set(VARIABLE.HEAVY_ARMOR, {Name: 'Heavy_Armor', Category: 'Defense', AbilScore: 'NONE'});
+g_profConversionMap.set(VARIABLE.UNARMORED_DEFENSE, {Name: 'Unarmored_Defense', Category: 'Defense', AbilScore: 'NONE'});
+
+// Old
 g_profConversionMap.set('LIGHTARMOR', {Name: 'Light_Armor', Category: 'Defense'});
 g_profConversionMap.set('MEDIUMARMOR', {Name: 'Medium_Armor', Category: 'Defense'});
 g_profConversionMap.set('HEAVYARMOR', {Name: 'Heavy_Armor', Category: 'Defense'});
 g_profConversionMap.set('UNARMOREDDEFENSE', {Name: 'Unarmored_Defense', Category: 'Defense'});
 
+g_profConversionMap.set(VARIABLE.SIMPLE_WEAPONS, {Name: 'Simple_Weapons', Category: 'Attack', AbilScore: 'NONE'});
+g_profConversionMap.set(VARIABLE.MARTIAL_WEAPONS, {Name: 'Martial_Weapons', Category: 'Attack', AbilScore: 'NONE'});
+g_profConversionMap.set(VARIABLE.ADVANCED_WEAPONS, {Name: 'Advanced_Weapons', Category: 'Attack', AbilScore: 'NONE'});
+g_profConversionMap.set(VARIABLE.UNARMED_ATTACKS, {Name: 'Unarmed_Attacks', Category: 'Attack', AbilScore: 'NONE'});
+
+// Old
 g_profConversionMap.set('SIMPLEWEAPONS', {Name: 'Simple_Weapons', Category: 'Attack'});
 g_profConversionMap.set('MARTIALWEAPONS', {Name: 'Martial_Weapons', Category: 'Attack'});
 g_profConversionMap.set('ADVANCEDWEAPONS', {Name: 'Advanced_Weapons', Category: 'Attack'});
 g_profConversionMap.set('UNARMEDATTACKS', {Name: 'Unarmed_Attacks', Category: 'Attack'});
 
+g_profConversionMap.set(VARIABLE.SAVE_FORT, {Name: 'Fortitude', Category: 'Save', AbilScore: 'CON'});
+g_profConversionMap.set(VARIABLE.SAVE_REFLEX, {Name: 'Reflex', Category: 'Save', AbilScore: 'DEX'});
+g_profConversionMap.set(VARIABLE.SAVE_WILL, {Name: 'Will', Category: 'Save', AbilScore: 'WIS'});
+
+// Old
 g_profConversionMap.set('FORTITUDE', {Name: 'Fortitude', Category: 'Save'});
 g_profConversionMap.set('REFLEX', {Name: 'Reflex', Category: 'Save'});
 g_profConversionMap.set('WILL', {Name: 'Will', Category: 'Save'});
 
+g_profConversionMap.set(VARIABLE.PERCEPTION, {Name: 'Perception', Category: 'Perception', AbilScore: 'WIS'});
+
+// Old
 g_profConversionMap.set('PERCEPTION', {Name: 'Perception', Category: 'Perception'});
 
+g_profConversionMap.set(VARIABLE.CLASS_DC, {Name: 'Class_DC', Category: 'Class_DC', AbilScore: 'NONE'});
+
+// Old
 g_profConversionMap.set('CLASSDC', {Name: 'Class_DC', Category: 'Class_DC'});
 
+g_profConversionMap.set(VARIABLE.ARCANE_SPELL_ATTACK, {Name: 'ArcaneSpellAttacks', Category: 'SpellAttack', AbilScore: 'NONE'});
+g_profConversionMap.set(VARIABLE.OCCULT_SPELL_ATTACK, {Name: 'OccultSpellAttacks', Category: 'SpellAttack', AbilScore: 'NONE'});
+g_profConversionMap.set(VARIABLE.PRIMAL_SPELL_ATTACK, {Name: 'PrimalSpellAttacks', Category: 'SpellAttack', AbilScore: 'NONE'});
+g_profConversionMap.set(VARIABLE.DIVINE_SPELL_ATTACK, {Name: 'DivineSpellAttacks', Category: 'SpellAttack', AbilScore: 'NONE'});
+
+// Old
 g_profConversionMap.set('ARCANESPELLATTACKS', {Name: 'ArcaneSpellAttacks', Category: 'SpellAttack'});
 g_profConversionMap.set('OCCULTSPELLATTACKS', {Name: 'OccultSpellAttacks', Category: 'SpellAttack'});
 g_profConversionMap.set('PRIMALSPELLATTACKS', {Name: 'PrimalSpellAttacks', Category: 'SpellAttack'});
 g_profConversionMap.set('DIVINESPELLATTACKS', {Name: 'DivineSpellAttacks', Category: 'SpellAttack'});
 
+g_profConversionMap.set(VARIABLE.ARCANE_SPELL_DC, {Name: 'ArcaneSpellDCs', Category: 'SpellDC', AbilScore: 'NONE'});
+g_profConversionMap.set(VARIABLE.OCCULT_SPELL_DC, {Name: 'OccultSpellDCs', Category: 'SpellDC', AbilScore: 'NONE'});
+g_profConversionMap.set(VARIABLE.PRIMAL_SPELL_DC, {Name: 'PrimalSpellDCs', Category: 'SpellDC', AbilScore: 'NONE'});
+g_profConversionMap.set(VARIABLE.DIVINE_SPELL_DC, {Name: 'DivineSpellDCs', Category: 'SpellDC', AbilScore: 'NONE'});
+
+// Old
 g_profConversionMap.set('ARCANESPELLDCS', {Name: 'ArcaneSpellDCs', Category: 'SpellDC'});
 g_profConversionMap.set('OCCULTSPELLDCS', {Name: 'OccultSpellDCs', Category: 'SpellDC'});
 g_profConversionMap.set('PRIMALSPELLDCS', {Name: 'PrimalSpellDCs', Category: 'SpellDC'});
@@ -37,6 +72,24 @@ g_profConversionMap.set('OCCULTSPELLDC', {Name: 'OccultSpellDCs', Category: 'Spe
 g_profConversionMap.set('PRIMALSPELLDC', {Name: 'PrimalSpellDCs', Category: 'SpellDC'});
 g_profConversionMap.set('DIVINESPELLDC', {Name: 'DivineSpellDCs', Category: 'SpellDC'});
 
+g_profConversionMap.set(VARIABLE.SKILL_ACROBATICS, {Name: 'Acrobatics', Category: 'Skill', AbilScore: 'DEX'});
+g_profConversionMap.set(VARIABLE.SKILL_ARCANA, {Name: 'Arcana', Category: 'Skill', AbilScore: 'INT'});
+g_profConversionMap.set(VARIABLE.SKILL_ATHLETICS, {Name: 'Athletics', Category: 'Skill', AbilScore: 'STR'});
+g_profConversionMap.set(VARIABLE.SKILL_CRAFTING, {Name: 'Crafting', Category: 'Skill', AbilScore: 'INT'});
+g_profConversionMap.set(VARIABLE.SKILL_DECEPTION, {Name: 'Deception', Category: 'Skill', AbilScore: 'CHA'});
+g_profConversionMap.set(VARIABLE.SKILL_DIPLOMACY, {Name: 'Diplomacy', Category: 'Skill', AbilScore: 'CHA'});
+g_profConversionMap.set(VARIABLE.SKILL_INTIMIDATION, {Name: 'Intimidation', Category: 'Skill', AbilScore: 'CHA'});
+g_profConversionMap.set(VARIABLE.SKILL_MEDICINE, {Name: 'Medicine', Category: 'Skill', AbilScore: 'WIS'});
+g_profConversionMap.set(VARIABLE.SKILL_NATURE, {Name: 'Nature', Category: 'Skill', AbilScore: 'WIS'});
+g_profConversionMap.set(VARIABLE.SKILL_OCCULTISM, {Name: 'Occultism', Category: 'Skill', AbilScore: 'INT'});
+g_profConversionMap.set(VARIABLE.SKILL_PERFORMANCE, {Name: 'Performance', Category: 'Skill', AbilScore: 'CHA'});
+g_profConversionMap.set(VARIABLE.SKILL_RELIGION, {Name: 'Religion', Category: 'Skill', AbilScore: 'WIS'});
+g_profConversionMap.set(VARIABLE.SKILL_SOCIETY, {Name: 'Society', Category: 'Skill', AbilScore: 'INT'});
+g_profConversionMap.set(VARIABLE.SKILL_STEALTH, {Name: 'Stealth', Category: 'Skill', AbilScore: 'DEX'});
+g_profConversionMap.set(VARIABLE.SKILL_SURVIVAL, {Name: 'Survival', Category: 'Skill', AbilScore: 'WIS'});
+g_profConversionMap.set(VARIABLE.SKILL_THIEVERY, {Name: 'Thievery', Category: 'Skill', AbilScore: 'DEX'});
+
+// Old
 g_profConversionMap.set('ACROBATICS', {Name: 'Acrobatics', Category: 'Skill'});
 g_profConversionMap.set('ARCANA', {Name: 'Arcana', Category: 'Skill'});
 g_profConversionMap.set('ATHLETICS', {Name: 'Athletics', Category: 'Skill'});
