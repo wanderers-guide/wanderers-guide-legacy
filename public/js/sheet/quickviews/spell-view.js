@@ -701,7 +701,6 @@ function post_spellModTextProcessor(text){
 
 function modifySpellByHeighten(spellData, hText){
 
-  console.log(hText);
   let spellDescription = spellData.spellDescription;
   let spellRange = spellData.spellRange;
   let spellArea = spellData.spellArea;
@@ -713,7 +712,6 @@ function modifySpellByHeighten(spellData, hText){
 
     /////////
     let increaseDamageByProcessor = function(match, overrideExisting=false) {
-      console.log(match);
 
       /////////
       let findDamageInSpell = function(spellDescription, match, overrideExisting){
@@ -858,6 +856,7 @@ function modifySpellByHeighten(spellData, hText){
     if(hText.includes('damage by')){
       let matches = hText.matchAll(getHeightenDamageRegex('damage by'));
       for(let match of matches){
+        if(match[11] != null && damageInvalidEndWordList().includes(match[11].trim())) { continue; }
         increaseDamageByProcessor(match);
       }
     }
@@ -865,11 +864,13 @@ function modifySpellByHeighten(spellData, hText){
     if(hText.includes('damage increases by')){
       let matches = hText.matchAll(getHeightenDamageRegex('damage increases by'));
       for(let match of matches){
+        if(match[11] != null && damageInvalidEndWordList().includes(match[11].trim())) { continue; }
         increaseDamageByProcessor(match);
       }
     } else if(hText.includes('increases by')){
       let matches = hText.matchAll(getHeightenDamageRegex('increases by'));
       for(let match of matches){
+        if(match[11] != null && damageInvalidEndWordList().includes(match[11].trim())) { continue; }
         increaseDamageByProcessor(match);
       }
     }
@@ -877,6 +878,7 @@ function modifySpellByHeighten(spellData, hText){
     if(hText.includes('damage on a critical hit by')){
       let matches = hText.matchAll(getHeightenDamageRegex('damage on a critical hit by'));
       for(let match of matches){
+        if(match[11] != null && damageInvalidEndWordList().includes(match[11].trim())) { continue; }
         increaseDamageByProcessor(match);
       }
     }
@@ -884,6 +886,7 @@ function modifySpellByHeighten(spellData, hText){
     if(hText.includes('damage to')){
       let matches = hText.matchAll(getHeightenDamageRegex('damage to'));
       for(let match of matches){
+        if(match[11] != null && damageInvalidEndWordList().includes(match[11].trim())) { continue; }
         increaseDamageByProcessor(match, true);
       }
     }
@@ -891,11 +894,13 @@ function modifySpellByHeighten(spellData, hText){
     if(hText.includes('damage increases to')){
       let matches = hText.matchAll(getHeightenDamageRegex('damage increases to'));
       for(let match of matches){
+        if(match[11] != null && damageInvalidEndWordList().includes(match[11].trim())) { continue; }
         increaseDamageByProcessor(match, true);
       }
     } else if(hText.includes('increases by')){
       let matches = hText.matchAll(getHeightenDamageRegex('increases to'));
       for(let match of matches){
+        if(match[11] != null && damageInvalidEndWordList().includes(match[11].trim())) { continue; }
         increaseDamageByProcessor(match, true);
       }
     }
@@ -1086,13 +1091,16 @@ function modifySpellByHeighten(spellData, hText){
   spellData.spellTargets = spellTargets;
   spellData.spellDuration = spellDuration;
   spellData.hText = hText;
-  console.log(spellData);
+
   return spellData;
 }
 
 function getHeightenDamageRegex(textBefore){
   // Double escape because string will remove an escape before regex applies
-  return new RegExp('( |^)([^ \\n]*)( |^)'+textBefore+' (\\d+)(d(\\d+)|)(( \\+ |\\+)(SPELL_MODIFIER|\\d+)|)([ .,;]|$)', 'g');
+  return new RegExp('( |^)([^ \\n]*)( |^)'+textBefore+' (\\d+)(d(\\d+)|)(( \\+ |\\+)(SPELL_MODIFIER|\\d+)|)([ .,;]|$)([^ .,;\\n]*|$)', 'g');
+}
+function damageInvalidEndWordList(){
+  return ['feet'];
 }
 
 let g_tempAutoHeightenCount = null;
