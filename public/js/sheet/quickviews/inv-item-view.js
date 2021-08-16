@@ -9,12 +9,14 @@ function openInvItemQuickview(data) {
     let viewOnly = (data.InvItem.viewOnly != null) ? true : false;
 
     let invItemName = data.InvItem.name;
-    if(data.Item.Item.level > 0 && data.Item.Item.level != 999){
-        invItemName += '<sup class="has-text-grey-light is-size-7 is-italic"> Lvl '+data.Item.Item.level+'</sup>';
+
+    let itemLevel = getInvItemLevel(data.Item, data.InvItem);
+    if(itemLevel > 0 && itemLevel != 999){
+        invItemName += '<sup class="has-text-grey-light is-size-7-5 is-italic"> Lvl '+itemLevel+'</sup>';
     }
     // Hardcoded New Item ID // If item isn't New Item, Paper, Parchment, and isn't an item with N/A level
     if(data.InvItem.name != data.Item.Item.name && data.Item.Item.id != 62 && data.Item.Item.id != 94 && data.Item.Item.id != 95 && data.Item.Item.level != 999 && data.ExtraData.IsCustomUnarmedAttack !== true){
-        invItemName += '<p class="is-inline pl-1 is-size-7 is-italic"> ( '+data.Item.Item.name+' )</p>';
+        invItemName += '<p class="is-inline pl-1 is-size-7-5 is-italic"> ( '+data.Item.Item.name+' )</p>';
     }
     $('#quickViewTitle').html(invItemName);
     let qContent = $('#quickViewContent');

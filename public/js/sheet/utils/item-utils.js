@@ -281,12 +281,35 @@ function getItemTraitsArray(item, invItem){
     }
   } catch (err) {
     tagArray = item.TagArray;
-    tagArray = tagArray.sort(
-      function(a, b) {
-        return a.name > b.name ? 1 : -1;
-      }
-    );
   }
+
+  // If item has a potency rune and is not magical, add magical trait and evocation trait
+  if(invItem.fundPotencyRuneID != null){
+    let magical = tagArray.find(tag => {
+      // Hardcoded - Magical Trait ID 41;
+      // Primal Trait ID 304; Occult Trait ID 500; Divine Trait ID 265; Arcane Trait ID 2;
+      return tag.id == 41 || tag.id == 304 || tag.id == 500 || tag.id == 265 || tag.id == 2;
+    });
+    if(magical == null){
+      tagArray.push({
+        id: 41,
+        name: 'Magical',
+        description: 'Something with the magical trait is imbued with magical energies not tied to a specific tradition of magic. A magical item radiates a magic aura infused with its dominant school of magic.'
+      });
+      tagArray.push({
+        id: 231,
+        name: 'Evocation',
+        description: 'Effects and magic items with this trait are associated with the evocation school of magic, typically involving energy and elemental forces.'
+      });
+    }
+  }
+
+  tagArray = tagArray.sort(
+    function(a, b) {
+      return a.name > b.name ? 1 : -1;
+    }
+  );
+
   return tagArray;
 }
 

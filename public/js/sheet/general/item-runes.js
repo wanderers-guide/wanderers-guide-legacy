@@ -434,3 +434,41 @@ function addPropertyRuneSelection(qContent, invItem, runeArray, propertyRuneSlot
     });
     
 }
+
+function getInvItemLevel(item, invItem){
+
+  let highestLevel = item.Item.level;
+
+  let runeArray = null;
+  if(item.WeaponData != null) {
+    runeArray = g_runeDataStruct.WeaponArray;
+  } else if(item.ArmorData != null) {
+    runeArray = g_runeDataStruct.ArmorArray;
+  } else {
+    return highestLevel;
+  }
+
+  let runeIDArray = [];
+  runeIDArray.push(invItem.fundPotencyRuneID);
+  runeIDArray.push(invItem.fundRuneID);
+  runeIDArray.push(invItem.propRune1ID);
+  runeIDArray.push(invItem.propRune2ID);
+  runeIDArray.push(invItem.propRune3ID);
+  runeIDArray.push(invItem.propRune4ID);
+
+  for(let runeID of runeIDArray){
+    if(runeID != null){
+      let rune = runeArray.find(rune => {
+        return rune.RuneData.id == runeID;
+      });
+      if(rune != null){
+        if(rune.Item.level > highestLevel){
+          highestLevel = rune.Item.level;
+        }
+      }
+    }
+  }
+
+  return highestLevel;
+
+}
