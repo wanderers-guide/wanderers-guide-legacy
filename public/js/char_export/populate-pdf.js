@@ -35,6 +35,9 @@ socket.on("returnCharExportPDFInfo", function(charInfo, extraData){
 let g_featMap = null;
 
 // HARDCODED Names of final profs and PDF fields
+  
+// Field names: https://www.pdfescape.com
+
 async function charExportGeneratePDF(charInfo, extraData) {
 
   g_featMap = objToMap(extraData.featsObject);
@@ -50,6 +53,8 @@ async function charExportGeneratePDF(charInfo, extraData) {
 
 
   const profMap = objToMap(charInfo.profs);
+
+  console.log(profMap);
 
   const nameField = form.getTextField('Character Name');
   const playerNameField = form.getTextField('Player Name');
@@ -78,6 +83,49 @@ async function charExportGeneratePDF(charInfo, extraData) {
   const wisScoreField = form.getTextField('WISDOM');
   const chaScoreField = form.getTextField('CHARISMA');
 
+  let strMod = 0;
+  let dexMod = 0;
+  let conMod = 0;
+  let intMod = 0;
+  let wisMod = 0;
+  let chaMod = 0;
+
+  let totalAbilityScores = JSON.parse(charInfo.stats.totalAbilityScores);
+  for(let abilityScore of totalAbilityScores){
+    switch(abilityScore.Name){
+      case 'Strength':
+        strMod = getMod(abilityScore.Score);
+        strScoreField.setText(abilityScore.Score+'');
+        strModField.setText(signNumber(strMod)+'');
+        break;
+      case 'Dexterity':
+        dexMod = getMod(abilityScore.Score);
+        dexScoreField.setText(abilityScore.Score+'');
+        dexModField.setText(signNumber(dexMod)+'');
+        break;
+      case 'Constitution':
+        conMod = getMod(abilityScore.Score);
+        conScoreField.setText(abilityScore.Score+'');
+        conModField.setText(signNumber(conMod)+'');
+        break;
+      case 'Intelligence':
+        intMod = getMod(abilityScore.Score);
+        intScoreField.setText(abilityScore.Score+'');
+        intModField.setText(signNumber(intMod)+'');
+        break;
+      case 'Wisdom':
+        wisMod = getMod(abilityScore.Score);
+        wisScoreField.setText(abilityScore.Score+'');
+        wisModField.setText(signNumber(wisMod)+'');
+        break;
+      case 'Charisma':
+        chaMod = getMod(abilityScore.Score);
+        chaScoreField.setText(abilityScore.Score+'');
+        chaModField.setText(signNumber(chaMod)+'');
+        break;
+      default: break;
+    }
+  }
   
 
   const totalSpeedField = form.getTextField('Text18');
@@ -87,6 +135,7 @@ async function charExportGeneratePDF(charInfo, extraData) {
 
   // //
   const totalACField = form.getTextField('Text3');
+
   const acDexModField = form.getTextField('Text12');
   const acCapField = form.getTextField('Text13');
   const acProfBonusField = form.getTextField('PROF');
@@ -96,34 +145,34 @@ async function charExportGeneratePDF(charInfo, extraData) {
   const acProfLegendaryField = form.getCheckBox('Check Box7');
   const acItemBonusField = form.getTextField('ITEM');
 
-  const unarmoredProfTrainedField = form.getCheckBox('Check Box28');
-  const unarmoredProfExpertField = form.getCheckBox('Check Box29');
-  const unarmoredProfMasterField = form.getCheckBox('Check Box30');
-  const unarmoredProfLegendaryField = form.getCheckBox('Check Box31');
+  const unarmoredTBox = form.getCheckBox('Check Box28');
+  const unarmoredEBox = form.getCheckBox('Check Box29');
+  const unarmoredMBox = form.getCheckBox('Check Box30');
+  const unarmoredLBox = form.getCheckBox('Check Box31');
+  setProfCheckBox(profMap.get('Unarmored_Defense'), unarmoredTBox, unarmoredEBox, unarmoredMBox, unarmoredLBox);
 
-  const lightArmorProfTrainedField = form.getCheckBox('Check Box32');
-  const lightArmorProfExpertField = form.getCheckBox('Check Box33');
-  const lightArmorProfMasterField = form.getCheckBox('Check Box34');
-  const lightArmorProfLegendaryField = form.getCheckBox('Check Box35');
+  const lightArmorTBox = form.getCheckBox('Check Box32');
+  const lightArmorEBox = form.getCheckBox('Check Box33');
+  const lightArmorMBox = form.getCheckBox('Check Box34');
+  const lightArmorLBox = form.getCheckBox('Check Box35');
+  setProfCheckBox(profMap.get('Light_Armor'), lightArmorTBox, lightArmorEBox, lightArmorMBox, lightArmorLBox);
 
-  const mediumArmorProfTrainedField = form.getCheckBox('Check Box36');
-  const mediumArmorProfExpertField = form.getCheckBox('Check Box37');
-  const mediumArmorProfMasterField = form.getCheckBox('Check Box38');
-  const mediumArmorProfLegendaryField = form.getCheckBox('Check Box39');
+  const mediumArmorTBox = form.getCheckBox('Check Box36');
+  const mediumArmorEBox = form.getCheckBox('Check Box37');
+  const mediumArmorMBox = form.getCheckBox('Check Box38');
+  const mediumArmorLBox = form.getCheckBox('Check Box39');
+  setProfCheckBox(profMap.get('Medium_Armor'), mediumArmorTBox, mediumArmorEBox, mediumArmorMBox, mediumArmorLBox);
 
-  const heavyArmorProfTrainedField = form.getCheckBox('Check Box40');
-  const heavyArmorProfExpertField = form.getCheckBox('Check Box41');
-  const heavyArmorProfMasterField = form.getCheckBox('Check Box42');
-  const heavyArmorProfLegendaryField = form.getCheckBox('Check Box43');
+  const heavyArmorTBox = form.getCheckBox('Check Box40');
+  const heavyArmorEBox = form.getCheckBox('Check Box41');
+  const heavyArmorMBox = form.getCheckBox('Check Box42');
+  const heavyArmorLBox = form.getCheckBox('Check Box43');
+  setProfCheckBox(profMap.get('Heavy_Armor'), heavyArmorTBox, heavyArmorEBox, heavyArmorMBox, heavyArmorLBox);
   
   const shieldACBonusField = form.getTextField('Text16');
   const shieldHardnessField = form.getTextField('HARDNESS');
   const shieldHealthAndBTField = form.getTextField('BT');
   const shieldCurrentHPField = form.getTextField('CURRENT HP');
-
-  // //
-  
-  // Field names: https://www.pdfescape.com
 
   // //
   const maxHPField = form.getTextField('Text1');
@@ -139,15 +188,25 @@ async function charExportGeneratePDF(charInfo, extraData) {
 
 
   const totalPerceptionField = form.getTextField('Text17');
+  totalPerceptionField.setText(signNumber(charInfo.stats.totalPerception));
+
   const perceptionWisModField = form.getTextField('WIS_2');
   const perceptionProfBonusField = form.getTextField('PROF_5');
-  const perceptionProfTrainedField = form.getCheckBox('Check Box24');
-  const perceptionProfExpertField = form.getCheckBox('Check Box25');
-  const perceptionProfMasterField = form.getCheckBox('Check Box26');
-  const perceptionProfLegendaryField = form.getCheckBox('Check Box27');
   const perceptionItemBonusField = form.getTextField('ITEM_5');
+
+  const percepTBox = form.getCheckBox('Check Box24');
+  const percepEBox = form.getCheckBox('Check Box25');
+  const percepMBox = form.getCheckBox('Check Box26');
+  const percepLBox = form.getCheckBox('Check Box27');
+  setProfCheckBox(profMap.get('Perception'), percepTBox, percepEBox, percepMBox, percepLBox);
   
   const sensesField = form.getTextField('SENSES');
+  let sensesText = '';
+  for(let sense of charInfo.build.senses){
+    sensesText += sense.value.name+', ';
+  }
+  sensesText = sensesText.slice(0, -2);// Trim off that last ', '
+  sensesField.setText(sensesText);
 
   // Saves
 
@@ -229,6 +288,39 @@ async function charExportGeneratePDF(charInfo, extraData) {
   const weap6DmgDiceField = form.getTextField('DICE_6');
   const weap6TraitsField = form.getTextField('TRAITS_6');
   const weap6SpeField = form.getTextField('undefined_3');
+
+  let weapons = JSON.parse(charInfo.stats.weapons);
+  console.log(weapons);
+  if(weapons.length >= 1){
+    weap1NameField.setText(weapons[0].Name);
+    weap1HitBonusField.setText(weapons[0].Bonus);
+    weap1DmgDiceField.setText(weapons[0].Damage);
+  }
+  if(weapons.length >= 2){
+    weap2NameField.setText(weapons[1].Name);
+    weap2HitBonusField.setText(weapons[1].Bonus);
+    weap2DmgDiceField.setText(weapons[1].Damage);
+  }
+  if(weapons.length >= 3){
+    weap3NameField.setText(weapons[2].Name);
+    weap3HitBonusField.setText(weapons[2].Bonus);
+    weap3DmgDiceField.setText(weapons[2].Damage);
+  }
+  if(weapons.length >= 4){
+    weap4NameField.setText(weapons[3].Name);
+    weap4HitBonusField.setText(weapons[3].Bonus);
+    weap4DmgDiceField.setText(weapons[3].Damage);
+  }
+  if(weapons.length >= 5){
+    weap5NameField.setText(weapons[4].Name);
+    weap5HitBonusField.setText(weapons[4].Bonus);
+    weap5DmgDiceField.setText(weapons[4].Damage);
+  }
+  if(weapons.length >= 6){
+    weap6NameField.setText(weapons[5].Name);
+    weap6HitBonusField.setText(weapons[5].Bonus);
+    weap6DmgDiceField.setText(weapons[5].Damage);
+  }
 
   // Skills
 
@@ -528,38 +620,6 @@ async function charExportGeneratePDF(charInfo, extraData) {
   }
 
   totalClassDCField.setText(charInfo.stats.totalClassDC+'');
-  totalPerceptionField.setText(signNumber(charInfo.stats.totalPerception));
-
-  let totalAbilityScores = JSON.parse(charInfo.stats.totalAbilityScores);
-  for(let abilityScore of totalAbilityScores){
-    switch(abilityScore.Name){
-      case 'Strength':
-        strScoreField.setText(abilityScore.Score+'');
-        strModField.setText(signNumber(getMod(abilityScore.Score))+'');
-        break;
-      case 'Dexterity':
-        dexScoreField.setText(abilityScore.Score+'');
-        dexModField.setText(signNumber(getMod(abilityScore.Score))+'');
-        break;
-      case 'Constitution':
-        conScoreField.setText(abilityScore.Score+'');
-        conModField.setText(signNumber(getMod(abilityScore.Score))+'');
-        break;
-      case 'Intelligence':
-        intScoreField.setText(abilityScore.Score+'');
-        intModField.setText(signNumber(getMod(abilityScore.Score))+'');
-        break;
-      case 'Wisdom':
-        wisScoreField.setText(abilityScore.Score+'');
-        wisModField.setText(signNumber(getMod(abilityScore.Score))+'');
-        break;
-      case 'Charisma':
-        chaScoreField.setText(abilityScore.Score+'');
-        chaModField.setText(signNumber(getMod(abilityScore.Score))+'');
-        break;
-      default: break;
-    }
-  }
 
   let charConditionsString = '';
   for(const condition of charInfo.conditions){
@@ -578,6 +638,106 @@ async function charExportGeneratePDF(charInfo, extraData) {
   }
   charTraitString = charTraitString.slice(0, -2);// Trim off that last ', '
   traitsField.setText(charTraitString);
+
+  // Inventory
+
+  const itemsField = form.getTextField('WORN ITEMS');
+  const bulkField = form.getTextField('BULK');
+  const investField = form.getTextField('INVEST MAX 10');
+  let itemsStr = '';
+  let bulkStr = '';
+  let bulkCount = 0;
+  let investCount = 0;
+
+  let copperCount = 0;
+  let silverCount = 0;
+  let goldCount = 0;
+  let platinumCount = 0;
+
+  for(let invItem of charInfo.invItems){
+
+    if(invItem.name == 'Copper (cp)'){
+      copperCount += invItem.quantity;
+      continue;
+    }
+    if(invItem.name == 'Silver (sp)'){
+      silverCount += invItem.quantity;
+      continue;
+    }
+    if(invItem.name == 'Gold (gp)'){
+      goldCount += invItem.quantity;
+      continue;
+    }
+    if(invItem.name == 'Platinum (pp)'){
+      platinumCount += invItem.quantity;
+      continue;
+    }
+
+    itemsStr += invItem.name+'\n';
+    bulkStr += invItem.bulk+'\n';
+    bulkCount += invItem.bulk;
+    if(invItem.isInvested == 1){ investCount++; }
+  }
+  bulkCount = round(bulkCount, 1);
+
+  itemsField.setText(itemsStr);
+  bulkField.setText(bulkStr+'');
+  investField.setText(investCount+'');
+
+  const totalField = form.getTextField('Text44');
+  totalField.setText(bulkCount+'');
+
+  const encumberedBulkField = form.getTextField('Text49');
+  encumberedBulkField.setText((strMod+5)+'');
+
+  const maximumBulkField = form.getTextField('Text94');
+  maximumBulkField.setText((strMod+10)+'');
+
+  const cpField = form.getTextField('Text45');
+  cpField.setText(copperCount+'');
+  const spField = form.getTextField('Text46');
+  spField.setText(silverCount+'');
+  const gpField = form.getTextField('Text47');
+  gpField.setText(goldCount+'');
+  const ppField = form.getTextField('Text48');
+  ppField.setText(platinumCount+'');
+
+
+  // Character Extra Info
+
+  let extraInfo = JSON.parse(charInfo.character.infoJSON);
+
+  if(extraInfo.ethnicity != null) {
+    form.getTextField('ETHNICITY').setText(extraInfo.ethnicity);
+  }
+  if(extraInfo.nationality != null) {
+    form.getTextField('NATIONALITY').setText(extraInfo.nationality);
+  }
+  if(extraInfo.age != null) {
+    form.getTextField('AGE').setText(extraInfo.age);
+  }
+  let genderPronouns = '';
+  if(extraInfo.gender != null) {
+    genderPronouns += extraInfo.gender;
+  }
+  if(extraInfo.pronouns != null) {
+    if(genderPronouns == ''){
+      genderPronouns += extraInfo.pronouns;
+    } else {
+      genderPronouns += ' & '+extraInfo.pronouns;
+    }
+  }
+  form.getTextField('GENDER PRONOUNS').setText(genderPronouns);
+
+  if(extraInfo.appearance != null) {
+    form.getTextField('APPEARANCE').setText(extraInfo.appearance);
+  }
+  if(extraInfo.personality != null) {
+    form.getTextField('ATTITUDE').setText(extraInfo.personality);
+  }
+  if(extraInfo.beliefs != null) {
+    form.getTextField('BELIEFS').setText(extraInfo.beliefs);
+  }
 
 
 
