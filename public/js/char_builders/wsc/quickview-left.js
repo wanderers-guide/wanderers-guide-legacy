@@ -66,8 +66,26 @@ function openLeftStatsQuickview(data) {
     qContent.append('<hr class="mb-2 mt-1">');
   }
 
-  qContent.append('<div class="columns is-mobile is-centered is-marginless text-center mx-3"><div class="column is-2 is-paddingless"><p class="is-bold-very">Str</p></div><div class="column is-2 is-paddingless"><p class="is-bold-very">Dex</p></div><div class="column is-2 is-paddingless"><p class="is-bold-very">Con</p></div><div class="column is-2 is-paddingless"><p class="is-bold-very">Int</p></div><div class="column is-2 is-paddingless"><p class="is-bold-very">Wis</p></div><div class="column is-2 is-paddingless"><p class="is-bold-very">Cha</p></div></div>');
-  qContent.append('<div class="columns is-mobile is-centered is-marginless text-center mx-3"><div class="column is-2 is-paddingless"><p class="">'+g_abilMap.get("STR")+'</p></div><div class="column is-2 is-paddingless"><p class="">'+g_abilMap.get("DEX")+'</p></div><div class="column is-2 is-paddingless"><p class="">'+g_abilMap.get("CON")+'</p></div><div class="column is-2 is-paddingless"><p class="">'+g_abilMap.get("INT")+'</p></div><div class="column is-2 is-paddingless"><p class="">'+g_abilMap.get("WIS")+'</p></div><div class="column is-2 is-paddingless"><p class="">'+g_abilMap.get("CHA")+'</p></div></div>');
+  qContent.append(`
+    <div class="columns is-mobile is-centered is-marginless text-center mx-3">
+      <div class="column is-2 is-paddingless"><p class="is-bold-very">Str</p></div>
+      <div class="column is-2 is-paddingless"><p class="is-bold-very">Dex</p></div>
+      <div class="column is-2 is-paddingless"><p class="is-bold-very">Con</p></div>
+      <div class="column is-2 is-paddingless"><p class="is-bold-very">Int</p></div>
+      <div class="column is-2 is-paddingless"><p class="is-bold-very">Wis</p></div>
+      <div class="column is-2 is-paddingless"><p class="is-bold-very">Cha</p></div>
+    </div>
+  `);
+  qContent.append(`
+    <div class="columns is-mobile is-centered is-marginless text-center mx-3">
+      <div class="column is-2 is-paddingless"><p class="">${g_abilMap.get("STR")}</p></div>
+      <div class="column is-2 is-paddingless"><p class="">${g_abilMap.get("DEX")}</p></div>
+      <div class="column is-2 is-paddingless"><p class="">${g_abilMap.get("CON")}</p></div>
+      <div class="column is-2 is-paddingless"><p class="">${g_abilMap.get("INT")}</p></div>
+      <div class="column is-2 is-paddingless"><p class="">${g_abilMap.get("WIS")}</p></div>
+      <div class="column is-2 is-paddingless"><p class="">${g_abilMap.get("CHA")}</p></div>
+    </div>
+  `);
 
   qContent.append('<hr class="m-2">');
 

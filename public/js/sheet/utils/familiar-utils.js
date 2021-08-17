@@ -144,7 +144,7 @@ function getFamiliarAC(){
   // Account for clumsy condition which could lower AC
   let dexModChange = 0;
   if(getStatTotal(VARIABLE.SCORE_DEX) != g_preConditions_dexScore){
-    let dexCap = getStatTotal(VARIABLE.DEX_CAP);
+    let dexCap = getStatBonusTotal(VARIABLE.DEX_CAP);
 
     let pre_dexMod = getMod(g_preConditions_dexScore);
     let pre_dexModCapped = (dexCap != null) ? ((pre_dexMod > dexCap) ? dexCap : pre_dexMod) : pre_dexMod;

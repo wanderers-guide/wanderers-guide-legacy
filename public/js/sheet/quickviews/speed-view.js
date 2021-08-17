@@ -23,12 +23,8 @@ function openSpeedQuickview(data) {
 
         qContent.append('<p class="has-text-centered"><strong>Conditionals</strong></p>');
         
-        for(const [condition, value] of conditionalStatMap.entries()){
-            if(value == null){
-                qContent.append('<p class="has-text-centered">'+condition+'</p>');
-            } else {
-                qContent.append('<p class="has-text-centered">'+signNumber(value)+' '+condition+'</p>');
-            }
+        for(const [condition, valueData] of conditionalStatMap.entries()){
+          qContent.append('<p class="has-text-centered">'+condition+'</p>');
         }
 
     }
@@ -41,7 +37,8 @@ function addSpeedContent(qContent, speedStatName, speedName){
     let speedAmalgBonusNumID = 'amalgSpeedBonusNum'+speedStatName;
     let speedTotal = getStatTotal(speedStatName);
     
-    let speedBase = getStat(speedStatName, 'BASE');
+    let speedBase = variables_getValue(speedStatName);
+
 
     qContent.append('<p class="has-text-centered is-size-5"><strong>'+speedName+'</strong></p>');
 

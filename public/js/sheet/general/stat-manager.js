@@ -2,8 +2,8 @@
     By Aaron Cassar.
 */
 
-let g_statManagerMap = null;
-let g_conditionalStatManagerMap = null;
+//let g_statManagerMap = null;
+//let g_conditionalStatManagerMap = null;
 
 // key(name) value([ {Source, Value}, {Source, Value} ])
 /*
@@ -33,66 +33,42 @@ let g_conditionalStatManagerMap = null;
 */
 
 function initStats(){
-  g_statManagerMap = new Map();
-  g_conditionalStatManagerMap = new Map();
+  //g_statManagerMap = new Map();
+  //g_conditionalStatManagerMap = new Map();
 }
 
-function addStat(statName, source, value){
-  addStatAndSrc(statName, source, value, 'CORE');
+function addStat(statName, type, value){
+  addStatAndSrc(statName, type, value, 'CORE');
 }
 
-function addStatAndSrc(statName, source, value, statSrc){
-    statName = statName.replace(/\s/g, "_").toUpperCase();
+function addStatAndSrc(statName, type, value, source){
+  statName = statName.replace(/\s/g, "_").toUpperCase();
 
-    // Don't add to map, just increase
-    if(statName == 'HEALTH') {
-      if(source.includes('_BONUS')) { g_character.currentHealth += value; }
-      if(source.includes('_PENALTY')) { g_character.currentHealth -= value; }
-      if(!source.includes('_BONUS') && !source.includes('_PENALTY')) { g_character.currentHealth = value; }
-      socket.emit("requestCurrentHitPointsSave",
-          getCharIDFromURL(),
-          g_character.currentHealth);
-      initHealthPointsAndMore();
-      return;
-    } else if(statName == 'TEMP_HEALTH'){
-      if(source.includes('_BONUS')) { g_character.tempHealth += value; }
-      if(source.includes('_PENALTY')) { g_character.tempHealth -= value; }
-      if(!source.includes('_BONUS') && !source.includes('_PENALTY')) { g_character.tempHealth = value; }
-      socket.emit("requestTempHitPointsSave",
-          getCharIDFromURL(),
-          g_character.tempHealth);
-      initHealthPointsAndMore();
-      return;
-    }
+  // Don't add to map, just increase
+  if(statName == 'HEALTH') {
+    if(type.includes('_BONUS')) { g_character.currentHealth += value; }
+    if(type.includes('_PENALTY')) { g_character.currentHealth -= value; }
+    if(!type.includes('_BONUS') && !type.includes('_PENALTY')) { g_character.currentHealth = value; }
+    socket.emit("requestCurrentHitPointsSave",
+        getCharIDFromURL(),
+        g_character.currentHealth);
+    initHealthPointsAndMore();
+    return;
+  } else if(statName == 'TEMP_HEALTH'){
+    if(type.includes('_BONUS')) { g_character.tempHealth += value; }
+    if(type.includes('_PENALTY')) { g_character.tempHealth -= value; }
+    if(!type.includes('_BONUS') && !type.includes('_PENALTY')) { g_character.tempHealth = value; }
+    socket.emit("requestTempHitPointsSave",
+        getCharIDFromURL(),
+        g_character.tempHealth);
+    initHealthPointsAndMore();
+    return;
+  }
 
-    // Normal stat map
-    let statDataMap = g_statManagerMap.get(statName);
-    if(statDataMap != null){
-        let existingData = statDataMap.get(source);
-        if(existingData != null){
-          // If both are negative, take the lowest
-          if(existingData.Value < 0 && value < 0){
-            if(existingData.Value < value) {
-              value = existingData.Value;
-              statSrc = existingData.Src;
-            }
-          } else {
-            // Take the highest
-            if(existingData.Value > value) {
-              value = existingData.Value;
-              statSrc = existingData.Src;
-            }
-          }
-        }
-        statDataMap.set(source, {Value: value, Src: statSrc});
-        g_statManagerMap.set(statName, statDataMap);
-    } else {
-        statDataMap = new Map();
-        statDataMap.set(source, {Value: value, Src: statSrc});
-        g_statManagerMap.set(statName, statDataMap);
-    }
+  variables_addToBonuses(statName, value, type, source);
 }
 
+/*
 function removeStat(statName, source){
     statName = statName.replace(/\s/g, "_").toUpperCase();
     let statDataMap = g_statManagerMap.get(statName);
@@ -104,47 +80,30 @@ function removeStat(statName, source){
 function removeStat(statName){
     statName = statName.replace(/\s/g, "_").toUpperCase();
     g_statManagerMap.delete(statName);
-}
+}*/
 
-function getStat(statName, source){
-    statName = statName.replace(/\s/g, "_").toUpperCase();
-    let statDataMap = g_statManagerMap.get(statName);
-    if(statDataMap != null){
-        let value = statDataMap.get(source).Value;
-        if(value === 'LAND_SPEED'){
-          value = getStatTotal(VARIABLE.SPEED);
-        }
-        return value;
-    } else {
-        return null;
-    }
+function getStat(statName, type){
+  statName = statName.replace(/\s/g, "_").toUpperCase();
+  let value = variables_getBonus(statName, type);
+  if(value === 'LAND_SPEED'){
+    value = getStatTotal(VARIABLE.SPEED);
+  }
+  return value;
 }
 
 function getStatTotal(statName){
-    statName = statName.replace(/\s/g, "_").toUpperCase();
-    let total = null;
-    let statDataMap = g_statManagerMap.get(statName);
-    if(statDataMap != null){
-        total = 0;
-        for(let [source, valueData] of statDataMap){
-          let value = valueData.Value;
-          if(value === 'LAND_SPEED'){
-            value = getStatTotal(VARIABLE.SPEED);
-          }
-          if(source === 'PROF_BONUS'){
-            total += getProfNumber(value, g_character.level);
-          } else if(source === 'MODIFIER') {
-            total += getModOfValue(value);
-          } else {
-            total += parseInt(value);
-          }
-        }
-    }
-    return total;
+  statName = statName.replace(/\s/g, "_").toUpperCase();
+  return variables_getTotal(statName);
+}
+
+function getStatBonusTotal(statName){
+  statName = statName.replace(/\s/g, "_").toUpperCase();
+  return variables_getBonusTotal(statName);
 }
 
 function getStatExtraBonuses(statName){
     statName = statName.replace(/\s/g, "_").toUpperCase();
+    /*
     let extraBonuses = null;
     let statDataMap = g_statManagerMap.get(statName);
     if(statDataMap != null){
@@ -167,13 +126,35 @@ function getStatExtraBonuses(statName){
                 }
             }
         }
+    }*/
+    let extraBonuses = null;
+    let map = variables_getBonusesMap(statName);
+    if(map != null){
+      extraBonuses = [];
+      for(let [type, valueData] of map){
+        if(valueData.Value != 0){
+          let cleanedType = type.replace(/_/g, " ").toLowerCase();
+          if(cleanedType.startsWith('other-')){
+            if(cleanedType.includes('bonus')){
+              cleanedType = 'bonus';
+            } else if(cleanedType.includes('penalty')){
+              cleanedType = 'penalty';
+            }
+          }
+          if(valueData.Src != 'CORE') {
+            extraBonuses.push(signNumber(valueData.Value)+' '+cleanedType+' from '+capitalizeWords(valueData.Src));
+          } else {
+            extraBonuses.push(signNumber(valueData.Value)+' '+cleanedType);
+          }
+        }
+      }
     }
     return extraBonuses;
 }
 
 function getStatMap(statName){
     statName = statName.replace(/\s/g, "_").toUpperCase();
-    return g_statManagerMap.get(statName);
+    return variables_getBonusesMap(statName);
 }
 
 function getModOfValue(valueModName){
@@ -214,25 +195,12 @@ function getModOfValue(valueModName){
 
 // Conditionals //
 
-function addConditionalStat(statName, condition, value){
-    statName = statName.replace(/\s/g, "_").toUpperCase();
-    let statDataMap = g_conditionalStatManagerMap.get(statName);
-    if(statDataMap != null){
-        let existingDataValue = statDataMap.get(condition);
-        if(existingDataValue != null){
-            if(existingDataValue > value) {
-                value = existingDataValue;
-            }
-        }
-        statDataMap.set(condition, value);
-        g_conditionalStatManagerMap.set(statName, statDataMap);
-    } else {
-        statDataMap = new Map();
-        statDataMap.set(condition, value);
-        g_conditionalStatManagerMap.set(statName, statDataMap);
-    }
+function addConditionalStat(statName, condition, source){
+  statName = statName.replace(/\s/g, "_").toUpperCase();
+  variables_addToConditionals(statName, condition, source);
 }
 
+/*
 function removeConditionalStat(statName, condition){
     statName = statName.replace(/\s/g, "_").toUpperCase();
     let statDataMap = g_conditionalStatManagerMap.get(statName);
@@ -254,19 +222,20 @@ function getConditionalStat(statName, condition){
     } else {
         return null;
     }
-}
+}*/
 
 function getConditionalStatMap(statName){
-    statName = statName.replace(/\s/g, "_").toUpperCase();
-    let map = g_conditionalStatManagerMap.get(statName);
-    if(map == null){
-      return new Map();
-    } else {
-      return map;
-    }
+  statName = statName.replace(/\s/g, "_").toUpperCase();
+  let map = variables_getConditionalsMap(statName);
+  if(map == null){
+    return new Map();
+  } else {
+    return map;
+  }
 }
 
 function hasConditionals(statName){
-    statName = statName.replace(/\s/g, "_").toUpperCase();
-    return g_conditionalStatManagerMap.get(statName) != null;
+  statName = statName.replace(/\s/g, "_").toUpperCase();
+  let map = variables_getConditionalsMap(statName);
+  return map != null && map.size > 0;
 }

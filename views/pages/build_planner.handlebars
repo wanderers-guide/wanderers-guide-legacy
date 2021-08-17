@@ -1,0 +1,441 @@
+
+{{#section 'header'}}
+    <link rel="stylesheet" href="/css/build-planner.css">
+    <script src="/js/build_planner/main.js"></script>
+{{/section}}
+
+{{#section 'nav_home'}}
+    <li><a href="/">Home</a></li>
+{{/section}}
+
+{{#section 'nav_characters'}}
+    <li><a href="/profile/characters">Characters</a></li>
+{{/section}}
+
+{{#section 'nav_homebrew'}}
+    <li class="mx-lg-4 mx-md-3 my-md-0 my-2"><a href="/homebrew">Homebrew</a></li>
+{{/section}}
+
+{{#section 'nav_browse'}}
+    <li class="mr-lg-4 mr-md-3"><a href="/browse"><i class="fas fa-lg fa-search"></i></a></li>
+{{/section}}
+
+{{#section 'nav_login'}}
+    <li class="mr-4"><a href="/auth/login">Login <i class="fas fa-sign-in-alt"></i></a></li>
+{{/section}}
+
+
+
+{{#section 'banner_nav'}}
+    <div class="banner_w3lspvt-2"></div>
+{{/section}}
+
+
+<div class="container mt-3 pt-3">
+  
+  <div class="tile is-ancestor">
+    <div class="tile is-4">
+      <div class="tile is-parent is-vertical">
+        <div class="tile is-child box p-2">
+          
+          <div class="columns is-mobile is-marginless m-1">
+            <div class="column is-paddingless">
+              <p class="has-text-light title-font has-text-centered">Ancestry</p>
+            </div>
+            <div class="column is-7 is-paddingless has-text-centered">
+              <span class="button is-info is-outlined is-small is-fullwidth">Human</span>
+            </div>
+          </div>
+          <div class="columns is-mobile is-marginless m-1">
+            <div class="column is-paddingless">
+              <p class="has-text-light title-font has-text-centered">Background</p>
+            </div>
+            <div class="column is-7 is-paddingless has-text-centered">
+              <span class="button is-info is-outlined is-small is-fullwidth">Barkeep</span>
+            </div>
+          </div>
+          <div class="columns is-mobile is-marginless m-1">
+            <div class="column is-paddingless">
+              <p class="has-text-light title-font has-text-centered">Class</p>
+            </div>
+            <div class="column is-7 is-paddingless has-text-centered">
+              <span class="button is-info is-outlined is-small is-fullwidth">Wizard</span>
+            </div>
+          </div>
+
+        </div>
+        <div class="tile is-child box py-2 pl-2 pr-1">
+          <p class="has-text-light title-font has-text-centered">Statistics</p>
+          <div class="use-custom-scrollbar" style="height: 500px; max-height: 500px; overflow-y: scroll;">
+          
+            <!-- Ability Scores -->
+            <div class="accord-like-button mx-2 mb-2">
+              <div class="columns is-mobile is-centered is-marginless text-center mx-3">
+                <div class="column is-2 is-paddingless"><p class="is-bold-very">Str</p></div>
+                <div class="column is-2 is-paddingless"><p class="is-bold-very">Dex</p></div>
+                <div class="column is-2 is-paddingless"><p class="is-bold-very">Con</p></div>
+                <div class="column is-2 is-paddingless"><p class="is-bold-very">Int</p></div>
+                <div class="column is-2 is-paddingless"><p class="is-bold-very">Wis</p></div>
+                <div class="column is-2 is-paddingless"><p class="is-bold-very">Cha</p></div>
+              </div>
+              <div class="columns is-mobile is-centered is-marginless text-center mx-3">
+                <div class="column is-2 is-paddingless"><p id="">14</p></div>
+                <div class="column is-2 is-paddingless"><p id="">16</p></div>
+                <div class="column is-2 is-paddingless"><p id="">8</p></div>
+                <div class="column is-2 is-paddingless"><p id="">16</p></div>
+                <div class="column is-2 is-paddingless"><p id="">12</p></div>
+                <div class="column is-2 is-paddingless"><p id="">10</p></div>
+              </div>
+            </div>
+
+            <!-- Hit Points -->
+            <div class="accord-like-button columns is-mobile is-marginless my-1">
+              <div class="column is-8 is-paddingless"><span class="title-font pl-2">Hit Points</span></div>
+              <div class="column is-2 is-paddingless"><p id="" class="has-text-centered">130</p></div>
+              <div class="column is-2 is-paddingless"><p class="has-text-centered is-italic has-text-grey is-size-7-5 pt-2">(at max)</p></div>
+            </div>
+
+            <!-- Class DC -->
+            <div class="accord-like-button columns is-mobile is-marginless my-1">
+              <div class="column is-8 is-paddingless"><span class="title-font pl-2">Class DC</span></div>
+              <div class="column is-2 is-paddingless"><p id="" class="has-text-centered">18</p></div>
+              <div class="column is-2 is-paddingless"><p id="" class="has-text-centered is-italic has-text-grey">E</p></div>
+            </div>
+
+            <!-- Perception -->
+            <div class="accord-like-button columns is-mobile is-marginless my-1">
+              <div class="column is-8 is-paddingless"><span class="title-font pl-2">Perception</span></div>
+              <div class="column is-2 is-paddingless"><p id="" class="has-text-centered">+28</p></div>
+              <div class="column is-2 is-paddingless"><p id="" class="has-text-centered is-italic has-text-grey">T</p></div>
+            </div>
+
+            <!-- Skills -->
+            <div class="accord-container my-1">
+              <div class="accord-header">
+                <span class="title-font pl-2">Skills</span>
+                <span class="icon is-pulled-right">
+                  <i class="accord-chevron fas fa-chevron-down"></i>
+                </span>
+              </div>
+              <div id="skills-body" class="accord-body is-hidden">
+                <!-- Populated at runtime -->
+              </div>
+            </div>
+
+            <!-- Attacks -->
+            <div class="accord-container my-1">
+              <div class="accord-header">
+                <span class="title-font pl-2">Attacks</span>
+                <span class="icon is-pulled-right">
+                  <i class="accord-chevron fas fa-chevron-down"></i>
+                </span>
+              </div>
+              <div id="attacks-body" class="accord-body is-hidden">
+                <!-- Populated at runtime -->
+              </div>
+            </div>
+
+            <!-- Defenses -->
+            <div class="accord-container my-1">
+              <div class="accord-header">
+                <span class="title-font pl-2">Defenses</span>
+                <span class="icon is-pulled-right">
+                  <i class="accord-chevron fas fa-chevron-down"></i>
+                </span>
+              </div>
+              <div id="defenses-body" class="accord-body is-hidden">
+                <!-- Populated at runtime -->
+              </div>
+            </div>
+
+            <!-- Spellcasting -->
+            <div class="accord-container my-1">
+              <div class="accord-header">
+                <span class="title-font pl-2">Spellcasting</span>
+                <span class="icon is-pulled-right">
+                  <i class="accord-chevron fas fa-chevron-down"></i>
+                </span>
+              </div>
+              <div id="spellcasting-body" class="accord-body is-hidden">
+                <!-- Populated at runtime -->
+              </div>
+            </div>
+            
+            <!-- Languages -->
+            <div class="accord-container my-1">
+              <div class="accord-header">
+                <span class="title-font pl-2">Languages</span>
+                <span class="icon is-pulled-right">
+                  <i class="accord-chevron fas fa-chevron-down"></i>
+                </span>
+              </div>
+              <div id="languages-body" class="accord-body is-hidden">
+                <!-- Populated at runtime -->
+              </div>
+            </div>
+
+            <!-- Saves -->
+            <div class="accord-container my-1">
+              <div class="accord-header">
+                <span class="title-font pl-2">Saves</span>
+                <span class="icon is-pulled-right">
+                  <i class="accord-chevron fas fa-chevron-down"></i>
+                </span>
+              </div>
+              <div id="saves-body" class="accord-body is-hidden">
+                <!-- Populated at runtime -->
+              </div>
+            </div>
+            
+            <!-- Resist & Weaks -->
+            <div class="accord-container my-1">
+              <div class="accord-header">
+                <span class="title-font pl-2">Resist & Weaks</span>
+                <span class="icon is-pulled-right">
+                  <i class="accord-chevron fas fa-chevron-down"></i>
+                </span>
+              </div>
+              <div id="resist-weaks-body" class="accord-body is-hidden">
+                <!-- Populated at runtime -->
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="tile is-8">
+      <div class="tile is-parent">
+        <div class="tile is-child box py-2 pl-2 pr-1">
+          
+          <div class="use-custom-scrollbar" style="height: 675px; max-height: 675px; overflow-y: scroll;">
+
+            <div class="accord-container my-1">
+              <div class="accord-header">
+                <span class="title-font pl-2">Level 1</span>
+                <span class="icon is-pulled-right">
+                  <i class="accord-chevron fas fa-chevron-down"></i>
+                </span>
+              </div>
+              <div id="spellcasting-body" class="accord-body is-hidden">
+                <!-- Populated at runtime -->
+              </div>
+            </div>
+            <div class="accord-container my-1">
+              <div class="accord-header">
+                <span class="title-font pl-2">Level 2</span>
+                <span class="icon is-pulled-right">
+                  <i class="accord-chevron fas fa-chevron-down"></i>
+                </span>
+              </div>
+              <div id="spellcasting-body" class="accord-body is-hidden">
+                <!-- Populated at runtime -->
+              </div>
+            </div>
+            <div class="accord-container my-1">
+              <div class="accord-header">
+                <span class="title-font pl-2">Level 3</span>
+                <span class="icon is-pulled-right">
+                  <i class="accord-chevron fas fa-chevron-down"></i>
+                </span>
+              </div>
+              <div id="spellcasting-body" class="accord-body is-hidden">
+                <!-- Populated at runtime -->
+              </div>
+            </div>
+            <div class="accord-container my-1">
+              <div class="accord-header">
+                <span class="title-font pl-2">Level 4</span>
+                <span class="icon is-pulled-right">
+                  <i class="accord-chevron fas fa-chevron-down"></i>
+                </span>
+              </div>
+              <div id="spellcasting-body" class="accord-body is-hidden">
+                <!-- Populated at runtime -->
+              </div>
+            </div>
+            <div class="accord-container my-1">
+              <div class="accord-header">
+                <span class="title-font pl-2">Level 5</span>
+                <span class="icon is-pulled-right">
+                  <i class="accord-chevron fas fa-chevron-down"></i>
+                </span>
+              </div>
+              <div id="spellcasting-body" class="accord-body is-hidden">
+                <!-- Populated at runtime -->
+              </div>
+            </div>
+            <div class="accord-container my-1">
+              <div class="accord-header">
+                <span class="title-font pl-2">Level 6</span>
+                <span class="icon is-pulled-right">
+                  <i class="accord-chevron fas fa-chevron-down"></i>
+                </span>
+              </div>
+              <div id="spellcasting-body" class="accord-body is-hidden">
+                <!-- Populated at runtime -->
+              </div>
+            </div>
+            <div class="accord-container my-1">
+              <div class="accord-header">
+                <span class="title-font pl-2">Level 7</span>
+                <span class="icon is-pulled-right">
+                  <i class="accord-chevron fas fa-chevron-down"></i>
+                </span>
+              </div>
+              <div id="spellcasting-body" class="accord-body is-hidden">
+                <!-- Populated at runtime -->
+              </div>
+            </div>
+            <div class="accord-container my-1">
+              <div class="accord-header">
+                <span class="title-font pl-2">Level 8</span>
+                <span class="icon is-pulled-right">
+                  <i class="accord-chevron fas fa-chevron-down"></i>
+                </span>
+              </div>
+              <div id="spellcasting-body" class="accord-body is-hidden">
+                <!-- Populated at runtime -->
+              </div>
+            </div>
+            <div class="accord-container my-1">
+              <div class="accord-header">
+                <span class="title-font pl-2">Level 9</span>
+                <span class="icon is-pulled-right">
+                  <i class="accord-chevron fas fa-chevron-down"></i>
+                </span>
+              </div>
+              <div id="spellcasting-body" class="accord-body is-hidden">
+                <!-- Populated at runtime -->
+              </div>
+            </div>
+            <div class="accord-container my-1">
+              <div class="accord-header">
+                <span class="title-font pl-2">Level 10</span>
+                <span class="icon is-pulled-right">
+                  <i class="accord-chevron fas fa-chevron-down"></i>
+                </span>
+              </div>
+              <div id="spellcasting-body" class="accord-body is-hidden">
+                <!-- Populated at runtime -->
+              </div>
+            </div>
+            <div class="accord-container my-1">
+              <div class="accord-header">
+                <span class="title-font pl-2">Level 11</span>
+                <span class="icon is-pulled-right">
+                  <i class="accord-chevron fas fa-chevron-down"></i>
+                </span>
+              </div>
+              <div id="spellcasting-body" class="accord-body is-hidden">
+                <!-- Populated at runtime -->
+              </div>
+            </div>
+            <div class="accord-container my-1">
+              <div class="accord-header">
+                <span class="title-font pl-2">Level 12</span>
+                <span class="icon is-pulled-right">
+                  <i class="accord-chevron fas fa-chevron-down"></i>
+                </span>
+              </div>
+              <div id="spellcasting-body" class="accord-body is-hidden">
+                <!-- Populated at runtime -->
+              </div>
+            </div>
+            <div class="accord-container my-1">
+              <div class="accord-header">
+                <span class="title-font pl-2">Level 13</span>
+                <span class="icon is-pulled-right">
+                  <i class="accord-chevron fas fa-chevron-down"></i>
+                </span>
+              </div>
+              <div id="spellcasting-body" class="accord-body is-hidden">
+                <!-- Populated at runtime -->
+              </div>
+            </div>
+            <div class="accord-container my-1">
+              <div class="accord-header">
+                <span class="title-font pl-2">Level 14</span>
+                <span class="icon is-pulled-right">
+                  <i class="accord-chevron fas fa-chevron-down"></i>
+                </span>
+              </div>
+              <div id="spellcasting-body" class="accord-body is-hidden">
+                <!-- Populated at runtime -->
+              </div>
+            </div>
+            <div class="accord-container my-1">
+              <div class="accord-header">
+                <span class="title-font pl-2">Level 15</span>
+                <span class="icon is-pulled-right">
+                  <i class="accord-chevron fas fa-chevron-down"></i>
+                </span>
+              </div>
+              <div id="spellcasting-body" class="accord-body is-hidden">
+                <!-- Populated at runtime -->
+              </div>
+            </div>
+            <div class="accord-container my-1">
+              <div class="accord-header">
+                <span class="title-font pl-2">Level 16</span>
+                <span class="icon is-pulled-right">
+                  <i class="accord-chevron fas fa-chevron-down"></i>
+                </span>
+              </div>
+              <div id="spellcasting-body" class="accord-body is-hidden">
+                <!-- Populated at runtime -->
+              </div>
+            </div>
+            <div class="accord-container my-1">
+              <div class="accord-header">
+                <span class="title-font pl-2">Level 17</span>
+                <span class="icon is-pulled-right">
+                  <i class="accord-chevron fas fa-chevron-down"></i>
+                </span>
+              </div>
+              <div id="spellcasting-body" class="accord-body is-hidden">
+                <!-- Populated at runtime -->
+              </div>
+            </div>
+            <div class="accord-container my-1">
+              <div class="accord-header">
+                <span class="title-font pl-2">Level 18</span>
+                <span class="icon is-pulled-right">
+                  <i class="accord-chevron fas fa-chevron-down"></i>
+                </span>
+              </div>
+              <div id="spellcasting-body" class="accord-body is-hidden">
+                <!-- Populated at runtime -->
+              </div>
+            </div>
+            <div class="accord-container my-1">
+              <div class="accord-header">
+                <span class="title-font pl-2">Level 19</span>
+                <span class="icon is-pulled-right">
+                  <i class="accord-chevron fas fa-chevron-down"></i>
+                </span>
+              </div>
+              <div id="spellcasting-body" class="accord-body is-hidden">
+                <!-- Populated at runtime -->
+              </div>
+            </div>
+            <div class="accord-container my-1">
+              <div class="accord-header">
+                <span class="title-font pl-2">Level 20</span>
+                <span class="icon is-pulled-right">
+                  <i class="accord-chevron fas fa-chevron-down"></i>
+                </span>
+              </div>
+              <div id="spellcasting-body" class="accord-body is-hidden">
+                <!-- Populated at runtime -->
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

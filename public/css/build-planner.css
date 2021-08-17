@@ -1,0 +1,26 @@
+
+.accord-header, .accord-like-button {
+  cursor: pointer!important;
+  user-select: none;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.5);
+  background: hsl(0, 0%, 12%);
+  border: 1px solid #1b1b1b;
+  color: #cccccc;
+  border-radius: 4px;
+
+  padding: .25rem!important;
+}
+
+.accord-body {
+  border: 1px solid #1d1d1d;
+  border-top: 0px;
+  border-radius: 0px 0px 4px 4px;
+  background: #2b2b2b;
+}
+
+.accord-hover {
+  background-color: hsl(0, 0%, 15%)!important
+}
+.entry-hover {
+  background-color: hsl(0, 0%, 19%)!important
+}

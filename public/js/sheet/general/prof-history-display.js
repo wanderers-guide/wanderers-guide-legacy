@@ -2,21 +2,19 @@
     By Aaron Cassar.
 */
 
-function getProfHistoryHTML(profMapKey){
-
-  const profDataArray = g_profMap.get(profMapKey);
-  const finalProfData = getFinalProf(profDataArray);
+function getProfHistoryHTML(VARIABLE_NAME){
+  VARIABLE_NAME = VARIABLE_NAME.replace(/\s/g, "_").toUpperCase();
+  let variableValue = variables_getValue(VARIABLE_NAME);
 
   let tooltipText = 'Proficiency History:';
-  if(finalProfData == null){
+  if(variableValue.Rank == 'U'){
     tooltipText += '\nNone';
     return '<a class="has-text-info has-tooltip-bottom text-center" data-tooltip="'+tooltipText+'">Untrained</a>';
   } else {
-    for(const profData of profDataArray){
-      if(!isNaN(profData.Prof)) { continue; }
-      tooltipText += '\n'+profToWord(profData.Prof)+' from '+profData.SourceName;
+    for(const [source, rank] of variableValue.RankHistory){
+      tooltipText += '\n'+profToWord(rank)+' from '+source;
     }
-    return '<a class="has-text-info has-tooltip-bottom text-center" data-tooltip="'+tooltipText+'">'+getProfNameFromNumUps(finalProfData.NumUps)+'</a>';
+    return '<a class="has-text-info has-tooltip-bottom text-center" data-tooltip="'+tooltipText+'">'+profToWord(variableValue.Rank)+'</a>';
   }
 
 }

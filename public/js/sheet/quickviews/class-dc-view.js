@@ -19,7 +19,7 @@ function openClassDCQuickview(data) {
     let qContent = $('#quickViewContent');
 
     let profName = getProfNameFromNumUps(data.ProfData.NumUps);
-    let profNameHTML = getProfHistoryHTML('Class_DC');
+    let profNameHTML = getProfHistoryHTML(VARIABLE.CLASS_DC);
     if(data.ProfData.UserProfOverride){
         qContent.append('<p><strong>Proficiency:</strong> '+profNameHTML+' <span class="is-inline pl-1 is-size-7 is-italic"> ( Override )</span></p>');
     } else {
@@ -90,12 +90,8 @@ function openClassDCQuickview(data) {
 
         qContent.append('<p class="has-text-centered"><strong>Conditionals</strong></p>');
         
-        for(const [condition, value] of conditionalStatMap.entries()){
-            if(value == null){
-                qContent.append('<p class="has-text-centered">'+condition+'</p>');
-            } else {
-                qContent.append('<p class="has-text-centered">'+signNumber(value)+' '+condition+'</p>');
-            }
+        for(const [condition, valueData] of conditionalStatMap.entries()){
+          qContent.append('<p class="has-text-centered">'+condition+'</p>');
         }
 
     }

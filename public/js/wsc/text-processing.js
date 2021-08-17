@@ -43,7 +43,6 @@ Optional Requirements:
 */
 let temp_textProcess_j = '';
 let temp_textProcess_s = '';
-let temp_textProcess_isSheet = false;
 
 function processText(text, isSheet, isJustified = false, size = 'MEDIUM', indexConditions = true) {
     if(text == null) {return text;}
@@ -70,7 +69,6 @@ function processText(text, isSheet, isJustified = false, size = 'MEDIUM', indexC
 
     temp_textProcess_j = _j;
     temp_textProcess_s = _s;
-    temp_textProcess_isSheet = isSheet;
 
     // Replace dice notation with roll button
     if(typeof gOption_hasDiceRoller !== 'undefined' && gOption_hasDiceRoller){
@@ -80,7 +78,10 @@ function processText(text, isSheet, isJustified = false, size = 'MEDIUM', indexC
 
     //////////////////////////////
 
-    // Table detection comes first
+    // Stage cleaner detection (creates tables that are then processed)
+    text = text.replace(/(\*\*|)Stage (\d+)(\*\*|) ([^;\n]+.|$)/gm, handleStages);
+
+    // Table detection comes before most, to prevent HTML from existing
     text = text.replace(regexTableDetection, handleTableCreation);
 
     // Wrap in a paragraph
@@ -561,8 +562,8 @@ function handleIndexConditions(text){
         let conditionName = condition.name.toLowerCase();
         let conditionLinkClass = 'conditionTextLink'+conditionName.replace(/ /g,'-');
         let conditionLinkText = ' <span class="'+conditionLinkClass+' is-underlined-info cursor-clickable">'+conditionName+'</span>';
-        let conditionNameRegex = new RegExp(' '+conditionName, "g");
-        text = text.replace(conditionNameRegex, conditionLinkText);
+        let conditionNameRegex = new RegExp('(\\W|)'+conditionName, "g");
+        text = text.replace(conditionNameRegex, '$1'+conditionLinkText);
         setTimeout(function() {
             $('.'+conditionLinkClass).off('click');
             $('.'+conditionLinkClass).click(function(event){
@@ -575,6 +576,22 @@ function handleIndexConditions(text){
         }, 100);
     }
     return text;
+}
+
+/////
+
+// Stages Cleaner
+function handleStages(match, boldOne, stageNum, boldTwo, text){
+  text = text.trim();
+  if(text.endsWith(';')){ text = text.slice(0, -1); }
+
+  let tableText = '';
+  if(stageNum == 1){
+    tableText = '\nStage|Effect\n:-:|:--';
+  }
+  tableText += `\n**${stageNum}**|${text}`;
+
+  return tableText;
 }
 
 /////
@@ -616,7 +633,7 @@ function handleSheetVariablesAndTooltips(match, innerText){
         innerTextVariable = innerTextData[0].replace(/\s/g, "").toUpperCase();
 
         let sheetVar = null;
-        if(temp_textProcess_isSheet){
+        if(isSheetPage()){
           sheetVar = acquireSheetVariable(innerTextVariable);
           if(sheetVar == null){
             let varValue = getVariableValue(innerTextVariable, false);
@@ -665,7 +682,7 @@ function handleSheetVariablesAndTooltips(match, innerText){
         }
         return '<a class="'+bulmaColor+' has-tooltip-top" data-tooltip="'+innerTextData[1]+'">'+sheetVar+'</a>';
     } else {
-      if(temp_textProcess_isSheet){
+      if(isSheetPage()){
         innerText = innerText.replace(/\s/g, "").toUpperCase();
         let sheetVar = acquireSheetVariable(innerText);
         if(sheetVar == null){

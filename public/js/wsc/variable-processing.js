@@ -96,6 +96,9 @@ const VARIABLE = {
   RANGED_ATTACKS_DMG_DICE: 'RANGED_ATTACKS_DMG_DICE',
   RANGED_ATTACKS_DMG_BONUS: 'RANGED_ATTACKS_DMG_BONUS',
 
+  WEAPON_XXX: 'WEAPON_XXX',
+  ARMOR_XXX: 'ARMOR_XXX',
+
 };
 
 const VAR_TYPE = {
@@ -106,17 +109,19 @@ const VAR_TYPE = {
   PROFICIENCY: 'PROFICIENCY',
 };
 
-function initializeVariable(variableName, variableType, statSource, value){
-  if(typeof g_statManagerMap === 'undefined') { return; }
+const VAR_NULL = -999;
+
+function initializeVariable(variableName, variableType, value){
+  variableName = variableName.replace(/\s/g, "_").toUpperCase();
 
   if(variableType == VAR_TYPE.INTEGER){
-    g_variableMap.set(variableName, { Type: VAR_TYPE.INTEGER, Value: value });
+    variables_addInteger(variableName, value);
   } else if(variableType == VAR_TYPE.STRING){
-    g_variableMap.set(variableName, { Type: VAR_TYPE.STRING, Value: value });
+    variables_addString(variableName, value);
   } else if(variableType == VAR_TYPE.ABILITY_SCORE){
-    g_variableMap.set(variableName, { Type: VAR_TYPE.ABILITY_SCORE, Value: { Score: value } });
+    variables_addAbilityScore(variableName, value);
   } else if(variableType == VAR_TYPE.LIST){
-    g_variableMap.set(variableName, { Type: VAR_TYPE.LIST, Value: value });
+    variables_addList(variableName, value);
   } else if(variableType == VAR_TYPE.PROFICIENCY){
     displayError("Variable Initialization: For PROFICIENCY variables, use initializeVariableProf() instead!");
     return;
@@ -125,15 +130,11 @@ function initializeVariable(variableName, variableType, statSource, value){
     return;
   }
 
-  // Add stat to stat manager
-  if(statSource != null){
-    addStat(variableName, statSource, value);
-  }
-
 }
 
-function initializeVariableProf(variableName, abilityScoreName, numUps){
-  g_variableMap.set(variableName, { Type: VAR_TYPE.PROFICIENCY, Value: { AbilityScore: abilityScoreName, Rank: getProfLetterFromNumUps(numUps) } });
+function initializeVariableProf(variableName, abilityScoreName, numUps, profDataArray){
+  variableName = variableName.replace(/\s/g, "_").toUpperCase();
+  variables_addProficiency(variableName, abilityScoreName, getProfLetterFromNumUps(numUps), profDataArray);
 }
 
 function builderTempInitializeVariables(){
@@ -141,22 +142,367 @@ function builderTempInitializeVariables(){
   if(variableProcessingDebug) { console.log(`Initializing predefined variables in builder.`); }
 
   // Ability Scores
-  g_variableMap.set(VARIABLE.SCORE_STR, { Type: VAR_TYPE.ABILITY_SCORE, Value: { Score: 10 } });
-  g_variableMap.set(VARIABLE.SCORE_DEX, { Type: VAR_TYPE.ABILITY_SCORE, Value: { Score: 10 } });
-  g_variableMap.set(VARIABLE.SCORE_CON, { Type: VAR_TYPE.ABILITY_SCORE, Value: { Score: 10 } });
-  g_variableMap.set(VARIABLE.SCORE_INT, { Type: VAR_TYPE.ABILITY_SCORE, Value: { Score: 10 } });
-  g_variableMap.set(VARIABLE.SCORE_WIS, { Type: VAR_TYPE.ABILITY_SCORE, Value: { Score: 10 } });
-  g_variableMap.set(VARIABLE.SCORE_CHA, { Type: VAR_TYPE.ABILITY_SCORE, Value: { Score: 10 } });
-  g_variableMap.set(VARIABLE.SCORE_NONE, { Type: VAR_TYPE.ABILITY_SCORE, Value: { Score: 10 } });
+  variables_addAbilityScore(VARIABLE.SCORE_STR, 10);
+  variables_addAbilityScore(VARIABLE.SCORE_DEX, 10);
+  variables_addAbilityScore(VARIABLE.SCORE_CON, 10);
+  variables_addAbilityScore(VARIABLE.SCORE_INT, 10);
+  variables_addAbilityScore(VARIABLE.SCORE_WIS, 10);
+  variables_addAbilityScore(VARIABLE.SCORE_CHA, 10);
+  variables_addAbilityScore(VARIABLE.SCORE_NONE, 10);
 
   // Proficiencies
   for(const [variableName, data] of g_profConversionMap.entries()){
     if(data.AbilScore != null){
-      g_variableMap.set(variableName, { Type: VAR_TYPE.PROFICIENCY, Value: { AbilityScore: 'SCORE_'+data.AbilScore, Rank: 'U' } });
+      variables_addProficiency(variableName, 'SCORE_'+data.AbilScore, 'U');
     }
   }
 
 }
+
+function variables_addInteger(variableName, value){
+  g_variableMap.set(variableName, {
+    Type: VAR_TYPE.INTEGER,
+    Value: value,
+    Bonuses: new Map(),
+    Conditionals: new Map()
+  });
+}
+function variables_addString(variableName, value){
+  g_variableMap.set(variableName, {
+    Type: VAR_TYPE.STRING,
+    Value: value
+  });
+}
+function variables_addAbilityScore(variableName, value){
+  g_variableMap.set(variableName, {
+    Type: VAR_TYPE.ABILITY_SCORE,
+    Value: {
+      Score: value,
+      Bonuses: new Map(),
+      Conditionals: new Map()
+    }
+  });
+}
+function variables_addList(variableName, value){
+  g_variableMap.set(variableName, {
+    Type: VAR_TYPE.LIST,
+    Value: value
+  });
+}
+function variables_addProficiency(variableName, abilityScoreName, rank, profDataArray=null){
+  let rankHistory = new Map();
+  if(profDataArray == null){
+    console.log('Prof History not input for '+variableName);
+    rankHistory.set('Initial', rank);
+  } else {
+    for(let profData of profDataArray){
+      rankHistory.set(profData.SourceName, profData.Prof);
+    }
+  }
+  g_variableMap.set(variableName, {
+    Type: VAR_TYPE.PROFICIENCY,
+    Value: {
+      AbilityScore: abilityScoreName,
+      Rank: rank,
+      RankHistory: rankHistory,
+      Bonuses: new Map(),
+      Conditionals: new Map()
+    }
+  });
+}
+
+function variables_getValue(variableName){
+
+  let variable = g_variableMap.get(variableName);
+  if(variable == null) { return null; }
+  return variable.Value;
+
+}
+
+function variables_changeRank(variableName, rank, source){
+
+  let variable = g_variableMap.get(variableName);
+  if(variable == null) { console.log('Unknown variable '+variableName); return; }
+
+  if(variable.Type != VAR_TYPE.PROFICIENCY){
+    displayError("Variable Change Rank: Unsupported variable type \'"+variable.Type+"\'!");
+    return;
+  }
+  if(rank == 'U' || rank == 'T' || rank == 'E' || rank == 'M' || rank == 'L') {} else {
+    displayError("Variable Change Rank: The value \'"+rank+"\' for \'"+variableName+"\' is not a proficiency rank! (options: U, T, E, M, and L)");
+    return;
+  }
+
+  variable.Value.Rank = rank;
+  variable.Value.RankHistory.set(source, rank);
+
+}
+
+function variables_addToBonuses(variableName, value, type, source){
+
+  let variable = g_variableMap.get(variableName);
+  if(variable == null) { console.log('Unknown variable '+variableName); return; }
+
+  let bonusesMap;
+  if(variable.Type == VAR_TYPE.INTEGER){
+    bonusesMap = variable.Bonuses;
+  } else if(variable.Type == VAR_TYPE.STRING){
+    displayError("Variable Add Bonus: Unsupported variable type \'"+variable.Type+"\'!");
+    return;
+  } else if(variable.Type == VAR_TYPE.ABILITY_SCORE){
+    bonusesMap = variable.Value.Bonuses;
+  } else if(variable.Type == VAR_TYPE.LIST){
+    displayError("Variable Add Bonus: Unsupported variable type \'"+variable.Type+"\'!");
+    return;
+  } else if(variable.Type == VAR_TYPE.PROFICIENCY){
+    bonusesMap = variable.Value.Bonuses;
+  } else {
+    displayError("Variable Add Bonus: Unknown variable type \'"+variable.Type+"\'!");
+    return;
+  }
+
+  // ( type ) -> ({ Value: value, Src: source })
+
+  let existingData = bonusesMap.get(type);
+  if(existingData != null){
+    // If both are negative, take the lowest
+    if(existingData.Value < 0 && value < 0){
+      if(existingData.Value < value) {
+        value = existingData.Value;
+        source = existingData.Src;
+      }
+    } else {
+      // Take the highest
+      if(existingData.Value > value) {
+        value = existingData.Value;
+        source = existingData.Src;
+      }
+    }
+  }
+  bonusesMap.set(type, {Value: value, Src: source});
+  
+  if(variable.Type == VAR_TYPE.INTEGER){
+    g_variableMap.get(variableName).Bonuses = bonusesMap;
+  } else if(variable.Type == VAR_TYPE.ABILITY_SCORE){
+    g_variableMap.get(variableName).Value.Bonuses = bonusesMap;
+  } else if(variable.Type == VAR_TYPE.PROFICIENCY){
+    g_variableMap.get(variableName).Value.Bonuses = bonusesMap;
+  }
+
+}
+
+function variables_getBonus(variableName, type){
+
+  let variable = g_variableMap.get(variableName);
+  if(variable == null) { console.log('Unknown variable '+variableName); return null; }
+
+  let bonusesMap;
+  if(variable.Type == VAR_TYPE.INTEGER){
+    bonusesMap = variable.Bonuses;
+  } else if(variable.Type == VAR_TYPE.STRING){
+    displayError("Variable Get Bonus: Unsupported variable type \'"+variable.Type+"\'!");
+    return;
+  } else if(variable.Type == VAR_TYPE.ABILITY_SCORE){
+    bonusesMap = variable.Value.Bonuses;
+  } else if(variable.Type == VAR_TYPE.LIST){
+    displayError("Variable Get Bonus: Unsupported variable type \'"+variable.Type+"\'!");
+    return;
+  } else if(variable.Type == VAR_TYPE.PROFICIENCY){
+    bonusesMap = variable.Value.Bonuses;
+  } else {
+    displayError("Variable Get Bonus: Unknown variable type \'"+variable.Type+"\'!");
+    return;
+  }
+
+  return bonusesMap.get(type);
+
+}
+
+function variables_getBonusTotal(variableName){
+
+  let variable = g_variableMap.get(variableName);
+  if(variable == null) { console.log('Unknown variable '+variableName); return null; }
+
+  let bonusesMap;
+  if(variable.Type == VAR_TYPE.INTEGER){
+    bonusesMap = variable.Bonuses;
+  } else if(variable.Type == VAR_TYPE.STRING){
+    displayError("Variable Get Bonus Total: Unsupported variable type \'"+variable.Type+"\'!");
+    return;
+  } else if(variable.Type == VAR_TYPE.ABILITY_SCORE){
+    bonusesMap = variable.Value.Bonuses;
+  } else if(variable.Type == VAR_TYPE.LIST){
+    displayError("Variable Get Bonus Total: Unsupported variable type \'"+variable.Type+"\'!");
+    return;
+  } else if(variable.Type == VAR_TYPE.PROFICIENCY){
+    bonusesMap = variable.Value.Bonuses;
+  } else {
+    displayError("Variable Get Bonus Total: Unknown variable type \'"+variable.Type+"\'!");
+    return;
+  }
+  if(bonusesMap.size == 0) { return null; }
+
+  let total = 0;
+  for(let [type, valueData] of bonusesMap){
+    let value = valueData.Value;
+    if(value === 'LAND_SPEED'){
+      value = getStatTotal(VARIABLE.SPEED);
+    }
+    total += value;
+    /*
+    if(type === 'PROF_BONUS'){
+      total += getProfNumber(value, g_character.level);
+    } else if(type === 'MODIFIER') {
+      total += getModOfValue(value);
+    } else {
+      total += parseInt(value);
+    }*/
+  }
+  return total;
+
+}
+
+function variables_getTotal(variableName){
+
+  let variable = g_variableMap.get(variableName);
+  if(variable == null) { console.log('Unknown variable '+variableName); return null; }
+
+  let total = 0;
+  if(variable.Type == VAR_TYPE.INTEGER){
+    
+    let bonusTotal = variables_getBonusTotal(variableName);
+    if(bonusTotal != null) { total += bonusTotal; }
+    total += variable.Value;
+    return total;
+
+  } else if(variable.Type == VAR_TYPE.STRING){
+    displayError("Variable Get Bonus Total: Unsupported variable type \'"+variable.Type+"\'!");
+    return;
+  } else if(variable.Type == VAR_TYPE.ABILITY_SCORE){
+    
+    let bonusTotal = variables_getBonusTotal(variableName);
+    if(bonusTotal != null) { total += bonusTotal; }
+    total += variable.Value.Score;
+    return total;
+
+  } else if(variable.Type == VAR_TYPE.LIST){
+    displayError("Variable Get Bonus Total: Unsupported variable type \'"+variable.Type+"\'!");
+    return;
+  } else if(variable.Type == VAR_TYPE.PROFICIENCY){
+    
+    let bonusTotal = variables_getBonusTotal(variableName);
+    if(bonusTotal != null) { total += bonusTotal; }
+    total += getProfNumber(profToNumUp(variable.Value.Rank, true), g_character.level);
+    total += getMod(g_variableMap.get(variable.Value.AbilityScore).Value.Score);
+    return total;
+
+  } else {
+    displayError("Variable Get Bonus Total: Unknown variable type \'"+variable.Type+"\'!");
+    return;
+  }
+
+}
+
+function variables_getBonusesMap(variableName){
+
+  let variable = g_variableMap.get(variableName);
+  if(variable == null) { console.log('Unknown variable '+variableName); return null; }
+
+  let bonusesMap;
+  if(variable.Type == VAR_TYPE.INTEGER){
+    bonusesMap = variable.Bonuses;
+  } else if(variable.Type == VAR_TYPE.STRING){
+    displayError("Variable Get Bonuses Map: Unsupported variable type \'"+variable.Type+"\'!");
+    return;
+  } else if(variable.Type == VAR_TYPE.ABILITY_SCORE){
+    bonusesMap = variable.Value.Bonuses;
+  } else if(variable.Type == VAR_TYPE.LIST){
+    displayError("Variable Get Bonuses Map: Unsupported variable type \'"+variable.Type+"\'!");
+    return;
+  } else if(variable.Type == VAR_TYPE.PROFICIENCY){
+    bonusesMap = variable.Value.Bonuses;
+  } else {
+    displayError("Variable Get Bonuses Map: Unknown variable type \'"+variable.Type+"\'!");
+    return;
+  }
+
+  return bonusesMap;
+
+}
+
+
+function variables_addToConditionals(variableName, condition, source){
+
+  let variable = g_variableMap.get(variableName);
+  if(variable == null) { console.log('Unknown variable '+variableName); return; }
+
+  let conditionalsMap;
+  if(variable.Type == VAR_TYPE.INTEGER){
+    conditionalsMap = variable.Conditionals;
+  } else if(variable.Type == VAR_TYPE.STRING){
+    displayError("Variable Add Bonus: Unsupported variable type \'"+variable.Type+"\'!");
+    return;
+  } else if(variable.Type == VAR_TYPE.ABILITY_SCORE){
+    conditionalsMap = variable.Value.Conditionals;
+  } else if(variable.Type == VAR_TYPE.LIST){
+    displayError("Variable Add Bonus: Unsupported variable type \'"+variable.Type+"\'!");
+    return;
+  } else if(variable.Type == VAR_TYPE.PROFICIENCY){
+    conditionalsMap = variable.Value.Conditionals;
+  } else {
+    displayError("Variable Add Bonus: Unknown variable type \'"+variable.Type+"\'!");
+    return;
+  }
+
+  // ( type ) -> ({ Condition: condition, Src: source })
+
+  let existingData = conditionalsMap.get(condition);
+  if(existingData != null){
+    console.log(`
+      Existing conditional exists for ${variableName}!
+      Overriding it with '${condition}' from ${source}...
+    `);
+  }
+  conditionalsMap.set(condition, { Src: source });
+  
+  if(variable.Type == VAR_TYPE.INTEGER){
+    g_variableMap.get(variableName).Conditionals = conditionalsMap;
+  } else if(variable.Type == VAR_TYPE.ABILITY_SCORE){
+    g_variableMap.get(variableName).Value.Conditionals = conditionalsMap;
+  } else if(variable.Type == VAR_TYPE.PROFICIENCY){
+    g_variableMap.get(variableName).Value.Conditionals = conditionalsMap;
+  }
+
+}
+
+function variables_getConditionalsMap(variableName){
+
+  let variable = g_variableMap.get(variableName);
+  if(variable == null) { console.log('Unknown variable '+variableName); return null; }
+
+  let conditionalsMap;
+  if(variable.Type == VAR_TYPE.INTEGER){
+    conditionalsMap = variable.Conditionals;
+  } else if(variable.Type == VAR_TYPE.STRING){
+    displayError("Variable Get Conditionals Map: Unsupported variable type \'"+variable.Type+"\'!");
+    return;
+  } else if(variable.Type == VAR_TYPE.ABILITY_SCORE){
+    conditionalsMap = variable.Value.Conditionals;
+  } else if(variable.Type == VAR_TYPE.LIST){
+    displayError("Variable Get Conditionals Map: Unsupported variable type \'"+variable.Type+"\'!");
+    return;
+  } else if(variable.Type == VAR_TYPE.PROFICIENCY){
+    conditionalsMap = variable.Value.Conditionals;
+  } else {
+    displayError("Variable Get Conditionals Map: Unknown variable type \'"+variable.Type+"\'!");
+    return;
+  }
+
+  return conditionalsMap;
+
+}
+
+
 
 ///////////////
 
@@ -203,25 +549,25 @@ function processVariables(wscCode){
         if(variableTypeUpper == VAR_TYPE.INTEGER){
 
           if(variableProcessingDebug) { console.log(`Defining new variable: '${variableName}' as '${VAR_TYPE.INTEGER}'`); }
-          g_variableMap.set(variableName, { Type: VAR_TYPE.INTEGER, Value: 0 });
+          variables_addInteger(variableName, 0);
 
           continue;
         } else if(variableTypeUpper == VAR_TYPE.STRING){
 
           if(variableProcessingDebug) { console.log(`Defining new variable: '${variableName}' as '${VAR_TYPE.STRING}'`); }
-          g_variableMap.set(variableName, { Type: VAR_TYPE.STRING, Value: '' });
+          variables_addString(variableName, '');
 
           continue;
         } else if(variableTypeUpper == VAR_TYPE.ABILITY_SCORE){
 
           if(variableProcessingDebug) { console.log(`Defining new variable: '${variableName}' as '${VAR_TYPE.ABILITY_SCORE}'`); }
-          g_variableMap.set(variableName, { Type: VAR_TYPE.ABILITY_SCORE, Value: { Score: 0 } });
+          variables_addAbilityScore(variableName, 0);
 
           continue;
         } else if(variableTypeUpper == VAR_TYPE.LIST){
 
           if(variableProcessingDebug) { console.log(`Defining new variable: '${variableName}' as '${VAR_TYPE.LIST}'`); }
-          g_variableMap.set(variableName, { Type: VAR_TYPE.LIST, Value: [] });
+          variables_addList(variableName, []);
 
           continue;
         } else if(variableTypeUpper.startsWith(VAR_TYPE.PROFICIENCY)){
@@ -233,7 +579,7 @@ function processVariables(wscCode){
             if(abilityScoreVariable != null && abilityScoreVariable.Type == VAR_TYPE.ABILITY_SCORE){
 
               if(variableProcessingDebug) { console.log(`Defining new variable: '${variableName}' as '${VAR_TYPE.PROFICIENCY}'`); }
-              g_variableMap.set(variableName, { Type: VAR_TYPE.PROFICIENCY, Value: { AbilityScore: abilityScoreVariableName, Rank: 'U' } });
+              variables_addProficiency(variableName, abilityScoreVariableName, 'U');
 
             } else {
               displayError(`Variable Processing: Could not find \'${abilityScoreVariableName}\' as an ${VAR_TYPE.ABILITY_SCORE} variable!`);
@@ -512,11 +858,7 @@ function setVariableValueIntoMethod(variable, varName, method, value) {
         displayError(`Variable Processing (set): The value \'${value}\' for \'${varName}\' is not an ${VAR_TYPE.ABILITY_SCORE} variable!`);
       }
     } else if(methodUpper == 'SET_VALUE'){
-      if(value == 'U' || value == 'T' || value == 'E' || value == 'M' || value == 'L'){
-        variable.Value.Rank = value;
-      } else {
-        displayError("Variable Processing (set): The value \'"+value+"\' for \'"+varName+"\' is not a proficiency rank! (options: U, T, E, M, and L)");
-      }
+      variables_changeRank(varName, value, 'WSC Statement');
     } else {
       displayError("Variable Processing: Unknown setting method \'"+method+"\' for variable \'"+varName+"\' ("+variable.Type+")!");
     }

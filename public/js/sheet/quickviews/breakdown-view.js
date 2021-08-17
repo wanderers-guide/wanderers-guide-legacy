@@ -162,22 +162,20 @@ function openBreakdownQuickview(data) {
 
         qContent.append('<p class="has-text-centered"><strong>Conditionals</strong></p>');
         
-        for(const [condition, value] of data.conditionalMap.entries()){
+        for(const [condition, valueData] of data.conditionalMap.entries()){
           let conditional = condition;
           if(gOption_hasDiceRoller){
             conditional = processDiceNotation(conditional);
             refreshDiceNotationButtons();
           }
-          if(value == null){
+          if (valueData.Src == 'WEAP-MOD:ON-HIT') {
             qContent.append('<p class="has-text-centered">'+conditional+'</p>');
-          } else if (value == 'WEAP-MOD:ON-HIT') {
-            qContent.append('<p class="has-text-centered">'+conditional+'</p>');
-          } else if (value == 'WEAP-MOD:ON-CRIT') {
+          } else if (valueData.Src == 'WEAP-MOD:ON-CRIT') {
             if(g_invItemView_isCriticalHit) {
               qContent.append('<p class="has-text-centered">'+conditional+'</p>');
             }
           } else {
-            qContent.append('<p class="has-text-centered">'+signNumber(value)+' '+conditional+'</p>');
+            qContent.append('<p class="has-text-centered">'+conditional+'</p>');
           }
         }
 

@@ -19,7 +19,7 @@ function openOtherProfsQuickview(data) {
     let qContent = $('#quickViewContent');
 
     let profName = getProfNameFromNumUps(data.ProfData.NumUps);
-    let profNameHTML = getProfHistoryHTML(data.ProfSrcData.To);
+    let profNameHTML = getProfHistoryHTML(data.VARIABLE);
     if(data.ProfData.UserProfOverride){
         qContent.append('<p><strong>Proficiency:</strong> '+profNameHTML+' <span class="is-inline pl-1 is-size-7 is-italic"> ( Override )</span></p>');
     } else {

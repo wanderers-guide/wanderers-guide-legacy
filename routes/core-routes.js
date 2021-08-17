@@ -61,4 +61,9 @@ router.get('/material_stats', (req, res) => {
   res.render('pages/material_stats', { title: "Material Stats - Wanderer's Guide", user: req.user });
 });
 
+// Build Planner Route
+router.get('/build_planner', (req, res) => {
+  res.render('pages/build_planner', { title: "Create Your Build - Wanderer's Guide", user: req.user });
+});
+
 module.exports = router;

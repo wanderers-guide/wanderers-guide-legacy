@@ -69,7 +69,7 @@ function processSheetCode(wscCode, extraData=null, isTest=false){
             let adjustmentNumInfoData = (adjustmentData[1]).split('~');
             let adjustmentNum = getSheetProcNumber(adjustmentNumInfoData[0], extraData.sourceName);
             let adjustmentCondition = adjustmentNumInfoData[1];
-            addConditionalStat(adjustmentTowards, adjustmentCondition, adjustmentNum);
+            addConditionalStat(adjustmentTowards, signNumber(adjustmentNum)+' '+adjustmentCondition, extraData.sourceName);
 
             continue;
         }
@@ -83,7 +83,7 @@ function processSheetCode(wscCode, extraData=null, isTest=false){
             let adjustmentNumInfoData = (adjustmentData[1]).split('~');
             let adjustmentNum = getSheetProcNumber(adjustmentNumInfoData[0], extraData.sourceName);
             let adjustmentCondition = adjustmentNumInfoData[1];
-            addConditionalStat(adjustmentTowards, adjustmentCondition, -1*adjustmentNum);
+            addConditionalStat(adjustmentTowards, signNumber(-1*adjustmentNum)+' '+adjustmentCondition, extraData.sourceName);
 
             continue;
         }
@@ -96,7 +96,7 @@ function processSheetCode(wscCode, extraData=null, isTest=false){
 
             let adjustmentTowards = dataSplit[0].split('-')[1];
             let adjustmentInfo = dataSplit[1];
-            addConditionalStat(adjustmentTowards, adjustmentInfo, null);
+            addConditionalStat(adjustmentTowards, adjustmentInfo, extraData.sourceName);
 
             continue;
         }
@@ -176,11 +176,11 @@ function processSheetCode(wscCode, extraData=null, isTest=false){
             let adjustmentData = wscStatement.split('=');
             let abilityScore = adjustmentData[1];
 
-            let baseStat = getStat('SCORE_'+abilityScore, 'BASE');
+            let baseStat = variables_getValue('SCORE_'+abilityScore).Score;
             if(baseStat >= 18){
-                addStat('SCORE_'+abilityScore, 'BASE', baseStat+2);
+              g_variableMap.get('SCORE_'+abilityScore).Value.Score = baseStat+2;
             } else {
-                addStat('SCORE_'+abilityScore, 'BASE', 18);
+              g_variableMap.get('SCORE_'+abilityScore).Value.Score = 18;
             }
 
             continue;

@@ -419,113 +419,115 @@ function loadCharSheet(){
 
     // ~~~~~~~~~~~~~~~~~~~~~~~ Adding Stats To Map ~~~~~~~~~~~~~~~~~~~~~~~ //
 
-    initializeVariable(VARIABLE.SCORE_STR, VAR_TYPE.ABILITY_SCORE, 'BASE', g_abilMap.get("STR"));
-    initializeVariable(VARIABLE.SCORE_DEX, VAR_TYPE.ABILITY_SCORE, 'BASE', g_abilMap.get("DEX"));
-    initializeVariable(VARIABLE.SCORE_CON, VAR_TYPE.ABILITY_SCORE, 'BASE', g_abilMap.get("CON"));
-    initializeVariable(VARIABLE.SCORE_INT, VAR_TYPE.ABILITY_SCORE, 'BASE', g_abilMap.get("INT"));
-    initializeVariable(VARIABLE.SCORE_WIS, VAR_TYPE.ABILITY_SCORE, 'BASE', g_abilMap.get("WIS"));
-    initializeVariable(VARIABLE.SCORE_CHA, VAR_TYPE.ABILITY_SCORE, 'BASE', g_abilMap.get("CHA"));
-    initializeVariable(VARIABLE.SCORE_NONE, VAR_TYPE.ABILITY_SCORE, null, 10);
+    initializeVariable(VARIABLE.SCORE_STR, VAR_TYPE.ABILITY_SCORE, g_abilMap.get("STR"));
+    initializeVariable(VARIABLE.SCORE_DEX, VAR_TYPE.ABILITY_SCORE, g_abilMap.get("DEX"));
+    initializeVariable(VARIABLE.SCORE_CON, VAR_TYPE.ABILITY_SCORE, g_abilMap.get("CON"));
+    initializeVariable(VARIABLE.SCORE_INT, VAR_TYPE.ABILITY_SCORE, g_abilMap.get("INT"));
+    initializeVariable(VARIABLE.SCORE_WIS, VAR_TYPE.ABILITY_SCORE, g_abilMap.get("WIS"));
+    initializeVariable(VARIABLE.SCORE_CHA, VAR_TYPE.ABILITY_SCORE, g_abilMap.get("CHA"));
+    initializeVariable(VARIABLE.SCORE_NONE, VAR_TYPE.ABILITY_SCORE, 10);
 
-    initializeVariable('SPEED', VAR_TYPE.INTEGER, 'BASE', g_ancestry.speed);
+    initializeVariable('SPEED', VAR_TYPE.INTEGER, g_ancestry.speed);
     for(const otherSpeed of g_otherSpeeds){
-      initializeVariable('SPEED_'+otherSpeed.Type, VAR_TYPE.INTEGER, 'BASE', otherSpeed.Amount);
+      initializeVariable('SPEED_'+otherSpeed.Type, VAR_TYPE.INTEGER, otherSpeed.Amount);
     }
 
     let classDCData = getFinalProf(g_profMap.get("Class_DC"));
-    initializeVariableProf(VARIABLE.CLASS_DC, 'SCORE_'+g_classDetails.KeyAbility, classDCData.NumUps);
-    addStat(VARIABLE.CLASS_DC, 'PROF_BONUS', classDCData.NumUps);
+    initializeVariableProf(VARIABLE.CLASS_DC, 'SCORE_'+g_classDetails.KeyAbility, classDCData.NumUps, g_profMap.get("Class_DC"));
     addStat(VARIABLE.CLASS_DC, 'USER_BONUS', classDCData.UserBonus);
-    addStat(VARIABLE.CLASS_DC, 'MODIFIER', g_classDetails.KeyAbility);
 
     let fortData = getFinalProf(g_profMap.get("Fortitude"));
-    initializeVariableProf(VARIABLE.SAVE_FORT, VARIABLE.SCORE_CON, fortData.NumUps);
-    addStat(VARIABLE.SAVE_FORT, 'PROF_BONUS', fortData.NumUps);
+    initializeVariableProf(VARIABLE.SAVE_FORT, VARIABLE.SCORE_CON, fortData.NumUps, g_profMap.get("Fortitude"));
     addStat(VARIABLE.SAVE_FORT, 'USER_BONUS', fortData.UserBonus);
-    addStat(VARIABLE.SAVE_FORT, 'MODIFIER', 'CON');
     
     let reflexData = getFinalProf(g_profMap.get("Reflex"));
-    initializeVariableProf(VARIABLE.SAVE_REFLEX, VARIABLE.SCORE_DEX, reflexData.NumUps);
-    addStat(VARIABLE.SAVE_REFLEX, 'PROF_BONUS', reflexData.NumUps);
+    initializeVariableProf(VARIABLE.SAVE_REFLEX, VARIABLE.SCORE_DEX, reflexData.NumUps, g_profMap.get("Reflex"));
     addStat(VARIABLE.SAVE_REFLEX, 'USER_BONUS', reflexData.UserBonus);
-    addStat(VARIABLE.SAVE_REFLEX, 'MODIFIER', 'DEX');
 
     let willData = getFinalProf(g_profMap.get("Will"));
-    initializeVariableProf(VARIABLE.SAVE_WILL, VARIABLE.SCORE_WIS, willData.NumUps);
-    addStat(VARIABLE.SAVE_WILL, 'PROF_BONUS', willData.NumUps);
+    initializeVariableProf(VARIABLE.SAVE_WILL, VARIABLE.SCORE_WIS, willData.NumUps, g_profMap.get("Will"));
     addStat(VARIABLE.SAVE_WILL, 'USER_BONUS', willData.UserBonus);
-    addStat(VARIABLE.SAVE_WILL, 'MODIFIER', 'WIS');
 
     for(const [skillName, skillData] of g_skillMap.entries()){
         let profData = getFinalProf(g_profMap.get(skillName));
         let skillCodeName = skillName.replace(/\s/g,'_');
         if(profData != null){
-          initializeVariableProf('SKILL_'+skillCodeName, 'SCORE_'+skillData.Skill.ability, profData.NumUps);
-          addStat('SKILL_'+skillCodeName, 'PROF_BONUS', profData.NumUps);
+          initializeVariableProf('SKILL_'+skillCodeName, 'SCORE_'+skillData.Skill.ability, profData.NumUps, g_profMap.get(skillName));
           addStat('SKILL_'+skillCodeName, 'USER_BONUS', profData.UserBonus);
         } else {
-          initializeVariableProf('SKILL_'+skillCodeName, 'SCORE_'+skillData.Skill.ability, skillData.NumUps);
-          addStat('SKILL_'+skillCodeName, 'PROF_BONUS', skillData.NumUps);
+          initializeVariableProf('SKILL_'+skillCodeName, 'SCORE_'+skillData.Skill.ability, skillData.NumUps, null);
         }
-        addStat('SKILL_'+skillCodeName, 'MODIFIER', skillData.Skill.ability);
     }
 
     let perceptionData = getFinalProf(g_profMap.get("Perception"));
-    initializeVariableProf(VARIABLE.PERCEPTION, VARIABLE.SCORE_WIS, perceptionData.NumUps);
-    addStat(VARIABLE.PERCEPTION, 'PROF_BONUS', perceptionData.NumUps);
+    initializeVariableProf(VARIABLE.PERCEPTION, VARIABLE.SCORE_WIS, perceptionData.NumUps, g_profMap.get("Perception"));
     addStat(VARIABLE.PERCEPTION, 'USER_BONUS', perceptionData.UserBonus);
-    addStat(VARIABLE.PERCEPTION, 'MODIFIER', 'WIS');
 
     // Spell Attacks and DCs
     let arcaneSpellAttack = getFinalProf(g_profMap.get("ArcaneSpellAttacks"));
     if(arcaneSpellAttack != null){
-      initializeVariableProf(VARIABLE.ARCANE_SPELL_ATTACK, VARIABLE.SCORE_NONE, arcaneSpellAttack.NumUps);
-      addStat(VARIABLE.ARCANE_SPELL_ATTACK, 'PROF_BONUS', arcaneSpellAttack.NumUps);
+      initializeVariableProf(VARIABLE.ARCANE_SPELL_ATTACK, VARIABLE.SCORE_NONE, arcaneSpellAttack.NumUps, g_profMap.get("ArcaneSpellAttacks"));
       addStat(VARIABLE.ARCANE_SPELL_ATTACK, 'USER_BONUS', arcaneSpellAttack.UserBonus);
     }
     let occultSpellAttack = getFinalProf(g_profMap.get("OccultSpellAttacks"));
     if(occultSpellAttack != null){
-      initializeVariableProf(VARIABLE.OCCULT_SPELL_ATTACK, VARIABLE.SCORE_NONE, occultSpellAttack.NumUps);
-      addStat(VARIABLE.OCCULT_SPELL_ATTACK, 'PROF_BONUS', occultSpellAttack.NumUps);
+      initializeVariableProf(VARIABLE.OCCULT_SPELL_ATTACK, VARIABLE.SCORE_NONE, occultSpellAttack.NumUps, g_profMap.get("OccultSpellAttacks"));
       addStat(VARIABLE.OCCULT_SPELL_ATTACK, 'USER_BONUS', occultSpellAttack.UserBonus);
     }
     let primalSpellAttack = getFinalProf(g_profMap.get("PrimalSpellAttacks"));
     if(primalSpellAttack != null){
-      initializeVariableProf(VARIABLE.PRIMAL_SPELL_ATTACK, VARIABLE.SCORE_NONE, primalSpellAttack.NumUps);
-      addStat(VARIABLE.PRIMAL_SPELL_ATTACK, 'PROF_BONUS', primalSpellAttack.NumUps);
+      initializeVariableProf(VARIABLE.PRIMAL_SPELL_ATTACK, VARIABLE.SCORE_NONE, primalSpellAttack.NumUps, g_profMap.get("PrimalSpellAttacks"));
       addStat(VARIABLE.PRIMAL_SPELL_ATTACK, 'USER_BONUS', primalSpellAttack.UserBonus);
     }
     let divineSpellAttack = getFinalProf(g_profMap.get("DivineSpellAttacks"));
     if(divineSpellAttack != null){
-      initializeVariableProf(VARIABLE.DIVINE_SPELL_ATTACK, VARIABLE.SCORE_NONE, divineSpellAttack.NumUps);
-      addStat(VARIABLE.DIVINE_SPELL_ATTACK, 'PROF_BONUS', divineSpellAttack.NumUps);
+      initializeVariableProf(VARIABLE.DIVINE_SPELL_ATTACK, VARIABLE.SCORE_NONE, divineSpellAttack.NumUps, g_profMap.get("DivineSpellAttacks"));
       addStat(VARIABLE.DIVINE_SPELL_ATTACK, 'USER_BONUS', divineSpellAttack.UserBonus);
     }
     
     let arcaneSpellDC = getFinalProf(g_profMap.get("ArcaneSpellDCs"));
     if(arcaneSpellDC != null){
-      initializeVariableProf(VARIABLE.ARCANE_SPELL_DC, VARIABLE.SCORE_NONE, arcaneSpellDC.NumUps);
-      addStat(VARIABLE.ARCANE_SPELL_DC, 'PROF_BONUS', arcaneSpellDC.NumUps);
+      initializeVariableProf(VARIABLE.ARCANE_SPELL_DC, VARIABLE.SCORE_NONE, arcaneSpellDC.NumUps, g_profMap.get("ArcaneSpellDCs"));
       addStat(VARIABLE.ARCANE_SPELL_DC, 'USER_BONUS', arcaneSpellDC.UserBonus);
     }
     let occultSpellDC = getFinalProf(g_profMap.get("OccultSpellDCs"));
     if(occultSpellDC != null){
-      initializeVariableProf(VARIABLE.OCCULT_SPELL_DC, VARIABLE.SCORE_NONE, occultSpellDC.NumUps);
-      addStat(VARIABLE.OCCULT_SPELL_DC, 'PROF_BONUS', occultSpellDC.NumUps);
+      initializeVariableProf(VARIABLE.OCCULT_SPELL_DC, VARIABLE.SCORE_NONE, occultSpellDC.NumUps, g_profMap.get("OccultSpellDCs"));
       addStat(VARIABLE.OCCULT_SPELL_DC, 'USER_BONUS', occultSpellDC.UserBonus);
     }
     let primalSpellDC = getFinalProf(g_profMap.get("PrimalSpellDCs"));
     if(primalSpellDC != null){
-      initializeVariableProf(VARIABLE.PRIMAL_SPELL_DC, VARIABLE.SCORE_NONE, primalSpellDC.NumUps);
-      addStat(VARIABLE.PRIMAL_SPELL_DC, 'PROF_BONUS', primalSpellDC.NumUps);
+      initializeVariableProf(VARIABLE.PRIMAL_SPELL_DC, VARIABLE.SCORE_NONE, primalSpellDC.NumUps, g_profMap.get("PrimalSpellDCs"));
       addStat(VARIABLE.PRIMAL_SPELL_DC, 'USER_BONUS', primalSpellDC.UserBonus);
     }
     let divineSpellDC = getFinalProf(g_profMap.get("DivineSpellDCs"));
     if(divineSpellDC != null){
-      initializeVariableProf(VARIABLE.DIVINE_SPELL_DC, VARIABLE.SCORE_NONE, divineSpellDC.NumUps);
-      addStat(VARIABLE.DIVINE_SPELL_DC, 'PROF_BONUS', divineSpellDC.NumUps);
+      initializeVariableProf(VARIABLE.DIVINE_SPELL_DC, VARIABLE.SCORE_NONE, divineSpellDC.NumUps, g_profMap.get("DivineSpellDCs"));
       addStat(VARIABLE.DIVINE_SPELL_DC, 'USER_BONUS', divineSpellDC.UserBonus);
     }
+
+    // Init integer values, for adding bonuses/penalties to them
+    initializeVariable(VARIABLE.AC, VAR_TYPE.INTEGER, VAR_NULL);
+    initializeVariable(VARIABLE.DEX_CAP, VAR_TYPE.INTEGER, VAR_NULL);
+    initializeVariable(VARIABLE.ARMOR_CHECK_PENALTY, VAR_TYPE.INTEGER, VAR_NULL);
+    initializeVariable(VARIABLE.ARMOR_SPEED_PENALTY, VAR_TYPE.INTEGER, VAR_NULL);
+
+    initializeVariable(VARIABLE.INVEST_LIMIT, VAR_TYPE.INTEGER, VAR_NULL);
+    initializeVariable(VARIABLE.BULK_LIMIT, VAR_TYPE.INTEGER, VAR_NULL);
+
+    initializeVariable(VARIABLE.ATTACKS, VAR_TYPE.INTEGER, VAR_NULL);
+    initializeVariable(VARIABLE.ATTACKS_DMG_DICE, VAR_TYPE.INTEGER, VAR_NULL);
+    initializeVariable(VARIABLE.ATTACKS_DMG_BONUS, VAR_TYPE.INTEGER, VAR_NULL);
+
+    initializeVariable(VARIABLE.MELEE_ATTACKS, VAR_TYPE.INTEGER, VAR_NULL);
+    initializeVariable(VARIABLE.MELEE_ATTACKS_DMG_DICE, VAR_TYPE.INTEGER, VAR_NULL);
+    initializeVariable(VARIABLE.MELEE_ATTACKS_DMG_BONUS, VAR_TYPE.INTEGER, VAR_NULL);
+    initializeVariable(VARIABLE.AGILE_MELEE_ATTACKS_DMG_BONUS, VAR_TYPE.INTEGER, VAR_NULL);
+    initializeVariable(VARIABLE.NON_AGILE_MELEE_ATTACKS_DMG_BONUS, VAR_TYPE.INTEGER, VAR_NULL);
+
+    initializeVariable(VARIABLE.RANGED_ATTACKS, VAR_TYPE.INTEGER, VAR_NULL);
+    initializeVariable(VARIABLE.RANGED_ATTACKS_DMG_DICE, VAR_TYPE.INTEGER, VAR_NULL);
+    initializeVariable(VARIABLE.RANGED_ATTACKS_DMG_BONUS, VAR_TYPE.INTEGER, VAR_NULL);
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 
@@ -564,11 +566,11 @@ function loadCharSheet(){
     determineBulkAndCoins(g_invStruct.InvItems, g_itemMap);
 
     // Display Health and Temp -> Stamina and Resolve //
-    initializeVariable(VARIABLE.MAX_HEALTH, VAR_TYPE.INTEGER, 'ANCESTRY', g_ancestry.hitPoints);
+    initializeVariable(VARIABLE.MAX_HEALTH, VAR_TYPE.INTEGER, g_ancestry.hitPoints);
     if(gOption_hasStamina){
-      initializeVariable(VARIABLE.MAX_HEALTH_BONUS_PER_LEVEL, VAR_TYPE.INTEGER, 'BASE', 0);
+      initializeVariable(VARIABLE.MAX_HEALTH_BONUS_PER_LEVEL, VAR_TYPE.INTEGER, 0);
     } else {
-      initializeVariable(VARIABLE.MAX_HEALTH_BONUS_PER_LEVEL, VAR_TYPE.INTEGER, 'BASE', getModOfValue('CON'));
+      initializeVariable(VARIABLE.MAX_HEALTH_BONUS_PER_LEVEL, VAR_TYPE.INTEGER, getModOfValue('CON'));
     }
 
     // Run Toggleables (Sheet State) Code //
@@ -955,6 +957,7 @@ function displayInformation() {
             AbilMod : getModOfValue('CON'),
             TotalBonus : fortBonus,
             CharLevel : g_character.level,
+            VARIABLE: VARIABLE.SAVE_FORT,
             AbilityName : 'Constitution',
             SavingThrowDescription : 'A Fortitude saving throw is used when your character’s health or vitality is under attack, such as from poison or disease.'
         });
@@ -982,6 +985,7 @@ function displayInformation() {
             AbilMod : getModOfValue('DEX'),
             TotalBonus : reflexBonus,
             CharLevel : g_character.level,
+            VARIABLE: VARIABLE.SAVE_REFLEX,
             AbilityName : 'Dexterity',
             SavingThrowDescription : 'A Reflex saving throw is called for when your character must dodge away from danger, usually something that affects a large area, such as the scorching blast of a fireball spell.'
         });
@@ -1009,6 +1013,7 @@ function displayInformation() {
             AbilMod : getModOfValue('WIS'),
             TotalBonus : willBonus,
             CharLevel : g_character.level,
+            VARIABLE: VARIABLE.SAVE_WILL,
             AbilityName : 'Wisdom',
             SavingThrowDescription : 'A Will saving throw is often used as your character’s defense against spells and effects that target their mind, such as a charm or confusion spell.'
         });
@@ -1124,35 +1129,62 @@ function displayInformation() {
 
     let profSimpleWeapons = getFinalProf(g_profMap.get("Simple_Weapons"));
     if(profSimpleWeapons != null){
+
+        if(variables_getValue(VARIABLE.SIMPLE_WEAPONS) == null){
+          initializeVariableProf(VARIABLE.SIMPLE_WEAPONS, VARIABLE.SCORE_NONE, profSimpleWeapons.NumUps, g_profMap.get("Simple_Weapons"));
+        }
+
         let profWord = getProfNameFromNumUps(profSimpleWeapons.NumUps);
         otherProfsNum++;
-        otherProfBuild(attacks, profWord, 'Simple Weapons', otherProfsNum, profSimpleWeapons, {For:'Attack',To:'Simple_Weapons'});
+        otherProfBuild(attacks, profWord, 'Simple Weapons', otherProfsNum, profSimpleWeapons, {For:'Attack',To:'Simple_Weapons'}, VARIABLE.SIMPLE_WEAPONS);
     }
     let profMartialWeapons = getFinalProf(g_profMap.get("Martial_Weapons"));
     if(profMartialWeapons != null){
+
+        if(variables_getValue(VARIABLE.MARTIAL_WEAPONS) == null){
+          initializeVariableProf(VARIABLE.MARTIAL_WEAPONS, VARIABLE.SCORE_NONE, profMartialWeapons.NumUps, g_profMap.get("Martial_Weapons"));
+        }
+
         let profWord = getProfNameFromNumUps(profMartialWeapons.NumUps);
         otherProfsNum++;
-        otherProfBuild(attacks, profWord, 'Martial Weapons', otherProfsNum, profMartialWeapons, {For:'Attack',To:'Martial_Weapons'});
+        otherProfBuild(attacks, profWord, 'Martial Weapons', otherProfsNum, profMartialWeapons, {For:'Attack',To:'Martial_Weapons'}, VARIABLE.MARTIAL_WEAPONS);
     }
     let profAdvancedWeapons = getFinalProf(g_profMap.get("Advanced_Weapons"));
     if(profAdvancedWeapons != null){
+
+        if(variables_getValue(VARIABLE.ADVANCED_WEAPONS) == null){
+          initializeVariableProf(VARIABLE.ADVANCED_WEAPONS, VARIABLE.SCORE_NONE, profAdvancedWeapons.NumUps, g_profMap.get("Advanced_Weapons"));
+        }
+
         let profWord = getProfNameFromNumUps(profAdvancedWeapons.NumUps);
         otherProfsNum++;
-        otherProfBuild(attacks, profWord, 'Advanced Weapons', otherProfsNum, profAdvancedWeapons, {For:'Attack',To:'Advanced_Weapons'});
+        otherProfBuild(attacks, profWord, 'Advanced Weapons', otherProfsNum, profAdvancedWeapons, {For:'Attack',To:'Advanced_Weapons'}, VARIABLE.ADVANCED_WEAPONS);
     }
     let profUnarmedAttacks = getFinalProf(g_profMap.get("Unarmed_Attacks"));
     if(profUnarmedAttacks != null){
+
+        if(variables_getValue(VARIABLE.UNARMED_ATTACKS) == null){
+          initializeVariableProf(VARIABLE.UNARMED_ATTACKS, VARIABLE.SCORE_NONE, profUnarmedAttacks.NumUps, g_profMap.get("Unarmed_Attacks"));
+        }
+
         let profWord = getProfNameFromNumUps(profUnarmedAttacks.NumUps);
         otherProfsNum++;
-        otherProfBuild(attacks, profWord, 'Unarmed Attacks', otherProfsNum, profUnarmedAttacks, {For:'Attack',To:'Unarmed_Attacks'});
+        otherProfBuild(attacks, profWord, 'Unarmed Attacks', otherProfsNum, profUnarmedAttacks, {For:'Attack',To:'Unarmed_Attacks'}, VARIABLE.UNARMED_ATTACKS);
     }
     for(const [profName, profDataArray] of g_profMap.entries()){
         const finalProfData = getFinalProf(profDataArray);
         if(finalProfData.For == "Attack" && profName != "Simple_Weapons" && profName != "Martial_Weapons" && profName != "Advanced_Weapons" && profName != "Unarmed_Attacks"){
             let dProfName = profName.replace(/_/g,' ');
             let profWord = getProfNameFromNumUps(finalProfData.NumUps);
+
+            // Get variable, init if null
+            let VARIABLE_NAME = 'WEAPON_'+profName.replace(/\s/g, "_").toUpperCase();
+            if(variables_getValue(VARIABLE_NAME) == null){
+              initializeVariableProf(VARIABLE_NAME, VARIABLE.SCORE_NONE, finalProfData.NumUps, profDataArray);
+            }
+
             otherProfsNum++;
-            otherProfBuild(attacks, profWord, capitalizeWords(dProfName), otherProfsNum, finalProfData, {For:'Attack',To:profName});
+            otherProfBuild(attacks, profWord, capitalizeWords(dProfName), otherProfsNum, finalProfData, {For:'Attack',To:profName}, VARIABLE_NAME);
         }
     }
 
@@ -1162,35 +1194,62 @@ function displayInformation() {
 
     let profLightArmor = getFinalProf(g_profMap.get("Light_Armor"));
     if(profLightArmor != null){
+
+        if(variables_getValue(VARIABLE.LIGHT_ARMOR) == null){
+          initializeVariableProf(VARIABLE.LIGHT_ARMOR, VARIABLE.SCORE_NONE, profLightArmor.NumUps, g_profMap.get("Light_Armor"));
+        }
+
         let profWord = getProfNameFromNumUps(profLightArmor.NumUps);
         otherProfsNum++;
-        otherProfBuild(defenses, profWord, 'Light Armor', otherProfsNum, profLightArmor, {For:'Defense',To:'Light_Armor'});
+        otherProfBuild(defenses, profWord, 'Light Armor', otherProfsNum, profLightArmor, {For:'Defense',To:'Light_Armor'}, VARIABLE.LIGHT_ARMOR);
     }
     let profMediumArmor = getFinalProf(g_profMap.get("Medium_Armor"));
     if(profMediumArmor != null){
+
+        if(variables_getValue(VARIABLE.MEDIUM_ARMOR) == null){
+          initializeVariableProf(VARIABLE.MEDIUM_ARMOR, VARIABLE.SCORE_NONE, profMediumArmor.NumUps, g_profMap.get("Medium_Armor"));
+        }
+
         let profWord = getProfNameFromNumUps(profMediumArmor.NumUps);
         otherProfsNum++;
-        otherProfBuild(defenses, profWord, 'Medium Armor', otherProfsNum, profMediumArmor, {For:'Defense',To:'Medium_Armor'});
+        otherProfBuild(defenses, profWord, 'Medium Armor', otherProfsNum, profMediumArmor, {For:'Defense',To:'Medium_Armor'}, VARIABLE.MEDIUM_ARMOR);
     }
     let profHeavyArmor = getFinalProf(g_profMap.get("Heavy_Armor"));
     if(profHeavyArmor != null){
+
+        if(variables_getValue(VARIABLE.HEAVY_ARMOR) == null){
+          initializeVariableProf(VARIABLE.HEAVY_ARMOR, VARIABLE.SCORE_NONE, profHeavyArmor.NumUps, g_profMap.get("Heavy_Armor"));
+        }
+
         let profWord = getProfNameFromNumUps(profHeavyArmor.NumUps);
         otherProfsNum++;
-        otherProfBuild(defenses, profWord, 'Heavy Armor', otherProfsNum, profHeavyArmor, {For:'Defense',To:'Heavy_Armor'});
+        otherProfBuild(defenses, profWord, 'Heavy Armor', otherProfsNum, profHeavyArmor, {For:'Defense',To:'Heavy_Armor'}, VARIABLE.HEAVY_ARMOR);
     }
     let profUnarmoredDefense = getFinalProf(g_profMap.get("Unarmored_Defense"));
     if(profUnarmoredDefense != null){
+
+        if(variables_getValue(VARIABLE.UNARMORED_DEFENSE) == null){
+          initializeVariableProf(VARIABLE.UNARMORED_DEFENSE, VARIABLE.SCORE_NONE, profUnarmoredDefense.NumUps, g_profMap.get("Unarmored_Defense"));
+        }
+
         let profWord = getProfNameFromNumUps(profUnarmoredDefense.NumUps);
         otherProfsNum++;
-        otherProfBuild(defenses, profWord, 'Unarmored Defense', otherProfsNum, profUnarmoredDefense, {For:'Defense',To:'Unarmored_Defense'});
+        otherProfBuild(defenses, profWord, 'Unarmored Defense', otherProfsNum, profUnarmoredDefense, {For:'Defense',To:'Unarmored_Defense'}, VARIABLE.UNARMORED_DEFENSE);
     }
     for(const [profName, profDataArray] of g_profMap.entries()){
         const finalProfData = getFinalProf(profDataArray);
         if(finalProfData.For == "Defense" && profName != "Light_Armor" && profName != "Medium_Armor" && profName != "Heavy_Armor" && profName != "Unarmored_Defense"){
             let dProfName = profName.replace(/_/g,' ');
             let profWord = getProfNameFromNumUps(finalProfData.NumUps);
+
+            // Get variable, init if null
+            let VARIABLE_NAME = 'ARMOR_'+profName.replace(/\s/g, "_").toUpperCase();
+            if(variables_getValue(VARIABLE_NAME) == null){
+              initializeVariableProf(VARIABLE_NAME, VARIABLE.SCORE_NONE, finalProfData.NumUps, profDataArray);
+            }
+
             otherProfsNum++;
-            otherProfBuild(defenses, profWord, capitalizeWords(dProfName), otherProfsNum, finalProfData, {For:'Defense',To:profName});
+            otherProfBuild(defenses, profWord, capitalizeWords(dProfName), otherProfsNum, finalProfData, {For:'Defense',To:profName}, VARIABLE_NAME);
         }
     }
 
@@ -1205,56 +1264,56 @@ function displayInformation() {
     if(arcaneSpellAttack != null){
         let profWord = getProfNameFromNumUps(arcaneSpellAttack.NumUps);
         otherProfsNum++;
-        otherProfBuild(spells, profWord, 'Arcane Attacks', otherProfsNum, arcaneSpellAttack, {For:'SpellAttack',To:'ArcaneSpellAttacks'}, { SpellTradition: 'ARCANE', SpellPart: 'Attack' });
+        otherProfBuild(spells, profWord, 'Arcane Attacks', otherProfsNum, arcaneSpellAttack, {For:'SpellAttack',To:'ArcaneSpellAttacks'}, VARIABLE.ARCANE_SPELL_ATTACK, { SpellTradition: 'ARCANE', SpellPart: 'Attack' });
     }
 
     let arcaneSpellDC = getFinalProf(g_profMap.get("ArcaneSpellDCs"));
     if(arcaneSpellDC != null){
         let profWord = getProfNameFromNumUps(arcaneSpellDC.NumUps);
         otherProfsNum++;
-        otherProfBuild(spells, profWord, 'Arcane DCs', otherProfsNum, arcaneSpellDC, {For:'SpellDC',To:'ArcaneSpellDCs'}, { SpellTradition: 'ARCANE', SpellPart: 'DC' });
+        otherProfBuild(spells, profWord, 'Arcane DCs', otherProfsNum, arcaneSpellDC, {For:'SpellDC',To:'ArcaneSpellDCs'}, VARIABLE.ARCANE_SPELL_DC, { SpellTradition: 'ARCANE', SpellPart: 'DC' });
     }
 
     let divineSpellAttack = getFinalProf(g_profMap.get("DivineSpellAttacks"));
     if(divineSpellAttack != null){
         let profWord = getProfNameFromNumUps(divineSpellAttack.NumUps);
         otherProfsNum++;
-        otherProfBuild(spells, profWord, 'Divine Attacks', otherProfsNum, divineSpellAttack, {For:'SpellAttack',To:'DivineSpellAttacks'}, { SpellTradition: 'DIVINE', SpellPart: 'Attack' });
+        otherProfBuild(spells, profWord, 'Divine Attacks', otherProfsNum, divineSpellAttack, {For:'SpellAttack',To:'DivineSpellAttacks'}, VARIABLE.DIVINE_SPELL_ATTACK, { SpellTradition: 'DIVINE', SpellPart: 'Attack' });
     }
 
     let divineSpellDC = getFinalProf(g_profMap.get("DivineSpellDCs"));
     if(divineSpellDC != null){
         let profWord = getProfNameFromNumUps(divineSpellDC.NumUps);
         otherProfsNum++;
-        otherProfBuild(spells, profWord, 'Divine DCs', otherProfsNum, divineSpellDC, {For:'SpellDC',To:'DivineSpellDCs'}, { SpellTradition: 'DIVINE', SpellPart: 'DC' });
+        otherProfBuild(spells, profWord, 'Divine DCs', otherProfsNum, divineSpellDC, {For:'SpellDC',To:'DivineSpellDCs'}, VARIABLE.DIVINE_SPELL_DC, { SpellTradition: 'DIVINE', SpellPart: 'DC' });
     }
 
     let occultSpellAttack = getFinalProf(g_profMap.get("OccultSpellAttacks"));
     if(occultSpellAttack != null){
         let profWord = getProfNameFromNumUps(occultSpellAttack.NumUps);
         otherProfsNum++;
-        otherProfBuild(spells, profWord, 'Occult Attacks', otherProfsNum, occultSpellAttack, {For:'SpellAttack',To:'OccultSpellAttacks'}, { SpellTradition: 'OCCULT', SpellPart: 'Attack' });
+        otherProfBuild(spells, profWord, 'Occult Attacks', otherProfsNum, occultSpellAttack, {For:'SpellAttack',To:'OccultSpellAttacks'}, VARIABLE.OCCULT_SPELL_ATTACK, { SpellTradition: 'OCCULT', SpellPart: 'Attack' });
     }
 
     let occultSpellDC = getFinalProf(g_profMap.get("OccultSpellDCs"));
     if(occultSpellDC != null){
         let profWord = getProfNameFromNumUps(occultSpellDC.NumUps);
         otherProfsNum++;
-        otherProfBuild(spells, profWord, 'Occult DCs', otherProfsNum, occultSpellDC, {For:'SpellDC',To:'OccultSpellDCs'}, { SpellTradition: 'OCCULT', SpellPart: 'DC' });
+        otherProfBuild(spells, profWord, 'Occult DCs', otherProfsNum, occultSpellDC, {For:'SpellDC',To:'OccultSpellDCs'}, VARIABLE.OCCULT_SPELL_DC, { SpellTradition: 'OCCULT', SpellPart: 'DC' });
     }
 
     let primalSpellAttack = getFinalProf(g_profMap.get("PrimalSpellAttacks"));
     if(primalSpellAttack != null){
         let profWord = getProfNameFromNumUps(primalSpellAttack.NumUps);
         otherProfsNum++;
-        otherProfBuild(spells, profWord, 'Primal Attacks', otherProfsNum, primalSpellAttack, {For:'SpellAttack',To:'PrimalSpellAttacks'}, { SpellTradition: 'PRIMAL', SpellPart: 'Attack' });
+        otherProfBuild(spells, profWord, 'Primal Attacks', otherProfsNum, primalSpellAttack, {For:'SpellAttack',To:'PrimalSpellAttacks'}, VARIABLE.PRIMAL_SPELL_ATTACK, { SpellTradition: 'PRIMAL', SpellPart: 'Attack' });
     }
 
     let primalSpellDC = getFinalProf(g_profMap.get("PrimalSpellDCs"));
     if(primalSpellDC != null){
         let profWord = getProfNameFromNumUps(primalSpellDC.NumUps);
         otherProfsNum++;
-        otherProfBuild(spells, profWord, 'Primal DCs', otherProfsNum, primalSpellDC, {For:'SpellDC',To:'PrimalSpellDCs'}, { SpellTradition: 'PRIMAL', SpellPart: 'DC' });
+        otherProfBuild(spells, profWord, 'Primal DCs', otherProfsNum, primalSpellDC, {For:'SpellDC',To:'PrimalSpellDCs'}, VARIABLE.PRIMAL_SPELL_DC, { SpellTradition: 'PRIMAL', SpellPart: 'DC' });
     }
 
     if(spells.html() == ''){
@@ -1341,7 +1400,8 @@ function displayInformation() {
                 AbilMod : abilMod,
                 ProfNum : profNum,
                 TotalBonus : totalBonus,
-                CharLevel : g_character.level
+                CharLevel : g_character.level,
+                VARIABLE: 'SKILL_'+skillName,
             });
         });
 
@@ -1925,7 +1985,7 @@ function determineArmor(dexMod, strScore) {
         let profNumber = getProfNumber(profNumUps, g_character.level);
 
         let pre_dexMod = getMod(g_preConditions_dexScore);
-        let dexCap = (getStatTotal(VARIABLE.DEX_CAP) != null) ? getStatTotal(VARIABLE.DEX_CAP) : armorStruct.Item.ArmorData.dexCap;
+        let dexCap = (getStatBonusTotal(VARIABLE.DEX_CAP) != null) ? getStatBonusTotal(VARIABLE.DEX_CAP) : armorStruct.Item.ArmorData.dexCap;
         let newDexMod = (pre_dexMod > dexCap) ? dexCap : pre_dexMod;
         dexMod = newDexMod - (pre_dexMod-dexMod);
 
@@ -1979,11 +2039,11 @@ function determineArmor(dexMod, strScore) {
         let totalArmorBonus = armorStruct.Item.ArmorData.acBonus + brokenPenalty + shoddyPenalty;
 
         let totalAC = 10 + dexMod + profNumber + totalArmorBonus;
-        totalAC += getStatTotal(VARIABLE.AC);
+        totalAC += getStatBonusTotal(VARIABLE.AC);
 
         // Apply armor penalties to character...
-        addStat(VARIABLE.ARMOR_CHECK_PENALTY, 'BASE', armorStruct.Item.ArmorData.checkPenalty);
-        addStat(VARIABLE.ARMOR_SPEED_PENALTY, 'BASE', armorStruct.Item.ArmorData.speedPenalty);
+        g_variableMap.get(VARIABLE.ARMOR_CHECK_PENALTY).Value = armorStruct.Item.ArmorData.checkPenalty;
+        g_variableMap.get(VARIABLE.ARMOR_SPEED_PENALTY).Value = armorStruct.Item.ArmorData.speedPenalty;
         let checkPenalty = getStatTotal(VARIABLE.ARMOR_CHECK_PENALTY);
         let speedPenalty = getStatTotal(VARIABLE.ARMOR_SPEED_PENALTY);
 
@@ -2021,10 +2081,10 @@ function determineArmor(dexMod, strScore) {
                         ignore noisy trait and reduce Stealth penalty if no noisy trait.
                     */
                     let stealthCheckPenalty = checkPenalty;
-                    let stealthNumUps = getStat(VARIABLE.SKILL_STEALTH, 'PROF_BONUS');
-                    if(stealthNumUps == 4){ // Legendary
+                    let stealthRank = variables_getValue(VARIABLE.SKILL_STEALTH).Rank;
+                    if(stealthRank == 'L'){ // Legendary
                         stealthCheckPenalty += 3;
-                    } else if(stealthNumUps == 3){ // Master
+                    } else if(stealthRank == 'M'){ // Master
                         stealthCheckPenalty += 2;
                     } else { // Expert or less
                         stealthCheckPenalty += 1;
@@ -2055,9 +2115,9 @@ function determineArmor(dexMod, strScore) {
         });
         if(bulwarkTag != null){
             if(gState_mightyBulwark) {
-                addConditionalStat(VARIABLE.SAVE_REFLEX, 'You add a +4 modifier instead of your Dexterity modifier.', null);
+                addConditionalStat(VARIABLE.SAVE_REFLEX, 'You add a +4 modifier instead of your Dexterity modifier.', 'Worn Armor');
             } else {
-                addConditionalStat(VARIABLE.SAVE_REFLEX, 'On saves to avoid a damaging effect, you add a +3 modifier instead of your Dexterity modifier.', null);
+                addConditionalStat(VARIABLE.SAVE_REFLEX, 'On saves to avoid a damaging effect, you add a +3 modifier instead of your Dexterity modifier.', 'Worn Armor');
             }
         }
 
@@ -2089,11 +2149,11 @@ function determineArmor(dexMod, strScore) {
 
         let totalArmorBonus = 0;
 
-        let dexCap = getStatTotal(VARIABLE.DEX_CAP);
+        let dexCap = getStatBonusTotal(VARIABLE.DEX_CAP);
         let dexModCapped = (dexCap != null) ? ((dexMod > dexCap) ? dexCap : dexMod) : dexMod;
 
         let totalAC = 10 + dexModCapped + profNumber + totalArmorBonus;
-        totalAC += getStatTotal(VARIABLE.AC);
+        totalAC += getStatBonusTotal(VARIABLE.AC);
 
         // Final Product
         let totalACDisplayed = (hasConditionals(VARIABLE.AC)) ? totalAC+'<sup class="is-size-6 has-text-info">*</sup>' : totalAC;
@@ -2140,7 +2200,7 @@ function runPropertyRuneCode(propertyRuneID, invItemID){
 function applyArmorCheckPenaltyToSkill(skillName, checkPenalty){
 
     addStat('SKILL_'+skillName, 'PENALTY (ARMOR)', checkPenalty);
-    addConditionalStat('SKILL_'+skillName, "penalty from armor is NOT applied to skill checks that have the attack trait", checkPenalty);
+    addConditionalStat('SKILL_'+skillName, signNumber(checkPenalty)+" penalty from armor is NOT applied to skill checks that have the attack trait", 'Worn Armor');
 
 }
 
@@ -2323,7 +2383,7 @@ function determineBulkAndCoins(invItems, itemMap){
     weightEncumbered = Math.floor(weightEncumbered*getBulkLimitModifierForSize(g_charSize));
     weightMax = Math.floor(weightMax*getBulkLimitModifierForSize(g_charSize));
 
-    let bulkLimitBonus = getStatTotal(VARIABLE.BULK_LIMIT);
+    let bulkLimitBonus = getStatBonusTotal(VARIABLE.BULK_LIMIT);
     if(bulkLimitBonus != null){
         weightEncumbered += bulkLimitBonus;
         weightMax += bulkLimitBonus;
@@ -2376,7 +2436,7 @@ function determineInvestitures(){
 
     maxInvests = 10;
 
-    let investLimitBonus = getStatTotal(VARIABLE.INVEST_LIMIT);
+    let investLimitBonus = getStatBonusTotal(VARIABLE.INVEST_LIMIT);
     if(investLimitBonus != null){
         maxInvests += investLimitBonus;
     }
@@ -2547,7 +2607,7 @@ function runAllSheetStateCode() {
 ///////////////////////////////////////// Other Profs //////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
-function otherProfBuild(content, prof, name, otherProfsNum, profData, profSrcData, extraData={}){
+function otherProfBuild(content, prof, name, otherProfsNum, profData, profSrcData, VARIABLE, extraData={}){
 
     if(profData.UserAdded){
         prof = '<span class="is-underlined-thin-darker">'+prof+'</span>';
@@ -2579,6 +2639,7 @@ function otherProfBuild(content, prof, name, otherProfsNum, profData, profSrcDat
             ProfData : profData,
             Name : name,
             ExtraData : extraData,
+            VARIABLE: VARIABLE,
         });
     });
 

@@ -789,11 +789,13 @@ function modifySpellByHeighten(spellData, hText){
         };
         /////////
 
+        let damageType = match[2].toLowerCase().replace(/[().]/g, '');
+
         // Check if word before damage can be located in spellDesc (Ex. splash damage)
         // Ex. Find 'XdX splash (?) damage'
         // Double escape because string will remove an escape before regex applies
         let newSpellDescription = spellDescription.replace(
-          new RegExp('()(\\d+)(d(\\d+)|)( \\+ SPELL_MODIFIER|)( '+match[2].toLowerCase()+' ([^ \\n]+) damage)', 'g'), handleDamageReplacement);
+          new RegExp('()(\\d+)(d(\\d+)|)( \\+ SPELL_MODIFIER|)( '+damageType+' ([^ \\n]+) damage)', 'g'), handleDamageReplacement);
           
         // Else try find 'XdX (?) damage'
         if(newSpellDescription == spellDescription){
@@ -813,7 +815,7 @@ function modifySpellByHeighten(spellData, hText){
         // Else try to find 'SPELL_MODIFIER splash (?) damage'
         if(newSpellDescription == spellDescription){
           newSpellDescription = spellDescription.replace(
-            new RegExp('()()(())(SPELL_MODIFIER)( '+match[2].toLowerCase()+' ([^ \\n]+) damage)', 'g'), handleDamageReplacement);
+            new RegExp('()()(())(SPELL_MODIFIER)( '+damageType+' ([^ \\n]+) damage)', 'g'), handleDamageReplacement);
         }
           
         // Else try to find 'SPELL_MODIFIER (?) damage'
