@@ -433,7 +433,11 @@ function loadCharSheet(){
     }
 
     let classDCData = getFinalProf(g_profMap.get("Class_DC"));
-    initializeVariableProf(VARIABLE.CLASS_DC, 'SCORE_'+g_classDetails.KeyAbility, classDCData.NumUps, g_profMap.get("Class_DC"));
+    if(g_classDetails.KeyAbility != null){
+      initializeVariableProf(VARIABLE.CLASS_DC, 'SCORE_'+g_classDetails.KeyAbility, classDCData.NumUps, g_profMap.get("Class_DC"));
+    } else {
+      initializeVariableProf(VARIABLE.CLASS_DC, VARIABLE.SCORE_NONE, classDCData.NumUps, g_profMap.get("Class_DC"));
+    }
     addStat(VARIABLE.CLASS_DC, 'USER_BONUS', classDCData.UserBonus);
 
     let fortData = getFinalProf(g_profMap.get("Fortitude"));

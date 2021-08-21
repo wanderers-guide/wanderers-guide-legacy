@@ -21,8 +21,8 @@ function textProcess_canIndex(dataCollection){
    return (typeof dataCollection !== 'undefined' && dataCollection != null);
 }
 
-const regexFeatLinkExt = /\((Feat|Ability|Action|Activity):\s*([^(:]+?)\s*\|\s*(.+?)\s*\)/ig;
-const regexFeatLink = /\((Feat|Ability|Action|Activity):\s*([^(:]+?)\s*\)/ig;
+const regexFeatLinkExt = /\((Feat|Ability|Action|Activity):(lvl-([\-0-9]+):|)\s*([^(:]+?)\s*\|\s*(.+?)\s*\)/ig;
+const regexFeatLink = /\((Feat|Ability|Action|Activity):(lvl-([\-0-9]+):|)\s*([^(:]+?)\s*\)/ig;
 const regexItemLinkExt = /\((Item):\s*([^(:]+?)\s*\|\s*(.+?)\s*\)/ig;
 const regexItemLink = /\((Item):\s*([^(:]+?)\s*\)/ig;
 const regexSpellLinkExt = /\((Spell):\s*([^(:]+?)\s*\|\s*(.+?)\s*\)/ig;
@@ -138,14 +138,14 @@ function processText(text, isSheet, isJustified = false, size = 'MEDIUM', indexC
     if(typeof g_featMap !== 'undefined' && g_featMap != null) {
         text = text.replace(regexFeatLinkExt, handleFeatLinkExt);
     } else {
-        text = text.replace(regexFeatLinkExt, '<span class="is-underlined-warning">$2</span>');
+        text = text.replace(regexFeatLinkExt, '<span class="is-underlined-warning">$4</span>');
     }
 
     // (Feat: Strike)
     if(typeof g_featMap !== 'undefined' && g_featMap != null) {
         text = text.replace(regexFeatLink, handleFeatLink);
     } else {
-        text = text.replace(regexFeatLink, '<span class="is-underlined-warning">$2</span>');
+        text = text.replace(regexFeatLink, '<span class="is-underlined-warning">$4</span>');
     }
 
     // (Item: Striking | Strike)
@@ -262,12 +262,12 @@ function processTextRemoveIndexing(text) {
 
 
   // (Feat: Striking | Strike)
-  let regexFeatLinkExt = /\((Feat|Ability|Action|Activity):\s*([^(:]+?)\s*\|\s*(.+?)\s*\)/ig;
-  text = text.replace(regexFeatLinkExt, '$2');
+  let regexFeatLinkExt = /\((Feat|Ability|Action|Activity):(lvl-([\-0-9]+):|)\s*([^(:]+?)\s*\|\s*(.+?)\s*\)/ig;
+  text = text.replace(regexFeatLinkExt, '$4');
 
   // (Feat: Strike)
-  let regexFeatLink = /\((Feat|Ability|Action|Activity):\s*([^(:]+?)\s*\)/ig;
-  text = text.replace(regexFeatLink, '$2');
+  let regexFeatLink = /\((Feat|Ability|Action|Activity):(lvl-([\-0-9]+):|)\s*([^(:]+?)\s*\)/ig;
+  text = text.replace(regexFeatLink, '$4');
 
   // (Item: Striking | Strike)
   let regexItemLinkExt = /\((Item):\s*([^(:]+?)\s*\|\s*(.+?)\s*\)/ig;
@@ -403,13 +403,14 @@ function handleTableCreation(match) {
 
 /////
 
-function handleFeatLink(match, linkName, innerTextName) {
-    return handleFeatLinkExt(match, linkName, innerTextName, innerTextName);
+function handleFeatLink(match, linkName, lvlTest, lvlNum, innerTextName) {
+    return handleFeatLinkExt(match, linkName, lvlTest, lvlNum, innerTextName, innerTextName);
 }
 
-function handleFeatLinkExt(match, linkName, innerTextDisplay, innerTextName) {
+function handleFeatLinkExt(match, linkName, lvlTest, lvlNum, innerTextDisplay, innerTextName) {
     let innerTextNameUpper = innerTextName.replace(/’/g,'\'').toUpperCase();
     for(const [featID, featStruct] of g_featMap.entries()){
+        if(lvlNum != null && featStruct.Feat.level != lvlNum) { continue; }
         let featName = featStruct.Feat.name.toUpperCase();
         if(innerTextNameUpper === featName && featStruct.Feat.isArchived == 0) {
             let featLinkClass = 'featTextLink'+featStruct.Feat.id;

@@ -278,9 +278,16 @@ function displaySpellDetails(spellDataStruct, spellTradDetailsSpellID){
         case 'ONE_TO_THREE_ACTIONS': castActions = '<span class="pf-icon">[one-action]</span><span> to </span><span class="pf-icon">[three-actions]</span>'; break;
         case 'ONE_TO_TWO_ACTIONS': castActions = '<span class="pf-icon">[one-action]</span><span> to </span><span class="pf-icon">[two-actions]</span>'; break;
         case 'TWO_TO_THREE_ACTIONS': castActions = '<span class="pf-icon">[two-actions]</span><span> to </span><span class="pf-icon">[three-actions]</span>'; break;
+        case 'TWO_TO_TWO_ROUNDS': castActions = '<span class="pf-icon">[two-actions]</span><span> to 2 rounds</span>'; break;
+        case 'TWO_TO_THREE_ROUNDS': castActions = '<span class="pf-icon">[two-actions]</span><span> to 3 rounds</span>'; break;
+        case 'THREE_TO_TWO_ROUNDS': castActions = '<span class="pf-icon">[three-actions]</span><span> to 2 rounds</span>'; break;
+        case 'THREE_TO_THREE_ROUNDS': castActions = '<span class="pf-icon">[three-actions]</span><span> to 3 rounds</span>'; break;
+        case 'TWO_ROUNDS': castActions = '<span>2 rounds</span>'; wrapComponents = true; break;
+        case 'THREE_ROUNDS': castActions = '<span>3 rounds</span>'; wrapComponents = true; break;
         case 'ONE_MINUTE': castActions = '<span>1 minute</span>'; wrapComponents = true; break;
         case 'FIVE_MINUTES': castActions = '<span>5 minutes</span>'; wrapComponents = true; break;
         case 'TEN_MINUTES': castActions = '<span>10 minutes</span>'; wrapComponents = true; break;
+        case 'THIRTY_MINUTES': castActions = '<span>30 minutes</span>'; wrapComponents = true; break;
         case 'ONE_HOUR': castActions = '<span>1 hour</span>'; wrapComponents = true; break;
         case 'EIGHT_HOURS': castActions = '<span>8 hours</span>'; wrapComponents = true; break;
         case 'ONE_DAY': castActions = '<span>24 hours</span>'; wrapComponents = true; break;
