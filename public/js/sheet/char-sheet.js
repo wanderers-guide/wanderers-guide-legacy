@@ -510,6 +510,10 @@ function loadCharSheet(){
       addStat(VARIABLE.DIVINE_SPELL_DC, 'USER_BONUS', divineSpellDC.UserBonus);
     }
 
+    // Init Max HP
+    initializeVariable(VARIABLE.MAX_HEALTH, VAR_TYPE.INTEGER, 0);
+    initializeVariable(VARIABLE.MAX_HEALTH_BONUS_PER_LEVEL, VAR_TYPE.INTEGER, 0);
+
     // Init integer values, for adding bonuses/penalties to them
     initializeVariable(VARIABLE.AC, VAR_TYPE.INTEGER, VAR_NULL);
     initializeVariable(VARIABLE.DEX_CAP, VAR_TYPE.INTEGER, VAR_NULL);
@@ -570,11 +574,11 @@ function loadCharSheet(){
     determineBulkAndCoins(g_invStruct.InvItems, g_itemMap);
 
     // Display Health and Temp -> Stamina and Resolve //
-    initializeVariable(VARIABLE.MAX_HEALTH, VAR_TYPE.INTEGER, g_ancestry.hitPoints);
+    g_variableMap.get(VARIABLE.MAX_HEALTH).Value = g_ancestry.hitPoints;
     if(gOption_hasStamina){
-      initializeVariable(VARIABLE.MAX_HEALTH_BONUS_PER_LEVEL, VAR_TYPE.INTEGER, 0);
+      g_variableMap.get(VARIABLE.MAX_HEALTH_BONUS_PER_LEVEL).Value = 0;
     } else {
-      initializeVariable(VARIABLE.MAX_HEALTH_BONUS_PER_LEVEL, VAR_TYPE.INTEGER, getModOfValue('CON'));
+      g_variableMap.get(VARIABLE.MAX_HEALTH_BONUS_PER_LEVEL).Value = getModOfValue('CON');
     }
 
     // Run Toggleables (Sheet State) Code //

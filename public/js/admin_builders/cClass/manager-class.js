@@ -16,6 +16,8 @@ $(function () {
         let cardEdit = $(classCard).find('.class-card-edit');
         let cardDelete = $(classCard).find('.class-card-delete');
 
+        let classIsArchived = $(classCard).attr('data-is-archived');
+
         cardEdit.mouseenter(function(){
             $(this).addClass('card-footer-hover');
         });
@@ -33,9 +35,11 @@ $(function () {
             $(this).removeClass('card-footer-hover');
         });
         cardDelete.click(function() {
+          if(classIsArchived == 'true'){
             $('.modal').addClass('is-active');
             $('html').addClass('is-clipped');
             activeModalClassID = classID;
+          }
         });
 
         $('.modal-card-close').click(function() {

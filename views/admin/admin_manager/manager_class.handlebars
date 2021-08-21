@@ -46,7 +46,7 @@
     <div class="columns is-centered is-multiline mb-2">
         {{#each classes}}
                 <div class="column is-4">
-                    <div class="card class-card" name="{{id}}">
+                    <div class="card class-card" name="{{id}}" data-is-archived="{{#ifEqual isArchived 1}}true{{else}}false{{/ifEqual}}">
                         <div class="card-content pt-2 pb-2 text-center">
                             <span class="is-size-4 has-text-grey-lighter">{{name}}</span>
                             <span class="is-size-5 has-text-grey-light"> - {{version}}</span>
