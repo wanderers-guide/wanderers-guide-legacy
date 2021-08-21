@@ -26,7 +26,7 @@ function mapToObj(strMap) {
 
 module.exports = class CharExport {
 
-  static getExportData(charID){
+  static getExportData(userID, charID){
 
     /*
 
@@ -48,17 +48,17 @@ module.exports = class CharExport {
 
     */
 
-    return CharGathering.getCharacter(charID)
+    return CharGathering.getCharacter(userID, charID)
     .then((character) => {
       return Inventory.findOne({ where: { id: character.inventoryID} })
       .then((inventory) => {
         return InvItem.findAll({ where: { invID: inventory.id} })
         .then((invItems) => {
-          return CharGathering.getAllMetadata(charID)
+          return CharGathering.getAllMetadata(userID, charID)
           .then((charMetaData) => {
-            return CharGathering.getCharAnimalCompanions(charID)
+            return CharGathering.getCharAnimalCompanions(userID, charID)
             .then((charAnimalCompanions) => {
-              return CharGathering.getCharFamiliars(charID)
+              return CharGathering.getCharFamiliars(userID, charID)
               .then((charFamiliars) => {
                 return CharCondition.findAll({ where: { charID: charID} })
                 .then((charConditions) => {
@@ -66,21 +66,21 @@ module.exports = class CharExport {
                   .then(function(noteFields) {
                     return SpellBookSpell.findAll({ where: { charID: charID } })
                     .then(function(spellBookSpells) {
-                      return CharExport.getCharBuildData(charID)
+                      return CharExport.getCharBuildData(userID, charID)
                       .then(function(charBuildData) {
-                        return CharGathering.getCalculatedStats(charID)
+                        return CharGathering.getCalculatedStats(userID, charID)
                         .then((calculatedStats) => {
-                          return CharGathering.getFinalProfs(charID)
+                          return CharGathering.getFinalProfs(userID, charID)
                           .then((profMap) => {
                             return CharTags.getTags(charID).then((charTags) => {
 
-                              return CharExport.processInvItems(charID, character, invItems)
+                              return CharExport.processInvItems(userID, charID, character, invItems)
                               .then((p_invItems) => {
-                                return CharExport.processSpellBookSpells(charID, character, spellBookSpells)
+                                return CharExport.processSpellBookSpells(userID, charID, character, spellBookSpells)
                                 .then((p_spellBookSpells) => {
-                                  return CharExport.processConditions(charID, character, charConditions)
+                                  return CharExport.processConditions(userID, charID, character, charConditions)
                                   .then((p_charConditions) => {
-                                    return CharExport.processBasicCharInfo(charID, character)
+                                    return CharExport.processBasicCharInfo(userID, charID, character)
                                     .then((p_character) => {
                               
                                       return {
@@ -122,11 +122,11 @@ module.exports = class CharExport {
 
   }
 
-  static async getCharBuildData(charID){
+  static async getCharBuildData(userID, charID){
 
-    let chosenBoosts = await CharGathering.getChoicesAbilityBonus(charID);
-    let chosenDomains = await CharGathering.getChoicesDomains(charID);
-    let chosenFeats = await CharGathering.getChoicesFeats(charID);
+    let chosenBoosts = await CharGathering.getChoicesAbilityBonus(userID, charID);
+    let chosenDomains = await CharGathering.getChoicesDomains(userID, charID);
+    let chosenFeats = await CharGathering.getChoicesFeats(userID, charID);
     let chosenLangs = await CharDataMapping.getDataAll(charID, 'languages', Language);
     let chosenSenses = await CharDataMapping.getDataAll(charID, 'senses', SenseType);
     let chosenProfs = await CharDataMappingExt.getDataAllProficiencies(charID);
@@ -142,9 +142,9 @@ module.exports = class CharExport {
 
   }
 
-  static async processInvItems(charID, character, invItems){
+  static async processInvItems(userID, charID, character, invItems){
 
-    let allItems = await CharGathering.getAllItems(charID, character, null, null);
+    let allItems = await CharGathering.getAllItems(userID, charID, character, null, null);
     for(let invItem of invItems){
       let itemData = allItems.get(invItem.itemID);
       if(itemData == null) { itemData = { Item: {} }; }
@@ -155,9 +155,9 @@ module.exports = class CharExport {
 
   }
 
-  static async processSpellBookSpells(charID, character, spellBookSpells){
+  static async processSpellBookSpells(userID, charID, character, spellBookSpells){
 
-    let allSpells = await CharGathering.getAllSpells(charID, character, null, null, null);
+    let allSpells = await CharGathering.getAllSpells(userID, charID, character, null, null, null);
     for(let spellBookSpell of spellBookSpells){
       let spellData = allSpells.get(spellBookSpell.spellID);
       if(spellData == null) { spellData = { Spell: {} }; }
@@ -168,9 +168,9 @@ module.exports = class CharExport {
 
   }
 
-  static async processConditions(charID, character, charConditions){
+  static async processConditions(userID, charID, character, charConditions){
 
-    let allConditions = await CharGathering.getAllConditions();
+    let allConditions = await CharGathering.getAllConditions(userID);
     for(let charCondition of charConditions){
       let condition = allConditions.find(condition => {
         return charCondition.conditionID == condition.id;
@@ -183,12 +183,12 @@ module.exports = class CharExport {
 
   }
 
-  static async processBasicCharInfo(charID, character){
+  static async processBasicCharInfo(userID, charID, character){
 
-    let cClass = await CharGathering.getClassBasic(character);
-    let background = await CharGathering.getBackground(charID, character);
-    let ancestry = await CharGathering.getAncestry(charID, character);
-    let heritage = await CharGathering.getHeritage(charID, character);
+    let cClass = await CharGathering.getClassBasic(userID, character);
+    let background = await CharGathering.getBackground(userID, charID, character);
+    let ancestry = await CharGathering.getAncestry(userID, charID, character);
+    let heritage = await CharGathering.getHeritage(userID, charID, character);
 
     character.dataValues._class = cClass;
     character.dataValues._background = background;

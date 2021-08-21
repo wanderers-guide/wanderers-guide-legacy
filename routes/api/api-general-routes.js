@@ -44,7 +44,7 @@ router.get('/item', (req, res) => {
   if(req.query.name != null || req.query.id != null){
     getModelByNameOrID(Item, req.query.name, req.query.id).then((item) => {
       if(item != null){
-        GeneralGathering.getItem(item.id).then((itemData) => {
+        GeneralGathering.getItem(-1, item.id).then((itemData) => {
           res.send(itemData);
         });
       } else {
@@ -57,7 +57,7 @@ router.get('/item', (req, res) => {
   }
 });
 router.get('/item/all', (req, res) => {
-  GeneralGathering.getAllItems().then((itemMap) => {
+  GeneralGathering.getAllItems(-1).then((itemMap) => {
     res.send(mapToObj(itemMap));
   });
 });
@@ -66,7 +66,7 @@ router.get('/spell', (req, res) => {
   if(req.query.name != null || req.query.id != null){
     getModelByNameOrID(Spell, req.query.name, req.query.id).then((spell) => {
       if(spell != null){
-        GeneralGathering.getSpell(spell.id).then((spellData) => {
+        GeneralGathering.getSpell(-1, spell.id).then((spellData) => {
           res.send(spellData);
         });
       } else {
@@ -79,7 +79,7 @@ router.get('/spell', (req, res) => {
   }
 });
 router.get('/spell/all', (req, res) => {
-  GeneralGathering.getAllSpells().then((spellMap) => {
+  GeneralGathering.getAllSpells(-1).then((spellMap) => {
     res.send(mapToObj(spellMap));
   });
 });
@@ -88,7 +88,7 @@ router.get('/feat', (req, res) => {
   if(req.query.name != null || req.query.id != null){
     getModelByNameOrID(Feat, req.query.name, req.query.id).then((feat) => {
       if(feat != null){
-        GeneralGathering.getFeat(feat.id).then((featData) => {
+        GeneralGathering.getFeat(-1, feat.id).then((featData) => {
           res.send(featData);
         });
       } else {
@@ -101,7 +101,7 @@ router.get('/feat', (req, res) => {
   }
 });
 router.get('/feat/all', (req, res) => {
-  GeneralGathering.getAllFeats().then((featObj) => {
+  GeneralGathering.getAllFeats(-1).then((featObj) => {
     res.send(featObj);
   });
 });
@@ -110,7 +110,7 @@ router.get('/class', (req, res) => {
   if(req.query.name != null || req.query.id != null){
     getModelByNameOrID(Class, req.query.name, req.query.id).then((cClass) => {
       if(cClass != null){
-        GeneralGathering.getClass(cClass.id).then((classData) => {
+        GeneralGathering.getClass(-1, cClass.id).then((classData) => {
           res.send(classData);
         });
       } else {
@@ -123,7 +123,7 @@ router.get('/class', (req, res) => {
   }
 });
 router.get('/class/all', (req, res) => {
-  GeneralGathering.getAllClasses().then((classObj) => {
+  GeneralGathering.getAllClasses(-1).then((classObj) => {
     res.send(classObj);
   });
 });
@@ -132,7 +132,7 @@ router.get('/ancestry', (req, res) => {
   if(req.query.name != null || req.query.id != null){
     getModelByNameOrID(Ancestry, req.query.name, req.query.id).then((ancestry) => {
       if(ancestry != null){
-        GeneralGathering.getAncestry(ancestry.id).then((ancestryData) => {
+        GeneralGathering.getAncestry(-1, ancestry.id).then((ancestryData) => {
           res.send(ancestryData);
         });
       } else {
@@ -145,7 +145,7 @@ router.get('/ancestry', (req, res) => {
   }
 });
 router.get('/ancestry/all', (req, res) => {
-  GeneralGathering.getAllAncestries(true).then((ancestryObj) => {
+  GeneralGathering.getAllAncestries(-1, true).then((ancestryObj) => {
     res.send(ancestryObj);
   });
 });
@@ -154,7 +154,7 @@ router.get('/archetype', (req, res) => {
   if(req.query.name != null || req.query.id != null){
     getModelByNameOrID(Archetype, req.query.name, req.query.id).then((archetype) => {
       if(archetype != null){
-        GeneralGathering.getArchetype(archetype.id).then((archetypeData) => {
+        GeneralGathering.getArchetype(-1, archetype.id).then((archetypeData) => {
           res.send(archetypeData);
         });
       } else {
@@ -167,7 +167,7 @@ router.get('/archetype', (req, res) => {
   }
 });
 router.get('/archetype/all', (req, res) => {
-  GeneralGathering.getAllArchetypes().then((archetypes) => {
+  GeneralGathering.getAllArchetypes(-1).then((archetypes) => {
     res.send(archetypes);
   });
 });
@@ -176,7 +176,7 @@ router.get('/v-heritage', (req, res) => {
   if(req.query.name != null || req.query.id != null){
     getModelByNameOrID(UniHeritage, req.query.name, req.query.id).then((uniHeritage) => {
       if(uniHeritage != null){
-        GeneralGathering.getUniHeritage(uniHeritage.id).then((uniHeritageData) => {
+        GeneralGathering.getUniHeritage(-1, uniHeritage.id).then((uniHeritageData) => {
           res.send(uniHeritageData);
         });
       } else {
@@ -189,7 +189,7 @@ router.get('/v-heritage', (req, res) => {
   }
 });
 router.get('/v-heritage/all', (req, res) => {
-  GeneralGathering.getAllUniHeritages().then((uniHeritages) => {
+  GeneralGathering.getAllUniHeritages(-1).then((uniHeritages) => {
     res.send(uniHeritages);
   });
 });
@@ -198,7 +198,7 @@ router.get('/heritage', (req, res) => {
   if(req.query.name != null || req.query.id != null){
     getModelByNameOrID(Heritage, req.query.name, req.query.id).then((heritage) => {
       if(heritage != null){
-        GeneralGathering.getHeritage(heritage.id).then((heritageData) => {
+        GeneralGathering.getHeritage(-1, heritage.id).then((heritageData) => {
           res.send(heritageData);
         });
       } else {
@@ -211,7 +211,7 @@ router.get('/heritage', (req, res) => {
   }
 });
 router.get('/heritage/all', (req, res) => {
-  GeneralGathering.getAllHeritages().then((heritages) => {
+  GeneralGathering.getAllHeritages(-1).then((heritages) => {
     res.send(heritages);
   });
 });
@@ -220,7 +220,7 @@ router.get('/background', (req, res) => {
   if(req.query.name != null || req.query.id != null){
     getModelByNameOrID(Background, req.query.name, req.query.id).then((background) => {
       if(background != null){
-        GeneralGathering.getBackground(background.id).then((backgroundData) => {
+        GeneralGathering.getBackground(-1, background.id).then((backgroundData) => {
           res.send(backgroundData);
         });
       } else {
@@ -233,7 +233,7 @@ router.get('/background', (req, res) => {
   }
 });
 router.get('/background/all', (req, res) => {
-  GeneralGathering.getAllBackgrounds().then((backgrounds) => {
+  GeneralGathering.getAllBackgrounds(-1).then((backgrounds) => {
     res.send(backgrounds);
   });
 });
@@ -242,7 +242,7 @@ router.get('/trait', (req, res) => {
   if(req.query.name != null || req.query.id != null){    
     getModelByNameOrID(Tag, req.query.name, req.query.id).then((tag) => {
       if(tag != null){
-        GeneralGathering.getTag(tag.id).then((tagData) => {
+        GeneralGathering.getTag(-1, tag.id).then((tagData) => {
           res.send(tagData);
         });
       } else {
@@ -255,7 +255,7 @@ router.get('/trait', (req, res) => {
   }
 });
 router.get('/trait/all', (req, res) => {
-  GeneralGathering.getAllTags().then((allTags) => {
+  GeneralGathering.getAllTags(-1).then((allTags) => {
     res.send(allTags);
   });
 });
@@ -264,7 +264,7 @@ router.get('/condition', (req, res) => {
   if(req.query.name != null || req.query.id != null){    
     getModelByNameOrID(Condition, req.query.name, req.query.id).then((condition) => {
       if(condition != null){
-        GeneralGathering.getCondition(condition.id).then((conditionData) => {
+        GeneralGathering.getCondition(-1, condition.id).then((conditionData) => {
           res.send(conditionData);
         });
       } else {
@@ -277,7 +277,7 @@ router.get('/condition', (req, res) => {
   }
 });
 router.get('/condition/all', (req, res) => {
-  GeneralGathering.getAllConditions().then((allConditions) => {
+  GeneralGathering.getAllConditions(-1).then((allConditions) => {
     res.send(allConditions);
   });
 });

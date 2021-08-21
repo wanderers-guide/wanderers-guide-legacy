@@ -5,19 +5,10 @@ const InvItem = require('../models/contentDB/InvItem');
 
 const CharStateUtils = require('./CharStateUtils');
 
-// Returns UserID or -1 if not logged in.
-function getUserID(socket){
-    if(socket.request.session.passport != null){
-        return socket.request.session.passport.user;
-    } else {
-        return -1;
-    }
-}
-
 module.exports = class AuthCheck {
 
-    static isLoggedIn(socket){
-      return (getUserID(socket) != -1);
+    static isLoggedIn(userID){
+      return (userID != -1);
     }
 
     static ownsCharacterAPI(userID, charID) {
@@ -29,8 +20,8 @@ module.exports = class AuthCheck {
         });
     }
 
-    static ownsCharacter(socket, charID) {
-        return Character.findOne({ where: { id: charID, userID: getUserID(socket) } })
+    static ownsCharacter(userID, charID) {
+        return Character.findOne({ where: { id: charID, userID: userID } })
         .then((character) => {
             return (character != null);
         }).catch((error) => {
@@ -38,28 +29,28 @@ module.exports = class AuthCheck {
         });
     }
 
-    static canViewCharacter(socket, charID) {
+    static canViewCharacter(userID, charID) {
         return Character.findOne({ where: { id: charID } })
         .then((character) => {
-          return CharStateUtils.isPublic(character) || character.userID === getUserID(socket);
+          return CharStateUtils.isPublic(character) || character.userID === userID;
         }).catch((error) => {
           return false;
         });
     }
 
-    static ownsInv(socket, invID) {
+    static ownsInv(userID, invID) {
         return Character.findOne({ where: { inventoryID: invID } })
         .then((character) => {
-            return AuthCheck.ownsCharacter(socket, character.id);
+            return AuthCheck.ownsCharacter(userID, character.id);
         }).catch((error) => {
             return false;
         });
     }
 
-    static ownsInvItem(socket, invItemID) {
+    static ownsInvItem(userID, invItemID) {
         return InvItem.findOne({ where: { id: invItemID } })
         .then((invItem) => {
-            return AuthCheck.ownsInv(socket, invItem.invID);
+            return AuthCheck.ownsInv(userID, invItem.invID);
         }).catch((error) => {
             return false;
         });
@@ -67,8 +58,8 @@ module.exports = class AuthCheck {
 
     /* -------- */
 
-    static getPermissions(socket){
-      return User.findOne({ where: { id: getUserID(socket)} })
+    static getPermissions(userID){
+      return User.findOne({ where: { id: userID} })
       .then((user) => {
         return {
           admin: user.isAdmin === 1,
@@ -92,32 +83,32 @@ module.exports = class AuthCheck {
       });
     }
 
-    static isAdmin(socket) {
-      return AuthCheck.getPermissions(socket).then((perms) => {
+    static isAdmin(userID) {
+      return AuthCheck.getPermissions(userID).then((perms) => {
         return perms.admin;
       });
     }
 
-    static isDeveloper(socket) {
-      return AuthCheck.getPermissions(socket).then((perms) => {
+    static isDeveloper(userID) {
+      return AuthCheck.getPermissions(userID).then((perms) => {
         return perms.developer;
       });
     }
 
-    static isLegend(socket) {
-      return AuthCheck.getPermissions(socket).then((perms) => {
+    static isLegend(userID) {
+      return AuthCheck.getPermissions(userID).then((perms) => {
         return perms.support.legend;
       });
     }
 
-    static isMember(socket) {
-      return AuthCheck.getPermissions(socket).then((perms) => {
+    static isMember(userID) {
+      return AuthCheck.getPermissions(userID).then((perms) => {
         return perms.support.member;
       });
     }
 
-    static isSupporter(socket) {
-      return AuthCheck.getPermissions(socket).then((perms) => {
+    static isSupporter(userID) {
+      return AuthCheck.getPermissions(userID).then((perms) => {
         return perms.support.supporter;
       });
     }

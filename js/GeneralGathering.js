@@ -31,6 +31,7 @@ const ItemRune = require('../models/contentDB/ItemRune');
 const SheetState = require("../models/contentDB/SheetState");
 
 const CharGathering = require('./CharGathering');
+const TempUnpublishedBooks = require('./TempUnpublishedBooks');
 
 const { Prisma } = require('./PrismaConnection');
 
@@ -46,8 +47,12 @@ function mapToObj(strMap) {
 
 module.exports = class GeneralGathering {
 
-    static getTag(tagID, homebrewID=null) {
-      return Tag.findOne({ where: { id: tagID, homebrewID: { [Op.or]: [null,homebrewID] } } })
+    static getTag(userID, tagID, homebrewID=null) {
+      return Tag.findOne({
+        where: {
+          id: tagID, homebrewID: { [Op.or]: [null,homebrewID] },
+        }
+      })
       .then((tag) => {
         return {
           trait : tag,
@@ -55,25 +60,30 @@ module.exports = class GeneralGathering {
       });
     }
 
-    static getAllTags(homebrewID=null) {
+    static getAllTags(userID, homebrewID=null) {
       return Tag.findAll({
-        where: { isArchived: 0, homebrewID: { [Op.or]: [null,homebrewID] } },
+        where: {
+          isArchived: 0,
+          homebrewID: { [Op.or]: [null,homebrewID] }
+        },
         order: [['name', 'ASC'],]
       }).then((allTags) => {
         return allTags;
       });
     }
 
-    static getAllToggleables(homebrewID=null) {
+    static getAllToggleables(userID, homebrewID=null) {
       return SheetState.findAll({
-        where: { homebrewID: { [Op.or]: [null,homebrewID] } },
+        where: {
+          homebrewID: { [Op.or]: [null,homebrewID] }
+        },
         order: [['name', 'ASC'],]
       }).then((allToggleables) => {
         return allToggleables;
       });
     }
 
-    static getCondition(conditionID) {
+    static getCondition(userID, conditionID) {
       return Condition.findOne({ where: { id: conditionID } })
       .then((condition) => {
         return {
@@ -82,9 +92,14 @@ module.exports = class GeneralGathering {
       });
     }
 
-    static getAllClasses(homebrewID=null) {
+    static getAllClasses(userID, homebrewID=null) {
         return Class.findAll({
-          where: { homebrewID: { [Op.or]: [null,homebrewID] } }
+          where: {
+            homebrewID: { [Op.or]: [null,homebrewID] },
+            [Op.not]: [
+              { contentSrc: { [Op.or]: TempUnpublishedBooks.getSourcesArray(userID) } },
+            ]
+          }
         }).then((classes) => {
             return ClassAbility.findAll({
                 order: [['level', 'ASC'],['name', 'ASC'],]
@@ -122,17 +137,30 @@ module.exports = class GeneralGathering {
         });
     }
 
-    static getAllClassesBasic(homebrewID=null) {
+    static getAllClassesBasic(userID, homebrewID=null) {
       return Class.findAll({
         order: [['name', 'ASC'],],
-        where: { homebrewID: { [Op.or]: [null,homebrewID] } }
+        where: {
+          homebrewID: { [Op.or]: [null,homebrewID] },
+          [Op.not]: [
+            { contentSrc: { [Op.or]: TempUnpublishedBooks.getSourcesArray(userID) } },
+          ]
+        }
       }).then((classes) => {
         return classes;
       });
     }
 
-    static getClass(classID, homebrewID=null) {
-      return Class.findOne({ where: { id: classID, homebrewID: { [Op.or]: [null,homebrewID] } } })
+    static getClass(userID, classID, homebrewID=null) {
+      return Class.findOne({
+        where: {
+          id: classID,
+          homebrewID: { [Op.or]: [null,homebrewID] },
+          [Op.not]: [
+            { contentSrc: { [Op.or]: TempUnpublishedBooks.getSourcesArray(userID) } },
+          ]
+        }
+      })
       .then((cClass) => {
         if(cClass == null) {return null;}
         return ClassAbility.findAll({
@@ -143,6 +171,9 @@ module.exports = class GeneralGathering {
                 { indivClassName: cClass.name }
             ],
             homebrewID: { [Op.or]: [null,homebrewID] },
+            [Op.not]: [
+              { contentSrc: { [Op.or]: TempUnpublishedBooks.getSourcesArray(userID) } },
+            ]
           },
         }).then((classAbilities) => {
           return {
@@ -153,17 +184,30 @@ module.exports = class GeneralGathering {
       });
     }
 
-    static getAllArchetypes(homebrewID=null) {
+    static getAllArchetypes(userID, homebrewID=null) {
         return Archetype.findAll({
           order: [['name', 'ASC'],],
-          where: { homebrewID: { [Op.or]: [null,homebrewID] } }
+          where: {
+            homebrewID: { [Op.or]: [null,homebrewID] },
+            [Op.not]: [
+              { contentSrc: { [Op.or]: TempUnpublishedBooks.getSourcesArray(userID) } },
+            ]
+          }
         }).then((archetypes) => {
             return archetypes;
         });
     }
 
-    static getArchetype(archetypeID, homebrewID=null) {
-      return Archetype.findOne({ where: { id: archetypeID, homebrewID: { [Op.or]: [null,homebrewID] } } })
+    static getArchetype(userID, archetypeID, homebrewID=null) {
+      return Archetype.findOne({
+        where: {
+          id: archetypeID,
+          homebrewID: { [Op.or]: [null,homebrewID] },
+          [Op.not]: [
+            { contentSrc: { [Op.or]: TempUnpublishedBooks.getSourcesArray(userID) } },
+          ]
+        }
+      })
       .then((archetype) => {
         return {
           archetype : archetype,
@@ -171,17 +215,30 @@ module.exports = class GeneralGathering {
       });
     }
 
-    static getAllUniHeritages(homebrewID=null) {
+    static getAllUniHeritages(userID, homebrewID=null) {
         return UniHeritage.findAll({
             order: [['name', 'ASC'],],
-            where: { homebrewID: { [Op.or]: [null,homebrewID] } }
+            where: {
+              homebrewID: { [Op.or]: [null,homebrewID] },
+              [Op.not]: [
+                { contentSrc: { [Op.or]: TempUnpublishedBooks.getSourcesArray(userID) } },
+              ]
+            }
         }).then((uniHeritages) => {
             return uniHeritages;
         });
     }
 
-    static getUniHeritage(uniHeritageID, homebrewID=null) {
-      return UniHeritage.findOne({ where: { id: uniHeritageID, homebrewID: { [Op.or]: [null,homebrewID] } } })
+    static getUniHeritage(userID, uniHeritageID, homebrewID=null) {
+      return UniHeritage.findOne({
+        where: {
+          id: uniHeritageID,
+          homebrewID: { [Op.or]: [null,homebrewID] },
+          [Op.not]: [
+            { contentSrc: { [Op.or]: TempUnpublishedBooks.getSourcesArray(userID) } },
+          ]
+        }
+      })
       .then((uniHeritage) => {
         return {
           heritage : uniHeritage,
@@ -189,17 +246,30 @@ module.exports = class GeneralGathering {
       });
     }
 
-    static getAllHeritages(homebrewID=null) {
+    static getAllHeritages(userID, homebrewID=null) {
         return Heritage.findAll({
             order: [['name', 'ASC'],],
-            where: { homebrewID: { [Op.or]: [null,homebrewID] } }
+            where: {
+              homebrewID: { [Op.or]: [null,homebrewID] },
+              [Op.not]: [
+                { contentSrc: { [Op.or]: TempUnpublishedBooks.getSourcesArray(userID) } },
+              ]
+            }
         }).then((heritages) => {
             return heritages;
         });
     }
 
-    static getHeritage(heritageID, homebrewID=null) {
-      return Heritage.findOne({ where: { id: heritageID, homebrewID: { [Op.or]: [null,homebrewID] } } })
+    static getHeritage(userID, heritageID, homebrewID=null) {
+      return Heritage.findOne({
+        where: {
+          id: heritageID,
+          homebrewID: { [Op.or]: [null,homebrewID] },
+          [Op.not]: [
+            { contentSrc: { [Op.or]: TempUnpublishedBooks.getSourcesArray(userID) } },
+          ]
+        }
+      })
       .then((heritage) => {
         return {
           heritage : heritage,
@@ -207,17 +277,30 @@ module.exports = class GeneralGathering {
       });
     }
 
-    static getAllAncestriesBasic(homebrewID=null) {
+    static getAllAncestriesBasic(userID, homebrewID=null) {
         return Ancestry.findAll({
             order: [['name', 'ASC'],],
-            where: { homebrewID: { [Op.or]: [null,homebrewID] } }
+            where: {
+              homebrewID: { [Op.or]: [null,homebrewID] },
+              [Op.not]: [
+                { contentSrc: { [Op.or]: TempUnpublishedBooks.getSourcesArray(userID) } },
+              ]
+            }
         }).then((ancestries) => {
             return ancestries;
         });
     }
 
-    static getAncestryBasic(ancestryID, homebrewID=null) {
-      return Ancestry.findOne({ where: { id: ancestryID, homebrewID: { [Op.or]: [null,homebrewID] } } })
+    static getAncestryBasic(userID, ancestryID, homebrewID=null) {
+      return Ancestry.findOne({
+        where: {
+          id: ancestryID,
+          homebrewID: { [Op.or]: [null,homebrewID] },
+          [Op.not]: [
+            { contentSrc: { [Op.or]: TempUnpublishedBooks.getSourcesArray(userID) } },
+          ]
+        }
+      })
       .then((ancestry) => {
         return {
           ancestry : ancestry,
@@ -225,8 +308,16 @@ module.exports = class GeneralGathering {
       });
     }
 
-    static getAncestry(ancestryID, homebrewID=null) {
-      return Ancestry.findOne({ where: { id: ancestryID, homebrewID: { [Op.or]: [null,homebrewID] } } })
+    static getAncestry(userID, ancestryID, homebrewID=null) {
+      return Ancestry.findOne({
+        where: {
+          id: ancestryID,
+          homebrewID: { [Op.or]: [null,homebrewID] },
+          [Op.not]: [
+            { contentSrc: { [Op.or]: TempUnpublishedBooks.getSourcesArray(userID) } },
+          ]
+        }
+      })
       .then((ancestry) => {
           return Heritage.findAll({
               where: {
@@ -235,6 +326,9 @@ module.exports = class GeneralGathering {
                     { indivAncestryName: ancestry.name }
                 ],
                 homebrewID: { [Op.or]: [null,homebrewID] },
+                [Op.not]: [
+                  { contentSrc: { [Op.or]: TempUnpublishedBooks.getSourcesArray(userID) } },
+                ]
               },
               order: [['name', 'ASC'],]
           }).then((heritages) => {
@@ -248,7 +342,7 @@ module.exports = class GeneralGathering {
                           .then((ancestFlaws) => {
                             return SenseType.findAll()
                             .then((senseTypes) => {
-                                return CharGathering.getAllPhysicalFeatures()
+                                return CharGathering.getAllPhysicalFeatures(userID)
                                 .then((physicalFeatures) => {
 
                                     let visionSense = null;
@@ -310,17 +404,30 @@ module.exports = class GeneralGathering {
       });
   }
 
-    static getAllBackgrounds(homebrewID=null) {
+    static getAllBackgrounds(userID, homebrewID=null) {
         return Background.findAll({
           order: [['name', 'ASC'],],
-          where: { homebrewID: { [Op.or]: [null,homebrewID] } }
+          where: {
+            homebrewID: { [Op.or]: [null,homebrewID] },
+            [Op.not]: [
+              { contentSrc: { [Op.or]: TempUnpublishedBooks.getSourcesArray(userID) } },
+            ]
+          }
         }).then((backgrounds) => {
             return backgrounds;
         });
     }
 
-    static getBackground(backgroundID, homebrewID=null) {
-      return Background.findOne({ where: { id: backgroundID, homebrewID: { [Op.or]: [null,homebrewID] } } })
+    static getBackground(userID, backgroundID, homebrewID=null) {
+      return Background.findOne({
+        where: {
+          id: backgroundID,
+          homebrewID: { [Op.or]: [null,homebrewID] },
+          [Op.not]: [
+            { contentSrc: { [Op.or]: TempUnpublishedBooks.getSourcesArray(userID) } },
+          ]
+        }
+      })
       .then((background) => {
         return {
           background : background,
@@ -328,7 +435,7 @@ module.exports = class GeneralGathering {
       });
     }
 
-    static async getAllFeats(homebrewID=null, feats=null, tags=null, cache=true) {
+    static async getAllFeats(userID, homebrewID=null, feats=null, tags=null, cache=true) {
       homebrewID = (homebrewID == null) ? null : parseInt(homebrewID);    
 
       if(feats==null){
@@ -354,6 +461,7 @@ module.exports = class GeneralGathering {
       let featMap = new Map();
 
       for (const feat of feats) {
+          if(TempUnpublishedBooks.getSourcesArray(userID).includes(feat.contentSrc)) { continue; }
           let fTags = [];
           /*
               If a feat has a genTypeName then it's a single feat for a class, ancestry, or uniHeritage.
@@ -395,8 +503,15 @@ module.exports = class GeneralGathering {
 
     }
 
-    static getFeat(featID, homebrewID=null) {
-      return Feat.findOne({ where: { id: featID, homebrewID: { [Op.or]: [null,homebrewID] } } })
+    static getFeat(userID, featID, homebrewID=null) {
+      return Feat.findOne({
+        where: {
+          id: featID,
+          homebrewID: { [Op.or]: [null,homebrewID] } },
+          [Op.not]: [
+            { contentSrc: { [Op.or]: TempUnpublishedBooks.getSourcesArray(userID) } },
+          ]
+        })
       .then((feat) => {
         return FeatTag.findAll({ where: { featID: featID } })
         .then((featTags) => {
@@ -416,7 +531,7 @@ module.exports = class GeneralGathering {
       });
     }
 
-    static async getAllSpells(homebrewID=null, spells=null, taggedSpells=null, tags=null, cache=true) {
+    static async getAllSpells(userID, homebrewID=null, spells=null, taggedSpells=null, tags=null, cache=true) {
       homebrewID = (homebrewID == null) ? null : parseInt(homebrewID);
 
       if(spells==null){
@@ -447,6 +562,7 @@ module.exports = class GeneralGathering {
       let spellMap = new Map();
     
       for (const spell of spells) {
+        if(TempUnpublishedBooks.getSourcesArray(userID).includes(spell.contentSrc)) { continue; }
         spellMap.set(spell.id, {Spell : spell, Tags : []});
       }
 
@@ -467,8 +583,16 @@ module.exports = class GeneralGathering {
       
     }
 
-    static getSpell(spellID, homebrewID=null) {
-      return Spell.findOne({ where: { id: spellID, homebrewID: { [Op.or]: [null,homebrewID] } } })
+    static getSpell(userID, spellID, homebrewID=null) {
+      return Spell.findOne({
+        where: {
+          id: spellID,
+          homebrewID: { [Op.or]: [null,homebrewID] },
+          [Op.not]: [
+            { contentSrc: { [Op.or]: TempUnpublishedBooks.getSourcesArray(userID) } },
+          ]
+        }
+      })
       .then((spell) => {
         return TaggedSpell.findAll({ where: { spellID: spellID } })
         .then((spellTags) => {
@@ -488,7 +612,7 @@ module.exports = class GeneralGathering {
       });
     }
 
-    static getAllSkills() {
+    static getAllSkills(userID) {
       return Skill.findAll()
       .then((skills) => {
         let skillMap = new Map();
@@ -502,21 +626,25 @@ module.exports = class GeneralGathering {
       });
     }
 
-    static getAllConditions() {
+    static getAllConditions(userID) {
       return Condition.findAll()
       .then((allConditions) => {
         return allConditions;
       });
     }
 
-    static getAllLanguages(homebrewID=null) {
-      return Language.findAll({ where: { homebrewID: { [Op.or]: [null,homebrewID] } } })
+    static getAllLanguages(userID, homebrewID=null) {
+      return Language.findAll({
+        where: {
+          homebrewID: { [Op.or]: [null,homebrewID] }
+        }
+      })
       .then((allLanguages) => {
         return allLanguages;
       });
     }
 
-    static async getAllItems(homebrewID=null, items=null, tags=null, cache=true){
+    static async getAllItems(userID, homebrewID=null, items=null, tags=null, cache=true){
       homebrewID = (homebrewID == null) ? null : parseInt(homebrewID);
 
       console.log('~~~~~~~~~~~ REQUESTING ALL ITEMS ~~~~~~~~~~~');
@@ -551,6 +679,7 @@ module.exports = class GeneralGathering {
 
       let itemMap = new Map();
       for(const item of items){
+        if(TempUnpublishedBooks.getSourcesArray(userID).includes(item.contentSrc)) { continue; }
 
         let tagArray = [];
         for(const taggedItem of item.taggedItems){
@@ -606,8 +735,15 @@ module.exports = class GeneralGathering {
 
     }
 
-    static getItem(itemID, homebrewID=null) {
-      return Item.findOne({ where: { id: itemID, homebrewID: { [Op.or]: [null,homebrewID] } } })
+    static getItem(userID, itemID, homebrewID=null) {
+      return Item.findOne({
+        where: {
+          id: itemID,
+          homebrewID: { [Op.or]: [null,homebrewID] } },
+          [Op.not]: [
+            { contentSrc: { [Op.or]: TempUnpublishedBooks.getSourcesArray(userID) } },
+          ]
+        })
       .then((item) => {
         return TaggedItem.findAll({ where: { itemID: itemID } })
         .then((itemTags) => {
@@ -647,15 +783,25 @@ module.exports = class GeneralGathering {
       });
     }
 
-    static getAllAncestries(includeTag, homebrewID=null) {
+    static getAllAncestries(userID, includeTag, homebrewID=null) {
 
         console.log('~~~~~~~~~~~ ADMIN - REQUESTING ALL ANCESTRIES ~~~~~~~~~~~');
 
         return Ancestry.findAll({
-          where: { homebrewID: { [Op.or]: [null,homebrewID] } }
+          where: {
+            homebrewID: { [Op.or]: [null,homebrewID] },
+            [Op.not]: [
+              { contentSrc: { [Op.or]: TempUnpublishedBooks.getSourcesArray(userID) } },
+            ]
+          }
         }).then((ancestries) => {
             return Heritage.findAll({
-              homebrewID: { [Op.or]: [null,homebrewID] },
+              where: {
+                homebrewID: { [Op.or]: [null,homebrewID] },
+                [Op.not]: [
+                  { contentSrc: { [Op.or]: TempUnpublishedBooks.getSourcesArray(userID) } },
+                ]
+              },
               order: [['name', 'ASC'],]
             })
             .then((heritages) => {
@@ -671,7 +817,7 @@ module.exports = class GeneralGathering {
                                 .then((tags) => {
                                     return SenseType.findAll()
                                     .then((senseTypes) => {
-                                        return CharGathering.getAllPhysicalFeatures()
+                                        return CharGathering.getAllPhysicalFeatures(userID)
                                         .then((physicalFeatures) => {
 
                                             let ancestryMap = new Map();

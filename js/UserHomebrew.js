@@ -13,33 +13,24 @@ function getUUIDv4() {
   });
 }
 
-// Returns UserID or -1 if not logged in.
-function getUserID(socket){
-  if(socket.request.session.passport != null){
-      return socket.request.session.passport.user;
-  } else {
-      return -1;
-  }
-}
-
 module.exports = class UserHomebrew {
 
-  static canAccessHomebrewBundle(socket, homebrewID){
+  static canAccessHomebrewBundle(userID, homebrewID){
     return UserHomebrewBundle.findOne({
-      where: { userID: getUserID(socket), homebrewID: homebrewID },
+      where: { userID: userID, homebrewID: homebrewID },
     }).then(userHomebrewBundle => {
       return HomebrewBundle.findOne({ where: { id: homebrewID } })
       .then((homebrewBundle) => {
-        return (userHomebrewBundle != null || homebrewBundle.userID === getUserID(socket) || homebrewBundle.isPublished === 1);
+        return (userHomebrewBundle != null || homebrewBundle.userID === userID || homebrewBundle.isPublished === 1);
       });
     });
   }
 
-  static createHomebrewBundle(socket) {
-    return AuthCheck.isMember(socket)
+  static createHomebrewBundle(userID) {
+    return AuthCheck.isMember(userID)
     .then((isMember) => {
       if(isMember){
-        return User.findOne({ where: { id: getUserID(socket) } })
+        return User.findOne({ where: { id: userID } })
         .then((user) => {
           return HomebrewBundle.create({
             userID: user.id,
@@ -58,11 +49,11 @@ module.exports = class UserHomebrew {
     });
   }
 
-  static updateHomebrewBundle(socket, homebrewID, inUpdateValues) {
-    return AuthCheck.isMember(socket)
+  static updateHomebrewBundle(userID, homebrewID, inUpdateValues) {
+    return AuthCheck.isMember(userID)
     .then((isMember) => {
       if(isMember){
-        return HomebrewBundle.findOne({ where: { id: homebrewID, userID: getUserID(socket) } })
+        return HomebrewBundle.findOne({ where: { id: homebrewID, userID: userID } })
         .then((homebrewBundle) => {
           if(homebrewBundle != null){
             let updateValues = {
@@ -74,10 +65,10 @@ module.exports = class UserHomebrew {
             return HomebrewBundle.update(updateValues, {
               where: {
                 id: homebrewBundle.id,
-                userID: getUserID(socket),
+                userID: userID,
               }
             }).then((result) => {
-              return HomebrewBundle.findOne({ where: { id: homebrewID, userID: getUserID(socket) } })
+              return HomebrewBundle.findOne({ where: { id: homebrewID, userID: userID } })
               .then((newHomebrewBundle) => {
                 return newHomebrewBundle;
               });
@@ -94,14 +85,14 @@ module.exports = class UserHomebrew {
     });
   }
 
-  static deleteHomebrewBundle(socket, homebrewID) {
-    return HomebrewBundle.findOne({ where: { id: homebrewID, userID: getUserID(socket) } })
+  static deleteHomebrewBundle(userID, homebrewID) {
+    return HomebrewBundle.findOne({ where: { id: homebrewID, userID: userID } })
     .then((homebrewBundle) => {
       if(homebrewBundle != null){
         return HomebrewBundle.destroy({
           where: {
             id: homebrewBundle.id,
-            userID: getUserID(socket)
+            userID: userID
           }
         }).then((result) => {
           return;
@@ -114,11 +105,11 @@ module.exports = class UserHomebrew {
     });
   }
 
-  static canEditHomebrew(socket, homebrewID) {
-    return AuthCheck.isMember(socket)
+  static canEditHomebrew(userID, homebrewID) {
+    return AuthCheck.isMember(userID)
     .then((isMember) => {
       if(isMember){
-        return HomebrewBundle.findOne({ where: { id: homebrewID, userID: getUserID(socket) } })
+        return HomebrewBundle.findOne({ where: { id: homebrewID, userID: userID } })
         .then((homebrewBundle) => {
             return homebrewBundle.isPublished === 0;
         }).catch((error) => {
@@ -130,11 +121,11 @@ module.exports = class UserHomebrew {
     });
   }
 
-  static getHomebrewBundles(socket) {
+  static getHomebrewBundles(userID) {
     HomebrewBundle.hasMany(UserHomebrewBundle, {foreignKey: 'homebrewID'});
     UserHomebrewBundle.belongsTo(HomebrewBundle, {foreignKey: 'homebrewID'});
     return HomebrewBundle.findAll({
-      where: { userID: getUserID(socket) },
+      where: { userID: userID },
       include: {
         model: UserHomebrewBundle,
         attributes:['homebrewID'],
@@ -144,17 +135,17 @@ module.exports = class UserHomebrew {
     });
   }
 
-  static getIncompleteHomebrewBundles(socket) {
-    return HomebrewBundle.findAll({ where: { userID: getUserID(socket), isPublished: 0 } })
+  static getIncompleteHomebrewBundles(userID) {
+    return HomebrewBundle.findAll({ where: { userID: userID, isPublished: 0 } })
     .then((homebrewBundles) => {
       return homebrewBundles;
     });
   }
 
-  static getHomebrewBundle(socket, homebrewID) {
+  static getHomebrewBundle(userID, homebrewID) {
     return HomebrewBundle.findOne({ where: { id: homebrewID } })
     .then((homebrewBundle) => {
-      return UserHomebrew.canAccessHomebrewBundle(socket, homebrewID)
+      return UserHomebrew.canAccessHomebrewBundle(userID, homebrewID)
       .then((canAccess) => {
         if(canAccess){
           return homebrewBundle;
@@ -165,44 +156,44 @@ module.exports = class UserHomebrew {
     });
   }
 
-  static hasHomebrewBundle(socket, homebrewID) {
+  static hasHomebrewBundle(userID, homebrewID) {
     return UserHomebrewBundle.findOne({
-      where: { userID: getUserID(socket), homebrewID: homebrewID }
+      where: { userID: userID, homebrewID: homebrewID }
     }).then(userBundle => {
       return (userBundle != null);
     });
   }
 
-  static ownsHomebrewBundle(socket, homebrewID) {
+  static ownsHomebrewBundle(userID, homebrewID) {
     return HomebrewBundle.findOne({
-      where: { id: homebrewID, userID: getUserID(socket) }
+      where: { id: homebrewID, userID: userID }
     }).then(homebrewBundle => {
       return (homebrewBundle != null);
     });
   }
 
-  static getCollectedHomebrewBundles(socket){
+  static getCollectedHomebrewBundles(userID){
     User.hasMany(UserHomebrewBundle, {foreignKey: 'userID'});
     UserHomebrewBundle.belongsTo(User, {foreignKey: 'userID'});
     HomebrewBundle.hasMany(UserHomebrewBundle, {foreignKey: 'homebrewID'});
     UserHomebrewBundle.belongsTo(HomebrewBundle, {foreignKey: 'homebrewID'});
 
     return UserHomebrewBundle.findAll({
-      where: { userID: getUserID(socket) },
+      where: { userID: userID },
       include: [HomebrewBundle]
     }).then(hBundles => {
       return hBundles;
     });
   }
 
-  static publishHomebrew(socket, homebrewID) {
-    return AuthCheck.isMember(socket)
+  static publishHomebrew(userID, homebrewID) {
+    return AuthCheck.isMember(userID)
     .then((isMember) => {
       if(isMember){
-        return HomebrewBundle.findOne({ where: { id: homebrewID, userID: getUserID(socket) } })
+        return HomebrewBundle.findOne({ where: { id: homebrewID, userID: userID } })
         .then((homebrewBundle) => {
             if(homebrewBundle.isPublished === 0){
-              return User.findOne({ where: { id: getUserID(socket) } })
+              return User.findOne({ where: { id: userID } })
               .then((user) => {
                 return HomebrewBundle.update({ isPublished: 1, authorName: user.username }, {
                   where: {
@@ -232,8 +223,8 @@ module.exports = class UserHomebrew {
     });
   }
 
-  static addToHomebrewCollection(socket, homebrewID, keyCode='None') {
-    return User.findOne({ where: { id: getUserID(socket)} })
+  static addToHomebrewCollection(userID, homebrewID, keyCode='None') {
+    return User.findOne({ where: { id: userID} })
     .then((user) => {
       if(user != null){
         return HomebrewBundle.findOne({ where: { id: homebrewID } })
@@ -286,8 +277,8 @@ module.exports = class UserHomebrew {
     });
   }
 
-  static removeFromHomebrewCollection(socket, homebrewID) {
-    return User.findOne({ where: { id: getUserID(socket)} })
+  static removeFromHomebrewCollection(userID, homebrewID) {
+    return User.findOne({ where: { id: userID} })
     .then((user) => {
       if(user != null){
         return UserHomebrewBundle.destroy({
@@ -321,8 +312,8 @@ module.exports = class UserHomebrew {
   
   // Key Management //
 
-  static addBundleKeys(socket, homebrewID, amount, isOneTimeUse){
-    return UserHomebrew.ownsHomebrewBundle(socket, homebrewID).then(ownsBundle => {
+  static addBundleKeys(userID, homebrewID, amount, isOneTimeUse){
+    return UserHomebrew.ownsHomebrewBundle(userID, homebrewID).then(ownsBundle => {
       if(ownsBundle) {
         let bundleKeyPromise = [];
         for (let i = 0; i < amount; i++) {
@@ -341,8 +332,8 @@ module.exports = class UserHomebrew {
     });
   }
 
-  static removeBundleKey(socket, homebrewID, keyCode){
-    return UserHomebrew.ownsHomebrewBundle(socket, homebrewID).then(ownsBundle => {
+  static removeBundleKey(userID, homebrewID, keyCode){
+    return UserHomebrew.ownsHomebrewBundle(userID, homebrewID).then(ownsBundle => {
       if(ownsBundle) {
         return HomebrewBundleKey.destroy({
           where: {
@@ -356,8 +347,8 @@ module.exports = class UserHomebrew {
     });
   }
 
-  static getBundleKeys(socket, homebrewID){
-    return UserHomebrew.ownsHomebrewBundle(socket, homebrewID).then(ownsBundle => {
+  static getBundleKeys(userID, homebrewID){
+    return UserHomebrew.ownsHomebrewBundle(userID, homebrewID).then(ownsBundle => {
       if(ownsBundle) {
         return HomebrewBundleKey.findAll({ where: { homebrewID: homebrewID } })
         .then((bundleKeys) => {
@@ -369,16 +360,16 @@ module.exports = class UserHomebrew {
 
   // Update Bundle //
 
-  static updateBundle(socket, homebrewID) {
-    return AuthCheck.isMember(socket)
+  static updateBundle(userID, homebrewID) {
+    return AuthCheck.isMember(userID)
     .then((isMember) => {
       if(isMember){
-        return UserHomebrew.ownsHomebrewBundle(socket, homebrewID).then(ownsBundle => {
+        return UserHomebrew.ownsHomebrewBundle(userID, homebrewID).then(ownsBundle => {
           if(ownsBundle) {
             return HomebrewBundle.update({ isPublished: 0 }, {
               where: {
                 id: homebrewID,
-                userID: getUserID(socket),
+                userID: userID,
               }
             }).then((result) => {
               return;

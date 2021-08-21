@@ -173,7 +173,7 @@ function handleCharacterOptions(character, hBundles, progessBundles) {
             'SECRETS-OF-MAGIC',
             this.checked);
     });
-    $("#contentSrc-SECRETS-OF-MAGIC").prop('checked', contentSourceArray.includes('SECRETS-OF-MAGIC'));
+    //$("#contentSrc-SECRETS-OF-MAGIC").prop('checked', contentSourceArray.includes('SECRETS-OF-MAGIC'));
 
     $("#contentSrc-GUNS-AND-GEARS").change(function(){
         socket.emit("requestCharacterSourceChange", 

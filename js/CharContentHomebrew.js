@@ -18,8 +18,8 @@ module.exports = class CharContentHomebrew {
       return newArray;
     }
 
-    static addHomebrewBundle(socket, charID, homebrewID){
-      return UserHomebrew.canAccessHomebrewBundle(socket, homebrewID)
+    static addHomebrewBundle(userID, charID, homebrewID){
+      return UserHomebrew.canAccessHomebrewBundle(userID, homebrewID)
       .then((canAccess) => {
         if(canAccess){
           return Character.findOne({ where: { id: charID } })

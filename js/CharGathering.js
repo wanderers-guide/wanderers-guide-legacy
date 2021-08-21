@@ -52,6 +52,8 @@ const CharDataMappingExt = require('./CharDataMappingExt');
 const CharContentSources = require('./CharContentSources');
 const CharContentHomebrew = require('./CharContentHomebrew');
 
+const TempUnpublishedBooks = require('./TempUnpublishedBooks');
+
 const UserHomebrew = require('./UserHomebrew');
 
 const CharSpells = require('./CharSpells');
@@ -138,30 +140,33 @@ function capitalizeWords(str){
 
 module.exports = class CharGathering {
 
-    static getAllMetadata(charID){
+    static getAllMetadata(userID, charID){
       return CharDataMappingModel.findAll({ where: { charID: charID } })
       .then((charMetaDatas) => {
         return charMetaDatas;
       });
     }
 
-    static getCalculatedStats(charID){
+    static getCalculatedStats(userID, charID){
       return CalculatedStat.findOne({ where: { charID: charID } })
       .then((calculatedStats) => {
         return calculatedStats;
       });
     }
 
-    static getSourceBooks(socket, character){
+    static getSourceBooks(userID, character){
       return Book.findAll({
         where: {
           codeName: {
             [Op.or]: CharContentSources.getSourceArray(character)
           },
+          [Op.not]: [
+            { codeName: { [Op.or]: TempUnpublishedBooks.getSourcesArray(userID) } },
+          ]
         }
       }).then((books) => {
-        return UserHomebrew.getCollectedHomebrewBundles(socket).then((hBundles) => {
-          return UserHomebrew.getIncompleteHomebrewBundles(socket).then((progessBundles) => {
+        return UserHomebrew.getCollectedHomebrewBundles(userID).then((hBundles) => {
+          return UserHomebrew.getIncompleteHomebrewBundles(userID).then((progessBundles) => {
             try {
               const homebrewBundleArray = JSON.parse(character.enabledHomebrew);
               for(const hBundle of hBundles) {
@@ -187,7 +192,7 @@ module.exports = class CharGathering {
       });
     }
 
-    static getAllClasses(charID) {
+    static getAllClasses(userID, charID) {
         return Character.findOne({ where: { id: charID} })
         .then((character) => {
             return Class.findAll({
@@ -198,6 +203,9 @@ module.exports = class CharGathering {
                     homebrewID: {
                       [Op.or]: CharContentHomebrew.getHomebrewArray(character)
                     },
+                    [Op.not]: [
+                      { contentSrc: { [Op.or]: TempUnpublishedBooks.getSourcesArray(userID) } },
+                    ]
                 }
             }).then((classes) => {
                 return ClassAbility.findAll({
@@ -209,6 +217,9 @@ module.exports = class CharGathering {
                         homebrewID: {
                           [Op.or]: CharContentHomebrew.getHomebrewArray(character)
                         },
+                        [Op.not]: [
+                          { contentSrc: { [Op.or]: TempUnpublishedBooks.getSourcesArray(userID) } },
+                        ]
                     }
                 })
                 .then((allClassAbilities) => {
@@ -245,10 +256,10 @@ module.exports = class CharGathering {
         });
     }
 
-    static async getAllClassFeatureOptions(charID, character=null) {
+    static async getAllClassFeatureOptions(userID, charID, character=null) {
 
       if(character==null){
-        character = await CharGathering.getCharacter(charID);
+        character = await CharGathering.getCharacter(userID, charID);
       }
 
       return await Prisma.classAbilities.findMany({
@@ -257,6 +268,7 @@ module.exports = class CharGathering {
           AND: [
             {OR: CharContentSources.getSourceArrayPrisma(character)},
             {OR: CharContentHomebrew.getHomebrewArrayPrisma(character)},
+            {NOT: TempUnpublishedBooks.getSourcesArrayPrisma(userID)}
           ],
         },
         orderBy: [{ level: 'asc' },{ name: 'asc' }],
@@ -264,14 +276,14 @@ module.exports = class CharGathering {
 
     }
 
-    static getAllExtraClassFeatures(charID){
+    static getAllExtraClassFeatures(userID, charID){
       return CharDataMapping.getDataAll(charID, 'classAbilityExtra', ClassAbility)
       .then((extraClassFeaturesArray) => {
         return extraClassFeaturesArray;
       });
     }
 
-    static getAllArchetypes(charID) {
+    static getAllArchetypes(userID, charID) {
         return Character.findOne({ where: { id: charID} })
         .then((character) => {
             return Archetype.findAll({
@@ -282,7 +294,10 @@ module.exports = class CharGathering {
                     homebrewID: {
                       [Op.or]: CharContentHomebrew.getHomebrewArray(character)
                     },
-                }
+                    [Op.not]: [
+                      { contentSrc: { [Op.or]: TempUnpublishedBooks.getSourcesArray(userID) } },
+                    ]
+                },
             })
             .then((archetypes) => {
                 return archetypes;
@@ -290,7 +305,7 @@ module.exports = class CharGathering {
         });
     }
 
-    static getAllUniHeritages(charID) {
+    static getAllUniHeritages(userID, charID) {
         return Character.findOne({ where: { id: charID} })
         .then((character) => {
             return UniHeritage.findAll({
@@ -301,6 +316,9 @@ module.exports = class CharGathering {
                     homebrewID: {
                       [Op.or]: CharContentHomebrew.getHomebrewArray(character)
                     },
+                    [Op.not]: [
+                      { contentSrc: { [Op.or]: TempUnpublishedBooks.getSourcesArray(userID) } },
+                    ]
                 },
                 order: [['name', 'ASC'],]
             })
@@ -310,10 +328,10 @@ module.exports = class CharGathering {
         });
     }
 
-    static async getAllFeats(charID, character=null, feats=null, tags=null) {
+    static async getAllFeats(userID, charID, character=null, feats=null, tags=null) {
 
       if(character==null) {
-        character = await CharGathering.getCharacter(charID);
+        character = await CharGathering.getCharacter(userID, charID);
       }
 
       if(feats==null){
@@ -322,6 +340,7 @@ module.exports = class CharGathering {
             AND: [
               {OR: CharContentSources.getSourceArrayPrisma(character)},
               {OR: CharContentHomebrew.getHomebrewArrayPrisma(character)},
+              {NOT: TempUnpublishedBooks.getSourcesArrayPrisma(userID)}
             ],
           },
           include: { featTags: true },
@@ -329,7 +348,7 @@ module.exports = class CharGathering {
       }
 
       if(tags==null){
-        tags = await CharGathering.getAllTags(charID, character);
+        tags = await CharGathering.getAllTags(userID, charID, character);
       }
 
 
@@ -377,10 +396,10 @@ module.exports = class CharGathering {
 
     }
 
-    static async getAllSpells(charID, character=null, spells=null, taggedSpells=null, tags=null) {
+    static async getAllSpells(userID, charID, character=null, spells=null, taggedSpells=null, tags=null) {
 
       if(character==null) {
-        character = await CharGathering.getCharacter(charID);
+        character = await CharGathering.getCharacter(userID, charID);
       }
 
       if(spells==null){
@@ -389,6 +408,7 @@ module.exports = class CharGathering {
             AND: [
               {OR: CharContentSources.getSourceArrayPrisma(character)},
               {OR: CharContentHomebrew.getHomebrewArrayPrisma(character)},
+              {NOT: TempUnpublishedBooks.getSourcesArrayPrisma(userID)}
             ],
           },
           orderBy: [{ level: 'asc' },{ name: 'asc' }],
@@ -400,7 +420,7 @@ module.exports = class CharGathering {
       }
 
       if(tags==null){
-        tags = await CharGathering.getAllTags(charID, character);
+        tags = await CharGathering.getAllTags(userID, charID, character);
       }
 
       // Processing Spells Data //
@@ -428,10 +448,10 @@ module.exports = class CharGathering {
 
     }
 
-    static async getAllItems(charID, character=null, items=null, tags=null){
+    static async getAllItems(userID, charID, character=null, items=null, tags=null){
 
         if(character==null){
-          character = await CharGathering.getCharacter(charID);
+          character = await CharGathering.getCharacter(userID, charID);
         }
         
         if(items==null){
@@ -440,6 +460,7 @@ module.exports = class CharGathering {
               AND: [
                 {OR: CharContentSources.getSourceArrayPrisma(character)},
                 {OR: CharContentHomebrew.getHomebrewArrayPrisma(character)},
+                {NOT: TempUnpublishedBooks.getSourcesArrayPrisma(userID)}
               ],
             },
             include: {
@@ -454,7 +475,7 @@ module.exports = class CharGathering {
         }
 
         if(tags==null){
-            tags = await CharGathering.getAllTags(charID, character);
+            tags = await CharGathering.getAllTags(userID, charID, character);
         }
 
         // Processing Item Data //
@@ -516,14 +537,14 @@ module.exports = class CharGathering {
         
     }
 
-    static getInvItem(invItemID){
+    static getInvItem(userID, invItemID){
       return InvItem.findOne({ where: { id: invItemID } })
       .then((invItem) => {
         return invItem;
       });
     }
 
-    static getInvIDFromInvItemID(invItemID){
+    static getInvIDFromInvItemID(userID, invItemID){
       return InvItem.findOne({ where: { id: invItemID } })
       .then((invItem) => {
         if(invItem != null){
@@ -534,7 +555,7 @@ module.exports = class CharGathering {
       });
     }
 
-    static getInventory(inventoryID){
+    static getInventory(userID, inventoryID){
         return Inventory.findOne({ where: { id: inventoryID} })
         .then((inventory) => {
             if(inventory == null) { return {}; }
@@ -550,7 +571,7 @@ module.exports = class CharGathering {
         });
     }
 
-    static async getAllSkills(charID, skills=null, profDataArray=null, loreDataArray=null) {
+    static async getAllSkills(userID, charID, skills=null, profDataArray=null, loreDataArray=null) {
 
         if(skills==null){
           skills = await Prisma.skills.findMany();
@@ -617,7 +638,7 @@ module.exports = class CharGathering {
 
     }
 
-    static getAllAncestries(charID, includeTag) {
+    static getAllAncestries(userID, charID, includeTag) {
 
         return Character.findOne({ where: { id: charID} })
         .then((character) => {
@@ -629,6 +650,9 @@ module.exports = class CharGathering {
                     homebrewID: {
                       [Op.or]: CharContentHomebrew.getHomebrewArray(character)
                     },
+                    [Op.not]: [
+                      { contentSrc: { [Op.or]: TempUnpublishedBooks.getSourcesArray(userID) } },
+                    ]
                 }
             })
             .then((ancestries) => {
@@ -640,6 +664,9 @@ module.exports = class CharGathering {
                         homebrewID: {
                           [Op.or]: CharContentHomebrew.getHomebrewArray(character)
                         },
+                        [Op.not]: [
+                          { contentSrc: { [Op.or]: TempUnpublishedBooks.getSourcesArray(userID) } },
+                        ]
                     },
                     order: [['name', 'ASC'],]
                 })
@@ -679,9 +706,9 @@ module.exports = class CharGathering {
                                           },
                                       }
                                     }).then((tags) => {
-                                        return CharGathering.getAllSenses()
+                                        return CharGathering.getAllSenses(userID)
                                         .then((senseTypes) => {
-                                            return CharGathering.getAllPhysicalFeatures()
+                                            return CharGathering.getAllPhysicalFeatures(userID)
                                             .then((physicalFeatures) => {
     
                                                 let ancestryMap = new Map();
@@ -795,7 +822,7 @@ module.exports = class CharGathering {
         });
     }
 
-    static getAllLanguages(charID) {
+    static getAllLanguages(userID, charID) {
         return Character.findOne({ where: { id: charID} })
         .then((character) => {
             return AncestryLanguage.findAll({ where: { ancestryID: character.ancestryID} })
@@ -827,7 +854,7 @@ module.exports = class CharGathering {
         });
     }
 
-    static async getAllCharConditions(charID, charConditions=null) {
+    static async getAllCharConditions(userID, charID, charConditions=null) {
 
       if(charConditions==null) {
         Condition.hasMany(CharCondition, {foreignKey: 'conditionID'});
@@ -854,64 +881,67 @@ module.exports = class CharGathering {
 
     }
 
-    static async getAllAncestriesBasic(charID, character=null) {
+    static async getAllAncestriesBasic(userID, charID, character=null) {
       if(character==null){
-        character = await CharGathering.getCharacter(charID);
+        character = await CharGathering.getCharacter(userID, charID);
       }
       return await Prisma.ancestries.findMany({
         where: {
           AND: [
             {OR: CharContentSources.getSourceArrayPrisma(character)},
             {OR: CharContentHomebrew.getHomebrewArrayPrisma(character)},
+            {NOT: TempUnpublishedBooks.getSourcesArrayPrisma(userID)}
           ],
         }
       });
     }
 
-    static async getAllBackgrounds(charID, character=null) {
+    static async getAllBackgrounds(userID, charID, character=null) {
       if(character==null){
-        character = await CharGathering.getCharacter(charID);
+        character = await CharGathering.getCharacter(userID, charID);
       }
       return await Prisma.backgrounds.findMany({
         where: {
           AND: [
             {OR: CharContentSources.getSourceArrayPrisma(character)},
             {OR: CharContentHomebrew.getHomebrewArrayPrisma(character)},
+            {NOT: TempUnpublishedBooks.getSourcesArrayPrisma(userID)}
           ],
         }
       });
     }
 
-    static async getAllUnselectedData(charID){
+    static async getAllUnselectedData(userID, charID){
       return await CharDataMapping.getDataAll(charID,"unselectedData",null);
     }
 
-    static async getAllPhysicalFeatures() {
+    static async getAllPhysicalFeatures(userID) {
       return await Prisma.physicalFeatures.findMany();
     }
 
-    static async getAllSenses() {
+    static async getAllSenses(userID) {
       return await Prisma.senseTypes.findMany();
     }
 
-    static async getAllDomains(charID, character=null) {
+    static async getAllDomains(userID, charID, character=null) {
       if(character==null){
-        character = await CharGathering.getCharacter(charID);
+        character = await CharGathering.getCharacter(userID, charID);
       }
       return await Prisma.domains.findMany({
         where: {
           AND: [
             {OR: CharContentSources.getSourceArrayPrisma(character)},
             {OR: CharContentHomebrew.getHomebrewArrayPrisma(character)},
+            {NOT: TempUnpublishedBooks.getSourcesArrayPrisma(userID)}
           ],
         },
         orderBy: [{ name: 'asc' }],
       });
     }
 
-    static async getAllTags(charID, character=null) {
+    static async getAllTags(userID, charID, character=null) {
       if(character==null){
-        character = await CharGathering.getCharacter(charID);
+        character = await CharGathering.getCharacter(userID, charID);
       }
       return await Prisma.tags.findMany({
         where: {
@@ -921,7 +951,7 @@ module.exports = class CharGathering {
       });
     }
 
-    static async getResistancesAndVulnerabilities(charID, resistancesDataArray=null, vulnerabilitiesDataArray=null) {
+    static async getResistancesAndVulnerabilities(userID, charID, resistancesDataArray=null, vulnerabilitiesDataArray=null) {
 
       if(resistancesDataArray==null){
         resistancesDataArray = await CharDataMappingExt.getDataAllResistance(charID);
@@ -935,7 +965,7 @@ module.exports = class CharGathering {
 
     }
 
-    static async getNoteFields(charID) {
+    static async getNoteFields(userID, charID) {
 
       let notesDataArray = await CharDataMapping.getDataAll(charID, 'notesField', null);
 
@@ -956,7 +986,7 @@ module.exports = class CharGathering {
 
     }
 
-    static getNoteField(charID, notesData) {
+    static getNoteField(userID, charID, notesData) {
         let noteFieldID = srcStructToCode(charID, 'notesField', notesData);
         return NoteField.findOne({ where: { id: noteFieldID, charID: charID } })
         .then((noteField) => {
@@ -968,12 +998,12 @@ module.exports = class CharGathering {
         });
     }
 
-    static async getOtherSpeeds(charID) {
+    static async getOtherSpeeds(userID, charID) {
       return await CharDataMappingExt.getDataAllOtherSpeed(charID);
     }
 
     // Weapon, Armor, and Critical Specializations
-    static async getSpecializations(charID, weapSpecialsDataArray=null, weapCriticalsDataArray=null, armorSpecialDataArray=null) {
+    static async getSpecializations(userID, charID, weapSpecialsDataArray=null, weapCriticalsDataArray=null, armorSpecialDataArray=null) {
 
       if(weapSpecialsDataArray==null){
         weapSpecialsDataArray = await CharDataMapping.getDataAll(charID, 'weaponSpecialization', null);
@@ -1006,12 +1036,12 @@ module.exports = class CharGathering {
 
     }
 
-    static async getWeaponFamiliarities(charID) {
+    static async getWeaponFamiliarities(userID, charID) {
       return await CharDataMapping.getDataAll(charID, 'weaponFamiliarity', null);
     }
 
 
-    static async getSpellData(charID){
+    static async getSpellData(userID, charID){
 
       // Normal Spells //
       let spellSlotsMap = await CharSpells.getSpellSlotMap(charID);
@@ -1076,21 +1106,21 @@ module.exports = class CharGathering {
 
     }
 
-    static getChoicesAbilityBonus(charID) {
+    static getChoicesAbilityBonus(userID, charID) {
         return CharDataMappingExt.getDataAllAbilityBonus(charID)
         .then((bonusDataArray) => {
             return bonusDataArray;
         });
     }
 
-    static getChoicesFeats(charID) {
+    static getChoicesFeats(userID, charID) {
         return CharDataMapping.getDataAll(charID, 'chosenFeats', Feat)
         .then((featDataArray) => {
             return featDataArray;
         });
     }
 
-    static getChoicesDomains(charID) {
+    static getChoicesDomains(userID, charID) {
         return CharDataMapping.getDataAll(charID, 'domains', Domain)
         .then((domainDataArray) => {
             return domainDataArray;
@@ -1098,9 +1128,9 @@ module.exports = class CharGathering {
     }
 
 
-    static async getAllLanguagesBasic(charID, character=null) {
+    static async getAllLanguagesBasic(userID, charID, character=null) {
       if(character==null){
-        character = await CharGathering.getCharacter(charID);
+        character = await CharGathering.getCharacter(userID, charID);
       }
       return await Prisma.languages.findMany({
         where: {
@@ -1109,14 +1139,14 @@ module.exports = class CharGathering {
       });
     }
 
-    static async getAllConditions(){
+    static async getAllConditions(userID){
       return await Prisma.conditions.findMany();
     }
 
 
-    static async getAncestry(charID, character=null) {
+    static async getAncestry(userID, charID, character=null) {
       if(character==null){
-        character = await CharGathering.getCharacter(charID);
+        character = await CharGathering.getCharacter(userID, charID);
       }
       if(character.ancestryID != null){
         return await Prisma.ancestries.findUnique({ where: { id: character.ancestryID } });
@@ -1125,9 +1155,9 @@ module.exports = class CharGathering {
       }
     }
 
-    static async getBackground(charID, character=null) {
+    static async getBackground(userID, charID, character=null) {
       if(character==null){
-        character = await CharGathering.getCharacter(charID);
+        character = await CharGathering.getCharacter(userID, charID);
       }
       if(character.backgroundID != null){
         return await Prisma.backgrounds.findUnique({ where: { id: character.backgroundID } });
@@ -1136,9 +1166,9 @@ module.exports = class CharGathering {
       }
     }
 
-    static async getHeritage(charID, character=null) {
+    static async getHeritage(userID, charID, character=null) {
       if(character==null){
-        character = await CharGathering.getCharacter(charID);
+        character = await CharGathering.getCharacter(userID, charID);
       }
       if(character.heritageID != null){
         return await Prisma.heritages.findUnique({ where: { id: character.heritageID } });
@@ -1149,7 +1179,7 @@ module.exports = class CharGathering {
       }
     }
 
-    static getClassBasic(character) {
+    static getClassBasic(userID, character) {
       return Class.findOne({
         where: {
           id: character.classID,
@@ -1159,10 +1189,10 @@ module.exports = class CharGathering {
       });
     }
 
-    static async getClass(charID, classID, character=null, cClass=null, keyBoostData=null) {
+    static async getClass(userID, charID, classID, character=null, cClass=null, keyBoostData=null) {
 
       if(character==null){
-        character = await CharGathering.getCharacter(charID);
+        character = await CharGathering.getCharacter(userID, charID);
       }
 
       if(cClass==null && classID!=null){
@@ -1193,6 +1223,9 @@ module.exports = class CharGathering {
               homebrewID: {
                 [Op.or]: CharContentHomebrew.getHomebrewArray(character)
               },
+              [Op.not]: [
+                { contentSrc: { [Op.or]: TempUnpublishedBooks.getSourcesArray(userID) } },
+              ],
               [Op.or]: [
                   { classID: cClass.id },
                   { indivClassName: cClass.name }
@@ -1211,7 +1244,7 @@ module.exports = class CharGathering {
 
     }
 
-    static async getCharacter(charID) {
+    static async getCharacter(userID, charID) {
       console.log('( FINDING CHARACTER )');
       return Character.findOne({ where: { id: charID } })
       .then((character) => {
@@ -1219,18 +1252,18 @@ module.exports = class CharGathering {
       });
     }
 
-    static getAllAbilityTypes() {
+    static getAllAbilityTypes(userID) {
         return ['Strength','Dexterity','Constitution','Intelligence','Wisdom','Charisma'];
     }
 
-    static getAncestryLanguages(ancestryID){
+    static getAncestryLanguages(userID, ancestryID){
         return AncestryLanguage.findAll({ where: { ancestryID: ancestryID } })
         .then((ancestLangs) => {
             return ancestLangs;
         });
     }
 
-    static getLanguageByName(charID, langName) {
+    static getLanguageByName(userID, charID, langName) {
       return Character.findOne({ where: { id: charID } })
       .then((character) => {
         return Language.findOne({
@@ -1246,7 +1279,7 @@ module.exports = class CharGathering {
       });
     }
 
-    static getFeatByName(charID, featName) {
+    static getFeatByName(userID, charID, featName) {
       return Character.findOne({ where: { id: charID } })
       .then((character) => {
         return Feat.findOne({
@@ -1262,7 +1295,7 @@ module.exports = class CharGathering {
       });
     }
 
-    static getSpellByName(charID, spellName) {
+    static getSpellByName(userID, charID, spellName) {
       return Character.findOne({ where: { id: charID } })
       .then((character) => {
         return Spell.findOne({
@@ -1278,7 +1311,7 @@ module.exports = class CharGathering {
       });
     }
 
-    static getSenseTypeByName(charID, senseTypeName) {
+    static getSenseTypeByName(userID, charID, senseTypeName) {
       return Character.findOne({ where: { id: charID } })
       .then((character) => {
         return SenseType.findOne({
@@ -1291,7 +1324,7 @@ module.exports = class CharGathering {
       });
     }
 
-    static getPhyFeatByName(charID, phyFeatName) {
+    static getPhyFeatByName(userID, charID, phyFeatName) {
       return Character.findOne({ where: { id: charID } })
       .then((character) => {
         return PhysicalFeature.findOne({
@@ -1304,7 +1337,7 @@ module.exports = class CharGathering {
       });
     }
 
-    static getClassFeatureByName(charID, featureName) {
+    static getClassFeatureByName(userID, charID, featureName) {
       return Character.findOne({ where: { id: charID } })
       .then((character) => {
         return ClassAbility.findOne({
@@ -1316,6 +1349,9 @@ module.exports = class CharGathering {
             homebrewID: {
               [Op.or]: CharContentHomebrew.getHomebrewArray(character)
             },
+            [Op.not]: [
+              { contentSrc: { [Op.or]: TempUnpublishedBooks.getSourcesArray(userID) } },
+            ]
           }
         })
         .then((classFeature) => {
@@ -1324,7 +1360,7 @@ module.exports = class CharGathering {
       });
     }
 
-    static getHeritageByName(charID, heritageName) {
+    static getHeritageByName(userID, charID, heritageName) {
       return Character.findOne({ where: { id: charID } })
       .then((character) => {
         return Heritage.findOne({
@@ -1336,6 +1372,9 @@ module.exports = class CharGathering {
             homebrewID: {
               [Op.or]: CharContentHomebrew.getHomebrewArray(character)
             },
+            [Op.not]: [
+              { contentSrc: { [Op.or]: TempUnpublishedBooks.getSourcesArray(userID) } },
+            ]
           }
         })
         .then((heritage) => {
@@ -1344,7 +1383,7 @@ module.exports = class CharGathering {
       });
     }
 
-    static getHeritagesByAncestryName(charID, ancestryName) {
+    static getHeritagesByAncestryName(userID, charID, ancestryName) {
       return Character.findOne({ where: { id: charID } })
       .then((character) => {
         return Ancestry.findOne({
@@ -1356,6 +1395,9 @@ module.exports = class CharGathering {
             homebrewID: {
               [Op.or]: CharContentHomebrew.getHomebrewArray(character)
             },
+            [Op.not]: [
+              { contentSrc: { [Op.or]: TempUnpublishedBooks.getSourcesArray(userID) } },
+            ]
           } 
         }).then((ancestry) => {
           if(ancestry == null) {return null;}
@@ -1371,6 +1413,9 @@ module.exports = class CharGathering {
               homebrewID: {
                 [Op.or]: CharContentHomebrew.getHomebrewArray(character)
               },
+              [Op.not]: [
+                { contentSrc: { [Op.or]: TempUnpublishedBooks.getSourcesArray(userID) } },
+              ]
             }
           }).then((heritages) => {
             return heritages;
@@ -1379,7 +1424,7 @@ module.exports = class CharGathering {
       });
     }
 
-    static getItem(charID, itemID) {
+    static getItem(userID, charID, itemID) {
       return Character.findOne({ where: { id: charID } })
       .then((character) => {
         return Item.findOne({
@@ -1395,7 +1440,7 @@ module.exports = class CharGathering {
       });
     }
 
-    static getAllAnimalCompanions(charID) {
+    static getAllAnimalCompanions(userID, charID) {
         return Character.findOne({ where: { id: charID} })
         .then((character) => {
             return AnimalCompanion.findAll({
@@ -1406,6 +1451,9 @@ module.exports = class CharGathering {
                     homebrewID: {
                       [Op.or]: CharContentHomebrew.getHomebrewArray(character)
                     },
+                    [Op.not]: [
+                      { contentSrc: { [Op.or]: TempUnpublishedBooks.getSourcesArray(userID) } },
+                    ]
                 }
             })
             .then((animalCompanions) => {
@@ -1414,7 +1462,7 @@ module.exports = class CharGathering {
         });
     }
 
-    static getAllSpecificFamiliars(charID) {
+    static getAllSpecificFamiliars(userID, charID) {
       return Character.findOne({ where: { id: charID} })
       .then((character) => {
           return SpecificFamiliar.findAll({
@@ -1425,6 +1473,9 @@ module.exports = class CharGathering {
                   homebrewID: {
                     [Op.or]: CharContentHomebrew.getHomebrewArray(character)
                   },
+                  [Op.not]: [
+                    { contentSrc: { [Op.or]: TempUnpublishedBooks.getSourcesArray(userID) } },
+                  ]
               }
           })
           .then((specificFamiliars) => {
@@ -1433,7 +1484,7 @@ module.exports = class CharGathering {
       });
     }
 
-    static getAllFamiliarAbilities(charID) {
+    static getAllFamiliarAbilities(userID, charID) {
       return Character.findOne({ where: { id: charID} })
       .then((character) => {
           return FamiliarAbility.findAll({
@@ -1444,6 +1495,9 @@ module.exports = class CharGathering {
                   homebrewID: {
                     [Op.or]: CharContentHomebrew.getHomebrewArray(character)
                   },
+                  [Op.not]: [
+                    { contentSrc: { [Op.or]: TempUnpublishedBooks.getSourcesArray(userID) } },
+                  ]
               }
           })
           .then((familiarAbilities) => {
@@ -1452,40 +1506,40 @@ module.exports = class CharGathering {
       });
   }
 
-  static getCharAnimalCompanions(charID) {
+  static getCharAnimalCompanions(userID, charID) {
     return CharAnimalCompanion.findAll({ where: { charID: charID} })
     .then((charAnimalComps) => {
       return charAnimalComps;
     });
   }
 
-  static getCharFamiliars(charID) {
+  static getCharFamiliars(userID, charID) {
     return CharFamiliar.findAll({ where: { charID: charID} })
     .then((charFamiliars) => {
       return charFamiliars;
     });
   }
 
-    static async getCompanionData(charID, allAnimalCompanions=null, charAnimalComps=null, allSpecificFamiliars=null, allFamiliarAbilities=null, charFamiliars=null){
+    static async getCompanionData(userID, charID, allAnimalCompanions=null, charAnimalComps=null, allSpecificFamiliars=null, allFamiliarAbilities=null, charFamiliars=null){
 
       if(allAnimalCompanions==null){
-        allAnimalCompanions = await CharGathering.getAllAnimalCompanions(charID);
+        allAnimalCompanions = await CharGathering.getAllAnimalCompanions(userID, charID);
       }
 
       if(charAnimalComps==null){
-        charAnimalComps = await CharGathering.getCharAnimalCompanions(charID);
+        charAnimalComps = await CharGathering.getCharAnimalCompanions(userID, charID);
       }
 
       if(allSpecificFamiliars==null){
-        allSpecificFamiliars = await CharGathering.getAllSpecificFamiliars(charID);
+        allSpecificFamiliars = await CharGathering.getAllSpecificFamiliars(userID, charID);
       }
 
       if(allFamiliarAbilities==null){
-        allFamiliarAbilities = await CharGathering.getAllFamiliarAbilities(charID);
+        allFamiliarAbilities = await CharGathering.getAllFamiliarAbilities(userID, charID);
       }
 
       if(charFamiliars==null){
-        charFamiliars = await CharGathering.getCharFamiliars(charID);
+        charFamiliars = await CharGathering.getCharFamiliars(userID, charID);
       }
 
       return {
@@ -1498,10 +1552,10 @@ module.exports = class CharGathering {
 
     }
 
-    static async getAbilityScores(charID, charAbilityScores=null, bonusDataArray=null) {
+    static async getAbilityScores(userID, charID, charAbilityScores=null, bonusDataArray=null) {
 
         if(charAbilityScores==null){
-          charAbilityScores = await CharGathering.getBaseAbilityScores(charID);
+          charAbilityScores = await CharGathering.getBaseAbilityScores(userID, charID);
         }
 
         if(bonusDataArray==null){
@@ -1560,7 +1614,7 @@ module.exports = class CharGathering {
 
     
 
-    static getProfs(charID) {
+    static getProfs(userID, charID) {
         return CharDataMappingExt.getDataAllProficiencies(charID)
         .then((profDataArray) => {
 
@@ -1585,8 +1639,8 @@ module.exports = class CharGathering {
         });
     }
 
-    static getFinalProfs(charID){
-      return CharGathering.getProfs(charID)
+    static getFinalProfs(userID, charID){
+      return CharGathering.getProfs(userID, charID)
       .then((profMap) => {
 
         let finalProfMap = new Map();
@@ -1617,10 +1671,10 @@ module.exports = class CharGathering {
     }
 
     
-    static async getSheetStates(charID, character=null) {
+    static async getSheetStates(userID, charID, character=null) {
 
       if(character==null) {
-        character = await CharGathering.getCharacter(charID);
+        character = await CharGathering.getCharacter(userID, charID);
       }
 
       return SheetState.findAll({
@@ -1632,12 +1686,15 @@ module.exports = class CharGathering {
           homebrewID: {
             [Op.or]: CharContentHomebrew.getHomebrewArray(character)
           },
+          [Op.not]: [
+            { contentSrc: { [Op.or]: TempUnpublishedBooks.getSourcesArray(userID) } },
+          ]
         }
       });
 
     }
 
-    static getBaseAbilityScores(charID) {
+    static getBaseAbilityScores(userID, charID) {
 
         let srcStruct = {
             sourceType: 'other',

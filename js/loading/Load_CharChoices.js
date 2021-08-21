@@ -24,28 +24,37 @@ function mapToObj(strMap) {
   return obj;
 }
 
-module.exports = async function(charID, character=null, background=null, ancestry=null, heritage=null, ancestries=null, charTagsArray=null, classDetails=null, featDataArray=null, bonusDataArray=null, choiceDataArray=null, profDataArray=null, innateSpellDataArray=null, langDataArray=null, senseDataArray=null, phyFeatDataArray=null, loreDataArray=null, scfsDataArray=null, focusPointDataArray=null, profMap=null, domains=null, domainDataArray=null, advancedDomainDataArray=null, extraClassFeatures=null, heritageEffectsArray=null) {
+// Returns UserID or -1 if not logged in.
+function getUserID(socket){
+  if(socket.request.session.passport != null){
+      return socket.request.session.passport.user;
+  } else {
+      return -1;
+  }
+}
+
+module.exports = async function(socket, charID, character=null, background=null, ancestry=null, heritage=null, ancestries=null, charTagsArray=null, classDetails=null, featDataArray=null, bonusDataArray=null, choiceDataArray=null, profDataArray=null, innateSpellDataArray=null, langDataArray=null, senseDataArray=null, phyFeatDataArray=null, loreDataArray=null, scfsDataArray=null, focusPointDataArray=null, profMap=null, domains=null, domainDataArray=null, advancedDomainDataArray=null, extraClassFeatures=null, heritageEffectsArray=null) {
 
   console.log('~ STARTING CHAR-CHOICES LOAD ~');
 
   if(character==null){
-    character = await CharGathering.getCharacter(charID);
+    character = await CharGathering.getCharacter(getUserID(socket), charID);
   }
 
   if(background==null){
-    background = await CharGathering.getBackground(charID, character);
+    background = await CharGathering.getBackground(getUserID(socket), charID, character);
   }
 
   if(ancestry==null){
-    ancestry = await CharGathering.getAncestry(charID, character);
+    ancestry = await CharGathering.getAncestry(getUserID(socket), charID, character);
   }
 
   if(heritage==null){
-    heritage = await CharGathering.getHeritage(charID, character);
+    heritage = await CharGathering.getHeritage(getUserID(socket), charID, character);
   }
 
   if(ancestries==null){
-    ancestries = await CharGathering.getAllAncestriesBasic(charID, character);
+    ancestries = await CharGathering.getAllAncestriesBasic(getUserID(socket), charID, character);
   }
 
   if(charTagsArray==null){
@@ -53,15 +62,15 @@ module.exports = async function(charID, character=null, background=null, ancestr
   }
 
   if(classDetails==null){
-    classDetails = await CharGathering.getClass(charID, character.classID, character, cClass=null, keyBoostData=null);
+    classDetails = await CharGathering.getClass(getUserID(socket), charID, character.classID, character, cClass=null, keyBoostData=null);
   }
 
   if(featDataArray==null){
-    featDataArray = await CharGathering.getChoicesFeats(charID);
+    featDataArray = await CharGathering.getChoicesFeats(getUserID(socket), charID);
   }
 
   if(bonusDataArray==null){
-    bonusDataArray = await CharGathering.getChoicesAbilityBonus(charID);
+    bonusDataArray = await CharGathering.getChoicesAbilityBonus(getUserID(socket), charID);
   }
 
   if(choiceDataArray==null){
@@ -101,15 +110,15 @@ module.exports = async function(charID, character=null, background=null, ancestr
   }
 
   if(profMap==null){
-    profMap = await CharGathering.getProfs(charID);
+    profMap = await CharGathering.getProfs(getUserID(socket), charID);
   }
 
   if(domains==null){
-    domains = await CharGathering.getAllDomains(charID, character);
+    domains = await CharGathering.getAllDomains(getUserID(socket), charID, character);
   }
 
   if(domainDataArray==null){
-    domainDataArray = await CharGathering.getChoicesDomains(charID);
+    domainDataArray = await CharGathering.getChoicesDomains(getUserID(socket), charID);
   }
 
   if(advancedDomainDataArray==null){
@@ -117,7 +126,7 @@ module.exports = async function(charID, character=null, background=null, ancestr
   }
 
   if(extraClassFeatures==null){
-    extraClassFeatures = await CharGathering.getAllExtraClassFeatures(charID);
+    extraClassFeatures = await CharGathering.getAllExtraClassFeatures(getUserID(socket), charID);
   }
 
   if(heritageEffectsArray==null){

@@ -21,7 +21,7 @@ function hasAccess(accessRights, neededAccessNum){
 // Metadata //
 router.get('/metadata', (req, res) => { // Read
   if(hasAccess(req.accessRights, 1)) {
-    CharGathering.getAllMetadata(req.charID).then((metaDatas) => {
+    CharGathering.getAllMetadata(-1, req.charID).then((metaDatas) => {
       res.send(metaDatas);
     });
   } else {
@@ -32,7 +32,7 @@ router.get('/metadata', (req, res) => { // Read
 // Current HP //
 router.get('/current-hp', (req, res) => { // Read
   if(hasAccess(req.accessRights, 1)) {
-    CharGathering.getCharacter(req.charID).then((character) => {
+    CharGathering.getCharacter(-1, req.charID).then((character) => {
       res.send(character.currentHealth+'');
     });
   } else {
@@ -58,7 +58,7 @@ router.put('/current-hp', (req, res) => { // Update
 // Temp HP //
 router.get('/temp-hp', (req, res) => { // Read
   if(hasAccess(req.accessRights, 1)) {
-    CharGathering.getCharacter(req.charID).then((character) => {
+    CharGathering.getCharacter(-1, req.charID).then((character) => {
       res.send(character.tempHealth+'');
     });
   } else {
@@ -84,7 +84,7 @@ router.put('/temp-hp', (req, res) => { // Update
 // Hero Points //
 router.get('/hero-points', (req, res) => { // Read
   if(hasAccess(req.accessRights, 1)) {
-    CharGathering.getCharacter(req.charID).then((character) => {
+    CharGathering.getCharacter(-1, req.charID).then((character) => {
       res.send(character.heroPoints+'');
     });
   } else {
@@ -110,7 +110,7 @@ router.put('/hero-points', (req, res) => { // Update
 // Experience //
 router.get('/experience', (req, res) => { // Read
   if(hasAccess(req.accessRights, 1)) {
-    CharGathering.getCharacter(req.charID).then((character) => {
+    CharGathering.getCharacter(-1, req.charID).then((character) => {
       res.send(character.experience+'');
     });
   } else {
@@ -136,7 +136,7 @@ router.put('/experience', (req, res) => { // Update
 // Conditions //
 router.get('/conditions', (req, res) => { // Read
   if(hasAccess(req.accessRights, 1)) {
-    CharGathering.getAllCharConditions(req.charID).then((conditionsData) => {
+    CharGathering.getAllCharConditions(-1, req.charID).then((conditionsData) => {
       res.send(conditionsData);
     });
   } else {
@@ -151,7 +151,7 @@ router.post('/conditions', (req, res) => { // Add
     if(!isNaN(conditionID)){
       if(isNaN(conditionValue)) { conditionValue = 1; }
       CharSaving.replaceCondition(req.charID, conditionID, conditionValue, null, null).then((result) => {
-        CharGathering.getAllCharConditions(req.charID).then((conditionsData) => {
+        CharGathering.getAllCharConditions(-1, req.charID).then((conditionsData) => {
           res.status(201).send(conditionsData);
         });
       });
@@ -168,7 +168,7 @@ router.delete('/conditions', (req, res) => { // Delete
     let conditionID = parseInt(req.query.id);
     if(!isNaN(conditionID)){
       CharSaving.removeCondition(req.charID, conditionID).then((result) => {
-        CharGathering.getAllCharConditions(req.charID).then((conditionsData) => {
+        CharGathering.getAllCharConditions(-1, req.charID).then((conditionsData) => {
           res.send(conditionsData);
         });
       });
@@ -183,8 +183,8 @@ router.delete('/conditions', (req, res) => { // Delete
 // Inventory //
 router.get('/inventory', (req, res) => { // Read
   if(hasAccess(req.accessRights, 1)) {
-    CharGathering.getCharacter(req.charID).then((character) => {
-      CharGathering.getInventory(character.inventoryID).then((invData) => {
+    CharGathering.getCharacter(-1, req.charID).then((character) => {
+      CharGathering.getInventory(-1, character.inventoryID).then((invData) => {
         res.send(invData);
       });
     });
@@ -199,7 +199,7 @@ router.put('/inventory/equip-armor-shield', (req, res) => { // Update
     let shieldInvItemID = parseInt(req.query.shield_inv_item_id);
     if(isNaN(armorInvItemID)) { armorInvItemID = null; }
     if(isNaN(shieldInvItemID)) { shieldInvItemID = null; }
-    CharGathering.getCharacter(req.charID).then((character) => {
+    CharGathering.getCharacter(-1, req.charID).then((character) => {
       CharSaving.updateInventory(character.inventoryID, armorInvItemID, shieldInvItemID).then((invData) => {
         res.sendStatus(200);
       });
@@ -215,8 +215,8 @@ router.post('/inventory/add-item', (req, res) => { // Add
     let itemQty = parseInt(req.query.quantity); // Optional
     if(!isNaN(itemID)){
       if(isNaN(itemQty)) { itemQty = 1; }
-      CharGathering.getCharacter(req.charID).then((character) => {
-        CharGathering.getItem(character.id, itemID).then((itemData) => {
+      CharGathering.getCharacter(-1, req.charID).then((character) => {
+        CharGathering.getItem(-1, character.id, itemID).then((itemData) => {
           if(itemData != null){
             CharSaving.addItemToInv(character.inventoryID, itemID, itemQty).then((invItem) => {
               res.status(201).send(invItem);
@@ -238,8 +238,8 @@ router.delete('/inventory/remove-item', (req, res) => { // Delete
   if(hasAccess(req.accessRights, 3)) {
     let invItemID = parseInt(req.query.inv_item_id);
     if(!isNaN(invItemID)){
-      CharGathering.getCharacter(req.charID).then((character) => {
-        CharGathering.getInvIDFromInvItemID(invItemID).then((invID) => {
+      CharGathering.getCharacter(-1, req.charID).then((character) => {
+        CharGathering.getInvIDFromInvItemID(-1, invItemID).then((invID) => {
           if(character.inventoryID === invID) {
             CharSaving.removeInvItemFromInv(invItemID).then((result) => {
               res.sendStatus(204);
@@ -266,8 +266,8 @@ router.put('/inventory/move-item', (req, res) => { // Update
     let movingInvItemID = parseInt(req.query.moving_inv_item_id);
     let bagInvItemID = parseInt(req.query.bag_inv_item_id); // Optional
     if(!isNaN(movingInvItemID)){
-      CharGathering.getCharacter(req.charID).then((character) => {
-        CharGathering.getInvIDFromInvItemID(movingInvItemID).then((movingItemInvID) => {
+      CharGathering.getCharacter(-1, req.charID).then((character) => {
+        CharGathering.getInvIDFromInvItemID(-1, movingInvItemID).then((movingItemInvID) => {
           if(character.inventoryID === movingItemInvID) {
 
             if(isNaN(bagInvItemID)) {
@@ -275,7 +275,7 @@ router.put('/inventory/move-item', (req, res) => { // Update
                 res.sendStatus(200);
               });
             } else {
-              CharGathering.getInvIDFromInvItemID(bagInvItemID).then((bagItemInvID) => {
+              CharGathering.getInvIDFromInvItemID(-1, bagInvItemID).then((bagItemInvID) => {
                 if(character.inventoryID === bagItemInvID) {
                   CharSaving.saveInvItemToNewBag(movingInvItemID, bagInvItemID, 0).then((result) => {
                     res.sendStatus(200);
@@ -311,8 +311,8 @@ router.put('/inventory/drop-item', (req, res) => { // Update
   if(hasAccess(req.accessRights, 2)) {
     let invItemID = parseInt(req.query.inv_item_id);
     if(!isNaN(invItemID)){
-      CharGathering.getCharacter(req.charID).then((character) => {
-        CharGathering.getInvIDFromInvItemID(invItemID).then((invID) => {
+      CharGathering.getCharacter(-1, req.charID).then((character) => {
+        CharGathering.getInvIDFromInvItemID(-1, invItemID).then((invID) => {
           if(character.inventoryID === invID) {
             CharSaving.saveInvItemToNewBag(invItemID, null, 1).then((result) => {
               res.sendStatus(200);
@@ -339,10 +339,10 @@ router.get('/item', (req, res) => { // Read
   if(hasAccess(req.accessRights, 1)) {
     let invItemID = parseInt(req.query.inv_item_id);
     if(!isNaN(invItemID)){
-      CharGathering.getCharacter(req.charID).then((character) => {
-        CharGathering.getInvIDFromInvItemID(invItemID).then((invID) => {
+      CharGathering.getCharacter(-1, req.charID).then((character) => {
+        CharGathering.getInvIDFromInvItemID(-1, invItemID).then((invID) => {
           if(character.inventoryID === invID) {
-            CharGathering.getInvItem(invItemID).then((invItem) => {
+            CharGathering.getInvItem(-1, invItemID).then((invItem) => {
               if(invItem != null){
                 res.send(invItem);
               } else {
@@ -371,8 +371,8 @@ router.put('/item/qty', (req, res) => { // Update
     let invItemID = parseInt(req.query.inv_item_id);
     let newValue = parseInt(req.query.value);
     if(!isNaN(invItemID) && !isNaN(newValue)){
-      CharGathering.getCharacter(req.charID).then((character) => {
-        CharGathering.getInvIDFromInvItemID(invItemID).then((invID) => {
+      CharGathering.getCharacter(-1, req.charID).then((character) => {
+        CharGathering.getInvIDFromInvItemID(-1, invItemID).then((invID) => {
           if(character.inventoryID === invID) {
             CharSaving.saveInvItemQty(invItemID, newValue).then((result) => {
               res.sendStatus(200);
@@ -397,7 +397,7 @@ router.put('/item/qty', (req, res) => { // Update
 // Spell //
 router.get('/spell', (req, res) => { // Read
   if(hasAccess(req.accessRights, 1)) {
-    CharGathering.getSpellData(req.charID).then((spellStruct) => {
+    CharGathering.getSpellData(-1, req.charID).then((spellStruct) => {
       res.send({
         spell_slots_map: spellStruct.SpellSlotObject,
         spell_books: spellStruct.SpellBookArray,
@@ -414,7 +414,7 @@ router.get('/spell', (req, res) => { // Read
 // Roll History //
 router.get('/roll-history', (req, res) => { // Read
   if(hasAccess(req.accessRights, 1)) {
-    CharGathering.getCharacter(req.charID).then((character) => {
+    CharGathering.getCharacter(-1, req.charID).then((character) => {
       if(character != null){
         let rollHistory = [];
         try {
@@ -434,7 +434,7 @@ router.get('/roll-history', (req, res) => { // Read
 // Calculated Stats //
 router.get('/calculated-stats', (req, res) => { // Read
   if(hasAccess(req.accessRights, 1)) {
-    CharGathering.getCalculatedStats(req.charID).then((calculatedStats) => {
+    CharGathering.getCalculatedStats(-1, req.charID).then((calculatedStats) => {
       if(calculatedStats != null){
         res.send(calculatedStats);
       } else {
@@ -450,7 +450,7 @@ router.get('/calculated-stats', (req, res) => { // Read
 
 router.get('/', (req, res) => {
   if(hasAccess(req.accessRights, 1)) {
-    CharGathering.getCharacter(req.charID).then((character) => {
+    CharGathering.getCharacter(-1, req.charID).then((character) => {
       res.send(character);
     });
   } else {

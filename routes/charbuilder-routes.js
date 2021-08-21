@@ -13,7 +13,7 @@ router.get('/basics', (req, res) => {
   .then((character) => {
     if(character != null){
 
-      CharGathering.getBaseAbilityScores(character.id)
+      CharGathering.getBaseAbilityScores(req.user.id, character.id)
       .then((charAbilityScores) => {
         let isPlayable = CharStateUtils.isPlayable(character);
 
@@ -47,7 +47,7 @@ router.get('/', (req, res) => {
   .then((character) => {
     if(character != null){
 
-      CharGathering.getBaseAbilityScores(character.id)
+      CharGathering.getBaseAbilityScores(req.user.id, character.id)
       .then((charAbilityScores) => {
         let isPlayable = CharStateUtils.isPlayable(character);
 

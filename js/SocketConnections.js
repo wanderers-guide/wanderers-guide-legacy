@@ -23,6 +23,7 @@ const CharSheetLoad = require('./loading/Load_CharSheet');
 const CharChoicesLoad = require('./loading/Load_CharChoices');
 const BuilderCoreLoad = require('./loading/Load_BuilderCore');
 const SearchLoad = require('./loading/Load_Search');
+const PlannerCoreLoad = require('./loading/Load_PlannerCore');
 
 const { Prisma, MemCache } = require('./PrismaConnection');
 
@@ -39,15 +40,25 @@ function mapToObj(strMap) {
   return obj;
 }
 
+// Returns UserID or -1 if not logged in.
+function getUserID(socket){
+  if(socket.request.session.passport != null){
+      return socket.request.session.passport.user;
+  } else {
+      return -1;
+  }
+}
+
 module.exports = class SocketConnections {
 
   static basicConnection(io) {
 
     io.on('connection', function(socket){
+      //const userID = getUserID(socket);
 
       /*
       socket.onAny((event, ...args) => {
-        if(!AuthCheck.isLoggedIn(socket)){
+        if(!AuthCheck.isLoggedIn(userID)){
           socket.emit('userNotLoggedIn', {});
         }
       });
@@ -61,16 +72,17 @@ module.exports = class SocketConnections {
 
     // Socket.IO Connections
     io.on('connection', function(socket){
+      const userID = getUserID(socket);
 
       socket.on('requestCharacterSheetInfo', function(charID){
-        AuthCheck.getPermissions(socket).then((perms) => {
-          AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+        AuthCheck.getPermissions(userID).then((perms) => {
+          AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
             if(ownsChar){
               CharSheetLoad(socket, charID).then((charInfo) => {
                 socket.emit('returnCharacterSheetInfo', charInfo, perms, false);
               });
             } else {
-              CharGathering.getCharacter(charID).then((character) => {
+              CharGathering.getCharacter(userID, charID).then((character) => {
                 if(CharStateUtils.isPublic(character)){
                   CharSheetLoad(socket, charID, character).then((charInfo) => {
                     socket.emit('returnCharacterSheetInfo', charInfo, perms, true);
@@ -85,10 +97,10 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestProfsAndSkills', function(charID){
-        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
-            CharGathering.getProfs(charID).then((profMap) => {
-              CharGathering.getAllSkills(charID).then((skillObject) => {
+            CharGathering.getProfs(userID, charID).then((profMap) => {
+              CharGathering.getAllSkills(userID, charID).then((skillObject) => {
                 socket.emit('returnProfsAndSkills', mapToObj(profMap), skillObject);
               });
             });
@@ -97,7 +109,7 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestUpdateCalculatedStats', function(charID, calcStatsStruct){
-        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
             CharSaving.updateCalculatedStats(charID, calcStatsStruct).then((result) => {
               socket.emit('returnUpdateCalculatedStats');
@@ -107,7 +119,7 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestNotesSave', function(charID, notes){
-        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
             CharSaving.saveNotes(charID, notes).then((result) => {
               socket.emit('returnNotesSave');
@@ -117,7 +129,7 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestCharInfoSave', function(charID, infoJSON){
-        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
             CharSaving.saveInfoJSON(charID, infoJSON).then((result) => {
               socket.emit('returnCharInfoSave');
@@ -127,7 +139,7 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestDetailsSave', function(charID, details){
-        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
             CharSaving.saveDetails(charID, details).then((result) => {
               socket.emit('returnDetailsSave');
@@ -137,7 +149,7 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestNotesFieldSave', function(charID, notesData, notesFieldControlShellID){
-        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
             CharSaving.saveNoteField(charID, notesData, notesData.placeholderText, notesData.text)
             .then((result) => {
@@ -148,7 +160,7 @@ module.exports = class SocketConnections {
       });
     
       socket.on('requestExperienceSave', function(charID, newExp){
-        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
             CharSaving.saveExp(charID, newExp).then((result) => {
               // Return nothing
@@ -158,7 +170,7 @@ module.exports = class SocketConnections {
       });
     
       socket.on('requestCurrentHitPointsSave', function(charID, currentHealth){
-        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
             CharSaving.saveCurrentHitPoints(charID, currentHealth).then((result) => {
               // Return nothing
@@ -167,7 +179,7 @@ module.exports = class SocketConnections {
         });
       });
       socket.on('requestTempHitPointsSave', function(charID, tempHealth){
-        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
             CharSaving.saveTempHitPoints(charID, tempHealth).then((result) => {
               // Return nothing
@@ -177,7 +189,7 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestCurrentStaminaPointsSave', function(charID, currentStamina){
-        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
             CharSaving.saveCurrentStaminaPoints(charID, currentStamina).then((result) => {
               // Return nothing
@@ -186,7 +198,7 @@ module.exports = class SocketConnections {
         });
       });
       socket.on('requestCurrentResolvePointsSave', function(charID, currentResolve){
-        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
             CharSaving.saveCurrentResolvePoints(charID, currentResolve).then((result) => {
               // Return nothing
@@ -196,7 +208,7 @@ module.exports = class SocketConnections {
       });
     
       socket.on('requestHeroPointsSave', function(charID, heroPoints){
-        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
             CharSaving.saveHeroPoints(charID, heroPoints).then((result) => {
               socket.emit('returnHeroPointsSave');
@@ -206,7 +218,7 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestRollHistorySave', function(charID, rollHistoryJSON){
-        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
             CharSaving.saveRollHistory(charID, rollHistoryJSON).then((result) => {
               socket.emit('returnRollHistorySave');
@@ -223,12 +235,13 @@ module.exports = class SocketConnections {
 
     // Socket.IO Connections
     io.on('connection', function(socket){
+      const userID = getUserID(socket);
 
       socket.on('requestInvUpdate', function(charID){
-        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
-            CharGathering.getCharacter(charID).then((character) => {
-              CharGathering.getInventory(character.inventoryID).then((invStruct) => {
+            CharGathering.getCharacter(userID, charID).then((character) => {
+              CharGathering.getInventory(userID, character.inventoryID).then((invStruct) => {
                 socket.emit('returnInvUpdate', invStruct);
               });
             });
@@ -237,11 +250,11 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestAddPropertyRune', function(invItemID, propRuneID, propRuneSlot){
-        AuthCheck.ownsInvItem(socket, invItemID).then((ownsItem) => {
+        AuthCheck.ownsInvItem(userID, invItemID).then((ownsItem) => {
           if(ownsItem){
-            CharGathering.getInvIDFromInvItemID(invItemID).then((invID) => {
+            CharGathering.getInvIDFromInvItemID(userID, invItemID).then((invID) => {
               CharSaving.addPropRune(invItemID, propRuneID, propRuneSlot).then(() => {
-                CharGathering.getInventory(invID).then((invStruct) => {
+                CharGathering.getInventory(userID, invID).then((invStruct) => {
                   socket.emit('returnInvItemUpdated', invStruct);
                 });
               });
@@ -251,11 +264,11 @@ module.exports = class SocketConnections {
       });
     
       socket.on('requestRemovePropertyRune', function(invItemID, propRuneSlot){
-        AuthCheck.ownsInvItem(socket, invItemID).then((ownsItem) => {
+        AuthCheck.ownsInvItem(userID, invItemID).then((ownsItem) => {
           if(ownsItem){
-            CharGathering.getInvIDFromInvItemID(invItemID).then((invID) => {
+            CharGathering.getInvIDFromInvItemID(userID, invItemID).then((invID) => {
               CharSaving.removePropRune(invItemID, propRuneSlot).then(() => {
-                CharGathering.getInventory(invID).then((invStruct) => {
+                CharGathering.getInventory(userID, invID).then((invStruct) => {
                   socket.emit('returnInvItemUpdated', invStruct);
                 });
               });
@@ -265,11 +278,11 @@ module.exports = class SocketConnections {
       });
     
       socket.on('requestAddFundamentalRune', function(invItemID, fundRuneID){
-        AuthCheck.ownsInvItem(socket, invItemID).then((ownsItem) => {
+        AuthCheck.ownsInvItem(userID, invItemID).then((ownsItem) => {
           if(ownsItem){
-            CharGathering.getInvIDFromInvItemID(invItemID).then((invID) => {
+            CharGathering.getInvIDFromInvItemID(userID, invItemID).then((invID) => {
               CharSaving.addFundRune(invItemID, fundRuneID).then(() => {
-                CharGathering.getInventory(invID).then((invStruct) => {
+                CharGathering.getInventory(userID, invID).then((invStruct) => {
                   socket.emit('returnAddFundamentalRune', invItemID, invStruct);
                 });
               });
@@ -279,11 +292,11 @@ module.exports = class SocketConnections {
       });
     
       socket.on('requestRemoveFundamentalRune', function(invItemID, fundRuneID){
-        AuthCheck.ownsInvItem(socket, invItemID).then((ownsItem) => {
+        AuthCheck.ownsInvItem(userID, invItemID).then((ownsItem) => {
           if(ownsItem){
-            CharGathering.getInvIDFromInvItemID(invItemID).then((invID) => {
+            CharGathering.getInvIDFromInvItemID(userID, invItemID).then((invID) => {
               CharSaving.removeFundRune(invItemID, fundRuneID).then(() => {
-                CharGathering.getInventory(invID).then((invStruct) => {
+                CharGathering.getInventory(userID, invID).then((invStruct) => {
                   socket.emit('returnInvItemUpdated', invStruct);
                 });
               });
@@ -293,7 +306,7 @@ module.exports = class SocketConnections {
       });
     
       socket.on('requestUpdateInventory', function(invID, equippedArmorInvItemID, equippedShieldInvItemID, equippedArmorCategory){
-        AuthCheck.ownsInv(socket, invID).then((ownsInv) => {
+        AuthCheck.ownsInv(userID, invID).then((ownsInv) => {
           if(ownsInv){
             CharSaving.updateInventory(invID, equippedArmorInvItemID, equippedShieldInvItemID, equippedArmorCategory).then(() => {
               // Return nothing
@@ -303,11 +316,11 @@ module.exports = class SocketConnections {
       });
     
       socket.on('requestAddItemToInv', function(charID, invID, itemID, quantity){
-        AuthCheck.ownsInv(socket, invID).then((ownsInv) => {
+        AuthCheck.ownsInv(userID, invID).then((ownsInv) => {
           if(ownsInv){
             CharSaving.addItemToInv(invID, itemID, quantity).then((invItem) => {
-              CharGathering.getInventory(invID).then((invStruct) => {
-                CharGathering.getItem(charID, itemID).then((item) => {
+              CharGathering.getInventory(userID, invID).then((invStruct) => {
+                CharGathering.getItem(userID, charID, itemID).then((item) => {
                   socket.emit('returnAddItemToInv', item, invItem, invStruct);
                 });
               });
@@ -317,11 +330,11 @@ module.exports = class SocketConnections {
       });
     
       socket.on('requestRemoveItemFromInv', function(invItemID){
-        AuthCheck.ownsInvItem(socket, invItemID).then((ownsItem) => {
+        AuthCheck.ownsInvItem(userID, invItemID).then((ownsItem) => {
           if(ownsItem){
-            CharGathering.getInvIDFromInvItemID(invItemID).then((invID) => {
+            CharGathering.getInvIDFromInvItemID(userID, invItemID).then((invID) => {
               CharSaving.removeInvItemFromInv(invItemID).then(() => {
-                CharGathering.getInventory(invID).then((invStruct) => {
+                CharGathering.getInventory(userID, invID).then((invStruct) => {
                   socket.emit('returnRemoveItemFromInv', invItemID, invStruct);
                 });
               });
@@ -331,11 +344,11 @@ module.exports = class SocketConnections {
       });
     
       socket.on('requestInvItemMoveBag', function(invItemID, bagInvItemID, isDropped){
-        AuthCheck.ownsInvItem(socket, invItemID).then((ownsItem) => {
+        AuthCheck.ownsInvItem(userID, invItemID).then((ownsItem) => {
           if(ownsItem){
-            CharGathering.getInvIDFromInvItemID(invItemID).then((invID) => {
+            CharGathering.getInvIDFromInvItemID(userID, invItemID).then((invID) => {
               CharSaving.saveInvItemToNewBag(invItemID, bagInvItemID, isDropped).then(() => {
-                CharGathering.getInventory(invID).then((invStruct) => {
+                CharGathering.getInventory(userID, invID).then((invStruct) => {
                   socket.emit('returnInvItemMoveBag', invItemID, invStruct);
                 });
               });
@@ -345,9 +358,9 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestAddItemToBag', function(itemID, quantity, bagInvItemID){
-        AuthCheck.ownsInvItem(socket, bagInvItemID).then((ownsItem) => {
+        AuthCheck.ownsInvItem(userID, bagInvItemID).then((ownsItem) => {
           if(ownsItem){
-            CharGathering.getInvIDFromInvItemID(bagInvItemID).then((invID) => {
+            CharGathering.getInvIDFromInvItemID(userID, bagInvItemID).then((invID) => {
               CharSaving.addItemToInv(invID, itemID, quantity).then((invItem) => {
                 CharSaving.saveInvItemToNewBag(invItem.id, bagInvItemID, 0).then(() => {
                   socket.emit('returnAddItemToBag');
@@ -359,11 +372,11 @@ module.exports = class SocketConnections {
       });
     
       socket.on('requestInvItemQtyChange', function(invItemID, newQty){
-        AuthCheck.ownsInvItem(socket, invItemID).then((ownsItem) => {
+        AuthCheck.ownsInvItem(userID, invItemID).then((ownsItem) => {
           if(ownsItem){
-            CharGathering.getInvIDFromInvItemID(invItemID).then((invID) => {
+            CharGathering.getInvIDFromInvItemID(userID, invItemID).then((invID) => {
               CharSaving.saveInvItemQty(invItemID, newQty).then(() => {
-                CharGathering.getInventory(invID).then((invStruct) => {
+                CharGathering.getInventory(userID, invID).then((invStruct) => {
                   socket.emit('returnInvItemUpdated', invStruct);
                 });
               });
@@ -373,11 +386,11 @@ module.exports = class SocketConnections {
       });
     
       socket.on('requestInvItemHPChange', function(invItemID, newHP){
-        AuthCheck.ownsInvItem(socket, invItemID).then((ownsItem) => {
+        AuthCheck.ownsInvItem(userID, invItemID).then((ownsItem) => {
           if(ownsItem){
-            CharGathering.getInvIDFromInvItemID(invItemID).then((invID) => {
+            CharGathering.getInvIDFromInvItemID(userID, invItemID).then((invID) => {
               CharSaving.saveInvItemHitPoints(invItemID, newHP).then(() => {
-                CharGathering.getInventory(invID).then((invStruct) => {
+                CharGathering.getInventory(userID, invID).then((invStruct) => {
                   socket.emit('returnInvItemUpdated', invStruct);
                 });
               });
@@ -387,11 +400,11 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestInvItemInvestChange', function(invItemID, isInvested){
-        AuthCheck.ownsInvItem(socket, invItemID).then((ownsItem) => {
+        AuthCheck.ownsInvItem(userID, invItemID).then((ownsItem) => {
           if(ownsItem){
-            CharGathering.getInvIDFromInvItemID(invItemID).then((invID) => {
+            CharGathering.getInvIDFromInvItemID(userID, invItemID).then((invID) => {
               CharSaving.saveInvItemInvest(invItemID, isInvested).then(() => {
-                CharGathering.getInventory(invID).then((invStruct) => {
+                CharGathering.getInventory(userID, invID).then((invStruct) => {
                   socket.emit('returnInvItemUpdated', invStruct);
                 });
               });
@@ -401,11 +414,11 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestCustomizeInvItem', function(invItemID, updateValues){
-        AuthCheck.ownsInvItem(socket, invItemID).then((ownsItem) => {
+        AuthCheck.ownsInvItem(userID, invItemID).then((ownsItem) => {
           if(ownsItem){
-            CharGathering.getInvIDFromInvItemID(invItemID).then((invID) => {
+            CharGathering.getInvIDFromInvItemID(userID, invItemID).then((invID) => {
               CharSaving.saveInvItemCustomize(invItemID, updateValues).then(() => {
-                CharGathering.getInventory(invID).then((invStruct) => {
+                CharGathering.getInventory(userID, invID).then((invStruct) => {
                   socket.emit('returnInvItemUpdated', invStruct);
                 });
               });
@@ -416,12 +429,12 @@ module.exports = class SocketConnections {
 
 
       socket.on('requestAddItemCustomizeToInv', function(charID, invID, itemID, updateValues){
-        AuthCheck.ownsInv(socket, invID).then((ownsInv) => {
+        AuthCheck.ownsInv(userID, invID).then((ownsInv) => {
           if(ownsInv){
             CharSaving.addItemToInv(invID, itemID, updateValues.quantity).then((invItem) => {
               CharSaving.saveInvItemCustomize(invItem.id, updateValues).then(() => {
-                CharGathering.getInventory(invID).then((invStruct) => {
-                  CharGathering.getItem(charID, itemID).then((item) => {
+                CharGathering.getInventory(userID, invID).then((invStruct) => {
+                  CharGathering.getItem(userID, charID, itemID).then((item) => {
                     socket.emit('returnAddItemToInv', item, invItem, invStruct);
                   });
                 });
@@ -439,12 +452,13 @@ module.exports = class SocketConnections {
 
     // Socket.IO Connections
     io.on('connection', function(socket){
+      const userID = getUserID(socket);
 
       socket.on('requestConditionChange', function(charID, conditionID, value, sourceText, parentID){
-        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
             CharSaving.replaceCondition(charID, conditionID, value, sourceText, parentID).then((result) => {
-              CharGathering.getAllCharConditions(charID)
+              CharGathering.getAllCharConditions(userID, charID)
               .then((conditionsObject) => {
                 socket.emit('returnUpdateConditionsMap', conditionsObject, true);
               });
@@ -454,10 +468,10 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestConditionRemove', function(charID, conditionID){
-        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
             CharSaving.removeCondition(charID, conditionID).then((didRemove) => {
-              CharGathering.getAllCharConditions(charID)
+              CharGathering.getAllCharConditions(userID, charID)
               .then((conditionsObject) => {
                 socket.emit('returnUpdateConditionsMap', conditionsObject, didRemove);
               });
@@ -475,9 +489,10 @@ module.exports = class SocketConnections {
 
     // Socket.IO Connections
     io.on('connection', function(socket){
+      const userID = getUserID(socket);
 
       socket.on('requestSpellAddToSpellBook', function(charID, spellSRC, spellID, spellLevel, spellType){
-        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
             CharSpells.addToSpellBook(charID, spellSRC, spellID, spellLevel, spellType, true).then((result) => {
               CharSpells.getSpellBook(charID, spellSRC, false).then((spellBookStruct) => {
@@ -489,7 +504,7 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestSpellRemoveFromSpellBook', function(charID, spellSRC, spellID, spellLevel){
-        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
             CharSpells.removeFromSpellBook(charID, spellSRC, spellID, spellLevel).then((result) => {
               CharSpells.getSpellBook(charID, spellSRC, false).then((spellBookStruct) => {
@@ -501,7 +516,7 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestSpellBookUpdate', function(charID, spellSRC){
-        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
             CharSpells.getSpellBook(charID, spellSRC, false).then((spellBookStruct) => {
               socket.emit('returnSpellBookUpdated', spellBookStruct);
@@ -511,7 +526,7 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestSpellTypeUpdate', function(charID, spellBookSpellID, spellType){
-        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
             CharSpells.changeSpellBookSpellType(charID, spellBookSpellID, spellType).then((result) => {
               socket.emit('returnSpellTypeUpdate');
@@ -521,7 +536,7 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestSpellSlotUpdate', function(charID, updateSlotObject){
-        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
             CharSpells.changeSpellSlot(charID, updateSlotObject).then((result) => {
               socket.emit('returnSpellSlotUpdate');
@@ -532,7 +547,7 @@ module.exports = class SocketConnections {
 
       socket.on('requestInnateSpellCastingUpdate', function(innateSpell, timesCast){
         if(innateSpell != null) {
-          AuthCheck.ownsCharacter(socket, innateSpell.charID).then((ownsChar) => {
+          AuthCheck.ownsCharacter(userID, innateSpell.charID).then((ownsChar) => {
             if(ownsChar){
               CharSaving.saveInnateSpellCastings(innateSpell, timesCast).then((result) => {
                 socket.emit('returnInnateSpellCastingUpdate');
@@ -544,7 +559,7 @@ module.exports = class SocketConnections {
 
       
       socket.on('requestFocusSpellUpdate', function(charID, srcStruct, spellSRC, spellID){
-        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
             CharDataMapping.setData(charID, 'focusSpell', srcStruct, spellSRC+"="+spellID)
             .then((result) => {
@@ -554,7 +569,7 @@ module.exports = class SocketConnections {
         });
       });
       socket.on('requestFocusPointUpdate', function(charID, srcStruct, unused){
-        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
             CharDataMapping.setData(charID, 'focusPoint', srcStruct, unused)
             .then((result) => {
@@ -573,9 +588,10 @@ module.exports = class SocketConnections {
 
     // Socket.IO Connections
     io.on('connection', function(socket){
+      const userID = getUserID(socket);
 
       socket.on('requestAddAnimalCompanion', function(charID, animalCompID){
-        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
             CharSaving.addAnimalCompanion(charID, animalCompID).then((charAnimalComp) => {
               socket.emit('returnAddAnimalCompanion', charAnimalComp);
@@ -585,7 +601,7 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestUpdateAnimalCompanion', function(charID, charAnimalCompID, updateValues){
-        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
             CharSaving.updateAnimalCompanion(charID, charAnimalCompID, updateValues).then(() => {
               socket.emit('returnUpdateAnimalCompanion');
@@ -595,7 +611,7 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestRemoveAnimalCompanion', function(charID, charAnimalCompID){
-        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
             CharSaving.deleteAnimalCompanion(charID, charAnimalCompID).then(() => {
               socket.emit('returnRemoveAnimalCompanion', charAnimalCompID);
@@ -607,7 +623,7 @@ module.exports = class SocketConnections {
 
 
       socket.on('requestAddFamiliar', function(charID){
-        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
             CharSaving.addFamiliar(charID).then((charFamiliar) => {
               socket.emit('returnAddFamiliar', charFamiliar);
@@ -617,7 +633,7 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestAddSpecificFamiliar', function(charID, specificStruct){
-        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
             CharSaving.addSpecificFamiliar(charID, specificStruct).then((charFamiliar) => {
               socket.emit('returnAddFamiliar', charFamiliar);
@@ -627,7 +643,7 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestUpdateFamiliar', function(charID, charFamiliarID, updateValues){
-        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
             CharSaving.updateFamiliar(charID, charFamiliarID, updateValues).then(() => {
               socket.emit('returnUpdateFamiliar');
@@ -637,7 +653,7 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestRemoveFamiliar', function(charID, charFamiliarID){
-        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
             CharSaving.deleteFamiliar(charID, charFamiliarID).then(() => {
               socket.emit('returnRemoveFamiliar', charFamiliarID);
@@ -655,14 +671,15 @@ module.exports = class SocketConnections {
 
     // Socket.IO Connections
     io.on('connection', function(socket){
+      const userID = getUserID(socket);
 
       socket.on('requestCharacterDetails', function(charID){
-        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
-            CharGathering.getCharacter(charID).then((character) => {
+            CharGathering.getCharacter(userID, charID).then((character) => {
               ClientAPI.getClientsWhoAccess(charID).then((clientsWithAccess) => {
-                UserHomebrew.getCollectedHomebrewBundles(socket).then((hBundles) => {
-                  UserHomebrew.getIncompleteHomebrewBundles(socket).then((progessBundles) => {
+                UserHomebrew.getCollectedHomebrewBundles(userID).then((hBundles) => {
+                  UserHomebrew.getIncompleteHomebrewBundles(userID).then((progessBundles) => {
                     socket.emit('returnCharacterDetails', character, clientsWithAccess, hBundles, progessBundles);
                   });
                 });
@@ -673,7 +690,7 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestCharacterRemoveClientAccess', function(charID, clientID){
-        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
             ClientAPI.removeAccessToken(charID, clientID).then((result) => {
               ClientAPI.getClientsWhoAccess(charID).then((clientsWithAccess) => {
@@ -685,7 +702,7 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestNameChange', function(charID, name){
-        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
             let validNameRegex = /^[^@#$%^*~=\/\\]+$/;
             if(validNameRegex.test(name)) {
@@ -698,7 +715,7 @@ module.exports = class SocketConnections {
       });
     
       socket.on('requestLevelChange', function(charID, charLevel){
-        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
             CharSaving.saveLevel(charID, charLevel).then((result) => {
               socket.emit('returnLevelChange');
@@ -708,7 +725,7 @@ module.exports = class SocketConnections {
       });
     
       socket.on('requestAbilityScoreChange', function(charID, abilSTR, abilDEX, abilCON, abilINT, abilWIS, abilCHA){
-        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
             CharSaving.saveAbilityScores(charID, abilSTR, abilDEX, abilCON, abilINT, abilWIS, abilCHA)
             .then((result) => {
@@ -719,7 +736,7 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestCharacterOptionChange', function(charID, optionName, value){
-        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
             CharSaving.saveCharacterOption(charID, optionName, value).then((result) => {
 
@@ -748,7 +765,7 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestCharacterSourceChange', function(charID, sourceName, isAdd){
-        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
             if(isAdd) {
               CharContentSources.addSource(charID, sourceName).then((result) => {
@@ -764,7 +781,7 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestCharacterSetSources', function(charID, contentSourceArray){
-        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
             CharContentSources.setSources(charID, contentSourceArray).then((result) => {
               socket.emit('returnCharacterSetSources');
@@ -774,10 +791,10 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestCharacterHomebrewChange', function(charID, homebrewID, isAdd){
-        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
             if(isAdd) {
-              CharContentHomebrew.addHomebrewBundle(socket, charID, homebrewID).then((result) => {
+              CharContentHomebrew.addHomebrewBundle(userID, charID, homebrewID).then((result) => {
                 socket.emit('returnCharacterHomebrewChange');
               });
             } else {
@@ -790,7 +807,7 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestCharacterCustomCodeBlockChange', function(charID, code){
-        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
             CharSaving.saveCustomCode(charID, code).then((result) => {
               socket.emit('returnCharacterCustomCodeBlockChange');
@@ -807,12 +824,13 @@ module.exports = class SocketConnections {
 
     // Socket.IO Connections
     io.on('connection', function(socket){
+      const userID = getUserID(socket);
 
       socket.on('requestBuilderPageAncestry', function(charID){
-        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
-            CharGathering.getAllAncestries(charID, false).then((ancestriesObject) => {
-              CharGathering.getAllUniHeritages(charID).then((uniHeritageArray) => {
+            CharGathering.getAllAncestries(userID, charID, false).then((ancestriesObject) => {
+              CharGathering.getAllUniHeritages(userID, charID).then((uniHeritageArray) => {
                 socket.emit('returnBuilderPageAncestry', ancestriesObject, uniHeritageArray);
               });
             });
@@ -823,10 +841,10 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestAncestryChange', function(charID, ancestryID){
-        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
             CharSaving.saveAncestry(charID, ancestryID).then((result) => {
-              CharChoicesLoad(charID).then((choiceStruct) => {
+              CharChoicesLoad(socket, charID).then((choiceStruct) => {
                 socket.emit('returnAncestryChange', choiceStruct);
               });
             });
@@ -835,7 +853,7 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestHeritageChange', function(charID, heritageID, isUniversal){
-        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
             CharSaving.saveHeritage(charID, heritageID, isUniversal).then((result) => {
               return CharTags.getTags(charID)
@@ -855,11 +873,12 @@ module.exports = class SocketConnections {
 
     // Socket.IO Connections
     io.on('connection', function(socket){
+      const userID = getUserID(socket);
 
       socket.on('requestBuilderPageBackground', function(charID){
-        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
-            CharGathering.getAllBackgrounds(charID).then((backgrounds) => {
+            CharGathering.getAllBackgrounds(userID, charID).then((backgrounds) => {
               socket.emit('returnBuilderPageBackground', backgrounds);
             });
           } else {
@@ -869,10 +888,10 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestBackgroundChange', function(charID, backgroundID){
-        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
             CharSaving.saveBackground(charID, backgroundID).then((result) => {
-              CharChoicesLoad(charID).then((choiceStruct) => {
+              CharChoicesLoad(socket, charID).then((choiceStruct) => {
                 socket.emit('returnBackgroundChange', choiceStruct);
               });
             });
@@ -888,11 +907,12 @@ module.exports = class SocketConnections {
 
     // Socket.IO Connections
     io.on('connection', function(socket){
+      const userID = getUserID(socket);
 
       socket.on('requestBuilderPageClass', function(charID){
-        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
-            CharGathering.getAllClasses(charID).then((classObject) => {
+            CharGathering.getAllClasses(userID, charID).then((classObject) => {
               socket.emit('returnBuilderPageClass', classObject);
             });
           } else {
@@ -902,9 +922,9 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestBuilderPageClass2', function(charID){
-        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
-            CharGathering.getAllClasses(charID).then((classObject) => {
+            CharGathering.getAllClasses(userID, charID).then((classObject) => {
               socket.emit('returnBuilderPageClass2', classObject);
             });
           } else {
@@ -914,10 +934,10 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestClassChange', function(charID, classID, classNum){
-        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
             CharSaving.saveClass(charID, classID, classNum).then((result) => {
-              CharChoicesLoad(charID).then((choiceStruct) => {
+              CharChoicesLoad(socket, charID).then((choiceStruct) => {
                 socket.emit('returnClassChange', choiceStruct, classNum);
               });
             });
@@ -934,12 +954,13 @@ module.exports = class SocketConnections {
 
     // Socket.IO Connections
     io.on('connection', function(socket){
+      const userID = getUserID(socket);
 
       socket.on('requestBuilderPageFinalize', function(charID){
-        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
-            CharGathering.getCharacter(charID).then((character) => {
-              CharGathering.getAllUnselectedData(charID).then((unselectedDataArray) => {
+            CharGathering.getCharacter(userID, userID, charID).then((character) => {
+              CharGathering.getAllUnselectedData(userID, charID).then((unselectedDataArray) => {
                 socket.emit('returnBuilderPageFinalize', character, unselectedDataArray);
               });
             });
@@ -950,7 +971,7 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestLangsAndTrainingsClear', function(charID, srcStruct, data){
-        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
             CharDataMapping.deleteData(charID, 'languages', srcStruct)
             .then((result) => {
@@ -964,7 +985,7 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestCustomCodeBlockDataClear', function(charID){
-        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
             CharDataMapping.deleteDataBySourceType(charID, 'custom-code')
             .then((result) => {
@@ -982,11 +1003,12 @@ module.exports = class SocketConnections {
 
     // Socket.IO Connections
     io.on('connection', function(socket){
+      const userID = getUserID(socket);
 
       socket.on('requestCharBuilderDetails', function(charID){
-        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
-            CharGathering.getCharacter(charID).then((character) => {
+            CharGathering.getCharacter(userID, charID).then((character) => {
               BuilderCoreLoad(socket, charID, character).then((bStruct) => {
                 socket.emit('returnCharBuilderDetails', character, bStruct.builderCore, bStruct.choiceStruct);
               });
@@ -998,7 +1020,7 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestUnselectedDataChange', function(charID, srcStruct, unselectedData){
-        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
             if(unselectedData == null){
               CharDataMapping.deleteDataOnly(charID, 'unselectedData', srcStruct)
@@ -1016,7 +1038,7 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestAbilityBonusChange', function(charID, srcStruct, abilityBonusStruct){
-        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
             if(abilityBonusStruct == null){
               CharDataMapping.deleteData(charID, 'abilityBonus', srcStruct)
@@ -1034,7 +1056,7 @@ module.exports = class SocketConnections {
       });
     
       socket.on('requestClassChoiceChange', function(charID, srcStruct, classChoiceStruct){
-        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
             if(classChoiceStruct == null){
               CharDataMapping.deleteData(charID, 'classChoice', srcStruct)
@@ -1052,7 +1074,7 @@ module.exports = class SocketConnections {
       });
     
       socket.on('requestProficiencyChange', function(charID, profChangePacket, profStruct){
-        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
             let srcStruct = profChangePacket.srcStruct;
             profChangePacket.profStruct = profStruct;
@@ -1072,7 +1094,7 @@ module.exports = class SocketConnections {
       });
     
       socket.on('requestFeatChange', function(charID, featChangePacket){
-        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
             let srcStruct = featChangePacket.srcStruct;
             if(featChangePacket.featID == null){
@@ -1091,7 +1113,7 @@ module.exports = class SocketConnections {
       });
     
       socket.on('requestLanguageChange', function(charID, srcStruct, langID){
-        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
             if(langID == null){
               CharDataMapping.deleteData(charID, 'languages', srcStruct)
@@ -1109,7 +1131,7 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestSensesChange', function(charID, srcStruct, senseID){
-        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
             if(senseID == null){
               CharDataMapping.deleteData(charID, 'senses', srcStruct)
@@ -1127,7 +1149,7 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestPhysicalFeaturesChange', function(charID, srcStruct, physicalFeatureID){
-        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
             if(physicalFeatureID == null){
               CharDataMapping.deleteData(charID, 'phyFeats', srcStruct)
@@ -1145,7 +1167,7 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestDomainChange', function(charID, srcStruct, domain){
-        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
             if(domain == null || domain.Domain == null){
               CharDataMapping.deleteData(charID, 'domains', srcStruct)
@@ -1167,7 +1189,7 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestDomainAdvancementChange', function(charID, srcStruct, domain){
-        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
             if(domain == null || domain.Domain == null){
               CharDataMapping.deleteData(charID, 'advancedDomains', srcStruct)
@@ -1196,9 +1218,10 @@ module.exports = class SocketConnections {
 
     // Socket.IO Connections
     io.on('connection', function(socket){
+      const userID = getUserID(socket);
 
       socket.on('requestLoreChange', function(charID, srcStruct, loreName, inputPacket, prof, sourceName){
-        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
             let profChangePacket = {
               srcStruct: srcStruct,
@@ -1235,7 +1258,7 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestAddClassFeature', function(charID, srcStruct, featureName, inputPacket){
-        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
             if(featureName == null){
 
@@ -1245,14 +1268,14 @@ module.exports = class SocketConnections {
               });
 
             } else {
-              CharGathering.getClassFeatureByName(charID, featureName)
+              CharGathering.getClassFeatureByName(userID, charID, featureName)
               .then((classFeature) => {
                 if(classFeature != null){
 
                   CharDataMapping.setData(charID, 'classAbilityExtra', srcStruct, classFeature.id)
                   .then((result) => {
                     if(classFeature.selectType == 'SELECTOR'){
-                      CharGathering.getAllClassFeatureOptions(charID)
+                      CharGathering.getAllClassFeatureOptions(userID, charID)
                       .then((allOptions) => {
                         socket.emit('returnAddClassFeature', srcStruct, classFeature, allOptions, inputPacket);
                       });
@@ -1273,7 +1296,7 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestSCFSChange', function(charID, srcStruct, classFeatureID, inputPacket){
-        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
             if(classFeatureID == null){
               CharDataMapping.deleteData(charID, 'scfs', srcStruct)
@@ -1293,15 +1316,15 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestFindClassFeatureForSCFS', function(charID, featureName, inputPacket){
-        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
 
-            CharGathering.getClassFeatureByName(charID, featureName)
+            CharGathering.getClassFeatureByName(userID, charID, featureName)
             .then((classFeature) => {
               if(classFeature != null){
 
                 if(classFeature.selectType == 'SELECTOR'){
-                  CharGathering.getAllClassFeatureOptions(charID)
+                  CharGathering.getAllClassFeatureOptions(userID, charID)
                   .then((allOptions) => {
                     socket.emit('returnFindClassFeatureForSCFS', classFeature, allOptions, inputPacket);
                   });
@@ -1321,9 +1344,9 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestAddHeritageEffect', function(charID, srcStruct, heritageName, inputPacket){
-        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
-            CharGathering.getHeritageByName(charID, heritageName)
+            CharGathering.getHeritageByName(userID, charID, heritageName)
             .then((heritage) => {
               if(heritage != null){
                 socket.emit('returnAddHeritageEffect', srcStruct, heritage, inputPacket);
@@ -1338,7 +1361,7 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestHeritageEffectsChange', function(charID, srcStruct, heritageID){
-        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
             if(heritageID == null){
               CharDataMapping.deleteData(charID, 'heritageExtra', srcStruct)
@@ -1358,9 +1381,9 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestFindHeritagesFromAncestryName', function(charID, srcStruct, ancestryName, inputPacket){
-        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
-            CharGathering.getHeritagesByAncestryName(charID, ancestryName)
+            CharGathering.getHeritagesByAncestryName(userID, charID, ancestryName)
             .then((heritages) => {
               if(heritages != null){
                 socket.emit('returnFindHeritagesFromAncestryName', srcStruct, heritages, inputPacket);
@@ -1375,7 +1398,7 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestWeaponFamiliarityChange', function(charID, srcStruct, trait){
-        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
             CharDataMapping.setData(charID, 'weaponFamiliarity', srcStruct, trait)
             .then((result) => {
@@ -1388,7 +1411,7 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestWeaponSpecializationChange', function(charID, srcStruct, type){
-        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
             if(type === 1 || type === 2 || type === 3) {
               CharDataMapping.setData(charID, 'weaponSpecialization', srcStruct, type)
@@ -1405,7 +1428,7 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestArmorSpecializationChange', function(charID, srcStruct, weapName){
-        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
             CharDataMapping.setData(charID, 'armorSpecialization', srcStruct, weapName)
             .then((result) => {
@@ -1418,7 +1441,7 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestWeaponCriticalSpecializationChange', function(charID, srcStruct, weapName){
-        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
             CharDataMapping.setData(charID, 'weaponCriticalSpecialization', srcStruct, weapName)
             .then((result) => {
@@ -1431,7 +1454,7 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestSpeedChange', function(charID, srcStruct, speedType, speedAmt){
-        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
             let amount = parseInt(speedAmt);
             if(!isNaN(amount) || speedAmt === 'LAND_SPEED') {
@@ -1449,7 +1472,7 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestCharTagChange', function(charID, srcStruct, charTag){
-        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
             CharTags.setTag(charID, srcStruct, charTag)
             .then((result) => {
@@ -1465,7 +1488,7 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestFeatChangeByName', function(charID, featChangePacket){
-        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
             if(featChangePacket.feat != null && featChangePacket.feat.Feat != null){
               let srcStruct = featChangePacket.srcStruct;
@@ -1483,9 +1506,9 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestLanguageChangeByName', function(charID, srcStruct, langName){
-        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
-            CharGathering.getLanguageByName(charID, langName)
+            CharGathering.getLanguageByName(userID, charID, langName)
             .then((language) => {
               if(language != null){
                 CharDataMapping.setData(charID, 'languages', srcStruct, language.id)
@@ -1503,9 +1526,9 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestSensesChangeByName', function(charID, srcStruct, senseName){
-        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
-            CharGathering.getSenseTypeByName(charID, senseName)
+            CharGathering.getSenseTypeByName(userID, charID, senseName)
             .then((senseType) => {
               if(senseType != null){
                 CharDataMapping.setData(charID, 'senses', srcStruct, senseType.id)
@@ -1521,9 +1544,9 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestPhysicalFeaturesChangeByName', function(charID, srcStruct, physicalFeatureName){
-        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
-            CharGathering.getPhyFeatByName(charID, physicalFeatureName)
+            CharGathering.getPhyFeatByName(userID, charID, physicalFeatureName)
             .then((physicalFeature) => {
               if(physicalFeature != null){
                 CharDataMapping.setData(charID, 'phyFeats', srcStruct, physicalFeature.id)
@@ -1540,7 +1563,7 @@ module.exports = class SocketConnections {
 
       // Give Spell Slots //
       socket.on('requestSpellCastingSlotChange', function(charID, srcStruct, spellSRC, spellcasting){
-        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
             CharSpells.setSpellCasting(charID, srcStruct, spellSRC, spellcasting)
             .then((spellSlots) => {
@@ -1557,7 +1580,7 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestSpellSlotChange', function(charID, srcStruct, spellSRC, spellLevel){
-        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
             if(spellLevel != null){
               CharSpells.setSpellSlot(charID, srcStruct, spellSRC, spellLevel)
@@ -1582,7 +1605,7 @@ module.exports = class SocketConnections {
 
       // Set Key Ability for Spell SRC //
       socket.on('requestKeySpellAbilityChange', function(charID, srcStruct, spellSRC, abilityScore){
-        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
             CharDataMapping.setData(charID, 'spellKeyAbilities', srcStruct, spellSRC+"="+abilityScore)
             .then((result) => {
@@ -1596,7 +1619,7 @@ module.exports = class SocketConnections {
 
       // Set Spellcasting Type for Spell SRC //
       socket.on('requestSpellCastingTypeChange', function(charID, srcStruct, spellSRC, castingType){
-        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
             CharDataMapping.setData(charID, 'spellCastingType', srcStruct, spellSRC+"="+castingType)
             .then((result) => {
@@ -1610,7 +1633,7 @@ module.exports = class SocketConnections {
 
       // Set Tradition for Spell SRC //
       socket.on('requestSpellTraditionChange', function(charID, srcStruct, spellSRC, spellList){
-        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
             if(spellList == 'OCCULT' || spellList == 'ARCANE' || spellList == 'DIVINE' || spellList == 'PRIMAL') {
               CharDataMapping.setData(charID, 'spellLists', srcStruct, spellSRC+"="+spellList)
@@ -1628,11 +1651,11 @@ module.exports = class SocketConnections {
 
       // Add Spell to Spellbook for Spell SRC //
       socket.on('requestBuilderSpellAddToSpellBook', function(charID, srcStruct, spellSRC, spellName, spellLevel){
-        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
             let sLevel = parseInt(spellLevel);
             if(!isNaN(sLevel)) {
-              CharGathering.getSpellByName(charID, spellName)
+              CharGathering.getSpellByName(userID, charID, spellName)
               .then((spell) => {
                 if(spell != null){
                   if(spell.level <= sLevel) {
@@ -1658,13 +1681,13 @@ module.exports = class SocketConnections {
 
       // Innate Spell //
       socket.on('requestInnateSpellChange', function(charID, srcStruct, spellName, spellLevel, spellTradition, timesPerDay){
-        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
             if(spellTradition == 'OCCULT' || spellTradition == 'ARCANE' || spellTradition == 'DIVINE' || spellTradition == 'PRIMAL') {
               let tPd = parseInt(timesPerDay);
               let sLevel = parseInt(spellLevel);
               if(!isNaN(tPd) && !isNaN(sLevel)) {
-                CharGathering.getSpellByName(charID, spellName)
+                CharGathering.getSpellByName(userID, charID, spellName)
                 .then((spell) => {
                   if(spell != null){
                     if(spell.level <= sLevel) {
@@ -1693,9 +1716,9 @@ module.exports = class SocketConnections {
 
       // Focus Spell //
       socket.on('requestFocusSpellChange', function(charID, srcStruct, spellSRC, spellName){
-        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
-            CharGathering.getSpellByName(charID, spellName)
+            CharGathering.getSpellByName(userID, charID, spellName)
             .then((spell) => {
               if(spell != null){
                 if(spell.isFocusSpell === 1){
@@ -1717,7 +1740,7 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestFocusPointChange', function(charID, srcStruct){
-        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
             CharDataMapping.setData(charID, 'focusPoint', srcStruct, '1')
             .then((result) => {
@@ -1731,7 +1754,7 @@ module.exports = class SocketConnections {
 
       // Resistances //
       socket.on('requestResistanceChange', function(charID, srcStruct, resistType, resistAmount){
-        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
             if(resistType == null || resistAmount == null){
               CharDataMapping.deleteData(charID, 'resistance', srcStruct)
@@ -1757,7 +1780,7 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestVulnerabilityChange', function(charID, srcStruct, vulnerType, vulnerAmount){
-        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
             if(vulnerType == null || vulnerAmount == null){
               CharDataMapping.deleteData(charID, 'vulnerability', srcStruct)
@@ -1783,7 +1806,7 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestNotesFieldChange', function(charID, srcStruct, placeholderText, noteChangePacket){
-        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
             CharDataMapping.getDataSingle(charID, 'notesField', srcStruct)
             .then((notesData) => {
@@ -1793,7 +1816,7 @@ module.exports = class SocketConnections {
                   socket.emit('returnNotesFieldChange', newNotesData, noteChangePacket);
                 });
               } else {
-                CharGathering.getNoteField(charID, notesData)
+                CharGathering.getNoteField(userID, charID, notesData)
                 .then((newNotesData) => {
                   socket.emit('returnNotesFieldChange', newNotesData, noteChangePacket);
                 });
@@ -1806,7 +1829,7 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestNotesFieldDelete', function(charID, srcStruct){
-        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
             CharDataMapping.deleteData(charID, 'notesField', srcStruct)
             .then((result) => {
@@ -1827,11 +1850,12 @@ module.exports = class SocketConnections {
 
     // Socket.IO Connections
     io.on('connection', function(socket){
+      const userID = getUserID(socket);
 
       socket.on('requestWSCChoices', function(charID, wscCode, srcStruct, locationID){
-        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
-            CharChoicesLoad(charID).then((choiceStruct) => {
+            CharChoicesLoad(socket, charID).then((choiceStruct) => {
               socket.emit('returnWSCChoices', wscCode, srcStruct, locationID, choiceStruct);
             });
           }
@@ -1840,12 +1864,12 @@ module.exports = class SocketConnections {
 
 
       socket.on('requestWSCMapsInit', function(charID){
-        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
-            CharGathering.getAllFeats(charID).then((featsObject) => {
-              CharGathering.getAllLanguages(charID).then((langsObject) => {
-                CharGathering.getAllSpells(charID).then((spellMap) => {
-                  CharGathering.getAllArchetypes(charID).then((archetypesArray) => {
+            CharGathering.getAllFeats(userID, charID).then((featsObject) => {
+              CharGathering.getAllLanguages(userID, charID).then((langsObject) => {
+                CharGathering.getAllSpells(userID, charID).then((spellMap) => {
+                  CharGathering.getAllArchetypes(userID, charID).then((archetypesArray) => {
                     socket.emit('returnWSCUpdateFeats', featsObject);
                     socket.emit('returnWSCUpdateLangs', langsObject);
                     socket.emit('returnWSCUpdateSpells', mapToObj(spellMap));
@@ -1860,18 +1884,18 @@ module.exports = class SocketConnections {
       });
     
       socket.on('requestWSCUpdateChoices', function(charID, updateType){
-        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
             if(updateType == 'ABILITY-BOOSTS'){
-              CharGathering.getChoicesAbilityBonus(charID).then((bonusDataArray) => {
+              CharGathering.getChoicesAbilityBonus(userID, charID).then((bonusDataArray) => {
                 socket.emit('returnWSCUpdateChoices', 'ABILITY-BOOSTS', bonusDataArray);
               });
             } else if(updateType == 'FEATS'){
-              CharGathering.getChoicesFeats(charID).then((featDataArray) => {
+              CharGathering.getChoicesFeats(userID, charID).then((featDataArray) => {
                 socket.emit('returnWSCUpdateChoices', 'FEATS', featDataArray);
               });
             } else if(updateType == 'DOMAINS'){
-              CharGathering.getChoicesDomains(charID).then((domainDataArray) => {
+              CharGathering.getChoicesDomains(userID, charID).then((domainDataArray) => {
                 socket.emit('returnWSCUpdateChoices', 'DOMAINS', domainDataArray);
               });
             } else {
@@ -1882,7 +1906,7 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestWSCAbilityBonusChange', function(charID, srcStruct, abilityBonusStruct, selectBoostControlShellClass){
-        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
             if(abilityBonusStruct == null){
               CharDataMapping.deleteData(charID, 'abilityBonus', srcStruct)
@@ -1900,7 +1924,7 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestWSCInnateSpellChange', function(charID, srcStruct, innateSpellStruct, selectControlShellClass){
-        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
             if(innateSpellStruct == null){
               CharDataMapping.deleteData(charID, 'innateSpell', srcStruct)
@@ -1908,7 +1932,7 @@ module.exports = class SocketConnections {
                 socket.emit('returnWSCInnateSpellChange', selectControlShellClass);
               });
             } else {
-              CharGathering.getSpellByName(charID, innateSpellStruct.name)
+              CharGathering.getSpellByName(userID, charID, innateSpellStruct.name)
               .then((spell) => {
                 if(spell != null){
                   CharDataMappingExt.setDataInnateSpell(charID, srcStruct, spell.id, innateSpellStruct.level, innateSpellStruct.tradition, innateSpellStruct.tPd)
@@ -1923,7 +1947,7 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestWSCCharTagChange', function(charID, srcStruct, charTag, selectControlShellClass, triggerReload){
-        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
             CharTags.setTag(charID, srcStruct, charTag)
             .then((result) => {
@@ -1939,11 +1963,11 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestWSCSrcStructDataClear', function(charID, srcStruct){
-        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
             CharDataMapping.deleteDataSNumChildren(charID, srcStruct)
             .then((result) => {
-              CharChoicesLoad(charID).then((choiceStruct) => {
+              CharChoicesLoad(socket, charID).then((choiceStruct) => {
                 socket.emit('returnWSCSrcStructDataClear', choiceStruct);
               });
             });
@@ -1959,6 +1983,7 @@ module.exports = class SocketConnections {
 
     // Socket.IO Connections
     io.on('connection', function(socket){
+      const userID = getUserID(socket);
 
       socket.on('requestCharImport', function(charExportData){
         CharImport.importData(socket, charExportData)
@@ -1968,9 +1993,9 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestCharExport', function(charID){
-        AuthCheck.canViewCharacter(socket, charID).then((canViewChar) => {
+        AuthCheck.canViewCharacter(userID, charID).then((canViewChar) => {
           if(canViewChar){
-            CharExport.getExportData(charID)
+            CharExport.getExportData(userID, charID)
             .then((charExportData) => {
               socket.emit('returnCharExport', charExportData);
             });
@@ -1979,9 +2004,9 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestCharCopy', function(charID){
-        AuthCheck.canViewCharacter(socket, charID).then((canViewChar) => {
+        AuthCheck.canViewCharacter(userID, charID).then((canViewChar) => {
           if(canViewChar){
-            CharExport.getExportData(charID)
+            CharExport.getExportData(userID, charID)
             .then((charExportData) => {
               CharImport.importData(socket, JSON.parse(JSON.stringify(charExportData)))
               .then((result) => {
@@ -1993,11 +2018,11 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestCharExportPDFInfo', function(charID){
-        AuthCheck.canViewCharacter(socket, charID).then((canViewChar) => {
+        AuthCheck.canViewCharacter(userID, charID).then((canViewChar) => {
           if(canViewChar){
-            CharExport.getExportData(charID)
+            CharExport.getExportData(userID, charID)
             .then((charExportData) => {
-              CharGathering.getAllFeats(charID).then((featsObject) => {
+              CharGathering.getAllFeats(userID, charID).then((featsObject) => {
                 socket.emit('returnCharExportPDFInfo', charExportData, { featsObject });
               });
             });
@@ -2013,6 +2038,7 @@ module.exports = class SocketConnections {
 
     // Socket.IO Connections
     io.on('connection', function(socket){
+      const userID = getUserID(socket);
 
       socket.on('requestBackgroundReport', function(backgroundID, email, message){
         if(message.length > 5 && GeneralUtils.validateEmail(email)) {
@@ -2071,9 +2097,10 @@ module.exports = class SocketConnections {
 
     // Socket.IO Connections
     io.on('connection', function(socket){
+      const userID = getUserID(socket);
 
       socket.on('requestAdminAddAncestry', function(data){
-        AuthCheck.isAdmin(socket).then((isAdmin) => {
+        AuthCheck.isAdmin(userID).then((isAdmin) => {
           if(isAdmin){
             AdminCreation.addAncestry(data).then((result) => {
               socket.emit('returnAdminCompleteAncestry');
@@ -2083,7 +2110,7 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestAdminUpdateAncestry', function(data){
-        AuthCheck.isAdmin(socket).then((isAdmin) => {
+        AuthCheck.isAdmin(userID).then((isAdmin) => {
           if(isAdmin){
             if(data != null && data.ancestryID != null) {
               AdminCreation.archiveAncestry(data.ancestryID, true).then((result) => {
@@ -2097,7 +2124,7 @@ module.exports = class SocketConnections {
       });
     
       socket.on('requestAdminRemoveAncestry', function(ancestryID){
-        AuthCheck.isAdmin(socket).then((isAdmin) => {
+        AuthCheck.isAdmin(userID).then((isAdmin) => {
           if(isAdmin){
             AdminCreation.deleteAncestry(ancestryID).then((result) => {
               socket.emit('returnAdminRemoveAncestry');
@@ -2107,10 +2134,10 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestAdminAncestryDetails', function(){
-        AuthCheck.isAdmin(socket).then((isAdmin) => {
+        AuthCheck.isAdmin(userID).then((isAdmin) => {
           if(isAdmin){
-            GeneralGathering.getAllAncestries(true).then((ancestriesObject) => {
-              GeneralGathering.getAllFeats(null, null, null, false).then((featsObject) => {
+            GeneralGathering.getAllAncestries(userID, true).then((ancestriesObject) => {
+              GeneralGathering.getAllFeats(userID, null, null, null, false).then((featsObject) => {
                 socket.emit('returnAdminAncestryDetails', ancestriesObject, featsObject);
               });
             });
@@ -2121,7 +2148,7 @@ module.exports = class SocketConnections {
       ////
 
       socket.on('requestAdminAddFeat', function(data){
-        AuthCheck.isAdmin(socket).then((isAdmin) => {
+        AuthCheck.isAdmin(userID).then((isAdmin) => {
           if(isAdmin){
             AdminCreation.addFeat(data).then((result) => {
               socket.emit('returnAdminCompleteFeat');
@@ -2131,7 +2158,7 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestAdminUpdateFeat', function(data){
-        AuthCheck.isAdmin(socket).then((isAdmin) => {
+        AuthCheck.isAdmin(userID).then((isAdmin) => {
           if(isAdmin){
             if(data != null && data.featID != null) {
               AdminCreation.archiveFeat(data.featID, true).then((result) => {
@@ -2145,7 +2172,7 @@ module.exports = class SocketConnections {
       });
     
       socket.on('requestAdminRemoveFeat', function(featID){
-        AuthCheck.isAdmin(socket).then((isAdmin) => {
+        AuthCheck.isAdmin(userID).then((isAdmin) => {
           if(isAdmin){
             AdminCreation.deleteFeat(featID).then((result) => {
               socket.emit('returnAdminRemoveFeat');
@@ -2155,9 +2182,9 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestAdminFeatDetails', function(){
-        AuthCheck.isAdmin(socket).then((isAdmin) => {
+        AuthCheck.isAdmin(userID).then((isAdmin) => {
           if(isAdmin){
-            GeneralGathering.getAllFeats(null, null, null, false).then((featsObject) => {
+            GeneralGathering.getAllFeats(userID, null, null, null, false).then((featsObject) => {
               socket.emit('returnAdminFeatDetails', featsObject);
             });
           }
@@ -2165,13 +2192,13 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestAdminFeatDetailsPlus', function(){
-        AuthCheck.isAdmin(socket).then((isAdmin) => {
+        AuthCheck.isAdmin(userID).then((isAdmin) => {
           if(isAdmin){
-            GeneralGathering.getAllFeats(null, null, null, false).then((featsObject) => {
-              GeneralGathering.getAllClasses().then((classObject) => {
-                GeneralGathering.getAllAncestries(true).then((ancestriesObject) => {
-                  GeneralGathering.getAllUniHeritages().then((uniHeritageArray) => {
-                    GeneralGathering.getAllArchetypes().then((archetypeArray) => {
+            GeneralGathering.getAllFeats(userID, null, null, null, false).then((featsObject) => {
+              GeneralGathering.getAllClasses(userID).then((classObject) => {
+                GeneralGathering.getAllAncestries(userID, true).then((ancestriesObject) => {
+                  GeneralGathering.getAllUniHeritages(userID).then((uniHeritageArray) => {
+                    GeneralGathering.getAllArchetypes(userID).then((archetypeArray) => {
                       socket.emit('returnAdminFeatDetailsPlus', featsObject, classObject, ancestriesObject, uniHeritageArray, archetypeArray);
                     });
                   });
@@ -2185,7 +2212,7 @@ module.exports = class SocketConnections {
       ////
 
       socket.on('requestAdminAddItem', function(data){
-        AuthCheck.isAdmin(socket).then((isAdmin) => {
+        AuthCheck.isAdmin(userID).then((isAdmin) => {
           if(isAdmin){
             AdminCreation.addItem(data).then((result) => {
               socket.emit('returnAdminCompleteItem');
@@ -2195,7 +2222,7 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestAdminUpdateItem', function(data){
-        AuthCheck.isAdmin(socket).then((isAdmin) => {
+        AuthCheck.isAdmin(userID).then((isAdmin) => {
           if(isAdmin){
             if(data != null && data.itemID != null) {
               AdminCreation.archiveItem(data.itemID, true).then((result) => {
@@ -2209,7 +2236,7 @@ module.exports = class SocketConnections {
       });
     
       socket.on('requestAdminRemoveItem', function(itemID){
-        AuthCheck.isAdmin(socket).then((isAdmin) => {
+        AuthCheck.isAdmin(userID).then((isAdmin) => {
           if(isAdmin){
             AdminCreation.deleteItem(itemID).then((result) => {
               socket.emit('returnAdminRemoveItem');
@@ -2219,9 +2246,9 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestAdminItemDetails', function(){
-        AuthCheck.isAdmin(socket).then((isAdmin) => {
+        AuthCheck.isAdmin(userID).then((isAdmin) => {
           if(isAdmin){
-            GeneralGathering.getAllItems(null, null, null, false).then((itemMap) => {
+            GeneralGathering.getAllItems(userID, null, null, null, false).then((itemMap) => {
               socket.emit('returnAdminItemDetails', mapToObj(itemMap));
             });
           }
@@ -2231,7 +2258,7 @@ module.exports = class SocketConnections {
       ////
 
       socket.on('requestAdminAddSpell', function(data){
-        AuthCheck.isAdmin(socket).then((isAdmin) => {
+        AuthCheck.isAdmin(userID).then((isAdmin) => {
           if(isAdmin){
             AdminCreation.addSpell(data).then((result) => {
               socket.emit('returnAdminCompleteSpell');
@@ -2241,7 +2268,7 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestAdminUpdateSpell', function(data){
-        AuthCheck.isAdmin(socket).then((isAdmin) => {
+        AuthCheck.isAdmin(userID).then((isAdmin) => {
           if(isAdmin){
             if(data != null && data.spellID != null) {
               AdminCreation.archiveSpell(data.spellID, true).then((result) => {
@@ -2255,7 +2282,7 @@ module.exports = class SocketConnections {
       });
     
       socket.on('requestAdminRemoveSpell', function(spellID){
-        AuthCheck.isAdmin(socket).then((isAdmin) => {
+        AuthCheck.isAdmin(userID).then((isAdmin) => {
           if(isAdmin){
             AdminCreation.deleteSpell(spellID).then((result) => {
               socket.emit('returnAdminRemoveSpell');
@@ -2265,9 +2292,9 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestAdminSpellDetails', function(){
-        AuthCheck.isAdmin(socket).then((isAdmin) => {
+        AuthCheck.isAdmin(userID).then((isAdmin) => {
           if(isAdmin){
-            GeneralGathering.getAllSpells(null, null, null, null, false).then((spellMap) => {
+            GeneralGathering.getAllSpells(userID, null, null, null, null, false).then((spellMap) => {
               socket.emit('returnAdminSpellDetails', mapToObj(spellMap));
             });
           }
@@ -2277,7 +2304,7 @@ module.exports = class SocketConnections {
       ////
 
       socket.on('requestAdminAddClass', function(data){
-        AuthCheck.isAdmin(socket).then((isAdmin) => {
+        AuthCheck.isAdmin(userID).then((isAdmin) => {
           if(isAdmin){
             AdminCreation.addClass(data).then((result) => {
               socket.emit('returnAdminCompleteClass');
@@ -2287,7 +2314,7 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestAdminUpdateClass', function(data){
-        AuthCheck.isAdmin(socket).then((isAdmin) => {
+        AuthCheck.isAdmin(userID).then((isAdmin) => {
           if(isAdmin){
             if(data != null && data.classID != null) {
               AdminCreation.archiveClass(data.classID, true).then((result) => {
@@ -2301,7 +2328,7 @@ module.exports = class SocketConnections {
       });
     
       socket.on('requestAdminRemoveClass', function(classID){
-        AuthCheck.isAdmin(socket).then((isAdmin) => {
+        AuthCheck.isAdmin(userID).then((isAdmin) => {
           if(isAdmin){
             AdminCreation.deleteClass(classID).then((result) => {
               socket.emit('returnAdminRemoveClass');
@@ -2311,10 +2338,10 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestAdminClassDetails', function(){
-        AuthCheck.isAdmin(socket).then((isAdmin) => {
+        AuthCheck.isAdmin(userID).then((isAdmin) => {
           if(isAdmin){
-            GeneralGathering.getAllClasses().then((classObject) => {
-              GeneralGathering.getAllFeats(null, null, null, false).then((featsObject) => {
+            GeneralGathering.getAllClasses(userID).then((classObject) => {
+              GeneralGathering.getAllFeats(userID, null, null, null, false).then((featsObject) => {
                 socket.emit('returnAdminClassDetails', classObject, featsObject);
               });
             });
@@ -2325,7 +2352,7 @@ module.exports = class SocketConnections {
       ////
 
       socket.on('requestAdminAddBackground', function(data){
-        AuthCheck.isAdmin(socket).then((isAdmin) => {
+        AuthCheck.isAdmin(userID).then((isAdmin) => {
           if(isAdmin){
             AdminCreation.addBackground(data).then((result) => {
               socket.emit('returnAdminCompleteBackground');
@@ -2335,7 +2362,7 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestAdminUpdateBackground', function(data){
-        AuthCheck.isAdmin(socket).then((isAdmin) => {
+        AuthCheck.isAdmin(userID).then((isAdmin) => {
           if(isAdmin){
             if(data != null && data.backgroundID != null) {
               AdminCreation.archiveBackground(data.backgroundID, true).then((result) => {
@@ -2349,7 +2376,7 @@ module.exports = class SocketConnections {
       });
     
       socket.on('requestAdminRemoveBackground', function(backgroundID){
-        AuthCheck.isAdmin(socket).then((isAdmin) => {
+        AuthCheck.isAdmin(userID).then((isAdmin) => {
           if(isAdmin){
             AdminCreation.deleteBackground(backgroundID).then((result) => {
               socket.emit('returnAdminRemoveBackground');
@@ -2359,9 +2386,9 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestAdminBackgroundDetails', function(){
-        AuthCheck.isAdmin(socket).then((isAdmin) => {
+        AuthCheck.isAdmin(userID).then((isAdmin) => {
           if(isAdmin){
-            GeneralGathering.getAllBackgrounds().then((backgrounds) => {
+            GeneralGathering.getAllBackgrounds(userID).then((backgrounds) => {
               socket.emit('returnAdminBackgroundDetails', backgrounds);
             });
           }
@@ -2372,7 +2399,7 @@ module.exports = class SocketConnections {
       ////
 
       socket.on('requestAdminAddArchetype', function(data){
-        AuthCheck.isAdmin(socket).then((isAdmin) => {
+        AuthCheck.isAdmin(userID).then((isAdmin) => {
           if(isAdmin){
             AdminCreation.addArchetype(data).then((result) => {
               socket.emit('returnAdminCompleteArchetype');
@@ -2382,7 +2409,7 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestAdminUpdateArchetype', function(data){
-        AuthCheck.isAdmin(socket).then((isAdmin) => {
+        AuthCheck.isAdmin(userID).then((isAdmin) => {
           if(isAdmin){
             if(data != null && data.archetypeID != null) {
               AdminCreation.archiveArchetype(data.archetypeID, true).then((result) => {
@@ -2396,7 +2423,7 @@ module.exports = class SocketConnections {
       });
     
       socket.on('requestAdminRemoveArchetype', function(archetypeID){
-        AuthCheck.isAdmin(socket).then((isAdmin) => {
+        AuthCheck.isAdmin(userID).then((isAdmin) => {
           if(isAdmin){
             AdminCreation.deleteArchetype(archetypeID).then((result) => {
               socket.emit('returnAdminRemoveArchetype');
@@ -2406,10 +2433,10 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestAdminArchetypeDetails', function(){
-        AuthCheck.isAdmin(socket).then((isAdmin) => {
+        AuthCheck.isAdmin(userID).then((isAdmin) => {
           if(isAdmin){
-            GeneralGathering.getAllArchetypes().then((archetypeArray) => {
-              GeneralGathering.getAllFeats(null, null, null, false).then((featsObject) => {
+            GeneralGathering.getAllArchetypes(userID).then((archetypeArray) => {
+              GeneralGathering.getAllFeats(userID, null, null, null, false).then((featsObject) => {
                 socket.emit('returnAdminArchetypeDetails', archetypeArray, featsObject);
               });
             });
@@ -2420,7 +2447,7 @@ module.exports = class SocketConnections {
       ////
 
       socket.on('requestAdminAddUniHeritage', function(data){
-        AuthCheck.isAdmin(socket).then((isAdmin) => {
+        AuthCheck.isAdmin(userID).then((isAdmin) => {
           if(isAdmin){
             AdminCreation.addUniHeritage(data).then((result) => {
               socket.emit('returnAdminCompleteUniHeritage');
@@ -2430,7 +2457,7 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestAdminUpdateUniHeritage', function(data){
-        AuthCheck.isAdmin(socket).then((isAdmin) => {
+        AuthCheck.isAdmin(userID).then((isAdmin) => {
           if(isAdmin){
             if(data != null && data.uniHeritageID != null) {
               AdminCreation.archiveUniHeritage(data.uniHeritageID, true).then((result) => {
@@ -2444,7 +2471,7 @@ module.exports = class SocketConnections {
       });
     
       socket.on('requestAdminRemoveUniHeritage', function(uniHeritageID){
-        AuthCheck.isAdmin(socket).then((isAdmin) => {
+        AuthCheck.isAdmin(userID).then((isAdmin) => {
           if(isAdmin){
             AdminCreation.deleteUniHeritage(uniHeritageID).then((result) => {
               socket.emit('returnAdminRemoveUniHeritage');
@@ -2454,10 +2481,10 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestAdminUniHeritageDetails', function(){
-        AuthCheck.isAdmin(socket).then((isAdmin) => {
+        AuthCheck.isAdmin(userID).then((isAdmin) => {
           if(isAdmin){
-            GeneralGathering.getAllUniHeritages().then((uniHeritageArray) => {
-              GeneralGathering.getAllFeats(null, null, null, false).then((featsObject) => {
+            GeneralGathering.getAllUniHeritages(userID).then((uniHeritageArray) => {
+              GeneralGathering.getAllFeats(userID, null, null, null, false).then((featsObject) => {
                 socket.emit('returnAdminUniHeritageDetails', uniHeritageArray, featsObject);
               });
             });
@@ -2468,7 +2495,7 @@ module.exports = class SocketConnections {
       ////
 
       socket.on('requestAdminAddHeritage', function(data){
-        AuthCheck.isAdmin(socket).then((isAdmin) => {
+        AuthCheck.isAdmin(userID).then((isAdmin) => {
           if(isAdmin){
             AdminCreation.addHeritage(null, data).then((result) => {
               socket.emit('returnAdminCompleteHeritage');
@@ -2478,7 +2505,7 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestAdminUpdateHeritage', function(data){
-        AuthCheck.isAdmin(socket).then((isAdmin) => {
+        AuthCheck.isAdmin(userID).then((isAdmin) => {
           if(isAdmin){
             if(data != null && data.heritageID != null) {
               AdminCreation.archiveHeritage(data.heritageID, true).then((result) => {
@@ -2492,7 +2519,7 @@ module.exports = class SocketConnections {
       });
     
       socket.on('requestAdminRemoveHeritage', function(heritageID){
-        AuthCheck.isAdmin(socket).then((isAdmin) => {
+        AuthCheck.isAdmin(userID).then((isAdmin) => {
           if(isAdmin){
             AdminCreation.deleteHeritage(heritageID).then((result) => {
               socket.emit('returnAdminRemoveHeritage');
@@ -2502,10 +2529,10 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestAdminHeritageDetails', function(){
-        AuthCheck.isAdmin(socket).then((isAdmin) => {
+        AuthCheck.isAdmin(userID).then((isAdmin) => {
           if(isAdmin){
-            GeneralGathering.getAllHeritages().then((heritageArray) => {
-              GeneralGathering.getAllAncestriesBasic().then((ancestryArray) => {
+            GeneralGathering.getAllHeritages(userID).then((heritageArray) => {
+              GeneralGathering.getAllAncestriesBasic(userID).then((ancestryArray) => {
                 socket.emit('returnAdminHeritageDetails', heritageArray, ancestryArray);
               });
             });
@@ -2516,7 +2543,7 @@ module.exports = class SocketConnections {
       ////
 
       socket.on('requestAdminAddClassFeature', function(data){
-        AuthCheck.isAdmin(socket).then((isAdmin) => {
+        AuthCheck.isAdmin(userID).then((isAdmin) => {
           if(isAdmin){
             AdminCreation.addClassFeature(data).then((result) => {
               socket.emit('returnAdminCompleteClassFeature');
@@ -2526,7 +2553,7 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestAdminUpdateClassFeature', function(data){
-        AuthCheck.isAdmin(socket).then((isAdmin) => {
+        AuthCheck.isAdmin(userID).then((isAdmin) => {
           if(isAdmin){
             if(data != null && data.classFeatureID != null) {
               AdminCreation.archiveClassFeature(data.classFeatureID, true).then((result) => {
@@ -2540,7 +2567,7 @@ module.exports = class SocketConnections {
       });
     
       socket.on('requestAdminRemoveClassFeature', function(classFeatureID){
-        AuthCheck.isAdmin(socket).then((isAdmin) => {
+        AuthCheck.isAdmin(userID).then((isAdmin) => {
           if(isAdmin){
             AdminCreation.deleteClassFeature(classFeatureID).then((result) => {
               socket.emit('returnAdminRemoveClassFeature');
@@ -2556,6 +2583,7 @@ module.exports = class SocketConnections {
 
     // Socket.IO Connections
     io.on('connection', function(socket){
+      const userID = getUserID(socket);
 
       socket.on('requestAllAPIClients', function(){
         ClientAPI.getAllClients(socket).then((apiClients) => {
@@ -2597,7 +2625,7 @@ module.exports = class SocketConnections {
 
       // Request Access //
       socket.on('requestAPIRequestAccess', function(clientID, charID, accessRights){
-        AuthCheck.ownsCharacter(socket, charID).then((ownsChar) => {
+        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
             ClientAPI.getRequestAccessData(clientID, charID, accessRights).then((accessData) => {
               socket.emit('returnAPIRequestAccess', accessData);
@@ -2614,9 +2642,10 @@ module.exports = class SocketConnections {
 
     // Socket.IO Connections
     io.on('connection', function(socket){
+      const userID = getUserID(socket);
 
       socket.on('requestBrowse', function(){
-        AuthCheck.isDeveloper(socket).then((isDeveloper) => {
+        AuthCheck.isDeveloper(userID).then((isDeveloper) => {
           SearchLoad(socket).then((searchStruct) => {
             socket.emit('returnBrowse', isDeveloper, searchStruct);
           });
@@ -2627,13 +2656,13 @@ module.exports = class SocketConnections {
 
       socket.on('requestGeneralClass', function(classID, homebrewID=null){
         if(homebrewID == null){
-          GeneralGathering.getClass(classID).then((classStruct) => {
+          GeneralGathering.getClass(userID, classID).then((classStruct) => {
             socket.emit('returnGeneralClass', classStruct);
           });
         } else {
-          UserHomebrew.canAccessHomebrewBundle(socket, homebrewID).then((canAccess) => {
+          UserHomebrew.canAccessHomebrewBundle(userID, homebrewID).then((canAccess) => {
             if(canAccess){
-              GeneralGathering.getClass(classID, homebrewID).then((classStruct) => {
+              GeneralGathering.getClass(userID, classID, homebrewID).then((classStruct) => {
                 socket.emit('returnGeneralClass', classStruct);
               });
             }
@@ -2643,13 +2672,13 @@ module.exports = class SocketConnections {
 
       socket.on('requestGeneralAncestry', function(ancestryID, homebrewID=null){
         if(homebrewID == null){
-          GeneralGathering.getAncestry(ancestryID).then((ancestryStruct) => {
+          GeneralGathering.getAncestry(userID, ancestryID).then((ancestryStruct) => {
             socket.emit('returnGeneralAncestry', ancestryStruct);
           });
         } else {
-          UserHomebrew.canAccessHomebrewBundle(socket, homebrewID).then((canAccess) => {
+          UserHomebrew.canAccessHomebrewBundle(userID, homebrewID).then((canAccess) => {
             if(canAccess){
-              GeneralGathering.getAncestry(ancestryID, homebrewID).then((ancestryStruct) => {
+              GeneralGathering.getAncestry(userID, ancestryID, homebrewID).then((ancestryStruct) => {
                 socket.emit('returnGeneralAncestry', ancestryStruct);
               });
             }
@@ -2659,13 +2688,13 @@ module.exports = class SocketConnections {
 
       socket.on('requestGeneralArchetype', function(archetypeID, homebrewID=null){
         if(homebrewID == null){
-          GeneralGathering.getArchetype(archetypeID).then((archetypeStruct) => {
+          GeneralGathering.getArchetype(userID, archetypeID).then((archetypeStruct) => {
             socket.emit('returnGeneralArchetype', archetypeStruct);
           });
         } else {
-          UserHomebrew.canAccessHomebrewBundle(socket, homebrewID).then((canAccess) => {
+          UserHomebrew.canAccessHomebrewBundle(userID, homebrewID).then((canAccess) => {
             if(canAccess){
-              GeneralGathering.getArchetype(archetypeID, homebrewID).then((archetypeStruct) => {
+              GeneralGathering.getArchetype(userID, archetypeID, homebrewID).then((archetypeStruct) => {
                 socket.emit('returnGeneralArchetype', archetypeStruct);
               });
             }
@@ -2675,13 +2704,13 @@ module.exports = class SocketConnections {
 
       socket.on('requestGeneralBackground', function(backgroundID, homebrewID=null){
         if(homebrewID == null){
-          GeneralGathering.getBackground(backgroundID).then((backgroundStruct) => {
+          GeneralGathering.getBackground(userID, backgroundID).then((backgroundStruct) => {
             socket.emit('returnGeneralBackground', backgroundStruct);
           });
         } else {
-          UserHomebrew.canAccessHomebrewBundle(socket, homebrewID).then((canAccess) => {
+          UserHomebrew.canAccessHomebrewBundle(userID, homebrewID).then((canAccess) => {
             if(canAccess){
-              GeneralGathering.getBackground(backgroundID, homebrewID).then((backgroundStruct) => {
+              GeneralGathering.getBackground(userID, backgroundID, homebrewID).then((backgroundStruct) => {
                 socket.emit('returnGeneralBackground', backgroundStruct);
               });
             }
@@ -2691,13 +2720,13 @@ module.exports = class SocketConnections {
 
       socket.on('requestGeneralUniHeritage', function(uniHeritageID, homebrewID=null){
         if(homebrewID == null){
-          GeneralGathering.getUniHeritage(uniHeritageID).then((uniHeritageStruct) => {
+          GeneralGathering.getUniHeritage(userID, uniHeritageID).then((uniHeritageStruct) => {
             socket.emit('returnGeneralUniHeritage', uniHeritageStruct);
           });
         } else {
-          UserHomebrew.canAccessHomebrewBundle(socket, homebrewID).then((canAccess) => {
+          UserHomebrew.canAccessHomebrewBundle(userID, homebrewID).then((canAccess) => {
             if(canAccess){
-              GeneralGathering.getUniHeritage(uniHeritageID, homebrewID).then((uniHeritageStruct) => {
+              GeneralGathering.getUniHeritage(userID, uniHeritageID, homebrewID).then((uniHeritageStruct) => {
                 socket.emit('returnGeneralUniHeritage', uniHeritageStruct);
               });
             }
@@ -2710,10 +2739,28 @@ module.exports = class SocketConnections {
   }
 
 
+  static buildPlanner(io) {
+
+    // Socket.IO Connections
+    io.on('connection', function(socket){
+      const userID = getUserID(socket);
+
+      socket.on('requestPlannerCore', function(){
+        PlannerCoreLoad(socket).then((plannerStruct) => {
+          socket.emit('returnPlannerCore', plannerStruct);
+        });
+      });
+
+    });
+
+  }
+
+
   static homebrewGeneral(io) {
 
     // Socket.IO Connections
     io.on('connection', function(socket){
+      const userID = getUserID(socket);
 
       socket.on('requestPublishedHomebrewBundles', function(){
         UserHomebrew.findPublishedBundles().then((hBundles) => {
@@ -2722,35 +2769,35 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestCollectedHomebrewBundles', function(){
-        UserHomebrew.getCollectedHomebrewBundles(socket).then((hBundles) => {
+        UserHomebrew.getCollectedHomebrewBundles(userID).then((hBundles) => {
           socket.emit('returnCollectedHomebrewBundles', hBundles);
         });
       });
 
       socket.on('requestHomebrewBundles', function(){
-        UserHomebrew.getHomebrewBundles(socket).then((homebrewBundles) => {
-          AuthCheck.isMember(socket).then((canMakeHomebrew) => {
+        UserHomebrew.getHomebrewBundles(userID).then((homebrewBundles) => {
+          AuthCheck.isMember(userID).then((canMakeHomebrew) => {
             socket.emit('returnHomebrewBundles', homebrewBundles, canMakeHomebrew);
           });
         });
       });
 
       socket.on('requestHomebrewBundle', function(REQUEST_TYPE, homebrewID){
-        UserHomebrew.getHomebrewBundle(socket, homebrewID).then((homebrewBundle) => {
+        UserHomebrew.getHomebrewBundle(userID, homebrewID).then((homebrewBundle) => {
           socket.emit('returnHomebrewBundle', REQUEST_TYPE, homebrewBundle);
         });
       });
 
       socket.on('requestBundleCreate', function(){
-        UserHomebrew.createHomebrewBundle(socket).then((homebrewBundle) => {
+        UserHomebrew.createHomebrewBundle(userID).then((homebrewBundle) => {
           socket.emit('returnBundleCreate', homebrewBundle);
         });
       });
 
       socket.on('requestBundleUpdate', function(homebrewID, updateValues){
-        UserHomebrew.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+        UserHomebrew.canEditHomebrew(userID, homebrewID).then((canEdit) => {
           if(canEdit){
-            UserHomebrew.updateHomebrewBundle(socket, homebrewID, updateValues).then((homebrewBundle) => {
+            UserHomebrew.updateHomebrewBundle(userID, homebrewID, updateValues).then((homebrewBundle) => {
               socket.emit('returnBundleUpdate', homebrewBundle);
             });
           }
@@ -2758,17 +2805,17 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestBundleDelete', function(homebrewID){
-        UserHomebrew.deleteHomebrewBundle(socket, homebrewID).then((result) => {
+        UserHomebrew.deleteHomebrewBundle(userID, homebrewID).then((result) => {
           socket.emit('returnBundleDelete');
         });
       });
       
       socket.on('requestBundleContents', function(REQUEST_TYPE, homebrewID, keyCode='None'){
 
-        UserHomebrew.getHomebrewBundle(socket, homebrewID).then((homebrewBundle) => {
-          UserHomebrew.hasHomebrewBundle(socket, homebrewID).then((userHasBundle) => {
-            UserHomebrew.ownsHomebrewBundle(socket, homebrewID).then((userOwnsBundle) => {
-              UserHomebrew.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+        UserHomebrew.getHomebrewBundle(userID, homebrewID).then((homebrewBundle) => {
+          UserHomebrew.hasHomebrewBundle(userID, homebrewID).then((userHasBundle) => {
+            UserHomebrew.ownsHomebrewBundle(userID, homebrewID).then((userOwnsBundle) => {
+              UserHomebrew.canEditHomebrew(userID, homebrewID).then((canEdit) => {
                 if(REQUEST_TYPE == 'EDIT' && !canEdit) { return; }
                 UserHomebrew.getValidKey(homebrewID, keyCode).then((bundleKey) => {
 
@@ -2778,7 +2825,7 @@ module.exports = class SocketConnections {
 
                   } else {
 
-                    GeneralGathering.getAllSkills().then((skillObject) => {
+                    GeneralGathering.getAllSkills(userID).then((skillObject) => {
                       HomebrewGathering.getAllClasses(homebrewID).then((classes) => {
                         HomebrewGathering.getAllAncestries(homebrewID).then((ancestries) => {
                           HomebrewGathering.getAllArchetypes(homebrewID).then((archetypes) => {
@@ -2789,7 +2836,7 @@ module.exports = class SocketConnections {
                                     HomebrewGathering.getAllUniHeritages(homebrewID).then((uniheritages) => {
                                       HomebrewGathering.getAllItems(homebrewID).then((items) => {
                                         HomebrewGathering.getAllSpells(homebrewID).then((spells) => {
-                                          GeneralGathering.getAllTags(homebrewID).then((allTags) => {
+                                          GeneralGathering.getAllTags(userID, homebrewID).then((allTags) => {
                                             HomebrewGathering.getAllLanguages(homebrewID).then((languages) => {
                                               HomebrewGathering.getAllToggleables(homebrewID).then((toggleables) => {
                                                 
@@ -2830,7 +2877,7 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestBundlePublish', function(homebrewID){
-        UserHomebrew.publishHomebrew(socket, homebrewID).then((isPublished) => {
+        UserHomebrew.publishHomebrew(userID, homebrewID).then((isPublished) => {
           socket.emit('returnBundlePublish', isPublished);
         });
       });
@@ -2838,18 +2885,18 @@ module.exports = class SocketConnections {
       socket.on('requestBundleChangeCollection', function(homebrewID, toAdd, keyCode='None'){
         if(toAdd){
           if(keyCode.length > 50) {return;}
-          UserHomebrew.addToHomebrewCollection(socket, homebrewID, keyCode).then((isSuccess) => {
+          UserHomebrew.addToHomebrewCollection(userID, homebrewID, keyCode).then((isSuccess) => {
             socket.emit('returnBundleChangeCollection', toAdd, isSuccess);
           });
         } else {
-          UserHomebrew.removeFromHomebrewCollection(socket, homebrewID).then((isSuccess) => {
+          UserHomebrew.removeFromHomebrewCollection(userID, homebrewID).then((isSuccess) => {
             socket.emit('returnBundleChangeCollection', toAdd, isSuccess);
           });
         }
       });
 
       socket.on('requestBundleUpdatePublished', function(homebrewID){
-        UserHomebrew.updateBundle(socket, homebrewID).then((result) => {
+        UserHomebrew.updateBundle(userID, homebrewID).then((result) => {
           socket.emit('returnBundleUpdatePublished');
         });
       });
@@ -2857,19 +2904,19 @@ module.exports = class SocketConnections {
       // Key Management //
 
       socket.on('requestBundleKeys', function(homebrewID){
-        UserHomebrew.getBundleKeys(socket, homebrewID).then((bundleKeys) => {
+        UserHomebrew.getBundleKeys(userID, homebrewID).then((bundleKeys) => {
           socket.emit('returnBundleKeys', bundleKeys);
         });
       });
 
       socket.on('requestBundleAddKeys', function(homebrewID, amount, isOneTimeUse){
-        UserHomebrew.addBundleKeys(socket, homebrewID, amount, isOneTimeUse).then((result) => {
+        UserHomebrew.addBundleKeys(userID, homebrewID, amount, isOneTimeUse).then((result) => {
           socket.emit('returnBundleAddKeys');
         });
       });
 
       socket.on('requestBundleRemoveKey', function(homebrewID, keyCode){
-        UserHomebrew.removeBundleKey(socket, homebrewID, keyCode).then((result) => {
+        UserHomebrew.removeBundleKey(userID, homebrewID, keyCode).then((result) => {
           socket.emit('returnBundleRemoveKey');
         });
       });
@@ -2883,9 +2930,10 @@ module.exports = class SocketConnections {
 
     // Socket.IO Connections
     io.on('connection', function(socket){
+      const userID = getUserID(socket);
 
       socket.on('requestHomebrewAddClass', function(homebrewID, data){
-        UserHomebrew.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+        UserHomebrew.canEditHomebrew(userID, homebrewID).then((canEdit) => {
           if(canEdit){
             HomebrewCreation.addClass(homebrewID, data).then((result) => {
               socket.emit('returnHomebrewCompleteClass');
@@ -2895,7 +2943,7 @@ module.exports = class SocketConnections {
       });
   
       socket.on('requestHomebrewUpdateClass', function(homebrewID, data){
-        UserHomebrew.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+        UserHomebrew.canEditHomebrew(userID, homebrewID).then((canEdit) => {
           if(canEdit){
             if(data != null && data.classID != null) {
               HomebrewCreation.deleteClass(homebrewID, data.classID).then((result) => {
@@ -2909,7 +2957,7 @@ module.exports = class SocketConnections {
       });
     
       socket.on('requestHomebrewRemoveClass', function(homebrewID, classID){
-        UserHomebrew.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+        UserHomebrew.canEditHomebrew(userID, homebrewID).then((canEdit) => {
           if(canEdit){
             HomebrewCreation.deleteClass(homebrewID, classID).then((result) => {
               socket.emit('returnHomebrewRemoveContent');
@@ -2919,10 +2967,10 @@ module.exports = class SocketConnections {
       });
   
       socket.on('requestHomebrewClassDetails', function(homebrewID){
-        UserHomebrew.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+        UserHomebrew.canEditHomebrew(userID, homebrewID).then((canEdit) => {
           if(canEdit){
-            GeneralGathering.getAllClasses(homebrewID).then((classObject) => {
-              GeneralGathering.getAllFeats(homebrewID).then((featsObject) => {
+            GeneralGathering.getAllClasses(userID, homebrewID).then((classObject) => {
+              GeneralGathering.getAllFeats(userID, homebrewID).then((featsObject) => {
                 socket.emit('returnHomebrewClassDetails', classObject, featsObject);
               });
             });
@@ -2933,7 +2981,7 @@ module.exports = class SocketConnections {
       ////
 
       socket.on('requestHomebrewAddAncestry', function(homebrewID, data){
-        UserHomebrew.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+        UserHomebrew.canEditHomebrew(userID, homebrewID).then((canEdit) => {
           if(canEdit){
             HomebrewCreation.addAncestry(homebrewID, data).then((result) => {
               socket.emit('returnHomebrewCompleteAncestry');
@@ -2943,7 +2991,7 @@ module.exports = class SocketConnections {
       });
   
       socket.on('requestHomebrewUpdateAncestry', function(homebrewID, data){
-        UserHomebrew.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+        UserHomebrew.canEditHomebrew(userID, homebrewID).then((canEdit) => {
           if(canEdit){
             if(data != null && data.ancestryID != null) {
               HomebrewCreation.deleteAncestry(homebrewID, data.ancestryID).then((result) => {
@@ -2957,7 +3005,7 @@ module.exports = class SocketConnections {
       });
     
       socket.on('requestHomebrewRemoveAncestry', function(homebrewID, ancestryID){
-        UserHomebrew.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+        UserHomebrew.canEditHomebrew(userID, homebrewID).then((canEdit) => {
           if(canEdit){
             HomebrewCreation.deleteAncestry(homebrewID, ancestryID).then((result) => {
               socket.emit('returnHomebrewRemoveContent');
@@ -2967,10 +3015,10 @@ module.exports = class SocketConnections {
       });
   
       socket.on('requestHomebrewAncestryDetails', function(homebrewID){
-        UserHomebrew.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+        UserHomebrew.canEditHomebrew(userID, homebrewID).then((canEdit) => {
           if(canEdit){
-            GeneralGathering.getAllAncestries(true, homebrewID).then((ancestryObject) => {
-              GeneralGathering.getAllFeats(homebrewID).then((featsObject) => {
+            GeneralGathering.getAllAncestries(userID, true, homebrewID).then((ancestryObject) => {
+              GeneralGathering.getAllFeats(userID, homebrewID).then((featsObject) => {
                 socket.emit('returnHomebrewAncestryDetails', ancestryObject, featsObject);
               });
             });
@@ -2981,7 +3029,7 @@ module.exports = class SocketConnections {
       ////
 
       socket.on('requestHomebrewAddArchetype', function(homebrewID, data){
-        UserHomebrew.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+        UserHomebrew.canEditHomebrew(userID, homebrewID).then((canEdit) => {
           if(canEdit){
             HomebrewCreation.addArchetype(homebrewID, data).then((result) => {
               socket.emit('returnHomebrewCompleteArchetype');
@@ -2991,7 +3039,7 @@ module.exports = class SocketConnections {
       });
   
       socket.on('requestHomebrewUpdateArchetype', function(homebrewID, data){
-        UserHomebrew.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+        UserHomebrew.canEditHomebrew(userID, homebrewID).then((canEdit) => {
           if(canEdit){
             if(data != null && data.archetypeID != null) {
               HomebrewCreation.deleteArchetype(homebrewID, data.archetypeID).then((result) => {
@@ -3005,7 +3053,7 @@ module.exports = class SocketConnections {
       });
     
       socket.on('requestHomebrewRemoveArchetype', function(homebrewID, archetypeID){
-        UserHomebrew.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+        UserHomebrew.canEditHomebrew(userID, homebrewID).then((canEdit) => {
           if(canEdit){
             HomebrewCreation.deleteArchetype(homebrewID, archetypeID).then((result) => {
               socket.emit('returnHomebrewRemoveContent');
@@ -3015,10 +3063,10 @@ module.exports = class SocketConnections {
       });
   
       socket.on('requestHomebrewArchetypeDetails', function(homebrewID){
-        UserHomebrew.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+        UserHomebrew.canEditHomebrew(userID, homebrewID).then((canEdit) => {
           if(canEdit){
-            GeneralGathering.getAllArchetypes(homebrewID).then((archetypeArray) => {
-              GeneralGathering.getAllFeats(homebrewID).then((featsObject) => {
+            GeneralGathering.getAllArchetypes(userID, homebrewID).then((archetypeArray) => {
+              GeneralGathering.getAllFeats(userID, homebrewID).then((featsObject) => {
                 socket.emit('returnHomebrewArchetypeDetails', archetypeArray, featsObject);
               });
             });
@@ -3029,7 +3077,7 @@ module.exports = class SocketConnections {
       ///
 
       socket.on('requestHomebrewAddBackground', function(homebrewID, data){
-        UserHomebrew.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+        UserHomebrew.canEditHomebrew(userID, homebrewID).then((canEdit) => {
           if(canEdit){
             HomebrewCreation.addBackground(homebrewID, data).then((result) => {
               socket.emit('returnHomebrewCompleteBackground');
@@ -3039,7 +3087,7 @@ module.exports = class SocketConnections {
       });
   
       socket.on('requestHomebrewUpdateBackground', function(homebrewID, data){
-        UserHomebrew.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+        UserHomebrew.canEditHomebrew(userID, homebrewID).then((canEdit) => {
           if(canEdit){
             if(data != null && data.backgroundID != null) {
               HomebrewCreation.deleteBackground(homebrewID, data.backgroundID).then((result) => {
@@ -3053,7 +3101,7 @@ module.exports = class SocketConnections {
       });
     
       socket.on('requestHomebrewRemoveBackground', function(homebrewID, backgroundID){
-        UserHomebrew.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+        UserHomebrew.canEditHomebrew(userID, homebrewID).then((canEdit) => {
           if(canEdit){
             HomebrewCreation.deleteBackground(homebrewID, backgroundID).then((result) => {
               socket.emit('returnHomebrewRemoveContent');
@@ -3063,9 +3111,9 @@ module.exports = class SocketConnections {
       });
   
       socket.on('requestHomebrewBackgroundDetails', function(homebrewID){
-        UserHomebrew.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+        UserHomebrew.canEditHomebrew(userID, homebrewID).then((canEdit) => {
           if(canEdit){
-            GeneralGathering.getAllBackgrounds(homebrewID).then((backgrounds) => {
+            GeneralGathering.getAllBackgrounds(userID, homebrewID).then((backgrounds) => {
               socket.emit('returnHomebrewBackgroundDetails', backgrounds);
             });
           }
@@ -3075,7 +3123,7 @@ module.exports = class SocketConnections {
       ////
 
       socket.on('requestHomebrewAddClassFeature', function(homebrewID, data){
-        UserHomebrew.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+        UserHomebrew.canEditHomebrew(userID, homebrewID).then((canEdit) => {
           if(canEdit){
             HomebrewCreation.addClassFeature(homebrewID, data).then((result) => {
               socket.emit('returnHomebrewCompleteClassFeature');
@@ -3085,7 +3133,7 @@ module.exports = class SocketConnections {
       });
   
       socket.on('requestHomebrewUpdateClassFeature', function(homebrewID, data){
-        UserHomebrew.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+        UserHomebrew.canEditHomebrew(userID, homebrewID).then((canEdit) => {
           if(canEdit){
             if(data != null && data.classFeatureID != null) {
               HomebrewCreation.deleteClassFeature(homebrewID, data.classFeatureID).then((result) => {
@@ -3099,7 +3147,7 @@ module.exports = class SocketConnections {
       });
     
       socket.on('requestHomebrewRemoveClassFeature', function(homebrewID, classFeatureID){
-        UserHomebrew.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+        UserHomebrew.canEditHomebrew(userID, homebrewID).then((canEdit) => {
           if(canEdit){
             HomebrewCreation.deleteClassFeature(homebrewID, classFeatureID).then((result) => {
               socket.emit('returnHomebrewRemoveContent');
@@ -3111,7 +3159,7 @@ module.exports = class SocketConnections {
       ////
 
       socket.on('requestHomebrewAddFeat', function(homebrewID, data){
-        UserHomebrew.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+        UserHomebrew.canEditHomebrew(userID, homebrewID).then((canEdit) => {
           if(canEdit){
             HomebrewCreation.addFeat(homebrewID, data).then((result) => {
               socket.emit('returnHomebrewCompleteFeat');
@@ -3121,7 +3169,7 @@ module.exports = class SocketConnections {
       });
   
       socket.on('requestHomebrewUpdateFeat', function(homebrewID, data){
-        UserHomebrew.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+        UserHomebrew.canEditHomebrew(userID, homebrewID).then((canEdit) => {
           if(canEdit){
             if(data != null && data.featID != null) {
               HomebrewCreation.deleteFeat(homebrewID, data.featID).then((result) => {
@@ -3135,7 +3183,7 @@ module.exports = class SocketConnections {
       });
     
       socket.on('requestHomebrewRemoveFeat', function(homebrewID, featID){
-        UserHomebrew.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+        UserHomebrew.canEditHomebrew(userID, homebrewID).then((canEdit) => {
           if(canEdit){
             HomebrewCreation.deleteFeat(homebrewID, featID).then((result) => {
               socket.emit('returnHomebrewRemoveContent');
@@ -3145,13 +3193,13 @@ module.exports = class SocketConnections {
       });
   
       socket.on('requestHomebrewFeatDetailsPlus', function(homebrewID){
-        UserHomebrew.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+        UserHomebrew.canEditHomebrew(userID, homebrewID).then((canEdit) => {
           if(canEdit){
-            GeneralGathering.getAllFeats(homebrewID).then((featsObject) => {
-              GeneralGathering.getAllClasses().then((classObject) => {
-                GeneralGathering.getAllAncestries(true).then((ancestriesObject) => {
-                  GeneralGathering.getAllUniHeritages().then((uniHeritageArray) => {
-                    GeneralGathering.getAllArchetypes().then((archetypeArray) => {
+            GeneralGathering.getAllFeats(userID, homebrewID).then((featsObject) => {
+              GeneralGathering.getAllClasses(userID).then((classObject) => {
+                GeneralGathering.getAllAncestries(userID, true).then((ancestriesObject) => {
+                  GeneralGathering.getAllUniHeritages(userID).then((uniHeritageArray) => {
+                    GeneralGathering.getAllArchetypes(userID).then((archetypeArray) => {
                       socket.emit('returnHomebrewFeatDetailsPlus', featsObject, classObject, ancestriesObject, uniHeritageArray, archetypeArray);
                     });
                   });
@@ -3165,7 +3213,7 @@ module.exports = class SocketConnections {
       ////
 
       socket.on('requestHomebrewAddHeritage', function(homebrewID, data){
-        UserHomebrew.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+        UserHomebrew.canEditHomebrew(userID, homebrewID).then((canEdit) => {
           if(canEdit){
             HomebrewCreation.addHeritage(homebrewID, null, data).then((result) => {
               socket.emit('returnHomebrewCompleteHeritage');
@@ -3175,7 +3223,7 @@ module.exports = class SocketConnections {
       });
   
       socket.on('requestHomebrewUpdateHeritage', function(homebrewID, data){
-        UserHomebrew.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+        UserHomebrew.canEditHomebrew(userID, homebrewID).then((canEdit) => {
           if(canEdit){
             if(data != null && data.heritageID != null) {
               HomebrewCreation.deleteHeritage(homebrewID, data.heritageID).then((result) => {
@@ -3189,7 +3237,7 @@ module.exports = class SocketConnections {
       });
     
       socket.on('requestHomebrewRemoveHeritage', function(homebrewID, heritageID){
-        UserHomebrew.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+        UserHomebrew.canEditHomebrew(userID, homebrewID).then((canEdit) => {
           if(canEdit){
             HomebrewCreation.deleteHeritage(homebrewID, heritageID).then((result) => {
               socket.emit('returnHomebrewRemoveContent');
@@ -3199,10 +3247,10 @@ module.exports = class SocketConnections {
       });
   
       socket.on('requestHomebrewHeritageDetails', function(homebrewID){
-        UserHomebrew.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+        UserHomebrew.canEditHomebrew(userID, homebrewID).then((canEdit) => {
           if(canEdit){
-            GeneralGathering.getAllHeritages(homebrewID).then((heritages) => {
-              GeneralGathering.getAllAncestriesBasic().then((ancestries) => {
+            GeneralGathering.getAllHeritages(userID, homebrewID).then((heritages) => {
+              GeneralGathering.getAllAncestriesBasic(userID).then((ancestries) => {
                 socket.emit('returnHomebrewHeritageDetails', heritages, ancestries);
               });
             });
@@ -3213,7 +3261,7 @@ module.exports = class SocketConnections {
       ////
 
       socket.on('requestHomebrewAddUniHeritage', function(homebrewID, data){
-        UserHomebrew.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+        UserHomebrew.canEditHomebrew(userID, homebrewID).then((canEdit) => {
           if(canEdit){
             HomebrewCreation.addUniHeritage(homebrewID, data).then((result) => {
               socket.emit('returnHomebrewCompleteUniHeritage');
@@ -3223,7 +3271,7 @@ module.exports = class SocketConnections {
       });
   
       socket.on('requestHomebrewUpdateUniHeritage', function(homebrewID, data){
-        UserHomebrew.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+        UserHomebrew.canEditHomebrew(userID, homebrewID).then((canEdit) => {
           if(canEdit){
             if(data != null && data.uniHeritageID != null) {
               HomebrewCreation.deleteUniHeritage(homebrewID, data.uniHeritageID).then((result) => {
@@ -3237,7 +3285,7 @@ module.exports = class SocketConnections {
       });
     
       socket.on('requestHomebrewRemoveUniHeritage', function(homebrewID, uniHeritageID){
-        UserHomebrew.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+        UserHomebrew.canEditHomebrew(userID, homebrewID).then((canEdit) => {
           if(canEdit){
             HomebrewCreation.deleteUniHeritage(homebrewID, uniHeritageID).then((result) => {
               socket.emit('returnHomebrewRemoveContent');
@@ -3247,10 +3295,10 @@ module.exports = class SocketConnections {
       });
   
       socket.on('requestHomebrewUniHeritageDetails', function(homebrewID){
-        UserHomebrew.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+        UserHomebrew.canEditHomebrew(userID, homebrewID).then((canEdit) => {
           if(canEdit){
-            GeneralGathering.getAllUniHeritages(homebrewID).then((uniheritages) => {
-              GeneralGathering.getAllFeats(homebrewID).then((featsObject) => {
+            GeneralGathering.getAllUniHeritages(userID, homebrewID).then((uniheritages) => {
+              GeneralGathering.getAllFeats(userID, homebrewID).then((featsObject) => {
                 socket.emit('returnHomebrewUniHeritageDetails', uniheritages, featsObject);
               });
             });
@@ -3261,7 +3309,7 @@ module.exports = class SocketConnections {
       ////
 
       socket.on('requestHomebrewAddItem', function(homebrewID, data){
-        UserHomebrew.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+        UserHomebrew.canEditHomebrew(userID, homebrewID).then((canEdit) => {
           if(canEdit){
             HomebrewCreation.addItem(homebrewID, data).then((result) => {
               socket.emit('returnHomebrewCompleteItem');
@@ -3271,7 +3319,7 @@ module.exports = class SocketConnections {
       });
   
       socket.on('requestHomebrewUpdateItem', function(homebrewID, data){
-        UserHomebrew.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+        UserHomebrew.canEditHomebrew(userID, homebrewID).then((canEdit) => {
           if(canEdit){
             if(data != null && data.itemID != null) {
               HomebrewCreation.deleteItem(homebrewID, data.itemID).then((result) => {
@@ -3285,7 +3333,7 @@ module.exports = class SocketConnections {
       });
     
       socket.on('requestHomebrewRemoveItem', function(homebrewID, itemID){
-        UserHomebrew.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+        UserHomebrew.canEditHomebrew(userID, homebrewID).then((canEdit) => {
           if(canEdit){
             HomebrewCreation.deleteItem(homebrewID, itemID).then((result) => {
               socket.emit('returnHomebrewRemoveContent');
@@ -3295,9 +3343,9 @@ module.exports = class SocketConnections {
       });
   
       socket.on('requestHomebrewItemDetails', function(homebrewID){
-        UserHomebrew.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+        UserHomebrew.canEditHomebrew(userID, homebrewID).then((canEdit) => {
           if(canEdit){
-            GeneralGathering.getAllItems(homebrewID).then((itemMap) => {
+            GeneralGathering.getAllItems(userID, homebrewID).then((itemMap) => {
               socket.emit('returnHomebrewItemDetails', mapToObj(itemMap));
             });
           }
@@ -3307,7 +3355,7 @@ module.exports = class SocketConnections {
       ////
 
       socket.on('requestHomebrewAddSpell', function(homebrewID, data){
-        UserHomebrew.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+        UserHomebrew.canEditHomebrew(userID, homebrewID).then((canEdit) => {
           if(canEdit){
             HomebrewCreation.addSpell(homebrewID, data).then((result) => {
               socket.emit('returnHomebrewCompleteSpell');
@@ -3317,7 +3365,7 @@ module.exports = class SocketConnections {
       });
   
       socket.on('requestHomebrewUpdateSpell', function(homebrewID, data){
-        UserHomebrew.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+        UserHomebrew.canEditHomebrew(userID, homebrewID).then((canEdit) => {
           if(canEdit){
             if(data != null && data.spellID != null) {
               HomebrewCreation.deleteSpell(homebrewID, data.spellID).then((result) => {
@@ -3331,7 +3379,7 @@ module.exports = class SocketConnections {
       });
     
       socket.on('requestHomebrewRemoveSpell', function(homebrewID, spellID){
-        UserHomebrew.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+        UserHomebrew.canEditHomebrew(userID, homebrewID).then((canEdit) => {
           if(canEdit){
             HomebrewCreation.deleteSpell(homebrewID, spellID).then((result) => {
               socket.emit('returnHomebrewRemoveContent');
@@ -3341,9 +3389,9 @@ module.exports = class SocketConnections {
       });
   
       socket.on('requestHomebrewSpellDetails', function(homebrewID){
-        UserHomebrew.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+        UserHomebrew.canEditHomebrew(userID, homebrewID).then((canEdit) => {
           if(canEdit){
-            GeneralGathering.getAllSpells(homebrewID).then((spellMap) => {
+            GeneralGathering.getAllSpells(userID, homebrewID).then((spellMap) => {
               socket.emit('returnHomebrewSpellDetails', mapToObj(spellMap));
             });
           }
@@ -3353,7 +3401,7 @@ module.exports = class SocketConnections {
       ////
 
       socket.on('requestHomebrewAddLanguage', function(homebrewID, data){
-        UserHomebrew.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+        UserHomebrew.canEditHomebrew(userID, homebrewID).then((canEdit) => {
           if(canEdit){
             HomebrewCreation.addLanguage(homebrewID, data).then((result) => {
               socket.emit('returnHomebrewCompleteLanguage');
@@ -3363,7 +3411,7 @@ module.exports = class SocketConnections {
       });
   
       socket.on('requestHomebrewUpdateLanguage', function(homebrewID, data){
-        UserHomebrew.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+        UserHomebrew.canEditHomebrew(userID, homebrewID).then((canEdit) => {
           if(canEdit){
             if(data != null && data.languageID != null) {
               HomebrewCreation.deleteLanguage(homebrewID, data.languageID).then((result) => {
@@ -3377,7 +3425,7 @@ module.exports = class SocketConnections {
       });
     
       socket.on('requestHomebrewRemoveLanguage', function(homebrewID, languageID){
-        UserHomebrew.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+        UserHomebrew.canEditHomebrew(userID, homebrewID).then((canEdit) => {
           if(canEdit){
             HomebrewCreation.deleteLanguage(homebrewID, languageID).then((result) => {
               socket.emit('returnHomebrewRemoveContent');
@@ -3387,9 +3435,9 @@ module.exports = class SocketConnections {
       });
   
       socket.on('requestHomebrewLanguageDetails', function(homebrewID){
-        UserHomebrew.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+        UserHomebrew.canEditHomebrew(userID, homebrewID).then((canEdit) => {
           if(canEdit){
-            GeneralGathering.getAllLanguages(homebrewID).then((languages) => {
+            GeneralGathering.getAllLanguages(userID, homebrewID).then((languages) => {
               socket.emit('returnHomebrewLanguageDetails', languages);
             });
           }
@@ -3399,7 +3447,7 @@ module.exports = class SocketConnections {
       ////
 
       socket.on('requestHomebrewAddTrait', function(homebrewID, data){
-        UserHomebrew.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+        UserHomebrew.canEditHomebrew(userID, homebrewID).then((canEdit) => {
           if(canEdit){
             HomebrewCreation.addTrait(homebrewID, data).then((result) => {
               socket.emit('returnHomebrewCompleteTrait');
@@ -3409,7 +3457,7 @@ module.exports = class SocketConnections {
       });
   
       socket.on('requestHomebrewUpdateTrait', function(homebrewID, data){
-        UserHomebrew.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+        UserHomebrew.canEditHomebrew(userID, homebrewID).then((canEdit) => {
           if(canEdit){
             if(data != null && data.traitID != null) {
               HomebrewCreation.deleteTrait(homebrewID, data.traitID).then((result) => {
@@ -3423,7 +3471,7 @@ module.exports = class SocketConnections {
       });
     
       socket.on('requestHomebrewRemoveTrait', function(homebrewID, traitID){
-        UserHomebrew.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+        UserHomebrew.canEditHomebrew(userID, homebrewID).then((canEdit) => {
           if(canEdit){
             HomebrewCreation.deleteTrait(homebrewID, traitID).then((result) => {
               socket.emit('returnHomebrewRemoveContent');
@@ -3433,9 +3481,9 @@ module.exports = class SocketConnections {
       });
   
       socket.on('requestHomebrewTraitDetails', function(homebrewID){
-        UserHomebrew.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+        UserHomebrew.canEditHomebrew(userID, homebrewID).then((canEdit) => {
           if(canEdit){
-            GeneralGathering.getAllTags(homebrewID).then((traits) => {
+            GeneralGathering.getAllTags(userID, homebrewID).then((traits) => {
               socket.emit('returnHomebrewTraitDetails', traits);
             });
           }
@@ -3445,7 +3493,7 @@ module.exports = class SocketConnections {
       ////
 
       socket.on('requestHomebrewAddToggleable', function(homebrewID, data){
-        UserHomebrew.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+        UserHomebrew.canEditHomebrew(userID, homebrewID).then((canEdit) => {
           if(canEdit){
             HomebrewCreation.addToggleable(homebrewID, data).then((result) => {
               socket.emit('returnHomebrewCompleteToggleable');
@@ -3455,7 +3503,7 @@ module.exports = class SocketConnections {
       });
   
       socket.on('requestHomebrewUpdateToggleable', function(homebrewID, data){
-        UserHomebrew.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+        UserHomebrew.canEditHomebrew(userID, homebrewID).then((canEdit) => {
           if(canEdit){
             if(data != null && data.toggleableID != null) {
               HomebrewCreation.deleteToggleable(homebrewID, data.toggleableID).then((result) => {
@@ -3469,7 +3517,7 @@ module.exports = class SocketConnections {
       });
     
       socket.on('requestHomebrewRemoveToggleable', function(homebrewID, toggleableID){
-        UserHomebrew.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+        UserHomebrew.canEditHomebrew(userID, homebrewID).then((canEdit) => {
           if(canEdit){
             HomebrewCreation.deleteToggleable(homebrewID, toggleableID).then((result) => {
               socket.emit('returnHomebrewRemoveContent');
@@ -3479,9 +3527,9 @@ module.exports = class SocketConnections {
       });
   
       socket.on('requestHomebrewToggleableDetails', function(homebrewID){
-        UserHomebrew.canEditHomebrew(socket, homebrewID).then((canEdit) => {
+        UserHomebrew.canEditHomebrew(userID, homebrewID).then((canEdit) => {
           if(canEdit){
-            GeneralGathering.getAllToggleables(homebrewID).then((toggleables) => {
+            GeneralGathering.getAllToggleables(userID, homebrewID).then((toggleables) => {
               socket.emit('returnHomebrewToggleableDetails', toggleables);
             });
           }
