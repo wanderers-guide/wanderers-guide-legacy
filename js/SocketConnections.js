@@ -959,7 +959,7 @@ module.exports = class SocketConnections {
       socket.on('requestBuilderPageFinalize', function(charID){
         AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
-            CharGathering.getCharacter(userID, userID, charID).then((character) => {
+            CharGathering.getCharacter(userID, charID).then((character) => {
               CharGathering.getAllUnselectedData(userID, charID).then((unselectedDataArray) => {
                 socket.emit('returnBuilderPageFinalize', character, unselectedDataArray);
               });

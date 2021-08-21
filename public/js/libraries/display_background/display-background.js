@@ -44,8 +44,8 @@ class DisplayBackground {
           if(backgroundRarity != ''){ sourceStr = '<span class="pr-2">'+sourceStr+'</span>'; }
           $('#background-source').html(sourceStr+backgroundRarity);
 
-          let boostStr = '';
           if(backgroundStruct.background.boostOne != null){
+            let boostStr = '';
             let boostParts = backgroundStruct.background.boostOne.split(',');
             for (let i = 0; i < boostParts.length; i++) {
               if(i != 0) {
@@ -57,11 +57,11 @@ class DisplayBackground {
               }
               boostStr += lengthenAbilityType(boostParts[i]);
             }
+            $('#background-boost-one').html(boostStr);
+            $('#background-boost-two').html('Free');
           } else {
-            boostStr = 'Free';
+            $('#background-boost-one').parent().parent().parent().addClass('is-hidden');
           }
-          $('#background-boost-one').html(boostStr);
-          $('#background-boost-two').html('Free');
 
           if(typeof g_isDeveloper !== 'undefined' && g_isDeveloper && backgroundStruct.background.code != null && backgroundStruct.background.code.trim() != '') {
             $('#background-code').html('');

@@ -1,5 +1,12 @@
 
 /* Typography */
+.has-text-left {
+  text-align-last: left!important;
+}
+.has-text-right {
+  text-align-last: right!important;
+}
+
 .is-underlined {
   text-decoration: underline;
 }

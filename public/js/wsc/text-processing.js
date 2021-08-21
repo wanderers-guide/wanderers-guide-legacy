@@ -636,10 +636,10 @@ function handleSheetVariablesAndTooltips(match, innerText){
         let sheetVar = null;
         if(isSheetPage()){
           sheetVar = acquireSheetVariable(innerTextVariable);
-          if(sheetVar == null){
-            let varValue = getVariableValue(innerTextVariable, false);
-            if(varValue != 'Error'){ sheetVar = varValue; }
-          }
+        }
+        if(sheetVar == null && typeof g_variableMap !== 'undefined'){
+          let varValue = getVariableValue(innerTextVariable, false);
+          if(varValue != 'Error'){ sheetVar = varValue; }
         }
         if(sheetVar == null){ sheetVar = innerTextData[0]; }
 
@@ -683,10 +683,13 @@ function handleSheetVariablesAndTooltips(match, innerText){
         }
         return '<a class="'+bulmaColor+' has-tooltip-top" data-tooltip="'+innerTextData[1]+'">'+sheetVar+'</a>';
     } else {
-      if(isSheetPage()){
+      if(isSheetPage() || typeof g_variableMap !== 'undefined'){
         innerText = innerText.replace(/\s/g, "").toUpperCase();
-        let sheetVar = acquireSheetVariable(innerText);
-        if(sheetVar == null){
+        let sheetVar = null;
+        if(isSheetPage()) {
+          sheetVar = acquireSheetVariable(innerText);
+        }
+        if(sheetVar == null && typeof g_variableMap !== 'undefined'){
           let varValue = getVariableValue(innerText, false);
           if(varValue != 'Error'){ sheetVar = varValue; }
         }

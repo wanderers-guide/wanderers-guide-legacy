@@ -192,7 +192,7 @@ function variables_addList(variableName, value){
 function variables_addProficiency(variableName, abilityScoreName, rank, profDataArray=null){
   let rankHistory = new Map();
   if(profDataArray == null){
-    console.log('Not rank history set for var:'+variableName);
+    console.log('No rank history set for var:'+variableName);
     rankHistory.set('Initial', rank);
   } else {
     for(let profData of profDataArray){
