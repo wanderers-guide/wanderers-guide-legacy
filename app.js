@@ -146,7 +146,7 @@ app.use(function(req, res, next) {
 
 // Rate Limiter
 app.use(function(req, res, next) {
-  rateLimiter.consume(req.ipAddress, 2) // -> consume 2 points
+  rateLimiter.consume(req.ipAddress, 1) // -> consume 1 point
     .then((rateLimiterRes) => { // Points consumed
       return next();
     }).catch((rateLimiterRes) => { // Not enough points to consume

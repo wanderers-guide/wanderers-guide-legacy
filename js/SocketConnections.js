@@ -1579,11 +1579,11 @@ module.exports = class SocketConnections {
         });
       });
 
-      socket.on('requestSpellSlotChange', function(charID, srcStruct, spellSRC, spellLevel){
+      socket.on('requestSpellSlotChange', function(charID, srcStruct, spellSRC, spellLevel, slotType=''){
         AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
             if(spellLevel != null){
-              CharSpells.setSpellSlot(charID, srcStruct, spellSRC, spellLevel)
+              CharSpells.setSpellSlot(charID, srcStruct, spellSRC, spellLevel, slotType)
               .then((spellSlot) => {
                 if(spellSlot != null){
                   socket.emit('returnSpellSlotChange', spellSRC, spellSlot);

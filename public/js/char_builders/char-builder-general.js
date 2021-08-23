@@ -7,6 +7,11 @@ let isBuilderInit = false;
 let isFirstLoad = true;
 let g_pageNum;
 
+// Temp global variables
+let gOption_hasProfWithoutLevel = false;
+let g_character = { level: 5 };
+//
+
 // 
 let g_char_ancestryID = null;
 let g_char_backgroundID = null;
@@ -60,19 +65,6 @@ socket.on("returnCharBuilderDetails", function(character, coreDataStruct, inChoi
   //
   injectWSCChoiceStruct(inChoiceStruct);
   // ~~~~~~~~~~~~~~~~~ //
-
-  // Temp Solution to Predefined Variables in the Builder
-  builderTempInitializeVariables();
-  //
-
-  // Run All SourceBook Code as Sheet Statements //
-  for(let enabledSource of g_enabledSources){
-    processSheetCode(enabledSource.code, {
-      source: 'SourceBook',
-      sourceName: enabledSource.name,
-    });
-  }
-  // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 
   for(const [featID, featStruct] of g_featMap.entries()){
     g_featPrereqMap.set(featID+'', meetsPrereqs(featStruct.Feat));

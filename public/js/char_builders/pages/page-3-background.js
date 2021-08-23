@@ -98,6 +98,7 @@ socket.on("returnBackgroundChange", function(choiceStruct){
 function displayCurrentBackground(background) {
     g_background = null;
     $('#selectBackground').blur();
+    resettingVariables(g_enabledSources);
     
     if(background.isArchived == 1){
         $('#isArchivedMessage').removeClass('is-hidden');

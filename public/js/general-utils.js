@@ -249,6 +249,40 @@ function getUpAmt(profType){
   return 0;
 }
 
+function getProfNumber(numUps, charLevel) {
+  if(typeof gOption_hasProfWithoutLevel !== 'undefined' && gOption_hasProfWithoutLevel){
+    switch(numUps) {
+      case 0:
+          return -2;
+      case 1:
+          return 2;
+      case 2:
+          return 4;
+      case 3:
+          return 6;
+      case 4:
+          return 8;
+      default:
+          return 0;
+    }
+  } else {
+    switch(numUps) {
+      case 0:
+          return 0;
+      case 1:
+          return charLevel+2;
+      case 2:
+          return charLevel+4;
+      case 3:
+          return charLevel+6;
+      case 4:
+          return charLevel+8;
+      default:
+          return 0;
+    }
+  }
+}
+
 /* HTML */
 function convertActionToHTML(actionsType){
   switch(actionsType) {

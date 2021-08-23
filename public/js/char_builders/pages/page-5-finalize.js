@@ -6,6 +6,8 @@
 
 function loadFinalizePage(character, unselectedDataArray) {
 
+    resettingVariables(g_enabledSources);
+
     let strScore = g_abilMap.get("STR");
     $("#strScore").html(strScore);
     $("#strMod").html(signNumber(getMod(strScore)));

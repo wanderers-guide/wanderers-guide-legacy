@@ -247,6 +247,11 @@ function expHandleExpression(expression, statement, elseStatement, srcStruct){
       return expHasSource(expression, statement, elseStatement);
     }
 
+    let variableExprMatch = expression.match(/IS-VARIABLE\(([\w]+)\)/);
+    if(variableExprMatch != null){ // IS-VARIABLE(SCORE_INT)>=25
+      return expIsVariable(expression, variableExprMatch[1], statement, elseStatement);
+    }
+
     /* Sheet-Only Expressions */
     if(expression.includes('IS-UNARMORED')){ // IS-UNARMORED
       return expIsUnarmored(expression, statement, elseStatement);
@@ -266,6 +271,30 @@ function expHasLevel(expression, statement, elseStatement){
 
 function expHasFocusPoints(expression, statement, elseStatement){
     return expHasNumberCompare(g_expr_focusPoints, expression, statement, elseStatement);
+}
+
+function expIsVariable(expression, variableName, statement, elseStatement){
+  let variable = g_variableMap.get(variableName);
+  if(variable == null) {
+    displayError("Expression Processing: Unknown variable \'"+variableName+"\'!");
+    return elseStatement;
+  }
+
+  if(variable.Type == VAR_TYPE.INTEGER){
+    return expHasNumberCompare(variable.Value, expression, statement, elseStatement);
+  } else if(variable.Type == VAR_TYPE.STRING){
+    return expHasStringCompare(variable.Value, expression, statement, elseStatement);
+  } else if(variable.Type == VAR_TYPE.ABILITY_SCORE){
+    return expHasNumberCompare(variable.Value.Score, expression, statement, elseStatement);
+  } else if(variable.Type == VAR_TYPE.LIST){
+    return expHasStringCompare(variable.Value+'', expression, statement, elseStatement);
+  } else if(variable.Type == VAR_TYPE.PROFICIENCY){
+    return expHasStringCompare(variable.Value.Rank, expression, statement, elseStatement);
+  } else {
+    displayError("Expression Processing: Unknown variable type \'"+variable.Type+"\'!");
+    return elseStatement;
+  }
+
 }
 
 function expHasNumberCompare(charVarNumber, expression, statement, elseStatement){
@@ -307,6 +336,29 @@ function expHasNumberCompare(charVarNumber, expression, statement, elseStatement
         }
     }
     return null;
+}
+
+function expHasStringCompare(charVarString, expression, statement, elseStatement){
+  if(expression.includes('==')){
+      let string = expression.split('==')[1];
+      if(string != null){
+          if(charVarString == string){
+              return statement;
+          } else {
+              return elseStatement;
+          }
+      }
+  } else if(expression.includes('!=')){
+      let string = expression.split('!=')[1];
+      if(string != null){
+          if(charVarString != string){
+              return statement;
+          } else {
+              return elseStatement;
+          }
+      }
+  }
+  return null;
 }
 
 function expHasHeritage(expression, statement, elseStatement){

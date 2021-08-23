@@ -179,7 +179,7 @@ socket.on("returnHeritageChange", function(heritageID, isUniversal, charTagsArra
 function displayCurrentAncestry(ancestryStruct, saving) {
     g_ancestry = null;
     $('#selectAncestry').blur();
-
+    resettingVariables(g_enabledSources);
 
     if(ancestryStruct.Ancestry.isArchived == 1){
         $('#isArchivedMessage').removeClass('is-hidden');

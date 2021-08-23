@@ -92,6 +92,7 @@ socket.on("returnClassChange", function(inChoiceStruct, classNum){
 function displayCurrentClass(classStruct, classNum) {
     g_class = null;
     $('#selectClass-'+classNum).blur();
+    resettingVariables(g_enabledSources);
 
     // Add support for Free Archetype Variant if enabled...
     if(wscChoiceStruct.Character.variantFreeArchetype == 1){

@@ -496,7 +496,7 @@ module.exports = class CharSpells {
     }
 
     // Actually adds a spell slot to character data
-    static setSpellSlot(charID, srcStruct, spellSRC, slotLevel){
+    static setSpellSlot(charID, srcStruct, spellSRC, slotLevel, slotType=''){
         let rowName = levelToRowName(slotLevel);
         if(rowName == null) {return null;}
 
@@ -505,13 +505,14 @@ module.exports = class CharSpells {
           slotID: getRandomSID(),
           used: false,
           spellID: null,
-          type: '',
+          type: slotType,
           level_lock: -1};
         spellSlot[rowName] = [spellSlotSubData];
 
         return CharDataMapping.getDataSingle(charID, 'spellSlots', srcStruct)
         .then((spellSlotData) => {
-          if(spellSlotData == null){// If slot data doesn't already exist,
+          // If slot data doesn't already exist or if it does exist and is a slot different level,
+          if(spellSlotData == null || (spellSlotData.value != null && !spellSlotData.value.includes(`"${rowName}":`))){
             return CharDataMapping.setData(charID, 'spellSlots', srcStruct, spellSRC+"="+JSON.stringify(spellSlot))
             .then((result) => {
               spellSlotSubData.slotLevel = parseInt(slotLevel);

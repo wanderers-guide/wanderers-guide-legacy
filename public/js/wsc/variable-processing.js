@@ -137,9 +137,11 @@ function initializeVariableProf(variableName, abilityScoreName, numUps, profData
   variables_addProficiency(variableName, abilityScoreName, getProfLetterFromNumUps(numUps), profDataArray);
 }
 
-function builderTempInitializeVariables(){
+function resettingVariables(enabledSources=null){
 
   if(variableProcessingDebug) { console.log(`Initializing predefined variables in builder.`); }
+
+  g_variableMap.clear();
 
   // Ability Scores
   variables_addAbilityScore(VARIABLE.SCORE_STR, 10);
@@ -156,6 +158,17 @@ function builderTempInitializeVariables(){
       variables_addProficiency(variableName, 'SCORE_'+data.AbilScore, 'U');
     }
   }
+
+  // Run All SourceBook Code as Sheet Statements //
+  if(enabledSources != null){
+    for(let enabledSource of enabledSources){
+      processSheetCode(enabledSource.code, {
+        source: 'SourceBook',
+        sourceName: enabledSource.name,
+      });
+    }
+  }
+  // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 
 }
 
@@ -745,6 +758,10 @@ function getVariableValueFromMethod(variable, varName, method) {
 
     if(methodUpper == 'GET_VALUE'){
       return variable.Value;
+    } else if(methodUpper == 'GET_BONUS_TOTAL'){
+      return variables_getBonusTotal(varName);
+    } else if(methodUpper == 'GET_TOTAL'){
+      return variables_getTotal(varName);
     } else {
       displayError("Variable Processing: Unknown getting method \'"+method+"\' for variable \'"+varName+"\' ("+variable.Type+")!");
       return 'Error';
@@ -771,8 +788,10 @@ function getVariableValueFromMethod(variable, varName, method) {
       if(rank == 'L'){ return 8; }
     };
 
-    if(methodUpper == 'GET_TOTAL'){
-      return rankToValue(variable.Value.Rank)+getMod(g_variableMap.get(variable.Value.AbilityScore).Value.Score);
+    if(methodUpper == 'GET_BONUS_TOTAL'){
+      return variables_getBonusTotal(varName);
+    } else if(methodUpper == 'GET_TOTAL'){
+      return variables_getTotal(varName);
     } else if(methodUpper == 'GET_BONUS_RANK'){
       return rankToValue(variable.Value.Rank);
     } else if(methodUpper == 'GET_BONUS_ABILITY'){
@@ -790,6 +809,10 @@ function getVariableValueFromMethod(variable, varName, method) {
 
     if(methodUpper == 'GET_MOD'){
       return getMod(variable.Value.Score);
+    } else if(methodUpper == 'GET_BONUS_TOTAL'){
+      return variables_getBonusTotal(varName);
+    } else if(methodUpper == 'GET_TOTAL'){
+      return variables_getTotal(varName);
     } else if(methodUpper == 'GET_SCORE'){
       return variable.Value.Score;
     } else if(methodUpper == 'GET_VALUE'){
@@ -832,6 +855,22 @@ function setVariableValueIntoMethod(variable, varName, method, value) {
       } else {
         displayError("Variable Processing (set): The value \'"+value+"\' for \'"+varName+"\' is not an integer!");
       }
+    } else if(methodUpper == 'ADD'){
+      let bonusInt;
+      let bonusType;
+      if(value.includes(':')){
+        let valueParts = value.split(':');
+        bonusInt = parseInt(valueParts[0]);
+        bonusType = valueParts[1];
+      } else {
+        bonusInt = parseInt(value);
+        bonusType = variables_randomType();
+      }
+      if(typeof bonusInt === 'number') {
+        variables_addToBonuses(varName, bonusInt, bonusType, 'WSC Statement');
+      } else {
+        displayError("Variable Processing (set): The value \'"+value+"\' for \'"+varName+"\' is not an integer!");
+      }
     } else {
       displayError("Variable Processing: Unknown setting method \'"+method+"\' for variable \'"+varName+"\' ("+variable.Type+")!");
     }
@@ -857,6 +896,22 @@ function setVariableValueIntoMethod(variable, varName, method, value) {
       } else {
         displayError(`Variable Processing (set): The value \'${value}\' for \'${varName}\' is not an ${VAR_TYPE.ABILITY_SCORE} variable!`);
       }
+    } else if(methodUpper == 'ADD'){
+      let bonusInt;
+      let bonusType;
+      if(value.includes(':')){
+        let valueParts = value.split(':');
+        bonusInt = parseInt(valueParts[0]);
+        bonusType = valueParts[1];
+      } else {
+        bonusInt = parseInt(value);
+        bonusType = variables_randomType();
+      }
+      if(typeof bonusInt === 'number') {
+        variables_addToBonuses(varName, bonusInt, bonusType, 'WSC Statement');
+      } else {
+        displayError("Variable Processing (set): The value \'"+value+"\' for \'"+varName+"\' is not an integer!");
+      }
     } else if(methodUpper == 'SET_VALUE'){
       variables_changeRank(varName, value, 'WSC Statement');
     } else {
@@ -869,6 +924,22 @@ function setVariableValueIntoMethod(variable, varName, method, value) {
       let intValue = parseInt(value);
       if(typeof intValue === 'number' && intValue == value) {
         variable.Value.Score = intValue;
+      } else {
+        displayError("Variable Processing (set): The value \'"+value+"\' for \'"+varName+"\' is not an integer!");
+      }
+    } else if(methodUpper == 'ADD'){
+      let bonusInt;
+      let bonusType;
+      if(value.includes(':')){
+        let valueParts = value.split(':');
+        bonusInt = parseInt(valueParts[0]);
+        bonusType = valueParts[1];
+      } else {
+        bonusInt = parseInt(value);
+        bonusType = variables_randomType();
+      }
+      if(typeof bonusInt === 'number') {
+        variables_addToBonuses(varName, bonusInt, bonusType, 'WSC Statement');
       } else {
         displayError("Variable Processing (set): The value \'"+value+"\' for \'"+varName+"\' is not an integer!");
       }
@@ -903,4 +974,8 @@ function setVariableValueIntoMethod(variable, varName, method, value) {
     displayError("Variable Processing: Unknown variable type \'"+variable.Type+"\'!");
   }
 
+}
+
+function variables_randomType(length = 8) {
+  return Math.random().toString(16).substr(2, length);
 }

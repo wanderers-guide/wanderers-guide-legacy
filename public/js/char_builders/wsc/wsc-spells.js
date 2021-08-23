@@ -12,7 +12,9 @@ function processingSpells(wscStatement, srcStruct, locationID, sourceName){
     } else if(wscStatement.includes("GIVE-SPELL-SLOT")){// GIVE-SPELL-SLOT=Bard:10
         let data = wscStatement.split('=')[1];
         let segments = data.split(':');
-        giveSpellSlot(srcStruct, segments[0], segments[1]);
+        let color = '';
+        if(segments[2] != null){ color = segments[2]; }
+        giveSpellSlot(srcStruct, segments[0], segments[1], color);
     } else if(wscStatement.includes("SET-SPELL-KEY-ABILITY")){// SET-SPELL-KEY-ABILITY=Bard:INT
         let data = wscStatement.split('=')[1]; //                 Will default to CHA if nothing is set
         let segments = data.split(':');
@@ -46,12 +48,26 @@ function giveSpellCasting(srcStruct, spellSRC, spellcasting){
         spellcasting);
 }
 
-function giveSpellSlot(srcStruct, spellSRC, spellSlot){
-    socket.emit("requestSpellSlotChange",
-        getCharIDFromURL(),
-        srcStruct,
-        spellSRC,
-        spellSlot);
+function giveSpellSlot(srcStruct, spellSRC, spellSlot, color){
+
+  let spellType = '';
+  switch(color.trim().toLowerCase()){
+    case 'green': spellType = 'R:0,G:1,B:0'; break;
+    case 'blue': spellType = 'R:0,G:0,B:1'; break;
+    case 'red': spellType = 'R:1,G:0,B:0'; break;
+    case 'brown': spellType = 'R:1,G:1,B:0'; break;
+    case 'aqua': spellType = 'R:0,G:1,B:1'; break;
+    case 'purple': spellType = 'R:1,G:0,B:1'; break;
+    case 'gold': spellType = 'R:1,G:1,B:1'; break;
+    default: break;
+  }
+
+  socket.emit("requestSpellSlotChange",
+      getCharIDFromURL(),
+      srcStruct,
+      spellSRC,
+      spellSlot,
+      spellType);
 }
 
 socket.on("returnSpellCastingSlotChange", function(spellSRC, spellSlots){
