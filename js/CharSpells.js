@@ -329,7 +329,7 @@ module.exports = class CharSpells {
     }
 
 
-    static addToSpellBookFromBuilder(charID, spellSRC, spellID, spellLevel, srcStruct){
+    static addToSpellBookFromBuilder(charID, spellSRC, spellID, spellLevel, srcStruct, spellType=null){
         let srcStructHashed = srcStructToCode(charID, 'Spell', srcStruct);
         return SpellBookSpell.destroy({
             where: {
@@ -342,7 +342,7 @@ module.exports = class CharSpells {
                 charID: charID,
                 spellID: spellID,
                 spellLevel: spellLevel,
-                spellType: null,
+                spellType: spellType,
                 srcStructHashed: srcStructHashed,
             }).then(spellBookSpell => {
                 return spellBookSpell;

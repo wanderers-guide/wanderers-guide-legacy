@@ -1650,7 +1650,7 @@ module.exports = class SocketConnections {
       });
 
       // Add Spell to Spellbook for Spell SRC //
-      socket.on('requestBuilderSpellAddToSpellBook', function(charID, srcStruct, spellSRC, spellName, spellLevel){
+      socket.on('requestBuilderSpellAddToSpellBook', function(charID, srcStruct, spellSRC, spellName, spellLevel, spellType=null){
         AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
             let sLevel = parseInt(spellLevel);
@@ -1659,7 +1659,7 @@ module.exports = class SocketConnections {
               .then((spell) => {
                 if(spell != null){
                   if(spell.level <= sLevel) {
-                    CharSpells.addToSpellBookFromBuilder(charID, spellSRC, spell.id, sLevel, srcStruct)
+                    CharSpells.addToSpellBookFromBuilder(charID, spellSRC, spell.id, sLevel, srcStruct, spellType)
                     .then((result) => {
                       socket.emit('returnBuilderSpellAddToSpellBook');
                     });

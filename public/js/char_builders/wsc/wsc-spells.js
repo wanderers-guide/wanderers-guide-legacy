@@ -30,7 +30,9 @@ function processingSpells(wscStatement, srcStruct, locationID, sourceName){
     } else if(wscStatement.includes("ADD-SPELL-TO-LIST")){// ADD-SPELL-TO-LIST=Wizard:Meld_Into_Stone:3
         let data = wscStatement.split('=')[1];
         let segments = data.split(':');
-        addSpellToSpellbook(srcStruct, segments[0], segments[1], segments[2]);
+        let color = '';
+        if(segments[3] != null){ color = segments[3]; }
+        addSpellToSpellbook(srcStruct, segments[0], segments[1], segments[2], color);
     } else {
         displayError("Unknown statement (2-Spell): \'"+wscStatement+"\'");
         statementComplete();
@@ -50,15 +52,15 @@ function giveSpellCasting(srcStruct, spellSRC, spellcasting){
 
 function giveSpellSlot(srcStruct, spellSRC, spellSlot, color){
 
-  let spellType = '';
+  let slotType = '';
   switch(color.trim().toLowerCase()){
-    case 'green': spellType = 'R:0,G:1,B:0'; break;
-    case 'blue': spellType = 'R:0,G:0,B:1'; break;
-    case 'red': spellType = 'R:1,G:0,B:0'; break;
-    case 'brown': spellType = 'R:1,G:1,B:0'; break;
-    case 'aqua': spellType = 'R:0,G:1,B:1'; break;
-    case 'purple': spellType = 'R:1,G:0,B:1'; break;
-    case 'gold': spellType = 'R:1,G:1,B:1'; break;
+    case 'green': slotType = 'R:0,G:1,B:0'; break;
+    case 'blue': slotType = 'R:0,G:0,B:1'; break;
+    case 'red': slotType = 'R:1,G:0,B:0'; break;
+    case 'brown': slotType = 'R:1,G:1,B:0'; break;
+    case 'aqua': slotType = 'R:0,G:1,B:1'; break;
+    case 'purple': slotType = 'R:1,G:0,B:1'; break;
+    case 'gold': slotType = 'R:1,G:1,B:1'; break;
     default: break;
   }
 
@@ -67,7 +69,7 @@ function giveSpellSlot(srcStruct, spellSRC, spellSlot, color){
       srcStruct,
       spellSRC,
       spellSlot,
-      spellType);
+      slotType);
 }
 
 socket.on("returnSpellCastingSlotChange", function(spellSRC, spellSlots){
@@ -134,14 +136,28 @@ socket.on("returnSpellCastingTypeChange", function(){
 
 
 //////////////////////////////// Add Spell to Spellbook ///////////////////////////////////
-function addSpellToSpellbook(srcStruct, spellSRC, spellName, spellLevel){
-    spellName = spellName.replace(/_/g," ");
-    socket.emit("requestBuilderSpellAddToSpellBook",
-        getCharIDFromURL(),
-        srcStruct,
-        spellSRC,
-        spellName,
-        spellLevel);
+function addSpellToSpellbook(srcStruct, spellSRC, spellName, spellLevel, color){
+
+  let spellType = null;
+  switch(color.trim().toLowerCase()){
+    case 'green': spellType = 'R:0,G:1,B:0'; break;
+    case 'blue': spellType = 'R:0,G:0,B:1'; break;
+    case 'red': spellType = 'R:1,G:0,B:0'; break;
+    case 'brown': spellType = 'R:1,G:1,B:0'; break;
+    case 'aqua': spellType = 'R:0,G:1,B:1'; break;
+    case 'purple': spellType = 'R:1,G:0,B:1'; break;
+    case 'gold': spellType = 'R:1,G:1,B:1'; break;
+    default: break;
+  }
+
+  spellName = spellName.replace(/_/g," ");
+  socket.emit("requestBuilderSpellAddToSpellBook",
+      getCharIDFromURL(),
+      srcStruct,
+      spellSRC,
+      spellName,
+      spellLevel,
+      spellType);
 }
 
 socket.on("returnBuilderSpellAddToSpellBook", function(){
