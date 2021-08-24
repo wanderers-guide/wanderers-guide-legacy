@@ -141,6 +141,7 @@ function featDisplayByType(data, sortingTagNameArray, featsSearchValue){
         if(feat.value == null) { continue; }
         let featData = data.FeatMap.get(feat.value.id+"");
         if(featData == null) { continue; }
+        if(isFeatConcealed(feat.value.name)){ continue; }
         let featTags = featData.Tags;
         if(sortingTagNameArray == null){
             // Is Other, display if feat is NOT ancestry, class, or skill

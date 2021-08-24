@@ -45,6 +45,10 @@ function hasSameSrcAnySNum(dataStruct, srcStruct){
   return (dataStruct.sourceType == srcStruct.sourceType && dataStruct.sourceLevel == srcStruct.sourceLevel && dataStruct.sourceCode == srcStruct.sourceCode);
 }
 
+function srcStructToCompositeKey(srcStruct){
+  return `${srcStruct.sourceType}:::${srcStruct.sourceLevel}:::${srcStruct.sourceCode}:::${srcStruct.sourceCodeSNum}`;
+}
+
 /* Content Sources */
 
 const g_contentSources = [

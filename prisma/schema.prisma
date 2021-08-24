@@ -246,7 +246,7 @@ model characters {
   infoJSON                    String?                @db.VarChar(3000)
   rollHistoryJSON             String?                @db.VarChar(8000)
   details                     String?                @db.Text
-  customCode                  String?                @db.VarChar(1000)
+  customCode                  String?                @db.VarChar(2000)
   optionAutoDetectPreReqs     Int?                @default(1)
   optionAutoHeightenSpells    Int?                @default(0)
   optionPublicCharacter       Int?                @default(0)
@@ -353,7 +353,7 @@ model classAbilities {
   name                 String?                    @db.VarChar(45)
   level                Int?
   description          String?                    @db.Text
-  code                 String?                    @db.VarChar(2000)
+  code                 String?                    @db.VarChar(3000)
   selectType           classAbilities_selectType? @default(NONE)
   selectOptionFor      Int?
   displayInSheet       Int?                    @default(0)

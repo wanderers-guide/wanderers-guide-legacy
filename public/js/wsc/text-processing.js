@@ -701,27 +701,28 @@ function handleSheetVariablesAndTooltips(match, innerText){
     }
 }
 
+// Old system, really need to replace getStatTotal() with getVariableValue()
 function acquireSheetVariable(variableName){
     if(variableName.charAt(0) === '+') {
         variableName = variableName.substring(1);
         if(variableName.slice(-3) === "_DC") {
             variableName = variableName.slice(0, -3);
-            return signNumber(getStatTotal(variableName)+10);
+            return signNumber(getStatTotal(variableName, false)+10);
         } else if(variableName.slice(-4) === "_MOD") {
             variableName = variableName.slice(0, -4);
-            return signNumber(getModOfValue(variableName));
+            return signNumber(getModOfValue(variableName, false));
         } else {
-            return signNumber(getStatTotal(variableName));
+            return null;
         }
     } else {
         if(variableName.slice(-3) === "_DC") {
             variableName = variableName.slice(0, -3);
-            return getStatTotal(variableName)+10;
+            return getStatTotal(variableName, false)+10;
         } else if(variableName.slice(-4) === "_MOD") {
             variableName = variableName.slice(0, -4);
-            return getModOfValue(variableName);
+            return getModOfValue(variableName, false);
         } else {
-            return getStatTotal(variableName);
+            return null;
         }
     }
 }

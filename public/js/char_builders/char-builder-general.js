@@ -9,7 +9,7 @@ let g_pageNum;
 
 // Temp global variables
 let gOption_hasProfWithoutLevel = false;
-let g_character = { level: 5 };
+let g_character = null;
 //
 
 // 
@@ -62,6 +62,9 @@ socket.on("returnCharBuilderDetails", function(character, coreDataStruct, inChoi
   g_char_backgroundID = character.backgroundID;
   g_char_classID_1 = character.classID;
   g_char_classID_2 = null;
+  //
+  gOption_hasProfWithoutLevel = (character.variantProfWithoutLevel == 1);
+  g_character = character;
   //
   injectWSCChoiceStruct(inChoiceStruct);
   // ~~~~~~~~~~~~~~~~~ //

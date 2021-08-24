@@ -64,6 +64,8 @@ function giveSpellSlot(srcStruct, spellSRC, spellSlot, color){
     default: break;
   }
 
+  console.log(spellSRC+' '+spellSlot+" "+color);
+
   socket.emit("requestSpellSlotChange",
       getCharIDFromURL(),
       srcStruct,

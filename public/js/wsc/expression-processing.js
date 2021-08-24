@@ -281,11 +281,11 @@ function expIsVariable(expression, variableName, statement, elseStatement){
   }
 
   if(variable.Type == VAR_TYPE.INTEGER){
-    return expHasNumberCompare(variable.Value, expression, statement, elseStatement);
+    return expHasNumberCompare(variables_getTotal(variableName), expression, statement, elseStatement);
   } else if(variable.Type == VAR_TYPE.STRING){
     return expHasStringCompare(variable.Value, expression, statement, elseStatement);
   } else if(variable.Type == VAR_TYPE.ABILITY_SCORE){
-    return expHasNumberCompare(variable.Value.Score, expression, statement, elseStatement);
+    return expHasNumberCompare(variables_getTotal(variableName), expression, statement, elseStatement);
   } else if(variable.Type == VAR_TYPE.LIST){
     return expHasStringCompare(variable.Value+'', expression, statement, elseStatement);
   } else if(variable.Type == VAR_TYPE.PROFICIENCY){
@@ -299,40 +299,72 @@ function expIsVariable(expression, variableName, statement, elseStatement){
 
 function expHasNumberCompare(charVarNumber, expression, statement, elseStatement){
     if(expression.includes('==')){
-        let number = parseInt(expression.split('==')[1]);
+        let inputValue = expression.split('==')[1];
+        let number = parseInt(inputValue);
         if(!isNaN(number)){
             if(charVarNumber == number){
                 return statement;
             } else {
                 return elseStatement;
             }
+        } else {
+          let varValue = getVariableValue(inputValue, false);
+          if(charVarNumber == varValue){
+            return statement;
+          } else {
+            return elseStatement;
+          }
         }
     } else if(expression.includes('>=')){
-        let number = parseInt(expression.split('>=')[1]);
+        let inputValue = expression.split('>=')[1];
+        let number = parseInt(inputValue);
         if(!isNaN(number)){
             if(charVarNumber >= number){
                 return statement;
             } else {
                 return elseStatement;
             }
+        } else {
+          let varValue = getVariableValue(inputValue, false);
+          if(charVarNumber >= varValue){
+            return statement;
+          } else {
+            return elseStatement;
+          }
         }
     } else if(expression.includes('<=')){
-        let number = parseInt(expression.split('<=')[1]);
+        let inputValue = expression.split('<=')[1];
+        let number = parseInt(inputValue);
         if(!isNaN(number)){
             if(charVarNumber <= number){
                 return statement;
             } else {
                 return elseStatement;
             }
+        } else {
+          let varValue = getVariableValue(inputValue, false);
+          if(charVarNumber <= varValue){
+            return statement;
+          } else {
+            return elseStatement;
+          }
         }
     } else if(expression.includes('!=')){
-        let number = parseInt(expression.split('!=')[1]);
+      let inputValue = expression.split('!=')[1];
+      let number = parseInt(inputValue);
         if(!isNaN(number)){
             if(charVarNumber != number){
                 return statement;
             } else {
                 return elseStatement;
             }
+        } else {
+          let varValue = getVariableValue(inputValue, false);
+          if(charVarNumber != varValue){
+            return statement;
+          } else {
+            return elseStatement;
+          }
         }
     }
     return null;

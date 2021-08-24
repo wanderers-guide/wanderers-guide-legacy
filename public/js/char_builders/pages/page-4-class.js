@@ -569,7 +569,10 @@ function displayCurrentClass(classStruct, classNum) {
 
     }
 
+    // Class abilities should come before ability options
+    processBuilderCode_ClassAbilities(classStruct.Abilities, classNum);
 
+    // Class ability options
     let abilSelectors = $('.classAbilSelection');
     for(const abilSelector of abilSelectors){
 
@@ -638,9 +641,6 @@ function displayCurrentClass(classStruct, classNum) {
     }
 
     $('.classAbilSelection').trigger("change", [false]);
-
-    processBuilderCode_ClassAbilities(classStruct.Abilities, classNum);
-
 
     
     for(let abilityTab of $('.ability-tabs a')){

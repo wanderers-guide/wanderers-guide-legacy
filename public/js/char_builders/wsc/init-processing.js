@@ -22,7 +22,7 @@ function processBuilderCode(wscCode, srcStruct, locationID, sourceName=''){
     if(wscCode == null || wscCode == ''){ return; }
 
     // Process Variables
-    wscCode = processVariables(wscCode);
+    wscCode = processVariables(wscCode, `builderCode-${srcStructToCompositeKey(srcStruct)}`);
 
     // Process ADD-TEXT Statements
     processAddText(wscCode, locationID, true);

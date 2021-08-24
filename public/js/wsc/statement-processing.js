@@ -15,7 +15,19 @@ function processSheetCode(wscCode, extraData=null, isTest=false){
     if(extraData == null){ extraData = {source: 'Unknown', sourceName: ''}; }
 
     // Process Variables
-    wscCode = processVariables(wscCode);
+    let varUniqueID = `sheetCode-${extraData.source}-`;
+    if(extraData.source == 'ClassAbility' || extraData.source == 'ClassAbilityOption'){
+      varUniqueID += extraData.abilityID;
+    } else if(extraData.source == 'Feat'){
+      if(extraData.srcStructKey != null){
+        varUniqueID += extraData.featID+'-'+extraData.srcStructKey;
+      } else {
+        varUniqueID += extraData.featID;
+      }
+    } else {
+      varUniqueID += extraData.sourceName;
+    }
+    wscCode = processVariables(wscCode, varUniqueID);
 
     let wscStatements = wscCode.split(/\n/);
 

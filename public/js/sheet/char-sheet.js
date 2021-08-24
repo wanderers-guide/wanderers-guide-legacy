@@ -419,6 +419,8 @@ function loadCharSheet(){
 
     // ~~~~~~~~~~~~~~~~~~~~~~~ Adding Stats To Map ~~~~~~~~~~~~~~~~~~~~~~~ //
 
+    initializeVariable(VARIABLE.LEVEL, VAR_TYPE.INTEGER, g_character.level);
+
     initializeVariable(VARIABLE.SCORE_STR, VAR_TYPE.ABILITY_SCORE, g_abilMap.get("STR"));
     initializeVariable(VARIABLE.SCORE_DEX, VAR_TYPE.ABILITY_SCORE, g_abilMap.get("DEX"));
     initializeVariable(VARIABLE.SCORE_CON, VAR_TYPE.ABILITY_SCORE, g_abilMap.get("CON"));
@@ -427,7 +429,7 @@ function loadCharSheet(){
     initializeVariable(VARIABLE.SCORE_CHA, VAR_TYPE.ABILITY_SCORE, g_abilMap.get("CHA"));
     initializeVariable(VARIABLE.SCORE_NONE, VAR_TYPE.ABILITY_SCORE, 10);
 
-    initializeVariable('SPEED', VAR_TYPE.INTEGER, g_ancestry.speed);
+    initializeVariable(VARIABLE.SPEED, VAR_TYPE.INTEGER, g_ancestry.speed);
     for(const otherSpeed of g_otherSpeeds){
       initializeVariable('SPEED_'+otherSpeed.Type, VAR_TYPE.INTEGER, otherSpeed.Amount);
     }
@@ -2516,26 +2518,6 @@ function runAllItemsCode() {
 
 function runAllFeatsAndAbilitiesCode() {
 
-    for(const feat of g_featChoiceArray){
-        if(feat != null && feat.value != null){
-            processSheetCode(feat.value.code, {
-              source: 'Feat',
-              sourceName: feat.value.name,
-              featID: feat.value.id,
-            });
-        }
-    }
-
-    for(const [featID, featStruct] of g_featMap.entries()){
-        if(featStruct.Feat.isDefault == 1){
-            processSheetCode(featStruct.Feat.code, {
-              source: 'Feat',
-              sourceName: featStruct.Feat.name,
-              featID: featStruct.Feat.id,
-            });
-        }
-    }
-
     let totalClassAbilities = cloneObj(g_classDetails.Abilities);
     for(let extraClassAbil of g_extraClassAbilities){ totalClassAbilities.push(extraClassAbil.value); }
 
@@ -2594,6 +2576,28 @@ function runAllFeatsAndAbilitiesCode() {
       sourceName: g_background.name+' Background',
       backgroundID: g_background.id,
     });
+
+
+    for(const [featID, featStruct] of g_featMap.entries()){
+      if(featStruct.Feat.isDefault == 1){
+          processSheetCode(featStruct.Feat.code, {
+            source: 'Feat',
+            sourceName: featStruct.Feat.name,
+            featID: featStruct.Feat.id,
+          });
+      }
+    }
+
+    for(const feat of g_featChoiceArray){
+      if(feat != null && feat.value != null){
+          processSheetCode(feat.value.code, {
+            source: 'Feat',
+            sourceName: feat.value.name,
+            featID: feat.value.id,
+            srcStructKey: srcStructToCompositeKey(feat),
+          });
+      }
+    }
 
 }
 

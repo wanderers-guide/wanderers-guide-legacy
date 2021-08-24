@@ -65,6 +65,7 @@ const VARIABLE = {
 
   PERCEPTION: 'PERCEPTION',
   CLASS_DC: 'CLASS_DC',
+  LEVEL: 'LEVEL',
 
   MAX_HEALTH: 'MAX_HEALTH',
   MAX_HEALTH_BONUS_PER_LEVEL: 'MAX_HEALTH_BONUS_PER_LEVEL',
@@ -143,6 +144,9 @@ function resettingVariables(enabledSources=null){
 
   g_variableMap.clear();
 
+  // Char Level
+  variables_addInteger(VARIABLE.LEVEL, g_character.level);
+
   // Ability Scores
   variables_addAbilityScore(VARIABLE.SCORE_STR, 10);
   variables_addAbilityScore(VARIABLE.SCORE_DEX, 10);
@@ -183,7 +187,8 @@ function variables_addInteger(variableName, value){
 function variables_addString(variableName, value){
   g_variableMap.set(variableName, {
     Type: VAR_TYPE.STRING,
-    Value: value
+    Value: value,
+    Extras: new Map()
   });
 }
 function variables_addAbilityScore(variableName, value){
@@ -248,6 +253,87 @@ function variables_changeRank(variableName, rank, source){
 
   variable.Value.Rank = rank;
   variable.Value.RankHistory.set(source, rank);
+
+}
+
+function variables_addToExtras(variableName, value, type, source){
+
+  let variable = g_variableMap.get(variableName);
+  if(variable == null) { return; }
+
+  let extrasMap;
+  if(variable.Type == VAR_TYPE.INTEGER){
+    displayError("Variable Add Extra: Unsupported variable type \'"+variable.Type+"\'!");
+    return;
+  } else if(variable.Type == VAR_TYPE.STRING){
+    extrasMap = variable.Extras;
+  } else if(variable.Type == VAR_TYPE.ABILITY_SCORE){
+    displayError("Variable Add Extra: Unsupported variable type \'"+variable.Type+"\'!");
+    return;
+  } else if(variable.Type == VAR_TYPE.LIST){
+    displayError("Variable Add Extra: Unsupported variable type \'"+variable.Type+"\'!");
+    return;
+  } else if(variable.Type == VAR_TYPE.PROFICIENCY){
+    displayError("Variable Add Extra: Unsupported variable type \'"+variable.Type+"\'!");
+    return;
+  } else {
+    displayError("Variable Add Extra: Unknown variable type \'"+variable.Type+"\'!");
+    return;
+  }
+
+  // ( type ) -> ({ Value: value, Src: source })
+  let existingData = extrasMap.get(type);
+  if(existingData != null){
+    console.log(`
+      Existing extra exists for ${variableName} at ${type}!
+      Overriding it with '${value}' from ${source}...
+    `);
+  }
+  extrasMap.set(type, {Value: value, Src: source});
+  
+  if(variable.Type == VAR_TYPE.STRING){
+    g_variableMap.get(variableName).Value.Extras = extrasMap;
+  }
+
+}
+
+function variables_getFullString(variableName, errorOnFailure=true){
+
+  let variable = g_variableMap.get(variableName);
+  if(variable == null) { console.log('Unknown variable '+variableName); return null; }
+
+  if(variable.Type == VAR_TYPE.INTEGER){
+    if(errorOnFailure){
+      displayError("Variable Get Full String: Unsupported variable type \'"+variable.Type+"\'!");
+    }
+    return;
+  } else if(variable.Type == VAR_TYPE.STRING){
+    
+    let str = variable.Value;
+    for(let [type, valueData] of variable.Extras){
+      str += ', '+valueData.Value;
+    }
+    return str;
+
+  } else if(variable.Type == VAR_TYPE.ABILITY_SCORE){
+    if(errorOnFailure){
+      displayError("Variable Get Full String: Unsupported variable type \'"+variable.Type+"\'!");
+    }
+    return;
+  } else if(variable.Type == VAR_TYPE.LIST){
+    if(errorOnFailure){
+      displayError("Variable Get Full String: Unsupported variable type \'"+variable.Type+"\'!");
+    }
+    return;
+  } else if(variable.Type == VAR_TYPE.PROFICIENCY){
+    if(errorOnFailure){
+      displayError("Variable Get Full String: Unsupported variable type \'"+variable.Type+"\'!");
+    }
+    return;
+  } else {
+    displayError("Variable Get Full String: Unknown variable type \'"+variable.Type+"\'!");
+    return;
+  }
 
 }
 
@@ -375,7 +461,7 @@ function variables_getBonusTotal(variableName){
 
 }
 
-function variables_getTotal(variableName){
+function variables_getTotal(variableName, errorOnFailure=true){
 
   let variable = g_variableMap.get(variableName);
   if(variable == null) { console.log('Unknown variable '+variableName); return null; }
@@ -389,7 +475,9 @@ function variables_getTotal(variableName){
     return total;
 
   } else if(variable.Type == VAR_TYPE.STRING){
-    displayError("Variable Get Bonus Total: Unsupported variable type \'"+variable.Type+"\'!");
+    if(errorOnFailure){
+      displayError("Variable Get Total: Unsupported variable type \'"+variable.Type+"\'!");
+    }
     return;
   } else if(variable.Type == VAR_TYPE.ABILITY_SCORE){
     
@@ -399,18 +487,20 @@ function variables_getTotal(variableName){
     return total;
 
   } else if(variable.Type == VAR_TYPE.LIST){
-    displayError("Variable Get Bonus Total: Unsupported variable type \'"+variable.Type+"\'!");
+    if(errorOnFailure){
+      displayError("Variable Get Total: Unsupported variable type \'"+variable.Type+"\'!");
+    }
     return;
   } else if(variable.Type == VAR_TYPE.PROFICIENCY){
     
     let bonusTotal = variables_getBonusTotal(variableName);
     if(bonusTotal != null) { total += bonusTotal; }
     total += getProfNumber(profToNumUp(variable.Value.Rank, true), g_character.level);
-    total += getMod(g_variableMap.get(variable.Value.AbilityScore).Value.Score);
+    total += getMod(variables_getTotal(variable.Value.AbilityScore));
     return total;
 
   } else {
-    displayError("Variable Get Bonus Total: Unknown variable type \'"+variable.Type+"\'!");
+    displayError("Variable Get Total: Unknown variable type \'"+variable.Type+"\'!");
     return;
   }
 
@@ -519,7 +609,7 @@ function variables_getConditionalsMap(variableName){
 
 ///////////////
 
-function processVariables(wscCode){
+function processVariables(wscCode, uniqueID){
   if(wscCode == null) {return;}
 
   let wscStatements = wscCode.split(/\n/);
@@ -527,6 +617,7 @@ function processVariables(wscCode){
 
   let newWscStatements = [];
 
+  let count = 0;
   for(let wscStatementRaw of wscStatements) {
 
     // Test/Check Statement for Expressions //
@@ -636,7 +727,7 @@ function processVariables(wscCode){
         }
 
         if(variableProcessingDebug) { console.log(`Setting variable: '${variableName}.${methodName}' to '${value}'`); }
-        setVariableValueIntoMethod(variable, variableName, methodName, value);
+        setVariableValueIntoMethod(variable, variableName, methodName, value, uniqueID+'-'+count);
 
         continue;
       }
@@ -718,35 +809,29 @@ function getVariableValue(variableStr, errorOnFailure=true){
 
     return getVariableValueFromMethod(variable, parts[0], parts[1]);
 
-  } else if(variableStr.match(/^[0-9 \-+\/^*]+$/) != null) {
-    // Just math
-
-    try {
-      return parseInt(math.evaluate(variableStr));
-    } catch (err){
-      if(errorOnFailure){
-        displayError("Variable Processing (2-0): Error doing math \'"+variableStr+"\'!");
-      }
-      console.error(err);
-      return 'Error';
-    }
-
-  } else if(variableStr.match(variableRegex) != null) {
-    // Variable
-
-    let variable = g_variableMap.get(variableStr);
-    if(variable == null){
-      if(errorOnFailure){
-        displayError("Variable Processing (2-2): Unknown variable \'"+variableStr+"\'!");
-      }
-      return 'Error';
-    }
-
-    return getVariableValueFromMethod(variable, variableStr, 'GET_VALUE');
-
   } else {
-    // Doesn't match anything
-    return 'Error';
+
+    // Might be just a variable
+    let variable = g_variableMap.get(variableStr);
+    if(variable != null){
+
+      return getVariableValueFromMethod(variable, variableStr, 'GET_VALUE');
+
+    } else {
+      // Could be just math
+
+      try {
+        return parseInt(math.evaluate(variableStr));
+      } catch (err){
+        if(errorOnFailure){
+          displayError("Variable Processing (2-0): Error trying to do math \'"+variableStr+"\'!");
+        }
+        console.error(err);
+        return 'Error';
+      }
+
+    }
+    
   }
 
 }
@@ -771,6 +856,8 @@ function getVariableValueFromMethod(variable, varName, method) {
 
     if(methodUpper == 'GET_VALUE'){
       return variable.Value;
+    } else if(methodUpper == 'GET_FULL_STRING'){
+      return variables_getFullString(varName);
     } else {
       displayError("Variable Processing: Unknown getting method \'"+method+"\' for variable \'"+varName+"\' ("+variable.Type+")!");
       return 'Error';
@@ -843,13 +930,14 @@ function getVariableValueFromMethod(variable, varName, method) {
 
 }
 
-function setVariableValueIntoMethod(variable, varName, method, value) {
+function setVariableValueIntoMethod(variable, varName, method, value, uniqueID=null) {
   let methodUpper = method.toUpperCase();
 
   if(variable.Type == VAR_TYPE.INTEGER){
 
     if(methodUpper == 'SET_VALUE'){
       let intValue = parseInt(value);
+      console.log(value);
       if(typeof intValue === 'number' && intValue == value) {
         variable.Value = intValue;
       } else {
@@ -864,7 +952,7 @@ function setVariableValueIntoMethod(variable, varName, method, value) {
         bonusType = valueParts[1];
       } else {
         bonusInt = parseInt(value);
-        bonusType = variables_randomType();
+        bonusType = uniqueID;
       }
       if(typeof bonusInt === 'number') {
         variables_addToBonuses(varName, bonusInt, bonusType, 'WSC Statement');
@@ -883,6 +971,18 @@ function setVariableValueIntoMethod(variable, varName, method, value) {
       } else {
         displayError("Variable Processing (set): The value \'"+value+"\' for \'"+varName+"\' is not a string!");
       }
+    } else if(methodUpper == 'ADD'){
+      let bonusStr;
+      let bonusType;
+      if(value.includes(':')){
+        let valueParts = value.split(':');
+        bonusStr = valueParts[0]
+        bonusType = valueParts[1];
+      } else {
+        bonusStr = value;
+        bonusType = uniqueID;
+      }
+      variables_addToExtras(varName, bonusStr, bonusType, 'WSC Statement');
     } else {
       displayError("Variable Processing: Unknown setting method \'"+method+"\' for variable \'"+varName+"\' ("+variable.Type+")!");
     }
@@ -905,7 +1005,7 @@ function setVariableValueIntoMethod(variable, varName, method, value) {
         bonusType = valueParts[1];
       } else {
         bonusInt = parseInt(value);
-        bonusType = variables_randomType();
+        bonusType = uniqueID;
       }
       if(typeof bonusInt === 'number') {
         variables_addToBonuses(varName, bonusInt, bonusType, 'WSC Statement');
@@ -936,7 +1036,7 @@ function setVariableValueIntoMethod(variable, varName, method, value) {
         bonusType = valueParts[1];
       } else {
         bonusInt = parseInt(value);
-        bonusType = variables_randomType();
+        bonusType = uniqueID;
       }
       if(typeof bonusInt === 'number') {
         variables_addToBonuses(varName, bonusInt, bonusType, 'WSC Statement');
@@ -974,8 +1074,4 @@ function setVariableValueIntoMethod(variable, varName, method, value) {
     displayError("Variable Processing: Unknown variable type \'"+variable.Type+"\'!");
   }
 
-}
-
-function variables_randomType(length = 8) {
-  return Math.random().toString(16).substr(2, length);
 }

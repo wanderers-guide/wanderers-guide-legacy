@@ -7,7 +7,7 @@ function processDefaultItemRuneSheetCode(wscCode, itemID, invItemID){
     if(wscCode == null) {return false;}
 
     // Process Variables
-    wscCode = processVariables(wscCode);
+    wscCode = processVariables(wscCode, `itemDefault-${invItemID}`);
     
     wscCode = wscCode.toUpperCase();
     let wscStatements = wscCode.split(/\n/);

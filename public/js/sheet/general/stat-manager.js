@@ -91,9 +91,9 @@ function getStat(statName, type){
   return value;
 }
 
-function getStatTotal(statName){
+function getStatTotal(statName, errorOnFailure=true){
   statName = statName.replace(/\s/g, "_").toUpperCase();
-  return variables_getTotal(statName);
+  return variables_getTotal(statName, errorOnFailure);
 }
 
 function getStatBonusTotal(statName){
@@ -157,23 +157,23 @@ function getStatMap(statName){
     return variables_getBonusesMap(statName);
 }
 
-function getModOfValue(valueModName){
+function getModOfValue(valueModName, errorOnFailure=true){
     if(valueModName == null){ return 0; }
     valueModName = valueModName+''; // Convert to string, in case a num is passed
     valueModName = valueModName.toUpperCase();
     switch(valueModName) {
         case 'STR':
-            return getMod(getStatTotal(VARIABLE.SCORE_STR));
+            return getMod(getStatTotal(VARIABLE.SCORE_STR, errorOnFailure));
         case 'DEX':
-            return getMod(getStatTotal(VARIABLE.SCORE_DEX));
+            return getMod(getStatTotal(VARIABLE.SCORE_DEX, errorOnFailure));
         case 'CON':
-            return getMod(getStatTotal(VARIABLE.SCORE_CON));
+            return getMod(getStatTotal(VARIABLE.SCORE_CON, errorOnFailure));
         case 'INT':
-            return getMod(getStatTotal(VARIABLE.SCORE_INT));
+            return getMod(getStatTotal(VARIABLE.SCORE_INT, errorOnFailure));
         case 'WIS':
-            return getMod(getStatTotal(VARIABLE.SCORE_WIS));
+            return getMod(getStatTotal(VARIABLE.SCORE_WIS, errorOnFailure));
         case 'CHA':
-            return getMod(getStatTotal(VARIABLE.SCORE_CHA));
+            return getMod(getStatTotal(VARIABLE.SCORE_CHA, errorOnFailure));
 
         case 'PRE_STR':
             return getMod(g_preConditions_strScore);

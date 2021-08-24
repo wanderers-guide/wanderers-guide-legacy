@@ -3,6 +3,7 @@
 */
 
 let g_hiddenFeatNames = [];
+let g_concealedFeatNames = [];
 let g_overrideFeatLevelMap = new Map();
 
 function processMiscFeatStatements(code){
@@ -46,10 +47,22 @@ function processMiscFeatStatements(code){
       continue;
     }
 
+    if(wscStatementUpper.includes("SHEET-CONCEAL-FEAT-NAME=")){ // SHEET-CONCEAL-FEAT-NAME=Counterspell
+
+      let featName = wscStatementUpper.split('=')[1];
+      g_concealedFeatNames.push(featName.toUpperCase());
+
+      continue;
+    }
+
     // Could not identify wsc statement
     success = false;
   }
   return success;
+}
+
+function isFeatConcealed(featName){
+  return g_concealedFeatNames.includes(featName.toUpperCase());
 }
 
 function isFeatHidden(featName){
