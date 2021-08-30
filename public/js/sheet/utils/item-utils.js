@@ -330,14 +330,17 @@ function getItemIcon(item, invItem){
     if(itemType === 'Book'){ fa_icon = 'fas fa-book'; }
     if(itemType === 'Boots'){ fa_icon = 'fas fa-boot'; }
     // Bracers
+    if(itemType === 'Catalyst'){ fa_icon = 'fad fa-certificate'; }
     // Circlet
     if(itemType === 'Cloak'){ fa_icon = 'fas fa-hood-cloak'; }
     if(itemType === 'Companion'){ fa_icon = 'fas fa-paw'; }
     if(itemType === 'Currency'){ fa_icon = 'fas fa-coins'; }
     if(itemType === 'Drug'){ fa_icon = 'fas fa-cannabis'; }
-    if(itemType === 'Elixir'){ fa_icon = 'fas fa-vial'; }
+    if(itemType === 'Elixir'){ fa_icon = 'fas fa-flask'; }
     if(itemType === 'Eyepiece'){ fa_icon = 'far fa-glasses-alt'; }
+    if(itemType === 'Fulu'){ fa_icon = 'fas fa-tag'; }
     if(itemType === 'Gloves'){ fa_icon = 'fad fa-boxing-glove'; }
+    if(itemType === 'Grimoire'){ fa_icon = 'fas fa-book-spells'; }
     if(itemType === 'Hat'){ fa_icon = 'fas fa-hat-witch'; }
     if(itemType === 'Ingredient'){ fa_icon = 'fad fa-cauldron'; }
     if(itemType === 'Instrument'){ fa_icon = 'fas fa-mandolin'; }
@@ -352,10 +355,11 @@ function getItemIcon(item, invItem){
     if(itemType === 'Rune'){ fa_icon = 'fas fa-tombstone-alt'; }
     if(itemType === 'Scroll'){ fa_icon = 'fas fa-scroll-old'; }
     if(itemType === 'Shield'){ fa_icon = 'far fa-shield-alt'; }
+    if(itemType === 'Spellheart'){ fa_icon = 'fas fa-heart'; }
     if(itemType === 'Staff'){ fa_icon = 'far fa-staff'; }
     if(itemType === 'Storage'){ fa_icon = 'fas fa-backpack'; }
     if(itemType === 'Structure'){ fa_icon = 'fas fa-home-alt'; }
-    if(itemType === 'Talisman'){ fa_icon = 'fas fa-ankh'; }
+    if(itemType === 'Talisman'){ fa_icon = 'fas fa-ornament'; }
     if(itemType === 'Tattoo'){ fa_icon = 'far fa-signature'; }
     // Tool (probably don't want to set one)
     if(itemType === 'Wand'){ fa_icon = 'fas fa-wand'; }

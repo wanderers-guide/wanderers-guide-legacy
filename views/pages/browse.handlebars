@@ -96,387 +96,395 @@
   <div id="tabContent" class="mx-3 mb-3" data-content-filter="{{contentFilter}}" data-content-section="{{contentSection}}" data-content-id="{{contentID}}">
 
     <div class="columns">
-      <div id="searchFilterSection" class="column is-4 m-1 is-paddingless use-custom-scrollbar" style="height: 650px; max-height: 650px; overflow-y: auto;">
+      <div id="searchFilterSection" class="column is-4 m-1 is-paddingless " style="">
         <div class="section-box" style="position: relative;">
           <p id="browsingFilter" class="is-size-6 text-center"><strong class="has-text-grey-lighter">Search Filters</strong></p>
 
-          <div id="filterNameSection" class="is-hidden filterFieldSection field">
-            <div class="control">
-              <input class="input" id="filterNameInput" type="text" placeholder="Name" autocomplete="off">
-            </div>
-          </div>
+          <div class="use-custom-scrollbar" style="height: 550px; max-height: 550px; overflow-y: auto;">
 
-          <div id="filterTagsSection" class="is-hidden filterFieldSection field">
-            <select id="filterTagsInput" data-placeholder="Traits" multiple>
-            </select>
-          </div>
-
-          <div id="filterFeatPrereqSection" class="is-hidden filterFieldSection field">
-            <div class="control">
-              <input class="input" id="filterFeatPrereqInput" type="text" placeholder="Prerequisites" autocomplete="off">
+            <div id="filterNameSection" class="is-hidden filterFieldSection field">
+              <div class="control">
+                <input class="input" id="filterNameInput" type="text" placeholder="Name" autocomplete="off">
+              </div>
             </div>
-          </div>
 
-          <div id="filterItemUsageSection" class="is-hidden filterFieldSection field">
-            <div class="control">
-              <input class="input" id="filterItemUsageInput" type="text" placeholder="Usage" autocomplete="off">
+            <div id="filterTagsSection" class="is-hidden filterFieldSection field">
+              <select id="filterTagsInput" data-placeholder="Traits" multiple>
+              </select>
             </div>
-          </div>
 
-          <div id="filterAreaSection" class="is-hidden filterFieldSection field">
-            <div class="control">
-              <input class="input" id="filterAreaInput" type="text" placeholder="Area" autocomplete="off">
+            <div id="filterFeatPrereqSection" class="is-hidden filterFieldSection field">
+              <div class="control">
+                <input class="input" id="filterFeatPrereqInput" type="text" placeholder="Prerequisites" autocomplete="off">
+              </div>
             </div>
-          </div>
 
-          <div id="filterRangeSection" class="is-hidden filterFieldSection field">
-            <div class="control">
-              <input class="input" id="filterRangeInput" type="text" placeholder="Range" autocomplete="off">
+            <div id="filterItemUsageSection" class="is-hidden filterFieldSection field">
+              <div class="control">
+                <input class="input" id="filterItemUsageInput" type="text" placeholder="Usage" autocomplete="off">
+              </div>
             </div>
-          </div>
 
-          <div id="filterTargetsSection" class="is-hidden filterFieldSection field">
-            <div class="control">
-              <input class="input" id="filterTargetsInput" type="text" placeholder="Targets" autocomplete="off">
+            <div id="filterAreaSection" class="is-hidden filterFieldSection field">
+              <div class="control">
+                <input class="input" id="filterAreaInput" type="text" placeholder="Area" autocomplete="off">
+              </div>
             </div>
-          </div>
 
-          <div id="filterDescSection" class="is-hidden filterFieldSection field">
-            <div class="control">
-              <input class="input" id="filterDescInput" type="text" placeholder="Description" autocomplete="off">
+            <div id="filterRangeSection" class="is-hidden filterFieldSection field">
+              <div class="control">
+                <input class="input" id="filterRangeInput" type="text" placeholder="Range" autocomplete="off">
+              </div>
             </div>
-          </div>
 
-          <div id="filterSpellTraditionSection" class="is-hidden filterFieldSection field is-horizontal">
-            <div class="field-label is-normal ml-2">
-              <label class="label">Tradition</label>
+            <div id="filterTargetsSection" class="is-hidden filterFieldSection field">
+              <div class="control">
+                <input class="input" id="filterTargetsInput" type="text" placeholder="Targets" autocomplete="off">
+              </div>
             </div>
-            <div class="field-body">
-              <div class="field">
-                <div class="control">
-                  <div class="select">
-                    <select id="filterSpellTraditionInput">
-                      <option value="ANY">Any</option>
-                      <option value="arcane">Arcane</option>
-                      <option value="divine">Divine</option>
-                      <option value="occult">Occult</option>
-                      <option value="primal">Primal</option>
-                    </select>
+
+            <div id="filterDescSection" class="is-hidden filterFieldSection field">
+              <div class="control">
+                <input class="input" id="filterDescInput" type="text" placeholder="Description" autocomplete="off">
+              </div>
+            </div>
+
+            <div id="filterSpellTraditionSection" class="is-hidden filterFieldSection field is-horizontal">
+              <div class="field-label is-normal ml-2">
+                <label class="label">Tradition</label>
+              </div>
+              <div class="field-body">
+                <div class="field">
+                  <div class="control">
+                    <div class="select">
+                      <select id="filterSpellTraditionInput">
+                        <option value="ANY">Any</option>
+                        <option value="arcane">Arcane</option>
+                        <option value="divine">Divine</option>
+                        <option value="occult">Occult</option>
+                        <option value="primal">Primal</option>
+                      </select>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
 
-          <div id="filterActionsSection" class="is-hidden filterFieldSection field is-horizontal">
-            <div class="field-label is-normal ml-2">
-              <label class="label">Actions</label>
-            </div>
-            <div class="field-body">
-              <div class="field">
-                <div class="control">
-                  <div class="select">
-                    <select id="filterActionsInput" class="pf-icon">
-                      <option value="ANY">Any</option>
-                      <option value="NONE">None</option>
-                      <option value="ACTION">[one-action]</option>
-                      <option value="TWO_ACTIONS">[two-actions]</option>
-                      <option value="THREE_ACTIONS">[three-actions]</option>
-                      <option value="FREE_ACTION">[free-action]</option>
-                      <option value="REACTION">[reaction]</option>
-                    </select>
+            <div id="filterActionsSection" class="is-hidden filterFieldSection field is-horizontal">
+              <div class="field-label is-normal ml-2">
+                <label class="label">Actions</label>
+              </div>
+              <div class="field-body">
+                <div class="field">
+                  <div class="control">
+                    <div class="select">
+                      <select id="filterActionsInput" class="pf-icon">
+                        <option value="ANY">Any</option>
+                        <option value="NONE">None</option>
+                        <option value="ACTION">[one-action]</option>
+                        <option value="TWO_ACTIONS">[two-actions]</option>
+                        <option value="THREE_ACTIONS">[three-actions]</option>
+                        <option value="FREE_ACTION">[free-action]</option>
+                        <option value="REACTION">[reaction]</option>
+                      </select>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
 
-          <div id="filterCastTimeSection" class="is-hidden filterFieldSection field is-horizontal">
-            <div class="field-label is-normal ml-2">
-              <label class="label" style="white-space: nowrap;">Cast Time</label>
-            </div>
-            <div class="field-body">
-              <div class="field">
-                <div class="control">
-                  <div class="select">
-                    <select id="filterCastTimeInput" class="pf-icon">
-                      <option value="ANY">Any</option>
-                      <option value="ACTION">[one-action]</option>
-                      <option value="TWO_ACTIONS">[two-actions]</option>
-                      <option value="THREE_ACTIONS">[three-actions]</option>
-                      <option value="FREE_ACTION">[free-action]</option>
-                      <option value="REACTION">[reaction]</option>
-                      <option value="ONE_TO_THREE_ACTIONS">[one-action] to [three-actions]</option>
-                      <option value="ONE_TO_TWO_ACTIONS">[one-action] to [two-actions]</option>
-                      <option value="TWO_TO_THREE_ACTIONS">[two-actions] to [three-actions]</option>
-                      <option value="TWO_TO_TWO_ROUNDS">[two-actions] to 2 rounds</option>
-                      <option value="TWO_TO_THREE_ROUNDS">[two-actions] to 3 rounds</option>
-                      <option value="THREE_TO_TWO_ROUNDS">[three-actions] to 2 rounds</option>
-                      <option value="THREE_TO_THREE_ROUNDS">[three-actions] to 3 rounds</option>
-                      <option value="TWO_ROUNDS">2 rounds</option>
-                      <option value="THREE_ROUNDS">3 rounds</option>
-                      <option value="ONE_MINUTE">1 minute</option>
-                      <option value="FIVE_MINUTES">5 minutes</option>
-                      <option value="TEN_MINUTES">10 minutes</option>
-                      <option value="THIRTY_MINUTES">30 minutes</option>
-                      <option value="ONE_HOUR">1 hour</option>
-                      <option value="EIGHT_HOURS">8 hours</option>
-                      <option value="ONE_DAY">24 hours</option>
-                    </select>
+            <div id="filterCastTimeSection" class="is-hidden filterFieldSection field is-horizontal">
+              <div class="field-label is-normal ml-2">
+                <label class="label" style="white-space: nowrap;">Cast Time</label>
+              </div>
+              <div class="field-body">
+                <div class="field">
+                  <div class="control">
+                    <div class="select">
+                      <select id="filterCastTimeInput" class="pf-icon">
+                        <option value="ANY">Any</option>
+                        <option value="ACTION">[one-action]</option>
+                        <option value="TWO_ACTIONS">[two-actions]</option>
+                        <option value="THREE_ACTIONS">[three-actions]</option>
+                        <option value="FREE_ACTION">[free-action]</option>
+                        <option value="REACTION">[reaction]</option>
+                        <option value="ONE_TO_THREE_ACTIONS">[one-action] to [three-actions]</option>
+                        <option value="ONE_TO_TWO_ACTIONS">[one-action] to [two-actions]</option>
+                        <option value="TWO_TO_THREE_ACTIONS">[two-actions] to [three-actions]</option>
+                        <option value="TWO_TO_TWO_ROUNDS">[two-actions] to 2 rounds</option>
+                        <option value="TWO_TO_THREE_ROUNDS">[two-actions] to 3 rounds</option>
+                        <option value="THREE_TO_TWO_ROUNDS">[three-actions] to 2 rounds</option>
+                        <option value="THREE_TO_THREE_ROUNDS">[three-actions] to 3 rounds</option>
+                        <option value="TWO_ROUNDS">2 rounds</option>
+                        <option value="THREE_ROUNDS">3 rounds</option>
+                        <option value="ONE_MINUTE">1 minute</option>
+                        <option value="FIVE_MINUTES">5 minutes</option>
+                        <option value="TEN_MINUTES">10 minutes</option>
+                        <option value="THIRTY_MINUTES">30 minutes</option>
+                        <option value="ONE_HOUR">1 hour</option>
+                        <option value="EIGHT_HOURS">8 hours</option>
+                        <option value="ONE_DAY">24 hours</option>
+                      </select>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
 
-          <div id="filterComponentsSection" class="is-hidden filterFieldSection field is-horizontal">
-            <div class="field-label is-normal ml-2">
-              <label class="label">Components</label>
-            </div>
-            <div class="field-body">
-              <div class="field">
-                <div class="control">
-                  <div class="select">
-                    <select id="filterComponentsInput">
-                      <option value="ANY">Any</option>
-                      <option value="verbal">Verbal</option>
-                      <option value="somatic">Somatic</option>
-                      <option value="material">Material</option>
-                      <option value="focus">Focus</option>
-                    </select>
+            <div id="filterComponentsSection" class="is-hidden filterFieldSection field is-horizontal">
+              <div class="field-label is-normal ml-2">
+                <label class="label">Components</label>
+              </div>
+              <div class="field-body">
+                <div class="field">
+                  <div class="control">
+                    <div class="select">
+                      <select id="filterComponentsInput">
+                        <option value="ANY">Any</option>
+                        <option value="verbal">Verbal</option>
+                        <option value="somatic">Somatic</option>
+                        <option value="material">Material</option>
+                        <option value="focus">Focus</option>
+                      </select>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
 
-          <div id="filterLevelSection" class="is-hidden filterFieldSection field is-horizontal">
-            <div class="field-label is-normal ml-2">
-              <label class="label">Level</label>
-            </div>
-            <div class="field-body">
-              <div class="field has-addons">
-                <p class="control">
-                  <span class="select">
-                    <select id="filterLevelRelationInput">
-                      <option value="EQUAL">=</option>
-                      <option value="LESS">&lt;</option>
-                      <option value="GREATER">&gt;</option>
-                      <option value="LESS-EQUAL">&#8804;</option>
-                      <option value="GREATER-EQUAL">&#8805;</option>
-                      <option value="NOT-EQUAL">&#8800;</option>
-                    </select>
-                  </span>
-                </p>
-                <p class="control">
-                  <input class="input" id="filterLevelInput" type="number" placeholder="Lvl" autocomplete="off">
-                </p>
+            <div id="filterLevelSection" class="is-hidden filterFieldSection field is-horizontal">
+              <div class="field-label is-normal ml-2">
+                <label class="label">Level</label>
+              </div>
+              <div class="field-body">
+                <div class="field has-addons">
+                  <p class="control">
+                    <span class="select">
+                      <select id="filterLevelRelationInput">
+                        <option value="EQUAL">=</option>
+                        <option value="LESS">&lt;</option>
+                        <option value="GREATER">&gt;</option>
+                        <option value="LESS-EQUAL">&#8804;</option>
+                        <option value="GREATER-EQUAL">&#8805;</option>
+                        <option value="NOT-EQUAL">&#8800;</option>
+                      </select>
+                    </span>
+                  </p>
+                  <p class="control">
+                    <input class="input" id="filterLevelInput" type="number" placeholder="Lvl" autocomplete="off">
+                  </p>
+                </div>
               </div>
             </div>
-          </div>
 
-          <div id="filterSpellSavingThrowSection" class="is-hidden filterFieldSection field is-horizontal">
-            <div class="field-label is-normal ml-2">
-              <label class="label">Saving Throw</label>
-            </div>
-            <div class="field-body">
-              <div class="field">
-                <div class="control">
-                  <div class="select">
-                    <select id="filterSpellSavingThrowInput">
-                      <option value="ANY">Any</option>
-                      <option value="FORT">Fortitude</option>
-                      <option value="REFLEX">Reflex</option>
-                      <option value="WILL">Will</option>
-                      <option value="BASIC_FORT">Basic Fortitude</option>
-                      <option value="BASIC_REFLEX">Basic Reflex</option>
-                      <option value="BASIC_WILL">Basic Will</option>
-                    </select>
+            <div id="filterSpellSavingThrowSection" class="is-hidden filterFieldSection field is-horizontal">
+              <div class="field-label is-normal ml-2">
+                <label class="label">Saving Throw</label>
+              </div>
+              <div class="field-body">
+                <div class="field">
+                  <div class="control">
+                    <div class="select">
+                      <select id="filterSpellSavingThrowInput">
+                        <option value="ANY">Any</option>
+                        <option value="FORT">Fortitude</option>
+                        <option value="REFLEX">Reflex</option>
+                        <option value="WILL">Will</option>
+                        <option value="BASIC_FORT">Basic Fortitude</option>
+                        <option value="BASIC_REFLEX">Basic Reflex</option>
+                        <option value="BASIC_WILL">Basic Will</option>
+                      </select>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
 
-          <div id="filterSpellFocusSection" class="is-hidden filterFieldSection field is-horizontal">
-            <div class="field-label is-normal ml-2">
-              <label class="label">Focus</label>
-            </div>
-            <div class="field-body">
-              <div class="field">
-                <div class="control">
-                  <div class="select">
-                    <select id="filterSpellFocusInput">
-                      <option value="ANY">Either</option>
-                      <option value="1">Only</option>
-                      <option value="0">None</option>
-                    </select>
+            <div id="filterSpellFocusSection" class="is-hidden filterFieldSection field is-horizontal">
+              <div class="field-label is-normal ml-2">
+                <label class="label">Focus</label>
+              </div>
+              <div class="field-body">
+                <div class="field">
+                  <div class="control">
+                    <div class="select">
+                      <select id="filterSpellFocusInput">
+                        <option value="ANY">Either</option>
+                        <option value="1">Only</option>
+                        <option value="0">None</option>
+                      </select>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
 
-          <div id="filterItemPriceSection" class="is-hidden filterFieldSection field is-horizontal">
-            <div class="field-label is-normal ml-2">
-              <label class="label">Price</label>
-            </div>
-            <div class="field-body">
-              <div class="field has-addons">
-                <p class="control">
-                  <span class="select">
-                    <select id="filterItemPriceRelationInput">
-                      <option value="EQUAL">=</option>
-                      <option value="LESS">&lt;</option>
-                      <option value="GREATER">&gt;</option>
-                      <option value="LESS-EQUAL">&#8804;</option>
-                      <option value="GREATER-EQUAL">&#8805;</option>
-                      <option value="NOT-EQUAL">&#8800;</option>
-                    </select>
-                  </span>
-                </p>
-                <p class="control">
-                  <input class="input" id="filterItemPriceInput" type="number" placeholder="Price (in cp)" min="0" max="99999999" autocomplete="off">
-                </p>
+            <div id="filterItemPriceSection" class="is-hidden filterFieldSection field is-horizontal">
+              <div class="field-label is-normal ml-2">
+                <label class="label">Price</label>
+              </div>
+              <div class="field-body">
+                <div class="field has-addons">
+                  <p class="control">
+                    <span class="select">
+                      <select id="filterItemPriceRelationInput">
+                        <option value="EQUAL">=</option>
+                        <option value="LESS">&lt;</option>
+                        <option value="GREATER">&gt;</option>
+                        <option value="LESS-EQUAL">&#8804;</option>
+                        <option value="GREATER-EQUAL">&#8805;</option>
+                        <option value="NOT-EQUAL">&#8800;</option>
+                      </select>
+                    </span>
+                  </p>
+                  <p class="control">
+                    <input class="input" id="filterItemPriceInput" type="number" placeholder="Price (in cp)" min="0" max="99999999" autocomplete="off">
+                  </p>
+                </div>
               </div>
             </div>
-          </div>
 
-          <div id="filterItemBulkSection" class="is-hidden filterFieldSection field is-horizontal">
-            <div class="field-label is-normal ml-2">
-              <label class="label">Bulk</label>
-            </div>
-            <div class="field-body">
-              <div class="field has-addons">
-                <p class="control">
-                  <span class="select">
-                    <select id="filterItemBulkRelationInput">
-                      <option value="EQUAL">=</option>
-                      <option value="LESS">&lt;</option>
-                      <option value="GREATER">&gt;</option>
-                      <option value="LESS-EQUAL">&#8804;</option>
-                      <option value="GREATER-EQUAL">&#8805;</option>
-                      <option value="NOT-EQUAL">&#8800;</option>
-                    </select>
-                  </span>
-                </p>
-                <p class="control">
-                  <input class="input" id="filterItemBulkInput" type="number" placeholder="Bulk" min="0" max="999" step="0.1" autocomplete="off">
-                </p>
+            <div id="filterItemBulkSection" class="is-hidden filterFieldSection field is-horizontal">
+              <div class="field-label is-normal ml-2">
+                <label class="label">Bulk</label>
+              </div>
+              <div class="field-body">
+                <div class="field has-addons">
+                  <p class="control">
+                    <span class="select">
+                      <select id="filterItemBulkRelationInput">
+                        <option value="EQUAL">=</option>
+                        <option value="LESS">&lt;</option>
+                        <option value="GREATER">&gt;</option>
+                        <option value="LESS-EQUAL">&#8804;</option>
+                        <option value="GREATER-EQUAL">&#8805;</option>
+                        <option value="NOT-EQUAL">&#8800;</option>
+                      </select>
+                    </span>
+                  </p>
+                  <p class="control">
+                    <input class="input" id="filterItemBulkInput" type="number" placeholder="Bulk" min="0" max="999" step="0.1" autocomplete="off">
+                  </p>
+                </div>
               </div>
             </div>
-          </div>
 
-          <div id="filterRaritySection" class="is-hidden filterFieldSection field is-horizontal">
-            <div class="field-label is-normal ml-2">
-              <label class="label">Rarity</label>
-            </div>
-            <div class="field-body">
-              <div class="field">
-                <div class="control">
-                  <div class="select">
-                    <select id="filterRarityInput">
-                      <option value="ANY">Any</option>
-                      <option value="COMMON">Common</option>
-                      <option value="UNCOMMON">Uncommon</option>
-                      <option value="RARE">Rare</option>
-                      <option value="UNIQUE">Unique</option>
-                    </select>
+            <div id="filterRaritySection" class="is-hidden filterFieldSection field is-horizontal">
+              <div class="field-label is-normal ml-2">
+                <label class="label">Rarity</label>
+              </div>
+              <div class="field-body">
+                <div class="field">
+                  <div class="control">
+                    <div class="select">
+                      <select id="filterRarityInput">
+                        <option value="ANY">Any</option>
+                        <option value="COMMON">Common</option>
+                        <option value="UNCOMMON">Uncommon</option>
+                        <option value="RARE">Rare</option>
+                        <option value="UNIQUE">Unique</option>
+                      </select>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
 
-          <div id="filterFeatSkillSection" class="is-hidden filterFieldSection field is-horizontal">
-            <div class="field-label is-normal ml-2">
-              <label class="label">Skill</label>
-            </div>
-            <div class="field-body">
-              <div class="field">
-                <div class="control">
-                  <div class="select">
-                    <select id="filterFeatSkillInput">
-                    </select>
+            <div id="filterFeatSkillSection" class="is-hidden filterFieldSection field is-horizontal">
+              <div class="field-label is-normal ml-2">
+                <label class="label">Skill</label>
+              </div>
+              <div class="field-body">
+                <div class="field">
+                  <div class="control">
+                    <div class="select">
+                      <select id="filterFeatSkillInput">
+                      </select>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
 
-          <div id="filterItemCategorySection" class="is-hidden filterFieldSection field is-horizontal">
-            <div class="field-label is-normal ml-2">
-              <label class="label">Category</label>
-            </div>
-            <div class="field-body">
-              <div class="field">
-                <div class="control">
-                  <div class="select">
-                    <select id="filterItemCategoryInput">
-                      <option value="ANY">Any</option>
-                      <option value="ARTIFACT">Artifact</option>
-                      <option value="AMMUNITION">Ammunition</option>
-                      <option value="ARMOR">Armor</option>
-                      <option value="BELT">Belt</option>
-                      <option value="BOMB">Bomb</option>
-                      <option value="BOOK">Book</option>
-                      <option value="BOOTS">Boots</option>
-                      <option value="BRACERS">Bracers</option>
-                      <option value="CIRCLET">Circlet</option>
-                      <option value="CLOAK">Cloak</option>
-                      <option value="COMPANION">Companion</option>
-                      <option value="CURRENCY">Currency</option>
-                      <option value="DRUG">Drug</option>
-                      <option value="ELIXIR">Elixir</option>
-                      <option value="EYEPIECE">Eyepiece</option>
-                      <option value="GLOVES">Gloves</option>
-                      <option value="HAT">Hat</option>
-                      <option value="INGREDIENT">Ingredient</option>
-                      <option value="INSTRUMENT">Instrument</option>
-                      <option value="KIT">Kit</option>
-                      <option value="MASK">Mask</option>
-                      <option value="NECKLACE">Necklace</option>
-                      <option value="OIL">Oil</option>
-                      <option value="POISON">Poison</option>
-                      <option value="POTION">Potion</option>
-                      <option value="RING">Ring</option>
-                      <option value="ROD">Rod</option>
-                      <option value="RUNE">Runestone</option>
-                      <option value="SCROLL">Scroll</option>
-                      <option value="SHIELD">Shield</option>
-                      <option value="STAFF">Staff</option>
-                      <option value="STORAGE">Storage</option>
-                      <option value="STRUCTURE">Structure</option>
-                      <option value="TALISMAN">Talisman</option>
-                      <option value="TATTOO">Tattoo</option>
-                      <option value="TOOL">Tool</option>
-                      <option value="WAND">Wand</option>
-                      <option value="WEAPON">Weapon</option>
-                      <option value="OTHER">Other</option>
-                    </select>
+            <div id="filterItemCategorySection" class="is-hidden filterFieldSection field is-horizontal">
+              <div class="field-label is-normal ml-2">
+                <label class="label">Category</label>
+              </div>
+              <div class="field-body">
+                <div class="field">
+                  <div class="control">
+                    <div class="select">
+                      <select id="filterItemCategoryInput">
+                        <option value="ANY">Any</option>
+                        <option value="ARTIFACT">Artifact</option>
+                        <option value="AMMUNITION">Ammunition</option>
+                        <option value="ARMOR">Armor</option>
+                        <option value="BELT">Belt</option>
+                        <option value="BOMB">Bomb</option>
+                        <option value="BOOK">Book</option>
+                        <option value="BOOTS">Boots</option>
+                        <option value="BRACERS">Bracers</option>
+                        <option value="CATALYST">Catalyst</option>
+                        <option value="CIRCLET">Circlet</option>
+                        <option value="CLOAK">Cloak</option>
+                        <option value="COMPANION">Companion</option>
+                        <option value="CURRENCY">Currency</option>
+                        <option value="DRUG">Drug</option>
+                        <option value="ELIXIR">Elixir</option>
+                        <option value="EYEPIECE">Eyepiece</option>
+                        <option value="FULU">Fulu</option>
+                        <option value="GLOVES">Gloves</option>
+                        <option value="GRIMOIRE">Grimoire</option>
+                        <option value="HAT">Hat</option>
+                        <option value="INGREDIENT">Ingredient</option>
+                        <option value="INSTRUMENT">Instrument</option>
+                        <option value="KIT">Kit</option>
+                        <option value="MASK">Mask</option>
+                        <option value="NECKLACE">Necklace</option>
+                        <option value="OIL">Oil</option>
+                        <option value="POISON">Poison</option>
+                        <option value="POTION">Potion</option>
+                        <option value="RING">Ring</option>
+                        <option value="ROD">Rod</option>
+                        <option value="RUNE">Runestone</option>
+                        <option value="SCROLL">Scroll</option>
+                        <option value="SHIELD">Shield</option>
+                        <option value="SPELLHEART">Spellheart</option>
+                        <option value="STAFF">Staff</option>
+                        <option value="STORAGE">Storage</option>
+                        <option value="STRUCTURE">Structure</option>
+                        <option value="TALISMAN">Talisman</option>
+                        <option value="TATTOO">Tattoo</option>
+                        <option value="TOOL">Tool</option>
+                        <option value="WAND">Wand</option>
+                        <option value="WEAPON">Weapon</option>
+                        <option value="OTHER">Other</option>
+                      </select>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
 
-          <div id="filterSourceSection" class="is-hidden filterFieldSection field is-horizontal">
-            <div class="field-label is-normal ml-2">
-              <label class="label">Source</label>
-            </div>
-            <div class="field-body">
-              <div class="field">
-                <div class="control">
-                  <div class="select is-small">
-                    <select id="filterSourceInput">
-                    </select>
+            <div id="filterSourceSection" class="is-hidden filterFieldSection field is-horizontal">
+              <div class="field-label is-normal ml-2">
+                <label class="label">Source</label>
+              </div>
+              <div class="field-body">
+                <div class="field">
+                  <div class="control">
+                    <div class="select is-small">
+                      <select id="filterSourceInput">
+                      </select>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
+
           </div>
 
-          <hr class="m-2">
+          <hr class="mt-0 mb-2 mx-2">
 
           <div class="field is-grouped is-grouped-centered pb-2">
             <div class="control">
