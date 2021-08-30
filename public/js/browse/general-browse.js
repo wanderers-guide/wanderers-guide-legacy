@@ -7,6 +7,8 @@ let socket = io();
 // Core Quickview Data //
 let g_isDeveloper = false;
 
+let g_enabledSources = null;
+
 let g_featMap = null;
 let g_skillMap = null;
 let g_itemMap = null;
@@ -39,10 +41,10 @@ socket.on("returnBrowse", function(isDeveloper, searchStruct) {
   let itemMap = objToMap(searchStruct.itemObject);
   let spellMap = objToMap(searchStruct.spellObject);
 
-  initBrowse(featMap, skillMap, itemMap, spellMap, searchStruct.allLanguages, searchStruct.allConditions, searchStruct.allTags, searchStruct.classes, searchStruct.ancestries, searchStruct.archetypes, searchStruct.backgrounds, searchStruct.uniHeritages);
+  initBrowse(featMap, skillMap, itemMap, spellMap, searchStruct.allLanguages, searchStruct.allConditions, searchStruct.allTags, searchStruct.classes, searchStruct.ancestries, searchStruct.archetypes, searchStruct.backgrounds, searchStruct.uniHeritages, searchStruct.sourceBooks);
 });
 
-function initBrowse(featMap, skillMap, itemMap, spellMap, allLanguages, allConditions, allTags, classes, ancestries, archetypes, backgrounds, uniHeritages) {
+function initBrowse(featMap, skillMap, itemMap, spellMap, allLanguages, allConditions, allTags, classes, ancestries, archetypes, backgrounds, uniHeritages, sourceBooks) {
   finishLoadingPage();
   
   g_featMap = featMap;
@@ -57,6 +59,16 @@ function initBrowse(featMap, skillMap, itemMap, spellMap, allLanguages, allCondi
   g_allArchetypes = archetypes;
   g_allBackgrounds = backgrounds;
   g_allUniHeritages = uniHeritages;
+
+  g_enabledSources = sourceBooks;
+
+  // Run All SourceBook Code, variable code only //
+  g_expr_hasInit = true;// pretend to init expr processor
+  let sourceBookCount = 0;
+  for(let enabledSource of g_enabledSources){
+    processVariables(enabledSource.code, 'SourceBook-'+sourceBookCount);
+  }
+  // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 
   // Tags
   for(let tag of g_allTags){

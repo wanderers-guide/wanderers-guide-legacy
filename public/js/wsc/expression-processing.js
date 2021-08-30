@@ -169,7 +169,7 @@ function profConversion_convertOldName(profName){
   return profName.replace(/\s+/g,'').replace(/_/g,'').toUpperCase();
 }
 
-let hasInit = false;
+let g_expr_hasInit = false;
 let g_expr_level, g_expr_focusPoints, g_expr_profMap, g_expr_senseArray,
         g_expr_heritage, g_expr_classAbilityArray, g_expr_featDataMap, g_expr_featNameArray = null;
 
@@ -200,7 +200,7 @@ function initExpressionProcessor(expDataStruct){
                 }
             }
             for(let classAbility of expDataStruct.ChoiceStruct.ExtraClassFeaturesArray){
-              if(classAbility.value.name != null){
+              if(classAbility.value != null && classAbility.value.name != null){
                 g_expr_classAbilityArray.push(classAbility.value.name.toUpperCase().replace(/\(|\)/g,""));
               }
             }
@@ -219,7 +219,7 @@ function initExpressionProcessor(expDataStruct){
       }
     }
 
-    hasInit = true;
+    g_expr_hasInit = true;
 
 }
 
@@ -229,7 +229,7 @@ function updateExpressionProcessor(expDataStruct){
 
 
 function testExpr(wscCode, srcStruct=null){
-    if(!hasInit) {
+    if(!g_expr_hasInit) {
         displayError("Expression Processor has not been init!");
         return null;
     }

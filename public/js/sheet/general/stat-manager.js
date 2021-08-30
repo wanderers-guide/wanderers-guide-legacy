@@ -98,7 +98,8 @@ function getStatTotal(statName, errorOnFailure=true){
 
 function getStatBonusTotal(statName){
   statName = statName.replace(/\s/g, "_").toUpperCase();
-  return variables_getBonusTotal(statName);
+  let bonusTotal = variables_getBonusTotal(statName);
+  if(bonusTotal == 0){ return null; } else { return bonusTotal; }
 }
 
 function getStatExtraBonuses(statName){

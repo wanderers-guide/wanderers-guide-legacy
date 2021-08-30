@@ -5,6 +5,7 @@ const Condition = require('../models/contentDB/Condition');
 const Class = require('../models/contentDB/Class');
 const ClassAbility = require('../models/contentDB/ClassAbility');
 const Archetype = require('../models/contentDB/Archetype');
+const Book = require('../models/contentDB/Book');
 const Feat = require('../models/contentDB/Feat');
 const FeatTag = require('../models/contentDB/FeatTag');
 const Tag = require('../models/contentDB/Tag');
@@ -89,6 +90,18 @@ module.exports = class GeneralGathering {
         return {
           condition : condition,
         };
+      });
+    }
+
+    static getSourceBooks(userID){
+      return Book.findAll({
+        where: {
+          [Op.not]: [
+            { codeName: { [Op.or]: TempUnpublishedBooks.getSourcesArray(userID) } },
+          ]
+        }
+      }).then((books) => {
+        return books;
       });
     }
 

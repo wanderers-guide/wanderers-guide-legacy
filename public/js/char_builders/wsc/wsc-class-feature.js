@@ -224,7 +224,7 @@ function extraClassFeatureOptionsUpdateWSCChoiceStruct(newClassFeatureOption, sr
     let newExtraClassFeaturesArray = [];
     let removedClassFeatureNamesArray = [];
     for(let classFeature of wscChoiceStruct.ExtraClassFeaturesArray){
-      if(classFeature.value.selectType == 'SELECT_OPTION' && hasSameSrc(classFeature.value.srcStruct, srcStruct)){
+      if(classFeature.value != null && classFeature.value.selectType == 'SELECT_OPTION' && hasSameSrc(classFeature.value.srcStruct, srcStruct)){
         // Is classFeatureOption, skip. Add to removed array.
         removedClassFeatureNamesArray.push(classFeature.value.name.toUpperCase());
       } else {

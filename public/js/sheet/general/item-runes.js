@@ -459,7 +459,7 @@ function getInvItemLevel(item, invItem){
   for(let runeID of runeIDArray){
     if(runeID != null){
       let rune = runeArray.find(rune => {
-        return rune.RuneData.id == runeID;
+        return rune != null && rune.RuneData.id == runeID;
       });
       if(rune != null){
         if(rune.Item.level > highestLevel){

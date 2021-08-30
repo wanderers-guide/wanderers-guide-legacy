@@ -26,7 +26,10 @@ module.exports = async function(socket) {
 
   console.log('~ STARTING SEARCH LOAD ~');
 
-  socket.emit('updateLoadProgess', { message: 'Gathering Skills', upVal: 5 }); // (5/100) //
+  socket.emit('updateLoadProgess', { message: 'Opening Books', upVal: 2 }); // (2/100) //
+  const sourceBooks = await GeneralGathering.getSourceBooks(getUserID(socket));
+
+  socket.emit('updateLoadProgess', { message: 'Gathering Skills', upVal: 3 }); // (5/100) //
   const skillObject = await GeneralGathering.getAllSkills(getUserID(socket), null);
 
   socket.emit('updateLoadProgess', { message: 'Understanding Feats', upVal: 20 }); // (25/100) //
@@ -75,6 +78,7 @@ module.exports = async function(socket) {
     ancestries,
     archetypes,
     backgrounds,
+    sourceBooks,
     uniHeritages,
   };
 

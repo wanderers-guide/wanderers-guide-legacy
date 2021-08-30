@@ -205,7 +205,7 @@ function showFeatListOptions(qContent, wscStatements, sourceFeatName){
       let value = statement.split('=')[1];
       let valueParts = value.split(':');
       let selectorTitle = valueParts[0];
-      let featNameList = valueParts[1].split(',');
+      let featNameList = handleVariableText(valueParts[1]).split(',');
 
       let repetitionWord = numToRepetitionWord(statementCounts[statement]);
 
