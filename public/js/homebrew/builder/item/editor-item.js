@@ -82,7 +82,7 @@ socket.on("returnHomebrewItemDetails", function(itemObject){
     }
 
     if(item.RuneData != null){
-        let runeType = (item.RuneData.isFundamental == 1) ? 'FUNDAMENTAL' : 'POTENCY';
+        let runeType = (item.RuneData.isFundamental == 1) ? 'FUNDAMENTAL' : 'PROPERTY';
         $("#inputRuneType").val(runeType);
         $("#inputEtchedType").val(item.RuneData.etchedType);
 

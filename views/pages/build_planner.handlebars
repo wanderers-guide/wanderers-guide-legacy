@@ -1,9 +1,77 @@
 
 {{#section 'header'}}
     <link rel="stylesheet" href="/css/build-planner.css">
+    <script src="/js/build_planner/ui-handler.js"></script>
 
     <script src="/js/build_planner/main.js"></script>
-    <script src="/js/build_planner/core-processor.js"></script>
+
+    <script src="/js/build_planner/processor/core-processor.js"></script>
+
+    <script src="/js/build_planner/processor/sub_processors/builder-statements.js"></script>
+    <script src="/js/build_planner/processor/sub_processors/sheet-statements.js"></script>
+
+    <script src="/js/build_planner/scripts/init-variables.js"></script>
+    <script src="/js/build_planner/scripts/process-class-stats.js"></script>
+
+    <script src="/js/build_planner/libraries/selector.js"></script>
+
+    <script src="/js/build_planner/data_mapping/data-map.js"></script>
+    <script src="/js/build_planner/data_mapping/data-map-ext.js"></script>
+    <script src="/js/build_planner/data_mapping/data-to-var-converter.js"></script>
+    <script src="/js/build_planner/data_mapping/retrieval.js"></script>
+
+    <!-- Dependencies -->
+    <script src="/js/wsc/text-processing.js"></script>
+    <script src="/js/wsc/variable-processing.js"></script>
+    <script src="/js/sheet/general/stat-manager.js"></script>
+    <script src="/js/wsc/expression-processing.js"></script>
+    <script src="/js/wsc/expression-utils.js"></script>
+
+    <script src="/js/char_builders/unselected-options.js"></script>
+
+    <script src="/js/wsc/errorHandling.js"></script>
+
+    <script src="/js/build_planner/processor/sub_processors/builder/wsc-boosts.js"></script>
+    <script src="/js/build_planner/processor/sub_processors/builder/wsc-feats.js"></script>
+    <script src="/js/build_planner/processor/sub_processors/builder/wsc-class-feature.js"></script>
+    <script src="/js/build_planner/processor/sub_processors/builder/wsc-heritage.js"></script>
+    <script src="/js/build_planner/processor/sub_processors/builder/wsc-langs.js"></script>
+    <script src="/js/build_planner/processor/sub_processors/builder/wsc-lore.js"></script>
+    <script src="/js/build_planner/processor/sub_processors/builder/wsc-skills.js"></script>
+    <script src="/js/build_planner/processor/sub_processors/builder/wsc-profs.js"></script>
+    <script src="/js/build_planner/processor/sub_processors/builder/wsc-spells.js"></script>
+    <script src="/js/build_planner/processor/sub_processors/builder/wsc-spells-innate.js"></script>
+    <script src="/js/build_planner/processor/sub_processors/builder/wsc-spells-focus.js"></script>
+    <script src="/js/build_planner/processor/sub_processors/builder/wsc-resistances.js"></script>
+    <script src="/js/build_planner/processor/sub_processors/builder/wsc-domains.js"></script>
+    <script src="/js/build_planner/processor/sub_processors/builder/wsc-specializations.js"></script>
+    <script src="/js/build_planner/processor/sub_processors/builder/wsc-notes.js"></script>
+    <script src="/js/build_planner/processor/sub_processors/builder/wsc-charTags.js"></script>
+    <script src="/js/build_planner/processor/sub_processors/builder/wsc-phyFeats.js"></script>
+    <script src="/js/build_planner/processor/sub_processors/builder/wsc-senses.js"></script>
+    <script src="/js/build_planner/processor/sub_processors/builder/wsc-speeds.js"></script>
+    <script src="/js/build_planner/processor/sub_processors/builder/wsc-familiarity.js"></script>
+    <script src="/js/build_planner/processor/sub_processors/builder/wsc-keyAbility.js"></script>
+    <script src="/js/build_planner/processor/sub_processors/builder/wsc-scfs.js"></script>
+
+    <script src="/js/build_planner/processor/sub_processors/builder/display-structs.js"></script>
+    <script src="/js/build_planner/processor/sub_processors/builder/feats-selection.js"></script>
+    <script src="/js/build_planner/processor/sub_processors/builder/prereq-parser.js"></script>
+
+    <!-- Quickview -->
+    <script type="text/javascript" src="/js/char_builders/wsc/quickview-left.js"></script>
+    <script src="/js/sheet/quickviews/_quickviews.js"></script>
+    <script src="/js/sheet/quickviews/feat-view.js"></script>
+    <script src="/js/sheet/quickviews/language-view.js"></script>
+    <script src="/js/sheet/quickviews/spell-view.js"></script>
+    <script src="/js/sheet/quickviews/item-view.js"></script>
+    <script src="/js/sheet/quickviews/tag-view.js"></script>
+    <script src="/js/sheet/quickviews/condition-view.js"></script>
+    <script src="/js/sheet/quickviews/general-breakdown-view.js"></script>
+    <script src="/js/sheet/quickviews/hit-points-breakdown-view.js"></script>
+
+    <script src="/js/sheet/general/prof-history-display.js"></script>
+    <script src="/js/sheet/utils/item-utils.js"></script>
 
 {{/section}}
 
@@ -60,7 +128,7 @@
               <p class="has-text-light title-font has-text-centered">Ancestry</p>
             </div>
             <div class="column is-7 is-paddingless has-text-centered">
-              <span class="button is-info is-outlined is-small is-fullwidth">Human</span>
+              <span class="button is-info is-outlined is-small is-fullwidth" id="ancestry-name">None</span>
             </div>
           </div>
           <div class="columns is-mobile is-marginless m-1">
@@ -68,7 +136,7 @@
               <p class="has-text-light title-font has-text-centered">Background</p>
             </div>
             <div class="column is-7 is-paddingless has-text-centered">
-              <span class="button is-info is-outlined is-small is-fullwidth">Barkeep</span>
+              <span class="button is-info is-outlined is-small is-fullwidth" id="background-name">None</span>
             </div>
           </div>
           <div class="columns is-mobile is-marginless m-1">
@@ -76,7 +144,7 @@
               <p class="has-text-light title-font has-text-centered">Class</p>
             </div>
             <div class="column is-7 is-paddingless has-text-centered">
-              <span class="button is-info is-outlined is-small is-fullwidth">Wizard</span>
+              <span class="button is-info is-outlined is-small is-fullwidth" id="class-name">None</span>
             </div>
           </div>
 
@@ -96,34 +164,34 @@
                 <div class="column is-2 is-paddingless"><p class="is-bold-very">Cha</p></div>
               </div>
               <div class="columns is-mobile is-centered is-marginless text-center mx-3">
-                <div class="column is-2 is-paddingless"><p id="">14</p></div>
-                <div class="column is-2 is-paddingless"><p id="">16</p></div>
-                <div class="column is-2 is-paddingless"><p id="">8</p></div>
-                <div class="column is-2 is-paddingless"><p id="">16</p></div>
-                <div class="column is-2 is-paddingless"><p id="">12</p></div>
-                <div class="column is-2 is-paddingless"><p id="">10</p></div>
+                <div class="column is-2 is-paddingless"><p id="str-score">10</p></div>
+                <div class="column is-2 is-paddingless"><p id="dex-score">10</p></div>
+                <div class="column is-2 is-paddingless"><p id="con-score">10</p></div>
+                <div class="column is-2 is-paddingless"><p id="int-score">10</p></div>
+                <div class="column is-2 is-paddingless"><p id="wis-score">10</p></div>
+                <div class="column is-2 is-paddingless"><p id="cha-score">10</p></div>
               </div>
             </div>
 
             <!-- Hit Points -->
-            <div class="accord-like-button columns is-mobile is-marginless my-1">
+            <div id="hit-points-body" class="accord-like-button columns is-mobile is-marginless my-1">
               <div class="column is-8 is-paddingless"><span class="title-font pl-2">Hit Points</span></div>
-              <div class="column is-2 is-paddingless"><p id="" class="has-text-centered">130</p></div>
+              <div class="column is-2 is-paddingless"><p id="hit-points-total" class="has-text-centered">130</p></div>
               <div class="column is-2 is-paddingless"><p class="has-text-centered is-italic has-text-grey is-size-7-5 pt-2">(at max)</p></div>
             </div>
 
             <!-- Class DC -->
-            <div class="accord-like-button columns is-mobile is-marginless my-1">
+            <div id="class-dc-body" class="accord-like-button columns is-mobile is-marginless my-1">
               <div class="column is-8 is-paddingless"><span class="title-font pl-2">Class DC</span></div>
-              <div class="column is-2 is-paddingless"><p id="" class="has-text-centered">18</p></div>
-              <div class="column is-2 is-paddingless"><p id="" class="has-text-centered is-italic has-text-grey">E</p></div>
+              <div class="column is-2 is-paddingless"><p id="class-dc-total" class="has-text-centered">18</p></div>
+              <div class="column is-2 is-paddingless"><p id="class-dc-rank" class="has-text-centered is-italic has-text-grey">E</p></div>
             </div>
 
             <!-- Perception -->
-            <div class="accord-like-button columns is-mobile is-marginless my-1">
+            <div id="perception-body" class="accord-like-button columns is-mobile is-marginless my-1">
               <div class="column is-8 is-paddingless"><span class="title-font pl-2">Perception</span></div>
-              <div class="column is-2 is-paddingless"><p id="" class="has-text-centered">+28</p></div>
-              <div class="column is-2 is-paddingless"><p id="" class="has-text-centered is-italic has-text-grey">T</p></div>
+              <div class="column is-2 is-paddingless"><p id="perception-total" class="has-text-centered">+28</p></div>
+              <div class="column is-2 is-paddingless"><p id="perception-rank" class="has-text-centered is-italic has-text-grey">T</p></div>
             </div>
 
             <!-- Skills -->
@@ -135,6 +203,19 @@
                 </span>
               </div>
               <div id="skills-body" class="accord-body is-hidden">
+                <!-- Populated at runtime -->
+              </div>
+            </div>
+
+            <!-- Saves -->
+            <div class="accord-container my-1">
+              <div class="accord-header">
+                <span class="title-font pl-2">Saves</span>
+                <span class="icon is-pulled-right">
+                  <i class="accord-chevron fas fa-chevron-down"></i>
+                </span>
+              </div>
+              <div id="saves-body" class="accord-body is-hidden">
                 <!-- Populated at runtime -->
               </div>
             </div>
@@ -190,19 +271,6 @@
                 <!-- Populated at runtime -->
               </div>
             </div>
-
-            <!-- Saves -->
-            <div class="accord-container my-1">
-              <div class="accord-header">
-                <span class="title-font pl-2">Saves</span>
-                <span class="icon is-pulled-right">
-                  <i class="accord-chevron fas fa-chevron-down"></i>
-                </span>
-              </div>
-              <div id="saves-body" class="accord-body is-hidden">
-                <!-- Populated at runtime -->
-              </div>
-            </div>
             
             <!-- Resist & Weaks -->
             <div class="accord-container my-1">
@@ -222,11 +290,50 @@
       </div>
     </div>
     <div class="tile is-8">
-      <div class="tile is-parent">
+      <div class="tile is-parent is-vertical">
+        <div class="tile is-child box py-2 pl-2 pr-1">
+
+          <div class="steps">
+          <div class="step-item is-completed is-info">
+              <div class="step-marker">
+              <a class="builder-basics-page-btn"><span class="has-text-bck-color icon"><i class="fas fa-home-alt"></i></span></a>
+              </div>
+              <div class="step-details is-hidden-touch">
+                  <a class="builder-basics-page-btn button is-rounded is-inverted is-tiny is-info"><p class="step-builder-title title-font">Home</p></a>
+              </div>
+          </div>
+          <div class="step-item is-completed is-info">
+              <div class="step-marker"><a class="builder-ancestry-page-btn"><span class="has-text-bck-color">A</span></a></div>
+              <div class="step-details is-hidden-touch">
+                  <a class="builder-ancestry-page-btn button is-rounded is-inverted is-tiny is-info"><p class="step-builder-title title-font">Ancestry</p></a>
+              </div>
+          </div>
+          <div class="step-item is-completed is-info">
+              <div class="step-marker"><a class="builder-background-page-btn"><span class="has-text-bck-color">B</span></a></div>
+              <div class="step-details is-hidden-touch">
+                  <a class="builder-background-page-btn button is-rounded is-inverted is-tiny is-info"><p class="step-builder-title title-font">Background</p></a>
+              </div>
+          </div>
+          <div class="step-item is-active is-info">
+              <div class="step-marker"><a class="builder-class-page-btn"><span class="">C</span></a></div>
+              <div class="step-details is-hidden-touch">
+                  <a class="builder-class-page-btn button is-rounded is-inverted is-tiny is-info"><p class="step-builder-title title-font">Class</p></a>
+              </div>
+          </div>
+          <div class="step-item">
+              <div class="step-marker">
+              <a class="builder-finalize-page-btn"><span class="has-text-bck-color icon"><i class="fa fa-user-alt"></i></span></a>
+              </div>
+              <div class="step-details is-hidden-touch">
+                  <a class="builder-finalize-page-btn button is-rounded is-inverted is-tiny is-info"><p class="step-builder-title title-font">Sheet</p></a>
+              </div>
+          </div>
+      </div>
+
+        </div>
         <div class="tile is-child box py-2 pl-2 pr-1">
           
-          <div class="use-custom-scrollbar" style="height: 675px; max-height: 675px; overflow-y: scroll;">
-
+          <div class="use-custom-scrollbar" style="height: 575px; max-height: 575px; overflow-y: scroll;">
             <div class="accord-container my-1">
               <div class="accord-header">
                 <span class="title-font pl-2">Level 1</span>
@@ -234,7 +341,7 @@
                   <i class="accord-chevron fas fa-chevron-down"></i>
                 </span>
               </div>
-              <div id="spellcasting-body" class="accord-body is-hidden">
+              <div id="level-1-body" class="accord-body is-hidden">
                 <!-- Populated at runtime -->
               </div>
             </div>
@@ -245,7 +352,7 @@
                   <i class="accord-chevron fas fa-chevron-down"></i>
                 </span>
               </div>
-              <div id="spellcasting-body" class="accord-body is-hidden">
+              <div id="level-2-body" class="accord-body is-hidden">
                 <!-- Populated at runtime -->
               </div>
             </div>
@@ -256,7 +363,7 @@
                   <i class="accord-chevron fas fa-chevron-down"></i>
                 </span>
               </div>
-              <div id="spellcasting-body" class="accord-body is-hidden">
+              <div id="level-3-body" class="accord-body is-hidden">
                 <!-- Populated at runtime -->
               </div>
             </div>
@@ -267,7 +374,7 @@
                   <i class="accord-chevron fas fa-chevron-down"></i>
                 </span>
               </div>
-              <div id="spellcasting-body" class="accord-body is-hidden">
+              <div id="level-4-body" class="accord-body is-hidden">
                 <!-- Populated at runtime -->
               </div>
             </div>
@@ -278,7 +385,7 @@
                   <i class="accord-chevron fas fa-chevron-down"></i>
                 </span>
               </div>
-              <div id="spellcasting-body" class="accord-body is-hidden">
+              <div id="level-5-body" class="accord-body is-hidden">
                 <!-- Populated at runtime -->
               </div>
             </div>
@@ -289,7 +396,7 @@
                   <i class="accord-chevron fas fa-chevron-down"></i>
                 </span>
               </div>
-              <div id="spellcasting-body" class="accord-body is-hidden">
+              <div id="level-6-body" class="accord-body is-hidden">
                 <!-- Populated at runtime -->
               </div>
             </div>
@@ -300,7 +407,7 @@
                   <i class="accord-chevron fas fa-chevron-down"></i>
                 </span>
               </div>
-              <div id="spellcasting-body" class="accord-body is-hidden">
+              <div id="level-7-body" class="accord-body is-hidden">
                 <!-- Populated at runtime -->
               </div>
             </div>
@@ -311,7 +418,7 @@
                   <i class="accord-chevron fas fa-chevron-down"></i>
                 </span>
               </div>
-              <div id="spellcasting-body" class="accord-body is-hidden">
+              <div id="level-8-body" class="accord-body is-hidden">
                 <!-- Populated at runtime -->
               </div>
             </div>
@@ -322,7 +429,7 @@
                   <i class="accord-chevron fas fa-chevron-down"></i>
                 </span>
               </div>
-              <div id="spellcasting-body" class="accord-body is-hidden">
+              <div id="level-9-body" class="accord-body is-hidden">
                 <!-- Populated at runtime -->
               </div>
             </div>
@@ -333,7 +440,7 @@
                   <i class="accord-chevron fas fa-chevron-down"></i>
                 </span>
               </div>
-              <div id="spellcasting-body" class="accord-body is-hidden">
+              <div id="level-10-body" class="accord-body is-hidden">
                 <!-- Populated at runtime -->
               </div>
             </div>
@@ -344,7 +451,7 @@
                   <i class="accord-chevron fas fa-chevron-down"></i>
                 </span>
               </div>
-              <div id="spellcasting-body" class="accord-body is-hidden">
+              <div id="level-11-body" class="accord-body is-hidden">
                 <!-- Populated at runtime -->
               </div>
             </div>
@@ -355,7 +462,7 @@
                   <i class="accord-chevron fas fa-chevron-down"></i>
                 </span>
               </div>
-              <div id="spellcasting-body" class="accord-body is-hidden">
+              <div id="level-12-body" class="accord-body is-hidden">
                 <!-- Populated at runtime -->
               </div>
             </div>
@@ -366,7 +473,7 @@
                   <i class="accord-chevron fas fa-chevron-down"></i>
                 </span>
               </div>
-              <div id="spellcasting-body" class="accord-body is-hidden">
+              <div id="level-13-body" class="accord-body is-hidden">
                 <!-- Populated at runtime -->
               </div>
             </div>
@@ -377,7 +484,7 @@
                   <i class="accord-chevron fas fa-chevron-down"></i>
                 </span>
               </div>
-              <div id="spellcasting-body" class="accord-body is-hidden">
+              <div id="level-14-body" class="accord-body is-hidden">
                 <!-- Populated at runtime -->
               </div>
             </div>
@@ -388,7 +495,7 @@
                   <i class="accord-chevron fas fa-chevron-down"></i>
                 </span>
               </div>
-              <div id="spellcasting-body" class="accord-body is-hidden">
+              <div id="level-15-body" class="accord-body is-hidden">
                 <!-- Populated at runtime -->
               </div>
             </div>
@@ -399,7 +506,7 @@
                   <i class="accord-chevron fas fa-chevron-down"></i>
                 </span>
               </div>
-              <div id="spellcasting-body" class="accord-body is-hidden">
+              <div id="level-16-body" class="accord-body is-hidden">
                 <!-- Populated at runtime -->
               </div>
             </div>
@@ -410,7 +517,7 @@
                   <i class="accord-chevron fas fa-chevron-down"></i>
                 </span>
               </div>
-              <div id="spellcasting-body" class="accord-body is-hidden">
+              <div id="level-17-body" class="accord-body is-hidden">
                 <!-- Populated at runtime -->
               </div>
             </div>
@@ -421,7 +528,7 @@
                   <i class="accord-chevron fas fa-chevron-down"></i>
                 </span>
               </div>
-              <div id="spellcasting-body" class="accord-body is-hidden">
+              <div id="level-18-body" class="accord-body is-hidden">
                 <!-- Populated at runtime -->
               </div>
             </div>
@@ -432,7 +539,7 @@
                   <i class="accord-chevron fas fa-chevron-down"></i>
                 </span>
               </div>
-              <div id="spellcasting-body" class="accord-body is-hidden">
+              <div id="level-19-body" class="accord-body is-hidden">
                 <!-- Populated at runtime -->
               </div>
             </div>
@@ -443,7 +550,7 @@
                   <i class="accord-chevron fas fa-chevron-down"></i>
                 </span>
               </div>
-              <div id="spellcasting-body" class="accord-body is-hidden">
+              <div id="level-20-body" class="accord-body is-hidden">
                 <!-- Populated at runtime -->
               </div>
             </div>
@@ -456,3 +563,21 @@
   </div>
 
 </div>
+
+
+{{#section 'overlay'}}
+    <!-- Right Quickview -->
+    <div id="quickviewDefault" class="quickview">
+        <div class="quickview-header">
+            <p id="quickViewTitle" class="title is-size-5 has-text-grey-lighter"></p>
+            <div class="is-inline-flex">
+                <p id="quickViewTitleRight"></p>
+                <p id="quickViewTitleClose"></p>
+            </div>
+        </div>
+        <div class="quickview-body use-custom-scrollbar">
+            <div id="quickViewContent" class="quickview-block pt-1 pb-3 px-3">
+            </div>
+        </div>
+    </div>
+{{/section}}

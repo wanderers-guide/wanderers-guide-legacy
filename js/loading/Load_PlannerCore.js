@@ -1,5 +1,14 @@
 
 const GeneralGathering = require('../GeneralGathering');
+const CharGathering = require('../CharGathering');
+
+const Inventory = require('./../../models/contentDB/Inventory');
+const InvItem = require('./../../models/contentDB/InvItem');
+const CharCondition = require('./../../models/contentDB/CharCondition');
+const NoteField = require('./../../models/contentDB/NoteField');
+const SpellBookSpell = require('./../../models/contentDB/SpellBookSpell');
+const PhysicalFeature = require('./../../models/contentDB/PhysicalFeature');
+
 
 const { Prisma } = require('../PrismaConnection');
 
@@ -48,10 +57,10 @@ module.exports = async function(socket) {
   const allTags = await GeneralGathering.getAllTags(getUserID(socket));
 
   socket.emit('updateLoadProgess', { message: 'Loading Classes', upVal: 10 }); // (70/100) //
-  const classes = await GeneralGathering.getAllClassesBasic(getUserID(socket));
+  const classes = await GeneralGathering.getAllClasses(getUserID(socket));
 
   socket.emit('updateLoadProgess', { message: 'Loading Ancestries', upVal: 10 }); // (80/100) //
-  const ancestries = await GeneralGathering.getAllAncestriesBasic(getUserID(socket));
+  const ancestries = await GeneralGathering.getAllAncestries(getUserID(socket));
 
   socket.emit('updateLoadProgess', { message: 'Loading Backgrounds', upVal: 5 }); // (85/100) //
   const backgrounds = await GeneralGathering.getAllBackgrounds(getUserID(socket));
@@ -61,6 +70,12 @@ module.exports = async function(socket) {
 
   socket.emit('updateLoadProgess', { message: 'Loading Heritages', upVal: 5 }); // (95/100) //
   const uniHeritages = await GeneralGathering.getAllUniHeritages(getUserID(socket));
+
+  socket.emit('updateLoadProgess', { message: 'Loading Physical Features', upVal: 0 }); // (95/100) //
+  const allPhyFeats = await Prisma.physicalFeatures.findMany();
+
+  socket.emit('updateLoadProgess', { message: 'Loading Senses', upVal: 0 }); // (95/100) //
+  const allSenses = await Prisma.senseTypes.findMany();
 
   socket.emit('updateLoadProgess', { message: 'Finalizing', upVal: 10 }); // (105/100) //
   const plannerStruct = {
@@ -76,10 +91,55 @@ module.exports = async function(socket) {
     archetypes,
     backgrounds,
     uniHeritages,
+    allPhyFeats,
+    allSenses,
   };
 
-  console.log('~ COMPLETE PLANNER-CORE LOAD! ~');
+  console.log('Starting char data...');
+  let charID = 60423;
+  return CharGathering.getCharacter(getUserID(socket), charID)
+    .then((character) => {
+      return Inventory.findOne({ where: { id: character.inventoryID} })
+      .then((inventory) => {
+        return InvItem.findAll({ where: { invID: inventory.id} })
+        .then((invItems) => {
+          return CharGathering.getAllMetadata(getUserID(socket), charID)
+          .then((charMetaData) => {
+            return CharGathering.getCharAnimalCompanions(getUserID(socket), charID)
+            .then((charAnimalCompanions) => {
+              return CharGathering.getCharFamiliars(getUserID(socket), charID)
+              .then((charFamiliars) => {
+                return CharCondition.findAll({ where: { charID: charID} })
+                .then((charConditions) => {
+                  return NoteField.findAll({ where: { charID: charID } })
+                  .then(function(noteFields) {
+                    return SpellBookSpell.findAll({ where: { charID: charID } })
+                    .then(function(spellBookSpells) {
 
-  return plannerStruct;
+                      const choiceStruct = {
+                        character,
+                        inventory,
+                        invItems,
+                        charMetaData,
+                        charAnimalCompanions,
+                        charFamiliars,
+                        charConditions,
+                        noteFields,
+                        spellBookSpells,
+                      };
+                    
+                      console.log('~ COMPLETE PLANNER-CORE LOAD! ~');
+                    
+                      return {plannerStruct, choiceStruct};
+
+                    });
+                  });
+                });
+              });
+            });
+          });
+        });
+      });
+    });
 
 };

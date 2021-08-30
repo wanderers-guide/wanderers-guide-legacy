@@ -1427,10 +1427,10 @@ module.exports = class SocketConnections {
         });
       });
 
-      socket.on('requestArmorSpecializationChange', function(charID, srcStruct, weapName){
+      socket.on('requestArmorSpecializationChange', function(charID, srcStruct, armorName){
         AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
-            CharDataMapping.setData(charID, 'armorSpecialization', srcStruct, weapName)
+            CharDataMapping.setData(charID, 'armorSpecialization', srcStruct, armorName)
             .then((result) => {
               socket.emit('returnArmorSpecializationChange');
             });
@@ -1851,6 +1851,17 @@ module.exports = class SocketConnections {
     // Socket.IO Connections
     io.on('connection', function(socket){
       const userID = getUserID(socket);
+
+      socket.on('requestDataClearAtSrcStruct', function(charID, srcStruct){
+        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
+          if(ownsChar){
+            CharDataMapping.deleteDataBySourceStruct(charID, srcStruct)
+            .then((result) => {
+              socket.emit('returnDataClearAtSrcStruct', srcStruct);
+            });
+          }
+        });
+      });
 
       socket.on('requestWSCChoices', function(charID, wscCode, srcStruct, locationID){
         AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {

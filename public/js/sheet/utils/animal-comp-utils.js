@@ -216,6 +216,7 @@ function getAnimalUnarmoredDefenseNumUps(animal, charAnimal){
   let cNumUps = 0;
   if(animalHasSpecial('AMBUSHER')){ cNumUps += 1; }
   if(animalHasSpecial('DAREDEVIL')){ cNumUps += 1; }
+  if(animalHasSpecial('SHADE')){ cNumUps += 1; }
   switch(charAnimal.age){
     case 'YOUNG': return cNumUps+1;
     case 'MATURE': return cNumUps+1;
@@ -375,3 +376,11 @@ function getAnimalWillNumUps(animal, charAnimal){
   }
 }
 
+//
+
+function getAnimalSpecializationExtraText(animal, charAnimal){
+  if(animalHasSpecial('SHADE')){
+    return 'It gains darkvision, resistance 5 to all damage except force, and in areas of dim light or darkness, it can Step 10 feet instead of 5 feet.';
+  }
+  return '';
+}

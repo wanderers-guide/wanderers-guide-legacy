@@ -14,7 +14,6 @@ const CharAnimalCompanion = db.define('charAnimalCompanions', {
   },
   specialization: {
     type: Sequelize.STRING
-    //values: ['NONE', 'AMBUSHER', 'BULLY', 'DAREDEVIL', 'RACER', 'TRACKER', 'WRECKER']
   },
   name: {
     type: Sequelize.STRING

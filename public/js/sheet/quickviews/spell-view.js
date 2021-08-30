@@ -456,6 +456,7 @@ function openSpellQuickview(data){
     componentsString = componentsString.replace(`somatic`, `(trait: somatic)`);
     componentsString = componentsString.replace(`verbal`, `(trait: verbal)`);
     componentsString = componentsString.replace(`material`, `(trait: material)`);
+    componentsString = componentsString.replace(`focus`, `(trait: focus)`);
     if(typeof g_allTags !== 'undefined' && g_allTags != null) {
       componentsString = componentsString.replace(regexTraitLink, handleTraitLink);// From text-processing.js
     } else {

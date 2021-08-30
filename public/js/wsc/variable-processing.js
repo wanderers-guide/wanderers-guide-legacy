@@ -100,6 +100,11 @@ const VARIABLE = {
   WEAPON_XXX: 'WEAPON_XXX',
   ARMOR_XXX: 'ARMOR_XXX',
 
+  RESISTANCES: 'RESISTANCES',
+  WEAKNESSES: 'WEAKNESSES',
+
+  LANGUAGES: 'LANGUAGES',
+
 };
 
 const VAR_TYPE = {
@@ -111,6 +116,8 @@ const VAR_TYPE = {
 };
 
 const VAR_NULL = -999;
+
+/////////
 
 function initializeVariable(variableName, variableType, value){
   variableName = variableName.replace(/\s/g, "_").toUpperCase();
@@ -211,23 +218,24 @@ function variables_addProficiency(variableName, abilityScoreName, rank, profData
   let rankHistory = new Map();
   if(profDataArray == null){
     console.log('No rank history set for var:'+variableName);
-    rankHistory.set('Initial', rank);
+    rankHistory.set('Initial', {Rank: rank, SourceName: 'Initial'});
   } else {
     for(let profData of profDataArray){
-      rankHistory.set(profData.SourceName, profData.Prof);
+      rankHistory.set(srcStructToCompositeKey(profData), {Rank: profData.Prof, SourceName: profData.SourceName});
     }
   }
   g_variableMap.set(variableName, {
     Type: VAR_TYPE.PROFICIENCY,
     Value: {
       AbilityScore: abilityScoreName,
-      Rank: rank,
       RankHistory: rankHistory,
       Bonuses: new Map(),
       Conditionals: new Map()
     }
   });
 }
+
+/////////
 
 function variables_getValue(variableName){
 
@@ -237,24 +245,69 @@ function variables_getValue(variableName){
 
 }
 
-function variables_changeRank(variableName, rank, source){
+///
+
+function variables_addRank(variableName, rank, sourceName, srcStructKey){
 
   let variable = g_variableMap.get(variableName);
   if(variable == null) { console.log('Unknown variable '+variableName); return; }
 
   if(variable.Type != VAR_TYPE.PROFICIENCY){
-    displayError("Variable Change Rank: Unsupported variable type \'"+variable.Type+"\'!");
+    displayError("Variable Add Rank: Unsupported variable type \'"+variable.Type+"\'!");
     return;
   }
   if(rank == 'U' || rank == 'T' || rank == 'E' || rank == 'M' || rank == 'L') {} else {
-    displayError("Variable Change Rank: The value \'"+rank+"\' for \'"+variableName+"\' is not a proficiency rank! (options: U, T, E, M, and L)");
+    displayError("Variable Add Rank: The value \'"+rank+"\' for \'"+variableName+"\' is not a proficiency rank! (options: U, T, E, M, and L)");
     return;
   }
 
-  variable.Value.Rank = rank;
-  variable.Value.RankHistory.set(source, rank);
+  variable.Value.RankHistory.set(srcStructKey, {Rank: rank, SourceName: sourceName});
 
 }
+
+function variables_removeRank(variableName, srcStructKey){
+
+  let variable = g_variableMap.get(variableName);
+  if(variable == null) { console.log('Unknown variable '+variableName); return; }
+
+  if(variable.Type != VAR_TYPE.PROFICIENCY){
+    displayError("Variable Remove Rank: Unsupported variable type \'"+variable.Type+"\'!");
+    return;
+  }
+
+  variable.Value.RankHistory.delete(srcStructKey);
+
+}
+
+function variables_getFinalRank(variableName){
+
+  let variable = g_variableMap.get(variableName);
+  if(variable == null) { console.log('Unknown variable '+variableName); return; }
+
+  if(variable.Type != VAR_TYPE.PROFICIENCY){
+    displayError("Variable Final Rank: Unsupported variable type \'"+variable.Type+"\'!");
+    return;
+  }
+
+  let highestNumUps = 0;
+  let rankUps = 0;
+  for(const [srcStructKey, rankData] of variable.Value.RankHistory.entries()){
+    if(rankData.Rank == 'UP'){
+      rankUps++;
+    } else if(rankData.Rank == 'DOWN'){
+      rankUps--;
+    } else {
+      let numUps = profToNumUp(rankData.Rank);
+      if(numUps > highestNumUps){ highestNumUps = numUps; }
+    }
+  }
+  highestNumUps += rankUps;
+
+  return getProfLetterFromNumUps(highestNumUps);
+
+}
+
+///
 
 function variables_addToExtras(variableName, value, type, source){
 
@@ -290,6 +343,40 @@ function variables_addToExtras(variableName, value, type, source){
     `);
   }
   extrasMap.set(type, {Value: value, Src: source});
+  
+  if(variable.Type == VAR_TYPE.STRING){
+    g_variableMap.get(variableName).Value.Extras = extrasMap;
+  }
+
+}
+
+function variables_removeFromExtras(variableName, type){
+
+  let variable = g_variableMap.get(variableName);
+  if(variable == null) { return; }
+
+  let extrasMap;
+  if(variable.Type == VAR_TYPE.INTEGER){
+    displayError("Variable Remove Extra: Unsupported variable type \'"+variable.Type+"\'!");
+    return;
+  } else if(variable.Type == VAR_TYPE.STRING){
+    extrasMap = variable.Extras;
+  } else if(variable.Type == VAR_TYPE.ABILITY_SCORE){
+    displayError("Variable Remove Extra: Unsupported variable type \'"+variable.Type+"\'!");
+    return;
+  } else if(variable.Type == VAR_TYPE.LIST){
+    displayError("Variable Remove Extra: Unsupported variable type \'"+variable.Type+"\'!");
+    return;
+  } else if(variable.Type == VAR_TYPE.PROFICIENCY){
+    displayError("Variable Remove Extra: Unsupported variable type \'"+variable.Type+"\'!");
+    return;
+  } else {
+    displayError("Variable Remove Extra: Unknown variable type \'"+variable.Type+"\'!");
+    return;
+  }
+
+  // ( type ) -> ({ Value: value, Src: source })
+  extrasMap.delete(type);
   
   if(variable.Type == VAR_TYPE.STRING){
     g_variableMap.get(variableName).Value.Extras = extrasMap;
@@ -337,6 +424,34 @@ function variables_getFullString(variableName, errorOnFailure=true){
 
 }
 
+function variables_getExtrasMap(variableName){
+
+  let variable = g_variableMap.get(variableName);
+  if(variable == null) { console.log('Unknown variable '+variableName); return null; }
+
+  if(variable.Type == VAR_TYPE.INTEGER){
+    displayError("Variable Get Extras Map: Unsupported variable type \'"+variable.Type+"\'!");
+    return;
+  } else if(variable.Type == VAR_TYPE.STRING){
+    return variable.Extras;
+  } else if(variable.Type == VAR_TYPE.ABILITY_SCORE){
+    displayError("Variable Get Extras Map: Unsupported variable type \'"+variable.Type+"\'!");
+    return;
+  } else if(variable.Type == VAR_TYPE.LIST){
+    displayError("Variable Get Extras Map: Unsupported variable type \'"+variable.Type+"\'!");
+    return;
+  } else if(variable.Type == VAR_TYPE.PROFICIENCY){
+    displayError("Variable Get Extras Map: Unsupported variable type \'"+variable.Type+"\'!");
+    return;
+  } else {
+    displayError("Variable Get Extras Map: Unsupported variable type \'"+variable.Type+"\'!");
+    return;
+  }
+
+}
+
+///
+
 function variables_addToBonuses(variableName, value, type, source){
 
   let variable = g_variableMap.get(variableName);
@@ -379,6 +494,42 @@ function variables_addToBonuses(variableName, value, type, source){
     }
   }
   bonusesMap.set(type, {Value: value, Src: source});
+  
+  if(variable.Type == VAR_TYPE.INTEGER){
+    g_variableMap.get(variableName).Bonuses = bonusesMap;
+  } else if(variable.Type == VAR_TYPE.ABILITY_SCORE){
+    g_variableMap.get(variableName).Value.Bonuses = bonusesMap;
+  } else if(variable.Type == VAR_TYPE.PROFICIENCY){
+    g_variableMap.get(variableName).Value.Bonuses = bonusesMap;
+  }
+
+}
+
+function variables_removeFromBonuses(variableName, type){
+
+  let variable = g_variableMap.get(variableName);
+  if(variable == null) { console.log('Unknown variable '+variableName); return; }
+
+  let bonusesMap;
+  if(variable.Type == VAR_TYPE.INTEGER){
+    bonusesMap = variable.Bonuses;
+  } else if(variable.Type == VAR_TYPE.STRING){
+    displayError("Variable Remove Bonus: Unsupported variable type \'"+variable.Type+"\'!");
+    return;
+  } else if(variable.Type == VAR_TYPE.ABILITY_SCORE){
+    bonusesMap = variable.Value.Bonuses;
+  } else if(variable.Type == VAR_TYPE.LIST){
+    displayError("Variable Remove Bonus: Unsupported variable type \'"+variable.Type+"\'!");
+    return;
+  } else if(variable.Type == VAR_TYPE.PROFICIENCY){
+    bonusesMap = variable.Value.Bonuses;
+  } else {
+    displayError("Variable Remove Bonus: Unknown variable type \'"+variable.Type+"\'!");
+    return;
+  }
+
+  // ( type ) -> ({ Value: value, Src: source })
+  bonusesMap.delete(type);
   
   if(variable.Type == VAR_TYPE.INTEGER){
     g_variableMap.get(variableName).Bonuses = bonusesMap;
@@ -439,7 +590,7 @@ function variables_getBonusTotal(variableName){
     displayError("Variable Get Bonus Total: Unknown variable type \'"+variable.Type+"\'!");
     return;
   }
-  if(bonusesMap.size == 0) { return null; }
+  if(bonusesMap.size == 0) { return 0; }
 
   let total = 0;
   for(let [type, valueData] of bonusesMap){
@@ -495,7 +646,7 @@ function variables_getTotal(variableName, errorOnFailure=true){
     
     let bonusTotal = variables_getBonusTotal(variableName);
     if(bonusTotal != null) { total += bonusTotal; }
-    total += getProfNumber(profToNumUp(variable.Value.Rank, true), g_character.level);
+    total += getProfNumber(profToNumUp(variables_getFinalRank(variableName)), g_character.level);
     total += getMod(variables_getTotal(variable.Value.AbilityScore));
     return total;
 
@@ -533,6 +684,7 @@ function variables_getBonusesMap(variableName){
 
 }
 
+/////////
 
 function variables_addToConditionals(variableName, condition, source){
 
@@ -622,7 +774,10 @@ function processVariables(wscCode, uniqueID){
 
     // Test/Check Statement for Expressions //
     let wscStatement = testExpr(wscStatementRaw);
-    if(wscStatement == null) {continue;}
+    if(wscStatement == null) {
+      newWscStatements.push(wscStatementRaw);
+      continue;
+    }
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 
     // Replace variable names with their values //
@@ -643,7 +798,7 @@ function processVariables(wscCode, uniqueID){
           continue;
         }
         if(g_variableMap.get(variableName) != null){
-          displayError("Variable Processing: A variable with the name \'"+variableName+"\' already exists!");
+          //displayError("Variable Processing: A variable with the name \'"+variableName+"\' already exists!");
           continue;
         }
 
@@ -880,13 +1035,13 @@ function getVariableValueFromMethod(variable, varName, method) {
     } else if(methodUpper == 'GET_TOTAL'){
       return variables_getTotal(varName);
     } else if(methodUpper == 'GET_BONUS_RANK'){
-      return rankToValue(variable.Value.Rank);
+      return rankToValue(variables_getFinalRank(varName));
     } else if(methodUpper == 'GET_BONUS_ABILITY'){
-      return getMod(g_variableMap.get(variable.Value.AbilityScore).Value.Score);
+      return getMod(variables_getTotal(variable.Value.AbilityScore));
     } else if(methodUpper == 'GET_ABILITY'){
       return variable.Value.AbilityScore;
     } else if(methodUpper == 'GET_VALUE'){
-      return variable.Value.Rank;
+      return variables_getFinalRank(varName);
     } else {
       displayError("Variable Processing: Unknown getting method \'"+method+"\' for variable \'"+varName+"\' ("+variable.Type+")!");
       return 'Error';
@@ -937,7 +1092,6 @@ function setVariableValueIntoMethod(variable, varName, method, value, uniqueID=n
 
     if(methodUpper == 'SET_VALUE'){
       let intValue = parseInt(value);
-      console.log(value);
       if(typeof intValue === 'number' && intValue == value) {
         variable.Value = intValue;
       } else {
@@ -1013,7 +1167,7 @@ function setVariableValueIntoMethod(variable, varName, method, value, uniqueID=n
         displayError("Variable Processing (set): The value \'"+value+"\' for \'"+varName+"\' is not an integer!");
       }
     } else if(methodUpper == 'SET_VALUE'){
-      variables_changeRank(varName, value, 'WSC Statement');
+      variables_addRank(varName, value, 'WSC Statement', uniqueID);
     } else {
       displayError("Variable Processing: Unknown setting method \'"+method+"\' for variable \'"+varName+"\' ("+variable.Type+")!");
     }

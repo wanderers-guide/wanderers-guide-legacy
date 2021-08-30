@@ -169,7 +169,12 @@ function runNextStatement(){
 
         // Test/Check Statement for Expressions //
         wscStatement = testExpr(wscStatement, srcStruct);
-        if(wscStatement == null) {return 'SKIP'; }
+        if(wscStatement == null) {
+          socket.emit("requestDataClearAtSrcStruct",
+              getCharIDFromURL(),
+              srcStruct);
+          return 'SKIP';
+        }
         //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
         
         // Test/Check if Statement is a Sheet Statement //

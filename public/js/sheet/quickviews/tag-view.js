@@ -9,6 +9,7 @@ let g_tagViewMapper = new Map();
 g_tagViewMapper.set('somatic', 'Spell Component');
 g_tagViewMapper.set('verbal', 'Spell Component');
 g_tagViewMapper.set('material', 'Spell Component');
+g_tagViewMapper.set('focus', 'Spell Component');
 
 function openTagQuickview(data) {
     addBackFunctionality(data);

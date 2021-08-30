@@ -24,3 +24,50 @@
 .entry-hover {
   background-color: hsl(0, 0%, 19%)!important
 }
+
+.accord-selection-none {
+  color: hsl(0, 0%, 54%);
+  font-style: italic;
+}
+
+/* Steps */
+.steps .step-item .step-marker {
+  background: #999;
+  color: #282828;
+  border-color: #282828;
+}
+
+.steps .step-item::before {
+  background: linear-gradient(to left,#999 50%,#999 50%);
+}
+
+.steps .step-item.is-info.is-active .step-marker {
+  background-color: #282828;
+}
+
+.step-marker a {
+  color: hsl(204, 86%, 53%);
+}
+.step-marker a:hover {
+  color: hsl(204, 86%, 53%);
+}
+
+.step-builder-title {
+  font-size: 0.8rem!important;
+}
+.has-text-bck-color {
+  color: #282828;
+}
+.button.is-info.is-inverted {
+  background-color: #282828;
+  color: #3298dc;
+}
+.button.is-info.is-inverted:hover {
+  background-color: #282828;
+}
+
+/* Sheet Styles */
+strong {
+  color: #b9b9b9;
+  font-weight: 800;
+}

@@ -11,7 +11,7 @@
     conditionalMap - Key = Condition, Value = value
     isBonus
 */
-function openBreakdownQuickview(data) {
+function openItemBreakdownQuickview(data) {
     addBackFunctionality(data);
 
     $('#quickViewTitle').html(data.title);

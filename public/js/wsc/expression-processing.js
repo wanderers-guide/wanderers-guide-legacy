@@ -107,6 +107,68 @@ g_profConversionMap.set('STEALTH', {Name: 'Stealth', Category: 'Skill'});
 g_profConversionMap.set('SURVIVAL', {Name: 'Survival', Category: 'Skill'});
 g_profConversionMap.set('THIEVERY', {Name: 'Thievery', Category: 'Skill'});
 
+function profConversion_convertOldNameToVarName(profName){
+
+  let convertProfName = profConversion_convertOldName(profName);
+  switch(convertProfName){
+    case 'LIGHTARMOR': return VARIABLE.LIGHT_ARMOR;
+    case 'MEDIUMARMOR': return VARIABLE.MEDIUM_ARMOR;
+    case 'HEAVYARMOR': return VARIABLE.HEAVY_ARMOR;
+    case 'UNARMOREDDEFENSE': return VARIABLE.UNARMORED_DEFENSE;
+
+    case 'SIMPLEWEAPONS': return VARIABLE.SIMPLE_WEAPONS;
+    case 'MARTIALWEAPONS': return VARIABLE.MARTIAL_WEAPONS;
+    case 'ADVANCEDWEAPONS': return VARIABLE.ADVANCED_WEAPONS;
+    case 'UNARMEDATTACKS': return VARIABLE.UNARMED_ATTACKS;
+
+    case 'FORTITUDE': return VARIABLE.SAVE_FORT;
+    case 'REFLEX': return VARIABLE.SAVE_REFLEX;
+    case 'WILL': return VARIABLE.SAVE_WILL;
+
+    case 'PERCEPTION': return VARIABLE.PERCEPTION;
+
+    case 'CLASSDC': return VARIABLE.CLASS_DC;
+
+    case 'ARCANESPELLATTACKS': return VARIABLE.ARCANE_SPELL_ATTACK;
+    case 'OCCULTSPELLATTACKS': return VARIABLE.OCCULT_SPELL_ATTACK;
+    case 'PRIMALSPELLATTACKS': return VARIABLE.PRIMAL_SPELL_ATTACK;
+    case 'DIVINESPELLATTACKS': return VARIABLE.DIVINE_SPELL_ATTACK;
+
+    case 'ARCANESPELLDCS': return VARIABLE.ARCANE_SPELL_DC;
+    case 'OCCULTSPELLDCS': return VARIABLE.OCCULT_SPELL_DC;
+    case 'PRIMALSPELLDCS': return VARIABLE.PRIMAL_SPELL_DC;
+    case 'DIVINESPELLDCS': return VARIABLE.DIVINE_SPELL_DC;
+    case 'ARCANESPELLDC': return VARIABLE.ARCANE_SPELL_DC;
+    case 'OCCULTSPELLDC': return VARIABLE.OCCULT_SPELL_DC;
+    case 'PRIMALSPELLDC': return VARIABLE.PRIMAL_SPELL_DC;
+    case 'DIVINESPELLDC': return VARIABLE.DIVINE_SPELL_DC;
+
+    case 'ACROBATICS': return VARIABLE.SKILL_ACROBATICS;
+    case 'ARCANA': return VARIABLE.SKILL_ARCANA;
+    case 'ATHLETICS': return VARIABLE.SKILL_ATHLETICS;
+    case 'CRAFTING': return VARIABLE.SKILL_CRAFTING;
+    case 'DECEPTION': return VARIABLE.SKILL_DECEPTION;
+    case 'DIPLOMACY': return VARIABLE.SKILL_DIPLOMACY;
+    case 'INTIMIDATION': return VARIABLE.SKILL_INTIMIDATION;
+    case 'MEDICINE': return VARIABLE.SKILL_MEDICINE;
+    case 'NATURE': return VARIABLE.SKILL_NATURE;
+    case 'OCCULTISM': return VARIABLE.SKILL_OCCULTISM;
+    case 'PERFORMANCE': return VARIABLE.SKILL_PERFORMANCE;
+    case 'RELIGION': return VARIABLE.SKILL_RELIGION;
+    case 'SOCIETY': return VARIABLE.SKILL_SOCIETY;
+    case 'STEALTH': return VARIABLE.SKILL_STEALTH;
+    case 'SURVIVAL': return VARIABLE.SKILL_SURVIVAL;
+    case 'THIEVERY': return VARIABLE.SKILL_THIEVERY;
+
+    default: console.error('Failed to convert variable '+convertProfName); return '';
+  }
+
+}
+
+function profConversion_convertOldName(profName){
+  return profName.replace(/\s+/g,'').replace(/_/g,'').toUpperCase();
+}
+
 let hasInit = false;
 let g_expr_level, g_expr_focusPoints, g_expr_profMap, g_expr_senseArray,
         g_expr_heritage, g_expr_classAbilityArray, g_expr_featDataMap, g_expr_featNameArray = null;
@@ -194,19 +256,19 @@ function testExpr(wscCode, srcStruct=null){
         }
 
         if(allTrue) {
-            return statement;
+          return statement;
         } else {
-            return elseStatement;
+          return elseStatement;
         }
         
     } else {
 
         let result = expHandleExpression(expression, statement, elseStatement, srcStruct);
         if(result != -1){
-            return result;
+          return result;
         } else {
-            displayError("Unknown expression: \'"+expression+"\'");
-            return null;
+          displayError("Unknown expression: \'"+expression+"\'");
+          return null;
         }
 
     }
@@ -289,7 +351,7 @@ function expIsVariable(expression, variableName, statement, elseStatement){
   } else if(variable.Type == VAR_TYPE.LIST){
     return expHasStringCompare(variable.Value+'', expression, statement, elseStatement);
   } else if(variable.Type == VAR_TYPE.PROFICIENCY){
-    return expHasStringCompare(variable.Value.Rank, expression, statement, elseStatement);
+    return expHasStringCompare(variables_getFinalRank(variableName), expression, statement, elseStatement);
   } else {
     displayError("Expression Processing: Unknown variable type \'"+variable.Type+"\'!");
     return elseStatement;

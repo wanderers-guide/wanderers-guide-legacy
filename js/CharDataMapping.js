@@ -159,17 +159,21 @@ module.exports = class CharDataMapping {
     }
 
     static deleteDataBySourceStruct(charID, srcStruct){
-        //console.log("Delete by SrcStruct - "+srcStruct.sourceType+" "+srcStruct.sourceLevel+" "+srcStruct.sourceCode);
-        return CharDataMappingModel.destroy({
-            where: {
-                charID,
-                sourceType: srcStruct.sourceType,
-                sourceLevel: srcStruct.sourceLevel,
-                sourceCode: srcStruct.sourceCode,
-                // Ignores sourceCodeSNum
-            }
-        }).then((result) => {
-            return;
+        //console.log("Delete and Delete SNum - Source:"+source);
+        //console.log(srcStruct);
+        return CharDataMapping.deleteDataSNumChildren(charID, srcStruct)
+        .then((result) => {
+            return CharDataMappingModel.destroy({
+                where: {
+                    charID,
+                    sourceType: srcStruct.sourceType,
+                    sourceLevel: srcStruct.sourceLevel,
+                    sourceCode: srcStruct.sourceCode,
+                    sourceCodeSNum: srcStruct.sourceCodeSNum,
+                }
+            }).then((result) => {
+                return;
+            });
         });
     }
 

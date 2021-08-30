@@ -6,6 +6,13 @@ function getCharIDFromURL(){
     return window.location.pathname.split("characters/")[1];
 }
 
+function hasEnabledSource(codeName){
+  const source = g_enabledSources.find(source => {
+    return source.codeName != null && source.codeName == codeName;
+  });
+  return source != null;
+}
+
 function getBulmaTextColorFromCurrentHP(currentHP, maxHP) {
   if(currentHP >= maxHP*0.8){
     return "has-text-success";

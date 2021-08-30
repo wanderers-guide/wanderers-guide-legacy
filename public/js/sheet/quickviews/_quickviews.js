@@ -130,8 +130,12 @@ function openQuickView(type, data, noProtection=false) {
         openAnimalCompQuickview(data);
     } else if(type == 'familiarView'){
         openFamiliarQuickview(data);
-    } else if(type == 'breakdownView'){
-        openBreakdownQuickview(data);
+    } else if(type == 'itemBreakdownView'){
+        openItemBreakdownQuickview(data);
+    } else if(type == 'generalBreakdownView'){
+        openGeneralBreakdownQuickview(data);
+    } else if(type == 'hitPointsBreakdownView'){
+        openHitPointsBreakdownQuickview(data);
     } else if(type == 'warningsView'){
         openWarningsQuickview(data);
     }

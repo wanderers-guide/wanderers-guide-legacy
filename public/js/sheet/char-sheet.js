@@ -2091,7 +2091,7 @@ function determineArmor(dexMod, strScore) {
                         ignore noisy trait and reduce Stealth penalty if no noisy trait.
                     */
                     let stealthCheckPenalty = checkPenalty;
-                    let stealthRank = variables_getValue(VARIABLE.SKILL_STEALTH).Rank;
+                    let stealthRank = variables_getFinalRank(VARIABLE.SKILL_STEALTH);
                     if(stealthRank == 'L'){ // Legendary
                         stealthCheckPenalty += 3;
                     } else if(stealthRank == 'M'){ // Master

@@ -563,7 +563,7 @@ function handleIndexConditions(text){
         let conditionName = condition.name.toLowerCase();
         let conditionLinkClass = 'conditionTextLink'+conditionName.replace(/ /g,'-');
         let conditionLinkText = ' <span class="'+conditionLinkClass+' is-underlined-info cursor-clickable">'+conditionName+'</span>';
-        let conditionNameRegex = new RegExp('(\\W|)'+conditionName, "g");
+        let conditionNameRegex = new RegExp('(\\W|^)'+conditionName, "g");
         text = text.replace(conditionNameRegex, '$1'+conditionLinkText);
         setTimeout(function() {
             $('.'+conditionLinkClass).off('click');

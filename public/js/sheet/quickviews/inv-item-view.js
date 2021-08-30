@@ -301,7 +301,7 @@ function openInvItemQuickview(data) {
         });
 
         $('#invWeapAttackView').click(function() {
-          openQuickView('breakdownView', {
+          openQuickView('itemBreakdownView', {
             title: data.InvItem.name+' - Attack Bonus',
             breakdownTitle: 'Bonus',
             breakdownTotal: calcStruct.AttackBonus,
@@ -319,7 +319,7 @@ function openInvItemQuickview(data) {
         });
 
         $('#invWeapDamageView').click(function() {
-          openQuickView('breakdownView', {
+          openQuickView('itemBreakdownView', {
             title: data.InvItem.name+(g_invItemView_isCriticalHit ? ' - Crit. Damage' : ' - Damage'),
             breakdownTitle: 'Damage',
             breakdownTotal: calcStruct.Damage,
