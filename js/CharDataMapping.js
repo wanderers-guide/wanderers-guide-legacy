@@ -28,11 +28,12 @@ module.exports = class CharDataMapping {
     
     */
 
-    static setData(charID, source, srcStruct, value){
+    static setData(charID, source, srcStruct, value, deleteSelfData=true){
         //console.log("Set and Delete SNum - Source:"+source+" Value:"+value);
         //console.log(srcStruct);
         return CharDataMapping.deleteDataSNumChildren(charID, srcStruct)
         .then((result) => {
+          if(deleteSelfData){
             return CharDataMappingModel.destroy({
               where: {
                   charID,
@@ -42,18 +43,31 @@ module.exports = class CharDataMapping {
                   sourceCodeSNum: srcStruct.sourceCodeSNum,
               }
             }).then((result) => {
-                return CharDataMappingModel.upsert({
-                  charID,
-                  source,
-                  sourceType: srcStruct.sourceType,
-                  sourceLevel: srcStruct.sourceLevel,
-                  sourceCode: srcStruct.sourceCode,
-                  sourceCodeSNum: srcStruct.sourceCodeSNum,
-                  value,
-                }).then(result => {
-                    return;
-                });
+              return CharDataMappingModel.upsert({
+                charID,
+                source,
+                sourceType: srcStruct.sourceType,
+                sourceLevel: srcStruct.sourceLevel,
+                sourceCode: srcStruct.sourceCode,
+                sourceCodeSNum: srcStruct.sourceCodeSNum,
+                value,
+              }).then(result => {
+                  return;
+              });
             });
+          } else {
+            return CharDataMappingModel.upsert({
+              charID,
+              source,
+              sourceType: srcStruct.sourceType,
+              sourceLevel: srcStruct.sourceLevel,
+              sourceCode: srcStruct.sourceCode,
+              sourceCodeSNum: srcStruct.sourceCodeSNum,
+              value,
+            }).then(result => {
+                return;
+            });
+          }
         });
     }
 

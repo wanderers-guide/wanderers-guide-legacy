@@ -177,7 +177,7 @@ function openLeftStatsQuickview(data) {
 
 }
 
-socket.on("returnLangsAndTrainingsClear", function(srcStruct, data){
+socket.on("returnLangsAndTrainingsClear", function(profSrcStruct, langSrcStruct, data){
   if(data.SkillLocationID != 'sideSkillSelection') { return; }
   // Runs after all code is executed for leftQuickView
   setTimeout(() => {
@@ -190,16 +190,24 @@ socket.on("returnLangsAndTrainingsClear", function(srcStruct, data){
 
 function statsFinalSkillsAndLangs(){
 
-  let srcStruct = {
+  let profSrcStruct = {
     sourceType: 'class',
     sourceLevel: 1,
-    sourceCode: 'inits-bonus',
+    sourceCode: 'inits-bonus-prof',
+    sourceCodeSNum: 'a',
+  };
+
+  let langSrcStruct = {
+    sourceType: 'class',
+    sourceLevel: 1,
+    sourceCode: 'inits-bonus-lang',
     sourceCodeSNum: 'a',
   };
   
   socket.emit("requestLangsAndTrainingsClear",
       getCharIDFromURL(),
-      srcStruct,
+      profSrcStruct,
+      langSrcStruct,
       {Character: null, SkillLocationID: 'sideSkillSelection', LangLocationID: 'sideLangSelection'});
 
 }

@@ -34,16 +34,24 @@ function loadFinalizePage(character, unselectedDataArray) {
 
     if(character.classID != null && character.ancestryID != null){
 
-        let srcStruct = {
-            sourceType: 'class',// Class 1 is what gives the extra skills
-            sourceLevel: 1,
-            sourceCode: 'inits-bonus',
-            sourceCodeSNum: 'a',
+        let profSrcStruct = {
+          sourceType: 'class',// Class 1 is what gives the extra skills
+          sourceLevel: 1,
+          sourceCode: 'inits-bonus-prof',
+          sourceCodeSNum: 'a',
+        };
+      
+        let langSrcStruct = {
+          sourceType: 'class',
+          sourceLevel: 1,
+          sourceCode: 'inits-bonus-lang',
+          sourceCodeSNum: 'a',
         };
         
         socket.emit("requestLangsAndTrainingsClear",
             getCharIDFromURL(),
-            srcStruct,
+            profSrcStruct,
+            langSrcStruct,
             {Character: character, SkillLocationID: 'skillSelection', LangLocationID: 'langSelection'});
 
     } else {
@@ -134,7 +142,7 @@ function loadFinalizePage(character, unselectedDataArray) {
 }
 
 
-socket.on("returnLangsAndTrainingsClear", function(srcStruct, data){
+socket.on("returnLangsAndTrainingsClear", function(profSrcStruct, langSrcStruct, data){
 
     $(".finalize-content").removeClass("is-hidden");
     
@@ -146,7 +154,7 @@ socket.on("returnLangsAndTrainingsClear", function(srcStruct, data){
       
       processBuilderCode(
           giveSkillTrainingCode,
-          srcStruct,
+          profSrcStruct,
           data.SkillLocationID,
           'Final Skill Trainings');
     }
@@ -161,7 +169,7 @@ socket.on("returnLangsAndTrainingsClear", function(srcStruct, data){
       
       processBuilderCode(
           giveLanguageCode,
-          srcStruct,
+          langSrcStruct,
           data.LangLocationID,
           'Final Languages');
     }

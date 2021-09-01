@@ -970,14 +970,14 @@ module.exports = class SocketConnections {
         });
       });
 
-      socket.on('requestLangsAndTrainingsClear', function(charID, srcStruct, data){
+      socket.on('requestLangsAndTrainingsClear', function(charID, profSrcStruct, langSrcStruct, data){
         AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
-            CharDataMapping.deleteData(charID, 'languages', srcStruct)
+            CharDataMapping.deleteData(charID, 'languages', langSrcStruct)
             .then((result) => {
-              CharDataMapping.deleteData(charID, 'proficiencies', srcStruct)
+              CharDataMapping.deleteData(charID, 'proficiencies', profSrcStruct)
               .then((result) => {
-                socket.emit('returnLangsAndTrainingsClear', srcStruct, data);
+                socket.emit('returnLangsAndTrainingsClear', profSrcStruct, langSrcStruct, data);
               });
             });
           }
@@ -1178,7 +1178,7 @@ module.exports = class SocketConnections {
               CharDataMapping.setData(charID, 'domains', srcStruct, domain.Domain.id)
               .then((result) => {
                 CharDataMapping.setData(charID, 'focusSpell', srcStruct, 
-                    domain.SpellSRC+"="+domain.Domain.initialSpellID)
+                    domain.SpellSRC+"="+domain.Domain.initialSpellID, false)
                 .then((result) => {
                   socket.emit('returnDomainChange');
                 });
@@ -1200,7 +1200,7 @@ module.exports = class SocketConnections {
               CharDataMapping.setData(charID, 'advancedDomains', srcStruct, domain.Domain.id)
               .then((result) => {
                 CharDataMapping.setData(charID, 'focusSpell', srcStruct, 
-                    domain.SpellSRC+"="+domain.Domain.advancedSpellID)
+                    domain.SpellSRC+"="+domain.Domain.advancedSpellID, false)
                 .then((result) => {
                   socket.emit('returnDomainAdvancementChange');
                 });
@@ -1244,7 +1244,8 @@ module.exports = class SocketConnections {
                   profChangePacket.profStruct.For,
                   profChangePacket.profStruct.To,
                   profChangePacket.profStruct.Prof,
-                  profChangePacket.profStruct.SourceName)
+                  profChangePacket.profStruct.SourceName,
+                  false)
                 .then((result) => {
                   socket.emit('returnProficiencyChange', profChangePacket);
                   socket.emit('returnLoreChange', srcStruct, loreName, inputPacket, prof);
