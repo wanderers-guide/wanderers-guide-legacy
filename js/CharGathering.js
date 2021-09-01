@@ -37,6 +37,7 @@ const Storage = require('../models/contentDB/Storage');
 const Shield = require('../models/contentDB/Shield');
 const ItemRune = require('../models/contentDB/ItemRune');
 const Book = require('../models/contentDB/Book');
+const ClassArchetype = require('../models/contentDB/ClassArchetype');
 const AnimalCompanion = require('../models/contentDB/AnimalCompanion');
 const CharAnimalCompanion = require('../models/contentDB/CharAnimalCompanion');
 const SpecificFamiliar = require('../models/contentDB/SpecificFamiliar');
@@ -189,6 +190,27 @@ module.exports = class CharGathering {
             return books;
           });
         });
+      });
+    }
+
+    static getAllClassArchetypes(userID, charID) {
+      return Character.findOne({ where: { id: charID} })
+      .then((character) => {
+          return ClassArchetype.findAll({
+              where: {
+                  contentSrc: {
+                    [Op.or]: CharContentSources.getSourceArray(character)
+                  },
+                  homebrewID: {
+                    [Op.or]: CharContentHomebrew.getHomebrewArray(character)
+                  },
+                  [Op.not]: [
+                    { contentSrc: { [Op.or]: TempUnpublishedBooks.getSourcesArray(userID) } },
+                  ]
+              }
+          }).then((classArchetypes) => {
+            return classArchetypes;
+          });
       });
     }
 
@@ -1691,6 +1713,21 @@ module.exports = class CharGathering {
           ]
         }
       });
+
+    }
+
+    static getClassArchetypeID(userID, charID) {
+      
+        let srcStruct = {
+            sourceType: 'class',
+            sourceLevel: 1,
+            sourceCode: 'classArchetype',
+            sourceCodeSNum: 'a',
+        };
+        return CharDataMapping.getDataSingle(charID, 'classArchetypeChoice', srcStruct)
+        .then((data) => {
+          return (data != null) ? data.value : null;
+        });
 
     }
 

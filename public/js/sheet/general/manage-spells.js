@@ -108,7 +108,7 @@ function openSpellSRCTab(spellSRC, data){
         });
     });
 
-    if(spellBook.SpellCastingType === 'SPONTANEOUS-REPERTOIRE') {
+    if(spellBook.SpellCastingType === 'SPONTANEOUS-REPERTOIRE' || spellBook.SpellCastingType === 'FLEXIBLE-COLLECTION') {
         displaySpellSpontaneous(spellBook, data);
         displaySpellSlotsSpontaneous(spellSRC, data);
     } else {
@@ -124,6 +124,8 @@ function openSpellSRCTab(spellSRC, data){
         $('#manageSpellsListName').html('<p class="is-size-5 has-text-centered has-tooltip-multiline has-tooltip-bottom" data-tooltip="You know how to prepare and cast all common spells from your tradition\'s spell list ('+capitalizeWord(spellBook.SpellList)+'). Add the appropriate spells to your spell list accordingly.">Spell List</p>');
     } else if(spellBook.SpellCastingType === 'SPONTANEOUS-REPERTOIRE'){
         $('#manageSpellsListName').html('<p class="is-size-5 has-text-centered has-tooltip-multiline has-tooltip-bottom" data-tooltip="Your spell repertoire is the collection of spells you know how to cast and at which level. Each time you gain new spell slots, add that many spells of that level to your spell repertoire and you may also switch out an old spell for a different one of the same level.">Spell Repertoire</p>');
+    } else if(spellBook.SpellCastingType === 'FLEXIBLE-COLLECTION'){
+      $('#manageSpellsListName').html('<p class="is-size-5 has-text-centered has-tooltip-multiline has-tooltip-bottom" data-tooltip="Your spell collection is the list of spells you prepare each day that you can cast at any appropriate level. The size of your spell collection is equal to the number of spell slots you have. You still prepare cantrips as normal. Lastly, you must select at least one 1st-level spell for your collection each time you prepare, ensuring that you can use all your spell slots each day.">Spell Collection</p>');
     }
 
 }

@@ -133,6 +133,8 @@ module.exports = async function(socket, charID, character=null, background=null,
     heritageEffectsArray = await CharDataMapping.getDataAll(charID,"heritageExtra",Heritage);
   }
 
+  const classArchetypeID = await CharGathering.getClassArchetypeID(getUserID(socket), charID);
+
 
   let choiceStruct = {
     Character: character,
@@ -159,6 +161,7 @@ module.exports = async function(socket, charID, character=null, background=null,
     LoreArray: loreDataArray,
     ExtraClassFeaturesArray: extraClassFeatures,
     HeritageEffectsArray: heritageEffectsArray,
+    ClassArchetypeID: classArchetypeID,
   };
 
   console.log('~ COMPLETE CHAR-CHOICES LOAD! ~');

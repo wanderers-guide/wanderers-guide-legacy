@@ -118,7 +118,7 @@ socket.on("returnSpellListChange", function(){
 
 //////////////////////////////// Set Casting Type ///////////////////////////////////
 function setSpellCastingType(srcStruct, spellSRC, castingType){
-    if(castingType === 'PREPARED-LIST' || castingType === 'PREPARED-BOOK' || castingType === 'PREPARED-FAMILIAR' || castingType === 'SPONTANEOUS-REPERTOIRE') {
+    if(castingType === 'PREPARED-LIST' || castingType === 'PREPARED-BOOK' || castingType === 'PREPARED-FAMILIAR' || castingType === 'SPONTANEOUS-REPERTOIRE' || castingType === 'FLEXIBLE-COLLECTION') {
         socket.emit("requestSpellCastingTypeChange",
             getCharIDFromURL(),
             srcStruct,

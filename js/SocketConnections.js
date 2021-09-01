@@ -1295,6 +1295,26 @@ module.exports = class SocketConnections {
         });
       });
 
+      socket.on('requestClassArchetypeChange', function(charID, srcStruct, classArchetypeID){
+        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
+          if(ownsChar){
+            if(classArchetypeID == null){
+              CharDataMapping.deleteData(charID, 'classArchetypeChoice', srcStruct)
+              .then((result) => {
+                socket.emit('returnClassArchetypeChange');
+              });
+            } else {
+              CharDataMapping.setData(charID, 'classArchetypeChoice', srcStruct, classArchetypeID)
+              .then((result) => {
+                socket.emit('returnClassArchetypeChange');
+              });
+            }
+          } else {
+            socket.emit('returnWSCStatementFailure', 'Incorrect Auth');
+          }
+        });
+      });
+
       socket.on('requestSCFSChange', function(charID, srcStruct, classFeatureID, inputPacket){
         AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
@@ -1621,6 +1641,7 @@ module.exports = class SocketConnections {
       socket.on('requestSpellCastingTypeChange', function(charID, srcStruct, spellSRC, castingType){
         AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
+            console.log(spellSRC+"="+castingType);
             CharDataMapping.setData(charID, 'spellCastingType', srcStruct, spellSRC+"="+castingType)
             .then((result) => {
               socket.emit('returnSpellCastingTypeChange');

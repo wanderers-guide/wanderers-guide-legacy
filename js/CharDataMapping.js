@@ -23,6 +23,7 @@ module.exports = class CharDataMapping {
             - heritage
             - background
             - keyAbility
+            - classArchetype
 
     
     */

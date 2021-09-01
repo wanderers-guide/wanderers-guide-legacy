@@ -35,8 +35,8 @@ model ancestries {
   physicalFeatureOneID                                               Int?
   physicalFeatureTwoID                                               Int?
   tagID                                                              Int?
-  artworkURL                                                         String?          @db.VarChar(60)
-  isArchived                                                         Int?           @default(0)
+  artworkURL                                                         String?           @db.VarChar(60)
+  isArchived                                                         Int?              @default(0)
   contentSrc                                                         String            @default("CRB") @db.VarChar(45)
   homebrewID                                                         Int?
   version                                                            String?           @db.VarChar(90)
@@ -79,7 +79,7 @@ model ancestryFlaws {
 model ancestryLanguages {
   ancestryID      Int
   langID          Int
-  isBonus         Int?         @default(0)
+  isBonus         Int?             @default(0)
   homebrewID      Int?
   homebrewBundles homebrewBundles? @relation(fields: [homebrewID], references: [id])
   languages       languages        @relation(fields: [langID], references: [id])
@@ -126,7 +126,7 @@ model animalCompanions {
   special              String?                     @db.VarChar(200)
   supportBenefit       String?                     @db.VarChar(800)
   advancedManeuver     String?                     @db.VarChar(45)
-  isArchived           Int?                     @default(0)
+  isArchived           Int?                        @default(0)
   contentSrc           String                      @default("CRB") @db.VarChar(45)
   homebrewID           Int?
   version              String?                     @db.VarChar(90)
@@ -162,7 +162,7 @@ model archetypes {
   dedicationFeatID Int?
   isMulticlass     Int?
   tagID            Int?
-  isArchived       Int?          @default(0)
+  isArchived       Int?             @default(0)
   contentSrc       String           @default("CRB") @db.VarChar(45)
   homebrewID       Int?
   version          String?          @db.VarChar(90)
@@ -199,7 +199,7 @@ model backgrounds {
   boostOne        String?            @db.VarChar(60)
   boostTwo        String?            @db.VarChar(60)
   code            String?            @db.VarChar(1000)
-  isArchived      Int?            @default(0)
+  isArchived      Int?               @default(0)
   contentSrc      String             @default("CRB") @db.VarChar(45)
   homebrewID      Int?
   version         String?            @db.VarChar(90)
@@ -247,18 +247,19 @@ model characters {
   rollHistoryJSON             String?                @db.VarChar(8000)
   details                     String?                @db.Text
   customCode                  String?                @db.VarChar(2000)
-  optionAutoDetectPreReqs     Int?                @default(1)
-  optionAutoHeightenSpells    Int?                @default(0)
-  optionPublicCharacter       Int?                @default(0)
-  optionCustomCodeBlock       Int?                @default(0)
-  optionDiceRoller            Int?                @default(0)
-  optionIgnoreBulk            Int?                @default(0)
-  variantProfWithoutLevel     Int?                @default(0)
-  variantFreeArchetype        Int?                @default(0)
-  variantAncestryParagon      Int?                @default(0)
-  variantStamina              Int?                @default(0)
-  variantAutoBonusProgression Int?                @default(0)
-  variantGradualAbilityBoosts Int?                @default(0)
+  optionAutoDetectPreReqs     Int?                   @default(1)
+  optionAutoHeightenSpells    Int?                   @default(0)
+  optionPublicCharacter       Int?                   @default(0)
+  optionCustomCodeBlock       Int?                   @default(0)
+  optionDiceRoller            Int?                   @default(0)
+  optionClassArchetypes       Int?                   @default(1)
+  optionIgnoreBulk            Int?                   @default(0)
+  variantProfWithoutLevel     Int?                   @default(0)
+  variantFreeArchetype        Int?                   @default(0)
+  variantAncestryParagon      Int?                   @default(0)
+  variantStamina              Int?                   @default(0)
+  variantAutoBonusProgression Int?                   @default(0)
+  variantGradualAbilityBoosts Int?                   @default(0)
   enabledSources              String                 @default("[\"CRB\",\"ADV-PLAYER-GUIDE\",\"GM-GUIDE\"]") @db.VarChar(4000)
   enabledHomebrew             String                 @default("[null]") @db.VarChar(6000)
   ancestries                  ancestries?            @relation(fields: [ancestryID], references: [id])
@@ -356,10 +357,10 @@ model classAbilities {
   code                 String?                    @db.VarChar(3000)
   selectType           classAbilities_selectType? @default(NONE)
   selectOptionFor      Int?
-  displayInSheet       Int?                    @default(0)
+  displayInSheet       Int?                       @default(0)
   indivClassName       String?                    @db.VarChar(45)
   indivClassAbilName   String?                    @db.VarChar(45)
-  isArchived           Int?                    @default(0)
+  isArchived           Int?                       @default(0)
   contentSrc           String                     @default("CRB") @db.VarChar(45)
   homebrewID           Int?
   classes              classes?                   @relation(fields: [classID], references: [id])
@@ -390,7 +391,7 @@ model classes {
   tArmor          String?          @db.VarChar(300)
   tagID           Int?
   artworkURL      String?          @db.VarChar(60)
-  isArchived      Int?          @default(0)
+  isArchived      Int?             @default(0)
   contentSrc      String           @default("CRB") @db.VarChar(45)
   homebrewID      Int?
   version         String?          @db.VarChar(90)
@@ -407,15 +408,15 @@ model conditions {
   id             Int              @id @default(autoincrement())
   name           String?          @db.VarChar(45)
   description    String?          @db.Text
-  hasValue       Int?          @default(0)
+  hasValue       Int?             @default(0)
   code           String?          @db.VarChar(1000)
   charConditions charConditions[]
 }
 
 model damageTypes {
-  id          Int       @id @default(autoincrement())
-  name        String?   @db.VarChar(45)
-  description String?   @db.TinyText
+  id          Int     @id @default(autoincrement())
+  name        String? @db.VarChar(45)
+  description String? @db.TinyText
 }
 
 model domains {
@@ -435,6 +436,19 @@ model domains {
   @@index([initialSpellID], name: "domain_initialSpellID_idx")
 }
 
+model classArchetypes {
+  id                  Int     @id @default(autoincrement())
+  name                String? @db.VarChar(45)
+  description         String? @db.Text
+  replacementCodeJSON String? @db.VarChar(8000)
+  dedicationFeatName  String? @db.VarChar(60)
+  contentSrc          String  @default("CRB") @db.VarChar(45)
+  homebrewID          Int?
+
+  homebrewBundles homebrewBundles? @relation(fields: [homebrewID], references: [id])
+  @@index([homebrewID], name: "classArchetype_homebrewID")
+}
+
 model familiarAbilities {
   id              Int              @id @default(autoincrement())
   name            String?          @db.VarChar(45)
@@ -442,7 +456,7 @@ model familiarAbilities {
   requirements    String?          @db.VarChar(200)
   description     String?          @db.VarChar(600)
   code            String?          @db.VarChar(600)
-  isMaster        Int?          @default(0)
+  isMaster        Int?             @default(0)
   contentSrc      String           @default("CRB") @db.VarChar(45)
   homebrewID      Int?
   homebrewBundles homebrewBundles? @relation(fields: [homebrewID], references: [id])
@@ -463,15 +477,15 @@ model feats {
   requirements      String?            @db.VarChar(600)
   description       String?            @db.Text
   special           String?            @db.VarChar(600)
-  canSelectMultiple Int?           @default(0)
-  isDefault         Int?           @default(0)
+  canSelectMultiple Int?               @default(0)
+  isDefault         Int?               @default(0)
   skillID           Int?
   minProf           String?            @db.VarChar(3)
   code              String?            @db.VarChar(3000)
-  isCore            Int?            @default(0)
+  isCore            Int?               @default(0)
   genericType       feats_genericType?
   genTypeName       String?            @db.VarChar(45)
-  isArchived        Int?            @default(0)
+  isArchived        Int?               @default(0)
   contentSrc        String             @default("CRB") @db.VarChar(45)
   homebrewID        Int?
   version           String?            @db.VarChar(90)
@@ -485,10 +499,10 @@ model feats {
 }
 
 model featTags {
-  featID    Int
-  tagID     Int
-  feats     feats     @relation(fields: [featID], references: [id])
-  tags      tags      @relation(fields: [tagID], references: [id])
+  featID Int
+  tagID  Int
+  feats  feats @relation(fields: [featID], references: [id])
+  tags   tags  @relation(fields: [tagID], references: [id])
 
   @@id([featID, tagID])
   @@index([tagID], name: "featTag.tagID_idx")
@@ -501,7 +515,7 @@ model heritages {
   rarity            heritages_rarity @default(COMMON)
   description       String?          @db.Text
   code              String?          @db.VarChar(1000)
-  isArchived        Int?          @default(0)
+  isArchived        Int?             @default(0)
   contentSrc        String           @default("CRB") @db.VarChar(45)
   indivAncestryName String?          @db.VarChar(45)
   homebrewID        Int?
@@ -535,7 +549,7 @@ model homeBackReports {
 model homebrewBundleKeys {
   homebrewID      Int
   keyCode         String          @db.VarChar(45)
-  isOneTimeUse    Int?         @default(0)
+  isOneTimeUse    Int?            @default(0)
   homebrewBundles homebrewBundles @relation(fields: [homebrewID], references: [id])
 
   @@id([homebrewID, keyCode])
@@ -548,8 +562,8 @@ model homebrewBundles {
   description         String?               @db.Text
   contactInfo         String?               @db.VarChar(120)
   code                String?               @db.VarChar(1000)
-  hasKeys             Int?               @default(0)
-  isPublished         Int?               @default(0)
+  hasKeys             Int?                  @default(0)
+  isPublished         Int?                  @default(0)
   authorName          String                @default("Unknown") @db.VarChar(45)
   users               users                 @relation(fields: [userID], references: [id])
   ancestries          ancestries[]
@@ -576,22 +590,23 @@ model homebrewBundles {
   userHomebrewBundles userHomebrewBundles[]
 
   @@index([userID], name: "homebrewBundleUserID")
+  classArchetypes classArchetypes[]
 }
 
 model innateSpellCastings {
-  innateSpellID String    @id @db.VarChar(120)
+  innateSpellID String @id @db.VarChar(120)
   timesCast     Int?
 }
 
 model inventories {
-  id                                                     Int          @id @default(autoincrement())
+  id                                                     Int              @id @default(autoincrement())
   equippedArmorInvItemID                                 Int?
   equippedShieldInvItemID                                Int?
   equippedArmorCategory                                  armors_category?
-  invItems_invItemsToinventories_equippedArmorInvItemID  invItems?    @relation("invItemsToinventories_equippedArmorInvItemID", fields: [equippedArmorInvItemID], references: [id])
-  invItems_invItemsToinventories_equippedShieldInvItemID invItems?    @relation("invItemsToinventories_equippedShieldInvItemID", fields: [equippedShieldInvItemID], references: [id])
+  invItems_invItemsToinventories_equippedArmorInvItemID  invItems?        @relation("invItemsToinventories_equippedArmorInvItemID", fields: [equippedArmorInvItemID], references: [id])
+  invItems_invItemsToinventories_equippedShieldInvItemID invItems?        @relation("invItemsToinventories_equippedShieldInvItemID", fields: [equippedShieldInvItemID], references: [id])
   characters                                             characters[]
-  invItems_invItems_invIDToinventories                   invItems[]   @relation("invItems_invIDToinventories")
+  invItems_invItems_invIDToinventories                   invItems[]       @relation("invItems_invIDToinventories")
 
   @@index([equippedArmorInvItemID], name: "inv_armorInvItemID_idx")
   @@index([equippedShieldInvItemID], name: "inv_shieldInvItemID_idx")
@@ -607,8 +622,8 @@ model invItems {
   description                                               String?                     @db.Text
   size                                                      invItems_size?
   quantity                                                  Int?
-  isShoddy                                                  Int?                     @default(0)
-  isDropped                                                 Int?                     @default(0)
+  isShoddy                                                  Int?                        @default(0)
+  isDropped                                                 Int?                        @default(0)
   currentHitPoints                                          Int?
   hitPoints                                                 Int?
   materialType                                              String?                     @db.VarChar(45)
@@ -617,15 +632,15 @@ model invItems {
   code                                                      String?                     @db.VarChar(1000)
   itemTags                                                  String?                     @db.VarChar(405)
   bagInvItemID                                              Int?
-  isInvested                                                Int?                     @default(0)
-  itemIsWeapon                                              Int?                     @default(0)
+  isInvested                                                Int?                        @default(0)
+  itemIsWeapon                                              Int?                        @default(0)
   itemWeaponDieType                                         invItems_itemWeaponDieType?
   itemWeaponDamageType                                      String?                     @db.VarChar(45)
-  itemWeaponRange                                           Int?                     @default(0)
-  itemWeaponReload                                          Int?                     @default(0)
-  itemWeaponAtkBonus                                        Int?                     @default(0)
-  itemWeaponDmgBonus                                        Int?                     @default(0)
-  itemIsStorage                                             Int?                     @default(0)
+  itemWeaponRange                                           Int?                        @default(0)
+  itemWeaponReload                                          Int?                        @default(0)
+  itemWeaponAtkBonus                                        Int?                        @default(0)
+  itemWeaponDmgBonus                                        Int?                        @default(0)
+  itemIsStorage                                             Int?                        @default(0)
   itemStorageMaxBulk                                        Float?
   fundRuneID                                                Int?
   fundPotencyRuneID                                         Int?
@@ -648,7 +663,7 @@ model invItems {
 model itemRunes {
   id            Int                   @id @default(autoincrement())
   itemID        Int?
-  isFundamental Int?               @default(0)
+  isFundamental Int?                  @default(0)
   etchedType    itemRunes_etchedType?
   items         items?                @relation(fields: [itemID], references: [id])
 
@@ -668,17 +683,17 @@ model items {
   size              items_size           @default(MEDIUM)
   craftRequirements String?              @db.VarChar(380)
   usage             String?              @db.VarChar(120)
-  isShoddy          Int?              @default(0)
-  hasQuantity       Int?              @default(0)
+  isShoddy          Int?                 @default(0)
+  hasQuantity       Int?                 @default(0)
   quantity          Int                  @default(1)
   materialType      String?              @db.VarChar(45)
   hitPoints         Int?
   brokenThreshold   Int?
   hardness          Int?
-  hidden            Int?              @default(0)
+  hidden            Int?                 @default(0)
   code              String?              @db.VarChar(1000)
   itemStructType    items_itemStructType @default(GENERAL)
-  isArchived        Int?              @default(0)
+  isArchived        Int?                 @default(0)
   contentSrc        String               @default("CRB") @db.VarChar(45)
   homebrewID        Int?
   version           String?              @db.VarChar(90)
@@ -737,31 +752,31 @@ model senseTypes {
   id                                                  Int          @id @default(autoincrement())
   name                                                String?      @db.VarChar(45)
   description                                         String?      @db.Text
-  isVisionType                                        Int?     @default(0)
+  isVisionType                                        Int?         @default(0)
   visionPrecedence                                    Int?
   ancestries_ancestries_additionalSenseIDTosenseTypes ancestries[] @relation("ancestries_additionalSenseIDTosenseTypes")
   ancestries_ancestries_visionSenseIDTosenseTypes     ancestries[] @relation("ancestries_visionSenseIDTosenseTypes")
 }
 
 model sheetStates {
-  id              Int                @id @default(autoincrement())
-  name            String?            @db.VarChar(90)
-  description     String?            @db.VarChar(2000)
-  code            String?            @db.VarChar(10000)
-  contentSrc      String             @default("CRB") @db.VarChar(45)
+  id              Int              @id @default(autoincrement())
+  name            String?          @db.VarChar(90)
+  description     String?          @db.VarChar(2000)
+  code            String?          @db.VarChar(10000)
+  contentSrc      String           @default("CRB") @db.VarChar(45)
   homebrewID      Int?
-  homebrewBundles homebrewBundles?   @relation(fields: [homebrewID], references: [id])
+  homebrewBundles homebrewBundles? @relation(fields: [homebrewID], references: [id])
 
   @@index([homebrewID], name: "sheetStates_homebrewID_idx")
 }
 
 model shields {
-  id           Int       @id @default(autoincrement())
+  id           Int     @id @default(autoincrement())
   itemID       Int?
-  profName     String?   @db.VarChar(45)
+  profName     String? @db.VarChar(45)
   acBonus      Int?
   speedPenalty Int?
-  items        items?    @relation(fields: [itemID], references: [id])
+  items        items?  @relation(fields: [itemID], references: [id])
 
   @@index([itemID], name: "shield_itemID_idx")
 }
@@ -775,11 +790,11 @@ model skills {
 }
 
 model books {
-  codeName    String          @id @db.VarChar(45)
-  name        String?         @db.VarChar(180)
-  url         String?         @db.VarChar(300)
-  description String?         @db.Text
-  code        String?         @db.VarChar(1000)
+  codeName    String  @id @db.VarChar(45)
+  name        String? @db.VarChar(180)
+  url         String? @db.VarChar(300)
+  description String? @db.Text
+  code        String? @db.VarChar(1000)
 }
 
 model specificFamiliars {
@@ -792,7 +807,7 @@ model specificFamiliars {
   numAbils        Int              @default(0)
   abilsJSON       String           @default("[]") @db.VarChar(250)
   extraAbils      String?          @db.VarChar(2000)
-  isArchived      Int?          @default(0)
+  isArchived      Int?             @default(0)
   contentSrc      String           @default("CRB") @db.VarChar(45)
   homebrewID      Int?
   homebrewBundles homebrewBundles? @relation(fields: [homebrewID], references: [id])
@@ -841,8 +856,8 @@ model spells {
   heightenedThreeText                     String?             @db.VarChar(500)
   heightenedFourVal                       String?             @db.VarChar(45)
   heightenedFourText                      String?             @db.VarChar(500)
-  isFocusSpell                            Int?             @default(0)
-  isArchived                              Int?             @default(0)
+  isFocusSpell                            Int?                @default(0)
+  isArchived                              Int?                @default(0)
   contentSrc                              String              @default("CRB") @db.VarChar(45)
   homebrewID                              Int?
   version                                 String?             @db.VarChar(90)
@@ -856,46 +871,46 @@ model spells {
 }
 
 model storages {
-  id                      Int       @id @default(autoincrement())
+  id                      Int    @id @default(autoincrement())
   itemID                  Int?
   maxBulkStorage          Float?
   bulkIgnored             Float?
-  ignoreSelfBulkIfWearing Int?  @default(0)
-  items                   items?    @relation(fields: [itemID], references: [id])
+  ignoreSelfBulkIfWearing Int?   @default(0)
+  items                   items? @relation(fields: [itemID], references: [id])
 
   @@index([itemID], name: "storage_itemID_idx")
 }
 
 model taggedItems {
-  itemID    Int
-  tagID     Int
-  items     items     @relation(fields: [itemID], references: [id])
-  tags      tags      @relation(fields: [tagID], references: [id])
+  itemID Int
+  tagID  Int
+  items  items @relation(fields: [itemID], references: [id])
+  tags   tags  @relation(fields: [tagID], references: [id])
 
-  @@index([itemID], name: "itemApplied_itemID_idx")
-  @@index([tagID], name: "taggedItem_tagID_idx")
 
   @@unique([itemID, tagID], name: "taggedItem_compKeys")
+  @@index([itemID], name: "itemApplied_itemID_idx")
+  @@index([tagID], name: "taggedItem_tagID_idx")
 }
 
 model taggedSpells {
-  spellID   Int
-  tagID     Int
-  spells    spells    @relation(fields: [spellID], references: [id])
-  tags      tags      @relation(fields: [tagID], references: [id])
+  spellID Int
+  tagID   Int
+  spells  spells @relation(fields: [spellID], references: [id])
+  tags    tags   @relation(fields: [tagID], references: [id])
 
-  @@index([spellID], name: "taggedSpell_spellID_idx")
-  @@index([tagID], name: "taggedTag_tagID_idx")
 
   @@unique([spellID, tagID], name: "taggedSpell_compKeys")
+  @@index([spellID], name: "taggedSpell_spellID_idx")
+  @@index([tagID], name: "taggedTag_tagID_idx")
 }
 
 model tags {
   id              Int              @id @default(autoincrement())
   name            String?          @db.VarChar(45)
   description     String?          @db.Text
-  isHidden        Int?          @default(0)
-  isArchived      Int?          @default(0)
+  isHidden        Int?             @default(0)
+  isArchived      Int?             @default(0)
   homebrewID      Int?
   homebrewBundles homebrewBundles? @relation(fields: [homebrewID], references: [id])
   ancestries      ancestries[]
@@ -945,11 +960,11 @@ model users {
   redditID            String                @db.VarChar(90)
   username            String                @db.VarChar(90)
   thumbnail           String?               @db.VarChar(200)
-  isPatreonSupporter  Int?               @default(0)
-  isPatreonMember     Int?               @default(0)
-  isPatreonLegend     Int?               @default(0)
-  isAdmin             Int?               @default(0)
-  isDeveloper         Int?               @default(0)
+  isPatreonSupporter  Int?                  @default(0)
+  isPatreonMember     Int?                  @default(0)
+  isPatreonLegend     Int?                  @default(0)
+  isAdmin             Int?                  @default(0)
+  isDeveloper         Int?                  @default(0)
   patreonUserID       Int?                  @unique
   patreonFullName     String?               @db.VarChar(120)
   patreonEmail        String?               @db.VarChar(120)
@@ -984,9 +999,9 @@ model weapons {
 }
 
 enum accessTokens_accessRights {
-  READ_ONLY @map("READ-ONLY")
-  READ_UPDATE @map("READ-UPDATE")
-  READ_UPDATE_ADD_DELETE @map("READ-UPDATE-ADD-DELETE")
+  READ_ONLY               @map("READ-ONLY")
+  READ_UPDATE             @map("READ-UPDATE")
+  READ_UPDATE_ADD_DELETE  @map("READ-UPDATE-ADD-DELETE")
 }
 
 enum ancestries_rarity {
@@ -1037,7 +1052,7 @@ enum animalCompanions_size {
   SMALL
   MEDIUM
   LARGE
-  MED_LARGE @map("MED-LARGE")
+  MED_LARGE   @map("MED-LARGE")
   HUGE
   GARGANTUAN
 }
@@ -1057,7 +1072,7 @@ enum animalCompanions_a1Actions {
 }
 
 enum animalCompanions_a1DmgDie {
-  EMPTY_ENUM_VALUE @map("")
+  EMPTY_ENUM_VALUE  @map("")
   d2
   d4
   d6
@@ -1082,7 +1097,7 @@ enum animalCompanions_a2Actions {
 }
 
 enum animalCompanions_a2DmgDie {
-  EMPTY_ENUM_VALUE @map("")
+  EMPTY_ENUM_VALUE  @map("")
   d2
   d4
   d6
@@ -1107,7 +1122,7 @@ enum animalCompanions_a3Actions {
 }
 
 enum animalCompanions_a3DmgDie {
-  EMPTY_ENUM_VALUE @map("")
+  EMPTY_ENUM_VALUE  @map("")
   d2
   d4
   d6
@@ -1118,13 +1133,13 @@ enum animalCompanions_a3DmgDie {
 }
 
 enum apiClientApps_accessRights {
-  READ_ONLY @map("READ-ONLY")
-  READ_UPDATE @map("READ-UPDATE")
-  READ_UPDATE_ADD_DELETE @map("READ-UPDATE-ADD-DELETE")
+  READ_ONLY               @map("READ-ONLY")
+  READ_UPDATE             @map("READ-UPDATE")
+  READ_UPDATE_ADD_DELETE  @map("READ-UPDATE-ADD-DELETE")
 }
 
 enum armors_armorType {
-  N_A @map("N/A")
+  N_A        @map("N/A")
   CLOTH
   LEATHER
   COMPOSITE
@@ -1183,13 +1198,13 @@ enum feats_rarity {
 }
 
 enum feats_genericType {
-  GENERAL_FEAT @map("GENERAL-FEAT")
-  SKILL_FEAT @map("SKILL-FEAT")
-  CLASS_FEAT @map("CLASS-FEAT")
-  ARCHETYPE_FEAT @map("ARCHETYPE-FEAT")
-  ANCESTRY_FEAT @map("ANCESTRY-FEAT")
-  BASIC_ACTION @map("BASIC-ACTION")
-  SKILL_ACTION @map("SKILL-ACTION")
+  GENERAL_FEAT    @map("GENERAL-FEAT")
+  SKILL_FEAT      @map("SKILL-FEAT")
+  CLASS_FEAT      @map("CLASS-FEAT")
+  ARCHETYPE_FEAT  @map("ARCHETYPE-FEAT")
+  ANCESTRY_FEAT   @map("ANCESTRY-FEAT")
+  BASIC_ACTION    @map("BASIC-ACTION")
+  SKILL_ACTION    @map("SKILL-ACTION")
 }
 
 enum heritages_rarity {
@@ -1209,7 +1224,7 @@ enum invItems_size {
 }
 
 enum invItems_itemWeaponDieType {
-  EMPTY_ENUM_VALUE @map("")
+  EMPTY_ENUM_VALUE  @map("")
   d2
   d4
   d6
@@ -1337,7 +1352,7 @@ enum uniHeritages_rarity {
 }
 
 enum weapons_dieType {
-  EMPTY_ENUM_VALUE @map("")
+  EMPTY_ENUM_VALUE  @map("")
   d2
   d4
   d6

@@ -564,6 +564,10 @@ module.exports = class CharSaving {
           charUpVals = {
             optionDiceRoller: value
           };
+        } else if(optionName === 'optionClassArchetypes'){
+          charUpVals = {
+            optionClassArchetypes: value
+          };
         } else if(optionName === 'optionIgnoreBulk'){
           charUpVals = {
             optionIgnoreBulk: value

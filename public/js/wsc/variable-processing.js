@@ -105,6 +105,8 @@ const VARIABLE = {
 
   LANGUAGES: 'LANGUAGES',
 
+  CLASS_NAME: 'CLASS_NAME',
+
 };
 
 const VAR_TYPE = {
@@ -168,6 +170,11 @@ function resettingVariables(enabledSources=null){
     if(data.AbilScore != null){
       variables_addProficiency(variableName, 'SCORE_'+data.AbilScore, 'U');
     }
+  }
+
+  // Class Name
+  if(wscChoiceStruct.ClassDetails != null && wscChoiceStruct.ClassDetails.Class != null){
+    variables_addString(VARIABLE.CLASS_NAME, wscChoiceStruct.ClassDetails.Class.name);
   }
 
   // Run All SourceBook Code as Sheet Statements //

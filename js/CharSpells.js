@@ -128,7 +128,54 @@ function getSpellSlots(SID, spellcasting){
             ],
             tenthLevel: []
         };
-    } else if(spellcasting === 'PARTIAL'){
+    } else if(spellcasting === 'REDUCED'){
+      return {
+          cantrip: [
+              {slotID: SID+1, used: false, spellID: null, type: '', level_lock: 1},
+              {slotID: SID+2, used: false, spellID: null, type: '', level_lock: 1},
+              {slotID: SID+3, used: false, spellID: null, type: '', level_lock: 1},
+              {slotID: SID+4, used: false, spellID: null, type: '', level_lock: 2},
+              {slotID: SID+5, used: false, spellID: null, type: '', level_lock: 4},
+          ],
+          firstLevel: [
+              {slotID: SID+6, used: false, spellID: null, type: '', level_lock: 1},
+              {slotID: SID+7, used: false, spellID: null, type: '', level_lock: 1},
+          ],
+          secondLevel: [
+              {slotID: SID+8, used: false, spellID: null, type: '', level_lock: 3},
+              {slotID: SID+9, used: false, spellID: null, type: '', level_lock: 3},
+          ],
+          thirdLevel: [
+              {slotID: SID+10, used: false, spellID: null, type: '', level_lock: 5},
+              {slotID: SID+11, used: false, spellID: null, type: '', level_lock: 5},
+          ],
+          fourthLevel: [
+              {slotID: SID+12, used: false, spellID: null, type: '', level_lock: 7},
+              {slotID: SID+13, used: false, spellID: null, type: '', level_lock: 7},
+          ],
+          fifthLevel: [
+              {slotID: SID+14, used: false, spellID: null, type: '', level_lock: 9},
+              {slotID: SID+15, used: false, spellID: null, type: '', level_lock: 9},
+          ],
+          sixthLevel: [
+              {slotID: SID+16, used: false, spellID: null, type: '', level_lock: 11},
+              {slotID: SID+17, used: false, spellID: null, type: '', level_lock: 11},
+          ],
+          seventhLevel: [
+              {slotID: SID+18, used: false, spellID: null, type: '', level_lock: 13},
+              {slotID: SID+19, used: false, spellID: null, type: '', level_lock: 13},
+          ],
+          eighthLevel: [
+              {slotID: SID+20, used: false, spellID: null, type: '', level_lock: 15},
+              {slotID: SID+21, used: false, spellID: null, type: '', level_lock: 15},
+          ],
+          ninthLevel: [
+              {slotID: SID+22, used: false, spellID: null, type: '', level_lock: 17},
+              {slotID: SID+23, used: false, spellID: null, type: '', level_lock: 17},
+          ],
+          tenthLevel: []
+      };
+  } else if(spellcasting === 'PARTIAL'){
       return {
           cantrip: [
               {slotID: SID+1, used: false, spellID: null, type: '', level_lock: 1},

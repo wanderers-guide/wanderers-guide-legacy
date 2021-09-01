@@ -82,6 +82,7 @@ socket.on("returnClassChange", function(inChoiceStruct, classNum){
     if(g_class != null){
         injectWSCChoiceStruct(inChoiceStruct);
         updateSkillMap(true);
+        resetClassArchetypes();
         displayCurrentClass(g_class, classNum);
     } else {
         finishLoadingPage();
@@ -521,8 +522,17 @@ function displayCurrentClass(classStruct, classNum) {
 
             }
 
+
             let classAbilityContent = $('#'+classAbilityContentID);
-            classAbilityContent.append('<div class="container ability-text-section">'+processText(classAbility.description, false, null)+'</div>');
+
+
+            let result = applyClassArchetypeChoice(classAbility);
+            if(result != null){
+              classAbilityContent.append('<div class="container ability-text-section">'+result.tabsHTML+'</div>');
+              assembleClassArchetypeTabs(result.tabsID, classAbility.id, classAbility.description);
+            } else {
+              classAbilityContent.append('<div class="container ability-text-section">'+processText(classAbility.description, false, null)+'</div>');
+            }
 
             classAbilityContent.append('<div class="columns is-mobile is-centered is-marginless"><div id="'+classAbilityCodeID+'" class="column is-mobile is-11 is-paddingless"></div></div>');
 
@@ -576,64 +586,112 @@ function displayCurrentClass(classStruct, classNum) {
     let abilSelectors = $('.classAbilSelection');
     for(const abilSelector of abilSelectors){
 
-        $(abilSelector).change(function(event, triggerSave){
+        $(abilSelector).change(function(event, triggerSave, runCodeOnly){
 
-            let descriptionID = $(this).attr('id')+'Description';
-            let abilityCodeID = $(this).attr('id')+'Code';
-            $('#'+descriptionID).html('');
-            $('#'+abilityCodeID).html('');
+            if(runCodeOnly === true){
 
-            let classAbilityID = $(this).attr('name');
-            let classAbility = classStruct.Abilities.find(classAbility => {
-                return classAbility.id == classAbilityID;
-            });
+              if($(this).val() != "chooseDefault"){
 
-            let srcStruct = {
-                sourceType: getClassSourceType(classNum),
-                sourceLevel: classAbility.level,
-                sourceCode: 'classAbilitySelector-'+classAbilityID,
-                sourceCodeSNum: 'a',
-            };
+                let abilityCodeID = $(this).attr('id')+'Code';
+                $('#'+abilityCodeID).html('');
 
-            if($(this).val() == "chooseDefault"){
-                $(this).parent().addClass("is-info");
-                $('#'+descriptionID).parent().parent().parent().parent().addClass('is-hidden');
-                
-                // Save ability choice
-                if(triggerSave == null || triggerSave) {
-                    socket.emit("requestClassChoiceChange",
-                        getCharIDFromURL(),
-                        srcStruct,
-                        null);
-                }
+                let classAbilityID = $(this).attr('name');
+                let classAbility = classStruct.Abilities.find(classAbility => {
+                    return classAbility.id == classAbilityID;
+                });
 
-            } else {
-                $(this).parent().removeClass("is-info");
-                $('#'+descriptionID).parent().parent().parent().parent().removeClass('is-hidden');
+                let srcStruct = {
+                    sourceType: getClassSourceType(classNum),
+                    sourceLevel: classAbility.level,
+                    sourceCode: 'classAbilitySelector-'+classAbilityID,
+                    sourceCodeSNum: 'a',
+                };
 
                 let chosenAbilityID = $(this).val();
                 let chosenClassAbility = classStruct.Abilities.find(classAbility => {
                     return classAbility.id == chosenAbilityID;
                 });
 
-                $('#'+descriptionID).html(processText(chosenClassAbility.description, false, null));
-
-                // Save ability choice
-                if(triggerSave == null || triggerSave) {
-                    socket.emit("requestClassChoiceChange",
-                        getCharIDFromURL(),
-                        srcStruct,
-                        { SelectorID : classAbilityID, OptionID : chosenAbilityID });
-                }
+                const chosenClassFeatureCode = replaceClassFeatureCodeFromClassArchetype(chosenClassAbility.id, chosenClassAbility.code, srcStruct);
 
                 // Run ability choice code
                 processBuilderCode(
-                    chosenClassAbility.code,
+                    chosenClassFeatureCode,
                     srcStruct,
                     abilityCodeID,
                     chosenClassAbility.name);
-                
+
+              }
+
+            } else {
+
+              let descriptionID = $(this).attr('id')+'Description';
+              let abilityCodeID = $(this).attr('id')+'Code';
+              $('#'+descriptionID).html('');
+              $('#'+abilityCodeID).html('');
+
+              let classAbilityID = $(this).attr('name');
+              let classAbility = classStruct.Abilities.find(classAbility => {
+                  return classAbility.id == classAbilityID;
+              });
+
+              let srcStruct = {
+                  sourceType: getClassSourceType(classNum),
+                  sourceLevel: classAbility.level,
+                  sourceCode: 'classAbilitySelector-'+classAbilityID,
+                  sourceCodeSNum: 'a',
+              };
+
+              if($(this).val() == "chooseDefault"){
+                  $(this).parent().addClass("is-info");
+                  $('#'+descriptionID).parent().parent().parent().parent().addClass('is-hidden');
+                  
+                  // Save ability choice
+                  if(triggerSave == null || triggerSave) {
+                      socket.emit("requestClassChoiceChange",
+                          getCharIDFromURL(),
+                          srcStruct,
+                          null);
+                  }
+
+              } else {
+                  $(this).parent().removeClass("is-info");
+                  $('#'+descriptionID).parent().parent().parent().parent().removeClass('is-hidden');
+
+                  let chosenAbilityID = $(this).val();
+                  let chosenClassAbility = classStruct.Abilities.find(classAbility => {
+                      return classAbility.id == chosenAbilityID;
+                  });
+
+                  let result = applyClassArchetypeChoice(chosenClassAbility);
+                  if(result != null){
+                    $('#'+descriptionID).html(result.tabsHTML);
+                    assembleClassArchetypeTabs(result.tabsID, chosenClassAbility.id, chosenClassAbility.description);
+                  } else {
+                    $('#'+descriptionID).html(processText(chosenClassAbility.description, false, null));
+                  }
+
+                  // Save ability choice
+                  if(triggerSave == null || triggerSave) {
+                      socket.emit("requestClassChoiceChange",
+                          getCharIDFromURL(),
+                          srcStruct,
+                          { SelectorID : classAbilityID, OptionID : chosenAbilityID });
+                  }
+
+                  const chosenClassFeatureCode = replaceClassFeatureCodeFromClassArchetype(chosenClassAbility.id, chosenClassAbility.code, srcStruct);
+
+                  // Run ability choice code
+                  processBuilderCode(
+                      chosenClassFeatureCode,
+                      srcStruct,
+                      abilityCodeID,
+                      chosenClassAbility.name);
+                  
+              }
+
             }
+
             $(this).blur();
             selectorUpdated();
         });

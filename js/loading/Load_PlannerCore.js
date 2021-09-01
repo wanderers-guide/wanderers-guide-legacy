@@ -76,6 +76,9 @@ module.exports = async function(socket) {
 
   socket.emit('updateLoadProgess', { message: 'Loading Senses', upVal: 0 }); // (95/100) //
   const allSenses = await Prisma.senseTypes.findMany();
+  
+  //socket.emit('updateLoadProgess', { message: 'Finding Class Archetypes', upVal: 3 }); // (86/100) //
+  //const classArchetypes = await CharGathering.getAllClassArchetypes(getUserID(socket), charID);
 
   socket.emit('updateLoadProgess', { message: 'Finalizing', upVal: 10 }); // (105/100) //
   const plannerStruct = {
@@ -91,6 +94,7 @@ module.exports = async function(socket) {
     archetypes,
     backgrounds,
     uniHeritages,
+    //classArchetypes,
     allPhyFeats,
     allSenses,
   };

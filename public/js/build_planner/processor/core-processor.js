@@ -135,7 +135,7 @@ function runQueuedStatement(){
 
     if(wscStatement != null){
         let wscStatementUpper = wscStatement.toUpperCase();
-        if(wscStatement == ''){ return PROCESS_RETURN.NEXT; }
+        if(wscStatement.trim() == ''){ return PROCESS_RETURN.NEXT; }
         if(wscStatement.endsWith(',')){ wscStatement = wscStatement.slice(0, -1); }
 
         // Test/Check Statement for Expressions //
@@ -148,6 +148,7 @@ function runQueuedStatement(){
           deleteDataBySourceStruct(srcStruct);
           return PROCESS_RETURN.NEXT;
         }
+        if(wscStatement.trim() == ''){ return PROCESS_RETURN.NEXT; }
         */
         //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
 
@@ -180,7 +181,7 @@ socket.on("returnWSCStatementFailure", function(details){
 });
 
 
-// WSC statement maximum: 26
+// WSC statement maximum: 52
 function processor_charIncrease(char){
   switch(char) {
     case 'a': return 'b';
@@ -208,7 +209,35 @@ function processor_charIncrease(char){
     case 'w': return 'x';
     case 'x': return 'y';
     case 'y': return 'z';
-    case 'z': return null;
+    case 'z': return 'A';
+
+    case 'A': return 'B';
+    case 'B': return 'C';
+    case 'C': return 'D';
+    case 'D': return 'E';
+    case 'E': return 'F';
+    case 'F': return 'G';
+    case 'G': return 'H';
+    case 'H': return 'I';
+    case 'I': return 'J';
+    case 'J': return 'K';
+    case 'K': return 'L';
+    case 'L': return 'M';
+    case 'M': return 'N';
+    case 'N': return 'O';
+    case 'O': return 'P';
+    case 'P': return 'Q';
+    case 'Q': return 'R';
+    case 'R': return 'S';
+    case 'S': return 'T';
+    case 'T': return 'U';
+    case 'U': return 'V';
+    case 'V': return 'W';
+    case 'W': return 'X';
+    case 'X': return 'Y';
+    case 'Y': return 'Z';
+    case 'Z': return null;
+
     default: return null;
   }
 }

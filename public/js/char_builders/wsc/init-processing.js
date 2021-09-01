@@ -164,7 +164,7 @@ function runNextStatement(){
     $('#'+locationID+' .wsc-statement-roller').remove();
 
     if(wscStatement != null){
-        if(wscStatement == ''){ return 'SKIP'; }
+        if(wscStatement.trim() == ''){ return 'SKIP'; }
         if(wscStatement.endsWith(',')){ wscStatement = wscStatement.slice(0, -1); }
 
         // Test/Check Statement for Expressions //
@@ -175,6 +175,7 @@ function runNextStatement(){
               srcStruct);
           return 'SKIP';
         }
+        if(wscStatement.trim() == ''){ return 'SKIP'; }
         //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
         
         // Test/Check if Statement is a Sheet Statement //
@@ -428,9 +429,12 @@ function processBuilderCode_ClassAbilities(classAbilities, classNum){
                 sourceCode: 'classAbility-'+classAbility.id,
                 sourceCodeSNum: 'a',
             };
+
+            const classFeatureCode = replaceClassFeatureCodeFromClassArchetype(classAbility.id, classAbility.code, srcStruct);
+
             $('#classAbilityCode-'+classNum+'-'+classAbility.id).html('');
             processBuilderCode(
-                classAbility.code,
+                classFeatureCode,
                 srcStruct,
                 'classAbilityCode-'+classNum+'-'+classAbility.id,
                 classAbility.name+' (Lvl '+classAbility.level+')');

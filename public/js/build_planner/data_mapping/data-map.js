@@ -8,6 +8,7 @@ const DATA_SOURCE = {
   INNATE_SPELL: 'innateSpell',
   LANGUAGE: 'languages',
   CLASS_FEATURE_CHOICE: 'classChoice',
+  CLASS_ARCHETYPE_CHOICE: 'classArchetypeChoice',
   PROFICIENCY: 'proficiencies',
   LORE: 'loreCategories',
   CHAR_TRAIT: 'charTag',

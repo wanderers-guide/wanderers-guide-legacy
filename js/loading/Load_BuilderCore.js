@@ -88,7 +88,10 @@ module.exports = async function(socket, charID, character=null, featObject=null,
     unselectedDataArray = await CharGathering.getAllUnselectedData(getUserID(socket), charID);
   }
 
-  socket.emit('updateLoadProgess', { message: 'Considering Character Choices', upVal: 17 }); // (100/100) //
+  socket.emit('updateLoadProgess', { message: 'Finding Class Archetypes', upVal: 3 }); // (86/100) //
+  const classArchetypeArray = await CharGathering.getAllClassArchetypes(getUserID(socket), charID);
+
+  socket.emit('updateLoadProgess', { message: 'Considering Character Choices', upVal: 14 }); // (100/100) //
   const choiceStruct = await CharChoicesLoad(socket, charID, character, background=null, ancestry=null, heritage=null, ancestries=null, charTagsArray=null, classDetails=null, featDataArray=null, bonusDataArray=null, choiceDataArray=null, profDataArray=null, innateSpellDataArray=null, langDataArray=null, senseDataArray=null, phyFeatDataArray=null, loreDataArray=null, focusPointDataArray=null, profMap=null, domains=null, domainDataArray=null, advancedDomainDataArray=null, extraClassFeatures=null, heritageEffectsArray=null);
 
 
@@ -104,6 +107,7 @@ module.exports = async function(socket, charID, character=null, featObject=null,
     AllLanguages: allLanguages,
     EnabledSources: sourcesArray,
     UnselectedDataArray: unselectedDataArray,
+    ClassArchetypeArray: classArchetypeArray,
     RawMetaDataArray: metaDataArray,
   };
 

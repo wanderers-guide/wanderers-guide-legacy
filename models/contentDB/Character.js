@@ -84,6 +84,9 @@ const Character = db.define('characters', {
   optionDiceRoller: {
     type: Sequelize.INTEGER
   },
+  optionClassArchetypes: {
+    type: Sequelize.INTEGER
+  },
   optionIgnoreBulk: {
     type: Sequelize.INTEGER
   },

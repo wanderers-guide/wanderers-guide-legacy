@@ -190,7 +190,7 @@ function displaySpellsAndSlots(){
         }
       }
       
-    } else if (spellBook.SpellCastingType == 'SPONTANEOUS-REPERTOIRE') {
+    } else if (spellBook.SpellCastingType == 'SPONTANEOUS-REPERTOIRE' || spellBook.SpellCastingType == 'FLEXIBLE-COLLECTION') {
 
       let foundKeytermInSearch = false;
       if(spellsSearchInput != null){

@@ -29,6 +29,7 @@ let g_allLanguages = null;
 let g_allConditions = null;
 let g_allTags = null;
 let g_enabledSources = null;
+let g_classArchetypes = null;
 let g_unselectedData = null;
 let g_rawMetaData = null;
 // ~~~~~~~~~~~~~~~~~ //
@@ -55,6 +56,7 @@ socket.on("returnCharBuilderDetails", function(character, coreDataStruct, inChoi
   g_allConditions = coreDataStruct.AllConditions;
   g_allTags = coreDataStruct.AllTags;
   g_enabledSources = coreDataStruct.EnabledSources;
+  g_classArchetypes = coreDataStruct.ClassArchetypeArray;
   g_unselectedData = coreDataStruct.UnselectedDataArray;
   g_rawMetaData = coreDataStruct.RawMetaDataArray;
   //
@@ -67,6 +69,7 @@ socket.on("returnCharBuilderDetails", function(character, coreDataStruct, inChoi
   g_character = character;
   //
   injectWSCChoiceStruct(inChoiceStruct);
+  initClassArchetypes(inChoiceStruct.ClassArchetypeID);
   // ~~~~~~~~~~~~~~~~~ //
 
   for(const [featID, featStruct] of g_featMap.entries()){

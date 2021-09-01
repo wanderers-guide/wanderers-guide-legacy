@@ -442,6 +442,15 @@ function handleCharacterOptions(character, hBundles, progessBundles) {
     });
     $("#optionDiceRoller").prop('checked', (character.optionDiceRoller === 1));
 
+    $("#optionClassArchetypes").change(function(){
+      let optionTypeValue = (this.checked) ? 1 : 0;
+      socket.emit("requestCharacterOptionChange", 
+          getCharIDFromURL(), 
+          'optionClassArchetypes',
+          optionTypeValue);
+    });
+    $("#optionClassArchetypes").prop('checked', (character.optionClassArchetypes === 1));
+
     $("#optionCustomCodeBlock").change(function(){
       let optionTypeValue = (this.checked) ? 1 : 0;
       if(optionTypeValue === 1) {
