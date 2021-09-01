@@ -1,6 +1,6 @@
 
 
-const ADMIN_USER_IDS = ['1', '11'];
+const ADMIN_USER_IDS = ['1', '11', '13'];
 
 module.exports = class TempUnpublishedBooks {
 
