@@ -33,16 +33,26 @@ module.exports = class CharDataMapping {
         //console.log(srcStruct);
         return CharDataMapping.deleteDataSNumChildren(charID, srcStruct)
         .then((result) => {
-            return CharDataMappingModel.upsert({
-                charID,
-                source,
-                sourceType: srcStruct.sourceType,
-                sourceLevel: srcStruct.sourceLevel,
-                sourceCode: srcStruct.sourceCode,
-                sourceCodeSNum: srcStruct.sourceCodeSNum,
-                value,
-            }).then(result => {
-                return;
+            return CharDataMappingModel.destroy({
+              where: {
+                  charID,
+                  sourceType: srcStruct.sourceType,
+                  sourceLevel: srcStruct.sourceLevel,
+                  sourceCode: srcStruct.sourceCode,
+                  sourceCodeSNum: srcStruct.sourceCodeSNum,
+              }
+            }).then((result) => {
+                return CharDataMappingModel.upsert({
+                  charID,
+                  source,
+                  sourceType: srcStruct.sourceType,
+                  sourceLevel: srcStruct.sourceLevel,
+                  sourceCode: srcStruct.sourceCode,
+                  sourceCodeSNum: srcStruct.sourceCodeSNum,
+                  value,
+                }).then(result => {
+                    return;
+                });
             });
         });
     }

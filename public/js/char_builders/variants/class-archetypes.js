@@ -220,8 +220,6 @@ function assembleClassArchetypeTabs(tabsID, classFeatureID, originalDescription)
 function replaceClassFeatureCodeFromClassArchetype(classFeatureID, classFeatureCode, srcStruct){
   if(wscChoiceStruct.Character.optionClassArchetypes == 0){ return classFeatureCode; }
 
-  console.log(classFeatureCode);
-
   // Replace changes code
   classFeatureCode = replaceCodeFromClassArchetype(classFeatureCode, srcStruct);
 
@@ -273,7 +271,9 @@ function replaceClassFeatureCodeFromClassArchetype(classFeatureID, classFeatureC
           }
         }
 
-        newWscStatements.push(wscStatementRaw);
+        if(wscStatementRaw != ''){
+          newWscStatements.push(wscStatementRaw);
+        }
     }
 
     // Assemble new wscCode
@@ -311,8 +311,6 @@ function replaceClassFeatureCodeFromClassArchetype(classFeatureID, classFeatureC
     Original Code
   
   */
-
-  console.log(newWscCode);
 
   return newWscCode;
 
@@ -369,7 +367,9 @@ function replaceCodeFromClassArchetype(wscCode, srcStruct){
     };
     findAndApplyStatementChanges();
     
-    newWscStatements.push(wscStatementRaw);
+    if(wscStatementRaw != ''){
+      newWscStatements.push(wscStatementRaw);
+    }
   }
 
   // Assemble new wscCode

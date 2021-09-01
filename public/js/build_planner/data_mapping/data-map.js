@@ -48,6 +48,18 @@ function initDataMap(charMetaData){
 function setData(in_source, in_srcStruct, in_value){
   let new_srcStruct = parameterizeSrcStruct(in_source, in_srcStruct);
   deleteDataSNumChildren(new_srcStruct);
+
+  for(const [JSON_srcStruct, value] of g_dataMap.entries()){
+    let srcStruct = JSON.parse(JSON_srcStruct);
+    if(srcStruct.sourceType == new_srcStruct.sourceType
+        && srcStruct.sourceLevel == new_srcStruct.sourceLevel
+        && srcStruct.sourceCode == new_srcStruct.sourceCode
+        && srcStruct.sourceCodeSNum == new_srcStruct.sourceCodeSNum){
+      g_dataMap.delete(JSON_srcStruct);
+      deleteVarDataFromSrcStruct(srcStruct);
+    }
+  }
+
   g_dataMap.set(JSON.stringify(new_srcStruct), in_value);
 }
 
