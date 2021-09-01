@@ -111,6 +111,8 @@ module.exports = async function(socket, charID, character) {
   socket.emit('updateLoadProgess', { message: 'Locating Class Features', upVal: 1 }); // (100/100) //
   const allClassFeatureOptions = await CharGathering.getAllClassFeatureOptions(getUserID(socket), charID, character);
 
+ // socket.emit('updateLoadProgess', { message: 'Finding Class Archetypes', upVal: 3 }); // (86/100) //
+  const classArchetypeArray = await CharGathering.getAllClassArchetypes(getUserID(socket), charID);
 
   socket.emit('updateLoadProgess', { message: 'Finalizing', upVal: 10 }); // (110/100) //
   let charInfo = {
@@ -139,6 +141,7 @@ module.exports = async function(socket, charID, character) {
     CompanionData : companionData,
     AllClassFeatureOptions: allClassFeatureOptions,
     SheetStatesArray: sheetStatesArray,
+    ClassArchetypeArray: classArchetypeArray,
     UnselectedDataArray: unselectedDataArray,
   };
 

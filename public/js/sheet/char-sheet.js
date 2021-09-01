@@ -39,6 +39,8 @@ let g_heritage = null;
 let g_background = null;
 let g_charTagsArray = null;
 
+let g_classArchetype = null;
+
 let g_charSize = null;
 
 let g_allTags = null;
@@ -203,6 +205,16 @@ socket.on("returnCharacterSheetInfo", function(charInfo, userPermissions, viewOn
     gOption_hasStamina = (g_character.variantStamina === 1);
     gOption_hasDiceRoller = (g_character.optionDiceRoller === 1);
     gOption_hasIgnoreBulk = (g_character.optionIgnoreBulk === 1);
+
+    /* Class Archetype ID */
+    if(charInfo.ChoiceStruct.ClassArchetypeID != null){
+      g_classArchetype = charInfo.ClassArchetypeArray.find(classArchetype => {
+        return classArchetype.id == charInfo.ChoiceStruct.ClassArchetypeID;
+      });
+      if(g_classArchetype != null){
+        g_classArchetype.replacementCode = JSON.parse(g_classArchetype.replacementCodeJSON);
+      }
+    }
 
     g_otherSpeeds = charInfo.OtherSpeeds;
 

@@ -335,6 +335,16 @@ function displayClassAbilities(data, abilitiesSearchValue){
     $('#abilitiesContent').append('<hr class="hr-light" style="margin-top:-0.5em; margin-bottom:0em;">');
 
     let abilCount = 0;
+    if(g_classArchetype != null){
+      let archetypeAbil = {
+        name: g_classArchetype.name,
+        description: g_classArchetype.replacementCode.initial.archetypeText,
+        level: 0,
+      };
+      filterAbilitiesThroughSearch(archetypeAbil, 'Class'+abilCount, abilitiesSearchValue);
+      abilCount++;
+    }
+
     for(let classAbil of data.ClassDetails.Abilities){
         if(classAbil.displayInSheet === 0 || classAbil.selectType == 'SELECT_OPTION' || classAbil.level > g_character.level || classAbil.level == -1){ continue; }
         filterAbilitiesThroughSearch(classAbil, 'Class'+abilCount, abilitiesSearchValue);

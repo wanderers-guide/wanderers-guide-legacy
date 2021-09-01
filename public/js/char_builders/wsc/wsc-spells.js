@@ -8,7 +8,7 @@ function processingSpells(wscStatement, srcStruct, locationID, sourceName){
     if(wscStatement.includes("SET-SPELL-SLOTS")){// SET-SPELL-SLOTS=Bard:Three-Quarters/Full/Single-Set
         let data = wscStatement.split('=')[1];
         let segments = data.split(':');
-        giveSpellCasting(srcStruct, segments[0], segments[1]);
+        giveSpellCasting(srcStruct, segments[0], segments[1], segments[2]);
     } else if(wscStatement.includes("GIVE-SPELL-SLOT")){// GIVE-SPELL-SLOT=Bard:10
         let data = wscStatement.split('=')[1];
         let segments = data.split(':');
@@ -42,12 +42,14 @@ function processingSpells(wscStatement, srcStruct, locationID, sourceName){
 
 
 //////////////////////////////// Set Spell Slots ///////////////////////////////////
-function giveSpellCasting(srcStruct, spellSRC, spellcasting){
+function giveSpellCasting(srcStruct, spellSRC, spellcasting, reduceSlotsByOne){
+    reduceSlotsByOne = (reduceSlotsByOne != null && reduceSlotsByOne.toUpperCase() == 'REDUCE-SLOTS-BY-ONE') ? true : false;
     socket.emit("requestSpellCastingSlotChange",
         getCharIDFromURL(),
         srcStruct,
         spellSRC,
-        spellcasting);
+        spellcasting,
+        reduceSlotsByOne);
 }
 
 function giveSpellSlot(srcStruct, spellSRC, spellSlot, color){

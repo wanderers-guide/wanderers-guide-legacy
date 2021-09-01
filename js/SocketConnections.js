@@ -1582,10 +1582,10 @@ module.exports = class SocketConnections {
       });
 
       // Give Spell Slots //
-      socket.on('requestSpellCastingSlotChange', function(charID, srcStruct, spellSRC, spellcasting){
+      socket.on('requestSpellCastingSlotChange', function(charID, srcStruct, spellSRC, spellcasting, reduceSlotsByOne=false){
         AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
-            CharSpells.setSpellCasting(charID, srcStruct, spellSRC, spellcasting)
+            CharSpells.setSpellCasting(charID, srcStruct, spellSRC, spellcasting, reduceSlotsByOne)
             .then((spellSlots) => {
               if(spellSlots != null){
                 socket.emit('returnSpellCastingSlotChange', spellSRC, spellSlots);
@@ -1641,7 +1641,6 @@ module.exports = class SocketConnections {
       socket.on('requestSpellCastingTypeChange', function(charID, srcStruct, spellSRC, castingType){
         AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
-            console.log(spellSRC+"="+castingType);
             CharDataMapping.setData(charID, 'spellCastingType', srcStruct, spellSRC+"="+castingType)
             .then((result) => {
               socket.emit('returnSpellCastingTypeChange');

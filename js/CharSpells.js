@@ -497,7 +497,7 @@ module.exports = class CharSpells {
     }
 
     // Actually adds a set of spell slots to character data
-    static setSpellCasting(charID, srcStruct, spellSRC, spellcasting){
+    static setSpellCasting(charID, srcStruct, spellSRC, spellcasting, reduceSlotsByOne=false){
         spellcasting = spellcasting.toUpperCase();
 
         return CharDataMapping.getDataSingle(charID, 'spellSlots', srcStruct)
@@ -505,6 +505,21 @@ module.exports = class CharSpells {
 
           const newSID = getRandomSID();
           let spellSlots = getSpellSlots(newSID, spellcasting);
+          if(reduceSlotsByOne && ( spellcasting == 'THREE-QUARTERS' || spellcasting == 'FULL' || spellcasting == 'REDUCED' || spellcasting == 'PARTIAL')){
+            let newSpellSlots = {};
+            for(let spellLevel in spellSlots){
+              newSpellSlots[spellLevel] = [];
+              let isFirstSpellSlot = true;
+              for(let spellSlot of spellSlots[spellLevel]){
+                if(!isFirstSpellSlot){
+                  newSpellSlots[spellLevel].push(spellSlot);
+                } else {
+                  isFirstSpellSlot = false;
+                }
+              }
+            }
+            spellSlots = newSpellSlots;
+          }
 
           // Transfer old data to new spellSlots data
           if(oldSpellSlotsData != null && oldSpellSlotsData.value != null){

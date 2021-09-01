@@ -605,7 +605,20 @@ function variables_getBonusTotal(variableName){
     if(value === 'LAND_SPEED'){
       value = getStatTotal(VARIABLE.SPEED);
     }
-    total += value;
+    // For ability score, only give +1 if over 18. +20 is +2 regardless.
+    if(variable.Type == VAR_TYPE.ABILITY_SCORE){
+      if(value == 2){
+        if(variable.Value.Score+total >= 18){
+          total += 1;
+        } else {
+          total += 2;
+        }
+      } else if(value == 20){
+        total += 2;
+      }
+    } else {
+      total += value;
+    }
     /*
     if(type === 'PROF_BONUS'){
       total += getProfNumber(value, g_character.level);

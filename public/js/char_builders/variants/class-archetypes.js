@@ -215,8 +215,6 @@ function replaceClassFeatureCodeFromClassArchetype(classFeatureID, classFeatureC
 
   let newWscCode = '';
 
-  console.log(classFeatureCode);
-
   // Replace detection statement with replacement statement
   if(classArchetype.replacementCode.initial.replacementStatement != null){
 
@@ -298,8 +296,6 @@ function replaceClassFeatureCodeFromClassArchetype(classFeatureID, classFeatureC
   
   */
 
-  console.log(newWscCode);
-
   return newWscCode;
 
 }
@@ -315,8 +311,6 @@ function replaceCodeFromClassArchetype(wscCode, srcStruct){
   }
 
   if(g_classArchetypeChosenArchetype.replacementCode.changes == null) { return wscCode; }
-
-  console.log(srcStruct);
 
   let newWscCode = '';
 
@@ -337,8 +331,6 @@ function replaceCodeFromClassArchetype(wscCode, srcStruct){
 
     let findAndApplyStatementChanges = function(){
       for(const change of g_classArchetypeChosenArchetype.replacementCode.changes){
-        console.log(wscStatement);
-        console.log(change.detectionCode);
         if(wscStatement.toUpperCase().includes(change.detectionCode.toUpperCase())){
           if(change.replacementStatement != null){
 
@@ -393,8 +385,6 @@ function replaceCodeFromClassArchetype(wscCode, srcStruct){
     Extra Text
   
   */
-
-  console.log(newWscCode);
 
   return newWscCode;
 
