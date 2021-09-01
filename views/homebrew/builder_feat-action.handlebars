@@ -1,6 +1,7 @@
 
 {{#section 'header'}}
     <link rel="stylesheet" href="/css/homebrew-builders.css">
+    <script type="text/javascript" src="/js/confirm-page-leave.js"></script>
     <script type="text/javascript" src="/js/homebrew/builder/feat-action/builder-feat-action.js"></script>
     {{#if featID}}
         <script type="text/javascript" src="/js/homebrew/builder/feat-action/editor-feat-action.js"></script>
@@ -277,9 +278,9 @@
 <div class="field is-grouped is-grouped-centered pb-2">
     <div class="control">
         {{#if featID}}
-            <button id="updateButton" class="button is-rounded is-success">Save</button>
+            <button id="updateButton" onClick="canLeavePage()" class="button is-rounded is-success">Save</button>
         {{else}}
-            <button id="createButton" class="button is-rounded is-success">Save</button>
+            <button id="createButton" onClick="canLeavePage()" class="button is-rounded is-success">Save</button>
         {{/if}}
     </div>
 </div>

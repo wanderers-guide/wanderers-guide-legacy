@@ -296,9 +296,9 @@
 <div class="field is-grouped is-grouped-centered pb-2">
     <div class="control">
         {{#if featID}}
-            <button id="updateFeatButton" class="button is-success">Update</button>
+            <button id="updateFeatButton" onClick="canLeavePage()" class="button is-success">Update</button>
         {{else}}
-            <button id="createFeatButton" class="button is-success">Create</button>
+            <button id="createFeatButton" onClick="canLeavePage()" class="button is-success">Create</button>
         {{/if}}
     </div>
 </div>

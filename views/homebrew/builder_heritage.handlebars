@@ -1,6 +1,7 @@
 
 {{#section 'header'}}
     <link rel="stylesheet" href="/css/homebrew-builders.css">
+    <script type="text/javascript" src="/js/confirm-page-leave.js"></script>
     <script type="text/javascript" src="/js/homebrew/builder/heritage/builder-heritage.js"></script>
     {{#if heritageID}}
         <script type="text/javascript" src="/js/homebrew/builder/heritage/editor-heritage.js"></script>
@@ -106,9 +107,9 @@
 <div class="field is-grouped is-grouped-centered pb-2">
     <div class="control">
         {{#if heritageID}}
-            <button id="updateButton" class="button is-rounded is-success">Save</button>
+            <button id="updateButton" onClick="canLeavePage()" class="button is-rounded is-success">Save</button>
         {{else}}
-            <button id="createButton" class="button is-rounded is-success">Save</button>
+            <button id="createButton" onClick="canLeavePage()" class="button is-rounded is-success">Save</button>
         {{/if}}
     </div>
 </div>

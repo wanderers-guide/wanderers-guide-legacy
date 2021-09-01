@@ -1,6 +1,7 @@
 
 {{#section 'header'}}
     <link rel="stylesheet" href="/css/homebrew-builders.css">
+    <script type="text/javascript" src="/js/confirm-page-leave.js"></script>
     <script type="text/javascript" src="/js/homebrew/builder/ancestry/builder-ancestry.js"></script>
     {{#if ancestryID}}
         <script type="text/javascript" src="/js/homebrew/builder/ancestry/editor-ancestry.js"></script>
@@ -458,9 +459,9 @@
           <span>Back</span>
         </a>-->
         {{#if ancestryID}}
-            <button id="updateButton" class="button is-rounded is-success">Save</button>
+            <button id="updateButton" onClick="canLeavePage()" onClick="canLeavePage()" class="button is-rounded is-success">Save</button>
         {{else}}
-            <button id="createButton" class="button is-rounded is-success">Save</button>
+            <button id="createButton" onClick="canLeavePage()" onClick="canLeavePage()" class="button is-rounded is-success">Save</button>
         {{/if}}
     </div>
 </div>

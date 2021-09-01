@@ -290,9 +290,9 @@
 <div class="field is-grouped is-grouped-centered pb-2">
     <div class="control">
         {{#if uniHeritageID}}
-            <button id="updateButton" class="button is-success">Update</button>
+            <button id="updateButton" onClick="canLeavePage()" class="button is-success">Update</button>
         {{else}}
-            <button id="createButton" class="button is-success">Create</button>
+            <button id="createButton" onClick="canLeavePage()" class="button is-success">Create</button>
         {{/if}}
     </div>
 </div>

@@ -471,9 +471,9 @@
 <div class="field is-grouped is-grouped-centered pb-2">
     <div class="control">
         {{#if ancestryID}}
-            <button id="updateAncestryButton" class="button is-success">Update</button>
+            <button id="updateAncestryButton" onClick="canLeavePage()" class="button is-success">Update</button>
         {{else}}
-            <button id="createAncestryButton" class="button is-success">Create</button>
+            <button id="createAncestryButton" onClick="canLeavePage()" class="button is-success">Create</button>
         {{/if}}
     </div>
 </div>

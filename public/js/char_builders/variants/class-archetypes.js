@@ -136,25 +136,36 @@ function assembleClassArchetypeTabs(tabsID, classFeatureID, originalDescription)
     $(this).parent().parent().find('.is-active').removeClass('is-active');
     $(this).parent().addClass('is-active');
 
-    let classArchetypeID = $(this).attr('id').replace(tabsID+'-option-', '');
+    const tabID = $(this).attr('id');
+    let classArchetypeID = tabID.replace(tabsID+'-option-', '');
 
     if(classArchetypeID == 'default'){
       $('#'+tabsID+'-description').html(processText(originalDescription, false, null));
 
       g_classArchetypeSelectedOptions.set(classFeatureID, null);
-      g_classArchetypeChosenArchetype = null;
 
-      socket.emit("requestClassArchetypeChange", 
-          getCharIDFromURL(),
-          {
-            sourceType: 'class',
-            sourceLevel: 1,
-            sourceCode: 'classArchetype',
-            sourceCodeSNum: 'a',
-          },
-          null);
+      if(autoPageLoad == null || !autoPageLoad){
+        g_classArchetypeChosenArchetype = null;
+        socket.emit("requestClassArchetypeChange", 
+            getCharIDFromURL(),
+            {
+              sourceType: 'class',
+              sourceLevel: 1,
+              sourceCode: 'classArchetype',
+              sourceCodeSNum: 'a',
+            },
+            null);
+      }
 
     } else {
+
+      // Set all other class archetypes to default
+      $('.classArchetypeTab').each(function() {
+        if(!$(this).attr('id').startsWith(tabsID)){
+          $('#'+$(this).attr('id').split('-option-')[0]+'-option-default').trigger("click", [true]);
+        }
+      });
+
       let classArchetype = g_classArchetypes.find(classArchetype => {
         return classArchetype.id == classArchetypeID;
       });
@@ -166,17 +177,19 @@ function assembleClassArchetypeTabs(tabsID, classFeatureID, originalDescription)
       }
 
       g_classArchetypeSelectedOptions.set(classFeatureID, classArchetype);
-      g_classArchetypeChosenArchetype = classArchetype;
 
-      socket.emit("requestClassArchetypeChange", 
-          getCharIDFromURL(),
-          {
-            sourceType: 'class',
-            sourceLevel: 1,
-            sourceCode: 'classArchetype',
-            sourceCodeSNum: 'a',
-          },
-          classArchetype.id);
+      if(autoPageLoad == null || !autoPageLoad){
+        g_classArchetypeChosenArchetype = classArchetype;
+        socket.emit("requestClassArchetypeChange", 
+            getCharIDFromURL(),
+            {
+              sourceType: 'class',
+              sourceLevel: 1,
+              sourceCode: 'classArchetype',
+              sourceCodeSNum: 'a',
+            },
+            classArchetype.id);
+      }
 
     }
 
@@ -193,7 +206,8 @@ function assembleClassArchetypeTabs(tabsID, classFeatureID, originalDescription)
     
   });
 
-  if(g_classArchetypeChosenArchetype != null){
+  // If archetype is selected and id exists,
+  if(g_classArchetypeChosenArchetype != null && $('#'+tabsID+'-option-'+g_classArchetypeChosenArchetype.id).length){
     $('#'+tabsID+'-option-'+g_classArchetypeChosenArchetype.id).trigger("click", [true]);
   } else {
     $('#'+tabsID+'-option-default').trigger("click", [true]);
@@ -205,6 +219,8 @@ function assembleClassArchetypeTabs(tabsID, classFeatureID, originalDescription)
 
 function replaceClassFeatureCodeFromClassArchetype(classFeatureID, classFeatureCode, srcStruct){
   if(wscChoiceStruct.Character.optionClassArchetypes == 0){ return classFeatureCode; }
+
+  console.log(classFeatureCode);
 
   // Replace changes code
   classFeatureCode = replaceCodeFromClassArchetype(classFeatureCode, srcStruct);
@@ -295,6 +311,8 @@ function replaceClassFeatureCodeFromClassArchetype(classFeatureID, classFeatureC
     Original Code
   
   */
+
+  console.log(newWscCode);
 
   return newWscCode;
 
