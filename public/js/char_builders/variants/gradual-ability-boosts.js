@@ -6,12 +6,20 @@ function addGradualAbilityBoostsVariant(classStruct){
 
   let newAbilities = [];
   for(let ability of classStruct.Abilities){
-    if (ability.code == 'GIVE-ABILITY-BOOST-MULTIPLE=4' && (ability.level == 5 || ability.level == 10 || ability.level == 15 || ability.level == 20)){
+    if (ability.code.startsWith('GIVE-ABILITY-BOOST-MULTIPLE=4') && (ability.level == 5 || ability.level == 10 || ability.level == 15 || ability.level == 20)){
 
-      newAbilities.push(getGAB_AbilityBoost(ability.level));
-      newAbilities.push(getGAB_AbilityBoost(ability.level-1));
-      newAbilities.push(getGAB_AbilityBoost(ability.level-2));
-      newAbilities.push(getGAB_AbilityBoost(ability.level-3));
+      let extraStatement = null;
+      if(ability.code.includes('\n')){
+        let statements = ability.code.split(/\n/);
+        if(statements.length == 5 && statements[1] == statements[2] && statements[1] == statements[3] && statements[1] == statements[4]){
+          extraStatement = statements[1];
+        }
+      }
+
+      newAbilities.push(getGAB_AbilityBoost(ability.level, extraStatement));
+      newAbilities.push(getGAB_AbilityBoost(ability.level-1, extraStatement));
+      newAbilities.push(getGAB_AbilityBoost(ability.level-2, extraStatement));
+      newAbilities.push(getGAB_AbilityBoost(ability.level-3, extraStatement));
 
     } else {
       newAbilities.push(ability);
@@ -32,7 +40,7 @@ function addGradualAbilityBoostsVariant(classStruct){
   return classStruct;
 }
 
-function getGAB_AbilityBoost(lvl){
+function getGAB_AbilityBoost(lvl, extraStatement){
   let setText = '';
   if(lvl > 1 && lvl <= 5) {
     setText = '2nd-5th level boosts';
@@ -51,7 +59,7 @@ function getGAB_AbilityBoost(lvl){
       You gain a single boost in an ability score. This boost increases an ability score by 2, or by 1 if it's already 18 or above.
       \n__You can't choose the same ability score more than once per set (${setText}).__
     `,
-    code: "GIVE-ABILITY-BOOST-SINGLE=ALL",
+    code: `GIVE-ABILITY-BOOST-SINGLE=ALL${(extraStatement == null) ? '' : '\n'+extraStatement}`,
     contentSrc: "CRB",
     displayInSheet: 0,
     selectType: "NONE",
