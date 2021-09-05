@@ -380,7 +380,11 @@ function replaceCodeFromClassArchetype(wscCode, srcStruct){
 
   // Add clear metadata
   if(wscCode != newWscCode || extraCodes.length > 0){
-    newWscCode = 'CLEAR-DATA-FROM-CODE-BLOCK\n'+newWscCode;
+    if(g_classArchetypeChosenArchetype.replacementCode.initial.clearDataAfterExtraCodeForChange != null && !g_classArchetypeChosenArchetype.replacementCode.initial.clearDataAfterExtraCodeForChange){
+      // Don't clear
+    } else {
+      newWscCode = 'CLEAR-DATA-FROM-CODE-BLOCK\n'+newWscCode;
+    }
   }
 
   // Add extra code
