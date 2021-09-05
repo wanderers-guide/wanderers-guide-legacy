@@ -6,7 +6,7 @@ function addGradualAbilityBoostsVariant(classStruct){
 
   let newAbilities = [];
   for(let ability of classStruct.Abilities){
-    if (ability.code.startsWith('GIVE-ABILITY-BOOST-MULTIPLE=4') && (ability.level == 5 || ability.level == 10 || ability.level == 15 || ability.level == 20)){
+    if (ability.code != null && ability.code.startsWith('GIVE-ABILITY-BOOST-MULTIPLE=4') && (ability.level == 5 || ability.level == 10 || ability.level == 15 || ability.level == 20)){
 
       let extraStatement = null;
       if(ability.code.includes('\n')){

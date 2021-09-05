@@ -125,7 +125,8 @@ socket.on("returnAddClassFeature", function(srcStruct, classAbility, allClassAbi
                 socket.emit("requestClassChoiceChange",
                     getCharIDFromURL(),
                     srcStruct,
-                    null);
+                    null,
+                    false);
             }
 
         } else {
@@ -147,7 +148,8 @@ socket.on("returnAddClassFeature", function(srcStruct, classAbility, allClassAbi
                 socket.emit("requestClassChoiceChange",
                     getCharIDFromURL(),
                     srcStruct,
-                    { SelectorID : classAbility.id+'', OptionID : chosenAbilityID });
+                    { SelectorID : classAbility.id+'', OptionID : chosenAbilityID },
+                    false);
             }
 
             if(inputPacket.dontRunCode) {

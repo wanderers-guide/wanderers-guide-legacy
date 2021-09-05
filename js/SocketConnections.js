@@ -1055,7 +1055,7 @@ module.exports = class SocketConnections {
         });
       });
     
-      socket.on('requestClassChoiceChange', function(charID, srcStruct, classChoiceStruct){
+      socket.on('requestClassChoiceChange', function(charID, srcStruct, classChoiceStruct, deleteSelfData=true){
         AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
             if(classChoiceStruct == null){
@@ -1064,7 +1064,7 @@ module.exports = class SocketConnections {
                 socket.emit('returnClassChoiceChange', srcStruct, null, null);
               });
             } else {
-              CharDataMappingExt.setDataClassChoice(charID, srcStruct, classChoiceStruct.SelectorID, classChoiceStruct.OptionID)
+              CharDataMappingExt.setDataClassChoice(charID, srcStruct, classChoiceStruct.SelectorID, classChoiceStruct.OptionID, deleteSelfData)
               .then((result) => {
                 socket.emit('returnClassChoiceChange', srcStruct, classChoiceStruct.SelectorID, classChoiceStruct.OptionID);
               });
@@ -1112,7 +1112,7 @@ module.exports = class SocketConnections {
         });
       });
     
-      socket.on('requestLanguageChange', function(charID, srcStruct, langID){
+      socket.on('requestLanguageChange', function(charID, srcStruct, langID, deleteSelfData=true){
         AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
             if(langID == null){
@@ -1121,7 +1121,7 @@ module.exports = class SocketConnections {
                 socket.emit('returnLanguageChange');
               });
             } else {
-              CharDataMapping.setData(charID, 'languages', srcStruct, langID)
+              CharDataMapping.setData(charID, 'languages', srcStruct, langID, deleteSelfData)
               .then((result) => {
                 socket.emit('returnLanguageChange');
               });
@@ -1130,7 +1130,7 @@ module.exports = class SocketConnections {
         });
       });
 
-      socket.on('requestSensesChange', function(charID, srcStruct, senseID){
+      socket.on('requestSensesChange', function(charID, srcStruct, senseID, deleteSelfData=true){
         AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
             if(senseID == null){
@@ -1139,7 +1139,7 @@ module.exports = class SocketConnections {
                 socket.emit('returnSensesChange');
               });
             } else {
-              CharDataMapping.setData(charID, 'senses', srcStruct, senseID)
+              CharDataMapping.setData(charID, 'senses', srcStruct, senseID, deleteSelfData)
               .then((result) => {
                 socket.emit('returnSensesChange');
               });
@@ -1148,7 +1148,7 @@ module.exports = class SocketConnections {
         });
       });
 
-      socket.on('requestPhysicalFeaturesChange', function(charID, srcStruct, physicalFeatureID){
+      socket.on('requestPhysicalFeaturesChange', function(charID, srcStruct, physicalFeatureID, deleteSelfData=true){
         AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
             if(physicalFeatureID == null){
@@ -1157,7 +1157,7 @@ module.exports = class SocketConnections {
                 socket.emit('returnPhysicalFeaturesChange');
               });
             } else {
-              CharDataMapping.setData(charID, 'phyFeats', srcStruct, physicalFeatureID)
+              CharDataMapping.setData(charID, 'phyFeats', srcStruct, physicalFeatureID, deleteSelfData)
               .then((result) => {
                 socket.emit('returnPhysicalFeaturesChange');
               });
@@ -1381,7 +1381,7 @@ module.exports = class SocketConnections {
         });
       });
 
-      socket.on('requestHeritageEffectsChange', function(charID, srcStruct, heritageID){
+      socket.on('requestHeritageEffectsChange', function(charID, srcStruct, heritageID, deleteSelfData=true){
         AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
             if(heritageID == null){
@@ -1390,7 +1390,7 @@ module.exports = class SocketConnections {
                 socket.emit('returnHeritageEffectsChange');
               });
             } else {
-              CharDataMapping.setData(charID, 'heritageExtra', srcStruct, heritageID)
+              CharDataMapping.setData(charID, 'heritageExtra', srcStruct, heritageID, deleteSelfData)
               .then((result) => {
                 socket.emit('returnHeritageEffectsChange');
               });

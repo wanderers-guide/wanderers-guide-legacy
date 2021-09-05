@@ -73,9 +73,9 @@ module.exports = class CharDataMappingExt {
     }
 
     
-    static setDataClassChoice(charID, srcStruct, selectorID, optionID){
+    static setDataClassChoice(charID, srcStruct, selectorID, optionID, deleteSelfData=true){
         let value = selectorID+getSeparator()+optionID;
-        return CharDataMapping.setData(charID, 'classChoice', srcStruct, value)
+        return CharDataMapping.setData(charID, 'classChoice', srcStruct, value, deleteSelfData)
         .then((result) => {
             return;
         });

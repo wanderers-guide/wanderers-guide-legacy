@@ -78,7 +78,8 @@ socket.on("returnFindHeritagesFromAncestryName", function(srcStruct, heritages, 
             socket.emit("requestHeritageEffectsChange",
                 getCharIDFromURL(),
                 srcStruct,
-                null);
+                null,
+                true);
           }
 
       } else {
@@ -101,7 +102,8 @@ socket.on("returnFindHeritagesFromAncestryName", function(srcStruct, heritages, 
             socket.emit("requestHeritageEffectsChange",
                 getCharIDFromURL(),
                 srcStruct,
-                heritageID);
+                heritageID,
+                true);
 
             socket.once("returnHeritageEffectsChange", function(){
               displayAndProcessHeritageEffects(

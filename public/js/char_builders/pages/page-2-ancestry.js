@@ -251,7 +251,8 @@ function displayCurrentAncestry(ancestryStruct, saving) {
             socket.emit("requestLanguageChange",
                 getCharIDFromURL(),
                 srcStruct,
-                langID);
+                langID,
+                false);
             langCount++;
         }
     }
@@ -284,7 +285,8 @@ function displayCurrentAncestry(ancestryStruct, saving) {
             socket.emit("requestSensesChange",
                 getCharIDFromURL(),
                 srcStruct,
-                senseID);
+                senseID,
+                false);
             senseCount++;
         }
     }
@@ -355,7 +357,8 @@ function displayCurrentAncestry(ancestryStruct, saving) {
                 socket.emit("requestPhysicalFeaturesChange",
                     getCharIDFromURL(),
                     srcStruct,
-                    physicalFeatureID);
+                    physicalFeatureID,
+                    false);
                 phyFeatCount++;
             }
         }
