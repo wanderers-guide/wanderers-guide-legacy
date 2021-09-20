@@ -128,6 +128,51 @@ function getSpellSlots(SID, spellcasting){
             ],
             tenthLevel: []
         };
+    } else if(spellcasting === 'PSY-REDUCED'){
+      return {
+          cantrip: [
+              {slotID: SID+1, used: false, spellID: null, type: '', level_lock: 1},
+              {slotID: SID+2, used: false, spellID: null, type: '', level_lock: 1},
+              {slotID: SID+3, used: false, spellID: null, type: '', level_lock: 1},
+          ],
+          firstLevel: [
+              {slotID: SID+6, used: false, spellID: null, type: '', level_lock: 1},
+              {slotID: SID+7, used: false, spellID: null, type: '', level_lock: 2},
+          ],
+          secondLevel: [
+              {slotID: SID+8, used: false, spellID: null, type: '', level_lock: 3},
+              {slotID: SID+9, used: false, spellID: null, type: '', level_lock: 4},
+          ],
+          thirdLevel: [
+              {slotID: SID+10, used: false, spellID: null, type: '', level_lock: 5},
+              {slotID: SID+11, used: false, spellID: null, type: '', level_lock: 6},
+          ],
+          fourthLevel: [
+              {slotID: SID+12, used: false, spellID: null, type: '', level_lock: 7},
+              {slotID: SID+13, used: false, spellID: null, type: '', level_lock: 8},
+          ],
+          fifthLevel: [
+              {slotID: SID+14, used: false, spellID: null, type: '', level_lock: 9},
+              {slotID: SID+15, used: false, spellID: null, type: '', level_lock: 10},
+          ],
+          sixthLevel: [
+              {slotID: SID+16, used: false, spellID: null, type: '', level_lock: 11},
+              {slotID: SID+17, used: false, spellID: null, type: '', level_lock: 12},
+          ],
+          seventhLevel: [
+              {slotID: SID+18, used: false, spellID: null, type: '', level_lock: 13},
+              {slotID: SID+19, used: false, spellID: null, type: '', level_lock: 14},
+          ],
+          eighthLevel: [
+              {slotID: SID+20, used: false, spellID: null, type: '', level_lock: 15},
+              {slotID: SID+21, used: false, spellID: null, type: '', level_lock: 16},
+          ],
+          ninthLevel: [
+              {slotID: SID+22, used: false, spellID: null, type: '', level_lock: 17},
+              {slotID: SID+23, used: false, spellID: null, type: '', level_lock: 18},
+          ],
+          tenthLevel: []
+      };
     } else if(spellcasting === 'REDUCED'){
       return {
           cantrip: [
@@ -505,7 +550,7 @@ module.exports = class CharSpells {
 
           const newSID = getRandomSID();
           let spellSlots = getSpellSlots(newSID, spellcasting);
-          if(reduceSlotsByOne && ( spellcasting == 'THREE-QUARTERS' || spellcasting == 'FULL' || spellcasting == 'REDUCED' || spellcasting == 'PARTIAL')){
+          if(reduceSlotsByOne && (spellcasting == 'THREE-QUARTERS' || spellcasting == 'FULL' || spellcasting == 'REDUCED' || spellcasting == 'PARTIAL' || spellcasting == 'PSY-REDUCED')){
             let newSpellSlots = {};
             for(let spellLevel in spellSlots){
               newSpellSlots[spellLevel] = [];

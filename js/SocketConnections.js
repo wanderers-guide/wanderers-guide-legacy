@@ -1742,14 +1742,14 @@ module.exports = class SocketConnections {
             CharGathering.getSpellByName(userID, charID, spellName)
             .then((spell) => {
               if(spell != null){
-                if(spell.isFocusSpell === 1){
-                  CharDataMapping.setData(charID, 'focusSpell', srcStruct, spellSRC+"="+spell.id)
-                  .then((result) => {
-                    socket.emit('returnFocusSpellChange');
-                  });
-                } else {
+                /* Ignore if spell is a focus spell or not. This is to support Psychic cantrips.
+                if(spell.isFocusSpell === 1){} else {
                   socket.emit('returnWSCStatementFailure', '\"'+spellName+'\" is not a focus spell!');
-                }
+                }*/
+                CharDataMapping.setData(charID, 'focusSpell', srcStruct, spellSRC+"="+spell.id)
+                .then((result) => {
+                  socket.emit('returnFocusSpellChange');
+                });
               } else {
                 socket.emit('returnWSCStatementFailure', 'Invalid Spell \"'+spellName+'\"');
               }
