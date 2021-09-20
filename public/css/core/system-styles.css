@@ -80,7 +80,7 @@ p,
 }
 
 span {
-  color: var(--text-p-color);
+  color: inherit;
   font-family: 'Open Sans', sans-serif;
 }
 

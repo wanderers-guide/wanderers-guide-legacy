@@ -18,8 +18,11 @@ strong, .is-bold {
   font-weight: 675;
   filter: brightness(115%);
 }
-.label, .has-text-bold-color {
+.has-text-bold-color {
   filter: brightness(115%);
+}
+.label {
+  color: var(--text-p-color)!important;
 }
 .is-brighter {
   filter: brightness(115%);
