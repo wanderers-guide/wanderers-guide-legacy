@@ -48,23 +48,23 @@ function openWeaponsTab(data) {
         $('#weaponsTabContent').append(`
           <div id="${weaponListEntryID}" class="columns is-mobile pt-1 is-marginless">
             <div class="column is-paddingless is-4 border-bottom border-dark-lighter cursor-clickable">
-              <p class="has-text-left has-text-grey-light">${getItemIcon(item, invItem)+invItem.name+unarmedIcon}</p>
+              <p class="has-text-left has-txt-listing">${getItemIcon(item, invItem)+invItem.name+unarmedIcon}</p>
             </div>
             <div class="column is-paddingless is-1 border-bottom border-dark-lighter cursor-clickable">
-              <p class="has-text-grey-light">
+              <p class="has-txt-listing">
                 ${calcStruct.AttackBonus+((attackHasConditionals) ? '<sup class="has-text-info">*</sup>' : '')}
               </p>
             </div>
             <div class="column is-paddingless is-3 border-bottom border-dark-lighter cursor-clickable">
-              <p class="has-text-grey-light">
+              <p class="has-txt-listing">
                 ${calcStruct.Damage+weapDamageMod+((damageHasConditionals) ? '<sup class="has-text-info">*</sup>' : '')}
               </p>
             </div>
             <div class="column is-paddingless is-2 border-bottom border-dark-lighter cursor-clickable">
-              <p class="has-text-grey-light">${weaponRange}</p>
+              <p class="has-txt-listing">${weaponRange}</p>
             </div>
             <div class="column is-paddingless is-1 border-bottom border-dark-lighter cursor-clickable">
-              <p class="has-text-grey-light">${weaponReload}</p>
+              <p class="has-txt-listing">${weaponReload}</p>
             </div>
             <div class="column is-paddingless is-1 border-bottom border-dark-lighter cursor-clickable"></div>
           </div>
@@ -85,29 +85,29 @@ function openWeaponsTab(data) {
         });
 
         $('#'+weaponListEntryID).mouseenter(function(){
-            $(this).addClass('has-background-grey-darker');
+            $(this).addClass('has-bg-selectable-hover');
         });
         $('#'+weaponListEntryID).mouseleave(function(){
-            $(this).removeClass('has-background-grey-darker');
+            $(this).removeClass('has-bg-selectable-hover');
         });
     };
 
     $('#tabContent').append(`
       <div class="columns is-mobile pt-1 is-marginless">
         <div class="column is-paddingless is-4">
-          <p class="pl-4 has-text-left"><strong class="has-text-grey-light">Name</strong></p>
+          <p class="pl-4 has-text-left"><strong class="has-txt-listing">Name</strong></p>
         </div>
         <div class="column is-paddingless is-1">
-          <p class=""><strong class="has-text-grey-light">Attack</strong></p>
+          <p class=""><strong class="has-txt-listing">Attack</strong></p>
         </div>
         <div class="column is-paddingless is-3">
-          <p class=""><strong class="has-text-grey-light">Damage</strong></p>
+          <p class=""><strong class="has-txt-listing">Damage</strong></p>
         </div>
         <div class="column is-paddingless is-2">
-          <p class=""><strong class="has-text-grey-light">Range</strong></p>
+          <p class=""><strong class="has-txt-listing">Range</strong></p>
         </div>
         <div class="column is-paddingless is-1">
-          <p class=""><strong class="has-text-grey-light">Reload</strong></p>
+          <p class=""><strong class="has-txt-listing">Reload</strong></p>
         </div>
         <div class="column is-paddingless is-1"></div>
       </div>

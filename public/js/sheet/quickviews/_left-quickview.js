@@ -118,7 +118,7 @@ function leftQuickview_OpenDiceRoller() {
               </span>
             </p>
             <p class="control">
-              <a class="button is-static has-text-grey-light has-background-grey-darkest is-info is-outlined">+</a>
+              <a class="button is-static is-info is-outlined">+</a>
             </p>
             <p class="control">
               <input id="dice-roller-input-bonus" class="input is-info" type="number" value="0" min="-999" max="999">
@@ -145,41 +145,41 @@ function leftQuickview_OpenDiceRoller() {
       }
 
       // Display Roll //
-      let resultLine = '<span class="has-text-grey-light">'+rollStruct.RollData.DiceNum+'</span><span class="has-text-grey is-thin">d</span><span class="has-text-grey-light">'+rollStruct.RollData.DieType+'</span>';
+      let resultLine = '<span class="has-txt-listing">'+rollStruct.RollData.DiceNum+'</span><span class="has-txt-noted is-thin">d</span><span class="has-txt-listing">'+rollStruct.RollData.DieType+'</span>';
       if(rollStruct.RollData.Bonus != 0){
-        resultLine += '<span class="has-text-grey">+</span><span class="has-text-grey-light">'+rollStruct.RollData.Bonus+'</span>';
+        resultLine += '<span class="has-txt-noted">+</span><span class="has-txt-listing">'+rollStruct.RollData.Bonus+'</span>';
       }
 
       if(rollStruct.RollData.DiceNum != 1 || rollStruct.RollData.Bonus != 0) {
-        resultLine += '<i class="fas fa-caret-right has-text-grey mx-2"></i>';
+        resultLine += '<i class="fas fa-caret-right has-txt-noted mx-2"></i>';
         let resultSubParts = '';
         let firstResult = true;
         for(let result of rollStruct.ResultData){
-          if(firstResult) { firstResult = false; } else { resultSubParts += '<span class="has-text-grey">+</span>'; }
+          if(firstResult) { firstResult = false; } else { resultSubParts += '<span class="has-txt-noted">+</span>'; }
   
-          let bulmaColor = 'has-text-grey-light';
+          let bulmaColor = 'has-txt-listing';
           if(result == rollStruct.RollData.DieType) { bulmaColor = 'has-text-success'; }
           else if (result == 1) { bulmaColor = 'has-text-danger'; }
   
-          resultSubParts += '<span class="has-text-grey">(</span><span class="'+bulmaColor+'">'+result+'</span><span class="has-text-grey">)</span>';
+          resultSubParts += '<span class="has-txt-noted">(</span><span class="'+bulmaColor+'">'+result+'</span><span class="has-txt-noted">)</span>';
         }
         if(rollStruct.RollData.Bonus != 0){
-          resultSubParts += '<span class="has-text-grey">+</span><span class="has-text-grey-light">'+rollStruct.RollData.Bonus+'</span>';
+          resultSubParts += '<span class="has-txt-noted">+</span><span class="has-txt-listing">'+rollStruct.RollData.Bonus+'</span>';
         }
         resultLine += '<span class="is-size-5 is-thin">'+resultSubParts+'</span>';
       }
 
       if(rollStruct.DoubleResult){
-        resultLine += `<span class="is-size-5 is-thin"><i class="fas fa-caret-right has-text-grey mx-2"></i><span class="has-text-primary">2</span><span class="has-text-grey">×</span><span class="has-text-grey-light">${rollStruct.Total}</span></span><i class="fas fa-caret-right has-text-grey mx-2"></i><span class="has-text-info is-bold">${(rollStruct.Total*2)}<span class="has-text-grey-kinda-light is-size-6 is-thin is-italic"> ${rollStruct.ResultSuffix}</span></span>`;
+        resultLine += `<span class="is-size-5 is-thin"><i class="fas fa-caret-right has-txt-noted mx-2"></i><span class="has-text-primary">2</span><span class="has-txt-noted">×</span><span class="has-txt-listing">${rollStruct.Total}</span></span><i class="fas fa-caret-right has-txt-noted mx-2"></i><span class="has-text-info is-bold">${(rollStruct.Total*2)}<span class="has-txt-partial-noted is-size-6 is-thin is-italic"> ${rollStruct.ResultSuffix}</span></span>`;
       } else {
-        resultLine += `<i class="fas fa-caret-right has-text-grey mx-2"></i><span class="has-text-info is-bold">${rollStruct.Total}<span class="has-text-grey-kinda-light is-size-6 is-thin is-italic"> ${rollStruct.ResultSuffix}</span></span>`;
+        resultLine += `<i class="fas fa-caret-right has-txt-noted mx-2"></i><span class="has-text-info is-bold">${rollStruct.Total}<span class="has-txt-partial-noted is-size-6 is-thin is-italic"> ${rollStruct.ResultSuffix}</span></span>`;
       }
 
       $('#dice-roller-output-container').append(`
           <div class="pos-relative">
             <p class="is-size-4 negative-indent">${resultLine}</p>
-            <p class="pos-absolute pos-t-1 pos-r-1 is-size-8 has-text-grey">${rollStruct.Label.Name}</p>
-            <p class="pos-absolute pos-b-1 pos-r-1 is-size-8 has-text-grey-dark is-italic">${rollStruct.Timestamp.Time}</p>
+            <p class="pos-absolute pos-t-1 pos-r-1 is-size-8 has-txt-noted">${rollStruct.Label.Name}</p>
+            <p class="pos-absolute pos-b-1 pos-r-1 is-size-8 has-txt-faded is-italic">${rollStruct.Timestamp.Time}</p>
           </div>
       `);
     }

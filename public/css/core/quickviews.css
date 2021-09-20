@@ -1,13 +1,13 @@
 
 .quickview-header {
-  background-color: #1d1d1d;
+  background-color: var(--quickview-header-bg-color);
   border-bottom-color: #303030;
 }
 .quickview {
-  background-color: #242424;
+  background-color: var(--quickview-body-bg-color);
 }
 .quickview-body {
-  background-color: #242424;
+  background-color: var(--quickview-body-bg-color);
 }
 
 /* Misc */

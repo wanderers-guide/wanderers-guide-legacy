@@ -29,14 +29,6 @@
     color: #282828;
 }
 
-.has-text-title {
-    color: #999;
-}
-
-.has-text-value {
-    color: rgb(184, 184, 184);
-}
-
 .button.is-link.is-inverted:hover {
     background-color: #282828;
 }
@@ -48,24 +40,4 @@
 
 .button:hover {
     color: hsl(0, 0%, 82%);
-}
-
-a {
-    color: hsl(217, 71%, 53%);
-}
-a:hover {
-    color: hsl(217, 71%, 53%);
-}
-
-li {
-    color: hsl(0, 0%, 68%);
-}
-
-.label, strong {
-    color: hsl(0, 0%, 68%);
-}
-
-hr {
-    border-color: hsl(0, 0%, 68%);
-    background-color: hsl(0, 0%, 68%);
 }

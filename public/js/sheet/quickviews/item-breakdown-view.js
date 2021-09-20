@@ -71,7 +71,7 @@ function openItemBreakdownQuickview(data) {
       breakDownInnerHTML = breakDownInnerHTML.slice(0, -3);// Trim off that last ' + '
 
       if(g_invItemView_isCriticalHit && !data.isBonus){
-        breakDownInnerHTML = `<span class="has-text-grey-lighter"><a class="has-text-info has-tooltip-bottom has-tooltip-multiline" data-tooltip="When you critically hit, you double all damage your weapon would usually deal.">2×</a>( </span>${breakDownInnerHTML}<span class="has-text-grey-lighter"> )</span>`;
+        breakDownInnerHTML = `<span class="has-txt-value-number"><a class="has-text-info has-tooltip-bottom has-tooltip-multiline" data-tooltip="When you critically hit, you double all damage your weapon would usually deal.">2×</a>( </span>${breakDownInnerHTML}<span class="has-txt-value-number"> )</span>`;
 
         if(data.modifications != null){
           breakDownInnerHTML += ' + ';

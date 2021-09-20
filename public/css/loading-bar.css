@@ -1,4 +1,5 @@
 .ldBar {
+  margin-bottom: 20%;
   position: relative;
 }
 .ldBar.label-center > .ldBar-label {
@@ -19,7 +20,8 @@
 }
 
 .ldBar-message {
+  margin-bottom: 20%;
   padding-top: 10rem;
   font-size: 0.8rem;
-  color: #666666;
+  color: var(--text-very-noted-color);
 }

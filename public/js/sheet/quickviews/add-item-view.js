@@ -226,13 +226,13 @@ function changeItemCategoryTab(type, data){
             $('#'+addItemChevronItemID).removeClass('fa-chevron-up');
             $('#'+addItemChevronItemID).addClass('fa-chevron-down');
             $('#'+addItemNameID).removeClass('has-text-white-ter');
-            $(this).parent().removeClass('has-background-black-like-more');
+            $(this).parent().removeClass('has-bg-options-header-bold');
             displayItemDetails(null, addItemDetailsItemID);
         } else {
             $('#'+addItemChevronItemID).removeClass('fa-chevron-down');
             $('#'+addItemChevronItemID).addClass('fa-chevron-up');
             $('#'+addItemNameID).addClass('has-text-white-ter');
-            $(this).parent().addClass('has-background-black-like-more');
+            $(this).parent().addClass('has-bg-options-header-bold');
             displayItemDetails(itemDataStruct, addItemDetailsItemID);
         }
 
@@ -269,16 +269,16 @@ function displayAddItem(itemID, itemDataStruct, data){
     }
 
     $('#addItemListSection').append(`
-      <div class="tile is-parent is-flex is-paddingless border-bottom border-additems has-background-black-like cursor-clickable" data-item-id="${itemID}">
+      <div class="tile is-parent is-flex is-paddingless border-bottom border-additems has-bg-options-header-bold cursor-clickable" data-item-id="${itemID}">
         <div class="tile is-child is-7 itemEntryPart">
-          <p id="${addItemNameID}" class="has-text-left mt-1 has-text-grey-lighter"><span class="ml-2">${getItemIcon(itemDataStruct, null)}</span>${itemName}</p>
+          <p id="${addItemNameID}" class="has-text-left mt-1 has-txt-value-number"><span class="ml-2">${getItemIcon(itemDataStruct, null)}</span>${itemName}</p>
         </div>
         <div class="tile is-child is-2 itemEntryPart">
           <p class="has-text-centered is-size-7 mt-2">${itemLevel}</p>
         </div>
         <div class="tile is-child">${addItemHTML}</div>
         <div class="tile is-child is-1 itemEntryPart">
-          <span class="icon has-text-grey mt-2"><i id="${addItemChevronItemID}" class="fas fa-chevron-down"></i></span>
+          <span class="icon has-txt-noted mt-2"><i id="${addItemChevronItemID}" class="fas fa-chevron-down"></i></span>
         </div>
       </div>
       <div id="${addItemDetailsItemID}" class="pos-relative"></div>

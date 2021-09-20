@@ -127,14 +127,14 @@
 
 <!-- IN-PROGRESS -->
 
-<div class="pos-relative">
+<div class="">
   <div class="dice-pageloader">
     <div
       class="ldBar label-center is-hidden"
       data-type="fill"
       data-img="/images/dice-d20.svg"
       data-fill-background-extrude="0"
-      data-fill-background="#161616"
+      data-fill-background="var(--main-loading-bg-color)"
       data-img-size="120,120"
       data-duration="1"
     ></div>
@@ -169,15 +169,15 @@
                     <div class="mobile-box tile mb-4 mr-2">
                         <div class="tile sheet-box">
                             <div id="charInfoContent" class="tile is-vertical is-7 pb-1 cursor-clickable">
-                                <p id="character-name" class="is-size-5 has-text-light is-clipped"></p>
+                                <p id="character-name" class="is-size-5 has-txt-value-string is-clipped"></p>
                                 <div class="tile is-child">
-                                    <p id="character-type" class="is-size-7 has-text-grey-light"></p>
+                                    <p id="character-type" class="is-size-7 has-txt-listing"></p>
                                 </div>
                             </div>
                             <div id="charExperienceContent" class="tile is-vertical is-5 pb-1">
-                                <p id="character-level" class="is-size-6 has-text-grey-lighter"></p>
+                                <p id="character-level" class="is-size-6 has-txt-value-number"></p>
                                 <div class="tile is-child pb-3">
-                                    <p class="is-size-7 has-text-grey-light has-text-weight-semibold">Experience</p>
+                                    <p class="is-size-7 has-txt-listing has-text-weight-semibold">Experience</p>
                                     <div class="field px-4">
                                         <p class="control">
                                             <input id="exp-input" class="input is-small" type="number" value="">
@@ -192,22 +192,22 @@
                     <div class="mobile-box tile is-vertical mx-4 mb-4 sheet-box">
                         <div class="tile pb-1" style="position: relative;">
                             <div id="healthPointsContainer" class="tile is-child px-2 pt-2">
-                                <p class="is-size-6"><strong class="has-text-grey-lighter">Hit Points</strong></p>
+                                <p class="is-size-6"><strong class="has-txt-value-number">Hit Points</strong></p>
                                 <div class="columns is-mobile is-centered">
                                     <div class="column is-narrow is-paddingless py-2">
                                         <div id="char-current-health" class="cursor-clickable">
                                         </div>
                                     </div>
                                     <div class="column is-narrow is-paddingless py-2">
-                                        <p class="is-size-5 text-center has-text-grey">/</p>
+                                        <p class="is-size-5 text-center has-txt-noted">/</p>
                                     </div>
                                     <div class="column is-narrow is-paddingless py-2" style="width: 70px;">
-                                        <p id="char-max-health" class="is-size-5 text-center has-text-light"></p>
+                                        <p id="char-max-health" class="is-size-5 text-center has-txt-value-string"></p>
                                     </div>
                                 </div>
                             </div>
                             <div id="tempPointsContainer" class="tile is-child pt-3">
-                                <p class="is-size-7"><strong class="has-text-grey-light">Temp. HP</strong></p>
+                                <p class="is-size-7"><strong class="has-txt-listing">Temp. HP</strong></p>
                                 <div class="columns is-centered">
                                     <div class="column is-narrow is-paddingless py-2">
                                         <div id="char-temp-health" class="cursor-clickable">
@@ -217,32 +217,32 @@
                             </div>
 
                             <div id="staminaPointsContainer" class="tile is-child px-2 pt-2 is-hidden">
-                                <p class="is-size-6"><strong class="has-text-grey-lighter">Stamina</strong></p>
+                                <p class="is-size-6"><strong class="has-txt-value-number">Stamina</strong></p>
                                 <div class="columns is-mobile is-centered">
                                     <div class="column is-narrow is-paddingless py-2">
                                         <div id="char-current-stamina" class="cursor-clickable">
                                         </div>
                                     </div>
                                     <div class="column is-narrow is-paddingless py-2">
-                                        <p class="is-size-5 text-center has-text-grey">/</p>
+                                        <p class="is-size-5 text-center has-txt-noted">/</p>
                                     </div>
                                     <div class="column is-narrow is-paddingless py-2" style="width: 40px;">
-                                        <p id="char-max-stamina" class="is-size-5 text-center has-text-light"></p>
+                                        <p id="char-max-stamina" class="is-size-5 text-center has-txt-value-string"></p>
                                     </div>
                                 </div>
                             </div>
                             <div id="resolvePointsContainer" class="tile is-child pt-3 is-hidden">
-                                <p class="is-size-7"><strong class="has-text-grey-light">Resolve</strong></p>
+                                <p class="is-size-7"><strong class="has-txt-listing">Resolve</strong></p>
                                 <div class="columns is-mobile is-centered">
                                     <div class="column is-narrow is-paddingless py-2">
                                         <div id="char-current-resolve" class="cursor-clickable">
                                         </div>
                                     </div>
                                     <div class="column is-narrow is-paddingless py-2">
-                                        <p class="is-size-5 text-center has-text-grey">/</p>
+                                        <p class="is-size-5 text-center has-txt-noted">/</p>
                                     </div>
                                     <div class="column is-narrow is-paddingless py-2" style="width: 40px;">
-                                        <p id="char-max-resolve" class="is-size-5 text-center has-text-light"></p>
+                                        <p id="char-max-resolve" class="is-size-5 text-center has-txt-value-string"></p>
                                     </div>
                                 </div>
                             </div>
@@ -269,7 +269,7 @@
                     <div class="mobile-box tile ml-1 mr-4 mb-4 mobile-is-marginless sheet-box">
                         <div class="tile is-child use-custom-scrollbar" style="max-height: 100px; overflow-y: auto;">
                             <div class="columns is-centered is-vcentered is-marginless">
-                                <div class="column is-paddingless"><p class="is-size-6"><strong class="has-text-grey-lighter">Conditions</strong></p></div>
+                                <div class="column is-paddingless"><p class="is-size-6"><strong class="has-txt-value-number">Conditions</strong></p></div>
                             </div>
                             <div id="conditionsContent" class="buttons is-centered mx-1"></div>
                         </div>
@@ -278,11 +278,11 @@
                 <div class="tile is-3">
                     <div class="mobile-box tile ml-2 mb-4 mobile-is-marginless mobile-apply-flex sheet-box">
                         <div class="tile is-child pt-2 is-paddingless cursor-clickable" id="classDCSection">
-                            <p class="is-size-6 is-unselectable"><strong class="has-text-grey-lighter">Class DC</strong></p>
-                            <p id="classDCContent" class="is-size-5 has-text-grey-light pl-2"></p>
+                            <p class="is-size-6 is-unselectable"><strong class="has-txt-value-number">Class DC</strong></p>
+                            <p id="classDCContent" class="is-size-5 has-txt-listing pl-2"></p>
                         </div>
                         <div class="tile is-child pt-2">
-                            <p id="heroPointsTitle" class="is-size-7 cursor-clickable"><strong class="has-text-grey-lighter">Hero Points</strong></p>
+                            <p id="heroPointsTitle" class="is-size-7 cursor-clickable"><strong class="has-txt-value-number">Hero Points</strong></p>
                             <div class="select">
                                 <select id="heroPointsSelect">
                                     <option value="0">0</option>
@@ -299,21 +299,21 @@
                 <div class="tile is-3">
                     <div class="mobile-box tile my-2 mr-4 mobile-is-marginless">
                         <div class="tile is-child is-paddingless sheet-box cursor-clickable" id="speedSection">
-                            <p class="is-size-6 is-unselectable"><strong class="has-text-grey-lighter">Speed</strong></p>
-                            <p id="speedContent" class="is-size-5 has-text-grey-light pl-2"></p>
+                            <p class="is-size-6 is-unselectable"><strong class="has-txt-value-number">Speed</strong></p>
+                            <p id="speedContent" class="is-size-5 has-txt-listing pl-2"></p>
                             <div id="speedBottom" class="is-hidden">
                                 <hr id="speedDivider" class="m-1">
-                                <p class="is-size-7 has-text-grey-light">View Others</p>
+                                <p class="is-size-7 has-txt-listing">View Others</p>
                             </div>
                         </div>
                     </div>
                     <div class="mobile-box tile m-2">
                         <div class="tile is-child is-paddingless sheet-box cursor-clickable" id="perceptionBonusSection">
-                            <p class="is-size-6 is-unselectable"><strong class="has-text-grey-lighter">Perception</strong></p>
-                            <p id="perceptionBonusContent" class="is-size-5 has-text-grey-light pr-3"></p>
+                            <p class="is-size-6 is-unselectable"><strong class="has-txt-value-number">Perception</strong></p>
+                            <p id="perceptionBonusContent" class="is-size-5 has-txt-listing pr-3"></p>
                             <div id="perceptionBonusBottom">
                                 <hr id="perceptionBonusDivider" class="m-1">
-                                <p id="perceptionPrimaryVisionSense" class="is-size-7 has-text-grey-light"></p>
+                                <p id="perceptionPrimaryVisionSense" class="is-size-7 has-txt-listing"></p>
                             </div>
                         </div>
                     </div>
@@ -325,32 +325,32 @@
                             <div id="strSection" class="tile is-child pt-2 is-paddingless cursor-clickable">
                                 <div class="has-text-weight-semibold is-size-7 is-unselectable">Strength</div>
                                 <div id="strMod" class="is-size-4 pr-3"></div>
-                                <span id="strScore" class="sheet-small-box is-size-7 has-text-grey-light"></span>
+                                <span id="strScore" class="sheet-small-box is-size-7 has-txt-listing"></span>
                             </div>
                             <div id="dexSection" class="tile is-child pt-2 is-paddingless cursor-clickable">
                                 <div class="has-text-weight-semibold is-size-7 is-unselectable">Dexterity</div>
                                 <div id="dexMod" class="is-size-4 pr-3"></div>
-                                <span id="dexScore" class="sheet-small-box is-size-7 has-text-grey-light"></span>
+                                <span id="dexScore" class="sheet-small-box is-size-7 has-txt-listing"></span>
                             </div>
                             <div id="conSection" class="tile is-child pt-2 is-paddingless cursor-clickable">
                                 <div class="has-text-weight-semibold is-size-7 is-unselectable">Constitution</div>
                                 <div id="conMod" class="is-size-4 pr-3"></div>
-                                <span id="conScore" class="sheet-small-box is-size-7 has-text-grey-light"></span>
+                                <span id="conScore" class="sheet-small-box is-size-7 has-txt-listing"></span>
                             </div>
                             <div id="intSection" class="tile is-child pt-2 is-paddingless cursor-clickable">
                                 <div class="has-text-weight-semibold is-size-7 is-unselectable">Intelligence</div>
                                 <div id="intMod" class="is-size-4 pr-3"></div>
-                                <span id="intScore" class="sheet-small-box is-size-7 has-text-grey-light"></span>
+                                <span id="intScore" class="sheet-small-box is-size-7 has-txt-listing"></span>
                             </div>
                             <div id="wisSection" class="tile is-child pt-2 is-paddingless cursor-clickable">
                                 <div class="has-text-weight-semibold is-size-7 is-unselectable">Wisdom</div>
                                 <div id="wisMod" class="is-size-4 pr-3"></div>
-                                <span id="wisScore" class="sheet-small-box is-size-7 has-text-grey-light"></span>
+                                <span id="wisScore" class="sheet-small-box is-size-7 has-txt-listing"></span>
                             </div>
                             <div id="chaSection" class="tile is-child pt-2 is-paddingless cursor-clickable">
                                 <div class="has-text-weight-semibold is-size-7 is-unselectable">Charisma</div>
                                 <div id="chaMod" class="is-size-4 pr-3"></div>
-                                <span id="chaScore" class="sheet-small-box is-size-7 has-text-grey-light"></span>
+                                <span id="chaScore" class="sheet-small-box is-size-7 has-txt-listing"></span>
                             </div>
                         </div>
                     </div>
@@ -358,18 +358,18 @@
                 <div class="tile is-3">
                     <div class="mobile-box tile is-vertical my-2 ml-2 mobile-is-marginless sheet-box">
                         <!-- Saving Throws -->
-                        <p class="is-size-6 has-text-centered has-text-grey-lighter">Saving Throws</p>
+                        <p class="is-size-6 has-text-centered has-txt-value-number">Saving Throws</p>
                         <div class="tile is-centered is-paddingless mobile-apply-flex">
                             <div id="fortSection" class="tile is-child is-paddingless cursor-clickable">
-                                <p class="has-text-grey-light">Fortitude</p>
+                                <p class="has-txt-listing">Fortitude</p>
                                 <div id="fortSave" class="is-size-5 pr-2"></div>
                             </div>
                             <div id="reflexSection" class="tile is-child is-paddingless cursor-clickable">
-                                <p class="has-text-grey-light">Reflex</p>
+                                <p class="has-txt-listing">Reflex</p>
                                 <div id="reflexSave" class="is-size-5 pr-2"></div>
                             </div>
                             <div id="willSection" class="tile is-child is-paddingless cursor-clickable">
-                                <p class="has-text-grey-light">Will</p>
+                                <p class="has-txt-listing">Will</p>
                                 <div id="willSave" class="is-size-5 pr-2"></div>
                             </div>
                         </div>
@@ -381,37 +381,37 @@
             <div class="tile is-parent is-vertical is-2 my-2 mr-4 mobile-is-marginless is-paddingless">
                 <div class="mobile-box tile is-paddingless p-3">
                     <div id="acSection" class="tile is-child is-unselectable pt-4 background-ac has-tooltip-bottom" data-tooltip="">
-                        <p id="acText" class="px-2"><strong class="has-text-grey-light">AC</strong></p>
-                        <p id="acNumber" class="has-text-grey-light"></p>
+                        <p id="acText" class="px-2"><strong class="has-txt-listing">AC</strong></p>
+                        <p id="acNumber" class="has-txt-listing"></p>
                     </div>
                     <div id="shieldSection" class="tile is-child background-shield pt-4 has-tooltip-bottom is-hidden" data-tooltip="">
-                        <p id="shieldText" class=""><strong class="has-text-grey-light">Shield</strong></p>
-                        <p id="shieldBonus" class="has-text-grey-light pr-2"></p>
+                        <p id="shieldText" class=""><strong class="has-txt-listing">Shield</strong></p>
+                        <p id="shieldBonus" class="has-txt-listing pr-2"></p>
                     </div>
                 </div>
                 <div class="mobile-box tile is-vertical sheet-box">
                     <div class="use-custom-scrollbar" style="height: 550px; max-height: 550px; overflow-y: auto; overflow-x: hidden;">
                         <div class="tile is-paddingless">
                             <div class="tile is-child">
-                                <p class="is-size-6"><strong class="has-text-grey-lighter pl-4">Attacks</strong><a id="addNewProfButton" class="is-pulled-right is-size-6"><span class="icon has-text-info"><i class="fal fa-plus-circle"></i></span></a></p>
+                                <p class="is-size-6"><strong class="has-txt-value-number pl-4">Attacks</strong><a id="addNewProfButton" class="is-pulled-right is-size-6"><span class="icon has-text-info"><i class="fal fa-plus-circle"></i></span></a></p>
                                 <p id="attacksContent"></p>
                             </div>
                         </div>
                         <div class="tile is-paddingless">
                             <div class="tile is-child">
-                                <p class="is-size-6"><strong class="has-text-grey-lighter">Defenses</strong></p>
+                                <p class="is-size-6"><strong class="has-txt-value-number">Defenses</strong></p>
                                 <p id="defensesContent"></p>
                             </div>
                         </div>
                         <div id="spellsContentSection" class="tile is-paddingless">
                             <div class="tile is-child">
-                                <p class="is-size-6"><strong class="has-text-grey-lighter">Spells</strong></p>
+                                <p class="is-size-6"><strong class="has-txt-value-number">Spells</strong></p>
                                 <p id="spellsContent"></p>
                             </div>
                         </div>
                         <div class="tile is-paddingless">
                             <div class="tile is-child py-2">
-                                <p class="is-size-6"><strong class="has-text-grey-lighter pl-4">Languages</strong><a id="addNewLangButton" class="is-pulled-right is-size-6"><span class="icon has-text-info"><i class="fal fa-plus-circle"></i></span></a></p>
+                                <p class="is-size-6"><strong class="has-txt-value-number pl-4">Languages</strong><a id="addNewLangButton" class="is-pulled-right is-size-6"><span class="icon has-text-info"><i class="fal fa-plus-circle"></i></span></a></p>
                                 <p id="languagesContent" class="is-unselectable"></p>
                             </div>
                         </div>
@@ -421,7 +421,7 @@
             <div class="tile is-parent is-2 is-paddingless">
                 <div class="tile is-child">
                     <nav class="mobile-box panel is-dark is-shadowless sheet-box my-2 mx-1">
-                        <p class="is-size-5"><strong class="has-text-grey-lighter pl-4">Skills</strong><a id="addNewLoreButton" class="is-pulled-right is-size-6 is-paddingless"><span class="icon has-text-info"><i class="fal fa-plus-circle"></i></span></a></p>
+                        <p class="is-size-5"><strong class="has-txt-value-number pl-4">Skills</strong><a id="addNewLoreButton" class="is-pulled-right is-size-6 is-paddingless"><span class="icon has-text-info"><i class="fal fa-plus-circle"></i></span></a></p>
                         <hr class="border-secondary is-marginless">
                         <div id="skills" class="use-custom-scrollbar" style="height: 660px; max-height: 660px; overflow-y: auto;">
 

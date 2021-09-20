@@ -90,13 +90,13 @@ socket.on("returnBundleContents", function(REQUEST_TYPE, userHasBundle, userOwns
 
       let bundleName = g_activeBundle.name;
       if(g_activeBundle.hasKeys === 1){
-        bundleName += '<sup class="has-text-grey is-size-5 pl-1"><i class="fas fa-lock"></i></sup>';
+        bundleName += '<sup class="has-txt-noted is-size-5 pl-1"><i class="fas fa-lock"></i></sup>';
       }
       $('#bundleName').html(bundleName);
       $('#bundleDescription').html(processText(g_activeBundle.description, false, false, 'MEDIUM', false));
 
       let contactInfoStr = (g_activeBundle.contactInfo != '') ? ', '+g_activeBundle.contactInfo : '';
-      $('#bundleContactInfo').html('<span class="is-thin has-text-grey-kinda-light">–</span> '+g_activeBundle.authorName+' <span class="is-thin has-text-grey-kinda-light is-size-7">#'+g_activeBundle.userID+'</span>'+contactInfoStr);
+      $('#bundleContactInfo').html('<span class="is-thin has-txt-partial-noted">–</span> '+g_activeBundle.authorName+' <span class="is-thin has-txt-partial-noted is-size-7">#'+g_activeBundle.userID+'</span>'+contactInfoStr);
 
       ///
 

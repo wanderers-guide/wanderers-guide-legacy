@@ -144,7 +144,7 @@ function giveInProf(srcStruct, profName, prof, locationID, sourceName){
 function displayProfChange(locationID, prof, profName){
   if(locationID == 'profSkillsCode-'+temp_classNum) { return; }// Skip for init skill profs from class
   window.setTimeout(() => {
-    let innerHTML = '<p class="help is-info"><span class="is-bold">Proficiency Change:</span><span class="is-italic"> You become '+profToWord(prof).toLowerCase()+' in '+profName.toLowerCase().replace(/_/g,' ').replace('class dc', 'your class DC').replace('spellattacks', ' spell attacks').replace('spelldcs', ' spell DCs')+'.</span></p>';
+    let innerHTML = '<p class="help is-info"><span class="is-bold has-text-info">Proficiency Change:</span><span class="is-italic has-text-info"> You become '+profToWord(prof).toLowerCase()+' in '+profName.toLowerCase().replace(/_/g,' ').replace('class dc', 'your class DC').replace('spellattacks', ' spell attacks').replace('spelldcs', ' spell DCs')+'.</span></p>';
     if($('#'+locationID).html() != null && !$('#'+locationID).html().includes(innerHTML)) { $('#'+locationID).append(innerHTML); }
   }, 100);
 }

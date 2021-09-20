@@ -401,7 +401,7 @@ function getItemIcon(item, invItem){
 
 
   if(fa_icon != null){
-    return `<span class="icon is-small mr-2 has-text-grey-kinda-dark"><i class="${fa_icon} fa-sm"></i></span>`;
+    return `<span class="icon is-small mr-2 has-txt-very-noted"><i class="${fa_icon} fa-sm"></i></span>`;
   } else {
     return '<span class="icon is-small mr-2"></span>';
   }

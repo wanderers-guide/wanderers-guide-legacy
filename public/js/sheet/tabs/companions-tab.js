@@ -24,7 +24,7 @@ function openCompanionTab(data) {
 
     let bulmaTextColor = getBulmaTextColorFromCurrentHP(currentHP, maxHP);
 
-    $('#companionsContent').append('<div id="'+charAnimalCompEntryID+'" class="columns is-mobile pt-1 is-marginless"><div class="column is-paddingless is-1 border-bottom border-dark-lighter cursor-clickable"><figure class="image is-64x64 is-marginless mb-1"><img class="is-rounded companion-icon" src="'+imageURL+'"></figure></div><div class="column is-paddingless is-3 border-bottom border-dark-lighter cursor-clickable"><p class="pl-3 ml-2 pt-2 has-text-left is-size-4 has-text-grey-light">'+charAnimalComp.name+'</p></div><div class="column is-paddingless is-4 border-bottom border-dark-lighter cursor-clickable"><p class="pt-3"><span class="is-size-5 '+bulmaTextColor+'">'+currentHP+'</span><span class="is-size-5 has-text-grey"> / </span><span class="is-size-5 has-text-grey-like">'+maxHP+'</span></p></div><div class="column is-paddingless is-4 border-bottom border-dark-lighter cursor-clickable"><p class="pt-3 is-size-5-5 is-italic has-text-grey-like">Animal Companion</p></div></div>');
+    $('#companionsContent').append('<div id="'+charAnimalCompEntryID+'" class="columns is-mobile pt-1 is-marginless"><div class="column is-paddingless is-1 border-bottom border-dark-lighter cursor-clickable"><figure class="image is-64x64 is-marginless mb-1"><img class="is-rounded companion-icon" src="'+imageURL+'"></figure></div><div class="column is-paddingless is-3 border-bottom border-dark-lighter cursor-clickable"><p class="pl-3 ml-2 pt-2 has-text-left is-size-4 has-txt-listing">'+charAnimalComp.name+'</p></div><div class="column is-paddingless is-4 border-bottom border-dark-lighter cursor-clickable"><p class="pt-3"><span class="is-size-5 '+bulmaTextColor+'">'+currentHP+'</span><span class="is-size-5 has-txt-noted"> / </span><span class="is-size-5 has-txt-partial-noted">'+maxHP+'</span></p></div><div class="column is-paddingless is-4 border-bottom border-dark-lighter cursor-clickable"><p class="pt-3 is-size-5-5 is-italic has-txt-partial-noted">Animal Companion</p></div></div>');
 
     $('#'+charAnimalCompEntryID).click(function(){
         openQuickView('animalCompanionView', {
@@ -33,10 +33,10 @@ function openCompanionTab(data) {
     });
 
     $('#'+charAnimalCompEntryID).mouseenter(function(){
-        $(this).addClass('has-background-grey-darker');
+        $(this).addClass('has-bg-selectable-hover');
     });
     $('#'+charAnimalCompEntryID).mouseleave(function(){
-        $(this).removeClass('has-background-grey-darker');
+        $(this).removeClass('has-bg-selectable-hover');
     });
 
   }
@@ -58,7 +58,7 @@ function openCompanionTab(data) {
 
     let bulmaTextColor = getBulmaTextColorFromCurrentHP(currentHP, maxHP);
 
-    $('#companionsContent').append('<div id="'+charFamiliarEntryID+'" class="columns is-mobile pt-1 is-marginless"><div class="column is-paddingless is-1 border-bottom border-dark-lighter cursor-clickable"><figure class="image is-64x64 is-marginless mb-1"><img class="is-rounded companion-icon" src="'+imageURL+'"></figure></div><div class="column is-paddingless is-3 border-bottom border-dark-lighter cursor-clickable"><p class="pl-3 ml-2 pt-2 has-text-left is-size-4 has-text-grey-light">'+charFamiliar.name+'</p></div><div class="column is-paddingless is-4 border-bottom border-dark-lighter cursor-clickable"><p class="pt-3"><span class="is-size-5 '+bulmaTextColor+'">'+currentHP+'</span><span class="is-size-5 has-text-grey"> / </span><span class="is-size-5 has-text-grey-like">'+maxHP+'</span></p></div><div class="column is-paddingless is-4 border-bottom border-dark-lighter cursor-clickable"><p class="pt-3 is-size-5-5 is-italic has-text-grey-like">Familiar</p></div></div>');
+    $('#companionsContent').append('<div id="'+charFamiliarEntryID+'" class="columns is-mobile pt-1 is-marginless"><div class="column is-paddingless is-1 border-bottom border-dark-lighter cursor-clickable"><figure class="image is-64x64 is-marginless mb-1"><img class="is-rounded companion-icon" src="'+imageURL+'"></figure></div><div class="column is-paddingless is-3 border-bottom border-dark-lighter cursor-clickable"><p class="pl-3 ml-2 pt-2 has-text-left is-size-4 has-txt-listing">'+charFamiliar.name+'</p></div><div class="column is-paddingless is-4 border-bottom border-dark-lighter cursor-clickable"><p class="pt-3"><span class="is-size-5 '+bulmaTextColor+'">'+currentHP+'</span><span class="is-size-5 has-txt-noted"> / </span><span class="is-size-5 has-txt-partial-noted">'+maxHP+'</span></p></div><div class="column is-paddingless is-4 border-bottom border-dark-lighter cursor-clickable"><p class="pt-3 is-size-5-5 is-italic has-txt-partial-noted">Familiar</p></div></div>');
 
     $('#'+charFamiliarEntryID).click(function(){
         openQuickView('familiarView', {
@@ -67,10 +67,10 @@ function openCompanionTab(data) {
     });
 
     $('#'+charFamiliarEntryID).mouseenter(function(){
-        $(this).addClass('has-background-grey-darker');
+        $(this).addClass('has-bg-selectable-hover');
     });
     $('#'+charFamiliarEntryID).mouseleave(function(){
-        $(this).removeClass('has-background-grey-darker');
+        $(this).removeClass('has-bg-selectable-hover');
     });
 
   }

@@ -22,7 +22,7 @@ function openResistancesListQuickview(data) {
     });
 
     if(data.ResistAndVulners.Resistances.length == 0){
-      qContent.append('<p class="has-text-centered is-size-6 is-italic has-text-grey">None</p>');
+      qContent.append('<p class="has-text-centered is-size-6 is-italic has-txt-noted">None</p>');
     }
 
     for (let i = 0; i < data.ResistAndVulners.Resistances.length; i++) {
@@ -68,7 +68,7 @@ function openResistancesListQuickview(data) {
     });
 
     if(data.ResistAndVulners.Vulnerabilities.length == 0){
-      qContent.append('<p class="has-text-centered is-size-6 is-italic has-text-grey">None</p>');
+      qContent.append('<p class="has-text-centered is-size-6 is-italic has-txt-noted">None</p>');
     }
 
     for (let i = 0; i < data.ResistAndVulners.Vulnerabilities.length; i++) {

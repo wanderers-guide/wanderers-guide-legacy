@@ -75,8 +75,8 @@
 .sheet-box {
 
     box-shadow: 0 1px 3px rgba(0,0,0,0.5);
-    background: #282828;
-    border: 1px solid #282828;
+    background: var(--main-box-bg-color);
+    border: 1px solid var(--main-box-bg-color);
     color: #cccccc;
     border-radius: 4px;
 
@@ -88,21 +88,21 @@
     padding-bottom: 4px;
     padding-left: 8px;
     padding-right: 8px;
-    background: #363636;
-    border: 1px solid #363636;
+    background: var(--main-box-small-bg-color);
+    border: 1px solid var(--main-box-small-bg-color);
     color: #cccccc;
     border-radius: 43%;
 
 }
 
 .card-header {
-    background-color: hsl(0, 0%, 17%);
+    background-color: var(--card-header-color);
     border-color: hsl(0, 0%, 13%);
     color: hsl(0, 0%, 73%);
 }
 
 .card {
-    background-color: hsl(212, 1%, 19%);
+    background-color: var(--card-bg-color);
     border-color: #282828;
 }
 
@@ -164,13 +164,13 @@
 
 /* Darkmode Styles */
 .input, .select select, .textarea {
-    background-color: hsl(0, 0%, 18%);
+    background-color: var(--input-bg-color);
     border-color: hsl(0, 0%, 13%);
     color: hsl(0, 0%, 86%);
 }
 
 .input-background-color {
-    background-color: hsl(0, 0%, 18%);
+    background-color: var(--input-bg-color);
 }
 
 .input:hover, .select select:hover, .textarea:hover {
@@ -187,15 +187,6 @@
 
 .control.has-icons-left .icon, .control.has-icons-right .icon {
     color:rgba(219,219,219,.4);
-}
-
-.label {
-    color: #b9b9b9;
-}
-
-strong {
-    color: #b9b9b9;
-    font-weight: 800;
 }
 
 .hr-highlighted {
@@ -227,6 +218,11 @@ strong {
   width: 128px!important;
   height: 128px!important;
   object-fit: cover!important;
+}
+
+/* Skills */
+a.panel-block:hover, label.panel-block:hover {
+  background-color: var(--selectable-hover);
 }
 
 /* Companions */

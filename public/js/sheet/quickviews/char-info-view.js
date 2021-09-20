@@ -13,9 +13,9 @@ function openCharInfoQuickview(data) {
   qContent.append('<div class="columns is-marginless"><div id="charInfoBasicInfoSection" class="column is-8 is-paddingless"></div><div id="charInfoPictureSection" class="column is-4 is-paddingless pt-2"></div></div>');
 
   /// Basic Info ///
-  $('#charInfoBasicInfoSection').append('<p class="is-size-4 has-text-centered has-text-light text-overflow-ellipsis">'+g_character.name+'</p>');
+  $('#charInfoBasicInfoSection').append('<p class="is-size-4 has-text-centered has-txt-value-string text-overflow-ellipsis">'+g_character.name+'</p>');
 
-  $('#charInfoBasicInfoSection').append('<div class="field is-horizontal is-marginless"><div class="field-label"><label class="label">Class</label></div><div class="field-label"><p class="is-size-6 has-text-left has-text-light-darker">'+g_classDetails.Class.name+'</p></div></div>');
+  $('#charInfoBasicInfoSection').append('<div class="field is-horizontal is-marginless"><div class="field-label"><label class="label">Class</label></div><div class="field-label"><p class="is-size-6 has-text-left has-txt-value-string">'+g_classDetails.Class.name+'</p></div></div>');
 
   let heritageAndAncestryName = '';
   if(g_heritage == null){
@@ -27,9 +27,9 @@ function openCharInfoQuickview(data) {
       heritageAndAncestryName = g_heritage.name;
     }
   }
-  $('#charInfoBasicInfoSection').append('<div class="field is-horizontal is-marginless"><div class="field-label"><label class="label">Ancestry</label></div><div class="field-label"><p class="is-size-6 has-text-left has-text-light-darker">'+heritageAndAncestryName+'</p></div></div>');
+  $('#charInfoBasicInfoSection').append('<div class="field is-horizontal is-marginless"><div class="field-label"><label class="label">Ancestry</label></div><div class="field-label"><p class="is-size-6 has-text-left has-txt-value-string">'+heritageAndAncestryName+'</p></div></div>');
 
-  $('#charInfoBasicInfoSection').append('<div class="field is-horizontal is-marginless"><div class="field-label"><label class="label">Background</label></div><div class="field-label"><p class="is-size-6 has-text-left has-text-light-darker">'+g_background.name+'</p></div></div>');
+  $('#charInfoBasicInfoSection').append('<div class="field is-horizontal is-marginless"><div class="field-label"><label class="label">Background</label></div><div class="field-label"><p class="is-size-6 has-text-left has-txt-value-string">'+g_background.name+'</p></div></div>');
 
   $('#charInfoPictureSection').append('<figure class="image is-128x128 is-marginless"><img id="charInfoPicture" class="is-rounded character-icon" src=""></figure>');
 

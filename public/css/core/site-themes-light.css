@@ -1,0 +1,107 @@
+:root {
+  
+  /* General colors */
+  /* --main-bg-texture: url('../../images/background.png'); */
+  --main-bg-color: #E7E3DC;
+
+  --main-nav-bg-color: #a1a1a1;
+
+  --main-code-block-bg-color: #b2b2b9;
+
+  --main-box-bg-color: #e9e9e9;
+  --main-box-darker-bg-color: #d1d1d1;
+  --main-box-lighter-bg-color: #ffffff;
+
+  --main-box-small-bg-color: #E7E3DC;
+  --main-box-s-s-bg-color: #E7E3DC;
+
+  --main-scrollbar-color: #181818;
+  --main-scrollbar-lighter-color: #252525;
+  --main-scrollbar-darker-color: #111111;
+
+  --main-loading-bg-color: #E7E3DC;
+
+  /* Component colors */
+  --message-bg-color:hsl(0, 0%, 89%);
+  --message-header-color: rgb(211, 211, 211);
+
+  --card-bg-color: hsl(240, 12%, 90%);
+  --card-header-color: rgb(211, 211, 211);
+
+  --accordion-header-bg-color: rgb(211, 211, 211);
+  --accordion-body-bg-color: hsl(240, 12%, 90%);
+  --accordion-header-bold-bg-color: rgb(179, 179, 179);
+
+  --steps-bg-color: #282828;
+
+  --selectors-color: #e6e0d8;
+  --selectors-hover-color: #dad3cc;
+
+  --feat-selection-list-color: #f0ebe6;
+  --feat-selection-selected-color: #e6e0d8;
+  --feat-selection-hover-color: #d4cfc8;
+  --feat-selection-divider-color: #002664;
+
+  --modal-header-color: #161616;
+  --modal-body-color: #1C1C1C;
+  --modal-footer-color: #161616;
+
+  --quickview-header-bg-color: #ddd9d3;
+  --quickview-body-bg-color: #ECE9E4;
+
+  --notes-header-color: hsl(0, 0%, 18%);
+  --notes-body-color: hsl(0, 0%, 20%);
+
+  --tooltips-bg-color: rgba(74, 74, 74, 0.9);
+
+  --selectable: #242424;
+  --selectable-hover: #363636;
+
+  --input-bg-color: hsl(0, 0%, 18%);
+
+  /* Very specific colors (reduce these) */
+  --ability-scores-box-bg-color: hsl(0, 0%, 18%);
+
+  --character-card-body-color: rgb(51, 51, 51);
+  --character-card-footer-color: rgb(43, 43, 43);
+  --character-card-body-hover-color: rgb(57, 57, 57);
+  --character-card-footer-hover-color: rgb(49, 49, 49);
+
+
+  --button-static-color: hsl(0, 0%, 17%);
+  --button-static-bold-color: hsl(0, 0%, 19%);
+
+  /* Rarity colors */
+  --rarity-uncommon: hsl(157, 65%, 38%);
+  --rarity-rare: hsl(224, 55%, 42%);
+  --rarity-unique: hsl(282, 58%, 38%);
+
+  --rarity-uncommon-option: hsl(158, 25%, 22%);
+  --rarity-rare-option: hsl(225, 30%, 22%);
+  --rarity-unique-option: hsl(282, 30%, 22%);
+
+  /* Text colors */
+  --text-header-color: #5E0000;
+  --text-p-color: rgb(0, 0, 0);
+  --text-listing-color: rgb(0, 0, 0);
+  --text-box-color: rgb(0, 0, 0);
+  --text-num-value-color: rgb(0, 0, 0);
+  --text-txt-value-color: rgb(0, 0, 0);
+
+  --text-faded-color: rgb(100, 100, 100);
+  --text-very-noted-color: rgb(71, 71, 71);
+  --text-noted-color: rgb(43, 43, 43);
+  --text-partial-noted-color: rgb(31, 31, 31);
+
+  /* Border colors */
+  --hr-color: rgb(29, 29, 29);
+  --hr-faded-color: rgb(40, 40, 40)
+  --hr-bolder-color: rgb(12, 12, 12);
+
+}
+
+.button.is-paddingless.is-very-small {
+  border: solid #D8C383;
+  border-radius: 0;
+  background-color: #5D0000;
+}

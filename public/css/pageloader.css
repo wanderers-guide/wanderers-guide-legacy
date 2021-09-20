@@ -6,7 +6,7 @@
 }
 
 .dice-pageloader {
-  position: fixed;
+  position: absolute;
   width: 100%;
   height: 100%;
   top: 0;
@@ -18,11 +18,11 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background: #161616;
+  background: var(--main-loading-bg-color);
 }
 
 .pageloader {
-    position: fixed;
+    position: absolute;
     width: 100%;
     height: 100%;
     top: 0;
@@ -34,7 +34,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background: #161616;
+    background: var(--main-loading-bg-color);
 }
 
 .subpageloader {

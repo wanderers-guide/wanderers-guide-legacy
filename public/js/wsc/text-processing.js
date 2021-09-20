@@ -103,7 +103,7 @@ function processText(text, isSheet, isJustified = false, size = 'MEDIUM', indexC
     text = text.replace(/\_\_(.+?)\_\_/g, '<em>$1</em>');
 
     // $$grey:word$$ - Makes word italicized
-    text = text.replace(/\$\$grey:(.+?)\$\$/gi, '<span class="has-text-grey">$1</span>');
+    text = text.replace(/\$\$grey:(.+?)\$\$/gi, '<span class="has-txt-noted">$1</span>');
 
     // ~~word~~ - Makes word strikethrough
     text = text.replace(/\~\~(.+?)\~\~/g, '<s>$1</s>');
@@ -389,7 +389,7 @@ function handleTableCreation(match) {
       for (let j = 0; j < columns.length; j++) {
         let column = columns[j].trim();
         let textAlignClass = tableAlignMap.get(j);
-        tableHTML += '<td class="wsc-td px-2 py-1 has-text-grey-light '+textAlignClass+'">'+column+'</td>';
+        tableHTML += '<td class="wsc-td px-2 py-1 has-txt-listing '+textAlignClass+'">'+column+'</td>';
       }
       tableHTML += '</tr>';
 

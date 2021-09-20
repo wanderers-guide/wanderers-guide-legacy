@@ -1,9 +1,4 @@
 
-hr {
-    border-color: #5e5e5e;
-    background-color: #5e5e5e;
-}
-
 .card {
     background-color: #222222;
     box-shadow: 0 1px 1px rgba(0,0,0,0.5);
@@ -35,22 +30,6 @@ hr {
 }
 .entry-footer-hover {
     background-color: rgb(49, 49, 49);
-}
-
-
-.modal-card-head {
-    background-color: #333333;
-    border-bottom-color: #282828;
-}
-.modal-card-body {
-    background-color: #3c3c3c;
-}
-.modal-card-foot {
-    background-color: #333333;
-    border-top-color: #282828;
-}
-.modal-background {
-    background-color: rgba(10,10,10,.26)
 }
 
 

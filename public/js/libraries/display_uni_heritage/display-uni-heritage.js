@@ -68,7 +68,7 @@ class DisplayUniHeritage {
             sourceTextName = 'Bundle #'+uniHeritageStruct.heritage.homebrewID;
             sourceLink = '/homebrew/?view_id='+uniHeritageStruct.heritage.homebrewID;
           }
-          let sourceStr = '<a class="has-text-grey" href="'+sourceLink+'" target="_blank">'+sourceTextName+'</a><span class="has-text-grey-dark">, #'+uniHeritageStruct.heritage.id+'</span>';
+          let sourceStr = '<a class="has-txt-noted" href="'+sourceLink+'" target="_blank">'+sourceTextName+'</a><span class="has-txt-faded">, #'+uniHeritageStruct.heritage.id+'</span>';
 
           let uniHeritageRarity = convertRarityToHTML(uniHeritageStruct.heritage.rarity);
           if(uniHeritageRarity != ''){ sourceStr = '<span class="pr-2">'+sourceStr+'</span>'; }
@@ -85,7 +85,7 @@ class DisplayUniHeritage {
               if(featStruct.Feat.level <= 0) { continue; }
               if(featStruct.Feat.level > uniHeritageFeatLevel){
                 uniHeritageFeatLevel = featStruct.Feat.level;
-                $('#uni-heritage-feats').append('<div class="border-bottom border-dark-lighter has-background-black-like-more text-center is-bold"><p>Level '+uniHeritageFeatLevel+'</p></div>');
+                $('#uni-heritage-feats').append('<div class="border-bottom border-dark-lighter has-bg-options-header-bold text-center is-bold"><p>Level '+uniHeritageFeatLevel+'</p></div>');
               }
 
               let sourceTextName = getContentSourceTextName(featStruct.Feat.contentSrc);
@@ -94,7 +94,7 @@ class DisplayUniHeritage {
               }
 
               let featEntryID = 'uni-heritage-feat-'+featStruct.Feat.id;
-              $('#uni-heritage-feats').append('<div id="'+featEntryID+'" class="border-bottom border-dark-lighter px-2 py-2 has-background-black-ter cursor-clickable"><span class="pl-4">'+featStruct.Feat.name+convertActionToHTML(featStruct.Feat.actions)+'</span><span class="is-pulled-right is-size-7 has-text-grey is-italic">'+sourceTextName+'</span></div>');
+              $('#uni-heritage-feats').append('<div id="'+featEntryID+'" class="border-bottom border-dark-lighter px-2 py-2 has-bg-selectable cursor-clickable"><span class="pl-4">'+featStruct.Feat.name+convertActionToHTML(featStruct.Feat.actions)+'</span><span class="is-pulled-right is-size-7 has-txt-noted is-italic">'+sourceTextName+'</span></div>');
 
               $('#'+featEntryID).click(function(){
                 openQuickView('featView', {
@@ -104,12 +104,12 @@ class DisplayUniHeritage {
               });
           
               $('#'+featEntryID).mouseenter(function(){
-                $(this).removeClass('has-background-black-ter');
-                $(this).addClass('has-background-grey-darker');
+                $(this).removeClass('has-bg-selectable');
+                $(this).addClass('has-bg-selectable-hover');
               });
               $('#'+featEntryID).mouseleave(function(){
-                $(this).removeClass('has-background-grey-darker');
-                $(this).addClass('has-background-black-ter');
+                $(this).removeClass('has-bg-selectable-hover');
+                $(this).addClass('has-bg-selectable');
               });
               
             }

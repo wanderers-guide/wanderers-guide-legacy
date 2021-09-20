@@ -31,8 +31,8 @@ function openWarningsQuickview(data) {
         </div>
         <div class="column is-11 pl-1">
           <span class="is-pulled-left">
-            <span class="has-text-grey-light">${unselectedData.details}</span>
-            <span class="has-text-grey">- ${unselectedData.sourceName}</span>
+            <span class="has-txt-listing">${unselectedData.details}</span>
+            <span class="has-txt-noted">- ${unselectedData.sourceName}</span>
           </span>
         </div>
       </div>

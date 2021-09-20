@@ -103,10 +103,10 @@ function openLeftStatsQuickview(data) {
       skillsColumnID = "skillsColumnOne";
     }
 
-    $('#'+skillsColumnID).append('<div><span class="is-size-7 has-text-grey-kinda-light">'+getProfLetterFromNumUps(skillData.NumUps)+' - </span><span class="is-size-6 has-text-grey-light">'+skillData.Name+'</span></div>');
+    $('#'+skillsColumnID).append('<div><span class="is-size-7 has-txt-partial-noted">'+getProfLetterFromNumUps(skillData.NumUps)+' - </span><span class="is-size-6 has-txt-listing">'+skillData.Name+'</span></div>');
   }
 
-  qContent.append('<div><p class="is-size-7 has-text-grey-kinda-light has-text-centered is-italic" style="letter-spacing: 0px;">U = Untrained, T = Trained, E = Expert, M = Master, L = Legendary</span></p>');
+  qContent.append('<div><p class="is-size-7 has-txt-partial-noted has-text-centered is-italic" style="letter-spacing: 0px;">U = Untrained, T = Trained, E = Expert, M = Master, L = Legendary</span></p>');
 
   qContent.append('<hr class="m-2">');
 
@@ -142,7 +142,7 @@ function openLeftStatsQuickview(data) {
     if(featData.value.level <= 0) { continue; }
 
     let featButtonID = 'myFeatViewButton-'+i;
-    $('#myFeatsQuickviewSection').append('<button id="'+featButtonID+'" class="button is-small is-fullwidth my-1 pos-relative" style="max-width: 300px; margin: auto;"><i class="pos-absolute pos-l-0 pl-2 is-size-7 has-text-grey">'+featData.value.level+'</i>'+featData.value.name+'</button>');
+    $('#myFeatsQuickviewSection').append('<button id="'+featButtonID+'" class="button is-small is-fullwidth my-1 pos-relative" style="max-width: 300px; margin: auto;"><i class="pos-absolute pos-l-0 pl-2 is-size-7 has-txt-noted">'+featData.value.level+'</i>'+featData.value.name+'</button>');
 
     $('#'+featButtonID).click(function(event) {
       let featStruct = g_featMap.get(featData.value.id+"");

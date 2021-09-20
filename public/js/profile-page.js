@@ -41,16 +41,34 @@ $(function () {
     }
   });
 
+  $('#lightModeBtn').change(function(){
+    if ($(this).is(':checked')) {
+      $(this).removeClass('is-dark');
+      $(this).addClass('is-info');
+      $(this).blur();
+      socket.emit("requestThemeStatusChange", true);
+    } else {
+      $(this).removeClass('is-info');
+      $(this).addClass('is-dark');
+      $(this).blur();
+      socket.emit("requestThemeStatusChange", false);
+    }
+  });
+
 });
 
 socket.on("returnProfileNameChange", function(newName){
   g_profileName = newName;
 });
 
-socket.on("requestDeveloperStatusChange", function(isDeveloper){
+socket.on("returnDeveloperStatusChange", function(isDeveloper){
   if(isDeveloper){
     $('#developerStatusListing').removeClass('is-hidden');
   } else {
     $('#developerStatusListing').addClass('is-hidden');
   }
+});
+
+socket.on("returnThemeStatusChange", function(lightMode){
+  window.location.reload(true);
 });

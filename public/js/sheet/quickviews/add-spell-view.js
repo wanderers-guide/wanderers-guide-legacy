@@ -156,7 +156,7 @@ function displayAddSpell(spellDataStruct, data){
     let spellTradNameID = 'addSpellFromTraditionName'+spellID;
     let spellTradDetailsSpellID = 'addSpellFromTraditionDetailsSpell'+spellID;
 
-    $('#traitionSpellListSection').append('<div class="tile is-parent is-flex is-paddingless border-bottom border-additems has-background-black-like cursor-clickable" data-spell-id="'+spellID+'"><div class="tile is-child is-9 spellEntryPart"><p id="'+spellTradNameID+'" class="has-text-left mt-1 pl-3 has-text-grey-lighter">'+spellName+'</p></div><div id="'+spellTradAddSpellBtnWrapperID+'" class="tile is-child"></div><div class="tile is-child is-1 spellEntryPart"><span class="icon has-text-grey mt-2"><i id="'+spellTradChevronSpellID+'" class="fas fa-chevron-down"></i></span></div></div><div id="'+spellTradDetailsSpellID+'"></div>');
+    $('#traitionSpellListSection').append('<div class="tile is-parent is-flex is-paddingless border-bottom border-additems has-bg-options-header-bold cursor-clickable" data-spell-id="'+spellID+'"><div class="tile is-child is-9 spellEntryPart"><p id="'+spellTradNameID+'" class="has-text-left mt-1 pl-3 has-txt-value-number">'+spellName+'</p></div><div id="'+spellTradAddSpellBtnWrapperID+'" class="tile is-child"></div><div class="tile is-child is-1 spellEntryPart"><span class="icon has-txt-noted mt-2"><i id="'+spellTradChevronSpellID+'" class="fas fa-chevron-down"></i></span></div></div><div id="'+spellTradDetailsSpellID+'"></div>');
 
     
     if(data.SpellBook.SpellCastingType === 'SPONTANEOUS-REPERTOIRE' && spellDataStruct.Spell.level != 0) {

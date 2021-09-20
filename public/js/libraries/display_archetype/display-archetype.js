@@ -50,7 +50,7 @@ class DisplayArchetype {
             sourceTextName = 'Bundle #'+archetypeStruct.archetype.homebrewID;
             sourceLink = '/homebrew/?view_id='+archetypeStruct.archetype.homebrewID;
           }
-          let sourceStr = '<a class="has-text-grey" href="'+sourceLink+'" target="_blank">'+sourceTextName+'</a><span class="has-text-grey-dark">, #'+archetypeStruct.archetype.id+'</span>';
+          let sourceStr = '<a class="has-txt-noted" href="'+sourceLink+'" target="_blank">'+sourceTextName+'</a><span class="has-txt-faded">, #'+archetypeStruct.archetype.id+'</span>';
 
           let archetypeRarity = convertRarityToHTML(dedFeatStruct.Feat.rarity);
           if(archetypeRarity != ''){ sourceStr = '<span class="pr-2">'+sourceStr+'</span>'; }
@@ -69,12 +69,12 @@ class DisplayArchetype {
           });
       
           $('#archetype-ded-feat-container').mouseenter(function(){
-            $(this).removeClass('has-background-black-ter');
-            $(this).addClass('has-background-grey-darker');
+            $(this).removeClass('has-bg-selectable');
+            $(this).addClass('has-bg-selectable-hover');
           });
           $('#archetype-ded-feat-container').mouseleave(function(){
-            $(this).removeClass('has-background-grey-darker');
-            $(this).addClass('has-background-black-ter');
+            $(this).removeClass('has-bg-selectable-hover');
+            $(this).addClass('has-bg-selectable');
           });
 
           ///
@@ -88,7 +88,7 @@ class DisplayArchetype {
               if(featStruct.Feat.level <= 0) { continue; }
               if(featStruct.Feat.level > archetypeFeatLevel){
                 archetypeFeatLevel = featStruct.Feat.level;
-                $('#archetype-feats').append('<div class="border-bottom border-dark-lighter has-background-black-like-more text-center is-bold"><p>Level '+archetypeFeatLevel+'</p></div>');
+                $('#archetype-feats').append('<div class="border-bottom border-dark-lighter has-bg-options-header-bold text-center is-bold"><p>Level '+archetypeFeatLevel+'</p></div>');
               }
 
               let sourceTextName = getContentSourceTextName(featStruct.Feat.contentSrc);
@@ -97,7 +97,7 @@ class DisplayArchetype {
               }
 
               let featEntryID = 'archetype-feat-'+featStruct.Feat.id;
-              $('#archetype-feats').append('<div id="'+featEntryID+'" class="border-bottom border-dark-lighter px-2 py-2 has-background-black-ter cursor-clickable"><span class="pl-4">'+featStruct.Feat.name+convertActionToHTML(featStruct.Feat.actions)+'</span><span class="is-pulled-right is-size-7 has-text-grey is-italic">'+sourceTextName+'</span></div>');
+              $('#archetype-feats').append('<div id="'+featEntryID+'" class="border-bottom border-dark-lighter px-2 py-2 has-bg-selectable cursor-clickable"><span class="pl-4">'+featStruct.Feat.name+convertActionToHTML(featStruct.Feat.actions)+'</span><span class="is-pulled-right is-size-7 has-txt-noted is-italic">'+sourceTextName+'</span></div>');
 
               $('#'+featEntryID).click(function(){
                 openQuickView('featView', {
@@ -107,12 +107,12 @@ class DisplayArchetype {
               });
           
               $('#'+featEntryID).mouseenter(function(){
-                $(this).removeClass('has-background-black-ter');
-                $(this).addClass('has-background-grey-darker');
+                $(this).removeClass('has-bg-selectable');
+                $(this).addClass('has-bg-selectable-hover');
               });
               $('#'+featEntryID).mouseleave(function(){
-                $(this).removeClass('has-background-grey-darker');
-                $(this).addClass('has-background-black-ter');
+                $(this).removeClass('has-bg-selectable-hover');
+                $(this).addClass('has-bg-selectable');
               });
               
             }

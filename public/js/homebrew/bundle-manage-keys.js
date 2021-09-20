@@ -32,7 +32,7 @@ socket.on("returnBundleKeys", function(bundleKeys){
 
     let useText = (bundleKey.isOneTimeUse == 1) ? 'One-Time-Use Key' : 'Permanent Key';
 
-    $('#manage-keys-modal-key-container').append('<div id="'+keyEntry+'" class="columns is-mobile is-marginless mb-1 sub-section-box"><div class="column is-6"><p class="is-size-7 is-thin has-text-light">'+bundleKey.keyCode+'</p></div><div class="column is-4"><p class="is-size-6 is-italic">'+useText+'</p></div><div class="column is-2"><div class="is-pulled-right buttons are-small"><button id="'+keyEntryDeleteBtn+'" class="button is-danger is-outlined">Delete</button></div></div></div>');
+    $('#manage-keys-modal-key-container').append('<div id="'+keyEntry+'" class="columns is-mobile is-marginless mb-1 sub-section-box"><div class="column is-6"><p class="is-size-7 is-thin has-txt-value-string">'+bundleKey.keyCode+'</p></div><div class="column is-4"><p class="is-size-6 is-italic">'+useText+'</p></div><div class="column is-2"><div class="is-pulled-right buttons are-small"><button id="'+keyEntryDeleteBtn+'" class="button is-danger is-outlined">Delete</button></div></div></div>');
 
     $('#'+keyEntryDeleteBtn).click(function() {
       socket.emit("requestBundleRemoveKey", g_activeBundle.id, bundleKey.keyCode);

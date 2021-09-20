@@ -158,7 +158,7 @@ function displayBundleResults(homebrewBundles){
 
   if(homebrewBundles.size <= 0){
     $('#browsingList').html('<p class="has-text-centered is-italic">No results found!</p>');
-    $('#searchResultCountContainer').html('<p class="is-italic has-text-grey">(0 results found)</p>');
+    $('#searchResultCountContainer').html('<p class="is-italic has-txt-noted">(0 results found)</p>');
     return;
   }
 
@@ -177,20 +177,20 @@ function displayBundleResults(homebrewBundles){
 
     let bundleName = homebrewBundle.name;
     if(homebrewBundle.hasKeys === 1){
-      bundleName += '<sup class="has-text-grey is-size-7 pl-1"><i class="fas fa-lock"></i></sup>';
+      bundleName += '<sup class="has-txt-noted is-size-7 pl-1"><i class="fas fa-lock"></i></sup>';
     }
 
-    $('#browsingList').append('<div id="'+entryID+'" class="columns is-mobile border-bottom border-dark-lighter cursor-clickable"><div class="column is-7"><span class="is-size-5">'+bundleName+'</span></div><div class="column is-3"><span class="is-size-6 has-text-grey is-italic">'+homebrewBundle.authorName+'</span></div><div class="column is-2" style="position: relative;"><span class="is-size-6 pr-2 '+ratingColor+'" style="position: absolute; top: 1px; right: 0px;">'+rating+'</span></div></div>');
+    $('#browsingList').append('<div id="'+entryID+'" class="columns is-mobile border-bottom border-dark-lighter cursor-clickable"><div class="column is-7"><span class="is-size-5">'+bundleName+'</span></div><div class="column is-3"><span class="is-size-6 has-txt-noted is-italic">'+homebrewBundle.authorName+'</span></div><div class="column is-2" style="position: relative;"><span class="is-size-6 pr-2 '+ratingColor+'" style="position: absolute; top: 1px; right: 0px;">'+rating+'</span></div></div>');
 
     $('#'+entryID).click(function(){
       openBundleView(homebrewBundle);
     });
 
     $('#'+entryID).mouseenter(function(){
-      $(this).addClass('has-background-grey-darker');
+      $(this).addClass('has-bg-selectable-hover');
     });
     $('#'+entryID).mouseleave(function(){
-      $(this).removeClass('has-background-grey-darker');
+      $(this).removeClass('has-bg-selectable-hover');
     });
 
   }

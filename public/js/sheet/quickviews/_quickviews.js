@@ -166,7 +166,7 @@ function refreshQuickView() {
 function addBackFunctionality(quickViewData){
 
   if(quickViewData._prevBackData != null && quickViewData._prevBackData.Data != null){
-    $('#quickViewTitleClose').html('<span id="quickViewBack" class="icon has-text-light cursor-clickable" style="font-size:0.8em;"><i class="fas fa-arrow-left"></i></i></span>');
+    $('#quickViewTitleClose').html('<span id="quickViewBack" class="icon has-txt-value-string cursor-clickable" style="font-size:0.8em;"><i class="fas fa-arrow-left"></i></i></span>');
     $('#quickViewBack').click(function(){
       openQuickView(quickViewData._prevBackData.Type, quickViewData._prevBackData.Data, true);
     });
@@ -187,8 +187,8 @@ function getContentSource(contentID, contentSrc, homebrewID){
     sourceLink = '/homebrew/?view_id='+homebrewID;
   }
 
-  let contentIDStr = (contentID == null) ? '' : '<span class="is-size-7 has-text-grey-dark is-italic">, #'+contentID+'</span>';
-  return '<div style="position: fixed; bottom: 5px; right: 12px;"><a class="is-size-7 has-text-grey is-italic" href="'+sourceLink+'" target="_blank">'+sourceTextName+'</a>'+contentIDStr+'</div>';
+  let contentIDStr = (contentID == null) ? '' : '<span class="is-size-7 has-txt-faded is-italic">, #'+contentID+'</span>';
+  return '<div style="position: fixed; bottom: 5px; right: 12px;"><a class="is-size-7 has-txt-noted is-italic" href="'+sourceLink+'" target="_blank">'+sourceTextName+'</a>'+contentIDStr+'</div>';
 
 }
 

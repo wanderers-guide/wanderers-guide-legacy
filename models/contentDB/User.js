@@ -43,6 +43,9 @@ const User = db.define('users', {
   },
   patreonRefreshToken: {
     type: Sequelize.STRING
+  },
+  enabledLightMode: {
+    type: Sequelize.TINYINT
   }
 });
 

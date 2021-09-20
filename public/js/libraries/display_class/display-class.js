@@ -47,7 +47,7 @@ class DisplayClass {
             sourceTextName = 'Bundle #'+classStruct.class.homebrewID;
             sourceLink = '/homebrew/?view_id='+classStruct.class.homebrewID;
           }
-          let sourceStr = '<a class="has-text-grey" href="'+sourceLink+'" target="_blank">'+sourceTextName+'</a><span class="has-text-grey-dark">, #'+classStruct.class.id+'</span>';
+          let sourceStr = '<a class="has-txt-noted" href="'+sourceLink+'" target="_blank">'+sourceTextName+'</a><span class="has-txt-faded">, #'+classStruct.class.id+'</span>';
 
           let classRarity = convertRarityToHTML(classStruct.class.rarity);
           if(classRarity != ''){ sourceStr = '<span class="pr-2">'+sourceStr+'</span>'; }
@@ -122,7 +122,7 @@ class DisplayClass {
                 sourceTextName = 'Bundle #'+classFeature.homebrewID;
               }
 
-              $('#class-features').append('<div style="position: relative;"><div class=""><p class="is-size-4 has-text-weight-semibold has-text-centered has-text-grey-light">'+classFeature.name+'</p>'+processText(classFeature.description, false, null)+'</div><span style="position: absolute; top: 0px; right: 5px;" class="is-size-7 has-text-grey is-italic">'+sourceTextName+'</span></div>');
+              $('#class-features').append('<div style="position: relative;"><div class=""><p class="is-size-4 has-text-weight-semibold has-text-centered has-txt-listing">'+classFeature.name+'</p>'+processText(classFeature.description, false, null)+'</div><span style="position: absolute; top: 0px; right: 5px;" class="is-size-7 has-txt-noted is-italic">'+sourceTextName+'</span></div>');
 
               if(classFeature.selectType == 'SELECTOR'){
                 $('#class-features').append('<p class="has-text-centered is-size-5 has-text-weight-semibold">Options</p)');
@@ -130,7 +130,7 @@ class DisplayClass {
                   if(subClassFeature.selectType == 'SELECT_OPTION' && (subClassFeature.selectOptionFor == classFeature.id || subClassFeature.indivClassAbilName === classFeature.name)) {
 
                     let subEntryID = 'class-feature-option-'+subClassFeature.id;
-                    $('#class-features').append('<div id="'+subEntryID+'" style="max-width: 300px; margin: auto;" class="border border-dark-lighter has-background-black-ter cursor-clickable p-2"><p class="has-text-centered">'+subClassFeature.name+'</p></div)');
+                    $('#class-features').append('<div id="'+subEntryID+'" style="max-width: 300px; margin: auto;" class="border border-dark-lighter has-bg-selectable cursor-clickable p-2"><p class="has-text-centered">'+subClassFeature.name+'</p></div)');
 
                     $('#'+subEntryID).click(function(){
                       openQuickView('abilityView', {
@@ -139,12 +139,12 @@ class DisplayClass {
                     });
                     
                     $('#'+subEntryID).mouseenter(function(){
-                      $(this).removeClass('has-background-black-ter');
-                      $(this).addClass('has-background-grey-darker');
+                      $(this).removeClass('has-bg-selectable');
+                      $(this).addClass('has-bg-selectable-hover');
                     });
                     $('#'+subEntryID).mouseleave(function(){
-                      $(this).removeClass('has-background-grey-darker');
-                      $(this).addClass('has-background-black-ter');
+                      $(this).removeClass('has-bg-selectable-hover');
+                      $(this).addClass('has-bg-selectable');
                     });
 
                   }
@@ -177,7 +177,7 @@ class DisplayClass {
               if(featStruct.Feat.level <= 0) { continue; }
               if(featStruct.Feat.level > classFeatLevel){
                 classFeatLevel = featStruct.Feat.level;
-                $('#class-feats').append('<div class="border-bottom border-dark-lighter has-background-black-like-more text-center is-bold"><p>Level '+classFeatLevel+'</p></div>');
+                $('#class-feats').append('<div class="border-bottom border-dark-lighter has-bg-options-header-bold text-center is-bold"><p>Level '+classFeatLevel+'</p></div>');
               }
 
               let sourceTextName = getContentSourceTextName(featStruct.Feat.contentSrc);
@@ -186,7 +186,7 @@ class DisplayClass {
               }
 
               let featEntryID = 'class-feat-'+featStruct.Feat.id;
-              $('#class-feats').append('<div id="'+featEntryID+'" class="border-bottom border-dark-lighter px-2 py-2 has-background-black-ter cursor-clickable"><span class="pl-4">'+featStruct.Feat.name+convertActionToHTML(featStruct.Feat.actions)+'</span><span class="is-pulled-right is-size-7 has-text-grey is-italic">'+sourceTextName+'</span></div>');
+              $('#class-feats').append('<div id="'+featEntryID+'" class="border-bottom border-dark-lighter px-2 py-2 has-bg-selectable cursor-clickable"><span class="pl-4">'+featStruct.Feat.name+convertActionToHTML(featStruct.Feat.actions)+'</span><span class="is-pulled-right is-size-7 has-txt-noted is-italic">'+sourceTextName+'</span></div>');
 
               $('#'+featEntryID).click(function(){
                 openQuickView('featView', {
@@ -196,12 +196,12 @@ class DisplayClass {
               });
           
               $('#'+featEntryID).mouseenter(function(){
-                $(this).removeClass('has-background-black-ter');
-                $(this).addClass('has-background-grey-darker');
+                $(this).removeClass('has-bg-selectable');
+                $(this).addClass('has-bg-selectable-hover');
               });
               $('#'+featEntryID).mouseleave(function(){
-                $(this).removeClass('has-background-grey-darker');
-                $(this).addClass('has-background-black-ter');
+                $(this).removeClass('has-bg-selectable-hover');
+                $(this).addClass('has-bg-selectable');
               });
               
             }

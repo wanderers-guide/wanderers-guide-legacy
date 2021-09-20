@@ -46,7 +46,7 @@ socket.on("returnHomebrewBundles", function(homebrewBundles, canMakeHomebrew){
           let bundleName = homebrewBundle.name;
           let manageKeysHTML = '';
           if(homebrewBundle.hasKeys === 1){
-            bundleName += '<sup class="has-text-grey is-size-7 pl-1"><i class="fas fa-lock"></i></sup>';
+            bundleName += '<sup class="has-txt-noted is-size-7 pl-1"><i class="fas fa-lock"></i></sup>';
             manageKeysHTML = '<button id="'+bundleManageKeysID+'" class="button is-outlined is-link">Manage Keys</button>';
           }
 
@@ -92,7 +92,7 @@ socket.on("returnHomebrewBundles", function(homebrewBundles, canMakeHomebrew){
 
           let bundleName = homebrewBundle.name;
           if(homebrewBundle.hasKeys === 1){
-            bundleName += '<sup class="has-text-grey is-size-7 pl-1"><i class="fas fa-lock"></i></sup>';
+            bundleName += '<sup class="has-txt-noted is-size-7 pl-1"><i class="fas fa-lock"></i></sup>';
           }
 
           $('#bundlesInProgessContainer').append('<div class="columns border-bottom border-dark-lighter"><div class="column is-6 text-center"><span class="is-size-5">'+bundleName+'</span></div><div class="column is-6"><div class="buttons are-small is-centered"><button id="'+bundleEditID+'" class="button is-outlined is-info">Edit</button><button id="'+bundleDeleteID+'" class="button is-outlined is-danger">Delete</button></div></div></div>');
@@ -127,10 +127,10 @@ socket.on("returnHomebrewBundles", function(homebrewBundles, canMakeHomebrew){
       });
       
       if(!foundPublished){
-        $('#bundlesPublishedContainer').html('<p class="has-text-centered has-text-grey is-italic">None</p>');
+        $('#bundlesPublishedContainer').html('<p class="has-text-centered has-txt-noted is-italic">None</p>');
       }
       if(!foundInProgess){
-        $('#bundlesInProgessContainer').html('<p class="has-text-centered has-text-grey is-italic">None</p>');
+        $('#bundlesInProgessContainer').html('<p class="has-text-centered has-txt-noted is-italic">None</p>');
       }
 
       $('#tabContent').removeClass('is-hidden');

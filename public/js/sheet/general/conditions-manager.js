@@ -153,7 +153,7 @@ function displayConditionsList(){
     }
 
     if(!conditionFound){
-        $('#conditionsContent').append('<em class="has-text-grey-kinda-light is-unselectable">None</em>');
+        $('#conditionsContent').append('<em class="has-txt-partial-noted is-unselectable">None</em>');
     }
 
 }
@@ -280,17 +280,17 @@ function openSelectConditionsModal() {
 
         if(conditionData != null) {
 
-            $('#conditionsSelectModalContent').append('<div id="'+conditionSectionID+'" class="tile is-parent is-paddingless has-background-black-ter cursor-clickable"><div class="tile is-child"><p class="has-text-centered is-size-5 border-bottom border-dark">'+condition.name+'</p></div></div>');
+            $('#conditionsSelectModalContent').append('<div id="'+conditionSectionID+'" class="tile is-parent is-paddingless has-bg-selectable cursor-clickable"><div class="tile is-child"><p class="has-text-centered is-size-5 border-bottom border-dark">'+condition.name+'</p></div></div>');
             
         } else {
 
             $('#conditionsSelectModalContent').append('<div id="'+conditionSectionID+'" class="tile is-parent is-paddingless cursor-clickable"><div class="tile is-child"><p class="has-text-centered is-size-5 border-bottom border-dark">'+condition.name+'</p></div></div>');
 
             $('#'+conditionSectionID).mouseenter(function(){
-                $(this).addClass('has-background-black-ter');
+                $(this).addClass('has-bg-selectable');
             });
             $('#'+conditionSectionID).mouseleave(function(){
-                $(this).removeClass('has-background-black-ter');
+                $(this).removeClass('has-bg-selectable');
             });
 
             $('#'+conditionSectionID).click(function(){

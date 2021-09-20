@@ -50,9 +50,9 @@ function generateFeatSelection(contentLocID, srcStruct, selectionName, selection
     const selectionTagInfo = (meetsPrereqs(selectedFeat.Feat) == 'FALSE') ? getTagFromData(srcStruct, sourceName, 'Prerequisites Not Met', 'INCORRECT') : getTagFromData(srcStruct, sourceName, '', '');
 
     let featNameHTML = '<span class="">'+selectedFeat.Feat.name+'</span>';
-    if(selectedFeat.Feat.isArchived === 1){ featNameHTML += '<span class="has-text-grey-kinda-light is-size-6-5"> - Archived</span>'; }
+    if(selectedFeat.Feat.isArchived === 1){ featNameHTML += '<span class="has-txt-partial-noted is-size-6-5"> - Archived</span>'; }
     let featLevelHTML = '';
-    if(selectedFeat.Feat.level > 0){ featLevelHTML = '<sup class="is-size-7 has-text-grey is-italic"> Lvl '+selectedFeat.Feat.level+'</sup>'; }
+    if(selectedFeat.Feat.level > 0){ featLevelHTML = '<sup class="is-size-7 has-txt-noted is-italic"> Lvl '+selectedFeat.Feat.level+'</sup>'; }
     $('#'+contentLocID).html('<div class="mb-3"><div data-contentLoc-id="'+contentLocID+'" class="feat-selection cursor-clickable columns is-mobile mb-0 p-0" data-selection-info="'+selectionTagInfo+'"><div class="column is-1 is-paddingless '+openFeatDetailsClass+' py-2"></div><div class="column is-10 is-paddingless '+openFeatDetailsClass+' py-2">'+featNameHTML+''+featLevelHTML+'</div><div class="column is-1 is-paddingless '+openFeatListClass+' py-2" style="border-left: 1px solid hsl(0, 0%, 13%);"><span class="icon feat-selection-dropdown"><i class="fas fa-chevron-down '+featDropdownIconClass+'"></i></span></div></div><div class="'+featListSectionClass+' is-hidden"></div><div id="'+featCodeSectionID+'" class="py-2"></div></div>');
   }
 
@@ -95,7 +95,7 @@ function generateFeatSelection(contentLocID, srcStruct, selectionName, selection
 
       if(featData.Feat.isArchived === 1){
         if(selectedFeat != null && selectedFeat.Feat.id == featData.Feat.id){
-          featNameHTML += '<span class="has-text-grey-kinda-light is-size-6-5"> - Archived</span>';
+          featNameHTML += '<span class="has-txt-partial-noted is-size-6-5"> - Archived</span>';
         } else {
           continue;
         }
@@ -103,7 +103,7 @@ function generateFeatSelection(contentLocID, srcStruct, selectionName, selection
 
       let rightInfoHTML = '';
       if(featData.Feat.skillID != null){
-        rightInfoHTML = '<span class="has-text-grey-kinda-light is-size-7 is-pulled-right">'+getSkillNameAbbrev(getSkillIDToName(featData.Feat.skillID))+'</span>';
+        rightInfoHTML = '<span class="has-txt-partial-noted is-size-7 is-pulled-right">'+getSkillNameAbbrev(getSkillIDToName(featData.Feat.skillID))+'</span>';
       }
 
       /*

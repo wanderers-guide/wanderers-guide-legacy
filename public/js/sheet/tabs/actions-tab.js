@@ -37,7 +37,7 @@ function openActionsTab(data) {
       <div class="columns is-mobile is-marginless">
 
         <div class="column is-1 is-narrow pb-1">
-          <p class="is-size-6 has-text-grey-lighter is-bold">Filter</p>
+          <p class="is-size-6 has-txt-value-number is-bold">Filter</p>
         </div>
 
         <div class="column is-narrow pb-1">
@@ -541,10 +541,10 @@ function displayAction(actionStruct, actionCount, skillMap) {
     }
 
     $('#'+actionID).mouseenter(function(){
-        $(this).addClass('has-background-grey-darker');
+        $(this).addClass('has-bg-selectable-hover');
     });
     $('#'+actionID).mouseleave(function(){
-        $(this).removeClass('has-background-grey-darker');
+        $(this).removeClass('has-bg-selectable-hover');
     });
 
 }

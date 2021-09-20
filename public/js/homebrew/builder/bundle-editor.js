@@ -325,7 +325,7 @@ socket.on("returnBundleContents", function(REQUEST_TYPE, userHasBundle, userOwns
         }
 
         if(!foundContent) {
-          $('#bundleContainerClassFeatures').html('<p class="is-size-7 has-text-grey is-italic">None</p>');
+          $('#bundleContainerClassFeatures').html('<p class="is-size-7 has-txt-noted is-italic">None</p>');
         }
       }
 
@@ -364,7 +364,7 @@ socket.on("returnBundleContents", function(REQUEST_TYPE, userHasBundle, userOwns
         }
 
         if(!foundContent) {
-          $('#bundleContainerFeats').html('<p class="is-size-7 has-text-grey is-italic">None</p>');
+          $('#bundleContainerFeats').html('<p class="is-size-7 has-txt-noted is-italic">None</p>');
         }
       }
 
@@ -411,7 +411,7 @@ socket.on("returnBundleContents", function(REQUEST_TYPE, userHasBundle, userOwns
         }
 
         if(!foundContent) {
-          $('#bundleContainerHeritages').html('<p class="is-size-7 has-text-grey is-italic">None</p>');
+          $('#bundleContainerHeritages').html('<p class="is-size-7 has-txt-noted is-italic">None</p>');
         }
       }
 
@@ -569,7 +569,7 @@ socket.on("returnBundleContents", function(REQUEST_TYPE, userHasBundle, userOwns
         }
 
         if(!foundContent) {
-          $('#bundleContainerTraits').html('<p class="is-size-7 has-text-grey is-italic">None</p>');
+          $('#bundleContainerTraits').html('<p class="is-size-7 has-txt-noted is-italic">None</p>');
         }
       }
 

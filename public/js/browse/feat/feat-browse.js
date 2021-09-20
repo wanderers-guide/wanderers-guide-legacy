@@ -119,7 +119,7 @@ function displayFeatResults(featMap){
 
   if(featMap.size <= 0){
     $('#browsingList').html('<p class="has-text-centered is-italic">No results found!</p>');
-    $('#searchResultCountContainer').html('<p class="is-italic has-text-grey">(0 results found)</p>');
+    $('#searchResultCountContainer').html('<p class="is-italic has-txt-noted">(0 results found)</p>');
     return;
   }
 
@@ -148,7 +148,7 @@ function displayFeatResults(featMap){
     let level = featStruct.Feat.level;
     if(level <= 0 || level >= 99) { level = ''; }
 
-    $('#browsingList').append('<div id="'+entryID+'" class="columns is-mobile border-bottom border-dark-lighter cursor-clickable"><div class="column is-8"><span class="is-size-5">'+name+'</span>'+convertActionToHTML(actions)+'</div><div class="column is-4" style="position: relative;">'+convertRarityToHTML(rarity)+'<span class="is-size-7 has-text-grey is-italic pr-2" style="position: absolute; top: 1px; right: 0px;">'+level+'</span></div></div>');
+    $('#browsingList').append('<div id="'+entryID+'" class="columns is-mobile border-bottom border-dark-lighter cursor-clickable"><div class="column is-8"><span class="is-size-5">'+name+'</span>'+convertActionToHTML(actions)+'</div><div class="column is-4" style="position: relative;">'+convertRarityToHTML(rarity)+'<span class="is-size-7 has-txt-noted is-italic pr-2" style="position: absolute; top: 1px; right: 0px;">'+level+'</span></div></div>');
 
     $('#'+entryID).click(function(){
       openQuickView('featView', {
@@ -159,14 +159,14 @@ function displayFeatResults(featMap){
     });
 
     $('#'+entryID).mouseenter(function(){
-      $(this).addClass('has-background-grey-darker');
+      $(this).addClass('has-bg-selectable-hover');
     });
     $('#'+entryID).mouseleave(function(){
-      $(this).removeClass('has-background-grey-darker');
+      $(this).removeClass('has-bg-selectable-hover');
     });
 
   }
-  $('#searchResultCountContainer').html('<p class="is-italic has-text-grey">('+foundCount+' results found)</p>');
+  $('#searchResultCountContainer').html('<p class="is-italic has-txt-noted">('+foundCount+' results found)</p>');
   $('#browsingList').scrollTop();
 }
 

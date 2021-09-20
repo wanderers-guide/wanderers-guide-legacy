@@ -14,19 +14,18 @@
   font-weight: 900;
   filter: brightness(115%);
 }
-.is-bold {
+strong, .is-bold {
   font-weight: 675;
   filter: brightness(115%);
 }
-strong {
-  font-weight: 675;
+.label, .has-text-bold-color {
+  filter: brightness(115%);
+}
+.is-brighter {
   filter: brightness(115%);
 }
 em {
   filter: brightness(80%);
-}
-.is-brighter {
-  filter: brightness(115%);
 }
 .is-weight-normal {
   font-weight: 400;
@@ -85,21 +84,6 @@ em {
 .has-text-info-lighter {
   color: hsl(204, 86%, 65%);
 }
-.has-text-grey-kinda-light {
-  color: hsl(0, 0%, 60%)!important;
-}
-.has-text-grey-kinda-dark {
-  color: hsl(0, 0%, 38%)!important;
-}
-.has-text-grey-like {
-  color: hsl(0, 0%, 57%)!important;
-}
-.has-text-light-darker {
-  color: hsl(0, 0%, 85%)!important;
-}
-.has-text-bold-color {
-  color: hsl(0, 0%, 68%)!important;
-}
 
 .has-text-gold {
   color: #eec00b!important;
@@ -115,20 +99,6 @@ em {
 }
 .has-text-cyan {
   color: #35D4C7!important;
-}
-
-/* Background Colors */
-.has-background-black-like {
-  background-color: hsl(0, 0%, 12%)!important;
-}
-.has-background-black-like-more {
-  background-color: hsl(0, 0%, 11%)!important;
-}
-.has-background-grey-darkest {
-  background-color: hsl(0, 0%, 17%)!important;
-}
-.has-background-grey-darklike {
-  background-color: hsl(0, 0%, 19%)!important;
 }
 
 /* Text Sizes */
@@ -167,6 +137,14 @@ em {
   font-size: 0.5rem!important;
 }
 
+.button.is-static {
+  background-color: var(--button-static-color);
+  color: hsl(0, 0%, 68%);
+}
+.button.is-static.is-extra {
+  background-color: var(--button-static-bold-color);
+}
+
 /* Border */
 .border-dark-ish {
   border-color: #262626!important;
@@ -192,6 +170,11 @@ em {
   margin-bottom: .13rem!important;
 }
 
+.tag:not(body).is-background {
+  background-color: var(--main-box-bg-color);
+  color: #fff;
+}
+
 /* Relative and Absolute */
 .pos-relative { position: relative; }
 .pos-absolute { position: absolute!important; }
@@ -205,6 +188,7 @@ em {
 .pos-absolute.pos-t-10 { top: 10px; }
 .pos-absolute.pos-t-15 { top: 15px; }
 .pos-absolute.pos-t-20 { top: 20px; }
+.pos-absolute.pos-t-40 { top: 40px; }
 
 .pos-absolute.pos-b-0 { bottom: 0px; }
 .pos-absolute.pos-b-1 { bottom: 1px; }
@@ -238,17 +222,17 @@ em {
 
 /* Rarities */
 .button.is-uncommon {
-  background-color: hsl(157, 65%, 38%);
+  background-color: var(--rarity-uncommon);
   border-color: transparent;
   color: #fff;
 }
 .button.is-rare {
-  background-color: hsl(224, 55%, 42%);
+  background-color: var(--rarity-rare);
   border-color: transparent;
   color: #fff;
 }
 .button.is-unique {
-  background-color: hsl(282, 58%, 38%);
+  background-color: var(--rarity-unique);
   border-color: transparent;
   color: #fff;
 }
@@ -260,13 +244,13 @@ select .is-non-available-very {
   background-color: hsl(0, 0%, 15%);
 }
 select .is-uncommon {
-  background-color: hsl(158, 25%, 22%);
+  background-color: var(--rarity-uncommon-option);
 }
 select .is-rare {
-  background-color: hsl(225, 30%, 22%);
+  background-color: var(--rarity-rare-option);
 }
 select .is-unique {
-  background-color: hsl(282, 30%, 22%);
+  background-color: var(--rarity-unique-option);
 }
 
 .feat-selection-list-entry.is-non-available {
@@ -276,13 +260,13 @@ select .is-unique {
   background-color: hsl(0, 0%, 15%);
 }
 .feat-selection-list-entry.is-uncommon {
-  background-color: hsl(158, 25%, 22%);
+  background-color: var(--rarity-uncommon-option);
 }
 .feat-selection-list-entry.is-rare {
-  background-color: hsl(225, 30%, 22%);
+  background-color: var(--rarity-rare-option);
 }
 .feat-selection-list-entry.is-unique {
-  background-color: hsl(282, 30%, 22%);
+  background-color: var(--rarity-unique-option);
 }
 
 /* Field Label */

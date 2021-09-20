@@ -12,7 +12,7 @@ function openInvItemQuickview(data) {
 
     let itemLevel = getInvItemLevel(data.Item, data.InvItem);
     if(itemLevel > 0 && itemLevel != 999){
-        invItemName += '<sup class="has-text-grey-light is-size-7-5 is-italic"> Lvl '+itemLevel+'</sup>';
+        invItemName += '<sup class="has-txt-listing is-size-7-5 is-italic"> Lvl '+itemLevel+'</sup>';
     }
     // Hardcoded New Item ID // If item isn't New Item, Paper, Parchment, and isn't an item with N/A level
     if(data.InvItem.name != data.Item.Item.name && data.Item.Item.id != 62 && data.Item.Item.id != 94 && data.Item.Item.id != 95 && data.Item.Item.level != 999 && data.ExtraData.IsCustomUnarmedAttack !== true){
@@ -242,7 +242,7 @@ function openInvItemQuickview(data) {
         let damageHTML = `<span class="damage-roll-btn ${doubleDamageClass}">${calcStruct.Damage}</span>
                           ${weapDamageModHTML}`;
         if(g_invItemView_isCriticalHit) {
-          damageHTML = `<span class="has-text-grey-lighter">2×( </span>${damageHTML}<span class="has-text-grey-lighter"> )</span>`;
+          damageHTML = `<span class="has-txt-value-number">2×( </span>${damageHTML}<span class="has-txt-value-number"> )</span>`;
 
           if(calcStruct.WeapStruct.damage.modifications.on_crit_other.length != 0){
             damageHasConditionals = true;
@@ -278,16 +278,16 @@ function openInvItemQuickview(data) {
         attackBonusAndDamageContent.append(`
           <div class="tile text-center is-flex">
             <div class="tile is-child is-6">
-              <span class="has-text-grey-light">
+              <span class="has-txt-listing">
                 <span class="stat-roll-btn">${map.one}</span>
-                <span class="has-text-grey">/</span>
+                <span class="has-txt-noted">/</span>
                 <span class="stat-roll-btn">${map.two}</span>
-                <span class="has-text-grey">/</span>
+                <span class="has-txt-noted">/</span>
                 <span class="stat-roll-btn">${map.three}</span>
               </span>
             </div>
             <div class="tile is-child is-6">
-              <span class="has-text-grey-light">
+              <span class="has-txt-listing">
                 ${damageHTML}
               </span>
             </div>
@@ -312,10 +312,10 @@ function openInvItemQuickview(data) {
           }, $('#quickviewDefault').hasClass('is-active'));
         });
         $('#invWeapAttackView').mouseenter(function(){
-          $(this).addClass('has-background-grey-darker');
+          $(this).addClass('has-bg-selectable-hover');
         });
         $('#invWeapAttackView').mouseleave(function(){
-          $(this).removeClass('has-background-grey-darker');
+          $(this).removeClass('has-bg-selectable-hover');
         });
 
         $('#invWeapDamageView').click(function() {
@@ -333,10 +333,10 @@ function openInvItemQuickview(data) {
           }, $('#quickviewDefault').hasClass('is-active'));
         });
         $('#invWeapDamageView').mouseenter(function(){
-          $(this).addClass('has-background-grey-darker');
+          $(this).addClass('has-bg-selectable-hover');
         });
         $('#invWeapDamageView').mouseleave(function(){
-          $(this).removeClass('has-background-grey-darker');
+          $(this).removeClass('has-bg-selectable-hover');
         });
 
       };
@@ -455,7 +455,7 @@ function openInvItemQuickview(data) {
 
     // Item Quantity
     if(!viewOnly && data.Item.Item.hasQuantity == 1){
-        qContent.append('<div class="field has-addons has-addons-centered"><p class="control"><a class="button is-static has-text-grey-lighter has-background-grey-darkest border-darker">Quantity</a></p><p class="control"><input id="'+invItemQtyInputID+'" class="input" type="number" min="0" max="9999999" value="'+data.InvItem.quantity+'"></p></div>');
+        qContent.append('<div class="field has-addons has-addons-centered"><p class="control"><a class="button is-static border-darker">Quantity</a></p><p class="control"><input id="'+invItemQtyInputID+'" class="input" type="number" min="0" max="9999999" value="'+data.InvItem.quantity+'"></p></div>');
 
         $('#'+invItemQtyInputID).blur(function() {
             let newQty = $(this).val();
@@ -533,7 +533,7 @@ function openInvItemQuickview(data) {
 
         qContent.append('<div id="itemHealthSection" class="is-hidden"></div>');
 
-        $('#itemHealthSection').append('<div class="field has-addons has-addons-centered"><p class="control"><input id="'+invItemHPInputID+'" class="input is-small" type="number" min="0" max="'+maxHP+'" value="'+data.InvItem.currentHitPoints+'"></p><p class="control"><a class="button is-static is-small has-text-grey-light has-background-grey-darkest border-darker">/</a></p><p class="control"><a class="button is-static is-small has-text-grey-lighter has-background-grey-darklike border-darker">'+maxHP+'</a></p></div>');
+        $('#itemHealthSection').append('<div class="field has-addons has-addons-centered"><p class="control"><input id="'+invItemHPInputID+'" class="input is-small" type="number" min="0" max="'+maxHP+'" value="'+data.InvItem.currentHitPoints+'"></p><p class="control"><a class="button is-static is-small border-darker">/</a></p><p class="control"><a class="button is-static is-extra is-small border-darker">'+maxHP+'</a></p></div>');
         $('#itemHealthSection').append('<div class="columns is-centered is-marginless text-center"><div class="column is-4 is-paddingless"><p class="is-size-7 has-text-right pr-2"><strong>Hardness:</strong> '+data.InvItem.hardness+'</p></div><div class="column is-5 is-paddingless"><p class="is-size-7 has-text-left pl-2"><strong>Broken Threshold:</strong> '+brokenThreshold+'</p></div></div>');
 
         $('#itemHealthName').click(function() {

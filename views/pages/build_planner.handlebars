@@ -101,14 +101,14 @@
     <div class="banner_w3lspvt-2"></div>
 {{/section}}
 
-<div class="pos-relative">
+<div class="">
   <div class="dice-pageloader">
     <div
       class="ldBar label-center is-hidden"
       data-type="fill"
       data-img="/images/dice-d20.svg"
       data-fill-background-extrude="0"
-      data-fill-background="#161616"
+      data-fill-background="var(--main-loading-bg-color)"
       data-img-size="120,120"
       data-duration="1"
     ></div>
@@ -125,7 +125,7 @@
           
           <div class="columns is-mobile is-marginless m-1">
             <div class="column is-paddingless">
-              <p class="has-text-light title-font has-text-centered">Ancestry</p>
+              <p class="has-txt-value-string title-font has-text-centered">Ancestry</p>
             </div>
             <div class="column is-7 is-paddingless has-text-centered">
               <span class="button is-info is-outlined is-small is-fullwidth" id="ancestry-name">None</span>
@@ -133,7 +133,7 @@
           </div>
           <div class="columns is-mobile is-marginless m-1">
             <div class="column is-paddingless">
-              <p class="has-text-light title-font has-text-centered">Background</p>
+              <p class="has-txt-value-string title-font has-text-centered">Background</p>
             </div>
             <div class="column is-7 is-paddingless has-text-centered">
               <span class="button is-info is-outlined is-small is-fullwidth" id="background-name">None</span>
@@ -141,7 +141,7 @@
           </div>
           <div class="columns is-mobile is-marginless m-1">
             <div class="column is-paddingless">
-              <p class="has-text-light title-font has-text-centered">Class</p>
+              <p class="has-txt-value-string title-font has-text-centered">Class</p>
             </div>
             <div class="column is-7 is-paddingless has-text-centered">
               <span class="button is-info is-outlined is-small is-fullwidth" id="class-name">None</span>
@@ -150,7 +150,7 @@
 
         </div>
         <div class="tile is-child box py-2 pl-2 pr-1">
-          <p class="has-text-light title-font has-text-centered">Statistics</p>
+          <p class="has-txt-value-string title-font has-text-centered">Statistics</p>
           <div class="use-custom-scrollbar" style="height: 500px; max-height: 500px; overflow-y: scroll;">
           
             <!-- Ability Scores -->
@@ -177,21 +177,21 @@
             <div id="hit-points-body" class="accord-like-button columns is-mobile is-marginless my-1">
               <div class="column is-8 is-paddingless"><span class="title-font pl-2">Hit Points</span></div>
               <div class="column is-2 is-paddingless"><p id="hit-points-total" class="has-text-centered">130</p></div>
-              <div class="column is-2 is-paddingless"><p class="has-text-centered is-italic has-text-grey is-size-7-5 pt-2">(at max)</p></div>
+              <div class="column is-2 is-paddingless"><p class="has-text-centered is-italic has-txt-noted is-size-7-5 pt-2">(at max)</p></div>
             </div>
 
             <!-- Class DC -->
             <div id="class-dc-body" class="accord-like-button columns is-mobile is-marginless my-1">
               <div class="column is-8 is-paddingless"><span class="title-font pl-2">Class DC</span></div>
               <div class="column is-2 is-paddingless"><p id="class-dc-total" class="has-text-centered">18</p></div>
-              <div class="column is-2 is-paddingless"><p id="class-dc-rank" class="has-text-centered is-italic has-text-grey">E</p></div>
+              <div class="column is-2 is-paddingless"><p id="class-dc-rank" class="has-text-centered is-italic has-txt-noted">E</p></div>
             </div>
 
             <!-- Perception -->
             <div id="perception-body" class="accord-like-button columns is-mobile is-marginless my-1">
               <div class="column is-8 is-paddingless"><span class="title-font pl-2">Perception</span></div>
               <div class="column is-2 is-paddingless"><p id="perception-total" class="has-text-centered">+28</p></div>
-              <div class="column is-2 is-paddingless"><p id="perception-rank" class="has-text-centered is-italic has-text-grey">T</p></div>
+              <div class="column is-2 is-paddingless"><p id="perception-rank" class="has-text-centered is-italic has-txt-noted">T</p></div>
             </div>
 
             <!-- Skills -->
@@ -315,7 +315,7 @@
               </div>
           </div>
           <div class="step-item is-active is-info">
-              <div class="step-marker"><a class="builder-class-page-btn"><span class="">C</span></a></div>
+              <div class="step-marker"><a class="builder-class-page-btn"><span class="has-text-info">C</span></a></div>
               <div class="step-details is-hidden-touch">
                   <a class="builder-class-page-btn button is-rounded is-inverted is-tiny is-info"><p class="step-builder-title title-font">Class</p></a>
               </div>
@@ -569,7 +569,7 @@
     <!-- Right Quickview -->
     <div id="quickviewDefault" class="quickview">
         <div class="quickview-header">
-            <p id="quickViewTitle" class="title is-size-5 has-text-grey-lighter"></p>
+            <p id="quickViewTitle" class="title is-size-5 has-txt-value-number"></p>
             <div class="is-inline-flex">
                 <p id="quickViewTitleRight"></p>
                 <p id="quickViewTitleClose"></p>

@@ -674,10 +674,10 @@ function displayAbilityScores() {
         });
     });
     $("#strSection").mouseenter(function(){
-        $(this).addClass('has-background-grey-darker');
+        $(this).addClass('has-bg-selectable-hover');
     });
     $("#strSection").mouseleave(function(){
-        $(this).removeClass('has-background-grey-darker');
+        $(this).removeClass('has-bg-selectable-hover');
     });
 
     let dexScore = getStatTotal(VARIABLE.SCORE_DEX);
@@ -692,10 +692,10 @@ function displayAbilityScores() {
         });
     });
     $("#dexSection").mouseenter(function(){
-        $(this).addClass('has-background-grey-darker');
+        $(this).addClass('has-bg-selectable-hover');
     });
     $("#dexSection").mouseleave(function(){
-        $(this).removeClass('has-background-grey-darker');
+        $(this).removeClass('has-bg-selectable-hover');
     });
 
     let conScore = getStatTotal(VARIABLE.SCORE_CON);
@@ -710,10 +710,10 @@ function displayAbilityScores() {
         });
     });
     $("#conSection").mouseenter(function(){
-        $(this).addClass('has-background-grey-darker');
+        $(this).addClass('has-bg-selectable-hover');
     });
     $("#conSection").mouseleave(function(){
-        $(this).removeClass('has-background-grey-darker');
+        $(this).removeClass('has-bg-selectable-hover');
     });
 
     let intScore = getStatTotal(VARIABLE.SCORE_INT);
@@ -728,10 +728,10 @@ function displayAbilityScores() {
         });
     });
     $("#intSection").mouseenter(function(){
-        $(this).addClass('has-background-grey-darker');
+        $(this).addClass('has-bg-selectable-hover');
     });
     $("#intSection").mouseleave(function(){
-        $(this).removeClass('has-background-grey-darker');
+        $(this).removeClass('has-bg-selectable-hover');
     });
 
     let wisScore = getStatTotal(VARIABLE.SCORE_WIS);
@@ -746,10 +746,10 @@ function displayAbilityScores() {
         });
     });
     $("#wisSection").mouseenter(function(){
-        $(this).addClass('has-background-grey-darker');
+        $(this).addClass('has-bg-selectable-hover');
     });
     $("#wisSection").mouseleave(function(){
-        $(this).removeClass('has-background-grey-darker');
+        $(this).removeClass('has-bg-selectable-hover');
     });
 
     let chaScore = getStatTotal(VARIABLE.SCORE_CHA);
@@ -764,10 +764,10 @@ function displayAbilityScores() {
         });
     });
     $("#chaSection").mouseenter(function(){
-        $(this).addClass('has-background-grey-darker');
+        $(this).addClass('has-bg-selectable-hover');
     });
     $("#chaSection").mouseleave(function(){
-        $(this).removeClass('has-background-grey-darker');
+        $(this).removeClass('has-bg-selectable-hover');
     });
 
 }
@@ -798,10 +798,10 @@ function displayInformation() {
         });
     });
     $("#charInfoContent").mouseenter(function(){
-        $(this).addClass('has-background-grey-darker');
+        $(this).addClass('has-bg-selectable-hover');
     });
     $("#charInfoContent").mouseleave(function(){
-        $(this).removeClass('has-background-grey-darker');
+        $(this).removeClass('has-bg-selectable-hover');
     });
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -848,10 +848,10 @@ function displayInformation() {
             });
         });
         $("#resistAndVulnerContent").mouseenter(function(){
-            $(this).addClass('has-background-grey-darker');
+            $(this).addClass('has-bg-selectable-hover');
         });
         $("#resistAndVulnerContent").mouseleave(function(){
-            $(this).removeClass('has-background-grey-darker');
+            $(this).removeClass('has-bg-selectable-hover');
         });
     } else {
         $('#resistAndVulnerContent').addClass('is-hidden');
@@ -897,10 +897,10 @@ function displayInformation() {
     });
 
     $("#classDCSection").mouseenter(function(){
-        $(this).addClass('has-background-grey-darker');
+        $(this).addClass('has-bg-selectable-hover');
     });
     $("#classDCSection").mouseleave(function(){
-        $(this).removeClass('has-background-grey-darker');
+        $(this).removeClass('has-bg-selectable-hover');
     });
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -985,10 +985,10 @@ function displayInformation() {
         });
     });
     $("#fortSection").mouseenter(function(){
-        $(this).addClass('has-background-grey-darker');
+        $(this).addClass('has-bg-selectable-hover');
     });
     $("#fortSection").mouseleave(function(){
-        $(this).removeClass('has-background-grey-darker');
+        $(this).removeClass('has-bg-selectable-hover');
     });
 
     let reflexBonus = getStatTotal(VARIABLE.SAVE_REFLEX);
@@ -1013,10 +1013,10 @@ function displayInformation() {
         });
     });
     $("#reflexSection").mouseenter(function(){
-        $(this).addClass('has-background-grey-darker');
+        $(this).addClass('has-bg-selectable-hover');
     });
     $("#reflexSection").mouseleave(function(){
-        $(this).removeClass('has-background-grey-darker');
+        $(this).removeClass('has-bg-selectable-hover');
     });
 
     let willBonus = getStatTotal(VARIABLE.SAVE_WILL);
@@ -1041,10 +1041,10 @@ function displayInformation() {
         });
     });
     $("#willSection").mouseenter(function(){
-        $(this).addClass('has-background-grey-darker');
+        $(this).addClass('has-bg-selectable-hover');
     });
     $("#willSection").mouseleave(function(){
-        $(this).removeClass('has-background-grey-darker');
+        $(this).removeClass('has-bg-selectable-hover');
     });
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1072,11 +1072,11 @@ function displayInformation() {
     }
 
     $("#speedSection").mouseenter(function(){
-        $(this).addClass('has-background-grey-darker');
+        $(this).addClass('has-bg-selectable-hover');
         $("#speedDivider").addClass('hr-highlighted');
     });
     $("#speedSection").mouseleave(function(){
-        $(this).removeClass('has-background-grey-darker');
+        $(this).removeClass('has-bg-selectable-hover');
         $("#speedDivider").removeClass('hr-highlighted');
     });
 
@@ -1127,11 +1127,11 @@ function displayInformation() {
     });
 
     $("#perceptionBonusSection").mouseenter(function(){
-        $(this).addClass('has-background-grey-darker');
+        $(this).addClass('has-bg-selectable-hover');
         $("#perceptionBonusDivider").addClass('hr-highlighted');
     });
     $("#perceptionBonusSection").mouseleave(function(){
-        $(this).removeClass('has-background-grey-darker');
+        $(this).removeClass('has-bg-selectable-hover');
         $("#perceptionBonusDivider").removeClass('hr-highlighted');
     });
 
@@ -1395,21 +1395,21 @@ function displayInformation() {
         let conditionalStar = (hasConditionals('SKILL_'+skillName)) ? '<sup class="is-size-7 has-text-info">*</sup>' : '';
 
 
-        let skillNameHTML = '<span class="has-text-grey-light">'+skillName+'</span>';
+        let skillNameHTML = '<span class="has-txt-listing">'+skillName+'</span>';
 
         // Underline if lore is user-added
         if(skillName.includes(' Lore')){
           let userAddedData = getUserAddedData(g_profMap.get(skillName));
           if(userAddedData != null){
-            skillNameHTML = '<span class="has-text-grey-light is-underlined-thin-darker">'+skillName+'</span>';
+            skillNameHTML = '<span class="has-txt-listing is-underlined-thin-darker">'+skillName+'</span>';
           }
         }
 
         skills.append(`
           <a id="${skillButtonID}" class="panel-block skillButton border-dark-lighter pos-relative">
-            <span class="panel-icon has-text-grey-lighter">${signNumber(totalBonus)+conditionalStar}</span>
+            <span class="panel-icon has-txt-value-number">${signNumber(totalBonus)+conditionalStar}</span>
             <span class="pl-3">${skillNameHTML}</span>
-            <span class="pos-absolute pos-t-5 pos-r-5 is-italic has-text-grey is-size-7-5">${getProfLetterFromNumUps(profData.NumUps)}</span>
+            <span class="pos-absolute pos-t-5 pos-r-5 is-italic has-txt-noted is-size-7-5">${getProfLetterFromNumUps(profData.NumUps)}</span>
           </a>
         `);
         g_calculatedStats.totalSkills.push({Name: skillName, Bonus: totalBonus});// Calculated Stat
@@ -1708,7 +1708,7 @@ function initHealthAndTemp() {
     }
 
     if(g_character.tempHealth == 0){
-        tempHealth.html('<p class="is-size-5 is-unselectable text-center has-text-grey-lighter" style="width: 70px; margin: auto;">―</p>');
+        tempHealth.html('<p class="is-size-5 is-unselectable text-center has-txt-value-number" style="width: 70px; margin: auto;">―</p>');
     } else {
         tempHealth.html('<p class="is-size-5 is-unselectable text-center has-text-info" style="width: 70px; margin: auto;">'+g_character.tempHealth+'</p>');
     }
@@ -1800,7 +1800,7 @@ function tempHealthConfirm(){
 
   g_character.tempHealth = newTempHealth;
   if(g_character.tempHealth == 0){
-      tempHealth.html('<p class="is-size-5 is-unselectable text-center has-text-grey-lighter" style="width: 70px;">―</p>');
+      tempHealth.html('<p class="is-size-5 is-unselectable text-center has-txt-value-number" style="width: 70px;">―</p>');
   } else {
       tempHealth.html('<p class="is-size-5 is-unselectable text-center has-text-info" style="width: 70px;">'+g_character.tempHealth+'</p>');
   }

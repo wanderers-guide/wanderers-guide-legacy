@@ -38,7 +38,7 @@ class DisplayBackground {
             sourceTextName = 'Bundle #'+backgroundStruct.background.homebrewID;
             sourceLink = '/homebrew/?view_id='+backgroundStruct.background.homebrewID;
           }
-          let sourceStr = '<a class="has-text-grey" href="'+sourceLink+'" target="_blank">'+sourceTextName+'</a><span class="has-text-grey-dark">, #'+backgroundStruct.background.id+'</span>';
+          let sourceStr = '<a class="has-txt-noted" href="'+sourceLink+'" target="_blank">'+sourceTextName+'</a><span class="has-txt-faded">, #'+backgroundStruct.background.id+'</span>';
 
           let backgroundRarity = convertRarityToHTML(backgroundStruct.background.rarity);
           if(backgroundRarity != ''){ sourceStr = '<span class="pr-2">'+sourceStr+'</span>'; }

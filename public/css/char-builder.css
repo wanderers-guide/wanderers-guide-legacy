@@ -84,14 +84,14 @@
 }
 
 .button.is-info.is-inverted {
-    background-color: #282828;
+    background-color: var(--main-box-bg-color);
     color: #3298dc;
 }
 
 .steps .step-item .step-marker {
     background: #999;
-    color: #282828;
-    border-color: #282828;
+    color: var(--steps-bg-color);
+    border-color: var(--steps-bg-color);
 }
 
 .steps .step-item::before {
@@ -99,46 +99,32 @@
 }
 
 .steps .step-item.is-info.is-active .step-marker {
-    background-color: #282828;
+    background-color: var(--steps-bg-color);
 }
 
 .has-text-bck-color {
-    color: #282828;
-}
-
-.has-text-title {
-    color: rgb(172, 172, 172);
-}
-
-.has-text-value {
-    color: rgb(184, 184, 184);
+    color: var(--main-box-bg-color);
 }
 
 .button.is-info.is-inverted:hover {
-    background-color: #282828;
-}
-
-.button.is-static {
-    background-color: hsl(0, 0%, 18%);
-    color: hsl(0, 0%, 68%);
+    background-color: var(--steps-bg-color);
 }
 
 .button:hover {
     color: hsl(0, 0%, 82%);
 }
 
-.message.is-info {
-    background-color: hsl(212, 1%, 19%);
-}
-
 .message-header, .card-header {
-    background-color: hsl(212, 0%, 17%);
+    background-color: var(--message-header-color);
     border-color: hsl(0, 0%, 13%);
-    color: hsl(0, 0%, 73%);
+    color: var(--text-header-color);
 }
 
+.message.is-info {
+  background-color: var(--message-bg-color);
+}
 .message {
-    background-color: hsl(212, 0%, 19%);
+    background-color: var(--message-bg-color);
     border-color: #282828;
 }
 
@@ -147,7 +133,7 @@
 }
 
 .card {
-    background-color: hsl(212, 1%, 24%);
+    background-color: var(--card-bg-color);
     border-color: #282828;
 }
 
@@ -158,13 +144,13 @@
 }
 
 .accordions .accordion .accordion-header {
-    background-color: hsl(0, 0%, 16%);
+    background-color: var(--accordion-header-bg-color);
     color: hsl(0, 0%, 73%);
 }
 
 .accordions .accordion .accordion-header+.accordion-body {
     border-color: #282828;
-    background-color: hsl(0, 0%, 18%);
+    background-color: var(--accordion-body-bg-color);
     color: hsl(0, 0%, 80%);
 }
 
@@ -175,21 +161,12 @@
     color: hsl(204, 86%, 53%);
 }
 
-li {
+.feat-attrib {
     color: hsl(0, 0%, 68%);
-}
-
-.feat-attrib, strong {
-    color: hsl(0, 0%, 68%);
-}
-
-hr {
-    border-color: hsl(0, 0%, 68%);
-    background-color: hsl(0, 0%, 68%);
 }
 
 #ability-scores-box {
-    background-color: hsl(0, 0%, 18%);
+  background-color: var(--ability-scores-box-bg-color);
 }
 
 /* Selections */
@@ -254,8 +231,8 @@ hr {
 }
 
 .ability-hr {
-    border-color: hsl(0, 0%, 35%);
-    background-color: hsl(0, 0%, 35%);
+    border-color: var(--hr-faded-color);
+    background-color: var(--hr-faded-color);
     margin-left: 10rem;
     margin-right: 10rem;
     margin-top: 0.5rem;
@@ -426,7 +403,7 @@ select {
 
 /* Feat Selection */
 .feat-selection {
-    background-color: hsl(0, 0%, 21%);
+    background-color: var(--selectors-color);
     color: hsl(0, 0%, 82%);
     border: 1px solid hsl(0, 0%, 13%);
     border-radius: 4px;
@@ -448,7 +425,7 @@ select {
 }
 
 .feat-selection-list {
-    background-color: hsl(0, 0%, 23%);
+    background-color: var(--feat-selection-list-color);
     color: hsl(0, 0%, 76%);
     border: 1px solid hsl(0, 0%, 13%);
     border-bottom-left-radius: 4px;
@@ -468,26 +445,26 @@ select {
 }
 
 .feat-selection-list-entry.is-selected {
-    background-color: hsl(0, 0%, 21%);
+    background-color: var(--feat-selection-selected-color);
 }
 
 .feat-selection-list-entry.is-prev-selected {
-    background-color: hsl(0, 0%, 21%);
+    background-color: var(--feat-selection-selected-color);
     color: hsl(0, 0%, 65%);
 }
 
 .feat-selection-is-hovered {
-    background-color: hsl(0, 0%, 20%);
+    background-color: var(--feat-selection-hover-color);
 }
 
 .feat-selection-level {
-    background-color: hsl(0, 0%, 19%);
+    background-color: var(--feat-selection-divider-color);
     color: hsl(0, 0%, 72%);
     font-weight: 800;
 }
 
 .feat-selection-none {
-  background-color: hsl(0, 0%, 19%);
+  background-color: var(--feat-selection-divider-color);
   color: hsl(0, 0%, 54%);
   font-style: italic;
 }
@@ -525,9 +502,9 @@ select {
     -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0);
 }
 .use-feat-selection-scrollbar::-webkit-scrollbar-thumb {
-    background-color: #252525;
-    outline: 1px solid #252525;
+    background-color: var(--main-scrollbar-lighter-color);
+    outline: 1px solid var(--main-scrollbar-lighter-color);
 }
 .use-feat-selection-scrollbar::-webkit-scrollbar-corner {
-    background-color: #252525;
+    background-color: var(--main-scrollbar-lighter-color);
 }

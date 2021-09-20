@@ -20,7 +20,7 @@ function reloadErrorMessages(){
     if(errorMessages.length > 0) {
         let errorHTML = '<p class="subtitle is-marginless has-text-weight-bold">Errors</p>';
         for(let errMsg of errorMessages){
-            errorHTML += '<p class="has-text-grey-lighter">'+errMsg+'</p>';
+            errorHTML += '<p class="has-txt-value-number">'+errMsg+'</p>';
         }
         $('#errorMessage').html(errorHTML);
         $('#errorDisplay').removeClass('is-hidden');

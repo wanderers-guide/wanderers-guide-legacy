@@ -49,7 +49,7 @@ function openFamiliarQuickview(data) {
     let currentHP = familiar.currentHP;
     if(currentHP == -1){ currentHP = maxHP; }
 
-    qContent.append('<div class="field has-addons has-addons-centered is-marginless"><p class="control"><input id="familiarHealthInput" class="input" type="text" size="4" min="0" max="'+maxHP+'" value="'+currentHP+'"></p><p class="control"><a class="button is-static has-text-grey-light has-background-grey-darkest border-darker">/</a><p class="control"><a class="button is-static has-text-grey-lighter has-background-grey-darklike border-darker">'+maxHP+'</a></p></div>');
+    qContent.append('<div class="field has-addons has-addons-centered is-marginless"><p class="control"><input id="familiarHealthInput" class="input" type="text" size="4" min="0" max="'+maxHP+'" value="'+currentHP+'"></p><p class="control"><a class="button is-static border-darker">/</a><p class="control"><a class="button is-static is-extra border-darker">'+maxHP+'</a></p></div>');
     // Press Enter Key
     $('#familiarHealthInput').on('keypress',function(e){
       if(e.which == 13){
@@ -90,9 +90,9 @@ function openFamiliarQuickview(data) {
 
     qContent.append('<hr class="m-2">');
 
-    qContent.append('<div class="px-4 columns is-marginless"><div class="column is-1 is-paddingless"><span class="is-p has-text-grey-lighter">'+signNumber(getFamiliarAcrobatics())+'</span></div><div class="column is-paddingless"><span class="is-p pl-1">Acrobatics</span></div></div>');
-    qContent.append('<div class="px-4 columns is-marginless"><div class="column is-1 is-paddingless"><span class="is-p has-text-grey-lighter">'+signNumber(getFamiliarStealth())+'</span></div><div class="column is-paddingless"><span class="is-p pl-1">Stealth</span></div></div>');
-    qContent.append('<div class="px-4 columns is-marginless"><div class="column is-1 is-paddingless"><span class="is-p has-text-grey-lighter has-tooltip-right has-tooltip-multiline" data-tooltip="This bonus is used when your familiar makes any other skill check or attack roll.">'+signNumber(getFamiliarMiscBonus())+'</span></div><div class="column is-paddingless"><span class="is-p pl-1">Misc. Bonus</span></div></div>');
+    qContent.append('<div class="px-4 columns is-marginless"><div class="column is-1 is-paddingless"><span class="is-p has-txt-value-number">'+signNumber(getFamiliarAcrobatics())+'</span></div><div class="column is-paddingless"><span class="is-p pl-1">Acrobatics</span></div></div>');
+    qContent.append('<div class="px-4 columns is-marginless"><div class="column is-1 is-paddingless"><span class="is-p has-txt-value-number">'+signNumber(getFamiliarStealth())+'</span></div><div class="column is-paddingless"><span class="is-p pl-1">Stealth</span></div></div>');
+    qContent.append('<div class="px-4 columns is-marginless"><div class="column is-1 is-paddingless"><span class="is-p has-txt-value-number has-tooltip-right has-tooltip-multiline" data-tooltip="This bonus is used when your familiar makes any other skill check or attack roll.">'+signNumber(getFamiliarMiscBonus())+'</span></div><div class="column is-paddingless"><span class="is-p pl-1">Misc. Bonus</span></div></div>');
 
     qContent.append('<hr class="m-2">');
 

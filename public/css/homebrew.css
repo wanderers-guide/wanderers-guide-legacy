@@ -6,8 +6,8 @@
 .section-box {
 
   box-shadow: 0 1px 3px rgba(0,0,0,0.5);
-  background: #282828;
-  border: 1px solid #282828;
+  background: var(--main-box-bg-color);
+  border: 1px solid var(--main-box-bg-color);
   border-radius: 4px;
 
 }
@@ -15,8 +15,8 @@
 .sub-section-box {
 
   box-shadow: 0 1px 3px rgba(0,0,0,0.5);
-  background: #303030;
-  border: 1px solid #303030;
+  background: var(--main-box-lighter-bg-color);
+  border: 1px solid var(--main-box-lighter-bg-color);
   border-radius: 4px;
 
 }
@@ -41,16 +41,6 @@
 
 .select::after {
   border-color: #b9b9b9!important;
-}
-
-/* Text */
-.label {
-  color: #b9b9b9;
-}
-
-strong {
-  color: #b9b9b9;
-  font-weight: 800;
 }
 
 /* Containers */

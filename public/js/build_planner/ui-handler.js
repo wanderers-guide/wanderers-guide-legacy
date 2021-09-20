@@ -94,7 +94,7 @@ function populateAccord(accordBodyID, optionsList){
       content.append(`
         <div id="${optionEntryID}" class="columns is-mobile is-marginless p-1 border-bottom border-dark-lighter cursor-clickable">
           <div class="column is-8 is-paddingless"><p class="pl-2">${value1}</p></div>
-          <div class="column is-4 is-paddingless"><p class="has-text-centered is-italic has-text-grey">${value2}</p></div>
+          <div class="column is-4 is-paddingless"><p class="has-text-centered is-italic has-txt-noted">${value2}</p></div>
         </div>
       `);
     } else {
@@ -102,7 +102,7 @@ function populateAccord(accordBodyID, optionsList){
         <div id="${optionEntryID}" class="columns is-mobile is-marginless p-1 border-bottom border-dark-lighter cursor-clickable">
           <div class="column is-8 is-paddingless"><p class="pl-2">${value1}</p></div>
           <div class="column is-2 is-paddingless"><p class="has-text-centered">${value2}</p></div>
-          <div class="column is-2 is-paddingless"><p class="has-text-centered is-italic has-text-grey">${value3}</p></div>
+          <div class="column is-2 is-paddingless"><p class="has-text-centered is-italic has-txt-noted">${value3}</p></div>
         </div>
       `);
     }

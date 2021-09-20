@@ -65,9 +65,3 @@
 .button.is-info.is-inverted:hover {
   background-color: #282828;
 }
-
-/* Sheet Styles */
-strong {
-  color: #b9b9b9;
-  font-weight: 800;
-}

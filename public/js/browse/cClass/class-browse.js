@@ -47,7 +47,7 @@ function displayClassResults(allClasses){
 
   if(allClasses.size <= 0){
     $('#browsingList').html('<p class="has-text-centered is-italic">No results found!</p>');
-    $('#searchResultCountContainer').html('<p class="is-italic has-text-grey">(0 results found)</p>');
+    $('#searchResultCountContainer').html('<p class="is-italic has-txt-noted">(0 results found)</p>');
     return;
   }
 
@@ -69,13 +69,13 @@ function displayClassResults(allClasses){
     });
 
     $('#'+entryID).mouseenter(function(){
-      $(this).addClass('has-background-grey-darker');
+      $(this).addClass('has-bg-selectable-hover');
     });
     $('#'+entryID).mouseleave(function(){
-      $(this).removeClass('has-background-grey-darker');
+      $(this).removeClass('has-bg-selectable-hover');
     });
 
   }
-  $('#searchResultCountContainer').html('<p class="is-italic has-text-grey">('+foundCount+' results found)</p>');
+  $('#searchResultCountContainer').html('<p class="is-italic has-txt-noted">('+foundCount+' results found)</p>');
   $('#browsingList').scrollTop();
 }

@@ -1,0 +1,101 @@
+:root {
+  
+  /* General colors */
+  --main-bg-texture: url('../../images/background.png');
+  --main-bg-color: #1c1c1c;
+
+  --main-nav-bg-color: #333333;
+
+  --main-code-block-bg-color: #2f2f31;
+
+  --main-box-bg-color: #282828;
+  --main-box-darker-bg-color: #272727;
+  --main-box-lighter-bg-color: #292929;
+
+  --main-box-small-bg-color: #363636;
+  --main-box-s-s-bg-color: #1d1d1d;
+
+  --main-scrollbar-color: #181818;
+  --main-scrollbar-lighter-color: #252525;
+  --main-scrollbar-darker-color: #111111;
+
+  --main-loading-bg-color: #161616;
+
+  /* Component colors */
+  --message-bg-color:hsl(212, 1%, 19%);
+  --message-header-color: hsl(212, 0%, 17%);
+
+  --card-bg-color: hsl(212, 1%, 19%);
+  --card-header-color: hsl(0, 0%, 17%);
+
+  --accordion-header-bg-color: hsl(0, 0%, 16%);
+  --accordion-body-bg-color: hsl(0, 0%, 18%);
+  --accordion-header-bold-bg-color: hsl(0, 0%, 11%);
+
+  --steps-bg-color: #282828;
+
+  --selectors-color: hsl(0, 0%, 21%);
+  --selectors-hover-color: hsl(0, 0%, 19%);
+
+  --feat-selection-list-color: hsl(0, 0%, 23%);
+  --feat-selection-selected-color: hsl(0, 0%, 21%);
+  --feat-selection-hover-color: hsl(0, 0%, 20%);
+  --feat-selection-divider-color: hsl(0, 0%, 19%);
+
+  --modal-header-color: #161616;
+  --modal-body-color: #1C1C1C;
+  --modal-footer-color: #161616;
+
+  --quickview-header-bg-color: #1d1d1d;
+  --quickview-body-bg-color: #242424;
+
+  --notes-header-color: hsl(0, 0%, 18%);
+  --notes-body-color: hsl(0, 0%, 20%);
+
+  --tooltips-bg-color: rgba(74, 74, 74, 0.9);
+
+  --selectable: #242424;
+  --selectable-hover: #363636;
+
+  --input-bg-color: hsl(0, 0%, 18%);
+
+  /* Very specific colors (reduce these) */
+  --ability-scores-box-bg-color: hsl(0, 0%, 18%);
+
+  --character-card-body-color: rgb(51, 51, 51);
+  --character-card-footer-color: rgb(43, 43, 43);
+  --character-card-body-hover-color: rgb(57, 57, 57);
+  --character-card-footer-hover-color: rgb(49, 49, 49);
+
+
+  --button-static-color: hsl(0, 0%, 17%);
+  --button-static-bold-color: hsl(0, 0%, 19%);
+
+  /* Rarity colors */
+  --rarity-uncommon: hsl(157, 65%, 38%);
+  --rarity-rare: hsl(224, 55%, 42%);
+  --rarity-unique: hsl(282, 58%, 38%);
+
+  --rarity-uncommon-option: hsl(158, 25%, 22%);
+  --rarity-rare-option: hsl(225, 30%, 22%);
+  --rarity-unique-option: hsl(282, 30%, 22%);
+
+  /* Text colors */
+  --text-header-color: rgb(189, 189, 189);
+  --text-p-color: rgb(190, 190, 190);
+  --text-listing-color: rgb(181, 181, 181);
+  --text-box-color: rgb(204, 204, 204);
+  --text-num-value-color: rgb(219, 219, 219);
+  --text-txt-value-color: rgb(245, 245, 245);
+
+  --text-faded-color: rgb(74, 74, 74);
+  --text-very-noted-color: rgb(97, 97, 97);
+  --text-noted-color: rgb(122, 122, 122);
+  --text-partial-noted-color: rgb(153, 153, 153);
+
+  /* Border colors */
+  --hr-color: hsl(0, 0%, 68%);
+  --hr-faded-color: rgb(89, 89, 89);
+  --hr-bolder-color: hsl(0, 0%, 82%);
+
+}

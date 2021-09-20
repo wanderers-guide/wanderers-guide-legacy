@@ -4,9 +4,9 @@
 
 function openInventoryTab(data){
 
-    $('#tabContent').append('<div class="columns is-mobile pt-1 is-marginless"><div class="column is-inline-flex is-paddingless pt-2 px-3"><p class="is-size-6 pr-3"><strong class="has-text-grey-lighter">Total Bulk</strong></p><p id="bulkTotal" class="is-size-6 has-text-left">'+g_bulkAndCoinsStruct.TotalBulk+' / '+g_bulkAndCoinsStruct.WeightEncumbered+'</p><p id="bulkMax" class="is-size-7 pl-2 has-text-left">(Limit '+g_bulkAndCoinsStruct.WeightMax+')</p></div><div class="column is-paddingless pt-2 px-3"><div class="is-inline-flex is-pulled-right"><p id="coinsMessage" class="is-size-6"><strong class="has-text-grey-lighter">Total Coins</strong></p><div id="coinsPlatinumSection" class="is-inline-flex" data-tooltip="Platinum"><figure class="image is-16x16 is-marginless mt-1 ml-3 mr-1"><img src="/images/platinum_coin.png"></figure><p>'+g_bulkAndCoinsStruct.PlatinumCoins+'</p></div><div id="coinsGoldSection" class="is-inline-flex" data-tooltip="Gold"><figure class="image is-16x16 is-marginless mt-1 ml-3 mr-1"><img src="/images/gold_coin.png"></figure><p>'+g_bulkAndCoinsStruct.GoldCoins+'</p></div><div id="coinsSilverSection" class="is-inline-flex" data-tooltip="Silver"><figure class="image is-16x16 is-marginless mt-1 ml-3 mr-1"><img src="/images/silver_coin.png"></figure><p>'+g_bulkAndCoinsStruct.SilverCoins+'</p></div><div id="coinsCopperSection" class="is-inline-flex" data-tooltip="Copper"><figure class="image is-16x16 is-marginless mt-1 ml-3 mr-1"><img src="/images/copper_coin.png"></figure><p>'+g_bulkAndCoinsStruct.CopperCoins+'</p></div></div></div></div>');
+    $('#tabContent').append('<div class="columns is-mobile pt-1 is-marginless"><div class="column is-inline-flex is-paddingless pt-2 px-3"><p class="is-size-6 pr-3"><strong class="has-txt-value-number">Total Bulk</strong></p><p id="bulkTotal" class="is-size-6 has-text-left">'+g_bulkAndCoinsStruct.TotalBulk+' / '+g_bulkAndCoinsStruct.WeightEncumbered+'</p><p id="bulkMax" class="is-size-7 pl-2 has-text-left">(Limit '+g_bulkAndCoinsStruct.WeightMax+')</p></div><div class="column is-paddingless pt-2 px-3"><div class="is-inline-flex is-pulled-right"><p id="coinsMessage" class="is-size-6"><strong class="has-txt-value-number">Total Coins</strong></p><div id="coinsPlatinumSection" class="is-inline-flex" data-tooltip="Platinum"><figure class="image is-16x16 is-marginless mt-1 ml-3 mr-1"><img src="/images/platinum_coin.png"></figure><p>'+g_bulkAndCoinsStruct.PlatinumCoins+'</p></div><div id="coinsGoldSection" class="is-inline-flex" data-tooltip="Gold"><figure class="image is-16x16 is-marginless mt-1 ml-3 mr-1"><img src="/images/gold_coin.png"></figure><p>'+g_bulkAndCoinsStruct.GoldCoins+'</p></div><div id="coinsSilverSection" class="is-inline-flex" data-tooltip="Silver"><figure class="image is-16x16 is-marginless mt-1 ml-3 mr-1"><img src="/images/silver_coin.png"></figure><p>'+g_bulkAndCoinsStruct.SilverCoins+'</p></div><div id="coinsCopperSection" class="is-inline-flex" data-tooltip="Copper"><figure class="image is-16x16 is-marginless mt-1 ml-3 mr-1"><img src="/images/copper_coin.png"></figure><p>'+g_bulkAndCoinsStruct.CopperCoins+'</p></div></div></div></div>');
 
-    $('#tabContent').append('<div class="columns is-mobile is-marginless"><div class="column"><p class="control has-icons-left"><input id="inventorySearch" class="input" type="text" autocomplete="off" placeholder="Search Inventory"><span class="icon is-left"><i class="fas fa-search" aria-hidden="true"></i></span></p></div><div class="column is-narrow"><a id="invAddItems" class="button is-info is-rounded has-text-light">Add Items</a></div></div><div class="tile is-ancestor is-vertical"><div class="tile is-parent mobile-apply-flex is-paddingless pt-1 px-2"><div class="tile is-child is-6"><p class="has-text-left pl-4"><strong class="has-text-grey-light">Name</strong></p></div><div class="tile is-child is-1"><p class="pr-3"><strong class="has-text-grey-light">Qty</strong></p></div><div class="tile is-child is-1"><p class="pr-3"><strong class="has-text-grey-light">Bulk</strong></p></div><div class="tile is-child is-1"><p class="pr-3"><strong class="has-text-grey-light">Health</strong></p></div><div class="tile is-child is-3"><p class="pr-4"><strong class="has-text-grey-light">Tags</strong></p></div></div><div class="is-divider hr-light is-marginless"></div><div id="inventoryContent" class="use-custom-scrollbar"></div></div>');
+    $('#tabContent').append('<div class="columns is-mobile is-marginless"><div class="column"><p class="control has-icons-left"><input id="inventorySearch" class="input" type="text" autocomplete="off" placeholder="Search Inventory"><span class="icon is-left"><i class="fas fa-search" aria-hidden="true"></i></span></p></div><div class="column is-narrow"><a id="invAddItems" class="button is-info is-rounded has-txt-value-string">Add Items</a></div></div><div class="tile is-ancestor is-vertical"><div class="tile is-parent mobile-apply-flex is-paddingless pt-1 px-2"><div class="tile is-child is-6"><p class="has-text-left pl-4"><strong class="has-txt-listing">Name</strong></p></div><div class="tile is-child is-1"><p class="pr-3"><strong class="has-txt-listing">Qty</strong></p></div><div class="tile is-child is-1"><p class="pr-3"><strong class="has-txt-listing">Bulk</strong></p></div><div class="tile is-child is-1"><p class="pr-3"><strong class="has-txt-listing">Health</strong></p></div><div class="tile is-child is-3"><p class="pr-4"><strong class="has-txt-listing">Tags</strong></p></div></div><div class="is-divider hr-light is-marginless"></div><div id="inventoryContent" class="use-custom-scrollbar"></div></div>');
 
     if(g_bulkAndCoinsStruct.CantMove) {
         $('#bulkTotal').addClass('has-text-black');
@@ -202,7 +202,7 @@ function displayInventoryItem(invItem, item, openBagInvItemArray, data) {
         let invItemStorageSectionID = 'invItemStorageSection'+invItem.id;
         let invItemStorageBulkAmountID = 'invItemStorageBulkAmount'+invItem.id;
 
-        $('#inventoryContent').append('<div id="'+invItemSectionID+'" class="tile is-parent mobile-apply-flex is-paddingless pt-1 px-2 border-bottom border-dark-lighter cursor-clickable"><div class="tile is-child is-6"><p id="'+invItemNameID+'" class="has-text-left has-text-grey-light"><a id="'+invItemStorageViewButtonID+'" class="button is-very-small is-info is-rounded is-outlined mb-1 ml-3">Open</a></p></div><div id="'+invItemQtyID+'" class="tile is-child is-1"><p></p></div><div id="'+invItemBulkID+'" class="tile is-child is-1"><p></p></div><div id="'+invItemHealthID+'" class="tile is-child is-1"><p></p></div><div class="tile is-child is-3"><div class="tags is-centered"><span id="'+invItemShoddyTagID+'" class="tag is-warning">Shoddy</span><span id="'+invItemBrokenTagID+'" class="tag is-danger">Broken</span><span id="'+invItemInvestedTagID+'" class="tag is-info">Invested</span><span id="'+invItemNotInvestedTagID+'" class="tag is-dark">Not Invested</span></div></div></div>');
+        $('#inventoryContent').append('<div id="'+invItemSectionID+'" class="tile is-parent mobile-apply-flex is-paddingless pt-1 px-2 border-bottom border-dark-lighter cursor-clickable"><div class="tile is-child is-6"><p id="'+invItemNameID+'" class="has-text-left has-txt-listing"><a id="'+invItemStorageViewButtonID+'" class="button is-very-small is-info is-rounded is-outlined mb-1 ml-3">Open</a></p></div><div id="'+invItemQtyID+'" class="tile is-child is-1"><p></p></div><div id="'+invItemBulkID+'" class="tile is-child is-1"><p></p></div><div id="'+invItemHealthID+'" class="tile is-child is-1"><p></p></div><div class="tile is-child is-3"><div class="tags is-centered"><span id="'+invItemShoddyTagID+'" class="tag is-warning">Shoddy</span><span id="'+invItemBrokenTagID+'" class="tag is-danger">Broken</span><span id="'+invItemInvestedTagID+'" class="tag is-info">Invested</span><span id="'+invItemNotInvestedTagID+'" class="tag is-background">Not Invested</span></div></div></div>');
 
         $('#inventoryContent').append('<div id="'+invItemStorageSectionID+'" class="tile is-vertical is-hidden"></div>');
 
@@ -225,7 +225,7 @@ function displayInventoryItem(invItem, item, openBagInvItemArray, data) {
         }
         let roundedBagBulk = round(bagBulk, 2);
         itemStorageBulkAmt = round(bagBulk-bulkIgnored, 2);
-        $('#'+invItemStorageSectionID).append('<div class="tile is-parent mobile-apply-flex is-paddingless pt-1 px-2"><div class="tile is-child is-1"></div><div class="tile is-child is-3 border-bottom border-dark-lighter"><p id="'+invItemStorageBulkAmountID+'" class="has-text-left pl-5 is-size-6 has-text-grey">Bulk '+roundedBagBulk+' / '+maxBagBulk+'</p></div><div class="tile is-child is-8 border-bottom border-dark-lighter"><p class="has-text-left pl-3 is-size-6 has-text-grey is-italic">'+bulkIgnoredMessage+'</p></div></div>');
+        $('#'+invItemStorageSectionID).append('<div class="tile is-parent mobile-apply-flex is-paddingless pt-1 px-2"><div class="tile is-child is-1"></div><div class="tile is-child is-3 border-bottom border-dark-lighter"><p id="'+invItemStorageBulkAmountID+'" class="has-text-left pl-5 is-size-6 has-txt-noted">Bulk '+roundedBagBulk+' / '+maxBagBulk+'</p></div><div class="tile is-child is-8 border-bottom border-dark-lighter"><p class="has-text-left pl-3 is-size-6 has-txt-noted is-italic">'+bulkIgnoredMessage+'</p></div></div>');
 
         let isOverBulk = false;
         if(maxBagBulk == 0) {
@@ -235,7 +235,7 @@ function displayInventoryItem(invItem, item, openBagInvItemArray, data) {
         }
 
         if(!gOption_hasIgnoreBulk && isOverBulk){
-            $('#'+invItemStorageBulkAmountID).removeClass('has-text-grey');
+            $('#'+invItemStorageBulkAmountID).removeClass('has-txt-noted');
             $('#'+invItemStorageBulkAmountID).addClass('has-text-danger');
             $('#'+invItemStorageBulkAmountID).addClass('has-text-weight-bold');
         }
@@ -276,7 +276,7 @@ function displayInventoryItem(invItem, item, openBagInvItemArray, data) {
                 // Reduce currentHP if it's over maxHP
                 baggedInvItem.currentHitPoints = (baggedInvItem.currentHitPoints > baggedInvItemMaxHP) ? baggedInvItemMaxHP : baggedInvItem.currentHitPoints;
 
-                $('#'+invItemStorageSectionID).append('<div id="'+baggedInvItemSectionID+'" class="tile is-parent mobile-apply-flex is-paddingless pt-1 px-2 cursor-clickable"><div id="'+baggedInvItemIndentID+'" class="tile is-child is-1"></div><div class="tile is-child is-5 border-bottom border-dark-lighter"><p id="'+baggedInvItemNameID+'" class="has-text-left has-text-grey-light"></p></div><div id="'+baggedInvItemQtyID+'" class="tile is-child is-1 border-bottom border-dark-lighter"><p></p></div><div id="'+baggedInvItemBulkID+'" class="tile is-child is-1 border-bottom border-dark-lighter"><p></p></div><div id="'+baggedInvItemHealthID+'" class="tile is-child is-1 border-bottom border-dark-lighter"><p></p></div><div class="tile is-child is-3 border-bottom border-dark-lighter"><div class="tags is-centered"><span id="'+baggedInvItemShoddyTagID+'" class="tag is-warning">Shoddy</span><span id="'+baggedInvItemBrokenTagID+'" class="tag is-danger">Broken</span><span id="'+baggedInvItemInvestedTagID+'" class="tag is-info">Invested</span><span id="'+baggedInvItemNotInvestedTagID+'" class="tag is-dark">Not Invested</span></div></div></div>');
+                $('#'+invItemStorageSectionID).append('<div id="'+baggedInvItemSectionID+'" class="tile is-parent mobile-apply-flex is-paddingless pt-1 px-2 cursor-clickable"><div id="'+baggedInvItemIndentID+'" class="tile is-child is-1"></div><div class="tile is-child is-5 border-bottom border-dark-lighter"><p id="'+baggedInvItemNameID+'" class="has-text-left has-txt-listing"></p></div><div id="'+baggedInvItemQtyID+'" class="tile is-child is-1 border-bottom border-dark-lighter"><p></p></div><div id="'+baggedInvItemBulkID+'" class="tile is-child is-1 border-bottom border-dark-lighter"><p></p></div><div id="'+baggedInvItemHealthID+'" class="tile is-child is-1 border-bottom border-dark-lighter"><p></p></div><div class="tile is-child is-3 border-bottom border-dark-lighter"><div class="tags is-centered"><span id="'+baggedInvItemShoddyTagID+'" class="tag is-warning">Shoddy</span><span id="'+baggedInvItemBrokenTagID+'" class="tag is-danger">Broken</span><span id="'+baggedInvItemInvestedTagID+'" class="tag is-info">Invested</span><span id="'+baggedInvItemNotInvestedTagID+'" class="tag is-background">Not Invested</span></div></div></div>');
 
                 $('#'+baggedInvItemNameID).html(getItemIcon(baggedItem, baggedInvItem)+baggedInvItem.name);
 
@@ -297,7 +297,7 @@ function displayInventoryItem(invItem, item, openBagInvItemArray, data) {
                       }
                     }
 
-                    $('#'+baggedInvItemNameID).append('<sup class="ml-2 has-text-weight-light">'+calcStruct.AttackBonus+((attackHasConditionals) ? '<sup class="has-text-info">*</sup>' : '')+'</sup><sup class="pl-3 has-text-weight-light has-text-grey">'+calcStruct.Damage+weapDamageMod+((damageHasConditionals) ? '<sup class="has-text-info">*</sup>' : '')+'</sup>');
+                    $('#'+baggedInvItemNameID).append('<sup class="ml-2 has-text-weight-light">'+calcStruct.AttackBonus+((attackHasConditionals) ? '<sup class="has-text-info">*</sup>' : '')+'</sup><sup class="pl-3 has-text-weight-light has-txt-noted">'+calcStruct.Damage+weapDamageMod+((damageHasConditionals) ? '<sup class="has-text-info">*</sup>' : '')+'</sup>');
                 }
 
                 if(baggedItem.Item.hasQuantity == 1){
@@ -361,17 +361,17 @@ function displayInventoryItem(invItem, item, openBagInvItemArray, data) {
                 });
 
                 $('#'+baggedInvItemSectionID).mouseenter(function(){
-                    $(this).addClass('has-background-grey-darker');
+                    $(this).addClass('has-bg-selectable-hover');
                 });
                 $('#'+baggedInvItemSectionID).mouseleave(function(){
-                    $(this).removeClass('has-background-grey-darker');
+                    $(this).removeClass('has-bg-selectable-hover');
                 });
 
             }
         }
 
         if(!foundBaggedItem){
-            $('#'+invItemStorageSectionID).append('<div class="tile is-parent mobile-apply-flex is-paddingless pt-1 px-2"><div class="tile is-child is-1"></div><div class="tile is-child is-11 border-bottom border-dark-lighter"><p class="has-text-left pl-3 is-size-7 has-text-grey is-italic">Empty</p></div></div>');
+            $('#'+invItemStorageSectionID).append('<div class="tile is-parent mobile-apply-flex is-paddingless pt-1 px-2"><div class="tile is-child is-1"></div><div class="tile is-child is-11 border-bottom border-dark-lighter"><p class="has-text-left pl-3 is-size-7 has-txt-noted is-italic">Empty</p></div></div>');
             itemIsStorageAndEmpty = true;
         }
 
@@ -399,7 +399,7 @@ function displayInventoryItem(invItem, item, openBagInvItemArray, data) {
         }
 
     } else {
-        $('#inventoryContent').append('<div id="'+invItemSectionID+'" class="tile is-parent mobile-apply-flex is-paddingless pt-1 px-2 border-bottom border-dark-lighter cursor-clickable"><div class="tile is-child is-6"><p id="'+invItemNameID+'" class="has-text-left has-text-grey-light"></p></div><div id="'+invItemQtyID+'" class="tile is-child is-1"><p></p></div><div id="'+invItemBulkID+'" class="tile is-child is-1"><p></p></div><div id="'+invItemHealthID+'" class="tile is-child is-1"><p></p></div><div class="tile is-child is-3"><div class="tags is-centered"><span id="'+invItemShoddyTagID+'" class="tag is-warning">Shoddy</span><span id="'+invItemBrokenTagID+'" class="tag is-danger">Broken</span><span id="'+invItemInvestedTagID+'" class="tag is-info">Invested</span><span id="'+invItemNotInvestedTagID+'" class="tag is-dark">Not Invested</span></div></div></div>');
+        $('#inventoryContent').append('<div id="'+invItemSectionID+'" class="tile is-parent mobile-apply-flex is-paddingless pt-1 px-2 border-bottom border-dark-lighter cursor-clickable"><div class="tile is-child is-6"><p id="'+invItemNameID+'" class="has-text-left has-txt-listing"></p></div><div id="'+invItemQtyID+'" class="tile is-child is-1"><p></p></div><div id="'+invItemBulkID+'" class="tile is-child is-1"><p></p></div><div id="'+invItemHealthID+'" class="tile is-child is-1"><p></p></div><div class="tile is-child is-3"><div class="tags is-centered"><span id="'+invItemShoddyTagID+'" class="tag is-warning">Shoddy</span><span id="'+invItemBrokenTagID+'" class="tag is-danger">Broken</span><span id="'+invItemInvestedTagID+'" class="tag is-info">Invested</span><span id="'+invItemNotInvestedTagID+'" class="tag is-background">Not Invested</span></div></div></div>');
     }
 
     
@@ -423,7 +423,7 @@ function displayInventoryItem(invItem, item, openBagInvItemArray, data) {
           }
         }
 
-        $('#'+invItemNameID).append('<sup class="ml-2 has-text-weight-light">'+calcStruct.AttackBonus+((attackHasConditionals) ? '<sup class="has-text-info">*</sup>' : '')+'</sup><sup class="pl-3 has-text-weight-light has-text-grey">'+calcStruct.Damage+weapDamageMod+((damageHasConditionals) ? '<sup class="has-text-info">*</sup>' : '')+'</sup>');
+        $('#'+invItemNameID).append('<sup class="ml-2 has-text-weight-light">'+calcStruct.AttackBonus+((attackHasConditionals) ? '<sup class="has-text-info">*</sup>' : '')+'</sup><sup class="pl-3 has-text-weight-light has-txt-noted">'+calcStruct.Damage+weapDamageMod+((damageHasConditionals) ? '<sup class="has-text-info">*</sup>' : '')+'</sup>');
     }
 
     if(item.ArmorData != null){
@@ -507,10 +507,10 @@ function displayInventoryItem(invItem, item, openBagInvItemArray, data) {
     });
 
     $('#'+invItemSectionID).mouseenter(function(){
-        $(this).addClass('has-background-grey-darker');
+        $(this).addClass('has-bg-selectable-hover');
     });
     $('#'+invItemSectionID).mouseleave(function(){
-        $(this).removeClass('has-background-grey-darker');
+        $(this).removeClass('has-bg-selectable-hover');
     });
 
 }

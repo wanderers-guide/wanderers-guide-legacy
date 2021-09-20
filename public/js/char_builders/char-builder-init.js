@@ -538,7 +538,7 @@ function displayHomebrewBundles(character, hBundles, progessBundles){
   for(let progessBundle of progessBundles) {
     let homebrewBundle = progessBundle;
     let bundleSwitchID = 'homebrew-bundle-progess-switch-'+homebrewBundle.id;
-    $('#homebrewCollectionContainer').append('<div class="field"><input id="'+bundleSwitchID+'" type="checkbox" name="'+bundleSwitchID+'" class="switch is-small is-rounded is-outlined is-info optionSwitch" value="1"><label for="'+bundleSwitchID+'">'+homebrewBundle.name+' <span class="has-text-grey is-italic">(in progress)</span></label></div>');
+    $('#homebrewCollectionContainer').append('<div class="field"><input id="'+bundleSwitchID+'" type="checkbox" name="'+bundleSwitchID+'" class="switch is-small is-rounded is-outlined is-info optionSwitch" value="1"><label for="'+bundleSwitchID+'">'+homebrewBundle.name+' <span class="has-txt-noted is-italic">(in progress)</span></label></div>');
 
     $('#'+bundleSwitchID).change(function(){
       socket.emit('requestCharacterHomebrewChange', 
@@ -648,10 +648,10 @@ function displayExternalCharacterAccess(clientsWithAccess){
   });
 
   $('#character-access-dropdown').mouseenter(function(){
-    $(this).addClass('has-background-grey-darker');
+    $(this).addClass('has-bg-selectable-hover');
   });
   $('#character-access-dropdown').mouseleave(function(){
-      $(this).removeClass('has-background-grey-darker');
+      $(this).removeClass('has-bg-selectable-hover');
   });
 
 }

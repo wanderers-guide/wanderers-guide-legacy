@@ -107,13 +107,13 @@ function displayFeatContent(data){
 }
 
 function displayClassFeats(data, featsSearchValue){
-    $('#featsContent').append('<p class="is-size-5 has-text-grey-light has-text-weight-bold text-left pl-5">Class</p>');
+    $('#featsContent').append('<p class="is-size-5 has-txt-listing has-text-weight-bold text-left pl-5">Class</p>');
     $('#featsContent').append('<hr class="hr-light" style="margin-top:-0.5em; margin-bottom:0em;">');
     featDisplayByType(data, [data.ClassDetails.Class.name], featsSearchValue);
 }
 
 function displayAncestryFeats(data, featsSearchValue){
-    $('#featsContent').append('<p class="is-size-5 has-text-grey-light has-text-weight-bold text-left pl-5">Ancestry</p>');
+    $('#featsContent').append('<p class="is-size-5 has-txt-listing has-text-weight-bold text-left pl-5">Ancestry</p>');
     $('#featsContent').append('<hr class="hr-light" style="margin-top:-0.5em; margin-bottom:0em;">');
     let charTagsArray = [];
     for(let dataTag of data.AncestryTagsArray){
@@ -123,13 +123,13 @@ function displayAncestryFeats(data, featsSearchValue){
 }
 
 function displaySkillFeats(data, featsSearchValue){
-  $('#featsContent').append('<p class="is-size-5 has-text-grey-light has-text-weight-bold text-left pl-5">Skill</p>');
+  $('#featsContent').append('<p class="is-size-5 has-txt-listing has-text-weight-bold text-left pl-5">Skill</p>');
   $('#featsContent').append('<hr class="hr-light" style="margin-top:-0.5em; margin-bottom:0em;">');
   featDisplayByType(data, ['Skill'], featsSearchValue);
 }
 
 function displayOtherFeats(data, featsSearchValue){
-    $('#featsContent').append('<p class="is-size-5 has-text-grey-light has-text-weight-bold text-left pl-5">Other</p>');
+    $('#featsContent').append('<p class="is-size-5 has-txt-listing has-text-weight-bold text-left pl-5">Other</p>');
     $('#featsContent').append('<hr class="hr-light" style="margin-top:-0.5em; margin-bottom:0em;">');
     featDisplayByType(data, null, featsSearchValue);
 }
@@ -197,14 +197,14 @@ function displayFeat(featData, featTags, featCount){
 
     let featNameInnerHTML = '';
     if(feat.level > 9){
-        featNameInnerHTML += '<span class="is-size-7 has-text-grey">'+feat.level+' - </span>';
+        featNameInnerHTML += '<span class="is-size-7 has-txt-noted">'+feat.level+' - </span>';
     } else if(feat.level > 0){
-        featNameInnerHTML += '<span class="is-size-7 has-text-grey pl-2">'+feat.level+' - </span>';
+        featNameInnerHTML += '<span class="is-size-7 has-txt-noted pl-2">'+feat.level+' - </span>';
     } else {
-        featNameInnerHTML += '<span class="is-size-7 has-text-grey pl-4 ml-1"></span>';
+        featNameInnerHTML += '<span class="is-size-7 has-txt-noted pl-4 ml-1"></span>';
     }
 
-    featNameInnerHTML += '<span class="has-text-grey-light">'+feat.name+'</span>';
+    featNameInnerHTML += '<span class="has-txt-listing">'+feat.name+'</span>';
 
     switch(feat.actions) {
         case 'FREE_ACTION': featNameInnerHTML += '<span class="px-2 pf-icon">[free-action]</span>'; break;
@@ -258,10 +258,10 @@ function displayFeat(featData, featTags, featCount){
     });
 
     $('#'+featID).mouseenter(function(){
-        $(this).addClass('has-background-grey-darker');
+        $(this).addClass('has-bg-selectable-hover');
     });
     $('#'+featID).mouseleave(function(){
-        $(this).removeClass('has-background-grey-darker');
+        $(this).removeClass('has-bg-selectable-hover');
     });
 
 }
@@ -331,7 +331,7 @@ function displayAbilitiesContent(data){
 }
 
 function displayClassAbilities(data, abilitiesSearchValue){
-    $('#abilitiesContent').append('<p class="is-size-5 has-text-grey-light has-text-weight-bold text-left pl-5">Class</p>');
+    $('#abilitiesContent').append('<p class="is-size-5 has-txt-listing has-text-weight-bold text-left pl-5">Class</p>');
     $('#abilitiesContent').append('<hr class="hr-light" style="margin-top:-0.5em; margin-bottom:0em;">');
 
     let abilCount = 0;
@@ -354,7 +354,7 @@ function displayClassAbilities(data, abilitiesSearchValue){
 }
 
 function displayAncestryAbilities(data, abilitiesSearchValue){
-    $('#abilitiesContent').append('<p class="is-size-5 has-text-grey-light has-text-weight-bold text-left pl-5">Ancestry</p>');
+    $('#abilitiesContent').append('<p class="is-size-5 has-txt-listing has-text-weight-bold text-left pl-5">Ancestry</p>');
     $('#abilitiesContent').append('<hr class="hr-light" style="margin-top:-0.5em; margin-bottom:0em;">');
     
     let abilCount = 0;
@@ -373,7 +373,7 @@ function displayAncestryAbilities(data, abilitiesSearchValue){
 }
 
 function displayOtherAbilities(data, abilitiesSearchValue){
-    $('#abilitiesContent').append('<p class="is-size-5 has-text-grey-light has-text-weight-bold text-left pl-5">Other</p>');
+    $('#abilitiesContent').append('<p class="is-size-5 has-txt-listing has-text-weight-bold text-left pl-5">Other</p>');
     $('#abilitiesContent').append('<hr class="hr-light" style="margin-top:-0.5em; margin-bottom:0em;">');
     
     let abilCount = 0;
@@ -431,13 +431,13 @@ function displayAbility(ability, abilIdentifier){
           let abilityOption = g_allClassAbilityOptions.find(abil => {
             return abil.id == classAbilChoice.OptionID;
           });
-          if(abilityOption != null){ abilityName += ' - <span class="is-italic has-text-grey-like">'+abilityOption.name+'</span>'; }
+          if(abilityOption != null){ abilityName += ' - <span class="is-italic has-txt-partial-noted">'+abilityOption.name+'</span>'; }
           break;
         }
       }
     }
 
-    let abilityNameInnerHTML = '<span class="has-text-grey-light">'+abilityName+'</span>';
+    let abilityNameInnerHTML = '<span class="has-txt-listing">'+abilityName+'</span>';
     let abilityLevelInnerHTML = (ability.level == 0 || ability.level == null) ? '' : '<span>Level '+ability.level+'</span>';
 
     $('#abilitiesContent').append('<div id="'+abilityID+'" class="columns is-mobile border-bottom border-dark-lighter cursor-clickable is-marginless mx-2"><div class="column is-paddingless pl-3"><p class="text-left pt-1">'+abilityNameInnerHTML+'</p></div><div class="column is-paddingless"><p class="pt-1">'+abilityLevelInnerHTML+'</p></div></div>');
@@ -449,10 +449,10 @@ function displayAbility(ability, abilIdentifier){
     });
 
     $('#'+abilityID).mouseenter(function(){
-        $(this).addClass('has-background-grey-darker');
+        $(this).addClass('has-bg-selectable-hover');
     });
     $('#'+abilityID).mouseleave(function(){
-        $(this).removeClass('has-background-grey-darker');
+        $(this).removeClass('has-bg-selectable-hover');
     });
 
 }
@@ -463,7 +463,7 @@ function displayAbility(ability, abilIdentifier){
 function displayDescriptionSection(data){
     $('#detailsTabContent').append('<div id="descriptionContent" class="use-custom-scrollbar" style="height: 555px; max-height: 555px; overflow-y: auto;"></div>');
 
-    $('#descriptionContent').append('<p class="is-size-5 has-text-grey-light has-text-weight-bold text-left pl-5 pt-2">Background - '+data.Background.name+'</p>');
+    $('#descriptionContent').append('<p class="is-size-5 has-txt-listing has-text-weight-bold text-left pl-5 pt-2">Background - '+data.Background.name+'</p>');
     $('#descriptionContent').append('<hr class="hr-light" style="margin-top:-0.5em; margin-bottom:0em;">');
 
     $('#descriptionContent').append('<div class="mx-3">'+processText(data.Background.description, true, true, 'SMALL')+'</div>');
@@ -482,7 +482,7 @@ function displayDescriptionSection(data){
 
     if(data.Heritage != null){
 
-        $('#descriptionContent').append('<p class="is-size-5 has-text-grey-light has-text-weight-bold text-left pl-5 pt-2">Heritage - '+data.Heritage.name+' </p>');
+        $('#descriptionContent').append('<p class="is-size-5 has-txt-listing has-text-weight-bold text-left pl-5 pt-2">Heritage - '+data.Heritage.name+' </p>');
         $('#descriptionContent').append('<hr class="hr-light" style="margin-top:-0.5em; margin-bottom:0em;">');
     
         $('#descriptionContent').append('<div class="mx-3">'+processText(data.Heritage.description, true, true, 'SMALL')+'</div>');
@@ -501,7 +501,7 @@ function displayDescriptionSection(data){
 
     }
 
-    $('#descriptionContent').append('<p class="is-size-5 has-text-grey-light has-text-weight-bold text-left pl-5 pt-2">Other Information</p>');
+    $('#descriptionContent').append('<p class="is-size-5 has-txt-listing has-text-weight-bold text-left pl-5 pt-2">Other Information</p>');
     $('#descriptionContent').append('<hr class="hr-light" style="margin-top:-0.5em; margin-bottom:0em;">');
 
     let charHistoryAreaID = "charHistoryArea";

@@ -48,7 +48,7 @@ function openAnimalCompQuickview(data) {
     let currentHP = charAnimal.currentHP;
     if(currentHP == -1){ currentHP = maxHP; }
 
-    qContent.append('<div class="field has-addons has-addons-centered is-marginless"><p class="control"><input id="animalHealthInput" class="input" type="text" size="4" min="0" max="'+maxHP+'" value="'+currentHP+'"></p><p class="control"><a class="button is-static has-text-grey-light has-background-grey-darkest border-darker">/</a><p class="control"><a class="button is-static has-text-grey-lighter has-background-grey-darklike border-darker">'+maxHP+'</a></p></div>');
+    qContent.append('<div class="field has-addons has-addons-centered is-marginless"><p class="control"><input id="animalHealthInput" class="input" type="text" size="4" min="0" max="'+maxHP+'" value="'+currentHP+'"></p><p class="control"><a class="button is-static border-darker">/</a><p class="control"><a class="button is-static is-extra border-darker">'+maxHP+'</a></p></div>');
     // Press Enter Key
     $('#animalHealthInput').on('keypress',function(e){
       if(e.which == 13){
@@ -123,7 +123,7 @@ function openAnimalCompQuickview(data) {
         if(skillNumUps != 0){
             let skillBonus = abilMod+getProfNumber(skillNumUps, lvl);
 
-            qContent.append('<div class="px-4 columns is-marginless"><div class="column is-1 is-paddingless"><span class="is-p has-text-grey-lighter">'+signNumber(skillBonus)+'</span></div><div class="column is-paddingless"><span class="is-p pl-1">'+capitalizeWords(skill)+'</span></div></div>');
+            qContent.append('<div class="px-4 columns is-marginless"><div class="column is-1 is-paddingless"><span class="is-p has-txt-value-number">'+signNumber(skillBonus)+'</span></div><div class="column is-paddingless"><span class="is-p pl-1">'+capitalizeWords(skill)+'</span></div></div>');
         }
     }
 
@@ -291,7 +291,7 @@ function displayAnimalCompanionAttack(qContent, animal, charAnimal, attackNum) {
     let attackModToBonus = (isFinesse) ? getAnimalModDex(animal, charAnimal) : getAnimalModStr(animal, charAnimal);
 
     let attackBonus = trainedProfBonus+attackModToBonus;
-    attackBonus = '<span class="has-text-grey-lighter">'+signNumber(attackBonus)+'</span>';
+    attackBonus = '<span class="has-txt-value-number">'+signNumber(attackBonus)+'</span>';
 
     // Damage //
     let damageDieNum = getAnimalDamageDieNumber(animal, charAnimal);

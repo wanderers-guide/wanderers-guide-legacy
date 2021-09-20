@@ -182,7 +182,7 @@ function displaySpellSpontaneous(spellBook, data) {
         let spellBookListingID = "spellBookListing"+spellListingCount;
         let spellLevel = (spellData.SpellLevel == 0) ? "Cantrip" : "Lvl "+spellData.SpellLevel;
 
-        $('#manageSpellsSpellBook').append('<div id="'+spellBookListingID+'" class="border-bottom border-dark-lighter cursor-clickable has-background-black-ter" name="'+spellDataStruct.Spell.id+'" style="z-index: 40; border-radius: 5px;"><span class="is-size-6 has-text-grey-light ml-3 mr-1 pos-relative">'+spellName+'</span><span class="is-size-7 has-text-grey-light is-pulled-right ml-1 mr-3">('+spellLevel+')</span></div>');
+        $('#manageSpellsSpellBook').append('<div id="'+spellBookListingID+'" class="border-bottom border-dark-lighter cursor-clickable has-bg-selectable" name="'+spellDataStruct.Spell.id+'" style="z-index: 40; border-radius: 5px;"><span class="is-size-6 has-txt-listing ml-3 mr-1 pos-relative">'+spellName+'</span><span class="is-size-7 has-txt-listing is-pulled-right ml-1 mr-3">('+spellLevel+')</span></div>');
         
         $('#'+spellBookListingID).click(function(){
             openQuickView('spellView', {
@@ -197,10 +197,10 @@ function displaySpellSpontaneous(spellBook, data) {
         });
 
         $('#'+spellBookListingID).mouseenter(function(){
-            $(this).addClass('has-background-grey-darker');
+            $(this).addClass('has-bg-selectable-hover');
         });
         $('#'+spellBookListingID).mouseleave(function(){
-            $(this).removeClass('has-background-grey-darker');
+            $(this).removeClass('has-bg-selectable-hover');
         });
 
         //$('#'+spellBookListingID).draggable({ opacity: 0.8, helper: "clone", revert: true });
@@ -236,7 +236,7 @@ function displaySpellSlotsSpontaneous(spellSRC, data) {
         );
 
         let sectionName = (level == 0) ? 'Cantrips' : 'Level '+level;
-        $('#manageSpellsSlots').append('<p class="is-size-5 has-text-grey-kinda-light has-text-weight-bold text-left pl-5">'+sectionName+'</p>');
+        $('#manageSpellsSlots').append('<p class="is-size-5 has-txt-partial-noted has-text-weight-bold text-left pl-5">'+sectionName+'</p>');
         $('#manageSpellsSlots').append('<hr class="hr-highlighted" style="margin-top:-0.5em; margin-bottom:0em;">');
 
         let spellSlotsButtonsID = 'spellManagerSlotsButtons'+level;
@@ -344,7 +344,7 @@ function displaySpellBookPrepared(spellBook, data) {
         let spellBookListingID = "spellBookListing"+spellListingCount;
         let spellLevel = (spellDataStruct.Spell.level == 0) ? "Cantrip" : "Lvl "+spellDataStruct.Spell.level;
 
-        $('#manageSpellsSpellBook').append('<div id="'+spellBookListingID+'" class="border-bottom border-dark-lighter cursor-clickable has-background-black-ter" name="'+spellDataStruct.Spell.id+'" style="z-index: 40; border-radius: 5px;"><span class="is-size-6 has-text-grey-light ml-3 mr-1 pos-relative">'+spellName+'</span><span class="is-size-7 has-text-grey-light is-pulled-right ml-1 mr-3">('+spellLevel+')</span></div>');
+        $('#manageSpellsSpellBook').append('<div id="'+spellBookListingID+'" class="border-bottom border-dark-lighter cursor-clickable has-bg-selectable" name="'+spellDataStruct.Spell.id+'" style="z-index: 40; border-radius: 5px;"><span class="is-size-6 has-txt-listing ml-3 mr-1 pos-relative">'+spellName+'</span><span class="is-size-7 has-txt-listing is-pulled-right ml-1 mr-3">('+spellLevel+')</span></div>');
         
         $('#'+spellBookListingID).click(function(){
             openQuickView('spellView', {
@@ -359,10 +359,10 @@ function displaySpellBookPrepared(spellBook, data) {
         });
 
         $('#'+spellBookListingID).mouseenter(function(){
-            $(this).addClass('has-background-grey-darker');
+            $(this).addClass('has-bg-selectable-hover');
         });
         $('#'+spellBookListingID).mouseleave(function(){
-            $(this).removeClass('has-background-grey-darker');
+            $(this).removeClass('has-bg-selectable-hover');
         });
 
         $('#'+spellBookListingID).draggable({ opacity: 0.8, helper: "clone", revert: true });
@@ -393,7 +393,7 @@ function displaySpellSlotsPrepared(spellSRC, data) {
     for(const [level, slotArray] of spellSlotMap){
 
         let sectionName = (level == 0) ? 'Cantrips' : 'Level '+level;
-        $('#manageSpellsSlots').append('<p class="is-size-5 has-text-grey-kinda-light has-text-weight-bold text-left pl-5">'+sectionName+'</p>');
+        $('#manageSpellsSlots').append('<p class="is-size-5 has-txt-partial-noted has-text-weight-bold text-left pl-5">'+sectionName+'</p>');
         $('#manageSpellsSlots').append('<hr class="hr-highlighted" style="margin-top:-0.5em; margin-bottom:0em;">');
 
         let spellSlotsButtonsID = 'spellManagerSlotsButtons'+level;

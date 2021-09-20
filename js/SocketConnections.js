@@ -2116,7 +2116,21 @@ module.exports = class SocketConnections {
           let updateValues = { isDeveloper: ((developer) ? 1 : 0) };
           User.update(updateValues, { where: { id: userID } })
           .then((result) => {
-            socket.emit('requestDeveloperStatusChange', developer);
+            socket.emit('returnDeveloperStatusChange', developer);
+          });
+        }
+      });
+
+      socket.on('requestThemeStatusChange', function(lightMode){
+        let userID = null;
+        if(socket.request.session.passport != null){
+          userID = socket.request.session.passport.user;
+        }
+        if(userID != null){
+          let updateValues = { enabledLightMode: ((lightMode) ? 1 : 0) };
+          User.update(updateValues, { where: { id: userID } })
+          .then((result) => {
+            socket.emit('returnThemeStatusChange', lightMode);
           });
         }
       });

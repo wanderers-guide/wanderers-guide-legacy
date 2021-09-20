@@ -286,7 +286,7 @@ function getAttackAndDamage(itemData, invItem){
             if(maxDamage >= 1) {
                 damage = diceNum+""+weapStruct.damage.die_type+totalDamageBonusStr+" "+weapStruct.damage.type;
             } else {
-                damage = '<a class="has-text-grey" data-tooltip="'+diceNum+""+weapStruct.damage.die_type+totalDamageBonusStr+'">1</a> '+weapStruct.damage.type;
+                damage = '<a class="has-txt-noted" data-tooltip="'+diceNum+""+weapStruct.damage.die_type+totalDamageBonusStr+'">1</a> '+weapStruct.damage.type;
             }
             damageDice = diceNum+''+weapStruct.damage.die_type;
         } else {
@@ -479,7 +479,7 @@ function getAttackAndDamage(itemData, invItem){
             if(maxDamage >= 1) {
                 damage = diceNum+""+weapStruct.damage.die_type+totalDamageBonusStr+" "+weapStruct.damage.type;
             } else {
-                damage = '<a class="has-text-grey" data-tooltip="'+diceNum+""+weapStruct.damage.die_type+totalDamageBonusStr+'">1</a> '+weapStruct.damage.type;
+                damage = '<a class="has-txt-noted" data-tooltip="'+diceNum+""+weapStruct.damage.die_type+totalDamageBonusStr+'">1</a> '+weapStruct.damage.type;
             }
             damageDice = diceNum+''+weapStruct.damage.die_type;
         } else {

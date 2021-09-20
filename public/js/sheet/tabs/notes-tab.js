@@ -190,7 +190,7 @@ function loadNotesArea(pageID, pageNotesData){
   let notesAreaID = "notesArea";
   let notesAreaControlShellID = "notesAreaControlShell";
 
-  $('#notesAreaSection').html('<div id="'+notesAreaControlShellID+'" style="background-color: hsl(0, 0%, 18%);"><div id="'+notesAreaID+'" style="background-color: hsl(0, 0%, 20%); height: 540px; max-height: 540px; overflow-y: auto;">'+pageNotesData+'</div></div>');
+  $('#notesAreaSection').html('<div id="'+notesAreaControlShellID+'" style="background-color: var(--notes-header-color);"><div id="'+notesAreaID+'" style="background-color: var(--notes-body-color); height: 540px; max-height: 540px; overflow-y: auto;">'+pageNotesData+'</div></div>');
 
   // Init Quill
   let Font = Quill.import('formats/font');

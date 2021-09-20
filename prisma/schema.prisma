@@ -970,6 +970,7 @@ model users {
   patreonEmail        String?               @db.VarChar(120)
   patreonAccessToken  String?               @db.VarChar(300)
   patreonRefreshToken String?               @db.VarChar(300)
+  enabledLightMode    Int?                  @default(0)
   apiClientApps       apiClientApps[]
   characters          characters[]
   homeBackReports     homeBackReports[]
