@@ -33,7 +33,7 @@ function openActionsTab(data) {
     }
 
     $('#tabContent').append(`
-      <p id="stateNumberOfActions" class="is-size-7 has-text-left is-italic pos-absolute pos-t-10 pos-l-5">${actionsCount} Actions per Turn</p>
+      <p id="stateNumberOfActions" class="is-size-7 has-text-left is-italic is-hidden-mobile pos-absolute pos-t-10 pos-l-5">${actionsCount} Actions per Turn</p>
       <div class="columns is-mobile is-marginless">
 
         <div class="column is-1 is-narrow pb-1">
@@ -66,7 +66,7 @@ function openActionsTab(data) {
 
         </div>
 
-        <div class="column is-narrow pb-1">
+        <div class="column is-narrow pb-1 is-hidden-mobile">
 
           <div class="select is-small is-info mr-4">
             <select id="actionFilterSelectBySkill">

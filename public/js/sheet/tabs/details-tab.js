@@ -201,7 +201,7 @@ function displayFeat(featData, featTags, featCount){
     } else if(feat.level > 0){
         featNameInnerHTML += '<span class="is-size-7 has-txt-noted pl-2">'+feat.level+' - </span>';
     } else {
-        featNameInnerHTML += '<span class="is-size-7 has-txt-noted pl-4 ml-1"></span>';
+        featNameInnerHTML += '<span class="is-size-7 has-txt-noted pl-4 ml-1 is-hidden-mobile"></span>';
     }
 
     featNameInnerHTML += '<span class="has-txt-listing">'+feat.name+'</span>';

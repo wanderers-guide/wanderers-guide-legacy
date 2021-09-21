@@ -7,7 +7,9 @@ let g_diceLoaderPercentage = 0;
 
 function startDiceLoader(){
   $('.ldBar').removeClass('is-hidden');
+  
   $('.dice-pageloader').removeClass("fadeout");
+  $('html').addClass('is-clipped');
 
   $('.ldBar-message').text('Initializing Load');
   setDiceLoaderPercentage(5);
@@ -34,6 +36,7 @@ function getDiceLoaderPercentage(){
 
 function stopDiceLoader(){
   $('.dice-pageloader').addClass("fadeout");
+  $('html').removeClass('is-clipped');
 }
 
 

@@ -1,76 +1,91 @@
 
 
 @media screen and (max-width:768px){
-    
-    #inventoryContent {
-        height: 490px;
-        max-height: 490px;
-        overflow-y: scroll;
-    }
+  /* Phones */
 
-    .mobile-box {
-      margin: 0rem 0rem 1.5rem !important;
-      padding: 0rem !important;
-    }
+  #inventoryContent {
+    height: 490px;
+    max-height: 490px;
+    overflow-y: scroll;
+  }
 
-}
+  .mobile-box {
+    margin: 0rem 0rem 1.5rem !important;
+    padding: 0rem !important;
+  }
 
-@media screen and (min-width:769px){
-    
-    #inventoryContent {
-        height: 470px;
-        max-height: 470px;
-        overflow-y: scroll;
-    }
-
-}
-
-@media screen and (min-width:937px){
-    
-    #inventoryContent {
-        height: 495px;
-        max-height: 495px;
-        overflow-y: scroll;
-    }
-
-    #acText {
-        margin-top: 0.5em;
-        font-size: 1rem;
-    }
-    #acNumber {
-        font-size: 1.25rem;
-    }
-    #shieldText {
-        margin-top: 0.5em;
-        font-size: 0.75rem;
-    }
-    #shieldBonus {
-        font-size: 1.25rem;
-    }
+  #acText {
+    margin-top: 0;
+    font-size: 1.25rem;
+  }
+  #acNumber {
+    font-size: 1.5rem;
+  }
+  #shieldText {
+    margin-top: 0;
+    font-size: 1rem;
+  }
+  #shieldBonus {
+    font-size: 1.5rem;
+  }
 
 }
 
-@media screen and (min-width:1280px){
+@media screen and (min-width : 769px) and (max-width : 1023px) {
+  /* Tablets */
 
-    #acText {
-        margin-top: 0;
-        font-size: 1.25rem;
-    }
-    #acNumber {
-        font-size: 1.5rem;
-    }
-    #shieldText {
-        margin-top: 0;
-        font-size: 1rem;
-    }
-    #shieldBonus {
-        font-size: 1.5rem;
-    }
+  #inventoryContent {
+    height: 495px;
+    max-height: 495px;
+    max-width: 60vw;
+    overflow-y: scroll;
+  }
+
+  #acText {
+    margin-top: 0.5em;
+    font-size: 1rem;
+  }
+  #acNumber {
+    font-size: 1.25rem;
+  }
+  #shieldText {
+    margin-top: 0.5em;
+    font-size: 0.75rem;
+  }
+  #shieldBonus {
+    font-size: 1.25rem;
+  }
 
 }
 
-@media screen and (min-width:1472px){
+@media screen and (min-width: 1024px){
+  /* Desktops */
+
+  #inventoryContent {
+    height: 495px;
+    max-height: 495px;
+    overflow-y: scroll;
+  }
+
+  #acText {
+    margin-top: 0;
+    font-size: 1.25rem;
+  }
+  #acNumber {
+    font-size: 1.5rem;
+  }
+  #shieldText {
+    margin-top: 0;
+    font-size: 1rem;
+  }
+  #shieldBonus {
+    font-size: 1.5rem;
+  }
+
 }
+
+
+
 
 .sheet-box {
 

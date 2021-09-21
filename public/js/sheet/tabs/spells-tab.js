@@ -347,19 +347,19 @@ function displaySpellsInLevelPrepared(spellBook, level, slotArray, spellBookSect
 
           $('#'+spellBookSectionID).append(`
             <div id="${spellSlotID}" class="columns is-mobile is-marginless cursor-clickable">
-              <div class="column is-4 is-paddingless border-bottom border-dark-lighter">
+              <div class="column is-4-desktop is-paddingless border-bottom border-dark-lighter is-6-mobile">
                 <p class="has-text-left pl-3 pt-1 pos-relative">${spellNameHTML}</p>
               </div>
-              <div class="column is-1 is-paddingless border-bottom border-dark-lighter">
+              <div class="column is-1-desktop is-paddingless border-bottom border-dark-lighter is-3-mobile">
                 <p class="text-center has-txt-listing is-size-6-5 pt-1">${spellCast}</p>
               </div>
-              <div class="column is-1 is-paddingless border-bottom border-dark-lighter">
+              <div class="column is-1-desktop is-paddingless border-bottom border-dark-lighter is-3-mobile">
                 <p class="text-center has-txt-listing is-size-6-5 pt-1">${spellSave}</p>
               </div>
-              <div class="column is-1 is-paddingless border-bottom border-dark-lighter">
+              <div class="column is-1-desktop is-paddingless border-bottom border-dark-lighter is-hidden-mobile">
                 <p class="text-center has-txt-listing is-size-6-5 pt-1">${spellRange}</p>
               </div>
-              <div class="column is-5 is-paddingless border-bottom border-dark-lighter">
+              <div class="column is-5-desktop is-paddingless border-bottom border-dark-lighter is-hidden-mobile">
                 <p class="text-center has-txt-listing">${tagsInnerHTML}</p>
               </div>
             </div>
@@ -422,19 +422,19 @@ function displaySpellsInLevelPrepared(spellBook, level, slotArray, spellBookSect
       $('#'+spellBookTitleSectionID).append('<p class="is-size-5 has-txt-partial-noted has-text-weight-bold text-left pl-5">'+sectionName+'</p>');
       $('#'+spellBookTitleSectionID).append(`
         <div class="columns is-mobile is-marginless">
-          <div class="column is-4 is-paddingless">
+          <div class="column is-4-desktop is-paddingless is-6-mobile">
             <p class="has-text-left pl-3"><strong class="has-txt-listing">Name</strong></p>
           </div>
-          <div class="column is-1 is-paddingless">
+          <div class="column is-1-desktop is-paddingless is-3-mobile">
             <p class="text-center"><strong class="has-txt-listing">Cast</strong></p>
           </div>
-          <div class="column is-1 is-paddingless">
+          <div class="column is-1-desktop is-paddingless is-3-mobile">
             <p class="text-center"><strong class="has-txt-listing">Save</strong></p>
           </div>
-          <div class="column is-1 is-paddingless">
+          <div class="column is-1-desktop is-paddingless is-hidden-mobile">
             <p class="text-center"><strong class="has-txt-listing">Range</strong></p>
           </div>
-          <div class="column is-5 is-paddingless">
+          <div class="column is-5-desktop is-paddingless is-hidden-mobile">
             <p class="text-center"><strong class="has-txt-listing">Traits</strong></p>
           </div>
         </div>
@@ -563,19 +563,19 @@ function displaySpellsInLevelSpontaneous(spellBook, level, slotArray, spellBookS
 
         $('#'+spellBookSectionID).append(`
           <div id="${spellSponListingID}" class="${spellListingSponClass} columns is-mobile is-marginless cursor-clickable">
-            <div class="column is-4 is-paddingless border-bottom border-dark-lighter">
+            <div class="column is-4-desktop is-paddingless border-bottom border-dark-lighter is-6-mobile">
               <p class="has-text-left pl-3 pt-1 pos-relative">${spellNameHTML}</p>
             </div>
-            <div class="column is-1 is-paddingless border-bottom border-dark-lighter">
+            <div class="column is-1-desktop is-paddingless border-bottom border-dark-lighter is-3-mobile">
               <p class="text-center has-txt-listing is-size-6-5 pt-1">${spellCast}</p>
             </div>
-            <div class="column is-1 is-paddingless border-bottom border-dark-lighter">
+            <div class="column is-1-desktop is-paddingless border-bottom border-dark-lighter is-3-mobile">
               <p class="text-center has-txt-listing is-size-6-5 pt-1">${spellSave}</p>
             </div>
-            <div class="column is-1 is-paddingless border-bottom border-dark-lighter">
+            <div class="column is-1-desktop is-paddingless border-bottom border-dark-lighter is-hidden-mobile">
               <p class="text-center has-txt-listing is-size-6-5 pt-1">${spellRange}</p>
             </div>
-            <div class="column is-5 is-paddingless border-bottom border-dark-lighter">
+            <div class="column is-5-desktop is-paddingless border-bottom border-dark-lighter is-hidden-mobile">
               <p class="text-center has-txt-listing">${tagsInnerHTML}</p>
             </div>
           </div>
@@ -669,19 +669,19 @@ function displaySpellsInLevelSpontaneous(spellBook, level, slotArray, spellBookS
     $('#'+spellBookTitleSectionID).append('<p class="text-left pl-5"><span class="has-txt-partial-noted has-text-weight-bold is-size-5 pr-2">'+sectionName+'</span><span id="'+spellSponCastingSetID+'" class="is-unselectable cursor-clickable"></span></p>');
     $('#'+spellBookTitleSectionID).append(`
       <div class="columns is-mobile is-marginless">
-        <div class="column is-4 is-paddingless">
+        <div class="column is-4-desktop is-paddingless is-6-mobile">
           <p class="has-text-left pl-3"><strong class="has-txt-listing">Name</strong></p>
         </div>
-        <div class="column is-1 is-paddingless">
+        <div class="column is-1-desktop is-paddingless is-3-mobile">
           <p class="text-center"><strong class="has-txt-listing">Cast</strong></p>
         </div>
-        <div class="column is-1 is-paddingless">
+        <div class="column is-1-desktop is-paddingless is-3-mobile">
           <p class="text-center"><strong class="has-txt-listing">Save</strong></p>
         </div>
-        <div class="column is-1 is-paddingless">
+        <div class="column is-1-desktop is-paddingless is-hidden-mobile">
           <p class="text-center"><strong class="has-txt-listing">Range</strong></p>
         </div>
-        <div class="column is-5 is-paddingless">
+        <div class="column is-5-desktop is-paddingless is-hidden-mobile">
           <p class="text-center"><strong class="has-txt-listing">Traits</strong></p>
         </div>
       </div>
@@ -801,19 +801,19 @@ function displaySpellsFocus() {
                 }
                 $('#spellsFocusContent').append(`
                   <div class="columns is-mobile is-marginless">
-                    <div class="column is-4 is-paddingless">
+                    <div class="column is-4-desktop is-paddingless is-6-mobile">
                       <p class="has-text-left pl-3"><strong class="has-txt-listing">Name</strong></p>
                     </div>
-                    <div class="column is-1 is-paddingless">
+                    <div class="column is-1-desktop is-paddingless is-3-mobile">
                       <p class="text-center"><strong class="has-txt-listing">Cast</strong></p>
                     </div>
-                    <div class="column is-1 is-paddingless">
+                    <div class="column is-1-desktop is-paddingless is-3-mobile">
                       <p class="text-center"><strong class="has-txt-listing">Save</strong></p>
                     </div>
-                    <div class="column is-1 is-paddingless">
+                    <div class="column is-1-desktop is-paddingless is-hidden-mobile">
                       <p class="text-center"><strong class="has-txt-listing">Range</strong></p>
                     </div>
-                    <div class="column is-5 is-paddingless">
+                    <div class="column is-5-desktop is-paddingless is-hidden-mobile">
                       <p class="text-center"><strong class="has-txt-listing">Traits</strong></p>
                     </div>
                   </div>
@@ -882,19 +882,19 @@ function displaySpellsFocus() {
             let focusListingClass = (spellDataStruct.Spell.level != 0) ? 'focusSpellListingClass' : 'focusCantripListingClass';
             $('#spellsFocusContent').append(`
               <div id="${spellListingID}" class="${focusListingClass} columns is-mobile is-marginless cursor-clickable">
-                <div class="column is-4 is-paddingless border-bottom border-dark-lighter">
+                <div class="column is-4-desktop is-paddingless border-bottom border-dark-lighter is-6-mobile">
                   <p class="has-text-left pl-3 pt-1">${spellName}</p>
                 </div>
-                <div class="column is-1 is-paddingless border-bottom border-dark-lighter">
+                <div class="column is-1-desktop is-paddingless border-bottom border-dark-lighter is-3-mobile">
                   <p class="text-center has-txt-listing is-size-6-5 pt-1">${spellCast}</p>
                 </div>
-                <div class="column is-1 is-paddingless border-bottom border-dark-lighter">
+                <div class="column is-1-desktop is-paddingless border-bottom border-dark-lighter is-3-mobile">
                   <p class="text-center has-txt-listing is-size-6-5 pt-1">${spellSave}</p>
                 </div>
-                <div class="column is-1 is-paddingless border-bottom border-dark-lighter">
+                <div class="column is-1-desktop is-paddingless border-bottom border-dark-lighter is-hidden-mobile">
                   <p class="text-center has-txt-listing is-size-6-5 pt-1">${spellRange}</p>
                 </div>
-                <div class="column is-5 is-paddingless border-bottom border-dark-lighter">
+                <div class="column is-5-desktop is-paddingless border-bottom border-dark-lighter is-hidden-mobile">
                   <p class="text-center has-txt-listing">${tagsInnerHTML}</p>
                 </div>
               </div>
@@ -1038,19 +1038,19 @@ function displaySpellsInnate() {
             }
             $('#spellsInnateContent').append(`
               <div class="columns is-mobile is-marginless">
-                <div class="column is-4 is-paddingless">
+                <div class="column is-4-desktop is-paddingless is-6-mobile">
                   <p class="has-text-left pl-3"><strong class="has-txt-listing">Name</strong></p>
                 </div>
-                <div class="column is-2 is-paddingless">
+                <div class="column is-2-desktop is-paddingless is-3-mobile">
                   <p class="text-center"><strong class="is-size-6-5 has-txt-listing">Casts Per Day</strong></p>
                 </div>
-                <div class="column is-1 is-paddingless">
+                <div class="column is-1-desktop is-paddingless is-3-mobile">
                   <p class="text-center"><strong class="has-txt-listing">Cast</strong></p>
                 </div>
-                <div class="column is-1 is-paddingless">
+                <div class="column is-1-desktop is-paddingless is-hidden-mobile">
                   <p class="text-center"><strong class="has-txt-listing">Range</strong></p>
                 </div>
-                <div class="column is-4 is-paddingless">
+                <div class="column is-4-desktop is-paddingless is-hidden-mobile">
                   <p class="text-center"><strong class="has-txt-listing">Traits</strong></p>
                 </div>
               </div>
@@ -1112,19 +1112,19 @@ function displaySpellsInnate() {
 
             $('#spellsInnateContent').append(`
               <div id="${spellListingID}" class="columns is-mobile is-marginless cursor-clickable">
-                <div class="column is-4 is-paddingless border-bottom border-dark-lighter">
+                <div class="column is-4-desktop is-paddingless border-bottom border-dark-lighter is-6-mobile">
                   <p class="has-text-left pl-3 pt-1">${spellName}</p>
                 </div>
-                <div class="column is-2 is-paddingless border-bottom border-dark-lighter">
+                <div class="column is-2 is-paddingless border-bottom border-dark-lighter is-3-mobile">
                   <p id="${spellCastingID}" class="text-center has-txt-listing pt-1 is-unselectable"></p>
                 </div>
-                <div class="column is-1 is-paddingless border-bottom border-dark-lighter">
+                <div class="column is-1-desktop is-paddingless border-bottom border-dark-lighter is-3-mobile">
                   <p class="text-center has-txt-listing is-size-6-5 pt-1">${spellCast}</p>
                 </div>
-                <div class="column is-1 is-paddingless border-bottom border-dark-lighter">
+                <div class="column is-1-desktop is-paddingless border-bottom border-dark-lighter is-hidden-mobile">
                   <p class="text-center has-txt-listing is-size-6-5 pt-1">${spellRange}</p>
                 </div>
-                <div class="column is-4 is-paddingless border-bottom border-dark-lighter">
+                <div class="column is-4-desktop is-paddingless border-bottom border-dark-lighter is-hidden-mobile">
                   <p class="text-center has-txt-listing">${tagsInnerHTML}</p>
                 </div>
               </div>

@@ -125,16 +125,18 @@
 
 <div class="">
   <div class="dice-pageloader">
-    <div
-      class="ldBar label-center is-hidden"
-      data-type="fill"
-      data-img="/images/dice-d20.svg"
-      data-fill-background-extrude="0"
-      data-fill-background="var(--main-loading-bg-color)"
-      data-img-size="120,120"
-      data-duration="1"
-    ></div>
-    <label class="ldBar-message pos-absolute"></label>
+    <div class="ldBar-container">
+      <div
+        class="ldBar label-center is-hidden"
+        data-type="fill"
+        data-img="/images/dice-d20.svg"
+        data-fill-background-extrude="0"
+        data-fill-background="var(--main-loading-bg-color)"
+        data-img-size="120,120"
+        data-duration="1"
+      ></div>
+      <p class="ldBar-message"></p>
+    </div>
   </div>
 </div>
 
@@ -342,32 +344,32 @@
                         <!-- Ability Scores -->
                         <div class="tile sheet-box mobile-apply-flex">
                             <div id="strSection" class="tile is-child pt-2 is-paddingless cursor-clickable">
-                                <div class="has-text-weight-semibold is-size-7 is-unselectable">Strength</div>
+                                <div class="is-size-7 is-unselectable">Strength</div>
                                 <div id="strMod" class="is-size-4 pr-3"></div>
                                 <span id="strScore" class="sheet-small-box is-size-7 has-txt-listing"></span>
                             </div>
                             <div id="dexSection" class="tile is-child pt-2 is-paddingless cursor-clickable">
-                                <div class="has-text-weight-semibold is-size-7 is-unselectable">Dexterity</div>
+                                <div class="is-size-7 is-unselectable">Dexterity</div>
                                 <div id="dexMod" class="is-size-4 pr-3"></div>
                                 <span id="dexScore" class="sheet-small-box is-size-7 has-txt-listing"></span>
                             </div>
                             <div id="conSection" class="tile is-child pt-2 is-paddingless cursor-clickable">
-                                <div class="has-text-weight-semibold is-size-7 is-unselectable">Constitution</div>
+                                <div class="is-size-7 is-unselectable">Constitution</div>
                                 <div id="conMod" class="is-size-4 pr-3"></div>
                                 <span id="conScore" class="sheet-small-box is-size-7 has-txt-listing"></span>
                             </div>
                             <div id="intSection" class="tile is-child pt-2 is-paddingless cursor-clickable">
-                                <div class="has-text-weight-semibold is-size-7 is-unselectable">Intelligence</div>
+                                <div class="is-size-7 is-unselectable">Intelligence</div>
                                 <div id="intMod" class="is-size-4 pr-3"></div>
                                 <span id="intScore" class="sheet-small-box is-size-7 has-txt-listing"></span>
                             </div>
                             <div id="wisSection" class="tile is-child pt-2 is-paddingless cursor-clickable">
-                                <div class="has-text-weight-semibold is-size-7 is-unselectable">Wisdom</div>
+                                <div class="is-size-7 is-unselectable">Wisdom</div>
                                 <div id="wisMod" class="is-size-4 pr-3"></div>
                                 <span id="wisScore" class="sheet-small-box is-size-7 has-txt-listing"></span>
                             </div>
                             <div id="chaSection" class="tile is-child pt-2 is-paddingless cursor-clickable">
-                                <div class="has-text-weight-semibold is-size-7 is-unselectable">Charisma</div>
+                                <div class="is-size-7 is-unselectable">Charisma</div>
                                 <div id="chaMod" class="is-size-4 pr-3"></div>
                                 <span id="chaScore" class="sheet-small-box is-size-7 has-txt-listing"></span>
                             </div>
@@ -544,7 +546,7 @@
                 </button>
         </div>
     </div>
-    <button id="conditionsModalCloseButton" class="modal-close is-large" aria-label="close"></button>
+    <button id="conditionsModalCloseButton" class="modal-close is-large is-hidden-mobile" aria-label="close"></button>
     </div>
 
     <!-- Conditions Select Modal -->
@@ -576,10 +578,9 @@
                 <ul id="manageSpellsTabs" class="sheet-tabs has-txt-value-number">
                 </ul>
             </div>
-            <div class="tile is-ancestor">
-                <div class="tile is-parent">
-                    <div class="tile is-child is-3">
-                        <div class="columns is-marginless has-bg-options-header-bold">
+                <div class="columns is-mobile is-marginless">
+                    <div class="column is-paddingless is-3-desktop is-6-mobile">
+                        <div class="columns is-mobile is-marginless has-bg-options-header-bold">
                             <div id="manageSpellsListName" class="column is-10 is-paddingless">
                             </div>
                             <div class="column is-2 is-paddingless">
@@ -597,7 +598,7 @@
                         <div id="manageSpellsSpellBook" class="use-custom-scrollbar" style="max-height: 55vh; overflow-y: auto;">
                         </div>
                     </div>
-                    <div class="tile is-child is-9 pos-relative">
+                    <div class="column is-paddingless is-9-desktop is-6-mobile pos-relative">
                         <div id="manageSpellsSlots" class="use-custom-scrollbar" style="max-height: 70vh; overflow-y: auto;">
                         </div>
                         <div class="pos-absolute pos-t-0 pos-r-4">
@@ -607,7 +608,6 @@
                         </div>
                     </div>
                 </div>
-            </div>
         </section>
         <div class="modal-card-foot">
         </div>
