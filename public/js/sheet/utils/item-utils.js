@@ -172,6 +172,7 @@ function getBulkLimitModifierForSize(creatureSize){
 }
 
 function determineItemBulk(creatureSize, itemSize, itemBulk){
+  if(itemBulk == -1){ return 0; }
   let newItemBulk = convertItemTreatedBulkForCreature(creatureSize, itemBulk);
   return getConvertedBulkForSize(itemSize, newItemBulk);
 }

@@ -248,10 +248,11 @@ function displaySpellSlotsSpontaneous(spellSRC, data) {
 
                 let bulmaColor = getSpellTypeBulmaColor(slot.type);
 
+                let isSlotCustomClass = (slot.srcStruct.sourceType == 'user-added') ? 'is-underlined-thin-darker' : '';
                 if(slot.used) {
-                    $('#'+spellSlotsButtonsID).append('<span id="'+spellManagerSlotID+'" class="icon is-medium '+bulmaColor+' mx-2 has-tooltip-bottom" data-tooltip="Consumed Slot"><i class="fas fa-2x fa-square"></i></span>');
+                    $('#'+spellSlotsButtonsID).append('<span id="'+spellManagerSlotID+'" class="icon is-medium '+bulmaColor+' mx-2 has-tooltip-bottom '+isSlotCustomClass+'" data-tooltip="Consumed Slot"><i class="fas fa-2x fa-square"></i></span>');
                 } else {
-                    $('#'+spellSlotsButtonsID).append('<span id="'+spellManagerSlotID+'" class="icon is-medium '+bulmaColor+' mx-2 has-tooltip-bottom" data-tooltip="Available Slot"><i class="far fa-2x fa-square"></i></span>');
+                    $('#'+spellSlotsButtonsID).append('<span id="'+spellManagerSlotID+'" class="icon is-medium '+bulmaColor+' mx-2 has-tooltip-bottom '+isSlotCustomClass+'" data-tooltip="Available Slot"><i class="far fa-2x fa-square"></i></span>');
                 }
 
                 $('#'+spellManagerSlotID).click(function(){
@@ -274,7 +275,8 @@ function displaySpellSlotsSpontaneous(spellSRC, data) {
 
                 let bulmaColor = getSpellTypeBulmaColor(slot.type);
 
-                $('#'+spellSlotsButtonsID).append('<span id="'+spellManagerSlotID+'" class="icon is-medium cursor-clickable '+bulmaColor+' mx-2"><i class="fas fa-2x fa-dot-circle"></i></span>');
+                let isSlotCustomClass = (slot.srcStruct.sourceType == 'user-added') ? 'is-underlined-thin-darker' : '';
+                $('#'+spellSlotsButtonsID).append('<span id="'+spellManagerSlotID+'" class="icon is-medium cursor-clickable '+bulmaColor+' mx-2 '+isSlotCustomClass+'"><i class="fas fa-2x fa-dot-circle"></i></span>');
 
                 $('#'+spellManagerSlotID).click(function(){
                     openQuickView('spellEmptyView', {
@@ -406,7 +408,8 @@ function displaySpellSlotsPrepared(spellSRC, data) {
 
                 let bulmaColor = getSpellTypeBulmaColor_SlotFilled(slot.type);
 
-                $('#'+spellSlotsButtonsID).append('<p id="'+spellManagerSlotID+'" class="button '+bulmaColor+'">'+spellDataStruct.Spell.name+'</p>');
+                let isSlotCustomClass = (slot.srcStruct.sourceType == 'user-added') ? 'is-underlined-darker' : '';
+                $('#'+spellSlotsButtonsID).append('<p id="'+spellManagerSlotID+'" class="button '+bulmaColor+' '+isSlotCustomClass+'">'+spellDataStruct.Spell.name+'</p>');
 
                 $('#'+spellManagerSlotID).click(function(){
                     openQuickView('spellView', {
@@ -419,7 +422,8 @@ function displaySpellSlotsPrepared(spellSRC, data) {
 
                 let bulmaColor = getSpellTypeBulmaColor_SlotEmpty(slot.type);
 
-                $('#'+spellSlotsButtonsID).append('<a id="'+spellManagerSlotID+'" class="button '+bulmaColor+'">Empty</a>');
+                let isSlotCustomClass = (slot.srcStruct.sourceType == 'user-added') ? 'is-underlined-darker' : '';
+                $('#'+spellSlotsButtonsID).append('<a id="'+spellManagerSlotID+'" class="button '+bulmaColor+' '+isSlotCustomClass+'">Empty</a>');
 
                 $('#'+spellManagerSlotID).click(function(){
                     openQuickView('spellEmptyView', {

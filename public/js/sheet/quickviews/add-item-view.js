@@ -226,13 +226,13 @@ function changeItemCategoryTab(type, data){
             $('#'+addItemChevronItemID).removeClass('fa-chevron-up');
             $('#'+addItemChevronItemID).addClass('fa-chevron-down');
             $('#'+addItemNameID).removeClass('has-text-white-ter');
-            $(this).parent().removeClass('has-bg-options-header-bold');
+            //$(this).parent().removeClass('has-bg-options-header-bold');
             displayItemDetails(null, addItemDetailsItemID);
         } else {
             $('#'+addItemChevronItemID).removeClass('fa-chevron-down');
             $('#'+addItemChevronItemID).addClass('fa-chevron-up');
             $('#'+addItemNameID).addClass('has-text-white-ter');
-            $(this).parent().addClass('has-bg-options-header-bold');
+            //$(this).parent().addClass('has-bg-options-header-bold');
             displayItemDetails(itemDataStruct, addItemDetailsItemID);
         }
 

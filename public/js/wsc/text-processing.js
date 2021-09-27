@@ -142,6 +142,7 @@ function processText(text, isSheet, isJustified = false, size = 'MEDIUM', indexC
     }
 
     // (Feat: Strike)
+    // Optional (Feat:lvl-0: Quick Alchemy)
     if(typeof g_featMap !== 'undefined' && g_featMap != null) {
         text = text.replace(regexFeatLink, handleFeatLink);
     } else {

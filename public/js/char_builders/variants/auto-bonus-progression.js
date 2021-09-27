@@ -77,7 +77,7 @@ function getABP_DevastatingAttacks(id_offset, lvl, diceNum, diceWord){
     name: "Devastating Attacks ("+diceWord+" dice)",
     level: lvl,
     description: "Your weapon and unarmed strikes deal "+diceWord+" damage dice instead of one.",
-    code: "INCREASE-ATTACKS_DMG_DICE="+diceNum,
+    code: "INCREASE-ATTACKS_DMG_DICE="+diceNum+"-ABP",
     contentSrc: "CRB",
     displayInSheet: 1,
     selectType: "NONE",

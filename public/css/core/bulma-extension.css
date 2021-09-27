@@ -69,6 +69,11 @@ em {
   -webkit-text-decoration-color: #3273dc!important; /* Safari */  
   text-decoration-color: #3273dc!important;
 }
+.is-underlined-darker {
+  text-decoration: underline!important;
+  -webkit-text-decoration-color: #484848!important; /* Safari */  
+  text-decoration-color: #484848!important;
+}
 
 .is-underlined-thin {
   border-bottom: 1px solid;

@@ -2333,14 +2333,19 @@ function determineBulkAndCoins(invItems, itemMap){
         if(invItem.isDropped == 1) { droppedItemArray.push(invItem.id); continue; }
 
         // Coins - Hardcoded IDs //
+        let isCurrency = false;
         if(invItem.itemID == 22){ // Copper
-            copperCoins += invItem.quantity;
+          isCurrency = true;
+          copperCoins += invItem.quantity;
         } else if(invItem.itemID == 23){ // Silver
-            silverCoins += invItem.quantity;
+          isCurrency = true;
+          silverCoins += invItem.quantity;
         } else if(invItem.itemID == 24){ // Gold
-            goldCoins += invItem.quantity;
+          isCurrency = true;
+          goldCoins += invItem.quantity;
         } else if(invItem.itemID == 25){ // Platinum
-            platinumCoins += invItem.quantity;
+          isCurrency = true;
+          platinumCoins += invItem.quantity;
         }
             
         // Bulk //
@@ -2358,6 +2363,11 @@ function determineBulkAndCoins(invItems, itemMap){
                     invItemBulk = getWornArmorBulkAdjustment(invItem, invItemBulk);
                     invItemBulk = (invItemBulk == 0.0) ? 0.001 : invItemBulk;
                     let invItemTotalBulk = invItemBulk * invItemQuantity;
+
+                    if(isCurrency){
+                      invItemTotalBulk = Math.floor(invItemQuantity / 1000);
+                    }
+
                     bagBulkMap.set(invItem.bagInvItemID, invItemTotalBulk-bagItem.StorageData.bulkIgnored);
                   }
                 }
@@ -2367,6 +2377,11 @@ function determineBulkAndCoins(invItems, itemMap){
                 invItemBulk = getWornArmorBulkAdjustment(invItem, invItemBulk);
                 invItemBulk = (invItemBulk == 0.0) ? 0.001 : invItemBulk;
                 let invItemTotalBulk = invItemBulk * invItemQuantity;
+
+                if(isCurrency){
+                  invItemTotalBulk = Math.floor(invItemQuantity / 1000);
+                }
+
                 bagBulkMap.set(invItem.bagInvItemID, bagBulk+invItemTotalBulk);
             }
         } else {
@@ -2385,6 +2400,11 @@ function determineBulkAndCoins(invItems, itemMap){
                 invItemBulk = getWornArmorBulkAdjustment(invItem, invItemBulk);
                 invItemBulk = (invItemBulk == 0.0) ? 0.001 : invItemBulk;
                 let invItemTotalBulk = invItemBulk * invItemQuantity;
+
+                if(isCurrency){
+                  invItemTotalBulk = Math.floor(invItemQuantity / 1000);
+                }
+
                 totalBulk += invItemTotalBulk;
             }
         }
