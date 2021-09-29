@@ -438,9 +438,11 @@ function filterActionArray(data, featStructArray, tabType){
           }
         } else {
           // If skill selection is hidden, hide all skill actions
+          /*
           if(actionStruct.skillID != null){
             willDisplay = false;
           }
+          */
         }
 
         // Filter by is Basic
