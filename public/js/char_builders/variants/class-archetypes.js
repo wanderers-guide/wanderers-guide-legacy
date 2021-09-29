@@ -321,9 +321,17 @@ function replaceCodeFromClassArchetype(wscCode, srcStruct){
   if(g_classArchetypeChosenArchetype == null) { return wscCode; }
 
   if(g_classArchetypeChosenArchetype.dedicationFeatName != null){
-    if(wscCode.trim() == 'GIVE-CLASS-FEAT=2' && srcStruct.sourceLevel == 2 && srcStruct.sourceType == 'class'){
-      return `GIVE-FEAT-NAME=${g_classArchetypeChosenArchetype.dedicationFeatName}\nADD-TEXT=Because of your class archetype, you must select (feat: ${g_classArchetypeChosenArchetype.dedicationFeatName}) as your 2nd-level class feat.`;
+
+    if(wscChoiceStruct.Character.variantFreeArchetype == 0){
+      if(wscCode.trim() == 'GIVE-CLASS-FEAT=2' && srcStruct.sourceLevel == 2 && srcStruct.sourceType == 'class'){
+        return `GIVE-FEAT-NAME=${g_classArchetypeChosenArchetype.dedicationFeatName}\nADD-TEXT=Because of your class archetype, you must select (feat: ${g_classArchetypeChosenArchetype.dedicationFeatName}) as your 2nd-level class feat.`;
+      }
+    } else {
+      if(wscCode.trim() == 'GIVE-ARCHETYPE-FEAT=2' && srcStruct.sourceLevel == 2 && srcStruct.sourceType == 'class'){
+        return `GIVE-FEAT-NAME=${g_classArchetypeChosenArchetype.dedicationFeatName}\nADD-TEXT=Because of your class archetype, you must select (feat: ${g_classArchetypeChosenArchetype.dedicationFeatName}) as your 2nd-level class feat.`;
+      }
     }
+    
   }
 
   if(g_classArchetypeChosenArchetype.replacementCode.changes == null) { return wscCode; }
