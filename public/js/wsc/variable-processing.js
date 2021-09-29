@@ -615,6 +615,8 @@ function variables_getBonusTotal(variableName){
         }
       } else if(value == 20){
         total += 2;
+      } else {
+        total += value;
       }
     } else {
       total += value;
