@@ -132,27 +132,15 @@ function openItemQuickview(data) {
           itemDataStruct.WeaponData.dieType = '';
         }
 
-        if(itemDataStruct.WeaponData.isMelee == 1){
+        let damage = itemDataStruct.WeaponData.diceNum+""+itemDataStruct.WeaponData.dieType+" "+itemDataStruct.WeaponData.damageType;
 
-            let damage = itemDataStruct.WeaponData.diceNum+""+itemDataStruct.WeaponData.dieType+" "+itemDataStruct.WeaponData.damageType;
+        qContent.append('<div class="tile text-center is-flex"><div class="tile is-child"><strong>Damage</strong></div></div>');
+        qContent.append('<div class="tile text-center is-flex"><div class="tile is-child"><p class="damage-roll-btn">'+damage+'</p></div></div>');
+        if(typeof gOption_hasDiceRoller !== 'undefined' && gOption_hasDiceRoller) { refreshStatRollButtons(); }
 
-            qContent.append('<div class="tile text-center is-flex"><div class="tile is-child"><strong>Damage</strong></div></div>');
-            qContent.append('<div class="tile text-center is-flex"><div class="tile is-child"><p class="damage-roll-btn">'+damage+'</p></div></div>');
-            if(typeof gOption_hasDiceRoller !== 'undefined' && gOption_hasDiceRoller) { refreshStatRollButtons(); }
-
-            qContent.append('<hr class="m-2">');
-
-        }
+        qContent.append('<hr class="m-2">');
 
         if(itemDataStruct.WeaponData.isRanged == 1){
-
-            let damage = itemDataStruct.WeaponData.diceNum+""+itemDataStruct.WeaponData.dieType+" "+itemDataStruct.WeaponData.damageType;
-
-            qContent.append('<div class="tile text-center is-flex"><div class="tile is-child"><strong>Damage</strong></div></div>');
-            qContent.append('<div class="tile text-center is-flex"><div class="tile is-child"><p class="damage-roll-btn">'+damage+'</p></div></div>');
-            if(typeof gOption_hasDiceRoller !== 'undefined' && gOption_hasDiceRoller) { refreshStatRollButtons(); }
-
-            qContent.append('<hr class="m-2">');
 
             let reload = itemDataStruct.WeaponData.rangedReload;
             if(reload == 0){ reload = '-'; }

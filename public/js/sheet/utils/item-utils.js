@@ -284,6 +284,18 @@ function getItemTraitsArray(item, invItem){
     tagArray = item.TagArray;
   }
 
+  // Added traits from attached items
+  for(const weapTraitMod of getWeapMod(invItem.id, 'ADD-TRAIT')){
+    let addedTag = g_allTags.find(tag => {
+      return tag.name.toUpperCase() === weapTraitMod.mod.toUpperCase();
+    });
+    if(addedTag != null){
+      tagArray.push(addedTag);
+    } else {
+      displayError('DEFAULT-ADD-TRAIT statement attempting to add trait to '+invItem.name+' that doesn\'t exist ('+weapTraitMod.mod+')!');
+    }
+  }
+
   // If item has a potency rune and is not magical, add magical trait and evocation trait
   if(invItem.fundPotencyRuneID != null){
     let magical = tagArray.find(tag => {

@@ -250,6 +250,9 @@ function processSheetCode(wscCode, extraData=null, isTest=false){
 
           let dataParts = wscStatement.split('=');
           addWeapMod(invItemID, dataParts[1], 'DAMAGE-ON-HIT', modInfo);
+          if(extraData.bagInvItemID != null){
+            addWeapMod(extraData.bagInvItemID, dataParts[1], 'DAMAGE-ON-HIT', 'AttachedItem');
+          }
 
           continue;
         }
@@ -272,6 +275,9 @@ function processSheetCode(wscCode, extraData=null, isTest=false){
 
           let dataParts = wscStatement.split('=');
           addWeapMod(invItemID, dataParts[1], 'DAMAGE-ON-CRIT', modInfo);
+          if(extraData.bagInvItemID != null){
+            addWeapMod(extraData.bagInvItemID, dataParts[1], 'DAMAGE-ON-CRIT', 'AttachedItem');
+          }
 
           continue;
         }
@@ -294,6 +300,9 @@ function processSheetCode(wscCode, extraData=null, isTest=false){
 
           let dataParts = wscStatement.split('=');
           addWeapMod(invItemID, dataParts[1], 'OTHER-ON-HIT', modInfo);
+          if(extraData.bagInvItemID != null){
+            addWeapMod(extraData.bagInvItemID, dataParts[1], 'OTHER-ON-HIT', 'AttachedItem');
+          }
 
           continue;
         }
@@ -316,6 +325,9 @@ function processSheetCode(wscCode, extraData=null, isTest=false){
 
           let dataParts = wscStatement.split('=');
           addWeapMod(invItemID, dataParts[1], 'OTHER-ON-CRIT', modInfo);
+          if(extraData.bagInvItemID != null){
+            addWeapMod(extraData.bagInvItemID, dataParts[1], 'OTHER-ON-CRIT', 'AttachedItem');
+          }
 
           continue;
         }
@@ -338,6 +350,9 @@ function processSheetCode(wscCode, extraData=null, isTest=false){
 
           let dataParts = wscStatement.split('=');
           addWeapMod(invItemID, dataParts[1], 'CONDITIONAL-ON-HIT', modInfo);
+          if(extraData.bagInvItemID != null){
+            addWeapMod(extraData.bagInvItemID, dataParts[1], 'CONDITIONAL-ON-HIT', 'AttachedItem');
+          }
 
           continue;
         }
@@ -360,6 +375,84 @@ function processSheetCode(wscCode, extraData=null, isTest=false){
 
           let dataParts = wscStatement.split('=');
           addWeapMod(invItemID, dataParts[1], 'CONDITIONAL-ON-CRIT', modInfo);
+          if(extraData.bagInvItemID != null){
+            addWeapMod(extraData.bagInvItemID, dataParts[1], 'CONDITIONAL-ON-CRIT', 'AttachedItem');
+          }
+
+          continue;
+        }
+
+        if(wscStatementUpper.startsWith("DEFAULT-ADJUST-RANGE=")){
+          if(isTest) {continue;} //DEFAULT-ADJUST-RANGE=+30
+
+          let invItemID = null;
+          if(extraData.source == 'InvItem' || extraData.source == 'PropertyRune'){
+            invItemID = extraData.invItemID;
+          } else {
+            displayError('Attempted to execute "DEFAULT-ADJUST-RANGE" from a non-item source');
+            continue;
+          }
+
+          let modInfo = extraData.source;
+          if(extraData.source == 'PropertyRune'){
+            modInfo = extraData.sourceName;
+          }
+
+          let dataParts = wscStatement.split('=');
+          addWeapMod(invItemID, dataParts[1], 'ADJUST-RANGE', modInfo);
+          if(extraData.bagInvItemID != null){
+            addWeapMod(extraData.bagInvItemID, dataParts[1], 'ADJUST-RANGE', 'AttachedItem');
+          }
+
+          continue;
+        }
+
+        if(wscStatementUpper.startsWith("DEFAULT-ADJUST-RELOAD=")){
+          if(isTest) {continue;} //DEFAULT-ADJUST-RELOAD=-1
+
+          let invItemID = null;
+          if(extraData.source == 'InvItem' || extraData.source == 'PropertyRune'){
+            invItemID = extraData.invItemID;
+          } else {
+            displayError('Attempted to execute "DEFAULT-ADJUST-RELOAD" from a non-item source');
+            continue;
+          }
+
+          let modInfo = extraData.source;
+          if(extraData.source == 'PropertyRune'){
+            modInfo = extraData.sourceName;
+          }
+
+          let dataParts = wscStatement.split('=');
+          addWeapMod(invItemID, dataParts[1], 'ADJUST-RELOAD', modInfo);
+          if(extraData.bagInvItemID != null){
+            addWeapMod(extraData.bagInvItemID, dataParts[1], 'ADJUST-RELOAD', 'AttachedItem');
+          }
+
+          continue;
+        }
+
+        if(wscStatementUpper.startsWith("DEFAULT-ADD-TRAIT=")){
+          if(isTest) {continue;} //DEFAULT-ADD-TRAIT=Deadly d8
+
+          let invItemID = null;
+          if(extraData.source == 'InvItem' || extraData.source == 'PropertyRune'){
+            invItemID = extraData.invItemID;
+          } else {
+            displayError('Attempted to execute "DEFAULT-ADD-TRAIT" from a non-item source');
+            continue;
+          }
+
+          let modInfo = extraData.source;
+          if(extraData.source == 'PropertyRune'){
+            modInfo = extraData.sourceName;
+          }
+
+          let dataParts = wscStatement.split('=');
+          //addWeapMod(invItemID, dataParts[1], 'ADD-TRAIT', modInfo);
+          if(extraData.bagInvItemID != null){
+            addWeapMod(extraData.bagInvItemID, dataParts[1], 'ADD-TRAIT', 'AttachedItem');
+          }
 
           continue;
         }

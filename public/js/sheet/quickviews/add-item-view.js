@@ -524,27 +524,20 @@ function displayItemDetails(itemDataStruct, addItemDetailsItemID){
             return tag.id == 402; // Hardcoded Consumable Tag ID
         });
 
-        if(itemDataStruct.WeaponData.isMelee == 1){
-
-            let damage = itemDataStruct.WeaponData.diceNum+""+itemDataStruct.WeaponData.dieType+" "+itemDataStruct.WeaponData.damageType;
-            damage = (consumableTag != null) ? 'See Text' : damage;
-
-            itemDetails.append('<div class="tile is-flex"><div class="tile is-child"><strong>Damage</strong></div></div>');
-            itemDetails.append('<div class="tile is-flex"><div class="tile is-child"><p>'+damage+'</p></div></div>');
-
-            itemDetails.append('<hr class="m-2">');
-
+        // Fixes Prisma empty enum for dieType, like for Blowguns
+        if(itemDataStruct.WeaponData.dieType == 'EMPTY_ENUM_VALUE'){
+          itemDataStruct.WeaponData.dieType = '';
         }
 
+        let damage = itemDataStruct.WeaponData.diceNum+""+itemDataStruct.WeaponData.dieType+" "+itemDataStruct.WeaponData.damageType;
+        damage = (consumableTag != null) ? 'See Text' : damage;
+
+        itemDetails.append('<div class="tile is-flex"><div class="tile is-child"><strong>Damage</strong></div></div>');
+        itemDetails.append('<div class="tile is-flex"><div class="tile is-child"><p>'+damage+'</p></div></div>');
+
+        itemDetails.append('<hr class="m-2">');
+
         if(itemDataStruct.WeaponData.isRanged == 1){
-
-            let damage = itemDataStruct.WeaponData.diceNum+""+itemDataStruct.WeaponData.dieType+" "+itemDataStruct.WeaponData.damageType;
-            damage = (consumableTag != null) ? 'See Text' : damage;
-
-            itemDetails.append('<div class="tile is-flex"><div class="tile is-child"><strong>Damage</strong></div></div>');
-            itemDetails.append('<div class="tile is-flex"><div class="tile is-child"><p>'+damage+'</p></div></div>');
-
-            itemDetails.append('<hr class="m-2">');
 
             let reload = itemDataStruct.WeaponData.rangedReload;
             if(reload == 0){ reload = '-'; }

@@ -57,6 +57,8 @@ function openItemBreakdownQuickview(data) {
           let source = '';
           if(onHitDmgMod.info == 'InvItem'){
             source = 'This extra damage comes from the item itself.';
+          } else if(onHitDmgMod.info == 'AttachedItem'){
+            source = 'This extra damage comes from an attached item.';
           } else {
             source = 'This extra damage comes from the '+runestoneNameToRuneName(onHitDmgMod.info)+' property rune this item has.';
           }
@@ -87,6 +89,8 @@ function openItemBreakdownQuickview(data) {
             let source = '';
             if(onCritDmgMod.info == 'InvItem'){
               source = 'This extra damage comes from the item itself and applies only when you critically hit.';
+            } else if(onHitDmgMod.info == 'AttachedItem'){
+              source = 'This extra damage comes from an attached item and applies only when you critically hit.';
             } else if(onCritDmgMod.info ==  'DeadlyTrait') {
               source = 'This extra damage comes from the deadly trait this item has. It adds an amount of extra damage (depending the item\'s Striking runes) that applies only when you critically hit.';
             } else if(onCritDmgMod.info ==  'FatalTrait') {
@@ -121,6 +125,8 @@ function openItemBreakdownQuickview(data) {
         let source = '';
         if(onHitOtherMod.info == 'InvItem'){
           source = 'This additional effect comes from the item itself.';
+        } else if(onHitOtherMod.info == 'AttachedItem'){
+          source = 'This additional effect comes from an attached item.';
         } else {
           source = 'This additional effect comes from the '+runestoneNameToRuneName(onHitOtherMod.info)+' property rune this item has.';
         }
@@ -142,6 +148,8 @@ function openItemBreakdownQuickview(data) {
           let source = '';
           if(onCritOtherMod.info == 'InvItem'){
             source = 'This additional effect comes from the item itself and applies only when you critically hit.';
+          } else if(onCritOtherMod.info == 'AttachedItem'){
+            source = 'This additional effect comes from an attached item and applies only when you critically hit.';
           } else if(onCritOtherMod.info ==  'CriticalSpecialization') {
             source = 'This is the critical specialization effect determined by your weapon\'s group (club, hammer, sword, etc).';
           } else {

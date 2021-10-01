@@ -107,12 +107,12 @@ function displayInventorySection(data){
 
     $('#inventorySearch').off('change');
 
-    let openBagInvItemArray = [];
+    let openBagItemArray = [];
     for(const invItem of g_invStruct.InvItems){
-        let item = g_itemMap.get(invItem.itemID+"");
+        const item = g_itemMap.get(invItem.itemID+"");
         if(item != null){
             if(item.StorageData != null && invItem.bagInvItemID == null){
-                openBagInvItemArray.push(invItem);
+              openBagItemArray.push({InvItem: invItem, Item: item});
             }
         }
     }
@@ -185,7 +185,7 @@ function displayInventorySection(data){
 
         if(willDisplay) {
           itemDisplayed = true;
-          displayInventoryItem(invItem, item, openBagInvItemArray, data);
+          displayInventoryItem(invItem, item, openBagItemArray, data);
         }
 
     }
@@ -199,11 +199,11 @@ function displayInventorySection(data){
 
 }
 
-function displayInventoryItem(invItem, item, openBagInvItemArray, data) {
+function displayInventoryItem(invItem, item, openBagItemArray, data) {
 
     let itemTagArray = getItemTraitsArray(item, invItem);
 
-    let itemIsStorage = (item.StorageData != null);
+    let itemIsStorage = (g_bulkAndCoinsStruct.BagBulkMap.get(invItem.id) != null);
     let itemIsStorageAndEmpty = false;
     let itemStorageBulkAmt = null;
 
@@ -261,7 +261,7 @@ function displayInventoryItem(invItem, item, openBagInvItemArray, data) {
 
         $('#inventoryContent').append('<div id="'+invItemStorageSectionID+'" class="tile is-vertical is-hidden"></div>');
 
-        let bulkIgnored = item.StorageData.bulkIgnored;
+        let bulkIgnored = (item.StorageData != null) ? item.StorageData.bulkIgnored : 0;
         let bagBulk = g_bulkAndCoinsStruct.BagBulkMap.get(invItem.id);
         if(bagBulk == null) {
             bagBulk = 0;
@@ -269,7 +269,9 @@ function displayInventoryItem(invItem, item, openBagInvItemArray, data) {
             bagBulk += bulkIgnored;
         }
         let maxBagBulk = invItem.itemStorageMaxBulk;
-        if(maxBagBulk == null){ maxBagBulk = item.StorageData.maxBulkStorage; }
+        if(maxBagBulk == null){
+          maxBagBulk = (item.StorageData != null) ? item.StorageData.maxBulkStorage : -1;
+        }
         let bulkIgnoredMessage = "";
         if(bulkIgnored != 0.0){
             if(bulkIgnored == maxBagBulk){
@@ -280,7 +282,9 @@ function displayInventoryItem(invItem, item, openBagInvItemArray, data) {
         }
         let roundedBagBulk = round(bagBulk, 2);
         itemStorageBulkAmt = round(bagBulk-bulkIgnored, 2);
-        $('#'+invItemStorageSectionID).append('<div class="tile is-parent mobile-apply-flex is-paddingless pt-1 px-2"><div class="tile is-child is-1"></div><div class="tile is-child is-3 border-bottom border-dark-lighter"><p id="'+invItemStorageBulkAmountID+'" class="has-text-left pl-5 is-size-6 has-txt-noted">Bulk '+roundedBagBulk+' / '+maxBagBulk+'</p></div><div class="tile is-child is-8 border-bottom border-dark-lighter"><p class="has-text-left pl-3 is-size-6 has-txt-noted is-italic">'+bulkIgnoredMessage+'</p></div></div>');
+        if(maxBagBulk >= 0){
+          $('#'+invItemStorageSectionID).append('<div class="tile is-parent mobile-apply-flex is-paddingless pt-1 px-2"><div class="tile is-child is-1"></div><div class="tile is-child is-3 border-bottom border-dark-lighter"><p id="'+invItemStorageBulkAmountID+'" class="has-text-left pl-5 is-size-6 has-txt-noted">Bulk '+roundedBagBulk+' / '+maxBagBulk+'</p></div><div class="tile is-child is-8 border-bottom border-dark-lighter"><p class="has-text-left pl-3 is-size-6 has-txt-noted is-italic">'+bulkIgnoredMessage+'</p></div></div>');
+        }
 
         let isOverBulk = false;
         if(maxBagBulk == 0) {
@@ -308,7 +312,7 @@ function displayInventoryItem(invItem, item, openBagInvItemArray, data) {
 
                 let baggedItemTagArray = getItemTraitsArray(baggedItem, baggedInvItem);
 
-                let baggedItemIsStorage = (baggedItem.StorageData != null);
+                let baggedItemIsStorage = (g_bulkAndCoinsStruct.BagBulkMap.get(baggedInvItem.id) != null);
 
                 let baggedInvItemSectionID = 'baggedInvItemSection'+baggedInvItem.id;
                 let baggedInvItemIndentID = 'baggedInvItemIndent'+baggedInvItem.id;
@@ -431,7 +435,7 @@ function displayInventoryItem(invItem, item, openBagInvItemArray, data) {
                         InvItem : baggedInvItem,
                         Item : baggedItem,
                         InvData : {
-                            OpenBagInvItemArray : openBagInvItemArray,
+                            OpenBagItemArray : openBagItemArray,
                             ItemIsStorage : baggedItemIsStorage,
                             ItemIsStorageAndEmpty : true
                         },
@@ -551,9 +555,11 @@ function displayInventoryItem(invItem, item, openBagInvItemArray, data) {
 
     let bulk = determineItemBulk(g_charSize, invItem.size, invItem.bulk);
     bulk = getWornArmorBulkAdjustment(invItem, bulk);
-    if(item.StorageData != null){
-        if(item.StorageData.ignoreSelfBulkIfWearing == 1){ bulk = 0; }
-        if(itemStorageBulkAmt != null && itemStorageBulkAmt > 0) { bulk += itemStorageBulkAmt; }
+    if(item.StorageData != null && item.StorageData.ignoreSelfBulkIfWearing == 1){
+      bulk = 0;
+    }
+    if(itemStorageBulkAmt != null && itemStorageBulkAmt > 0) {
+      bulk += itemStorageBulkAmt;
     }
     bulk = getBulkFromNumber(bulk);
     if(invItem.isDropped == 1) { bulk = '<span class="is-size-6-5">Dropped</span>'; }
@@ -600,7 +606,7 @@ function displayInventoryItem(invItem, item, openBagInvItemArray, data) {
             InvItem : invItem,
             Item : item,
             InvData : {
-                OpenBagInvItemArray : openBagInvItemArray,
+                OpenBagItemArray : openBagItemArray,
                 ItemIsStorage : itemIsStorage,
                 ItemIsStorageAndEmpty : itemIsStorageAndEmpty
             },

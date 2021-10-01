@@ -19,6 +19,11 @@ function initWeapModManager(){
 
     - CONDITIONAL-ON-HIT
     - CONDITIONAL-ON-CRIT
+
+    - ADJUST-RANGE
+    - ADJUST-RELOAD
+
+    - ADD-TRAIT
 */
 
 /* Layout:
@@ -27,7 +32,15 @@ function initWeapModManager(){
 
 function addWeapMod(invItemID, weapMod, weapModType, extraInfo=''){
   if(invItemID == null) { return; }
-  if(weapModType == 'DAMAGE-ON-HIT' || weapModType == 'DAMAGE-ON-CRIT' || weapModType == 'OTHER-ON-HIT' || weapModType == 'OTHER-ON-CRIT' || weapModType == 'CONDITIONAL-ON-HIT' || weapModType == 'CONDITIONAL-ON-CRIT') {
+  if(weapModType == 'DAMAGE-ON-HIT'
+      || weapModType == 'DAMAGE-ON-CRIT'
+      || weapModType == 'OTHER-ON-HIT'
+      || weapModType == 'OTHER-ON-CRIT'
+      || weapModType == 'CONDITIONAL-ON-HIT'
+      || weapModType == 'CONDITIONAL-ON-CRIT'
+      || weapModType == 'ADJUST-RANGE'
+      || weapModType == 'ADJUST-RELOAD'
+      || weapModType == 'ADD-TRAIT') {
     // Good, weapModType is a valid type
     if(weapModType.includes('DAMAGE-')){
       let weapModMatch = weapMod.match(g_weapMod_damageRegex);

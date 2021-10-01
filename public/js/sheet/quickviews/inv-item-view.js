@@ -5,6 +5,7 @@
 let g_invItemView_isCriticalHit = false;
 
 function openInvItemQuickview(data) {
+    addBackFunctionality(data);
 
     let viewOnly = (data.InvItem.viewOnly != null) ? true : false;
 
@@ -355,6 +356,14 @@ function openInvItemQuickview(data) {
           weaponRange = data.InvItem.itemWeaponRange;
           weaponReload = data.InvItem.itemWeaponReload;
         }
+
+        for(const weapRangeMod of getWeapMod(data.InvItem.id, 'ADJUST-RANGE')){
+          weaponRange += parseInt(weapRangeMod.mod);
+        }
+        for(const weapReloadMod of getWeapMod(data.InvItem.id, 'ADJUST-RELOAD')){
+          weaponReload += parseInt(weapReloadMod.mod);
+        }
+
         if(weaponReload == 0){ weaponReload = '-'; }
         weaponRange += ' ft';
 
@@ -430,6 +439,64 @@ function openInvItemQuickview(data) {
     }
     
     qContent.append('<hr class="m-2">');
+
+    // Attachments
+    if(data.Item.StorageData == null){
+      let hasInvData = (data.InvData != null);
+      // Not storage but has items stored under it.
+      if((hasInvData && data.InvData.ItemIsStorage) || (!hasInvData && (g_bulkAndCoinsStruct.BagBulkMap.get(data.InvItem.id) != null))) {
+
+        qContent.append(`
+        <div>  
+          <div class="text-center">
+            <strong px-1">Attachments</strong>
+          </div>
+          <div id="itemAttachmentsSection">
+            
+          </div>
+        </div>
+        `);
+
+        for(const attachedInvItem of g_invStruct.InvItems){
+        if(data.InvItem.id == attachedInvItem.bagInvItemID){
+
+          const itemAttachmentID = 'itemAttachment-'+attachedInvItem.id;
+
+          $('#itemAttachmentsSection').append(`
+            <p class="text-center"><span id="${itemAttachmentID}" class="has-text-info-lighter cursor-clickable">${attachedInvItem.name}</span></p>
+          `);
+
+          $('#'+itemAttachmentID).click(function(){
+            if(hasInvData) {
+              openQuickView('invItemView', {
+                InvItem : attachedInvItem,
+                Item : g_itemMap.get(attachedInvItem.itemID+""),
+                InvData : {
+                    OpenBagItemArray : data.InvData.OpenBagItemArray,
+                    ItemIsStorage : (g_bulkAndCoinsStruct.BagBulkMap.get(attachedInvItem.id) != null),
+                    ItemIsStorageAndEmpty : true
+                },
+                ExtraData : {},
+                _prevBackData: {Type: g_QViewLastType, Data: g_QViewLastData},
+              }, $('#quickviewDefault').hasClass('is-active'));
+            } else {
+              openQuickView('invItemView', {
+                InvItem : attachedInvItem,
+                Item : g_itemMap.get(attachedInvItem.itemID+""),
+                InvData : null,
+                ExtraData : {},
+                _prevBackData: {Type: g_QViewLastType, Data: g_QViewLastData},
+              }, $('#quickviewDefault').hasClass('is-active'));
+            }
+          });
+
+        }
+        }
+
+        qContent.append('<hr class="m-2">');
+
+      }
+    }
 
     // Item Runes
     let consumableTag = tagArray.find(tag => {
@@ -576,22 +643,72 @@ function openInvItemQuickview(data) {
             qContent.append('<div class="field has-addons has-addons-centered"><div class="control"><div class="select is-small is-link"><select id="'+invItemMoveSelectID+'"></select></div></div><div class="control"><button id="'+invItemMoveButtonID+'" type="submit" class="button is-small is-link is-rounded is-outlined">Move</button></div></div>');
         
             $('#'+invItemMoveSelectID).append('<option value="Unstored">Unstored</option>');
+
+            // Attachments //
+            if(data.Item.StorageData == null && (
+                data.Item.Item.itemType == 'AMMUNITION' ||
+                data.Item.Item.itemType == 'TALISMAN' || 
+                data.Item.Item.itemType == 'FULU' || 
+                //data.Item.Item.itemType == 'RUNE' || 
+                data.Item.Item.itemType == 'OTHER' || 
+                data.Item.Item.itemType == 'SPELLHEART')) {
+              // Item is attachment
+
+              $('#'+invItemMoveSelectID).append('<optgroup label="───────"></optgroup>');
+              for(const attachableInvItem of g_invStruct.InvItems){
+                if(data.InvItem.id != attachableInvItem.id) {
+
+                  // Item is attachable
+                  const attachableItem = g_itemMap.get(attachableInvItem.itemID+"");
+                  if(attachableItem != null
+                    && attachableInvItem.bagInvItemID == null // Not stored
+                    && attachableItem.StorageData == null // Not storage
+                    && attachableItem.Item.hidden == 0 // Not hidden
+                    && (
+                      attachableItem.Item.itemType == 'WEAPON' ||
+                      attachableItem.Item.itemType == 'ARMOR' ||
+                      attachableItem.Item.itemType == 'SHIELD' ||
+                      attachableItem.Item.itemType == 'WAND' ||
+                      attachableItem.Item.itemType == 'STAFF' ||
+                      attachableItem.Item.itemType == 'STRUCTURE' ||
+                      attachableItem.Item.itemType == 'HAT' ||
+                      attachableItem.Item.itemType == 'CLOAK' ||
+                      attachableItem.Item.itemType == 'BELT' ||
+                      attachableItem.Item.itemType == 'BOOTS')) {
+
+                    if(data.InvItem.bagInvItemID == attachableInvItem.id){
+                      $('#'+invItemMoveSelectID).append('<option value="'+attachableInvItem.id+'" selected>Attach ▸ '+attachableInvItem.name+'</option>');
+                    } else {
+                      $('#'+invItemMoveSelectID).append('<option value="'+attachableInvItem.id+'">Attach ▸ '+attachableInvItem.name+'</option>');
+                    }
+
+                  }
+
+                }
+              }
+
+            }
+
+            // Storage //
             if(data.InvData.ItemIsStorage && !data.InvData.ItemIsStorageAndEmpty) {
+              // Don't include for storage items that contain other items.
             } else {
-                for(const bagInvItem of data.InvData.OpenBagInvItemArray){
-                    if(data.InvItem.id != bagInvItem.id) {
-                        if(data.InvItem.bagInvItemID == bagInvItem.id){
-                            $('#'+invItemMoveSelectID).append('<option value="'+bagInvItem.id+'" selected>'+bagInvItem.name+'</option>');
-                        } else {
-                            $('#'+invItemMoveSelectID).append('<option value="'+bagInvItem.id+'">'+bagInvItem.name+'</option>');
-                        }
+              $('#'+invItemMoveSelectID).append('<optgroup label="───────"></optgroup>');
+              for(const bagItemStruct of data.InvData.OpenBagItemArray){
+                if(data.InvItem.id != bagItemStruct.InvItem.id) {
+                    if(data.InvItem.bagInvItemID == bagItemStruct.InvItem.id){
+                        $('#'+invItemMoveSelectID).append('<option value="'+bagItemStruct.InvItem.id+'" selected>Store ▸ '+bagItemStruct.InvItem.name+'</option>');
+                    } else {
+                        $('#'+invItemMoveSelectID).append('<option value="'+bagItemStruct.InvItem.id+'">Store ▸ '+bagItemStruct.InvItem.name+'</option>');
                     }
                 }
+              }
             }
+
+            $('#'+invItemMoveSelectID).append('<optgroup label="───────"></optgroup>');
             $('#'+invItemMoveSelectID).append('<option value="Dropped">Dropped</option>');
                 
             if(data.InvItem.isDropped == 1){ $('#'+invItemMoveSelectID).val('Dropped'); }
-        
             $('#'+invItemMoveButtonID).click(function() {
                 let bagItemID = $('#'+invItemMoveSelectID).val();
                 let isDropped = 0;

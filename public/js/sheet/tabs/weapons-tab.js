@@ -20,6 +20,14 @@ function openWeaponsTab(data) {
           weaponRange = invItem.itemWeaponRange;
           weaponReload = invItem.itemWeaponReload;
         }
+
+        for(const weapRangeMod of getWeapMod(invItem.id, 'ADJUST-RANGE')){
+          weaponRange += parseInt(weapRangeMod.mod);
+        }
+        for(const weapReloadMod of getWeapMod(invItem.id, 'ADJUST-RELOAD')){
+          weaponReload += parseInt(weapReloadMod.mod);
+        }
+
         if(weaponReload == 0){ weaponReload = '-'; }
         if(weaponRange == 0 || (item.WeaponData.isRanged == 0 && weaponRange == 20 && !extraData.IsCustomUnarmedAttack)){ weaponRange = '-'; } else { weaponRange += ' ft'; }
 

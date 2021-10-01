@@ -1955,6 +1955,7 @@ function determineArmor(dexMod, strScore) {
               source: 'InvItem',
               sourceName: shieldStruct.InvItem.name,
               invItemID: shieldStruct.InvItem.id,
+              bagInvItemID: shieldStruct.InvItem.bagInvItemID,
             });
         }
 
@@ -1991,6 +1992,7 @@ function determineArmor(dexMod, strScore) {
               source: 'InvItem',
               sourceName: armorStruct.InvItem.name,
               invItemID: armorStruct.InvItem.id,
+              bagInvItemID: armorStruct.InvItem.bagInvItemID,
             });
         }
 
@@ -2367,8 +2369,10 @@ function determineBulkAndCoins(invItems, itemMap){
                     if(isCurrency){
                       invItemTotalBulk = Math.floor(invItemQuantity / 1000);
                     }
+                    
+                    let bulkIgnored = (bagItem.StorageData != null) ? bagItem.StorageData.bulkIgnored : 0;
 
-                    bagBulkMap.set(invItem.bagInvItemID, invItemTotalBulk-bagItem.StorageData.bulkIgnored);
+                    bagBulkMap.set(invItem.bagInvItemID, invItemTotalBulk-bulkIgnored);
                   }
                 }
             } else {
@@ -2505,6 +2509,7 @@ function determineInvestitures(){
               source: 'InvItem',
               sourceName: invItem.name,
               invItemID: invItem.id,
+              bagInvItemID: invItem.bagInvItemID,
             });
             runPropertyRuneCode(invItem.propRune1ID, invItem.id);
             runPropertyRuneCode(invItem.propRune2ID, invItem.id);
@@ -2537,6 +2542,7 @@ function runAllItemsCode() {
               source: 'InvItem',
               sourceName: invItem.name,
               invItemID: invItem.id,
+              bagInvItemID: invItem.bagInvItemID,
             });
             runPropertyRuneCode(invItem.propRune1ID, invItem.id);
             runPropertyRuneCode(invItem.propRune2ID, invItem.id);
