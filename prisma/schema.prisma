@@ -909,6 +909,7 @@ model tags {
   id              Int              @id @default(autoincrement())
   name            String?          @db.VarChar(45)
   description     String?          @db.Text
+  isImportant     Int?             @default(0)
   isHidden        Int?             @default(0)
   isArchived      Int?             @default(0)
   homebrewID      Int?

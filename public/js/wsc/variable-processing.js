@@ -1003,7 +1003,7 @@ function getVariableValue(variableStr, errorOnFailure=true){
         if(errorOnFailure){
           displayError("Variable Processing (2-0): Error trying to do math \'"+variableStr+"\'!");
         }
-        console.error(err);
+        //console.error(err);
         return 'Error';
       }
 

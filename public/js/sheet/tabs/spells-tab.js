@@ -341,7 +341,7 @@ function displaySpellsInLevelPrepared(spellBook, level, slotArray, spellBookSect
           // Tags //
           let tagsInnerHTML = '<div class="buttons is-marginless is-centered">';
           for(const tag of spellDataStruct.Tags){
-              tagsInnerHTML += '<button class="button is-marginless mr-2 my-1 is-very-small is-info">'+tag.name+'</button>';
+              tagsInnerHTML += '<button class="button is-marginless mr-2 my-1 is-very-small is-info">'+tag.name+getImportantTraitIcon(tag)+'</button>';
           }
           tagsInnerHTML += '</div>';
 
@@ -557,7 +557,7 @@ function displaySpellsInLevelSpontaneous(spellBook, level, slotArray, spellBookS
         // Tags //
         let tagsInnerHTML = '<div class="buttons is-marginless is-centered">';
         for(const tag of spellDataStruct.Tags){
-            tagsInnerHTML += '<button class="button is-marginless mr-2 my-1 is-very-small is-info">'+tag.name+'</button>';
+            tagsInnerHTML += '<button class="button is-marginless mr-2 my-1 is-very-small is-info">'+tag.name+getImportantTraitIcon(tag)+'</button>';
         }
         tagsInnerHTML += '</div>';
 
@@ -875,7 +875,7 @@ function displaySpellsFocus() {
             // Tags //
             let tagsInnerHTML = '<div class="buttons is-marginless is-centered">';
             for(const tag of spellDataStruct.Tags){
-                tagsInnerHTML += '<button class="button is-marginless mr-2 my-1 is-very-small is-info">'+tag.name+'</button>';
+                tagsInnerHTML += '<button class="button is-marginless mr-2 my-1 is-very-small is-info">'+tag.name+getImportantTraitIcon(tag)+'</button>';
             }
             tagsInnerHTML += '</div>';
 
@@ -1106,7 +1106,7 @@ function displaySpellsInnate() {
             // Tags //
             let tagsInnerHTML = '<div class="buttons is-marginless is-centered">';
             for(const tag of spellDataStruct.Tags){
-                tagsInnerHTML += '<button class="button is-marginless mr-2 my-1 is-very-small is-info">'+tag.name+'</button>';
+                tagsInnerHTML += '<button class="button is-marginless mr-2 my-1 is-very-small is-info">'+tag.name+getImportantTraitIcon(tag)+'</button>';
             }
             tagsInnerHTML += '</div>';
 

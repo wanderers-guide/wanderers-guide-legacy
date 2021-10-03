@@ -517,7 +517,7 @@ function displayAction(actionStruct, actionCount, skillMap) {
     );
     for(const tag of actionStruct.Tags){
         if(actionStruct.level == -1 && tag.name == 'General'){ continue; }
-        actionTagsInnerHTML += '<button class="button is-marginless mr-2 my-1 is-very-small is-info">'+tag.name+'</button>';
+        actionTagsInnerHTML += '<button class="button is-marginless mr-2 my-1 is-very-small is-info">'+tag.name+getImportantTraitIcon(tag)+'</button>';
     }
     actionTagsInnerHTML += '</div>';
 

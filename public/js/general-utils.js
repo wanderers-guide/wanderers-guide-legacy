@@ -310,6 +310,14 @@ function convertRarityToHTML(rarityType, uniqueIsSpecial = false){
   }
 }
 
+function getImportantTraitIcon(trait){
+  if(trait.isImportant == 1){
+    return `<sup style="position: absolute; top: 1px; right: 1px;"><i class="fad fa-exclamation-circle"></i></sup>`;
+  } else {
+    return ``;
+  }
+}
+
 /* Misc */
 function hashCode(str) {
   return str.split('').reduce((prevHash, currVal) =>

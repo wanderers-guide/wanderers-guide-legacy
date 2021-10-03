@@ -243,7 +243,7 @@ function displayFeat(featData, featTags, featCount){
 
     for(const tag of featTags){
         if(feat.level == -1 && tag.name == 'General'){ continue; }
-        featTagsInnerHTML += '<button class="button is-marginless mr-2 my-1 is-very-small is-info">'+tag.name+'</button>';
+        featTagsInnerHTML += '<button class="button is-marginless mr-2 my-1 is-very-small is-info">'+tag.name+getImportantTraitIcon(tag)+'</button>';
     }
     featTagsInnerHTML += '</div>';
 
