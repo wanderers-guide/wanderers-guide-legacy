@@ -136,6 +136,8 @@ function openQuickView(type, data, noProtection=false) {
         openGeneralBreakdownQuickview(data);
     } else if(type == 'hitPointsBreakdownView'){
         openHitPointsBreakdownQuickview(data);
+    } else if(type == 'abilityScoresBreakdownView'){
+        openAbilityScoresBreakdownQuickview(data);
     } else if(type == 'warningsView'){
         openWarningsQuickview(data);
     }

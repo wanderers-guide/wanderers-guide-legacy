@@ -3,7 +3,7 @@
 */
 
 class DisplayUniHeritage {
-  constructor(containerID, uniHeritageID, featMap, homebrewID=null) {
+  constructor(containerID, uniHeritageID, featMap, homebrewID=null, backButton=true) {
     startSpinnerSubLoader();
 
     featMap = new Map([...featMap.entries()].sort(
@@ -17,7 +17,7 @@ class DisplayUniHeritage {
     );
 
     let uniHeritageDisplayContainerID = 'uni-heritage-container-'+uniHeritageID;
-    $('#'+containerID).parent().append('<div id="'+uniHeritageDisplayContainerID+'" class="is-hidden"></div>');
+    $('#'+containerID).parent().append('<div id="'+uniHeritageDisplayContainerID+'" class="generated-display-container is-hidden"></div>');
     $('#'+containerID).addClass('is-hidden');
 
     socket.emit('requestGeneralUniHeritage', uniHeritageID, homebrewID);
@@ -30,14 +30,17 @@ class DisplayUniHeritage {
         {
           stopSpinnerSubLoader();
 
-          $('#uni-heritage-back-btn').click(function() {
-            $('#'+uniHeritageDisplayContainerID).remove();
-            $('#'+containerID).removeClass('is-hidden');
-          });
-          $('.category-tabs li').click(function() {
-            $('#'+uniHeritageDisplayContainerID).remove();
-            $('#'+containerID).removeClass('is-hidden');
-          });
+          if(backButton){
+            $('#uni-heritage-back-btn').removeClass('is-hidden');
+            $('#uni-heritage-back-btn').click(function() {
+              $('#'+uniHeritageDisplayContainerID).remove();
+              $('#'+containerID).removeClass('is-hidden');
+            });
+            $('.category-tabs li').click(function() {
+              $('#'+uniHeritageDisplayContainerID).remove();
+              $('#'+containerID).removeClass('is-hidden');
+            });
+          }
 
           $('#uni-heritage-name').html(uniHeritageStruct.heritage.name);
           $('#uni-heritage-description').html(processText(uniHeritageStruct.heritage.description, false, false, 'MEDIUM', false));
@@ -94,7 +97,7 @@ class DisplayUniHeritage {
               }
 
               let featEntryID = 'uni-heritage-feat-'+featStruct.Feat.id;
-              $('#uni-heritage-feats').append('<div id="'+featEntryID+'" class="border-bottom border-dark-lighter px-2 py-2 has-bg-selectable cursor-clickable"><span class="pl-4">'+featStruct.Feat.name+convertActionToHTML(featStruct.Feat.actions)+'</span><span class="is-pulled-right is-size-7 has-txt-noted is-italic">'+sourceTextName+'</span></div>');
+              $('#uni-heritage-feats').append('<div id="'+featEntryID+'" class="border-bottom border-dark-lighter px-2 py-2 has-bg-selectable cursor-clickable pos-relative"><span class="pl-4 is-p">'+featStruct.Feat.name+convertActionToHTML(featStruct.Feat.actions)+'</span><span class="pos-absolute pos-b-5 pos-r-5 is-size-7-5 is-hidden-mobile has-txt-noted is-italic">'+sourceTextName+'</span></div>');
 
               $('#'+featEntryID).click(function(){
                 openQuickView('featView', {

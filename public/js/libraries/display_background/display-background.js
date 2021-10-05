@@ -3,11 +3,11 @@
 */
 
 class DisplayBackground {
-  constructor(containerID, backgroundID, homebrewID=null) {
+  constructor(containerID, backgroundID, homebrewID=null, backButton=true) {
     startSpinnerSubLoader();
 
     let backgroundDisplayContainerID = 'background-container-'+backgroundID;
-    $('#'+containerID).parent().append('<div id="'+backgroundDisplayContainerID+'" class="is-hidden"></div>');
+    $('#'+containerID).parent().append('<div id="'+backgroundDisplayContainerID+'" class="generated-display-container is-hidden"></div>');
     $('#'+containerID).addClass('is-hidden');
 
     socket.emit('requestGeneralBackground', backgroundID, homebrewID);
@@ -20,14 +20,17 @@ class DisplayBackground {
         {
           stopSpinnerSubLoader();
 
-          $('#background-back-btn').click(function() {
-            $('#'+backgroundDisplayContainerID).remove();
-            $('#'+containerID).removeClass('is-hidden');
-          });
-          $('.category-tabs li').click(function() {
-            $('#'+backgroundDisplayContainerID).remove();
-            $('#'+containerID).removeClass('is-hidden');
-          });
+          if(backButton){
+            $('#background-back-btn').removeClass('is-hidden');
+            $('#background-back-btn').click(function() {
+              $('#'+backgroundDisplayContainerID).remove();
+              $('#'+containerID).removeClass('is-hidden');
+            });
+            $('.category-tabs li').click(function() {
+              $('#'+backgroundDisplayContainerID).remove();
+              $('#'+containerID).removeClass('is-hidden');
+            });
+          }
 
           $('#background-name').html(backgroundStruct.background.name);
           $('#background-description').html(processText(backgroundStruct.background.description, false, null, 'MEDIUM', false));

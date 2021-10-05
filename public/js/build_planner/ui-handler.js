@@ -37,6 +37,10 @@ $(function () {
     });
   });
 
+  $('#ability-scores-body').click(function() {
+    openQuickView('abilityScoresBreakdownView', {});
+  });
+
   $('#hit-points-body').click(function() {
     openQuickView('hitPointsBreakdownView', {
       classHitPoints : getCharClass().Class.hitPoints,

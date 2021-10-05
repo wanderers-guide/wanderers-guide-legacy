@@ -192,14 +192,6 @@
     border-color: hsl(0, 0%, 10%);
 }
 
-.select::after {
-    border-color: hsl(0, 0%, 86%)!important;
-}
-
-.select:hover::after {
-    border-color: #3273dc!important;
-}
-
 .control.has-icons-left .icon, .control.has-icons-right .icon {
     color:rgba(219,219,219,.4);
 }

@@ -156,14 +156,83 @@ function mainLoaded(plannerCoreStruct, choiceStruct){
   displayStats();
 
   if(getCharAncestry() != null){
-    $('#ancestry-name').text(getCharAncestry().Ancestry.name);
+    $('#selected-ancestry').text(getCharAncestry().Ancestry.name);
   }
   if(getCharBackground() != null){
-    $('#background-name').text(getCharBackground().name);
+    $('#selected-background').text(getCharBackground().name);
   }
   if(getCharClass() != null){
-    $('#class-name').text(getCharClass().Class.name);
+    $('#selected-class').text(getCharClass().Class.name);
   }
+
+  // Change ancestry
+  let ancestrySelections = [];
+  for(const [ancestryID, ancestryData] of g_ancestryMap.entries()){
+    if(ancestryData.Ancestry.isArchived == 1){ continue; }
+    ancestrySelections.push({
+      id: ancestryID,
+      name: ancestryData.Ancestry.name,
+      rarity: ancestryData.Ancestry.rarity
+    });
+  }
+  ancestrySelections = ancestrySelections.sort(
+    function(a, b) {
+      return a.name > b.name ? 1 : -1;
+    }
+  );
+  ancestrySelections = [{id: 'none', name: 'None', rarity: 'COMMON'}, ...ancestrySelections];
+  $('#selected-ancestry').click(function() {
+    new ModalSelection('Select Ancestry', 'Confirm Ancestry', ancestrySelections, 'ancestry', 'modal-select-ancestry', 'modal-select-ancestry-confirm-btn', g_featMap, 'none');
+    $('#modal-select-ancestry-confirm-btn').click(function() {
+      console.log('Clicked butn');
+    });
+  });
+
+  // Change background
+  let backgroundSelections = [];
+  for(const background of g_backgrounds){
+    if(background.isArchived == 1){ continue; }
+    backgroundSelections.push({
+      id: background.id,
+      name: background.name,
+      rarity: background.rarity
+    });
+  }
+  backgroundSelections = backgroundSelections.sort(
+    function(a, b) {
+      return a.name > b.name ? 1 : -1;
+    }
+  );
+  backgroundSelections = [{id: 'none', name: 'None', rarity: 'COMMON'}, ...backgroundSelections];
+  $('#selected-background').click(function() {
+    new ModalSelection('Select Background', 'Confirm Background', backgroundSelections, 'background', 'modal-select-background', 'modal-select-background-confirm-btn', g_featMap, 'none');
+    $('#modal-select-background-confirm-btn').click(function() {
+      console.log('Clicked butn');
+    });
+  });
+
+  // Change class
+  let classSelections = [];
+  for(const [classID, classData] of g_classMap.entries()){
+    if(classData.Class.isArchived == 1){ continue; }
+    classSelections.push({
+      id: classID,
+      name: classData.Class.name,
+      rarity: classData.Class.rarity
+    });
+  }
+  classSelections = classSelections.sort(
+    function(a, b) {
+      return a.name > b.name ? 1 : -1;
+    }
+  );
+  classSelections = [{id: 'none', name: 'None', rarity: 'COMMON'}, ...classSelections];
+  $('#selected-class').click(function() {
+    new ModalSelection('Select Class', 'Confirm Class', classSelections, 'class', 'modal-select-class', 'modal-select-class-confirm-btn', g_featMap, 269);
+    $('#modal-select-class-confirm-btn').click(function() {
+      console.log('Clicked butn');
+    });
+  });
 
 
 }

@@ -351,7 +351,7 @@ function handleTableCreation(match) {
 
   // Construct table
   let tableAlignMap = new Map();
-  let tableHTML = '</p><table class="wsc-table table-bck">';
+  let tableHTML = '</p><table class="wsc-table use-custom-scrollbar is-darker table-bck">';
   for (let i = 0; i < rows.length; i++) {
     let row = rows[i];
     if(row == '') { continue; }

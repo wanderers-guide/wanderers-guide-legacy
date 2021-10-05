@@ -8,7 +8,7 @@ module.exports = class TempUnpublishedBooks {
     if(ADMIN_USER_IDS.includes(userID+'')){
       return [''];
     } else {
-      return [''];// Unpublished books
+      return ['GUNS-AND-GEARS'];// Unpublished books
     }
   }
 
@@ -16,7 +16,7 @@ module.exports = class TempUnpublishedBooks {
     if(ADMIN_USER_IDS.includes(userID+'')){
       return [{contentSrc:''}];
     } else {
-      return [{contentSrc:''}];// Unpublished books
+      return [{contentSrc:'GUNS-AND-GEARS'}];// Unpublished books
     }
   }
 

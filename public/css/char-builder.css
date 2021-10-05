@@ -75,14 +75,6 @@
 
 /* Dark Mode Styling */
 
-.select::after {
-    border-color: hsl(0, 0%, 82%)!important;
-}
-
-.select:hover::after {
-    border-color: #3273dc!important;
-}
-
 .button.is-info.is-inverted {
     background-color: var(--main-box-bg-color);
     color: #3298dc;

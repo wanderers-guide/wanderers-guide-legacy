@@ -188,6 +188,22 @@ body {
 .box.darker {
   background: var(--main-box-darker-bg-color);
 }
+
+.section-box {
+  box-shadow: 0 1px 3px rgba(0,0,0,0.5);
+  background: var(--main-box-bg-color);
+  border: 1px solid var(--main-box-bg-color);
+  border-radius: 4px;
+}
+.s-s-box {
+  box-shadow: 0 1px 3px rgba(0,0,0,0.5);
+  background: var(--main-box-s-s-bg-color);
+  border: 1px solid var(--main-box-s-s-bg-color);
+  border-radius: 4px;
+  max-width: 600px;
+  margin: auto;
+}
+
 .key-container {
   width: 40vw;
   min-width: 300px;
@@ -215,6 +231,12 @@ body {
 }
 .button:hover {
   background-color: var(--selectors-hover-color);
+}
+.select::after {
+  border-color: var(--text-p-color)!important;
+}
+.select:hover::after {
+  border-color: hsl(204, 86%, 53%)!important;
 }
 .input.isURL {
 color: var(--text-partial-noted-color)!important;
@@ -296,6 +318,20 @@ a:hover {
   overflow: hidden;
 }
 
+.fading-reveal-container.is-active {
+  -webkit-mask-image: linear-gradient(to bottom, black 50%, transparent 100%);
+  mask-image: linear-gradient(to bottom, black 50%, transparent 100%);
+  height: 400px;
+  overflow-y: hidden;
+}
+.reveal-container-text {
+  cursor: pointer !important;
+  position: absolute;
+  bottom: -1.5rem;
+  left: 10px;
+  opacity: 0.9;
+}
+
 /* Main Body */
 #center-body {
   position: relative;
@@ -303,7 +339,7 @@ a:hover {
 }
 
 .title, .modal-card-title, #quickViewTitle {
-font-family: 'Proza Libre', sans-serif;
+  font-family: 'Proza Libre', sans-serif;
 }
 
 /* Indent all but first line of paragraph */

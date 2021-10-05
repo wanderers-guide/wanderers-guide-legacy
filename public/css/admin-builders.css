@@ -1,14 +1,6 @@
 
 /* Dark Mode Styling */
 
-.select::after {
-    border-color: hsl(0, 0%, 82%)!important;
-}
-
-.select:hover::after {
-    border-color: #3273dc!important;
-}
-
 .card {
     background-color: hsl(0, 0%, 28%);
     border-color: #282828;

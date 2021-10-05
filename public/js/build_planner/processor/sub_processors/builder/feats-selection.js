@@ -89,7 +89,7 @@ function generateFeatSelection(contentLocID, srcStruct, selectionName, selection
     
     for(let featData of featArray) {
 
-      let featNameHTML = '<span class="">'+featData.Feat.name+'</span><span class="featPrereqIcon"></span>';
+      let featNameHTML = '<span class="feat-selection-list-entry-feat-name">'+featData.Feat.name+'</span><span class="feat-selection-list-entry-feat-actions">'+convertActionToHTML(featData.Feat.actions)+'</span>';
 
       if(featData.Feat.isArchived === 1){
         if(selectedFeat != null && selectedFeat.Feat.id == featData.Feat.id){
@@ -101,7 +101,12 @@ function generateFeatSelection(contentLocID, srcStruct, selectionName, selection
 
       let rightInfoHTML = '';
       if(featData.Feat.skillID != null){
-        rightInfoHTML = '<span class="has-txt-partial-noted is-size-7 is-pulled-right">'+getSkillNameAbbrev(getSkillIDToName(featData.Feat.skillID))+'</span>';
+        rightInfoHTML = '<span class="">'+convertRarityToIconHTML(featData.Feat.rarity)+'<span class="featPrereqIcon"></span></span>';
+      }
+
+      let topLeftHTML = '';
+      if(featData.Feat.skillID != null){
+        topLeftHTML = '<span class="has-txt-partial-noted is-italic is-size-7-5">'+getSkillNameAbbrev(getSkillIDToName(featData.Feat.skillID))+'</span>';
       }
 
       /*
@@ -116,11 +121,42 @@ function generateFeatSelection(contentLocID, srcStruct, selectionName, selection
 
       let hasFeat = (featData.Feat.canSelectMultiple == 0 && hasDuplicateFeat(featData.Feat.id));
       if(selectedFeat != null && selectedFeat.Feat.id == featData.Feat.id){
-        featListHTML += '<hr class="hr-feat-selection m-0"><div class="cursor-clickable feat-selection-list-entry is-prev-selected columns is-mobile m-0 p-0" data-feat-id="'+featData.Feat.id+'"><div class="column is-2 is-paddingless py-2 feat-selection-list-entry-view"></div><div class="column is-7 is-paddingless py-2 feat-selection-list-entry-view">'+featNameHTML+'</div><div class="column is-1 is-paddingless py-2 feat-selection-list-entry-view">'+rightInfoHTML+'</div><div class="column is-2 is-paddingless py-2 feat-selection-list-entry-choose"><button class="button is-very-small is-danger is-outlined is-rounded '+featRemoveButtonClass+'" data-feat-id="'+featData.Feat.id+'">Remove</button></div></div>';
+        featListHTML += `
+          <hr class="hr-feat-selection m-0">
+          <div class="cursor-clickable feat-selection-list-entry is-prev-selected pos-relative columns is-mobile m-0 p-0" data-feat-id="${featData.Feat.id}">
+            <div class="column is-2 is-paddingless py-2 feat-selection-list-entry-view"></div>
+            <div class="column is-7 is-paddingless py-2 feat-selection-list-entry-view">${featNameHTML}</div>
+            <div class="column is-1 is-paddingless py-2 pr-1 feat-selection-list-entry-view text-right">${rightInfoHTML}</div>
+            <div class="column is-2 is-paddingless py-2 feat-selection-list-entry-choose">
+              <button class="button is-very-small is-danger is-outlined is-rounded ${featRemoveButtonClass}" data-feat-id="${featData.Feat.id}">Remove</button>
+            </div>
+            <div class="pos-absolute pos-t-0 pos-l-5">${topLeftHTML}</div>
+          </div>
+        `;
       } else if(hasFeat) {
-        featListHTML += '<hr class="hr-feat-selection m-0"><div class="cursor-clickable feat-selection-list-entry is-prev-selected columns is-mobile m-0 p-0" data-feat-id="'+featData.Feat.id+'"><div class="column is-2 is-paddingless py-2 feat-selection-list-entry-view"></div><div class="column is-7 is-paddingless py-2 feat-selection-list-entry-view">'+featNameHTML+'</div><div class="column is-1 is-paddingless py-2 feat-selection-list-entry-view">'+rightInfoHTML+'</div><div class="column is-2 is-paddingless py-2"></div></div>';
+        featListHTML += `
+          <hr class="hr-feat-selection m-0">
+          <div class="cursor-clickable feat-selection-list-entry is-prev-selected pos-relative columns is-mobile m-0 p-0" data-feat-id="${featData.Feat.id}">
+            <div class="column is-2 is-paddingless py-2 feat-selection-list-entry-view"></div>
+            <div class="column is-7 is-paddingless py-2 feat-selection-list-entry-view">${featNameHTML}</div>
+            <div class="column is-1 is-paddingless py-2 pr-1 feat-selection-list-entry-view text-right">${rightInfoHTML}</div>
+            <div class="column is-2 is-paddingless py-2"></div>
+            <div class="pos-absolute pos-t-0 pos-l-5">${topLeftHTML}</div>
+          </div>
+        `;
       } else {
-        featListHTML += '<hr class="hr-feat-selection m-0"><div class="cursor-clickable feat-selection-list-entry columns is-mobile m-0 p-0" data-feat-id="'+featData.Feat.id+'"><div class="column is-2 is-paddingless py-2 feat-selection-list-entry-view"></div><div class="column is-7 is-paddingless py-2 feat-selection-list-entry-view">'+featNameHTML+'</div><div class="column is-1 is-paddingless py-2 feat-selection-list-entry-view">'+rightInfoHTML+'</div><div class="column is-2 is-paddingless py-2 feat-selection-list-entry-choose"><button class="button is-very-small is-info is-outlined is-rounded '+featSelectButtonClass+'" data-feat-id="'+featData.Feat.id+'">Select</button></div></div>';
+        featListHTML += `
+          <hr class="hr-feat-selection m-0">
+          <div class="cursor-clickable feat-selection-list-entry pos-relative columns is-mobile m-0 p-0" data-feat-id="${featData.Feat.id}">
+            <div class="column is-2 is-paddingless py-2 feat-selection-list-entry-view"></div>
+            <div class="column is-7 is-paddingless py-2 feat-selection-list-entry-view">${featNameHTML}</div>
+            <div class="column is-1 is-paddingless py-2 pr-1 feat-selection-list-entry-view text-right">${rightInfoHTML}</div>
+            <div class="column is-2 is-paddingless py-2 feat-selection-list-entry-choose">
+              <button class="button is-very-small is-info is-outlined is-rounded ${featSelectButtonClass}" data-feat-id="${featData.Feat.id}">Select</button>
+            </div>
+            <div class="pos-absolute pos-t--5 pos-l-5">${topLeftHTML}</div>
+          </div>
+        `;
       }
       displayedFeat = true;
 

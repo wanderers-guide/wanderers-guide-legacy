@@ -82,8 +82,8 @@ const g_contentSources = [
   {TextName: 'Pathfinder Society', CodeName: 'PATH-SOCIETY', Link: 'https://paizo.com/pathfindersociety'},
 ];
 
-const g_currentContentSource = 'BEST-1';
-const g_hiddenFromBrowseContentSources = [];// TODO - Temp solution
+const g_currentContentSource = 'GUNS-AND-GEARS';
+const g_hiddenFromBrowseContentSources = ['GUNS-AND-GEARS'];// TODO - Temp solution
 
 function getContentSourceTextName(codeName){
   let contentSourceData = g_contentSources.find(contentSourceData => {
@@ -301,11 +301,20 @@ function convertActionToHTML(actionsType){
   }
 }
 
-function convertRarityToHTML(rarityType, uniqueIsSpecial = false){
+function convertRarityToHTML(rarityType, uniqueIsSpecial = false, size='is-very-small'){
   switch(rarityType) {
-    case 'UNCOMMON': return '<button style="z-index: 5;" class="button is-pulled-right is-paddingless px-2 is-marginless mr-3 mb-1 is-very-small is-uncommon">Uncommon</button>';
-    case 'RARE': return '<button style="z-index: 5;" class="button is-pulled-right is-paddingless px-2 is-marginless mr-3 mb-1 is-very-small is-rare">Rare</button>';
-    case 'UNIQUE': let uniqueText = (uniqueIsSpecial) ? 'Special' : 'Unique'; return '<button style="z-index: 5;" class="button is-pulled-right is-paddingless px-2 is-marginless mr-3 mb-1 is-very-small is-unique">'+uniqueText+'</button>';
+    case 'UNCOMMON': return '<button style="z-index: 5;" class="button is-pulled-right is-paddingless px-2 is-marginless mr-3 mb-1 '+size+' is-uncommon">Uncommon</button>';
+    case 'RARE': return '<button style="z-index: 5;" class="button is-pulled-right is-paddingless px-2 is-marginless mr-3 mb-1 '+size+' is-rare">Rare</button>';
+    case 'UNIQUE': let uniqueText = (uniqueIsSpecial) ? 'Special' : 'Unique'; return '<button style="z-index: 5;" class="button is-pulled-right is-paddingless px-2 is-marginless mr-3 mb-1 '+size+' is-unique">'+uniqueText+'</button>';
+    default: return '';
+  }
+}
+
+function convertRarityToIconHTML(rarityType, uniqueIsSpecial = false, size='is-size-7-5'){
+  switch(rarityType) {
+    case 'UNCOMMON': return '<span style="z-index: 5;" class="'+size+' is-bold is-uncommon">U</span>';
+    case 'RARE': return '<span style="z-index: 5;" class="'+size+' is-bold is-rare">R</span>';
+    case 'UNIQUE': let uniqueTextLetter = (uniqueIsSpecial) ? 'S' : 'U'; return '<span style="z-index: 5;" class="'+size+' is-bold is-unique">'+uniqueTextLetter+'</span>';
     default: return '';
   }
 }

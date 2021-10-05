@@ -187,6 +187,7 @@ em {
 .pos-relative { position: relative; }
 .pos-absolute { position: absolute!important; }
 
+.pos-absolute.pos-t--5 { top: -5px; }
 .pos-absolute.pos-t-0 { top: 0px; }
 .pos-absolute.pos-t-1 { top: 1px; }
 .pos-absolute.pos-t-2 { top: 2px; }
@@ -229,6 +230,16 @@ em {
 .pos-absolute.pos-r-20 { right: 20px; }
 
 /* Rarities */
+span.is-uncommon, p.is-uncommon {
+  color: var(--rarity-uncommon);
+}
+span.is-rare, p.is-rare {
+  color: var(--rarity-rare);
+}
+span.is-unique, p.is-unique {
+  color: var(--rarity-unique);
+}
+
 .button.is-uncommon {
   background-color: var(--rarity-uncommon);
   border-color: transparent;
@@ -293,6 +304,9 @@ select .is-unique {
   background-color: hsl(240, 2%, 15%);
 }
 .wsc-table {
+  overflow-x: scroll;
+  display: block;
+
   width:100%;
   box-shadow: 0 1px 2px rgb(0 0 0 / 30%);
 }
