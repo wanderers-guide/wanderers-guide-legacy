@@ -480,6 +480,7 @@ function expHasClassAbility(expression, statement, elseStatement){
     if(expression.includes('==')){
         let classAbilityName = expression.split('==')[1].toUpperCase();
         classAbilityName = classAbilityName.replace(/_/g," ");
+        if(g_expr_classAbilityArray == null){ return statement; }
         if(g_expr_classAbilityArray.includes(classAbilityName)){
             return statement;
         } else {
@@ -488,6 +489,7 @@ function expHasClassAbility(expression, statement, elseStatement){
     } else if(expression.includes('!=')){
         let classAbilityName = expression.split('!=')[1].toUpperCase();
         classAbilityName = classAbilityName.replace(/_/g," ");
+        if(g_expr_classAbilityArray == null){ return elseStatement; }
         if(!g_expr_classAbilityArray.includes(classAbilityName)){
             return statement;
         } else {

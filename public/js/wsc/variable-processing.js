@@ -1073,6 +1073,8 @@ function getVariableValueFromMethod(variable, varName, method) {
 
     if(methodUpper == 'GET_MOD'){
       return getMod(variable.Value.Score);
+    } else if(methodUpper == 'GET_TOTAL_MOD'){
+      return getMod(variables_getTotal(varName));
     } else if(methodUpper == 'GET_BONUS_TOTAL'){
       return variables_getBonusTotal(varName);
     } else if(methodUpper == 'GET_TOTAL'){
@@ -1152,7 +1154,7 @@ function setVariableValueIntoMethod(variable, varName, method, value, uniqueID=n
       let bonusType;
       if(value.includes(':')){
         let valueParts = value.split(':');
-        bonusStr = valueParts[0]
+        bonusStr = valueParts[0];
         bonusType = valueParts[1];
       } else {
         bonusStr = value;

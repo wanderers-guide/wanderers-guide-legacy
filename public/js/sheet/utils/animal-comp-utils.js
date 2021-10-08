@@ -52,6 +52,7 @@ function getAnimalModStr(animal, charAnimal){
     case 'MATURE': return modStr+1;
     case 'NIMBLE': return modStr+2;
     case 'SAVAGE': return modStr+3;
+    case 'INDOMITABLE': return modStr+2;
     default: return -1;
   }
 }
@@ -66,6 +67,7 @@ function getAnimalModDex(animal, charAnimal){
     case 'MATURE': return modDex+1;
     case 'NIMBLE': return modDex+3;
     case 'SAVAGE': return modDex+2;
+    case 'INDOMITABLE': return modDex+2;
     default: return -1;
   }
 }
@@ -78,6 +80,7 @@ function getAnimalModCon(animal, charAnimal){
     case 'MATURE': return modCon+1;
     case 'NIMBLE': return modCon+2;
     case 'SAVAGE': return modCon+2;
+    case 'INDOMITABLE': return modCon+3;
     default: return -1;
   }
 }
@@ -90,6 +93,7 @@ function getAnimalModInt(animal, charAnimal){
     case 'MATURE': return modInt;
     case 'NIMBLE': return modInt;
     case 'SAVAGE': return modInt;
+    case 'INDOMITABLE': return modInt;
     default: return -1;
   }
 }
@@ -102,6 +106,7 @@ function getAnimalModWis(animal, charAnimal){
     case 'MATURE': return modWis+1;
     case 'NIMBLE': return modWis+2;
     case 'SAVAGE': return modWis+2;
+    case 'INDOMITABLE': return modWis+2;
     default: return -1;
   }
 }
@@ -114,6 +119,7 @@ function getAnimalModCha(animal, charAnimal){
     case 'MATURE': return modCha;
     case 'NIMBLE': return modCha;
     case 'SAVAGE': return modCha;
+    case 'INDOMITABLE': return modCha;
     default: return -1;
   }
 }
@@ -129,6 +135,7 @@ function getAnimalDamageDieNumber(animal, charAnimal){
     case 'MATURE': return 2;
     case 'NIMBLE': return 2;
     case 'SAVAGE': return 2;
+    case 'INDOMITABLE': return 2;
     default: return -1;
   }
 }
@@ -143,6 +150,9 @@ function getAnimalAdditionalDamage(animal, charAnimal){
     case 'SAVAGE':
       if(animalHasAnySpecial()){ return 6; }
       return 3;
+    case 'INDOMITABLE':
+      if(animalHasAnySpecial()){ return 6; }
+      return 3;
     default: return -1;
   }
 }
@@ -155,6 +165,7 @@ function hasAnimalAdvancedManeuver(animal, charAnimal){
     case 'MATURE': return false;
     case 'NIMBLE': return true;
     case 'SAVAGE': return true;
+    case 'INDOMITABLE': return true;
     default: return false;
   }
 }
@@ -165,6 +176,7 @@ function hasAnimalMagicalAttacks(animal, charAnimal){
     case 'MATURE': return false;
     case 'NIMBLE': return true;
     case 'SAVAGE': return true;
+    case 'INDOMITABLE': return true;
     default: return false;
   }
 }
@@ -208,6 +220,7 @@ function getAnimalUnarmedAttacksNumUps(animal, charAnimal){
     case 'MATURE': return 1;
     case 'NIMBLE': return 1;
     case 'SAVAGE': return 1;
+    case 'INDOMITABLE': return 1;
     default: return -1;
   }
 }
@@ -222,6 +235,7 @@ function getAnimalUnarmoredDefenseNumUps(animal, charAnimal){
     case 'MATURE': return cNumUps+1;
     case 'NIMBLE': return cNumUps+2;
     case 'SAVAGE': return cNumUps+1;
+    case 'INDOMITABLE': return cNumUps+1;
     default: return -1;
   }
 }
@@ -244,6 +258,7 @@ function getAnimalSize(animal, charAnimal){
     case 'MATURE': return matureSize(animal.size);
     case 'NIMBLE': return matureSize(animal.size);
     case 'SAVAGE': return matureSize(matureSize(animal.size));
+    case 'INDOMITABLE': return matureSize(animal.size);
     default: return null;
   }
 }
@@ -268,6 +283,7 @@ function getAnimalAcrobaticsNumUps(animal, charAnimal){
     case 'MATURE': return 1;
     case 'NIMBLE': return 2;
     case 'SAVAGE': return 1;
+    case 'INDOMITABLE': return 1;
     default: return -1;
   }
 }
@@ -281,6 +297,7 @@ function getAnimalAthleticsNumUps(animal, charAnimal){
     case 'MATURE': return cNumUps+1;
     case 'NIMBLE': return cNumUps+1;
     case 'SAVAGE': return cNumUps+2;
+    case 'INDOMITABLE': return cNumUps+2;
     default: return -1;
   }
 }
@@ -293,6 +310,7 @@ function getAnimalIntimidationNumUps(animal, charAnimal){
     case 'MATURE': return cNumUps+1;
     case 'NIMBLE': return cNumUps+1;
     case 'SAVAGE': return cNumUps+1;
+    case 'INDOMITABLE': return cNumUps+1;
     default: return -1;
   }
 }
@@ -305,6 +323,7 @@ function getAnimalStealthNumUps(animal, charAnimal){
     case 'MATURE': return cNumUps+1;
     case 'NIMBLE': return cNumUps+1;
     case 'SAVAGE': return cNumUps+1;
+    case 'INDOMITABLE': return cNumUps+1;
     default: return -1;
   }
 }
@@ -317,6 +336,7 @@ function getAnimalSurvivalNumUps(animal, charAnimal){
     case 'MATURE': return cNumUps+1;
     case 'NIMBLE': return cNumUps+1;
     case 'SAVAGE': return cNumUps+1;
+    case 'INDOMITABLE': return cNumUps+1;
     default: return -1;
   }
 }
@@ -332,6 +352,7 @@ function getAnimalPerceptionNumUps(animal, charAnimal){
     case 'MATURE': return 2;
     case 'NIMBLE': return 2;
     case 'SAVAGE': return 2;
+    case 'INDOMITABLE': return 2;
     default: return -1;
   }
 }
@@ -346,6 +367,7 @@ function getAnimalFortitudeNumUps(animal, charAnimal){
     case 'MATURE': return 2;
     case 'NIMBLE': return 2;
     case 'SAVAGE': return 2;
+    case 'INDOMITABLE': return 2;
     default: return -1;
   }
 }
@@ -359,6 +381,7 @@ function getAnimalReflexNumUps(animal, charAnimal){
     case 'MATURE': return 2;
     case 'NIMBLE': return 2;
     case 'SAVAGE': return 2;
+    case 'INDOMITABLE': return 2;
     default: return -1;
   }
 }
@@ -372,6 +395,7 @@ function getAnimalWillNumUps(animal, charAnimal){
     case 'MATURE': return 2;
     case 'NIMBLE': return 2;
     case 'SAVAGE': return 2;
+    case 'INDOMITABLE': return 2;
     default: return -1;
   }
 }

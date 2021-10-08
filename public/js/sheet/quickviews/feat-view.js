@@ -171,7 +171,7 @@ function openFeatQuickview(data) {
         displayNotesField(qContent, data.SrcStruct);
     }
 
-    showFeatListOptions(qContent, data.Feat.code, data.Feat.name);
+    showFeatListOptions(qContent, data.Feat.code);
 
     if(!isSheetPage()){
       showFeatPrerequisiteFor(qContent, data.Feat.name);
@@ -192,7 +192,7 @@ function openFeatQuickview(data) {
 
 
 
-function showFeatListOptions(qContent, wscStatements, sourceFeatName){
+function showFeatListOptions(qContent, wscStatements){
   if(wscStatements == null) {return;}
 
   let statementArray = wscStatements.split(/\n/);
@@ -210,8 +210,28 @@ function showFeatListOptions(qContent, wscStatements, sourceFeatName){
       let repetitionWord = numToRepetitionWord(statementCounts[statement]);
 
       let listText = '**'+selectorTitle+' '+repetitionWord+'**\n';
+
+      let detectSameBeginningDashText = function(){
+        let beginningDashText = null;
+        for(let featName of featNameList){
+          if(beginningDashText == null){
+            if(featName.includes(' - ')){
+              beginningDashText = featName.split(' - ')[0];
+            } else {
+              return null;
+            }
+          } else {
+            if(!featName.startsWith(beginningDashText+' - ')){
+              return null;
+            }
+          }
+        }
+        return beginningDashText;
+      };
+      const beginningDashText = detectSameBeginningDashText();
+      
       for(let featName of featNameList){
-        let displayFeatName = featName.replace(sourceFeatName+' - ', '');
+        let displayFeatName = featName.replace(beginningDashText+' - ', '');
         listText += '* : (feat: '+displayFeatName+' | '+featName+')\n';
       }
       qContent.append('<hr class="m-2">');

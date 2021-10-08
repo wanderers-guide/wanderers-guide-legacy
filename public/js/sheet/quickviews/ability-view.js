@@ -70,6 +70,7 @@ function openAbilityQuickview(data) {
       displayNotesField(qContent, srcStruct);
     }
 
+    showFeatListOptions(qContent, data.Ability.code);
 
     if(typeof g_isDeveloper !== 'undefined' && g_isDeveloper && data.Ability.code != null && data.Ability.code.trim() != '') {
       qContent.append('<hr class="m-3">');
@@ -82,4 +83,53 @@ function openAbilityQuickview(data) {
       qContent.append('<div class="code-block">'+codeHTML+'</div>');
     }
 
+}
+
+
+function showFeatListOptions(qContent, wscStatements){
+  if(wscStatements == null) {return;}
+
+  let statementArray = wscStatements.split(/\n/);
+  
+  let statementCounts = {};
+  statementArray.forEach(function(x) { statementCounts[x] = (statementCounts[x] || 0)+1; });
+
+  for(let statement in statementCounts) {
+    if(statement.includes("GIVE-FEAT-FROM=")){ // GIVE-FEAT-FROM=Choose a Tradition:feat 1,feat 2,feat 2
+      let value = statement.split('=')[1];
+      let valueParts = value.split(':');
+      let selectorTitle = valueParts[0];
+      let featNameList = handleVariableText(valueParts[1]).split(',');
+
+      let repetitionWord = numToRepetitionWord(statementCounts[statement]);
+
+      let listText = '**'+selectorTitle+' '+repetitionWord+'**\n';
+
+      let detectSameBeginningDashText = function(){
+        let beginningDashText = null;
+        for(let featName of featNameList){
+          if(beginningDashText == null){
+            if(featName.includes(' - ')){
+              beginningDashText = featName.split(' - ')[0];
+            } else {
+              return null;
+            }
+          } else {
+            if(!featName.startsWith(beginningDashText+' - ')){
+              return null;
+            }
+          }
+        }
+        return beginningDashText;
+      };
+      const beginningDashText = detectSameBeginningDashText();
+      
+      for(let featName of featNameList){
+        let displayFeatName = featName.replace(beginningDashText+' - ', '');
+        listText += '* : (feat: '+displayFeatName+' | '+featName+')\n';
+      }
+      qContent.append('<hr class="m-2">');
+      qContent.append('<div>'+processText(listText, true, true, 'MEDIUM')+'</div>');
+    }
+  }
 }

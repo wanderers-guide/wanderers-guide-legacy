@@ -291,7 +291,7 @@ model charAnimalCompanions {
   id                Int                      @id @default(autoincrement())
   charID            Int
   animalCompanionID Int
-  age               charAnimalCompanions_age @default(YOUNG)
+  age               String                   @default("YOUNG") @db.VarChar(350)
   specialization    String                   @default("NONE") @db.VarChar(350)
   name              String                   @default("") @db.VarChar(95)
   description       String                   @db.Text
@@ -1161,13 +1161,6 @@ enum backgrounds_rarity {
   UNCOMMON
   RARE
   UNIQUE
-}
-
-enum charAnimalCompanions_age {
-  YOUNG
-  MATURE
-  NIMBLE
-  SAVAGE
 }
 
 enum classAbilities_selectType {

@@ -83,7 +83,7 @@ const g_contentSources = [
 ];
 
 const g_currentContentSource = 'GUNS-AND-GEARS';
-const g_hiddenFromBrowseContentSources = ['GUNS-AND-GEARS'];// TODO - Temp solution
+const g_hiddenFromBrowseContentSources = [''];// TODO - Temp solution
 
 function getContentSourceTextName(codeName){
   let contentSourceData = g_contentSources.find(contentSourceData => {

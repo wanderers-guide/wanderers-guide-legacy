@@ -88,10 +88,30 @@ function generateFeatSelection(contentLocID, srcStruct, selectionName, selection
     if(featLevel > 0){
       featListHTML += '<hr class="hr-feat-selection m-0"><div class="feat-selection-level"><span class="">Level '+featLevel+'</span></div>';
     }
+
+    // If all the feats of a given level start with the same 'Text - ...', remove the 'Text - '
+    let detectSameBeginningDashText = function(){
+      let beginningDashText = null;
+      for(const featData of featArray){
+        if(beginningDashText == null){
+          if(featData.Feat.name.includes(' - ')){
+            beginningDashText = featData.Feat.name.split(' - ')[0];
+          } else {
+            return null;
+          }
+        } else {
+          if(!featData.Feat.name.startsWith(beginningDashText+' - ')){
+            return null;
+          }
+        }
+      }
+      return beginningDashText;
+    };
+    const beginningDashText = detectSameBeginningDashText();
     
     for(let featData of featArray) {
 
-      let featNameHTML = '<span class="">'+featData.Feat.name+'</span><span class="featPrereqIcon"></span>';
+      let featNameHTML = '<span class="">'+featData.Feat.name.replace(beginningDashText+' - ', '')+'</span><span class="featPrereqIcon"></span>';
 
       if(featData.Feat.isArchived === 1){
         if(selectedFeat != null && selectedFeat.Feat.id == featData.Feat.id){

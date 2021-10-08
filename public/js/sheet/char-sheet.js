@@ -1962,6 +1962,11 @@ function determineArmor(dexMod, strScore) {
         // Halve maxHP if it's shoddy
         let maxHP = (shieldStruct.InvItem.isShoddy == 1) ? Math.floor(shieldStruct.InvItem.hitPoints/2) : shieldStruct.InvItem.hitPoints;
 
+        const speedPenalty = shieldStruct.Item.ShieldData.speedPenalty;
+        if(speedPenalty < 0){
+          addStat(VARIABLE.SPEED, 'PENALTY (SHIELD)', speedPenalty);
+        }
+
         $('#shieldSection').removeClass('is-hidden');
         $('#shieldBonus').html('+'+shieldStruct.Item.ShieldData.acBonus);
         $('#shieldSection').attr('data-tooltip', shieldStruct.InvItem.name+'\nHardness: '+shieldStruct.InvItem.hardness+'\nHealth: '+shieldStruct.InvItem.currentHitPoints+'/'+maxHP);

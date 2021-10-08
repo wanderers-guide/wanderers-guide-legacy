@@ -9,8 +9,7 @@ const CharAnimalCompanion = db.define('charAnimalCompanions', {
     type: Sequelize.INTEGER,
   },
   age: {
-    type: Sequelize.ENUM,
-    values: ['YOUNG', 'MATURE', 'NIMBLE', 'SAVAGE']
+    type: Sequelize.STRING
   },
   specialization: {
     type: Sequelize.STRING

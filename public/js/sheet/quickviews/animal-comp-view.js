@@ -177,13 +177,55 @@ function openAnimalCompQuickview(data) {
 
     qContent.append('<hr class="m-2">');
 
-    if(charAnimal.age == 'NIMBLE' || charAnimal.age == 'SAVAGE'){
-      qContent.append('<div class="columns is-centered is-marginless"><div class="field is-grouped is-grouped-right column is-4 px-0"><div class="control"><div class="select is-info"><select id="selectAnimalAge"><option value="YOUNG">Young</option><option value="MATURE">Mature</option><option value="NIMBLE">Nimble</option><option value="SAVAGE">Savage</option></select></div></div></div><div class="column is-1 px-0">'+processText('[https://pf2.easytool.es/index.php?id=6442&name=Specialized_Animal_Companions]', true, null, 'MEDIUM')+'</div><div class="column is-7 pl-0"><select id="selectAnimalSpecialization" data-placeholder="Select a Specialization" multiple><option value="AMBUSHER">Ambusher</option><option value="BULLY">Bully</option><option value="DAREDEVIL">Daredevil</option><option value="RACER">Racer</option><option value="TRACKER">Tracker</option><option value="WRECKER">Wrecker</option></select></div></div>');
-      if(hasEnabledSource('SECRETS-OF-MAGIC')){
-        $('#selectAnimalSpecialization').append('<option value="SHADE">Shade</option>');
-      }
+    if(charAnimal.age == 'NIMBLE' || charAnimal.age == 'SAVAGE' || charAnimal.age == 'INDOMITABLE'){
+      qContent.append(`
+        <div class="columns is-centered is-marginless">
+          <div class="field is-grouped is-grouped-right column is-4 px-0">
+            <div class="control">
+              <div class="select is-info">
+                <select id="selectAnimalAge">
+                  <option value="YOUNG">Young</option>
+                  <option value="MATURE">Mature</option>
+                  <option value="NIMBLE">Nimble</option>
+                  <option value="SAVAGE">Savage</option>
+                  ${ hasEnabledSource('LOST-WORLD-GUIDE') ? '<option value="INDOMITABLE">Indomitable</option>' : '' }
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="column is-1 px-0">
+            ${processText('[https://pf2.easytool.es/index.php?id=6442&name=Specialized_Animal_Companions]', true, null, 'MEDIUM')}
+          </div>
+          <div class="column is-7 pl-0">
+            <select id="selectAnimalSpecialization" data-placeholder="Select a Specialization" multiple>
+              <option value="AMBUSHER">Ambusher</option>
+              <option value="BULLY">Bully</option>
+              <option value="DAREDEVIL">Daredevil</option>
+              <option value="RACER">Racer</option>
+              <option value="TRACKER">Tracker</option>
+              <option value="WRECKER">Wrecker</option>
+              ${ hasEnabledSource('SECRETS-OF-MAGIC') ? '<option value="SHADE">Shade</option>' : '' }
+            </select>
+          </div>
+        </div>
+      `);
     } else {
-      qContent.append('<div class="field is-grouped is-grouped-centered"><div class="control"><div class="select is-info"><select id="selectAnimalAge"><option value="YOUNG">Young</option><option value="MATURE">Mature</option><option value="NIMBLE">Nimble</option><option value="SAVAGE">Savage</option></select></div></div>'+processText('[https://pf2.easytool.es/index.php?id=6431&name=Animal_Companions_and_Familiars]', true, null, 'MEDIUM')+'</div>');
+      qContent.append(`
+        <div class="field is-grouped is-grouped-centered">
+          <div class="control">
+            <div class="select is-info">
+              <select id="selectAnimalAge">
+                <option value="YOUNG">Young</option>
+                <option value="MATURE">Mature</option>
+                <option value="NIMBLE">Nimble</option>
+                <option value="SAVAGE">Savage</option>
+                ${ hasEnabledSource('LOST-WORLD-GUIDE') ? '<option value="INDOMITABLE">Indomitable</option>' : '' }
+              </select>
+            </div>
+          </div>
+          ${processText('[https://pf2.easytool.es/index.php?id=6431&name=Animal_Companions_and_Familiars]', true, null, 'MEDIUM')}
+        </div>
+      `);
     }
 
     qContent.append('<div class="px-4 mx-2"><p class="is-size-6">'+getAnimalSpecializationExtraText(animal, charAnimal)+'</p></div>');
@@ -216,7 +258,7 @@ function openAnimalCompQuickview(data) {
         }
     });
 
-    if($('#selectAnimalAge').val() == 'NIMBLE' || $('#selectAnimalAge').val() == 'SAVAGE'){
+    if($('#selectAnimalAge').val() == 'NIMBLE' || $('#selectAnimalAge').val() == 'SAVAGE' || $('#selectAnimalAge').val() == 'INDOMITABLE'){
       
       for(let specialization of g_animalSpecialArray) {
         $('#selectAnimalSpecialization option[value="'+specialization+'"]').attr('selected','selected');
