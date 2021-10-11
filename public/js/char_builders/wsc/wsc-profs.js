@@ -113,6 +113,12 @@ function giveInProf(srcStruct, profName, prof, locationID, sourceName){
         profCategory = 'Defense';
     }
 
+    if(profName.startsWith('GROUP~')){
+      profName = profName.replace(/GROUP\~/g,'');
+      profProperName = profName.replace(/\s+/g,'_').toUpperCase();
+      profCategory = 'Group';
+    }
+
     profName = profName.replace(/\s+/g,'');
     let profData = g_profConversionMap.get(profName);
     if(profData != null){

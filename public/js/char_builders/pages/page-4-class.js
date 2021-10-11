@@ -383,6 +383,12 @@ function displayCurrentClass(classStruct, classNum) {
         savingProfArray.push({ For : "Attack", To : weapID, Prof : weapTraining });
 
     }
+    if(classStruct.Class.weaponsExtra != null) {
+      let weapLines = classStruct.Class.weaponsExtra.split('\n');
+      for(const weapLine of weapLines){
+        profAttacksUL.append(`<li>${weapLine}</li>`);
+      }
+    }
 
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Defenses ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //

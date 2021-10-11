@@ -85,7 +85,11 @@ function openItemQuickview(data) {
 
         let weapGroup = null;
         if(itemDataStruct.WeaponData.isRanged == 1){
+          if(itemDataStruct.WeaponData.rangedWeaponType == 'CROSSBOW'){
+            weapGroup = 'Bow';
+          } else {
             weapGroup = capitalizeWord(itemDataStruct.WeaponData.rangedWeaponType);
+          }
         }
         if(itemDataStruct.WeaponData.isMelee == 1){
             weapGroup = capitalizeWord(itemDataStruct.WeaponData.meleeWeaponType);

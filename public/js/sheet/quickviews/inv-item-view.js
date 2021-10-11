@@ -550,13 +550,17 @@ function openInvItemQuickview(data) {
 
         if(data.Item.WeaponData.isMelee == 1){
             if(weapGroup == null){
-                weapGroup = capitalizeWord(data.Item.WeaponData.meleeWeaponType);
+              weapGroup = capitalizeWord(data.Item.WeaponData.meleeWeaponType);
             }
         }
 
         if(data.Item.WeaponData.isRanged == 1){
             if(weapGroup == null){
+              if(data.Item.WeaponData.rangedWeaponType == 'CROSSBOW'){
+                weapGroup = 'Bow';
+              } else {
                 weapGroup = capitalizeWord(data.Item.WeaponData.rangedWeaponType);
+              }
             }
         }
 

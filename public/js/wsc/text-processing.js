@@ -351,7 +351,7 @@ function handleTableCreation(match) {
 
   // Construct table
   let tableAlignMap = new Map();
-  let tableHTML = '</p><table class="wsc-table use-custom-scrollbar is-darker table-bck">';
+  let tableHTML = '</p><div class="wsc-table-container use-custom-scrollbar is-darker"><table class="wsc-table table-bck">';
   for (let i = 0; i < rows.length; i++) {
     let row = rows[i];
     if(row == '') { continue; }
@@ -397,7 +397,7 @@ function handleTableCreation(match) {
     }
 
   }
-  tableHTML += '</table><p class="p-1 pl-2 '+temp_textProcess_j+temp_textProcess_s+'">';
+  tableHTML += '</table></div><p class="p-1 pl-2 '+temp_textProcess_j+temp_textProcess_s+'">';
 
   return tableHTML;
 }

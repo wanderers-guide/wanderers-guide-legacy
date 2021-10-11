@@ -304,13 +304,13 @@ select .is-unique {
   background-color: hsl(240, 2%, 15%);
 }
 .wsc-table {
-  overflow-x: scroll;
-  display: block;
-
   width:100%;
   box-shadow: 0 1px 2px rgb(0 0 0 / 30%);
 }
 .wsc-table, .wsc-th, .wsc-td {
   border: 1px solid hsl(240, 2%, 12%);
   border-collapse: collapse;
+}
+.wsc-table-container {
+  overflow-x: auto;
 }

@@ -127,6 +127,48 @@ function buildWeaponProfMap(){
                 }
             }
 
+        } else if(finalProfData.For == "Group"){
+
+          let groupName = profName.toUpperCase();
+
+          let isSimple = false;
+          let isMartial = false;
+          let isAdvanced = false;
+          let isUnarmed = false;
+          if(groupName.startsWith('SIMPLE ')){
+            groupName = groupName.replace('SIMPLE ', '');
+            isSimple = true;
+          }
+          if(groupName.startsWith('MARTIAL ')){
+            groupName = groupName.replace('MARTIAL ', '');
+            isMartial = true;
+          }
+          if(groupName.startsWith('ADVANCED ')){
+            groupName = groupName.replace('ADVANCED ', '');
+            isAdvanced = true;
+          }
+          if(groupName.startsWith('UNARMED ')){
+            groupName = groupName.replace('UNARMED ', '');
+            isUnarmed = true;
+          }
+
+          for(const [itemID, itemData] of g_itemMap.entries()){
+            if(itemData.WeaponData != null){
+              if((itemData.WeaponData.isMelee == 1 && itemData.WeaponData.meleeWeaponType == groupName) || (itemData.WeaponData.isRanged == 1 && itemData.WeaponData.rangedWeaponType == groupName)){
+                if(!isSimple && !isMartial && !isAdvanced && !isUnarmed){
+                  weaponProfMap.set(itemData.WeaponData.profName, {
+                    NumUps : finalProfData.NumUps,
+                    UserBonus : finalProfData.UserBonus
+                  });
+                } else if((isSimple && itemData.WeaponData.category == "SIMPLE") || (isMartial && itemData.WeaponData.category == "MARTIAL") || (isAdvanced && itemData.WeaponData.category == "ADVANCED") || (isUnarmed && itemData.WeaponData.category == "UNARMED")) {
+                  weaponProfMap.set(itemData.WeaponData.profName, {
+                    NumUps : finalProfData.NumUps,
+                    UserBonus : finalProfData.UserBonus
+                  });
+                }
+              }
+            }
+          }
         }
     }
 
@@ -216,6 +258,22 @@ function buildArmorProfMap(){
             }
 
         }
+        /*
+        
+         else if(finalProfData.For == "Group"){
+          for(const [itemID, itemData] of g_itemMap.entries()){
+            if(itemData.ArmorData != null){
+              if(itemData.ArmorData.armorType == profName.toUpperCase()){
+                weaponProfMap.set(itemData.ArmorData.profName, {
+                  NumUps : finalProfData.NumUps,
+                  UserBonus : finalProfData.UserBonus
+                });
+              }
+            }
+          }
+        }
+        
+        */
     }
 
     return armorProfMap;

@@ -924,7 +924,8 @@ function processVariables(wscCode, uniqueID){
   return newWscCode;
 }
 
-function handleVariableText(varText){
+function handleVariableText(varText, errorOnFailure=true){
+  console.log(varText);
   if(!varText.includes('{') || !varText.includes('}')) { return varText; }
 
   // Validate text //
@@ -941,8 +942,10 @@ function handleVariableText(varText){
       const char = varText.charAt(i);
   
       if(lastBrace != null && lastBrace.Type === '{' && char === '}'){
+
+        console.log(varText.substring(lastBrace.Index, i+1));
         
-        return varText.replace(varText.substring(lastBrace.Index, i+1), getVariableValue(varText.substring(lastBrace.Index+1, i)));
+        return varText.replace(varText.substring(lastBrace.Index, i+1), getVariableValue(varText.substring(lastBrace.Index+1, i), errorOnFailure));
   
       } else {
         if(char === '{' || char === '}'){

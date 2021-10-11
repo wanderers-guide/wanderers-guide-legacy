@@ -388,9 +388,11 @@ model classes {
   tSkills         String?          @db.VarChar(60)
   tSkillsMore     Int?
   tWeapons        String?          @db.VarChar(300)
+  weaponsExtra    String?          @db.VarChar(500)
   tArmor          String?          @db.VarChar(300)
   tagID           Int?
   artworkURL      String?          @db.VarChar(60)
+  code            String?          @db.VarChar(1000)
   isArchived      Int?             @default(0)
   contentSrc      String           @default("CRB") @db.VarChar(45)
   homebrewID      Int?
@@ -1278,6 +1280,8 @@ enum items_itemType {
   STRUCTURE
   TALISMAN
   SNARE
+  GADGET
+  SIEGE
   KIT
   INGREDIENT
   INSTRUMENT
@@ -1382,6 +1386,7 @@ enum weapons_meleeWeaponType {
 enum weapons_rangedWeaponType {
   DART
   BOW
+  CROSSBOW
   FIREARM
   SLING
   BOMB

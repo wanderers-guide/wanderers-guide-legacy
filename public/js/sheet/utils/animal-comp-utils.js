@@ -258,7 +258,7 @@ function getAnimalSize(animal, charAnimal){
     case 'MATURE': return matureSize(animal.size);
     case 'NIMBLE': return matureSize(animal.size);
     case 'SAVAGE': return matureSize(matureSize(animal.size));
-    case 'INDOMITABLE': return matureSize(animal.size);
+    case 'INDOMITABLE': return matureSize(matureSize(animal.size));
     default: return null;
   }
 }

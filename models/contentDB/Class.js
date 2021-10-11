@@ -42,6 +42,9 @@ const Class = db.define('classes', {
   tWeapons: {
     type: Sequelize.STRING
   },
+  weaponsExtra: {
+    type: Sequelize.STRING
+  },
   tArmor: {
     type: Sequelize.STRING
   },
@@ -49,6 +52,9 @@ const Class = db.define('classes', {
     type: Sequelize.INTEGER
   },
   artworkURL: {
+    type: Sequelize.STRING
+  },
+  code: { // Not used currently
     type: Sequelize.STRING
   },
   isArchived: {

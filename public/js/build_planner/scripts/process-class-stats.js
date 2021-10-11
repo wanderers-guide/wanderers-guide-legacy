@@ -320,6 +320,12 @@ function processClassStats(classData, outputStruct, processType){
       }
 
   }
+  if(classData.weaponsExtra != null) {
+    let weapLines = classData.weaponsExtra.split('\n');
+    for(const weapLine of weapLines){
+      profAttacksInner += `<li>${weapLine}</li>`;
+    }
+  }
 
   if(processType == PROCESS_CLASS_STATS_TYPE.DISPLAY || isBoth){
     $('#'+outputStruct.attacks.displayID).html(`<ul>${profAttacksInner}</ul>`);

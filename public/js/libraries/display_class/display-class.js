@@ -106,6 +106,12 @@ class DisplayClass {
               $('#class-attacks').append('<p>'+profToWord(weapTraining)+' in the '+weaponName+'</p>');
             }
           }
+          if(classStruct.class.weaponsExtra != null) {
+            let weapLines = classStruct.class.weaponsExtra.split('\n');
+            for(const weapLine of weapLines){
+              $('#class-attacks').append(`<p>${weapLine}</p>`);
+            }
+          }
 
           if(classStruct.class.tSkills != null){
             $('#class-skills').html('Trained in '+classStruct.class.tSkills);

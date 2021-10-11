@@ -33,7 +33,21 @@ function openAddItemQuickview(data) {
 
     $('#itemTabGeneral').click(function(){
         $('#allItemsFilterBySubcategory').parent().parent().removeClass('is-hidden');
-        $('#allItemsFilterBySubcategory').html('<option value="ALL">Category</option><option value="AMMUNITION">Ammunition</option><option value="ARMOR">Armor</option><option value="BOOK">Book</option><option value="INGREDIENT">Ingredient</option><option value="INSTRUMENT">Instrument</option><option value="KIT">Kit</option><option value="SHIELD">Shield</option><option value="STORAGE">Storage</option><option value="TOOL">Tool</option><option value="WEAPON">Weapon</option><option value="OTHER">Other</option>');
+        $('#allItemsFilterBySubcategory').html(`
+          <option value="ALL">Category</option>
+          <option value="AMMUNITION">Ammunition</option>
+          <option value="ARMOR">Armor</option>
+          <option value="BOOK">Book</option>
+          <option value="GADGET">Gadget</option>
+          <option value="INGREDIENT">Ingredient</option>
+          <option value="INSTRUMENT">Instrument</option>
+          <option value="KIT">Kit</option>
+          <option value="SHIELD">Shield</option>
+          <option value="STORAGE">Storage</option>
+          <option value="TOOL">Tool</option>
+          <option value="WEAPON">Weapon</option>
+          <option value="OTHER">Other</option>
+        `);
         $('#allItemSearch').attr('placeholder', 'Search General Items');
         changeItemCategoryTab('itemTabGeneral', data);
     });
