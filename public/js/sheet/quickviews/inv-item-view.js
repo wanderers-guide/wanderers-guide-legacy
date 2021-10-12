@@ -654,6 +654,7 @@ function openInvItemQuickview(data) {
                 data.Item.Item.itemType == 'TALISMAN' || 
                 data.Item.Item.itemType == 'FULU' || 
                 //data.Item.Item.itemType == 'RUNE' || 
+                data.Item.Item.itemType == 'GADGET' || 
                 data.Item.Item.itemType == 'OTHER' || 
                 data.Item.Item.itemType == 'SPELLHEART')) {
               // Item is attachment

@@ -2,6 +2,11 @@
     By Aaron Cassar.
 */
 
+let g_addItems_itemSearchMap = null;
+let g_addItems_appliedFilters = 0;
+let g_addItems_itemMaxDisplay = 0;
+const g_addItems_displayIncrement = 20;
+
 function openAddItemQuickview(data) {
 
     $('#quickViewTitle').html('Add Items');
@@ -18,98 +23,269 @@ function openAddItemQuickview(data) {
 
     let qContent = $('#quickViewContent');
 
-    qContent.append('<div class="tabs is-small is-centered is-marginless mb-1"><ul class="category-tabs"><li><a id="itemTabAll">All</a></li><li><a id="itemTabGeneral">General</a></li><li><a id="itemTabMagical">Magical</a></li><li><a id="itemTabAlchemical">Alchemical</a></li><li><a id="itemTabCurrency">Currency</a></li></ul></div>');
+    qContent.append(`
+      <div class="tabs is-centered is-marginless mb-1">
+        <ul class="category-tabs">
+          <li><a id="addItemTabSearch">Search</a></li>
+          <li><a id="addItemTabAdvanced">Advanced</a></li>
+          <li><a id="addItemTabCurrency">Currency</a></li>
+        </ul>
+      </div>
+    `);
 
-    qContent.append('<div class="columns is-mobile is-marginless mb-3"><div class="column py-1 pr-1"><p class="control has-icons-left"><input id="allItemSearch" class="input" type="text" autocomplete="off"><span class="icon is-left"><i class="fas fa-search" aria-hidden="true"></i></span></p></div><div class="column is-3 py-1 mt-1"><div class="select is-small is-info"><select id="allItemsFilterBySubcategory"></select></div></div></div>');
+    qContent.append(`<div id="addItemFilterSection"></div>`);
 
-    qContent.append('<div id="addItemListSection" class="tile is-ancestor is-vertical"></div>');
+    qContent.append(`<div id="addItemListSection" class="tile is-ancestor is-vertical"></div>`);
 
-    $('#itemTabAll').click(function(){
-        $('#allItemsFilterBySubcategory').parent().parent().addClass('is-hidden');
-        $('#allItemsFilterBySubcategory').html('');
-        $('#allItemSearch').attr('placeholder', 'Search All Items');
-        changeItemCategoryTab('itemTabAll', data);
+    $('#addItemTabSearch').click(function(){
+
+      $('#addItemFilterSection').html(`
+        <div class="columns is-mobile is-marginless mb-3">
+          <div class="column py-1 pr-1">
+            <p class="control has-icons-left"><input id="addItem-filterNameInput" class="input" type="text" autocomplete="off" placeholder="Search All Items"><span class="icon is-left"><i class="fas fa-search" aria-hidden="true"></i></span></p>
+          </div>
+        </div>
+      `);
+      $('#addItem-filterNameInput').on('input', function() {
+        applyFiltersAndItemSearch('addItemTabSearch', data);
+      });
+
+      applyFiltersAndItemSearch('addItemTabSearch', data);
     });
 
-    $('#itemTabGeneral').click(function(){
-        $('#allItemsFilterBySubcategory').parent().parent().removeClass('is-hidden');
-        $('#allItemsFilterBySubcategory').html(`
-          <option value="ALL">Category</option>
-          <option value="AMMUNITION">Ammunition</option>
-          <option value="ARMOR">Armor</option>
-          <option value="BOOK">Book</option>
-          <option value="GADGET">Gadget</option>
-          <option value="INGREDIENT">Ingredient</option>
-          <option value="INSTRUMENT">Instrument</option>
-          <option value="KIT">Kit</option>
-          <option value="SHIELD">Shield</option>
-          <option value="STORAGE">Storage</option>
-          <option value="TOOL">Tool</option>
-          <option value="WEAPON">Weapon</option>
-          <option value="OTHER">Other</option>
-        `);
-        $('#allItemSearch').attr('placeholder', 'Search General Items');
-        changeItemCategoryTab('itemTabGeneral', data);
+    $('#addItemTabAdvanced').click(function(){
+
+      $('#addItemFilterSection').html(`
+        <div id="addItemFilterReveal" class="columns is-mobile is-marginless cursor-clickable">
+          <div class="column py-1">
+            <p class="is-bold has-text-centered is-size-6 title-font">Applied Filters <span id="addItemFilterNumOfFilters" class="has-text-info pl-2">0</span></p>
+          </div>
+          <div class="column is-2 py-1">
+            <span class="icon pt-1 has-txt-listing"><i id="addItemFilterChevron" class="fas fa-chevron-down"></i></span>
+          </div>
+        </div>
+        <div id="addItemFilterApplySection">
+
+          <div class="mb-2">
+
+            <div class="filterFieldSection field">
+              <div class="control">
+                <input class="input" id="addItem-filterNameInput" type="text" placeholder="Name" autocomplete="off">
+              </div>
+            </div>
+
+            <div class="filterFieldSection field">
+              <select id="addItem-filterTagsInput" data-placeholder="Traits" multiple>
+              </select>
+            </div>
+
+            <div class="filterFieldSection field">
+              <div class="control">
+                <input class="input" id="addItem-filterItemUsageInput" type="text" placeholder="Usage" autocomplete="off">
+              </div>
+            </div>
+
+            <div class="filterFieldSection field">
+              <div class="control">
+                <input class="input" id="addItem-filterDescInput" type="text" placeholder="Description" autocomplete="off">
+              </div>
+            </div>
+
+            <div class="filterFieldSection field is-horizontal">
+              <div class="field-label is-normal ml-2">
+                <label class="label">Level</label>
+              </div>
+              <div class="field-body">
+                <div class="field has-addons">
+                  <p class="control">
+                    <span class="select">
+                      <select id="addItem-filterLevelRelationInput">
+                        <option value="EQUAL">=</option>
+                        <option value="LESS">&lt;</option>
+                        <option value="GREATER">&gt;</option>
+                        <option value="LESS-EQUAL">≤</option>
+                        <option value="GREATER-EQUAL">≥</option>
+                        <option value="NOT-EQUAL">≠</option>
+                      </select>
+                    </span>
+                  </p>
+                  <p class="control">
+                    <input class="input" id="addItem-filterLevelInput" type="number" placeholder="Lvl" autocomplete="off" max="30" min="0">
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="filterFieldSection field is-horizontal">
+              <div class="field-label is-normal ml-2">
+                <label class="label">Price</label>
+              </div>
+              <div class="field-body">
+                <div class="field has-addons">
+                  <p class="control">
+                    <span class="select">
+                      <select id="addItem-filterItemPriceRelationInput">
+                        <option value="EQUAL">=</option>
+                        <option value="LESS">&lt;</option>
+                        <option value="GREATER">&gt;</option>
+                        <option value="LESS-EQUAL">≤</option>
+                        <option value="GREATER-EQUAL">≥</option>
+                        <option value="NOT-EQUAL">≠</option>
+                      </select>
+                    </span>
+                  </p>
+                  <p class="control">
+                    <input class="input" id="addItem-filterItemPriceInput" type="number" placeholder="Price (in cp)" min="0" max="99999999" autocomplete="off">
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="filterFieldSection field is-horizontal">
+              <div class="field-label is-normal ml-2">
+                <label class="label">Bulk</label>
+              </div>
+              <div class="field-body">
+                <div class="field has-addons">
+                  <p class="control">
+                    <span class="select">
+                      <select id="addItem-filterItemBulkRelationInput">
+                        <option value="EQUAL">=</option>
+                        <option value="LESS">&lt;</option>
+                        <option value="GREATER">&gt;</option>
+                        <option value="LESS-EQUAL">≤</option>
+                        <option value="GREATER-EQUAL">≥</option>
+                        <option value="NOT-EQUAL">≠</option>
+                      </select>
+                    </span>
+                  </p>
+                  <p class="control">
+                    <input class="input" id="addItem-filterItemBulkInput" type="number" placeholder="Bulk" min="0" max="999" step="0.1" autocomplete="off">
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="filterFieldSection field is-horizontal">
+              <div class="field-label is-normal ml-2">
+                <label class="label">Rarity</label>
+              </div>
+              <div class="field-body">
+                <div class="field">
+                  <div class="control">
+                    <div class="select">
+                      <select id="addItem-filterRarityInput">
+                        <option value="ANY">Any</option>
+                        <option value="COMMON">Common</option>
+                        <option value="UNCOMMON">Uncommon</option>
+                        <option value="RARE">Rare</option>
+                        <option value="UNIQUE">Unique</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="filterFieldSection field is-horizontal">
+              <div class="field-label is-normal ml-2">
+                <label class="label">Category</label>
+              </div>
+              <div class="field-body">
+                <div class="field">
+                  <div class="control">
+                    <div class="select">
+                      <select id="addItem-filterItemCategoryInput">
+                        <option value="ANY">Any</option>
+                        <option value="ARTIFACT">Artifact</option>
+                        <option value="AMMUNITION">Ammunition</option>
+                        <option value="ARMOR">Armor</option>
+                        <option value="BELT">Belt</option>
+                        <option value="BOMB">Bomb</option>
+                        <option value="BOOK">Book</option>
+                        <option value="BOOTS">Boots</option>
+                        <option value="BRACERS">Bracers</option>
+                        <option value="CATALYST">Catalyst</option>
+                        <option value="CIRCLET">Circlet</option>
+                        <option value="CLOAK">Cloak</option>
+                        <option value="COMPANION">Companion</option>
+                        <option value="CURRENCY">Currency</option>
+                        <option value="DRUG">Drug</option>
+                        <option value="ELIXIR">Elixir</option>
+                        <option value="EYEPIECE">Eyepiece</option>
+                        <option value="FULU">Fulu</option>
+                        <option value="GLOVES">Gloves</option>
+                        <option value="GRIMOIRE">Grimoire</option>
+                        <option value="HAT">Hat</option>
+                        <option value="INGREDIENT">Ingredient</option>
+                        <option value="INSTRUMENT">Instrument</option>
+                        <option value="KIT">Kit</option>
+                        <option value="MASK">Mask</option>
+                        <option value="NECKLACE">Necklace</option>
+                        <option value="OIL">Oil</option>
+                        <option value="POISON">Poison</option>
+                        <option value="POTION">Potion</option>
+                        <option value="RING">Ring</option>
+                        <option value="ROD">Rod</option>
+                        <option value="RUNE">Runestone</option>
+                        <option value="SCROLL">Scroll</option>
+                        <option value="SHIELD">Shield</option>
+                        <option value="SPELLHEART">Spellheart</option>
+                        <option value="STAFF">Staff</option>
+                        <option value="STORAGE">Storage</option>
+                        <option value="STRUCTURE">Structure</option>
+                        <option value="TALISMAN">Talisman</option>
+                        <option value="TATTOO">Tattoo</option>
+                        <option value="TOOL">Tool</option>
+                        <option value="WAND">Wand</option>
+                        <option value="WEAPON">Weapon</option>
+                        <option value="OTHER">Other</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+        <hr class="mb-2 mt-0">
+      `);
+      for(let tag of g_allTags){
+        $('#addItem-filterTagsInput').append('<option value="'+tag.id+'">'+tag.name+'</option>');
+      }
+      $("#addItem-filterTagsInput").chosen({width: "100%"});
+      $("#addItem-filterTagsInput").chosen();
+
+      $('#addItemFilterReveal').click(function(){
+        if($('#addItemFilterApplySection').hasClass('is-hidden')){
+            $('#addItemFilterChevron').removeClass('fa-chevron-up');
+            $('#addItemFilterChevron').addClass('fa-chevron-down');
+            $('#addItemFilterApplySection').removeClass('is-hidden');
+        } else {
+          $('#addItemFilterChevron').removeClass('fa-chevron-down');
+          $('#addItemFilterChevron').addClass('fa-chevron-up');
+          $('#addItemFilterApplySection').addClass('is-hidden');
+        }
+      });
+
+      $('#addItem-filterNameInput, #addItem-filterItemUsageInput, #addItem-filterDescInput, #addItem-filterLevelInput, #addItem-filterItemPriceInput, #addItem-filterItemBulkInput').on('input', function() {
+        applyFiltersAndItemSearch('addItemTabAdvanced', data);
+      });
+      $('#addItem-filterTagsInput, #addItem-filterLevelRelationInput, #addItem-filterItemPriceRelationInput, #addItem-filterItemBulkRelationInput, #addItem-filterRarityInput, #addItem-filterItemCategoryInput').change(function(){
+        applyFiltersAndItemSearch('addItemTabAdvanced', data);
+      });
+      
+      applyFiltersAndItemSearch('addItemTabAdvanced', data);
     });
 
-    $('#itemTabMagical').click(function(){
-        $('#allItemsFilterBySubcategory').parent().parent().removeClass('is-hidden');
-        $('#allItemsFilterBySubcategory').html(`
-          <option value="ALL">Category</option>
-          <option value="ARTIFACT">Artifact</option>
-          <option value="AMMUNITION">Ammunition</option>
-          <option value="ARMOR">Armor</option>
-          <option value="BELT">Belt</option>
-          <option value="BOOK">Book</option>
-          <option value="BOOTS">Boots</option>
-          <option value="BRACERS">Bracers</option>
-          <option value="CATALYST">Catalyst</option>
-          <option value="CIRCLET">Circlet</option>
-          <option value="CLOAK">Cloak</option>
-          <option value="COMPANION">Companion</option>
-          <option value="EYEPIECE">Eyepiece</option>
-          <option value="FULU">Fulu</option>
-          <option value="GLOVES">Gloves</option>
-          <option value="GRIMOIRE">Grimoire</option>
-          <option value="HAT">Hat</option>
-          <option value="INSTRUMENT">Instrument</option>
-          <option value="MASK">Mask</option>
-          <option value="NECKLACE">Necklace</option>
-          <option value="OIL">Oil</option>
-          <option value="POTION">Potion</option>
-          <option value="RING">Ring</option>
-          <option value="ROD">Rod</option>
-          <option value="RUNE">Runestone</option>
-          <option value="SCROLL">Scroll</option>
-          <option value="SHIELD">Shield</option>
-          <option value="SPELLHEART">Spellheart</option>
-          <option value="STAFF">Staff</option>
-          <option value="STORAGE">Storage</option>
-          <option value="STRUCTURE">Structure</option>
-          <option value="TALISMAN">Talisman</option>
-          <option value="TATTOO">Tattoo</option>
-          <option value="WAND">Wand</option>
-          <option value="WEAPON">Weapon</option>
-          <option value="OTHER">Other</option>`);
-        $('#allItemSearch').attr('placeholder', 'Search Magical Items');
-        changeItemCategoryTab('itemTabMagical', data);
+    $('#addItemTabCurrency').click(function(){
+      $('#addItemFilterSection').html(`<div class="p-2"></div>`);
+      applyFiltersAndItemSearch('addItemTabCurrency', data);
     });
 
-    $('#itemTabAlchemical').click(function(){
-        $('#allItemsFilterBySubcategory').parent().parent().removeClass('is-hidden');
-        $('#allItemsFilterBySubcategory').html('<option value="ALL">Category</option><option value="BOMB">Bomb</option><option value="DRUG">Drug</option><option value="ELIXIR">Elixir</option><option value="INGREDIENT">Ingredient</option><option value="POISON">Poison</option><option value="TOOL">Tool</option><option value="OTHER">Other</option>');
-        $('#allItemSearch').attr('placeholder', 'Search Alchemical Items');
-        changeItemCategoryTab('itemTabAlchemical', data);
-    });
-
-    $('#itemTabCurrency').click(function(){
-        $('#allItemsFilterBySubcategory').parent().parent().addClass('is-hidden');
-        $('#allItemsFilterBySubcategory').html('<option value="ALL">All</option>');
-        $('#allItemSearch').attr('placeholder', 'Search Currency');
-        changeItemCategoryTab('itemTabCurrency', data);
-    });
-
-    $('#itemTabAll').click();
+    $('#addItemTabSearch').click();
 
 }
 
@@ -117,140 +293,268 @@ function openAddItemQuickview(data) {
 
 
 
-function changeItemCategoryTab(type, data){
+function applyFiltersAndItemSearch(type, data){
 
     $('#addItemListSection').html('');
 
-    $('#itemTabAll').parent().removeClass("is-active");
-    $('#itemTabGeneral').parent().removeClass("is-active");
-    $('#itemTabMagical').parent().removeClass("is-active");
-    $('#itemTabAlchemical').parent().removeClass("is-active");
-    $('#itemTabCurrency').parent().removeClass("is-active");
+    $('#addItemTabSearch').parent().removeClass("is-active");
+    $('#addItemTabAdvanced').parent().removeClass("is-active");
+    $('#addItemTabCurrency').parent().removeClass("is-active");
     $('#'+type).parent().addClass("is-active");
 
-    let allItemSearch = $('#allItemSearch');
-    let allItemSearchInput = null;
-    if(allItemSearch.val() != ''){
-        allItemSearchInput = allItemSearch.val().toUpperCase();
-        allItemSearch.addClass('is-info');
-    } else {
-        allItemSearch.removeClass('is-info');
-        if(type != 'itemTabAll') {
-            allItemSearch.blur();
+
+    g_addItems_itemSearchMap = new Map(data.ItemMap);
+    g_addItems_appliedFilters = 0;
+    g_addItems_itemMaxDisplay = g_addItems_displayIncrement;
+
+    if(type == 'addItemTabSearch' || type == 'addItemTabAdvanced'){
+
+      // Item Name
+      if($('#addItem-filterNameInput').val() != ''){
+
+        console.log('Add Item - Filtering by Name...');
+        g_addItems_appliedFilters++;
+
+        let parts = $('#addItem-filterNameInput').val().toUpperCase().split(' ');
+        for(const [itemID, itemStruct] of g_addItems_itemSearchMap.entries()){
+          if(!textContainsWords(itemStruct.Item.name, parts)){
+            g_addItems_itemSearchMap.delete(itemID);
+          }
         }
+
+        $('#addItem-filterNameInput').addClass('is-info');
+      } else {
+        $('#addItem-filterNameInput').removeClass('is-info');
+      }
+
     }
 
-    let allItemsFilterBySubcategoryValue = $('#allItemsFilterBySubcategory').val();
+    if(type == 'addItemTabAdvanced'){
 
-    $('#allItemSearch').off('change');
-    $('#allItemSearch').change(function(){
-        changeItemCategoryTab(type, data);
-    });
+      // Item Traits
+      if($('#addItem-filterTagsInput').val().length > 0){
 
-    $('#allItemsFilterBySubcategory').off('change');
-    $('#allItemsFilterBySubcategory').change(function(){
-        changeItemCategoryTab(type, data);
-    });
+        console.log('Add Item - Filtering by Traits...');
+        g_addItems_appliedFilters++;
 
-    for(const [itemID, itemDataStruct] of data.ItemMap.entries()){
-
-        let willDisplay = false;
-
-        if(type == 'itemTabAll') {
-            willDisplay = (allItemSearchInput != null);
-        } else if(type == 'itemTabGeneral') {
-            let magical = itemDataStruct.TagArray.find(tag => {
-                // Hardcoded - Magical Trait ID 41;
-                // Primal Trait ID 304; Occult Trait ID 500; Divine Trait ID 265; Arcane Trait ID 2;
-                return tag.id === 41 || tag.id === 304 || tag.id === 500 || tag.id === 265 || tag.id === 2;
-            });
-            let alchemical = itemDataStruct.TagArray.find(tag => {
-                return tag.id === 399; // Hardcoded - Alchemical Trait ID 399
-            });
-            willDisplay = (magical == null && alchemical == null && itemDataStruct.Item.itemType != 'CURRENCY');
-        } else if(type == 'itemTabMagical') {
-            let magical = itemDataStruct.TagArray.find(tag => {
-                // Hardcoded - Magical Trait ID 41;
-                // Primal Trait ID 304; Occult Trait ID 500; Divine Trait ID 265; Arcane Trait ID 2;
-                return tag.id === 41 || tag.id === 304 || tag.id === 500 || tag.id === 265 || tag.id === 2;
-            });
-            willDisplay = (magical != null);
-        } else if(type == 'itemTabAlchemical') {
-            let alchemical = itemDataStruct.TagArray.find(tag => {
-                return tag.id === 399; // Hardcoded - Alchemical Trait ID 399
-            });
-            willDisplay = (alchemical != null);
-        } else if(type == 'itemTabCurrency') {
-            if(itemDataStruct.Item.itemType == 'CURRENCY') {
-                willDisplay = true;
-            }
+        for(const [itemID, itemStruct] of g_addItems_itemSearchMap.entries()){
+          let foundTags = itemStruct.TagArray.filter(tag => {
+            return $('#addItem-filterTagsInput').val().includes(tag.id+"");
+          });
+          if(foundTags.length !== $('#addItem-filterTagsInput').val().length){
+            g_addItems_itemSearchMap.delete(itemID);
+          }
         }
+
+      }
+
+      // Item Usage
+      if($('#addItem-filterItemUsageInput').val() != ''){
+
+        console.log('Add Item - Filtering by Usage...');
+        g_addItems_appliedFilters++;
+
+        let parts = $('#addItem-filterItemUsageInput').val().toUpperCase().split(' ');
+        for(const [itemID, itemStruct] of g_addItems_itemSearchMap.entries()){
+          if(!textContainsWords(itemStruct.Item.usage, parts)){
+            g_addItems_itemSearchMap.delete(itemID);
+          }
+        }
+
+        $('#addItem-filterItemUsageInput').addClass('is-info');
+      } else {
+        $('#addItem-filterItemUsageInput').removeClass('is-info');
+      }
+
+      // Item Description
+      if($('#addItem-filterDescInput').val() != ''){
+
+        console.log('Add Item - Filtering by Description...');
+        g_addItems_appliedFilters++;
+
+        let parts = $('#addItem-filterDescInput').val().toUpperCase().split(' ');
+        for(const [itemID, itemStruct] of g_addItems_itemSearchMap.entries()){
+          if(!textContainsWords(itemStruct.Item.description, parts)){
+            g_addItems_itemSearchMap.delete(itemID);
+          }
+        }
+
+        $('#addItem-filterDescInput').addClass('is-info');
+      } else {
+        $('#addItem-filterDescInput').removeClass('is-info');
+      }
+
+      // Item Level
+      if($('#addItem-filterLevelInput').val() != ''){
+
+        console.log('Add Item - Filtering by Level...');
+        g_addItems_appliedFilters++;
         
-        if(allItemSearchInput != null){
-            $('#allItemsFilterBySubcategory').parent().removeClass('is-info');
-            
-            let itemName = itemDataStruct.Item.name.toUpperCase();
-            if(!itemName.includes(allItemSearchInput)){
-                willDisplay = false;
-            }
-
-        } else {
-            $('#allItemsFilterBySubcategory').parent().addClass('is-info');
-
-            if(allItemsFilterBySubcategoryValue == 'ALL'){
-                $('#allItemsFilterBySubcategory').parent().removeClass('is-info');
-                if(type != 'itemTabCurrency'){
-                    willDisplay = false;
-                }
-            } else if(allItemsFilterBySubcategoryValue == 'OTHER'){
-                let foundItemType = false;
-                if(itemDataStruct.Item.itemType != 'OTHER') {
-                    $("#allItemsFilterBySubcategory option").each(function() {
-                        if(itemDataStruct.Item.itemType === $(this).val()){
-                            foundItemType = true;
-                        }
-                    });
-                }
-                if(foundItemType){
-                    willDisplay = false;
-                }
-            } else {
-                if(itemDataStruct.Item.itemType !== allItemsFilterBySubcategoryValue){
-                    willDisplay = false;
-                }
-            }
-
+        let level = parseInt($('#addItem-filterLevelInput').val());
+        for(const [itemID, itemStruct] of g_addItems_itemSearchMap.entries()){
+          switch($('#addItem-filterLevelRelationInput').val()) {
+            case 'EQUAL': if(itemStruct.Item.level === level) {} else {g_addItems_itemSearchMap.delete(itemID);} break;
+            case 'LESS': if(itemStruct.Item.level < level) {} else {g_addItems_itemSearchMap.delete(itemID);} break;
+            case 'GREATER': if(itemStruct.Item.level > level) {} else {g_addItems_itemSearchMap.delete(itemID);} break;
+            case 'LESS-EQUAL': if(itemStruct.Item.level <= level) {} else {g_addItems_itemSearchMap.delete(itemID);} break;
+            case 'GREATER-EQUAL': if(itemStruct.Item.level >= level) {} else {g_addItems_itemSearchMap.delete(itemID);} break;
+            case 'NOT-EQUAL': if(itemStruct.Item.level !== level) {} else {g_addItems_itemSearchMap.delete(itemID);} break;
+            default: break;
+          }
         }
 
-        if(willDisplay){
-            displayAddItem(itemID, itemDataStruct, data);
+        $('#addItem-filterLevelInput').addClass('is-info');
+      } else {
+        $('#addItem-filterLevelInput').removeClass('is-info');
+      }
+
+      // Item Price
+      if($('#addItem-filterItemPriceInput').val() != ''){
+
+        console.log('Add Item - Filtering by Price...');
+        g_addItems_appliedFilters++;
+        
+        let price = parseInt($('#addItem-filterItemPriceInput').val());
+        for(const [itemID, itemStruct] of g_addItems_itemSearchMap.entries()){
+          switch($('#addItem-filterItemPriceRelationInput').val()) {
+            case 'EQUAL': if(itemStruct.Item.price === price) {} else {g_addItems_itemSearchMap.delete(itemID);} break;
+            case 'LESS': if(itemStruct.Item.price < price) {} else {g_addItems_itemSearchMap.delete(itemID);} break;
+            case 'GREATER': if(itemStruct.Item.price > price) {} else {g_addItems_itemSearchMap.delete(itemID);} break;
+            case 'LESS-EQUAL': if(itemStruct.Item.price <= price) {} else {g_addItems_itemSearchMap.delete(itemID);} break;
+            case 'GREATER-EQUAL': if(itemStruct.Item.price >= price) {} else {g_addItems_itemSearchMap.delete(itemID);} break;
+            case 'NOT-EQUAL': if(itemStruct.Item.price !== price) {} else {g_addItems_itemSearchMap.delete(itemID);} break;
+            default: break;
+          }
         }
+
+        $('#addItem-filterItemPriceInput').addClass('is-info');
+      } else {
+        $('#addItem-filterItemPriceInput').removeClass('is-info');
+      }
+
+      // Item Bulk
+      if($('#addItem-filterItemBulkInput').val() != ''){
+
+        console.log('Add Item - Filtering by Bulk...');
+        g_addItems_appliedFilters++;
+        
+        let bulk = parseInt($('#addItem-filterItemBulkInput').val());
+        for(const [itemID, itemStruct] of g_addItems_itemSearchMap.entries()){
+          switch($('#addItem-filterItemBulkRelationInput').val()) {
+            case 'EQUAL': if(itemStruct.Item.bulk === bulk) {} else {g_addItems_itemSearchMap.delete(itemID);} break;
+            case 'LESS': if(itemStruct.Item.bulk < bulk) {} else {g_addItems_itemSearchMap.delete(itemID);} break;
+            case 'GREATER': if(itemStruct.Item.bulk > bulk) {} else {g_addItems_itemSearchMap.delete(itemID);} break;
+            case 'LESS-EQUAL': if(itemStruct.Item.bulk <= bulk) {} else {g_addItems_itemSearchMap.delete(itemID);} break;
+            case 'GREATER-EQUAL': if(itemStruct.Item.bulk >= bulk) {} else {g_addItems_itemSearchMap.delete(itemID);} break;
+            case 'NOT-EQUAL': if(itemStruct.Item.bulk !== bulk) {} else {g_addItems_itemSearchMap.delete(itemID);} break;
+            default: break;
+          }
+        }
+
+        $('#addItem-filterItemBulkInput').addClass('is-info');
+      } else {
+        $('#addItem-filterItemBulkInput').removeClass('is-info');
+      }
+
+      // Item Rarity
+      if($('#addItem-filterRarityInput').val() != 'ANY'){
+
+        console.log('Add Item - Filtering by Rarity...');
+        g_addItems_appliedFilters++;
+
+        for(const [itemID, itemStruct] of g_addItems_itemSearchMap.entries()){
+          if(itemStruct.Item.rarity !== $('#addItem-filterRarityInput').val()){
+            g_addItems_itemSearchMap.delete(itemID);
+          }
+        }
+
+        $('#addItem-filterRarityInput').parent().addClass('is-info');
+      } else {
+        $('#addItem-filterRarityInput').parent().removeClass('is-info');
+      }
+
+       // Item Category
+       if($('#addItem-filterItemCategoryInput').val() != 'ANY'){
+
+        console.log('Add Item - Filtering by Category...');
+        g_addItems_appliedFilters++;
+
+        for(const [itemID, itemStruct] of g_addItems_itemSearchMap.entries()){
+          if(itemStruct.Item.itemType != $('#addItem-filterItemCategoryInput').val()){
+            g_addItems_itemSearchMap.delete(itemID);
+          }
+        }
+
+        $('#addItem-filterItemCategoryInput').parent().addClass('is-info');
+      } else {
+        $('#addItem-filterItemCategoryInput').parent().removeClass('is-info');
+      }
+
+      // Update filter count
+      $('#addItemFilterNumOfFilters').text(g_addItems_appliedFilters);
 
     }
 
-    $('.itemEntryPart').click(function(){
-
-        let itemID = $(this).parent().attr('data-item-id');
-        let itemDataStruct = data.ItemMap.get(itemID+"");
-
-        let addItemChevronItemID = 'addItemChevronItemID'+itemID;
-        let addItemNameID = 'addItemName'+itemID;
-        let addItemDetailsItemID = 'addItemDetailsItem'+itemID;
-        if($('#'+addItemDetailsItemID).html() != ''){
-            $('#'+addItemChevronItemID).removeClass('fa-chevron-up');
-            $('#'+addItemChevronItemID).addClass('fa-chevron-down');
-            $('#'+addItemNameID).removeClass('has-text-white-ter');
-            //$(this).parent().removeClass('has-bg-options-header-bold');
-            displayItemDetails(null, addItemDetailsItemID);
-        } else {
-            $('#'+addItemChevronItemID).removeClass('fa-chevron-down');
-            $('#'+addItemChevronItemID).addClass('fa-chevron-up');
-            $('#'+addItemNameID).addClass('has-text-white-ter');
-            //$(this).parent().addClass('has-bg-options-header-bold');
-            displayItemDetails(itemDataStruct, addItemDetailsItemID);
+    if(type == 'addItemTabCurrency'){
+      for(const [itemID, itemStruct] of g_addItems_itemSearchMap.entries()){
+        if(itemStruct.Item.itemType != 'CURRENCY') {
+          g_addItems_itemSearchMap.delete(itemID);
         }
+      }
+    }
 
+    if(g_addItems_appliedFilters > 0 || type == 'addItemTabCurrency'){
+      listItemsFromSearch(data);
+    }
+
+}
+
+function listItemsFromSearch(data){
+
+  $('#addItemListSection').html('');
+
+  let itemCount = 0;
+  let didntLoadAll = false;
+  for(const [itemID, itemDataStruct] of g_addItems_itemSearchMap.entries()){
+    if(itemDataStruct.Item.hidden == 1 || itemDataStruct.Item.isArchived == 1) {continue;}
+    itemCount++;
+    displayAddItem(itemID, itemDataStruct, data);
+    if(itemCount >= g_addItems_itemMaxDisplay){ didntLoadAll = true; break; }
+  }
+
+  $('.itemEntryPart').click(function(){
+
+      let itemID = $(this).parent().attr('data-item-id');
+      let itemDataStruct = data.ItemMap.get(itemID+"");
+
+      let addItemChevronItemID = 'addItemChevronItemID'+itemID;
+      let addItemNameID = 'addItemName'+itemID;
+      let addItemDetailsItemID = 'addItemDetailsItem'+itemID;
+      if($('#'+addItemDetailsItemID).html() != ''){
+          $('#'+addItemChevronItemID).removeClass('fa-chevron-up');
+          $('#'+addItemChevronItemID).addClass('fa-chevron-down');
+          $('#'+addItemNameID).removeClass('has-text-white-ter');
+          //$(this).parent().removeClass('has-bg-options-header-bold');
+          displayItemDetails(null, addItemDetailsItemID);
+      } else {
+          $('#'+addItemChevronItemID).removeClass('fa-chevron-down');
+          $('#'+addItemChevronItemID).addClass('fa-chevron-up');
+          $('#'+addItemNameID).addClass('has-text-white-ter');
+          //$(this).parent().addClass('has-bg-options-header-bold');
+          displayItemDetails(itemDataStruct, addItemDetailsItemID);
+      }
+
+  });
+
+  if(didntLoadAll){
+    $('#addItemListSection').append(`
+      <button id="addItemLoadMore" class="button mx-1 is-small is-info is-outlined is-fullwidth">Load More</button>
+    `);
+    $('#addItemLoadMore').click(function(){
+      g_addItems_itemMaxDisplay += g_addItems_displayIncrement;
+      listItemsFromSearch(data);
     });
+  }
 
 }
 
@@ -285,7 +589,7 @@ function displayAddItem(itemID, itemDataStruct, data){
     $('#addItemListSection').append(`
       <div class="tile is-parent is-flex is-paddingless border-bottom border-additems has-bg-options-header-bold cursor-clickable" data-item-id="${itemID}">
         <div class="tile is-child is-7 itemEntryPart">
-          <p id="${addItemNameID}" class="has-text-left mt-1 has-txt-value-number"><span class="ml-2">${getItemIcon(itemDataStruct, null)}</span>${itemName}</p>
+          <p id="${addItemNameID}" class="has-text-left mt-1 has-txt-value-number text-overflow-ellipsis"><span class="ml-2">${getItemIcon(itemDataStruct, null)}</span>${itemName}</p>
         </div>
         <div class="tile is-child is-2 itemEntryPart">
           <p class="has-text-centered is-size-7 mt-2">${itemLevel}</p>

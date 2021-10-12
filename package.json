@@ -41,6 +41,7 @@
         "passport-google-oauth20": "^2.0.0",
         "passport-reddit": "^0.2.4",
         "patreon": "^0.4.1",
+        "prisma": "^2.22.1",
         "rate-limiter-flexible": "^2.1.10",
         "redis": "^3.1.1",
         "sequelize": "^5.21.6",
@@ -49,7 +50,6 @@
     },
     "devDependencies": {
         "handlebars": "4.5.3",
-        "nodemon": "^2.0.2",
-        "prisma": "^2.22.1"
+        "nodemon": "^2.0.2"
     }
 }
