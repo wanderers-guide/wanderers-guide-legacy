@@ -1,0 +1,163 @@
+
+{{#section 'header'}}
+    <link rel="stylesheet" href="/css/admin-builders.css">
+    <script type="text/javascript" src="/js/admin_builders/eExtra/builder-extra.js"></script>
+    <script type="text/javascript" src="/js/confirm-page-leave.js"></script>
+    {{#if extraID}}
+        <script type="text/javascript" src="/js/admin_builders/eExtra/editor-extra.js"></script>
+    {{/if}}
+    <script type="text/javascript" src="/js/admin_builders/editor-utils.js"></script>
+{{/section}}
+
+{{#section 'nav_home'}}
+    <li><a href="/">Home</a></li>
+{{/section}}
+
+{{#section 'nav_characters'}}
+    <li><a href="/profile/characters">Characters</a></li>
+{{/section}}
+
+{{#section 'nav_homebrew'}}
+    <li class="mx-lg-4 mx-md-3 my-md-0 my-2"><a href="/homebrew">Homebrew</a></li>
+{{/section}}
+
+{{#section 'nav_browse'}}
+    <li class="mr-lg-4 mr-md-3"><a href="/browse"><i class="fas fa-lg fa-search"></i></a></li>
+{{/section}}
+
+{{#section 'nav_login'}}
+    <li class="mr-4"><a href="/auth/login">Login <i class="fas fa-sign-in-alt"></i></a></li>
+{{/section}}
+
+{{#section 'banner_nav'}}
+    <div class="banner_w3lspvt-2"></div>
+{{/section}}
+
+
+<div class="pt-3">
+    {{#if extraID}}
+        <h1 class="is-size-1 has-txt-value-string has-text-centered">Extra Editor</h1>
+    {{else}}
+        <h1 class="is-size-1 has-txt-value-string has-text-centered">Extra Creation</h1>
+    {{/if}}
+</div>
+
+<div class="columns is-mobile is-centered mt-2 mb-3">
+    <div class="column is-8 tile is-ancestor is-vertical">
+
+        <div class="tile">
+
+            <div class="tile is-parent is-vertical box is-marginless">
+
+                <div class="tile is-child">
+                    <div class="field is-grouped is-grouped-centered">
+                        <div class="control">
+                            <div class="select">
+                                <select id="inputExtraType">
+                                    <option value="SNARE">Snare</option>
+                                    <option value="VEHICLE">Vehicle</option>
+                                    <option value="RITUAL">Ritual</option>
+                                    <option value="OTHER">Other</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <div class="tile is-child field">
+                    <label class="label">Name</label>
+                    <div class="control">
+                        <input class="input" id="inputName" type="text" placeholder="Name">
+                    </div>
+                </div>
+
+                <div class="tile is-child field">
+                    <label class="label">Source</label>
+                    <div class="control">
+                        <div class="select">
+                            <select id="inputContentSource">
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tile is-child field">
+                    <label class="label">Level</label>
+                    <div class="control">
+                        <div class="select">
+                            <select id="inputLevel">
+                                    <option value="0">0</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                    <option value="6">6</option>
+                                    <option value="7">7</option>
+                                    <option value="8">8</option>
+                                    <option value="9">9</option>
+                                    <option value="10">10</option>
+                                    <option value="11">11</option>
+                                    <option value="12">12</option>
+                                    <option value="13">13</option>
+                                    <option value="14">14</option>
+                                    <option value="15">15</option>
+                                    <option value="16">16</option>
+                                    <option value="17">17</option>
+                                    <option value="18">18</option>
+                                    <option value="19">19</option>
+                                    <option value="20">20</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tile is-child field">
+                        <label class="label">Rarity</label>
+                        <div class="control">
+                            <div class="select">
+                                <select id="inputRarity">
+                                    <option value="COMMON">Common</option>
+                                    <option value="UNCOMMON">Uncommon</option>
+                                    <option value="RARE">Rare</option>
+                                    <option value="UNIQUE">Unique</option>
+                                </select>
+                            </div>
+                        </div>
+                </div>
+
+                <div class="tile is-child">
+                    <label class="label">Traits</label>
+                    <select id="inputTags" data-placeholder="Select Traits" multiple>
+                        {{#each tags}}
+                            <option value="{{id}}">{{name}}</option>
+                        {{/each}}
+                    </select>
+                </div>
+
+                <div class="tile is-child field">
+                    <label class="label">
+                        Description
+                        <a href="/wsc_docs/#description_fields" target="_blank"><span class="icon is-small has-text-info has-tooltip-top" data-tooltip="WSC Docs"><i class="fas fa-book"></i></span></a>
+                    </label>
+                    <div class="control">
+                        <textarea class="textarea" id="inputDescription" placeholder=""></textarea>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="field is-grouped is-grouped-centered pb-2">
+    <div class="control">
+        {{#if extraID}}
+            <button id="updateButton" onClick="canLeavePage()" class="button is-success">Update</button>
+        {{else}}
+            <button id="createButton" onClick="canLeavePage()" class="button is-success">Create</button>
+        {{/if}}
+    </div>
+</div>

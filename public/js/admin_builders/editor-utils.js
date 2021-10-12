@@ -51,3 +51,8 @@ function getHeritageEditorIDFromURL(){
   let spl1 = window.location.pathname.split("heritage/");
   return parseInt(spl1[1]);
 }
+
+function getExtraEditorIDFromURL(){
+  let spl1 = window.location.pathname.split("extra/");
+  return parseInt(spl1[1]);
+}

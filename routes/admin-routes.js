@@ -10,6 +10,7 @@ const editFeatActionRoutes = require('./edit-feat-action-routes');
 const editItemRoutes = require('./edit-item-routes');
 const editSpellRoutes = require('./edit-spell-routes');
 const editHeritageRoutes = require('./edit-heritage-routes');
+const editExtraRoutes = require('./edit-extra-routes');
 
 const Class = require('../models/contentDB/Class');
 const ClassAbility = require('../models/contentDB/ClassAbility');
@@ -26,6 +27,7 @@ const Feat = require('../models/contentDB/Feat');
 const Skill = require('../models/contentDB/Skill');
 const Archetype = require('../models/contentDB/Archetype');
 const UniHeritage = require('../models/contentDB/UniHeritage');
+const Extra = require('../models/contentDB/Extra');
 
 const adminAuthCheck = (req, res, next) => {
     if(!req.user){
@@ -422,5 +424,41 @@ router.get('/create/spell', adminAuthCheck, (req, res) => {
 });
 
 router.use('/edit/spell', adminAuthCheck, editSpellRoutes);
+
+
+// Extra Builder
+router.get('/manage/extra', adminAuthCheck, (req, res) => {
+
+  Extra.findAll({
+      order: [['type', 'ASC'],['level', 'ASC'],['name', 'ASC'],],
+      where: { homebrewID: null }
+  }).then((extras) => {
+
+      res.render('admin/admin_manager/manager_extra', {
+          title: "Extra Manager - Wanderer's Guide",
+          user: req.user,
+          extras
+      });
+
+  });
+
+});
+
+router.get('/create/extra', adminAuthCheck, (req, res) => {
+
+  Tag.findAll({
+      where: { isArchived: 0, isHidden: 0, homebrewID: null },
+      order: [['name', 'ASC'],]
+  }).then((tags) => {
+      res.render('admin/admin_builder/builder_extra', {
+          title: "Extra Builder - Wanderer's Guide",
+          user: req.user,
+          tags
+      });
+  });
+
+});
+
+router.use('/edit/extra', adminAuthCheck, editExtraRoutes);
 
 module.exports = router;

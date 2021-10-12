@@ -22,6 +22,8 @@ const Shield = require('../models/contentDB/Shield');
 const ItemRune = require('../models/contentDB/ItemRune');
 const Spell = require('../models/contentDB/Spell');
 const TaggedSpell = require('../models/contentDB/TaggedSpell');
+const Extra = require('../models/contentDB/Extra');
+const TaggedExtra = require('../models/contentDB/TaggedExtra');
 
 const CharSaving = require('./CharSaving');
 
@@ -1539,6 +1541,67 @@ module.exports = class AdminCreation {
         .then((result) => {
             return;
         });
+    }
+
+
+
+    static addExtra(data) {
+      /* Data:
+          extraID
+          extraName,
+          extraRarity,
+          extraDescription,
+          extraType,
+          extraLevel,
+          extraTags,
+          extraContentSrc,
+      */
+      for(let d in data) { if(data[d] === ''){ data[d] = null; } }
+      if(data.extraName == null) { return Promise.resolve(); }
+      data.extraName = data.extraName.replace(/’/g,"'");
+      if(data.extraDescription == null){ data.extraDescription = '__No Description__'; }
+      if(data.extraLevel == null){ data.extraLevel = 0; }
+      return Extra.create({
+          name: trimVal(data.extraName),
+          level: data.extraLevel,
+          rarity: data.extraRarity,
+          description: data.extraDescription,
+          type: data.extraType,
+          contentSrc: data.extraContentSrc,
+          homebrewID: null,
+      }).then(extra => {
+          let extraTagPromises = []; // Create Extra Tags
+          if(data.extraTags != null) {
+              for(const extraTag of data.extraTags) {
+                  let newPromise = TaggedExtra.create({
+                    extraID: extra.id,
+                    tagID: extraTag
+                  });
+                  extraTagPromises.push(newPromise);
+              }
+          }
+          return Promise.all(extraTagPromises)
+          .then(function(result) {
+              return extra;
+          });
+      });
+    }
+
+    static deleteExtra(extraID) {
+      return Extra.destroy({ // Delete Extra (which will cascade to TaggedExtras)
+          where: { id: extraID }
+      }).then((result) => {
+          return;
+      });
+    }
+
+    static archiveExtra(extraID, isArchived){
+      let archived = (isArchived) ? 1 : 0;
+      let updateValues = { isArchived: archived };
+      return Extra.update(updateValues, { where: { id: extraID } })
+      .then((result) => {
+          return;
+      });
     }
 
 };

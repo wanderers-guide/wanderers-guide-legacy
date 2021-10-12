@@ -30,6 +30,8 @@ const Storage = require('../models/contentDB/Storage');
 const Shield = require('../models/contentDB/Shield');
 const ItemRune = require('../models/contentDB/ItemRune');
 const SheetState = require("../models/contentDB/SheetState");
+const Extra = require("../models/contentDB/Extra");
+const TaggedExtra = require("../models/contentDB/TaggedExtra");
 
 const CharGathering = require('./CharGathering');
 const TempUnpublishedBooks = require('./TempUnpublishedBooks');
@@ -618,6 +620,81 @@ module.exports = class GeneralGathering {
           .then(function(tags) {
             return {
               spell : spell,
+              traits : tags,
+            };
+          });
+        });
+      });
+    }
+
+    static async getAllExtras(userID, homebrewID=null, extras=null, tags=null, cache=true) {
+      homebrewID = (homebrewID == null) ? null : parseInt(homebrewID);
+
+      if(extras==null){
+        extras = await Prisma.extras.findMany({
+          where: {
+            OR: [{ homebrewID: null }, { homebrewID: homebrewID }],
+            NOT: (homebrewID==null && cache)? undefined : {id:-1/*No-Cache*/},
+          },
+          include: { taggedExtras: true },
+        });
+      }
+
+      if(tags==null){
+        tags = await Prisma.tags.findMany({
+          where: {
+            OR: [{ homebrewID: null }, { homebrewID: homebrewID }],
+            NOT: (homebrewID==null && cache)? undefined : {id:-1/*No-Cache*/},
+          }
+        });
+      }
+
+
+      let extraMap = new Map();
+
+      for (const extra of extras) {
+          if(TempUnpublishedBooks.getSourcesArray(userID).includes(extra.contentSrc)) { continue; }
+          let eTags = [];
+
+          // Add Tags from TaggedExtras
+          for(const taggedExtra of extra.taggedExtras) {
+            let tag = tags.find(tag => {
+              return tag.id === taggedExtra.tagID;
+            });
+            if(tag != null){
+              eTags.push(tag);
+            }
+          }
+
+          extraMap.set(extra.id, {Extra : extra, Tags : eTags});
+
+      }
+
+      return mapToObj(extraMap);
+
+    }
+
+    static getExtra(userID, extraID, homebrewID=null) {
+      return Extra.findOne({
+        where: {
+          id: extraID,
+          homebrewID: { [Op.or]: [null,homebrewID] } },
+          [Op.not]: [
+            { contentSrc: { [Op.or]: TempUnpublishedBooks.getSourcesArray(userID) } },
+          ]
+        })
+      .then((extra) => {
+        return TaggedExtra.findAll({ where: { extraID: extraID } })
+        .then((taggedExtras) => {
+          let taggedExtraPromises = [];
+          for(const taggedExtra of taggedExtras) {
+            let newPromise = Tag.findOne({ where: { id: taggedExtra.tagID } });
+            taggedExtraPromises.push(newPromise);
+          }
+          return Promise.all(taggedExtraPromises)
+          .then(function(tags) {
+            return {
+              extra : extra,
               traits : tags,
             };
           });

@@ -2622,6 +2622,52 @@ module.exports = class SocketConnections {
         });
       });
 
+      ////
+
+      socket.on('requestAdminAddExtra', function(data){
+        AuthCheck.isAdmin(userID).then((isAdmin) => {
+          if(isAdmin){
+            AdminCreation.addExtra(data).then((result) => {
+              socket.emit('returnAdminCompleteExtra');
+            });
+          }
+        });
+      });
+
+      socket.on('requestAdminUpdateExtra', function(data){
+        AuthCheck.isAdmin(userID).then((isAdmin) => {
+          if(isAdmin){
+            if(data != null && data.extraID != null) {
+              AdminCreation.archiveExtra(data.extraID, true).then((result) => {
+                AdminCreation.addExtra(data).then((result) => {
+                  socket.emit('returnAdminCompleteExtra');
+                });
+              });
+            }
+          }
+        });
+      });
+    
+      socket.on('requestAdminRemoveExtra', function(extraID){
+        AuthCheck.isAdmin(userID).then((isAdmin) => {
+          if(isAdmin){
+            AdminCreation.deleteExtra(extraID).then((result) => {
+              socket.emit('returnAdminRemoveExtra');
+            });
+          }
+        });
+      });
+
+      socket.on('requestAdminExtraDetails', function(){
+        AuthCheck.isAdmin(userID).then((isAdmin) => {
+          if(isAdmin){
+            GeneralGathering.getAllExtras(userID, null, null, null, false).then((extraObj) => {
+              socket.emit('returnAdminExtraDetails', extraObj);
+            });
+          }
+        });
+      });
+
     });
   }
 

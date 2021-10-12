@@ -510,6 +510,32 @@ model featTags {
   @@index([tagID], name: "featTag.tagID_idx")
 }
 
+model extras {
+  id                Int                @id @default(autoincrement())
+  name              String?            @default("Unnamed Extra") @db.VarChar(60)
+  level             Int
+  rarity            extras_rarity      @default(COMMON)
+  description       String?            @db.Text
+  type              String?            @db.VarChar(45)
+  isArchived        Int?               @default(0)
+  contentSrc        String             @default("CRB") @db.VarChar(45)
+  homebrewID        Int?
+  homebrewBundles   homebrewBundles?   @relation(fields: [homebrewID], references: [id])
+  taggedExtras      taggedExtras[]
+
+  @@index([homebrewID], name: "extras_homebrewID")
+}
+
+model taggedExtras {
+  extraID  Int
+  tagID    Int
+  extras   extras @relation(fields: [extraID], references: [id])
+  tags     tags   @relation(fields: [tagID], references: [id])
+
+  @@id([extraID, tagID])
+  @@index([tagID], name: "extraTag.tagID_idx")
+}
+
 model heritages {
   id                Int              @id @default(autoincrement())
   name              String?          @db.VarChar(45)
@@ -578,6 +604,7 @@ model homebrewBundles {
   classAbilities      classAbilities[]
   classes             classes[]
   domains             domains[]
+  extras              extras[]
   familiarAbilities   familiarAbilities[]
   feats               feats[]
   heritages           heritages[]
@@ -922,6 +949,7 @@ model tags {
   featTags        featTags[]
   taggedItems     taggedItems[]
   taggedSpells    taggedSpells[]
+  taggedExtras    taggedExtras[]
   uniHeritages    uniHeritages[]
 
   @@index([homebrewID], name: "tag_homebrewID")
@@ -1344,6 +1372,13 @@ enum spells_rarity {
 }
 
 enum uniHeritages_rarity {
+  COMMON
+  UNCOMMON
+  RARE
+  UNIQUE
+}
+
+enum extras_rarity {
   COMMON
   UNCOMMON
   RARE
