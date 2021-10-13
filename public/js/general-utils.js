@@ -82,7 +82,7 @@ const g_contentSources = [
   {TextName: 'Pathfinder Society', CodeName: 'PATH-SOCIETY', Link: 'https://paizo.com/pathfindersociety'},
 ];
 
-const g_currentContentSource = 'GUNS-AND-GEARS';
+const g_currentContentSource = 'BEST-1';
 const g_hiddenFromBrowseContentSources = [''];// TODO - Temp solution
 
 function getContentSourceTextName(codeName){

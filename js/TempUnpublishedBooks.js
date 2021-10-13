@@ -1,6 +1,6 @@
 
 
-const ADMIN_USER_IDS = ['1', '11', '1538'];
+const ADMIN_USER_IDS = ['1', '11'];
 
 module.exports = class TempUnpublishedBooks {
 
@@ -8,7 +8,7 @@ module.exports = class TempUnpublishedBooks {
     if(ADMIN_USER_IDS.includes(userID+'')){
       return [''];
     } else {
-      return ['GUNS-AND-GEARS'];// Unpublished books
+      return [''];// Unpublished books
     }
   }
 
@@ -16,7 +16,7 @@ module.exports = class TempUnpublishedBooks {
     if(ADMIN_USER_IDS.includes(userID+'')){
       return [{contentSrc:''}];
     } else {
-      return [{contentSrc:'GUNS-AND-GEARS'}];// Unpublished books
+      return [{contentSrc:''}];// Unpublished books
     }
   }
 
