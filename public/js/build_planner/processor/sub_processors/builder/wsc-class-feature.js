@@ -154,7 +154,7 @@ socket.on("returnAddClassFeature", function(srcStruct, classAbility, allClassAbi
 
             if(inputPacket.dontRunCode) {
               processCode(
-                  'ADD-TEXT=__$$grey:You don’t gain any of this option’s other effects, just the class feature option itself.$$__',
+                  'ADD-TEXT=__You don’t gain any of this option’s other effects, just the class feature option itself.__',
                   srcStruct,
                   abilityCodeID,
                   {source: 'Extra Class Feature', sourceName: chosenClassAbility.name});
@@ -177,7 +177,7 @@ socket.on("returnAddClassFeature", function(srcStruct, classAbility, allClassAbi
 
   if(inputPacket.dontRunCode) {
     processBuilderCode(
-        'ADD-TEXT=__$$grey:You don’t gain any of this class feature’s other effects, just the feature itself.$$__',
+        'ADD-TEXT=__You don’t gain any of this class feature’s other effects, just the feature itself.__',
         srcStruct,
         classAbilityCodeID,
         classAbility.name);

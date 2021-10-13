@@ -456,6 +456,10 @@ function handleCharacterOptions(character, hBundles, progessBundles) {
           getCharIDFromURL(), 
           'optionClassArchetypes',
           optionTypeValue);
+      socket.emit("requestCharacterSourceChange", 
+          getCharIDFromURL(), 
+          'CLASS-ARCHETYPES-OPTION',
+          this.checked);
     });
     $("#optionClassArchetypes").prop('checked', (character.optionClassArchetypes === 1));
 
