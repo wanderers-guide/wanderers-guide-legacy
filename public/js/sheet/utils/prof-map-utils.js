@@ -42,15 +42,22 @@ function buildWeaponProfMap(){
             if(profName == 'Simple_Weapons'){
                 for(const [itemID, itemData] of g_itemMap.entries()){
                     if(itemData.WeaponData != null && itemData.WeaponData.category == "SIMPLE"){
+
+                        let prevWeapData = weaponProfMap.get(itemData.WeaponData.profName);
+                        if(prevWeapData == null){ prevWeapData = { NumUps: null, UserBonus: null }; }
+
                         weaponProfMap.set(itemData.WeaponData.profName, {
-                            NumUps : finalProfData.NumUps,
-                            UserBonus : finalProfData.UserBonus
+                          NumUps : greaterProfValue(prevWeapData.NumUps,finalProfData.NumUps),
+                          UserBonus : greaterProfValue(prevWeapData.UserBonus,finalProfData.UserBonus),
                         });
                     }
                 }
             } else if(profName == 'Martial_Weapons'){
                 for(const [itemID, itemData] of g_itemMap.entries()){
                     if(itemData.WeaponData != null && itemData.WeaponData.category == "MARTIAL"){
+
+                        let prevWeapData = weaponProfMap.get(itemData.WeaponData.profName);
+                        if(prevWeapData == null){ prevWeapData = { NumUps: null, UserBonus: null }; }
 
                         let numUps = finalProfData.NumUps;
                         if(hasFamiliarityReduceProf(itemData)){
@@ -63,14 +70,17 @@ function buildWeaponProfMap(){
                         }
 
                         weaponProfMap.set(itemData.WeaponData.profName, {
-                            NumUps : numUps,
-                            UserBonus : finalProfData.UserBonus
+                          NumUps : greaterProfValue(prevWeapData.NumUps,numUps),
+                          UserBonus : greaterProfValue(prevWeapData.UserBonus,finalProfData.UserBonus),
                         });
                     }
                 }
             } else if(profName == 'Advanced_Weapons'){
                 for(const [itemID, itemData] of g_itemMap.entries()){
                     if(itemData.WeaponData != null && itemData.WeaponData.category == "ADVANCED"){
+
+                        let prevWeapData = weaponProfMap.get(itemData.WeaponData.profName);
+                        if(prevWeapData == null){ prevWeapData = { NumUps: null, UserBonus: null }; }
 
                         let numUps = finalProfData.NumUps;
                         if(hasFamiliarityReduceProf(itemData)){
@@ -83,17 +93,21 @@ function buildWeaponProfMap(){
                         }
 
                         weaponProfMap.set(itemData.WeaponData.profName, {
-                            NumUps : numUps,
-                            UserBonus : finalProfData.UserBonus
+                          NumUps : greaterProfValue(prevWeapData.NumUps,numUps),
+                          UserBonus : greaterProfValue(prevWeapData.UserBonus,finalProfData.UserBonus),
                         });
                     }
                 }
             } else if(profName == 'Unarmed_Attacks'){
                 for(const [itemID, itemData] of g_itemMap.entries()){
                     if(itemData.WeaponData != null && itemData.WeaponData.category == "UNARMED"){
+
+                        let prevWeapData = weaponProfMap.get(itemData.WeaponData.profName);
+                        if(prevWeapData == null){ prevWeapData = { NumUps: null, UserBonus: null }; }
+
                         weaponProfMap.set(itemData.WeaponData.profName, {
-                            NumUps : finalProfData.NumUps,
-                            UserBonus : finalProfData.UserBonus
+                          NumUps : greaterProfValue(prevWeapData.NumUps,finalProfData.NumUps),
+                          UserBonus : greaterProfValue(prevWeapData.UserBonus,finalProfData.UserBonus),
                         });
                     }
                 }
@@ -101,6 +115,9 @@ function buildWeaponProfMap(){
                 let dProfName = profName.toUpperCase().replace(/_/g,' ');
                 const itemData = findItemDataByName(g_itemMap, dProfName, 'WEAPON');
                 if(itemData != null && itemData.WeaponData != null){
+
+                    let prevWeapData = weaponProfMap.get(itemData.WeaponData.profName);
+                    if(prevWeapData == null){ prevWeapData = { NumUps: null, UserBonus: null }; }
 
                     let numUps = finalProfData.NumUps;
                     if(hasFamiliarityReduceProf(itemData)){
@@ -121,8 +138,8 @@ function buildWeaponProfMap(){
                     }
 
                     weaponProfMap.set(itemData.WeaponData.profName, {
-                        NumUps : numUps,
-                        UserBonus : finalProfData.UserBonus
+                      NumUps : greaterProfValue(prevWeapData.NumUps,numUps),
+                      UserBonus : greaterProfValue(prevWeapData.UserBonus,finalProfData.UserBonus),
                     });
                 }
             }
@@ -135,20 +152,20 @@ function buildWeaponProfMap(){
           let isMartial = false;
           let isAdvanced = false;
           let isUnarmed = false;
-          if(groupName.startsWith('SIMPLE ')){
-            groupName = groupName.replace('SIMPLE ', '');
+          if(groupName.startsWith('SIMPLE_')){
+            groupName = groupName.replace('SIMPLE_', '');
             isSimple = true;
           }
-          if(groupName.startsWith('MARTIAL ')){
-            groupName = groupName.replace('MARTIAL ', '');
+          if(groupName.startsWith('MARTIAL_')){
+            groupName = groupName.replace('MARTIAL_', '');
             isMartial = true;
           }
-          if(groupName.startsWith('ADVANCED ')){
-            groupName = groupName.replace('ADVANCED ', '');
+          if(groupName.startsWith('ADVANCED_')){
+            groupName = groupName.replace('ADVANCED_', '');
             isAdvanced = true;
           }
-          if(groupName.startsWith('UNARMED ')){
-            groupName = groupName.replace('UNARMED ', '');
+          if(groupName.startsWith('UNARMED_')){
+            groupName = groupName.replace('UNARMED_', '');
             isUnarmed = true;
           }
 
@@ -156,14 +173,22 @@ function buildWeaponProfMap(){
             if(itemData.WeaponData != null){
               if((itemData.WeaponData.isMelee == 1 && itemData.WeaponData.meleeWeaponType == groupName) || (itemData.WeaponData.isRanged == 1 && itemData.WeaponData.rangedWeaponType == groupName)){
                 if(!isSimple && !isMartial && !isAdvanced && !isUnarmed){
+
+                  let prevWeapData = weaponProfMap.get(itemData.WeaponData.profName);
+                  if(prevWeapData == null){ prevWeapData = { NumUps: null, UserBonus: null }; }
+
                   weaponProfMap.set(itemData.WeaponData.profName, {
-                    NumUps : finalProfData.NumUps,
-                    UserBonus : finalProfData.UserBonus
+                    NumUps : greaterProfValue(prevWeapData.NumUps,finalProfData.NumUps),
+                    UserBonus : greaterProfValue(prevWeapData.UserBonus,finalProfData.UserBonus),
                   });
                 } else if((isSimple && itemData.WeaponData.category == "SIMPLE") || (isMartial && itemData.WeaponData.category == "MARTIAL") || (isAdvanced && itemData.WeaponData.category == "ADVANCED") || (isUnarmed && itemData.WeaponData.category == "UNARMED")) {
+
+                  let prevWeapData = weaponProfMap.get(itemData.WeaponData.profName);
+                  if(prevWeapData == null){ prevWeapData = { NumUps: null, UserBonus: null }; }
+
                   weaponProfMap.set(itemData.WeaponData.profName, {
-                    NumUps : finalProfData.NumUps,
-                    UserBonus : finalProfData.UserBonus
+                    NumUps : greaterProfValue(prevWeapData.NumUps,finalProfData.NumUps),
+                    UserBonus : greaterProfValue(prevWeapData.UserBonus,finalProfData.UserBonus),
                   });
                 }
               }
@@ -213,46 +238,66 @@ function buildArmorProfMap(){
             if(profName == 'Light_Armor'){
                 for(const [itemID, itemData] of g_itemMap.entries()){
                     if(itemData.ArmorData != null && itemData.ArmorData.category == "LIGHT"){
+
+                        let prevArmorData = armorProfMap.get(itemData.ArmorData.profName);
+                        if(prevArmorData == null){ prevArmorData = { NumUps: null, UserBonus: null }; }
+
                         armorProfMap.set(itemData.ArmorData.profName, {
-                            NumUps : finalProfData.NumUps,
-                            UserBonus : finalProfData.UserBonus
+                          NumUps : greaterProfValue(prevArmorData.NumUps,finalProfData.NumUps),
+                          UserBonus : greaterProfValue(prevArmorData.UserBonus,finalProfData.UserBonus),
                         });
                     }
                 }
             } else if(profName == 'Medium_Armor'){
                 for(const [itemID, itemData] of g_itemMap.entries()){
                     if(itemData.ArmorData != null && itemData.ArmorData.category == "MEDIUM"){
+
+                        let prevArmorData = armorProfMap.get(itemData.ArmorData.profName);
+                        if(prevArmorData == null){ prevArmorData = { NumUps: null, UserBonus: null }; }
+
                         armorProfMap.set(itemData.ArmorData.profName, {
-                            NumUps : finalProfData.NumUps,
-                            UserBonus : finalProfData.UserBonus
+                          NumUps : greaterProfValue(prevArmorData.NumUps,finalProfData.NumUps),
+                          UserBonus : greaterProfValue(prevArmorData.UserBonus,finalProfData.UserBonus),
                         });
                     }
                 }
             } else if(profName == 'Heavy_Armor'){
                 for(const [itemID, itemData] of g_itemMap.entries()){
                     if(itemData.ArmorData != null && itemData.ArmorData.category == "HEAVY"){
+
+                        let prevArmorData = armorProfMap.get(itemData.ArmorData.profName);
+                        if(prevArmorData == null){ prevArmorData = { NumUps: null, UserBonus: null }; }
+                        
                         armorProfMap.set(itemData.ArmorData.profName, {
-                            NumUps : finalProfData.NumUps,
-                            UserBonus : finalProfData.UserBonus
+                          NumUps : greaterProfValue(prevArmorData.NumUps,finalProfData.NumUps),
+                          UserBonus : greaterProfValue(prevArmorData.UserBonus,finalProfData.UserBonus),
                         });
                     }
                 }
             } else if(profName == 'Unarmored_Defense'){
                 for(const [itemID, itemData] of g_itemMap.entries()){
                     if(itemData.ArmorData != null && itemData.ArmorData.category == "UNARMORED"){
+
+                        let prevArmorData = armorProfMap.get(itemData.ArmorData.profName);
+                        if(prevArmorData == null){ prevArmorData = { NumUps: null, UserBonus: null }; }
+                        
                         armorProfMap.set(itemData.ArmorData.profName, {
-                            NumUps : finalProfData.NumUps,
-                            UserBonus : finalProfData.UserBonus
+                          NumUps : greaterProfValue(prevArmorData.NumUps,finalProfData.NumUps),
+                          UserBonus : greaterProfValue(prevArmorData.UserBonus,finalProfData.UserBonus),
                         });
                     }
                 }
             } else {
                 let dProfName = profName.toUpperCase().replace(/_/g,' ');
                 const itemData = findItemDataByName(g_itemMap, dProfName, 'ARMOR');
-                if(itemData != null){
+                if(itemData != null && itemData.ArmorData != null){
+
+                    let prevArmorData = armorProfMap.get(itemData.ArmorData.profName);
+                    if(prevArmorData == null){ prevArmorData = { NumUps: null, UserBonus: null }; }
+
                     armorProfMap.set(itemData.ArmorData.profName, {
-                        NumUps : finalProfData.NumUps,
-                        UserBonus : finalProfData.UserBonus
+                      NumUps : greaterProfValue(prevArmorData.NumUps,finalProfData.NumUps),
+                      UserBonus : greaterProfValue(prevArmorData.UserBonus,finalProfData.UserBonus),
                     });
                 }
             }
@@ -277,4 +322,14 @@ function buildArmorProfMap(){
     }
 
     return armorProfMap;
+}
+
+function greaterProfValue(prevValue, newValue){
+  if(prevValue == null || isNaN(prevValue)){
+    return newValue;
+  } else if(prevValue > newValue){
+    return prevValue;
+  } else {
+    return newValue;
+  }
 }
