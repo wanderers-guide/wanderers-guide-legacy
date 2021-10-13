@@ -384,7 +384,7 @@ function displayOtherAbilities(data, abilitiesSearchValue){
       abilCount++;
     }
     for(let heritageEffect of g_heritageEffects){
-      let ability = heritageEffect.value;
+      let ability = cloneObj(heritageEffect.value);
       ability.level = heritageEffect.sourceLevel;
       ability.name = 'Heritage Benefits - '+ability.name;
       filterAbilitiesThroughSearch(ability, 'ExtraClass'+abilCount, abilitiesSearchValue);

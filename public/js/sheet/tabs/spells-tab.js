@@ -275,18 +275,20 @@ function displaySpellsInLevelPrepared(spellBook, level, slotArray, spellBookSect
           // Name //
           let spellName = spellDataStruct.Spell.name;
 
-          // Get color from spellBookSpell
-          let bulmaColor = getSpellTypeBulmaColor(spellData.SpellType);
-          if(bulmaColor != '' && bulmaColor != 'has-text-info'){
-            spellName += '<span class="pos-absolute pos-l-1 pos-t-2 icon is-medium '+bulmaColor+'"><i class="fas fa-xs fa-circle"></i></span>';
-          } else {
-
-            // Get color from spell slot
-            bulmaColor = getSpellTypeBulmaColor(slot.type);
+          if(spellData != null){
+            // Get color from spellBookSpell
+            let bulmaColor = getSpellTypeBulmaColor(spellData.SpellType);
             if(bulmaColor != '' && bulmaColor != 'has-text-info'){
               spellName += '<span class="pos-absolute pos-l-1 pos-t-2 icon is-medium '+bulmaColor+'"><i class="fas fa-xs fa-circle"></i></span>';
-            }
+            } else {
 
+              // Get color from spell slot
+              bulmaColor = getSpellTypeBulmaColor(slot.type);
+              if(bulmaColor != '' && bulmaColor != 'has-text-info'){
+                spellName += '<span class="pos-absolute pos-l-1 pos-t-2 icon is-medium '+bulmaColor+'"><i class="fas fa-xs fa-circle"></i></span>';
+              }
+
+            }
           }
 
 

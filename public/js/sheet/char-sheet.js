@@ -2575,7 +2575,15 @@ function runAllItemsCode() {
 function runAllFeatsAndAbilitiesCode() {
 
     let totalClassAbilities = cloneObj(g_classDetails.Abilities);
-    for(let extraClassAbil of g_extraClassAbilities){ totalClassAbilities.push(extraClassAbil.value); }
+    for(let extraClassAbil of g_extraClassAbilities){
+      totalClassAbilities.push(extraClassAbil.value);
+    }
+    for(let heritageEffect of g_heritageEffects){
+      let ability = cloneObj(heritageEffect.value);
+      ability.level = heritageEffect.sourceLevel;
+      ability.name = 'Heritage Benefits - '+ability.name;
+      totalClassAbilities.push(ability);
+    }
 
     for(let classAbil of totalClassAbilities){
         if(classAbil.selectType != 'SELECT_OPTION' && classAbil.level <= g_character.level) {

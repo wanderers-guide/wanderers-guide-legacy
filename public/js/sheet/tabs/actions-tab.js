@@ -443,6 +443,11 @@ function filterActionArray(data, featStructArray, tabType){
             willDisplay = false;
           }
           */
+         if(!g_selectedAction_SkillsEnabled){
+          if(actionStruct.skillID != null){
+            willDisplay = false;
+          }
+         }
         }
 
         // Filter by is Basic
