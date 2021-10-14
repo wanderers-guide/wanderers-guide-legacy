@@ -63,6 +63,7 @@ const g_contentSources = [
   {TextName: 'Lost Omens: Character Guide', CodeName: 'LOST-CHAR-GUIDE', Link: 'https://paizo.com/products/btq01zt4?Pathfinder-Lost-Omens-Character-Guide'},
   {TextName: 'Lost Omens: Gods & Magic', CodeName: 'LOST-GOD-MAGIC', Link: 'https://paizo.com/products/btq021wf?Pathfinder-Lost-Omens-Gods-Magic'},
   {TextName: 'Lost Omens: Legends', CodeName: 'LOST-LEGENDS', Link: 'https://paizo.com/products/btq023gd?Pathfinder-Lost-Omens-Legends'},
+  {TextName: 'Lost Omens: Grand Bazaar', CodeName: 'LOST-GRAND-BAZAAR', Link: 'https://paizo.com/products/btq029xo?Pathfinder-Lost-Omens-The-Grand-Bazaar'},
   {TextName: 'Lost Omens: The Mwangi Expanse', CodeName: 'LOST-MWANGI', Link: 'https://paizo.com/products/btq027ot?Pathfinder-Lost-Omens-The-Mwangi-Expanse'},
   {TextName: 'Lost Omens: Pathfinder Society Guide', CodeName: 'LOST-SOCIETY-GUIDE', Link: 'https://paizo.com/products/btq0233q?Pathfinder-Lost-Omens-Pathfinder-Society-Guide'},
   {TextName: 'Lost Omens: World Guide', CodeName: 'LOST-WORLD-GUIDE', Link: 'https://paizo.com/products/btq01zoj?Pathfinder-Lost-Omens-World-Guide'},

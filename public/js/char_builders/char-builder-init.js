@@ -215,6 +215,14 @@ function handleCharacterOptions(character, hBundles, progessBundles) {
     });
     $("#contentSrc-LOST-GOD-MAGIC").prop('checked', contentSourceArray.includes('LOST-GOD-MAGIC'));
 
+    $("#contentSrc-LOST-GRAND-BAZAAR").change(function(){
+      socket.emit("requestCharacterSourceChange", 
+          getCharIDFromURL(), 
+          'LOST-GRAND-BAZAAR',
+          this.checked);
+    });
+    $("#contentSrc-LOST-GRAND-BAZAAR").prop('checked', contentSourceArray.includes('LOST-GRAND-BAZAAR'));
+
     $("#contentSrc-LOST-LEGENDS").change(function(){
       socket.emit("requestCharacterSourceChange", 
           getCharIDFromURL(), 
@@ -462,6 +470,12 @@ function handleCharacterOptions(character, hBundles, progessBundles) {
           this.checked);
     });
     $("#optionClassArchetypes").prop('checked', (character.optionClassArchetypes === 1));
+    if(character.optionClassArchetypes === 1){
+      socket.emit("requestCharacterSourceChange", 
+          getCharIDFromURL(), 
+          'CLASS-ARCHETYPES-OPTION',
+          true);
+    }
 
     $("#optionCustomCodeBlock").change(function(){
       let optionTypeValue = (this.checked) ? 1 : 0;
