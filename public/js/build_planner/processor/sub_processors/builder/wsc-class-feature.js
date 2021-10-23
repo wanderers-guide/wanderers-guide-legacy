@@ -3,7 +3,7 @@
 */
 
 //------------------------- Processing Class Features -------------------------//
-function processingClassFeatures(wscStatement, srcStruct, locationID, sourceName){
+function processingClassFeatures(wscStatement, srcStruct, locationID, extraData){
 
   if(wscStatement.includes("GIVE-CLASS-FEATURE-NAME")){ // GIVE-CLASS-FEATURE-NAME=Polymath
       let value = wscStatement.split('=')[1];
@@ -13,7 +13,7 @@ function processingClassFeatures(wscStatement, srcStruct, locationID, sourceName
         optionals = optionals[1].split(',');
       }
       let dontRunCode = (optionals != null && optionals.length > 0 && optionals[0].toUpperCase() == 'NO-CODE');
-      giveClassFeatureByName(srcStruct, locationID, value, sourceName, dontRunCode);
+      giveClassFeatureByName(srcStruct, locationID, value, extraData, dontRunCode);
   } else {
       displayError("Unknown statement (2-ClassFeature): \'"+wscStatement+"\'");
       statementComplete();
@@ -23,13 +23,13 @@ function processingClassFeatures(wscStatement, srcStruct, locationID, sourceName
 
 //////////////////////////////// Give Class Feature ///////////////////////////////////
 
-function giveClassFeatureByName(srcStruct, locationID, featureName, sourceName, dontRunCode=false){
+function giveClassFeatureByName(srcStruct, locationID, featureName, extraData, dontRunCode=false){
 
   socket.emit("requestAddClassFeature",
       getCharIDFromURL(),
       srcStruct,
       featureName,
-      { locationID, sourceName, dontRunCode });
+      { locationID, sourceName: extraData.sourceName, dontRunCode });
 
 }
 

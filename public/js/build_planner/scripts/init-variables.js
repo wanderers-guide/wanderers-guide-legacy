@@ -148,12 +148,13 @@ function varInit_abilityScores(){
   initializeVariable(VARIABLE.SCORE_NONE, VAR_TYPE.ABILITY_SCORE, 10);
 
   for(const bonusData of getDataAllAbilityBonus()){
+    console.log(bonusData);
     if(bonusData.Bonus == "Boost") {
-      variables_addToBonuses('SCORE_'+bonusData.Ability, 2, srcStructToCompositeKey(bonusData), 'Boost');
+      variables_addToBonuses('SCORE_'+bonusData.Ability, 2, JSON.stringify(parameterizeSrcStruct(bonusData.source, bonusData)), 'Boost');
     } else if(bonusData.Bonus == "Flaw") {
-      variables_addToBonuses('SCORE_'+bonusData.Ability, -2, srcStructToCompositeKey(bonusData), 'Flaw');
+      variables_addToBonuses('SCORE_'+bonusData.Ability, -2, JSON.stringify(parameterizeSrcStruct(bonusData.source, bonusData)), 'Flaw');
     } else {
-      variables_addToBonuses('SCORE_'+bonusData.Ability, parseInt(bonusData.Bonus), srcStructToCompositeKey(bonusData), 'Unknown');
+      variables_addToBonuses('SCORE_'+bonusData.Ability, parseInt(bonusData.Bonus), JSON.stringify(parameterizeSrcStruct(bonusData.source, bonusData)), 'Unknown');
     }
   }
 

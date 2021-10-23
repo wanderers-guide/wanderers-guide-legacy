@@ -1,11 +1,29 @@
 
 
 function setDataProficiencies(srcStruct, fFor, tTo, prof, sourceName){
-  
-  toVar_setDataProficiencies(srcStruct, tTo, prof, sourceName);
 
+  // Data-Map
   let value = fFor+getSeparator()+tTo+getSeparator()+prof+getSeparator()+sourceName;
-  return setData(DATA_SOURCE.PROFICIENCY, srcStruct, value);
+  setData(DATA_SOURCE.PROFICIENCY, srcStruct, value);
+
+  // Variable-Processing
+  let varName = profConversion_convertOldNameToVarName(tTo);
+  variables_addRank(varName, prof, sourceName, JSON.stringify(parameterizeSrcStruct(DATA_SOURCE.PROFICIENCY, srcStruct)));
+
+  displayStats();
+
+}
+
+function getDataSingleProficiency(srcStruct){
+  let data = getDataSingle(DATA_SOURCE.PROFICIENCY, srcStruct);
+  if(data.value != null){
+    let vParts = data.value.split(getSeparator());
+    data.For = vParts[0];
+    data.To = vParts[1];
+    data.Prof = vParts[2];
+    if(vParts.length == 4){ data.SourceName = vParts[3]; } else { data.SourceName = 'Unknown'; }
+  }
+  return data;
 }
 
 function getDataAllProficiencies(){
@@ -23,11 +41,22 @@ function getDataAllProficiencies(){
 //
 
 function setDataAbilityBonus(srcStruct, ability, bonus){
-  
-  toVar_setDataAbilityBonus(srcStruct, ability, bonus);
 
+  // Data-Map
   let value = ability+getSeparator()+bonus;
-  return setData(DATA_SOURCE.ABILITY_BONUS, srcStruct, value);
+  setData(DATA_SOURCE.ABILITY_BONUS, srcStruct, value);
+
+  // Variable-Processing
+  if(bonus == 'Boost'){
+    variables_addToBonuses('SCORE_'+ability, 2, JSON.stringify(parameterizeSrcStruct(DATA_SOURCE.ABILITY_BONUS, srcStruct)), 'Metadata');
+  } else if(bonus == 'Flaw'){
+    variables_addToBonuses('SCORE_'+ability, -2, JSON.stringify(parameterizeSrcStruct(DATA_SOURCE.ABILITY_BONUS, srcStruct)), 'Metadata');
+  } else {
+    variables_addToBonuses('SCORE_'+ability, parseInt(bonus), JSON.stringify(parameterizeSrcStruct(DATA_SOURCE.ABILITY_BONUS, srcStruct)), 'Metadata');
+  }
+
+  displayStats();
+
 }
 
 function getDataSingleAbilityBonus(srcStruct){
@@ -54,7 +83,7 @@ function getDataAllAbilityBonus(){
 
 function setDataClassChoice(srcStruct, selectorID, optionID){
   let value = selectorID+getSeparator()+optionID;
-  return setData(DATA_SOURCE.CLASS_FEATURE_CHOICE, srcStruct, value);
+  setData(DATA_SOURCE.CLASS_FEATURE_CHOICE, srcStruct, value);
 }
 
 function getDataAllClassChoice(){
@@ -75,7 +104,7 @@ function setDataInnateSpell(srcStruct, spellID, spellLevel, spellTradition, time
           "You use your Charisma modifier as your spellcasting ability
           modifier for innate spells unless otherwise specified."
       */
-  return setData(DATA_SOURCE.INNATE_SPELL, srcStruct, value);
+  setData(DATA_SOURCE.INNATE_SPELL, srcStruct, value);
 }
 
 function getDataAllInnateSpell(){
@@ -93,12 +122,35 @@ function getDataAllInnateSpell(){
 
 //
 
+function setDataLanguage(srcStruct, langID){
+
+  // Data-Map
+  setDataLanguage(srcStruct, langID);
+
+  // Variable-Processing
+  variables_addToExtras(VARIABLE.LANGUAGES, langID, JSON.stringify(parameterizeSrcStruct(DATA_SOURCE.LANGUAGE, srcStruct)), 'Metadata');
+
+  displayStats();
+
+}
+
+function getDataAllLanguage(){
+  return getDataAll(DATA_SOURCE.LANGUAGE);
+}
+
+//
+
 function setDataResistance(srcStruct, resistType, resistAmount){
   let value = resistType+getSeparator()+resistAmount;
 
-  toVar_setDataResistances(srcStruct, value);
+  // Data-Map
+  setData(DATA_SOURCE.RESISTANCE, srcStruct, value);
 
-  return setData(DATA_SOURCE.RESISTANCE, srcStruct, value);
+  // Variable-Processing
+  variables_addToExtras(VARIABLE.RESISTANCES, value, JSON.stringify(parameterizeSrcStruct(DATA_SOURCE.RESISTANCE, srcStruct)), 'Metadata');
+
+  displayStats();
+
 }
 
 function getDataAllResistance(){
@@ -111,13 +163,19 @@ function getDataAllResistance(){
   return dataArray;
 }
 
+//
 
 function setDataVulnerability(srcStruct, vulnerableType, vulnerableAmount){
   let value = vulnerableType+getSeparator()+vulnerableAmount;
 
-  toVar_setDataWeaknesses(srcStruct, value);
+  // Data-Map
+  setData(DATA_SOURCE.WEAKNESS, srcStruct, value);
 
-  return setData(DATA_SOURCE.WEAKNESS, srcStruct, value);
+  // Variable-Processing
+  variables_addToExtras(VARIABLE.WEAKNESSES, value, JSON.stringify(parameterizeSrcStruct(DATA_SOURCE.WEAKNESS, srcStruct)), 'Metadata');
+
+  displayStats();
+
 }
 
 function getDataAllVulnerability(){
@@ -130,10 +188,11 @@ function getDataAllVulnerability(){
   return dataArray;
 }
 
+//
 
 function setDataOtherSpeed(srcStruct, speedType, speedAmount){
   let value = speedType+getSeparator()+speedAmount;
-  return setData(DATA_SOURCE.OTHER_SPEED, srcStruct, value);
+  setData(DATA_SOURCE.OTHER_SPEED, srcStruct, value);
 }
 
 function getDataAllOtherSpeed(){

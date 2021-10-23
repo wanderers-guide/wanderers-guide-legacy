@@ -9,6 +9,23 @@ $(function () {
   startDiceLoader();
   socket.emit("requestPlannerCore");
 
+  // Create the container for each level
+  $(`#creation-section`).html('');
+  for(let lvl = 20; lvl >= 1; lvl--){
+    $(`#creation-section`).append(`
+      <div class="accord-container my-1">
+        <div class="accord-header">
+          <span class="title-font pl-2">Level ${lvl}</span>
+          <span class="icon is-pulled-right">
+            <i class="accord-chevron fas fa-chevron-down"></i>
+          </span>
+        </div>
+        <div id="level-${lvl}-body" class="accord-body is-hidden">
+        </div>
+      </div>
+    `);
+  }
+
 });
 
 socket.on("returnPlannerCore", function(coreStruct) {
@@ -129,28 +146,46 @@ function mainLoaded(plannerCoreStruct, choiceStruct){
   
     }, PROCESS_CLASS_STATS_TYPE.RUN_CODE);
 
-    let count = 0;
     for(const classFeature of getCharClass().Abilities){
       if(classFeature.selectType != 'SELECT_OPTION'){
         $(`#level-${classFeature.level}-body`).append(`
-          <p>${classFeature.name}</p>
+
+          <div class="class-feature-section pt-1">
+            <div class="pos-relative">
+              <div class="fading-reveal-container is-active">
+                <p class="class-feature-header text-center"><span class="is-size-4 has-text-weight-semibold">${classFeature.name}</span></p>
+                <div id="class-feature-container-${classFeature.id}" class="class-feature-container ability-text-section px-1">
+                </div>
+              </div>
+              <p class="reveal-container-text is-hidden has-text-info">Show More</p>
+            </div>
+
+            <hr class="mt-1 mb-0 mx-5">
+            <div id="class-feature-code-${classFeature.id}" class="mx-5"></div>
+            <hr class="mt-0 mb-1 mx-0" style="height: 1px;">
+          </div>
+
         `);
+
+        $(`#class-feature-container-${classFeature.id}`).append(processText(classFeature.description, false, null));
+
         processCode(
           classFeature.code,
-            {
-              sourceType: 'class',
-              sourceLevel: 1,
-              sourceCode: 'classFeature-'+count,
-              sourceCodeSNum: 'a'
-            },
-            `level-${classFeature.level}-body`,
-            {source: 'Class Feature', sourceName: classFeature.name});
-        count++;
+          {
+            sourceType: 'class',
+            sourceLevel: classFeature.level,
+            sourceCode: 'classAbility-'+classFeature.id,
+            sourceCodeSNum: 'a'
+          },
+          `class-feature-code-${classFeature.id}`,
+          {source: 'Class Feature', sourceName: classFeature.name+' (Lvl '+classFeature.level+')'});
       }
     }
 
   }
 
+  // Open First Accordion //
+  $('#level-20-body').parent().find('.accord-header').trigger('click');
 
   // Display Results //
   displayStats();
@@ -245,7 +280,7 @@ function displayStats(){
   $('#con-score').text(variables_getTotal(VARIABLE.SCORE_CON));
   $('#int-score').text(variables_getTotal(VARIABLE.SCORE_INT));
   $('#wis-score').text(variables_getTotal(VARIABLE.SCORE_WIS));
-  $('#con-score').text(variables_getTotal(VARIABLE.SCORE_CHA));
+  $('#cha-score').text(variables_getTotal(VARIABLE.SCORE_CHA));
 
   // Hit Points
   let maxHealth = variables_getTotal(VARIABLE.MAX_HEALTH);
@@ -388,6 +423,14 @@ function displayStats(){
       VarName: VARIABLE.SKILL_THIEVERY,
     },
   ];
+  for(const loreData of getDataAll(DATA_SOURCE.LORE)){
+    skills.push({
+      Value1: capitalizeWords(loreData.value)+' Lore',
+      Value2: signNumber(variables_getTotal(`SKILL_${profConversion_convertOldName(loreData.value)}_LORE`)),
+      Value3: variables_getFinalRank(`SKILL_${profConversion_convertOldName(loreData.value)}_LORE`),
+      VarName: `SKILL_${profConversion_convertOldName(loreData.value)}_LORE`,
+    });
+  }
   populateAccord('skills-body', skills);
 
   let attacks = [

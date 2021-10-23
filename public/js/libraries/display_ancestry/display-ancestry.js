@@ -28,7 +28,6 @@ class DisplayAncestry {
         url: "/templates/display-ancestry.html",   
         success : function(text)
         {
-          stopSpinnerSubLoader();
 
           if(backButton){
             $('#ancestry-back-btn').removeClass('is-hidden');
@@ -45,17 +44,7 @@ class DisplayAncestry {
           $('#ancestry-name').html(ancestryStruct.ancestry.name);
           $('#ancestry-description').html(processText(ancestryStruct.ancestry.description, false, false, 'MEDIUM', false));
 
-          // Faded description, show more/show less
-          $('.reveal-container-text').click(function() {
-            let fadeContainer = $(this).parent().find('.fading-reveal-container');
-            if(fadeContainer.hasClass('is-active')) {
-              fadeContainer.removeClass('is-active');
-              $(this).text('Show Less');
-            } else {
-              fadeContainer.addClass('is-active');
-              $(this).text('Show More');
-            }
-          });
+          showMoreCheck();// Check if description is too long, reveal show more instead
 
           if(ancestryStruct.ancestry.artworkURL != null){
             $('#ancestry-artwork-img').removeClass('is-hidden');
@@ -153,7 +142,17 @@ class DisplayAncestry {
               sourceTextName = 'Bundle #'+heritage.homebrewID;
             }
 
-            $('#ancestry-heritages').append('<div style="position: relative;"><div class="pb-2"><p><span id="ancestry-name" class="is-size-5 is-bold has-txt-listing pl-3">'+heritage.name+'</span>'+convertRarityToHTML(heritage.rarity)+'</p>'+processText(heritage.description, false, null)+'</div><span class="is-size-7 has-txt-noted is-italic pr-2" style="position: absolute; bottom: 0px; right: 0px;">'+sourceTextName+'</span></div>');
+            $('#ancestry-heritages').append(`
+              <div class="pos-relative">
+                <div class="pb-2 fading-reveal-container is-active">
+                  <p><span id="ancestry-name" class="is-size-5 is-bold has-txt-listing pl-3">${heritage.name}</span>${convertRarityToHTML(heritage.rarity)}</p>
+                  ${processText(heritage.description, false, null)}
+                </div>
+                <p class="reveal-container-text is-hidden has-text-info">Show More</p>
+                
+                <span class="is-size-7 has-txt-noted is-italic pr-2" style="position: absolute; bottom: 0px; right: 0px;">${sourceTextName}</span>
+              </div>
+            `);
 
 
             if(typeof g_isDeveloper !== 'undefined' && g_isDeveloper && heritage.code != null && heritage.code.trim() != '') {
@@ -209,6 +208,7 @@ class DisplayAncestry {
             }
           }
           
+          stopSpinnerSubLoader();
           $('#'+ancestryDisplayContainerID).removeClass('is-hidden');
         }
       });

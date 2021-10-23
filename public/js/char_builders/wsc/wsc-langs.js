@@ -34,7 +34,7 @@ function giveLang(srcStruct, locationID, sourceName, bonusOnly){
 
     const selectionTagInfo = getTagFromData(srcStruct, sourceName, 'Unselected Language', 'UNSELECTED');
 
-    $('#'+locationID).append('<div class="field is-grouped is-grouped-centered is-marginless mt-1"><div class="select '+selectLangControlShellClass+'" data-selection-info="'+selectionTagInfo+'"><select id="'+selectLangID+'" class="selectLang"></select></div></div>');
+    $('#'+locationID).append('<div class="field is-grouped is-grouped-centered is-marginless my-1"><div class="select '+selectLangControlShellClass+'" data-selection-info="'+selectionTagInfo+'"><select id="'+selectLangID+'" class="selectLang"></select></div></div>');
 
     $('#'+locationID).append('<div class="columns is-centered is-marginless pb-2"><div id="'+langDescriptionID+'" class="column is-8 is-paddingless"></div></div>');
 

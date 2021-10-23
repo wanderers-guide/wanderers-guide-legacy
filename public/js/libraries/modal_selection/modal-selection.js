@@ -31,13 +31,14 @@ class ModalSelection {
           </header>
           <section class="modal-card-body is-paddingless">
             <div class="columns is-marginless is-mobile">
-              <div class="column is-paddingless is-4 use-custom-scrollbar is-darker" style="overflow-y: auto; overflow-x: hidden; height: calc(100vh - 200px); max-height: calc(100vh - 200px);">
+              <div class="column is-paddingless is-4 use-custom-scrollbar is-darker pos-relative" style="overflow-y: auto; overflow-x: hidden; height: calc(100vh - 200px); max-height: calc(100vh - 200px);">
                 <div id="${modalID}-listings" class="accord-body"></div>
               </div>
-              <div class="column is-paddingless is-8 use-custom-scrollbar is-darker" style="overflow-y: auto; overflow-x: hidden; height: calc(100vh - 200px); max-height: calc(100vh - 200px);">
+              <div class="column is-paddingless is-8 use-custom-scrollbar is-darker pos-relative" style="overflow-y: auto; overflow-x: hidden; height: calc(100vh - 200px); max-height: calc(100vh - 200px);">
                 <div id="${modalID}-preview">
                   <p class="is-italic has-txt-partial-noted text-center pt-3">Select to preview an option.</p>
                 </div>
+                <div class="subpageloader is-hidden"><div class="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div></div>
               </div>
             </div>
           </section>

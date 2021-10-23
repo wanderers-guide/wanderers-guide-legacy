@@ -3,7 +3,7 @@
 */
 
 //--------------------- Processing Physical Features --------------------//
-function processingPhysicalFeatures(wscStatement, srcStruct, locationID, sourceName){
+function processingPhysicalFeatures(wscStatement, srcStruct, locationID, extraData){
     
     if(wscStatement.includes("GIVE-PHYSICAL-FEATURE-NAME")){ // GIVE-PHYSICAL-FEATURE-NAME=Tusks
         let phyFeatName = wscStatement.split('=')[1];

@@ -311,6 +311,14 @@ function handleCharacterOptions(character, hBundles, progessBundles) {
     });
     $("#contentSrc-MALEVOLENCE").prop('checked', contentSourceArray.includes('MALEVOLENCE'));
 
+    $("#contentSrc-NIGHT-GRAY-DEATH").change(function(){
+      socket.emit("requestCharacterSourceChange", 
+          getCharIDFromURL(), 
+          'NIGHT-GRAY-DEATH',
+          this.checked);
+    });
+    $("#contentSrc-NIGHT-GRAY-DEATH").prop('checked', contentSourceArray.includes('NIGHT-GRAY-DEATH'));
+
     $("#contentSrc-SLITHERING").change(function(){
       socket.emit("requestCharacterSourceChange", 
           getCharIDFromURL(), 

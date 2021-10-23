@@ -84,6 +84,26 @@
 }
 
 
+/* Tabs */
+.builder-tabs {
+  border-bottom-style: none!important;
+}
+.builder-tabs li:hover {
+  color: #3298dc;
+}
+.builder-tabs li {
+  color: #bdbdbd;
+  border-bottom-style: solid;
+  border-bottom-width: 0.5px;
+}
+.builder-tabs a:hover {
+  border-bottom-color: #3298dc;
+}
+
+.tabs:not(.is-boxed) li.is-active a {
+  border-bottom-color: #3298dc!important;
+  color: #3298dc!important;
+}
 
 
 

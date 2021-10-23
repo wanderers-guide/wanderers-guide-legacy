@@ -3,12 +3,12 @@
 */
 
 //------------------------- Processing SCFS -------------------------//
-function processingSCFS(wscStatement, srcStruct, locationID, sourceName){
+function processingSCFS(wscStatement, srcStruct, locationID, extraData){
 
   if(wscStatement.includes("GIVE-SCFS=")){ // GIVE-SCFS=Class Feature Selector Name:WSC Statement Name
     let data = wscStatement.split('=')[1];
     let segments = data.split(':');
-    createSCFS(srcStruct, locationID, segments[0], segments[1], sourceName);
+    createSCFS(srcStruct, locationID, segments[0], segments[1], extraData);
   } else {
     displayError("Unknown statement (2-SCFS): \'"+wscStatement+"\'");
     statementComplete();
@@ -18,12 +18,12 @@ function processingSCFS(wscStatement, srcStruct, locationID, sourceName){
 
 //////////////////////////////// Create SCFS ///////////////////////////////////
 
-function createSCFS(srcStruct, locationID, featureName, statementName, sourceName){
+function createSCFS(srcStruct, locationID, featureName, statementName, extraData){
 
   socket.emit("requestFindClassFeatureForSCFS",
       getCharIDFromURL(),
       featureName,
-      { locationID, srcStruct, statementName, sourceName });
+      { locationID, srcStruct, statementName, sourceName: extraData.sourceName });
 
 }
 
@@ -40,7 +40,7 @@ socket.on("returnFindClassFeatureForSCFS", function(classFeature, allClassFeatur
 
   const selectionTagInfo = getTagFromData(inputPacket.srcStruct, inputPacket.sourceName, 'Unselected Option', 'UNSELECTED');
 
-  $('#'+inputPacket.locationID).append('<div class="field is-grouped is-grouped-centered is-marginless mt-1"><div class="select '+scfsControlShellClass+'" data-selection-info="'+selectionTagInfo+'"><select id="'+scfsID+'" class="selectLang"></select></div></div><div id="'+scfsCodeID+'"></div>');
+  $('#'+inputPacket.locationID).append('<div class="field is-grouped is-grouped-centered is-marginless my-1"><div class="select '+scfsControlShellClass+'" data-selection-info="'+selectionTagInfo+'"><select id="'+scfsID+'" class="selectLang"></select></div></div><div id="'+scfsCodeID+'"></div>');
 
   $('#'+scfsID).append('<option value="chooseDefault">Choose an Option</option>');
   $('#'+scfsID).append('<optgroup label="──────────"></optgroup>');

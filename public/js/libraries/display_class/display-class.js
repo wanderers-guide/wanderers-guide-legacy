@@ -28,7 +28,6 @@ class DisplayClass {
         url: "/templates/display-class.html",   
         success : function(text)
         {
-          stopSpinnerSubLoader();
 
           if(backButton){
             $('#class-back-btn').removeClass('is-hidden');
@@ -58,17 +57,7 @@ class DisplayClass {
 
           $('#class-description').html(processText(classStruct.class.description, false, false, 'MEDIUM', false));
 
-          // Faded description, show more/show less
-          $('.reveal-container-text').click(function() {
-            let fadeContainer = $(this).parent().find('.fading-reveal-container');
-            if(fadeContainer.hasClass('is-active')) {
-              fadeContainer.removeClass('is-active');
-              $(this).text('Show Less');
-            } else {
-              fadeContainer.addClass('is-active');
-              $(this).text('Show More');
-            }
-          });
+          showMoreCheck();// Check if description is too long, reveal show more instead
 
           if(classStruct.class.artworkURL != null){
             $('#class-artwork-img').removeClass('is-hidden');
@@ -88,10 +77,10 @@ class DisplayClass {
 
           $('#class-hit-points').html('<p class="pl-1">'+classStruct.class.hitPoints+'</p>');
 
-          $('#class-perception').html(profToWord(classStruct.class.tPerception));
-          $('#class-saving-throw-fort').html(profToWord(classStruct.class.tFortitude)+' in Fortitude');
-          $('#class-saving-throws-reflex').html(profToWord(classStruct.class.tReflex)+' in Reflex');
-          $('#class-saving-throws-will').html(profToWord(classStruct.class.tWill)+' in Will');
+          $('#class-perception').html('<span class="has-txt-value-string is-italic">'+profToWord(classStruct.class.tPerception)+'</span>');
+          $('#class-saving-throw-fort').html('<span class="has-txt-value-string is-italic">'+profToWord(classStruct.class.tFortitude)+'</span> in Fortitude');
+          $('#class-saving-throws-reflex').html('<span class="has-txt-value-string is-italic">'+profToWord(classStruct.class.tReflex)+'</span> in Reflex');
+          $('#class-saving-throws-will').html('<span class="has-txt-value-string is-italic">'+profToWord(classStruct.class.tWill)+'</span> in Will');
 
           let tWeaponsArray = classStruct.class.tWeapons.split(',,, ');
           for(const tWeapons of tWeaponsArray){
@@ -100,32 +89,37 @@ class DisplayClass {
             let weaponName = sections[1];
             if(weaponName.slice(-1) === 's'){
               // is plural
-              $('#class-attacks').append('<p>'+profToWord(weapTraining)+' in all '+weaponName+'</p>');
+              $('#class-attacks').append('<p class="class-starting-prof"><span class="has-txt-value-string is-italic">'+profToWord(weapTraining)+'</span> in all '+weaponName+'</p>');
             } else {
               // is singular
-              $('#class-attacks').append('<p>'+profToWord(weapTraining)+' in the '+weaponName+'</p>');
+              $('#class-attacks').append('<p class="class-starting-prof"><span class="has-txt-value-string is-italic">'+profToWord(weapTraining)+'</span> in the '+weaponName+'</p>');
             }
           }
           if(classStruct.class.weaponsExtra != null) {
             let weapLines = classStruct.class.weaponsExtra.split('\n');
-            for(const weapLine of weapLines){
-              $('#class-attacks').append(`<p>${weapLine}</p>`);
+            for(let weapLine of weapLines){
+              weapLine = weapLine.replace('Untrained','<span class="has-txt-value-string is-italic">Untrained</span>');
+              weapLine = weapLine.replace('Trained','<span class="has-txt-value-string is-italic">Trained</span>');
+              weapLine = weapLine.replace('Expert','<span class="has-txt-value-string is-italic">Expert</span>');
+              weapLine = weapLine.replace('Master','<span class="has-txt-value-string is-italic">Master</span>');
+              weapLine = weapLine.replace('Legendary','<span class="has-txt-value-string is-italic">Legendary</span>');
+              $('#class-attacks').append(`<p class="class-starting-prof">${weapLine}</p>`);
             }
           }
 
           if(classStruct.class.tSkills != null){
-            $('#class-skills').html('Trained in '+classStruct.class.tSkills);
+            $('#class-skills').html('<span class="has-txt-value-string is-italic">Trained</span> in '+classStruct.class.tSkills);
           }
-          $('#class-skills-extra').html('Trained in a number of additional skills equal to '+classStruct.class.tSkillsMore+' plus your Intelligence modifier');
+          $('#class-skills-extra').html('<span class="has-txt-value-string is-italic">Trained</span> in a number of additional skills equal to '+classStruct.class.tSkillsMore+' plus your Intelligence modifier');
 
-          $('#class-class-dc').html(profToWord(classStruct.class.tClassDC));
+          $('#class-class-dc').html('<span class="has-txt-value-string is-italic">'+profToWord(classStruct.class.tClassDC)+'</span>');
           
           let tArmorArray = classStruct.class.tArmor.split(',,, ');
           for(const tArmor of tArmorArray){
             let sections = tArmor.split(':::');
             let armTraining = sections[0];
             let armName = sections[1];
-            $('#class-defenses').append('<p>'+profToWord(armTraining)+' in all '+armName+'</p>');
+            $('#class-defenses').append('<p class="class-starting-prof"><span class="has-txt-value-string is-italic">'+profToWord(armTraining)+'</span> in all '+armName+'</p>');
           }
 
           ///
@@ -143,7 +137,17 @@ class DisplayClass {
                 sourceTextName = 'Bundle #'+classFeature.homebrewID;
               }
 
-              $('#class-features').append('<div style="position: relative;"><div class=""><p class="is-size-4 has-text-weight-semibold has-text-centered has-txt-listing">'+classFeature.name+'</p>'+processText(classFeature.description, false, null)+'</div><span style="position: absolute; top: 0px; right: 5px;" class="is-size-7 has-txt-noted is-italic">'+sourceTextName+'</span></div>');
+              $('#class-features').append(`
+                <div class="pos-relative">
+                  <div class="fading-reveal-container is-active">
+                    <p class="is-size-4 has-text-weight-semibold has-text-centered has-txt-listing">${classFeature.name}</p>
+                    ${processText(classFeature.description, false, null)}
+                  </div>
+                  <p class="reveal-container-text is-hidden has-text-info">Show More</p>
+
+                  <span style="position: absolute; top: 0px; right: 5px;" class="is-size-7 has-txt-noted is-italic">${sourceTextName}</span>
+                </div>
+              `);
 
               if(classFeature.selectType == 'SELECTOR'){
                 $('#class-features').append('<p class="has-text-centered is-size-5 has-text-weight-semibold">Options</p)');
@@ -228,6 +232,7 @@ class DisplayClass {
             }
           }
           
+          stopSpinnerSubLoader();
           $('#'+classDisplayContainerID).removeClass('is-hidden');
         }
       });

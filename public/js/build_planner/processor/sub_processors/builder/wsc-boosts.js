@@ -33,7 +33,7 @@ function giveAbilityBoostMultiple(srcStruct, numberOfBoosts, locationID, extraDa
         }
         if(multiBoostCodeStr != ''){
             let newLocationID = locationID+'-BoostContent';
-            $('#'+locationID).append('<div class="field is-grouped is-grouped-centered"><div class="" id="'+newLocationID+'"></div></div>');
+            $('#'+locationID).append('<div class="field is-grouped is-grouped-centered pt-1"><div class="" id="'+newLocationID+'"></div></div>');
             processCode(
                 multiBoostCodeStr,
                 srcStruct,
@@ -96,11 +96,11 @@ function displayAbilityBoostSingle(srcStruct, locationID, abilityTypes, extraDat
 
     const selectionTagInfo = getTagFromData(srcStruct, extraData.sourceName, 'Unselected Ability Boost', 'UNSELECTED');
 
-    $('#'+locationID).append('<span class="select mb-1 mx-1 '+selectBoostControlShellClass+'" data-selection-info="'+selectionTagInfo+'"><select id="'+selectBoostID+'" class="'+selectBoostSet+'"></select></span>');
+    $('#'+locationID).append('<span class="select mb-1 mx-1 is-small '+selectBoostControlShellClass+'" data-selection-info="'+selectionTagInfo+'"><select id="'+selectBoostID+'" class="'+selectBoostSet+'"></select></span>');
 
     let selectBoost = $('#'+selectBoostID);
-    selectBoost.append('<option value="chooseDefault">Choose an Ability</option>');
-    selectBoost.append('<optgroup label="──────────"></optgroup>');
+    selectBoost.append('<option value="chooseDefault">Choose a Boost</option>');
+    selectBoost.append('<optgroup label="────────"></optgroup>');
     for(const ability of abilityTypes){
         selectBoost.append('<option value="'+ability+'">'+ability+'</option>');
     }
@@ -143,6 +143,8 @@ function displayAbilityBoostSingle(srcStruct, locationID, abilityTypes, extraDat
             } else {
                 $(this).parent().addClass("is-info");
                 deleteData(DATA_SOURCE.ABILITY_BONUS, srcStruct);
+
+                console.log('got here '+srcStructToCompositeKey(srcStruct));
 
                 socket.emit("requestWSCAbilityBonusChange",
                     getCharIDFromURL(),

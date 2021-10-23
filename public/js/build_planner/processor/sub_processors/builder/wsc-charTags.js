@@ -3,15 +3,15 @@
 */
 
 //--------------------- Processing Char Tags --------------------//
-function processingCharTags(wscStatement, srcStruct, locationID, sourceName){
+function processingCharTags(wscStatement, srcStruct, locationID, extraData){
     
     if(wscStatement.includes("GIVE-CHAR-TRAIT-NAME")){ // GIVE-CHAR-TRAIT-NAME=Elf
         let charTagName = wscStatement.split('=')[1];
         giveCharTag(srcStruct, charTagName);
     } else if(wscStatement.includes("GIVE-CHAR-TRAIT-COMMON")){ // GIVE-CHAR-TRAIT-COMMON
-        displayCharTagChoice(srcStruct, locationID, sourceName, true);
+        displayCharTagChoice(srcStruct, locationID, extraData, true);
     } else if(wscStatement.includes("GIVE-CHAR-TRAIT")){ // GIVE-CHAR-TRAIT
-        displayCharTagChoice(srcStruct, locationID, sourceName);
+        displayCharTagChoice(srcStruct, locationID, extraData);
     } else {
         displayError("Unknown statement (2-CharTrait): \'"+wscStatement+"\'");
         statementComplete();
@@ -42,12 +42,12 @@ socket.on("returnCharTagChange", function(charTagsArray){
 
 //////////////////////////////// Give Char Tag Selector ///////////////////////////////////
 
-function displayCharTagChoice(srcStruct, locationID, sourceName, commonOnly=false){
+function displayCharTagChoice(srcStruct, locationID, extraData, commonOnly=false){
 
     let selectCharTagID = "selectCharTag"+locationID+"-"+srcStruct.sourceCode+"-"+srcStruct.sourceCodeSNum;
     let selectCharTagControlShellClass = selectCharTagID+'ControlShell';
 
-    const selectionTagInfo = getTagFromData(srcStruct, sourceName, 'Unselected Option', 'UNSELECTED');
+    const selectionTagInfo = getTagFromData(srcStruct, extraData.sourceName, 'Unselected Option', 'UNSELECTED');
 
     $('#'+locationID).append('<div class="field my-2"><div class="select '+selectCharTagControlShellClass+'" data-selection-info="'+selectionTagInfo+'"><select id="'+selectCharTagID+'" class="selectCharTag"></select></div></div>');
 

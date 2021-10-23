@@ -8,7 +8,7 @@ let g_featSelectionMap = new Map();
 function giveFeatSelection(locationID, srcStruct, selectionName, selectionMap, sourceName){
 
   let featSelectionLocID = "featSelect-"+locationID+"-"+srcStruct.sourceCode+"-"+srcStruct.sourceCodeSNum;
-  $('#'+locationID).append('<div id="'+featSelectionLocID+'"></div>');
+  $('#'+locationID).append('<div id="'+featSelectionLocID+'" class="py-1"></div>');
   generateFeatSelection(featSelectionLocID, srcStruct, selectionName, selectionMap, sourceName);
 
 }
@@ -43,7 +43,7 @@ function generateFeatSelection(contentLocID, srcStruct, selectionName, selection
   if(selectedFeat == null) {
     const selectionTagInfo = getTagFromData(srcStruct, sourceName, 'Unselected Feat', 'UNSELECTED');
 
-    $('#'+contentLocID).html('<div class="mb-3"><div data-contentLoc-id="'+contentLocID+'" class="feat-selection is-default cursor-clickable columns is-mobile mb-0 p-0" data-selection-info="'+selectionTagInfo+'"><div class="column is-2 is-paddingless '+openFeatListClass+' py-2"></div><div class="column is-8 is-paddingless '+openFeatListClass+' py-2"><span class="">'+selectionName+'</span></div><div class="column is-2 is-paddingless '+openFeatListClass+' py-2"><span class="icon feat-selection-dropdown"><i class="fas fa-chevron-down '+featDropdownIconClass+'"></i></span></div></div><div class="'+featListSectionClass+' is-hidden"></div><div id="'+featCodeSectionID+'" class="py-2"></div></div>');
+    $('#'+contentLocID).html('<div class="mb-0"><div data-contentLoc-id="'+contentLocID+'" class="feat-selection is-default cursor-clickable columns is-mobile mb-0 p-0" data-selection-info="'+selectionTagInfo+'"><div class="column is-2 is-paddingless '+openFeatListClass+' py-2"></div><div class="column is-8 is-paddingless '+openFeatListClass+' py-2"><span class="">'+selectionName+'</span></div><div class="column is-2 is-paddingless '+openFeatListClass+' py-2"><span class="icon feat-selection-dropdown"><i class="fas fa-chevron-down '+featDropdownIconClass+'"></i></span></div></div><div class="'+featListSectionClass+' is-hidden"></div><div id="'+featCodeSectionID+'" class="py-2"></div></div>');
   } else {
     const selectionTagInfo = (meetsPrereqs(selectedFeat.Feat) == 'FALSE') ? getTagFromData(srcStruct, sourceName, 'Prerequisites Not Met', 'INCORRECT') : getTagFromData(srcStruct, sourceName, '', '');
 
@@ -51,7 +51,7 @@ function generateFeatSelection(contentLocID, srcStruct, selectionName, selection
     if(selectedFeat.Feat.isArchived === 1){ featNameHTML += '<span class="has-txt-partial-noted is-size-6-5"> - Archived</span>'; }
     let featLevelHTML = '';
     if(selectedFeat.Feat.level > 0){ featLevelHTML = '<sup class="is-size-7 has-txt-noted is-italic"> Lvl '+selectedFeat.Feat.level+'</sup>'; }
-    $('#'+contentLocID).html('<div class="mb-3"><div data-contentLoc-id="'+contentLocID+'" class="feat-selection cursor-clickable columns is-mobile mb-0 p-0" data-selection-info="'+selectionTagInfo+'"><div class="column is-1 is-paddingless '+openFeatDetailsClass+' py-2"></div><div class="column is-10 is-paddingless '+openFeatDetailsClass+' py-2">'+featNameHTML+''+featLevelHTML+'</div><div class="column is-1 is-paddingless '+openFeatListClass+' py-2" style="border-left: 1px solid hsl(0, 0%, 13%);"><span class="icon feat-selection-dropdown"><i class="fas fa-chevron-down '+featDropdownIconClass+'"></i></span></div></div><div class="'+featListSectionClass+' is-hidden"></div><div id="'+featCodeSectionID+'" class="py-2"></div></div>');
+    $('#'+contentLocID).html('<div class="mb-0"><div data-contentLoc-id="'+contentLocID+'" class="feat-selection cursor-clickable columns is-mobile mb-0 p-0" data-selection-info="'+selectionTagInfo+'"><div class="column is-1 is-paddingless '+openFeatDetailsClass+' py-2"></div><div class="column is-10 is-paddingless '+openFeatDetailsClass+' py-2">'+featNameHTML+''+featLevelHTML+'</div><div class="column is-1 is-paddingless '+openFeatListClass+' py-2" style="border-left: 1px solid hsl(0, 0%, 13%);"><span class="icon feat-selection-dropdown"><i class="fas fa-chevron-down '+featDropdownIconClass+'"></i></span></div></div><div class="'+featListSectionClass+' is-hidden"></div><div id="'+featCodeSectionID+'" class="py-2"></div></div>');
   }
 
   let sortedSelectionMap = new Map();

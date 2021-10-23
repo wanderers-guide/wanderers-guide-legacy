@@ -3,7 +3,7 @@
 */
 
 //------------------------- Processing Spells ------------------------//
-function processingSpells(wscStatement, srcStruct, locationID, sourceName){
+function processingSpells(wscStatement, srcStruct, locationID, extraData){
 
     if(wscStatement.includes("SET-SPELL-SLOTS")){// SET-SPELL-SLOTS=Bard:Three-Quarters/Full/Single-Set
         let data = wscStatement.split('=')[1];

@@ -3,17 +3,17 @@
 */
 
 //------------------------- Processing Langs -------------------------//
-function processingLangs(wscStatement, srcStruct, locationID, sourceName){
+function processingLangs(wscStatement, srcStruct, locationID, extraData){
 
     if(wscStatement.includes("GIVE-LANG-NAME")){ // GIVE-LANG-NAME=Elven
         let langName = wscStatement.split('=')[1];
-        giveLangByName(srcStruct, langName, sourceName);
+        giveLangByName(srcStruct, langName, extraData);
     }
     else if(wscStatement.includes("GIVE-LANG-BONUS-ONLY")){// GIVE-LANG-BONUS-ONLY
-        giveLang(srcStruct, locationID, sourceName, true);
+        giveLang(srcStruct, locationID, extraData, true);
     }
     else if(wscStatement.includes("GIVE-LANG")){// GIVE-LANG
-        giveLang(srcStruct, locationID, sourceName, false);
+        giveLang(srcStruct, locationID, extraData, false);
     } else {
         displayError("Unknown statement (2-Lang): \'"+wscStatement+"\'");
         statementComplete();
@@ -23,7 +23,7 @@ function processingLangs(wscStatement, srcStruct, locationID, sourceName){
 
 //////////////////////////////// Give Lang ///////////////////////////////////
 
-function giveLang(srcStruct, locationID, sourceName, bonusOnly){
+function giveLang(srcStruct, locationID, extraData, bonusOnly){
 
     let selectLangID = "selectLang"+locationID+"-"+srcStruct.sourceCode+"-"+srcStruct.sourceCodeSNum;
     let selectLangControlShellClass = selectLangID+'ControlShell';
@@ -32,9 +32,9 @@ function giveLang(srcStruct, locationID, sourceName, bonusOnly){
     // If ID already exists, just return. This is a temporary fix - this shouldn't be an issue in the first place.
     if($('#'+selectLangID).length != 0) { statementComplete(); return; }
 
-    const selectionTagInfo = getTagFromData(srcStruct, sourceName, 'Unselected Language', 'UNSELECTED');
+    const selectionTagInfo = getTagFromData(srcStruct, extraData.sourceName, 'Unselected Language', 'UNSELECTED');
 
-    $('#'+locationID).append('<div class="field is-grouped is-grouped-centered is-marginless mt-1"><div class="select '+selectLangControlShellClass+'" data-selection-info="'+selectionTagInfo+'"><select id="'+selectLangID+'" class="selectLang"></select></div></div>');
+    $('#'+locationID).append('<div class="field is-grouped is-grouped-centered is-marginless my-1"><div class="select '+selectLangControlShellClass+'" data-selection-info="'+selectionTagInfo+'"><select id="'+selectLangID+'" class="selectLang"></select></div></div>');
 
     $('#'+locationID).append('<div class="columns is-centered is-marginless pb-2"><div id="'+langDescriptionID+'" class="column is-8 is-paddingless"></div></div>');
 
@@ -106,7 +106,7 @@ function giveLang(srcStruct, locationID, sourceName, bonusOnly){
 
                     $('#'+langDescriptionID).html('');
 
-                    setData(DATA_SOURCE.LANGUAGE, srcStruct, langID);
+                    setDataLanguage(srcStruct, langID);
                     
                     socket.emit("requestLanguageChange",
                         getCharIDFromURL(),
@@ -124,7 +124,7 @@ function giveLang(srcStruct, locationID, sourceName, bonusOnly){
 
                 $('#'+langDescriptionID).html('');
 
-                setData(DATA_SOURCE.LANGUAGE, srcStruct, langID);
+                setDataLanguage(srcStruct, langID);
 
                 socket.emit("requestLanguageChange",
                     getCharIDFromURL(),
@@ -151,13 +151,13 @@ socket.on("returnLanguageChange", function(){
 
 //////////////////////////////// Give Lang (by Lang Name) ///////////////////////////////////
 
-function giveLangByName(srcStruct, langName, sourceName){
+function giveLangByName(srcStruct, langName, extraData){
 
   let language = g_allLanguages.find(language => {
     return language.name == langName;
   });
   if(language != null){
-    setData(DATA_SOURCE.LANGUAGE, srcStruct, language.id);
+    setDataLanguage(srcStruct, language.id);
   }
 
   socket.emit("requestLanguageChangeByName",

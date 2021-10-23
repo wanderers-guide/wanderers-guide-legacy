@@ -381,3 +381,45 @@ function runSheetStatements(wscStatement, wscStatementUpper, srcStruct, location
   return PROCESS_RETURN.UNKNOWN;
 
 }
+
+function getSheetProcNumber(strNum, sourceName){
+  if(strNum == null) {
+    displayError('Incorrect WSC syntax ('+sourceName+')(1-1): NaN error in sheet statement');
+    return 0;
+  }
+  
+  strNum = strNum.toUpperCase().trim();
+
+  if(strNum.includes('HALF_LEVEL')) {
+    strNum = strNum.replace(/HALF_LEVEL/g, Math.floor(g_character.level/2)+'');
+  }
+  if(strNum.includes('LEVEL')) {
+    strNum = strNum.replace(/LEVEL/g, g_character.level+'');
+  }
+
+  if(strNum.includes('STR_MOD')) {
+    strNum = strNum.replace(/STR_MOD/g, getModOfValue('STR'));
+  }
+  if(strNum.includes('DEX_MOD')) {
+    strNum = strNum.replace(/DEX_MOD/g, getModOfValue('DEX'));
+  }
+  if(strNum.includes('CON_MOD')) {
+    strNum = strNum.replace(/CON_MOD/g, getModOfValue('CON'));
+  }
+  if(strNum.includes('INT_MOD')) {
+    strNum = strNum.replace(/INT_MOD/g, getModOfValue('INT'));
+  }
+  if(strNum.includes('WIS_MOD')) {
+    strNum = strNum.replace(/WIS_MOD/g, getModOfValue('WIS'));
+  }
+  if(strNum.includes('CHA_MOD')) {
+    strNum = strNum.replace(/CHA_MOD/g, getModOfValue('CHA'));
+  }
+
+  try {
+    return parseInt(math.evaluate(strNum));
+  } catch (err) {
+    displayError('Incorrect WSC syntax ('+sourceName+')(1-2): NaN error in sheet statement');
+    return 0;
+  }
+}

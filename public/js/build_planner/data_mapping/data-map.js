@@ -34,6 +34,12 @@ const g_dataMap = new Map();
 
 function initDataMap(charMetaData){
   for(let metaData of charMetaData){
+
+    // Don't load init class profs (for backwards compatibility with out builder).
+    if(metaData.source == DATA_SOURCE.PROFICIENCY && metaData.sourceCode.startsWith('inits-')){
+      continue;
+    }
+
     let srcStruct = {
       source: metaData.source,
       sourceType: metaData.sourceType,
@@ -56,11 +62,12 @@ function setData(in_source, in_srcStruct, in_value){
         && srcStruct.sourceCode == new_srcStruct.sourceCode
         && srcStruct.sourceCodeSNum == new_srcStruct.sourceCodeSNum){
       g_dataMap.delete(JSON_srcStruct);
-      deleteVarDataFromSrcStruct(srcStruct);
+      deleteVarDataFromSrcStruct(JSON_srcStruct);
     }
   }
 
   g_dataMap.set(JSON.stringify(new_srcStruct), in_value);
+  displayStats();
 }
 
 function getDataSingle(in_source, in_srcStruct){
@@ -81,23 +88,22 @@ function getDataAll(in_source){
   return dataArray;
 }
 
-function parameterizeSrcStruct(in_source, in_srcStruct){
-  return {
-    source: in_source,
-    sourceType: in_srcStruct.sourceType,
-    sourceLevel: in_srcStruct.sourceLevel,
-    sourceCode: in_srcStruct.sourceCode,
-    sourceCodeSNum: in_srcStruct.sourceCodeSNum,
-  };
-}
-
 // Delete Data //
-function deleteVarDataFromSrcStruct(in_srcStruct){
-  toVar_removeDataProficiencies(in_srcStruct);
-  toVar_removeDataAbilityBonus(in_srcStruct);
-  toVar_removeDataResistances(in_srcStruct);
-  toVar_removeDataWeaknesses(in_srcStruct);
-  toVar_removeDataLanguages(in_srcStruct);
+function deleteVarDataFromSrcStruct(JSON_srcStruct, varType=null){
+  for(let [varName, varData] of g_variableMap.entries()){
+    if(varType != null && varData.Type != varType) { continue; }
+
+    if(varData.Type == VAR_TYPE.INTEGER){
+      varData.Bonuses.delete(JSON_srcStruct);
+    } else if(varData.Type == VAR_TYPE.STRING){
+      varData.Extras.delete(JSON_srcStruct);
+    } else if(varData.Type == VAR_TYPE.ABILITY_SCORE){
+      varData.Value.Bonuses.delete(JSON_srcStruct);
+    } else if(varData.Type == VAR_TYPE.PROFICIENCY){
+      varData.Value.RankHistory.delete(JSON_srcStruct);
+    }
+
+  }
 }
 
 function deleteData(in_source, in_srcStruct){
@@ -107,7 +113,8 @@ function deleteData(in_source, in_srcStruct){
 
 function deleteDataOnly(in_source, in_srcStruct){
   g_dataMap.delete(JSON.stringify(parameterizeSrcStruct(in_source, in_srcStruct)));
-  deleteVarDataFromSrcStruct(in_srcStruct);
+  deleteVarDataFromSrcStruct(JSON.stringify(parameterizeSrcStruct(in_source, in_srcStruct)));
+  displayStats();
 }
 
 function deleteDataBySourceStruct(in_srcStruct){
@@ -119,9 +126,10 @@ function deleteDataBySourceStruct(in_srcStruct){
         && srcStruct.sourceCode == in_srcStruct.sourceCode
         && srcStruct.sourceCodeSNum == in_srcStruct.sourceCodeSNum){
       g_dataMap.delete(JSON_srcStruct);
-      deleteVarDataFromSrcStruct(srcStruct);
+      deleteVarDataFromSrcStruct(JSON_srcStruct);
     }
   }
+  displayStats();
 }
 
 function deleteDataSNumChildren(in_srcStruct){
@@ -133,9 +141,10 @@ function deleteDataSNumChildren(in_srcStruct){
         && srcStruct.sourceLevel == in_srcStruct.sourceLevel
         && srcStruct.sourceCode == in_srcStruct.sourceCode){
       g_dataMap.delete(JSON_srcStruct);
-      deleteVarDataFromSrcStruct(srcStruct);
+      deleteVarDataFromSrcStruct(JSON_srcStruct);
     }
   }
+  displayStats();
 }
 
 function deleteDataBySource(in_source){
@@ -143,9 +152,10 @@ function deleteDataBySource(in_source){
     let srcStruct = JSON.parse(JSON_srcStruct);
     if(srcStruct.source == in_source){
       g_dataMap.delete(JSON_srcStruct);
-      deleteVarDataFromSrcStruct(srcStruct);
+      deleteVarDataFromSrcStruct(JSON_srcStruct);
     }
   }
+  displayStats();
 }
 
 function deleteDataBySourceType(in_sourceType){
@@ -153,9 +163,10 @@ function deleteDataBySourceType(in_sourceType){
     let srcStruct = JSON.parse(JSON_srcStruct);
     if(srcStruct.sourceType == in_sourceType){
       g_dataMap.delete(JSON_srcStruct);
-      deleteVarDataFromSrcStruct(srcStruct);
+      deleteVarDataFromSrcStruct(JSON_srcStruct);
     }
   }
+  displayStats();
 }
 
 function deleteDataBySourceAndType(in_source, in_sourceType){
@@ -163,9 +174,10 @@ function deleteDataBySourceAndType(in_source, in_sourceType){
     let srcStruct = JSON.parse(JSON_srcStruct);
     if(srcStruct.source == in_source && srcStruct.sourceType == in_sourceType){
       g_dataMap.delete(JSON_srcStruct);
-      deleteVarDataFromSrcStruct(srcStruct);
+      deleteVarDataFromSrcStruct(JSON_srcStruct);
     }
   }
+  displayStats();
 }
 
 function deleteDataByGreaterThanSourceLevel(in_level){
@@ -173,9 +185,10 @@ function deleteDataByGreaterThanSourceLevel(in_level){
     let srcStruct = JSON.parse(JSON_srcStruct);
     if(srcStruct.sourceLevel > in_level){
       g_dataMap.delete(JSON_srcStruct);
-      deleteVarDataFromSrcStruct(srcStruct);
+      deleteVarDataFromSrcStruct(JSON_srcStruct);
     }
   }
+  displayStats();
 }
 
 function deleteDataBySourceCode(in_sourceCode){
@@ -183,7 +196,8 @@ function deleteDataBySourceCode(in_sourceCode){
     let srcStruct = JSON.parse(JSON_srcStruct);
     if(srcStruct.sourceCode == in_sourceCode){
       g_dataMap.delete(JSON_srcStruct);
-      deleteVarDataFromSrcStruct(srcStruct);
+      deleteVarDataFromSrcStruct(JSON_srcStruct);
     }
   }
+  displayStats();
 }

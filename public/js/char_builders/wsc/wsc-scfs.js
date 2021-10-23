@@ -40,7 +40,7 @@ socket.on("returnFindClassFeatureForSCFS", function(classFeature, allClassFeatur
 
   const selectionTagInfo = getTagFromData(inputPacket.srcStruct, inputPacket.sourceName, 'Unselected Option', 'UNSELECTED');
 
-  $('#'+inputPacket.locationID).append('<div class="field is-grouped is-grouped-centered is-marginless mt-1"><div class="select '+scfsControlShellClass+'" data-selection-info="'+selectionTagInfo+'"><select id="'+scfsID+'" class="selectLang"></select></div></div><div id="'+scfsCodeID+'"></div>');
+  $('#'+inputPacket.locationID).append('<div class="field is-grouped is-grouped-centered is-marginless my-1"><div class="select '+scfsControlShellClass+'" data-selection-info="'+selectionTagInfo+'"><select id="'+scfsID+'" class="selectLang"></select></div></div><div id="'+scfsCodeID+'"></div>');
 
   $('#'+scfsID).append('<option value="chooseDefault">Choose an Option</option>');
   $('#'+scfsID).append('<optgroup label="──────────"></optgroup>');

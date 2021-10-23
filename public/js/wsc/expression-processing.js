@@ -160,7 +160,17 @@ function profConversion_convertOldNameToVarName(profName){
     case 'SURVIVAL': return VARIABLE.SKILL_SURVIVAL;
     case 'THIEVERY': return VARIABLE.SKILL_THIEVERY;
 
-    default: console.error('Failed to convert variable '+convertProfName); return '';
+    case 'ADDLORE': return VARIABLE.ADD_LORE;
+
+    default: break; // Break to below
+  }
+
+  if(convertProfName.endsWith('LORE')){
+    console.log(`SKILL_${convertProfName.slice(0, -4)}_LORE`);
+    return `SKILL_${convertProfName.slice(0, -4)}_LORE`;
+  } else {
+    console.error('Failed to convert variable '+convertProfName);
+    return '';
   }
 
 }

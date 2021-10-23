@@ -3,7 +3,7 @@
 */
 
 //--------------------- Processing Specializations --------------------//
-function processingSpecializations(wscStatement, srcStruct, locationID, sourceName){
+function processingSpecializations(wscStatement, srcStruct, locationID, extraData){
     
     if(wscStatement.includes("GIVE-WEAPON-SPECIALIZATION")){ // GIVE-WEAPON-SPECIALIZATION
         giveWeaponSpecialization(srcStruct, 1);

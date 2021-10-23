@@ -1,9 +1,9 @@
 
 {{#section 'header'}}
     <link rel="stylesheet" href="/css/build-planner.css">
-    <script src="/js/build_planner/ui-handler.js"></script>
 
     <script src="/js/build_planner/main.js"></script>
+    <script src="/js/build_planner/ui-handler.js"></script>
 
     <script src="/js/build_planner/processor/core-processor.js"></script>
 
@@ -17,11 +17,11 @@
 
     <script src="/js/build_planner/data_mapping/data-map.js"></script>
     <script src="/js/build_planner/data_mapping/data-map-ext.js"></script>
-    <script src="/js/build_planner/data_mapping/data-to-var-converter.js"></script>
     <script src="/js/build_planner/data_mapping/retrieval.js"></script>
 
     <!-- Dependencies -->
     <script src="/js/wsc/text-processing.js"></script>
+    <script src="/js/wsc/add-text-processing.js"></script>
     <script src="/js/wsc/variable-processing.js"></script>
     <script src="/js/sheet/general/stat-manager.js"></script>
     <script src="/js/wsc/expression-processing.js"></script>
@@ -346,228 +346,7 @@
         </div>
         <div class="tile is-child box py-2 pl-2 pr-1">
           
-          <div class="use-custom-scrollbar" style="height: 575px; max-height: 575px; overflow-y: scroll;">
-            <div class="accord-container my-1">
-              <div class="accord-header">
-                <span class="title-font pl-2">Level 1</span>
-                <span class="icon is-pulled-right">
-                  <i class="accord-chevron fas fa-chevron-down"></i>
-                </span>
-              </div>
-              <div id="level-1-body" class="accord-body is-hidden">
-                <!-- Populated at runtime -->
-              </div>
-            </div>
-            <div class="accord-container my-1">
-              <div class="accord-header">
-                <span class="title-font pl-2">Level 2</span>
-                <span class="icon is-pulled-right">
-                  <i class="accord-chevron fas fa-chevron-down"></i>
-                </span>
-              </div>
-              <div id="level-2-body" class="accord-body is-hidden">
-                <!-- Populated at runtime -->
-              </div>
-            </div>
-            <div class="accord-container my-1">
-              <div class="accord-header">
-                <span class="title-font pl-2">Level 3</span>
-                <span class="icon is-pulled-right">
-                  <i class="accord-chevron fas fa-chevron-down"></i>
-                </span>
-              </div>
-              <div id="level-3-body" class="accord-body is-hidden">
-                <!-- Populated at runtime -->
-              </div>
-            </div>
-            <div class="accord-container my-1">
-              <div class="accord-header">
-                <span class="title-font pl-2">Level 4</span>
-                <span class="icon is-pulled-right">
-                  <i class="accord-chevron fas fa-chevron-down"></i>
-                </span>
-              </div>
-              <div id="level-4-body" class="accord-body is-hidden">
-                <!-- Populated at runtime -->
-              </div>
-            </div>
-            <div class="accord-container my-1">
-              <div class="accord-header">
-                <span class="title-font pl-2">Level 5</span>
-                <span class="icon is-pulled-right">
-                  <i class="accord-chevron fas fa-chevron-down"></i>
-                </span>
-              </div>
-              <div id="level-5-body" class="accord-body is-hidden">
-                <!-- Populated at runtime -->
-              </div>
-            </div>
-            <div class="accord-container my-1">
-              <div class="accord-header">
-                <span class="title-font pl-2">Level 6</span>
-                <span class="icon is-pulled-right">
-                  <i class="accord-chevron fas fa-chevron-down"></i>
-                </span>
-              </div>
-              <div id="level-6-body" class="accord-body is-hidden">
-                <!-- Populated at runtime -->
-              </div>
-            </div>
-            <div class="accord-container my-1">
-              <div class="accord-header">
-                <span class="title-font pl-2">Level 7</span>
-                <span class="icon is-pulled-right">
-                  <i class="accord-chevron fas fa-chevron-down"></i>
-                </span>
-              </div>
-              <div id="level-7-body" class="accord-body is-hidden">
-                <!-- Populated at runtime -->
-              </div>
-            </div>
-            <div class="accord-container my-1">
-              <div class="accord-header">
-                <span class="title-font pl-2">Level 8</span>
-                <span class="icon is-pulled-right">
-                  <i class="accord-chevron fas fa-chevron-down"></i>
-                </span>
-              </div>
-              <div id="level-8-body" class="accord-body is-hidden">
-                <!-- Populated at runtime -->
-              </div>
-            </div>
-            <div class="accord-container my-1">
-              <div class="accord-header">
-                <span class="title-font pl-2">Level 9</span>
-                <span class="icon is-pulled-right">
-                  <i class="accord-chevron fas fa-chevron-down"></i>
-                </span>
-              </div>
-              <div id="level-9-body" class="accord-body is-hidden">
-                <!-- Populated at runtime -->
-              </div>
-            </div>
-            <div class="accord-container my-1">
-              <div class="accord-header">
-                <span class="title-font pl-2">Level 10</span>
-                <span class="icon is-pulled-right">
-                  <i class="accord-chevron fas fa-chevron-down"></i>
-                </span>
-              </div>
-              <div id="level-10-body" class="accord-body is-hidden">
-                <!-- Populated at runtime -->
-              </div>
-            </div>
-            <div class="accord-container my-1">
-              <div class="accord-header">
-                <span class="title-font pl-2">Level 11</span>
-                <span class="icon is-pulled-right">
-                  <i class="accord-chevron fas fa-chevron-down"></i>
-                </span>
-              </div>
-              <div id="level-11-body" class="accord-body is-hidden">
-                <!-- Populated at runtime -->
-              </div>
-            </div>
-            <div class="accord-container my-1">
-              <div class="accord-header">
-                <span class="title-font pl-2">Level 12</span>
-                <span class="icon is-pulled-right">
-                  <i class="accord-chevron fas fa-chevron-down"></i>
-                </span>
-              </div>
-              <div id="level-12-body" class="accord-body is-hidden">
-                <!-- Populated at runtime -->
-              </div>
-            </div>
-            <div class="accord-container my-1">
-              <div class="accord-header">
-                <span class="title-font pl-2">Level 13</span>
-                <span class="icon is-pulled-right">
-                  <i class="accord-chevron fas fa-chevron-down"></i>
-                </span>
-              </div>
-              <div id="level-13-body" class="accord-body is-hidden">
-                <!-- Populated at runtime -->
-              </div>
-            </div>
-            <div class="accord-container my-1">
-              <div class="accord-header">
-                <span class="title-font pl-2">Level 14</span>
-                <span class="icon is-pulled-right">
-                  <i class="accord-chevron fas fa-chevron-down"></i>
-                </span>
-              </div>
-              <div id="level-14-body" class="accord-body is-hidden">
-                <!-- Populated at runtime -->
-              </div>
-            </div>
-            <div class="accord-container my-1">
-              <div class="accord-header">
-                <span class="title-font pl-2">Level 15</span>
-                <span class="icon is-pulled-right">
-                  <i class="accord-chevron fas fa-chevron-down"></i>
-                </span>
-              </div>
-              <div id="level-15-body" class="accord-body is-hidden">
-                <!-- Populated at runtime -->
-              </div>
-            </div>
-            <div class="accord-container my-1">
-              <div class="accord-header">
-                <span class="title-font pl-2">Level 16</span>
-                <span class="icon is-pulled-right">
-                  <i class="accord-chevron fas fa-chevron-down"></i>
-                </span>
-              </div>
-              <div id="level-16-body" class="accord-body is-hidden">
-                <!-- Populated at runtime -->
-              </div>
-            </div>
-            <div class="accord-container my-1">
-              <div class="accord-header">
-                <span class="title-font pl-2">Level 17</span>
-                <span class="icon is-pulled-right">
-                  <i class="accord-chevron fas fa-chevron-down"></i>
-                </span>
-              </div>
-              <div id="level-17-body" class="accord-body is-hidden">
-                <!-- Populated at runtime -->
-              </div>
-            </div>
-            <div class="accord-container my-1">
-              <div class="accord-header">
-                <span class="title-font pl-2">Level 18</span>
-                <span class="icon is-pulled-right">
-                  <i class="accord-chevron fas fa-chevron-down"></i>
-                </span>
-              </div>
-              <div id="level-18-body" class="accord-body is-hidden">
-                <!-- Populated at runtime -->
-              </div>
-            </div>
-            <div class="accord-container my-1">
-              <div class="accord-header">
-                <span class="title-font pl-2">Level 19</span>
-                <span class="icon is-pulled-right">
-                  <i class="accord-chevron fas fa-chevron-down"></i>
-                </span>
-              </div>
-              <div id="level-19-body" class="accord-body is-hidden">
-                <!-- Populated at runtime -->
-              </div>
-            </div>
-            <div class="accord-container my-1">
-              <div class="accord-header">
-                <span class="title-font pl-2">Level 20</span>
-                <span class="icon is-pulled-right">
-                  <i class="accord-chevron fas fa-chevron-down"></i>
-                </span>
-              </div>
-              <div id="level-20-body" class="accord-body is-hidden">
-                <!-- Populated at runtime -->
-              </div>
-            </div>
-
+          <div id="creation-section" class="use-custom-scrollbar" style="height: 575px; max-height: 575px; overflow-y: scroll;">
           </div>
 
         </div>

@@ -28,7 +28,7 @@ function giveDomain(srcStruct, locationID, spellSRC, sourceName){
 
     const selectionTagInfo = getTagFromData(srcStruct, sourceName, 'Unselected Domain', 'UNSELECTED');
 
-    $('#'+locationID).append('<div class="field is-grouped is-grouped-centered is-marginless mt-1"><div class="select '+selectControlShellClass+'" data-selection-info="'+selectionTagInfo+'"><select id="'+selectID+'"></select></div></div>');
+    $('#'+locationID).append('<div class="field is-grouped is-grouped-centered is-marginless my-1"><div class="select '+selectControlShellClass+'" data-selection-info="'+selectionTagInfo+'"><select id="'+selectID+'"></select></div></div>');
 
     $('#'+locationID).append('<div id="'+descriptionID+'"></div>');
 
@@ -108,7 +108,7 @@ function giveDomainAdvancement(srcStruct, locationID, spellSRC, sourceName){
 
     const selectionTagInfo = getTagFromData(srcStruct, sourceName, 'Unselected Domain Advancement', 'UNSELECTED');
 
-    $('#'+locationID).append('<div class="field is-grouped is-grouped-centered is-marginless mt-1"><div class="select '+selectControlShellClass+'" data-selection-info="'+selectionTagInfo+'"><select id="'+selectID+'"></select></div></div>');
+    $('#'+locationID).append('<div class="field is-grouped is-grouped-centered is-marginless my-1"><div class="select '+selectControlShellClass+'" data-selection-info="'+selectionTagInfo+'"><select id="'+selectID+'"></select></div></div>');
 
     $('#'+locationID).append('<div id="'+descriptionID+'"></div>');
 

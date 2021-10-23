@@ -43,6 +43,8 @@ const VARIABLE = {
   SKILL_THIEVERY: 'SKILL_THIEVERY',
   SKILL_XXX_LORE: 'SKILL_XXX_LORE',
 
+  ADD_LORE: 'ADD_LORE',
+
   ARCANE_SPELL_ATTACK: 'ARCANE_SPELL_ATTACK',
   DIVINE_SPELL_ATTACK: 'DIVINE_SPELL_ATTACK',
   OCCULT_SPELL_ATTACK: 'OCCULT_SPELL_ATTACK',
@@ -224,11 +226,15 @@ function variables_addList(variableName, value){
 function variables_addProficiency(variableName, abilityScoreName, rank, profDataArray=null){
   let rankHistory = new Map();
   if(profDataArray == null){
-    console.log('No rank history set for var:'+variableName);
-    rankHistory.set('Initial', {Rank: rank, SourceName: 'Initial'});
+    if(rank != 'U'){
+      console.log('No rank history set for var:'+variableName);
+      rankHistory.set('Initial', {Rank: rank, SourceName: 'Initial'});
+    } else {
+      // Don't add initial untrained to rank history
+    }
   } else {
     for(let profData of profDataArray){
-      rankHistory.set(srcStructToCompositeKey(profData), {Rank: profData.Prof, SourceName: profData.SourceName});
+      rankHistory.set(JSON.stringify(parameterizeSrcStruct(profData.source, profData)), {Rank: profData.Prof, SourceName: profData.SourceName});
     }
   }
   g_variableMap.set(variableName, {
@@ -257,14 +263,18 @@ function variables_getValue(variableName){
 function variables_addRank(variableName, rank, sourceName, srcStructKey){
 
   let variable = g_variableMap.get(variableName);
-  if(variable == null) { console.log('Unknown variable '+variableName); return; }
+  if(variable == null) {
+    console.log('Unknown variable '+variableName+', creating new one with SCORE_INT.');
+    variables_addProficiency(variableName, VARIABLE.SCORE_INT, 'U');
+    variable = g_variableMap.get(variableName);
+  }
 
   if(variable.Type != VAR_TYPE.PROFICIENCY){
     displayError("Variable Add Rank: Unsupported variable type \'"+variable.Type+"\'!");
     return;
   }
-  if(rank == 'U' || rank == 'T' || rank == 'E' || rank == 'M' || rank == 'L') {} else {
-    displayError("Variable Add Rank: The value \'"+rank+"\' for \'"+variableName+"\' is not a proficiency rank! (options: U, T, E, M, and L)");
+  if(rank == 'U' || rank == 'T' || rank == 'E' || rank == 'M' || rank == 'L' || rank == 'UP' || rank == 'DOWN') {} else {
+    displayError("Variable Add Rank: The value \'"+rank+"\' for \'"+variableName+"\' is not a proficiency rank! (options: U, T, E, M, L, UP, and DOWN)");
     return;
   }
 

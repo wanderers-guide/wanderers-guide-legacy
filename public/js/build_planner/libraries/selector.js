@@ -30,7 +30,7 @@ class Selector {
     this.extra_code = extra_code;
 
     $('#'+locationID).append(`
-      <div class="field is-grouped is-grouped-centered is-marginless mt-1">
+      <div class="field is-grouped is-grouped-centered is-marginless my-1">
         <div class="select" data-selection-info="${selectionTagInfo}">
           <select id="${selectorID}"></select>
         </div>

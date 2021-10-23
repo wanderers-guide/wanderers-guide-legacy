@@ -50,6 +50,16 @@ function srcStructToCompositeKey(srcStruct){
   return `${srcStruct.sourceType}:::${srcStruct.sourceLevel}:::${srcStruct.sourceCode}:::${srcStruct.sourceCodeSNum}`;
 }
 
+function parameterizeSrcStruct(in_source, in_srcStruct){
+  return {
+    source: in_source,
+    sourceType: in_srcStruct.sourceType,
+    sourceLevel: in_srcStruct.sourceLevel,
+    sourceCode: in_srcStruct.sourceCode,
+    sourceCodeSNum: in_srcStruct.sourceCodeSNum,
+  };
+}
+
 /* Content Sources */
 
 const g_contentSources = [
@@ -74,6 +84,7 @@ const g_contentSources = [
   {TextName: 'The Fall of Plaguestone', CodeName: 'FALL-OF-PLAGUE', Link: 'https://paizo.com/products/btq01zoh?Pathfinder-Adventure-The-Fall-of-Plaguestone'},
   {TextName: 'Fists of the Ruby Phoenix', CodeName: 'FIST-PHOENIX', Link: 'https://paizo.com/store/pathfinder/adventures/adventurePath/fistsOfTheRubyPhoenix'},
   {TextName: 'Malevolence', CodeName: 'MALEVOLENCE', Link: 'https://paizo.com/products/btq027qf?Pathfinder-Adventure-Malevolence'},
+  {TextName: 'Night of the Gray Death', CodeName: 'NIGHT-GRAY-DEATH', Link: 'https://paizo.com/products/btq02alp?Pathfinder-Adventure-Night-of-the-Gray-Death'},
   {TextName: 'The Slithering', CodeName: 'SLITHERING', Link: 'https://paizo.com/products/btq023hg?Pathfinder-Adventure-The-Slithering'},
   {TextName: 'Strength of Thousands', CodeName: 'STRENGTH-THOUSANDS', Link: 'https://paizo.com/store/pathfinder/adventures/adventurePath/strengthOfThousands'},
   {TextName: 'Troubles in Otari', CodeName: 'TROUBLES-IN-OTARI', Link: 'https://paizo.com/products/btq026k1?Pathfinder-Adventure-Troubles-in-Otari'},
@@ -377,9 +388,17 @@ function round(value, precision) {
   return Math.floor(value * multiplier) / multiplier;
 }
 
-function isOverflown(jQueryElement) {
+function isOverflown(jQueryElement){
   let element = jQueryElement[0];
   return element.scrollHeight > element.clientHeight || element.scrollWidth > element.clientWidth;
+}
+function hasGreaterHeight(jQueryElement, pixelHeight){
+  let element = jQueryElement[0];
+  return element.clientHeight > pixelHeight;
+}
+function hasGreaterWidth(jQueryElement, pixelWidth){
+  let element = jQueryElement[0];
+  return element.clientWidth > pixelWidth;
 }
 
 function isSheetPage(){

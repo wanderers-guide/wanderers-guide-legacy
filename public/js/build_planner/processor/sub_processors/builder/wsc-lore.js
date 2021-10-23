@@ -3,15 +3,15 @@
 */
 
 //--------------------- Processing Lore --------------------//
-function processingLore(wscStatement, srcStruct, locationID, sourceName){
+function processingLore(wscStatement, srcStruct, locationID, extraData){
 
     if(wscStatement.includes("GIVE-LORE=")){ // GIVE-LORE=Sailing
         let loreName = wscStatement.split('=')[1];
-        giveLore(srcStruct, loreName, sourceName);
+        giveLore(srcStruct, loreName, extraData);
     } else if(wscStatement.includes("GIVE-LORE-CHOOSE-INCREASING")){ // GIVE-LORE-CHOOSE-INCREASING
-        giveLoreChooseIncreasing(srcStruct, locationID, sourceName);
+        giveLoreChooseIncreasing(srcStruct, locationID, extraData);
     } else if(wscStatement.includes("GIVE-LORE-CHOOSE")){ // GIVE-LORE-CHOOSE
-        giveLoreChoose(srcStruct, locationID, sourceName);
+        giveLoreChoose(srcStruct, locationID, extraData);
     } else {
         displayError("Unknown statement (2-Lore): \'"+wscStatement+"\'");
         statementComplete();
@@ -21,21 +21,21 @@ function processingLore(wscStatement, srcStruct, locationID, sourceName){
 
 //////////////////////////////// Give Lore Choose ///////////////////////////////////
 
-function giveLoreChooseIncreasing(srcStruct, locationID, sourceName){
+function giveLoreChooseIncreasing(srcStruct, locationID, extraData){
   // At 3rd, 7th, and 15th level automatically increase lore
   let charLevel = g_character.level;
   if(charLevel >= 15){
-    giveLoreChoose(srcStruct, locationID, sourceName, 'L');
+    giveLoreChoose(srcStruct, locationID, extraData, 'L');
   } else if(charLevel >= 7){
-    giveLoreChoose(srcStruct, locationID, sourceName, 'M');
+    giveLoreChoose(srcStruct, locationID, extraData, 'M');
   } else if(charLevel >= 3){
-    giveLoreChoose(srcStruct, locationID, sourceName, 'E');
+    giveLoreChoose(srcStruct, locationID, extraData, 'E');
   } else {
-    giveLoreChoose(srcStruct, locationID, sourceName, 'T');
+    giveLoreChoose(srcStruct, locationID, extraData, 'T');
   }
 }
 
-function giveLoreChoose(srcStruct, locationID, sourceName, prof='T'){
+function giveLoreChoose(srcStruct, locationID, extraData, prof='T'){
 
     let inputLoreID = "inputLore"+locationID+"-"+srcStruct.sourceCode+"-"+srcStruct.sourceCodeSNum;
     let inputLoreControlShell = inputLoreID+'ControlShell';
@@ -43,7 +43,7 @@ function giveLoreChoose(srcStruct, locationID, sourceName, prof='T'){
     // If ID already exists, just return. This is a temporary fix - this shouldn't be an issue in the first place.
     if($('#'+inputLoreID).length != 0) { statementComplete(); return; }
 
-    $('#'+locationID).append('<div class="field is-grouped is-grouped-centered is-marginless mt-1"><div id="'+inputLoreControlShell+'" class="control"><input id="'+inputLoreID+'" class="input loreInput" type="text" maxlength="20" placeholder="Lore Type" autocomplete="off"></div></div>');
+    $('#'+locationID).append('<div class="field is-grouped is-grouped-centered is-marginless my-1"><div id="'+inputLoreControlShell+'" class="control"><input id="'+inputLoreID+'" class="input loreInput" type="text" maxlength="20" placeholder="Lore Type" autocomplete="off"></div></div>');
 
     // Set saved lore input data
     let savedLoreData = getDataSingle(DATA_SOURCE.LORE, srcStruct);
@@ -65,7 +65,7 @@ function giveLoreChoose(srcStruct, locationID, sourceName, prof='T'){
                 null,
                 { ControlShellID: inputLoreControlShell, isAutoLoad},
                 prof,
-                sourceName);
+                extraData.sourceName);
 
         } else {
 
@@ -78,7 +78,7 @@ function giveLoreChoose(srcStruct, locationID, sourceName, prof='T'){
                 let loreName = $(this).val().toUpperCase();
 
                 setData(DATA_SOURCE.LORE, srcStruct,  loreName);
-                setDataProficiencies(srcStruct, 'Skill', loreName+'_LORE', prof, sourceName);
+                setDataProficiencies(srcStruct, 'Skill', loreName+'_LORE', prof, extraData.sourceName);
 
                 socket.emit("requestLoreChange",
                     getCharIDFromURL(),
@@ -86,7 +86,7 @@ function giveLoreChoose(srcStruct, locationID, sourceName, prof='T'){
                     loreName,
                     { ControlShellID: inputLoreControlShell, isAutoLoad},
                     prof,
-                    sourceName);
+                    extraData.sourceName);
 
             } else {
                 $(this).addClass("is-danger");
@@ -107,10 +107,10 @@ function giveLoreChoose(srcStruct, locationID, sourceName, prof='T'){
 
 //////////////////////////////// Give Lore ///////////////////////////////////
 
-function giveLore(srcStruct, loreName, sourceName){
+function giveLore(srcStruct, loreName, extraData){
 
   setData(DATA_SOURCE.LORE, srcStruct,  loreName);
-  setDataProficiencies(srcStruct, 'Skill', loreName+'_LORE', 'T', sourceName);
+  setDataProficiencies(srcStruct, 'Skill', loreName+'_LORE', 'T', extraData.sourceName);
 
   socket.emit("requestLoreChange",
       getCharIDFromURL(),
@@ -118,7 +118,7 @@ function giveLore(srcStruct, loreName, sourceName){
       loreName,
       null,
       'T',
-      sourceName);
+      extraData.sourceName);
 
 }
 
@@ -128,15 +128,6 @@ socket.on("returnLoreChange", function(srcStruct, loreName, inputPacket, prof){
         $('#'+inputPacket.ControlShellID).removeClass("is-loading");
     } else {
         statementComplete();
-    }
-
-    if(loreName != null){
-        //skillsUpdateWSCChoiceStruct(srcStruct, loreName+'_LORE', prof);
-    } else {
-        //skillsUpdateWSCChoiceStruct(srcStruct, null, null);
-    }
-    if(inputPacket == null || inputPacket.isAutoLoad == null || !inputPacket.isAutoLoad) {
-      updateSkillMap(true);
     }
 
 });

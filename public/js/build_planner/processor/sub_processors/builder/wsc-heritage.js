@@ -3,14 +3,14 @@
 */
 
 //------------------------- Processing Heritage Effects -------------------------//
-function processingHeritageEffects(wscStatement, srcStruct, locationID, sourceName){
+function processingHeritageEffects(wscStatement, srcStruct, locationID, extraData){
 
   if(wscStatement.includes("GIVE-HERITAGE-EFFECTS-NAME")){ // GIVE-HERITAGE-EFFECTS-NAME=Ancient Elf
       let value = wscStatement.split('=')[1];
-      giveHeritageEffectsByName(srcStruct, locationID, value, sourceName);
+      giveHeritageEffectsByName(srcStruct, locationID, value, extraData);
   } else if(wscStatement.includes("GIVE-HERITAGE-EFFECTS-ANCESTRY")){ // GIVE-HERITAGE-EFFECTS-ANCESTRY=Elf
     let value = wscStatement.split('=')[1];
-    giveHeritageEffectsFindHeritages(srcStruct, locationID, value, sourceName);
+    giveHeritageEffectsFindHeritages(srcStruct, locationID, value, extraData);
   } else {
       displayError("Unknown statement (2-HeritageEffects): \'"+wscStatement+"\'");
       statementComplete();
@@ -20,13 +20,13 @@ function processingHeritageEffects(wscStatement, srcStruct, locationID, sourceNa
 
 
 //////////////////////////////// Give Heritage Effects Selection ///////////////////////////////////
-function giveHeritageEffectsFindHeritages(srcStruct, locationID, ancestryName, sourceName){
+function giveHeritageEffectsFindHeritages(srcStruct, locationID, ancestryName, extraData){
 
   socket.emit("requestFindHeritagesFromAncestryName",
       getCharIDFromURL(),
       srcStruct,
       ancestryName,
-      { locationID, sourceName });
+      { locationID, sourceName: extraData.sourceName });
 
 }
 
@@ -41,7 +41,7 @@ socket.on("returnFindHeritagesFromAncestryName", function(srcStruct, heritages, 
 
   const selectionTagInfo = getTagFromData(srcStruct, inputPacket.sourceName, 'Unselected Heritage', 'UNSELECTED');
 
-  $('#'+inputPacket.locationID).append('<div class="field is-grouped is-grouped-centered is-marginless mt-1"><div class="select '+selectHeritageEffectsControlShellClass+'" data-selection-info="'+selectionTagInfo+'"><select id="'+selectHeritageEffectsID+'" class="selectLang"></select></div></div>');
+  $('#'+inputPacket.locationID).append('<div class="field is-grouped is-grouped-centered is-marginless my-1"><div class="select '+selectHeritageEffectsControlShellClass+'" data-selection-info="'+selectionTagInfo+'"><select id="'+selectHeritageEffectsID+'" class="selectLang"></select></div></div>');
 
   $('#'+inputPacket.locationID).append('<div class="columns is-centered is-marginless pb-2"><div id="'+selectHeritageEffectsDescriptionID+'" class="column is-8 is-paddingless"></div></div>');
 
@@ -132,13 +132,13 @@ socket.on("returnFindHeritagesFromAncestryName", function(srcStruct, heritages, 
 
 
 
-function giveHeritageEffectsByName(srcStruct, locationID, heritageName, sourceName) {
+function giveHeritageEffectsByName(srcStruct, locationID, heritageName, extraData) {
 
   socket.emit("requestAddHeritageEffect",
       getCharIDFromURL(),
       srcStruct,
       heritageName,
-      { locationID, sourceName });
+      { locationID, sourceName: extraData.sourceName });
 
 }
 

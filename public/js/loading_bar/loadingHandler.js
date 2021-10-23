@@ -46,7 +46,9 @@ function startSpinnerLoader(){
 }
 
 function stopSpinnerLoader(){
-  $('.pageloader').addClass('is-hidden');
+  setTimeout(() => {
+    $('.pageloader').addClass('is-hidden');
+  }, 500);// After 1/2 second
 }
 
 /* Spinner Sub-Loader */
@@ -55,5 +57,7 @@ function startSpinnerSubLoader(){
 }
 
 function stopSpinnerSubLoader(){
-  $('.subpageloader').addClass('is-hidden');
+  setTimeout(() => {
+    $('.subpageloader').addClass('is-hidden');
+  }, 500);// After 1/2 second
 }

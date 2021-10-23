@@ -3,11 +3,11 @@
 */
 
 //--------------------- Processing Notes --------------------//
-function processingNotes(wscStatement, srcStruct, locationID, sourceName){
+function processingNotes(wscStatement, srcStruct, locationID, extraData){
 
     if(wscStatement.includes("GIVE-NOTES-FIELD")){ // GIVE-NOTES-FIELD=Placeholder Text
         let placeholderText = wscStatement.split('=')[1]; // - Displays notes field for feats and class abilities
-        giveNotesField(srcStruct, placeholderText, locationID, sourceName);
+        giveNotesField(srcStruct, placeholderText, locationID, extraData);
     } else {
         displayError("Unknown statement (2-Notes): \'"+wscStatement+"\'");
         statementComplete();
@@ -17,7 +17,7 @@ function processingNotes(wscStatement, srcStruct, locationID, sourceName){
 
 //////////////////////////////// Give Notes Field ///////////////////////////////////
 
-function giveNotesField(srcStruct, placeholderText, locationID, sourceName){
+function giveNotesField(srcStruct, placeholderText, locationID, extraData){
     placeholderText = capitalizeWord(placeholderText);
 
     setData(DATA_SOURCE.NOTES_FIELD, srcStruct, 'StoredNoteField');
@@ -26,7 +26,7 @@ function giveNotesField(srcStruct, placeholderText, locationID, sourceName){
         getCharIDFromURL(),
         srcStruct,
         placeholderText,
-        { locationID, sourceName });
+        { locationID, sourceName: extraData.sourceName });
 
 }
 
