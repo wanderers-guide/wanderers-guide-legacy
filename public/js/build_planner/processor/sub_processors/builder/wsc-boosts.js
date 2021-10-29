@@ -10,6 +10,9 @@ function processingAbilityBoosts(wscStatement, srcStruct, locationID, extraData)
     if(wscStatement.includes("GIVE-ABILITY-BOOST-SINGLE")){
         let selectionOptions = wscStatement.split('=')[1];
         giveAbilityBoostSingle(srcStruct, selectionOptions, locationID, extraData);
+    } else if(wscStatement.includes("GIVE-ABILITY-FLAW-SINGLE")){
+        let selectionOptions = wscStatement.split('=')[1];
+        giveAbilityBoostSingle(srcStruct, selectionOptions, locationID, extraData, true);
     } else if(wscStatement.includes("GIVE-ABILITY-BOOST-MULTIPLE")){// GIVE-ABILITY-BOOST-MULTIPLE=3
         let numberOfBoosts = wscStatement.split('=')[1];
         giveAbilityBoostMultiple(srcStruct, numberOfBoosts, locationID, extraData);
@@ -43,12 +46,13 @@ function giveAbilityBoostMultiple(srcStruct, numberOfBoosts, locationID, extraDa
     }
 }
 
-function giveAbilityBoostSingle(srcStruct, selectionOptions, locationID, extraData){
+function giveAbilityBoostSingle(srcStruct, selectionOptions, locationID, extraData, isFlaw=false){
+    const boostFlaw = (isFlaw) ? 'Flaw' : 'Boost';
 
     selectionOptions = selectionOptions.toUpperCase();
 
     if(selectionOptions == "ALL"){
-        displayAbilityBoostSingle(srcStruct, locationID, getAllAbilityTypes(), extraData);
+        displayAbilityBoostSingle(srcStruct, locationID, getAllAbilityTypes(), extraData, boostFlaw);
     } else {
 
         let selectionOptionsArray = selectionOptions.split(",");
@@ -62,14 +66,14 @@ function giveAbilityBoostSingle(srcStruct, selectionOptions, locationID, extraDa
             }
             if(abilityTypes.length != 0){
                 if(abilityTypes.length != 1) {
-                  displayAbilityBoostSingle(srcStruct, locationID, abilityTypes, extraData);
+                  displayAbilityBoostSingle(srcStruct, locationID, abilityTypes, extraData, boostFlaw);
                 } else {
-                  setDataAbilityBonus(srcStruct, shortenAbilityType(abilityTypes[0]), "Boost");
+                  setDataAbilityBonus(srcStruct, shortenAbilityType(abilityTypes[0]), boostFlaw);
 
                   socket.emit("requestWSCAbilityBonusChange",
                       getCharIDFromURL(),
                       srcStruct,
-                      {Ability: shortenAbilityType(abilityTypes[0]), Bonus: "Boost"},
+                      {Ability: shortenAbilityType(abilityTypes[0]), Bonus: boostFlaw},
                       null);
                   removeUnselectedData(srcStruct); // Fixes bug with ability boost selector becoming no selector
                   statementComplete();
@@ -88,7 +92,7 @@ function giveAbilityBoostSingle(srcStruct, selectionOptions, locationID, extraDa
 
 }
 
-function displayAbilityBoostSingle(srcStruct, locationID, abilityTypes, extraData){
+function displayAbilityBoostSingle(srcStruct, locationID, abilityTypes, extraData, boostFlaw){
     
     let selectBoostID = "selectBoost-"+locationID+"-"+srcStruct.sourceCode+"-"+srcStruct.sourceCodeSNum;
     let selectBoostSet = "selectBoostSet-"+locationID;
@@ -99,7 +103,14 @@ function displayAbilityBoostSingle(srcStruct, locationID, abilityTypes, extraDat
     $('#'+locationID).append('<span class="select mb-1 mx-1 is-small '+selectBoostControlShellClass+'" data-selection-info="'+selectionTagInfo+'"><select id="'+selectBoostID+'" class="'+selectBoostSet+'"></select></span>');
 
     let selectBoost = $('#'+selectBoostID);
-    selectBoost.append('<option value="chooseDefault">Choose a Boost</option>');
+    selectBoost.parent().parent().addClass('text-center');
+
+    if(srcStruct == g_keyAbility_SrcStruct){
+      selectBoost.append('<option value="chooseDefault">Choose a Key Ability</option>');
+    } else {
+      selectBoost.append('<option value="chooseDefault">Choose a '+boostFlaw+'</option>');
+    }
+
     selectBoost.append('<optgroup label="────────"></optgroup>');
     for(const ability of abilityTypes){
         selectBoost.append('<option value="'+ability+'">'+ability+'</option>');
@@ -133,18 +144,22 @@ function displayAbilityBoostSingle(srcStruct, locationID, abilityTypes, extraDat
 
             if($(this).val() != "chooseDefault"){
                 $(this).parent().removeClass("is-info");
-                setDataAbilityBonus(srcStruct, shortenAbilityType($(this).val()), "Boost");
+                if(srcStruct == g_keyAbility_SrcStruct){
+                  g_variableMap.get(VARIABLE.CLASS_DC).Value.AbilityScore = 'SCORE_'+shortenAbilityType($(this).val());
+                }
+                setDataAbilityBonus(srcStruct, shortenAbilityType($(this).val()), boostFlaw);
 
                 socket.emit("requestWSCAbilityBonusChange",
                     getCharIDFromURL(),
                     srcStruct,
-                    {Ability: shortenAbilityType($(this).val()), Bonus: "Boost"},
+                    {Ability: shortenAbilityType($(this).val()), Bonus: boostFlaw},
                     selectBoostControlShellClass);
             } else {
                 $(this).parent().addClass("is-info");
+                if(srcStruct == g_keyAbility_SrcStruct){
+                  g_variableMap.get(VARIABLE.CLASS_DC).Value.AbilityScore = VARIABLE.SCORE_NONE;
+                }
                 deleteData(DATA_SOURCE.ABILITY_BONUS, srcStruct);
-
-                console.log('got here '+srcStructToCompositeKey(srcStruct));
 
                 socket.emit("requestWSCAbilityBonusChange",
                     getCharIDFromURL(),

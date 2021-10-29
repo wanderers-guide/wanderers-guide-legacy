@@ -10,12 +10,28 @@ $(function () {
   socket.emit("requestPlannerCore");
 
   // Create the container for each level
-  $(`#creation-section`).html('');
-  for(let lvl = 20; lvl >= 1; lvl--){
+  $(`#creation-section`).html(`
+    <div class="accord-container accord-creation-container my-1">
+      <div class="accord-header">
+        <span class="title-font pl-2">Initial Stats <span class="has-txt-noted is-italic">(Level 1)</span></span>
+        <span class="accord-indicate-unselected-options"></span>
+        <span class="icon is-pulled-right">
+          <i class="accord-chevron fas fa-chevron-down"></i>
+        </span>
+      </div>
+      <div class="accord-body is-hidden">
+        <div id="initial-stats-ancestry"></div>
+        <div id="initial-stats-background"></div>
+        <div id="initial-stats-class"></div>
+      </div>
+    </div>
+  `);
+  for(let lvl = 1; lvl <= g_char_level; lvl++){
     $(`#creation-section`).append(`
-      <div class="accord-container my-1">
+      <div class="accord-container accord-creation-container my-1">
         <div class="accord-header">
           <span class="title-font pl-2">Level ${lvl}</span>
+          <span class="accord-indicate-unselected-options"></span>
           <span class="icon is-pulled-right">
             <i class="accord-chevron fas fa-chevron-down"></i>
           </span>
@@ -40,6 +56,8 @@ socket.on("returnPlannerCore", function(coreStruct) {
 
 let g_character = null;
 let gOption_hasProfWithoutLevel = false;
+
+let g_char_level = 10;
 
 let temp_classNum = 1;
 let g_unselectedData = null;
@@ -92,7 +110,6 @@ function mainLoaded(plannerCoreStruct, choiceStruct){
     if(metaData.source == 'unselectedData'){
       g_unselectedData.push(JSON.parse(metaData.value));
     }
-
   }
 
   initDataMap(choiceStruct.charMetaData);
@@ -103,89 +120,15 @@ function mainLoaded(plannerCoreStruct, choiceStruct){
 
   initVariables();
 
-  console.log(getCharClass());
-
-  // Run Code //
-  if(getCharClass() != null){
-
-    processClassStats(getCharClass().Class, {
-
-      keyAbility: {
-        //displayID: 'keyAbility-1',
-        codeID: 'keyAbility-1',
-      },
-      hitPoints: {
-        //displayID: 'hitPoints-1',
-        codeID: 'hitPoints-1',
-      },
-  
-      perception: {
-        //displayID: 'profPerception-1',
-        codeID: 'profPerception-1',
-      },
-      skills: {
-        //displayID: 'profSkills-1',
-        codeID: 'profSkillsCode-1',
-      },
-      savingThrows: {
-        //displayID: 'profSavingThrows-1',
-        codeID: 'profSavingThrows-1',
-      },
-      classDC: {
-        //displayID: 'profClassDC-1',
-        codeID: 'profClassDC-1',
-      },
-      attacks: {
-        //displayID: 'profAttacks-1',
-        codeID: 'profAttacks-1',
-      },
-      defenses: {
-        //displayID: 'profDefenses-1',
-        codeID: 'profDefenses-1',
-      },
-  
-    }, PROCESS_CLASS_STATS_TYPE.RUN_CODE);
-
-    for(const classFeature of getCharClass().Abilities){
-      if(classFeature.selectType != 'SELECT_OPTION'){
-        $(`#level-${classFeature.level}-body`).append(`
-
-          <div class="class-feature-section pt-1">
-            <div class="pos-relative">
-              <div class="fading-reveal-container is-active">
-                <p class="class-feature-header text-center"><span class="is-size-4 has-text-weight-semibold">${classFeature.name}</span></p>
-                <div id="class-feature-container-${classFeature.id}" class="class-feature-container ability-text-section px-1">
-                </div>
-              </div>
-              <p class="reveal-container-text is-hidden has-text-info">Show More</p>
-            </div>
-
-            <hr class="mt-1 mb-0 mx-5">
-            <div id="class-feature-code-${classFeature.id}" class="mx-5"></div>
-            <hr class="mt-0 mb-1 mx-0" style="height: 1px;">
-          </div>
-
-        `);
-
-        $(`#class-feature-container-${classFeature.id}`).append(processText(classFeature.description, false, null));
-
-        processCode(
-          classFeature.code,
-          {
-            sourceType: 'class',
-            sourceLevel: classFeature.level,
-            sourceCode: 'classAbility-'+classFeature.id,
-            sourceCodeSNum: 'a'
-          },
-          `class-feature-code-${classFeature.id}`,
-          {source: 'Class Feature', sourceName: classFeature.name+' (Lvl '+classFeature.level+')'});
-      }
-    }
-
-  }
+  // Process Modules //
+  processClass();
+  processAncestry();
+  processBackground();
 
   // Open First Accordion //
-  $('#level-20-body').parent().find('.accord-header').trigger('click');
+  $(`#level-${g_char_level}-body`).parent().find('.accord-header').trigger('click');
+  // Scroll down to Accordion
+  $(`#level-${g_char_level}-body`).parent()[0].scrollIntoView();
 
   // Display Results //
   displayStats();
@@ -423,7 +366,13 @@ function displayStats(){
       VarName: VARIABLE.SKILL_THIEVERY,
     },
   ];
-  for(const loreData of getDataAll(DATA_SOURCE.LORE)){
+
+  const sortedLoreDataArray = getDataAll(DATA_SOURCE.LORE).sort(
+    function(a, b) {
+      return a.value > b.value ? 1 : -1;
+    }
+  );
+  for(const loreData of sortedLoreDataArray){
     skills.push({
       Value1: capitalizeWords(loreData.value)+' Lore',
       Value2: signNumber(variables_getTotal(`SKILL_${profConversion_convertOldName(loreData.value)}_LORE`)),

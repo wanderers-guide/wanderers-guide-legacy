@@ -55,11 +55,9 @@ function giveProfSkillTraining(srcStruct, profName, prof, locationID, extraData)
     if(profCategory === 'Skill'){
         
         for(const [profName, profDataArray] of getProfMap()){
-            let profNumUps = profToNumUp(variables_getFinalRank(profConversion_convertOldNameToVarName(profName)));
-            console.log(profNumUps);
-            let tempSkillName = profName.toUpperCase();
-            tempSkillName = tempSkillName.replace(/_|\s+/g,"");
-            if(adjProfName === tempSkillName && profNumUps >= numUps){
+            const varName = profConversion_convertOldNameToVarName(profName);
+            const profNumUps = profToNumUp(variables_getFinalRank(varName));
+            if((adjProfName == varName || profConversion_convertOldNameToVarName(adjProfName) == varName) && profNumUps >= numUps){
                 if(!hasSameSrcIterate(srcStruct, profDataArray)){
                     processCode(
                         'GIVE-SKILL='+prof,
@@ -165,8 +163,6 @@ function displayProfChange(locationID, prof, profName){
 socket.on("returnProficiencyChange", function(profChangePacket){
 
   if(profChangePacket.isSkill){
-
-    detectMultipleSkillTrainings();
 
     selectorUpdated();
     if(profChangePacket.isAutoLoad == null || !profChangePacket.isAutoLoad) {

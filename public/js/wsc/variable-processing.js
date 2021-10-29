@@ -935,7 +935,6 @@ function processVariables(wscCode, uniqueID){
 }
 
 function handleVariableText(varText, errorOnFailure=true){
-  console.log(varText);
   if(!varText.includes('{') || !varText.includes('}')) { return varText; }
 
   // Validate text //

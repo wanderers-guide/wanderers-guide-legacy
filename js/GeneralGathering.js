@@ -117,7 +117,13 @@ module.exports = class GeneralGathering {
           }
         }).then((classes) => {
             return ClassAbility.findAll({
-                order: [['level', 'ASC'],['name', 'ASC'],]
+              order: [['level', 'ASC'],['name', 'ASC'],],
+              where: {
+                homebrewID: { [Op.or]: [null,homebrewID] },
+                [Op.not]: [
+                  { contentSrc: { [Op.or]: TempUnpublishedBooks.getSourcesArray(userID) } },
+                ]
+              }
             })
             .then((allClassAbilities) => {
                 

@@ -353,6 +353,7 @@ function getItemIcon(item, invItem){
     if(itemType === 'Eyepiece'){ fa_icon = 'far fa-glasses-alt'; }
     if(itemType === 'Fulu'){ fa_icon = 'fas fa-tag'; }
     if(itemType === 'Gadget'){ fa_icon = 'fas fa-cog'; }
+    if(itemType === 'Gift'){ fa_icon = 'fas fa-gift'; }
     if(itemType === 'Gloves'){ fa_icon = 'fad fa-boxing-glove'; }
     if(itemType === 'Grimoire'){ fa_icon = 'fas fa-book-spells'; }
     if(itemType === 'Hat'){ fa_icon = 'fas fa-hat-witch'; }

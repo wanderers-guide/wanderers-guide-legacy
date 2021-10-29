@@ -1,0 +1,434 @@
+/* Copyright (C) 2021, Wanderer's Guide, all rights reserved.
+    By Aaron Cassar.
+*/
+
+/*
+
+  outputStruct: {
+    hitPoints: {
+      displayID,
+      codeID,
+    },
+    size: {
+      displayID,
+      codeID,
+    },
+    speed: {
+      displayID,
+      codeID,
+    },
+
+    languages: {
+      displayID,
+      codeID,
+    },
+    senses: {
+      displayID,
+      codeID,
+    },
+    physicalFeatures: {
+      displayID,
+      codeID,
+    },
+
+    boosts: {
+      displayID,
+      codeID,
+    },
+    flaws: {
+      displayID,
+      codeID,
+    },
+  }
+
+*/
+
+const PROCESS_ANCESTRY_STATS_TYPE = {
+  DISPLAY: 'DISPLAY',
+  RUN_CODE: 'RUN_CODE',
+  BOTH: 'BOTH',
+};
+
+// Designed to replicate the same sourceCode value as the old character builder to support old data //
+function processAncestryStats(ancestryData, outputStruct, processType){
+  const isBoth = (processType == PROCESS_ANCESTRY_STATS_TYPE.BOTH);
+
+  let statInitCount = 0;
+  // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Hit Points ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
+
+  if(processType == PROCESS_ANCESTRY_STATS_TYPE.DISPLAY || isBoth){
+    $('#'+outputStruct.hitPoints.displayID).html(`
+      <p class="is-inline is-size-5">
+        ${ancestryData.Ancestry.hitPoints}
+      </p>
+    `);
+  }
+
+  // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Size ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
+
+  if(processType == PROCESS_ANCESTRY_STATS_TYPE.DISPLAY || isBoth){
+    $('#'+outputStruct.size.displayID).html(`
+      <p class="is-inline is-size-5">
+        ${capitalizeWords(ancestryData.Ancestry.size)}
+      </p>
+    `);
+  }
+
+  // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Speed ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
+
+  if(processType == PROCESS_ANCESTRY_STATS_TYPE.DISPLAY || isBoth){
+    $('#'+outputStruct.speed.displayID).html(`
+      <p class="is-inline is-size-5">
+        ${ancestryData.Ancestry.speed} ft
+      </p>
+    `);
+  }
+
+  // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Languages ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
+
+  if(processType == PROCESS_ANCESTRY_STATS_TYPE.DISPLAY || isBoth){
+
+    let ancestryLanguages = '';
+    for(const language of ancestryData.Languages) {
+      ancestryLanguages += language.name+", ";
+    }
+    
+    const ancestryBonusLanguagesArray = ancestryData.BonusLanguages.sort(
+      function(a, b) {
+        return a.name > b.name ? 1 : -1;
+      }
+    );
+    let bonusLangs = '';
+    for(const bonusLang of ancestryBonusLanguagesArray) {
+      bonusLangs += bonusLang.name+", ";
+    }
+    bonusLangs = bonusLangs.substring(0, bonusLangs.length - 2);
+
+    ancestryLanguages += 'and <a class="has-text-info ancestry-langs-more-info">more*</a>';
+
+    $('#'+outputStruct.languages.displayID).html(`
+      <p class="is-inline is-size-6">
+        ${ancestryLanguages}
+      </p>
+    `);
+
+    $('.ancestry-langs-more-info').click(function(){
+      openQuickView('abilityView', {
+        Ability : {
+          name: 'Additional Languages - '+ancestryData.Ancestry.name,
+          description: 'You get to learn an additional number of languages equal your final Intelligence modifer (if it\'s positive). Choose from the following list (or any others you may have access to): '+bonusLangs,
+          level: 0,
+        }
+      });
+    });
+
+  }
+
+  if(processType == PROCESS_ANCESTRY_STATS_TYPE.RUN_CODE || isBoth){
+
+    let langCount = 0;
+    for(const language of ancestryData.Languages) {
+      processCode(
+        `GIVE-LANG-NAME=${language.name}`,
+        {
+          sourceType: 'ancestry',
+          sourceLevel: 1,
+          sourceCode: 'inits-'+langCount,
+          sourceCodeSNum: '',
+        },
+        outputStruct.languages.codeID,
+        {source: 'Ancestry', sourceName: 'Initial Ancestry'});
+      langCount = 0;
+    }
+
+    // TODO - Langs equal to Int mod
+
+  }
+
+  // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Senses ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
+
+  if(processType == PROCESS_ANCESTRY_STATS_TYPE.DISPLAY || isBoth){
+
+    let ancestrySenses = '';
+    if(ancestryData.VisionSense != null){
+      ancestrySenses += '<a class="has-text-info has-tooltip-bottom has-tooltip-multiline" data-tooltip="'+processTextRemoveIndexing(ancestryData.VisionSense.description)+'">'+ancestryData.VisionSense.name+'</a>';
+      if(ancestryData.AdditionalSense != null){
+        ancestrySenses += ' and ';
+      }
+    }
+    if(ancestryData.AdditionalSense != null){
+      ancestrySenses += '<a class="has-text-info has-tooltip-bottom has-tooltip-multiline" data-tooltip="'+processTextRemoveIndexing(ancestryData.AdditionalSense.description)+'">'+ancestryData.AdditionalSense.name+'</a>';
+    }
+
+    $('#'+outputStruct.senses.displayID).html(`
+      <p class="is-inline is-size-6">
+        ${ancestrySenses}
+      </p>
+    `);
+
+  }
+
+  if(processType == PROCESS_ANCESTRY_STATS_TYPE.RUN_CODE || isBoth){
+
+    if(ancestryData.VisionSense != null){
+      processCode(
+        `GIVE-SENSE-NAME=${ancestryData.VisionSense.name}`,
+        {
+          sourceType: 'ancestry',
+          sourceLevel: 1,
+          sourceCode: 'inits-1',
+          sourceCodeSNum: '',
+        },
+        outputStruct.senses.codeID,
+        {source: 'Ancestry', sourceName: 'Initial Ancestry'});
+      statInitCount++;
+    }
+    if(ancestryData.AdditionalSense != null){
+      processCode(
+        `GIVE-SENSE-NAME=${ancestryData.AdditionalSense.name}`,
+        {
+          sourceType: 'ancestry',
+          sourceLevel: 1,
+          sourceCode: 'inits-'+((ancestryData.VisionSense == null) ? 1 : 2),
+          sourceCodeSNum: '',
+        },
+        outputStruct.senses.codeID,
+        {source: 'Ancestry', sourceName: 'Initial Ancestry'});
+      statInitCount++;
+    }
+
+  }
+
+  // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Physical Features ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
+
+  if(processType == PROCESS_ANCESTRY_STATS_TYPE.DISPLAY || isBoth){
+
+    let ancestryPhyFeatures = '';
+    if(ancestryData.PhysicalFeatureOne != null){
+      ancestryPhyFeatures += '<a class="has-text-info has-tooltip-bottom has-tooltip-multiline" data-tooltip="'+processTextRemoveIndexing(ancestryData.PhysicalFeatureOne.description)+'">'+ancestryData.PhysicalFeatureOne.name+'</a>';
+      if(ancestryData.PhysicalFeatureTwo != null){
+        ancestryPhyFeatures += ' and ';
+      }
+    }
+    if(ancestryData.PhysicalFeatureTwo != null){
+      ancestryPhyFeatures += '<a class="has-text-info has-tooltip-bottom has-tooltip-multiline" data-tooltip="'+processTextRemoveIndexing(ancestryData.PhysicalFeatureTwo.description)+'">'+ancestryData.PhysicalFeatureTwo.name+'</a>';
+    }
+
+    $('#'+outputStruct.physicalFeatures.displayID).html(`
+      <p class="is-inline is-size-6">
+        ${ancestryPhyFeatures}
+      </p>
+    `);
+
+  }
+
+  if(processType == PROCESS_ANCESTRY_STATS_TYPE.RUN_CODE || isBoth){
+
+    if(ancestryData.PhysicalFeatureOne != null){
+      // Giving Physical Feature
+      processCode(
+        `GIVE-PHYSICAL-FEATURE-NAME=${ancestryData.PhysicalFeatureOne.name}`,
+        {
+          sourceType: 'ancestry',
+          sourceLevel: 1,
+          sourceCode: 'inits-1',
+          sourceCodeSNum: 'a',
+        },
+        outputStruct.physicalFeatures.codeID,
+        {source: 'Ancestry', sourceName: 'Initial Ancestry'});
+      
+      // Running Physical Feature Code
+      processCode(
+        ancestryData.PhysicalFeatureOne.code,
+        {
+          sourceType: 'ancestry',
+          sourceLevel: 1,
+          sourceCode: 'inits-phyFeat-1',
+          sourceCodeSNum: 'a',
+        },
+        outputStruct.physicalFeatures.codeID,
+        {source: 'Ancestry', sourceName: ancestryData.PhysicalFeatureOne.name});
+    }
+    if(ancestryData.PhysicalFeatureTwo != null){
+      // Giving Physical Feature
+      processCode(
+        `GIVE-PHYSICAL-FEATURE-NAME=${ancestryData.PhysicalFeatureTwo.name}`,
+        {
+          sourceType: 'ancestry',
+          sourceLevel: 1,
+          sourceCode: 'inits-'+((ancestryData.PhysicalFeatureOne == null) ? 1 : 2),
+          sourceCodeSNum: 'a',
+        },
+        outputStruct.physicalFeatures.codeID,
+        {source: 'Ancestry', sourceName: 'Initial Ancestry'});
+
+      // Running Physical Feature Code
+      processCode(
+        ancestryData.PhysicalFeatureTwo.code,
+        {
+          sourceType: 'ancestry',
+          sourceLevel: 1,
+          sourceCode: 'inits-phyFeat-2',
+          sourceCodeSNum: 'a',
+        },
+        outputStruct.physicalFeatures.codeID,
+        {source: 'Ancestry', sourceName: ancestryData.PhysicalFeatureTwo.name});
+    }
+
+  }
+
+
+  // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Boosts ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
+  
+  if(processType == PROCESS_ANCESTRY_STATS_TYPE.DISPLAY || isBoth){
+
+    let ancestryBoosts = '';
+    for(const boost of ancestryData.Boosts){
+      if(ancestryBoosts != ''){ancestryBoosts += ', ';}
+      if(boost == 'Anything'){
+        ancestryBoosts += 'Free';
+      } else {
+        ancestryBoosts += boost;
+      }
+    }
+    if(ancestryBoosts == '') {ancestryBoosts = 'None';}
+
+    $('#'+outputStruct.boosts.displayID).html(`
+      <p class="is-size-5">
+        ${ancestryBoosts}
+      </p>
+    `);
+
+  }
+
+  if(processType == PROCESS_ANCESTRY_STATS_TYPE.RUN_CODE || isBoth){
+    
+    let chooseBoostCount = 0;
+    let nonChooseBoostCount = 0;
+    for(const boost of ancestryData.Boosts){
+
+      let abilityScore = shortenAbilityType(boost);
+      if(abilityScore == 'ALL'){
+        chooseBoostCount++;
+        continue;
+      } else {
+        nonChooseBoostCount++;
+      }
+
+      processCode(
+        `GIVE-ABILITY-BOOST-SINGLE=${abilityScore}`,
+        {
+          sourceType: 'ancestry',
+          sourceLevel: 1,
+          sourceCode: 'boost-nonChoose-'+nonChooseBoostCount,
+          sourceCodeSNum: '',
+        },
+        outputStruct.boosts.codeID,
+        {source: 'Ancestry', sourceName: 'Initial Ancestry'});
+    }
+
+
+    // Create list of free options
+    let freeListOptions = new Set(['STR','DEX','CON','INT','WIS','CHA']);
+    for(const boost of ancestryData.Boosts){
+      freeListOptions.delete(shortenAbilityType(boost));
+    }
+    freeListOptions = Array.from(freeListOptions);
+
+    let boostChooseCode = '';
+    for(let i = 0; i < chooseBoostCount; i++) {
+      boostChooseCode += 'GIVE-ABILITY-BOOST-SINGLE='+freeListOptions+'\n';
+    }
+    if(boostChooseCode != ''){
+      processCode(
+        boostChooseCode,
+        {
+          sourceType: 'ancestry',
+          sourceLevel: 1,
+          sourceCode: 'boost-choose',
+          sourceCodeSNum: 'a',
+        },
+        outputStruct.boosts.codeID,
+        {source: 'Ancestry', sourceName: 'Initial Ancestry'});
+    }
+
+  }
+
+  // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Flaws ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
+  
+  if(processType == PROCESS_ANCESTRY_STATS_TYPE.DISPLAY || isBoth){
+
+    let ancestryFlaws = '';
+    for(const flaw of ancestryData.Flaws){
+      if(ancestryFlaws != ''){ancestryFlaws += ', ';}
+      if(flaw == 'Anything'){
+        ancestryFlaws += 'Free';
+      } else {
+        ancestryFlaws += flaw;
+      }
+    }
+    if(ancestryFlaws == '') {ancestryFlaws = 'None';}
+
+    $('#'+outputStruct.flaws.displayID).html(`
+      <p class="is-size-5">
+        ${ancestryFlaws}
+      </p>
+    `);
+
+  }
+
+  if(processType == PROCESS_ANCESTRY_STATS_TYPE.RUN_CODE || isBoth){
+
+
+    let chooseFlawCount = 0;
+    let nonChooseFlawCount = 0;
+    for(const flaw of ancestryData.Flaws){
+
+      let abilityScore = shortenAbilityType(flaw);
+      if(abilityScore == 'ALL'){
+        chooseFlawCount++;
+        continue;
+      } else {
+        nonChooseFlawCount++;
+      }
+
+      processCode(
+        `GIVE-ABILITY-FLAW-SINGLE=${abilityScore}`,
+        {
+          sourceType: 'ancestry',
+          sourceLevel: 1,
+          sourceCode: 'flaw-nonChoose-'+nonChooseFlawCount,
+          sourceCodeSNum: '',
+        },
+        outputStruct.flaws.codeID,
+        {source: 'Ancestry', sourceName: 'Initial Ancestry'});
+    }
+
+
+    // Create list of free options
+    let freeListOptions = new Set(['STR','DEX','CON','INT','WIS','CHA']);
+    for(const flaw of ancestryData.Flaws){
+      freeListOptions.delete(shortenAbilityType(flaw));
+    }
+    freeListOptions = Array.from(freeListOptions);
+
+    let flawChooseCode = '';
+    for(let i = 0; i < chooseFlawCount; i++) {
+      flawChooseCode += 'GIVE-ABILITY-FLAW-SINGLE='+freeListOptions+'\n';
+    }
+    if(flawChooseCode != ''){
+      processCode(
+        flawChooseCode,
+        {
+          sourceType: 'ancestry',
+          sourceLevel: 1,
+          sourceCode: 'flaw-choose',
+          sourceCodeSNum: 'a',
+        },
+        outputStruct.flaws.codeID,
+        {source: 'Ancestry', sourceName: 'Initial Ancestry'});
+    }
+
+  }
+
+}

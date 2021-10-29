@@ -42,7 +42,7 @@ function runBuilderStatements(wscStatement, wscStatementUpper, srcStruct, locati
     return PROCESS_RETURN.NEXT;
   }
 
-  if(wscStatementUpper.includes("-SKILL")){
+  if(wscStatementUpper.includes("GIVE-SKILL")){
     processingSkills(wscStatementUpper, srcStruct, locationID, extraData);
     return PROCESS_RETURN.NEXT;
   }
@@ -52,7 +52,7 @@ function runBuilderStatements(wscStatement, wscStatementUpper, srcStruct, locati
     return PROCESS_RETURN.NEXT;
   }
 
-  if(wscStatementUpper.includes("-ABILITY-BOOST")){
+  if(wscStatementUpper.includes("-ABILITY-BOOST") || wscStatementUpper.includes("-ABILITY-FLAW")){
     processingAbilityBoosts(wscStatementUpper, srcStruct, locationID, extraData);
     return PROCESS_RETURN.NEXT;
   }
@@ -114,11 +114,6 @@ function runBuilderStatements(wscStatement, wscStatementUpper, srcStruct, locati
 
   if(wscStatementUpper.includes("-HERITAGE-EFFECTS")){
     processingHeritageEffects(wscStatementUpper, srcStruct, locationID, extraData);
-    return PROCESS_RETURN.NEXT;
-  }
-
-  if(wscStatementUpper.includes("ADD-TEXT")){
-    processingAddText(wscStatementUpper, srcStruct, locationID, extraData);
     return PROCESS_RETURN.NEXT;
   }
 

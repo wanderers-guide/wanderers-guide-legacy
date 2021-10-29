@@ -76,6 +76,9 @@ module.exports = async function(socket) {
 
   socket.emit('updateLoadProgess', { message: 'Loading Senses', upVal: 0 }); // (95/100) //
   const allSenses = await Prisma.senseTypes.findMany();
+
+  //socket.emit('updateLoadProgess', { message: 'Discovering Domains', upVal: 0 }); // (95/100) //
+  //const allDomains = await CharGathering.getAllDomains(getUserID(socket), charID, character);
   
   //socket.emit('updateLoadProgess', { message: 'Finding Class Archetypes', upVal: 3 }); // (86/100) //
   //const classArchetypes = await CharGathering.getAllClassArchetypes(getUserID(socket), charID);

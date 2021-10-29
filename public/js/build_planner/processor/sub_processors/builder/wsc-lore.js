@@ -47,12 +47,15 @@ function giveLoreChoose(srcStruct, locationID, extraData, prof='T'){
 
     // Set saved lore input data
     let savedLoreData = getDataSingle(DATA_SOURCE.LORE, srcStruct);
+    console.log(savedLoreData);
+    
 
     $('#'+inputLoreID).change(function(event, isAutoLoad){
         isAutoLoad = (isAutoLoad == null) ? false : isAutoLoad;
 
         if($(this).val() == ''){
 
+            $(this).addClass("is-info");
             $(this).removeClass("is-danger");
             $('#'+inputLoreControlShell).addClass("is-loading");
 
@@ -72,13 +75,14 @@ function giveLoreChoose(srcStruct, locationID, extraData, prof='T'){
             let validNameRegex = /^[A-Za-z0-9 \-_']+$/;
             if(validNameRegex.test($(this).val())) {
                 $(this).removeClass("is-danger");
+                $(this).removeClass("is-info");
 
                 $('#'+inputLoreControlShell).addClass("is-loading");
 
                 let loreName = $(this).val().toUpperCase();
 
-                setData(DATA_SOURCE.LORE, srcStruct,  loreName);
-                setDataProficiencies(srcStruct, 'Skill', loreName+'_LORE', prof, extraData.sourceName);
+                setData(DATA_SOURCE.LORE, srcStruct, loreName);
+                setDataProficiencies(srcStruct, 'Skill', loreName+'_LORE', prof, extraData.sourceName, false);
 
                 socket.emit("requestLoreChange",
                     getCharIDFromURL(),
@@ -90,6 +94,7 @@ function giveLoreChoose(srcStruct, locationID, extraData, prof='T'){
 
             } else {
                 $(this).addClass("is-danger");
+                $(this).removeClass("is-info");
             }
 
         }
@@ -110,7 +115,7 @@ function giveLoreChoose(srcStruct, locationID, extraData, prof='T'){
 function giveLore(srcStruct, loreName, extraData){
 
   setData(DATA_SOURCE.LORE, srcStruct,  loreName);
-  setDataProficiencies(srcStruct, 'Skill', loreName+'_LORE', 'T', extraData.sourceName);
+  setDataProficiencies(srcStruct, 'Skill', loreName+'_LORE', 'T', extraData.sourceName, false);
 
   socket.emit("requestLoreChange",
       getCharIDFromURL(),
@@ -124,10 +129,11 @@ function giveLore(srcStruct, loreName, extraData){
 
 socket.on("returnLoreChange", function(srcStruct, loreName, inputPacket, prof){
 
-    if(inputPacket != null){
-        $('#'+inputPacket.ControlShellID).removeClass("is-loading");
-    } else {
-        statementComplete();
-    }
+  if(inputPacket != null){
+    $('#'+inputPacket.ControlShellID).removeClass("is-loading");
+    selectorUpdated();
+  } else {
+    statementComplete();
+  }
 
 });

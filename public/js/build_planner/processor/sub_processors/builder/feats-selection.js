@@ -22,18 +22,19 @@ function generateFeatSelection(contentLocID, srcStruct, selectionName, selection
   });
 
   // Find selectedFeat //
-  let featData = getDataSingle(DATA_SOURCE.FEAT_CHOICE, srcStruct);
+  let selectedFeatData = getDataSingle(DATA_SOURCE.FEAT_CHOICE, srcStruct);
+  console.log(selectedFeatData);
   let selectedFeat = null;
-  if(featData != null && featData.value != null){
-      selectedFeat = g_featMap.get(featData.value+"");
+  if(selectedFeatData != null && selectedFeatData.value != null){
+    selectedFeat = g_featMap.get(selectedFeatData.value+"");
   }
   // ~~~~~~~~~~~~~~~~~ //
 
   let openFeatDetailsClass = "openFeat-"+contentLocID;
   let openFeatListClass = "openList-"+contentLocID;
 
-  let featListSectionClass = "featListSection-"+contentLocID;
-  let featDropdownIconClass = "featDropdownIcon-"+contentLocID;
+  let featListSectionID = "featListSection-"+contentLocID;
+  let featDropdownIconID = "featDropdownIcon-"+contentLocID;
 
   let featCodeSectionID = "featCode-"+contentLocID;
 
@@ -43,7 +44,21 @@ function generateFeatSelection(contentLocID, srcStruct, selectionName, selection
   if(selectedFeat == null) {
     const selectionTagInfo = getTagFromData(srcStruct, sourceName, 'Unselected Feat', 'UNSELECTED');
 
-    $('#'+contentLocID).html('<div class="mb-0"><div data-contentLoc-id="'+contentLocID+'" class="feat-selection is-default cursor-clickable columns is-mobile mb-0 p-0" data-selection-info="'+selectionTagInfo+'"><div class="column is-2 is-paddingless '+openFeatListClass+' py-2"></div><div class="column is-8 is-paddingless '+openFeatListClass+' py-2"><span class="">'+selectionName+'</span></div><div class="column is-2 is-paddingless '+openFeatListClass+' py-2"><span class="icon feat-selection-dropdown"><i class="fas fa-chevron-down '+featDropdownIconClass+'"></i></span></div></div><div class="'+featListSectionClass+' is-hidden"></div><div id="'+featCodeSectionID+'" class="py-2"></div></div>');
+    $('#'+contentLocID).html(`
+      <div class="mb-0">
+        <div data-contentLoc-id="${contentLocID}" class="feat-selection is-default cursor-clickable columns is-mobile mb-0 p-0" data-selection-info="${selectionTagInfo}">
+          <div class="column is-2 is-paddingless ${openFeatListClass} py-2"></div>
+          <div class="column is-8 is-paddingless ${openFeatListClass} py-2">
+            <span class="">${selectionName}</span>
+          </div>
+          <div class="column is-2 is-paddingless ${openFeatListClass} py-2">
+            <span class="icon feat-selection-dropdown"><i id="${featDropdownIconID}" class="fas fa-chevron-down"></i></span>
+          </div>
+        </div>
+        <div id="${featListSectionID}" class="is-hidden"></div>
+        <div id="${featCodeSectionID}" class="py-2"></div>
+      </div>
+    `);
   } else {
     const selectionTagInfo = (meetsPrereqs(selectedFeat.Feat) == 'FALSE') ? getTagFromData(srcStruct, sourceName, 'Prerequisites Not Met', 'INCORRECT') : getTagFromData(srcStruct, sourceName, '', '');
 
@@ -51,8 +66,90 @@ function generateFeatSelection(contentLocID, srcStruct, selectionName, selection
     if(selectedFeat.Feat.isArchived === 1){ featNameHTML += '<span class="has-txt-partial-noted is-size-6-5"> - Archived</span>'; }
     let featLevelHTML = '';
     if(selectedFeat.Feat.level > 0){ featLevelHTML = '<sup class="is-size-7 has-txt-noted is-italic"> Lvl '+selectedFeat.Feat.level+'</sup>'; }
-    $('#'+contentLocID).html('<div class="mb-0"><div data-contentLoc-id="'+contentLocID+'" class="feat-selection cursor-clickable columns is-mobile mb-0 p-0" data-selection-info="'+selectionTagInfo+'"><div class="column is-1 is-paddingless '+openFeatDetailsClass+' py-2"></div><div class="column is-10 is-paddingless '+openFeatDetailsClass+' py-2">'+featNameHTML+''+featLevelHTML+'</div><div class="column is-1 is-paddingless '+openFeatListClass+' py-2" style="border-left: 1px solid hsl(0, 0%, 13%);"><span class="icon feat-selection-dropdown"><i class="fas fa-chevron-down '+featDropdownIconClass+'"></i></span></div></div><div class="'+featListSectionClass+' is-hidden"></div><div id="'+featCodeSectionID+'" class="py-2"></div></div>');
+    $('#'+contentLocID).html(`
+      <div class="mb-0">
+        <div data-contentLoc-id="${contentLocID}" class="feat-selection cursor-clickable columns is-mobile mb-0 p-0" data-selection-info="${selectionTagInfo}">
+          <div class="column is-1 is-paddingless ${openFeatDetailsClass} py-2"></div>
+          <div class="column is-10 is-paddingless ${openFeatDetailsClass} py-2">
+            ${featNameHTML}${featLevelHTML}
+          </div>
+          <div class="column is-1 is-paddingless ${openFeatListClass} py-2" style="border-left: 1px solid hsl(0, 0%, 13%);">
+            <span class="icon feat-selection-dropdown"><i id="${featDropdownIconID}" class="fas fa-chevron-down"></i></span>
+          </div>
+        </div>
+        <div id="${featListSectionID}" class="is-hidden"></div>
+        <div id="${featCodeSectionID}" class="py-2"></div>
+      </div>
+    `);
   }
+
+
+  if(selectedFeat != null) {
+    $('.'+openFeatDetailsClass).click(function(event) {
+      openQuickView('featView', {
+        Feat : selectedFeat.Feat,
+        Tags : selectedFeat.Tags,
+        _prevBackData: {Type: g_QViewLastType, Data: g_QViewLastData},
+      });
+    });
+
+    $('.'+openFeatDetailsClass).mouseenter(function(){
+      $('.'+openFeatDetailsClass).addClass('feat-selection-is-hovered');
+    });
+    $('.'+openFeatDetailsClass).mouseleave(function(){
+      $('.'+openFeatDetailsClass).removeClass('feat-selection-is-hovered');
+    });
+  
+    $('.'+openFeatListClass).mouseenter(function(){
+      $(this).addClass('feat-selection-is-hovered');
+    });
+    $('.'+openFeatListClass).mouseleave(function(){
+      $(this).removeClass('feat-selection-is-hovered');
+    });
+  }
+
+  $('.'+openFeatListClass).click(function() {
+    if($('#'+featListSectionID).hasClass('is-hidden')){
+      $('#'+featDropdownIconID).removeClass('fa-chevron-down');
+      $('#'+featDropdownIconID).addClass('fa-chevron-up');
+
+      generateFeatSelectionList(contentLocID, srcStruct, selectedFeat, selectionMap, {
+        featListSectionID,
+        featSelectButtonClass,
+        featRemoveButtonClass,
+        featCodeSectionID,
+      });
+      populatePrereqIcons(featListSectionID);
+
+      $('#'+featListSectionID).removeClass('is-hidden');
+    } else {
+
+      $('#'+featDropdownIconID).removeClass('fa-chevron-up');
+      $('#'+featDropdownIconID).addClass('fa-chevron-down');
+      $('#'+featListSectionID).addClass('is-hidden');
+
+      $('#'+featListSectionID).html('');
+
+    }
+  });
+
+  if(selectedFeat != null){
+    processCode(
+        selectedFeat.Feat.code,
+        srcStruct,
+        featCodeSectionID,
+        {source: 'Feat', sourceName: selectedFeat.Feat.name+' (Lvl '+srcStruct.sourceLevel+')'});
+  }
+
+}
+
+function generateFeatSelectionList(contentLocID, srcStruct, selectedFeat, selectionMap, featListStruct){
+
+  let featListSectionID = featListStruct.featListSectionID;
+  let featCodeSectionID = featListStruct.featCodeSectionID;
+
+  let featSelectButtonClass = featListStruct.featSelectButtonClass;
+  let featRemoveButtonClass = featListStruct.featRemoveButtonClass;
 
   let sortedSelectionMap = new Map();
   if(g_character.optionAutoDetectPreReqs === 1) {
@@ -86,10 +183,30 @@ function generateFeatSelection(contentLocID, srcStruct, selectionName, selection
     if(featLevel > 0){
       featListHTML += '<hr class="hr-feat-selection m-0"><div class="feat-selection-level"><span class="">Level '+featLevel+'</span></div>';
     }
+
+    // If all the feats of a given level start with the same 'Text - ...', remove the 'Text - '
+    let detectSameBeginningDashText = function(){
+      let beginningDashText = null;
+      for(const featData of featArray){
+        if(beginningDashText == null){
+          if(featData.Feat.name.includes(' - ')){
+            beginningDashText = featData.Feat.name.split(' - ')[0];
+          } else {
+            return null;
+          }
+        } else {
+          if(!featData.Feat.name.startsWith(beginningDashText+' - ')){
+            return null;
+          }
+        }
+      }
+      return beginningDashText;
+    };
+    const beginningDashText = detectSameBeginningDashText();
     
     for(let featData of featArray) {
 
-      let featNameHTML = '<span class="feat-selection-list-entry-feat-name">'+featData.Feat.name+'</span><span class="feat-selection-list-entry-feat-actions">'+convertActionToHTML(featData.Feat.actions)+'</span>';
+      let featNameHTML = '<span class="feat-selection-list-entry-feat-name">'+featData.Feat.name.replace(beginningDashText+' - ', '')+'</span><span class="feat-selection-list-entry-feat-actions">'+convertActionToHTML(featData.Feat.actions)+'</span>';
 
       if(featData.Feat.isArchived === 1){
         if(selectedFeat != null && selectedFeat.Feat.id == featData.Feat.id){
@@ -169,87 +286,50 @@ function generateFeatSelection(contentLocID, srcStruct, selectionName, selection
       <div class="feat-selection-none"><span class="">None</span></div>
     `;
   }
-  $('.'+featListSectionClass).html('<div class="feat-selection-list use-feat-selection-scrollbar">'+featListHTML+'</div>');
+  $('#'+featListSectionID).html('<div class="feat-selection-list use-feat-selection-scrollbar">'+featListHTML+'</div>');
 
-
-  if(selectedFeat != null) {
-    $('.'+openFeatDetailsClass).click(function(event) {
-      openQuickView('featView', {
-        Feat : selectedFeat.Feat,
-        Tags : selectedFeat.Tags,
-        _prevBackData: {Type: g_QViewLastType, Data: g_QViewLastData},
-      });
-    });
-
-    $('.'+openFeatDetailsClass).mouseenter(function(){
-      $('.'+openFeatDetailsClass).addClass('feat-selection-is-hovered');
-    });
-    $('.'+openFeatDetailsClass).mouseleave(function(){
-      $('.'+openFeatDetailsClass).removeClass('feat-selection-is-hovered');
-    });
-  
-    $('.'+openFeatListClass).mouseenter(function(){
-      $(this).addClass('feat-selection-is-hovered');
-    });
-    $('.'+openFeatListClass).mouseleave(function(){
-      $(this).removeClass('feat-selection-is-hovered');
-    });
-  }
-
-  $('.'+openFeatListClass).click(function() {
-    if($('.'+featListSectionClass).hasClass('is-hidden')){
-      $('.'+featDropdownIconClass).removeClass('fa-chevron-down');
-      $('.'+featDropdownIconClass).addClass('fa-chevron-up');
-      populatePrereqIcons(featListSectionClass);
-      $('.'+featListSectionClass).removeClass('is-hidden');
-    } else {
-      $('.'+featDropdownIconClass).removeClass('fa-chevron-up');
-      $('.'+featDropdownIconClass).addClass('fa-chevron-down');
-      $('.'+featListSectionClass).addClass('is-hidden');
-    }
-  });
-
+  // Events //
   $('.'+featSelectButtonClass).click(function() {
     $(this).addClass('is-loading');
     let featID = $(this).attr('data-feat-id');
     let feat = g_featMap.get(featID);
+
+    setData(DATA_SOURCE.FEAT_CHOICE, srcStruct, featID);
     socket.emit("requestFeatChange",
         getCharIDFromURL(),
         {srcStruct, feat, featID, codeLocationID : featCodeSectionID });
+    handleFeatChange(feat, contentLocID);
   });
 
   $('.'+featRemoveButtonClass).click(function() {
     $(this).addClass('is-loading');
+
+    setData(DATA_SOURCE.FEAT_CHOICE, srcStruct, null);
     socket.emit("requestFeatChange",
         getCharIDFromURL(),
         {srcStruct, feat : null, featID : null, codeLocationID : featCodeSectionID });
+    handleFeatChange(null, contentLocID);
   });
 
   updateFeatSelectionEntryEvents();
 
-  if(selectedFeat != null){
-    processCode(
-        selectedFeat.Feat.code,
-        srcStruct,
-        featCodeSectionID,
-        {source: 'Feat', sourceName: selectedFeat.Feat.name});
-  }
-
 }
 
-socket.on("returnFeatChange", function(featChangePacket){
+//socket.on("returnFeatChange", function(featChangePacket){});
+
+function handleFeatChange(feat, contentLocID){
 
   // Updating feat selections will run code for all feats (including this one)
-  updateAllFeatSelections();
-  selectorUpdated();
-
-  // If leftStatsQuickview is open, refresh it
-  if($('#quickviewLeftDefault').hasClass('is-active')){
-    openLeftQuickView('skillsView', null);
+  let featData = g_featSelectionMap.get(contentLocID);
+  if(featData != null){
+    generateFeatSelection(contentLocID,
+      featData.SrcStruct,
+      featData.SelectionName,
+      featData.SelectionMap,
+      featData.SourceName);
   }
-
-  // If dedication is switched, reload all class abilities //
-  //if(featChangePacket.autoPageLoad != null && !featChangePacket.autoPageLoad){}
+  //updateAllFeatSelections();
+  selectorUpdated();
 
   // Get number of character archetypes
   let charArchetypesArray = [];
@@ -279,8 +359,8 @@ socket.on("returnFeatChange", function(featChangePacket){
 
   // Changed feat has Dedication tag
   let featDedicationTag = null;
-  if(featChangePacket.feat != null){
-    featDedicationTag = featChangePacket.feat.Tags.find(featTag => {
+  if(feat != null){
+    featDedicationTag = feat.Tags.find(featTag => {
       return featTag.name === 'Dedication';
     });
   }
@@ -292,9 +372,9 @@ socket.on("returnFeatChange", function(featChangePacket){
     }
   }
 
-});
+}
 
-
+/*
 function updateAllFeatSelections(){
 
   $(".feat-selection").each(function(){
@@ -311,7 +391,7 @@ function updateAllFeatSelections(){
 
   });
 
-}
+}*/
 
 function updateFeatSelectionEntryEvents(){
 
@@ -337,10 +417,10 @@ function updateFeatSelectionEntryEvents(){
 
 }
 
-function populatePrereqIcons(featListSectionClass){
+function populatePrereqIcons(featListSectionID){
   if(g_character.optionAutoDetectPreReqs !== 1) { return; }
 
-  $('.'+featListSectionClass+' .feat-selection-list .feat-selection-list-entry').each(function(){
+  $('#'+featListSectionID+' .feat-selection-list .feat-selection-list-entry').each(function(){
     let feat = g_featMap.get($(this).attr('data-feat-id'));
     let preReqResult = meetsPrereqs(feat.Feat);
 

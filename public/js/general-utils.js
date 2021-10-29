@@ -156,6 +156,7 @@ function shortenAbilityType(longType) {
     case 'Wisdom': return "WIS";
     case 'Charisma': return "CHA";
     case 'Free': return "ALL";
+    case 'Anything': return "ALL";
     default: return null;
   }
 }

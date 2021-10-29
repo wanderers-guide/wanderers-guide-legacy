@@ -196,50 +196,53 @@ function openAddItemQuickview(data) {
                   <div class="control">
                     <div class="select">
                       <select id="addItem-filterItemCategoryInput">
-                        <option value="ANY">Any</option>
-                        <option value="ARTIFACT">Artifact</option>
-                        <option value="AMMUNITION">Ammunition</option>
-                        <option value="ARMOR">Armor</option>
-                        <option value="BELT">Belt</option>
-                        <option value="BOMB">Bomb</option>
-                        <option value="BOOK">Book</option>
-                        <option value="BOOTS">Boots</option>
-                        <option value="BRACERS">Bracers</option>
-                        <option value="CATALYST">Catalyst</option>
-                        <option value="CIRCLET">Circlet</option>
-                        <option value="CLOAK">Cloak</option>
-                        <option value="COMPANION">Companion</option>
-                        <option value="CURRENCY">Currency</option>
-                        <option value="DRUG">Drug</option>
-                        <option value="ELIXIR">Elixir</option>
-                        <option value="EYEPIECE">Eyepiece</option>
-                        <option value="FULU">Fulu</option>
-                        <option value="GLOVES">Gloves</option>
-                        <option value="GRIMOIRE">Grimoire</option>
-                        <option value="HAT">Hat</option>
-                        <option value="INGREDIENT">Ingredient</option>
-                        <option value="INSTRUMENT">Instrument</option>
-                        <option value="KIT">Kit</option>
-                        <option value="MASK">Mask</option>
-                        <option value="NECKLACE">Necklace</option>
-                        <option value="OIL">Oil</option>
-                        <option value="POISON">Poison</option>
-                        <option value="POTION">Potion</option>
-                        <option value="RING">Ring</option>
-                        <option value="ROD">Rod</option>
-                        <option value="RUNE">Runestone</option>
-                        <option value="SCROLL">Scroll</option>
-                        <option value="SHIELD">Shield</option>
-                        <option value="SPELLHEART">Spellheart</option>
-                        <option value="STAFF">Staff</option>
-                        <option value="STORAGE">Storage</option>
-                        <option value="STRUCTURE">Structure</option>
-                        <option value="TALISMAN">Talisman</option>
-                        <option value="TATTOO">Tattoo</option>
-                        <option value="TOOL">Tool</option>
-                        <option value="WAND">Wand</option>
-                        <option value="WEAPON">Weapon</option>
-                        <option value="OTHER">Other</option>
+                                    <option value="ANY">Any</option>
+                                    <option value="ARTIFACT">Artifact</option>
+                                    <option value="AMMUNITION">Ammunition</option>
+                                    <option value="ARMOR">Armor</option>
+                                    <option value="BELT">Belt</option>
+                                    <option value="BOMB">Bomb</option>
+                                    <option value="BOOK">Book</option>
+                                    <option value="BOOTS">Boots</option>
+                                    <option value="BRACERS">Bracers</option>
+                                    <option value="CATALYST">Catalyst</option>
+                                    <option value="CIRCLET">Circlet</option>
+                                    <option value="CLOAK">Cloak</option>
+                                    <option value="COMPANION">Companion</option>
+                                    <option value="CURRENCY">Currency</option>
+                                    <option value="DRUG">Drug</option>
+                                    <option value="ELIXIR">Elixir</option>
+                                    <option value="EYEPIECE">Eyepiece</option>
+                                    <option value="FULU">Fulu</option>
+                                    <option value="GADGET">Gadget</option>
+                                    <option value="GIFT">Gift</option>
+                                    <option value="GLOVES">Gloves</option>
+                                    <option value="GRIMOIRE">Grimoire</option>
+                                    <option value="HAT">Hat</option>
+                                    <option value="INGREDIENT">Ingredient</option>
+                                    <option value="INSTRUMENT">Instrument</option>
+                                    <option value="KIT">Kit</option>
+                                    <option value="MASK">Mask</option>
+                                    <option value="NECKLACE">Necklace</option>
+                                    <option value="OIL">Oil</option>
+                                    <option value="POISON">Poison</option>
+                                    <option value="POTION">Potion</option>
+                                    <option value="RING">Ring</option>
+                                    <option value="ROD">Rod</option>
+                                    <option value="RUNE">Runestone</option>
+                                    <option value="SCROLL">Scroll</option>
+                                    <option value="SHIELD">Shield</option>
+                                    <option value="SIEGE">Siege</option>
+                                    <option value="SPELLHEART">Spellheart</option>
+                                    <option value="STAFF">Staff</option>
+                                    <option value="STORAGE">Storage</option>
+                                    <option value="STRUCTURE">Structure</option>
+                                    <option value="TALISMAN">Talisman</option>
+                                    <option value="TATTOO">Tattoo</option>
+                                    <option value="TOOL">Tool</option>
+                                    <option value="WAND">Wand</option>
+                                    <option value="WEAPON">Weapon</option>
+                                    <option value="OTHER">Other</option>
                       </select>
                     </div>
                   </div>
@@ -331,23 +334,6 @@ function applyFiltersAndItemSearch(type, data){
 
     if(type == 'addItemTabAdvanced'){
 
-      // Item Traits
-      if($('#addItem-filterTagsInput').val().length > 0){
-
-        console.log('Add Item - Filtering by Traits...');
-        g_addItems_appliedFilters++;
-
-        for(const [itemID, itemStruct] of g_addItems_itemSearchMap.entries()){
-          let foundTags = itemStruct.TagArray.filter(tag => {
-            return $('#addItem-filterTagsInput').val().includes(tag.id+"");
-          });
-          if(foundTags.length !== $('#addItem-filterTagsInput').val().length){
-            g_addItems_itemSearchMap.delete(itemID);
-          }
-        }
-
-      }
-
       // Item Usage
       if($('#addItem-filterItemUsageInput').val() != ''){
 
@@ -360,6 +346,7 @@ function applyFiltersAndItemSearch(type, data){
             g_addItems_itemSearchMap.delete(itemID);
           }
         }
+        console.log('Matching Items: '+g_addItems_itemSearchMap.size);
 
         $('#addItem-filterItemUsageInput').addClass('is-info');
       } else {
@@ -378,6 +365,7 @@ function applyFiltersAndItemSearch(type, data){
             g_addItems_itemSearchMap.delete(itemID);
           }
         }
+        console.log('Matching Items: '+g_addItems_itemSearchMap.size);
 
         $('#addItem-filterDescInput').addClass('is-info');
       } else {
@@ -402,6 +390,7 @@ function applyFiltersAndItemSearch(type, data){
             default: break;
           }
         }
+        console.log('Matching Items: '+g_addItems_itemSearchMap.size);
 
         $('#addItem-filterLevelInput').addClass('is-info');
       } else {
@@ -426,6 +415,7 @@ function applyFiltersAndItemSearch(type, data){
             default: break;
           }
         }
+        console.log('Matching Items: '+g_addItems_itemSearchMap.size);
 
         $('#addItem-filterItemPriceInput').addClass('is-info');
       } else {
@@ -450,6 +440,7 @@ function applyFiltersAndItemSearch(type, data){
             default: break;
           }
         }
+        console.log('Matching Items: '+g_addItems_itemSearchMap.size);
 
         $('#addItem-filterItemBulkInput').addClass('is-info');
       } else {
@@ -467,14 +458,15 @@ function applyFiltersAndItemSearch(type, data){
             g_addItems_itemSearchMap.delete(itemID);
           }
         }
+        console.log('Matching Items: '+g_addItems_itemSearchMap.size);
 
         $('#addItem-filterRarityInput').parent().addClass('is-info');
       } else {
         $('#addItem-filterRarityInput').parent().removeClass('is-info');
       }
 
-       // Item Category
-       if($('#addItem-filterItemCategoryInput').val() != 'ANY'){
+      // Item Category
+      if($('#addItem-filterItemCategoryInput').val() != 'ANY'){
 
         console.log('Add Item - Filtering by Category...');
         g_addItems_appliedFilters++;
@@ -484,10 +476,29 @@ function applyFiltersAndItemSearch(type, data){
             g_addItems_itemSearchMap.delete(itemID);
           }
         }
+        console.log('Matching Items: '+g_addItems_itemSearchMap.size);
 
         $('#addItem-filterItemCategoryInput').parent().addClass('is-info');
       } else {
         $('#addItem-filterItemCategoryInput').parent().removeClass('is-info');
+      }
+
+      // Item Traits
+      if($('#addItem-filterTagsInput').val().length > 0){
+
+        console.log('Add Item - Filtering by Traits...');
+        g_addItems_appliedFilters++;
+
+        for(const [itemID, itemStruct] of g_addItems_itemSearchMap.entries()){
+          let foundTags = itemStruct.TagArray.filter(tag => {
+            return $('#addItem-filterTagsInput').val().includes(tag.id+"");
+          });
+          if(foundTags.length !== $('#addItem-filterTagsInput').val().length){
+            g_addItems_itemSearchMap.delete(itemID);
+          }
+        }
+        console.log('Matching Items: '+g_addItems_itemSearchMap.size);
+
       }
 
       // Update filter count

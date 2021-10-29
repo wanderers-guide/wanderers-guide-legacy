@@ -83,17 +83,20 @@ function giveSkill(srcStruct, locationID, extraData, profType, optionals=null){
                 $('#'+increaseDescriptionID).html('');
             }
 
-            setDataProficiencies(srcStruct, 'Skill', 'addLore', profType, extraData.sourceName);
+            if(!isAutoLoad){
+              setDataProficiencies(srcStruct, 'Skill', 'addLore', profType, extraData.sourceName);
 
-            socket.emit("requestProficiencyChange",
-                getCharIDFromURL(),
-                {srcStruct, isSkill : true, isAutoLoad},
-                { For : "Skill", To : 'addLore', Prof : profType, SourceName : extraData.sourceName });
+              socket.emit("requestProficiencyChange",
+                  getCharIDFromURL(),
+                  {srcStruct, isSkill : true, isAutoLoad},
+                  { For : "Skill", To : 'addLore', Prof : profType, SourceName : extraData.sourceName });
+            }
+            
             processCode(
                 'GIVE-LORE-CHOOSE',
                 srcStruct,
                 increaseCodeID,
-                {source: extraData.source, sourceName: 'Skill Training'});
+                {source: extraData.source, sourceName: 'Add Lore (Lvl '+srcStruct.sourceLevel+')'});
 
 
         } else {

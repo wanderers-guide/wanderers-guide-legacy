@@ -69,6 +69,7 @@ function openAddItemQuickview(data) {
           <option value="COMPANION">Companion</option>
           <option value="EYEPIECE">Eyepiece</option>
           <option value="FULU">Fulu</option>
+          <option value="GIFT">Gift</option>
           <option value="GLOVES">Gloves</option>
           <option value="GRIMOIRE">Grimoire</option>
           <option value="HAT">Hat</option>

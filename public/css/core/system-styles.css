@@ -238,6 +238,16 @@ body {
 .select:hover::after {
   border-color: hsl(204, 86%, 53%)!important;
 }
+.message.is-info {
+  background-color: var(--message-bg-color);
+}
+.message {
+  background-color: var(--message-bg-color);
+  border-color: #282828;
+}
+.message a:not(.button):not(.tag):not(.dropdown-item) {
+  text-decoration: none;
+}
 .input.isURL {
 color: var(--text-partial-noted-color)!important;
 }

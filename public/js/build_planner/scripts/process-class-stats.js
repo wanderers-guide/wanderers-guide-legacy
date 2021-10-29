@@ -1,3 +1,6 @@
+/* Copyright (C) 2021, Wanderer's Guide, all rights reserved.
+    By Aaron Cassar.
+*/
 
 /*
 
@@ -70,7 +73,6 @@ function processClassStats(classData, outputStruct, processType){
     let keyAbilityOptionArray = classData.keyAbility.split(' or ');
 
     if(processType == PROCESS_CLASS_STATS_TYPE.RUN_CODE || isBoth){
-
       processCode(
         `SET-KEY-ABILITY=${shortenAbilityType(keyAbilityOptionArray[0])},${shortenAbilityType(keyAbilityOptionArray[1])}`,
         {

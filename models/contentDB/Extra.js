@@ -12,6 +12,10 @@ const Extra = db.define('extras', {
     type: Sequelize.ENUM,
     values: ['COMMON', 'UNCOMMON', 'RARE', 'UNIQUE']
   },
+  size: {
+    type: Sequelize.ENUM,
+    values: ['TINY', 'SMALL', 'MEDIUM', 'LARGE', 'HUGE', 'GARGANTUAN']
+  },
   description: {
     type: Sequelize.TEXT
   },

@@ -2068,6 +2068,7 @@ function determineArmor(dexMod, strScore) {
 
         let brokenPenalty = 0;
         let isBroken = (armorStruct.InvItem.currentHitPoints <= brokenThreshold);
+        if(doesntHaveItemHealth(armorStruct.InvItem)) {isBroken = false;}
         if(isBroken){
             switch(armorStruct.Item.ArmorData.category){
                 case 'LIGHT': brokenPenalty = -1; break;

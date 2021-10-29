@@ -1,3 +1,6 @@
+/* Copyright (C) 2021, Wanderer's Guide, all rights reserved.
+    By Aaron Cassar.
+*/
 
 function initVariables(){
 
@@ -31,16 +34,23 @@ function initVariables(){
     initializeVariableProf(VARIABLE.CLASS_DC, VARIABLE.SCORE_NONE, 0, profMap.get("Class_DC"));
   }
 
-
+  // Saves
   initializeVariableProf(VARIABLE.SAVE_FORT, VARIABLE.SCORE_CON, 0, profMap.get("Fortitude"));
   initializeVariableProf(VARIABLE.SAVE_REFLEX, VARIABLE.SCORE_DEX, 0, profMap.get("Reflex"));
   initializeVariableProf(VARIABLE.SAVE_WILL, VARIABLE.SCORE_WIS, 0, profMap.get("Will"));
 
+  // Skills
   for(const [skillName, skillData] of g_skillMap.entries()){
     let skillCodeName = skillName.replace(/\s/g,'_');
     initializeVariableProf('SKILL_'+skillCodeName, 'SCORE_'+skillData.Skill.ability, 0, profMap.get(skillName));
   }
 
+  // Lore Skills
+  for(const loreData of getDataAll(DATA_SOURCE.LORE)){
+    initializeVariableProf(`SKILL_${profConversion_convertOldName(loreData.value)}_LORE`, VARIABLE.SCORE_INT, 0, profMap.get(capitalizeWords(loreData.value)+' Lore'));
+  }
+
+  // Perception
   initializeVariableProf(VARIABLE.PERCEPTION, VARIABLE.SCORE_WIS, 0, profMap.get("Perception"));
 
   // Spell Attacks and DCs

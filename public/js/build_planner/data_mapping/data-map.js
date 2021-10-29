@@ -35,7 +35,7 @@ const g_dataMap = new Map();
 function initDataMap(charMetaData){
   for(let metaData of charMetaData){
 
-    // Don't load init class profs (for backwards compatibility with out builder).
+    // Don't load init class profs (for backwards compatibility with old builder).
     if(metaData.source == DATA_SOURCE.PROFICIENCY && metaData.sourceCode.startsWith('inits-')){
       continue;
     }
@@ -51,18 +51,20 @@ function initDataMap(charMetaData){
   }
 }
 
-function setData(in_source, in_srcStruct, in_value){
+function setData(in_source, in_srcStruct, in_value, deleteSelfData=true){
   let new_srcStruct = parameterizeSrcStruct(in_source, in_srcStruct);
   deleteDataSNumChildren(new_srcStruct);
 
-  for(const [JSON_srcStruct, value] of g_dataMap.entries()){
-    let srcStruct = JSON.parse(JSON_srcStruct);
-    if(srcStruct.sourceType == new_srcStruct.sourceType
-        && srcStruct.sourceLevel == new_srcStruct.sourceLevel
-        && srcStruct.sourceCode == new_srcStruct.sourceCode
-        && srcStruct.sourceCodeSNum == new_srcStruct.sourceCodeSNum){
-      g_dataMap.delete(JSON_srcStruct);
-      deleteVarDataFromSrcStruct(JSON_srcStruct);
+  if(deleteSelfData){
+    for(const [JSON_srcStruct, value] of g_dataMap.entries()){
+      let srcStruct = JSON.parse(JSON_srcStruct);
+      if(srcStruct.sourceType == new_srcStruct.sourceType
+          && srcStruct.sourceLevel == new_srcStruct.sourceLevel
+          && srcStruct.sourceCode == new_srcStruct.sourceCode
+          && srcStruct.sourceCodeSNum == new_srcStruct.sourceCodeSNum){
+        g_dataMap.delete(JSON_srcStruct);
+        deleteVarDataFromSrcStruct(JSON_srcStruct);
+      }
     }
   }
 

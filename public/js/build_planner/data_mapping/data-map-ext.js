@@ -1,10 +1,10 @@
 
 
-function setDataProficiencies(srcStruct, fFor, tTo, prof, sourceName){
+function setDataProficiencies(srcStruct, fFor, tTo, prof, sourceName, deleteSelfData=true){
 
   // Data-Map
   let value = fFor+getSeparator()+tTo+getSeparator()+prof+getSeparator()+sourceName;
-  setData(DATA_SOURCE.PROFICIENCY, srcStruct, value);
+  setData(DATA_SOURCE.PROFICIENCY, srcStruct, value, deleteSelfData);
 
   // Variable-Processing
   let varName = profConversion_convertOldNameToVarName(tTo);
