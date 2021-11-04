@@ -14,9 +14,6 @@ function processAncestry() {
         <div class="pos-relative">
           <div class="">
             <p class="text-center"><span class="is-size-4 has-text-weight-semibold">Ancestry</span></p>
-            <div class="ability-text-section px-1">
-              <p class="p-1 pl-2 has-text-center-justified is-size-6">These are the initial options given by your ancestry.</p>
-            </div>
           </div>
         </div>
 

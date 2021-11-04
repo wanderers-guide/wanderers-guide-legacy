@@ -53,12 +53,11 @@ const PROCESS_ANCESTRY_STATS_TYPE = {
 function processAncestryStats(ancestryData, outputStruct, processType){
   const isBoth = (processType == PROCESS_ANCESTRY_STATS_TYPE.BOTH);
 
-  let statInitCount = 0;
   // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Hit Points ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 
   if(processType == PROCESS_ANCESTRY_STATS_TYPE.DISPLAY || isBoth){
     $('#'+outputStruct.hitPoints.displayID).html(`
-      <p class="is-inline is-size-5">
+      <p class="is-inline is-size-6">
         ${ancestryData.Ancestry.hitPoints}
       </p>
     `);
@@ -68,7 +67,7 @@ function processAncestryStats(ancestryData, outputStruct, processType){
 
   if(processType == PROCESS_ANCESTRY_STATS_TYPE.DISPLAY || isBoth){
     $('#'+outputStruct.size.displayID).html(`
-      <p class="is-inline is-size-5">
+      <p class="is-inline is-size-6">
         ${capitalizeWords(ancestryData.Ancestry.size)}
       </p>
     `);
@@ -78,7 +77,7 @@ function processAncestryStats(ancestryData, outputStruct, processType){
 
   if(processType == PROCESS_ANCESTRY_STATS_TYPE.DISPLAY || isBoth){
     $('#'+outputStruct.speed.displayID).html(`
-      <p class="is-inline is-size-5">
+      <p class="is-inline is-size-6">
         ${ancestryData.Ancestry.speed} ft
       </p>
     `);
@@ -116,7 +115,7 @@ function processAncestryStats(ancestryData, outputStruct, processType){
       openQuickView('abilityView', {
         Ability : {
           name: 'Additional Languages - '+ancestryData.Ancestry.name,
-          description: 'You get to learn an additional number of languages equal your final Intelligence modifer (if it\'s positive). Choose from the following list (or any others you may have access to): '+bonusLangs,
+          description: 'You get to learn an additional number of languages equal your final Intelligence modifier (if it\'s positive). Choose from the following list (or any others you may have access to): '+bonusLangs,
           level: 0,
         }
       });
@@ -138,7 +137,7 @@ function processAncestryStats(ancestryData, outputStruct, processType){
         },
         outputStruct.languages.codeID,
         {source: 'Ancestry', sourceName: 'Initial Ancestry'});
-      langCount = 0;
+      langCount++;
     }
 
     // TODO - Langs equal to Int mod
@@ -151,13 +150,13 @@ function processAncestryStats(ancestryData, outputStruct, processType){
 
     let ancestrySenses = '';
     if(ancestryData.VisionSense != null){
-      ancestrySenses += '<a class="has-text-info has-tooltip-bottom has-tooltip-multiline" data-tooltip="'+processTextRemoveIndexing(ancestryData.VisionSense.description)+'">'+ancestryData.VisionSense.name+'</a>';
+      ancestrySenses += '<a class="has-text-info ancestry-sense-vision">'+ancestryData.VisionSense.name+'</a>';
       if(ancestryData.AdditionalSense != null){
         ancestrySenses += ' and ';
       }
     }
     if(ancestryData.AdditionalSense != null){
-      ancestrySenses += '<a class="has-text-info has-tooltip-bottom has-tooltip-multiline" data-tooltip="'+processTextRemoveIndexing(ancestryData.AdditionalSense.description)+'">'+ancestryData.AdditionalSense.name+'</a>';
+      ancestrySenses += '<a class="has-text-info ancestry-sense-additional">'+ancestryData.AdditionalSense.name+'</a>';
     }
 
     $('#'+outputStruct.senses.displayID).html(`
@@ -165,6 +164,25 @@ function processAncestryStats(ancestryData, outputStruct, processType){
         ${ancestrySenses}
       </p>
     `);
+
+    $('.ancestry-sense-vision').click(function(){
+      openQuickView('abilityView', {
+        Ability : {
+          name: ancestryData.VisionSense.name,
+          description: ancestryData.VisionSense.description,
+          level: 0,
+        }
+      });
+    });
+    $('.ancestry-sense-additional').click(function(){
+      openQuickView('abilityView', {
+        Ability : {
+          name: ancestryData.AdditionalSense.name,
+          description: ancestryData.AdditionalSense.description,
+          level: 0,
+        }
+      });
+    });
 
   }
 
@@ -181,7 +199,6 @@ function processAncestryStats(ancestryData, outputStruct, processType){
         },
         outputStruct.senses.codeID,
         {source: 'Ancestry', sourceName: 'Initial Ancestry'});
-      statInitCount++;
     }
     if(ancestryData.AdditionalSense != null){
       processCode(
@@ -194,7 +211,6 @@ function processAncestryStats(ancestryData, outputStruct, processType){
         },
         outputStruct.senses.codeID,
         {source: 'Ancestry', sourceName: 'Initial Ancestry'});
-      statInitCount++;
     }
 
   }
@@ -205,13 +221,13 @@ function processAncestryStats(ancestryData, outputStruct, processType){
 
     let ancestryPhyFeatures = '';
     if(ancestryData.PhysicalFeatureOne != null){
-      ancestryPhyFeatures += '<a class="has-text-info has-tooltip-bottom has-tooltip-multiline" data-tooltip="'+processTextRemoveIndexing(ancestryData.PhysicalFeatureOne.description)+'">'+ancestryData.PhysicalFeatureOne.name+'</a>';
+      ancestryPhyFeatures += '<a class="has-text-info ancestry-phy-feat-one">'+ancestryData.PhysicalFeatureOne.name+'</a>';
       if(ancestryData.PhysicalFeatureTwo != null){
         ancestryPhyFeatures += ' and ';
       }
     }
     if(ancestryData.PhysicalFeatureTwo != null){
-      ancestryPhyFeatures += '<a class="has-text-info has-tooltip-bottom has-tooltip-multiline" data-tooltip="'+processTextRemoveIndexing(ancestryData.PhysicalFeatureTwo.description)+'">'+ancestryData.PhysicalFeatureTwo.name+'</a>';
+      ancestryPhyFeatures += '<a class="has-text-info ancestry-phy-feat-two">'+ancestryData.PhysicalFeatureTwo.name+'</a>';
     }
 
     $('#'+outputStruct.physicalFeatures.displayID).html(`
@@ -219,6 +235,25 @@ function processAncestryStats(ancestryData, outputStruct, processType){
         ${ancestryPhyFeatures}
       </p>
     `);
+
+    $('.ancestry-phy-feat-one').click(function(){
+      openQuickView('abilityView', {
+        Ability : {
+          name: ancestryData.PhysicalFeatureOne.name,
+          description: ancestryData.PhysicalFeatureOne.description,
+          level: 0,
+        }
+      });
+    });
+    $('.ancestry-phy-feat-two').click(function(){
+      openQuickView('abilityView', {
+        Ability : {
+          name: ancestryData.PhysicalFeatureTwo.name,
+          description: ancestryData.PhysicalFeatureTwo.description,
+          level: 0,
+        }
+      });
+    });
 
   }
 
@@ -294,7 +329,7 @@ function processAncestryStats(ancestryData, outputStruct, processType){
     if(ancestryBoosts == '') {ancestryBoosts = 'None';}
 
     $('#'+outputStruct.boosts.displayID).html(`
-      <p class="is-size-5">
+      <p class="is-size-6">
         ${ancestryBoosts}
       </p>
     `);
@@ -370,7 +405,7 @@ function processAncestryStats(ancestryData, outputStruct, processType){
     if(ancestryFlaws == '') {ancestryFlaws = 'None';}
 
     $('#'+outputStruct.flaws.displayID).html(`
-      <p class="is-size-5">
+      <p class="is-size-6">
         ${ancestryFlaws}
       </p>
     `);

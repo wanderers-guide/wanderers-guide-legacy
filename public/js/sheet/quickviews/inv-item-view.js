@@ -656,6 +656,7 @@ function openInvItemQuickview(data) {
                 data.Item.Item.itemType == 'RUNE' || 
                 data.Item.Item.itemType == 'GADGET' || 
                 data.Item.Item.itemType == 'GIFT' || 
+                data.Item.Item.itemType == 'ADJUSTMENT' || 
                 data.Item.Item.itemType == 'OTHER' || 
                 data.Item.Item.itemType == 'SPELLHEART')) {
               // Item is attachment
@@ -680,7 +681,8 @@ function openInvItemQuickview(data) {
                       attachableItem.Item.itemType == 'HAT' ||
                       attachableItem.Item.itemType == 'CLOAK' ||
                       attachableItem.Item.itemType == 'BELT' ||
-                      attachableItem.Item.itemType == 'BOOTS')) {
+                      attachableItem.Item.itemType == 'BOOTS' ||
+                      attachableItem.Item.itemType == 'OTHER')) {
 
                     if(data.InvItem.bagInvItemID == attachableInvItem.id){
                       $('#'+invItemMoveSelectID).append('<option value="'+attachableInvItem.id+'" selected>Attach ▸ '+attachableInvItem.name+'</option>');

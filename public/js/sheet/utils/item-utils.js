@@ -335,6 +335,7 @@ function getItemIcon(item, invItem){
   if(item.Item.itemType != null){
     let itemType = capitalizeWords(item.Item.itemType);
 
+    if(itemType === 'Adjustment'){ fa_icon = 'fas fa-tools'; }
     if(itemType === 'Artifact'){ fa_icon = 'fas fa-star-christmas'; }
     if(itemType === 'Ammunition'){ fa_icon = 'fad fa-bow-arrow'; }
     if(itemType === 'Armor'){ fa_icon = 'fas fa-tshirt'; }

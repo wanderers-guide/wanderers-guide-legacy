@@ -237,7 +237,7 @@ function displayCurrentAncestry(ancestryStruct, saving) {
         bonusLangs += bonusLang.name+", ";
     }
     bonusLangs = bonusLangs.substring(0, bonusLangs.length - 2);
-    ancestryLanguages.append('and <a class="has-text-info has-tooltip-bottom has-tooltip-multiline" data-tooltip="You will get to select an additional number of languages equal your Intelligence modifer in the Finalize step. The following are the options you will be able to choose from: '+bonusLangs+'">more*</a>');
+    ancestryLanguages.append('and <a class="has-text-info has-tooltip-bottom has-tooltip-multiline" data-tooltip="You will get to select an additional number of languages equal your Intelligence modifier in the Finalize step. The following are the options you will be able to choose from: '+bonusLangs+'">more*</a>');
 
     if(saving){
         let langCount = 0;

@@ -430,11 +430,107 @@ function displayStats(){
   ];
   populateAccord('defenses-body', defenses);
 
+  let spellcasting = [];
+  const arcaneSpellAttacksRank = variables_getFinalRank(VARIABLE.ARCANE_SPELL_ATTACK);
+  if(arcaneSpellAttacksRank != 'U'){
+    spellcasting.push({
+      Value1: 'Arcane Spell Attacks',
+      Value2: arcaneSpellAttacksRank,
+      VarName: VARIABLE.ARCANE_SPELL_ATTACK,
+    });
+  }
+  const arcaneSpellDCsRank = variables_getFinalRank(VARIABLE.ARCANE_SPELL_DC);
+  if(arcaneSpellDCsRank != 'U'){
+    spellcasting.push({
+      Value1: 'Arcane Spell DCs',
+      Value2: arcaneSpellDCsRank,
+      VarName: VARIABLE.ARCANE_SPELL_DC,
+    });
+  }
 
-  populateAccord('spellcasting-body', []);
+  const divineSpellAttacksRank = variables_getFinalRank(VARIABLE.DIVINE_SPELL_ATTACK);
+  if(divineSpellAttacksRank != 'U'){
+    spellcasting.push({
+      Value1: 'Divine Spell Attacks',
+      Value2: divineSpellAttacksRank,
+      VarName: VARIABLE.DIVINE_SPELL_ATTACK,
+    });
+  }
+  const divineSpellDCsRank = variables_getFinalRank(VARIABLE.DIVINE_SPELL_DC);
+  if(divineSpellDCsRank != 'U'){
+    spellcasting.push({
+      Value1: 'Divine Spell DCs',
+      Value2: divineSpellDCsRank,
+      VarName: VARIABLE.DIVINE_SPELL_DC,
+    });
+  }
 
-  let languages = variables_getFullString(VARIABLE.LANGUAGES);
-  populateAccord('languages-body', []);
+  const occultSpellAttacksRank = variables_getFinalRank(VARIABLE.OCCULT_SPELL_ATTACK);
+  if(occultSpellAttacksRank != 'U'){
+    spellcasting.push({
+      Value1: 'Occult Spell Attacks',
+      Value2: occultSpellAttacksRank,
+      VarName: VARIABLE.OCCULT_SPELL_ATTACK,
+    });
+  }
+  const occultSpellDCsRank = variables_getFinalRank(VARIABLE.OCCULT_SPELL_DC);
+  if(occultSpellDCsRank != 'U'){
+    spellcasting.push({
+      Value1: 'Occult Spell DCs',
+      Value2: occultSpellDCsRank,
+      VarName: VARIABLE.OCCULT_SPELL_DC,
+    });
+  }
+
+  const primalSpellAttacksRank = variables_getFinalRank(VARIABLE.PRIMAL_SPELL_ATTACK);
+  if(primalSpellAttacksRank != 'U'){
+    spellcasting.push({
+      Value1: 'Primal Spell Attacks',
+      Value2: primalSpellAttacksRank,
+      VarName: VARIABLE.PRIMAL_SPELL_ATTACK,
+    });
+  }
+  const primalSpellDCsRank = variables_getFinalRank(VARIABLE.PRIMAL_SPELL_DC);
+  if(primalSpellDCsRank != 'U'){
+    spellcasting.push({
+      Value1: 'Primal Spell DCs',
+      Value2: primalSpellDCsRank,
+      VarName: VARIABLE.PRIMAL_SPELL_DC,
+    });
+  }
+  populateAccord('spellcasting-body', spellcasting);
+
+  let languages = [];
+  for(const [key, data] of variables_getExtrasMap(VARIABLE.LANGUAGES).entries()){
+    let lang = g_allLanguages.find(lang => {
+      return lang.id == data.Value;
+    });
+    if(lang != null){
+      languages.push({
+        Value1: lang.name,
+        Value2: '',
+        CustomQuickview: {name: 'languageView', data: {Language: lang}},
+      });
+    }
+  }
+  populateAccord('languages-body', languages);
+
+  let resistWeaks = [];
+  for(const [key, data] of variables_getExtrasMap(VARIABLE.RESISTANCES).entries()){
+    let dParts = data.Value.split(getSeparator());
+    resistWeaks.push({
+      Value1: dParts[0]+' '+dParts[1],
+      Value2: 'Resist',
+    });
+  }
+  for(const [key, data] of variables_getExtrasMap(VARIABLE.WEAKNESSES).entries()){
+    let dParts = data.Value.split(getSeparator());
+    resistWeaks.push({
+      Value1: dParts[0]+' '+dParts[1],
+      Value2: 'Weak',
+    });
+  }
+  populateAccord('resist-weaks-body', resistWeaks);
 
 }
 

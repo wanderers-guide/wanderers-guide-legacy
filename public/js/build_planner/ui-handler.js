@@ -125,6 +125,18 @@ function populateAccord(accordBodyID, optionsList){
           varName : varName,getProfHistoryHTML
         });
       });
+    } else if (option.CustomQuickview != null){
+
+      $('#'+optionEntryID).mouseenter(function(){
+        $('#'+optionEntryID).addClass('entry-hover');
+      });
+      $('#'+optionEntryID).mouseleave(function(){
+        $('#'+optionEntryID).removeClass('entry-hover');
+      });
+      $('#'+optionEntryID).click(function() {
+        openQuickView(option.CustomQuickview.name, option.CustomQuickview.data);
+      });
+
     }
 
   }

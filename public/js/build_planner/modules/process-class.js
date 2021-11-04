@@ -14,9 +14,47 @@ function processClass() {
         <div class="pos-relative">
           <div class="">
             <p class="text-center"><span class="is-size-4 has-text-weight-semibold">Class</span></p>
-            <div class="ability-text-section px-1">
-              <p class="p-1 pl-2 has-text-center-justified is-size-6">These are the initial proficiencies given by your class.</p>
-            </div>
+          </div>
+        </div>
+
+        <div class="columns is-tablet">
+          <div class="column text-center">
+            <p class="title-font is-bold">Key Ability</p>
+            <p id="class-feature-initial-stats-display-key-ability"></p>
+          </div>
+          <div class="column text-center">
+            <p class="title-font is-bold">Hit Points</p>
+            <p id="class-feature-initial-stats-display-hit-points"></p>
+          </div>
+        </div>
+        <div class="columns is-tablet">
+          <div class="column text-center">
+            <p class="title-font is-bold">Perception</p>
+            <p id="class-feature-initial-stats-display-perception"></p>
+          </div>
+          <div class="column text-center">
+            <p class="title-font is-bold">Skills</p>
+            <p id="class-feature-initial-stats-display-skills"></p>
+          </div>
+        </div>
+        <div class="columns is-tablet">
+          <div class="column text-center">
+            <p class="title-font is-bold">Saving Throws</p>
+            <p id="class-feature-initial-stats-display-saving-throws"></p>
+          </div>
+          <div class="column text-center">
+            <p class="title-font is-bold">Class DC</p>
+            <p id="class-feature-initial-stats-display-class-dc"></p>
+          </div>
+        </div>
+        <div class="columns is-tablet">
+          <div class="column text-center">
+            <p class="title-font is-bold">Attacks</p>
+            <p id="class-feature-initial-stats-display-attacks"></p>
+          </div>
+          <div class="column text-center">
+            <p class="title-font is-bold">Defenses</p>
+            <p id="class-feature-initial-stats-display-defenses"></p>
           </div>
         </div>
 
@@ -38,40 +76,40 @@ function processClass() {
     processClassStats(charClass.Class, {
 
       keyAbility: {
-        //displayID: 'keyAbility-1',
+        displayID: 'class-feature-initial-stats-display-key-ability',
         codeID: 'class-feature-initial-stats-code-key-ability',
       },
       hitPoints: {
-        //displayID: 'hitPoints-1',
+        displayID: 'class-feature-initial-stats-display-hit-points',
         codeID: 'class-feature-initial-stats-code-hit-points',
       },
   
       perception: {
-        //displayID: 'profPerception-1',
+        displayID: 'class-feature-initial-stats-display-perception',
         codeID: 'class-feature-initial-stats-code-perception',
       },
       skills: {
-        //displayID: 'profSkills-1',
+        displayID: 'class-feature-initial-stats-display-skills',
         codeID: 'class-feature-initial-stats-code-skills',
       },
       savingThrows: {
-        //displayID: 'profSavingThrows-1',
+        displayID: 'class-feature-initial-stats-display-saving-throws',
         codeID: 'class-feature-initial-stats-code-saving-throws',
       },
       classDC: {
-        //displayID: 'profClassDC-1',
+        displayID: 'class-feature-initial-stats-display-class-dc',
         codeID: 'class-feature-initial-stats-code-class-dc',
       },
       attacks: {
-        //displayID: 'profAttacks-1',
+        displayID: 'class-feature-initial-stats-display-attacks',
         codeID: 'class-feature-initial-stats-code-attacks',
       },
       defenses: {
-        //displayID: 'profDefenses-1',
+        displayID: 'class-feature-initial-stats-display-defenses',
         codeID: 'class-feature-initial-stats-code-defenses',
       },
   
-    }, PROCESS_CLASS_STATS_TYPE.RUN_CODE);
+    }, PROCESS_CLASS_STATS_TYPE.BOTH);
 
     // Process each class feature //
     for(const classFeature of charClass.Abilities){

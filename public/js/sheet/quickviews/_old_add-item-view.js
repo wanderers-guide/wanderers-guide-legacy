@@ -56,6 +56,7 @@ function openAddItemQuickview(data) {
         $('#allItemsFilterBySubcategory').parent().parent().removeClass('is-hidden');
         $('#allItemsFilterBySubcategory').html(`
           <option value="ALL">Category</option>
+          <option value="ADJUSTMENT">Adjustment</option>
           <option value="ARTIFACT">Artifact</option>
           <option value="AMMUNITION">Ammunition</option>
           <option value="ARMOR">Armor</option>

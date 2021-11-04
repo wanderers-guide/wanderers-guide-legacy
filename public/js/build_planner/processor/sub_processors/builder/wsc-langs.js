@@ -44,33 +44,46 @@ function giveLang(srcStruct, locationID, extraData, bonusOnly){
     // Set saved prof choices to savedProfData
     let savedLang = getDataSingle(DATA_SOURCE.LANGUAGE, srcStruct);
 
-    let sortedLangMap = new Map([...g_langMap.entries()].sort(
-        function(a, b) {
-            return a[1].IsBonus && !b[1].IsBonus ? -1 : 1;
-        })
+    let sortedLangArray = g_allLanguages.sort(
+      function(a, b) {
+        return a.name > b.name ? 1 : -1;
+      }
     );
 
     let isStillBonusLang = true;
-    for(const [langID, langData] of sortedLangMap.entries()){
+    for(const lang of sortedLangArray){
 
-        if(!langData.IsBonus){
+        let langIsBonus = false;
+        if(bonusOnly){
+          let currentAncestry = getCharAncestry();
+          if(currentAncestry != null){
+            let bonusLang = currentAncestry.BonusLanguages.find(l => {
+              return l.id == lang.id;
+            });
+            langIsBonus = (bonusLang != null);
+          }
+        }
+
+        if(bonusOnly && !langIsBonus){
           if(isStillBonusLang){
             $('#'+selectLangID).append('<optgroup label="──────────"></optgroup>');
           }
           isStillBonusLang = false;
         }
 
-        if(savedLang != null && savedLang.value.id == langID) {
-            if(bonusOnly && !langData.IsBonus){
-                $('#'+selectLangID).append('<option value="'+langData.Lang.id+'" class="is-non-available-very" selected>'+langData.Lang.name+'</option>');
+        
+
+        if(savedLang != null && savedLang.value != null && savedLang.value == lang.id) {
+            if(bonusOnly && !langIsBonus){
+                $('#'+selectLangID).append('<option value="'+lang.id+'" class="is-non-available-very" selected>'+lang.name+'</option>');
             } else {
-                $('#'+selectLangID).append('<option value="'+langData.Lang.id+'" selected>'+langData.Lang.name+'</option>');
+                $('#'+selectLangID).append('<option value="'+lang.id+'" selected>'+lang.name+'</option>');
             }
         } else {
-            if(bonusOnly && !langData.IsBonus){
-                $('#'+selectLangID).append('<option value="'+langData.Lang.id+'" class="is-non-available-very">'+langData.Lang.name+'</option>');
+            if(bonusOnly && !langIsBonus){
+                $('#'+selectLangID).append('<option value="'+lang.id+'" class="is-non-available-very">'+lang.name+'</option>');
             } else {
-                $('#'+selectLangID).append('<option value="'+langData.Lang.id+'">'+langData.Lang.name+'</option>');
+                $('#'+selectLangID).append('<option value="'+lang.id+'">'+lang.name+'</option>');
             }
         }
 
@@ -101,8 +114,7 @@ function giveLang(srcStruct, locationID, extraData, bonusOnly){
             // Save lang
             if(triggerSave == null || triggerSave) {
 
-                let langArray = wscChoiceStruct.LangArray;
-                if(!hasDuplicateLang(langArray, langID)) {
+                if(!checkDuplicateLang(langID)) {
 
                     $('#'+langDescriptionID).html('');
 
@@ -149,12 +161,23 @@ socket.on("returnLanguageChange", function(){
     selectorUpdated();
 });
 
+function checkDuplicateLang(langID){
+  for(const [key, data] of variables_getExtrasMap(VARIABLE.LANGUAGES).entries()){
+    if(data.Value == langID){
+      return true;
+    }
+  }
+  return false;
+}
+
 //////////////////////////////// Give Lang (by Lang Name) ///////////////////////////////////
 
 function giveLangByName(srcStruct, langName, extraData){
 
+  console.log(langName);
+
   let language = g_allLanguages.find(language => {
-    return language.name == langName;
+    return language.name.toUpperCase() == langName.toUpperCase();
   });
   if(language != null){
     setDataLanguage(srcStruct, language.id);
@@ -170,33 +193,3 @@ function giveLangByName(srcStruct, langName, extraData){
 socket.on("returnLanguageChangeByName", function(){
     statementComplete();
 });
-
-
-
-function langsUpdateWSCChoiceStruct(srcStruct, langID){
-    
-  let langArray = wscChoiceStruct.LangArray;
-  let langStruct = (langID != null) ? g_langMap.get(langID+"") : null;
-
-  let foundLangData = false;
-  for(let langData of langArray){
-    if(hasSameSrc(langData, srcStruct)){
-      foundLangData = true;
-      if(langStruct != null){
-        langData.value = langStruct.Lang;
-      } else {
-        langData.value = {};
-      }
-      break;
-    }
-  }
-
-  if(!foundLangData && langStruct != null){
-    let langData = cloneObj(srcStruct);
-    langData.value = langStruct.Lang;
-    langArray.push(langData);
-  }
-
-  wscChoiceStruct.LangArray = langArray;
-
-}

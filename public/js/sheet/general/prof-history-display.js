@@ -12,7 +12,14 @@ function getProfHistoryHTML(VARIABLE_NAME){
     tooltipText += '\nNone';
     return '<a class="has-text-info has-tooltip-bottom text-center" data-tooltip="'+tooltipText+'">Untrained</a>';
   } else {
-    for(const [srcStructKey, rankData] of variableValue.RankHistory){
+
+    let sortedRankHistory = new Map([...variableValue.RankHistory.entries()].sort(
+      function(a, b) {
+        return profToNumUp(a[1].Rank) > profToNumUp(b[1].Rank) ? -1 : 1;
+      })
+    );
+
+    for(const [srcStructKey, rankData] of sortedRankHistory){
       tooltipText += '\n'+profToWord(rankData.Rank)+' from '+rankData.SourceName;
     }
     return '<a class="has-text-info has-tooltip-bottom text-center" data-tooltip="'+tooltipText+'">'+profToWord(finalRank)+'</a>';

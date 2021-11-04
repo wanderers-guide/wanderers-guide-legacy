@@ -318,7 +318,7 @@ function displayCurrentClass(classStruct, classNum) {
     profSkillsUL.append('<li id="profSkillsLIAdditionalTrained-'+classNum+'"></li>');
     let profSkillsLIAddTrained = $('#profSkillsLIAdditionalTrained-'+classNum);
 
-    profSkillsLIAddTrained.append('Trained in <a class="has-text-info has-tooltip-bottom has-tooltip-multiline" data-tooltip="You will get to select training in an additional number of skills equal to '+classStruct.Class.tSkillsMore+' plus your Intelligence modifer in the Finalize step">'+classStruct.Class.tSkillsMore+'*</a> more skills');
+    profSkillsLIAddTrained.append('Trained in <a class="has-text-info has-tooltip-bottom has-tooltip-multiline" data-tooltip="You will get to select training in an additional number of skills equal to '+classStruct.Class.tSkillsMore+' plus your Intelligence modifier in the Finalize step">'+classStruct.Class.tSkillsMore+'*</a> more skills');
 
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Saving Throws ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //

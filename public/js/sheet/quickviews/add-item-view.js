@@ -197,6 +197,7 @@ function openAddItemQuickview(data) {
                     <div class="select">
                       <select id="addItem-filterItemCategoryInput">
                                     <option value="ANY">Any</option>
+                                    <option value="ADJUSTMENT">Adjustment</option>
                                     <option value="ARTIFACT">Artifact</option>
                                     <option value="AMMUNITION">Ammunition</option>
                                     <option value="ARMOR">Armor</option>

@@ -29,10 +29,10 @@ function openAbilityScoreQuickview(data){
     qContent.append('<p>'+abilityDescription+'</p>');
     qContent.append('<hr class="mt-2 mb-3">');
     qContent.append('<p class="has-text-centered is-size-7"><strong>What is this all for?</strong></p>');
-    qContent.append('<p class="has-text-centered is-size-7">Each ability represents a certain aspect of your character. The ability score is used to calculate that ability\'s modifier. That modifer is used to dictate how good or bad your character is in that aspect.</p>');
+    qContent.append('<p class="has-text-centered is-size-7">Each ability represents a certain aspect of your character. The ability score is used to calculate that ability\'s modifier. That modifier is used to dictate how good or bad your character is in that aspect.</p>');
     /*<a class="has-text-link has-tooltip-bottom has-tooltip-multiline" data-tooltip="As you may have noticed, ability scores are only used to calculate your ability score modifiers in Pathfinder 2e. To be honest, they could easily be cut and removed from the system all together as all they really do is add unnecessary complexity. With that said, they\'re around for more traditional reasons. The concept of ability scores were in Pathfinder 1e and have existed in tabletop role-playing games for decades.">ability score</a>
     qContent.append('<hr class="m-2">');
-    qContent.append('<p class="has-text-centered is-size-7"><strong>Calculating Ability Modifer from Score</strong></p>');
+    qContent.append('<p class="has-text-centered is-size-7"><strong>Calculating Ability Modifier from Score</strong></p>');
     qContent.append('<p class="has-text-centered is-size-7">To determine the ability modifier from its score, you must look at how far away it is from 10. For every 2 higher it is than 10, your modifier is that number greater. For example, the ability modifier of 16 is +3. If the score is odd, the modifier is the same of the score of one lower. So the ability modifier of 17 is still only +3. The same works in the opposite direction – the ability modifier of 8 is -1. The actual mathmatical formula for this is:</p>');
     qContent.append('<p class="has-text-centered is-size-7">Modifier = ⌊(Score-10)/2⌋</p>');*/
 

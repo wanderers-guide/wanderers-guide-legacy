@@ -62,7 +62,7 @@ function processClassStats(classData, outputStruct, processType){
 
     if(processType == PROCESS_CLASS_STATS_TYPE.DISPLAY || isBoth){
       $('#'+outputStruct.keyAbility.displayID).html(`
-        <p class="is-size-5">
+        <p class="is-size-6">
           Other
         </p>
       `);
@@ -84,10 +84,18 @@ function processClassStats(classData, outputStruct, processType){
         outputStruct.keyAbility.codeID,
         {source: 'Class', sourceName: 'Initial Class'});
 
+      if(isBoth){
+        $('#'+outputStruct.keyAbility.displayID).html(`
+          <p class="is-size-6">
+            ${classData.keyAbility}
+          </p>
+        `);
+      }
+
     } else {
 
       $('#'+outputStruct.keyAbility.displayID).html(`
-        <p class="is-size-5">
+        <p class="is-size-6">
           ${classData.keyAbility}
         </p>
       `);
@@ -98,7 +106,7 @@ function processClassStats(classData, outputStruct, processType){
     
     if(processType == PROCESS_CLASS_STATS_TYPE.DISPLAY || isBoth){
       $('#'+outputStruct.keyAbility.displayID).html(`
-        <p class="is-size-5">
+        <p class="is-size-6">
           ${classData.keyAbility}
         </p>
       `);
@@ -124,7 +132,7 @@ function processClassStats(classData, outputStruct, processType){
 
   if(processType == PROCESS_CLASS_STATS_TYPE.DISPLAY || isBoth){
     $('#'+outputStruct.hitPoints.displayID).html(`
-      <p class="is-inline is-size-5">
+      <p class="is-inline is-size-6">
         ${classData.hitPoints}
       </p>
     `);
@@ -135,8 +143,8 @@ function processClassStats(classData, outputStruct, processType){
   if(processType == PROCESS_CLASS_STATS_TYPE.DISPLAY || isBoth){
     $('#'+outputStruct.perception.displayID).html(`
       <ul>
-        <li>
-          ${profToWord(classData.tPerception)}
+        <li class="is-size-7">
+          <span class="has-txt-value-string is-italic">${profToWord(classData.tPerception)}</span>
         </li>
       </ul>
     `);
@@ -192,14 +200,14 @@ function processClassStats(classData, outputStruct, processType){
 
         } else {
 
-          profSkillsInner += '<li>Trained in '+tSkill+'</li>';
+          profSkillsInner += '<li class="is-size-7"><span class="has-txt-value-string is-italic">Trained</span> in '+tSkill+'</li>';
 
         }
 
       } else {
 
         if(processType == PROCESS_CLASS_STATS_TYPE.DISPLAY || isBoth){
-          profSkillsInner += '<li>Trained in '+tSkill+'</li>';
+          profSkillsInner += '<li class="is-size-7"><span class="has-txt-value-string is-italic">Trained</span> in '+tSkill+'</li>';
         }
 
         if(processType == PROCESS_CLASS_STATS_TYPE.RUN_CODE || isBoth){
@@ -222,11 +230,22 @@ function processClassStats(classData, outputStruct, processType){
 
   if(processType == PROCESS_CLASS_STATS_TYPE.DISPLAY || isBoth){
     profSkillsInner += `
-      <li>
-        Trained in <a class="has-text-info has-tooltip-bottom has-tooltip-multiline" data-tooltip="You will get to select training in an additional number of skills equal to ${classData.tSkillsMore} plus your Intelligence modifer in the Finalize step">${classData.tSkillsMore}*</a> more skills
+      <li class="is-size-7">
+        <span class="has-txt-value-string is-italic">Trained</span> in <a class="has-text-info class-feature-initial-stats-skills-more-info">${classData.tSkillsMore}*</a> more skills
       </li>
     `;
     $('#'+outputStruct.skills.displayID).html(`<ul>${profSkillsInner}</ul>`);
+
+    $('.class-feature-initial-stats-skills-more-info').click(function(){
+      openQuickView('abilityView', {
+        Ability : {
+          name: 'Additional Skills - '+classData.name,
+          description: `You get to select training in an additional number of skills equal to ${classData.tSkillsMore} plus your final Intelligence modifier.`,
+          level: 0,
+        }
+      });
+    });
+
   }
 
   // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Saving Throws ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
@@ -234,9 +253,9 @@ function processClassStats(classData, outputStruct, processType){
   if(processType == PROCESS_CLASS_STATS_TYPE.DISPLAY || isBoth){
     $('#'+outputStruct.savingThrows.displayID).html(`
       <ul>
-        <li>${profToWord(classData.tFortitude)} in Fortitude</li>
-        <li>${profToWord(classData.tReflex)} in Reflex</li>
-        <li>${profToWord(classData.tWill)} in Will</li>
+        <li class="is-size-7"><span class="has-txt-value-string is-italic">${profToWord(classData.tFortitude)}</span> in Fortitude</li>
+        <li class="is-size-7"><span class="has-txt-value-string is-italic">${profToWord(classData.tReflex)}</span> in Reflex</li>
+        <li class="is-size-7"><span class="has-txt-value-string is-italic">${profToWord(classData.tWill)}</span> in Will</li>
       </ul>
     `);
   }
@@ -301,10 +320,10 @@ function processClassStats(classData, outputStruct, processType){
 
       if(weaponName.slice(-1) === 's'){
           // is plural
-          profAttacksInner += `<li>${profToWord(weapTraining)+" in all "+weaponName}</li>`;
+          profAttacksInner += `<li class="is-size-7"><span class="has-txt-value-string is-italic">${profToWord(weapTraining)+"</span> in all "+weaponName}</li>`;
       } else {
           // is singular
-          profAttacksInner += `<li>${profToWord(weapTraining)+" in the "+weaponName}</li>`;
+          profAttacksInner += `<li class="is-size-7"><span class="has-txt-value-string is-italic">${profToWord(weapTraining)+"</span> in the "+weaponName}</li>`;
       }
 
       if(processType == PROCESS_CLASS_STATS_TYPE.RUN_CODE || isBoth){
@@ -325,7 +344,13 @@ function processClassStats(classData, outputStruct, processType){
   if(classData.weaponsExtra != null) {
     let weapLines = classData.weaponsExtra.split('\n');
     for(const weapLine of weapLines){
-      profAttacksInner += `<li>${weapLine}</li>`;
+      let newWeapLine = weapLine;
+      newWeapLine = newWeapLine.replace('Untrained','<span class="has-txt-value-string is-italic">Untrained</span>');
+      newWeapLine = newWeapLine.replace('Trained','<span class="has-txt-value-string is-italic">Trained</span>');
+      newWeapLine = newWeapLine.replace('Expert','<span class="has-txt-value-string is-italic">Expert</span>');
+      newWeapLine = newWeapLine.replace('Master','<span class="has-txt-value-string is-italic">Master</span>');
+      newWeapLine = newWeapLine.replace('Legendary','<span class="has-txt-value-string is-italic">Legendary</span>');
+      profAttacksInner += `<li class="is-size-7">${newWeapLine}</li>`;
     }
   }
 
@@ -354,7 +379,7 @@ function processClassStats(classData, outputStruct, processType){
           armorID = armorName.replace(/\s+/g,'_').toUpperCase();
       }
 
-      profAttacksInner += `<li>${profToWord(armorTraining)+" in all "+armorName}</li>`;
+      profDefensesInner += `<li class="is-size-7"><span class="has-txt-value-string is-italic">${profToWord(armorTraining)+"</span> in all "+armorName}</li>`;
 
       if(processType == PROCESS_CLASS_STATS_TYPE.RUN_CODE || isBoth){
         processCode(
@@ -381,8 +406,8 @@ function processClassStats(classData, outputStruct, processType){
   if(processType == PROCESS_CLASS_STATS_TYPE.DISPLAY || isBoth){
     $('#'+outputStruct.classDC.displayID).html(`
       <ul>
-        <li>
-          ${profToWord(classData.tClassDC)}
+        <li class="is-size-7">
+          <span class="has-txt-value-string is-italic">${profToWord(classData.tClassDC)}</span>
         </li>
       </ul>
     `);

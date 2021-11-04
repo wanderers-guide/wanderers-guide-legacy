@@ -97,13 +97,14 @@ class DisplayClass {
           }
           if(classStruct.class.weaponsExtra != null) {
             let weapLines = classStruct.class.weaponsExtra.split('\n');
-            for(let weapLine of weapLines){
-              weapLine = weapLine.replace('Untrained','<span class="has-txt-value-string is-italic">Untrained</span>');
-              weapLine = weapLine.replace('Trained','<span class="has-txt-value-string is-italic">Trained</span>');
-              weapLine = weapLine.replace('Expert','<span class="has-txt-value-string is-italic">Expert</span>');
-              weapLine = weapLine.replace('Master','<span class="has-txt-value-string is-italic">Master</span>');
-              weapLine = weapLine.replace('Legendary','<span class="has-txt-value-string is-italic">Legendary</span>');
-              $('#class-attacks').append(`<p class="class-starting-prof">${weapLine}</p>`);
+            for(const weapLine of weapLines){
+              let newWeapLine = weapLine;
+              newWeapLine = newWeapLine.replace('Untrained','<span class="has-txt-value-string is-italic">Untrained</span>');
+              newWeapLine = newWeapLine.replace('Trained','<span class="has-txt-value-string is-italic">Trained</span>');
+              newWeapLine = newWeapLine.replace('Expert','<span class="has-txt-value-string is-italic">Expert</span>');
+              newWeapLine = newWeapLine.replace('Master','<span class="has-txt-value-string is-italic">Master</span>');
+              newWeapLine = newWeapLine.replace('Legendary','<span class="has-txt-value-string is-italic">Legendary</span>');
+              $('#class-attacks').append(`<p class="class-starting-prof">${newWeapLine}</p>`);
             }
           }
 
