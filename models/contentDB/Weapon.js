@@ -34,7 +34,7 @@ const Weapon = db.define('weapons', {
   },
   rangedWeaponType: {
     type: Sequelize.ENUM,
-    values: ['DART', 'BOW', 'CROSSBOW', 'SLING', 'BOMB']
+    values: ['DART', 'BOW', 'CROSSBOW', 'SLING', 'BOMB', 'KNIFE']
   },
   rangedRange: {
     type: Sequelize.INTEGER

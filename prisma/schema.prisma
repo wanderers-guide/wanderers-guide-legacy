@@ -1437,4 +1437,5 @@ enum weapons_rangedWeaponType {
   FIREARM
   SLING
   BOMB
+  KNIFE
 }
