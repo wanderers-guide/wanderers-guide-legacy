@@ -30,6 +30,7 @@ function finishExtra(isUpdate){
 
     let extraName = $("#inputName").val();
     let extraRarity = $("#inputRarity").val();
+    let extraSize = $("#inputSize").val();
     let extraDescription = $("#inputDescription").val();
     let extraType = $("#inputExtraType").val();
     let extraLevel = $("#inputLevel").val();
@@ -49,6 +50,7 @@ function finishExtra(isUpdate){
         extraID,
         extraName,
         extraRarity,
+        extraSize,
         extraDescription,
         extraType,
         extraLevel,

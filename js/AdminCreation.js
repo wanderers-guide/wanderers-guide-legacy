@@ -1550,6 +1550,7 @@ module.exports = class AdminCreation {
           extraID
           extraName,
           extraRarity,
+          extraSize,
           extraDescription,
           extraType,
           extraLevel,
@@ -1565,6 +1566,7 @@ module.exports = class AdminCreation {
           name: trimVal(data.extraName),
           level: data.extraLevel,
           rarity: data.extraRarity,
+          size: data.extraSize,
           description: data.extraDescription,
           type: data.extraType,
           contentSrc: data.extraContentSrc,

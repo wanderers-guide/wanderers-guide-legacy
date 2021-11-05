@@ -22,6 +22,7 @@ socket.on("returnAdminExtraDetails", function(extrasObject){
     $("#inputName").val(extraData.Extra.name);
     $("#inputExtraType").val(extraData.Extra.type);
     $("#inputRarity").val(extraData.Extra.rarity);
+    $("#inputSize").val(extraData.Extra.size);
     $("#inputLevel").val(extraData.Extra.level);
     $("#inputDescription").val(extraData.Extra.description);
     $("#inputContentSource").val(extraData.Extra.contentSrc);
