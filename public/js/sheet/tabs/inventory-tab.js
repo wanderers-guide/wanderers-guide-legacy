@@ -142,7 +142,7 @@ function displayInventorySection(data){
           willDisplay = false;
         }
 
-        if(isUnarmedAttack(item)){
+        if(isUnarmedAttack(item) || item.Item.id == IMPROVISED_ITEM_ID){
           willDisplay = false;
         }
 

@@ -354,6 +354,14 @@ function runSheetStatements(wscStatement, wscStatementUpper, srcStruct, location
     return PROCESS_RETURN.NEXT;
   }
 
+  if(wscStatementUpper == "SET-IMPROVISED-WEAPON-NO-PENALTY"){
+
+
+    gState_improvisedWeaponNoPenalty = true;
+
+    return PROCESS_RETURN.NEXT;
+  }
+
   if(wscStatementUpper == "SET-ADD-LEVEL-TO-UNTRAINED-WEAPONS"){
       
 

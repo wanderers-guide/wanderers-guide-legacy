@@ -164,6 +164,11 @@ function getAttackAndDamage(itemData, invItem){
         }
         weapStruct.attack.parts.set('This is a custom bonus that\'s been added manually.', profUserBonus);
 
+        // Improvised Weapon, take -2 item penalty
+        if(itemData.Item.id == IMPROVISED_ITEM_ID && !gState_improvisedWeaponNoPenalty){
+          weapStruct.attack.parts.set('This item penalty occurs when attacking with an improvised weapon.', -2);
+        }
+
         // Totaling Attack Bonus //
         let totalAttackBonus = 0;
         for(const [source, amount] of weapStruct.attack.parts.entries()){

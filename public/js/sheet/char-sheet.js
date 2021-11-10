@@ -18,6 +18,7 @@ let gState_hasFinesseMeleeUseDexDamage;
 let gState_armoredStealth;
 let gState_mightyBulwark;
 let gState_unburdenedIron;
+let gState_improvisedWeaponNoPenalty;
 let gState_addLevelToUntrainedWeaponAttack;
 let gState_addLevelToUntrainedSkill;
 let gState_displayCompanionTab;
@@ -407,6 +408,7 @@ function loadCharSheet(){
     gState_armoredStealth = false;
     gState_mightyBulwark = false;
     gState_unburdenedIron = false;
+    gState_improvisedWeaponNoPenalty = false;
     gState_addLevelToUntrainedWeaponAttack = false;
     gState_addLevelToUntrainedSkill = false;
     gState_displayCompanionTab = false;

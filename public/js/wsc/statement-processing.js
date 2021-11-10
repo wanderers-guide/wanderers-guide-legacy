@@ -490,6 +490,14 @@ function processSheetCode(wscCode, extraData=null, isTest=false){
           continue;
         }
 
+        if(wscStatementUpper == "SET-IMPROVISED-WEAPON-NO-PENALTY"){
+          if(isTest) {continue;}
+
+          gState_improvisedWeaponNoPenalty = true;
+
+          continue;
+        }
+
         if(wscStatementUpper == "SET-ADD-LEVEL-TO-UNTRAINED-WEAPONS"){
             if(isTest) {continue;}
 

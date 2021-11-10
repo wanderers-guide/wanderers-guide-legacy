@@ -3,6 +3,7 @@
 */
 
 const FIST_ITEM_ID = 56; // <- Fist, Hardcoded Item ID
+const IMPROVISED_ITEM_ID = 4753; // <- Improvised Weapon, Hardcoded Item ID
 
 function openWeaponsTab(data) {
 
@@ -136,6 +137,7 @@ function openWeaponsTab(data) {
     // Physical Features to Unarmed Attacks
     let phyFeatWeaponMap = new Map();
     phyFeatWeaponMap.set(0, FIST_ITEM_ID);
+    phyFeatWeaponMap.set(-1, IMPROVISED_ITEM_ID);
 
     for(const physicalFeature of g_phyFeatArray){
         if(physicalFeature.value.itemWeaponID != null){
@@ -163,8 +165,8 @@ function openWeaponsTab(data) {
 
     let checkDuplicateUnarmedAttacks = [];
     for(const invItem of g_invStruct.InvItems){
-      const item = g_itemMap.get(invItem.itemID+"");
-      if(isUnarmedAttack(item) && item.Item.id != FIST_ITEM_ID){ // Is Non-Custom Unarmed Attack
+      const item = g_itemMap.get(invItem.itemID+""); // Is Non-Custom Unarmed Attack
+      if(isUnarmedAttack(item) && item.Item.id != FIST_ITEM_ID && item.Item.id != IMPROVISED_ITEM_ID){
         const itemWeaponID = Array.from(phyFeatWeaponMap.values()).find(itemWeaponID => {
           return (itemWeaponID === invItem.itemID);
         });
@@ -185,7 +187,7 @@ function openWeaponsTab(data) {
 
       // Normal Fist has qty of 0 to detect that it is the base Fist, hope that makes sense
       let qty;
-      if(itemID == FIST_ITEM_ID){ qty = 0; } else { qty = 1; }
+      if(itemID == FIST_ITEM_ID || itemID == IMPROVISED_ITEM_ID){ qty = 0; } else { qty = 1; }
       socket.emit("requestAddItemToInv",
           getCharIDFromURL(),
           g_invStruct.Inventory.id,
