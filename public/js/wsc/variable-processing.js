@@ -655,7 +655,7 @@ function variables_getTotal(variableName, errorOnFailure=true){
     let bonusTotal = variables_getBonusTotal(variableName);
     if(bonusTotal != null) { total += bonusTotal; }
     total += variable.Value;
-    return total;
+    return parseInt(total);
 
   } else if(variable.Type == VAR_TYPE.STRING){
     if(errorOnFailure){
