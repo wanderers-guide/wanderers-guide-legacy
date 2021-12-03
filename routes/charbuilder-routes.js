@@ -49,7 +49,7 @@ router.get('/', (req, res) => {
 
       let isPlayable = CharStateUtils.isPlayable(character);
 
-      res.render('builder/build_planner_abc', {
+      res.render('char_builder/char_builder', { // builder/build_planner_abc
         title: "Character Builder - Wanderer's Guide",
         user: req.user,
         character: character,

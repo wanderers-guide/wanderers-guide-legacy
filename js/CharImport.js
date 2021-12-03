@@ -1,5 +1,6 @@
 
 const { Op } = require("sequelize");
+const db = require('../config/databases/content-database');
 
 const User = require('../models/contentDB/User');
 const Inventory = require('../models/contentDB/Inventory');
@@ -54,135 +55,148 @@ module.exports = class CharImport {
     charExportData.character.userID = userID;// User ID is current user.
 
     try {
+    
+      return db.query('SET FOREIGN_KEY_CHECKS = 0;')
+      .then(function() {
+        return db.query('SET UNIQUE_CHECKS = 0;')
+      .then(function() {
 
-      // Inventory
-      delete charExportData.inventory.id;
-      return Inventory.create(charExportData.inventory)
-      .then(inventory => {
+        // Inventory
+        delete charExportData.inventory.id;
+        return Inventory.create(charExportData.inventory)
+        .then(inventory => {
 
-        // Character
-        delete charExportData.character.id;
-        charExportData.character.inventoryID = inventory.id;
-        return Character.create(charExportData.character)
-        .then(character => {
-          
-          // Inv Items
-          let oldItemIDMap = new Map();
-          let itemIDMapper = new Map();
+          // Character
+          delete charExportData.character.id;
+          charExportData.character.inventoryID = inventory.id;
+          return Character.create(charExportData.character)
+          .then(character => {
+            
+            // Inv Items
+            let oldItemIDMap = new Map();
+            let itemIDMapper = new Map();
 
-          let invItemPromises = [];
-
-          let index = 0;
-          for(let invItem of charExportData.invItems) {
-
-            oldItemIDMap.set(index, invItem.id);
-
-            delete invItem.id;
-            invItem.invID = inventory.id;
-            invItemPromises.push(InvItem.create(invItem));
-
-            index++;
-          }
-
-          return Promise.all(invItemPromises)
-          .then(function(createdInvItems) {
-
-            // Update bagged items to correct bag ID
-            let updatedInvItemPromises = [];
+            let invItemPromises = [];
 
             let index = 0;
-            for(let createdInvItem of createdInvItems) {
+            for(let invItem of charExportData.invItems) {
 
-              let oldItemID = oldItemIDMap.get(index);
-              itemIDMapper.set(oldItemID, createdInvItem.id);
+              oldItemIDMap.set(index, invItem.id);
+
+              delete invItem.id;
+              invItem.invID = inventory.id;
+              invItemPromises.push(InvItem.create(invItem));
 
               index++;
             }
 
-            for(let createdInvItem of createdInvItems) {
+            return Promise.all(invItemPromises)
+            .then(function(createdInvItems) {
 
-              if(createdInvItem.bagInvItemID != null){
-                let newBagItemID = itemIDMapper.get(createdInvItem.bagInvItemID);
-                updatedInvItemPromises.push(InvItem.update(
-                  { bagInvItemID: newBagItemID },
-                  { where: { id: createdInvItem.id, invID: inventory.id } }));
+              // Update bagged items to correct bag ID
+              let updatedInvItemPromises = [];
+
+              let index = 0;
+              for(let createdInvItem of createdInvItems) {
+
+                let oldItemID = oldItemIDMap.get(index);
+                itemIDMapper.set(oldItemID, createdInvItem.id);
+
+                index++;
               }
 
-            }
+              for(let createdInvItem of createdInvItems) {
 
-            return Promise.all(updatedInvItemPromises)
-            .then(function(result) {
-
-              // Note Fields
-              let noteFieldPromises = [];
-
-              // Generate a new ID based off of char metadata.
-              for(const metaData of charExportData.metaData) {
-                if(metaData.source == 'notesField') {
-                  let oldNoteFieldID = srcStructToCode(metaData.charID, metaData.source, metaData);
-                  let noteField = charExportData.noteFields.find(noteField => {
-                    return noteField.id == oldNoteFieldID;
-                  });
-                  if(noteField != null){
-                    noteField.id = srcStructToCode(character.id, metaData.source, metaData);
-                    noteFieldPromises.push(NoteField.create(noteField));
-                  }
+                if(createdInvItem.bagInvItemID != null){
+                  let newBagItemID = itemIDMapper.get(createdInvItem.bagInvItemID);
+                  updatedInvItemPromises.push(InvItem.update(
+                    { bagInvItemID: newBagItemID },
+                    { where: { id: createdInvItem.id, invID: inventory.id } }));
                 }
+
               }
 
-              return Promise.all(noteFieldPromises)
+              return Promise.all(updatedInvItemPromises)
               .then(function(result) {
 
-                // Meta Data
-                let metaDataPromises = [];
-                for(let metaData of charExportData.metaData) {
-                  metaData.charID = character.id;
-                  metaDataPromises.push(CharDataMapping.create(metaData));
-                }
-                return Promise.all(metaDataPromises)
-                .then(function(result) {
-                    
-                  // Animal Companions
-                  let animalCompPromises = [];
-                  for(let animalCompanion of charExportData.animalCompanions) {
-                    delete animalCompanion.id;
-                    animalCompanion.charID = character.id;
-                    animalCompPromises.push(CharAnimalCompanion.create(animalCompanion));
-                  }
-                  return Promise.all(animalCompPromises)
-                  .then(function(result) {
+                // Note Fields
+                let noteFieldPromises = [];
 
-                    // Familiars
-                    let familiarPromises = [];
-                    for(let familiar of charExportData.familiars) {
-                      delete familiar.id;
-                      familiar.charID = character.id;
-                      familiarPromises.push(CharFamiliar.create(familiar));
+                // Generate a new ID based off of char metadata.
+                for(const metaData of charExportData.metaData) {
+                  if(metaData.source == 'notesField') {
+                    let oldNoteFieldID = srcStructToCode(metaData.charID, metaData.source, metaData);
+                    let noteField = charExportData.noteFields.find(noteField => {
+                      return noteField.id == oldNoteFieldID;
+                    });
+                    if(noteField != null){
+                      noteField.id = srcStructToCode(character.id, metaData.source, metaData);
+                      noteField.charID = character.id;
+                      noteFieldPromises.push(NoteField.create(noteField));
                     }
-                    return Promise.all(familiarPromises)
+                  }
+                }
+
+                return Promise.all(noteFieldPromises)
+                .then(function(result) {
+
+                  // Meta Data
+                  let metaDataPromises = [];
+                  for(let metaData of charExportData.metaData) {
+                    metaData.charID = character.id;
+                    metaDataPromises.push(CharDataMapping.create(metaData));
+                  }
+                  return Promise.all(metaDataPromises)
+                  .then(function(result) {
+                      
+                    // Animal Companions
+                    let animalCompPromises = [];
+                    for(let animalCompanion of charExportData.animalCompanions) {
+                      delete animalCompanion.id;
+                      animalCompanion.charID = character.id;
+                      animalCompPromises.push(CharAnimalCompanion.create(animalCompanion));
+                    }
+                    return Promise.all(animalCompPromises)
                     .then(function(result) {
 
-                      // Conditions
-                      let conditionPromises = [];
-                      for(let condition of charExportData.conditions) {
-                        delete condition.id;
-                        condition.charID = character.id;
-                        conditionPromises.push(CharCondition.create(condition));
+                      // Familiars
+                      let familiarPromises = [];
+                      for(let familiar of charExportData.familiars) {
+                        delete familiar.id;
+                        familiar.charID = character.id;
+                        familiarPromises.push(CharFamiliar.create(familiar));
                       }
-                      return Promise.all(conditionPromises)
+                      return Promise.all(familiarPromises)
                       .then(function(result) {
 
-                        // Spell Book Spells
-                        let spellBookSpellPromises = [];
-                        for(let spellBookSpell of charExportData.spellBookSpells) {
-                          delete spellBookSpell.id;
-                          spellBookSpell.charID = character.id;
-                          spellBookSpellPromises.push(SpellBookSpell.create(spellBookSpell));
+                        // Conditions
+                        let conditionPromises = [];
+                        for(let condition of charExportData.conditions) {
+                          delete condition.id;
+                          condition.charID = character.id;
+                          conditionPromises.push(CharCondition.create(condition));
                         }
-                        return Promise.all(spellBookSpellPromises)
+                        return Promise.all(conditionPromises)
                         .then(function(result) {
 
-                          return true;
+                          // Spell Book Spells
+                          let spellBookSpellPromises = [];
+                          for(let spellBookSpell of charExportData.spellBookSpells) {
+                            delete spellBookSpell.id;
+                            spellBookSpell.charID = character.id;
+                            spellBookSpellPromises.push(SpellBookSpell.create(spellBookSpell));
+                          }
+                          return Promise.all(spellBookSpellPromises)
+                          .then(function(result) {
+
+                            return db.query('SET FOREIGN_KEY_CHECKS = 1;')
+                            .then(function() {
+
+                              return true;
+
+                            });
+
+                          });
 
                         });
 
@@ -197,10 +211,11 @@ module.exports = class CharImport {
               });
 
             });
-
           });
 
+          });
         });
+
       });
 
     } catch (err) {
