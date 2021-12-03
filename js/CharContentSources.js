@@ -10,7 +10,7 @@ module.exports = class CharContentSources {
     static getSourceArray(character){
       let array = JSON.parse(character.enabledSources);
       array = array.concat(getConstantSources());
-      return array;
+      return [...new Set(array)];
     }
 
     static getSourceArrayPrisma(character){
@@ -20,7 +20,7 @@ module.exports = class CharContentSources {
       for(let arr of array){
         newArray.push({ contentSrc: arr });
       }
-      return newArray;
+      return [...new Set(newArray)];
     }
 
     static addSource(charID, sourceName){

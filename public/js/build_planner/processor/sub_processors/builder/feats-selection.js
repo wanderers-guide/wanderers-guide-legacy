@@ -7,6 +7,13 @@ let g_featSelectionMap = new Map();
 
 function giveFeatSelection(locationID, srcStruct, selectionName, selectionMap, sourceName){
 
+  // Sort selectionMap by key (level) -> highest to loweest
+  selectionMap = new Map([...selectionMap.entries()].sort(
+    function(a, b) {
+        return b[0] - a[0];
+    })
+  );
+
   let featSelectionLocID = "featSelect-"+locationID+"-"+srcStruct.sourceCode+"-"+srcStruct.sourceCodeSNum;
   $('#'+locationID).append('<div id="'+featSelectionLocID+'" class="py-1"></div>');
   generateFeatSelection(featSelectionLocID, srcStruct, selectionName, selectionMap, sourceName);
@@ -27,6 +34,24 @@ function generateFeatSelection(contentLocID, srcStruct, selectionName, selection
   let selectedFeat = null;
   if(selectedFeatData != null && selectedFeatData.value != null){
     selectedFeat = g_featMap.get(selectedFeatData.value+"");
+  }
+
+  // Selected feat must be one of the selection options,
+  if(selectedFeat != null){
+    let findSelectedFeatInSelectionMap = function(){
+      for(let [featLevel, featArray] of selectionMap.entries()){
+        for(let feat of featArray){
+          if(feat.Feat.name == selectedFeat.Feat.name){
+            return true;
+          }
+        }
+      }
+      return false;
+    };
+    if(!findSelectedFeatInSelectionMap()){
+      selectedFeat = null;
+      setData(DATA_SOURCE.FEAT_CHOICE, srcStruct, null);
+    }
   }
   // ~~~~~~~~~~~~~~~~~ //
 

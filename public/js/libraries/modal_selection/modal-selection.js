@@ -12,14 +12,27 @@
   ]
 */
 class ModalSelection {
-  constructor(title, confirmBtnText, selectionArray, selectionType, modalID, confirmBtnID, featMap, existingSelectionID, confirmBtnColor='is-info') {
+  constructor(title, confirmBtnText, selectionArray, selectionType, modalID, confirmBtnID, featMap, character, confirmBtnColor='is-info') {
     this.title = title;
     this.featMap = featMap;
     this.selectionArray = selectionArray;
     this.selectionType = selectionType;
-    this.existingSelectionID = existingSelectionID;
 
-    this.selectedOptionID = null;
+    let existingSelectionID;
+    if(selectionType == 'ancestry'){
+      existingSelectionID = character.ancestryID;
+    } else if(selectionType == 'background'){
+      existingSelectionID = character.backgroundID;
+    } else if(selectionType == 'class'){
+      existingSelectionID = character.classID;
+    } else {
+      existingSelectionID = 'none';
+    }
+    if(existingSelectionID == null){
+      existingSelectionID = 'none';
+    }
+
+    let selectedOptionID = null;
 
     $('#center-body').parent().append(`
       <div id="${modalID}" class="modal modal-selection" style="z-index: 30;">
@@ -54,9 +67,12 @@ class ModalSelection {
       $('#'+modalID).remove();
     });
     $('#'+confirmBtnID).click(function() {
-      $('#'+modalID).removeClass('is-active');
-      $('html').removeClass('is-clipped');
-      window.setTimeout(()=>{ $('#'+modalID).remove(); }, 300);
+      $('#'+confirmBtnID).addClass('is-loading');
+      window.setTimeout(()=>{
+        $('#'+modalID).removeClass('is-active');
+        $('html').removeClass('is-clipped');
+        $('#'+modalID).remove();
+      }, 300);
     });
 
     // Allow quickview to close by clicking on modal
@@ -73,7 +89,7 @@ class ModalSelection {
       $(`#${modalID}-listings`).append(`
         <div id="${modalID}-listings-${selection.id}" class="columns is-mobile is-marginless p-1 border-bottom border-dark-lighter cursor-clickable">
           <div class="column is-paddingless pos-relative">
-            <p class="pl-2">${selection.name}</p>
+            <p class="pl-2 ${(selection.id == 'none')?'is-italic':''}">${selection.name}</p>
             <span class="pos-absolute pos-t-0 pos-r-0 is-hidden-mobile">${convertRarityToHTML(selection.rarity, true, 'is-tiny')}</span>
           </div>
         </div>
@@ -97,13 +113,14 @@ class ModalSelection {
         // Listing is darkened
         $(`#${modalID}-listings > div.entry-selected-darker`).removeClass('entry-selected-darker');
         $(`#${modalID}-listings-${selection.id}`).addClass('entry-selected-darker');
-        this.selectedOptionID = selection.id;
+        selectedOptionID = selection.id;
 
-        if(this.selectedOptionID != existingSelectionID){
+        if(selectedOptionID != existingSelectionID){
           $('#'+confirmBtnID).css('visibility', 'visible');
         } else {
           $('#'+confirmBtnID).css('visibility', 'hidden');
         }
+        $('#'+confirmBtnID).attr('data-selectedOptionID', selectedOptionID);
 
         // Display preview
         if(selection.id == 'none'){

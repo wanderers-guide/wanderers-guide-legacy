@@ -5,10 +5,11 @@
 function processClass() {
 
   const charClass = getCharClass();
+  $(`#initial-stats-class`).html('');
   if(charClass != null){
 
     // Process initial class stats //
-    $(`#initial-stats-class`).append(`
+    $(`#initial-stats-class`).html(`
     
       <div class="pt-1">
         <div class="pos-relative">
@@ -169,11 +170,19 @@ function processClass() {
               </div>
             </div>
             <div id="class-feature-selector-result-${classFeature.id}" class="columns is-centered m-0 is-hidden">
-              <div class="column is-mobile is-8 p-0 mb-2">
+              <div class="column is-mobile is-10 p-0 mb-2">
                 <article class="message is-info">
                   <div class="message-body">
-                    <div id="class-feature-selector-description-${classFeature.id}"></div>
+
+                    <div class="pos-relative">
+                      <div class="fading-reveal-container is-active">
+                        <div id="class-feature-selector-description-${classFeature.id}" class="has-text-left"></div>
+                      </div>
+                      <p class="reveal-container-text is-hidden has-text-info">Show More</p>
+                    </div>
+
                     <div id="class-feature-selector-code-${classFeature.id}"></div>
+
                   </div>
                 </article>
               </div>
@@ -262,5 +271,18 @@ function processClass() {
     }
 
   }
+
+}
+
+function deleteClass(){
+
+  deleteDataBySourceType('class');
+  g_character.classID = null;
+
+}
+
+function setClass(classID){
+
+  g_character.classID = classID;
 
 }

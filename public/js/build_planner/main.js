@@ -4,14 +4,33 @@
 
 let socket = io();
 
+let g_builder_type = null;// 'by-abc' or 'by-level'
+let g_page_num = null;
+
+let g_char_id = null;
+let g_char_level = null;
+
 $(function () {
 
+  g_builder_type = $('#builder-data').attr('data-builder-type');
+  g_page_num = parseInt($('#builder-data').attr('data-page-num'));
+
+  g_char_id = parseInt($('#builder-data').attr('data-char-id'));
+  g_char_level = parseInt($('#builder-data').attr('data-char-lvl'));
+
   startDiceLoader();
-  socket.emit("requestPlannerCore");
+  socket.emit("requestPlannerCore", g_char_id);
 
   // Create the container for each level
   $(`#creation-section`).html(`
-    <div class="accord-container accord-creation-container my-1">
+    <div>
+      <p id="creation-select-msg-by-level" class="is-hidden has-text-centered is-italic">Select an ancestry, background, or class.</p>
+      <p id="creation-select-msg-by-abc-a" class="is-hidden has-text-centered is-italic">Select an ancestry.</p>
+      <p id="creation-select-msg-by-abc-b" class="is-hidden has-text-centered is-italic">Select a background.</p>
+      <p id="creation-select-msg-by-abc-c" class="is-hidden has-text-centered is-italic">Select a class.</p>
+    </div>
+
+    <div id="accord-container-init-stats" class="accord-container accord-creation-container my-1">
       <div class="accord-header">
         <span class="title-font pl-2">Initial Stats <span class="has-txt-noted is-italic">(Level 1)</span></span>
         <span class="accord-indicate-unselected-options"></span>
@@ -20,9 +39,9 @@ $(function () {
         </span>
       </div>
       <div class="accord-body is-hidden">
-        <div id="initial-stats-ancestry"></div>
-        <div id="initial-stats-background"></div>
-        <div id="initial-stats-class"></div>
+        <div id="initial-stats-ancestry" class="ancestry-feature-section"></div>
+        <div id="initial-stats-background" class="background-feature-section"></div>
+        <div id="initial-stats-class" class="class-feature-section"></div>
       </div>
     </div>
   `);
@@ -56,8 +75,7 @@ socket.on("returnPlannerCore", function(coreStruct) {
 
 let g_character = null;
 let gOption_hasProfWithoutLevel = false;
-
-let g_char_level = 10;
+let gOption_hasVariantAncestryParagon = false;
 
 let temp_classNum = 1;
 let g_unselectedData = null;
@@ -78,7 +96,6 @@ let g_ancestryMap = null;
 let g_archetypes = null;
 let g_backgrounds = null;
 let g_uniHeritages = null;
-
 
 function mainLoaded(plannerCoreStruct, choiceStruct){
 
@@ -103,8 +120,11 @@ function mainLoaded(plannerCoreStruct, choiceStruct){
   g_uniHeritages = plannerCoreStruct.uniHeritages;
   //          //
 
+  g_character = choiceStruct.character;
+
   console.log(choiceStruct);
 
+  // Populate unselectedData array
   g_unselectedData = [];
   for(let metaData of choiceStruct.charMetaData){
     if(metaData.source == 'unselectedData'){
@@ -112,38 +132,10 @@ function mainLoaded(plannerCoreStruct, choiceStruct){
     }
   }
 
+  // Init char meta data
   initDataMap(choiceStruct.charMetaData);
 
-  g_character = choiceStruct.character;
-  gOption_hasProfWithoutLevel = (g_character.variantProfWithoutLevel === 1);
-
-
-  initVariables();
-
-  // Process Modules //
-  processClass();
-  processAncestry();
-  processBackground();
-
-  // Open First Accordion //
-  $(`#level-${g_char_level}-body`).parent().find('.accord-header').trigger('click');
-  // Scroll down to Accordion
-  $(`#level-${g_char_level}-body`).parent()[0].scrollIntoView();
-
-  // Display Results //
-  displayStats();
-
-  if(getCharAncestry() != null){
-    $('#selected-ancestry').text(getCharAncestry().Ancestry.name);
-  }
-  if(getCharBackground() != null){
-    $('#selected-background').text(getCharBackground().name);
-  }
-  if(getCharClass() != null){
-    $('#selected-class').text(getCharClass().Class.name);
-  }
-
-  // Change ancestry
+  // ABC Selections //
   let ancestrySelections = [];
   for(const [ancestryID, ancestryData] of g_ancestryMap.entries()){
     if(ancestryData.Ancestry.isArchived == 1){ continue; }
@@ -159,14 +151,28 @@ function mainLoaded(plannerCoreStruct, choiceStruct){
     }
   );
   ancestrySelections = [{id: 'none', name: 'None', rarity: 'COMMON'}, ...ancestrySelections];
-  $('#selected-ancestry').click(function() {
-    new ModalSelection('Select Ancestry', 'Confirm Ancestry', ancestrySelections, 'ancestry', 'modal-select-ancestry', 'modal-select-ancestry-confirm-btn', g_featMap, 'none');
-    $('#modal-select-ancestry-confirm-btn').click(function() {
-      console.log('Clicked butn');
-    });
-  });
 
-  // Change background
+  let ancestryModalSelect = function() {
+    new ModalSelection('Select Ancestry', 'Confirm Ancestry', ancestrySelections, 'ancestry', 'modal-select-ancestry', 'modal-select-ancestry-confirm-btn', g_featMap, g_character);
+    $('#modal-select-ancestry-confirm-btn').click(function() {
+      let newAncestryID = $('#modal-select-ancestry-confirm-btn').attr('data-selectedOptionID');
+      if(newAncestryID == 'none'){ newAncestryID = null; }
+      console.log(newAncestryID);
+
+      window.setTimeout(()=>{
+        // Update ancestry in builder
+        deleteAncestry();
+        setAncestry(newAncestryID);
+        stateLoad();
+
+        // Update ancestry in db
+        socket.emit("requestAncestryChange",
+            getCharIDFromURL(),
+            newAncestryID);
+      }, 100);
+    });
+  };
+
   let backgroundSelections = [];
   for(const background of g_backgrounds){
     if(background.isArchived == 1){ continue; }
@@ -182,14 +188,28 @@ function mainLoaded(plannerCoreStruct, choiceStruct){
     }
   );
   backgroundSelections = [{id: 'none', name: 'None', rarity: 'COMMON'}, ...backgroundSelections];
-  $('#selected-background').click(function() {
-    new ModalSelection('Select Background', 'Confirm Background', backgroundSelections, 'background', 'modal-select-background', 'modal-select-background-confirm-btn', g_featMap, 'none');
-    $('#modal-select-background-confirm-btn').click(function() {
-      console.log('Clicked butn');
-    });
-  });
 
-  // Change class
+  let backgroundModalSelect = function() {
+    new ModalSelection('Select Background', 'Confirm Background', backgroundSelections, 'background', 'modal-select-background', 'modal-select-background-confirm-btn', g_featMap, g_character);
+    $('#modal-select-background-confirm-btn').click(function() {
+      let newBackgroundID = $('#modal-select-background-confirm-btn').attr('data-selectedOptionID');
+      if(newBackgroundID == 'none'){ newBackgroundID = null; }
+      console.log(newBackgroundID);
+
+      window.setTimeout(()=>{
+        // Update background in builder
+        deleteBackground();
+        setBackground(newBackgroundID);
+        stateLoad();
+
+        // Update background in db
+        socket.emit("requestBackgroundChange",
+            getCharIDFromURL(),
+            newBackgroundID);
+      }, 100);
+    });
+  };
+
   let classSelections = [];
   for(const [classID, classData] of g_classMap.entries()){
     if(classData.Class.isArchived == 1){ continue; }
@@ -205,13 +225,217 @@ function mainLoaded(plannerCoreStruct, choiceStruct){
     }
   );
   classSelections = [{id: 'none', name: 'None', rarity: 'COMMON'}, ...classSelections];
-  $('#selected-class').click(function() {
-    new ModalSelection('Select Class', 'Confirm Class', classSelections, 'class', 'modal-select-class', 'modal-select-class-confirm-btn', g_featMap, 269);
-    $('#modal-select-class-confirm-btn').click(function() {
-      console.log('Clicked butn');
-    });
-  });
 
+  let classModalSelect = function() {
+    new ModalSelection('Select Class', 'Confirm Class', classSelections, 'class', 'modal-select-class', 'modal-select-class-confirm-btn', g_featMap, g_character);
+    $('#modal-select-class-confirm-btn').click(function() {
+      let newClassID = $('#modal-select-class-confirm-btn').attr('data-selectedOptionID');
+      if(newClassID == 'none'){ newClassID = null; }
+      console.log(newClassID);
+
+      window.setTimeout(()=>{
+        // Update class in builder
+        deleteClass();
+        setClass(newClassID);
+        stateLoad();
+
+        // Update class in db
+        socket.emit("requestClassChange",
+            getCharIDFromURL(),
+            newClassID,
+            1);
+      }, 100);
+    });
+  };
+
+  // Selector for changing ABCs
+  if(g_builder_type == 'by-level'){
+    
+    $('#selected-ancestry').click(function() {
+      ancestryModalSelect();
+    });
+    $('#selected-background').click(function() {
+      backgroundModalSelect();
+    });
+    $('#selected-class').click(function() {
+      classModalSelect();
+    });
+
+  } else if(g_builder_type == 'by-abc'){
+
+    $('#selected-abc').click(function() {
+      if(g_page_num == 2){
+        ancestryModalSelect();
+      } else if(g_page_num == 3){
+        backgroundModalSelect();
+      } else if(g_page_num == 4){
+        classModalSelect();
+      }
+    });
+
+  }
+
+  // Loading Builder State
+  stateLoad();
+
+}
+
+function stateLoad(){
+
+  // Clear each level container
+  for(let lvl = 1; lvl <= g_char_level; lvl++){
+    $(`#level-${lvl}-body`).html('');
+  }
+
+  gOption_hasProfWithoutLevel = (g_character.variantProfWithoutLevel === 1);
+  gOption_hasVariantAncestryParagon = (g_character.variantAncestryParagon === 1);
+
+  initVariables();
+
+  // Process Modules //
+  processAncestry();
+  processBackground();
+  processClass();
+
+  // Open First Accordion //
+  $(`#level-${g_char_level}-body`).parent().find('.accord-header').trigger('click');
+  // Scroll down to Accordion
+  $(`#level-${g_char_level}-body`).parent()[0].scrollIntoView();
+
+  // Display Results //
+  displayStats();
+
+  // If level body is empty, hide accord
+  if(g_builder_type == 'by-level'){
+    for(let lvl = 1; lvl <= g_char_level; lvl++){
+      if($(`#level-${lvl}-body`).html() == ''){
+        $(`#level-${lvl}-body`).parent().addClass('is-hidden');
+      } else {
+        $(`#level-${lvl}-body`).parent().removeClass('is-hidden');
+      }
+    }
+  } else if(g_builder_type == 'by-abc'){
+    for(let lvl = 1; lvl <= g_char_level; lvl++){
+      if(g_page_num == 2){
+        if($(`#level-${lvl}-body`).find('.ancestry-feature-section').length > 0){
+          $(`#level-${lvl}-body`).parent().removeClass('is-hidden');
+        } else {
+          $(`#level-${lvl}-body`).parent().addClass('is-hidden');
+        }
+      } else if(g_page_num == 3){
+        if($(`#level-${lvl}-body`).find('.background-feature-section').length > 0){
+          $(`#level-${lvl}-body`).parent().removeClass('is-hidden');
+        } else {
+          $(`#level-${lvl}-body`).parent().addClass('is-hidden');
+        }
+      } else if(g_page_num == 4){
+        if($(`#level-${lvl}-body`).find('.class-feature-section').length > 0){
+          $(`#level-${lvl}-body`).parent().removeClass('is-hidden');
+        } else {
+          $(`#level-${lvl}-body`).parent().addClass('is-hidden');
+        }
+      }
+    }
+  }
+
+  // Set name of current ancestry / background / class in selector
+  if(g_builder_type == 'by-level'){
+    if(getCharAncestry() != null){
+      $('#selected-ancestry').text(getCharAncestry().Ancestry.name);
+    } else {
+      $('#selected-ancestry').text('None');
+    }
+    if(getCharBackground() != null){
+      $('#selected-background').text(getCharBackground().name);
+    } else {
+      $('#selected-background').text('None');
+    }
+    if(getCharClass() != null){
+      $('#selected-class').text(getCharClass().Class.name);
+    } else {
+      $('#selected-class').text('None');
+    }
+  } else if(g_builder_type == 'by-abc'){
+    if(g_page_num == 2){
+      $('#selected-abc-title').text('Ancestry');
+      if(getCharAncestry() != null){
+        $('#selected-abc').text(getCharAncestry().Ancestry.name);
+      } else {
+        $('#selected-abc').text('None');
+      }
+    } else if(g_page_num == 3){
+      $('#selected-abc-title').text('Background');
+      if(getCharBackground() != null){
+        $('#selected-abc').text(getCharBackground().name);
+      } else {
+        $('#selected-abc').text('None');
+      }
+    } else if(g_page_num == 4){
+      $('#selected-abc-title').text('Class');
+      if(getCharClass() != null){
+        $('#selected-abc').text(getCharClass().Class.name);
+      } else {
+        $('#selected-abc').text('None');
+      }
+    }
+  }
+
+  // If ancestry, background, and/or class is none, hide init stats
+  if(g_builder_type == 'by-level'){
+    if(getCharAncestry() == null && getCharBackground() == null && getCharClass() == null){
+      $('#accord-container-init-stats').addClass('is-hidden');
+      $('#creation-select-msg-by-level').removeClass('is-hidden');
+    } else {
+      $('#accord-container-init-stats').removeClass('is-hidden');
+      $('#creation-select-msg-by-level').addClass('is-hidden');
+    }
+  } else if(g_builder_type == 'by-abc'){
+    $('#creation-select-msg-by-abc-a').addClass('is-hidden');
+    $('#creation-select-msg-by-abc-b').addClass('is-hidden');
+    $('#creation-select-msg-by-abc-c').addClass('is-hidden');
+    if(g_page_num == 2){
+      if(getCharAncestry() == null){
+        $('#accord-container-init-stats').addClass('is-hidden');
+        $('#creation-select-msg-by-abc-a').removeClass('is-hidden');
+      } else {
+        $('#accord-container-init-stats').removeClass('is-hidden');
+      }
+    } else if(g_page_num == 3){
+      if(getCharBackground() == null){
+        $('#accord-container-init-stats').addClass('is-hidden');
+        $('#creation-select-msg-by-abc-b').removeClass('is-hidden');
+      } else {
+        $('#accord-container-init-stats').removeClass('is-hidden');
+      }
+    } else if(g_page_num == 4){
+      if(getCharClass() == null){
+        $('#accord-container-init-stats').addClass('is-hidden');
+        $('#creation-select-msg-by-abc-c').removeClass('is-hidden');
+      } else {
+        $('#accord-container-init-stats').removeClass('is-hidden');
+      }
+    }
+  }
+  
+  // If is in abc, hide other sections
+  if(g_builder_type == 'by-abc'){
+    if(g_page_num == 2){
+      $('.ancestry-feature-section').removeClass('is-hidden');
+      $('.background-feature-section').addClass('is-hidden');
+      $('.class-feature-section').addClass('is-hidden');
+      
+      $('.background-feature-section').find('li').removeClass("active");
+
+    } else if(g_page_num == 3){
+      $('.ancestry-feature-section').addClass('is-hidden');
+      $('.background-feature-section').removeClass('is-hidden');
+      $('.class-feature-section').addClass('is-hidden');
+    } else if(g_page_num == 4){
+      $('.ancestry-feature-section').addClass('is-hidden');
+      $('.background-feature-section').addClass('is-hidden');
+      $('.class-feature-section').removeClass('is-hidden');
+    }
+  }
 
 }
 
@@ -536,7 +760,7 @@ function displayStats(){
 
 
 function getCharIDFromURL(){
-  return 60423;
+  return g_char_id;
 }
 
 function getAllAbilityTypes() {

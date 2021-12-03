@@ -30,9 +30,10 @@ const DATA_SOURCE = {
   SCFS: 'scfs',
 };
 
-const g_dataMap = new Map();
+let g_dataMap = null;
 
 function initDataMap(charMetaData){
+  g_dataMap = new Map();
   for(let metaData of charMetaData){
 
     // Don't load init class profs (for backwards compatibility with old builder).

@@ -61,6 +61,48 @@ function processMiscFeatStatements(code){
   return success;
 }
 
+// For new processor
+function runMiscFeatStatements(wscStatement, wscStatementUpper){
+
+  if(wscStatementUpper.startsWith("UNHIDE-FEAT-NAME=")){ // UNHIDE-FEAT-NAME=Counterspell
+
+    let featName = wscStatementUpper.split('=')[1];
+    removeHidden(featName);
+    g_featMap = updateFeatMapWithMiscs(g_featMap);
+
+    return PROCESS_RETURN.NEXT;
+  }
+  
+  if(wscStatementUpper.startsWith("HIDE-FEAT-NAME=")){ // HIDE-FEAT-NAME=Counterspell
+
+    let featName = wscStatementUpper.split('=')[1];
+    g_hiddenFeatNames.push(featName.toUpperCase());
+    g_featMap = updateFeatMapWithMiscs(g_featMap);
+
+    return PROCESS_RETURN.NEXT;
+  }
+  
+  if(wscStatementUpper.startsWith("OVERRIDE-FEAT-LEVEL=")){ // OVERRIDE-FEAT-LEVEL=Counterspell:2
+
+    let data = wscStatementUpper.split('=')[1];
+    let dataParts = data.split(':');
+    g_overrideFeatLevelMap.set(dataParts[0].toUpperCase(),parseInt(dataParts[1]));
+    g_featMap = updateFeatMapWithMiscs(g_featMap);
+
+    return PROCESS_RETURN.NEXT;
+  }
+
+  if(wscStatementUpper.startsWith("SHEET-CONCEAL-FEAT-NAME=")){ // SHEET-CONCEAL-FEAT-NAME=Counterspell
+
+    let featName = wscStatementUpper.split('=')[1];
+    g_concealedFeatNames.push(featName.toUpperCase());
+
+    return PROCESS_RETURN.NEXT;
+  }
+
+  return PROCESS_RETURN.UNKNOWN;
+}
+
 function isFeatConcealed(featName){
   return g_concealedFeatNames.includes(featName.toUpperCase());
 }

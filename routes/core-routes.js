@@ -62,8 +62,9 @@ router.get('/material_stats', (req, res) => {
 });
 
 // Build Planner Route
+/*
 router.get('/build_planner', (req, res) => {
   res.render('pages/build_planner', { title: "Create Your Build - Wanderer's Guide", user: req.user });
-});
+});*/
 
 module.exports = router;

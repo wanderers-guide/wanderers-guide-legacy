@@ -47,19 +47,14 @@ router.get('/', (req, res) => {
   .then((character) => {
     if(character != null){
 
-      CharGathering.getBaseAbilityScores(req.user.id, character.id)
-      .then((charAbilityScores) => {
-        let isPlayable = CharStateUtils.isPlayable(character);
+      let isPlayable = CharStateUtils.isPlayable(character);
 
-        res.render('char_builder/char_builder', {
-          title: "Character Builder - Wanderer's Guide",
-          user: req.user,
-          character: character,
-          charAbilities: charAbilityScores,
-          isPlayable: isPlayable,
-          pageNum: pageNum,
-        });
-        
+      res.render('builder/build_planner_abc', {
+        title: "Character Builder - Wanderer's Guide",
+        user: req.user,
+        character: character,
+        isPlayable: isPlayable,
+        pageNum: pageNum,
       });
 
     } else {

@@ -5,10 +5,11 @@
 function processBackground() {
 
   const charBackground = getCharBackground();
+  $(`#initial-stats-background`).html('');
   if(charBackground != null){
 
     // Process initial class stats //
-    $(`#initial-stats-background`).append(`
+    $(`#initial-stats-background`).html(`
     
       <div class="pt-1">
         <div class="pos-relative">
@@ -60,5 +61,18 @@ function processBackground() {
     }
 
   }
+
+}
+
+function deleteBackground(){
+
+  deleteDataBySourceType('background');
+  g_character.backgroundID = null;
+
+}
+
+function setBackground(backgroundID){
+
+  g_character.backgroundID = backgroundID;
 
 }

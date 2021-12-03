@@ -35,13 +35,42 @@ function getDataFromTag(tagData){
 function selectorUpdated() {
 
   // Show blue circle indicator for all accords that require a selection //
-  $('.accord-creation-container').each(function() {
-    if($(this).find('.input.is-info').length !== 0 || $(this).find('.select.is-info').length !== 0 || $(this).find('.feat-selection.is-default').length !== 0){
-        $(this).find('.accord-indicate-unselected-options').html('<span class="icon is-small has-text-info pl-3"><i class="fas fa-xs fa-circle"></i></span>');
-    } else {
-        $(this).find('.accord-indicate-unselected-options').html('');
+  if(g_builder_type == 'by-level'){
+    $('.accord-creation-container').each(function() {
+      if($(this).find('.input.is-info').length !== 0 || $(this).find('.select.is-info').length !== 0 || $(this).find('.feat-selection.is-default').length !== 0){
+          $(this).find('.accord-indicate-unselected-options').html('<span class="icon is-small has-text-info pl-3"><i class="fas fa-xs fa-circle"></i></span>');
+      } else {
+          $(this).find('.accord-indicate-unselected-options').html('');
+      }
+    });
+  } else if(g_builder_type == 'by-abc'){
+    if(g_page_num == 2){
+      $('.ancestry-feature-section').each(function() {
+        if($(this).find('.input.is-info').length !== 0 || $(this).find('.select.is-info').length !== 0 || $(this).find('.feat-selection.is-default').length !== 0){
+            $(this).parent().parent().find('.accord-indicate-unselected-options').html('<span class="icon is-small has-text-info pl-3"><i class="fas fa-xs fa-circle"></i></span>');
+        } else {
+            $(this).parent().parent().find('.accord-indicate-unselected-options').html('');
+        }
+      });
+    } else if(g_page_num == 3){
+      $('.background-feature-section').each(function() {
+        if($(this).find('.input.is-info').length !== 0 || $(this).find('.select.is-info').length !== 0 || $(this).find('.feat-selection.is-default').length !== 0){
+            $(this).parent().parent().find('.accord-indicate-unselected-options').html('<span class="icon is-small has-text-info pl-3"><i class="fas fa-xs fa-circle"></i></span>');
+        } else {
+            $(this).parent().parent().find('.accord-indicate-unselected-options').html('');
+        }
+      });
+    } else if(g_page_num == 4){
+      $('.class-feature-section').each(function() {
+        if($(this).find('.input.is-info').length !== 0 || $(this).find('.select.is-info').length !== 0 || $(this).find('.feat-selection.is-default').length !== 0){
+            $(this).parent().parent().find('.accord-indicate-unselected-options').html('<span class="icon is-small has-text-info pl-3"><i class="fas fa-xs fa-circle"></i></span>');
+        } else {
+            $(this).parent().parent().find('.accord-indicate-unselected-options').html('');
+        }
+      });
     }
-  });
+    
+  }
 
   // Process all selections that haven't been selected
   $('.select').each(function() {

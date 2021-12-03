@@ -24,6 +24,7 @@ const CharChoicesLoad = require('./loading/Load_CharChoices');
 const BuilderCoreLoad = require('./loading/Load_BuilderCore');
 const SearchLoad = require('./loading/Load_Search');
 const PlannerCoreLoad = require('./loading/Load_PlannerCore');
+const NewBuilderCoreLoad = require('./loading/Load_NewBuilderCore');
 
 const { Prisma, MemCache } = require('./PrismaConnection');
 
@@ -2837,8 +2838,8 @@ module.exports = class SocketConnections {
     io.on('connection', function(socket){
       const userID = getUserID(socket);
 
-      socket.on('requestPlannerCore', function(){
-        PlannerCoreLoad(socket).then((plannerStruct) => {
+      socket.on('requestPlannerCore', function(charID){
+        NewBuilderCoreLoad(socket, charID).then((plannerStruct) => {
           socket.emit('returnPlannerCore', plannerStruct);
         });
       });

@@ -158,8 +158,19 @@ function runQueuedStatement(){
         }
 
         const sheet_stateReturn = runSheetStatements(wscStatement, wscStatementUpper, srcStruct, locationID, extraData);
+
         if(sheet_stateReturn != PROCESS_RETURN.UNKNOWN){
           return sheet_stateReturn;
+        } else {
+
+          // MiscFeats is run even on tests, which is how the code is run for character builder.
+          //  - Probably should change this to a better system in the future.
+          const miscFeat_stateReturn = runMiscFeatStatements(wscStatement, wscStatementUpper);
+
+          if(miscFeat_stateReturn != PROCESS_RETURN.UNKNOWN){
+            return miscFeat_stateReturn;
+          }
+          
         }
 
         displayError("Unknown statement (1): \'"+wscStatement+"\'");
