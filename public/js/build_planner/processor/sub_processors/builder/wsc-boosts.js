@@ -18,7 +18,7 @@ function processingAbilityBoosts(wscStatement, srcStruct, locationID, extraData)
         giveAbilityBoostMultiple(srcStruct, numberOfBoosts, locationID, extraData);
     } else {
         displayError("Unknown statement (2-Boost): \'"+wscStatement+"\'");
-        statementComplete();
+        statementComplete('Boost - Unknown Statement');
     }
 
 }
@@ -26,7 +26,7 @@ function processingAbilityBoosts(wscStatement, srcStruct, locationID, extraData)
 //////////////////////////////// Give Ability Boost - Single ///////////////////////////////////
 
 function giveAbilityBoostMultiple(srcStruct, numberOfBoosts, locationID, extraData) {
-    statementComplete();
+    statementComplete('Boost - Multiple');
     if(numberOfBoosts > 6){
         displayError("Attempted to create more than 6 ability boosts!");
     } else {
@@ -70,21 +70,25 @@ function giveAbilityBoostSingle(srcStruct, selectionOptions, locationID, extraDa
                 } else {
                   setDataAbilityBonus(srcStruct, shortenAbilityType(abilityTypes[0]), boostFlaw);
 
+                  // When boost is changed, reprocess Extra Ancestry Langs and Class Skill Trainings
+                  processExtraSkillsAndLangs();
+                  //
+
                   socket.emit("requestWSCAbilityBonusChange",
                       getCharIDFromURL(),
                       srcStruct,
                       {Ability: shortenAbilityType(abilityTypes[0]), Bonus: boostFlaw},
                       null);
                   removeUnselectedData(srcStruct); // Fixes bug with ability boost selector becoming no selector
-                  statementComplete();
+                  statementComplete('Boost - Single');
                 }
             } else {
               displayError("Attempted to produce an invalid ability boost! (2)");
-              statementComplete();
+              statementComplete('Boost - Error');
             }
         } else {
           displayError("Attempted to produce an invalid ability boost! (1)");
-          statementComplete();
+          statementComplete('Boost - Error');
         }
         
     }
@@ -149,6 +153,10 @@ function displayAbilityBoostSingle(srcStruct, locationID, abilityTypes, extraDat
                 }
                 setDataAbilityBonus(srcStruct, shortenAbilityType($(this).val()), boostFlaw);
 
+                // When boost is changed, reprocess Extra Ancestry Langs and Class Skill Trainings
+                processExtraSkillsAndLangs();
+                //
+
                 socket.emit("requestWSCAbilityBonusChange",
                     getCharIDFromURL(),
                     srcStruct,
@@ -161,6 +169,10 @@ function displayAbilityBoostSingle(srcStruct, locationID, abilityTypes, extraDat
                 }
                 deleteData(DATA_SOURCE.ABILITY_BONUS, srcStruct);
 
+                // When boost is changed, reprocess Extra Ancestry Langs and Class Skill Trainings
+                processExtraSkillsAndLangs();
+                //
+
                 socket.emit("requestWSCAbilityBonusChange",
                     getCharIDFromURL(),
                     srcStruct,
@@ -172,7 +184,7 @@ function displayAbilityBoostSingle(srcStruct, locationID, abilityTypes, extraDat
         
     });
 
-    statementComplete();
+    statementComplete('Boost - Single, Display');
 
 }
 

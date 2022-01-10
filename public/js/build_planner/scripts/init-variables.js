@@ -13,21 +13,25 @@ function initVariables(){
   varInit_abilityScores();
   initializeVariable(VARIABLE.SCORE_NONE, VAR_TYPE.ABILITY_SCORE, 10);
 
+  // Class Name
+  const charClass = getCharClass();
+  if(charClass != null && charClass.Class != null){
+    variables_addString(VARIABLE.CLASS_NAME, charClass.Class.name);
+  }
+
   // Speed
   varInit_speeds();
-
 
   // Profs
   let profMap = getProfMap();
 
-
+  // Key Ability
   let keyBoost = getDataSingleAbilityBonus({
     sourceType: 'class',
     sourceLevel: 1,
     sourceCode: 'keyAbility',
     sourceCodeSNum: 'a'
   });
-  console.log(keyBoost);
   if(keyBoost != null){
     initializeVariableProf(VARIABLE.CLASS_DC, 'SCORE_'+keyBoost.Ability, 0, profMap.get("Class_DC"));
   } else {
@@ -114,6 +118,23 @@ function initVariables(){
   initializeVariable(VARIABLE.RANGED_ATTACKS_DMG_DICE, VAR_TYPE.INTEGER, VAR_NULL);
   initializeVariable(VARIABLE.RANGED_ATTACKS_DMG_BONUS, VAR_TYPE.INTEGER, VAR_NULL);
 
+  // Run All SourceBook Code //
+  if(g_enabledSources != null){
+    for(let enabledSource of g_enabledSources){
+      processCode(
+        enabledSource.code,
+        {
+          sourceType: 'other',
+          sourceLevel: 0,
+          sourceCode: 'source-book',
+          sourceCodeSNum: 'a',
+        },
+        null, // No location
+        {source: 'SourceBook', sourceName: enabledSource.name});
+    }
+  }
+  // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
+
 }
 
 
@@ -158,7 +179,6 @@ function varInit_abilityScores(){
   initializeVariable(VARIABLE.SCORE_NONE, VAR_TYPE.ABILITY_SCORE, 10);
 
   for(const bonusData of getDataAllAbilityBonus()){
-    console.log(bonusData);
     if(bonusData.Bonus == "Boost") {
       variables_addToBonuses('SCORE_'+bonusData.Ability, 2, JSON.stringify(parameterizeSrcStruct(bonusData.source, bonusData)), 'Boost');
     } else if(bonusData.Bonus == "Flaw") {

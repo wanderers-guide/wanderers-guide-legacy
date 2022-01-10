@@ -113,7 +113,7 @@ function getAttackAndDamage(itemData, invItem){
         let profName = getProfNameFromNumUps(profNumUps);
         if(profNumUps === 0 && gState_addLevelToUntrainedWeaponAttack && !gOption_hasProfWithoutLevel) {
           let profAttackBonus = g_character.level; // Sheet-State, adds level to untrained weapons
-          weapStruct.attack.parts.set('This is your proficiency bonus. You are '+profName.toLowerCase()+' in this weapon but have an ability that adds your level ('+g_character.level+') to your proficiency bonus, making it '+signNumber(getBonusFromProfName(profName))+'.', profAttackBonus);
+          weapStruct.attack.parts.set('This is your proficiency bonus. You are '+profName.toLowerCase()+' in this weapon but have an ability that adds your level ('+g_character.level+') to your proficiency bonus, making it '+signNumber(getBonusFromProfName(profName)+g_character.level)+'.', profAttackBonus);
         } else {
           let profAttackBonus = getProfNumber(profNumUps, g_character.level);
           if(gOption_hasProfWithoutLevel){

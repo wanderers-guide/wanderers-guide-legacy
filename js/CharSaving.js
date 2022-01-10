@@ -541,6 +541,18 @@ module.exports = class CharSaving {
 
     }
 
+    static saveBuilderType(charID, builderType) {
+
+      let charUpVals = { builderByLevel: ((builderType == 'by-level') ? 1 : 0) };
+
+      // Update char builder type
+      return Character.update(charUpVals, { where: { id: charID } })
+      .then((result) => {
+          return;
+      });
+
+    }
+
     static saveCharacterOption(charID, optionName, value) {
 
         let charUpVals = null;

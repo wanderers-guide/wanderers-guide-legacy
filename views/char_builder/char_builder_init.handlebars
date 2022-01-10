@@ -4,6 +4,8 @@
     <script type="text/javascript" src="/js/char_builders/char-builder-init.js"></script>
 
     <script src="/js/require-signin.js"></script>
+
+    <script src="/js/libraries/confirm_message/confirm-message.js"></script>
     
     <script type="text/javascript" src="/js/wsc/text-processing.js"></script>
     <script type="text/javascript" src="/js/wsc/errorHandling.js"></script>
@@ -50,14 +52,6 @@
     </button>
 </div>
 
-{{#if isPlayable}}
-    <div class="sticky_buttons_shell sticky_button_rightest">
-        <span class="icon is-medium has-text-info cursor-clickable sticky_button is-upper has-tooltip-left" data-tooltip="Go to Sheet" id="goToCharButton">
-            <i class="fas fa-2x fa-address-card"></i> 
-        </span>
-    </div>
-{{/if}}
-
 <div id="char-builder-container" data-char-id="{{character.id}}">
 </div>
 
@@ -76,51 +70,66 @@
         <div class="steps">
             <div class="step-item is-active is-info">
                 <div class="step-marker">
-                <a class="builder-basics-page-btn"><span class="icon"><i class="fa fa-user-alt"></i></span></a>
+                <a class="builder-basics-page-btn"><span class="icon"><i class="fas fa-home-alt"></i></span></a>
                 </div>
                 <div class="step-details is-hidden-touch">
-                    <a class="builder-basics-page-btn button is-rounded is-inverted is-info"><p class="step-title">Basics</p></a>
+                    <a class="builder-basics-page-btn button is-rounded is-inverted is-info"><p class="step-title">Home</p></a>
                 </div>
             </div>
-            <div class="step-item">
+            <div class="step-item is-builder-type-by-abc">
                 <div class="step-marker"><a class="builder-ancestry-page-btn"><span class="has-text-bck-color">A</span></a></div>
                 <div class="step-details is-hidden-touch">
                     <a class="builder-ancestry-page-btn button is-rounded is-inverted is-info"><p class="step-title">Ancestry</p></a>
                 </div>
             </div>
-            <div class="step-item">
+            <div class="step-item is-builder-type-by-abc">
                 <div class="step-marker"><a class="builder-background-page-btn"><span class="has-text-bck-color">B</span></a></div>
                 <div class="step-details is-hidden-touch">
                     <a class="builder-background-page-btn button is-rounded is-inverted is-info"><p class="step-title">Background</p></a>
                 </div>
             </div>
-            <div class="step-item">
+            <div class="step-item is-builder-type-by-abc">
                 <div class="step-marker"><a class="builder-class-page-btn"><span class="has-text-bck-color">C</span></a></div>
                 <div class="step-details is-hidden-touch">
                     <a class="builder-class-page-btn button is-rounded is-inverted is-info"><p class="step-title">Class</p></a>
                 </div>
             </div>
-            <div class="step-item is-info is-hidden">
-              <div class="step-marker"><a class="builder-class-2-page-btn"><span class="">C</span></a></div>
-              <div class="step-details is-hidden-touch">
-                  <a class="builder-class-2-page-btn button is-rounded is-inverted is-info"><p class="step-title">Class</p></a>
-              </div>
+            <div class="step-item is-builder-type-by-level">
+                <div class="step-marker"><a class="builder-ancestry-page-btn"><span class="has-text-bck-color">C</span></a></div>
+                <div class="step-details is-hidden-touch">
+                    <a class="builder-ancestry-page-btn button is-rounded is-inverted is-info"><p class="step-title">Creation</p></a>
+                </div>
             </div>
             <div class="step-item">
                 <div class="step-marker">
-                <a class="builder-finalize-page-btn"><span class="has-text-bck-color icon"><i class="fa fa-flag"></i></span></a>
+                <a class="builder-finalize-page-btn"><span class="has-text-bck-color icon"><i class="fa fa-user-alt"></i></span></a>
                 </div>
                 <div class="step-details is-hidden-touch">
-                    <a class="builder-finalize-page-btn button is-rounded is-inverted is-info"><p class="step-title">Finalize</p></a>
+                    <a class="builder-finalize-page-btn button is-rounded is-inverted is-info"><p class="step-title">Sheet</p></a>
                 </div>
             </div>
         </div>
 
-        <div class="columns py-2">
+        <div class="columns py-2 pos-relative">
+
+            <div class="pos-absolute pos-b-5 pos-r-5">
+              <h6>Build</h6>
+              <div class="control">
+                <label class="px-1 is-size-7 cursor-clickable">
+                  <input id="builder-by-abc" type="radio" name="build-type">
+                  by ABC
+                </label>
+                <label class="px-1 is-size-7 cursor-clickable">
+                  <input id="builder-by-level" type="radio" name="build-type">
+                  by Level
+                </label>
+              </div>
+            </div>
+
             <div class="column is-4 is-offset-4">
 
                 <div class="columns">
-                    <div class="column is-10">
+                    <div class="column is-10 is-paddingless p-1">
 
                         <div>
                             <h5>Character Name</h5>
@@ -138,7 +147,7 @@
                         </div>
                         
                     </div>
-                    <div class="column">
+                    <div class="column is-paddingless p-1">
 
                         <div>
                             <h5>Level</h5>
@@ -519,7 +528,7 @@
                         <div class="field">
                             <input id="optionCustomCodeBlock" type="checkbox" name="optionCustomCodeBlock" class="switch is-small is-rounded is-outlined is-info optionSwitch charOptionSwitch" value="1">
                             <label for="optionCustomCodeBlock">Custom Code Block</label>
-                            <p id="optionCustomCodeBlockInfo" class="help is-info is-italic text-center is-hidden">A WSC block is enabled, the code is run on the Finalize page and sheet.</p>
+                            <p id="optionCustomCodeBlockInfo" class="help is-info is-italic text-center is-hidden">A WSC block is enabled, the code is run under Initial Stats section and sheet.</p>
                         </div>
 
                         <div class="field">

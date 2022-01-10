@@ -5,13 +5,13 @@
 //--------------------- Processing Speeds --------------------//
 function processingSpeeds(wscStatement, srcStruct, locationID, extraData){
     
-    if(wscStatement.includes("GIVE-SPEED")){ // GIVE-SPEED=Swim:15
+    if(wscStatement.startsWith("GIVE-SPEED")){ // GIVE-SPEED=Swim:15
         let data = wscStatement.split('=')[1]; // GIVE-SPEED=Swim:LAND_SPEED
         let segments = data.split(':');
         giveSpeed(srcStruct, segments[0], segments[1]);
     } else {
         displayError("Unknown statement (2-Speed): \'"+wscStatement+"\'");
-        statementComplete();
+        statementComplete('Speed - Unknown Statement');
     }
 
 }
@@ -31,5 +31,5 @@ function giveSpeed(srcStruct, speedType, speedAmt){
 }
 
 socket.on("returnSpeedChange", function(){
-    statementComplete();
+    statementComplete('Speed - Add');
 });

@@ -11,7 +11,7 @@ function processingSCFS(wscStatement, srcStruct, locationID, extraData){
     createSCFS(srcStruct, locationID, segments[0], segments[1], extraData);
   } else {
     displayError("Unknown statement (2-SCFS): \'"+wscStatement+"\'");
-    statementComplete();
+    statementComplete('SCFS - Unknown Statement');
   }
 
 }
@@ -28,7 +28,8 @@ function createSCFS(srcStruct, locationID, featureName, statementName, extraData
 }
 
 socket.on("returnFindClassFeatureForSCFS", function(classFeature, allClassFeatureOptions, inputPacket){
-  if(classFeature == null) { statementComplete(); return; }
+  console.log(`Waited for 'returnFindClassFeatureForSCFS'.`);
+  if(classFeature == null) { statementComplete('SCFS - Add Null'); return; }
 
 
   let scfsID = "scfs-"+inputPacket.locationID+"-"+inputPacket.srcStruct.sourceCode+"-"+inputPacket.srcStruct.sourceCodeSNum;
@@ -36,7 +37,7 @@ socket.on("returnFindClassFeatureForSCFS", function(classFeature, allClassFeatur
   let scfsControlShellClass = scfsID+'-ControlShell';
 
   // If ID already exists, just return. This is a temporary fix - this shouldn't be an issue in the first place.
-  if($('#'+scfsID).length != 0) { statementComplete(); return; }
+  if($('#'+scfsID).length != 0) { statementComplete('SCFS - Add Error'); return; }
 
   const selectionTagInfo = getTagFromData(inputPacket.srcStruct, inputPacket.sourceName, 'Unselected Option', 'UNSELECTED');
 
@@ -46,10 +47,9 @@ socket.on("returnFindClassFeatureForSCFS", function(classFeature, allClassFeatur
   $('#'+scfsID).append('<optgroup label="──────────"></optgroup>');
 
   ///
-    
-  let SCFSData = wscChoiceStruct.SCFSDataArray.find(SCFSData => {
-    return hasSameSrc(SCFSData, inputPacket.srcStruct);
-  });
+  
+  //Get saved SCFS
+  const SCFSData = getDataSingle(DATA_SOURCE.SCFS, inputPacket.srcStruct);
 
   let selectedClassFeatureOption = null;
   if(SCFSData != null && SCFSData.value != null){
@@ -141,7 +141,7 @@ socket.on("returnFindClassFeatureForSCFS", function(classFeature, allClassFeatur
 
   $('#'+scfsID).trigger("change");
 
-  statementComplete();
+  statementComplete('SCFS - Add');
 
 });
 

@@ -3,7 +3,14 @@
 function runBuilderStatements(wscStatement, wscStatementUpper, srcStruct, locationID, extraData){
 
   if(wscStatementUpper == "CLEAR-DATA-FROM-CODE-BLOCK"){
-    clearDataFromSrcStruct(srcStruct);
+    
+    let newSrcStruct = cloneObj(srcStruct);
+    newSrcStruct.sourceCodeSNum = newSrcStruct.sourceCodeSNum.substring(1);
+    socket.emit("requestWSCSrcStructDataClear",
+        getCharIDFromURL(),
+        newSrcStruct);
+    deleteDataSNumChildren(newSrcStruct);
+
     return PROCESS_RETURN.NEXT;
   }
 
@@ -102,7 +109,7 @@ function runBuilderStatements(wscStatement, wscStatementUpper, srcStruct, locati
     return PROCESS_RETURN.NEXT;
   }
 
-  if(wscStatementUpper.includes("-SPEED")){
+  if(wscStatementUpper.includes("GIVE-SPEED")){
     processingSpeeds(wscStatementUpper, srcStruct, locationID, extraData);
     return PROCESS_RETURN.NEXT;
   }

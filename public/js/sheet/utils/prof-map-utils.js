@@ -194,6 +194,29 @@ function buildWeaponProfMap(){
               }
             }
           }
+        } else if(finalProfData.For == "Trait"){
+
+          let traitName = profName.toUpperCase().replace(/_/g,' ').trim();
+
+          for(const [itemID, itemData] of g_itemMap.entries()){
+            if(itemData.WeaponData != null){
+
+              let trait = itemData.TagArray.find(trait => {
+                return trait.name.toUpperCase() == traitName;
+              });
+
+              if(trait != null){
+                let prevWeapData = weaponProfMap.get(itemData.WeaponData.profName);
+                if(prevWeapData == null){ prevWeapData = { NumUps: null, UserBonus: null }; }
+
+                weaponProfMap.set(itemData.WeaponData.profName, {
+                  NumUps : greaterProfValue(prevWeapData.NumUps,finalProfData.NumUps),
+                  UserBonus : greaterProfValue(prevWeapData.UserBonus,finalProfData.UserBonus),
+                });
+              }
+
+            }
+          }
         }
     }
 
@@ -302,7 +325,31 @@ function buildArmorProfMap(){
                 }
             }
 
+        } else if(finalProfData.For == "Trait"){
+
+          let traitName = profName.toUpperCase().replace(/_/g,' ').trim();
+
+          for(const [itemID, itemData] of g_itemMap.entries()){
+            if(itemData.ArmorData != null){
+
+              let trait = itemData.TagArray.find(trait => {
+                return trait.name.toUpperCase() == traitName;
+              });
+
+              if(trait != null){
+                let prevArmorData = armorProfMap.get(itemData.ArmorData.profName);
+                if(prevArmorData == null){ prevArmorData = { NumUps: null, UserBonus: null }; }
+
+                armorProfMap.set(itemData.ArmorData.profName, {
+                  NumUps : greaterProfValue(prevArmorData.NumUps,finalProfData.NumUps),
+                  UserBonus : greaterProfValue(prevArmorData.UserBonus,finalProfData.UserBonus),
+                });
+              }
+
+            }
+          }
         }
+
         /*
         
          else if(finalProfData.For == "Group"){

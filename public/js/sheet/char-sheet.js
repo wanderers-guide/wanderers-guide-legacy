@@ -1222,6 +1222,19 @@ function displayInformation() {
 
             otherProfsNum++;
             otherProfBuild(attacks, profWord, capitalizeWords(dProfName)+'s', otherProfsNum, finalProfData, {For:'Group',To:profName}, VARIABLE_NAME);
+            
+        } else if(finalProfData.For == "Trait"){
+          let dProfName = profName.replace(/_/g,' ');
+          let profWord = getProfNameFromNumUps(finalProfData.NumUps);
+
+          // Get variable, init if null
+          let VARIABLE_NAME = 'HAS_TRAIT_'+profName.replace(/\s/g, "_").toUpperCase();
+          if(variables_getValue(VARIABLE_NAME) == null){
+            initializeVariableProf(VARIABLE_NAME, VARIABLE.SCORE_NONE, finalProfData.NumUps, profDataArray);
+          }
+
+          otherProfsNum++;
+          otherProfBuild(attacks, profWord, capitalizeWords(dProfName)+'s', otherProfsNum, finalProfData, {For:'Trait',To:profName}, VARIABLE_NAME);
         }
     }
 

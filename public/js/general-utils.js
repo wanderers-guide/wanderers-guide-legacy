@@ -52,11 +52,11 @@ function srcStructToCompositeKey(srcStruct){
 
 function parameterizeSrcStruct(in_source, in_srcStruct){
   return {
-    source: in_source,
-    sourceType: in_srcStruct.sourceType,
-    sourceLevel: in_srcStruct.sourceLevel,
-    sourceCode: in_srcStruct.sourceCode,
-    sourceCodeSNum: in_srcStruct.sourceCodeSNum,
+    source: in_source+'',
+    sourceType: in_srcStruct.sourceType+'',
+    sourceLevel: in_srcStruct.sourceLevel+'',
+    sourceCode: in_srcStruct.sourceCode+'',
+    sourceCodeSNum: in_srcStruct.sourceCodeSNum+'',
   };
 }
 
@@ -324,11 +324,11 @@ function convertRarityToHTML(rarityType, uniqueIsSpecial = false, size='is-very-
 }
 
 function convertRarityToIconHTML(rarityType, uniqueIsSpecial = false, size='is-size-7-5'){
-  switch(rarityType) {
-    case 'UNCOMMON': return '<span style="z-index: 5;" class="'+size+' is-bold is-uncommon">U</span>';
-    case 'RARE': return '<span style="z-index: 5;" class="'+size+' is-bold is-rare">R</span>';
-    case 'UNIQUE': let uniqueTextLetter = (uniqueIsSpecial) ? 'S' : 'U'; return '<span style="z-index: 5;" class="'+size+' is-bold is-unique">'+uniqueTextLetter+'</span>';
-    default: return '';
+  switch(rarityType) { //
+    case 'UNCOMMON': return '<span style="z-index: 5;" class="'+size+' px-1 py-1 pos-absolute pos-l-0 pos-t-2 is-bold is-uncommon">U</span>';
+    case 'RARE': return '<span style="z-index: 5;" class="'+size+' px-1 py-1 pos-absolute pos-l-0 pos-t-2 is-bold is-rare">R</span>';
+    case 'UNIQUE': let uniqueTextLetter = (uniqueIsSpecial) ? 'S' : 'U'; return '<span style="z-index: 5;" class="'+size+' px-1 py-1 pos-absolute pos-l-0 pos-t-2 is-bold is-unique">'+uniqueTextLetter+'</span>';
+    default: return '<span style="z-index: 5;" class="'+size+' px-1 py-1 pos-absolute pos-l-0 pos-t-2 is-bold"> </span>';
   }
 }
 

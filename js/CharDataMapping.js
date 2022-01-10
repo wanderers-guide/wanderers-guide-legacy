@@ -71,6 +71,22 @@ module.exports = class CharDataMapping {
         });
     }
 
+    static setDataOnly(charID, source, srcStruct, value){
+      //console.log("Set Only - Source:"+source+" Value:"+value);
+      //console.log(srcStruct);
+      return CharDataMappingModel.upsert({
+        charID,
+        source,
+        sourceType: srcStruct.sourceType,
+        sourceLevel: srcStruct.sourceLevel,
+        sourceCode: srcStruct.sourceCode,
+        sourceCodeSNum: srcStruct.sourceCodeSNum,
+        value,
+      }).then(result => {
+          return;
+      });
+    }
+
     static getDataSingle(charID, source, srcStruct){
         //console.log("Get Single - "+source);
         return CharDataMappingModel.findOne({

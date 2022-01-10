@@ -405,7 +405,7 @@ socket.on("returnWSCUpdateArchetypes", function(archetypesArray){
 function clearDataFromSrcStruct(srcStruct){
   let newSrcStruct = cloneObj(srcStruct);
   newSrcStruct.sourceCodeSNum = newSrcStruct.sourceCodeSNum.substring(1);
-  socket.emit("requestWSCSrcStructDataClear",
+  socket.emit("requestWSCSrcStructDataClear",// FYI - No longer returns choiceStruct
       getCharIDFromURL(),
       newSrcStruct);
 }

@@ -129,7 +129,7 @@ function processingFeats(wscStatement, srcStruct, locationID, extraData){
         giveFeatByName(srcStruct, featName, locationID, optionals, extraData);
     } else {
         displayError("Unknown statement (2-Feat): \'"+wscStatement+"\'");
-        statementComplete();
+        statementComplete('Feat - Unknown Statement');
     }
 
 }
@@ -152,7 +152,7 @@ function giveFeatCustomList(srcStruct, locationID, chooseTitle, customList, extr
         customList
     );
 
-    statementComplete();
+    statementComplete('Feat - Give Custom List');
 
 }
 
@@ -168,7 +168,7 @@ function giveFeat(srcStruct, locationID, featLevel, optionalTags, extraData){
         extraData
     );
 
-    statementComplete();
+    statementComplete('Feat - Give Generic');
 
 }
 
@@ -184,7 +184,7 @@ function giveGeneralFeat(srcStruct, locationID, featLevel, optionalTags, extraDa
         extraData
     );
 
-    statementComplete();
+    statementComplete('Feat - Give General');
 
 }
 
@@ -200,12 +200,14 @@ function giveSkillFeat(srcStruct, locationID, featLevel, optionalTags, extraData
         extraData
     );
 
-    statementComplete();
+    statementComplete('Feat - Give Skill');
 
 }
 
 function giveAncestryFeat(srcStruct, locationID, featLevel, charTagsArray, optionalTags, extraData){
     
+    if(charTagsArray.length == 0){ charTagsArray = ['No Ancestry Selected']; }
+
     displayFeatChoice(
         srcStruct,
         locationID,
@@ -216,7 +218,7 @@ function giveAncestryFeat(srcStruct, locationID, featLevel, charTagsArray, optio
         extraData
     );
 
-    statementComplete();
+    statementComplete('Feat - Give Ancestry');
 
 }
 
@@ -236,24 +238,24 @@ function giveClassFeat(srcStruct, locationID, featLevel, className, optionalTags
     let archetypesTabClass = locationID+'-classFeatArchetypesTab-'+srcStruct.sourceCode+'-'+srcStruct.sourceCodeSNum;
     let dedicationTabClass = locationID+'-classFeatDedicationTab-'+srcStruct.sourceCode+'-'+srcStruct.sourceCodeSNum;
 
-    $('#'+locationID).append('<div class="tabs is-small is-centered is-marginless use-custom-scrollbar"><ul id="'+classFeatTabsID+'" class="builder-tabs classFeatTabs" data-arch-tab-class="'+archetypesTabClass+'"></ul></div>');
+    $('#'+locationID).append('<div class="tabs is-small is-centered use-custom-scrollbar" style="margin: auto; max-width: 400px;"><ul id="'+classFeatTabsID+'" class="builder-tabs classFeatTabs" data-arch-tab-class="'+archetypesTabClass+'"></ul></div>');
     let tabsContent = $('#'+classFeatTabsID);
     tabsContent.html(''); // <- Fixes bug with multiple tabs being created
 
     if(!isArchetypeOnlyFeat) {
-      tabsContent.append('<li><a class="'+classTabClass+'">'+className+' Class</a></li>');
+      tabsContent.append('<li><a class="'+classTabClass+'">'+((className == null) ? 'Unselected' : className)+' Class</a></li>');
     }
 
     let charArchetypesArray = [];
-    for(let featChoice of getDataAll(DATA_SOURCE.FEAT_CHOICE)){
-        if(featChoice.value != null) {
-            let feat = g_featMap.get(featChoice.value.id+"");
+    for(let featData of getDataAll(DATA_SOURCE.FEAT_CHOICE)){
+        if(featData.value != null) {
+            let feat = g_featMap.get(featData.value+"");
             if(feat != null){
                 let dedicationTag = feat.Tags.find(featTag => {
                     return featTag.name === 'Dedication';
                 });
                 if(dedicationTag != null){
-                    charArchetypesArray.push(featChoice.value.id);
+                    charArchetypesArray.push(featData.value);
                 }
             }
         }
@@ -286,7 +288,7 @@ function giveClassFeat(srcStruct, locationID, featLevel, className, optionalTags
             srcStruct,
             containerLocationID,
             "Choose a Class Feat",
-            [className],
+            [( (className == null) ? 'No Class Selected' : className )],
             featLevel,
             optionalTags,
             extraData,
@@ -388,7 +390,7 @@ function giveClassFeat(srcStruct, locationID, featLevel, className, optionalTags
       }
     }
 
-    statementComplete();
+    statementComplete('Feat - Give Class');
 
 }
 
@@ -516,7 +518,7 @@ function giveFeatByName(srcStruct, featName, locationID, optionalTags, extraData
             displayError("Cannot find feat: \'"+featName+"\'");
           }
         }
-        statementComplete();
+        statementComplete('Feat - Give By Name Error');
         return;
     }
 
@@ -532,16 +534,12 @@ function giveFeatByName(srcStruct, featName, locationID, optionalTags, extraData
 }
 
 socket.on("returnFeatChangeByName", function(featChangePacket){
-  // If leftStatsQuickview is open, refresh it
-  if($('#quickviewLeftDefault').hasClass('is-active')){
-    openLeftQuickView('skillsView', null);
-  }
-
+  console.log(`Waited for 'returnFeatChangeByName'.`);
   processCode(
       featChangePacket.feat.Feat.code,
       featChangePacket.srcStruct,
       featChangePacket.codeLocationID,
       {source: 'Feat', sourceName: featChangePacket.feat.Feat.name});
   
-  statementComplete();
+  statementComplete('Feat - Give By Name');
 });

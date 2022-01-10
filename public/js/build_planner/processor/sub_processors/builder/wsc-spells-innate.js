@@ -15,7 +15,7 @@ function processingInnateSpells(wscStatement, srcStruct, locationID, extraData){
         giveInnateSpellByName(srcStruct, extraData, segments[0], segments[1], segments[2], segments[3]);
     } else {
         displayError("Unknown statement (2-SpellInnate): \'"+wscStatement+"\'");
-        statementComplete();
+        statementComplete('SpellInnate - Unknown Statement');
     }
 
 }
@@ -29,15 +29,15 @@ function giveInnateSpell(srcStruct, locationID, extraData, spellLevel, spellTrad
                 displayInnateSpellChoice(srcStruct, locationID, extraData, spellLevel, spellTradition, timesPerDay, selectFromAnyTradition);
             } else {
                 displayError("Spell Level is Not a Number: \'"+spellLevel+"\'");
-                statementComplete();
+                statementComplete('SpellInnate - Add Error 3');
             }
         } else {
             displayError("Unknown Spell Tradition: \'"+spellTradition+"\'");
-            statementComplete();
+            statementComplete('SpellInnate - Add Error 2');
         }
     } else {
         displayError("Invalid Spell Tradition");
-        statementComplete();
+        statementComplete('SpellInnate - Add Error 1');
     }
 }
 
@@ -49,7 +49,7 @@ function displayInnateSpellChoice(srcStruct, locationID, extraData, spellLevel, 
     let selectSpellControlShellClass = selectSpellID+'-ControlShell';
 
     // If ID already exists, just return. This is a temporary fix - this shouldn't be an issue in the first place.
-    if($('#'+selectSpellID).length != 0) { statementComplete(); return; }
+    if($('#'+selectSpellID).length != 0) { statementComplete('SpellInnate - Add Choice Error'); return; }
 
     const selectionTagInfo = getTagFromData(srcStruct, extraData.sourceName, 'Unselected Spell', 'UNSELECTED');
 
@@ -61,11 +61,7 @@ function displayInnateSpellChoice(srcStruct, locationID, extraData, spellLevel, 
     let triggerChange = false;
     // Set saved spell choices
 
-    let innateSpellArray = wscChoiceStruct.InnateSpellArray;
-    
-    let innateSpellData = innateSpellArray.find(innateSpellData => {
-        return hasSameSrc(innateSpellData, srcStruct);
-    });
+    const innateSpellData = getDataSingleInnateSpell(srcStruct);
 
     let selectedSpell = null;
     if(innateSpellData != null){
@@ -148,7 +144,7 @@ function displayInnateSpellChoice(srcStruct, locationID, extraData, spellLevel, 
 
     $('#'+selectSpellID).trigger("change", [triggerChange]);
 
-    statementComplete();
+    statementComplete('SpellInnate - Add Choice');
 
 }
 
@@ -170,30 +166,36 @@ function giveInnateSpellByName(srcStruct, extraData, spellName, spellLevel, spel
 
           let spell = null;
           for(const [spellID, spellData] of g_spellMap.entries()){
-            if(spellData.Spell.name == spellName){
+            if(spellData.Spell.name.toUpperCase() == spellName){
               spell = spellData.Spell;
               break;
             }
           }
-          setDataInnateSpell(srcStruct, spell.id, spellLevel, spellTradition, timesPerDay);
 
-          socket.emit("requestInnateSpellChange",
-              getCharIDFromURL(),
-              srcStruct,
-              spellName,
-              spellLevel,
-              spellTradition,
-              timesPerDay);
+          if(spell != null){
+            setDataInnateSpell(srcStruct, spell.id, spellLevel, spellTradition, timesPerDay);
+
+            socket.emit("requestInnateSpellChange",
+                getCharIDFromURL(),
+                srcStruct,
+                spellName,
+                spellLevel,
+                spellTradition,
+                timesPerDay);
+          } else {
+            displayError("Unknown Spell: \'"+spellName+"\'");
+            statementComplete('SpellInnate - Add By Name Error 4');
+          }
         } else {
             displayError("Unknown Spell Tradition: \'"+spellTradition+"\'");
-            statementComplete();
+            statementComplete('SpellInnate - Add By Name Error 3');
         }
     } else {
         displayError("Invalid Spell Tradition");
-        statementComplete();
+        statementComplete('SpellInnate - Add By Name Error 2');
     }
 }
 
 socket.on("returnInnateSpellChange", function(){
-    statementComplete();
+    statementComplete('SpellInnate - Add By Name Error 1');
 });

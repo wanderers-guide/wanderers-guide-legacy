@@ -14,7 +14,7 @@ function processingProf(wscStatement, srcStruct, locationID, extraData){
         giveProf(srcStruct, segments[0], segments[1], locationID, extraData);
     } else {
         displayError("Unknown statement (2-Prof): \'"+wscStatement+"\'");
-        statementComplete();
+        statementComplete('Prof - Unknown Statement');
     }
 
 }
@@ -48,7 +48,7 @@ function giveProfSkillTraining(srcStruct, profName, prof, locationID, extraData)
     let numUps = profToNumUp(prof);
     if(numUps === -1){
         displayError("Not a proficiency type: \'"+prof+"\'");
-        statementComplete();
+        statementComplete('Prof - Add Skill Error, not prof type');
         return;
     }
 
@@ -67,7 +67,7 @@ function giveProfSkillTraining(srcStruct, profName, prof, locationID, extraData)
                     window.setTimeout(() => {
                       $('#'+locationID).append('<p class="help is-info is-italic">You are already trained in '+profName+' which means you can select a new skill to become trained in instead.</p>');
                     }, 100);
-                    statementComplete();
+                    statementComplete('Prof - Add Skill, already has');
                     return;
                 }
 
@@ -81,6 +81,9 @@ function giveProfSkillTraining(srcStruct, profName, prof, locationID, extraData)
             {srcStruct, isSkill : true, isStatement : true},
             { For : profCategory, To : profProperName, Prof : prof, SourceName : extraData.sourceName });
         displayProfChange(locationID, prof, profProperName);
+
+        selectorUpdated();
+        statementComplete('Prof - Add Skill');
         return;
 
     } else {
@@ -119,6 +122,12 @@ function giveInProf(srcStruct, profName, prof, locationID, extraData){
       profCategory = 'Group';
     }
 
+    if(profName.startsWith('TRAIT~')){
+      profName = profName.replace(/TRAIT\~/g,'');
+      profProperName = profName.replace(/\s+/g,'_').toUpperCase();
+      profCategory = 'Trait';
+    }
+
     profName = profName.replace(/\s+/g,'');
     let profData = g_profConversionMap.get(profName);
     if(profData != null){
@@ -142,9 +151,14 @@ function giveInProf(srcStruct, profName, prof, locationID, extraData){
             {srcStruct, isSkill : isSkill, isStatement : true},
             { For : profCategory, To : profProperName, Prof : prof, SourceName : extraData.sourceName });
         displayProfChange(locationID, prof, profProperName);
+
+        if(isSkill){
+          selectorUpdated();
+        }
+        statementComplete('Prof - Add');
     } else {
         displayError("Unknown proficiency: \'"+profName+"\'");
-        statementComplete();
+        statementComplete('Prof - Add Error, not prof type');
     }
 
 }
@@ -159,7 +173,7 @@ function displayProfChange(locationID, prof, profName){
 
 
 
-
+/*
 socket.on("returnProficiencyChange", function(profChangePacket){
 
   if(profChangePacket.isSkill){
@@ -170,7 +184,7 @@ socket.on("returnProficiencyChange", function(profChangePacket){
     }
   }
   if(profChangePacket.isStatement != null && profChangePacket.isStatement){
-    statementComplete();
+    statementComplete('Prof - Add');
   }
 
-});
+});*/

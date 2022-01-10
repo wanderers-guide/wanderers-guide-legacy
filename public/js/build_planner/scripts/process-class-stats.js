@@ -310,12 +310,14 @@ function processClassStats(classData, outputStruct, processType){
       let weapTraining = sections[0];
       let weaponName = sections[1];
 
+      let singleWeapon = false;
       let weapID;
       let profConvertData = g_profConversionMap.get(weaponName.replace(/\s+/g,'').toUpperCase());
       if(profConvertData != null){
-          weapID = profConvertData.Name;
+        weapID = profConvertData.Name;
       } else {
-          weapID = weaponName.replace(/\s+/g,'_').toUpperCase();
+        singleWeapon = true;
+        weapID = weaponName.replace(/\s+/g,'_').toUpperCase();
       }
 
       if(weaponName.slice(-1) === 's'){
@@ -328,7 +330,7 @@ function processClassStats(classData, outputStruct, processType){
 
       if(processType == PROCESS_CLASS_STATS_TYPE.RUN_CODE || isBoth){
         processCode(
-          `GIVE-PROF-IN=${weapID}:${weapTraining}`,
+          `GIVE-PROF-IN=${(singleWeapon) ? 'WEAPON~' : ''}${weapID}:${weapTraining}`,
           {
             sourceType: 'class',
             sourceLevel: 1,
@@ -371,19 +373,21 @@ function processClassStats(classData, outputStruct, processType){
       let armorTraining = sections[0];
       let armorName = sections[1];
 
+      let singleArmor = false;
       let armorID;
       let profConvertData = g_profConversionMap.get(armorName.replace(/\s+/g,'').toUpperCase());
       if(profConvertData != null){
-          armorID = profConvertData.Name;
+        armorID = profConvertData.Name;
       } else {
-          armorID = armorName.replace(/\s+/g,'_').toUpperCase();
+        singleArmor = true;
+        armorID = armorName.replace(/\s+/g,'_').toUpperCase();
       }
 
       profDefensesInner += `<li class="is-size-7"><span class="has-txt-value-string is-italic">${profToWord(armorTraining)+"</span> in all "+armorName}</li>`;
 
       if(processType == PROCESS_CLASS_STATS_TYPE.RUN_CODE || isBoth){
         processCode(
-          `GIVE-PROF-IN=${armorID}:${armorTraining}`,
+          `GIVE-PROF-IN=${(singleArmor) ? 'ARMOR~' : ''}${armorID}:${armorTraining}`,
           {
             sourceType: 'class',
             sourceLevel: 1,
@@ -426,5 +430,50 @@ function processClassStats(classData, outputStruct, processType){
       {source: 'Class', sourceName: 'Initial Class'});
     statInitCount++;
   }
+
+}
+
+function processMoreClassSkills(charClass, extraSkillsCodeID){
+  if(charClass == null) { return; }
+
+  // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Extra Skills ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
+
+  let allProfData = getDataAllProficiencies();
+  let allLoreData = getDataAll(DATA_SOURCE.LORE);
+
+  deleteDataBySourceCode('inits-bonus-prof');
+
+  let currentChar = 'a';
+  let extraSkillCode = '';
+  for (let i = 0; i < getMod(variables_getTotal(VARIABLE.SCORE_INT))+charClass.Class.tSkillsMore; i++) {
+    extraSkillCode += 'GIVE-SKILL=T\n';
+
+    for(let profData of allProfData){
+      if(profData.sourceCode == 'inits-bonus-prof' && profData.sourceCodeSNum.endsWith(currentChar+'a')){
+        setDataProficiencies(profData, profData.For, profData.To, profData.Prof, profData.SourceName, false);
+      }
+    }
+
+    let loreData = allLoreData.find(loreData => {
+      return (loreData.sourceCode == 'inits-bonus-prof' && loreData.sourceCodeSNum.endsWith(currentChar+'a'));
+    });
+    if(loreData != null){
+      setData(DATA_SOURCE.LORE, loreData, loreData.value);
+    }
+
+    currentChar = processor_charIncrease(currentChar);
+  }
+
+  $('#'+extraSkillsCodeID).html('');
+  processCode(
+    extraSkillCode,
+    {
+      sourceType: 'class',
+      sourceLevel: 1,
+      sourceCode: 'inits-bonus-prof',
+      sourceCodeSNum: 'a',
+    },
+    extraSkillsCodeID,
+    {source: 'Class', sourceName: 'Extra Skill Trainings'});
 
 }

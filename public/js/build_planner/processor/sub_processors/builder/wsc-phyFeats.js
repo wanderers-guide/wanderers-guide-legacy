@@ -10,7 +10,7 @@ function processingPhysicalFeatures(wscStatement, srcStruct, locationID, extraDa
         givePhysicalFeature(srcStruct, phyFeatName);
     } else {
         displayError("Unknown statement (2-PhyFeat): \'"+wscStatement+"\'");
-        statementComplete();
+        statementComplete('PhyFeat - Unknown Statement');
     }
 
 }
@@ -34,5 +34,5 @@ function givePhysicalFeature(srcStruct, phyFeatName){
 }
 
 socket.on("returnPhysicalFeaturesChangeByName", function(){
-    statementComplete();
+    statementComplete('PhyFeat - Add By Name');
 });

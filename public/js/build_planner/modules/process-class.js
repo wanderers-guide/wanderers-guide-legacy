@@ -14,7 +14,7 @@ function processClass() {
       <div class="pt-1">
         <div class="pos-relative">
           <div class="">
-            <p class="text-center"><span class="is-size-4 has-text-weight-semibold">Class</span></p>
+            <p class="text-center"><span class="is-size-3 has-text-weight-semibold">Class</span></p>
           </div>
         </div>
 
@@ -69,6 +69,8 @@ function processClass() {
           <div id="class-feature-initial-stats-code-class-dc"></div>
           <div id="class-feature-initial-stats-code-attacks"></div>
           <div id="class-feature-initial-stats-code-defenses"></div>
+
+          <div id="class-feature-initial-stats-code-skills-extra"></div>
         </div>
         <hr class="mt-0 mb-1 mx-0" style="height: 1px;">
       </div>
@@ -136,7 +138,20 @@ function processClass() {
 
         `);
 
-        $(`#class-feature-container-${classFeature.id}`).append(processText(classFeature.description, false, null));
+        const classFeature_srcStruct = {
+          sourceType: 'class',
+          sourceLevel: classFeature.level,
+          sourceCode: 'classAbility-'+classFeature.id,
+          sourceCodeSNum: 'a'
+        };
+
+        const classArchetypeResult = applyClassArchetypeChoice(classFeature);
+        if(classArchetypeResult != null){
+          $(`#class-feature-container-${classFeature.id}`).append(classArchetypeResult.tabsHTML);
+          assembleClassArchetypeTabs(classArchetypeResult.tabsID, classFeature.id, classFeature.description, classFeature_srcStruct);
+        } else {
+          $(`#class-feature-container-${classFeature.id}`).append(processText(classFeature.description, false, null));
+        }
 
         // Selection Options
         if(classFeature.selectType === 'SELECTOR') {
@@ -191,7 +206,7 @@ function processClass() {
           `);
 
           // Class Feature Selector
-          $(`#class-feature-selector-${classFeature.id}`).change(function(){
+          $(`#class-feature-selector-${classFeature.id}`).change(function(event, triggerSave){
 
             $(`#class-feature-selector-description-${classFeature.id}`).html('');
             $(`#class-feature-selector-code-${classFeature.id}`).html('');
@@ -227,17 +242,26 @@ function processClass() {
                 return cf.id == $(this).val();
               });
 
-              $(`#class-feature-selector-description-${classFeature.id}`).html(processText(chosenClassFeature.description, false, null));
+              const classArchetypeOptionResult = applyClassArchetypeChoice(chosenClassFeature);
+              if(classArchetypeOptionResult != null){
+                $(`#class-feature-selector-description-${classFeature.id}`).html(classArchetypeOptionResult.tabsHTML);
+                assembleClassArchetypeTabs(classArchetypeOptionResult.tabsID, chosenClassFeature.id, chosenClassFeature.description, srcStruct);
+              } else {
+                $(`#class-feature-selector-description-${classFeature.id}`).html(processText(chosenClassFeature.description, false, null));
+              }
 
               // Save choice
-              socket.emit("requestClassChoiceChange",
+              if(triggerSave == null || triggerSave) {
+                socket.emit("requestClassChoiceChange",
                   getCharIDFromURL(),
                   srcStruct,
                   { SelectorID : classFeature.id, OptionID : chosenClassFeature.id });
+                setDataClassChoice(srcStruct, classFeature.id, chosenClassFeature.id);
+              }
 
               // Run class feature option code
               processCode(
-                chosenClassFeature.code,
+                replaceClassFeatureCodeFromClassArchetype(chosenClassFeature.id, chosenClassFeature.code, srcStruct),
                 srcStruct,
                 `class-feature-selector-code-${classFeature.id}`,
                 {source: 'Class Feature Option', sourceName: classFeature.name+' - '+chosenClassFeature.name});
@@ -246,19 +270,14 @@ function processClass() {
 
             $(this).blur();
           });
-          $(`#class-feature-selector-${classFeature.id}`).trigger('change');
+          $(`#class-feature-selector-${classFeature.id}`).trigger('change', [false]);
 
         }
 
-        // Run code
+        // Run code        
         processCode(
-          classFeature.code,
-          {
-            sourceType: 'class',
-            sourceLevel: classFeature.level,
-            sourceCode: 'classAbility-'+classFeature.id,
-            sourceCodeSNum: 'a'
-          },
+          replaceClassFeatureCodeFromClassArchetype(classFeature.id, classFeature.code, classFeature_srcStruct),
+          classFeature_srcStruct,
           `class-feature-code-${classFeature.id}`,
           {source: 'Class Feature', sourceName: classFeature.name+' (Lvl '+classFeature.level+')'});
 
@@ -276,6 +295,7 @@ function processClass() {
 
 function deleteClass(){
 
+  resetClassArchetypes();
   deleteDataBySourceType('class');
   g_character.classID = null;
 

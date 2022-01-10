@@ -10,7 +10,7 @@ function processingSenses(wscStatement, srcStruct, locationID, extraData){
         giveSense(srcStruct, senseName);
     } else {
         displayError("Unknown statement (2-Sense): \'"+wscStatement+"\'");
-        statementComplete();
+        statementComplete('Sense - Unknown Statement');
     }
 
 }
@@ -18,6 +18,7 @@ function processingSenses(wscStatement, srcStruct, locationID, extraData){
 //////////////////////////////// Give Sense ///////////////////////////////////
 
 function giveSense(srcStruct, senseName){
+  if(senseName.trim() == ''){ return; }
 
   let sense = g_allSenses.find(sense => {
     return sense.name == senseName;
@@ -34,5 +35,5 @@ function giveSense(srcStruct, senseName){
 }
 
 socket.on("returnSensesChangeByName", function(){
-  statementComplete();
+  statementComplete('Sense - Add By Name');
 });

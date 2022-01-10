@@ -49,7 +49,14 @@ router.get('/', (req, res) => {
 
       let isPlayable = CharStateUtils.isPlayable(character);
 
-      res.render('char_builder/char_builder', { // builder/build_planner_abc
+      let builderPageRender = '';
+      if(character.builderByLevel === 1) {
+        builderPageRender = 'builder/build_planner_level';
+      } else {
+        builderPageRender = 'builder/build_planner_abc';
+      }
+
+      res.render(builderPageRender, { // char_builder/char_builder
         title: "Character Builder - Wanderer's Guide",
         user: req.user,
         character: character,

@@ -15,7 +15,7 @@ function processingResistances(wscStatement, srcStruct, locationID, extraData){
         giveVulnerability(srcStruct, segments[0], segments[1]);
     } else {
         displayError("Unknown statement (2-Resist/Weak): \'"+wscStatement+"\'");
-        statementComplete();
+        statementComplete('Resist/Weak - Unknown Statement');
     }
 
 }
@@ -33,7 +33,7 @@ function giveResistance(srcStruct, resistType, resistAmount){
 }
 
 socket.on("returnResistanceChange", function(data){
-    statementComplete();
+    statementComplete('Resist - Add');
 });
 
 //////////////////////////////// Give Vulnerability ///////////////////////////////////
@@ -49,5 +49,5 @@ function giveVulnerability(srcStruct, vulnerableType, vulnerableAmount){
 }
 
 socket.on("returnVulnerabilityChange", function(data){
-    statementComplete();
+    statementComplete('Weak - Add');
 });

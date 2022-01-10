@@ -30,7 +30,6 @@ function generateFeatSelection(contentLocID, srcStruct, selectionName, selection
 
   // Find selectedFeat //
   let selectedFeatData = getDataSingle(DATA_SOURCE.FEAT_CHOICE, srcStruct);
-  console.log(selectedFeatData);
   let selectedFeat = null;
   if(selectedFeatData != null && selectedFeatData.value != null){
     selectedFeat = g_featMap.get(selectedFeatData.value+"");
@@ -144,7 +143,6 @@ function generateFeatSelection(contentLocID, srcStruct, selectionName, selection
         featRemoveButtonClass,
         featCodeSectionID,
       });
-      populatePrereqIcons(featListSectionID);
 
       $('#'+featListSectionID).removeClass('is-hidden');
     } else {
@@ -176,14 +174,25 @@ function generateFeatSelectionList(contentLocID, srcStruct, selectedFeat, select
   let featSelectButtonClass = featListStruct.featSelectButtonClass;
   let featRemoveButtonClass = featListStruct.featRemoveButtonClass;
 
-  let sortedSelectionMap = new Map();
-  if(g_character.optionAutoDetectPreReqs === 1) {
-    for(let [featLevel, featArray] of selectionMap.entries()){
 
-      // Sort feat array by level -> prereq -> name
-      let sortedFeatArray = featArray.sort(
-        function(a, b) {
-          if (a.Feat.level === b.Feat.level) {
+  // Update prereqs
+  if(gOption_hasAutoDetectPreReqs) {
+    for(let [featLevel, featArray] of selectionMap.entries()){
+      for(let featData of featArray) {
+        const preReqResult = meetsPrereqs(featData.Feat);
+        g_featPrereqMap.set(featData.Feat.id+'', preReqResult);
+      }
+    }
+  }
+
+  let sortedSelectionMap = new Map();
+  for(let [featLevel, featArray] of selectionMap.entries()){
+
+    // Sort feat array by level -> prereq -> name
+    let sortedFeatArray = featArray.sort(
+      function(a, b) {
+        if (a.Feat.level === b.Feat.level) {
+          if(gOption_hasAutoDetectPreReqs) {
             // Prereq is only important when levels are the same
             let a_meets = prereqToValue(g_featPrereqMap.get(a.Feat.id+''));
             let b_meets = prereqToValue(g_featPrereqMap.get(b.Feat.id+''));
@@ -192,18 +201,20 @@ function generateFeatSelectionList(contentLocID, srcStruct, selectedFeat, select
               return a.Feat.name > b.Feat.name ? 1 : -1;
             }
             return b_meets - a_meets;
+          } else {
+            return a.Feat.name > b.Feat.name ? 1 : -1;
           }
-          return a.Feat.level - b.Feat.level;
         }
-      );
-      sortedSelectionMap.set(featLevel, sortedFeatArray);
+        return a.Feat.level - b.Feat.level;
+      }
+    );
+    sortedSelectionMap.set(featLevel, sortedFeatArray);
 
-    }
   }
 
   let featListHTML = '';
   let displayedFeat = false;
-  for(let [featLevel, featArray] of selectionMap.entries()){
+  for(let [featLevel, featArray] of sortedSelectionMap.entries()){
 
     if(featLevel > 0){
       featListHTML += '<hr class="hr-feat-selection m-0"><div class="feat-selection-level"><span class="">Level '+featLevel+'</span></div>';
@@ -241,10 +252,25 @@ function generateFeatSelectionList(contentLocID, srcStruct, selectedFeat, select
         }
       }
 
-      let rightInfoHTML = '';
-      if(featData.Feat.skillID != null){
-        rightInfoHTML = '<span class="">'+convertRarityToIconHTML(featData.Feat.rarity)+'<span class="featPrereqIcon"></span></span>';
+
+      let preReqIconHTML = '';
+      if(gOption_hasAutoDetectPreReqs){
+        const preReqResult = g_featPrereqMap.get(featData.Feat.id+'');
+        if(preReqResult == 'TRUE'){
+          preReqIconHTML = ' '+preReqGetIconTrue();
+        } else if(preReqResult == 'FALSE'){
+          preReqIconHTML = ' '+preReqGetIconFalse();
+        } else if(preReqResult == 'UNKNOWN'){
+          preReqIconHTML = ' '+preReqGetIconUnknown();
+        }
       }
+
+      let rightInfoHTML = `
+        <div class="pos-relative">
+          <span class="is-hidden-mobile">${convertRarityToIconHTML(featData.Feat.rarity)}</span>
+          <span class="featPrereqIcon">${preReqIconHTML}</span>
+        </div>
+      `;
 
       let topLeftHTML = '';
       if(featData.Feat.skillID != null){
@@ -390,11 +416,9 @@ function handleFeatChange(feat, contentLocID){
     });
   }
 
-  // If they aren't the same amount, reload class abilities
+  // If they aren't the same amount, reload state
   if(maxArchetypesLength != charArchetypesArray.length || featDedicationTag != null) {
-    if(temp_classAbilities != null && temp_classNum != null){
-      processBuilderCode_ClassAbilities(temp_classAbilities, temp_classNum);
-    }
+    animatedStateLoad();
   }
 
 }
@@ -438,29 +462,6 @@ function updateFeatSelectionEntryEvents(){
       Tags : feat.Tags,
       _prevBackData: {Type: g_QViewLastType, Data: g_QViewLastData},
     });
-  });
-
-}
-
-function populatePrereqIcons(featListSectionID){
-  if(g_character.optionAutoDetectPreReqs !== 1) { return; }
-
-  $('#'+featListSectionID+' .feat-selection-list .feat-selection-list-entry').each(function(){
-    let feat = g_featMap.get($(this).attr('data-feat-id'));
-    let preReqResult = meetsPrereqs(feat.Feat);
-
-    let preReqIconHTML = '';
-    if(preReqResult == 'TRUE'){
-      preReqIconHTML = ' '+preReqGetIconTrue();
-    } else if(preReqResult == 'FALSE'){
-      preReqIconHTML = ' '+preReqGetIconFalse();
-    } else if(preReqResult == 'UNKNOWN'){
-      preReqIconHTML = ' '+preReqGetIconUnknown();
-    }
-    $(this).find(".featPrereqIcon").html(preReqIconHTML);
-
-    g_featPrereqMap.set(feat.Feat.id+'', preReqResult);
-
   });
 
 }

@@ -96,8 +96,9 @@ function showFeatListOptions(qContent, wscStatements){
 
   for(let statement in statementCounts) {
     if(statement.includes("GIVE-FEAT-FROM=")){ // GIVE-FEAT-FROM=Choose a Tradition:feat 1,feat 2,feat 2
-      let value = statement.split('=')[1];
+      let value = statement.split('GIVE-FEAT-FROM=')[1];
       let valueParts = value.split(':');
+      if(valueParts.length != 2){ displayError('Invalid syntax "'+statement+'"'); continue; }
       let selectorTitle = valueParts[0];
       let featNameList = handleVariableText(valueParts[1]).split(',');
 
@@ -125,6 +126,7 @@ function showFeatListOptions(qContent, wscStatements){
       const beginningDashText = detectSameBeginningDashText();
       
       for(let featName of featNameList){
+        if(featName.endsWith('}')){ featName = featName.replace('}',''); }
         let displayFeatName = featName.replace(beginningDashText+' - ', '');
         listText += '* : (feat: '+displayFeatName+' | '+featName+')\n';
       }

@@ -18,7 +18,7 @@ function processingSkills(wscStatement, srcStruct, locationID, extraData){
         giveSkillProf(srcStruct, locationID, extraData, value, optionals);
     } else {
         displayError("Unknown statement (2-Skill): \'"+wscStatement+"\'");
-        statementComplete();
+        statementComplete('Skill - Unknown Statement');
     }
 
 }
@@ -41,7 +41,7 @@ function giveSkill(srcStruct, locationID, extraData, profType, optionals=null){
     let increaseCodeID = "selectIncreaseCode-"+locationID+"-"+srcStruct.sourceCode+"-"+srcStruct.sourceCodeSNum;
 
     // If ID already exists, just return. This is a temporary fix - this shouldn't be an issue in the first place.
-    if($('#'+selectIncreaseID).length != 0) { statementComplete(); return; }
+    if($('#'+selectIncreaseID).length != 0) { statementComplete('Skill - Add Error'); return; }
 
     const selectionTagInfo = getTagFromData(srcStruct, extraData.sourceName, 'Unselected Skill', 'UNSELECTED');
 
@@ -52,6 +52,11 @@ function giveSkill(srcStruct, locationID, extraData, profType, optionals=null){
     $('#'+locationID).append('<div id="'+increaseDescriptionID+'" class="pb-1"></div>');
     
     populateSkillLists(selectIncreaseID, srcStruct, profType, optionals);
+
+    // On click (open) of selectIncrease, re-populate skill list
+    $('#'+selectIncreaseID).click(function() {
+      populateSkillLists(selectIncreaseID, srcStruct, profType, optionals);
+    });
 
     // On increase choice change
     $('#'+selectIncreaseID).change(function(event, isAutoLoad) {
@@ -73,6 +78,8 @@ function giveSkill(srcStruct, locationID, extraData, profType, optionals=null){
                 getCharIDFromURL(),
                 {srcStruct, isSkill : true, isAutoLoad},
                 null);
+            
+            selectorUpdated();
 
         } else if($(this).val() == "addLore"){
 
@@ -90,6 +97,8 @@ function giveSkill(srcStruct, locationID, extraData, profType, optionals=null){
                   getCharIDFromURL(),
                   {srcStruct, isSkill : true, isAutoLoad},
                   { For : "Skill", To : 'addLore', Prof : profType, SourceName : extraData.sourceName });
+
+              selectorUpdated();
             }
             
             processCode(
@@ -105,8 +114,8 @@ function giveSkill(srcStruct, locationID, extraData, profType, optionals=null){
 
             let canSave = false;
             if(profType === 'UP') {
-                let skillName = $('#'+selectIncreaseID).val();
-                let numUps = g_skillMap.get(skillName).NumUps;
+                const skill_varName = profConversion_convertOldNameToVarName($('#'+selectIncreaseID).val());
+                const numUps = profToNumUp(variables_getFinalRank(skill_varName));
                 if(isAutoLoad || isAbleToSelectIncrease(numUps+1, srcStruct.sourceLevel)) {
                     canSave = true;
                     $('#'+increaseDescriptionID).html('');
@@ -132,6 +141,8 @@ function giveSkill(srcStruct, locationID, extraData, profType, optionals=null){
                     getCharIDFromURL(),
                     {srcStruct, isSkill : true, isAutoLoad},
                     { For : "Skill", To : skillName, Prof : profType, SourceName : extraData.sourceName });
+                
+                selectorUpdated();
             }
             
         }
@@ -142,7 +153,7 @@ function giveSkill(srcStruct, locationID, extraData, profType, optionals=null){
 
     $('#'+selectIncreaseID).trigger("change", [true]);
 
-    statementComplete();
+    statementComplete('Skill - Add');
 
 }
 
@@ -167,23 +178,46 @@ function populateSkillLists(selectIncreaseID, srcStruct, profType, optionals){
     // Set saved skill choices
     let savedSkillData = getDataSingleProficiency(srcStruct);
 
+    // Build Skill List
+    let skillList = [];
     for(const [skillName, skillData] of g_skillMap.entries()){
+      if(skillName == 'Lore'){ continue; }
+      skillList.push(skillName);
+    }
+    const sortedLoreDataArray = getDataAll(DATA_SOURCE.LORE).sort(
+      function(a, b) {
+        return a.value > b.value ? 1 : -1;
+      }
+    );
+    for(const loreData of sortedLoreDataArray){
+      skillList.push(capitalizeWords(loreData.value)+' Lore');
+    }
 
-        if(optionals != null){
-          if(!optionals.includes(skillName.toUpperCase())){
-            continue;
-          }
+    // Process each skill,
+    for(const skillName of skillList){
+
+      if(optionals != null){
+        if(!optionals.includes(skillName.toUpperCase())){
+          continue;
         }
-        
-        if(savedSkillData != null && savedSkillData.To != null && similarSkills(savedSkillData, skillName)) {
-            $('#'+selectIncreaseID).append('<option value="'+skillName+'" selected>'+skillName+'</option>');
+      }
+      
+      if(savedSkillData != null && savedSkillData.To != null && similarSkills(savedSkillData, skillName)) {
+        $('#'+selectIncreaseID).append('<option value="'+skillName+'" selected>'+skillName+'</option>');
+      } else {
+        if(profToNumUp(variables_getFinalRank(profConversion_convertOldNameToVarName(skillName))) < profToNumUp(profType)){
+          $('#'+selectIncreaseID).append('<option value="'+skillName+'">'+skillName+'</option>');
         } else {
-            if(skillData.NumUps == null || skillData.NumUps < profToNumUp(profType)) {
-                $('#'+selectIncreaseID).append('<option value="'+skillName+'">'+skillName+'</option>');
-            } else {
-              $('#'+selectIncreaseID).append('<option value="'+skillName+'" disabled="true">'+skillName+'</option>');
-            }
+          $('#'+selectIncreaseID).append('<option value="'+skillName+'" disabled="true">'+skillName+'</option>');
         }
+        /*
+          if(skillData.NumUps == null || skillData.NumUps < profToNumUp(profType)) {
+              $('#'+selectIncreaseID).append('<option value="'+skillName+'">'+skillName+'</option>');
+          } else {
+            $('#'+selectIncreaseID).append('<option value="'+skillName+'" disabled="true">'+skillName+'</option>');
+          }
+        */
+      }
 
     }
 

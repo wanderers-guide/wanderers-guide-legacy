@@ -68,6 +68,9 @@ const Character = db.define('characters', {
   currentResolve: {
     type: Sequelize.INTEGER
   },
+  builderByLevel: {
+    type: Sequelize.INTEGER
+  },
   // Character Options //
   optionAutoDetectPreReqs: {
     type: Sequelize.INTEGER

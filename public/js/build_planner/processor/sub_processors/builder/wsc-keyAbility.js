@@ -19,7 +19,7 @@ function processingKeyAbilities(wscStatement, srcStruct, locationID, extraData){
         giveAbilityBoostSingle(g_keyAbility_SrcStruct, selectionOptions, locationID, extraData);
     } else {
         displayError("Unknown statement (2-KeyAbility): \'"+wscStatement+"\'");
-        statementComplete();
+        statementComplete('KeyAbility - Unknown Statement');
     }
 
 }

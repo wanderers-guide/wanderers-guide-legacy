@@ -13,7 +13,7 @@ function processingDomains(wscStatement, srcStruct, locationID, extraData){
         giveDomain(srcStruct, locationID, spellSRC, extraData);
     } else {
         displayError("Unknown statement (2-Domain): \'"+wscStatement+"\'");
-        statementComplete();
+        statementComplete('Domain - Unknown Statement');
     }
 
 }
@@ -38,7 +38,7 @@ function giveDomain(srcStruct, locationID, spellSRC, extraData){
     // Set saved domain choice
     let savedDomainData = getDataSingle(DATA_SOURCE.DOMAIN, srcStruct);
 
-    for(const domain of wscChoiceStruct.AllDomains){
+    for(const domain of g_domains){
 
         if(savedDomainData != null && savedDomainData.value.id == domain.id) {
             $('#'+selectID).append('<option value="'+domain.id+'" selected>'+domain.name+'</option>');
@@ -69,7 +69,7 @@ function giveDomain(srcStruct, locationID, spellSRC, extraData){
             $('.'+selectControlShellClass).removeClass("is-info");
 
             let domainID = $(this).val();
-            let domain = wscChoiceStruct.AllDomains.find(domain => {
+            let domain = g_domains.find(domain => {
                 return domain.id == domainID;
             });
 
@@ -91,7 +91,7 @@ function giveDomain(srcStruct, locationID, spellSRC, extraData){
 
     $('#'+selectID).trigger("change", [false]);
 
-    statementComplete();
+    statementComplete('Domain - Display');
 
 }
 
@@ -118,14 +118,18 @@ function giveDomainAdvancement(srcStruct, locationID, spellSRC, extraData){
     $('#'+selectID).append('<optgroup label="──────────"></optgroup>');
 
     // Set saved domain choice
-    let savedDomainData = getDataSingle(DATA_SOURCE.ADVANCED_DOMAIN, srcStruct);
+    const savedDomainData = getDataSingle(DATA_SOURCE.ADVANCED_DOMAIN, srcStruct);
 
-    for(const domainData of wscChoiceStruct.DomainArray){
+    for(const domainData of getDataAll(DATA_SOURCE.DOMAIN)){
 
-        if(savedDomainData != null && savedDomainData.value.id == domainData.value.id) {
-            $('#'+selectID).append('<option value="'+domainData.value.id+'" selected>'+domainData.value.name+'</option>');
+        let domain = g_domains.find(domain => {
+          return domain.id == domainData.value;
+        });
+
+        if(savedDomainData != null && savedDomainData.value == domainData.value) {
+            $('#'+selectID).append('<option value="'+domainData.value+'" selected>'+domain.name+'</option>');
         } else {
-            $('#'+selectID).append('<option value="'+domainData.value.id+'">'+domainData.value.name+'</option>');
+            $('#'+selectID).append('<option value="'+domainData.value+'">'+domain.name+'</option>');
         }
 
     }
@@ -151,7 +155,7 @@ function giveDomainAdvancement(srcStruct, locationID, spellSRC, extraData){
             $('.'+selectControlShellClass).removeClass("is-info");
 
             let domainID = $(this).val();
-            let domain = wscChoiceStruct.AllDomains.find(domain => {
+            let domain = g_domains.find(domain => {
                 return domain.id == domainID;
             });
 
@@ -173,7 +177,7 @@ function giveDomainAdvancement(srcStruct, locationID, spellSRC, extraData){
 
     $('#'+selectID).trigger("change", [false]);
 
-    statementComplete();
+    statementComplete('Domain - Advancement Display');
 
 }
 

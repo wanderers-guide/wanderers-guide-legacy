@@ -4,6 +4,34 @@
 
 $(function () {
 
+  // If mobile, hide Statistics in left quickview
+  const isMobile = window.matchMedia("screen and (max-width: 768px)").matches;
+  if (isMobile) {
+    // Moving HTML
+    let statisticsHTML = $('#builder-statistics-container').html();
+    $('#builder-statistics-container').html('');
+    $('#builder-statistics-container').parent().addClass('is-hidden');
+    $('#quickViewLeftContent').html(statisticsHTML);
+
+    $('#center-body').prepend(`
+      <div class="sticky_buttons_shell sticky_button_leftest">
+        <span class="icon is-medium has-text-info cursor-clickable sticky_button is-upper has-tooltip-right" data-tooltip="View Character Stats" id="leftQuickviewButton">
+            <i class="fas fa-2x fa-chart-bar"></i>
+        </span>
+      </div>
+    `);
+
+    $('#leftQuickviewButton').click(function(event){
+      event.stopImmediatePropagation();
+      $('#quickviewLeftDefault').addClass('is-active');
+    });
+
+    $('#quickViewLeftTitleClose').click(function(event){
+      $('#quickviewLeftDefault').removeClass('is-active');
+    });
+    
+  }
+
   // Assemble accords
   $('.accord-container').each(function() {
     let accordHeader = $(this).find('.accord-header');
@@ -42,8 +70,10 @@ $(function () {
   });
 
   $('#hit-points-body').click(function() {
+    const charClass = getCharClass();
+    const classHitPoints = (charClass == null) ? 0 : charClass.Class.hitPoints;
     openQuickView('hitPointsBreakdownView', {
-      classHitPoints : getCharClass().Class.hitPoints,
+      classHitPoints : classHitPoints,
     });
   });
   $('#class-dc-body').click(function() {
@@ -70,7 +100,6 @@ $(function () {
   populateAccord('spellcasting-body', []);
   populateAccord('languages-body', []);
 
-     
 });
 
 
@@ -137,6 +166,8 @@ function populateAccord(accordBodyID, optionsList){
         openQuickView(option.CustomQuickview.name, option.CustomQuickview.data);
       });
 
+    } else {
+      $('#'+optionEntryID).removeClass('cursor-clickable');
     }
 
   }

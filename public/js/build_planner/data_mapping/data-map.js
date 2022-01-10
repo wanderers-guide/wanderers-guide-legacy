@@ -37,16 +37,16 @@ function initDataMap(charMetaData){
   for(let metaData of charMetaData){
 
     // Don't load init class profs (for backwards compatibility with old builder).
-    if(metaData.source == DATA_SOURCE.PROFICIENCY && metaData.sourceCode.startsWith('inits-')){
+    if(metaData.source == DATA_SOURCE.PROFICIENCY && metaData.sourceCode.startsWith('inits-') && metaData.sourceCode != 'inits-bonus-prof'){
       continue;
     }
 
     let srcStruct = {
-      source: metaData.source,
-      sourceType: metaData.sourceType,
-      sourceLevel: metaData.sourceLevel,
-      sourceCode: metaData.sourceCode,
-      sourceCodeSNum: metaData.sourceCodeSNum,
+      source: metaData.source+'',
+      sourceType: metaData.sourceType+'',
+      sourceLevel: metaData.sourceLevel+'',
+      sourceCode: metaData.sourceCode+'',
+      sourceCodeSNum: metaData.sourceCodeSNum+'',
     };
     g_dataMap.set(JSON.stringify(srcStruct), metaData.value);
   }

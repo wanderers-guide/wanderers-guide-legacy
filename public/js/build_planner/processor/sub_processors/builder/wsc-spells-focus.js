@@ -13,7 +13,7 @@ function processingFocusSpells(wscStatement, srcStruct, locationID, extraData){
         giveFocusPoint(srcStruct);
     } else {
         displayError("Unknown statement (2-SpellFocus): \'"+wscStatement+"\'");
-        statementComplete();
+        statementComplete('SpellFocus - Unknown Statement');
     }
 
 }
@@ -41,7 +41,7 @@ function giveFocusSpell(srcStruct, spellSRC, spellName){
 }
 
 socket.on("returnFocusSpellChange", function(){
-    statementComplete();
+    statementComplete('SpellFocus - Add Spell');
 });
 
 //////////////////////////////// Give Focus Point ///////////////////////////////////
@@ -55,5 +55,5 @@ function giveFocusPoint(srcStruct){
 }
 
 socket.on("returnFocusPointChange", function(){
-    statementComplete();
+    statementComplete('SpellFocus - Add Point');
 });

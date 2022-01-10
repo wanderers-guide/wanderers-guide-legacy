@@ -106,6 +106,27 @@
 }
 
 
+/* Sticky Buttons */
+#main-container {
+  overflow: visible!important;
+}
+.sticky_button {
+  position: -webkit-sticky!important;
+  position: sticky!important;
+  top: 50%;
+  z-index: 10;
+}
+.sticky_button.is-upper {
+  top: 1rem;
+}
+.sticky_buttons_shell {
+  position: absolute;
+  height:100%;
+}
+.sticky_button_leftest {
+  padding-left: 0.2rem;
+  padding-top: 0.2rem;
+}
 
 
 /* Feat Selection */

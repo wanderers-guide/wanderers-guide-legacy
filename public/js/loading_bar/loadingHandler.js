@@ -52,12 +52,20 @@ function stopSpinnerLoader(){
 }
 
 /* Spinner Sub-Loader */
-function startSpinnerSubLoader(){
-  $('.subpageloader').removeClass('is-hidden');
+function startSpinnerSubLoader(loaderClass=null){
+  if(loaderClass != null){
+    $('.'+loaderClass).removeClass('is-hidden');
+  } else {
+    $('.subpageloader').removeClass('is-hidden');
+  }
 }
 
-function stopSpinnerSubLoader(){
+function stopSpinnerSubLoader(loaderClass=null){
   setTimeout(() => {
-    $('.subpageloader').addClass('is-hidden');
+    if(loaderClass != null){
+      $('.'+loaderClass).addClass('is-hidden');
+    } else {
+      $('.subpageloader').addClass('is-hidden');
+    }
   }, 500);// After 1/2 second
 }

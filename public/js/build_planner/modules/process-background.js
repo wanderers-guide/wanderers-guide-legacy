@@ -14,7 +14,7 @@ function processBackground() {
       <div class="pt-1">
         <div class="pos-relative">
           <div class="fading-reveal-container is-active">
-            <p class="text-center"><span class="is-size-4 has-text-weight-semibold">Background</span></p>
+            <p class="text-center"><span class="is-size-3 has-text-weight-semibold">Background</span></p>
             <div class="ability-text-section px-1">
               ${processText(charBackground.description, false, null, 'MEDIUM', false)}
             </div>

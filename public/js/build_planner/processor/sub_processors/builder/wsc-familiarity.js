@@ -10,7 +10,7 @@ function processingFamiliarities(wscStatement, srcStruct, locationID, extraData)
         giveWeaponFamiliarity(srcStruct, trait);
     } else {
         displayError("Unknown statement (2-Familiarity): \'"+wscStatement+"\'");
-        statementComplete();
+        statementComplete('Familiarity - Unknown Statement');
     }
 
 }
@@ -29,5 +29,5 @@ function giveWeaponFamiliarity(srcStruct, trait){
 }
 
 socket.on("returnWeaponFamiliarityChange", function(){
-    statementComplete();
+    statementComplete('Familiarity - Add');
 });

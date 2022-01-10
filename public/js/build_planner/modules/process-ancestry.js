@@ -14,7 +14,7 @@ function processAncestry() {
       <div class="pt-1">
         <div class="pos-relative">
           <div class="">
-            <p class="text-center"><span class="is-size-4 has-text-weight-semibold">Ancestry</span></p>
+            <p class="text-center"><span class="is-size-3 has-text-weight-semibold">Ancestry</span></p>
           </div>
         </div>
 
@@ -53,7 +53,7 @@ function processAncestry() {
             <p class="title-font is-bold">Senses</p>
             <p id="ancestry-initial-stats-display-senses"></p>
           </div>
-          <div class="column text-center">
+          <div id="ancestry-initial-stats-extra-features-section" class="column text-center">
             <p class="title-font is-bold">Extra Features</p>
             <p id="ancestry-initial-stats-display-physicalFeatures"></p>
           </div>
@@ -69,6 +69,8 @@ function processAncestry() {
           <div id="ancestry-initial-stats-code-languages"></div>
           <div id="ancestry-initial-stats-code-senses"></div>
           <div id="ancestry-initial-stats-code-physicalFeatures"></div>
+          
+          <div id="ancestry-initial-stats-code-languages-extra"></div>
         </div>
         <hr class="mt-0 mb-1 mx-0" style="height: 1px;">
       </div>
@@ -129,7 +131,7 @@ function processAncestry() {
 
         <div id="ancestry-feature-selector-section-heritage" class="pb-4">
 
-          <div class="tabs is-small is-centered is-marginless">
+          <div class="tabs is-small is-centered is-marginless use-custom-scrollbar">
               <ul class="builder-tabs">
                   <li><a id="ancestryHeritageTab" class="heritageTab">Ancestry</a></li>
                   <li><a id="universalHeritageTab" class="heritageTab">Versatile</a></li>
@@ -217,6 +219,8 @@ function processAncestry() {
           $('#ancestry-feature-selector-result-heritage').addClass("is-hidden");
           $(this).parent().addClass("is-info");
 
+          $('#ancestry-feature-selector-code-heritage').html('');
+
           let isUniversal = processAncestry_isUniversalHeritage();
           if(triggerSave == null || triggerSave) {
 
@@ -245,7 +249,9 @@ function processAncestry() {
       $(this).parent().parent().find('.is-active').removeClass('is-active');
       $(this).parent().addClass('is-active');
 
-      processAncestry_displayHeritageSelectOptions(charAncestry, getCharHeritage(), true);
+      // Triggersave, which will reselect heritage again, only if autoPageLoad is false or null
+      const triggersave = (!autoPageLoad || autoPageLoad == null);
+      processAncestry_displayHeritageSelectOptions(charAncestry, getCharHeritage(), triggersave);
     });
 
     if(getCharHeritage() != null){
@@ -418,9 +424,6 @@ function processAncestry_displayCurrentHeritage(charAncestry, heritageID, isUniv
         },
         'ancestry-feature-selector-code-heritage',
         {source: 'Heritage', sourceName: 'Heritage'});
-      
-      // Clear wscChoiceStruct.FeatArray of feats with srcStruct
-      //featsRemoveFromWSCChoiceStruct(srcStruct, true); ???
 
   } else {
 

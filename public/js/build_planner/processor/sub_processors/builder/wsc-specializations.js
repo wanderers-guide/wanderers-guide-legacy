@@ -17,7 +17,7 @@ function processingSpecializations(wscStatement, srcStruct, locationID, extraDat
         giveArmorSpecialization(srcStruct, armorName);
     } else {
         displayError("Unknown statement (2-Specialization): \'"+wscStatement+"\'");
-        statementComplete();
+        statementComplete('Specialization - Unknown Statement');
     }
 
 }
@@ -38,7 +38,7 @@ function giveWeaponSpecialization(srcStruct, type){
 }
 
 socket.on("returnWeaponSpecializationChange", function(){
-    statementComplete();
+    statementComplete('Specialization - Add Weapon');
 });
 
 //////////////////////////////// Give Armor Specialization ///////////////////////////////////
@@ -58,7 +58,7 @@ function giveArmorSpecialization(srcStruct, armorName){
 }
 
 socket.on("returnArmorSpecializationChange", function(){
-    statementComplete();
+    statementComplete('Specialization - Add Armor');
 });
 
 //////////////////////////////// Give Critical Specialization ///////////////////////////////////
@@ -81,5 +81,5 @@ function giveWeaponCriticalSpecialization(srcStruct, weapName){
 }
 
 socket.on("returnWeaponCriticalSpecializationChange", function(){
-    statementComplete();
+    statementComplete('Specialization - Add Weapon Crit');
 });

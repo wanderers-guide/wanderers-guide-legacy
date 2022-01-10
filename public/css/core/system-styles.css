@@ -347,7 +347,7 @@ a:hover {
 .reveal-container-text {
   cursor: pointer !important;
   position: absolute;
-  bottom: -0.6rem;
+  bottom: -1rem;
   left: 10px;
   opacity: 0.9;
 }

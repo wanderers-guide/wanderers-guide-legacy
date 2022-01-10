@@ -14,6 +14,7 @@
     <script src="/js/build_planner/scripts/process-ancestry-stats.js"></script>
     <script src="/js/build_planner/scripts/process-class-stats.js"></script>
     <script src="/js/build_planner/scripts/unselected-options.js"></script>
+    <script src="/js/build_planner/scripts/extra-skills-and-langs.js"></script>
 
     <script src="/js/build_planner/libraries/selector.js"></script>
 
@@ -24,6 +25,13 @@
     <script src="/js/build_planner/modules/process-ancestry.js"></script>
     <script src="/js/build_planner/modules/process-background.js"></script>
     <script src="/js/build_planner/modules/process-class.js"></script>
+    
+    <script src="/js/build_planner/modules/process-custom-code.js"></script>
+
+    <script src="/js/build_planner/scripts/variants/auto-bonus-progression.js"></script>
+    <script src="/js/build_planner/scripts/variants/class-archetypes.js"></script>
+    <script src="/js/build_planner/scripts/variants/free-archetype.js"></script>
+    <script src="/js/build_planner/scripts/variants/gradual-ability-boosts.js"></script>
 
     <!-- Dependencies -->
     <script src="/js/wsc/text-processing.js"></script>
@@ -31,8 +39,7 @@
     <script src="/js/wsc/misc-feat-processing.js"></script>
     <script src="/js/wsc/variable-processing.js"></script>
     <script src="/js/sheet/general/stat-manager.js"></script>
-    <script src="/js/wsc/expression-processing.js"></script>
-    <script src="/js/wsc/expression-utils.js"></script>
+    <script src="/js/sheet/general/sheet-states.js"></script>
 
     <script src="/js/wsc/errorHandling.js"></script>
 
@@ -44,6 +51,7 @@
     <script src="/js/libraries/display_archetype/display-archetype.js"></script>
     <script src="/js/libraries/display_background/display-background.js"></script>
     <script src="/js/libraries/display_uni_heritage/display-uni-heritage.js"></script>
+    <script src="/js/libraries/confirm_message/confirm-message.js"></script>
 
 
     <script src="/js/build_planner/processor/sub_processors/builder/wsc-boosts.js"></script>
@@ -73,6 +81,9 @@
     <script src="/js/build_planner/processor/sub_processors/builder/feats-selection.js"></script>
     <script src="/js/build_planner/processor/sub_processors/builder/prereq-parser.js"></script>
 
+    <script src="/js/build_planner/processor/sub_processors/expression-processor.js"></script>
+    <script src="/js/build_planner/processor/sub_processors/expression-utils.js"></script>
+
     <!-- Quickview -->
     <script type="text/javascript" src="/js/char_builders/wsc/quickview-left.js"></script>
     <script src="/js/sheet/quickviews/_quickviews.js"></script>
@@ -86,6 +97,7 @@
     <script src="/js/sheet/quickviews/general-breakdown-view.js"></script>
     <script src="/js/sheet/quickviews/hit-points-breakdown-view.js"></script>
     <script src="/js/sheet/quickviews/ability-scores-breakdown-view.js"></script>
+    <script src="/js/sheet/quickviews/resist-view.js"></script>
 
     <script src="/js/sheet/general/prof-history-display.js"></script>
     <script src="/js/sheet/utils/item-utils.js"></script>
@@ -135,7 +147,15 @@
   </div>
 </div>
 
+<div class="planner-subpageloader subpageloader-like is-hidden"><div class="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div></div>
+
 <div class="container mt-3 pt-3">
+
+  <div id="errorDisplay" class="hero is-danger is-hidden text-center">
+      <div class="hero-body is-paddingless py-3">
+          <div id="errorMessage" class="container"></div>
+      </div>
+  </div>
 
   <div id="builder-data" data-char-id="{{character.id}}" data-char-lvl="{{character.level}}" data-builder-type="by-abc" data-page-num="{{pageNum}}"></div>
   
@@ -147,33 +167,33 @@
         <div class="tile is-child box py-2 pl-2 pr-1">
 
           <div class="steps">
-            <div class="step-item is-completed is-info">
+            <div id="builder-home-step" class="step-item is-completed is-info">
                 <div class="step-marker">
-                <a class="builder-basics-page-btn"><span class="has-text-bck-color icon"><i class="fas fa-home-alt"></i></span></a>
+                <a class="builder-basics-page-btn"><span id="builder-home-step-symbol" class="has-text-bck-color icon"><i class="fas fa-home-alt"></i></span></a>
                 </div>
                 <div class="step-details is-hidden-touch">
                     <a class="builder-basics-page-btn button is-rounded is-inverted is-tiny is-info"><p class="step-builder-title title-font">Home</p></a>
                 </div>
             </div>
-            <div class="step-item is-completed is-info">
-                <div class="step-marker"><a class="builder-ancestry-page-btn"><span class="has-text-bck-color">A</span></a></div>
+            <div id="builder-ancestry-step" class="step-item">
+                <div class="step-marker"><a class="builder-ancestry-page-btn"><span id="builder-ancestry-step-symbol" class="has-text-bck-color">A</span></a></div>
                 <div class="step-details is-hidden-touch">
                     <a class="builder-ancestry-page-btn button is-rounded is-inverted is-tiny is-info"><p class="step-builder-title title-font">Ancestry</p></a>
                 </div>
             </div>
-            <div class="step-item is-completed is-info">
-                <div class="step-marker"><a class="builder-background-page-btn"><span class="has-text-bck-color">B</span></a></div>
+            <div id="builder-background-step" class="step-item">
+                <div class="step-marker"><a class="builder-background-page-btn"><span id="builder-background-step-symbol" class="has-text-bck-color">B</span></a></div>
                 <div class="step-details is-hidden-touch">
                     <a class="builder-background-page-btn button is-rounded is-inverted is-tiny is-info"><p class="step-builder-title title-font">Background</p></a>
                 </div>
             </div>
-            <div class="step-item is-active is-info">
-                <div class="step-marker"><a class="builder-class-page-btn"><span class="has-text-info">C</span></a></div>
+            <div id="builder-class-step" class="step-item">
+                <div class="step-marker"><a class="builder-class-page-btn"><span id="builder-class-step-symbol" class="has-text-bck-color">C</span></a></div>
                 <div class="step-details is-hidden-touch">
                     <a class="builder-class-page-btn button is-rounded is-inverted is-tiny is-info"><p class="step-builder-title title-font">Class</p></a>
                 </div>
             </div>
-            <div class="step-item">
+            <div id="builder-finalize-step" class="step-item">
                 <div class="step-marker">
                 <a class="builder-finalize-page-btn"><span class="has-text-bck-color icon"><i class="fa fa-user-alt"></i></span></a>
                 </div>
@@ -192,7 +212,7 @@
 
       <div class="tile is-parent is-vertical">
 
-        <div class="tile is-child box p-2">
+        <div class="tile is-child box p-2 is-marginless">
           
           <div class="columns is-mobile is-marginless m-1">
             <div class="column is-paddingless">
@@ -207,7 +227,7 @@
         
         <div class="tile is-child box py-2 pl-2 pr-1">
           <p class="has-txt-value-string title-font has-text-centered">Statistics</p>
-          <div class="use-custom-scrollbar" style="height: 500px; max-height: 500px; overflow-y: scroll;">
+          <div id="builder-statistics-container" class="use-custom-scrollbar" style="height: 500px; max-height: 500px; overflow-y: scroll;">
           
             <!-- Ability Scores -->
             <div id="ability-scores-body" class="accord-like-button mx-2 mb-2">
@@ -350,7 +370,7 @@
 
         <div class="tile is-child box py-2 pl-2 pr-1">
           
-          <div id="creation-section" class="use-custom-scrollbar" style="height: 575px; max-height: 575px; overflow-y: scroll;">
+          <div id="creation-section" class="use-custom-scrollbar" style="height: 600px; max-height: 600px; overflow-y: scroll;">
           </div>
 
         </div>
@@ -376,6 +396,20 @@
         </div>
         <div class="quickview-body use-custom-scrollbar">
             <div id="quickViewContent" class="quickview-block pt-1 pb-3 px-3">
+            </div>
+        </div>
+    </div>
+
+    <!-- Left Quickview -->
+    <div id="quickviewLeftDefault" class="quickview is-left" style="z-index: 34;">
+        <div class="quickview-header">
+            <p id="quickViewLeftTitle" class="title is-size-5 has-txt-value-number">Statistics</p>
+            <div class="is-inline-flex">
+                <p><a id="quickViewLeftTitleClose" class="delete"></a></p>
+            </div>
+        </div>
+        <div class="quickview-body use-custom-scrollbar">
+            <div id="quickViewLeftContent" class="quickview-block pt-1 pb-3 px-3">
             </div>
         </div>
     </div>

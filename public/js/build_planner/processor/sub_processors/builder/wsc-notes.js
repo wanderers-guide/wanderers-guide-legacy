@@ -10,7 +10,7 @@ function processingNotes(wscStatement, srcStruct, locationID, extraData){
         giveNotesField(srcStruct, placeholderText, locationID, extraData);
     } else {
         displayError("Unknown statement (2-Notes): \'"+wscStatement+"\'");
-        statementComplete();
+        statementComplete('Notes - Unknown Statement');
     }
 
 }
@@ -31,7 +31,8 @@ function giveNotesField(srcStruct, placeholderText, locationID, extraData){
 }
 
 socket.on("returnNotesFieldChange", function(notesData, noteChangePacket){
-    statementComplete();
+    console.log(`Waited for 'returnNotesFieldChange'.`);
+    statementComplete('Notes - Add');
     if(noteChangePacket == null) { return; }
 
     let placeholderText = noteChangePacket.sourceName+' - '+notesData.placeholderText;

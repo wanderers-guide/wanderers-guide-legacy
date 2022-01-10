@@ -44,28 +44,28 @@ function selectorUpdated() {
       }
     });
   } else if(g_builder_type == 'by-abc'){
+    // Clear all blue dots
+    $('.accord-creation-container').each(function() {
+      $(this).find('.accord-indicate-unselected-options').html('');
+    });
+
+    // Reapply blue dots
     if(g_page_num == 2){
       $('.ancestry-feature-section').each(function() {
         if($(this).find('.input.is-info').length !== 0 || $(this).find('.select.is-info').length !== 0 || $(this).find('.feat-selection.is-default').length !== 0){
             $(this).parent().parent().find('.accord-indicate-unselected-options').html('<span class="icon is-small has-text-info pl-3"><i class="fas fa-xs fa-circle"></i></span>');
-        } else {
-            $(this).parent().parent().find('.accord-indicate-unselected-options').html('');
         }
       });
     } else if(g_page_num == 3){
       $('.background-feature-section').each(function() {
         if($(this).find('.input.is-info').length !== 0 || $(this).find('.select.is-info').length !== 0 || $(this).find('.feat-selection.is-default').length !== 0){
             $(this).parent().parent().find('.accord-indicate-unselected-options').html('<span class="icon is-small has-text-info pl-3"><i class="fas fa-xs fa-circle"></i></span>');
-        } else {
-            $(this).parent().parent().find('.accord-indicate-unselected-options').html('');
         }
       });
     } else if(g_page_num == 4){
       $('.class-feature-section').each(function() {
         if($(this).find('.input.is-info').length !== 0 || $(this).find('.select.is-info').length !== 0 || $(this).find('.feat-selection.is-default').length !== 0){
             $(this).parent().parent().find('.accord-indicate-unselected-options').html('<span class="icon is-small has-text-info pl-3"><i class="fas fa-xs fa-circle"></i></span>');
-        } else {
-            $(this).parent().parent().find('.accord-indicate-unselected-options').html('');
         }
       });
     }

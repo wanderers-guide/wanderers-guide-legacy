@@ -14,10 +14,6 @@ $(function () {
       // Hardcoded redirect to page 2
       window.location.href = '/profile/characters/builder/?id='+getCharIDFromURL()+'&page=2';
     });
-    $("#goToCharButton").click(function(){
-      // Hardcoded redirect
-      window.location.href ='/profile/characters/'+getCharIDFromURL();
-    });
     initBuilderSteps();
     
     // On load get basic character info
@@ -40,9 +36,7 @@ function initBuilderSteps(){
   $('.builder-class-page-btn').click(function(){
     window.location.href = '/profile/characters/builder/?id='+getCharIDFromURL()+'&page=4';
   });
-  $('.builder-finalize-page-btn').click(function(){
-    window.location.href = '/profile/characters/builder/?id='+getCharIDFromURL()+'&page=5';
-  });
+  // Sheet btn is set in returnCharacterDetails because it needs character object.
 
 }
 
@@ -50,6 +44,19 @@ function initBuilderSteps(){
 
 socket.on("returnCharacterDetails", function(character, clientsWithAccess, hBundles, progessBundles){
     isBuilderInit = true;
+
+    $('.builder-finalize-page-btn').click(function(){
+      if(character.name != null && character.ancestryID != null && character.backgroundID != null && character.classID != null){
+        window.location.href ='/profile/characters/'+getCharIDFromURL();
+      } else {
+        let charRequirements = '';
+        if(character.name == null){ charRequirements += '<br><span class="is-bold">Name</span>'; }
+        if(character.ancestryID == null){ charRequirements += '<br><span class="is-bold">Ancestry</span>'; }
+        if(character.backgroundID == null){ charRequirements += '<br><span class="is-bold">Background</span>'; }
+        if(character.classID == null){ charRequirements += '<br><span class="is-bold">Class</span>'; }
+        new ConfirmMessage('Incomplete Character', 'Your character requires the following before you can view their sheet:'+charRequirements, 'Okay', 'modal-incomplete-character', 'modal-incomplete-character-btn', 'is-info');
+      }
+    });
 
     displayExternalCharacterAccess(clientsWithAccess);
 
@@ -75,9 +82,51 @@ socket.on("returnCharacterDetails", function(character, clientsWithAccess, hBund
 
     // When character level changes, save level
     $("#charLevel").change(function(){
+      const newLevel = $(this).val();
+      if(newLevel < character.level){
+        $("#charLevel").val(character.level);
+        new ConfirmMessage('Decrease Level', 'Are you sure you want to decrease your character\'s level? Any selections you\'ve made at a higher level than the new level will be erased.', 'Change', 'modal-decrease-character-level', 'modal-decrease-character-level-btn');
+        $('#modal-decrease-character-level-btn').click(function() {
+          $("#charLevel").val(newLevel);
+          character.level = newLevel;
+          socket.emit("requestLevelChange",
+              getCharIDFromURL(),
+              newLevel);
+        });
+      } else {
+        character.level = newLevel;
         socket.emit("requestLevelChange",
             getCharIDFromURL(),
-            $(this).val());
+            newLevel);
+      }
+
+    });
+
+    // Set builder type
+    if(character.builderByLevel === 1){
+      $('#builder-by-level').prop('checked', true);
+      $('#builder-by-abc').prop('checked', false);
+      $('.is-builder-type-by-level').removeClass('is-hidden');
+      $('.is-builder-type-by-abc').addClass('is-hidden');
+    } else {
+      $('#builder-by-level').prop('checked', false);
+      $('#builder-by-abc').prop('checked', true);
+      $('.is-builder-type-by-level').addClass('is-hidden');
+      $('.is-builder-type-by-abc').removeClass('is-hidden');
+    }
+    $("#builder-by-level").click(function(){
+      $('.is-builder-type-by-level').removeClass('is-hidden');
+      $('.is-builder-type-by-abc').addClass('is-hidden');
+      socket.emit("requestBuilderTypeChange",
+          getCharIDFromURL(),
+          'by-level');
+    });
+    $("#builder-by-abc").click(function(){
+      $('.is-builder-type-by-level').addClass('is-hidden');
+      $('.is-builder-type-by-abc').removeClass('is-hidden');
+      socket.emit("requestBuilderTypeChange",
+          getCharIDFromURL(),
+          'by-abc');
     });
 
     // When ability score changes, save them all

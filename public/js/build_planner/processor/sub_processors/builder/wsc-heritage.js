@@ -13,7 +13,7 @@ function processingHeritageEffects(wscStatement, srcStruct, locationID, extraDat
     giveHeritageEffectsFindHeritages(srcStruct, locationID, value, extraData);
   } else {
       displayError("Unknown statement (2-HeritageEffects): \'"+wscStatement+"\'");
-      statementComplete();
+      statementComplete('Heritage - Unknown Statement');
   }
 
 }
@@ -31,13 +31,14 @@ function giveHeritageEffectsFindHeritages(srcStruct, locationID, ancestryName, e
 }
 
 socket.on("returnFindHeritagesFromAncestryName", function(srcStruct, heritages, inputPacket){
+  console.log(`Waited for 'returnFindHeritagesFromAncestryName'.`);
 
   let selectHeritageEffectsID = "selectHeritageEffects-"+inputPacket.locationID+"-"+srcStruct.sourceCode+"-"+srcStruct.sourceCodeSNum;
   let selectHeritageEffectsControlShellClass = selectHeritageEffectsID+'-ControlShell';
   let selectHeritageEffectsDescriptionID = selectHeritageEffectsID+"-Description";
 
   // If ID already exists, just return. This is a temporary fix - this shouldn't be an issue in the first place.
-  if($('#'+selectHeritageEffectsID).length != 0) { statementComplete(); return; }
+  if($('#'+selectHeritageEffectsID).length != 0) { statementComplete('Heritage - Add Error'); return; }
 
   const selectionTagInfo = getTagFromData(srcStruct, inputPacket.sourceName, 'Unselected Heritage', 'UNSELECTED');
 
@@ -48,13 +49,11 @@ socket.on("returnFindHeritagesFromAncestryName", function(srcStruct, heritages, 
   $('#'+selectHeritageEffectsID).append('<option value="chooseDefault">Choose a Heritage</option>');
   $('#'+selectHeritageEffectsID).append('<optgroup label="──────────"></optgroup>');
 
-  // Set saved prof choices to savedProfData
-  const savedHeritage = wscChoiceStruct.HeritageEffectsArray.find(heritageData => {
-      return hasSameSrc(heritageData, srcStruct);
-  });
+  // Get saved extra heritage
+  const savedHeritage = getDataSingle(DATA_SOURCE.EXTRA_HERITAGE, srcStruct);
 
   for(const heritage of heritages){
-    if(savedHeritage != null && savedHeritage.value != null && savedHeritage.value.id == heritage.id) {
+    if(savedHeritage != null && savedHeritage.value != null && savedHeritage.value == heritage.id) {
       $('#'+selectHeritageEffectsID).append('<option value="'+heritage.id+'" selected>'+heritage.name+'</option>');
     } else {
       $('#'+selectHeritageEffectsID).append('<option value="'+heritage.id+'">'+heritage.name+'</option>');
@@ -106,6 +105,7 @@ socket.on("returnFindHeritagesFromAncestryName", function(srcStruct, heritages, 
                 true);
 
             socket.once("returnHeritageEffectsChange", function(){
+              console.log(`Waited for 'returnHeritageEffectsChange'.`);
               displayAndProcessHeritageEffects(
                 srcStruct, heritage, selectHeritageEffectsDescriptionID, inputPacket.sourceName);
             });
@@ -125,7 +125,7 @@ socket.on("returnFindHeritagesFromAncestryName", function(srcStruct, heritages, 
 
   $('#'+selectHeritageEffectsID).trigger("change", [false]);
 
-  statementComplete();
+  statementComplete('Heritage - Add');
 
 });
 
@@ -143,11 +143,12 @@ function giveHeritageEffectsByName(srcStruct, locationID, heritageName, extraDat
 }
 
 socket.on("returnAddHeritageEffect", function(srcStruct, heritage, inputPacket){
-  if(heritage == null) { statementComplete(); return; }
+  console.log(`Waited for 'returnAddHeritageEffect'.`);
+  if(heritage == null) { statementComplete('Heritage - Add By Name Null'); return; }
 
   displayAndProcessHeritageEffects(srcStruct, heritage, inputPacket.locationID, inputPacket.sourceName);
   
-  statementComplete();
+  statementComplete('Heritage - Add By Name');
 
 });
 
@@ -156,12 +157,23 @@ function displayAndProcessHeritageEffects(srcStruct, heritage, locationID, sourc
 
   let heritageLocationCodeID = locationID+'-heritageCode';
 
-  $('#'+locationID).append('<div class="box lighter my-2"><span class="is-size-4 has-text-weight-semibold">'+heritage.name+'</span><div class="container ability-text-section">'+processText(heritage.description, false, null)+'</div><div id="'+heritageLocationCodeID+'"></div></div>');
+  $('#'+locationID).append(`
+    <div class="box lighter my-2">
+      <p class="is-size-4 has-text-weight-semibold text-center">${heritage.name}</p>
+      <div class="pos-relative">
+        <div class="container ability-text-section fading-reveal-container is-active">
+          ${processText(heritage.description, false, null)}
+        </div>
+        <p class="reveal-container-text is-hidden has-text-info">Show More</p>
+      </div>
+      <div id="${heritageLocationCodeID}"></div>
+    </div>
+  `);
 
-  processBuilderCode(
+  processCode(
     heritage.code,
     srcStruct,
     heritageLocationCodeID,
-    heritage.name);
+    {source: sourceName, sourceName: 'Extra Heritage'});    
 
 }

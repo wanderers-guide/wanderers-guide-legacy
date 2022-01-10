@@ -247,6 +247,7 @@ model characters {
   rollHistoryJSON             String?                @db.VarChar(8000)
   details                     String?                @db.Text
   customCode                  String?                @db.VarChar(2000)
+  builderByLevel              Int?                   @default(0)
   optionAutoDetectPreReqs     Int?                   @default(1)
   optionAutoHeightenSpells    Int?                   @default(0)
   optionPublicCharacter       Int?                   @default(0)

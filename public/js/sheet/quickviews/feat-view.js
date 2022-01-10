@@ -95,16 +95,16 @@ function openFeatQuickview(data) {
     let featContentInnerHTML = '';
     let foundUpperFeatLine = false;
     if(data.Feat.prerequisites != null){
-        if(isBuilderPage() && wscChoiceStruct.Character.optionAutoDetectPreReqs === 1) {
+        if(isBuilderPage() && g_character.optionAutoDetectPreReqs === 1) {
             let resultArray = preReqResultArray(data.Feat);
 
             let preReqStr = '';
             for(let resultData of resultArray){
-                let featLinkClass = 'featLink-'+Math.floor((Math.random()*9999));
+                let dataLinkClass = 'dataLink-'+Math.floor((Math.random()*99999));
                 if(resultData.Result == 'TRUE'){
                     if(resultData.Type == 'FEAT'){
-                        preReqStr += '<span class="prereq-true '+featLinkClass+' has-tooltip-bottom" data-tooltip="Feat">'+resultData.PreReqPart+'</span>'+preReqGetIconTrue();
-                        preReqFeatLink(featLinkClass, resultData.PreReqPart);
+                        preReqStr += '<span class="prereq-true '+dataLinkClass+' has-tooltip-bottom" data-tooltip="Feat">'+resultData.PreReqPart+'</span>'+preReqGetIconTrue();
+                        preReqFeatLink(dataLinkClass, resultData.PreReqPart);
                     } else if(resultData.Type == 'CLASS-FEATURE'){
                         preReqStr += '<span class="prereq-true has-tooltip-bottom" data-tooltip="Class Feature">'+resultData.PreReqPart+'</span>'+preReqGetIconTrue();
                     } else {
@@ -112,8 +112,8 @@ function openFeatQuickview(data) {
                     }
                 } else if(resultData.Result == 'FALSE') {
                     if(resultData.Type == 'FEAT'){
-                        preReqStr += '<span class="prereq-false '+featLinkClass+' has-tooltip-bottom" data-tooltip="Feat">'+resultData.PreReqPart+'</span>'+preReqGetIconFalse();
-                        preReqFeatLink(featLinkClass, resultData.PreReqPart);
+                        preReqStr += '<span class="prereq-false '+dataLinkClass+' has-tooltip-bottom" data-tooltip="Feat">'+resultData.PreReqPart+'</span>'+preReqGetIconFalse();
+                        preReqFeatLink(dataLinkClass, resultData.PreReqPart);
                     } else if(resultData.Type == 'CLASS-FEATURE'){
                         preReqStr += '<span class="prereq-false has-tooltip-bottom" data-tooltip="Class Feature">'+resultData.PreReqPart+'</span>'+preReqGetIconFalse();
                     } else {
@@ -202,8 +202,9 @@ function showFeatListOptions(qContent, wscStatements){
 
   for(let statement in statementCounts) {
     if(statement.includes("GIVE-FEAT-FROM=")){ // GIVE-FEAT-FROM=Choose a Tradition:feat 1,feat 2,feat 2
-      let value = statement.split('=')[1];
+      let value = statement.split('GIVE-FEAT-FROM=')[1];
       let valueParts = value.split(':');
+      if(valueParts.length != 2){ displayError('Invalid syntax "'+statement+'"'); continue; }
       let selectorTitle = valueParts[0];
       let featNameList = handleVariableText(valueParts[1]).split(',');
 
@@ -231,6 +232,7 @@ function showFeatListOptions(qContent, wscStatements){
       const beginningDashText = detectSameBeginningDashText();
       
       for(let featName of featNameList){
+        if(featName.endsWith('}')){ featName = featName.replace('}',''); }
         let displayFeatName = featName.replace(beginningDashText+' - ', '');
         listText += '* : (feat: '+displayFeatName+' | '+featName+')\n';
       }

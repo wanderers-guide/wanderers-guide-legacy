@@ -16,7 +16,7 @@ function processingLangs(wscStatement, srcStruct, locationID, extraData){
         giveLang(srcStruct, locationID, extraData, false);
     } else {
         displayError("Unknown statement (2-Lang): \'"+wscStatement+"\'");
-        statementComplete();
+        statementComplete('Lang - Unknown Statement');
     }
 
 }
@@ -30,16 +30,19 @@ function giveLang(srcStruct, locationID, extraData, bonusOnly){
     let langDescriptionID = selectLangID+"Description";
 
     // If ID already exists, just return. This is a temporary fix - this shouldn't be an issue in the first place.
-    if($('#'+selectLangID).length != 0) { statementComplete(); return; }
+    if($('#'+selectLangID).length != 0) { statementComplete('Lang - Add Null'); return; }
 
     const selectionTagInfo = getTagFromData(srcStruct, extraData.sourceName, 'Unselected Language', 'UNSELECTED');
 
     $('#'+locationID).append('<div class="field is-grouped is-grouped-centered is-marginless my-1"><div class="select '+selectLangControlShellClass+'" data-selection-info="'+selectionTagInfo+'"><select id="'+selectLangID+'" class="selectLang"></select></div></div>');
 
-    $('#'+locationID).append('<div class="columns is-centered is-marginless pb-2"><div id="'+langDescriptionID+'" class="column is-8 is-paddingless"></div></div>');
+    $('#'+locationID).append('<div class="columns is-centered is-marginless pb-1"><div id="'+langDescriptionID+'" class="column is-8 is-paddingless"></div></div>');
 
     $('#'+selectLangID).append('<option value="chooseDefault">Choose a Language</option>');
     $('#'+selectLangID).append('<optgroup label="──────────"></optgroup>');
+
+    let availableLangsHTML = '';
+    let nonAvailableLangsHTML = '';
 
     // Set saved prof choices to savedProfData
     let savedLang = getDataSingle(DATA_SOURCE.LANGUAGE, srcStruct);
@@ -49,8 +52,7 @@ function giveLang(srcStruct, locationID, extraData, bonusOnly){
         return a.name > b.name ? 1 : -1;
       }
     );
-
-    let isStillBonusLang = true;
+    
     for(const lang of sortedLangArray){
 
         let langIsBonus = false;
@@ -64,29 +66,26 @@ function giveLang(srcStruct, locationID, extraData, bonusOnly){
           }
         }
 
-        if(bonusOnly && !langIsBonus){
-          if(isStillBonusLang){
-            $('#'+selectLangID).append('<optgroup label="──────────"></optgroup>');
-          }
-          isStillBonusLang = false;
-        }
-
-        
-
         if(savedLang != null && savedLang.value != null && savedLang.value == lang.id) {
             if(bonusOnly && !langIsBonus){
-                $('#'+selectLangID).append('<option value="'+lang.id+'" class="is-non-available-very" selected>'+lang.name+'</option>');
+              nonAvailableLangsHTML += '<option value="'+lang.id+'" class="is-non-available-very" selected>'+lang.name+'</option>';
             } else {
-                $('#'+selectLangID).append('<option value="'+lang.id+'" selected>'+lang.name+'</option>');
+              availableLangsHTML += '<option value="'+lang.id+'" selected>'+lang.name+'</option>';
             }
         } else {
             if(bonusOnly && !langIsBonus){
-                $('#'+selectLangID).append('<option value="'+lang.id+'" class="is-non-available-very">'+lang.name+'</option>');
+              nonAvailableLangsHTML += '<option value="'+lang.id+'" class="is-non-available-very">'+lang.name+'</option>';
             } else {
-                $('#'+selectLangID).append('<option value="'+lang.id+'">'+lang.name+'</option>');
+              availableLangsHTML += '<option value="'+lang.id+'">'+lang.name+'</option>';
             }
         }
 
+    }
+
+    $('#'+selectLangID).append(availableLangsHTML);
+    if(bonusOnly){
+      $('#'+selectLangID).append('<optgroup label="──────────"></optgroup>');
+      $('#'+selectLangID).append(nonAvailableLangsHTML);
     }
 
     // On lang choice change
@@ -153,7 +152,7 @@ function giveLang(srcStruct, locationID, extraData, bonusOnly){
 
     $('#'+selectLangID).trigger("change", [false]);
 
-    statementComplete();
+    statementComplete('Lang - Add');
 
 }
 
@@ -174,8 +173,6 @@ function checkDuplicateLang(langID){
 
 function giveLangByName(srcStruct, langName, extraData){
 
-  console.log(langName);
-
   let language = g_allLanguages.find(language => {
     return language.name.toUpperCase() == langName.toUpperCase();
   });
@@ -188,8 +185,6 @@ function giveLangByName(srcStruct, langName, extraData){
       srcStruct,
       langName);
 
-}
+  statementComplete('Lang - Add By Name');
 
-socket.on("returnLanguageChangeByName", function(){
-    statementComplete();
-});
+}

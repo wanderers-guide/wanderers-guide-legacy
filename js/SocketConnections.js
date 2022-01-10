@@ -724,6 +724,16 @@ module.exports = class SocketConnections {
           }
         });
       });
+
+      socket.on('requestBuilderTypeChange', function(charID, builderType){
+        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
+          if(ownsChar){
+            CharSaving.saveBuilderType(charID, builderType).then((result) => {
+              socket.emit('returnBuilderTypeChange');
+            });
+          }
+        });
+      });
     
       socket.on('requestAbilityScoreChange', function(charID, abilSTR, abilDEX, abilCON, abilINT, abilWIS, abilCHA){
         AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
@@ -1029,7 +1039,7 @@ module.exports = class SocketConnections {
                 socket.emit('returnUnselectedDataChange', unselectedData);
               });
             } else {
-              CharDataMapping.setData(charID, 'unselectedData', srcStruct, unselectedData)
+              CharDataMapping.setDataOnly(charID, 'unselectedData', srcStruct, unselectedData)
               .then((result) => {
                 socket.emit('returnUnselectedDataChange', unselectedData);
               });
@@ -1104,7 +1114,10 @@ module.exports = class SocketConnections {
                 socket.emit('returnFeatChange', featChangePacket);
               });
             } else {
-              CharDataMapping.setData(charID, 'chosenFeats', srcStruct, featChangePacket.featID)
+              let deleteSelfData = featChangePacket.deleteSelfData;
+              if(deleteSelfData == null) { deleteSelfData = true; }
+
+              CharDataMapping.setData(charID, 'chosenFeats', srcStruct, featChangePacket.featID, deleteSelfData)
               .then((result) => {
                 socket.emit('returnFeatChange', featChangePacket);
               });
@@ -2000,9 +2013,7 @@ module.exports = class SocketConnections {
           if(ownsChar){
             CharDataMapping.deleteDataSNumChildren(charID, srcStruct)
             .then((result) => {
-              CharChoicesLoad(socket, charID).then((choiceStruct) => {
-                socket.emit('returnWSCSrcStructDataClear', choiceStruct);
-              });
+              socket.emit('returnWSCSrcStructDataClear');
             });
           }
         });

@@ -96,6 +96,18 @@ function getDataAllClassChoice(){
   return dataArray;
 }
 
+function getDataSingleClassChoice(srcStruct){
+  let data = getDataSingle(DATA_SOURCE.CLASS_FEATURE_CHOICE, srcStruct);
+  if(data != null && data.value != null) {
+    let vParts = data.value.split(getSeparator());
+    data.SelectorID = vParts[0];
+    data.OptionID = vParts[1];
+    return data;
+  } else {
+    return null;
+  }
+}
+
 //
 
 function setDataInnateSpell(srcStruct, spellID, spellLevel, spellTradition, timesPerDay){
@@ -105,6 +117,19 @@ function setDataInnateSpell(srcStruct, spellID, spellLevel, spellTradition, time
           modifier for innate spells unless otherwise specified."
       */
   setData(DATA_SOURCE.INNATE_SPELL, srcStruct, value);
+}
+
+function getDataSingleInnateSpell(srcStruct){
+  let data = getDataSingle(DATA_SOURCE.INNATE_SPELL, srcStruct);
+  if(data.value != null){
+    let vParts = data.value.split(getSeparator());
+    data.SpellID = vParts[0];
+    data.SpellLevel = vParts[1];
+    data.SpellTradition = vParts[2];
+    data.TimesPerDay = vParts[3];
+    data.KeyAbility = vParts[4];
+  }
+  return data;
 }
 
 function getDataAllInnateSpell(){

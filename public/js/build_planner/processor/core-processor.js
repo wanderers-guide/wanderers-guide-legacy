@@ -24,7 +24,7 @@ function processCode(wscCode, srcStruct, locationID, extraData){
     if(extraData == null){ extraData = {source: 'Unknown', sourceName: ''}; }
 
     // Process Variables
-    //wscCode = processVariables(wscCode, `newCoreCode-${srcStructToCompositeKey(srcStruct)}`);
+    wscCode = processVariables(wscCode, `newCoreCode-${srcStructToCompositeKey(srcStruct)}`);
 
     // Add Loading Animiation //
     $('#'+locationID).append('<div class="wsc-statement-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>');
@@ -110,8 +110,20 @@ function statementComplete_new(){
   // Run next statement,
   statementNext();
 }
-function statementComplete(){
-console.log('Complete statement - old');
+
+let timeTrackCount = null;
+function statementComplete(calledSource='Unknown'){
+
+  if(timeTrackCount != null){
+    console.timeEnd('track-'+timeTrackCount);
+    console.log('   Src: '+calledSource);
+    timeTrackCount++;
+  } else {
+    timeTrackCount = 0;
+  }
+  
+  console.time('track-'+timeTrackCount);
+  
 }
 
 function runQueuedStatement(){
@@ -134,12 +146,10 @@ function runQueuedStatement(){
     $('#'+locationID+' .wsc-statement-roller').remove();
 
     if(wscStatement != null){
-        let wscStatementUpper = wscStatement.toUpperCase();
         if(wscStatement.trim() == ''){ return PROCESS_RETURN.NEXT; }
         if(wscStatement.endsWith(',')){ wscStatement = wscStatement.slice(0, -1); }
 
         // Test/Check Statement for Expressions //
-        /*
         wscStatement = testExpr(wscStatement, srcStruct);
         if(wscStatement == null) {
           socket.emit("requestDataClearAtSrcStruct",
@@ -149,8 +159,10 @@ function runQueuedStatement(){
           return PROCESS_RETURN.NEXT;
         }
         if(wscStatement.trim() == ''){ return PROCESS_RETURN.NEXT; }
-        */
         //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+
+        let wscStatementUpper = wscStatement.toUpperCase();
+        //
 
         const builder_stateReturn = runBuilderStatements(wscStatement, wscStatementUpper, srcStruct, locationID, extraData);
         if(builder_stateReturn != PROCESS_RETURN.UNKNOWN){
@@ -158,7 +170,6 @@ function runQueuedStatement(){
         }
 
         const sheet_stateReturn = runSheetStatements(wscStatement, wscStatementUpper, srcStruct, locationID, extraData);
-
         if(sheet_stateReturn != PROCESS_RETURN.UNKNOWN){
           return sheet_stateReturn;
         } else {
@@ -170,7 +181,13 @@ function runQueuedStatement(){
           if(miscFeat_stateReturn != PROCESS_RETURN.UNKNOWN){
             return miscFeat_stateReturn;
           }
-          
+
+          // AddText will return true or false based on if it successfully processed the statement
+          const addText_foundReturn = processStatement_AddText(wscStatement, locationID, true);
+          if(addText_foundReturn){
+            return PROCESS_RETURN.NEXT;
+          }
+
         }
 
         displayError("Unknown statement (1): \'"+wscStatement+"\'");

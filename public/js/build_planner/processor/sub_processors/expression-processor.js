@@ -166,10 +166,14 @@ function profConversion_convertOldNameToVarName(profName){
   }
 
   if(convertProfName.endsWith('LORE')){
-    console.log(`SKILL_${convertProfName.slice(0, -4)}_LORE`);
-    return `SKILL_${convertProfName.slice(0, -4)}_LORE`;
+    let skillLoreName = convertProfName.slice(0, -4).trim();
+    if(skillLoreName == ''){
+      return 'SKILL_LORE';
+    } else {
+      return `SKILL_${skillLoreName}_LORE`;
+    }
   } else {
-    console.error('Failed to convert variable '+convertProfName);
+    console.warn('Failed to convert variable: '+convertProfName);
     return '';
   }
 
@@ -182,7 +186,7 @@ function profConversion_convertOldName(profName){
 let g_expr_hasInit = false;
 let g_expr_focusPoints, g_expr_senseArray, g_expr_classAbilityArray, g_expr_featDataMap, g_expr_featNameArray = null;
 
-function initExpressionProcessor(expDataStruct){
+function initExpressionProcessor(){
 
     g_expr_focusPoints = getDataAll(DATA_SOURCE.FOCUS_POINT).length;
 
@@ -198,16 +202,17 @@ function initExpressionProcessor(expDataStruct){
       }
     }
 
-    if(expDataStruct.ChoiceStruct.ClassDetails != null){
+    const charClass = getCharClass();
+    if(charClass != null){
         g_expr_classAbilityArray = [];
-        if(expDataStruct.ChoiceStruct.ClassDetails.Abilities != null){
-            for(let classAbility of expDataStruct.ChoiceStruct.ClassDetails.Abilities){
+        if(charClass.Abilities != null){
+            for(let classAbility of charClass.Abilities){
                 if(classAbility.level == -1) {continue;}
                 if(classAbility.level <= g_char_level) {
                     if(classAbility.selectType != 'SELECT_OPTION'){
                         g_expr_classAbilityArray.push(classAbility.name.toUpperCase().replace(/\(|\)/g,""));
                     } else {
-                        let choiceData = expDataStruct.ChoiceStruct.ChoiceArray.find(choiceData => {
+                        let choiceData = getDataAllClassChoice().find(choiceData => {
                             return classAbility.id == choiceData.OptionID;
                         });
                         if(choiceData != null){
@@ -216,32 +221,48 @@ function initExpressionProcessor(expDataStruct){
                     }
                 }
             }
-            for(let classAbility of expDataStruct.ChoiceStruct.ExtraClassFeaturesArray){
-              if(classAbility.value != null && classAbility.value.name != null){
-                g_expr_classAbilityArray.push(classAbility.value.name.toUpperCase().replace(/\(|\)/g,""));
+
+
+            let findClassFeatureName = function(classFeatureID){
+              for(const [classID, classData] of g_classMap.entries()){
+                for(const classFeature of classData.Abilities){
+                  if(classFeature.id == classFeatureID){
+                    return classFeature.name;
+                  }
+                }
+              }
+              return null;
+            };
+
+            for(let classAbility of getDataAll(DATA_SOURCE.EXTRA_CLASS_FEATURE)){
+              if(classAbility.value != null){
+                let featureName = findClassFeatureName(classAbility.value);
+                if(featureName != null){
+                  g_expr_classAbilityArray.push(featureName.toUpperCase().replace(/\(|\)/g,""));
+                }
               }
             }
         }
     }
 
-    if(expDataStruct.ChoiceStruct.FeatArray != null){
+
+    if(g_featMap != null){
       g_expr_featNameArray = [];
       g_expr_featDataMap = new Map();
-      for(let feat of expDataStruct.ChoiceStruct.FeatArray){
+      for(let feat of getDataAll(DATA_SOURCE.FEAT_CHOICE)){
         if(feat.value != null){
-          let featName = feat.value.name.toUpperCase();
-          g_expr_featNameArray.push(featName);
-          g_expr_featDataMap.set(featName, feat);
+          const featData = g_featMap.get(feat.value+'');
+          if(featData != null){
+            let featName = featData.Feat.name.toUpperCase();
+            g_expr_featNameArray.push(featName);
+            g_expr_featDataMap.set(featName, feat);
+          }
         }
       }
     }
 
     g_expr_hasInit = true;
 
-}
-
-function updateExpressionProcessor(expDataStruct){
-    initExpressionProcessor(expDataStruct);
 }
 
 
@@ -625,8 +646,8 @@ function expHasProf(expression, statement, elseStatement, srcStruct){
     if(numUps === -1){return null;}
 
     let foundProf = false;
-    for(const [profMapName, profMapDataArray] of getProfMap().entries()){
-        const finalProfData = getFinalProf(cleanProfDataArrayOfStatementProfs(profMapDataArray, srcStruct));
+    for(const [profName, profMapDataArray] of getProfMap().entries()){
+        const finalProfData = expr_getFinalProf(cleanProfDataArrayOfStatementProfs(profMapDataArray, srcStruct));
         if(finalProfData == null) { continue; }
         if(profData == null){
             let tempSkillName = finalProfData.Name.toUpperCase();

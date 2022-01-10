@@ -285,7 +285,7 @@ function variables_addRank(variableName, rank, sourceName, srcStructKey){
 function variables_removeRank(variableName, srcStructKey){
 
   let variable = g_variableMap.get(variableName);
-  if(variable == null) { console.log('Unknown variable '+variableName); return; }
+  if(variable == null) { console.warn('Unknown variable: '+variableName); return; }
 
   if(variable.Type != VAR_TYPE.PROFICIENCY){
     displayError("Variable Remove Rank: Unsupported variable type \'"+variable.Type+"\'!");
@@ -299,7 +299,7 @@ function variables_removeRank(variableName, srcStructKey){
 function variables_getFinalRank(variableName){
 
   let variable = g_variableMap.get(variableName);
-  if(variable == null) { console.log('Unknown variable '+variableName); return; }
+  if(variable == null) { console.warn('Unknown variable: '+variableName); return; }
 
   if(variable.Type != VAR_TYPE.PROFICIENCY){
     displayError("Variable Final Rank: Unsupported variable type \'"+variable.Type+"\'!");
@@ -404,7 +404,7 @@ function variables_removeFromExtras(variableName, type){
 function variables_getFullString(variableName, errorOnFailure=true){
 
   let variable = g_variableMap.get(variableName);
-  if(variable == null) { console.log('Unknown variable '+variableName); return null; }
+  if(variable == null) { console.warn('Unknown variable: '+variableName); return null; }
 
   if(variable.Type == VAR_TYPE.INTEGER){
     if(errorOnFailure){
@@ -444,7 +444,7 @@ function variables_getFullString(variableName, errorOnFailure=true){
 function variables_getExtrasMap(variableName){
 
   let variable = g_variableMap.get(variableName);
-  if(variable == null) { console.log('Unknown variable '+variableName); return null; }
+  if(variable == null) { console.warn('Unknown variable: '+variableName); return null; }
 
   if(variable.Type == VAR_TYPE.INTEGER){
     displayError("Variable Get Extras Map: Unsupported variable type \'"+variable.Type+"\'!");
@@ -472,7 +472,7 @@ function variables_getExtrasMap(variableName){
 function variables_addToBonuses(variableName, value, type, source){
 
   let variable = g_variableMap.get(variableName);
-  if(variable == null) { console.log('Unknown variable '+variableName); return; }
+  if(variable == null) { console.warn('Unknown variable: '+variableName); return; }
 
   let bonusesMap;
   if(variable.Type == VAR_TYPE.INTEGER){
@@ -525,7 +525,7 @@ function variables_addToBonuses(variableName, value, type, source){
 function variables_removeFromBonuses(variableName, type){
 
   let variable = g_variableMap.get(variableName);
-  if(variable == null) { console.log('Unknown variable '+variableName); return; }
+  if(variable == null) { console.warn('Unknown variable: '+variableName); return; }
 
   let bonusesMap;
   if(variable.Type == VAR_TYPE.INTEGER){
@@ -561,7 +561,7 @@ function variables_removeFromBonuses(variableName, type){
 function variables_getBonus(variableName, type){
 
   let variable = g_variableMap.get(variableName);
-  if(variable == null) { console.log('Unknown variable '+variableName); return null; }
+  if(variable == null) { console.warn('Unknown variable: '+variableName); return null; }
 
   let bonusesMap;
   if(variable.Type == VAR_TYPE.INTEGER){
@@ -588,7 +588,7 @@ function variables_getBonus(variableName, type){
 function variables_getBonusTotal(variableName){
 
   let variable = g_variableMap.get(variableName);
-  if(variable == null) { console.log('Unknown variable '+variableName); return null; }
+  if(variable == null) { console.warn('Unknown variable: '+variableName); return null; }
 
   let bonusesMap;
   if(variable.Type == VAR_TYPE.INTEGER){
@@ -647,7 +647,7 @@ function variables_getBonusTotal(variableName){
 function variables_getTotal(variableName, errorOnFailure=true){
 
   let variable = g_variableMap.get(variableName);
-  if(variable == null) { console.log('Unknown variable '+variableName); return null; }
+  if(variable == null) { console.warn('Unknown variable: '+variableName); return null; }
 
   let total = 0;
   if(variable.Type == VAR_TYPE.INTEGER){
@@ -692,7 +692,7 @@ function variables_getTotal(variableName, errorOnFailure=true){
 function variables_getBonusesMap(variableName){
 
   let variable = g_variableMap.get(variableName);
-  if(variable == null) { console.log('Unknown variable '+variableName); return null; }
+  if(variable == null) { console.warn('Unknown variable: '+variableName); return null; }
 
   let bonusesMap;
   if(variable.Type == VAR_TYPE.INTEGER){
@@ -721,7 +721,7 @@ function variables_getBonusesMap(variableName){
 function variables_addToConditionals(variableName, condition, source){
 
   let variable = g_variableMap.get(variableName);
-  if(variable == null) { console.log('Unknown variable '+variableName); return; }
+  if(variable == null) { console.warn('Unknown variable: '+variableName); return; }
 
   let conditionalsMap;
   if(variable.Type == VAR_TYPE.INTEGER){
@@ -765,7 +765,7 @@ function variables_addToConditionals(variableName, condition, source){
 function variables_getConditionalsMap(variableName){
 
   let variable = g_variableMap.get(variableName);
-  if(variable == null) { console.log('Unknown variable '+variableName); return null; }
+  if(variable == null) { console.warn('Unknown variable: '+variableName); return null; }
 
   let conditionalsMap;
   if(variable.Type == VAR_TYPE.INTEGER){

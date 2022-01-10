@@ -140,8 +140,6 @@ function processAncestryStats(ancestryData, outputStruct, processType){
       langCount++;
     }
 
-    // TODO - Langs equal to Int mod
-
   }
 
   // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Senses ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
@@ -254,6 +252,13 @@ function processAncestryStats(ancestryData, outputStruct, processType){
         }
       });
     });
+
+    // Hide section if no physical features
+    if(ancestryData.PhysicalFeatureOne == null && ancestryData.PhysicalFeatureTwo == null){
+      $('#ancestry-initial-stats-extra-features-section').addClass('is-hidden');
+    } else {
+      $('#ancestry-initial-stats-extra-features-section').removeClass('is-hidden');
+    }
 
   }
 
@@ -465,5 +470,45 @@ function processAncestryStats(ancestryData, outputStruct, processType){
     }
 
   }
+
+}
+
+function processMoreAncestryLangs(ancestryData, extraLangsCodeID){
+  if(ancestryData == null) { return; }
+
+  // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Extra Languages ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
+
+  let allLangData = getDataAllLanguage();
+
+  deleteDataBySourceCode('inits-bonus-lang');
+
+  let currentChar = 'a';
+  let extraLangCode = '';
+  let additionalLangs = getMod(variables_getTotal(VARIABLE.SCORE_INT));
+  if(ancestryData.Ancestry.name == 'Human'){ additionalLangs++; } // Hardcoded - ancestry named Human gains +1 langs. 
+  for (let i = 0; i < additionalLangs; i++) {
+    extraLangCode += 'GIVE-LANG-BONUS-ONLY\n';
+
+    let langData = allLangData.find(langData => {
+      return (langData.sourceCode == 'inits-bonus-lang' && langData.sourceCodeSNum.endsWith(currentChar+'a'));
+    });
+    if(langData != null){
+      setDataLanguage(langData, langData.value);
+    }
+
+    currentChar = processor_charIncrease(currentChar);
+  }
+
+  $('#'+extraLangsCodeID).html('');
+  processCode(
+    extraLangCode,
+    {
+      sourceType: 'class', // This is a mistake, should be ancestry
+      sourceLevel: 1,
+      sourceCode: 'inits-bonus-lang',
+      sourceCodeSNum: 'a',
+    },
+    extraLangsCodeID,
+    {source: 'Ancestry', sourceName: 'Extra Languages'});
 
 }

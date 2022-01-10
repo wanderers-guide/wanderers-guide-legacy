@@ -41,13 +41,12 @@ module.exports = async function(socket, charID=null) {
     character = await CharGathering.getCharacter(userID, charID);
   }
 
-  socket.emit('updateLoadProgess', { message: 'Gathering Skills', upVal: 5 }); // (5/100) //
-  let skillObject;
-  if(charID == null){
-    skillObject = await GeneralGathering.getAllSkills(userID);
-  } else {
-    skillObject = await CharGathering.getAllSkills(userID, charID, skills=null, profDataArray=null, loreDataArray=null);
-  }
+  socket.emit('updateLoadProgess', { message: 'Opening Books', upVal: 2 }); // (2/100) //
+  let sourceBooks = await GeneralGathering.getSourceBooks(userID);
+
+  socket.emit('updateLoadProgess', { message: 'Gathering Skills', upVal: 3 }); // (5/100) //
+  let skillObject = await GeneralGathering.getAllSkills(userID);
+  // Always gets GeneralGathering skills_map
 
   socket.emit('updateLoadProgess', { message: 'Indexing Traits', upVal: 5 }); // (60/100) //
   let allTags;
@@ -173,6 +172,7 @@ module.exports = async function(socket, charID=null) {
     allDomains,
     allPhyFeats,
     allSenses,
+    sourceBooks,
   };
 
   console.log('Starting char data...');

@@ -9,7 +9,13 @@ function openWarningsQuickview(data) {
 
   let sortedUnselectedDataArray = g_unselectedDataArray.sort(
     function(a, b) {
-      return a.value > b.value ? 1 : -1;
+      let aData = JSON.parse(a.value);
+      let bData = JSON.parse(b.value);
+      if(aData.STATE != bData.STATE){
+        return aData.STATE > bData.STATE ? 1 : -1;
+      } else {
+        return aData.sourceName > bData.sourceName ? 1 : -1;
+      }
     }
   );
 

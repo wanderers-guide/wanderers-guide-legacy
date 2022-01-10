@@ -35,7 +35,7 @@ function processingSpells(wscStatement, srcStruct, locationID, extraData){
         addSpellToSpellbook(srcStruct, segments[0], segments[1], segments[2], color);
     } else {
         displayError("Unknown statement (2-Spell): \'"+wscStatement+"\'");
-        statementComplete();
+        statementComplete('Spell - Unknown Statement');
     }
 
 }
@@ -75,11 +75,11 @@ function giveSpellSlot(srcStruct, spellSRC, spellSlot, color){
 }
 
 socket.on("returnSpellCastingSlotChange", function(spellSRC, spellSlots){
-  statementComplete();
+  statementComplete('Spell - Add Spell Casting Slot');
 });
 
 socket.on("returnSpellSlotChange", function(spellSRC, spellSlot){
-  statementComplete();
+  statementComplete('Spell - Add Spell Slot');
 });
 
 //////////////////////////////// Set Key Ability ///////////////////////////////////
@@ -92,12 +92,12 @@ function setSpellKeyAbility(srcStruct, spellSRC, abilityScore){
             abilityScore);
     } else {
         displayError("Cannot identify ability score (case sensitive): '"+abilityScore+"'!");
-        statementComplete();
+        statementComplete('Spell - Set Key Ability Error');
     }
 }
 
 socket.on("returnKeySpellAbilityChange", function(){
-    statementComplete();
+    statementComplete('Spell - Set Key Ability');
 });
 
 //////////////////////////////// Give Spell List ///////////////////////////////////
@@ -110,12 +110,12 @@ function giveSpellList(srcStruct, spellSRC, spellList){
             spellList);
     } else {
         displayError("Unknown Spell Tradition: \'"+spellList+"\'");
-        statementComplete();
+        statementComplete('Spell - Set Tradition Error');
     }
 }
 
 socket.on("returnSpellListChange", function(){
-    statementComplete();
+    statementComplete('Spell - Set Tradition');
 });
 
 //////////////////////////////// Set Casting Type ///////////////////////////////////
@@ -128,12 +128,12 @@ function setSpellCastingType(srcStruct, spellSRC, castingType){
             castingType);
     } else {
         displayError("Unknown Spellcasting Type: \'"+castingType+"\'");
-        statementComplete();
+        statementComplete('Spell - Set Casting Type Error');
     }
 }
 
 socket.on("returnSpellCastingTypeChange", function(){
-    statementComplete();
+    statementComplete('Spell - Set Casting Type');
 });
 
 
@@ -163,5 +163,5 @@ function addSpellToSpellbook(srcStruct, spellSRC, spellName, spellLevel, color){
 }
 
 socket.on("returnBuilderSpellAddToSpellBook", function(){
-    statementComplete();
+    statementComplete('Spell - Add to Spellbook');
 });

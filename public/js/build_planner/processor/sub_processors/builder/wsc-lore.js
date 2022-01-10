@@ -14,7 +14,7 @@ function processingLore(wscStatement, srcStruct, locationID, extraData){
         giveLoreChoose(srcStruct, locationID, extraData);
     } else {
         displayError("Unknown statement (2-Lore): \'"+wscStatement+"\'");
-        statementComplete();
+        statementComplete('Lore - Unknown Statement');
     }
 
 }
@@ -41,7 +41,7 @@ function giveLoreChoose(srcStruct, locationID, extraData, prof='T'){
     let inputLoreControlShell = inputLoreID+'ControlShell';
 
     // If ID already exists, just return. This is a temporary fix - this shouldn't be an issue in the first place.
-    if($('#'+inputLoreID).length != 0) { statementComplete(); return; }
+    if($('#'+inputLoreID).length != 0) { statementComplete('Lore - Add Null'); return; }
 
     $('#'+locationID).append('<div class="field is-grouped is-grouped-centered is-marginless my-1"><div id="'+inputLoreControlShell+'" class="control"><input id="'+inputLoreID+'" class="input loreInput" type="text" maxlength="20" placeholder="Lore Type" autocomplete="off"></div></div>');
 
@@ -106,7 +106,7 @@ function giveLoreChoose(srcStruct, locationID, extraData, prof='T'){
     }
     $('#'+inputLoreID).trigger("change", [true]);
 
-    statementComplete();
+    statementComplete('Lore - Add');
 
 }
 
@@ -133,7 +133,7 @@ socket.on("returnLoreChange", function(srcStruct, loreName, inputPacket, prof){
     $('#'+inputPacket.ControlShellID).removeClass("is-loading");
     selectorUpdated();
   } else {
-    statementComplete();
+    statementComplete('Lore - Add By Name');
   }
 
 });

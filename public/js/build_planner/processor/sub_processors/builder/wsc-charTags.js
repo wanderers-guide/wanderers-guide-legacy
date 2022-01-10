@@ -14,7 +14,7 @@ function processingCharTags(wscStatement, srcStruct, locationID, extraData){
         displayCharTagChoice(srcStruct, locationID, extraData);
     } else {
         displayError("Unknown statement (2-CharTrait): \'"+wscStatement+"\'");
-        statementComplete();
+        statementComplete('CharTrait - Unknown Statement');
     }
 
 }
@@ -30,15 +30,18 @@ function giveCharTag(srcStruct, charTagName){
         getCharIDFromURL(),
         srcStruct,
         charTagName);
-
+    
+    statementComplete('CharTrait - Give');
 }
 
+/*
 socket.on("returnCharTagChange", function(charTagsArray){
     if($('#quickviewLeftDefault').hasClass('is-active')){
         openLeftQuickView('skillsView', null);
     }
-    statementComplete();
+    statementComplete('CharTrait - Change');
 });
+*/
 
 //////////////////////////////// Give Char Tag Selector ///////////////////////////////////
 
@@ -49,7 +52,7 @@ function displayCharTagChoice(srcStruct, locationID, extraData, commonOnly=false
 
     const selectionTagInfo = getTagFromData(srcStruct, extraData.sourceName, 'Unselected Option', 'UNSELECTED');
 
-    $('#'+locationID).append('<div class="field my-2"><div class="select '+selectCharTagControlShellClass+'" data-selection-info="'+selectionTagInfo+'"><select id="'+selectCharTagID+'" class="selectCharTag"></select></div></div>');
+    $('#'+locationID).append('<div class="field my-2 text-center"><div class="select '+selectCharTagControlShellClass+'" data-selection-info="'+selectionTagInfo+'"><select id="'+selectCharTagID+'" class="selectCharTag"></select></div></div>');
 
     $('#'+selectCharTagID).append('<option value="chooseDefault">Choose an Ancestry</option>');
     $('#'+selectCharTagID).append('<optgroup label="──────────"></optgroup>');
@@ -59,36 +62,36 @@ function displayCharTagChoice(srcStruct, locationID, extraData, commonOnly=false
     let charTagsData = getDataSingle(DATA_SOURCE.CHAR_TRAIT, srcStruct);
 
     let selectedCharTag = null;
-    if(charTagsData != null){
+    if(charTagsData != null && charTagsData.value != null){
         selectedCharTag = charTagsData;
         triggerChange = true;
     }
 
-    let sortedAncestries = wscChoiceStruct.AllAncestries.sort(
+    let sortedAncestriesMap = new Map([...g_ancestryMap.entries()].sort(
       function(a, b) {
-        return a.name > b.name ? 1 : -1;
-      }
+        return a[1].Ancestry.name > b[1].Ancestry.name ? 1 : -1;
+      })
     );
 
     if(commonOnly) {
 
-      for(const ancestry of sortedAncestries){
-        if(ancestry.isArchived === 0 && ancestry.rarity === 'COMMON'){
-          $('#'+selectCharTagID).append('<option value="'+ancestry.name+'">'+ancestry.name+'</option>');
+      for(const [ancestryID, ancestryData] of sortedAncestriesMap.entries()){
+        if(ancestryData.Ancestry.isArchived === 0 && ancestryData.Ancestry.rarity === 'COMMON'){
+          $('#'+selectCharTagID).append('<option value="'+ancestryData.Ancestry.name+'">'+ancestryData.Ancestry.name+'</option>');
         }
       }
       $('#'+selectCharTagID).append('<optgroup label="──────────"></optgroup>');
-      for(const ancestry of sortedAncestries){
-        if(ancestry.isArchived === 0 && ancestry.rarity !== 'COMMON'){
-          $('#'+selectCharTagID).append('<option value="'+ancestry.name+'" class="is-non-available-very">'+ancestry.name+'</option>');
+      for(const [ancestryID, ancestryData] of sortedAncestriesMap.entries()){
+        if(ancestryData.Ancestry.isArchived === 0 && ancestryData.Ancestry.rarity !== 'COMMON'){
+          $('#'+selectCharTagID).append('<option value="'+ancestryData.Ancestry.name+'" class="is-non-available-very">'+ancestryData.Ancestry.name+'</option>');
         }
       }
 
     } else {
 
-      for(const ancestry of sortedAncestries){
-        if(ancestry.isArchived === 0){
-          $('#'+selectCharTagID).append('<option value="'+ancestry.name+'">'+ancestry.name+'</option>');
+      for(const [ancestryID, ancestryData] of sortedAncestriesMap.entries()){
+        if(ancestryData.Ancestry.isArchived === 0){
+          $('#'+selectCharTagID).append('<option value="'+ancestryData.Ancestry.name+'">'+ancestryData.Ancestry.name+'</option>');
         }
       }
 
@@ -97,7 +100,7 @@ function displayCharTagChoice(srcStruct, locationID, extraData, commonOnly=false
     if(selectedCharTag != null){
         $('#'+selectCharTagID).val(selectedCharTag.value);
         if ($('#'+selectCharTagID).val() != selectedCharTag.value){
-            $('#'+selectCharTagID).val($("#"+selectCharTagID+" option:first").val());
+            $('#'+selectCharTagID).val('chooseDefault');
             $('#'+selectCharTagID).parent().addClass("is-info");
         }
     }
@@ -141,7 +144,7 @@ function displayCharTagChoice(srcStruct, locationID, extraData, commonOnly=false
 
     $('#'+selectCharTagID).trigger("change", [triggerChange, false]);
 
-    statementComplete();
+    statementComplete('CharTrait - Display Choice');
 
 }
 
@@ -150,16 +153,11 @@ socket.on("returnWSCCharTagChange", function(charTagsArray, selectControlShellCl
         $('.'+selectControlShellClass).removeClass("is-loading");
         $('.'+selectControlShellClass+'>select').blur();
     }
-    if($('#quickviewLeftDefault').hasClass('is-active')){
-        openLeftQuickView('skillsView', null);
-    }
     selectorUpdated();
 
-    // If on ancestry page, reload ancestry feats
-    if(triggerReload && g_pageNum == 2){
-      window.setTimeout(() => {
-        createAncestryFeats(wscChoiceStruct.Character.level);
-      }, 250);
+    // Reload builder state,
+    if(triggerReload){
+      animatedStateLoad();
     }
 
 });

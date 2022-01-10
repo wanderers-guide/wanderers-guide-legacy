@@ -12,14 +12,14 @@ function preReqGetIconUnknown(){
   return '<span class="icon is-small has-text-warning"><i class="fas prereq-icon fa-question"></i></span>';
 }
 
-function preReqFeatLink(featLinkClass, inFeatName){
+function preReqFeatLink(dataLinkClass, inFeatName){
   inFeatName = inFeatName.replace(/’/g,'\'').toUpperCase();
   for(const [featID, featStruct] of g_featMap.entries()){
     let featName = featStruct.Feat.name.toUpperCase();
     if(inFeatName === featName && featStruct.Feat.isArchived == 0) {
       setTimeout(function() {
-        $('.'+featLinkClass).off('click');
-        $('.'+featLinkClass).click(function(){
+        $('.'+dataLinkClass).off('click');
+        $('.'+dataLinkClass).click(function(){
             openQuickView('featView', {
                 Feat : featStruct.Feat,
                 Tags : featStruct.Tags,
@@ -87,8 +87,8 @@ function meetsPrereqs(feat){
 
 function prereqToValue(prereq){
   if(prereq == 'TRUE'){ return 0; }
-  if(prereq == 'UNKNOWN'){ return 0; }
-  if(prereq == 'FALSE'){ return -1; }
+  if(prereq == 'UNKNOWN'){ return -1; }
+  if(prereq == 'FALSE'){ return -2; }
   return 0;// No prereq
 }
 
@@ -237,9 +237,10 @@ function preReqCheckProfs(prereq){
 function preReqConfirmSkillProf(skillName, numUps){
   let customChecksResult = checkCustomSkillProfs(skillName, numUps);
   if(customChecksResult != null) { return customChecksResult; }
-  let skillData = g_skillMap.get(capitalizeWords(skillName));
-  if(skillData != null){
-    return skillData.NumUps >= numUps ? 'TRUE' : 'FALSE';
+  const varName = profConversion_convertOldNameToVarName(skillName);
+  const skillNumUps = profToNumUp(variables_getFinalRank(varName));
+  if(skillNumUps != null){
+    return skillNumUps >= numUps ? 'TRUE' : 'FALSE';
   } else {
     if(skillName.endsWith(' LORE')){ return 'FALSE'; }
     return 'UNKNOWN';
@@ -250,7 +251,9 @@ function checkCustomSkillProfs(name, numUps){
 
   if(name === 'LORE'){
     for(const [skillName, skillData] of g_skillMap.entries()){
-      if(skillData.Name.includes(' Lore') && skillData.NumUps >= numUps){
+      const varName = profConversion_convertOldNameToVarName(skillName);
+      const skillNumUps = profToNumUp(variables_getFinalRank(varName));
+      if(skillName.includes(' Lore') && skillNumUps >= numUps){
         return 'TRUE';
       }
     }
@@ -259,7 +262,9 @@ function checkCustomSkillProfs(name, numUps){
 
   if(name === 'AT LEAST ONE SKILL'){
     for(const [skillName, skillData] of g_skillMap.entries()){
-      if(skillData.NumUps >= numUps){
+      const varName = profConversion_convertOldNameToVarName(skillName);
+      const skillNumUps = profToNumUp(variables_getFinalRank(varName));
+      if(skillNumUps >= numUps){
         return 'TRUE';
       }
     }
@@ -268,15 +273,17 @@ function checkCustomSkillProfs(name, numUps){
 
   if(name === 'A SKILL WITH THE RECALL KNOWLEDGE ACTION' || name === 'A RECALL KNOWLEDGE SKILL'){
     for(const [skillName, skillData] of g_skillMap.entries()){
-      if(skillData.NumUps >= numUps){
-        if(skillData.Name.includes(' Lore') ||
-            skillData.Name == 'Arcana' ||
-            skillData.Name == 'Crafting' ||
-            skillData.Name == 'Medicine' ||
-            skillData.Name == 'Nature' ||
-            skillData.Name == 'Occultism' ||
-            skillData.Name == 'Religion' || 
-            skillData.Name == 'Society'){
+      const varName = profConversion_convertOldNameToVarName(skillName);
+      const skillNumUps = profToNumUp(variables_getFinalRank(varName));
+      if(skillNumUps >= numUps){
+        if(skillName.includes(' Lore') ||
+            skillName == 'Arcana' ||
+            skillName == 'Crafting' ||
+            skillName == 'Medicine' ||
+            skillName == 'Nature' ||
+            skillName == 'Occultism' ||
+            skillName == 'Religion' || 
+            skillName == 'Society'){
           return 'TRUE';
         }
       }
@@ -285,7 +292,7 @@ function checkCustomSkillProfs(name, numUps){
   }
 
   if(name === 'PERCEPTION'){
-    let profNumUps = profToNumUp(variables_getFinalRank(profConversion_convertOldNameToVarName('Perception')));
+    let profNumUps = profToNumUp(variables_getFinalRank(VARIABLE.PERCEPTION));
     if(profNumUps >= numUps){
       return 'TRUE';
     }

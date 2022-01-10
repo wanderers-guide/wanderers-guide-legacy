@@ -1,11 +1,15 @@
 /* Copyright (C) 2021, Wanderer's Guide, all rights reserved.
     By Aaron Cassar.
 */
+"use strict";
 
 let socket = io();
 
+let isBuilderInit = false;
 let g_builder_type = null;// 'by-abc' or 'by-level'
 let g_page_num = null;
+
+let g_creationSectionScroll = null;
 
 let g_char_id = null;
 let g_char_level = null;
@@ -42,6 +46,7 @@ $(function () {
         <div id="initial-stats-ancestry" class="ancestry-feature-section"></div>
         <div id="initial-stats-background" class="background-feature-section"></div>
         <div id="initial-stats-class" class="class-feature-section"></div>
+        <div id="initial-stats-custom-code" class="custom-code-feature-section"></div>
       </div>
     </div>
   `);
@@ -55,7 +60,7 @@ $(function () {
             <i class="accord-chevron fas fa-chevron-down"></i>
           </span>
         </div>
-        <div id="level-${lvl}-body" class="accord-body is-hidden">
+        <div id="level-${lvl}-body" class="accord-body is-hidden has-back-to-top no-tooltip">
         </div>
       </div>
     `);
@@ -74,11 +79,37 @@ socket.on("returnPlannerCore", function(coreStruct) {
 
 
 let g_character = null;
+
+/* Internal Builder-Char Options */
 let gOption_hasProfWithoutLevel = false;
 let gOption_hasVariantAncestryParagon = false;
+let gOption_hasFreeArchetype = false;
+let gOption_hasAutoBonusProgression = false;
+let gOption_hasGradualAbilityBoosts = false;
+let gOption_hasClassArchetypes = false;
+let gOption_hasAutoDetectPreReqs = false;
+/* ~~~~~~~~~~~~~~~~~~~ */
+
+/* Internal Sheet-State Options */
+let gState_hasFinesseMeleeUseDexDamage = false;
+let gState_armoredStealth = false;
+let gState_mightyBulwark = false;
+let gState_unburdenedIron = false;
+let gState_improvisedWeaponNoPenalty = false;
+let gState_addLevelToUntrainedWeaponAttack = false;
+let gState_addLevelToUntrainedSkill = false;
+let gState_displayCompanionTab = false;
+let gState_MAP = 'TIER_1';
+// TIER_1 = (5/10 or 4/8 agile)
+// TIER_2 = (4/8 or 3/6 agile)
+// TIER_3 = (3/6 or 2/4 agile)
+// TIER_4 = (2/4 or 1/2 agile)
+/* ~~~~~~~~~~~~~~~~~~~ */
 
 let temp_classNum = 1;
 let g_unselectedData = null;
+
+let g_enabledSources = null;
 
 let g_featMap = null;
 let g_itemMap = null;
@@ -97,9 +128,12 @@ let g_archetypes = null;
 let g_backgrounds = null;
 let g_uniHeritages = null;
 
+let g_domains = null;
+let g_classArchetypes = null;
+
 function mainLoaded(plannerCoreStruct, choiceStruct){
 
-  console.log(plannerCoreStruct);
+  console.log('~ LOADING BUILDER ~');
 
   // Core Data //
   g_featMap = objToMap(plannerCoreStruct.featsObject);
@@ -118,11 +152,13 @@ function mainLoaded(plannerCoreStruct, choiceStruct){
   g_archetypes = plannerCoreStruct.archetypes;
   g_backgrounds = plannerCoreStruct.backgrounds;
   g_uniHeritages = plannerCoreStruct.uniHeritages;
+
+  g_domains = plannerCoreStruct.allDomains;
+  g_classArchetypes = plannerCoreStruct.classArchetypes;
+  g_enabledSources = plannerCoreStruct.sourceBooks;
   //          //
 
   g_character = choiceStruct.character;
-
-  console.log(choiceStruct);
 
   // Populate unselectedData array
   g_unselectedData = [];
@@ -134,6 +170,150 @@ function mainLoaded(plannerCoreStruct, choiceStruct){
 
   // Init char meta data
   initDataMap(choiceStruct.charMetaData);
+
+  console.log(getDataAll(DATA_SOURCE.CLASS_FEATURE_CHOICE));
+
+  // Predetermine Prereq Match
+  for(const [featID, featStruct] of g_featMap.entries()){
+    g_featPrereqMap.set(featID+'', meetsPrereqs(featStruct.Feat));
+  }
+
+  // Init Class Archetypes
+  initClassArchetypes(getDataSingle(DATA_SOURCE.CLASS_ARCHETYPE_CHOICE, {
+    sourceType: 'class',
+    sourceLevel: 1,
+    sourceCode: 'classArchetype',
+    sourceCodeSNum: 'a',
+  }).value);
+
+  // Bind step buttons
+  $('.builder-basics-page-btn').click(function(event, initLoad){
+    window.location.href = '/profile/characters/builder/basics/?id='+getCharIDFromURL();
+  });
+  $('.builder-ancestry-page-btn').click(function(event, initLoad){
+
+    $('#builder-home-step').addClass('is-completed');
+    $('#builder-ancestry-step').removeClass('is-completed');
+    $('#builder-background-step').removeClass('is-completed');
+    $('#builder-class-step').removeClass('is-completed');
+
+    $('#builder-ancestry-step').addClass('is-active');
+    $('#builder-background-step').removeClass('is-active');
+    $('#builder-class-step').removeClass('is-active');
+
+    $('#builder-ancestry-step').addClass('is-info');
+    $('#builder-background-step').removeClass('is-info');
+    $('#builder-class-step').removeClass('is-info');
+
+    $('#builder-ancestry-step-symbol').removeClass('has-text-bck-color');
+    $('#builder-background-step-symbol').addClass('has-text-bck-color');
+    $('#builder-class-step-symbol').addClass('has-text-bck-color');
+
+    $('#builder-ancestry-step-symbol').addClass('has-text-info');
+    $('#builder-background-step-symbol').removeClass('has-text-info');
+    $('#builder-class-step-symbol').removeClass('has-text-info');
+
+    if(!initLoad){
+      startSpinnerSubLoader('planner-subpageloader');
+    }
+
+    g_page_num = 2;
+    window.history.pushState('profile/characters/builder', '', '/profile/characters/builder/?id='+getCharIDFromURL()+'&page=2');// Update URL
+
+    if(!initLoad){
+      setTimeout(() => {
+        stateLoad();
+        stopSpinnerSubLoader('planner-subpageloader');
+      }, 50);// After 0.05 second
+    }
+  });
+  $('.builder-background-page-btn').click(function(event, initLoad){
+
+    $('#builder-home-step').addClass('is-completed');
+    $('#builder-ancestry-step').addClass('is-completed');
+    $('#builder-background-step').removeClass('is-completed');
+    $('#builder-class-step').removeClass('is-completed');
+
+    $('#builder-ancestry-step').removeClass('is-active');
+    $('#builder-background-step').addClass('is-active');
+    $('#builder-class-step').removeClass('is-active');
+
+    $('#builder-ancestry-step').addClass('is-info');
+    $('#builder-background-step').addClass('is-info');
+    $('#builder-class-step').removeClass('is-info');
+
+    $('#builder-ancestry-step-symbol').addClass('has-text-bck-color');
+    $('#builder-background-step-symbol').removeClass('has-text-bck-color');
+    $('#builder-class-step-symbol').addClass('has-text-bck-color');
+
+    $('#builder-ancestry-step-symbol').removeClass('has-text-info');
+    $('#builder-background-step-symbol').addClass('has-text-info');
+    $('#builder-class-step-symbol').removeClass('has-text-info');
+
+    if(!initLoad){
+      startSpinnerSubLoader('planner-subpageloader');
+    }
+
+    g_page_num = 3;
+    window.history.pushState('profile/characters/builder', '', '/profile/characters/builder/?id='+getCharIDFromURL()+'&page=3');// Update URL
+
+    if(!initLoad){
+      setTimeout(() => {
+        stateLoad();
+        stopSpinnerSubLoader('planner-subpageloader');
+      }, 50);// After 0.05 second
+    }
+  });
+  $('.builder-class-page-btn').click(function(event, initLoad){
+
+    $('#builder-home-step').addClass('is-completed');
+    $('#builder-ancestry-step').addClass('is-completed');
+    $('#builder-background-step').addClass('is-completed');
+    $('#builder-class-step').removeClass('is-completed');
+
+    $('#builder-ancestry-step').removeClass('is-active');
+    $('#builder-background-step').removeClass('is-active');
+    $('#builder-class-step').addClass('is-active');
+
+    $('#builder-ancestry-step').addClass('is-info');
+    $('#builder-background-step').addClass('is-info');
+    $('#builder-class-step').addClass('is-info');
+
+    $('#builder-ancestry-step-symbol').addClass('has-text-bck-color');
+    $('#builder-background-step-symbol').addClass('has-text-bck-color');
+    $('#builder-class-step-symbol').removeClass('has-text-bck-color');
+
+    $('#builder-ancestry-step-symbol').removeClass('has-text-info');
+    $('#builder-background-step-symbol').removeClass('has-text-info');
+    $('#builder-class-step-symbol').addClass('has-text-info');
+
+    if(!initLoad){
+      startSpinnerSubLoader('planner-subpageloader');
+    }
+
+    g_page_num = 4;
+    window.history.pushState('profile/characters/builder', '', '/profile/characters/builder/?id='+getCharIDFromURL()+'&page=4');// Update URL
+    
+    if(!initLoad){
+      setTimeout(() => {
+        stateLoad();
+        stopSpinnerSubLoader('planner-subpageloader');
+      }, 50);// After 0.05 second
+    }
+  });
+  $('.builder-finalize-page-btn').click(function(event, initLoad){
+    if(g_character.name != null && g_character.ancestryID != null && g_character.backgroundID != null && g_character.classID != null){
+      window.location.href ='/profile/characters/'+getCharIDFromURL();
+    } else {
+      let charRequirements = '';
+      if(g_character.name == null){ charRequirements += '<br><span class="is-bold">Name</span>'; }
+      if(g_character.ancestryID == null){ charRequirements += '<br><span class="is-bold">Ancestry</span>'; }
+      if(g_character.backgroundID == null){ charRequirements += '<br><span class="is-bold">Background</span>'; }
+      if(g_character.classID == null){ charRequirements += '<br><span class="is-bold">Class</span>'; }
+      new ConfirmMessage('Incomplete Character', 'Your character requires the following before you can view their sheet:'+charRequirements, 'Okay', 'modal-incomplete-character', 'modal-incomplete-character-btn', 'is-info');
+    }
+  });
+
 
   // ABC Selections //
   let ancestrySelections = [];
@@ -275,12 +455,25 @@ function mainLoaded(plannerCoreStruct, choiceStruct){
 
   }
 
-  // Loading Builder State
-  stateLoad();
+  // Set Builder State, don't load from it
+  if(g_page_num == 2){
+    $('.builder-ancestry-page-btn').trigger('click', [true]);
+  } else if(g_page_num == 3){
+    $('.builder-background-page-btn').trigger('click', [true]);
+  } else if(g_page_num == 4){
+    $('.builder-class-page-btn').trigger('click', [true]);
+  }
+
+  // Load State by calling
+  stateLoad(true);
+
+  isBuilderInit = true;
 
 }
 
-function stateLoad(){
+function stateLoad(isInitLoad=false){
+
+  g_creationSectionScroll = $('#creation-section').scrollTop();
 
   // Clear each level container
   for(let lvl = 1; lvl <= g_char_level; lvl++){
@@ -289,6 +482,13 @@ function stateLoad(){
 
   gOption_hasProfWithoutLevel = (g_character.variantProfWithoutLevel === 1);
   gOption_hasVariantAncestryParagon = (g_character.variantAncestryParagon === 1);
+  gOption_hasFreeArchetype = (g_character.variantFreeArchetype === 1);
+  gOption_hasAutoBonusProgression = (g_character.variantAutoBonusProgression === 1);
+  gOption_hasGradualAbilityBoosts = (g_character.variantGradualAbilityBoosts === 1);
+  gOption_hasClassArchetypes = (g_character.optionClassArchetypes === 1);
+  gOption_hasAutoDetectPreReqs = (g_character.optionAutoDetectPreReqs === 1);
+
+  initExpressionProcessor();
 
   initVariables();
 
@@ -297,10 +497,10 @@ function stateLoad(){
   processBackground();
   processClass();
 
-  // Open First Accordion //
-  $(`#level-${g_char_level}-body`).parent().find('.accord-header').trigger('click');
-  // Scroll down to Accordion
-  $(`#level-${g_char_level}-body`).parent()[0].scrollIntoView();
+  processCustomCode();
+
+  // Process Extra Ancestry Langs and Class Skill Trainings
+  processExtraSkillsAndLangs();
 
   // Display Results //
   displayStats();
@@ -435,6 +635,16 @@ function stateLoad(){
       $('.background-feature-section').addClass('is-hidden');
       $('.class-feature-section').removeClass('is-hidden');
     }
+  }
+
+  if(isInitLoad){
+    // Open Level's Accordion //
+    $(`#level-${g_char_level}-body`).parent().find('.accord-header').trigger('click');
+    // Scroll down to Accordion
+    $(`#level-${g_char_level}-body`).parent()[0].scrollIntoView();
+  } else {
+    // If is reload, scroll back to previous location
+    $('#creation-section').scrollTop(g_creationSectionScroll);
   }
 
 }
@@ -724,34 +934,59 @@ function displayStats(){
   }
   populateAccord('spellcasting-body', spellcasting);
 
-  let languages = [];
+  let sortedLangsArray = [];
   for(const [key, data] of variables_getExtrasMap(VARIABLE.LANGUAGES).entries()){
     let lang = g_allLanguages.find(lang => {
       return lang.id == data.Value;
     });
     if(lang != null){
-      languages.push({
-        Value1: lang.name,
-        Value2: '',
-        CustomQuickview: {name: 'languageView', data: {Language: lang}},
-      });
+      sortedLangsArray.push(lang);
     }
+  }
+  sortedLangsArray = sortedLangsArray.sort(
+    function(a, b) {
+      return a.name > b.name ? 1 : -1;
+    }
+  );
+  let languages = [];
+  for(let lang of sortedLangsArray){
+    languages.push({
+      Value1: lang.name,
+      Value2: '',
+      CustomQuickview: {name: 'languageView', data: {Language: lang}},
+    });
   }
   populateAccord('languages-body', languages);
 
   let resistWeaks = [];
+
+  // Process Resists into array that can be passed into processResistsOrWeaksToMap()
+  const resistsArray = [];
   for(const [key, data] of variables_getExtrasMap(VARIABLE.RESISTANCES).entries()){
     let dParts = data.Value.split(getSeparator());
+    resistsArray.push({ Type: dParts[0], Amount: dParts[1] });
+  }
+  const resistsMap = processResistsOrWeaksToMap(resistsArray, g_character.level);
+
+  for(const [type, amount] of resistsMap.entries()){
     resistWeaks.push({
-      Value1: dParts[0]+' '+dParts[1],
-      Value2: 'Resist',
+      Value1: type+' '+amount,
+      Value2: 'Resist.',
     });
   }
+
+  // Process Weaks into array that can be passed into processResistsOrWeaksToMap()
+  const weaksArray = [];
   for(const [key, data] of variables_getExtrasMap(VARIABLE.WEAKNESSES).entries()){
     let dParts = data.Value.split(getSeparator());
+    weaksArray.push({ Type: dParts[0], Amount: dParts[1] });
+  }
+  const weaksMap = processResistsOrWeaksToMap(weaksArray, g_character.level);
+
+  for(const [type, amount] of weaksMap.entries()){
     resistWeaks.push({
-      Value1: dParts[0]+' '+dParts[1],
-      Value2: 'Weak',
+      Value1: type+' '+amount,
+      Value2: 'Weak.',
     });
   }
   populateAccord('resist-weaks-body', resistWeaks);
@@ -769,6 +1004,14 @@ function getAllAbilityTypes() {
 
 function finishLoadingPage(){
 
+}
+
+function animatedStateLoad() {
+  startSpinnerSubLoader('planner-subpageloader');
+  setTimeout(() => {
+    stateLoad();
+    stopSpinnerSubLoader('planner-subpageloader');
+  }, 50);// After 0.05 second
 }
 
 function hasDuplicateFeat(featID){
