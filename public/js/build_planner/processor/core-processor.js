@@ -166,31 +166,31 @@ function runQueuedStatement(){
         let wscStatementUpper = wscStatement.toUpperCase();
         //
 
+        // MiscFeats is run even on tests, which is how the code is run for character builder.
+        //  - Probably should change this to a better system in the future.
+        const miscFeat_stateReturn = runMiscFeatStatements(wscStatement, wscStatementUpper);
+        if(miscFeat_stateReturn != PROCESS_RETURN.UNKNOWN){
+          return miscFeat_stateReturn;
+        }
+
+        // Builder Compiler
         const builder_stateReturn = runBuilderStatements(wscStatement, wscStatementUpper, srcStruct, locationID, extraData);
         if(builder_stateReturn != PROCESS_RETURN.UNKNOWN){
           return builder_stateReturn;
         }
 
+        // Sheet Compiler
         const sheet_stateReturn = runSheetStatements(wscStatement, wscStatementUpper, srcStruct, locationID, extraData);
         if(sheet_stateReturn != PROCESS_RETURN.UNKNOWN){
           return sheet_stateReturn;
-        } else {
-
-          // MiscFeats is run even on tests, which is how the code is run for character builder.
-          //  - Probably should change this to a better system in the future.
-          const miscFeat_stateReturn = runMiscFeatStatements(wscStatement, wscStatementUpper);
-
-          if(miscFeat_stateReturn != PROCESS_RETURN.UNKNOWN){
-            return miscFeat_stateReturn;
-          }
-
-          // AddText will return true or false based on if it successfully processed the statement
-          const addText_foundReturn = processStatement_AddText(wscStatement, locationID, true);
-          if(addText_foundReturn){
-            return PROCESS_RETURN.NEXT;
-          }
-
         }
+
+        // AddText will return true or false based on if it successfully processed the statement
+        const addText_foundReturn = processStatement_AddText(wscStatement, locationID, true);
+        if(addText_foundReturn){
+          return PROCESS_RETURN.NEXT;
+        }
+        
 
         displayError("Unknown statement (1): \'"+wscStatement+"\'");
         return PROCESS_RETURN.END;
