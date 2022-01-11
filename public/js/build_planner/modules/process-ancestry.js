@@ -67,10 +67,9 @@ function processAncestry() {
           <div id="ancestry-initial-stats-code-size"></div>
           <div id="ancestry-initial-stats-code-speed"></div>
           <div id="ancestry-initial-stats-code-languages"></div>
+          <div id="ancestry-initial-stats-code-languages-extra"></div>
           <div id="ancestry-initial-stats-code-senses"></div>
           <div id="ancestry-initial-stats-code-physicalFeatures"></div>
-          
-          <div id="ancestry-initial-stats-code-languages-extra"></div>
         </div>
         <hr class="mt-0 mb-1 mx-0" style="height: 1px;">
       </div>

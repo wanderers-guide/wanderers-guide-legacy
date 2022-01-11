@@ -209,6 +209,30 @@ function preReqConfirmHeritage(heritageName){
   if(heritage != null && heritageName === heritage.name.toUpperCase()){
     return 'TRUE';
   } else {
+
+    let findHeritageName = function(heritageID){
+      for(const [ancestryID, ancestryData] of g_ancestryMap.entries()){
+        for(const heritage of ancestryData.Heritages){
+          if(heritage.id == heritageID){
+            return heritage.name;
+          }
+        }
+      }
+      return null;
+    };
+
+    // Check extra heritages
+    for(const heritageData of getDataAll(DATA_SOURCE.EXTRA_HERITAGE)){
+      if(heritageData.value != null){
+        let foundHeritageName = findHeritageName(heritageData.value);
+        if(foundHeritageName != null){
+          if(heritageName === foundHeritageName.toUpperCase()){
+            return 'TRUE';
+          }
+        }
+      }
+    }
+
     return 'FALSE';
   }
 }

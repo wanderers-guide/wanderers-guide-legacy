@@ -111,9 +111,10 @@ function statementComplete_new(){
   statementNext();
 }
 
-let timeTrackCount = null;
+//let timeTrackCount = null;
 function statementComplete(calledSource='Unknown'){
 
+  /*
   if(timeTrackCount != null){
     console.timeEnd('track-'+timeTrackCount);
     console.log('   Src: '+calledSource);
@@ -123,6 +124,7 @@ function statementComplete(calledSource='Unknown'){
   }
   
   console.time('track-'+timeTrackCount);
+  */
   
 }
 

@@ -153,10 +153,10 @@ socket.on("returnSCFSChange", function(inputPacket){
     selectorUpdated();
   }
   if(inputPacket.wscStatement != null){
-    processBuilderCode(
-        inputPacket.wscStatement,
-        inputPacket.srcStruct,
-        inputPacket.locationID,
-        inputPacket.sourceName);
+    processCode(
+      inputPacket.wscStatement,
+      inputPacket.srcStruct,
+      inputPacket.locationID,
+      {source: 'SCFS', sourceName: inputPacket.sourceName});
   }
 });

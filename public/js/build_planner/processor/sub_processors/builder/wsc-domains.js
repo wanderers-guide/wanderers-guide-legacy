@@ -40,7 +40,7 @@ function giveDomain(srcStruct, locationID, spellSRC, extraData){
 
     for(const domain of g_domains){
 
-        if(savedDomainData != null && savedDomainData.value.id == domain.id) {
+        if(savedDomainData != null && savedDomainData.value == domain.id) {
             $('#'+selectID).append('<option value="'+domain.id+'" selected>'+domain.name+'</option>');
         } else {
             $('#'+selectID).append('<option value="'+domain.id+'">'+domain.name+'</option>');
@@ -76,7 +76,7 @@ function giveDomain(srcStruct, locationID, spellSRC, extraData){
             $('#'+descriptionID).html(processText(domain.description, false, null));
 
             setData(DATA_SOURCE.DOMAIN, srcStruct, domain.id);
-            setData(DATA_SOURCE.FOCUS_SPELL, srcStruct, spellSRC+"="+domain.initialSpellID);
+            setData(DATA_SOURCE.FOCUS_SPELL, srcStruct, spellSRC+"="+domain.initialSpellID, false);
 
             socket.emit("requestDomainChange",
                 getCharIDFromURL(),
@@ -162,7 +162,7 @@ function giveDomainAdvancement(srcStruct, locationID, spellSRC, extraData){
             $('#'+descriptionID).html(processText(domain.description, false, null));
 
             setData(DATA_SOURCE.ADVANCED_DOMAIN, srcStruct, domain.id);
-            setData(DATA_SOURCE.FOCUS_SPELL, srcStruct, spellSRC+"="+domain.advancedSpellID);
+            setData(DATA_SOURCE.FOCUS_SPELL, srcStruct, spellSRC+"="+domain.advancedSpellID, false);
 
             socket.emit("requestDomainAdvancementChange",
                 getCharIDFromURL(),

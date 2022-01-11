@@ -59,12 +59,12 @@ function displayCharTagChoice(srcStruct, locationID, extraData, commonOnly=false
 
     let triggerChange = false;
     // Set saved char trait choices
-    let charTagsData = getDataSingle(DATA_SOURCE.CHAR_TRAIT, srcStruct);
+    const charTagsData = getDataSingle(DATA_SOURCE.CHAR_TRAIT, srcStruct);
 
     let selectedCharTag = null;
     if(charTagsData != null && charTagsData.value != null){
-        selectedCharTag = charTagsData;
-        triggerChange = true;
+      selectedCharTag = charTagsData;
+      triggerChange = true;
     }
 
     let sortedAncestriesMap = new Map([...g_ancestryMap.entries()].sort(

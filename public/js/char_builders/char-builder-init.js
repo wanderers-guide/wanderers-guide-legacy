@@ -256,6 +256,14 @@ function handleCharacterOptions(character, hBundles, progessBundles) {
     });
     $("#contentSrc-LOST-CHAR-GUIDE").prop('checked', contentSourceArray.includes('LOST-CHAR-GUIDE'));
 
+    $("#contentSrc-LOST-CITY-ABSALOM").change(function(){
+      socket.emit("requestCharacterSourceChange", 
+          getCharIDFromURL(), 
+          'LOST-CITY-ABSALOM',
+          this.checked);
+    });
+    $("#contentSrc-LOST-CITY-ABSALOM").prop('checked', contentSourceArray.includes('LOST-CITY-ABSALOM'));
+
     $("#contentSrc-LOST-GOD-MAGIC").change(function(){
         socket.emit("requestCharacterSourceChange", 
             getCharIDFromURL(), 
@@ -287,6 +295,14 @@ function handleCharacterOptions(character, hBundles, progessBundles) {
           this.checked);
     });
     $("#contentSrc-LOST-MWANGI").prop('checked', contentSourceArray.includes('LOST-MWANGI'));
+
+    $("#contentSrc-LOST-MONSTERS-MYTH").change(function(){
+      socket.emit("requestCharacterSourceChange", 
+          getCharIDFromURL(), 
+          'LOST-MONSTERS-MYTH',
+          this.checked);
+    });
+    $("#contentSrc-LOST-MONSTERS-MYTH").prop('checked', contentSourceArray.includes('LOST-MONSTERS-MYTH'));
 
     $("#contentSrc-LOST-SOCIETY-GUIDE").change(function(){
       socket.emit("requestCharacterSourceChange", 
@@ -368,6 +384,14 @@ function handleCharacterOptions(character, hBundles, progessBundles) {
     });
     $("#contentSrc-NIGHT-GRAY-DEATH").prop('checked', contentSourceArray.includes('NIGHT-GRAY-DEATH'));
 
+    $("#contentSrc-QUEST-FROZEN-FLAME").change(function(){
+      socket.emit("requestCharacterSourceChange", 
+          getCharIDFromURL(), 
+          'QUEST-FROZEN-FLAME',
+          this.checked);
+    });
+    $("#contentSrc-QUEST-FROZEN-FLAME").prop('checked', contentSourceArray.includes('QUEST-FROZEN-FLAME'));
+
     $("#contentSrc-SLITHERING").change(function(){
       socket.emit("requestCharacterSourceChange", 
           getCharIDFromURL(), 
@@ -391,6 +415,14 @@ function handleCharacterOptions(character, hBundles, progessBundles) {
           this.checked);
     });
     $("#contentSrc-TROUBLES-IN-OTARI").prop('checked', contentSourceArray.includes('TROUBLES-IN-OTARI'));
+
+    $("#contentSrc-THRESHOLD-KNOWLEDGE").change(function(){
+      socket.emit("requestCharacterSourceChange", 
+          getCharIDFromURL(), 
+          'THRESHOLD-KNOWLEDGE',
+          this.checked);
+    });
+    $("#contentSrc-THRESHOLD-KNOWLEDGE").prop('checked', contentSourceArray.includes('THRESHOLD-KNOWLEDGE'));
 
     $("#contentSrc-PATH-SOCIETY").change(function(){
       socket.emit("requestCharacterSourceChange", 

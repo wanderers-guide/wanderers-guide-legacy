@@ -171,7 +171,9 @@ function mainLoaded(plannerCoreStruct, choiceStruct){
   // Init char meta data
   initDataMap(choiceStruct.charMetaData);
 
-  console.log(getDataAll(DATA_SOURCE.CLASS_FEATURE_CHOICE));
+  // First expression and variable init
+  initExpressionProcessor();
+  initVariables();
 
   // Predetermine Prereq Match
   for(const [featID, featStruct] of g_featMap.entries()){
@@ -337,7 +339,6 @@ function mainLoaded(plannerCoreStruct, choiceStruct){
     $('#modal-select-ancestry-confirm-btn').click(function() {
       let newAncestryID = $('#modal-select-ancestry-confirm-btn').attr('data-selectedOptionID');
       if(newAncestryID == 'none'){ newAncestryID = null; }
-      console.log(newAncestryID);
 
       window.setTimeout(()=>{
         // Update ancestry in builder
@@ -374,7 +375,6 @@ function mainLoaded(plannerCoreStruct, choiceStruct){
     $('#modal-select-background-confirm-btn').click(function() {
       let newBackgroundID = $('#modal-select-background-confirm-btn').attr('data-selectedOptionID');
       if(newBackgroundID == 'none'){ newBackgroundID = null; }
-      console.log(newBackgroundID);
 
       window.setTimeout(()=>{
         // Update background in builder
@@ -411,7 +411,6 @@ function mainLoaded(plannerCoreStruct, choiceStruct){
     $('#modal-select-class-confirm-btn').click(function() {
       let newClassID = $('#modal-select-class-confirm-btn').attr('data-selectedOptionID');
       if(newClassID == 'none'){ newClassID = null; }
-      console.log(newClassID);
 
       window.setTimeout(()=>{
         // Update class in builder
@@ -489,7 +488,6 @@ function stateLoad(isInitLoad=false){
   gOption_hasAutoDetectPreReqs = (g_character.optionAutoDetectPreReqs === 1);
 
   initExpressionProcessor();
-
   initVariables();
 
   // Process Modules //

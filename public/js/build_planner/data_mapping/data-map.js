@@ -37,7 +37,7 @@ function initDataMap(charMetaData){
   for(let metaData of charMetaData){
 
     // Don't load init class profs (for backwards compatibility with old builder).
-    if(metaData.source == DATA_SOURCE.PROFICIENCY && metaData.sourceCode.startsWith('inits-') && metaData.sourceCode != 'inits-bonus-prof'){
+    if(metaData.source == DATA_SOURCE.PROFICIENCY && metaData.sourceCode.startsWith('inits-') && metaData.sourceCode != 'inits-bonus-prof' && metaData.value.endsWith('Initial Class')){
       continue;
     }
 

@@ -82,7 +82,7 @@ function processClassStats(classData, outputStruct, processType){
           sourceCodeSNum: 'a'
         },
         outputStruct.keyAbility.codeID,
-        {source: 'Class', sourceName: 'Initial Class'});
+        {source: 'Class', sourceName: 'Initial Prof (Class)'});
 
       if(isBoth){
         $('#'+outputStruct.keyAbility.displayID).html(`
@@ -122,7 +122,7 @@ function processClassStats(classData, outputStruct, processType){
           sourceCodeSNum: 'a'
         },
         outputStruct.keyAbility.codeID,
-        {source: 'Class', sourceName: 'Initial Class'});
+        {source: 'Class', sourceName: 'Initial Prof (Class)'});
     }
 
   }
@@ -160,7 +160,7 @@ function processClassStats(classData, outputStruct, processType){
         sourceCodeSNum: 'a',
       },
       outputStruct.perception.codeID,
-      {source: 'Class', sourceName: 'Initial Class'});
+      {source: 'Class', sourceName: 'Initial Prof (Class)'});
     statInitCount++;
   }
 
@@ -195,7 +195,7 @@ function processClassStats(classData, outputStruct, processType){
               sourceCodeSNum: 'a',
             },
             outputStruct.skills.codeID,
-            {source: 'Class', sourceName: 'Initial Class'});
+            {source: 'Class', sourceName: 'Initial Prof (Class)'});
           statInitCount++;
 
         } else {
@@ -220,7 +220,7 @@ function processClassStats(classData, outputStruct, processType){
               sourceCodeSNum: 'a',
             },
             outputStruct.skills.codeID,
-            {source: 'Class', sourceName: 'Initial Class'});
+            {source: 'Class', sourceName: 'Initial Prof (Class)'});
           statInitCount++;
         }
 
@@ -270,7 +270,7 @@ function processClassStats(classData, outputStruct, processType){
           sourceCodeSNum: 'a',
         },
         outputStruct.savingThrows.codeID,
-        {source: 'Class', sourceName: 'Initial Class'});
+        {source: 'Class', sourceName: 'Initial Prof (Class)'});
     statInitCount++;
 
     processCode(
@@ -282,7 +282,7 @@ function processClassStats(classData, outputStruct, processType){
           sourceCodeSNum: 'a',
         },
         outputStruct.savingThrows.codeID,
-        {source: 'Class', sourceName: 'Initial Class'});
+        {source: 'Class', sourceName: 'Initial Prof (Class)'});
     statInitCount++;
 
     processCode(
@@ -294,7 +294,7 @@ function processClassStats(classData, outputStruct, processType){
           sourceCodeSNum: 'a',
         },
         outputStruct.savingThrows.codeID,
-        {source: 'Class', sourceName: 'Initial Class'});
+        {source: 'Class', sourceName: 'Initial Prof (Class)'});
     statInitCount++;
   }
 
@@ -338,7 +338,7 @@ function processClassStats(classData, outputStruct, processType){
             sourceCodeSNum: 'a',
           },
           outputStruct.attacks.codeID,
-          {source: 'Class', sourceName: 'Initial Class'});
+          {source: 'Class', sourceName: 'Initial Prof (Class)'});
         statInitCount++;
       }
 
@@ -395,7 +395,7 @@ function processClassStats(classData, outputStruct, processType){
             sourceCodeSNum: 'a',
           },
           outputStruct.defenses.codeID,
-          {source: 'Class', sourceName: 'Initial Class'});
+          {source: 'Class', sourceName: 'Initial Prof (Class)'});
         statInitCount++;
       }
 
@@ -427,7 +427,7 @@ function processClassStats(classData, outputStruct, processType){
         sourceCodeSNum: 'a',
       },
       outputStruct.classDC.codeID,
-      {source: 'Class', sourceName: 'Initial Class'});
+      {source: 'Class', sourceName: 'Initial Prof (Class)'});
     statInitCount++;
   }
 

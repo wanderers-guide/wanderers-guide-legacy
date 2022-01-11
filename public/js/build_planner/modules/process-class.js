@@ -65,12 +65,11 @@ function processClass() {
           <div id="class-feature-initial-stats-code-hit-points"></div>
           <div id="class-feature-initial-stats-code-perception"></div>
           <div id="class-feature-initial-stats-code-skills"></div>
+          <div id="class-feature-initial-stats-code-skills-extra"></div>
           <div id="class-feature-initial-stats-code-saving-throws"></div>
           <div id="class-feature-initial-stats-code-class-dc"></div>
           <div id="class-feature-initial-stats-code-attacks"></div>
           <div id="class-feature-initial-stats-code-defenses"></div>
-
-          <div id="class-feature-initial-stats-code-skills-extra"></div>
         </div>
         <hr class="mt-0 mb-1 mx-0" style="height: 1px;">
       </div>
@@ -233,6 +232,10 @@ function processClass() {
                   getCharIDFromURL(),
                   srcStruct);
               deleteDataBySourceStruct(srcStruct);
+
+              if(triggerSave == null || triggerSave) {
+                initExpressionProcessor();// Update g_expr_classAbilityArray
+              }
               
             } else {
               $(this).parent().removeClass("is-info");
@@ -257,6 +260,7 @@ function processClass() {
                   srcStruct,
                   { SelectorID : classFeature.id, OptionID : chosenClassFeature.id });
                 setDataClassChoice(srcStruct, classFeature.id, chosenClassFeature.id);
+                initExpressionProcessor();// Update g_expr_classAbilityArray
               }
 
               // Run class feature option code

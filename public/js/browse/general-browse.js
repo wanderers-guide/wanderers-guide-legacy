@@ -201,6 +201,15 @@ function initBrowse(featMap, skillMap, itemMap, spellMap, allLanguages, allCondi
       removeFromBrowseURL('filter', 'SpellSavingThrow');
     }
   });
+  $("#filterSpellHeightenInput").blur(function(){
+    if($('#filterSpellHeightenInput').val() != 'ANY'){
+      $('#filterSpellHeightenInput').parent().addClass('is-info');
+      addToBrowseURL('filter', $('#filterSpellHeightenInput').val(), 'SpellHeighten');
+    } else {
+      $('#filterSpellHeightenInput').parent().removeClass('is-info');
+      removeFromBrowseURL('filter', 'SpellHeighten');
+    }
+  });
   $("#filterSpellFocusInput").blur(function(){
     if($('#filterSpellFocusInput').val() != 'ANY'){
       $('#filterSpellFocusInput').parent().addClass('is-info');
@@ -366,6 +375,7 @@ function openTab(tabName){
   $('#filterLevelRelationInput').val('EQUAL');
   $('#filterLevelInput').val('');
   $('#filterSpellSavingThrowInput').val('ANY');
+  $('#filterSpellHeightenInput').val('ANY');
   $('#filterSpellFocusInput').val('ANY');
   $('#filterItemPriceRelationInput').val('EQUAL');
   $('#filterItemPriceInput').val('');
@@ -466,6 +476,7 @@ function openTab(tabName){
       $('#filterTargetsSection').removeClass('is-hidden');
       $('#filterLevelSection').removeClass('is-hidden');
       $('#filterSpellSavingThrowSection').removeClass('is-hidden');
+      $('#filterSpellHeightenSection').removeClass('is-hidden');
       $('#filterSpellFocusSection').removeClass('is-hidden');
       $('#filterRaritySection').removeClass('is-hidden');
       $('#filterSourceSection').removeClass('is-hidden');

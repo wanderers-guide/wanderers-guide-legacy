@@ -16,6 +16,7 @@ function filterSpellSearch(){
   let levelRelationFilter = $('#filterLevelRelationInput').val();
   let levelFilter = $('#filterLevelInput').val();
   let savingThrowFilter = $('#filterSpellSavingThrowInput').val();
+  let heightenFilter = $('#filterSpellHeightenInput').val();
   let focusFilter = $('#filterSpellFocusInput').val();
   let rarityFilter = $('#filterRarityInput').val();
   let sourceFilter = $('#filterSourceInput').val();
@@ -78,7 +79,14 @@ function filterSpellSearch(){
     console.log('Filtering by Description...');
     let parts = descFilter.toUpperCase().split(' ');
     for(const [spellID, spellStruct] of spellMap.entries()){
-      if(!textContainsWords(spellStruct.Spell.description, parts)){
+
+      let spellDesc = textContainsWords(spellStruct.Spell.description, parts);
+      let h1Desc = textContainsWords(spellStruct.Spell.heightenedOneText, parts);
+      let h2Desc = textContainsWords(spellStruct.Spell.heightenedTwoText, parts);
+      let h3Desc = textContainsWords(spellStruct.Spell.heightenedThreeText, parts);
+      let h4Desc = textContainsWords(spellStruct.Spell.heightenedFourText, parts);
+
+      if(!spellDesc && !h1Desc && !h2Desc && !h3Desc && !h4Desc){
         spellMap.delete(spellID);
       }
     }
@@ -133,6 +141,25 @@ function filterSpellSearch(){
       if(spellStruct.Spell.savingThrow !== savingThrowFilter){
         spellMap.delete(spellID);
       }
+    }
+  }
+
+  if(heightenFilter != 'ANY'){
+    console.log('Filtering by Heighten...');
+    for(const [spellID, spellStruct] of spellMap.entries()){
+
+      if(heightenFilter == 'NONE'){
+        if(spellStruct.Spell.heightenedOneVal == null && spellStruct.Spell.heightenedTwoVal == null && spellStruct.Spell.heightenedThreeVal == null && spellStruct.Spell.heightenedFourVal == null) {
+          // Found spell with no heightening
+        } else {
+          spellMap.delete(spellID);
+        }
+      } else {
+        if(spellStruct.Spell.heightenedOneVal !== heightenFilter && spellStruct.Spell.heightenedTwoVal !== heightenFilter && spellStruct.Spell.heightenedThreeVal !== heightenFilter && spellStruct.Spell.heightenedFourVal !== heightenFilter) {
+          spellMap.delete(spellID);
+        }
+      }
+
     }
   }
 

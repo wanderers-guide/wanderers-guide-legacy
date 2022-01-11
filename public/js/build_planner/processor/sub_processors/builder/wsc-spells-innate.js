@@ -53,20 +53,19 @@ function displayInnateSpellChoice(srcStruct, locationID, extraData, spellLevel, 
 
     const selectionTagInfo = getTagFromData(srcStruct, extraData.sourceName, 'Unselected Spell', 'UNSELECTED');
 
-    $('#'+locationID).append('<div class="field is-grouped is-grouped-centered is-marginless mb-1"><div class="select '+selectSpellControlShellClass+'" data-selection-info="'+selectionTagInfo+'"><select id="'+selectSpellID+'" class="selectFeat"></select></div></div><div id="'+descriptionSpellID+'"></div>');
+    $('#'+locationID).append('<div class="field is-grouped is-grouped-centered is-marginless mb-1"><div class="select '+selectSpellControlShellClass+'" data-selection-info="'+selectionTagInfo+'"><select id="'+selectSpellID+'" class="selectFeat"></select></div></div><div id="'+descriptionSpellID+'" class="text-center"></div>');
 
     $('#'+selectSpellID).append('<option value="chooseDefault">'+selectionName+'</option>');
     $('#'+selectSpellID).append('<optgroup label="──────────"></optgroup>');
 
     let triggerChange = false;
     // Set saved spell choices
-
     const innateSpellData = getDataSingleInnateSpell(srcStruct);
 
     let selectedSpell = null;
-    if(innateSpellData != null){
-        selectedSpell = innateSpellData;
-        triggerChange = true;
+    if(innateSpellData != null && innateSpellData.value != null){
+      selectedSpell = innateSpellData;
+      triggerChange = true;
     }
 
     for(const [spellID, spellData] of g_spellMap.entries()){
