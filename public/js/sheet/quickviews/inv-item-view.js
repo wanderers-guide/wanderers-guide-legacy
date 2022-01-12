@@ -367,8 +367,76 @@ function openInvItemQuickview(data) {
         if(weaponReload == 0){ weaponReload = '-'; }
         weaponRange += ' ft';
 
-        qContent.append('<div class="tile text-center is-flex"><div class="tile is-child is-6"><strong>Range</strong></div><div class="tile is-child is-6"><strong>Reload</strong></div></div>');
-        qContent.append('<div class="tile text-center is-flex"><div class="tile is-child is-6"><p>'+weaponRange+'</p></div><div class="tile is-child is-6"><p>'+weaponReload+'</p></div></div>');
+        qContent.append(`
+          <div class="tile text-center is-flex">
+            <div class="tile is-child is-6">
+              <strong>Range</strong>
+            </div>
+            <div class="tile is-child is-6">
+              <strong>Reload</strong>
+            </div>
+          </div>
+        `);
+        qContent.append(`
+          <div class="tile text-center is-flex">
+            <div class="tile is-child is-6">
+              <p>
+                <span id="itemRangeAmount" class="cursor-clickable is-p pl-3">
+                  ${weaponRange}<sub class="icon is-small is-size-8 pl-1"><i id="itemRangeCalcChevron" class="fas fa-lg fa-chevron-down"></i></sub>
+                </span>
+              </p>
+
+              <div id="itemRangeCalcSection" class="is-hidden">
+                <p class="help is-info is-italic text-center">Distance to Range Penalty</p>
+                <div class="field has-addons has-addons-centered">
+                  <p class="control"><input id="itemRangeCalcInput" class="input is-small" type="number" min="0" max="${6*parseInt(weaponRange)}" value="0" step="5">
+                  </p>
+                  <p class="control"><a class="button is-static is-small border-darker">➤</a></p>
+                  <p class="control"><a id="itemRangeCalcOutput" class="button is-static is-extra is-small border-darker">-0</a></p>
+                </div>
+              </div>
+
+            </div>
+            <div class="tile is-child is-6">
+              <p>
+                ${weaponReload}
+              </p>
+            </div>
+          </div>
+        `);
+
+        $('#itemRangeAmount').click(function() {
+          if($("#itemRangeCalcSection").hasClass("is-hidden")) {
+            $("#itemRangeCalcSection").removeClass('is-hidden');
+            $("#itemRangeCalcChevron").removeClass('fa-chevron-down');
+            $("#itemRangeCalcChevron").addClass('fa-chevron-up');
+          } else {
+            $("#itemRangeCalcSection").addClass('is-hidden');
+            $("#itemRangeCalcChevron").removeClass('fa-chevron-up');
+            $("#itemRangeCalcChevron").addClass('fa-chevron-down');
+          }
+        });
+
+        $('#itemRangeCalcInput').on('keypress',function(e){
+          if(e.which == 13){ // Press Enter Key
+            $('#itemRangeCalcInput').blur();
+          }
+        });
+        $('#itemRangeCalcInput').blur(function() {
+          let newDistance = $(this).val();
+          $(this).removeClass('is-danger');
+          if(newDistance == '' || newDistance == null || newDistance == 0){
+            $('#itemRangeCalcInput').val(0);
+            $('#itemRangeCalcOutput').text('-0');
+          } else if(newDistance > 6*parseInt(weaponRange) || newDistance < 0){
+            $(this).addClass('is-danger');
+            $('#itemRangeCalcOutput').text('×');
+          } else {
+            let penalty = (Math.ceil(newDistance/parseInt(weaponRange))-1)*2;
+            // For -0 to show properly, split '-' from penalty
+            $('#itemRangeCalcOutput').text('-'+penalty);
+          }
+        });
 
         qContent.append('<hr class="m-2">');
 

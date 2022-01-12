@@ -1001,7 +1001,7 @@ function getAllAbilityTypes() {
 }
 
 function finishLoadingPage(){
-
+  displayStats();
 }
 
 function animatedStateLoad() {

@@ -9,6 +9,7 @@
 let supportedWebLinks = [
     {Website: '2e.aonprd.com', Title: 'Archives of Nethys - 2e'},
     {Website: 'pf2.easytool.es', Title: 'PF2 EasyTool'},
+    {Website: 'pf2easy.com', Title: 'PF2 EasyTool'},
     {Website: 'pathfinder2.dragonlash.com', Title: 'Dragonlash - 2e'},
     {Website: 'pf2srd.com', Title: 'PF2SRD'},
     {Website: 'pf2.d20pfsrd.com', Title: 'Pf2 Srd'},
