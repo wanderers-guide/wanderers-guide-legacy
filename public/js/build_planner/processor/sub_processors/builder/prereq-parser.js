@@ -274,10 +274,9 @@ function preReqConfirmSkillProf(skillName, numUps){
 function checkCustomSkillProfs(name, numUps){
 
   if(name === 'LORE'){
-    for(const [skillName, skillData] of g_skillMap.entries()){
-      const varName = profConversion_convertOldNameToVarName(skillName);
-      const skillNumUps = profToNumUp(variables_getFinalRank(varName));
-      if(skillName.includes(' Lore') && skillNumUps >= numUps){
+    for(const loreData of getDataAll(DATA_SOURCE.LORE)){
+      const skillNumUps = profToNumUp(variables_getFinalRank(`SKILL_${profConversion_convertOldName(loreData.value)}_LORE`));
+      if(skillNumUps >= numUps){
         return 'TRUE';
       }
     }

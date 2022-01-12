@@ -344,7 +344,7 @@ function processAncestryStats(ancestryData, outputStruct, processType){
   if(processType == PROCESS_ANCESTRY_STATS_TYPE.RUN_CODE || isBoth){
     
     let chooseBoostCount = 0;
-    let nonChooseBoostCount = 0;
+    let nonChooseBoostCount = -1;
     for(const boost of ancestryData.Boosts){
 
       let abilityScore = shortenAbilityType(boost);

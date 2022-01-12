@@ -475,6 +475,7 @@ function displayFeatChoice(srcStruct, locationID, selectionName, tagsArray, feat
 function giveFeatByName(srcStruct, featName, locationID, optionalTags, extraData){
     featName = featName.replace(/_/g," ");
     featName = featName.replace(/’/g,"'");
+    featName = featName.toUpperCase();
 
     // Make optional tags lowercase
     if(optionalTags != null){
@@ -483,33 +484,35 @@ function giveFeatByName(srcStruct, featName, locationID, optionalTags, extraData
       }
     }
 
-    let featEntry = null;
-    g_featMap.forEach(function(value, key, map){
-        if(value.Feat.isArchived === 0) {
-            if(value.Feat.name.toUpperCase() === featName){
+    let findFeatByNameAndTraits = function(){
+      for(const [featID, featData] of g_featMap.entries()){
+        if(featData.Feat.isArchived === 0) {
+          if(featData.Feat.name.toUpperCase() === featName){
 
-              if(optionalTags != null) {
-                let hasCorrectTags = false;
-                let sameOpsTagsArray = [];
-                for(let featTag of value.Tags){
-                    let featTagNameLower = featTag.name.toLowerCase();
-                    if(optionalTags.includes(featTagNameLower)){
-                        sameOpsTagsArray.push(featTagNameLower);
-                    }
-                }
-                hasCorrectTags = (optionalTags.sort().join(',') === sameOpsTagsArray.sort().join(','));
-
-                if(hasCorrectTags) {
-                  featEntry = value;
-                  return;
-                }
-              } else {
-                featEntry = value;
-                return;
+            if(optionalTags != null) {
+              let hasCorrectTags = false;
+              let sameOpsTagsArray = [];
+              for(let featTag of featData.Tags){
+                  let featTagNameLower = featTag.name.toLowerCase();
+                  if(optionalTags.includes(featTagNameLower)){
+                      sameOpsTagsArray.push(featTagNameLower);
+                  }
               }
+              hasCorrectTags = (optionalTags.sort().join(',') === sameOpsTagsArray.sort().join(','));
+
+              if(hasCorrectTags) {
+                return featData;
+              }
+            } else {
+              return featData;
             }
+          }
         }
-    });
+      }
+      return null;
+    };
+
+    let featEntry = findFeatByNameAndTraits();
     if(featEntry == null){
         if(!isFeatHidden(featName)){
           if(optionalTags != null) {
