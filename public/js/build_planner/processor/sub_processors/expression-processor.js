@@ -646,7 +646,7 @@ function expHasProf(expression, statement, elseStatement, srcStruct){
     if(numUps === -1){return null;}
 
     let foundProf = false;
-    for(const [profName, profMapDataArray] of getProfMap().entries()){
+    for(const [profMapName, profMapDataArray] of getProfMap().entries()){
         const finalProfData = expr_getFinalProf(cleanProfDataArrayOfStatementProfs(profMapDataArray, srcStruct));
         if(finalProfData == null) { continue; }
         if(profData == null){
