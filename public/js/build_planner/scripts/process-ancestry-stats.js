@@ -421,7 +421,7 @@ function processAncestryStats(ancestryData, outputStruct, processType){
 
 
     let chooseFlawCount = 0;
-    let nonChooseFlawCount = 0;
+    let nonChooseFlawCount = -1;
     for(const flaw of ancestryData.Flaws){
 
       let abilityScore = shortenAbilityType(flaw);
