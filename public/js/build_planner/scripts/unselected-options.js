@@ -88,6 +88,7 @@ function selectorUpdated() {
       }
     }
   });
+
   $('.feat-selection').each(function() {
     let tagData = $(this).attr('data-selection-info');
     if(tagData != null && tagData != ''){
@@ -107,14 +108,10 @@ function selectorUpdated() {
 }
 
 function addUnselectedData(srcStruct, unselectedData){
-  let existingData = g_unselectedData.find(unselData => {
-    return hasSameSrc(unselData, srcStruct) && unselData.value === unselectedData;
-  });
-  if(existingData == null){
+  let existingData = getDataSingle(DATA_SOURCE.UNSELECTED_DATA, srcStruct);
+  if(existingData == null || existingData.value == null){
 
-    let newData = cloneObj(srcStruct);
-    newData.value = unselectedData;
-    g_unselectedData.push(newData);
+    setDataOnly(DATA_SOURCE.UNSELECTED_DATA, srcStruct, unselectedData);
 
     socket.emit("requestUnselectedDataChange",
         getCharIDFromURL(),
@@ -125,18 +122,10 @@ function addUnselectedData(srcStruct, unselectedData){
 }
 
 function removeUnselectedData(srcStruct){
-  let existingData = g_unselectedData.find(unselData => {
-    return hasSameSrc(unselData, srcStruct);
-  });
-  if(existingData != null){
+  let existingData = getDataSingle(DATA_SOURCE.UNSELECTED_DATA, srcStruct);
+  if(existingData != null && existingData.value != null){
 
-    let newDataArray = [];
-    for(let unselData of g_unselectedData){
-      if(!hasSameSrc(unselData, srcStruct)){
-        newDataArray.push(unselData);
-      }
-    }
-    g_unselectedData = newDataArray;
+    deleteDataOnly(DATA_SOURCE.UNSELECTED_DATA, srcStruct);
 
     socket.emit("requestUnselectedDataChange",
         getCharIDFromURL(),

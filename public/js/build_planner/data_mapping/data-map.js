@@ -73,6 +73,11 @@ function setData(in_source, in_srcStruct, in_value, deleteSelfData=true){
   displayStats();
 }
 
+function setDataOnly(in_source, in_srcStruct, in_value){
+  g_dataMap.set(JSON.stringify(parameterizeSrcStruct(in_source, in_srcStruct)), in_value);
+  displayStats();
+}
+
 function getDataSingle(in_source, in_srcStruct){
   let new_srcStruct = parameterizeSrcStruct(in_source, in_srcStruct);
   new_srcStruct.value = cloneObj(g_dataMap.get(JSON.stringify(new_srcStruct)));

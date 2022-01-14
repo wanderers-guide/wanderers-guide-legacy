@@ -107,7 +107,6 @@ let gState_MAP = 'TIER_1';
 /* ~~~~~~~~~~~~~~~~~~~ */
 
 let temp_classNum = 1;
-let g_unselectedData = null;
 
 let g_enabledSources = null;
 
@@ -159,14 +158,6 @@ function mainLoaded(plannerCoreStruct, choiceStruct){
   //          //
 
   g_character = choiceStruct.character;
-
-  // Populate unselectedData array
-  g_unselectedData = [];
-  for(let metaData of choiceStruct.charMetaData){
-    if(metaData.source == 'unselectedData'){
-      g_unselectedData.push(JSON.parse(metaData.value));
-    }
-  }
 
   // Init char meta data
   initDataMap(choiceStruct.charMetaData);
