@@ -12,6 +12,17 @@ function preReqGetIconUnknown(){
   return '<span class="icon is-small has-text-warning"><i class="fas prereq-icon fa-question"></i></span>';
 }
 
+function preReq_skillList(){
+  let skills = [];
+  for(let loreData of getDataAll(DATA_SOURCE.LORE)){
+    skills.push(loreData.value+' Lore');
+  }
+  for(const [skillName, skillData] of g_skillMap.entries()){
+    skills.push(skillName);
+  }
+  return skills;
+}
+
 function preReqFeatLink(dataLinkClass, inFeatName){
   inFeatName = inFeatName.replace(/’/g,'\'').toUpperCase();
   for(const [featID, featStruct] of g_featMap.entries()){
@@ -284,7 +295,7 @@ function checkCustomSkillProfs(name, numUps){
   }
 
   if(name === 'AT LEAST ONE SKILL'){
-    for(const [skillName, skillData] of g_skillMap.entries()){
+    for(const skillName of preReq_skillList()){
       const varName = profConversion_convertOldNameToVarName(skillName);
       const skillNumUps = profToNumUp(variables_getFinalRank(varName));
       if(skillNumUps >= numUps){
@@ -295,11 +306,11 @@ function checkCustomSkillProfs(name, numUps){
   }
 
   if(name === 'A SKILL WITH THE RECALL KNOWLEDGE ACTION' || name === 'AT LEAST ONE SKILL TO RECALL KNOWLEDGE' || name === 'A RECALL KNOWLEDGE SKILL'){
-    for(const [skillName, skillData] of g_skillMap.entries()){
+    for(const skillName of preReq_skillList()){
       const varName = profConversion_convertOldNameToVarName(skillName);
       const skillNumUps = profToNumUp(variables_getFinalRank(varName));
       if(skillNumUps >= numUps){
-        if(skillName.includes(' Lore') ||
+        if(skillName.endsWith(' Lore') ||
             skillName == 'Arcana' ||
             skillName == 'Crafting' ||
             skillName == 'Medicine' ||
@@ -315,7 +326,7 @@ function checkCustomSkillProfs(name, numUps){
   }
 
   if(name === 'A SKILL WITH THE DECIPHER WRITING ACTION' || name === 'AT LEAST ONE SKILL TO DECIPHER WRITING' || name === 'A DECIPHER WRITING SKILL'){
-    for(const [skillName, skillData] of g_skillMap.entries()){
+    for(const skillName of preReq_skillList()){
       const varName = profConversion_convertOldNameToVarName(skillName);
       const skillNumUps = profToNumUp(variables_getFinalRank(varName));
       if(skillNumUps >= numUps){
@@ -328,6 +339,17 @@ function checkCustomSkillProfs(name, numUps){
       }
     }
     return 'FALSE';
+  }
+
+  if(name === 'AT LEAST ONE SAVING THROW'){
+    const fortNumUps = profToNumUp(variables_getFinalRank(VARIABLE.SAVE_FORT));
+    const reflexNumUps = profToNumUp(variables_getFinalRank(VARIABLE.SAVE_REFLEX));
+    const willNumUps = profToNumUp(variables_getFinalRank(VARIABLE.SAVE_WILL));
+    if(fortNumUps >= numUps || reflexNumUps >= numUps || willNumUps >= numUps){
+      return 'TRUE';
+    } else {
+      return 'FALSE';
+    }
   }
 
   if(name === 'PERCEPTION'){
