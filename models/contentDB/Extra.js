@@ -5,6 +5,9 @@ const Extra = db.define('extras', {
   name: {
     type: Sequelize.STRING
   },
+  price: {
+    type: Sequelize.INTEGER
+  },
   level: {
     type: Sequelize.INTEGER
   },
@@ -18,6 +21,15 @@ const Extra = db.define('extras', {
   },
   description: {
     type: Sequelize.TEXT
+  },
+  hitPoints: {
+    type: Sequelize.INTEGER
+  },
+  brokenThreshold: {
+    type: Sequelize.INTEGER
+  },
+  hardness: {
+    type: Sequelize.INTEGER
   },
   type: {
     type: Sequelize.STRING

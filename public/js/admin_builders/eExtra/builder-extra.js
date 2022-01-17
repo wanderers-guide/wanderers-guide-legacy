@@ -19,6 +19,15 @@ $(function () {
 
     $("#inputTags").chosen();
 
+    $("#inputExtraType").change(function(){
+      if($(this).val() == "VEHICLE" || $(this).val() == "OTHER"){
+        $("#sectionHealth").removeClass('is-hidden');
+      } else {
+        $("#sectionHealth").addClass('is-hidden');
+      }
+    });
+    $("#inputExtraType").trigger('change');
+
     $("#createButton").click(function(){
         $(this).unbind();
         finishExtra(false);
@@ -31,11 +40,23 @@ function finishExtra(isUpdate){
     let extraName = $("#inputName").val();
     let extraRarity = $("#inputRarity").val();
     let extraSize = $("#inputSize").val();
+    let extraPrice = $("#inputPrice").val();
     let extraDescription = $("#inputDescription").val();
     let extraType = $("#inputExtraType").val();
     let extraLevel = $("#inputLevel").val();
     let extraTags = $("#inputTags").val();
     let extraContentSrc = $("#inputContentSource").val();
+
+    let extraHitPoints, extraBrokenThreshold, extraHardness = null;
+    if($("#sectionHealth").is(":visible")) {
+      extraHitPoints = $("#inputHitPoints").val();
+      extraBrokenThreshold = $("#inputBrokenThreshold").val();
+      extraHardness = $("#inputHardness").val();
+    } else {
+      extraHitPoints = 0;
+      extraBrokenThreshold = 0;
+      extraHardness = 0;
+    }
 
     let requestPacket = null;
     let extraID = null;
@@ -50,11 +71,15 @@ function finishExtra(isUpdate){
         extraID,
         extraName,
         extraRarity,
+        extraPrice,
         extraSize,
         extraDescription,
         extraType,
         extraLevel,
         extraTags,
+        extraHitPoints,
+        extraBrokenThreshold,
+        extraHardness,
         extraContentSrc
     });
 

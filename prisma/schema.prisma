@@ -517,7 +517,11 @@ model extras {
   level             Int
   rarity            extras_rarity      @default(COMMON)
   size              extras_size        @default(MEDIUM)
+  price             Int?
   description       String?            @db.Text
+  hitPoints         Int?
+  brokenThreshold   Int?
+  hardness          Int?
   type              String?            @db.VarChar(45)
   isArchived        Int?               @default(0)
   contentSrc        String             @default("CRB") @db.VarChar(45)

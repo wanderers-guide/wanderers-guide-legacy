@@ -1551,11 +1551,15 @@ module.exports = class AdminCreation {
           extraName,
           extraRarity,
           extraSize,
+          extraPrice,
           extraDescription,
           extraType,
           extraLevel,
           extraTags,
           extraContentSrc,
+          extraHitPoints,
+          extraBrokenThreshold,
+          extraHardness,
       */
       for(let d in data) { if(data[d] === ''){ data[d] = null; } }
       if(data.extraName == null) { return Promise.resolve(); }
@@ -1567,7 +1571,11 @@ module.exports = class AdminCreation {
           level: data.extraLevel,
           rarity: data.extraRarity,
           size: data.extraSize,
+          price: data.extraPrice,
           description: data.extraDescription,
+          hitPoints: data.extraHitPoints,
+          brokenThreshold: data.extraBrokenThreshold,
+          hardness: data.extraHardness,
           type: data.extraType,
           contentSrc: data.extraContentSrc,
           homebrewID: null,

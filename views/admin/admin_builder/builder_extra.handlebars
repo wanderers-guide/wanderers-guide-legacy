@@ -153,6 +153,13 @@
                     </select>
                 </div>
 
+                <div class="tile is-child">
+                  <label class="label">Price (in cp)</label>
+                  <div class="control">
+                    <input id="inputPrice" class="input" type="number" value="100" min="0">
+                  </div>
+                </div>
+
                 <div class="tile is-child field">
                     <label class="label">
                         Description
@@ -161,6 +168,43 @@
                     <div class="control">
                         <textarea class="textarea" id="inputDescription" placeholder=""></textarea>
                     </div>
+                </div>
+
+                <div id="sectionHealth" class="tile is-child columns">
+
+                    <div class="column field">
+                        <label class="label">
+                          <a href="/material_stats" class="has-text-bold-color" target="_blank">
+                            <strong class="has-tooltip-top" data-tooltip="Link to Material Stats page">Hardness<sup class="icon is-small"><i class="fas fa-xs fa-external-link-alt"></i></sup></strong>
+                          </a>
+                        </label>
+                        <div class="control">
+                            <input id="inputHardness" class="input" type="number" value="0">
+                        </div>
+                    </div>
+
+                    <div class="column field">
+                        <label class="label">
+                          <a href="/material_stats" class="has-text-bold-color" target="_blank">
+                            <strong class="has-tooltip-top" data-tooltip="Link to Material Stats page">Hit Points<sup class="icon is-small"><i class="fas fa-xs fa-external-link-alt"></i></sup></strong>
+                          </a>
+                        </label>
+                        <div class="control">
+                            <input id="inputHitPoints" class="input" type="number" value="0">
+                        </div>
+                    </div>
+
+                    <div class="column field">
+                        <label class="label">
+                          <a href="/material_stats" class="has-text-bold-color" target="_blank">
+                            <strong class="has-tooltip-top" data-tooltip="Link to Material Stats page">Broken Threshold<sup class="icon is-small"><i class="fas fa-xs fa-external-link-alt"></i></sup></strong>
+                          </a>
+                        </label>
+                        <div class="control">
+                            <input id="inputBrokenThreshold" class="input" type="number" value="0">
+                        </div>
+                    </div>
+
                 </div>
 
             </div>
