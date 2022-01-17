@@ -96,7 +96,7 @@ function openFeatQuickview(data) {
     let foundUpperFeatLine = false;
     if(data.Feat.prerequisites != null){
         if(isBuilderPage() && g_character.optionAutoDetectPreReqs === 1) {
-            let resultArray = preReqResultArray(data.Feat);
+            let resultArray = preReqResultArray(data.Feat.prerequisites);
 
             let preReqStr = '';
             for(let resultData of resultArray){

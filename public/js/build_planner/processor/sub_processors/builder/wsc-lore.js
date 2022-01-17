@@ -47,7 +47,6 @@ function giveLoreChoose(srcStruct, locationID, extraData, prof='T'){
 
     // Set saved lore input data
     let savedLoreData = getDataSingle(DATA_SOURCE.LORE, srcStruct);
-    console.log(savedLoreData);
     
 
     $('#'+inputLoreID).change(function(event, isAutoLoad){

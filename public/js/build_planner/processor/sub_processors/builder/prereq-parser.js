@@ -31,11 +31,11 @@ function preReqFeatLink(dataLinkClass, inFeatName){
   }
 }
 
-function preReqResultArray(feat){
+function preReqResultArray(featPrereq){
   let resultArray = [];
 
   let prereqParts = [];
-  let prereqSemicolonParts = feat.prerequisites.replace(/’/g,"'").split('; ');
+  let prereqSemicolonParts = featPrereq.replace(/’/g,"'").split('; ');
   for(let prereq of prereqSemicolonParts){
     if(prereq.includes(', or ') || prereq.includes(', and ')){
       prereqParts.push(prereq);
@@ -74,7 +74,7 @@ function meetsPrereqs(feat){
   // Returns TRUE, FALSE, UNKNOWN, and null
   if(feat.prerequisites == null) { return null; }
 
-  let resultArray = preReqResultArray(feat);
+  let resultArray = preReqResultArray(feat.prerequisites);
 
   let totalResult = 'TRUE';
   for(let resultData of resultArray){
@@ -294,7 +294,7 @@ function checkCustomSkillProfs(name, numUps){
     return 'FALSE';
   }
 
-  if(name === 'A SKILL WITH THE RECALL KNOWLEDGE ACTION' || name === 'A RECALL KNOWLEDGE SKILL'){
+  if(name === 'A SKILL WITH THE RECALL KNOWLEDGE ACTION' || name === 'AT LEAST ONE SKILL TO RECALL KNOWLEDGE' || name === 'A RECALL KNOWLEDGE SKILL'){
     for(const [skillName, skillData] of g_skillMap.entries()){
       const varName = profConversion_convertOldNameToVarName(skillName);
       const skillNumUps = profToNumUp(variables_getFinalRank(varName));
@@ -306,6 +306,22 @@ function checkCustomSkillProfs(name, numUps){
             skillName == 'Nature' ||
             skillName == 'Occultism' ||
             skillName == 'Religion' || 
+            skillName == 'Society'){
+          return 'TRUE';
+        }
+      }
+    }
+    return 'FALSE';
+  }
+
+  if(name === 'A SKILL WITH THE DECIPHER WRITING ACTION' || name === 'AT LEAST ONE SKILL TO DECIPHER WRITING' || name === 'A DECIPHER WRITING SKILL'){
+    for(const [skillName, skillData] of g_skillMap.entries()){
+      const varName = profConversion_convertOldNameToVarName(skillName);
+      const skillNumUps = profToNumUp(variables_getFinalRank(varName));
+      if(skillNumUps >= numUps){
+        if(skillName == 'Arcana' ||
+            skillName == 'Occultism' ||
+            skillName == 'Religion' ||
             skillName == 'Society'){
           return 'TRUE';
         }
