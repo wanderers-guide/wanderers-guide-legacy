@@ -614,28 +614,25 @@ function openInvItemQuickview(data) {
     // Weapon and Armor Category
     if(data.Item.WeaponData != null){
 
-        let weapGroup = null;
-
-        if(data.Item.WeaponData.isMelee == 1){
-            if(weapGroup == null){
-              weapGroup = capitalizeWord(data.Item.WeaponData.meleeWeaponType);
-            }
-        }
-
+        let weapGroup = '';
         if(data.Item.WeaponData.isRanged == 1){
-            if(weapGroup == null){
-              if(data.Item.WeaponData.rangedWeaponType == 'CROSSBOW'){
-                weapGroup = 'Bow';
-              } else {
-                weapGroup = capitalizeWord(data.Item.WeaponData.rangedWeaponType);
-              }
-            }
+          if(data.Item.WeaponData.rangedWeaponType == 'CROSSBOW'){
+            weapGroup += 'Bow';
+          } else {
+            weapGroup += capitalizeWord(data.Item.WeaponData.rangedWeaponType);
+          }
+        }
+        if(data.Item.WeaponData.isMelee == 1){
+          if(weapGroup != ''){
+            weapGroup += ' & ';
+          }
+          weapGroup += capitalizeWord(data.Item.WeaponData.meleeWeaponType);
         }
 
         let weapCategory = capitalizeWord(data.Item.WeaponData.category);
         let weapOrAttack = (weapCategory === 'Unarmed') ? 'Attack' : 'Weapon';
 
-        if(weapGroup != null){
+        if(weapGroup != ''){
             qContent.append('<div class="tile is-child text-center"><p class="is-size-7"><strong>'+weapCategory+' '+weapOrAttack+' - '+weapGroup+'</strong></p></div>');
         } else {
             qContent.append('<div class="tile is-child text-center"><p class="is-size-7"><strong>'+weapCategory+' '+weapOrAttack+'</strong></p></div>');

@@ -202,21 +202,29 @@ function criticalSpecializationTitle(item){
 
 function criticalSpecializationText(item){
 
-    let text = null;
+    let text = '';
     if(item.ArmorData != null){
       text = g_critSpecialTextMap.get(item.ArmorData.armorType);
-    }
 
-    if(item.WeaponData != null){
-        if(item.WeaponData.isMelee == 1){
-          text = g_critSpecialTextMap.get(item.WeaponData.meleeWeaponType);
-        }
+    } else if(item.WeaponData != null){
+
         if(item.WeaponData.isRanged == 1){
-          if(item.WeaponData.rangedWeaponType == 'CROSSBOW') {
-            text = g_critSpecialTextMap.get('BOW');
-          } else {
-            text = g_critSpecialTextMap.get(item.WeaponData.rangedWeaponType);
+          if(item.WeaponData.isMelee == 1){
+            text += '**Ranged Effect**\n';
           }
+
+          if(item.WeaponData.rangedWeaponType == 'CROSSBOW') {
+            text += g_critSpecialTextMap.get('BOW');
+          } else {
+            text += g_critSpecialTextMap.get(item.WeaponData.rangedWeaponType);
+          }
+        }
+        if(item.WeaponData.isMelee == 1){
+          if(item.WeaponData.isRanged == 1){
+            text += '\n**Melee Effect**\n';
+          }
+
+          text += g_critSpecialTextMap.get(item.WeaponData.meleeWeaponType);
         }
     }
 

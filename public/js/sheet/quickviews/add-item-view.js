@@ -802,12 +802,19 @@ function displayItemDetails(itemDataStruct, addItemDetailsItemID){
 
     if(itemDataStruct.WeaponData != null){
 
-        let weapGroup = null;
+        let weapGroup = '';
         if(itemDataStruct.WeaponData.isRanged == 1){
-            weapGroup = capitalizeWord(itemDataStruct.WeaponData.rangedWeaponType);
+          if(itemDataStruct.WeaponData.rangedWeaponType == 'CROSSBOW'){
+            weapGroup += 'Bow';
+          } else {
+            weapGroup += capitalizeWord(itemDataStruct.WeaponData.rangedWeaponType);
+          }
         }
         if(itemDataStruct.WeaponData.isMelee == 1){
-            weapGroup = capitalizeWord(itemDataStruct.WeaponData.meleeWeaponType);
+          if(weapGroup != ''){
+            weapGroup += ' & ';
+          }
+          weapGroup += capitalizeWord(itemDataStruct.WeaponData.meleeWeaponType);
         }
 
         let weapCategory = capitalizeWord(itemDataStruct.WeaponData.category);

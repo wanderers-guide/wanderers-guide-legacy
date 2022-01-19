@@ -387,7 +387,7 @@ function getItemIcon(item, invItem){
 
 
   if(item.WeaponData != null){
-    let weaponType = (item.WeaponData.isMelee == 1) ? item.WeaponData.meleeWeaponType : item.WeaponData.rangedWeaponType;
+    let weaponType = (item.WeaponData.isRanged == 1) ? item.WeaponData.rangedWeaponType : item.WeaponData.meleeWeaponType;
     weaponType = capitalizeWords(weaponType);
 
     if(weaponType === 'Bomb'){ fa_icon = 'fas fa-bomb'; }
@@ -395,6 +395,7 @@ function getItemIcon(item, invItem){
     if(weaponType === 'Brawling'){ fa_icon = 'fas fa-fist-raised'; }
     if(weaponType === 'Club'){ fa_icon = 'fas fa-mace'; }
     // Dart
+    // Firearm
     if(weaponType === 'Flail'){ fa_icon = 'fad fa-mace'; }
     if(weaponType === 'Hammer'){ fa_icon = 'fas fa-hammer-war'; }
     if(weaponType === 'Knife'){ fa_icon = 'fas fa-dagger'; }
