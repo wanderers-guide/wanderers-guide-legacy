@@ -6,7 +6,7 @@
 function openUserCollection(){
   window.history.pushState('homebrew', '', '/homebrew/?sub_tab=collection');// Update URL
   socket.emit('requestCollectedHomebrewBundles');
-  startSpinnerSubLoader();
+  //startSpinnerSubLoader();
 }
 
 socket.on("returnCollectedHomebrewBundles", function(hBundles){

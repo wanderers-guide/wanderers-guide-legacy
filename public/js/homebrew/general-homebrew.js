@@ -43,8 +43,10 @@ $(function () {
 
   if(editHomebrewID != '' || viewHomebrewID != '' || homebrewTabName != '') {
     if(editHomebrewID != ''){
+      $('#userContentTab').parent().addClass('is-active');
       socket.emit('requestHomebrewBundle', 'EDIT', editHomebrewID);
     } else if(viewHomebrewID != ''){
+      $('#browseTab').parent().addClass('is-active');
       socket.emit('requestHomebrewBundle', 'VIEW', viewHomebrewID);
     } else if(homebrewTabName != ''){
       switch(homebrewTabName) {

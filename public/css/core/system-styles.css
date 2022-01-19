@@ -474,8 +474,11 @@ select::-webkit-scrollbar-corner {
 /* Banners */
 
 .w3ls_banner_txt {
-  margin-top: 23%;
+  margin-top: calc(5% + 40px);
   margin-bottom: 23%;
+
+  margin-left: 4%;
+  margin-right: 4%;
 }
 .w3ls_banner_txt p {
   color: #eee;
@@ -537,10 +540,10 @@ a.banner-1-artist {
 }
 
 .button-style {
-  padding: 11px 20px;
+  padding: 7px 10px;
   border: none;
   color: #fff;
-  font-size: 14px;
+  font-size: 12px;
   letter-spacing: 1px;
   border: 2px solid #fff;
   border-radius: 4px;

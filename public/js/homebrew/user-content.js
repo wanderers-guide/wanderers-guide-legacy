@@ -7,7 +7,7 @@ let g_homebrewBundles = null;
 function openUserContent(){
   window.history.pushState('homebrew', '', '/homebrew/?sub_tab=content');// Update URL
   socket.emit('requestHomebrewBundles');
-  startSpinnerSubLoader();
+  //startSpinnerSubLoader();
 }
 
 socket.on("returnHomebrewBundles", function(homebrewBundles, canMakeHomebrew){

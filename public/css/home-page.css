@@ -1,2 +1,7 @@
 
-
+.home-containers {
+  background: #212529;
+  opacity: 0.9;
+  border-radius: 20px;
+  margin: 10px;
+}

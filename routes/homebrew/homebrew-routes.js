@@ -11,6 +11,14 @@ const SenseType = require('../../models/contentDB/SenseType');
 const PhysicalFeature = require('../../models/contentDB/PhysicalFeature');
 const Skill = require('../../models/contentDB/Skill');
 
+const authCheck = (req, res, next) => {
+  if(!req.user){
+    res.redirect('/auth/login');
+  } else {
+    next();
+  }
+};
+
 router.get('/', (req, res) => {
 
   let editHomebrewID = parseInt(req.query.edit_id); if(isNaN(editHomebrewID)){editHomebrewID=null;}

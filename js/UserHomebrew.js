@@ -309,6 +309,25 @@ module.exports = class UserHomebrew {
     });
   }
 
+  static findTopPublishedBundles(top=10){
+    return UserHomebrew.findPublishedBundles().then((hBundles)=>{
+
+      hBundles = hBundles.sort(
+        function(a, b) {
+          let aRating = a.userHomebrewBundles.length;
+          let bRating = b.userHomebrewBundles.length;
+          if (aRating === bRating) {
+            // Name is only important when ratings are the same
+            return a.name > b.name ? 1 : -1;
+          }
+          return bRating - aRating;
+        }
+      );
+
+      return hBundles.slice(0, top);
+
+    });
+  }
   
   // Key Management //
 

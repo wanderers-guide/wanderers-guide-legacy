@@ -106,6 +106,11 @@ socket.on("returnBundleContents", function(REQUEST_TYPE, userHasBundle, userOwns
         $('#bundleCollectionAddBtn').removeClass('is-hidden');
       }
 
+      // Hide add button if user isn't logged in
+      if($('#homebrew-container').attr('data-user-id') == '') {
+        $('#bundleCollectionAddBtn').addClass('is-hidden');
+      }
+
       // Add Button //
       $('#bundleCollectionAddBtn').click(function() {
         if(g_activeBundle.hasKeys === 1){

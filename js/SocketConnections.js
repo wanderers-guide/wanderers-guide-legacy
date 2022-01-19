@@ -43,7 +43,7 @@ function mapToObj(strMap) {
 
 // Returns UserID or -1 if not logged in.
 function getUserID(socket){
-  if(socket.request.session.passport != null){
+  if(socket.request.session.passport != null && socket.request.session.passport.user != null){
       return socket.request.session.passport.user;
   } else {
       return -1;
@@ -2872,6 +2872,12 @@ module.exports = class SocketConnections {
         });
       });
 
+      socket.on('requestTopPublishedHomebrewBundles', function(topNum){
+        UserHomebrew.findTopPublishedBundles(topNum).then((hBundles) => {
+          socket.emit('returnTopPublishedHomebrewBundles', hBundles);
+        });
+      });
+
       socket.on('requestCollectedHomebrewBundles', function(){
         UserHomebrew.getCollectedHomebrewBundles(userID).then((hBundles) => {
           socket.emit('returnCollectedHomebrewBundles', hBundles);
@@ -2929,7 +2935,7 @@ module.exports = class SocketConnections {
 
                   } else {
 
-                    GeneralGathering.getAllSkills(userID).then((skillObject) => {
+                    GeneralGathering.getAllSkills(null).then((skillObject) => {
                       HomebrewGathering.getAllClasses(homebrewID).then((classes) => {
                         HomebrewGathering.getAllAncestries(homebrewID).then((ancestries) => {
                           HomebrewGathering.getAllArchetypes(homebrewID).then((archetypes) => {
@@ -2940,7 +2946,7 @@ module.exports = class SocketConnections {
                                     HomebrewGathering.getAllUniHeritages(homebrewID).then((uniheritages) => {
                                       HomebrewGathering.getAllItems(homebrewID).then((items) => {
                                         HomebrewGathering.getAllSpells(homebrewID).then((spells) => {
-                                          GeneralGathering.getAllTags(userID, homebrewID).then((allTags) => {
+                                          GeneralGathering.getAllTags(null, homebrewID).then((allTags) => {
                                             HomebrewGathering.getAllLanguages(homebrewID).then((languages) => {
                                               HomebrewGathering.getAllToggleables(homebrewID).then((toggleables) => {
                                                 

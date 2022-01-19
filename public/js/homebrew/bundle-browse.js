@@ -5,7 +5,7 @@
 function openBundleBrowse(){
   window.history.pushState('homebrew', '', '/homebrew/?sub_tab=browse');// Update URL
   socket.emit('requestPublishedHomebrewBundles');
-  startSpinnerSubLoader();
+  //startSpinnerSubLoader();
 }
 
 socket.on("returnPublishedHomebrewBundles", function(homebrewBundles){

@@ -4,22 +4,25 @@ const Sequelize = require('sequelize');
 
 const homebrewRoutes = require('./homebrew/homebrew-routes');
 
-const authCheck = (req, res, next) => {
-  if(!req.user){
-    res.redirect('/auth/login');
-  } else {
-    next();
-  }
-};
-
 // Home Route
 router.get('/', (req, res) => {
 
+  let goToHomepage = function(user, background){
+
+    res.render('pages/home', {
+      title: "Wanderer's Guide - Pathfinder 2e Character Manager",
+      user,
+      background,
+    });
+
+  };
+
+  // Get random (or by ID) background //
   let backgroundID = parseInt(req.query.bck_id); if(isNaN(backgroundID)){backgroundID=null;}
   if(backgroundID != null){
 
     Background.findOne({ where: { id: backgroundID } }).then((background) => {
-      res.render('pages/home', { title: "Wanderer's Guide - Pathfinder 2e Character Manager", user: req.user, background });
+      goToHomepage(req.user, background);
     }).catch((error) => {
       res.render('pages/website_down', { title: "Website Down - Wanderer's Guide" });
     });
@@ -28,8 +31,9 @@ router.get('/', (req, res) => {
 
     // Get single random background
     Background.findOne({ order: [ [ Sequelize.fn('RAND') ] ] }).then((background) => {
-      res.render('pages/home', { title: "Wanderer's Guide - Pathfinder 2e Character Manager", user: req.user, background });
+      goToHomepage(req.user, background);
     }).catch((error) => {
+      console.log(error);
       res.render('pages/website_down', { title: "Website Down - Wanderer's Guide" });
     });
 
@@ -38,7 +42,7 @@ router.get('/', (req, res) => {
 });
 
 // Direct Homebrew Route
-router.use('/homebrew', authCheck, homebrewRoutes);
+router.use('/homebrew', homebrewRoutes);
 
 // License Route
 router.get('/license', (req, res) => {
