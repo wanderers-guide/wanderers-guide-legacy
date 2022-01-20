@@ -37,7 +37,7 @@ module.exports = async function(socket, charID, character) {
   }
 
   socket.emit('updateLoadProgess', { message: 'Opening Books', upVal: 1 }); // (4/100) //
-  const sourcesArray = await CharGathering.getSourceBooks(getUserID(socket), character);
+  const sourcesArray = await CharGathering.getSourceBooks(getUserID(socket), character.enabledSources, character.enabledHomebrew);
   
   socket.emit('updateLoadProgess', { message: 'Discovering Backstory', upVal: 2 }); // (6/100) //
   const background = await CharGathering.getBackground(getUserID(socket), charID, character);
@@ -52,22 +52,22 @@ module.exports = async function(socket, charID, character) {
   const allConditions = await CharGathering.getAllConditions(getUserID(socket));
 
   socket.emit('updateLoadProgess', { message: 'Finding Languages', upVal: 3 }); // (18/100) //
-  const allLanguages = await CharGathering.getAllLanguagesBasic(getUserID(socket), charID, character);
+  const allLanguages = await CharGathering.getAllLanguagesBasic(getUserID(socket), character.enabledHomebrew);
 
   socket.emit('updateLoadProgess', { message: 'Keeping Inventory', upVal: 8 }); // (26/100) //
   const invStruct = await CharGathering.getInventory(getUserID(socket), character.inventoryID);
 
   socket.emit('updateLoadProgess', { message: 'Indexing Traits', upVal: 5 }); // (31/100) //
-  const tags = await CharGathering.getAllTags(getUserID(socket), charID, character);
+  const tags = await CharGathering.getAllTags(getUserID(socket), character.enabledHomebrew);
 
   socket.emit('updateLoadProgess', { message: 'Discovering Spells', upVal: 5 }); // (36/100) //
-  const spellMap = await CharGathering.getAllSpells(getUserID(socket), charID, character, spells=null, taggedSpells=null, tags);
+  const spellMap = await CharGathering.getAllSpells(getUserID(socket), character.enabledSources, character.enabledHomebrew, spells=null, taggedSpells=null, tags);
 
   socket.emit('updateLoadProgess', { message: 'Bartering for Items', upVal: 15 }); // (51/100) //
-  const itemMap = await CharGathering.getAllItems(getUserID(socket), charID, character, items=null, tags);
+  const itemMap = await CharGathering.getAllItems(getUserID(socket), character.enabledSources, character.enabledHomebrew, items=null, tags);
 
   socket.emit('updateLoadProgess', { message: 'Understanding Feats', upVal: 15 }); // (66/100) //
-  const featObject = await CharGathering.getAllFeats(getUserID(socket), charID, character, feats=null, tags);
+  const featObject = await CharGathering.getAllFeats(getUserID(socket), character.enabledSources, character.enabledHomebrew, feats=null, tags);
 
   socket.emit('updateLoadProgess', { message: 'Analyzing Ability Scores', upVal: 3 }); // (69/100) //
   const abilObject = await CharGathering.getAbilityScores(getUserID(socket), charID, charAbilityScores=null, bonusDataArray=null);
@@ -85,7 +85,7 @@ module.exports = async function(socket, charID, character) {
   const conditionsObject = await CharGathering.getAllCharConditions(getUserID(socket), charID, charConditions=null);
 
   socket.emit('updateLoadProgess', { message: 'Training Companions', upVal: 2 }); // (89/100) //
-  const companionData = await CharGathering.getCompanionData(getUserID(socket), charID, allAnimalCompanions=null, charAnimalComps=null, allSpecificFamiliars=null, allFamiliarAbilities=null, charFamiliars=null);
+  const companionData = await CharGathering.getCompanionData(getUserID(socket), charID, character.enabledSources, character.enabledHomebrew);
 
   socket.emit('updateLoadProgess', { message: 'Gathering Resistances and Weaknesses', upVal: 2 }); // (91/100) //
   const resistAndVulnerStruct = await CharGathering.getResistancesAndVulnerabilities(getUserID(socket), charID, resistancesDataArray=null, vulnerabilitiesDataArray=null);
@@ -103,16 +103,16 @@ module.exports = async function(socket, charID, character) {
   const speedsDataArray = await CharGathering.getOtherSpeeds(getUserID(socket), charID);
 
   socket.emit('updateLoadProgess', { message: 'Gathering Sheet States', upVal: 1 }); // (97/100) //
-  const sheetStatesArray = await CharGathering.getSheetStates(getUserID(socket), charID, character);
+  const sheetStatesArray = await CharGathering.getSheetStates(getUserID(socket), character.enabledSources, character.enabledHomebrew);
 
   socket.emit('updateLoadProgess', { message: 'Gathering Weapon Familiarities', upVal: 2 }); // (99/100) //
   const familiaritiesDataArray = await CharGathering.getWeaponFamiliarities(getUserID(socket), charID);
 
   socket.emit('updateLoadProgess', { message: 'Locating Class Features', upVal: 1 }); // (100/100) //
-  const allClassFeatureOptions = await CharGathering.getAllClassFeatureOptions(getUserID(socket), charID, character);
+  const allClassFeatureOptions = await CharGathering.getAllClassFeatureOptions(getUserID(socket), character.enabledSources, character.enabledHomebrew);
 
  // socket.emit('updateLoadProgess', { message: 'Finding Class Archetypes', upVal: 3 }); // (86/100) //
-  const classArchetypeArray = await CharGathering.getAllClassArchetypes(getUserID(socket), charID);
+  const classArchetypeArray = await CharGathering.getAllClassArchetypes(getUserID(socket), character.enabledSources, character.enabledHomebrew);
 
   socket.emit('updateLoadProgess', { message: 'Finalizing', upVal: 10 }); // (110/100) //
   let charInfo = {

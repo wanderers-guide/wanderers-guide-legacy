@@ -36,26 +36,26 @@ module.exports = async function(socket, charID, character=null, featObject=null,
   }
 
   socket.emit('updateLoadProgess', { message: 'Opening Books', upVal: 2 }); // (5/100) //
-  const sourcesArray = await CharGathering.getSourceBooks(getUserID(socket), character);
+  const sourcesArray = await CharGathering.getSourceBooks(getUserID(socket), character.enabledSources, character.enabledHomebrew);
 
   socket.emit('updateLoadProgess', { message: 'Indexing Traits', upVal: 5 }); // (10/100) //
   if(tags==null){
-    tags = await CharGathering.getAllTags(getUserID(socket), charID, character);
+    tags = await CharGathering.getAllTags(getUserID(socket), character.enabledHomebrew);
   }
 
   socket.emit('updateLoadProgess', { message: 'Understanding Feats', upVal: 23 }); // (33/100) //
   if(featObject==null){
-    featObject = await CharGathering.getAllFeats(getUserID(socket), charID, character, feats=null, tags);
+    featObject = await CharGathering.getAllFeats(getUserID(socket), character.enabledSources, character.enabledHomebrew, feats=null, tags);
   }
 
   socket.emit('updateLoadProgess', { message: 'Bartering for Items', upVal: 20 }); // (53/100) //
   if(itemMap==null){
-    itemMap = await CharGathering.getAllItems(getUserID(socket), charID, character, items=null, tags);
+    itemMap = await CharGathering.getAllItems(getUserID(socket), character.enabledSources, character.enabledHomebrew, items=null, tags);
   }
 
   socket.emit('updateLoadProgess', { message: 'Discovering Spells', upVal: 15 }); // (68/100) //
   if(spellMap==null){
-    spellMap = await CharGathering.getAllSpells(getUserID(socket), charID, character, spells=null, taggedSpells=null, tags);
+    spellMap = await CharGathering.getAllSpells(getUserID(socket), character.enabledSources, character.enabledHomebrew, spells=null, taggedSpells=null, tags);
   }
 
   socket.emit('updateLoadProgess', { message: 'Determining Skills', upVal: 6 }); // (74/100) //
@@ -80,7 +80,7 @@ module.exports = async function(socket, charID, character=null, featObject=null,
 
   socket.emit('updateLoadProgess', { message: 'Finding Languages', upVal: 2 }); // (82/100) //
   if(allLanguages==null){
-    allLanguages = await CharGathering.getAllLanguagesBasic(getUserID(socket), charID, character);
+    allLanguages = await CharGathering.getAllLanguagesBasic(getUserID(socket), character.enabledHomebrew);
   }
 
   socket.emit('updateLoadProgess', { message: 'Finding Unselected Options', upVal: 1 }); // (83/100) //
@@ -89,7 +89,7 @@ module.exports = async function(socket, charID, character=null, featObject=null,
   }
 
   socket.emit('updateLoadProgess', { message: 'Finding Class Archetypes', upVal: 3 }); // (86/100) //
-  const classArchetypeArray = await CharGathering.getAllClassArchetypes(getUserID(socket), charID);
+  const classArchetypeArray = await CharGathering.getAllClassArchetypes(getUserID(socket), character.enabledSources, character.enabledHomebrew);
 
   socket.emit('updateLoadProgess', { message: 'Considering Character Choices', upVal: 14 }); // (100/100) //
   const choiceStruct = await CharChoicesLoad(socket, charID, character, background=null, ancestry=null, heritage=null, ancestries=null, charTagsArray=null, classDetails=null, featDataArray=null, bonusDataArray=null, choiceDataArray=null, profDataArray=null, innateSpellDataArray=null, langDataArray=null, senseDataArray=null, phyFeatDataArray=null, loreDataArray=null, focusPointDataArray=null, profMap=null, domains=null, domainDataArray=null, advancedDomainDataArray=null, extraClassFeatures=null, heritageEffectsArray=null);

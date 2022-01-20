@@ -78,10 +78,10 @@ module.exports = async function(socket) {
   const allSenses = await Prisma.senseTypes.findMany();
 
   //socket.emit('updateLoadProgess', { message: 'Discovering Domains', upVal: 0 }); // (95/100) //
-  //const allDomains = await CharGathering.getAllDomains(getUserID(socket), charID, character);
+  //const allDomains = await CharGathering.getAllDomains(getUserID(socket), character.enabledSources, character.enabledHomebrew);
   
   //socket.emit('updateLoadProgess', { message: 'Finding Class Archetypes', upVal: 3 }); // (86/100) //
-  //const classArchetypes = await CharGathering.getAllClassArchetypes(getUserID(socket), charID);
+  //const classArchetypes = await CharGathering.getAllClassArchetypes(getUserID(socket), character.enabledSources, character.enabledHomebrew);
 
   socket.emit('updateLoadProgess', { message: 'Finalizing', upVal: 10 }); // (105/100) //
   const plannerStruct = {

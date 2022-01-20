@@ -14,16 +14,29 @@ let g_creationSectionScroll = null;
 let g_char_id = null;
 let g_char_level = null;
 
+let g_build_id = null;
+
 $(function () {
 
   g_builder_type = $('#builder-data').attr('data-builder-type');
   g_page_num = parseInt($('#builder-data').attr('data-page-num'));
 
-  g_char_id = parseInt($('#builder-data').attr('data-char-id'));
-  g_char_level = parseInt($('#builder-data').attr('data-char-lvl'));
+  if($('#builder-data').attr('data-char-id') != 'none'){
+
+    g_char_id = parseInt($('#builder-data').attr('data-char-id'));
+    g_char_level = parseInt($('#builder-data').attr('data-char-lvl'));
+    g_build_id = null;
+
+  } else {
+
+    g_char_id = null;
+    g_char_level = 20;
+    g_build_id = parseInt($('#builder-data').attr('data-build-id'));
+
+  }
 
   startDiceLoader();
-  socket.emit("requestPlannerCore", g_char_id);
+  socket.emit("requestPlannerCore", g_char_id, g_build_id);
 
   // Create the container for each level
   $(`#creation-section`).html(`

@@ -144,7 +144,7 @@ module.exports = class CharExport {
 
   static async processInvItems(userID, charID, character, invItems){
 
-    let allItems = await CharGathering.getAllItems(userID, charID, character, null, null);
+    let allItems = await CharGathering.getAllItems(userID, character.enabledSources, character.enabledHomebrew, null, null);
     for(let invItem of invItems){
       let itemData = allItems.get(invItem.itemID);
       if(itemData == null) { itemData = { Item: {} }; }
@@ -157,7 +157,7 @@ module.exports = class CharExport {
 
   static async processSpellBookSpells(userID, charID, character, spellBookSpells){
 
-    let allSpells = await CharGathering.getAllSpells(userID, charID, character, null, null, null);
+    let allSpells = await CharGathering.getAllSpells(userID, character.enabledSources, character.enabledHomebrew, null, null, null);
     for(let spellBookSpell of spellBookSpells){
       let spellData = allSpells.get(spellBookSpell.spellID);
       if(spellData == null) { spellData = { Spell: {} }; }

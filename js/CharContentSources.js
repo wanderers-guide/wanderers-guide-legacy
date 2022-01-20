@@ -7,14 +7,14 @@ function getConstantSources(){ // HARDCODED - Constant Content Sources
 
 module.exports = class CharContentSources {
 
-    static getSourceArray(character){
-      let array = JSON.parse(character.enabledSources);
+    static getSourceArray(enabledSources){
+      let array = JSON.parse(enabledSources);
       array = array.concat(getConstantSources());
       return [...new Set(array)];
     }
 
-    static getSourceArrayPrisma(character){
-      let array = JSON.parse(character.enabledSources);
+    static getSourceArrayPrisma(enabledSources){
+      let array = JSON.parse(enabledSources);
       array = array.concat(getConstantSources());
       let newArray = [];
       for(let arr of array){
@@ -26,7 +26,7 @@ module.exports = class CharContentSources {
     static addSource(charID, sourceName){
         return Character.findOne({ where: { id: charID} })
         .then((character) => {
-            let sourceArray = CharContentSources.getSourceArray(character);
+            let sourceArray = CharContentSources.getSourceArray(character.enabledSources);
             sourceArray.push(sourceName);
             let charUpVals = {enabledSources: JSON.stringify(sourceArray) };
             return Character.update(charUpVals, { where: { id: character.id } })
@@ -39,7 +39,7 @@ module.exports = class CharContentSources {
     static removeSource(charID, sourceName){
         return Character.findOne({ where: { id: charID} })
         .then((character) => {
-            let sourceArray = CharContentSources.getSourceArray(character);
+            let sourceArray = CharContentSources.getSourceArray(character.enabledSources);
             let sourceIndex = sourceArray.indexOf(sourceName);
             if (sourceIndex > -1) {
                 sourceArray.splice(sourceIndex, 1);

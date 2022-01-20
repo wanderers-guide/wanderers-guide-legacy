@@ -155,11 +155,11 @@ module.exports = class CharGathering {
       });
     }
 
-    static getSourceBooks(userID, character){
+    static getSourceBooks(userID, enabledSources, enabledHomebrew){
       return Book.findAll({
         where: {
           codeName: {
-            [Op.or]: CharContentSources.getSourceArray(character)
+            [Op.or]: CharContentSources.getSourceArray(enabledSources)
           },
           [Op.not]: [
             { codeName: { [Op.or]: TempUnpublishedBooks.getSourcesArray(userID) } },
@@ -169,7 +169,7 @@ module.exports = class CharGathering {
         return UserHomebrew.getCollectedHomebrewBundles(userID).then((hBundles) => {
           return UserHomebrew.getIncompleteHomebrewBundles(userID).then((progessBundles) => {
             try {
-              const homebrewBundleArray = JSON.parse(character.enabledHomebrew);
+              const homebrewBundleArray = JSON.parse(enabledHomebrew);
               for(const hBundle of hBundles) {
                 if(homebrewBundleArray.includes(hBundle.homebrewBundle.id)) {
                   books.push({
@@ -193,103 +193,93 @@ module.exports = class CharGathering {
       });
     }
 
-    static getAllClassArchetypes(userID, charID) {
-      return Character.findOne({ where: { id: charID} })
-      .then((character) => {
-          return ClassArchetype.findAll({
-              where: {
-                  contentSrc: {
-                    [Op.or]: CharContentSources.getSourceArray(character)
-                  },
-                  homebrewID: {
-                    [Op.or]: CharContentHomebrew.getHomebrewArray(character)
-                  },
-                  [Op.not]: [
-                    { contentSrc: { [Op.or]: TempUnpublishedBooks.getSourcesArray(userID) } },
-                  ]
-              }
-          }).then((classArchetypes) => {
-            return classArchetypes;
-          });
+    static getAllClassArchetypes(userID, enabledSources, enabledHomebrew) {
+      return ClassArchetype.findAll({
+        where: {
+            contentSrc: {
+              [Op.or]: CharContentSources.getSourceArray(enabledSources)
+            },
+            homebrewID: {
+              [Op.or]: CharContentHomebrew.getHomebrewArray(enabledHomebrew)
+            },
+            [Op.not]: [
+              { contentSrc: { [Op.or]: TempUnpublishedBooks.getSourcesArray(userID) } },
+            ]
+        }
+      }).then((classArchetypes) => {
+        return classArchetypes;
       });
     }
 
-    static getAllClasses(userID, charID) {
-        return Character.findOne({ where: { id: charID} })
-        .then((character) => {
-            return Class.findAll({
-                where: {
-                    contentSrc: {
-                      [Op.or]: CharContentSources.getSourceArray(character)
-                    },
-                    homebrewID: {
-                      [Op.or]: CharContentHomebrew.getHomebrewArray(character)
-                    },
-                    [Op.not]: [
-                      { contentSrc: { [Op.or]: TempUnpublishedBooks.getSourcesArray(userID) } },
-                    ]
+    static getAllClasses(userID, enabledSources, enabledHomebrew) {
+      return Class.findAll({
+        where: {
+            contentSrc: {
+              [Op.or]: CharContentSources.getSourceArray(enabledSources)
+            },
+            homebrewID: {
+              [Op.or]: CharContentHomebrew.getHomebrewArray(enabledHomebrew)
+            },
+            [Op.not]: [
+              { contentSrc: { [Op.or]: TempUnpublishedBooks.getSourcesArray(userID) } },
+            ]
+        }
+      }).then((classes) => {
+        return ClassAbility.findAll({
+            order: [['level', 'ASC'],['name', 'ASC'],],
+            where: {
+                contentSrc: {
+                  [Op.or]: CharContentSources.getSourceArray(enabledSources)
+                },
+                homebrewID: {
+                  [Op.or]: CharContentHomebrew.getHomebrewArray(enabledHomebrew)
+                },
+                [Op.not]: [
+                  { contentSrc: { [Op.or]: TempUnpublishedBooks.getSourcesArray(userID) } },
+                ]
+            }
+        })
+        .then((allClassAbilities) => {
+            
+            let classMap = new Map();
+
+            for (const cClass of classes) {
+                classMap.set(cClass.id, {Class : cClass, Abilities : []}); 
+            }
+
+            for (const classAbil of allClassAbilities) {
+                let classID = classAbil.classID;
+
+                if(classID == null && classAbil.indivClassName != null){
+                    let cClass = classes.find(cClass => {
+                        return cClass.name === classAbil.indivClassName;
+                    });
+                    if(cClass != null){
+                        classID = cClass.id;
+                    }
                 }
-            }).then((classes) => {
-                return ClassAbility.findAll({
-                    order: [['level', 'ASC'],['name', 'ASC'],],
-                    where: {
-                        contentSrc: {
-                          [Op.or]: CharContentSources.getSourceArray(character)
-                        },
-                        homebrewID: {
-                          [Op.or]: CharContentHomebrew.getHomebrewArray(character)
-                        },
-                        [Op.not]: [
-                          { contentSrc: { [Op.or]: TempUnpublishedBooks.getSourcesArray(userID) } },
-                        ]
-                    }
-                })
-                .then((allClassAbilities) => {
-                    
-                    let classMap = new Map();
-    
-                    for (const cClass of classes) {
-                        classMap.set(cClass.id, {Class : cClass, Abilities : []}); 
-                    }
-    
-                    for (const classAbil of allClassAbilities) {
-                        let classID = classAbil.classID;
-    
-                        if(classID == null && classAbil.indivClassName != null){
-                            let cClass = classes.find(cClass => {
-                                return cClass.name === classAbil.indivClassName;
-                            });
-                            if(cClass != null){
-                                classID = cClass.id;
-                            }
-                        }
-    
-                        let classStruct = classMap.get(classID);
-                        if(classStruct != null){
-                            classStruct.Abilities.push(classAbil);
-                        }
-    
-                    }
-    
-                    return mapToObj(classMap);
-    
-                });
-            });
+
+                let classStruct = classMap.get(classID);
+                if(classStruct != null){
+                    classStruct.Abilities.push(classAbil);
+                }
+
+            }
+
+            return mapToObj(classMap);
+
         });
+      });
     }
 
-    static async getAllClassFeatureOptions(userID, charID, character=null) {
-
-      if(character==null){
-        character = await CharGathering.getCharacter(userID, charID);
-      }
+    static async getAllClassFeatureOptions(userID, enabledSources, enabledHomebrew) {
 
       return await Prisma.classAbilities.findMany({
         where: {
           selectType: 'SELECT_OPTION',
           AND: [
-            {OR: CharContentSources.getSourceArrayPrisma(character)},
-            {OR: CharContentHomebrew.getHomebrewArrayPrisma(character)},
+            {OR: CharContentSources.getSourceArrayPrisma(enabledSources)},
+            {OR: CharContentHomebrew.getHomebrewArrayPrisma(enabledHomebrew)},
             {NOT: TempUnpublishedBooks.getSourcesArrayPrisma(userID)}
           ],
         },
@@ -305,63 +295,53 @@ module.exports = class CharGathering {
       });
     }
 
-    static getAllArchetypes(userID, charID) {
-        return Character.findOne({ where: { id: charID} })
-        .then((character) => {
-            return Archetype.findAll({
-                where: {
-                    contentSrc: {
-                      [Op.or]: CharContentSources.getSourceArray(character)
-                    },
-                    homebrewID: {
-                      [Op.or]: CharContentHomebrew.getHomebrewArray(character)
-                    },
-                    [Op.not]: [
-                      { contentSrc: { [Op.or]: TempUnpublishedBooks.getSourcesArray(userID) } },
-                    ]
-                },
-            })
-            .then((archetypes) => {
-                return archetypes;
-            });
-        });
+    static getAllArchetypes(userID, enabledSources, enabledHomebrew) {
+      return Archetype.findAll({
+        where: {
+            contentSrc: {
+              [Op.or]: CharContentSources.getSourceArray(enabledSources)
+            },
+            homebrewID: {
+              [Op.or]: CharContentHomebrew.getHomebrewArray(enabledHomebrew)
+            },
+            [Op.not]: [
+              { contentSrc: { [Op.or]: TempUnpublishedBooks.getSourcesArray(userID) } },
+            ]
+        },
+      })
+      .then((archetypes) => {
+        return archetypes;
+      });
     }
 
-    static getAllUniHeritages(userID, charID) {
-        return Character.findOne({ where: { id: charID} })
-        .then((character) => {
-            return UniHeritage.findAll({
-                where: {
-                    contentSrc: {
-                      [Op.or]: CharContentSources.getSourceArray(character)
-                    },
-                    homebrewID: {
-                      [Op.or]: CharContentHomebrew.getHomebrewArray(character)
-                    },
-                    [Op.not]: [
-                      { contentSrc: { [Op.or]: TempUnpublishedBooks.getSourcesArray(userID) } },
-                    ]
-                },
-                order: [['name', 'ASC'],]
-            })
-            .then((uniHeritages) => {
-                return uniHeritages;
-            });
-        });
+    static getAllUniHeritages(userID, enabledSources, enabledHomebrew) {
+      return UniHeritage.findAll({
+        where: {
+            contentSrc: {
+              [Op.or]: CharContentSources.getSourceArray(enabledSources)
+            },
+            homebrewID: {
+              [Op.or]: CharContentHomebrew.getHomebrewArray(enabledHomebrew)
+            },
+            [Op.not]: [
+              { contentSrc: { [Op.or]: TempUnpublishedBooks.getSourcesArray(userID) } },
+            ]
+        },
+        order: [['name', 'ASC'],]
+      })
+      .then((uniHeritages) => {
+          return uniHeritages;
+      });
     }
 
-    static async getAllFeats(userID, charID, character=null, feats=null, tags=null) {
-
-      if(character==null) {
-        character = await CharGathering.getCharacter(userID, charID);
-      }
+    static async getAllFeats(userID, enabledSources, enabledHomebrew, feats=null, tags=null) {
 
       if(feats==null){
         feats = await Prisma.feats.findMany({
           where: {
             AND: [
-              {OR: CharContentSources.getSourceArrayPrisma(character)},
-              {OR: CharContentHomebrew.getHomebrewArrayPrisma(character)},
+              {OR: CharContentSources.getSourceArrayPrisma(enabledSources)},
+              {OR: CharContentHomebrew.getHomebrewArrayPrisma(enabledHomebrew)},
               {NOT: TempUnpublishedBooks.getSourcesArrayPrisma(userID)}
             ],
           },
@@ -370,7 +350,7 @@ module.exports = class CharGathering {
       }
 
       if(tags==null){
-        tags = await CharGathering.getAllTags(userID, charID, character);
+        tags = await CharGathering.getAllTags(userID, enabledHomebrew);
       }
 
 
@@ -418,18 +398,14 @@ module.exports = class CharGathering {
 
     }
 
-    static async getAllSpells(userID, charID, character=null, spells=null, taggedSpells=null, tags=null) {
-
-      if(character==null) {
-        character = await CharGathering.getCharacter(userID, charID);
-      }
+    static async getAllSpells(userID, enabledSources, enabledHomebrew, spells=null, taggedSpells=null, tags=null) {
 
       if(spells==null){
         spells = await Prisma.spells.findMany({
           where: {
             AND: [
-              {OR: CharContentSources.getSourceArrayPrisma(character)},
-              {OR: CharContentHomebrew.getHomebrewArrayPrisma(character)},
+              {OR: CharContentSources.getSourceArrayPrisma(enabledSources)},
+              {OR: CharContentHomebrew.getHomebrewArrayPrisma(enabledHomebrew)},
               {NOT: TempUnpublishedBooks.getSourcesArrayPrisma(userID)}
             ],
           },
@@ -442,7 +418,7 @@ module.exports = class CharGathering {
       }
 
       if(tags==null){
-        tags = await CharGathering.getAllTags(userID, charID, character);
+        tags = await CharGathering.getAllTags(userID, enabledHomebrew);
       }
 
       // Processing Spells Data //
@@ -470,18 +446,14 @@ module.exports = class CharGathering {
 
     }
 
-    static async getAllItems(userID, charID, character=null, items=null, tags=null){
-
-        if(character==null){
-          character = await CharGathering.getCharacter(userID, charID);
-        }
+    static async getAllItems(userID, enabledSources, enabledHomebrew, items=null, tags=null){
         
         if(items==null){
           items = await Prisma.items.findMany({
             where: {
               AND: [
-                {OR: CharContentSources.getSourceArrayPrisma(character)},
-                {OR: CharContentHomebrew.getHomebrewArrayPrisma(character)},
+                {OR: CharContentSources.getSourceArrayPrisma(enabledSources)},
+                {OR: CharContentHomebrew.getHomebrewArrayPrisma(enabledHomebrew)},
                 {NOT: TempUnpublishedBooks.getSourcesArrayPrisma(userID)}
               ],
             },
@@ -497,7 +469,7 @@ module.exports = class CharGathering {
         }
 
         if(tags==null){
-            tags = await CharGathering.getAllTags(userID, charID, character);
+            tags = await CharGathering.getAllTags(userID, enabledHomebrew);
         }
 
         // Processing Item Data //
@@ -660,17 +632,16 @@ module.exports = class CharGathering {
 
     }
 
-    static getAllAncestries(userID, charID, includeTag) {
+    static getAllAncestries(userID, enabledSources, enabledHomebrew, includeTag) {
 
-        return Character.findOne({ where: { id: charID} })
-        .then((character) => {
+        
             return Ancestry.findAll({
                 where: {
                     contentSrc: {
-                      [Op.or]: CharContentSources.getSourceArray(character)
+                      [Op.or]: CharContentSources.getSourceArray(enabledSources)
                     },
                     homebrewID: {
-                      [Op.or]: CharContentHomebrew.getHomebrewArray(character)
+                      [Op.or]: CharContentHomebrew.getHomebrewArray(enabledHomebrew)
                     },
                     [Op.not]: [
                       { contentSrc: { [Op.or]: TempUnpublishedBooks.getSourcesArray(userID) } },
@@ -681,10 +652,10 @@ module.exports = class CharGathering {
                 return Heritage.findAll({
                     where: {
                         contentSrc: {
-                          [Op.or]: CharContentSources.getSourceArray(character)
+                          [Op.or]: CharContentSources.getSourceArray(enabledSources)
                         },
                         homebrewID: {
-                          [Op.or]: CharContentHomebrew.getHomebrewArray(character)
+                          [Op.or]: CharContentHomebrew.getHomebrewArray(enabledHomebrew)
                         },
                         [Op.not]: [
                           { contentSrc: { [Op.or]: TempUnpublishedBooks.getSourcesArray(userID) } },
@@ -696,35 +667,35 @@ module.exports = class CharGathering {
                     return Language.findAll({
                       where: {
                           homebrewID: {
-                            [Op.or]: CharContentHomebrew.getHomebrewArray(character)
+                            [Op.or]: CharContentHomebrew.getHomebrewArray(enabledHomebrew)
                           },
                       }
                     }).then((languages) => {
                         return AncestryLanguage.findAll({
                           where: {
                               homebrewID: {
-                                [Op.or]: CharContentHomebrew.getHomebrewArray(character)
+                                [Op.or]: CharContentHomebrew.getHomebrewArray(enabledHomebrew)
                               },
                           }
                         }).then((ancestLangs) => {
                             return AncestryBoost.findAll({
                               where: {
                                   homebrewID: {
-                                    [Op.or]: CharContentHomebrew.getHomebrewArray(character)
+                                    [Op.or]: CharContentHomebrew.getHomebrewArray(enabledHomebrew)
                                   },
                               }
                             }).then((ancestBoosts) => {
                                 return AncestryFlaw.findAll({
                                   where: {
                                       homebrewID: {
-                                        [Op.or]: CharContentHomebrew.getHomebrewArray(character)
+                                        [Op.or]: CharContentHomebrew.getHomebrewArray(enabledHomebrew)
                                       },
                                   }
                                 }).then((ancestFlaws) => {
                                     return Tag.findAll({
                                       where: {
                                           homebrewID: {
-                                            [Op.or]: CharContentHomebrew.getHomebrewArray(character)
+                                            [Op.or]: CharContentHomebrew.getHomebrewArray(enabledHomebrew)
                                           },
                                       }
                                     }).then((tags) => {
@@ -841,7 +812,7 @@ module.exports = class CharGathering {
                     });
                 });
             });
-        });
+        
     }
 
     static getAllLanguages(userID, charID) {
@@ -852,7 +823,7 @@ module.exports = class CharGathering {
                 return Language.findAll({
                   where: {
                       homebrewID: {
-                        [Op.or]: CharContentHomebrew.getHomebrewArray(character)
+                        [Op.or]: CharContentHomebrew.getHomebrewArray(character.enabledHomebrew)
                       },
                   }
                 }).then((languages) => {
@@ -903,30 +874,24 @@ module.exports = class CharGathering {
 
     }
 
-    static async getAllAncestriesBasic(userID, charID, character=null) {
-      if(character==null){
-        character = await CharGathering.getCharacter(userID, charID);
-      }
+    static async getAllAncestriesBasic(userID, enabledSources, enabledHomebrew) {
       return await Prisma.ancestries.findMany({
         where: {
           AND: [
-            {OR: CharContentSources.getSourceArrayPrisma(character)},
-            {OR: CharContentHomebrew.getHomebrewArrayPrisma(character)},
+            {OR: CharContentSources.getSourceArrayPrisma(enabledSources)},
+            {OR: CharContentHomebrew.getHomebrewArrayPrisma(enabledHomebrew)},
             {NOT: TempUnpublishedBooks.getSourcesArrayPrisma(userID)}
           ],
         }
       });
     }
 
-    static async getAllBackgrounds(userID, charID, character=null) {
-      if(character==null){
-        character = await CharGathering.getCharacter(userID, charID);
-      }
+    static async getAllBackgrounds(userID, enabledSources, enabledHomebrew) {
       return await Prisma.backgrounds.findMany({
         where: {
           AND: [
-            {OR: CharContentSources.getSourceArrayPrisma(character)},
-            {OR: CharContentHomebrew.getHomebrewArrayPrisma(character)},
+            {OR: CharContentSources.getSourceArrayPrisma(enabledSources)},
+            {OR: CharContentHomebrew.getHomebrewArrayPrisma(enabledHomebrew)},
             {NOT: TempUnpublishedBooks.getSourcesArrayPrisma(userID)}
           ],
         }
@@ -945,15 +910,12 @@ module.exports = class CharGathering {
       return await Prisma.senseTypes.findMany();
     }
 
-    static async getAllDomains(userID, charID, character=null) {
-      if(character==null){
-        character = await CharGathering.getCharacter(userID, charID);
-      }
+    static async getAllDomains(userID, enabledSources, enabledHomebrew) {
       return await Prisma.domains.findMany({
         where: {
           AND: [
-            {OR: CharContentSources.getSourceArrayPrisma(character)},
-            {OR: CharContentHomebrew.getHomebrewArrayPrisma(character)},
+            {OR: CharContentSources.getSourceArrayPrisma(enabledSources)},
+            {OR: CharContentHomebrew.getHomebrewArrayPrisma(enabledHomebrew)},
             {NOT: TempUnpublishedBooks.getSourcesArrayPrisma(userID)}
           ],
         },
@@ -961,13 +923,10 @@ module.exports = class CharGathering {
       });
     }
 
-    static async getAllTags(userID, charID, character=null) {
-      if(character==null){
-        character = await CharGathering.getCharacter(userID, charID);
-      }
+    static async getAllTags(userID, enabledHomebrew) {
       return await Prisma.tags.findMany({
         where: {
-          OR: CharContentHomebrew.getHomebrewArrayPrisma(character),
+          OR: CharContentHomebrew.getHomebrewArrayPrisma(enabledHomebrew),
         },
         orderBy: [{ name: 'asc' }],
       });
@@ -1150,13 +1109,10 @@ module.exports = class CharGathering {
     }
 
 
-    static async getAllLanguagesBasic(userID, charID, character=null) {
-      if(character==null){
-        character = await CharGathering.getCharacter(userID, charID);
-      }
+    static async getAllLanguagesBasic(userID, enabledHomebrew) {
       return await Prisma.languages.findMany({
         where: {
-          OR: CharContentHomebrew.getHomebrewArrayPrisma(character)
+          OR: CharContentHomebrew.getHomebrewArrayPrisma(enabledHomebrew)
         }
       });
     }
@@ -1240,10 +1196,10 @@ module.exports = class CharGathering {
           order: [['level', 'ASC'],['name', 'ASC'],],
           where: {
               contentSrc: {
-                [Op.or]: CharContentSources.getSourceArray(character)
+                [Op.or]: CharContentSources.getSourceArray(character.enabledSources)
               },
               homebrewID: {
-                [Op.or]: CharContentHomebrew.getHomebrewArray(character)
+                [Op.or]: CharContentHomebrew.getHomebrewArray(character.enabledHomebrew)
               },
               [Op.not]: [
                 { contentSrc: { [Op.or]: TempUnpublishedBooks.getSourcesArray(userID) } },
@@ -1292,7 +1248,7 @@ module.exports = class CharGathering {
           where: {
             name: langName,
             homebrewID: {
-              [Op.or]: CharContentHomebrew.getHomebrewArray(character)
+              [Op.or]: CharContentHomebrew.getHomebrewArray(character.enabledHomebrew)
             },
           }
         }).then((language) => {
@@ -1308,7 +1264,7 @@ module.exports = class CharGathering {
           where: {
             name: featName,
             homebrewID: {
-              [Op.or]: CharContentHomebrew.getHomebrewArray(character)
+              [Op.or]: CharContentHomebrew.getHomebrewArray(character.enabledHomebrew)
             },
           }
         }).then((feat) => {
@@ -1324,7 +1280,7 @@ module.exports = class CharGathering {
           where: {
             name: spellName,
             homebrewID: {
-              [Op.or]: CharContentHomebrew.getHomebrewArray(character)
+              [Op.or]: CharContentHomebrew.getHomebrewArray(character.enabledHomebrew)
             },
           }
         }).then((spell) => {
@@ -1366,10 +1322,10 @@ module.exports = class CharGathering {
           where: {
             name: featureName,
             contentSrc: {
-              [Op.or]: CharContentSources.getSourceArray(character)
+              [Op.or]: CharContentSources.getSourceArray(character.enabledSources)
             },
             homebrewID: {
-              [Op.or]: CharContentHomebrew.getHomebrewArray(character)
+              [Op.or]: CharContentHomebrew.getHomebrewArray(character.enabledHomebrew)
             },
             [Op.not]: [
               { contentSrc: { [Op.or]: TempUnpublishedBooks.getSourcesArray(userID) } },
@@ -1389,10 +1345,10 @@ module.exports = class CharGathering {
           where: {
             name: heritageName,
             contentSrc: {
-              [Op.or]: CharContentSources.getSourceArray(character)
+              [Op.or]: CharContentSources.getSourceArray(character.enabledSources)
             },
             homebrewID: {
-              [Op.or]: CharContentHomebrew.getHomebrewArray(character)
+              [Op.or]: CharContentHomebrew.getHomebrewArray(character.enabledHomebrew)
             },
             [Op.not]: [
               { contentSrc: { [Op.or]: TempUnpublishedBooks.getSourcesArray(userID) } },
@@ -1412,10 +1368,10 @@ module.exports = class CharGathering {
           where: {
             name: ancestryName,
             contentSrc: {
-              [Op.or]: CharContentSources.getSourceArray(character)
+              [Op.or]: CharContentSources.getSourceArray(character.enabledSources)
             },
             homebrewID: {
-              [Op.or]: CharContentHomebrew.getHomebrewArray(character)
+              [Op.or]: CharContentHomebrew.getHomebrewArray(character.enabledHomebrew)
             },
             [Op.not]: [
               { contentSrc: { [Op.or]: TempUnpublishedBooks.getSourcesArray(userID) } },
@@ -1430,10 +1386,10 @@ module.exports = class CharGathering {
                 { indivAncestryName: ancestry.name }
               ],
               contentSrc: {
-                [Op.or]: CharContentSources.getSourceArray(character)
+                [Op.or]: CharContentSources.getSourceArray(character.enabledSources)
               },
               homebrewID: {
-                [Op.or]: CharContentHomebrew.getHomebrewArray(character)
+                [Op.or]: CharContentHomebrew.getHomebrewArray(character.enabledHomebrew)
               },
               [Op.not]: [
                 { contentSrc: { [Op.or]: TempUnpublishedBooks.getSourcesArray(userID) } },
@@ -1453,7 +1409,7 @@ module.exports = class CharGathering {
           where: {
             id: itemID,
             homebrewID: {
-              [Op.or]: CharContentHomebrew.getHomebrewArray(character)
+              [Op.or]: CharContentHomebrew.getHomebrewArray(character.enabledHomebrew)
             },
           }
         }).then((item) => {
@@ -1462,90 +1418,81 @@ module.exports = class CharGathering {
       });
     }
 
-    static getAllAnimalCompanions(userID, charID) {
-        return Character.findOne({ where: { id: charID} })
-        .then((character) => {
-            return AnimalCompanion.findAll({
-                where: {
-                    contentSrc: {
-                      [Op.or]: CharContentSources.getSourceArray(character)
-                    },
-                    homebrewID: {
-                      [Op.or]: CharContentHomebrew.getHomebrewArray(character)
-                    },
-                    [Op.not]: [
-                      { contentSrc: { [Op.or]: TempUnpublishedBooks.getSourcesArray(userID) } },
-                    ]
-                }
-            })
-            .then((animalCompanions) => {
-                return animalCompanions;
-            });
-        });
-    }
-
-    static getAllSpecificFamiliars(userID, charID) {
-      return Character.findOne({ where: { id: charID} })
-      .then((character) => {
-          return SpecificFamiliar.findAll({
-              where: {
-                  contentSrc: {
-                    [Op.or]: CharContentSources.getSourceArray(character)
-                  },
-                  homebrewID: {
-                    [Op.or]: CharContentHomebrew.getHomebrewArray(character)
-                  },
-                  [Op.not]: [
-                    { contentSrc: { [Op.or]: TempUnpublishedBooks.getSourcesArray(userID) } },
-                  ]
-              }
-          })
-          .then((specificFamiliars) => {
-              return specificFamiliars;
-          });
+    static getAllAnimalCompanions(userID, enabledSources, enabledHomebrew) {
+      return AnimalCompanion.findAll({
+        where: {
+            contentSrc: {
+              [Op.or]: CharContentSources.getSourceArray(enabledSources)
+            },
+            homebrewID: {
+              [Op.or]: CharContentHomebrew.getHomebrewArray(enabledHomebrew)
+            },
+            [Op.not]: [
+              { contentSrc: { [Op.or]: TempUnpublishedBooks.getSourcesArray(userID) } },
+            ]
+        }
+      })
+      .then((animalCompanions) => {
+          return animalCompanions;
       });
     }
 
-    static getAllFamiliarAbilities(userID, charID) {
-      return Character.findOne({ where: { id: charID} })
-      .then((character) => {
-          return FamiliarAbility.findAll({
-              where: {
-                  contentSrc: {
-                    [Op.or]: CharContentSources.getSourceArray(character)
-                  },
-                  homebrewID: {
-                    [Op.or]: CharContentHomebrew.getHomebrewArray(character)
-                  },
-                  [Op.not]: [
-                    { contentSrc: { [Op.or]: TempUnpublishedBooks.getSourcesArray(userID) } },
-                  ]
-              }
-          })
-          .then((familiarAbilities) => {
-              return familiarAbilities;
-          });
+    static getAllSpecificFamiliars(userID, enabledSources, enabledHomebrew) {
+      return SpecificFamiliar.findAll({
+        where: {
+            contentSrc: {
+              [Op.or]: CharContentSources.getSourceArray(enabledSources)
+            },
+            homebrewID: {
+              [Op.or]: CharContentHomebrew.getHomebrewArray(enabledHomebrew)
+            },
+            [Op.not]: [
+              { contentSrc: { [Op.or]: TempUnpublishedBooks.getSourcesArray(userID) } },
+            ]
+        }
+      })
+      .then((specificFamiliars) => {
+          return specificFamiliars;
       });
-  }
+    }
 
-  static getCharAnimalCompanions(userID, charID) {
-    return CharAnimalCompanion.findAll({ where: { charID: charID} })
-    .then((charAnimalComps) => {
-      return charAnimalComps;
-    });
-  }
+    static getAllFamiliarAbilities(userID, enabledSources, enabledHomebrew) {
+      return FamiliarAbility.findAll({
+        where: {
+            contentSrc: {
+              [Op.or]: CharContentSources.getSourceArray(enabledSources)
+            },
+            homebrewID: {
+              [Op.or]: CharContentHomebrew.getHomebrewArray(enabledHomebrew)
+            },
+            [Op.not]: [
+              { contentSrc: { [Op.or]: TempUnpublishedBooks.getSourcesArray(userID) } },
+            ]
+        }
+      })
+      .then((familiarAbilities) => {
+          return familiarAbilities;
+      });
+    }
 
-  static getCharFamiliars(userID, charID) {
-    return CharFamiliar.findAll({ where: { charID: charID} })
-    .then((charFamiliars) => {
-      return charFamiliars;
-    });
-  }
+    static getCharAnimalCompanions(userID, charID) {
+      return CharAnimalCompanion.findAll({ where: { charID: charID} })
+      .then((charAnimalComps) => {
+        return charAnimalComps;
+      });
+    }
 
-    static async getCompanionData(userID, charID, allAnimalCompanions=null, charAnimalComps=null, allSpecificFamiliars=null, allFamiliarAbilities=null, charFamiliars=null){
+    static getCharFamiliars(userID, charID) {
+      return CharFamiliar.findAll({ where: { charID: charID} })
+      .then((charFamiliars) => {
+        return charFamiliars;
+      });
+    }
+
+    static async getCompanionData(userID, charID, enabledSources, enabledHomebrew){
 
       if(allAnimalCompanions==null){
-        allAnimalCompanions = await CharGathering.getAllAnimalCompanions(userID, charID);
+        allAnimalCompanions = await CharGathering.getAllAnimalCompanions(userID, enabledSources, enabledHomebrew);
       }
 
       if(charAnimalComps==null){
@@ -1553,11 +1500,11 @@ module.exports = class CharGathering {
       }
 
       if(allSpecificFamiliars==null){
-        allSpecificFamiliars = await CharGathering.getAllSpecificFamiliars(userID, charID);
+        allSpecificFamiliars = await CharGathering.getAllSpecificFamiliars(userID, enabledSources, enabledHomebrew);
       }
 
       if(allFamiliarAbilities==null){
-        allFamiliarAbilities = await CharGathering.getAllFamiliarAbilities(userID, charID);
+        allFamiliarAbilities = await CharGathering.getAllFamiliarAbilities(userID, enabledSources, enabledHomebrew);
       }
 
       if(charFamiliars==null){
@@ -1693,20 +1640,16 @@ module.exports = class CharGathering {
     }
 
     
-    static async getSheetStates(userID, charID, character=null) {
-
-      if(character==null) {
-        character = await CharGathering.getCharacter(userID, charID);
-      }
+    static async getSheetStates(userID, enabledSources, enabledHomebrew) {
 
       return SheetState.findAll({
         order: [['name', 'ASC'],],
         where: {
           contentSrc: {
-            [Op.or]: CharContentSources.getSourceArray(character)
+            [Op.or]: CharContentSources.getSourceArray(enabledSources)
           },
           homebrewID: {
-            [Op.or]: CharContentHomebrew.getHomebrewArray(character)
+            [Op.or]: CharContentHomebrew.getHomebrewArray(enabledHomebrew)
           },
           [Op.not]: [
             { contentSrc: { [Op.or]: TempUnpublishedBooks.getSourcesArray(userID) } },

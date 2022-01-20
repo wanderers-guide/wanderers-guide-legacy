@@ -2,6 +2,7 @@
 const User = require('../models/contentDB/User');
 const Character = require('../models/contentDB/Character');
 const InvItem = require('../models/contentDB/InvItem');
+const Build = require('../models/contentDB/Build');
 
 const CharStateUtils = require('./CharStateUtils');
 
@@ -54,6 +55,15 @@ module.exports = class AuthCheck {
         }).catch((error) => {
             return false;
         });
+    }
+
+    static canEditBuild(userID, buildID) {
+      return Build.findOne({ where: { id: buildID, userID: userID, isPublished: 0 } })
+      .then((build) => {
+          return (build != null);
+      }).catch((error) => {
+          return false;
+      });
     }
 
     /* -------- */

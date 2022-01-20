@@ -5,12 +5,12 @@ const UserHomebrew = require('./UserHomebrew');
 
 module.exports = class CharContentHomebrew {
 
-    static getHomebrewArray(character){
-      return JSON.parse(character.enabledHomebrew);
+    static getHomebrewArray(enabledHomebrew){
+      return JSON.parse(enabledHomebrew);
     }
 
-    static getHomebrewArrayPrisma(character){
-      let array = JSON.parse(character.enabledHomebrew);
+    static getHomebrewArrayPrisma(enabledHomebrew){
+      let array = JSON.parse(enabledHomebrew);
       let newArray = [];
       for(let arr of array){
         newArray.push({ homebrewID: arr });
@@ -24,7 +24,7 @@ module.exports = class CharContentHomebrew {
         if(canAccess){
           return Character.findOne({ where: { id: charID } })
           .then((character) => {
-              let homebrewArray = CharContentHomebrew.getHomebrewArray(character);
+              let homebrewArray = CharContentHomebrew.getHomebrewArray(character.enabledHomebrew);
               homebrewArray.push(homebrewID);
               let charUpVals = {enabledHomebrew: JSON.stringify(homebrewArray) };
               return Character.update(charUpVals, { where: { id: character.id } })
@@ -39,7 +39,7 @@ module.exports = class CharContentHomebrew {
     static removeHomebrewBundle(charID, homebrewID){
         return Character.findOne({ where: { id: charID } })
         .then((character) => {
-            let homebrewArray = CharContentHomebrew.getHomebrewArray(character);
+            let homebrewArray = CharContentHomebrew.getHomebrewArray(character.enabledHomebrew);
             let bundleIndex = homebrewArray.indexOf(homebrewID);
             if (bundleIndex > -1) {
               homebrewArray.splice(bundleIndex, 1);

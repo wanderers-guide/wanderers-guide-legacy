@@ -1,12 +1,12 @@
 
 {{#section 'header'}}
-    <link rel="stylesheet" href="/css/builds.css">
+    <link rel="stylesheet" href="/css/homebrew.css">
+    <link rel="stylesheet" href="/css/build-planner.css">
     <link rel="stylesheet" href="/css/browse.css">
 
-    <script src="/js/homebrew/general-homebrew.js"></script>
-    <script src="/js/homebrew/user-content.js"></script>
-    <script src="/js/homebrew/user-collection.js"></script>
-    <script src="/js/homebrew/bundle-browse.js"></script>
+    <script src="/js/builds/general-builds.js"></script>
+    <script src="/js/builds/user-content.js"></script>
+    <script src="/js/builds/builds-browse.js"></script>
     <script src="/js/browse/browse-utils.js"></script>
 
     <script src="/js/libraries/display_class/display-class.js"></script>
@@ -15,8 +15,7 @@
     <script src="/js/libraries/display_background/display-background.js"></script>
     <script src="/js/libraries/display_uni_heritage/display-uni-heritage.js"></script>
 
-    <script src="/js/homebrew/builder/bundle-editor.js"></script>
-    <script src="/js/homebrew/builder/builder-templating.js"></script>
+    <script src="/js/builds/build-view.js"></script>
 
     <script src="/js/libraries/confirm_message/confirm-message.js"></script>
 
@@ -35,14 +34,6 @@
     <script src="/js/wsc/add-text-processing.js"></script>
     <script src="/js/wsc/expression-utils.js"></script>
 
-    <!-- Discord Widget Bot -->
-    <script src="https://cdn.jsdelivr.net/npm/@widgetbot/crate@3" async defer>
-      new Crate({
-        server: '735260060682289254',
-        channel: '735260060682289257'
-      })
-    </script>
-
 {{/section}}
 
 {{#section 'nav_home'}}
@@ -54,11 +45,11 @@
 {{/section}}
 
 {{#section 'nav_builds'}}
-    <li><a href="/builds">Builds</a></li>
+    <li><a href="/builds" class="active">Builds</a></li>
 {{/section}}
 
 {{#section 'nav_homebrew'}}
-    <li class="mx-lg-4 mx-md-3 my-md-0 my-2"><a href="/homebrew" class="active">Homebrew</a></li>
+    <li class="mx-lg-4 mx-md-3 my-md-0 my-2"><a href="/homebrew">Homebrew</a></li>
 {{/section}}
 
 {{#section 'nav_browse'}}
@@ -75,13 +66,12 @@
     <div class="banner_w3lspvt-2"></div>
 {{/section}}
 
-<div id="homebrew-container" class="container" data-edit-homebrew-id="{{editHomebrewID}}" data-view-homebrew-id="{{viewHomebrewID}}" data-direct-to-tab="{{homebrewTabName}}" data-user-id="{{user.id}}">
+<div id="builds-container" class="container" data-view-build-id="{{viewBuildID}}" data-direct-to-tab="{{buildTabName}}" data-user-id="{{user.id}}">
   
   <div class="tabs is-centered is-boxed use-custom-scrollbar mb-2">
     <ul class="category-tabs">
-      <li><a id="browseTab">Browse Homebrew</a></li>
-      {{#if user}}<li><a id="userCollectionTab">My Collection</a></li>{{/if}}
-      {{#if user}}<li><a id="userContentTab">My Creations</a></li>{{/if}}
+      <li><a id="browseTab">Browse Builds</a></li>
+      {{#if user}}<li><a id="userContentTab">My Builds</a></li>{{/if}}
     </ul>
   </div>
   <div id="tabContent" class="mx-3 mb-3"></div><!-- tabContent must be empty! -->
@@ -105,15 +95,3 @@
         </div>
     </div>
 {{/section}}
-
-<div id="manage-keys-modal" class="modal">
-  <div id="manage-keys-modal-background" class="modal-background"></div>
-  <div class="modal-card">
-      <header class="modal-card-head">
-          <p class="modal-card-title is-size-4 has-txt-value-number">Key Management</p>
-          <button id="manage-keys-modal-close" class="delete modal-card-close" aria-label="close"></button>
-      </header>
-      <section id="manage-keys-modal-body" class="modal-card-body">
-      </section>
-  </div>
-</div>

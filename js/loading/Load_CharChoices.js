@@ -54,7 +54,7 @@ module.exports = async function(socket, charID, character=null, background=null,
   }
 
   if(ancestries==null){
-    ancestries = await CharGathering.getAllAncestriesBasic(getUserID(socket), charID, character);
+    ancestries = await CharGathering.getAllAncestriesBasic(getUserID(socket), character.enabledSources, character.enabledHomebrew);
   }
 
   if(charTagsArray==null){
@@ -114,7 +114,7 @@ module.exports = async function(socket, charID, character=null, background=null,
   }
 
   if(domains==null){
-    domains = await CharGathering.getAllDomains(getUserID(socket), charID, character);
+    domains = await CharGathering.getAllDomains(getUserID(socket), character.enabledSources, character.enabledHomebrew);
   }
 
   if(domainDataArray==null){

@@ -5,6 +5,9 @@ const Character = db.define('characters', {
   userID: {
     type: Sequelize.INTEGER
   },
+  buildID: {
+    type: Sequelize.INTEGER
+  },
   name: {
     type: Sequelize.STRING
   },

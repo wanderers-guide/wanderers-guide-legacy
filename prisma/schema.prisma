@@ -47,6 +47,7 @@ model ancestries {
   tags                                                               tags?             @relation(fields: [tagID], references: [id])
   senseTypes_ancestries_visionSenseIDTosenseTypes                    senseTypes?       @relation("ancestries_visionSenseIDTosenseTypes", fields: [visionSenseID], references: [id])
   characters                                                         characters[]
+  builds                                                             builds[]
 
   @@index([additionalSenseID], name: "ancestry_additionalSenseID_idx")
   @@index([homebrewID], name: "ancestry_homebrewID_idx")
@@ -205,6 +206,7 @@ model backgrounds {
   version         String?            @db.VarChar(90)
   homebrewBundles homebrewBundles?   @relation(fields: [homebrewID], references: [id])
   characters      characters[]
+  builds          builds[]
 
   @@index([homebrewID], name: "backgrounds_homebrewID_idx")
 }
@@ -226,6 +228,7 @@ model calculatedStats {
 model characters {
   id                          Int                    @id @default(autoincrement())
   userID                      Int?
+  buildID                     Int?
   name                        String?                @db.VarChar(45)
   level                       Int                    @default(1)
   experience                  Int                    @default(0)
@@ -270,6 +273,7 @@ model characters {
   inventories                 inventories?           @relation(fields: [inventoryID], references: [id])
   uniHeritages                uniHeritages?          @relation(fields: [uniHeritageID], references: [id])
   users                       users?                 @relation(fields: [userID], references: [id])
+  builds                      builds?                @relation(fields: [buildID], references: [id])
   accessTokens                accessTokens[]
   calculatedStats             calculatedStats?
   charAnimalCompanions        charAnimalCompanions[]
@@ -281,6 +285,8 @@ model characters {
 
   @@index([ancestryID], name: "char_ancestryID_idx")
   @@index([backgroundID], name: "char_backgroundID_idx")
+  @@index([buildID], name: "char_buildID_idx")
+  @@index([classID_2], name: "char_classID_2_idx")
   @@index([classID], name: "char_classID_idx")
   @@index([heritageID], name: "char_heritageID_idx")
   @@index([inventoryID], name: "char_inventoryID_idx")
@@ -400,6 +406,8 @@ model classes {
   version         String?          @db.VarChar(90)
   homebrewBundles homebrewBundles? @relation(fields: [homebrewID], references: [id])
   tags            tags?            @relation(fields: [tagID], references: [id])
+  builds_builds_classIDToclasses           builds[]         @relation("builds_classIDToclasses")
+  builds_builds_classID_2Toclasses         builds[]         @relation("builds_classID_2Toclasses")
   characters      characters[]
   classAbilities  classAbilities[]
 
@@ -555,6 +563,7 @@ model heritages {
   homebrewID        Int?
   homebrewBundles   homebrewBundles? @relation(fields: [homebrewID], references: [id])
   characters        characters[]
+  builds            builds[]
 
   @@index([homebrewID], name: "heritage_homebrewID_idx")
 }
@@ -976,6 +985,7 @@ model uniHeritages {
   homebrewBundles homebrewBundles?    @relation(fields: [homebrewID], references: [id])
   tags            tags?               @relation(fields: [tagID], references: [id])
   characters      characters[]
+  builds          builds[]
 
   @@index([homebrewID], name: "uniHeritage_homebrewID_idx")
   @@index([tagID], name: "uniHeritage_tagID_idx")
@@ -1010,6 +1020,7 @@ model users {
   enabledLightMode    Int?                  @default(0)
   apiClientApps       apiClientApps[]
   characters          characters[]
+  builds              builds[]
   homeBackReports     homeBackReports[]
   homebrewBundles     homebrewBundles[]
   userHomebrewBundles userHomebrewBundles[]
@@ -1034,6 +1045,67 @@ model weapons {
   items            items?                    @relation(fields: [itemID], references: [id])
 
   @@index([itemID], name: "weapon_itemID_idx")
+}
+
+
+model buildDataMappings {
+  buildID        Int
+  source         String    @db.VarChar(45)
+  sourceType     String    @db.VarChar(45)
+  sourceLevel    Int
+  sourceCode     String    @db.VarChar(45)
+  sourceCodeSNum String    @db.VarChar(60)
+  value          String?   @db.VarChar(5100)
+  createdAt      DateTime? @db.DateTime(0)
+  updatedAt      DateTime? @db.DateTime(0)
+  builds         builds    @relation(fields: [buildID], references: [id])
+
+  @@id([buildID, source, sourceType, sourceCode, sourceLevel, sourceCodeSNum])
+  @@unique([buildID, source, sourceType, sourceLevel, sourceCode, sourceCodeSNum], name: "buildDataMappings_compKeys")
+}
+
+model builds {
+  id                                Int                 @id @default(autoincrement())
+  userID                            Int?
+  name                              String?             @db.VarChar(45)
+  description                       String?             @db.Text
+  contactInfo                       String?             @db.VarChar(120)
+  isPublished                       Boolean             @default(false)
+  authorName                        String              @default("Unknown") @db.VarChar(45)
+  ancestryID                        Int?
+  heritageID                        Int?
+  uniHeritageID                     Int?
+  backgroundID                      Int?
+  classID                           Int?
+  classID_2                         Int?
+  customCode                        String?             @db.VarChar(2000)
+  optionCustomCodeBlock             Boolean             @default(false)
+  optionClassArchetypes             Boolean             @default(true)
+  variantFreeArchetype              Boolean             @default(false)
+  variantAncestryParagon            Boolean             @default(false)
+  variantStamina                    Boolean             @default(false)
+  variantGradualAbilityBoosts       Boolean             @default(false)
+  enabledSources                    String              @default("[\"CRB\",\"ADV-PLAYER-GUIDE\",\"GM-GUIDE\"]") @db.VarChar(4000)
+  enabledHomebrew                   String              @default("[null]") @db.VarChar(6000)
+  createdAt                         DateTime?           @db.DateTime(0)
+  updatedAt                         DateTime?           @db.DateTime(0)
+  ancestries                        ancestries?         @relation(fields: [ancestryID], references: [id])
+  backgrounds                       backgrounds?        @relation(fields: [backgroundID], references: [id])
+  classes_builds_classIDToclasses   classes?            @relation("builds_classIDToclasses", fields: [classID], references: [id])
+  classes_builds_classID_2Toclasses classes?            @relation("builds_classID_2Toclasses", fields: [classID_2], references: [id])
+  heritages                         heritages?          @relation(fields: [heritageID], references: [id])
+  uniHeritages                      uniHeritages?       @relation(fields: [uniHeritageID], references: [id])
+  users                             users?              @relation(fields: [userID], references: [id])
+  buildDataMappings                 buildDataMappings[]
+  characters                        characters[]
+
+  @@index([ancestryID], name: "buildAncestryID_idx")
+  @@index([backgroundID], name: "buildBackgroundID_idx")
+  @@index([classID_2], name: "buildClass2ID_idx")
+  @@index([classID], name: "buildClassID_idx")
+  @@index([heritageID], name: "buildHeritageID_idx")
+  @@index([uniHeritageID], name: "buildUniHeritageID_idx")
+  @@index([userID], name: "buildUserID_idx")
 }
 
 enum accessTokens_accessRights {

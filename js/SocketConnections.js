@@ -18,6 +18,8 @@ const ClientAPI = require('./ClientAPI');
 const CharStateUtils = require('./CharStateUtils');
 const GeneralUtils = require('./GeneralUtils');
 const UserHomebrew = require('./UserHomebrew');
+const BuildsGathering = require('./BuildsGathering');
+const BuildsSaving = require('./BuildsSaving');
 
 const CharSheetLoad = require('./loading/Load_CharSheet');
 const CharChoicesLoad = require('./loading/Load_CharChoices');
@@ -840,9 +842,11 @@ module.exports = class SocketConnections {
       socket.on('requestBuilderPageAncestry', function(charID){
         AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
-            CharGathering.getAllAncestries(userID, charID, false).then((ancestriesObject) => {
-              CharGathering.getAllUniHeritages(userID, charID).then((uniHeritageArray) => {
-                socket.emit('returnBuilderPageAncestry', ancestriesObject, uniHeritageArray);
+            CharGathering.getCharacter(userID, charID).then((character) => {
+              CharGathering.getAllAncestries(userID, character.enabledSources, character.enabledHomebrew, false).then((ancestriesObject) => {
+                CharGathering.getAllUniHeritages(userID, charID).then((uniHeritageArray) => {
+                  socket.emit('returnBuilderPageAncestry', ancestriesObject, uniHeritageArray);
+                });
               });
             });
           } else {
@@ -889,8 +893,10 @@ module.exports = class SocketConnections {
       socket.on('requestBuilderPageBackground', function(charID){
         AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
-            CharGathering.getAllBackgrounds(userID, charID).then((backgrounds) => {
-              socket.emit('returnBuilderPageBackground', backgrounds);
+            CharGathering.getCharacter(userID, charID).then((character) => {
+              CharGathering.getAllBackgrounds(userID, character.enabledSources, character.enabledHomebrew).then((backgrounds) => {
+                socket.emit('returnBuilderPageBackground', backgrounds);
+              });
             });
           } else {
             socket.emit('returnErrorMessage', 'Incorrect Auth - No access to this character.');
@@ -923,8 +929,10 @@ module.exports = class SocketConnections {
       socket.on('requestBuilderPageClass', function(charID){
         AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
-            CharGathering.getAllClasses(userID, charID).then((classObject) => {
-              socket.emit('returnBuilderPageClass', classObject);
+            CharGathering.getCharacter(userID, charID).then((character) => {
+              CharGathering.getAllClasses(userID, character.enabledSources, character.enabledHomebrew).then((classObject) => {
+                socket.emit('returnBuilderPageClass', classObject);
+              });
             });
           } else {
             socket.emit('returnErrorMessage', 'Incorrect Auth - No access to this character.');
@@ -935,8 +943,10 @@ module.exports = class SocketConnections {
       socket.on('requestBuilderPageClass2', function(charID){
         AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
-            CharGathering.getAllClasses(userID, charID).then((classObject) => {
-              socket.emit('returnBuilderPageClass2', classObject);
+            CharGathering.getCharacter(userID, charID).then((character) => {
+              CharGathering.getAllClasses(userID, character.enabledSources, character.enabledHomebrew).then((classObject) => {
+                socket.emit('returnBuilderPageClass2', classObject);
+              });
             });
           } else {
             socket.emit('returnErrorMessage', 'Incorrect Auth - No access to this character.');
@@ -1290,9 +1300,11 @@ module.exports = class SocketConnections {
                   CharDataMapping.setData(charID, 'classAbilityExtra', srcStruct, classFeature.id)
                   .then((result) => {
                     if(classFeature.selectType == 'SELECTOR'){
-                      CharGathering.getAllClassFeatureOptions(userID, charID)
-                      .then((allOptions) => {
-                        socket.emit('returnAddClassFeature', srcStruct, classFeature, allOptions, inputPacket);
+                      CharGathering.getCharacter(userID, charID).then((character) => {
+                        CharGathering.getAllClassFeatureOptions(userID, character.enabledSources, character.enabledHomebrew)
+                        .then((allOptions) => {
+                          socket.emit('returnAddClassFeature', srcStruct, classFeature, allOptions, inputPacket);
+                        });
                       });
                     } else {
                       socket.emit('returnAddClassFeature', srcStruct, classFeature, null, inputPacket);
@@ -1359,9 +1371,11 @@ module.exports = class SocketConnections {
               if(classFeature != null){
 
                 if(classFeature.selectType == 'SELECTOR'){
-                  CharGathering.getAllClassFeatureOptions(userID, charID)
-                  .then((allOptions) => {
-                    socket.emit('returnFindClassFeatureForSCFS', classFeature, allOptions, inputPacket);
+                  CharGathering.getCharacter(userID, charID).then((character) => {
+                    CharGathering.getAllClassFeatureOptions(userID, character.enabledSources, character.enabledHomebrew)
+                    .then((allOptions) => {
+                      socket.emit('returnFindClassFeatureForSCFS', classFeature, allOptions, inputPacket);
+                    });
                   });
                 } else {
                   socket.emit('returnWSCStatementFailure', 'Class Feature must have selection options for a SCFS!');
@@ -1912,15 +1926,17 @@ module.exports = class SocketConnections {
       socket.on('requestWSCMapsInit', function(charID){
         AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
-            CharGathering.getAllFeats(userID, charID).then((featsObject) => {
-              CharGathering.getAllLanguages(userID, charID).then((langsObject) => {
-                CharGathering.getAllSpells(userID, charID).then((spellMap) => {
-                  CharGathering.getAllArchetypes(userID, charID).then((archetypesArray) => {
-                    socket.emit('returnWSCUpdateFeats', featsObject);
-                    socket.emit('returnWSCUpdateLangs', langsObject);
-                    socket.emit('returnWSCUpdateSpells', mapToObj(spellMap));
-                    socket.emit('returnWSCUpdateArchetypes', archetypesArray);
-                    socket.emit('returnWSCMapsInit');
+            CharGathering.getCharacter(userID, charID).then((character) => {
+              CharGathering.getAllFeats(userID, character.enabledSources, character.enabledHomebrew).then((featsObject) => {
+                CharGathering.getAllLanguages(userID, charID).then((langsObject) => {
+                  CharGathering.getAllSpells(userID, character.enabledSources, character.enabledHomebrew).then((spellMap) => {
+                    CharGathering.getAllArchetypes(userID, charID).then((archetypesArray) => {
+                      socket.emit('returnWSCUpdateFeats', featsObject);
+                      socket.emit('returnWSCUpdateLangs', langsObject);
+                      socket.emit('returnWSCUpdateSpells', mapToObj(spellMap));
+                      socket.emit('returnWSCUpdateArchetypes', archetypesArray);
+                      socket.emit('returnWSCMapsInit');
+                    });
                   });
                 });
               });
@@ -2066,8 +2082,10 @@ module.exports = class SocketConnections {
           if(canViewChar){
             CharExport.getExportData(userID, charID)
             .then((charExportData) => {
-              CharGathering.getAllFeats(userID, charID).then((featsObject) => {
-                socket.emit('returnCharExportPDFInfo', charExportData, { featsObject });
+              CharGathering.getCharacter(userID, charID).then((character) => {
+                CharGathering.getAllFeats(userID, character.enabledSources, character.enabledHomebrew).then((featsObject) => {
+                  socket.emit('returnCharExportPDFInfo', charExportData, { featsObject });
+                });
               });
             });
           }
@@ -2849,9 +2867,128 @@ module.exports = class SocketConnections {
     io.on('connection', function(socket){
       const userID = getUserID(socket);
 
-      socket.on('requestPlannerCore', function(charID){
-        NewBuilderCoreLoad(socket, charID).then((plannerStruct) => {
+      socket.on('requestPlannerCore', function(charID, buildID){
+        NewBuilderCoreLoad(socket, charID, buildID).then((plannerStruct) => {
           socket.emit('returnPlannerCore', plannerStruct);
+        });
+      });
+
+      socket.on('requestPublishedBuilds', function(){
+        BuildsGathering.findPublishedBuilds().then((builds) => {
+          socket.emit('returnPublishedBuilds', builds);
+        });
+      });
+
+      socket.on('requestUserBuilds', function(){
+        BuildsGathering.findUserBuilds(userID).then((builds) => {
+          socket.emit('returnUserBuilds', builds);
+        });
+      });
+
+      socket.on('requestBuildContents', function(buildID){
+        BuildsGathering.getBuildContents(userID, buildID).then((buildContents) => {
+          socket.emit('returnBuildContents', buildContents);
+        });
+      });
+
+      socket.on('requestBuildCreate', function(){
+        BuildsSaving.createNewBuild(userID).then((build) => {
+          socket.emit('returnBuildCreate', build);
+        });
+      });
+
+      socket.on('requestBuildInfo', function(buildID){
+        BuildsGathering.getBasicBuildInfo(userID, buildID).then((build) => {
+          UserHomebrew.getCollectedHomebrewBundles(userID).then((hBundles) => {
+            UserHomebrew.getIncompleteHomebrewBundles(userID).then((progessBundles) => {
+              socket.emit('returnBuildInfo', build, hBundles, progessBundles);
+            });
+          });
+        });
+      });
+
+      socket.on('requestBuildNameChange', function(buildID, name){
+        AuthCheck.canEditBuild(userID, buildID).then((editBuild) => {
+          if(editBuild){
+            let validNameRegex = /^[^@#$%^*~=\/\\]+$/;
+            if(validNameRegex.test(name)) {
+              BuildsSaving.saveName(buildID, name).then((result) => {
+                socket.emit('returnBuildNameChange');
+              });
+            }
+          }
+        });
+      });
+      
+      socket.on('requestBuildOptionChange', function(buildID, optionName, value){
+        AuthCheck.canEditBuild(userID, buildID).then((editBuild) => {
+          if(editBuild){
+            BuildsSaving.saveOption(buildID, optionName, value).then((result) => {
+
+              if(optionName == 'variantAncestryParagon' || optionName == 'variantGradualAbilityBoosts') {
+                // Clear all meta data for Ancestry Paragon or Gradual Ability Boosts variant
+                BuildsSaving.clearMetaData(buildID)
+                .then((result) => {
+                  socket.emit('returnBuildOptionChange');
+                });
+              } else {
+                socket.emit('returnBuildOptionChange');
+              }
+
+            });
+          }
+        });
+      });
+
+      socket.on('requestBuildSourceChange', function(buildID, sourceName, isAdd){
+        AuthCheck.canEditBuild(userID, buildID).then((editBuild) => {
+          if(editBuild){
+            if(isAdd) {
+              BuildsSaving.addSource(buildID, sourceName).then((result) => {
+                socket.emit('returnBuildSourceChange');
+              });
+            } else {
+              BuildsSaving.removeSource(buildID, sourceName).then((result) => {
+                socket.emit('returnBuildSourceChange');
+              });
+            }
+          }
+        });
+      });
+
+      socket.on('requestBuildSetSources', function(buildID, contentSourceArray){
+        AuthCheck.canEditBuild(userID, buildID).then((editBuild) => {
+          if(editBuild){
+            BuildsSaving.setSources(buildID, contentSourceArray).then((result) => {
+              socket.emit('returnBuildSetSources');
+            });
+          }
+        });
+      });
+
+      socket.on('requestBuildHomebrewChange', function(buildID, homebrewID, isAdd){
+        AuthCheck.canEditBuild(userID, buildID).then((editBuild) => {
+          if(editBuild){
+            if(isAdd) {
+              BuildsSaving.addHomebrewBundle(userID, buildID, homebrewID).then((result) => {
+                socket.emit('returnBuildHomebrewChange');
+              });
+            } else {
+              BuildsSaving.removeHomebrewBundle(buildID, homebrewID).then((result) => {
+                socket.emit('returnBuildHomebrewChange');
+              });
+            }
+          }
+        });
+      });
+
+      socket.on('requestBuildCustomCodeBlockChange', function(buildID, code){
+        AuthCheck.canEditBuild(userID, buildID).then((editBuild) => {
+          if(editBuild){
+            BuildsSaving.saveCustomCode(buildID, code).then((result) => {
+              socket.emit('returnBuildCustomCodeBlockChange');
+            });
+          }
         });
       });
 

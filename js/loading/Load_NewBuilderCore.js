@@ -1,6 +1,7 @@
 
 const GeneralGathering = require('../GeneralGathering');
 const CharGathering = require('../CharGathering');
+const BuildsGathering = require('../BuildsGathering');
 
 const Inventory = require('./../../models/contentDB/Inventory');
 const InvItem = require('./../../models/contentDB/InvItem');
@@ -31,14 +32,17 @@ function getUserID(socket){
   }
 }
 
-module.exports = async function(socket, charID=null) {
+module.exports = async function(socket, charID=null, buildID=null) {
 
   const userID = getUserID(socket);
   console.log('~ STARTING NEW BUILDER-CORE LOAD ~');
 
   let character;
+  let build;
   if(charID != null){
     character = await CharGathering.getCharacter(userID, charID);
+  } else {
+    build = await BuildsGathering.getBuild(buildID);
   }
 
   socket.emit('updateLoadProgess', { message: 'Opening Books', upVal: 2 }); // (2/100) //
@@ -51,47 +55,47 @@ module.exports = async function(socket, charID=null) {
   socket.emit('updateLoadProgess', { message: 'Indexing Traits', upVal: 5 }); // (60/100) //
   let allTags;
   if(charID == null){
-    allTags = await GeneralGathering.getAllTags(userID);
+    allTags = await CharGathering.getAllTags(userID, build.enabledHomebrew);
   } else {
-    allTags = await CharGathering.getAllTags(userID, charID, character);
+    allTags = await CharGathering.getAllTags(userID, character.enabledHomebrew);
   }
 
   socket.emit('updateLoadProgess', { message: 'Understanding Feats', upVal: 20 }); // (25/100) //
   let featsObject;
   if(charID == null){
-    featsObject = await GeneralGathering.getAllFeats(userID);
+    featsObject = await CharGathering.getAllFeats(userID, build.enabledSources, build.enabledHomebrew, feats=null, allTags);
   } else {
-    featsObject = await CharGathering.getAllFeats(userID, charID, character, feats=null, allTags);
+    featsObject = await CharGathering.getAllFeats(userID, character.enabledSources, character.enabledHomebrew, feats=null, allTags);
   }
 
   socket.emit('updateLoadProgess', { message: 'Bartering for Items', upVal: 10 }); // (35/100) //
   let itemMap;
   if(charID == null){
-    itemMap = await GeneralGathering.getAllItems(userID);
+    itemMap = await CharGathering.getAllItems(userID, build.enabledSources, build.enabledHomebrew, items=null, allTags);
   } else {
-    itemMap = await CharGathering.getAllItems(userID, charID, character, items=null, allTags);
+    itemMap = await CharGathering.getAllItems(userID, character.enabledSources, character.enabledHomebrew, items=null, allTags);
   }
 
   socket.emit('updateLoadProgess', { message: 'Discovering Spells', upVal: 10 }); // (45/100) //
   let spellMap;
   if(charID == null){
-    spellMap = await GeneralGathering.getAllSpells(userID);
+    spellMap = await CharGathering.getAllSpells(userID, build.enabledSources, build.enabledHomebrew, spells=null, taggedSpells=null, allTags);
   } else {
-    spellMap = await CharGathering.getAllSpells(userID, charID, character, spells=null, taggedSpells=null, allTags);
+    spellMap = await CharGathering.getAllSpells(userID, character.enabledSources, character.enabledHomebrew, spells=null, taggedSpells=null, allTags);
   }
 
   socket.emit('updateLoadProgess', { message: 'Finding Languages', upVal: 5 }); // (50/100) //
   let allLanguages;
   if(charID == null){
-    allLanguages = await GeneralGathering.getAllLanguages(userID);
+    allLanguages = await CharGathering.getAllLanguagesBasic(userID, build.enabledHomebrew);
   } else {
-    allLanguages = await CharGathering.getAllLanguagesBasic(userID, charID, character);
+    allLanguages = await CharGathering.getAllLanguagesBasic(userID, character.enabledHomebrew);
   }
 
   socket.emit('updateLoadProgess', { message: 'Finding Conditions', upVal: 5 }); // (55/100) //
   let allConditions;
   if(charID == null){
-    allConditions = await GeneralGathering.getAllConditions(userID);
+    allConditions = await CharGathering.getAllConditions(userID);
   } else {
     allConditions = await CharGathering.getAllConditions(userID);
   }
@@ -99,41 +103,41 @@ module.exports = async function(socket, charID=null) {
   socket.emit('updateLoadProgess', { message: 'Loading Classes', upVal: 10 }); // (70/100) //
   let classes;
   if(charID == null){
-    classes = await GeneralGathering.getAllClasses(userID);
+    classes = await CharGathering.getAllClasses(userID, build.enabledSources, build.enabledHomebrew);
   } else {
-    classes = await CharGathering.getAllClasses(userID, charID);
+    classes = await CharGathering.getAllClasses(userID, character.enabledSources, character.enabledHomebrew);
   }
 
   socket.emit('updateLoadProgess', { message: 'Loading Ancestries', upVal: 10 }); // (80/100) //
   let ancestries;
   if(charID == null){
-    ancestries = await GeneralGathering.getAllAncestries(userID);
+    ancestries = await CharGathering.getAllAncestries(userID, build.enabledSources, build.enabledHomebrew, true);
   } else {
-    ancestries = await CharGathering.getAllAncestries(userID, charID, true);
+    ancestries = await CharGathering.getAllAncestries(userID, character.enabledSources, character.enabledHomebrew, true);
   }
 
   socket.emit('updateLoadProgess', { message: 'Loading Backgrounds', upVal: 5 }); // (85/100) //
   let backgrounds;
   if(charID == null){
-    backgrounds = await GeneralGathering.getAllBackgrounds(userID);
+    backgrounds = await CharGathering.getAllBackgrounds(userID, build.enabledSources, build.enabledHomebrew);
   } else {
-    backgrounds = await CharGathering.getAllBackgrounds(userID, charID, character);
+    backgrounds = await CharGathering.getAllBackgrounds(userID, character.enabledSources, character.enabledHomebrew);
   }
 
   socket.emit('updateLoadProgess', { message: 'Loading Archetypes', upVal: 5 }); // (90/100) //
   let archetypes;
   if(charID == null){
-    archetypes = await GeneralGathering.getAllArchetypes(userID);
+    archetypes = await CharGathering.getAllArchetypes(userID, build.enabledSources, build.enabledHomebrew);
   } else {
-    archetypes = await CharGathering.getAllArchetypes(userID, charID);
+    archetypes = await CharGathering.getAllArchetypes(userID, character.enabledSources, character.enabledHomebrew);
   }
 
   socket.emit('updateLoadProgess', { message: 'Loading Heritages', upVal: 5 }); // (95/100) //
   let uniHeritages;
   if(charID == null){
-    uniHeritages = await GeneralGathering.getAllUniHeritages(userID);
+    uniHeritages = await CharGathering.getAllUniHeritages(userID, build.enabledSources, build.enabledHomebrew);
   } else {
-    uniHeritages = await CharGathering.getAllUniHeritages(userID, charID);
+    uniHeritages = await CharGathering.getAllUniHeritages(userID, character.enabledSources, character.enabledHomebrew);
   }
 
   socket.emit('updateLoadProgess', { message: 'Loading Physical Features', upVal: 0 }); // (95/100) //
@@ -144,14 +148,18 @@ module.exports = async function(socket, charID=null) {
 
   socket.emit('updateLoadProgess', { message: 'Discovering Domains', upVal: 0 }); // (95/100) //
   let allDomains;
-  if(charID != null){
-    allDomains = await CharGathering.getAllDomains(userID, charID, character);
+  if(charID == null){
+    allDomains = await CharGathering.getAllDomains(userID, build.enabledSources, build.enabledHomebrew);
+  } else {
+    allDomains = await CharGathering.getAllDomains(userID, character.enabledSources, character.enabledHomebrew);
   }
   
   socket.emit('updateLoadProgess', { message: 'Finding Class Archetypes', upVal: 3 }); // (86/100) //
   let classArchetypes;
-  if(charID != null){
-    classArchetypes = await CharGathering.getAllClassArchetypes(userID, charID);
+  if(charID == null){
+    classArchetypes = await CharGathering.getAllClassArchetypes(userID, build.enabledSources, build.enabledHomebrew);
+  } else {
+    classArchetypes = await CharGathering.getAllClassArchetypes(userID, character.enabledSources, character.enabledHomebrew);
   }
 
   socket.emit('updateLoadProgess', { message: 'Finalizing', upVal: 10 }); // (105/100) //
@@ -175,8 +183,42 @@ module.exports = async function(socket, charID=null) {
     sourceBooks,
   };
 
-  console.log('Starting char data...');
-  return CharGathering.getCharacter(userID, charID)
+  if(charID == null){
+
+    console.log('Starting build data...');
+    return BuildsGathering.getAllMetadata(buildID)
+    .then((buildMetaData) => {
+
+      const choiceStruct = {
+        character: build,
+        charMetaData: buildMetaData,
+      };
+    
+      console.log('~ COMPLETE PLANNER-CORE LOAD! ~');
+    
+      return {plannerStruct, choiceStruct};
+
+    });
+
+  } else {
+
+    console.log('Starting char data...');
+    return CharGathering.getAllMetadata(userID, charID)
+    .then((charMetaData) => {
+      
+      const choiceStruct = {
+        character,
+        charMetaData,
+      };
+    
+      console.log('~ COMPLETE PLANNER-CORE LOAD! ~');
+    
+      return {plannerStruct, choiceStruct};
+
+    });
+
+    /*
+    return CharGathering.getCharacter(userID, charID)
     .then((character) => {
       return Inventory.findOne({ where: { id: character.inventoryID} })
       .then((inventory) => {
@@ -195,21 +237,7 @@ module.exports = async function(socket, charID=null) {
                     return SpellBookSpell.findAll({ where: { charID: charID } })
                     .then(function(spellBookSpells) {
 
-                      const choiceStruct = {
-                        character,
-                        inventory,
-                        invItems,
-                        charMetaData,
-                        charAnimalCompanions,
-                        charFamiliars,
-                        charConditions,
-                        noteFields,
-                        spellBookSpells,
-                      };
-                    
-                      console.log('~ COMPLETE PLANNER-CORE LOAD! ~');
-                    
-                      return {plannerStruct, choiceStruct};
+                      
 
                     });
                   });
@@ -219,6 +247,8 @@ module.exports = async function(socket, charID=null) {
           });
         });
       });
-    });
+    });*/
+
+  }
 
 };

@@ -3,6 +3,7 @@ const Background = require('../models/backgroundDB/HomeBackground');
 const Sequelize = require('sequelize');
 
 const homebrewRoutes = require('./homebrew/homebrew-routes');
+const buildsRoutes = require('./builds/builds-routes');
 
 // Home Route
 router.get('/', (req, res) => {
@@ -40,6 +41,9 @@ router.get('/', (req, res) => {
   }
 
 });
+
+// Direct Builds Route
+router.use('/builds', buildsRoutes);
 
 // Direct Homebrew Route
 router.use('/homebrew', homebrewRoutes);
