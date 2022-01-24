@@ -1541,7 +1541,7 @@ module.exports = class SocketConnections {
           if(ownsChar){
             if(featChangePacket.feat != null && featChangePacket.feat.Feat != null){
               let srcStruct = featChangePacket.srcStruct;
-              CharDataMapping.setData(charID, 'chosenFeats', srcStruct, featChangePacket.feat.Feat.id)
+              CharDataMapping.setDataOnly(charID, 'chosenFeats', srcStruct, featChangePacket.feat.Feat.id)
               .then((result) => {
                 socket.emit('returnFeatChangeByName', featChangePacket);
               });
@@ -1598,7 +1598,7 @@ module.exports = class SocketConnections {
             CharGathering.getPhyFeatByName(userID, charID, physicalFeatureName)
             .then((physicalFeature) => {
               if(physicalFeature != null){
-                CharDataMapping.setData(charID, 'phyFeats', srcStruct, physicalFeature.id)
+                CharDataMapping.setDataOnly(charID, 'phyFeats', srcStruct, physicalFeature.id)
                 .then((result) => {
                   socket.emit('returnPhysicalFeaturesChangeByName');
                 });
@@ -2987,6 +2987,67 @@ module.exports = class SocketConnections {
           if(editBuild){
             BuildsSaving.saveCustomCode(buildID, code).then((result) => {
               socket.emit('returnBuildCustomCodeBlockChange');
+            });
+          }
+        });
+      });
+
+
+      socket.on('requestBuildUpdateInfo', function(buildID, buildInfo){
+        AuthCheck.canEditBuild(userID, buildID).then((editBuild) => {
+          if(editBuild){
+            BuildsSaving.updateInfo(buildID, buildInfo).then((result) => {
+              socket.emit('returnBuildUpdateInfo');
+            });
+          }
+        });
+      });
+
+      socket.on('requestBuildUpdateMetaData', function(buildID, metaDataObject){
+        AuthCheck.canEditBuild(userID, buildID).then((editBuild) => {
+          if(editBuild){
+            BuildsSaving.updateMetaData(buildID, metaDataObject).then((result) => {
+              socket.emit('returnBuildUpdateMetaData');
+            });
+          }
+        });
+      });
+
+      socket.on('requestBuildUpdateFinalStats', function(buildID, finalStatistics){
+        AuthCheck.canEditBuild(userID, buildID).then((editBuild) => {
+          if(editBuild){
+            BuildsSaving.updateFinalStats(buildID, finalStatistics).then((result) => {
+              socket.emit('returnBuildUpdateFinalStats');
+            });
+          }
+        });
+      });
+
+      socket.on('requestBuildPublish', function(buildID){
+        AuthCheck.canEditBuild(userID, buildID).then((editBuild) => {
+          if(editBuild){
+            BuildsSaving.publishBuild(buildID).then((result) => {
+              socket.emit('returnBuildPublish', buildID);
+            });
+          }
+        });
+      });
+
+      socket.on('requestBuildUpdate', function(buildID){
+        AuthCheck.ownsBuild(userID, buildID).then((ownsBuild) => {
+          if(ownsBuild){
+            BuildsSaving.updateBuild(buildID).then((result) => {
+              socket.emit('returnBuildUpdate', buildID);
+            });
+          }
+        });
+      });
+
+      socket.on('requestBuildDelete', function(buildID){
+        AuthCheck.ownsBuild(userID, buildID).then((ownsBuild) => {
+          if(ownsBuild){
+            BuildsSaving.deleteBuild(buildID).then((result) => {
+              socket.emit('returnBuildDelete', buildID);
             });
           }
         });

@@ -25,11 +25,16 @@ function giveResistance(srcStruct, resistType, resistAmount){
 
   setDataResistance(srcStruct, resistType, resistAmount);
 
-  socket.emit("requestResistanceChange",
-      getCharIDFromURL(),
-      srcStruct,
-      resistType,
-      resistAmount);
+  if(g_char_id != null){
+    socket.emit("requestResistanceChange",
+        g_char_id,
+        srcStruct,
+        resistType,
+        resistAmount);
+  } else {
+    saveBuildMetaData();
+  }
+
 }
 
 socket.on("returnResistanceChange", function(data){
@@ -41,11 +46,16 @@ function giveVulnerability(srcStruct, vulnerableType, vulnerableAmount){
 
   setDataVulnerability(srcStruct, vulnerableType, vulnerableAmount);
 
-  socket.emit("requestVulnerabilityChange",
-      getCharIDFromURL(),
-      srcStruct,
-      vulnerableType,
-      vulnerableAmount);
+  if(g_char_id != null){
+    socket.emit("requestVulnerabilityChange",
+        g_char_id,
+        srcStruct,
+        vulnerableType,
+        vulnerableAmount);
+  } else {
+    saveBuildMetaData();
+  }
+
 }
 
 socket.on("returnVulnerabilityChange", function(data){

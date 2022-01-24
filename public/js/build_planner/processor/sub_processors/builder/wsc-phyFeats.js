@@ -23,16 +23,18 @@ function givePhysicalFeature(srcStruct, phyFeatName){
     return phyFeat.name == phyFeatName;
   });
   if(phyFeat != null){
-    setData(DATA_SOURCE.PHYSICAL_FEATURE, srcStruct, phyFeat.id);
+    setDataOnly(DATA_SOURCE.PHYSICAL_FEATURE, srcStruct, phyFeat.id);
   }
 
-  socket.emit("requestPhysicalFeaturesChangeByName",
-      getCharIDFromURL(),
-      srcStruct,
-      phyFeatName);
+  if(g_char_id != null){
+    socket.emit("requestPhysicalFeaturesChangeByName",
+        g_char_id,
+        srcStruct,
+        phyFeatName);
+  } else {
+    saveBuildMetaData();
+  }
+
+  statementComplete('PhyFeat - Add By Name');
 
 }
-
-socket.on("returnPhysicalFeaturesChangeByName", function(){
-    statementComplete('PhyFeat - Add By Name');
-});

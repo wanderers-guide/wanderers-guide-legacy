@@ -22,11 +22,13 @@ function processingHeritageEffects(wscStatement, srcStruct, locationID, extraDat
 //////////////////////////////// Give Heritage Effects Selection ///////////////////////////////////
 function giveHeritageEffectsFindHeritages(srcStruct, locationID, ancestryName, extraData){
 
-  socket.emit("requestFindHeritagesFromAncestryName",
-      getCharIDFromURL(),
-      srcStruct,
-      ancestryName,
-      { locationID, sourceName: extraData.sourceName });
+  if(g_char_id != null){ // TODO - Support builds
+    socket.emit("requestFindHeritagesFromAncestryName",
+        g_char_id,
+        srcStruct,
+        ancestryName,
+        { locationID, sourceName: extraData.sourceName });
+  }
 
 }
 
@@ -75,7 +77,7 @@ socket.on("returnFindHeritagesFromAncestryName", function(srcStruct, heritages, 
             deleteData(DATA_SOURCE.EXTRA_HERITAGE, srcStruct);
 
             socket.emit("requestHeritageEffectsChange",
-                getCharIDFromURL(),
+                g_char_id,
                 srcStruct,
                 null,
                 true);
@@ -99,7 +101,7 @@ socket.on("returnFindHeritagesFromAncestryName", function(srcStruct, heritages, 
             setData(DATA_SOURCE.EXTRA_HERITAGE, srcStruct, heritageID);
 
             socket.emit("requestHeritageEffectsChange",
-                getCharIDFromURL(),
+                g_char_id,
                 srcStruct,
                 heritageID,
                 true);
@@ -134,11 +136,13 @@ socket.on("returnFindHeritagesFromAncestryName", function(srcStruct, heritages, 
 
 function giveHeritageEffectsByName(srcStruct, locationID, heritageName, extraData) {
 
-  socket.emit("requestAddHeritageEffect",
-      getCharIDFromURL(),
-      srcStruct,
-      heritageName,
-      { locationID, sourceName: extraData.sourceName });
+  if(g_char_id != null){ // TODO - Support builds
+    socket.emit("requestAddHeritageEffect",
+        g_char_id,
+        srcStruct,
+        heritageName,
+        { locationID, sourceName: extraData.sourceName });
+  }
 
 }
 

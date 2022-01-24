@@ -572,7 +572,7 @@ opacity:0.7;
   border-color: #fff;
 }
 
-.button-style:hover {
+.button-style:hover.is-to {
   background: transparent;
   border-color: #fff;
   color: #fff;
@@ -583,6 +583,15 @@ opacity:0.7;
   -o-transition: 0.5s all;
   -ms-transition: 0.5s all;
 
+}
+
+.button-style.is-info {
+  border-color: #3298dc!important;
+  color: #3298dc!important;
+}
+.button-style:hover.is-info {
+  border-color: #3298dc!important;
+  color: #3298dc!important;
 }
 
 .button-style-2:hover {

@@ -27,10 +27,14 @@ function giveSense(srcStruct, senseName){
     setData(DATA_SOURCE.SENSE, srcStruct, sense.id);
   }
 
-  socket.emit("requestSensesChangeByName",
-      getCharIDFromURL(),
-      srcStruct,
-      senseName);
+  if(g_char_id != null){
+    socket.emit("requestSensesChangeByName",
+        g_char_id,
+        srcStruct,
+        senseName);
+  } else {
+    saveBuildMetaData();
+  }
 
 }
 

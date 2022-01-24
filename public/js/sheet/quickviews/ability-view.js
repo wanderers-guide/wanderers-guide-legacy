@@ -14,7 +14,7 @@ function openAbilityQuickview(data) {
 
     qContent.append('<div>'+processText(data.Ability.description, true, true, 'MEDIUM')+'</div>');
 
-    if(data.Ability.selectType == "SELECTOR"){
+    if(data.Ability.selectType == "SELECTOR" && typeof g_classDetails !== 'undefined'){
         for(let classAbilChoice of g_classDetails.AbilityChoices){
             if(classAbilChoice.SelectorID == data.Ability.id){
 

@@ -20,10 +20,12 @@ function processingSCFS(wscStatement, srcStruct, locationID, extraData){
 
 function createSCFS(srcStruct, locationID, featureName, statementName, extraData){
 
-  socket.emit("requestFindClassFeatureForSCFS",
-      getCharIDFromURL(),
-      featureName,
-      { locationID, srcStruct, statementName, sourceName: extraData.sourceName });
+  if(g_char_id != null){// TODO - Support builds
+    socket.emit("requestFindClassFeatureForSCFS",
+        g_char_id,
+        featureName,
+        { locationID, srcStruct, statementName, sourceName: extraData.sourceName });
+  }
 
 }
 
@@ -102,7 +104,7 @@ socket.on("returnFindClassFeatureForSCFS", function(classFeature, allClassFeatur
 
         // Delete SCFS
         socket.emit("requestSCFSChange",
-            getCharIDFromURL(),
+            g_char_id,
             inputPacket.srcStruct,
             null,
             {
@@ -124,7 +126,7 @@ socket.on("returnFindClassFeatureForSCFS", function(classFeature, allClassFeatur
         // Save SCFS
         $('.'+scfsControlShellClass).addClass("is-loading");
         socket.emit("requestSCFSChange",
-            getCharIDFromURL(),
+            g_char_id,
             inputPacket.srcStruct,
             classFeatureOptionID,
             {

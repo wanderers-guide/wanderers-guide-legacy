@@ -49,7 +49,7 @@ socket.on("returnUserBuilds", function(builds){
 
           // Delete Button //
           $('#'+buildDeleteID).click(function() {
-            new ConfirmMessage('Delete “'+build.name+'”', '<p class="has-text-centered">Are you sure you want to delete this?</p><p class="has-text-centered">There are <span class="has-text-info">'+'???'+'</span> users still using the build.</p>', 'Delete', 'modal-delete-in-progress-build-'+build.id, 'modal-delete-in-progress-build-btn-'+build.id);
+            new ConfirmMessage('Delete “'+build.name+'”', '<p class="has-text-centered">Are you sure you want to delete this?</p><p class="has-text-centered">There are <span class="has-text-info">'+'???'+'</span> users still using this build.</p>', 'Delete', 'modal-delete-in-progress-build-'+build.id, 'modal-delete-in-progress-build-btn-'+build.id);
             $('#modal-delete-in-progress-build-btn-'+build.id).click(function() {
               socket.emit('requestBuildDelete', build.id);
             });
@@ -68,7 +68,7 @@ socket.on("returnUserBuilds", function(builds){
           });
 
           $('#'+buildDeleteID).click(function() {
-            new ConfirmMessage('Delete “'+build.name+'”', '<p class="has-text-centered">Are you sure you want to delete this?</p><p class="has-text-centered">There are <span class="has-text-info">'+'???'+'</span> users still using the build.</p>', 'Delete', 'modal-delete-published-build-'+build.id, 'modal-delete-published-build-btn-'+build.id);
+            new ConfirmMessage('Delete “'+build.name+'”', '<p class="has-text-centered">Are you sure you want to delete this?</p><p class="has-text-centered">There are <span class="has-text-info">'+'???'+'</span> users still using this build.</p>', 'Delete', 'modal-delete-published-build-'+build.id, 'modal-delete-published-build-btn-'+build.id);
             $('#modal-delete-published-build-btn-'+build.id).click(function() {
               socket.emit('requestBuildDelete', build.id);
             });
@@ -80,7 +80,7 @@ socket.on("returnUserBuilds", function(builds){
 
       $('#build-update-published-modal-btn').click(function() {
         $('html').removeClass('is-clipped');
-        socket.emit('requestBuildUpdatePublished', g_activeBuild.id);
+        socket.emit('requestBuildUpdate', g_activeBuild.id);
       });
       $('#build-update-published-modal-background,#build-update-published-modal-close').click(function() {
         $('#build-update-published-modal').removeClass('is-active');
@@ -108,6 +108,6 @@ socket.on("returnBuildDelete", function(){
   openUserContent();
 });
 
-socket.on("returnBuildUpdatePublished", function(){
+socket.on("returnBuildUpdate", function(){
   openUserContent();
 });

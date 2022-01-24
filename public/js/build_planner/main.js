@@ -171,6 +171,13 @@ function mainLoaded(plannerCoreStruct, choiceStruct){
   //          //
 
   g_character = choiceStruct.character;
+  
+  // Set g_character.level = g_char_level for the build creator
+  g_character.level = g_char_level;
+
+  if(g_char_id == null){// If build creator, enable AutoDetectPreReqs
+    g_character.optionAutoDetectPreReqs = 1;
+  }
 
   // Init char meta data
   initDataMap(choiceStruct.charMetaData);
@@ -194,7 +201,7 @@ function mainLoaded(plannerCoreStruct, choiceStruct){
 
   // Bind step buttons
   $('.builder-basics-page-btn').click(function(event, initLoad){
-    window.location.href = '/profile/characters/builder/basics/?id='+getCharIDFromURL();
+    window.location.href = '/profile/characters/builder/basics/?id='+g_char_id;
   });
   $('.builder-ancestry-page-btn').click(function(event, initLoad){
 
@@ -224,7 +231,7 @@ function mainLoaded(plannerCoreStruct, choiceStruct){
     }
 
     g_page_num = 2;
-    window.history.pushState('profile/characters/builder', '', '/profile/characters/builder/?id='+getCharIDFromURL()+'&page=2');// Update URL
+    window.history.pushState('profile/characters/builder', '', '/profile/characters/builder/?id='+g_char_id+'&page=2');// Update URL
 
     if(!initLoad){
       setTimeout(() => {
@@ -261,7 +268,7 @@ function mainLoaded(plannerCoreStruct, choiceStruct){
     }
 
     g_page_num = 3;
-    window.history.pushState('profile/characters/builder', '', '/profile/characters/builder/?id='+getCharIDFromURL()+'&page=3');// Update URL
+    window.history.pushState('profile/characters/builder', '', '/profile/characters/builder/?id='+g_char_id+'&page=3');// Update URL
 
     if(!initLoad){
       setTimeout(() => {
@@ -298,7 +305,7 @@ function mainLoaded(plannerCoreStruct, choiceStruct){
     }
 
     g_page_num = 4;
-    window.history.pushState('profile/characters/builder', '', '/profile/characters/builder/?id='+getCharIDFromURL()+'&page=4');// Update URL
+    window.history.pushState('profile/characters/builder', '', '/profile/characters/builder/?id='+g_char_id+'&page=4');// Update URL
     
     if(!initLoad){
       setTimeout(() => {
@@ -309,7 +316,7 @@ function mainLoaded(plannerCoreStruct, choiceStruct){
   });
   $('.builder-finalize-page-btn').click(function(event, initLoad){
     if(g_character.name != null && g_character.ancestryID != null && g_character.backgroundID != null && g_character.classID != null){
-      window.location.href ='/profile/characters/'+getCharIDFromURL();
+      window.location.href ='/profile/characters/'+g_char_id;
     } else {
       let charRequirements = '';
       if(g_character.name == null){ charRequirements += '<br><span class="is-bold">Name</span>'; }
@@ -351,9 +358,13 @@ function mainLoaded(plannerCoreStruct, choiceStruct){
         stateLoad();
 
         // Update ancestry in db
-        socket.emit("requestAncestryChange",
-            getCharIDFromURL(),
+        if(g_char_id != null){
+          socket.emit("requestAncestryChange",
+            g_char_id,
             newAncestryID);
+        } else {
+          saveBuildInfo();
+        }
       }, 100);
     });
   };
@@ -387,9 +398,13 @@ function mainLoaded(plannerCoreStruct, choiceStruct){
         stateLoad();
 
         // Update background in db
-        socket.emit("requestBackgroundChange",
-            getCharIDFromURL(),
+        if(g_char_id != null){
+          socket.emit("requestBackgroundChange",
+            g_char_id,
             newBackgroundID);
+        } else {
+          saveBuildInfo();
+        }
       }, 100);
     });
   };
@@ -423,10 +438,14 @@ function mainLoaded(plannerCoreStruct, choiceStruct){
         stateLoad();
 
         // Update class in db
-        socket.emit("requestClassChange",
-            getCharIDFromURL(),
+        if(g_char_id != null){
+          socket.emit("requestClassChange",
+            g_char_id,
             newClassID,
             1);
+        } else {
+          saveBuildInfo();
+        }
       }, 100);
     });
   };
@@ -677,11 +696,7 @@ function displayStats(){
   $('#perception-total').text(signNumber(variables_getTotal(VARIABLE.PERCEPTION)));
   $('#perception-rank').text(variables_getFinalRank(VARIABLE.PERCEPTION));
 
-  // Resists / Weaks
-  let resistances = variables_getFullString(VARIABLE.RESISTANCES);
-  let weaknesses = variables_getFullString(VARIABLE.WEAKNESSES);
-  populateAccord('resist-weaks-body', []);
-
+  // Saves
   let saves = [
     {
       Value1: 'Fortitude',
@@ -704,6 +719,7 @@ function displayStats(){
   ];
   populateAccord('saves-body', saves);
 
+  // Skills
   let skills = [
     {
       Value1: 'Acrobatics',
@@ -818,6 +834,7 @@ function displayStats(){
   }
   populateAccord('skills-body', skills);
 
+  // Attacks
   let attacks = [
     {
       Value1: 'Simple Weapons',
@@ -842,6 +859,7 @@ function displayStats(){
   ];
   populateAccord('attacks-body', attacks);
 
+  // Armor
   let defenses = [
     {
       Value1: 'Light Armor',
@@ -866,6 +884,7 @@ function displayStats(){
   ];
   populateAccord('defenses-body', defenses);
 
+  // Spellcasting
   let spellcasting = [];
   const arcaneSpellAttacksRank = variables_getFinalRank(VARIABLE.ARCANE_SPELL_ATTACK);
   if(arcaneSpellAttacksRank != 'U'){
@@ -936,6 +955,7 @@ function displayStats(){
   }
   populateAccord('spellcasting-body', spellcasting);
 
+  // Languages
   let sortedLangsArray = [];
   for(const [key, data] of variables_getExtrasMap(VARIABLE.LANGUAGES).entries()){
     let lang = g_allLanguages.find(lang => {
@@ -995,10 +1015,6 @@ function displayStats(){
 
 }
 
-
-function getCharIDFromURL(){
-  return g_char_id;
-}
 
 function getAllAbilityTypes() {
   return ['Strength','Dexterity','Constitution','Intelligence','Wisdom','Charisma'];

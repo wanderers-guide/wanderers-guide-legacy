@@ -44,12 +44,16 @@ function processingSpells(wscStatement, srcStruct, locationID, extraData){
 //////////////////////////////// Set Spell Slots ///////////////////////////////////
 function giveSpellCasting(srcStruct, spellSRC, spellcasting, reduceSlotsByOne){
   reduceSlotsByOne = (reduceSlotsByOne != null && reduceSlotsByOne.toUpperCase() == 'REDUCE-SLOTS-BY-ONE') ? true : false;
-  socket.emit("requestSpellCastingSlotChange",
-      getCharIDFromURL(),
-      srcStruct,
-      spellSRC,
-      spellcasting,
-      reduceSlotsByOne);
+  if(g_char_id != null){
+    socket.emit("requestSpellCastingSlotChange",
+        g_char_id,
+        srcStruct,
+        spellSRC,
+        spellcasting,
+        reduceSlotsByOne);
+  } else {
+    saveBuildMetaData();
+  }
 }
 
 function giveSpellSlot(srcStruct, spellSRC, spellSlot, color){
@@ -66,12 +70,16 @@ function giveSpellSlot(srcStruct, spellSRC, spellSlot, color){
     default: break;
   }
 
-  socket.emit("requestSpellSlotChange",
-      getCharIDFromURL(),
-      srcStruct,
-      spellSRC,
-      spellSlot,
-      slotType);
+  if(g_char_id != null){
+    socket.emit("requestSpellSlotChange",
+        g_char_id,
+        srcStruct,
+        spellSRC,
+        spellSlot,
+        slotType);
+  } else {
+    saveBuildMetaData();
+  }
 }
 
 socket.on("returnSpellCastingSlotChange", function(spellSRC, spellSlots){
@@ -85,11 +93,15 @@ socket.on("returnSpellSlotChange", function(spellSRC, spellSlot){
 //////////////////////////////// Set Key Ability ///////////////////////////////////
 function setSpellKeyAbility(srcStruct, spellSRC, abilityScore){
     if(getAllAbilityTypes().includes(lengthenAbilityType(abilityScore))){
+      if(g_char_id != null){
         socket.emit("requestKeySpellAbilityChange",
-            getCharIDFromURL(),
+            g_char_id,
             srcStruct,
             spellSRC,
             abilityScore);
+      } else {
+        saveBuildMetaData();
+      }
     } else {
         displayError("Cannot identify ability score (case sensitive): '"+abilityScore+"'!");
         statementComplete('Spell - Set Key Ability Error');
@@ -103,11 +115,15 @@ socket.on("returnKeySpellAbilityChange", function(){
 //////////////////////////////// Give Spell List ///////////////////////////////////
 function giveSpellList(srcStruct, spellSRC, spellList){
     if(spellList === 'OCCULT' || spellList === 'ARCANE' || spellList === 'DIVINE' || spellList === 'PRIMAL') {
+      if(g_char_id != null){  
         socket.emit("requestSpellTraditionChange",
-            getCharIDFromURL(),
+            g_char_id,
             srcStruct,
             spellSRC,
             spellList);
+      } else {
+        saveBuildMetaData();
+      }
     } else {
         displayError("Unknown Spell Tradition: \'"+spellList+"\'");
         statementComplete('Spell - Set Tradition Error');
@@ -121,11 +137,15 @@ socket.on("returnSpellListChange", function(){
 //////////////////////////////// Set Casting Type ///////////////////////////////////
 function setSpellCastingType(srcStruct, spellSRC, castingType){
     if(castingType === 'PREPARED-LIST' || castingType === 'PREPARED-BOOK' || castingType === 'PREPARED-FAMILIAR' || castingType === 'SPONTANEOUS-REPERTOIRE' || castingType === 'FLEXIBLE-COLLECTION') {
+      if(g_char_id != null){
         socket.emit("requestSpellCastingTypeChange",
-            getCharIDFromURL(),
+            g_char_id,
             srcStruct,
             spellSRC,
             castingType);
+      } else {
+        saveBuildMetaData();
+      }
     } else {
         displayError("Unknown Spellcasting Type: \'"+castingType+"\'");
         statementComplete('Spell - Set Casting Type Error');
@@ -153,13 +173,17 @@ function addSpellToSpellbook(srcStruct, spellSRC, spellName, spellLevel, color){
   }
 
   spellName = spellName.replace(/_/g," ");
-  socket.emit("requestBuilderSpellAddToSpellBook",
-      getCharIDFromURL(),
-      srcStruct,
-      spellSRC,
-      spellName,
-      spellLevel,
-      spellType);
+  if(g_char_id != null){
+    socket.emit("requestBuilderSpellAddToSpellBook",
+        g_char_id,
+        srcStruct,
+        spellSRC,
+        spellName,
+        spellLevel,
+        spellType);
+  } else {
+    saveBuildMetaData();
+  }
 }
 
 socket.on("returnBuilderSpellAddToSpellBook", function(){

@@ -59,10 +59,14 @@ function giveDomain(srcStruct, locationID, spellSRC, extraData){
 
             deleteData(DATA_SOURCE.DOMAIN, srcStruct);
 
-            socket.emit("requestDomainChange",
-                getCharIDFromURL(),
-                srcStruct,
-                null);
+            if(g_char_id != null){
+              socket.emit("requestDomainChange",
+                  g_char_id,
+                  srcStruct,
+                  null);
+            } else {
+              saveBuildMetaData();
+            }
 
         } else {
 
@@ -78,10 +82,14 @@ function giveDomain(srcStruct, locationID, spellSRC, extraData){
             setData(DATA_SOURCE.DOMAIN, srcStruct, domain.id);
             setData(DATA_SOURCE.FOCUS_SPELL, srcStruct, spellSRC+"="+domain.initialSpellID, false);
 
-            socket.emit("requestDomainChange",
-                getCharIDFromURL(),
-                srcStruct,
-                {Domain: domain, SpellSRC: spellSRC});
+            if(g_char_id != null){
+              socket.emit("requestDomainChange",
+                  g_char_id,
+                  srcStruct,
+                  {Domain: domain, SpellSRC: spellSRC});
+            } else {
+              saveBuildMetaData();
+            }
             
         }
 
@@ -145,10 +153,14 @@ function giveDomainAdvancement(srcStruct, locationID, spellSRC, extraData){
 
             deleteData(DATA_SOURCE.ADVANCED_DOMAIN, srcStruct);
 
-            socket.emit("requestDomainAdvancementChange",
-                getCharIDFromURL(),
-                srcStruct,
-                null);
+            if(g_char_id != null){
+              socket.emit("requestDomainAdvancementChange",
+                  g_char_id,
+                  srcStruct,
+                  null);
+            } else {
+              saveBuildMetaData();
+            }
 
         } else {
 
@@ -164,10 +176,14 @@ function giveDomainAdvancement(srcStruct, locationID, spellSRC, extraData){
             setData(DATA_SOURCE.ADVANCED_DOMAIN, srcStruct, domain.id);
             setData(DATA_SOURCE.FOCUS_SPELL, srcStruct, spellSRC+"="+domain.advancedSpellID, false);
 
-            socket.emit("requestDomainAdvancementChange",
-                getCharIDFromURL(),
-                srcStruct,
-                {Domain: domain, SpellSRC: spellSRC});
+            if(g_char_id != null){
+              socket.emit("requestDomainAdvancementChange",
+                  g_char_id,
+                  srcStruct,
+                  {Domain: domain, SpellSRC: spellSRC});
+            } else {
+              saveBuildMetaData();
+            }
             
         }
 

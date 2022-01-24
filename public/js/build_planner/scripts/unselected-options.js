@@ -113,10 +113,14 @@ function addUnselectedData(srcStruct, unselectedData){
 
     setDataOnly(DATA_SOURCE.UNSELECTED_DATA, srcStruct, unselectedData);
 
-    socket.emit("requestUnselectedDataChange",
-        getCharIDFromURL(),
-        srcStruct,
-        unselectedData);
+    if(g_char_id != null){
+      socket.emit("requestUnselectedDataChange",
+          g_char_id,
+          srcStruct,
+          unselectedData);
+    } else {
+      saveBuildMetaData();
+    }
 
   }
 }
@@ -127,10 +131,14 @@ function removeUnselectedData(srcStruct){
 
     deleteDataOnly(DATA_SOURCE.UNSELECTED_DATA, srcStruct);
 
-    socket.emit("requestUnselectedDataChange",
-        getCharIDFromURL(),
-        srcStruct,
-        null);
+    if(g_char_id != null){
+      socket.emit("requestUnselectedDataChange",
+          g_char_id,
+          srcStruct,
+          null);
+    } else {
+      saveBuildMetaData();
+    }
 
   }
 }

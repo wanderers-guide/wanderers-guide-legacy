@@ -98,10 +98,14 @@ function giveLang(srcStruct, locationID, extraData, bonusOnly){
 
             deleteData(DATA_SOURCE.LANGUAGE, srcStruct);
             
-            socket.emit("requestLanguageChange",
-                getCharIDFromURL(),
-                srcStruct,
-                null);
+            if(g_char_id != null){
+              socket.emit("requestLanguageChange",
+                  g_char_id,
+                  srcStruct,
+                  null);
+            } else {
+              saveBuildMetaData();
+            }
 
         } else {
 
@@ -119,10 +123,14 @@ function giveLang(srcStruct, locationID, extraData, bonusOnly){
 
                     setDataLanguage(srcStruct, langID);
                     
-                    socket.emit("requestLanguageChange",
-                        getCharIDFromURL(),
-                        srcStruct,
-                        langID);
+                    if(g_char_id != null){
+                      socket.emit("requestLanguageChange",
+                          g_char_id,
+                          srcStruct,
+                          langID);
+                    } else {
+                      saveBuildMetaData();
+                    }
 
                 } else {
                     $('.'+selectLangControlShellClass).addClass("is-danger");
@@ -137,10 +145,14 @@ function giveLang(srcStruct, locationID, extraData, bonusOnly){
 
                 setDataLanguage(srcStruct, langID);
 
-                socket.emit("requestLanguageChange",
-                    getCharIDFromURL(),
-                    srcStruct,
-                    langID);
+                if(g_char_id != null){
+                  socket.emit("requestLanguageChange",
+                      g_char_id,
+                      srcStruct,
+                      langID);
+                } else {
+                  saveBuildMetaData();
+                }
 
             }
             
@@ -180,10 +192,14 @@ function giveLangByName(srcStruct, langName, extraData){
     setDataLanguage(srcStruct, language.id);
   }
 
-  socket.emit("requestLanguageChangeByName",
-      getCharIDFromURL(),
-      srcStruct,
-      langName);
+  if(g_char_id != null){
+    socket.emit("requestLanguageChangeByName",
+        g_char_id,
+        srcStruct,
+        langName);
+  } else {
+    saveBuildMetaData();
+  }
 
   statementComplete('Lang - Add By Name');
 

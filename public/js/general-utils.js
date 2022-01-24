@@ -406,6 +406,10 @@ function hasGreaterWidth(jQueryElement, pixelWidth){
   return element.clientWidth > pixelWidth;
 }
 
+function isMobileView(){
+  return window.matchMedia("screen and (max-width: 768px)").matches;
+}
+
 function isSheetPage(){
   return typeof isSheetInit !== 'undefined';
 }

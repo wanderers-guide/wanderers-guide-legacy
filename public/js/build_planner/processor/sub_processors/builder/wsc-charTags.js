@@ -26,10 +26,14 @@ function giveCharTag(srcStruct, charTagName){
 
     setData(DATA_SOURCE.CHAR_TRAIT, srcStruct, charTagName);
 
-    socket.emit("requestCharTagChange",
-        getCharIDFromURL(),
-        srcStruct,
-        charTagName);
+    if(g_char_id != null){
+      socket.emit("requestCharTagChange",
+          g_char_id,
+          srcStruct,
+          charTagName);
+    } else {
+      saveBuildMetaData();
+    }
     
     statementComplete('CharTrait - Give');
 }
@@ -115,12 +119,16 @@ function displayCharTagChoice(srcStruct, locationID, extraData, commonOnly=false
             $('.'+selectCharTagControlShellClass).addClass("is-info");
             deleteData(DATA_SOURCE.CHAR_TRAIT, srcStruct);
 
-            socket.emit("requestWSCCharTagChange",
-                getCharIDFromURL(),
-                srcStruct,
-                null,
-                selectCharTagControlShellClass,
-                triggerReload);
+            if(g_char_id != null){
+              socket.emit("requestWSCCharTagChange",
+                  g_char_id,
+                  srcStruct,
+                  null,
+                  selectCharTagControlShellClass,
+                  triggerReload);
+            } else {
+              saveBuildMetaData();
+            }
 
         } else {
             $('.'+selectCharTagControlShellClass).removeClass("is-info");
@@ -130,12 +138,16 @@ function displayCharTagChoice(srcStruct, locationID, extraData, commonOnly=false
                 $('.'+selectCharTagControlShellClass).addClass("is-loading");
                 setData(DATA_SOURCE.CHAR_TRAIT, srcStruct, charTagName);
 
-                socket.emit("requestWSCCharTagChange",
-                    getCharIDFromURL(),
-                    srcStruct,
-                    charTagName,
-                    selectCharTagControlShellClass,
-                    triggerReload);
+                if(g_char_id != null){
+                  socket.emit("requestWSCCharTagChange",
+                      g_char_id,
+                      srcStruct,
+                      charTagName,
+                      selectCharTagControlShellClass,
+                      triggerReload);
+                } else {
+                  saveBuildMetaData();
+                }
             }
 
         }

@@ -62,7 +62,7 @@ module.exports = async function(socket, charID, character=null, background=null,
   }
 
   if(classDetails==null){
-    classDetails = await CharGathering.getClass(getUserID(socket), charID, character.classID, character, cClass=null, keyBoostData=null);
+    classDetails = await CharGathering.getClass(getUserID(socket), charID, character.classID, character.enabledSources, character.enabledHomebrew);
   }
 
   if(featDataArray==null){

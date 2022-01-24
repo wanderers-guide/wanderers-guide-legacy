@@ -105,9 +105,8 @@ module.exports = class BuildsGathering {
           return Background.findOne({
             where: { id: build.backgroundID },
           }).then(bBackground => {
-            return Class.findOne({
-              where: { id: build.classID },
-            }).then(bClass => {
+            return CharGathering.getClass(userID, null, build.classID, build.enabledSources, build.enabledHomebrew)
+            .then(bClass => {
               return Heritage.findOne({
                 where: { id: build.heritageID },
               }).then(bHeritage => {

@@ -528,21 +528,22 @@ function giveFeatByName(srcStruct, featName, locationID, optionalTags, extraData
     let featCodeSectionID = "featCode-"+locationID+"-"+srcStruct.sourceCode+"-"+srcStruct.sourceCodeSNum;
     $('#'+locationID).append('<div id="'+featCodeSectionID+'"></div>');
 
-    setData(DATA_SOURCE.FEAT_CHOICE, srcStruct, featEntry.Feat.id);
+    setDataOnly(DATA_SOURCE.FEAT_CHOICE, srcStruct, featEntry.Feat.id);
 
-    socket.emit("requestFeatChangeByName",
-        getCharIDFromURL(),
-        {srcStruct, feat: featEntry, codeLocationID: featCodeSectionID});
+    if(g_char_id != null){
+      socket.emit("requestFeatChangeByName",
+          g_char_id,
+          {srcStruct, feat: featEntry, codeLocationID: featCodeSectionID});
+    } else {
+      saveBuildMetaData();
+    }
+
+    processCode(
+      featEntry.Feat.code,
+      srcStruct,
+      featCodeSectionID,
+      {source: 'Feat', sourceName: featEntry.Feat.name});
+
+    statementComplete('Feat - Give By Name');
 
 }
-
-socket.on("returnFeatChangeByName", function(featChangePacket){
-  console.log(`Waited for 'returnFeatChangeByName'.`);
-  processCode(
-      featChangePacket.feat.Feat.code,
-      featChangePacket.srcStruct,
-      featChangePacket.codeLocationID,
-      {source: 'Feat', sourceName: featChangePacket.feat.Feat.name});
-  
-  statementComplete('Feat - Give By Name');
-});

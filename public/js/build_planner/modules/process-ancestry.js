@@ -197,10 +197,14 @@ function processAncestry() {
           let isUniversal = processAncestry_isUniversalHeritage();
           if(triggerSave == null || triggerSave) {
             
-            socket.emit("requestHeritageChange",
-                getCharIDFromURL(),
-                heritageID,
-                isUniversal);
+            if(g_char_id != null){
+              socket.emit("requestHeritageChange",
+                  g_char_id,
+                  heritageID,
+                  isUniversal);
+            } else {
+              saveBuildInfo();
+            }
 
             if(isUniversal){
               g_character.uniHeritageID = heritageID;
@@ -223,10 +227,14 @@ function processAncestry() {
           let isUniversal = processAncestry_isUniversalHeritage();
           if(triggerSave == null || triggerSave) {
 
-            socket.emit("requestHeritageChange",
-              getCharIDFromURL(),
-              null,
-              isUniversal);
+            if(g_char_id != null){
+              socket.emit("requestHeritageChange",
+                g_char_id,
+                null,
+                isUniversal);
+            } else {
+              saveBuildInfo();
+            }
 
             g_character.heritageID = null;
             g_character.uniHeritageID = null;

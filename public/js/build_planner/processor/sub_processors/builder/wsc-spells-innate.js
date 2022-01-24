@@ -112,11 +112,15 @@ function displayInnateSpellChoice(srcStruct, locationID, extraData, spellLevel, 
 
             deleteData(DATA_SOURCE.INNATE_SPELL, srcStruct);
 
-            socket.emit("requestWSCInnateSpellChange",
-                getCharIDFromURL(),
-                srcStruct,
-                null,
-                selectSpellControlShellClass);
+            if(g_char_id != null){
+              socket.emit("requestWSCInnateSpellChange",
+                  g_char_id,
+                  srcStruct,
+                  null,
+                  selectSpellControlShellClass);
+            } else {
+              saveBuildMetaData();
+            }
 
         } else {
             $('.'+selectSpellControlShellClass).removeClass("is-info");
@@ -130,11 +134,15 @@ function displayInnateSpellChoice(srcStruct, locationID, extraData, spellLevel, 
                 
                 setDataInnateSpell(srcStruct, spell.Spell.id, spell.Spell.level, spellTradition, timesPerDay);
 
-                socket.emit("requestWSCInnateSpellChange",
-                    getCharIDFromURL(),
-                    srcStruct,
-                    {name: spell.Spell.name, level: spell.Spell.level, tradition: spellTradition, tPd: timesPerDay},
-                    selectSpellControlShellClass);
+                if(g_char_id != null){
+                  socket.emit("requestWSCInnateSpellChange",
+                      g_char_id,
+                      srcStruct,
+                      {name: spell.Spell.name, level: spell.Spell.level, tradition: spellTradition, tPd: timesPerDay},
+                      selectSpellControlShellClass);
+                } else {
+                  saveBuildMetaData();
+                }
             }
 
         }
@@ -174,13 +182,17 @@ function giveInnateSpellByName(srcStruct, extraData, spellName, spellLevel, spel
           if(spell != null){
             setDataInnateSpell(srcStruct, spell.id, spellLevel, spellTradition, timesPerDay);
 
-            socket.emit("requestInnateSpellChange",
-                getCharIDFromURL(),
-                srcStruct,
-                spellName,
-                spellLevel,
-                spellTradition,
-                timesPerDay);
+            if(g_char_id != null){
+              socket.emit("requestInnateSpellChange",
+                  g_char_id,
+                  srcStruct,
+                  spellName,
+                  spellLevel,
+                  spellTradition,
+                  timesPerDay);
+            } else {
+              saveBuildMetaData();
+            }
           } else {
             displayError("Unknown Spell: \'"+spellName+"\'");
             statementComplete('SpellInnate - Add By Name Error 4');

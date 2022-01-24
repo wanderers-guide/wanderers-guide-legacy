@@ -5,8 +5,7 @@
 $(function () {
 
   // If mobile, hide Statistics in left quickview
-  const isMobile = window.matchMedia("screen and (max-width: 768px)").matches;
-  if (isMobile) {
+  if (isMobileView()) {
     // Moving HTML
     let statisticsHTML = $('#builder-statistics-container').html();
     $('#builder-statistics-container').html('');
@@ -151,7 +150,7 @@ function populateAccord(accordBodyID, optionsList){
         openQuickView('generalBreakdownView', {
           title : value1,
           name : value1,
-          varName : varName,getProfHistoryHTML
+          varName : varName,
         });
       });
     } else if (option.CustomQuickview != null){

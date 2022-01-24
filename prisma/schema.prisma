@@ -1072,6 +1072,7 @@ model builds {
   contactInfo                       String?             @db.VarChar(120)
   isPublished                       Boolean             @default(false)
   authorName                        String              @default("Unknown") @db.VarChar(45)
+  finalStatsJSON                    String?             @db.Text
   ancestryID                        Int?
   heritageID                        Int?
   uniHeritageID                     Int?

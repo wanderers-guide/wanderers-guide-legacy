@@ -35,8 +35,12 @@ function processCustomCode() {
       {source: 'Custom Code Block', sourceName: 'Custom Code Block'});
 
   } else {
-    socket.emit("requestCustomCodeBlockDataClear",
-        getCharIDFromURL());
+    if(g_char_id != null){
+      socket.emit("requestCustomCodeBlockDataClear",
+          g_char_id);
+    } else {
+      saveBuildMetaData();
+    }
   }
 
 }

@@ -346,9 +346,13 @@ function generateFeatSelectionList(contentLocID, srcStruct, selectedFeat, select
     let feat = g_featMap.get(featID);
 
     setData(DATA_SOURCE.FEAT_CHOICE, srcStruct, featID);
-    socket.emit("requestFeatChange",
-        getCharIDFromURL(),
-        {srcStruct, feat, featID, codeLocationID : featCodeSectionID });
+    if(g_char_id != null){
+      socket.emit("requestFeatChange",
+          g_char_id,
+          {srcStruct, feat, featID, codeLocationID : featCodeSectionID });
+    } else {
+      saveBuildMetaData();
+    }
     handleFeatChange(feat, contentLocID);
   });
 
@@ -356,9 +360,13 @@ function generateFeatSelectionList(contentLocID, srcStruct, selectedFeat, select
     $(this).addClass('is-loading');
 
     setData(DATA_SOURCE.FEAT_CHOICE, srcStruct, null);
-    socket.emit("requestFeatChange",
-        getCharIDFromURL(),
-        {srcStruct, feat : null, featID : null, codeLocationID : featCodeSectionID });
+    if(g_char_id != null){
+      socket.emit("requestFeatChange",
+          g_char_id,
+          {srcStruct, feat : null, featID : null, codeLocationID : featCodeSectionID });
+    } else {
+      saveBuildMetaData();
+    }
     handleFeatChange(null, contentLocID);
   });
 

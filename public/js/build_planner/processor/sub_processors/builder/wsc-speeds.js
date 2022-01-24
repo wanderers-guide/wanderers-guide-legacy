@@ -22,11 +22,15 @@ function giveSpeed(srcStruct, speedType, speedAmt){
 
   setDataOtherSpeed(srcStruct, speedType, speedAmt);
 
-  socket.emit("requestSpeedChange",
-      getCharIDFromURL(),
-      srcStruct,
-      speedType,
-      speedAmt);
+  if(g_char_id != null){
+    socket.emit("requestSpeedChange",
+        g_char_id,
+        srcStruct,
+        speedType,
+        speedAmt);
+  } else {
+    saveBuildMetaData();
+  }
 
 }
 

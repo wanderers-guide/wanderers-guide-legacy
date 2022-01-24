@@ -66,6 +66,15 @@ module.exports = class AuthCheck {
       });
     }
 
+    static ownsBuild(userID, buildID) {
+      return Build.findOne({ where: { id: buildID, userID: userID } })
+      .then((build) => {
+          return (build != null);
+      }).catch((error) => {
+          return false;
+      });
+    }
+
     /* -------- */
 
     static getPermissions(userID){

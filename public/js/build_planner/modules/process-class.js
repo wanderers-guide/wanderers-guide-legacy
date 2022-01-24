@@ -222,15 +222,20 @@ function processClass() {
               $(`#class-feature-selector-result-${classFeature.id}`).addClass('is-hidden');
 
               // Save choice
-              socket.emit("requestClassChoiceChange",
-                  getCharIDFromURL(),
-                  srcStruct,
-                  null);
+              if(g_char_id != null){
+                socket.emit("requestClassChoiceChange",
+                    g_char_id,
+                    srcStruct,
+                    null);
 
-              // Clear all data under srcStruct
-              socket.emit("requestDataClearAtSrcStruct",
-                  getCharIDFromURL(),
-                  srcStruct);
+                // Clear all data under srcStruct
+                socket.emit("requestDataClearAtSrcStruct",
+                    g_char_id,
+                    srcStruct);
+              } else {
+                saveBuildMetaData();
+              }
+
               deleteDataBySourceStruct(srcStruct);
 
               if(triggerSave == null || triggerSave) {
@@ -255,10 +260,14 @@ function processClass() {
 
               // Save choice
               if(triggerSave == null || triggerSave) {
-                socket.emit("requestClassChoiceChange",
-                  getCharIDFromURL(),
-                  srcStruct,
-                  { SelectorID : classFeature.id, OptionID : chosenClassFeature.id });
+                if(g_char_id != null){
+                  socket.emit("requestClassChoiceChange",
+                    g_char_id,
+                    srcStruct,
+                    { SelectorID : classFeature.id, OptionID : chosenClassFeature.id });
+                } else {
+                  saveBuildMetaData();
+                }
                 setDataClassChoice(srcStruct, classFeature.id, chosenClassFeature.id);
                 initExpressionProcessor();// Update g_expr_classAbilityArray
               }

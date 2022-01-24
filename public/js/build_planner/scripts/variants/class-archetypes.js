@@ -146,15 +146,17 @@ function assembleClassArchetypeTabs(tabsID, classFeatureID, originalDescription,
 
       if(autoPageLoad == null || !autoPageLoad){
         g_classArchetypeChosenArchetype = null;
-        socket.emit("requestClassArchetypeChange", 
-            getCharIDFromURL(),
-            {
-              sourceType: 'class',
-              sourceLevel: 1,
-              sourceCode: 'classArchetype',
-              sourceCodeSNum: 'a',
-            },
-            null);
+        if(g_char_id != null){
+          socket.emit("requestClassArchetypeChange", 
+              g_char_id,
+              {
+                sourceType: 'class',
+                sourceLevel: 1,
+                sourceCode: 'classArchetype',
+                sourceCodeSNum: 'a',
+              },
+              null);
+        }
       }
 
     } else {
@@ -180,30 +182,37 @@ function assembleClassArchetypeTabs(tabsID, classFeatureID, originalDescription,
 
       if(autoPageLoad == null || !autoPageLoad){
         g_classArchetypeChosenArchetype = classArchetype;
-        socket.emit("requestClassArchetypeChange", 
-            getCharIDFromURL(),
-            {
-              sourceType: 'class',
-              sourceLevel: 1,
-              sourceCode: 'classArchetype',
-              sourceCodeSNum: 'a',
-            },
-            classArchetype.id);
+        if(g_char_id != null){
+          socket.emit("requestClassArchetypeChange", 
+              g_char_id,
+              {
+                sourceType: 'class',
+                sourceLevel: 1,
+                sourceCode: 'classArchetype',
+                sourceCodeSNum: 'a',
+              },
+              classArchetype.id);
+        }
       }
 
     }
 
     if(autoPageLoad == null || !autoPageLoad){
 
-      socket.emit("requestWSCSrcStructDataClear",
-          getCharIDFromURL(),
-          srcStruct);
-      deleteDataSNumChildren(srcStruct);
+      if(g_char_id != null){
+        socket.emit("requestWSCSrcStructDataClear",
+            g_char_id,
+            srcStruct);
 
-      socket.once("returnWSCSrcStructDataClear", function(){
-        // Update class feature code
-        animatedStateLoad();
-      });
+        socket.once("returnWSCSrcStructDataClear", function(){
+          // Update class feature code
+          animatedStateLoad();
+        });
+
+      } else {
+        saveBuildMetaData();
+      }
+      deleteDataSNumChildren(srcStruct);
 
     }
     

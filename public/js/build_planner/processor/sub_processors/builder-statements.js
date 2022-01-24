@@ -6,9 +6,13 @@ function runBuilderStatements(wscStatement, wscStatementUpper, srcStruct, locati
     
     let newSrcStruct = cloneObj(srcStruct);
     newSrcStruct.sourceCodeSNum = newSrcStruct.sourceCodeSNum.substring(1);
-    socket.emit("requestWSCSrcStructDataClear",
-        getCharIDFromURL(),
-        newSrcStruct);
+    if(g_char_id != null){
+      socket.emit("requestWSCSrcStructDataClear",
+          g_char_id,
+          newSrcStruct);
+    } else {
+      saveBuildMetaData();
+    }
     deleteDataSNumChildren(newSrcStruct);
 
     return PROCESS_RETURN.NEXT;

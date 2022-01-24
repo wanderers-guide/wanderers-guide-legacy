@@ -20,6 +20,9 @@ const Build = db.define('builds', {
   authorName: {
     type: Sequelize.STRING
   },
+  finalStatsJSON: {
+    type: Sequelize.TEXT
+  },
   ancestryID: {
     type: Sequelize.INTEGER
   },

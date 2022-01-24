@@ -1167,18 +1167,13 @@ module.exports = class CharGathering {
       });
     }
 
-    static async getClass(userID, charID, classID, character=null, cClass=null, keyBoostData=null) {
+    static async getClass(userID, charID, classID, enabledSources, enabledHomebrew) {
 
-      if(character==null){
-        character = await CharGathering.getCharacter(userID, charID);
-      }
+      let cClass = await Prisma.classes.findUnique({ where: { id: parseInt(classID) } });
 
-      if(cClass==null && classID!=null){
-        cClass = await Prisma.classes.findUnique({ where: { id: parseInt(classID) } });
-      }
-
-      if(keyBoostData==null){
-        let srcStruct = {
+      let keyBoostData = null;
+      if(charID != null){
+        const srcStruct = {
           sourceType: 'class',
           sourceLevel: 1,
           sourceCode: 'keyAbility',
@@ -1196,10 +1191,10 @@ module.exports = class CharGathering {
           order: [['level', 'ASC'],['name', 'ASC'],],
           where: {
               contentSrc: {
-                [Op.or]: CharContentSources.getSourceArray(character.enabledSources)
+                [Op.or]: CharContentSources.getSourceArray(enabledSources)
               },
               homebrewID: {
-                [Op.or]: CharContentHomebrew.getHomebrewArray(character.enabledHomebrew)
+                [Op.or]: CharContentHomebrew.getHomebrewArray(enabledHomebrew)
               },
               [Op.not]: [
                 { contentSrc: { [Op.or]: TempUnpublishedBooks.getSourcesArray(userID) } },
@@ -1491,25 +1486,16 @@ module.exports = class CharGathering {
 
     static async getCompanionData(userID, charID, enabledSources, enabledHomebrew){
 
-      if(allAnimalCompanions==null){
-        allAnimalCompanions = await CharGathering.getAllAnimalCompanions(userID, enabledSources, enabledHomebrew);
-      }
+      let allAnimalCompanions = await CharGathering.getAllAnimalCompanions(userID, enabledSources, enabledHomebrew);
 
-      if(charAnimalComps==null){
-        charAnimalComps = await CharGathering.getCharAnimalCompanions(userID, charID);
-      }
-
-      if(allSpecificFamiliars==null){
-        allSpecificFamiliars = await CharGathering.getAllSpecificFamiliars(userID, enabledSources, enabledHomebrew);
-      }
-
-      if(allFamiliarAbilities==null){
-        allFamiliarAbilities = await CharGathering.getAllFamiliarAbilities(userID, enabledSources, enabledHomebrew);
-      }
-
-      if(charFamiliars==null){
-        charFamiliars = await CharGathering.getCharFamiliars(userID, charID);
-      }
+      let charAnimalComps = await CharGathering.getCharAnimalCompanions(userID, charID);
+      
+      let allSpecificFamiliars = await CharGathering.getAllSpecificFamiliars(userID, enabledSources, enabledHomebrew);
+      
+      let allFamiliarAbilities = await CharGathering.getAllFamiliarAbilities(userID, enabledSources, enabledHomebrew);
+      
+      let charFamiliars = await CharGathering.getCharFamiliars(userID, charID);
+      
 
       return {
         AllAnimalCompanions : allAnimalCompanions,

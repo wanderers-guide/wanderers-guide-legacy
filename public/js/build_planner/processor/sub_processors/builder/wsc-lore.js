@@ -61,13 +61,17 @@ function giveLoreChoose(srcStruct, locationID, extraData, prof='T'){
             deleteData(DATA_SOURCE.LORE, srcStruct);
             deleteData(DATA_SOURCE.PROFICIENCY, srcStruct);
 
-            socket.emit("requestLoreChange",
-                getCharIDFromURL(),
-                srcStruct,
-                null,
-                { ControlShellID: inputLoreControlShell, isAutoLoad},
-                prof,
-                extraData.sourceName);
+            if(g_char_id != null){
+              socket.emit("requestLoreChange",
+                  g_char_id,
+                  srcStruct,
+                  null,
+                  { ControlShellID: inputLoreControlShell, isAutoLoad},
+                  prof,
+                  extraData.sourceName);
+            } else {
+              saveBuildMetaData();
+            }
 
         } else {
 
@@ -83,13 +87,17 @@ function giveLoreChoose(srcStruct, locationID, extraData, prof='T'){
                 setData(DATA_SOURCE.LORE, srcStruct, loreName);
                 setDataProficiencies(srcStruct, 'Skill', loreName+'_LORE', prof, extraData.sourceName, false);
 
-                socket.emit("requestLoreChange",
-                    getCharIDFromURL(),
-                    srcStruct,
-                    loreName,
-                    { ControlShellID: inputLoreControlShell, isAutoLoad},
-                    prof,
-                    extraData.sourceName);
+                if(g_char_id != null){
+                  socket.emit("requestLoreChange",
+                      g_char_id,
+                      srcStruct,
+                      loreName,
+                      { ControlShellID: inputLoreControlShell, isAutoLoad},
+                      prof,
+                      extraData.sourceName);
+                } else {
+                  saveBuildMetaData();
+                }
 
             } else {
                 $(this).addClass("is-danger");
@@ -116,13 +124,17 @@ function giveLore(srcStruct, loreName, extraData){
   setData(DATA_SOURCE.LORE, srcStruct,  loreName);
   setDataProficiencies(srcStruct, 'Skill', loreName+'_LORE', 'T', extraData.sourceName, false);
 
-  socket.emit("requestLoreChange",
-      getCharIDFromURL(),
-      srcStruct,
-      loreName,
-      null,
-      'T',
-      extraData.sourceName);
+  if(g_char_id != null){
+    socket.emit("requestLoreChange",
+        g_char_id,
+        srcStruct,
+        loreName,
+        null,
+        'T',
+        extraData.sourceName);
+  } else {
+    saveBuildMetaData();
+  }
 
 }
 

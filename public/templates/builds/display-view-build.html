@@ -5,8 +5,8 @@
   </span>
 
   <div style="position: absolute; top: 5px; right: 5px; z-index: 1;">
-    <button id="build-create-character-btn" class="is-hidden button is-rounded is-success is-outlined is-small">
-      <span>Create Character from Build</span>
+    <button id="build-create-character-btn" class="button is-rounded is-success is-outlined is-small">
+      <span id="build-create-character-btn-text">Create Character from Build</span>
       <span class="icon">
         <i class="fas fa-user-plus"></i>
       </span>
@@ -34,8 +34,8 @@
 
   <div class="view-build-container">
 
-    <div class="columns mx-5">
-      <div class="column mx-4">
+    <div class="columns mx-5 mobile-is-marginless">
+      <div class="column mx-4 mobile-is-marginless">
 
         <div class="s-x-box py-2 pl-4 pr-1">
           <p class="has-txt-value-string title-font px-3">Ancestry</p>
@@ -46,15 +46,20 @@
           <p class="has-txt-value-string"><a id="build-class" style="max-width: 180px;" class="btn button-style m-1"></a></p>
         </div>
 
+        <div id="build-class-selections-section" class="is-hidden mt-3">
+          <div id="build-class-selections" class="s-x-box">
+          </div>
+        </div>
+
       </div>
-      <div class="column mx-4">
+      <div class="column mx-4 mobile-is-marginless">
         
         <div class="s-x-box py-2 pl-2 pr-1">
           <p class="has-txt-value-string title-font has-text-centered">Final Statistics</p>
           <div id="build-statistics-container" class="use-custom-scrollbar" style="height: 500px; max-height: 500px; overflow-y: scroll;">
           
             <!-- Ability Scores -->
-            <div id="ability-scores-body" class="accord-like-button mx-2 mb-2">
+            <div id="ability-scores-body" class="accord-like-button-mimic mx-2 mb-2">
               <div class="columns is-mobile is-centered is-marginless text-center mx-3">
                 <div class="column is-2 is-paddingless"><p class="is-bold-very">Str</p></div>
                 <div class="column is-2 is-paddingless"><p class="is-bold-very">Dex</p></div>
@@ -74,21 +79,21 @@
             </div>
 
             <!-- Hit Points -->
-            <div id="hit-points-body" class="accord-like-button columns is-mobile is-marginless my-1">
+            <div id="hit-points-body" class="accord-like-button-mimic columns is-mobile is-marginless my-1">
               <div class="column is-8 is-paddingless"><span class="title-font pl-2">Hit Points</span></div>
               <div class="column is-2 is-paddingless"><p id="hit-points-total" class="has-text-centered">130</p></div>
               <div class="column is-2 is-paddingless"><p class="has-text-centered is-italic has-txt-noted is-size-7-5 pt-2">(at max)</p></div>
             </div>
 
             <!-- Class DC -->
-            <div id="class-dc-body" class="accord-like-button columns is-mobile is-marginless my-1">
+            <div id="class-dc-body" class="accord-like-button-mimic columns is-mobile is-marginless my-1">
               <div class="column is-8 is-paddingless"><span class="title-font pl-2">Class DC</span></div>
               <div class="column is-2 is-paddingless"><p id="class-dc-total" class="has-text-centered">18</p></div>
               <div class="column is-2 is-paddingless"><p id="class-dc-rank" class="has-text-centered is-italic has-txt-noted">E</p></div>
             </div>
 
             <!-- Perception -->
-            <div id="perception-body" class="accord-like-button columns is-mobile is-marginless my-1">
+            <div id="perception-body" class="accord-like-button-mimic columns is-mobile is-marginless my-1">
               <div class="column is-8 is-paddingless"><span class="title-font pl-2">Perception</span></div>
               <div class="column is-2 is-paddingless"><p id="perception-total" class="has-text-centered">+28</p></div>
               <div class="column is-2 is-paddingless"><p id="perception-rank" class="has-text-centered is-italic has-txt-noted">T</p></div>
@@ -191,24 +196,46 @@
       </div>
     </div>
 
-    <div id="build-ancestry-feats" class="s-s-box">
+    <div id="build-ancestry-feats-section" class="is-hidden" style="margin-left: 0.75rem; margin-right: 0.75rem;">
+      <h3 class="text-center pb-2">Ancestry Feats</h3>
+      <div id="build-ancestry-feats" class="s-x-box mb-4">
+      </div>
     </div>
 
-    <div id="build-class-selections" class="s-s-box">
+    <hr class="m-2">
+
+    <div id="build-class-feats-section" class="is-hidden" style="margin-left: 0.75rem; margin-right: 0.75rem;">
+      <h3 class="text-center pb-2">Class Feats</h3>
+      <div id="build-class-feats" class="s-x-box mb-4">
+      </div>
     </div>
 
-    <div id="build-class-feats" class="s-s-box">
+    <div id="build-archetype-feats-section" class="is-hidden" style="margin-left: 0.75rem; margin-right: 0.75rem;">
+      <h3 class="text-center pb-2">Archetype Feats</h3>
+      <div id="build-archetype-feats" class="s-x-box mb-4">
+      </div>
     </div>
 
-    <!-- Free Archetype Feats -->
+    <hr class="m-2">
 
-    <div id="build-skill-increases" class="s-s-box">
+    <div id="build-skill-history-section" class="is-hidden" style="margin-left: 0.75rem; margin-right: 0.75rem;">
+      <h3 class="text-center pb-2">Skill History</h3>
+      <div id="build-skill-history" class="s-x-box mb-4">
+      </div>
     </div>
 
-    <div id="build-skill-feats" class="s-s-box">
+    <hr class="m-2">
+
+    <div id="build-skill-feats-section" class="is-hidden" style="margin-left: 0.75rem; margin-right: 0.75rem;">
+      <h3 class="text-center pb-2">Skill Feats</h3>
+      <div id="build-skill-feats" class="s-x-box mb-4">
+      </div>
     </div>
 
-    <div id="build-general-feats" class="s-s-box">
+    <div id="build-general-feats-section" class="is-hidden" style="margin-left: 0.75rem; margin-right: 0.75rem;">
+      <h3 class="text-center pb-2">General Feats</h3>
+      <div id="build-general-feats" class="s-x-box mb-4">
+      </div>
     </div>
 
   </div>

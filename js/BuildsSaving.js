@@ -6,6 +6,14 @@ const UserHomebrew = require('./UserHomebrew');
 const CharContentSources = require('./CharContentSources');
 const CharContentHomebrew = require('./CharContentHomebrew');
 
+function objToMap(obj) {
+  let strMap = new Map();
+  for (let k of Object.keys(obj)) {
+    strMap.set(k, obj[k]);
+  }
+  return strMap;
+}
+
 module.exports = class BuildsSaving {
 
   static saveName(buildID, name){
@@ -170,6 +178,97 @@ module.exports = class BuildsSaving {
       }).then((build) => {
         return build;
       });
+    });
+
+  }
+
+
+  static updateMetaData(buildID, metaDataObject) {
+
+    return BuildsSaving.clearMetaData(buildID)
+    .then(() => {
+
+      let metaDataMap = objToMap(metaDataObject);
+
+      let entryPromises = [];
+      for(const [JSON_srcStruct, value] of metaDataMap.entries()){
+        let srcStruct = JSON.parse(JSON_srcStruct);
+        
+        let newPromise = BuildDataMapping.upsert({
+          buildID,
+          source: srcStruct.source,
+          sourceType: srcStruct.sourceType,
+          sourceLevel: srcStruct.sourceLevel,
+          sourceCode: srcStruct.sourceCode,
+          sourceCodeSNum: srcStruct.sourceCodeSNum,
+          value,
+        });
+        entryPromises.push(newPromise);
+      }
+
+      return Promise.all(entryPromises)
+      .then(function(result) {
+        return;
+      });
+
+    });
+
+  }
+
+  static updateInfo(buildID, buildInfo){
+
+    let updateValues = {
+      ancestryID: buildInfo.ancestryID,
+      heritageID: buildInfo.heritageID,
+      uniHeritageID: buildInfo.uniHeritageID,
+      backgroundID: buildInfo.backgroundID,
+      classID: buildInfo.classID,
+    };
+
+    return Build.update(updateValues, { where: { id: buildID } })
+    .then((result) => {
+        return;
+    });
+
+  }
+
+  static updateFinalStats(buildID, finalStatistics){
+
+    let updateValues = {
+      finalStatsJSON: JSON.stringify(finalStatistics),
+    };
+
+    return Build.update(updateValues, { where: { id: buildID } })
+    .then((result) => {
+        return;
+    });
+
+  }
+
+  static publishBuild(buildID){
+
+    return Build.update({ isPublished: 1 }, { where: { id: buildID } })
+    .then((result) => {
+        return;
+    });
+
+  }
+
+  static updateBuild(buildID){
+
+    return Build.update({ isPublished: 0 }, { where: { id: buildID } })
+    .then((result) => {
+        return;
+    });
+
+  }
+
+  static deleteBuild(buildID){
+
+    return Build.destroy({
+      where: { id: buildID }
+    }).then((result) => {
+      return;
     });
 
   }

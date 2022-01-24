@@ -33,11 +33,15 @@ function giveFocusSpell(srcStruct, spellSRC, spellName){
     setData(DATA_SOURCE.FOCUS_SPELL, srcStruct, spellSRC+"="+spell.id);
   }
 
-  socket.emit("requestFocusSpellChange",
-      getCharIDFromURL(),
-      srcStruct,
-      spellSRC,
-      spellName);
+  if(g_char_id != null){
+    socket.emit("requestFocusSpellChange",
+        g_char_id,
+        srcStruct,
+        spellSRC,
+        spellName);
+  } else {
+    saveBuildMetaData();
+  }
 }
 
 socket.on("returnFocusSpellChange", function(){
@@ -49,9 +53,13 @@ function giveFocusPoint(srcStruct){
 
   setData(DATA_SOURCE.FOCUS_POINT, srcStruct, '1');
 
-  socket.emit("requestFocusPointChange",
-      getCharIDFromURL(),
-      srcStruct);
+  if(g_char_id != null){
+    socket.emit("requestFocusPointChange",
+        g_char_id,
+        srcStruct);
+  } else {
+    saveBuildMetaData();
+  }
 }
 
 socket.on("returnFocusPointChange", function(){

@@ -154,9 +154,13 @@ function runQueuedStatement(){
         // Test/Check Statement for Expressions //
         wscStatement = testExpr(wscStatement, srcStruct);
         if(wscStatement == null) {
-          socket.emit("requestDataClearAtSrcStruct",
-              getCharIDFromURL(),
-              srcStruct);
+          if(g_char_id != null){
+            socket.emit("requestDataClearAtSrcStruct",
+                g_char_id,
+                srcStruct);
+          } else {
+            saveBuildMetaData();
+          }
           deleteDataBySourceStruct(srcStruct);
           return PROCESS_RETURN.NEXT;
         }

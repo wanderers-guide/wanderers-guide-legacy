@@ -74,11 +74,15 @@ function giveAbilityBoostSingle(srcStruct, selectionOptions, locationID, extraDa
                   processExtraSkillsAndLangs();
                   //
 
-                  socket.emit("requestWSCAbilityBonusChange",
-                      getCharIDFromURL(),
-                      srcStruct,
-                      {Ability: shortenAbilityType(abilityTypes[0]), Bonus: boostFlaw},
-                      null);
+                  if(g_char_id != null){
+                    socket.emit("requestWSCAbilityBonusChange",
+                        g_char_id,
+                        srcStruct,
+                        {Ability: shortenAbilityType(abilityTypes[0]), Bonus: boostFlaw},
+                        null);
+                  } else {
+                    saveBuildMetaData();
+                  }
                   removeUnselectedData(srcStruct); // Fixes bug with ability boost selector becoming no selector
                   statementComplete('Boost - Single');
                 }
@@ -157,11 +161,17 @@ function displayAbilityBoostSingle(srcStruct, locationID, abilityTypes, extraDat
                 processExtraSkillsAndLangs();
                 //
 
-                socket.emit("requestWSCAbilityBonusChange",
-                    getCharIDFromURL(),
-                    srcStruct,
-                    {Ability: shortenAbilityType($(this).val()), Bonus: boostFlaw},
-                    selectBoostControlShellClass);
+                if(g_char_id != null){
+                  socket.emit("requestWSCAbilityBonusChange",
+                      g_char_id,
+                      srcStruct,
+                      {Ability: shortenAbilityType($(this).val()), Bonus: boostFlaw},
+                      selectBoostControlShellClass);
+                } else {
+                  saveBuildMetaData();
+                  $('.'+selectBoostControlShellClass).removeClass("is-loading");
+                  $('.'+selectBoostControlShellClass+'>select').blur();
+                }
             } else {
                 $(this).parent().addClass("is-info");
                 if(srcStruct == g_keyAbility_SrcStruct){
@@ -173,11 +183,17 @@ function displayAbilityBoostSingle(srcStruct, locationID, abilityTypes, extraDat
                 processExtraSkillsAndLangs();
                 //
 
-                socket.emit("requestWSCAbilityBonusChange",
-                    getCharIDFromURL(),
-                    srcStruct,
-                    null,
-                    selectBoostControlShellClass);
+                if(g_char_id != null){
+                  socket.emit("requestWSCAbilityBonusChange",
+                      g_char_id,
+                      srcStruct,
+                      null,
+                      selectBoostControlShellClass);
+                } else {
+                  saveBuildMetaData();
+                  $('.'+selectBoostControlShellClass).removeClass("is-loading");
+                  $('.'+selectBoostControlShellClass+'>select').blur();
+                }
             }
 
         }

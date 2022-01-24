@@ -21,10 +21,14 @@ function giveWeaponFamiliarity(srcStruct, trait){
 
   setData(DATA_SOURCE.WEAPON_FAMILIARITY, srcStruct, trait);
 
-  socket.emit("requestWeaponFamiliarityChange",
-      getCharIDFromURL(),
-      srcStruct,
-      trait);
+  if(g_char_id != null){
+    socket.emit("requestWeaponFamiliarityChange",
+        g_char_id,
+        srcStruct,
+        trait);
+  } else {
+    saveBuildMetaData();
+  }
 
 }
 

@@ -25,11 +25,13 @@ function processingClassFeatures(wscStatement, srcStruct, locationID, extraData)
 
 function giveClassFeatureByName(srcStruct, locationID, featureName, extraData, dontRunCode=false){
 
-  socket.emit("requestAddClassFeature",
-      getCharIDFromURL(),
-      srcStruct,
-      featureName,
-      { locationID, sourceName: extraData.sourceName, dontRunCode });
+  if(g_char_id != null){ // TODO - Support builds
+    socket.emit("requestAddClassFeature",
+        g_char_id,
+        srcStruct,
+        featureName,
+        { locationID, sourceName: extraData.sourceName, dontRunCode });
+  }
 
 }
 
@@ -139,7 +141,7 @@ socket.on("returnAddClassFeature", function(srcStruct, classAbility, allClassAbi
             deleteData(DATA_SOURCE.CLASS_FEATURE_CHOICE, srcStruct);
 
             socket.emit("requestClassChoiceChange",
-                getCharIDFromURL(),
+                g_char_id,
                 srcStruct,
                 null,
                 false);
@@ -160,7 +162,7 @@ socket.on("returnAddClassFeature", function(srcStruct, classAbility, allClassAbi
             setDataClassChoice(srcStruct, classAbility.id+'', chosenAbilityID);
 
             socket.emit("requestClassChoiceChange",
-                getCharIDFromURL(),
+                g_char_id,
                 srcStruct,
                 { SelectorID : classAbility.id+'', OptionID : chosenAbilityID },
                 false);

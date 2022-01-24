@@ -30,10 +30,14 @@ function giveWeaponSpecialization(srcStruct, type){
 
   setData(DATA_SOURCE.WEAPON_SPECIAL, srcStruct, type);
 
-  socket.emit("requestWeaponSpecializationChange",
-      getCharIDFromURL(),
-      srcStruct,
-      type);
+  if(g_char_id != null){
+    socket.emit("requestWeaponSpecializationChange",
+        g_char_id,
+        srcStruct,
+        type);
+  } else {
+    saveBuildMetaData();
+  }
 
 }
 
@@ -50,10 +54,14 @@ function giveArmorSpecialization(srcStruct, armorName){
 
   setData(DATA_SOURCE.ARMOR_SPECIAL, srcStruct, armorName);
 
-  socket.emit("requestArmorSpecializationChange",
-      getCharIDFromURL(),
-      srcStruct,
-      armorName);
+  if(g_char_id != null){
+    socket.emit("requestArmorSpecializationChange",
+        g_char_id,
+        srcStruct,
+        armorName);
+  } else {
+    saveBuildMetaData();
+  }
 
 }
 
@@ -73,10 +81,14 @@ function giveWeaponCriticalSpecialization(srcStruct, weapName){
 
   setData(DATA_SOURCE.WEAPON_CRIT_SPECIAL, srcStruct, weapName);
 
-  socket.emit("requestWeaponCriticalSpecializationChange",
-      getCharIDFromURL(),
-      srcStruct,
-      weapName);
+  if(g_char_id != null){
+    socket.emit("requestWeaponCriticalSpecializationChange",
+        g_char_id,
+        srcStruct,
+        weapName);
+  } else {
+    saveBuildMetaData();
+  }
 
 }
 

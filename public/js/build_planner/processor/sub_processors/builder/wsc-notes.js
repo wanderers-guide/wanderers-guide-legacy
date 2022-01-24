@@ -22,11 +22,15 @@ function giveNotesField(srcStruct, placeholderText, locationID, extraData){
 
     setData(DATA_SOURCE.NOTES_FIELD, srcStruct, 'StoredNoteField');
 
-    socket.emit("requestNotesFieldChange",
-        getCharIDFromURL(),
-        srcStruct,
-        placeholderText,
-        { locationID, sourceName: extraData.sourceName });
+    if(g_char_id != null){
+      socket.emit("requestNotesFieldChange",
+          g_char_id,
+          srcStruct,
+          placeholderText,
+          { locationID, sourceName: extraData.sourceName });
+    } else {
+      saveBuildMetaData();
+    }
 
 }
 
@@ -38,7 +42,7 @@ socket.on("returnNotesFieldChange", function(notesData, noteChangePacket){
     let placeholderText = noteChangePacket.sourceName+' - '+notesData.placeholderText;
     let notesText = notesData.text;
     
-    let notesFieldID = getCharIDFromURL()+'-notesField-'+notesData.sourceType+'-'+notesData.sourceLevel+'-'+notesData.sourceCode+'-'+notesData.sourceCodeSNum;
+    let notesFieldID = g_char_id+'-notesField-'+notesData.sourceType+'-'+notesData.sourceLevel+'-'+notesData.sourceCode+'-'+notesData.sourceCodeSNum;
     let notesFieldControlShellID = notesFieldID+'ControlShell';
 
     // If ID already exists, just return. This is a temporary fix - this shouldn't be an issue in the first place.
@@ -53,10 +57,14 @@ socket.on("returnNotesFieldChange", function(notesData, noteChangePacket){
             
             notesData.text = $(this).val();
 
-            socket.emit("requestNotesFieldSave",
-                getCharIDFromURL(),
-                notesData,
-                notesFieldControlShellID);
+            if(g_char_id != null){
+              socket.emit("requestNotesFieldSave",
+                  g_char_id,
+                  notesData,
+                  notesFieldControlShellID);
+            } else {
+              saveBuildMetaData();
+            }
 
         }
     });

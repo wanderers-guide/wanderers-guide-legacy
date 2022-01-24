@@ -76,10 +76,15 @@ function giveProfSkillTraining(srcStruct, profName, prof, locationID, extraData)
 
         setDataProficiencies(srcStruct, profCategory, profProperName, prof, extraData.sourceName);
   
-        socket.emit("requestProficiencyChange",
-            getCharIDFromURL(),
-            {srcStruct, isSkill : true, isStatement : true},
-            { For : profCategory, To : profProperName, Prof : prof, SourceName : extraData.sourceName });
+        if(g_char_id != null){
+          socket.emit("requestProficiencyChange",
+              g_char_id,
+              {srcStruct, isSkill : true, isStatement : true},
+              { For : profCategory, To : profProperName, Prof : prof, SourceName : extraData.sourceName });
+        } else {
+          saveBuildMetaData();
+        }
+
         displayProfChange(locationID, prof, profProperName);
 
         selectorUpdated();
@@ -146,10 +151,15 @@ function giveInProf(srcStruct, profName, prof, locationID, extraData){
         }
         setDataProficiencies(srcStruct, profCategory, profProperName, prof, extraData.sourceName);
 
-        socket.emit("requestProficiencyChange",
-            getCharIDFromURL(),
-            {srcStruct, isSkill : isSkill, isStatement : true},
-            { For : profCategory, To : profProperName, Prof : prof, SourceName : extraData.sourceName });
+        if(g_char_id != null){
+          socket.emit("requestProficiencyChange",
+              g_char_id,
+              {srcStruct, isSkill : isSkill, isStatement : true},
+              { For : profCategory, To : profProperName, Prof : prof, SourceName : extraData.sourceName });
+        } else {
+          saveBuildMetaData();
+        }
+
         displayProfChange(locationID, prof, profProperName);
 
         if(isSkill){

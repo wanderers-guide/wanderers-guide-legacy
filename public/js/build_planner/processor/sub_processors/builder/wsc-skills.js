@@ -74,10 +74,14 @@ function giveSkill(srcStruct, locationID, extraData, profType, optionals=null){
 
             deleteData(DATA_SOURCE.PROFICIENCY, srcStruct);
 
-            socket.emit("requestProficiencyChange",
-                getCharIDFromURL(),
-                {srcStruct, isSkill : true, isAutoLoad},
-                null);
+            if(g_char_id != null){
+              socket.emit("requestProficiencyChange",
+                  g_char_id,
+                  {srcStruct, isSkill : true, isAutoLoad},
+                  null);
+            } else {
+              saveBuildMetaData();
+            }
             
             selectorUpdated();
 
@@ -93,10 +97,14 @@ function giveSkill(srcStruct, locationID, extraData, profType, optionals=null){
             if(!isAutoLoad){
               setDataProficiencies(srcStruct, 'Skill', 'addLore', profType, extraData.sourceName);
 
-              socket.emit("requestProficiencyChange",
-                  getCharIDFromURL(),
-                  {srcStruct, isSkill : true, isAutoLoad},
-                  { For : "Skill", To : 'addLore', Prof : profType, SourceName : extraData.sourceName });
+              if(g_char_id != null){
+                socket.emit("requestProficiencyChange",
+                    g_char_id,
+                    {srcStruct, isSkill : true, isAutoLoad},
+                    { For : "Skill", To : 'addLore', Prof : profType, SourceName : extraData.sourceName });
+              } else {
+                saveBuildMetaData();
+              }
 
               selectorUpdated();
             }
@@ -137,10 +145,14 @@ function giveSkill(srcStruct, locationID, extraData, profType, optionals=null){
 
                 setDataProficiencies(srcStruct, 'Skill', skillName, profType, extraData.sourceName);
 
-                socket.emit("requestProficiencyChange",
-                    getCharIDFromURL(),
-                    {srcStruct, isSkill : true, isAutoLoad},
-                    { For : "Skill", To : skillName, Prof : profType, SourceName : extraData.sourceName });
+                if(g_char_id != null){
+                  socket.emit("requestProficiencyChange",
+                      g_char_id,
+                      {srcStruct, isSkill : true, isAutoLoad},
+                      { For : "Skill", To : skillName, Prof : profType, SourceName : extraData.sourceName });
+                } else {
+                  saveBuildMetaData();
+                }
                 
                 selectorUpdated();
             }
