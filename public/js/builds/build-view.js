@@ -8,13 +8,14 @@ function openBuildView(buildID){
   startSpinnerSubLoader();
 }
 
+let g_notesMap;
+let g_unselectedDataArray;
+
 socket.on("returnBuildContents", function(buildContents){
 
   if(buildContents == null){ console.error('Don\'t have access!'); }
 
   g_activeBuild = buildContents.build;
-
-  console.log(buildContents);
 
   textProcess_warningOnUnknown = true;
   g_skillMap = objToMap(buildContents.sourceMaterial.skillObject);
@@ -50,11 +51,31 @@ socket.on("returnBuildContents", function(buildContents){
         $('#build-create-character-btn-text').remove();
       }
 
+      // Generate Notes Map //
+      generateNotesMap();
+
+
       $('#build-name').html(g_activeBuild.name);
       $('#build-description').html(processText(g_activeBuild.description, false, false, 'MEDIUM', false));
 
-      let contactInfoStr = (g_activeBuild.contactInfo != '') ? ', '+g_activeBuild.contactInfo : '';
+      $('#build-artwork-img').attr('src', g_activeBuild.artworkURL);
+
+      let contactInfoStr = (g_activeBuild.contactInfo != '' && g_activeBuild.contactInfo != null) ? ', '+g_activeBuild.contactInfo : '';
       $('#build-contact-info').html('<span class="is-thin has-txt-partial-noted">–</span> '+g_activeBuild.authorName+' <span class="is-thin has-txt-partial-noted is-size-7">#'+g_activeBuild.userID+'</span>'+contactInfoStr);
+
+      // Determine build level range
+      let lowestLvl = 999;
+      let highestLvl = 0;
+      for(const data of buildContents.buildData){
+        if(!processData_isCheckedData(data)) { continue; }
+        if(data.sourceLevel < lowestLvl){
+          lowestLvl = data.sourceLevel;
+        }
+        if(data.sourceLevel > highestLvl){
+          highestLvl = data.sourceLevel;
+        }
+      }
+      $('#build-lvl-range').html(`(Level ${lowestLvl} - ${highestLvl})`);
 
       ///
 
@@ -65,10 +86,113 @@ socket.on("returnBuildContents", function(buildContents){
 
       // Create Character Button //
       $('#build-create-character-btn').click(function() {
-        //socket.emit('requestBundleChangeCollection', g_activeBuild.id, true);
+
+        let homebrewNeeded = [];
+
+        const buildHomebrew = JSON.parse(g_activeBuild.enabledHomebrew);
+        for(const buildHomebrewID of buildHomebrew){
+          let hBundle = buildContents.userInfo.hBundlesCollected.find(hBundle => {
+            return hBundle.homebrewID == buildHomebrewID;
+          });
+          if(hBundle == null){
+            hBundle = buildContents.userInfo.hBundlesProgess.find(hBundle => {
+              return hBundle.id == buildHomebrewID;
+            });
+          }
+          if(hBundle == null){
+            homebrewNeeded.push(buildHomebrewID);
+          }
+        }
+
+        startSpinnerSubLoader();
+
+        // If requires homebrew bundles to be added, get homebrew bundles
+        if(homebrewNeeded.length > 0){
+          socket.emit('requestHomebrewBundlesFromArray', homebrewNeeded);
+          
+          socket.once('returnHomebrewBundlesFromArray', function(neededBundles){
+            if(neededBundles.length > 0){
+              stopSpinnerSubLoader();
+
+              // Send confirm message asking if it's okay to add required bundles
+              let requiredBundlesHTML = '';
+              for(const neededBundle of neededBundles){
+                if(neededBundle == null) { continue; }
+                requiredBundlesHTML += `<p class="has-text-left" style="padding-left: 30%;"> - ${neededBundle.name} <span class="is-size-6-5 is-italic has-txt-partial-noted">(ID: ${neededBundle.id})</span></p>`;
+              }
+
+              new ConfirmMessage('Build Requires Homebrew', `
+                <p class="has-text-centered">This build requires the following homebrew to be enabled and added to your homebrew collection:</p>
+                ${requiredBundlesHTML}
+                `, 'Add Homebrew to Collection', 'modal-build-add-required-homebrew', 'modal-build-add-required-homebrew-btn', 'is-info');
+              $('#modal-build-add-required-homebrew-btn').click(function() {
+                startSpinnerSubLoader();
+
+                // Homebrew bundles can be added, but do any require a key?
+                let neededBundlesRequireKey = [];
+                for(const neededBundle of neededBundles){
+                  if(neededBundle == null) { continue; }
+                  if(neededBundle.hasKeys == 1){
+                    neededBundlesRequireKey.push(neededBundle);
+                  } else {
+                    socket.emit('requestBundleChangeCollection', neededBundle.id, true);
+                  }
+                }
+
+                // Some of the bundles require a key, say that.
+                if(neededBundlesRequireKey.length > 0){
+                  stopSpinnerSubLoader();
+
+                  let requiredBundlesThatNeedKeyHTML = '';
+                  for(const neededBundleRequireKey of neededBundlesRequireKey){
+                    requiredBundlesThatNeedKeyHTML += `<p class="has-text-left" style="padding-left: 30%;"> - ${neededBundleRequireKey.name} <span class="is-size-6-5 is-italic has-txt-partial-noted">(ID: ${neededBundleRequireKey.id})</span></p>`;
+                  }
+
+                  new ConfirmMessage('Homebrew Requires Key to Access', `
+                    <p class="has-text-centered">The following homebrew requires a key to access:</p>
+                    ${requiredBundlesThatNeedKeyHTML}
+                    <p class="has-text-centered">You can add the homebrew to your collection by individually adding the homebrew bundle and inputting the required key.</p>
+                    `, 'Okay', 'modal-build-homebrew-requires-key', 'modal-build-homebrew-requires-key-btn', 'is-info');
+
+                } else {
+                  // No keys required, create the character
+                  socket.emit('requestCreateCharacterFromBuild', g_activeBuild.id);
+                }
+
+              });
+
+            } else {
+              // If requires homebrew bundles, but can't find them. Just create the character and hope for the best!
+              socket.emit('requestCreateCharacterFromBuild', g_activeBuild.id);
+            }
+          });
+        } else {
+          // No homebrew bundles required to be enabled, just create the character
+          socket.emit('requestCreateCharacterFromBuild', g_activeBuild.id);
+        }
+
       });
 
-      ////
+      ///
+
+      g_unselectedDataArray = [];
+      for(const data of buildContents.buildData){
+        if(processData_isIncorrectOption(data)){
+          g_unselectedDataArray.push(data);
+        }
+      }
+
+      // Reveal warnings icon if there is incorrect data
+      if(g_unselectedDataArray.length > 0){
+        $('#build-warnings-icon').removeClass('is-hidden');
+      }
+
+      // Build Warnings Icon //
+      $('#build-warnings-icon').click(function() {
+        openQuickView('warningsView', {});
+      });
+
+      ///
 
       if(buildContents.mainSelections.bAncestry != null){
         $('#build-ancestry').html(buildContents.mainSelections.bAncestry.name);
@@ -162,8 +286,6 @@ socket.on("returnBuildContents", function(buildContents){
       if(buildContents.build.finalStatsJSON != null){
 
         let finalStats = JSON.parse(buildContents.build.finalStatsJSON);
-
-        console.log(finalStats);
 
         $('#str-score').text(finalStats.scores.str);
         $('#dex-score').text(finalStats.scores.dex);
@@ -428,7 +550,7 @@ socket.on("returnBuildContents", function(buildContents){
         populateAccord('resist-weaks-body', []);
 
       }
-      
+
       //// Reading MetaData
 
       processMetaData(buildContents);
@@ -437,6 +559,16 @@ socket.on("returnBuildContents", function(buildContents){
       $('#'+displayContainerID).removeClass('is-hidden');
     }
   });
+});
+
+socket.on('returnCharacterCreatedFromBuild', function(character){
+  stopSpinnerSubLoader();
+  window.location.href = '/profile/characters/builder/basics/?id='+character.id;
+});
+
+socket.on('returnCharacterFailedToCreateFromBuild', function(){
+  stopSpinnerSubLoader();
+  new ConfirmMessage('Cannot Create Character', 'It seems like you\'ve reached your max characters. To get unlimited characters, support us and what we\'re doing on Patreon!', 'Okay', 'modal-failed-max-characters', 'modal-failed-max-characters-btn', 'is-info');
 });
 
 function populateAccord(accordBodyID, optionsList){
@@ -478,6 +610,28 @@ function populateAccord(accordBodyID, optionsList){
 
 }
 
+function generateNotesMap(){
+  g_notesMap = new Map();
+  if(g_activeBuild.description == null) { return; }
+
+  let newDescription = '';
+  for(let line of g_activeBuild.description.split('\n')){
+    if(line.includes(':')){
+      let lineParts = line.split(':');
+      if(lineParts.length == 2 && lineParts[0].length <= 60){
+        g_notesMap.set(lineParts[0].toUpperCase(), lineParts[1].trim());
+      } else {
+        newDescription += line+'\n';
+      }
+    } else {
+      newDescription += line+'\n';
+    }
+  }
+
+  g_activeBuild.description = newDescription;
+
+}
+
 function processMetaData(buildContents){
 
   let ancestryFeats = [];
@@ -511,29 +665,24 @@ function processMetaData(buildContents){
   }
 
   // Build Tables //
-  console.log(classSelections);
   processData_buildClassSelection('build-class-selections', classSelections, buildContents);
 
-  console.log(ancestryFeats);
   processData_buildFeatTable('build-ancestry-feats', ancestryFeats);
 
-  console.log(classFeats);
   processData_buildFeatTable('build-class-feats', classFeats);
 
-  console.log(archetypeFeats);
   processData_buildFeatTable('build-archetype-feats', archetypeFeats);
 
-  console.log(skillData);
-  processData_buildSkillTable('build-skill-history', skillData);
-
-  console.log(skillFeats);
-  processData_buildFeatTable('build-skill-feats', skillFeats);
-
-  console.log(generalFeats);
   processData_buildFeatTable('build-general-feats', generalFeats);
 
-  console.log(otherData);
+  processData_buildFeatTable('build-skill-feats', skillFeats);
 
+  processData_buildSkillTable('build-skill-history', skillData);
+
+}
+
+function processData_isCheckedData(data){
+  return ((data.source == 'chosenFeats' || data.source == 'classChoice') && data.value != null);
 }
 
 function processData_isAncestryFeat(data){
@@ -638,12 +787,29 @@ function processData_isClassSelection(data){
   );
 }
 
+function processData_isIncorrectOption(data){
+  return (data.source == 'unselectedData'
+    && data.value.includes('"INCORRECT"')
+  );
+}
+
 
 function processData_buildFeatTable(locationID, featDataArray){
   if(featDataArray.length > 0){
     $('#'+locationID+'-section').removeClass('is-hidden');
   } else {
     return;
+  }
+
+  let containsNotes = false;
+  for(let data of featDataArray){
+    let featStruct = g_featMap.get(data.value+'');
+    if(featStruct != null && g_notesMap.has(featStruct.Feat.name.toUpperCase())){
+      containsNotes = true;
+    }
+  }
+  if(!containsNotes){
+    $('#'+locationID).addClass('is-short');
   }
 
   $('#'+locationID).html(`
@@ -654,15 +820,25 @@ function processData_buildFeatTable(locationID, featDataArray){
       <div class="column p-1 border-bottom border-dark-lighter has-bg-options-header-bold is-bold">
         <span class="is-p pl-3">Feat</span>
       </div>
-      <div class="column p-1 border-bottom border-dark-lighter has-bg-options-header-bold is-bold">
-        <span class="is-p pl-3">Notes</span>
-      </div>
+      ${(containsNotes) ? `
+        <div class="column p-1 border-bottom border-dark-lighter has-bg-options-header-bold is-bold">
+          <span class="is-p pl-3">Notes</span>
+        </div>
+      ` : ``}
     </div>
     <div id="${locationID}-list" class="use-custom-scrollbar" style="max-height: 450px; overflow-y: scroll;"></div>
   `);
   for(let data of featDataArray){
     let featStruct = g_featMap.get(data.value+'');
+    if(featStruct == null) { continue; }
     let featEntryID = 'feat-table-entry-'+featStruct.Feat.id;
+
+    let notes = null;
+    if(containsNotes){
+      notes = g_notesMap.get(featStruct.Feat.name.toUpperCase());
+      if(notes == null) { notes = ''; }
+    }
+
     $('#'+locationID+'-list').append(`
       <div class="columns is-marginless is-mobile">
         <div class="column is-2 border-bottom border-dark-lighter p-2 has-bg-selectable">
@@ -671,9 +847,11 @@ function processData_buildFeatTable(locationID, featDataArray){
         <div id="${featEntryID}" class="column border-bottom border-dark-lighter p-2 has-bg-selectable cursor-clickable">
           <span class="is-p pl-2">${featStruct.Feat.name+convertActionToHTML(featStruct.Feat.actions)}</span>
         </div>
-        <div class="column border-bottom border-dark-lighter p-2 has-bg-selectable">
-          <span class="is-p pl-2 is-size-7">GRemlopppy</span>
-        </div>
+        ${(containsNotes) ? `
+          <div class="column border-bottom border-dark-lighter p-2 pl-3 has-bg-selectable">
+            <span class="is-p is-size-7">${notes}</span>
+          </div>
+        ` : ``}
       </div>
     `);
 
@@ -737,6 +915,7 @@ function processData_buildSkillTable(locationID, skillDataArray){
     <div id="${locationID}-list" class="use-custom-scrollbar" style="max-height: 450px; overflow-y: scroll;"></div>
   `);
   for(let data of skillDataArray){
+    if(data.value == null) { continue; }
     
     let parts = data.value.split(':::');
     const skillName = parts[1];
@@ -786,6 +965,7 @@ function processData_buildClassSelection(locationID, selectionDataArray, buildCo
     <div id="${locationID}-list" class="use-custom-scrollbar" style="max-height: 208px; overflow-y: scroll;"></div>
   `);
   for(let data of selectionDataArray){
+    if(data.value == null) { continue; }
     
     let parts = data.value.split(':::');
     const selectorID = parts[0];

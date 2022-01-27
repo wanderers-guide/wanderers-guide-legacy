@@ -409,6 +409,9 @@ function hasGreaterWidth(jQueryElement, pixelWidth){
 function isMobileView(){
   return window.matchMedia("screen and (max-width: 768px)").matches;
 }
+function isTabletView(){
+  return window.matchMedia("screen and (min-width : 769px) and (max-width : 1023px)").matches;
+}
 
 function isSheetPage(){
   return typeof isSheetInit !== 'undefined';

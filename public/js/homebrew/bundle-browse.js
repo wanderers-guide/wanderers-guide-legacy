@@ -94,7 +94,7 @@ function filterBundleSearch(homebrewBundles){
 
   homebrewBundles = new Set(homebrewBundles);
 
-  if(nameFilter != ''){
+  if(nameFilter != null && nameFilter != ''){
     console.log('Filtering by Name...');
     let parts = nameFilter.toUpperCase().split(' ');
     for(const homebrewBundle of homebrewBundles){
@@ -104,7 +104,7 @@ function filterBundleSearch(homebrewBundles){
     }
   }
 
-  if(descFilter != ''){
+  if(descFilter != null && descFilter != ''){
     console.log('Filtering by Description...');
     let parts = descFilter.toUpperCase().split(' ');
     for(const homebrewBundle of homebrewBundles){
@@ -114,7 +114,7 @@ function filterBundleSearch(homebrewBundles){
     }
   }
 
-  if(authorFilter != ''){
+  if(authorFilter != null && authorFilter != ''){
     console.log('Filtering by Author...');
     let parts = authorFilter.toUpperCase().split(' ');
     for(const homebrewBundle of homebrewBundles){
@@ -124,7 +124,7 @@ function filterBundleSearch(homebrewBundles){
     }
   }
 
-  if(ratingFilter != ''){
+  if(ratingFilter != null && ratingFilter != ''){
     console.log('Filtering by Rating...');
     let rating = parseInt(ratingFilter);
     for(const homebrewBundle of homebrewBundles){
@@ -141,7 +141,7 @@ function filterBundleSearch(homebrewBundles){
     }
   }
 
-  if(keyRequiredFilter != 'ANY'){
+  if(keyRequiredFilter != null && keyRequiredFilter != 'ANY'){
     console.log('Filtering by Key Required...');
     for(const homebrewBundle of homebrewBundles){
       if(homebrewBundle.hasKeys != keyRequiredFilter){

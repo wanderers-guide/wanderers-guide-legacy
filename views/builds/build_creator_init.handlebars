@@ -12,6 +12,10 @@
 
     <script type="text/javascript" src="/js/char_builders/top-stickies.js"></script>
     <script type="text/javascript" src="/js/char_builders/utils.js"></script>
+
+    <!-- Build Creator Augment -->
+    <script src="/js/builds/build-creator-augment.js"></script>
+    
 {{/section}}
 
 {{#section 'nav_home'}}
@@ -74,10 +78,10 @@
         <div class="steps">
             <div class="step-item is-active is-info">
                 <div class="step-marker">
-                <a class="builder-basics-page-btn"><span class="icon"><i class="fas fa-home-alt"></i></span></a>
+                <a class="builder-build-home-page-btn"><span class="icon"><i class="fas fa-home-alt"></i></span></a>
                 </div>
                 <div class="step-details is-hidden-touch">
-                    <a class="builder-basics-page-btn button is-rounded is-inverted is-info"><p class="step-title">Home</p></a>
+                    <a class="builder-build-home-page-btn button is-rounded is-inverted is-info"><p class="step-title">Home</p></a>
                 </div>
             </div>
             <div class="step-item is-builder-type-by-level">
@@ -88,40 +92,73 @@
             </div>
             <div class="step-item">
                 <div class="step-marker">
-                <a class="builder-finalize-page-btn"><span class="has-text-bck-color icon"><i class="fa fa-user-alt"></i></span></a>
+                <a class="builder-build-publish-page-btn"><span class="has-text-bck-color icon"><i class="fa fa-user-alt"></i></span></a>
                 </div>
                 <div class="step-details is-hidden-touch">
-                    <a class="builder-finalize-page-btn button is-rounded is-inverted is-info"><p class="step-title">Publish</p></a>
+                    <a class="builder-build-publish-page-btn button is-rounded is-inverted is-info"><p class="step-title">Publish</p></a>
                 </div>
             </div>
         </div>
 
-        <div class="columns py-2 pos-relative">
-
+        <div class="columns is-marginless">
             <div class="column is-4 is-offset-4">
 
-                <div class="columns">
-                    <div class="column is-paddingless p-1">
-
-                        <div>
-                            <h5>Build Name</h5>
-                        </div>
-                        <div class="field">
-                            <div id="charNameControlShell" class="control has-icons-left has-icons-right">
-                                <input class="input" type="text" placeholder="Name" spellcheck="false" id="charName" maxlength="28" value="{{build.name}}" style="text-align:center;">
-                                <span class="icon is-small is-left">
-                                    <i class="fas fa-user"></i>
-                                </span>
-                                <span class="icon is-small is-right">
-                                    <i id="charNameSideIcon" class="fas fa-exclamation-triangle is-hidden"></i>
-                                </span>
-                            </div>
-                        </div>
-                        
-                    </div>
+              <div class="field">
+                <div id="charNameControlShell" class="control has-icons-left has-icons-right">
+                  <input class="input" type="text" placeholder="Build Name" spellcheck="false" id="charName" maxlength="28" value="{{build.name}}" style="text-align:center;">
+                  <span class="icon is-small is-right">
+                    <i id="charNameSideIcon" class="fas fa-exclamation-triangle is-hidden"></i>
+                  </span>
                 </div>
+              </div>
+
             </div>
         </div>
+
+        <div class="columns is-marginless">
+            <div class="column is-paddingless is-8 is-offset-2" style="padding-left: 0.75rem!important; padding-right: 0.75rem!important;">
+              
+              <div class="control py-1">
+                <textarea id="buildDescription" class="textarea use-custom-scrollbar" placeholder="Build Description">{{build.description}}</textarea>
+              </div>
+
+            </div>
+        </div>
+
+        <div class="columns is-marginless py-1">
+          <div class="column is-paddingless is-8 is-offset-2 px-4">
+            <p class="has-text-left has-txt-partial-noted is-size-6-5">
+              You can write notes for specific feats you've selected by writing at the end of the description, each on their own line: "{feat name}: {notes}"
+            </p>
+            <p class="has-text-left has-txt-noted is-size-7 is-italic">
+              Example.
+            </p>
+            <p class="has-text-left has-txt-noted is-size-7">
+              Goblin Song: A great option for easily lowering an enemy's Perception and Will saves, this can be an amazing tool in helping rogues and casters alike.
+            </p>
+          </div>
+        </div>
+
+        <div class="columns is-marginless">
+            <div class="column is-4 is-offset-4">
+
+              <div class="control py-1">
+                <input id="buildContactInfo" class="input" type="text" placeholder="Contact Info" autocomplete="off" value="{{build.contactInfo}}">
+              </div>
+
+            </div>
+        </div>
+
+        <div class="columns is-marginless">
+            <div class="column is-paddingless is-4 is-offset-4" style="padding-left: 0.75rem!important; padding-right: 0.75rem!important;">
+              
+              <div class="control py-1">
+                <input id="buildArtworkURL" class="input isURL" type="text" maxlength="200" placeholder="Image URL" spellcheck="false" autocomplete="off" value="{{build.artworkURL}}">
+              </div>
+
+            </div>
+        </div>
+
     </div>
 
     

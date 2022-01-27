@@ -572,7 +572,7 @@
     <!-- Spells Manager Modal -->
     <div id="manageSpellsModalDefault" name="" class="modal" style="z-index:30;">
     <div id="manageSpellsModalBackground" class="modal-background"></div>
-    <div class="modal-card" style="width: 90%; height: 90%;">
+    <div id="manageSpellsModalCard" class="modal-card">
         <div class="modal-card-head">
         <p id="manageSpellsModalTitle" class="modal-card-title has-text-centered is-size-4 has-txt-value-number">Manage Spells<span class="icon is-size-6 has-text-info has-tooltip-multiline has-tooltip-bottom" data-tooltip="For prepared spellcasters, drag spells from your spell list over to the appropriate slots to prepare them."><i class="far fa-question-circle"></i></span></p>
         <button id="manageSpellsModalCloseButton" class="delete" aria-label="close"></button>
@@ -582,8 +582,8 @@
                 <ul id="manageSpellsTabs" class="sheet-tabs has-txt-value-number">
                 </ul>
             </div>
-                <div class="columns is-mobile is-marginless">
-                    <div class="column is-paddingless is-3-desktop is-6-mobile">
+                <div class="columns is-mobile is-marginless" style="height: 100%; padding-bottom: 2rem;">
+                    <div class="column is-paddingless is-3-desktop is-6-mobile" style="height: 100%;">
                         <div class="columns is-mobile is-marginless has-bg-options-header-bold">
                             <div id="manageSpellsListName" class="column is-10 is-paddingless">
                             </div>
@@ -599,11 +599,11 @@
                                 <span class="icon is-left"><i class="fas fa-search" aria-hidden="true"></i></span>
                             </p>
                         </div>
-                        <div id="manageSpellsSpellBook" class="use-custom-scrollbar" style="max-height: 55vh; overflow-y: auto;">
+                        <div id="manageSpellsSpellBook" class="use-custom-scrollbar" style="overflow-y: auto;height: calc(100% - 80px);">
                         </div>
                     </div>
                     <div class="column is-paddingless is-9-desktop is-6-mobile pos-relative">
-                        <div id="manageSpellsSlots" class="use-custom-scrollbar" style="max-height: 70vh; overflow-y: auto;">
+                        <div id="manageSpellsSlots" class="use-custom-scrollbar" style="overflow-y: auto; height: 100%;">
                         </div>
                         <div class="pos-absolute pos-t-0 pos-r-4">
                           <span id="manageSpellsAddNewSlotBtn" class="icon is-medium has-text-info cursor-clickable has-tooltip-left" data-tooltip="Add Spell Slot">

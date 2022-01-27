@@ -13,20 +13,33 @@
     </button>
   </div>
 
-  <div style="max-width: 70%; margin: auto;">
-    <p class="is-size-3 has-text-centered pb-2"><span id="build-name" class="title-font has-txt-value-number is-bold"></span></p>
+  <div style="position: absolute; top: 50px; right: 13px; z-index: 1;">
+    <span id="build-warnings-icon" class="is-hidden icon has-text-warning cursor-clickable has-tooltip-left" data-tooltip="Warnings"><i class="fas fa-exclamation-triangle"></i></span>
   </div>
 
-  <div class="view-build-container pb-2">
+  <div style="max-width: 70%; margin: auto;">
+    <p class="is-size-3 has-text-centered pb-2">
+      <span class="pos-relative">
+        <span id="build-name" class="title-font has-txt-value-number is-bold"></span>
+        <span id="build-lvl-range" class="pos-absolute is-size-6-5 is-italic has-txt-partial-noted" style="bottom: -35px; left: 50%; transform: translate(-50%, -50%); white-space: nowrap;"></span>
+      </span>
+    </p>
+  </div>
 
-    <div class="pos-relative">
-      <div class="fading-reveal-container is-active">
-        <div style="float: right; max-width: 60%; max-height: 40vh;">
-          <img id="build-artwork-img" src="" style="max-height: 40vh;">
+  <div class="view-build-container pb-2 px-4 mx-5 mobile-is-marginless">
+
+    <div class="columns is-marginless">
+      <div class="column is-paddingless">
+        <div class="pos-relative">
+          <div class="fading-reveal-container is-active">
+            <div style="float: right; max-width: 60%; max-height: 40vh;">
+              <img id="build-artwork-img" src="" style="max-height: 40vh;">
+            </div>
+            <div id="build-description" class="has-text-left"></div>
+          </div>
+          <p class="reveal-container-text is-hidden has-text-info">Show More</p>
         </div>
-        <div id="build-description" class="has-text-left"></div>
       </div>
-      <p class="reveal-container-text is-hidden has-text-info">Show More</p>
     </div>
     <div class="px-1 pb-1"><p id="build-contact-info" class="has-txt-listing is-bold text-right"></p></div>
 
@@ -196,13 +209,14 @@
       </div>
     </div>
 
+    <hr class="m-2">
+
     <div id="build-ancestry-feats-section" class="is-hidden" style="margin-left: 0.75rem; margin-right: 0.75rem;">
       <h3 class="text-center pb-2">Ancestry Feats</h3>
       <div id="build-ancestry-feats" class="s-x-box mb-4">
       </div>
+      <hr class="m-2">
     </div>
-
-    <hr class="m-2">
 
     <div id="build-class-feats-section" class="is-hidden" style="margin-left: 0.75rem; margin-right: 0.75rem;">
       <h3 class="text-center pb-2">Class Feats</h3>
@@ -218,23 +232,22 @@
 
     <hr class="m-2">
 
-    <div id="build-skill-history-section" class="is-hidden" style="margin-left: 0.75rem; margin-right: 0.75rem;">
-      <h3 class="text-center pb-2">Skill History</h3>
-      <div id="build-skill-history" class="s-x-box mb-4">
+    <div id="build-general-feats-section" class="is-hidden" style="margin-left: 0.75rem; margin-right: 0.75rem;">
+      <h3 class="text-center pb-2">General Feats</h3>
+      <div id="build-general-feats" class="s-x-box mb-4">
       </div>
     </div>
-
-    <hr class="m-2">
 
     <div id="build-skill-feats-section" class="is-hidden" style="margin-left: 0.75rem; margin-right: 0.75rem;">
       <h3 class="text-center pb-2">Skill Feats</h3>
       <div id="build-skill-feats" class="s-x-box mb-4">
       </div>
+      <hr class="m-2">
     </div>
 
-    <div id="build-general-feats-section" class="is-hidden" style="margin-left: 0.75rem; margin-right: 0.75rem;">
-      <h3 class="text-center pb-2">General Feats</h3>
-      <div id="build-general-feats" class="s-x-box mb-4">
+    <div id="build-skill-history-section" class="is-hidden" style="margin-left: 0.75rem; margin-right: 0.75rem;">
+      <h3 class="text-center pb-2">Skill History</h3>
+      <div id="build-skill-history" class="s-x-box mb-4">
       </div>
     </div>
 

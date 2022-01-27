@@ -680,10 +680,12 @@ module.exports = class SocketConnections {
         AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
             CharGathering.getCharacter(userID, charID).then((character) => {
-              ClientAPI.getClientsWhoAccess(charID).then((clientsWithAccess) => {
-                UserHomebrew.getCollectedHomebrewBundles(userID).then((hBundles) => {
-                  UserHomebrew.getIncompleteHomebrewBundles(userID).then((progessBundles) => {
-                    socket.emit('returnCharacterDetails', character, clientsWithAccess, hBundles, progessBundles);
+              BuildsGathering.getBuildInfo(character.buildID).then((buildInfo) => {
+                ClientAPI.getClientsWhoAccess(charID).then((clientsWithAccess) => {
+                  UserHomebrew.getCollectedHomebrewBundles(userID).then((hBundles) => {
+                    UserHomebrew.getIncompleteHomebrewBundles(userID).then((progessBundles) => {
+                      socket.emit('returnCharacterDetails', character, buildInfo, clientsWithAccess, hBundles, progessBundles);
+                    });
                   });
                 });
               });
@@ -859,9 +861,7 @@ module.exports = class SocketConnections {
         AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
             CharSaving.saveAncestry(charID, ancestryID).then((result) => {
-              CharChoicesLoad(socket, charID).then((choiceStruct) => {
-                socket.emit('returnAncestryChange', choiceStruct);
-              });
+              socket.emit('returnAncestryChange');
             });
           }
         });
@@ -1912,6 +1912,17 @@ module.exports = class SocketConnections {
         });
       });
 
+      socket.on('requestMetaDataSetOnly', function(charID, source, srcStruct, value){
+        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
+          if(ownsChar){
+            CharDataMapping.setDataOnly(charID, source, srcStruct, value)
+            .then((result) => {
+              socket.emit('returnMetaDataSetOnly');
+            });
+          }
+        });
+      });
+
       socket.on('requestWSCChoices', function(charID, wscCode, srcStruct, locationID){
         AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
@@ -2104,10 +2115,6 @@ module.exports = class SocketConnections {
 
       socket.on('requestBackgroundReport', function(backgroundID, email, message){
         if(message.length > 5 && GeneralUtils.validateEmail(email)) {
-          let userID = null;
-          if(socket.request.session.passport != null){
-            userID = socket.request.session.passport.user;
-          }
           HomeBackReport.create({
             userID: userID,
             backgroundID: backgroundID,
@@ -2123,10 +2130,6 @@ module.exports = class SocketConnections {
 
       socket.on('requestProfileNameChange', function(newName){
         if(GeneralUtils.validateProfileName(newName)) {
-          let userID = null;
-          if(socket.request.session.passport != null){
-            userID = socket.request.session.passport.user;
-          }
           if(userID != null){
             let updateValues = { username: newName };
             User.update(updateValues, { where: { id: userID } })
@@ -2138,10 +2141,6 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestDeveloperStatusChange', function(developer){
-        let userID = null;
-        if(socket.request.session.passport != null){
-          userID = socket.request.session.passport.user;
-        }
         if(userID != null){
           let updateValues = { isDeveloper: ((developer) ? 1 : 0) };
           User.update(updateValues, { where: { id: userID } })
@@ -2152,10 +2151,6 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestThemeStatusChange', function(lightMode){
-        let userID = null;
-        if(socket.request.session.passport != null){
-          userID = socket.request.session.passport.user;
-        }
         if(userID != null){
           let updateValues = { enabledLightMode: ((lightMode) ? 1 : 0) };
           User.update(updateValues, { where: { id: userID } })
@@ -2868,14 +2863,50 @@ module.exports = class SocketConnections {
       const userID = getUserID(socket);
 
       socket.on('requestPlannerCore', function(charID, buildID){
+        // Get CharID & BuildID from Builder (if in Character Builder or Builder Creator mode)
         NewBuilderCoreLoad(socket, charID, buildID).then((plannerStruct) => {
-          socket.emit('returnPlannerCore', plannerStruct);
+          
+          if(charID != null){
+            // Get Character to get the character's buildID (if it has one)
+            CharGathering.getCharacter(userID, charID).then((character) => {
+              BuildsGathering.getBuildInfo(character.buildID).then((buildInfo) => {
+                socket.emit('returnPlannerCore', plannerStruct, buildInfo);
+              });
+            });
+          } else {
+            socket.emit('returnPlannerCore', plannerStruct, null);
+          }
+
+        });
+      });
+
+      socket.on('requestCreateCharacterFromBuild', function(buildID){
+        User.findOne({ where: { id: userID } })
+        .then((user) => {
+          if(user != null){
+            BuildsGathering.getBuild(buildID).then((build) => {
+              CharSaving.createNewCharacter(user, build)
+              .then((character) => {
+                if(character != null){
+                  socket.emit('returnCharacterCreatedFromBuild', character);
+                } else {
+                  socket.emit('returnCharacterFailedToCreateFromBuild');
+                }
+              });
+            });
+          }
         });
       });
 
       socket.on('requestPublishedBuilds', function(){
         BuildsGathering.findPublishedBuilds().then((builds) => {
           socket.emit('returnPublishedBuilds', builds);
+        });
+      });
+
+      socket.on('requestTopPublishedBuilds', function(topNum){
+        BuildsGathering.findTopPublishedBuilds(topNum).then((builds) => {
+          socket.emit('returnTopPublishedBuilds', builds);
         });
       });
 
@@ -2886,8 +2917,12 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestBuildContents', function(buildID){
-        BuildsGathering.getBuildContents(userID, buildID).then((buildContents) => {
-          socket.emit('returnBuildContents', buildContents);
+        AuthCheck.canViewBuild(userID, buildID).then((viewBuild) => {
+          if(viewBuild){
+            BuildsGathering.getBuildContents(userID, buildID).then((buildContents) => {
+              socket.emit('returnBuildContents', buildContents);
+            });
+          }
         });
       });
 
@@ -2916,6 +2951,36 @@ module.exports = class SocketConnections {
                 socket.emit('returnBuildNameChange');
               });
             }
+          }
+        });
+      });
+
+      socket.on('requestBuildDescriptionChange', function(buildID, description){
+        AuthCheck.canEditBuild(userID, buildID).then((editBuild) => {
+          if(editBuild){
+            BuildsSaving.saveDescription(buildID, description).then((result) => {
+              socket.emit('returnBuildDescriptionChange');
+            });
+          }
+        });
+      });
+
+      socket.on('requestBuildContactInfoChange', function(buildID, contactInfo){
+        AuthCheck.canEditBuild(userID, buildID).then((editBuild) => {
+          if(editBuild){
+            BuildsSaving.saveContactInfo(buildID, contactInfo).then((result) => {
+              socket.emit('returnBuildContactInfoChange');
+            });
+          }
+        });
+      });
+
+      socket.on('requestBuildArtworkURLChange', function(buildID, artworkURL){
+        AuthCheck.canEditBuild(userID, buildID).then((editBuild) => {
+          if(editBuild){
+            BuildsSaving.saveArtworkURL(buildID, artworkURL).then((result) => {
+              socket.emit('returnBuildArtworkURLChange');
+            });
           }
         });
       });
@@ -3093,6 +3158,12 @@ module.exports = class SocketConnections {
       socket.on('requestHomebrewBundle', function(REQUEST_TYPE, homebrewID){
         UserHomebrew.getHomebrewBundle(userID, homebrewID).then((homebrewBundle) => {
           socket.emit('returnHomebrewBundle', REQUEST_TYPE, homebrewBundle);
+        });
+      });
+
+      socket.on('requestHomebrewBundlesFromArray', function(homebrewArrayIDs){
+        UserHomebrew.getHomebrewBundlesFromArray(userID, homebrewArrayIDs).then((hBundles) => {
+          socket.emit('returnHomebrewBundlesFromArray', hBundles);
         });
       });
 

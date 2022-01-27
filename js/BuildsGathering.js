@@ -2,6 +2,8 @@
 const Build = require("../models/contentDB/Build");
 const BuildDataMapping = require("../models/contentDB/BuildDataMapping");
 
+const Character = require("../models/contentDB/Character");
+
 const Ancestry = require("../models/contentDB/Ancestry");
 const Background = require("../models/contentDB/Background");
 const Class = require("../models/contentDB/Class");
@@ -10,6 +12,7 @@ const UniHeritage = require("../models/contentDB/UniHeritage");
 
 const GeneralGathering = require('./GeneralGathering');
 const CharGathering = require('./CharGathering');
+const UserHomebrew = require('./UserHomebrew');
 
 function mapToObj(strMap) {
   let obj = Object.create(null);
@@ -34,13 +37,39 @@ module.exports = class BuildsGathering {
   }
 
   static findPublishedBuilds(){
-    
+
+    Build.hasMany(Character, {foreignKey: 'buildID'});
+    Character.belongsTo(Build, {foreignKey: 'buildID'});
     return Build.findAll({
       where: { isPublished: 1 },
+      include: {
+        model: Character,
+        attributes:['buildID'],
+      }
     }).then(builds => {
       return builds;
     });
 
+  }
+
+  static findTopPublishedBuilds(top=10){
+    return BuildsGathering.findPublishedBuilds().then((builds)=>{
+
+      builds = builds.sort(
+        function(a, b) {
+          let aRating = a.characters.length;
+          let bRating = b.characters.length;
+          if (aRating === bRating) {
+            // Name is only important when ratings are the same
+            return a.name > b.name ? 1 : -1;
+          }
+          return bRating - aRating;
+        }
+      );
+
+      return builds.slice(0, top);
+
+    });
   }
 
   static findUserBuilds(userID){
@@ -75,6 +104,26 @@ module.exports = class BuildsGathering {
         return build;
       }
 
+    });
+  }
+
+  static getBuildInfo(buildID){
+    if(buildID == null) { return Promise.resolve(null); }
+    return Build.findOne({
+      where: { id: buildID },
+    }).then(build => {
+      if(build != null){
+        return BuildDataMapping.findAll({
+          where: { buildID: build.id },
+        }).then(buildData => {
+          return {
+            build,
+            buildData,
+          };
+        });
+      } else {
+        return null;
+      }
     });
   }
 
@@ -123,29 +172,39 @@ module.exports = class BuildsGathering {
                             return CharGathering.getAllLanguagesBasic(userID, build.enabledHomebrew).then((allLanguages) => {
                               return CharGathering.getAllConditions(userID).then((allConditions) => {
                     
-
-                                return {
-                                  buildData,
-                                  build,
-                                  mainSelections: {
-                                    bAncestry,
-                                    bBackground,
-                                    bClass,
-                                    bHeritage,
-                                    bUniHeritage,
-                                  },
-                                  sourceMaterial: {
-                                    skillObject,
-                                    featsObject,
-                                    itemsObject: mapToObj(itemMap),
-                                    spellsObject: mapToObj(spellMap),
-                                    allTags,
-                                    allLanguages,
-                                    allConditions,
-                                  }
-                                };
+                                // User Collected Bundles
+                                return UserHomebrew.getCollectedHomebrewBundles(userID).then((hBundlesCollected) => {
+                                  return UserHomebrew.getIncompleteHomebrewBundles(userID).then((hBundlesProgess) => {
 
 
+                                    return {
+                                      buildData,
+                                      build,
+                                      mainSelections: {
+                                        bAncestry,
+                                        bBackground,
+                                        bClass,
+                                        bHeritage,
+                                        bUniHeritage,
+                                      },
+                                      userInfo: {
+                                        hBundlesCollected,
+                                        hBundlesProgess,
+                                      },
+                                      sourceMaterial: {
+                                        skillObject,
+                                        featsObject,
+                                        itemsObject: mapToObj(itemMap),
+                                        spellsObject: mapToObj(spellMap),
+                                        allTags,
+                                        allLanguages,
+                                        allConditions,
+                                      }
+                                    };
+
+
+                                  });
+                                });
                               });
                             });
                           });

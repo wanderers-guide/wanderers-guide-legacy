@@ -126,11 +126,11 @@ class ModalSelection {
         if(selection.id == 'none'){
           $(`#${modalID}-preview`).removeClass('is-hidden');
         } else if(selectionType == 'ancestry'){
-          new DisplayAncestry(modalID+'-preview', selection.id, featMap, null, false);
+          new DisplayAncestry(modalID+'-preview', selection.id, featMap, selection.homebrewID, false);
         } else if(selectionType == 'background'){
-          new DisplayBackground(modalID+'-preview', selection.id, null, false);
+          new DisplayBackground(modalID+'-preview', selection.id, selection.homebrewID, false);
         } else if(selectionType == 'class'){
-          new DisplayClass(modalID+'-preview', selection.id, featMap, null, false);
+          new DisplayClass(modalID+'-preview', selection.id, featMap, selection.homebrewID, false);
         }
       });
 

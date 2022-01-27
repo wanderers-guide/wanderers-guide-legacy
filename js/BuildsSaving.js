@@ -22,7 +22,30 @@ module.exports = class BuildsSaving {
     .then((result) => {
         return;
     });
+  }
 
+  static saveDescription(buildID, description){
+    let buildUpVals = {description: description };
+    return Build.update(buildUpVals, { where: { id: buildID } })
+    .then((result) => {
+        return;
+    });
+  }
+
+  static saveContactInfo(buildID, contactInfo){
+    let buildUpVals = {contactInfo: contactInfo };
+    return Build.update(buildUpVals, { where: { id: buildID } })
+    .then((result) => {
+        return;
+    });
+  }
+
+  static saveArtworkURL(buildID, artworkURL){
+    let buildUpVals = {artworkURL: artworkURL };
+    return Build.update(buildUpVals, { where: { id: buildID } })
+    .then((result) => {
+        return;
+    });
   }
 
   static saveCustomCode(buildID, code) {

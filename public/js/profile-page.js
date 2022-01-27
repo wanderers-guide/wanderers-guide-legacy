@@ -15,6 +15,13 @@ $(function () {
     $('#profileName').html('<div class="pt-2"><input id="profileNameInput" class="input is-medium" style="max-width: 340px;" maxlength="40" value="'+g_profileName+'" spellcheck="false" autocomplete="off"></div>');
     $('#profileNameBtn').addClass('is-hidden');
     $('#profileNameInput').focus();
+
+    // Press Enter Key
+    $('#profileNameInput').on('keypress',function(e){
+      if(e.which == 13){
+        $(this).blur();
+      }
+    });
   
     $('#profileNameInput').blur(function(){
       let newName = $('#profileNameInput').val();

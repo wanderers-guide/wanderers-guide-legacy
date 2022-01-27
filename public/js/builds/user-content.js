@@ -58,15 +58,23 @@ socket.on("returnUserBuilds", function(builds){
         } else {
           foundInProgess = true;
 
+          let buildViewID = 'build-'+build.id+'-view';
           let buildEditID = 'build-'+build.id+'-edit';
           let buildDeleteID = 'build-'+build.id+'-delete';
 
-          $('#buildsInProgessContainer').append('<div class="columns border-bottom border-dark-lighter"><div class="column is-6 text-center"><span class="is-p is-size-5">'+build.name+'</span></div><div class="column is-6"><div class="buttons are-small is-centered"><button id="'+buildEditID+'" class="button is-outlined is-info">Edit</button><button id="'+buildDeleteID+'" class="button is-outlined is-danger">Delete</button></div></div></div>');
+          $('#buildsInProgessContainer').append('<div class="columns border-bottom border-dark-lighter"><div class="column is-6 text-center"><span class="is-p is-size-5">'+build.name+'</span></div><div class="column is-6"><div class="buttons are-small is-centered"><button id="'+buildViewID+'" class="button is-outlined is-success">View</button><button id="'+buildEditID+'" class="button is-outlined is-info">Edit</button><button id="'+buildDeleteID+'" class="button is-outlined is-danger">Delete</button></div></div></div>');
 
+          // View Button //
+          $('#'+buildViewID).click(function() {
+            openBuildView(build.id);
+          });
+
+          // Update Button //
           $('#'+buildEditID).click(function() {
             window.location.href = '/builds/create/?build_id='+build.id+'&page=init';
           });
 
+          // Delete Button //
           $('#'+buildDeleteID).click(function() {
             new ConfirmMessage('Delete “'+build.name+'”', '<p class="has-text-centered">Are you sure you want to delete this?</p><p class="has-text-centered">There are <span class="has-text-info">'+'???'+'</span> users still using this build.</p>', 'Delete', 'modal-delete-published-build-'+build.id, 'modal-delete-published-build-btn-'+build.id);
             $('#modal-delete-published-build-btn-'+build.id).click(function() {

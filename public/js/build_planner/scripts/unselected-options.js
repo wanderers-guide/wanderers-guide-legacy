@@ -36,13 +36,17 @@ function selectorUpdated() {
 
   // Show blue circle indicator for all accords that require a selection //
   if(g_builder_type == 'by-level'){
-    $('.accord-creation-container').each(function() {
-      if($(this).find('.input.is-info').length !== 0 || $(this).find('.select.is-info').length !== 0 || $(this).find('.feat-selection.is-default').length !== 0){
-          $(this).find('.accord-indicate-unselected-options').html('<span class="icon is-small has-text-info pl-3"><i class="fas fa-xs fa-circle"></i></span>');
-      } else {
-          $(this).find('.accord-indicate-unselected-options').html('');
-      }
-    });
+    if(g_char_id == null){// If build creator, use custom icons
+      selectorUpdatedBuildIcons();
+    } else {// Else, use normal blue icons
+      $('.accord-creation-container').each(function() {
+        if($(this).find('.input.is-info').length !== 0 || $(this).find('.select.is-info').length !== 0 || $(this).find('.feat-selection.is-default').length !== 0){
+            $(this).find('.accord-indicate-unselected-options').html('<span class="icon is-small has-text-info pl-3"><i class="fas fa-xs fa-circle"></i></span>');
+        } else {
+            $(this).find('.accord-indicate-unselected-options').html('');
+        }
+      });
+    }
   } else if(g_builder_type == 'by-abc'){
     // Clear all blue dots
     $('.accord-creation-container').each(function() {

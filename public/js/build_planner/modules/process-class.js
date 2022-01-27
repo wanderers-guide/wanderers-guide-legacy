@@ -143,6 +143,12 @@ function processClass() {
           sourceCode: 'classAbility-'+classFeature.id,
           sourceCodeSNum: 'a'
         };
+        const classFeatureChoice_srcStruct = {
+          sourceType: 'class',
+          sourceLevel: classFeature.level,
+          sourceCode: 'classAbilitySelector-'+classFeature.id,
+          sourceCodeSNum: 'a',
+        };
 
         const classArchetypeResult = applyClassArchetypeChoice(classFeature);
         if(classArchetypeResult != null){
@@ -152,6 +158,18 @@ function processClass() {
           $(`#class-feature-container-${classFeature.id}`).append(processText(classFeature.description, false, null));
         }
 
+        // Run code        
+        processCode(
+          replaceClassFeatureCodeFromClassArchetype(classFeature.id, classFeature.code, classFeature_srcStruct),
+          classFeature_srcStruct,
+          `class-feature-code-${classFeature.id}`,
+          {source: 'Class Feature', sourceName: classFeature.name+' (Lvl '+classFeature.level+')'});
+
+        // Hide top hr if no code result is generated
+        if($(`#class-feature-code-${classFeature.id}`).html() == '' || $(`#class-feature-code-${classFeature.id}`).find('div').html() == ''){
+          $(`#class-feature-code-hr-${classFeature.id}`).addClass('is-hidden');
+        }
+
         // Selection Options
         if(classFeature.selectType === 'SELECTOR') {
           
@@ -159,13 +177,13 @@ function processClass() {
             <option value="chooseDefault">Choose a ${classFeature.name}</option>
             <optgroup label="──────────"></optgroup>
           `;
-          const featureChoice = getDataAllClassChoice().find(featureChoice => {
-            return featureChoice.SelectorID == classFeature.id;
-          });
+          
+          const choice = getDataSingleClassChoice(classFeatureChoice_srcStruct);
+
           for(const classFeatureOption of charClass.Abilities) {
             if(classFeatureOption.selectType === 'SELECT_OPTION' && (classFeatureOption.selectOptionFor === classFeature.id || classFeatureOption.indivClassAbilName === classFeature.name)) {
 
-              if(featureChoice != null && featureChoice.OptionID == classFeatureOption.id) {
+              if(choice != null && choice.OptionID == classFeatureOption.id) {
                 selectionOptionListHTML += '<option value="'+classFeatureOption.id+'" selected>'+classFeatureOption.name+'</option>';
               } else {
                 selectionOptionListHTML += '<option value="'+classFeatureOption.id+'">'+classFeatureOption.name+'</option>';
@@ -210,13 +228,6 @@ function processClass() {
             $(`#class-feature-selector-description-${classFeature.id}`).html('');
             $(`#class-feature-selector-code-${classFeature.id}`).html('');
 
-            let srcStruct = {
-              sourceType: 'class',
-              sourceLevel: classFeature.level,
-              sourceCode: 'classAbilitySelector-'+classFeature.id,
-              sourceCodeSNum: 'a',
-            };
-
             if($(this).val() == 'chooseDefault'){
               $(this).parent().addClass("is-info");
               $(`#class-feature-selector-result-${classFeature.id}`).addClass('is-hidden');
@@ -225,18 +236,18 @@ function processClass() {
               if(g_char_id != null){
                 socket.emit("requestClassChoiceChange",
                     g_char_id,
-                    srcStruct,
+                    classFeatureChoice_srcStruct,
                     null);
 
                 // Clear all data under srcStruct
                 socket.emit("requestDataClearAtSrcStruct",
                     g_char_id,
-                    srcStruct);
+                    classFeatureChoice_srcStruct);
               } else {
                 saveBuildMetaData();
               }
 
-              deleteDataBySourceStruct(srcStruct);
+              deleteDataBySourceStruct(classFeatureChoice_srcStruct);
 
               if(triggerSave == null || triggerSave) {
                 initExpressionProcessor();// Update g_expr_classAbilityArray
@@ -253,7 +264,7 @@ function processClass() {
               const classArchetypeOptionResult = applyClassArchetypeChoice(chosenClassFeature);
               if(classArchetypeOptionResult != null){
                 $(`#class-feature-selector-description-${classFeature.id}`).html(classArchetypeOptionResult.tabsHTML);
-                assembleClassArchetypeTabs(classArchetypeOptionResult.tabsID, chosenClassFeature.id, chosenClassFeature.description, srcStruct);
+                assembleClassArchetypeTabs(classArchetypeOptionResult.tabsID, chosenClassFeature.id, chosenClassFeature.description, classFeatureChoice_srcStruct);
               } else {
                 $(`#class-feature-selector-description-${classFeature.id}`).html(processText(chosenClassFeature.description, false, null));
               }
@@ -263,19 +274,19 @@ function processClass() {
                 if(g_char_id != null){
                   socket.emit("requestClassChoiceChange",
                     g_char_id,
-                    srcStruct,
+                    classFeatureChoice_srcStruct,
                     { SelectorID : classFeature.id, OptionID : chosenClassFeature.id });
                 } else {
                   saveBuildMetaData();
                 }
-                setDataClassChoice(srcStruct, classFeature.id, chosenClassFeature.id);
+                setDataClassChoice(classFeatureChoice_srcStruct, classFeature.id, chosenClassFeature.id);
                 initExpressionProcessor();// Update g_expr_classAbilityArray
               }
 
               // Run class feature option code
               processCode(
-                replaceClassFeatureCodeFromClassArchetype(chosenClassFeature.id, chosenClassFeature.code, srcStruct),
-                srcStruct,
+                replaceClassFeatureCodeFromClassArchetype(chosenClassFeature.id, chosenClassFeature.code, classFeatureChoice_srcStruct),
+                classFeatureChoice_srcStruct,
                 `class-feature-selector-code-${classFeature.id}`,
                 {source: 'Class Feature Option', sourceName: classFeature.name+' - '+chosenClassFeature.name});
 
@@ -285,18 +296,6 @@ function processClass() {
           });
           $(`#class-feature-selector-${classFeature.id}`).trigger('change', [false]);
 
-        }
-
-        // Run code        
-        processCode(
-          replaceClassFeatureCodeFromClassArchetype(classFeature.id, classFeature.code, classFeature_srcStruct),
-          classFeature_srcStruct,
-          `class-feature-code-${classFeature.id}`,
-          {source: 'Class Feature', sourceName: classFeature.name+' (Lvl '+classFeature.level+')'});
-
-        // Hide top hr if no code result is generated
-        if($(`#class-feature-code-${classFeature.id}`).html() == '' || $(`#class-feature-code-${classFeature.id}`).find('div').html() == ''){
-          $(`#class-feature-code-hr-${classFeature.id}`).addClass('is-hidden');
         }
 
       }

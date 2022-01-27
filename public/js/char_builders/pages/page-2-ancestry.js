@@ -151,6 +151,7 @@ function loadAncestryPage(ancestryObject, uniHeritageArray) {
 
 }
 
+/*
 socket.on("returnAncestryChange", function(inChoiceStruct){
     $('#selectAncestryControlShell').removeClass("is-loading");
 
@@ -162,7 +163,7 @@ socket.on("returnAncestryChange", function(inChoiceStruct){
         finishLoadingPage();
     }
 
-});
+});*/
 
 socket.on("returnHeritageChange", function(heritageID, isUniversal, charTagsArray){
     $('#selectHeritageControlShell').removeClass("is-loading");

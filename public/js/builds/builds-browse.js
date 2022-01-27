@@ -108,7 +108,7 @@ function filterBundleSearch(builds){
     console.log('Filtering by Rating...');
     let rating = parseInt(ratingFilter);
     for(const build of builds){
-      let bundleRating = 0; //homebrewBundle.userHomebrewBundles.length;
+      let bundleRating = build.characters.length;
       switch(ratingRelationFilter) {
         case 'EQUAL': if(bundleRating === rating) {} else {builds.delete(build);} break;
         case 'LESS': if(bundleRating < rating) {} else {builds.delete(build);} break;
@@ -135,7 +135,7 @@ function displayBundleResults(builds){
 
   for(const build of builds){
     let entryID = 'bundle-entry-'+build.id;
-    let rating = 0;//homebrewBundle.userHomebrewBundles.length;
+    let rating = build.characters.length;
     let ratingColor = '';
 
     if(rating > 0){

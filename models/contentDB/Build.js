@@ -20,6 +20,9 @@ const Build = db.define('builds', {
   authorName: {
     type: Sequelize.STRING
   },
+  artworkURL: {
+    type: Sequelize.STRING
+  },
   finalStatsJSON: {
     type: Sequelize.TEXT
   },

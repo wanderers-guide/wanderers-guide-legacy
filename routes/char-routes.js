@@ -10,11 +10,9 @@ const CharSaving = require('../js/CharSaving');
 const CharStateUtils = require('../js/CharStateUtils');
 
 const Class = require('../models/contentDB/Class');
-const Background = require('../models/contentDB/Background');
 const Ancestry = require('../models/contentDB/Ancestry');
 const Heritage = require('../models/contentDB/Heritage');
 const UniHeritage = require('../models/contentDB/UniHeritage');
-const Inventory = require('../models/contentDB/Inventory');
 
 router.get('/', (req, res) => {
 
@@ -96,54 +94,16 @@ router.get('/', (req, res) => {
 });
 
 router.get('/add', (req, res) => {
-
-    Character.findAll({ where: { userID: req.user.id} })
-    .then((characters) => {
-
-        if(CharStateUtils.canMakeCharacter(req.user, characters)){
-
-            Inventory.create({
-            }).then(inventory => { // -- Hardcoded Item IDs for Small Pouch and Silver
-                CharSaving.addItemToInv(inventory.id, 84, 1) // Give Small Pouch
-                .then(pouchInvItem => {
-                    CharSaving.saveInvItemCustomize(pouchInvItem.id, {
-                        name: 'Coin Pouch',
-                        price: 0,
-                        bulk: pouchInvItem.bulk,
-                        description: 'A small, simple pouch used to hold coins.',
-                        size: pouchInvItem.size,
-                        isShoddy: pouchInvItem.isShoddy,
-                        hitPoints: pouchInvItem.hitPoints,
-                        brokenThreshold: pouchInvItem.brokenThreshold,
-                        hardness: pouchInvItem.hardness,
-                        code: pouchInvItem.code,
-                    }).then(result => {
-                        CharSaving.addItemToInv(inventory.id, 23, 150) // Give starting 150 silver
-                        .then(silverInvItem => {
-                            CharSaving.saveInvItemToNewBag(silverInvItem.id, pouchInvItem.id, 0) // Put silver in pouch
-                            .then(result => {
-                                Character.create({
-                                    name: "Unnamed Character",
-                                    level: 1,
-                                    userID: req.user.id,
-                                    inventoryID: inventory.id,
-                                }).then(character => {
-                                    res.redirect('/profile/characters/builder/basics/?id='+character.id);
-                                }).catch(err => console.error(err));
-                            });
-                        });
-                    });
-                });
-            });
-
-        } else {
-            // Cannot make another character, goto 404 not found
-            res.status(404);
-            res.render('error/404_error', { title: "404 Not Found - Wanderer's Guide", user: req.user });
-        }
-
-    });
-    
+  CharSaving.createNewCharacter(req.user)
+  .then((character) => {
+    if(character != null){
+      res.redirect('/profile/characters/builder/basics/?id='+character.id);
+    } else {
+      // Cannot make another character, goto 404 not found
+      res.status(404);
+      res.render('error/404_error', { title: "404 Not Found - Wanderer's Guide", user: req.user });
+    }
+  });
 });
 
 router.use('/delete', chardeleteRoutes);

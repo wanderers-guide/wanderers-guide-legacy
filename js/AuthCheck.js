@@ -66,6 +66,19 @@ module.exports = class AuthCheck {
       });
     }
 
+    static canViewBuild(userID, buildID) {
+      return Build.findOne({ where: { id: buildID } })
+      .then((build) => {
+        if(build != null){
+          return (build.userID == userID || build.isPublished == 1);
+        } else {
+          return false;
+        }
+      }).catch((error) => {
+          return false;
+      });
+    }
+
     static ownsBuild(userID, buildID) {
       return Build.findOne({ where: { id: buildID, userID: userID } })
       .then((build) => {

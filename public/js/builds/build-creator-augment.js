@@ -27,6 +27,28 @@ $(function () {
 
 });
 
+function selectorUpdatedBuildIcons(){
+
+  $('.accord-creation-container').each(function() {
+
+    if($(this).find('.input').length == $(this).find('.input.is-info').length && $(this).find('.select').length == $(this).find('.select.is-info').length && $(this).find('.feat-selection').length == $(this).find('.feat-selection.is-default').length){
+
+      $(this).find('.accord-indicate-unselected-options').html('<span class="icon is-small has-text-danger pl-3"><i class="fas fa-xs fa-times"></i></span>');
+
+    } else if ($(this).find('.input.is-info').length !== 0 || $(this).find('.select.is-info').length !== 0 || $(this).find('.feat-selection.is-default').length !== 0){
+
+        $(this).find('.accord-indicate-unselected-options').html('<span class="icon is-small has-text-warning pl-3"><i class="fas fa-xs fa-check"></i></span>');
+
+    } else {
+      $(this).find('.accord-indicate-unselected-options').html('<span class="icon is-small has-text-info pl-3"><i class="fas fa-xs fa-check"></i></span>');
+    }
+  });
+
+}
+
+
+const saveBuildMetaData_isDebug = false;
+
 function saveBuildInfo(){
 
   if(saveBuildMetaData_isDebug) {console.log('S-BuildInfo - EXECUTED');}
@@ -266,9 +288,6 @@ function saveBuildFinalStats(){
       finalStatistics);
 
 }
-
-
-const saveBuildMetaData_isDebug = true;
 
 // Process Save Build MetaData
 let saveBuildMetaData_isInCooldown = false;

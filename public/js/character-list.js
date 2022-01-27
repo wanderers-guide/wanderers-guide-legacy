@@ -8,6 +8,14 @@ let socket = io();
 // ~~~~~~~~~~~~~~ // Run on Load // ~~~~~~~~~~~~~~ //
 $(function () {
 
+    // If in tablet view, just show icons
+    if(isTabletView()){
+      $('.character-card-edit-text').remove();
+      $('.character-card-options-text').remove();
+      $('.character-card-delete-text').remove();
+    }
+    //
+
     let characterCards = $('.character-card');
     for(const characterCard of characterCards){
 

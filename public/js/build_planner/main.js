@@ -81,15 +81,16 @@ $(function () {
 
 });
 
-socket.on("returnPlannerCore", function(coreStruct) {
+socket.on("returnPlannerCore", function(coreStruct, buildInfo) {
   stopDiceLoader();
+  g_buildInfo = buildInfo;
   mainLoaded(coreStruct.plannerStruct, coreStruct.choiceStruct);
 });
 
 
 
 
-
+let g_buildInfo = null;
 
 let g_character = null;
 
@@ -335,7 +336,8 @@ function mainLoaded(plannerCoreStruct, choiceStruct){
     ancestrySelections.push({
       id: ancestryID,
       name: ancestryData.Ancestry.name,
-      rarity: ancestryData.Ancestry.rarity
+      rarity: ancestryData.Ancestry.rarity,
+      homebrewID: ancestryData.Ancestry.homebrewID
     });
   }
   ancestrySelections = ancestrySelections.sort(
@@ -343,7 +345,7 @@ function mainLoaded(plannerCoreStruct, choiceStruct){
       return a.name > b.name ? 1 : -1;
     }
   );
-  ancestrySelections = [{id: 'none', name: 'None', rarity: 'COMMON'}, ...ancestrySelections];
+  ancestrySelections = [{id: 'none', name: 'None', rarity: 'COMMON', homebrewID: null}, ...ancestrySelections];
 
   let ancestryModalSelect = function() {
     new ModalSelection('Select Ancestry', 'Confirm Ancestry', ancestrySelections, 'ancestry', 'modal-select-ancestry', 'modal-select-ancestry-confirm-btn', g_featMap, g_character);
@@ -375,7 +377,8 @@ function mainLoaded(plannerCoreStruct, choiceStruct){
     backgroundSelections.push({
       id: background.id,
       name: background.name,
-      rarity: background.rarity
+      rarity: background.rarity,
+      homebrewID: background.homebrewID
     });
   }
   backgroundSelections = backgroundSelections.sort(
@@ -383,7 +386,7 @@ function mainLoaded(plannerCoreStruct, choiceStruct){
       return a.name > b.name ? 1 : -1;
     }
   );
-  backgroundSelections = [{id: 'none', name: 'None', rarity: 'COMMON'}, ...backgroundSelections];
+  backgroundSelections = [{id: 'none', name: 'None', rarity: 'COMMON', homebrewID: null}, ...backgroundSelections];
 
   let backgroundModalSelect = function() {
     new ModalSelection('Select Background', 'Confirm Background', backgroundSelections, 'background', 'modal-select-background', 'modal-select-background-confirm-btn', g_featMap, g_character);
@@ -415,7 +418,8 @@ function mainLoaded(plannerCoreStruct, choiceStruct){
     classSelections.push({
       id: classID,
       name: classData.Class.name,
-      rarity: classData.Class.rarity
+      rarity: classData.Class.rarity,
+      homebrewID: classData.Class.homebrewID
     });
   }
   classSelections = classSelections.sort(
@@ -423,7 +427,7 @@ function mainLoaded(plannerCoreStruct, choiceStruct){
       return a.name > b.name ? 1 : -1;
     }
   );
-  classSelections = [{id: 'none', name: 'None', rarity: 'COMMON'}, ...classSelections];
+  classSelections = [{id: 'none', name: 'None', rarity: 'COMMON', homebrewID: null}, ...classSelections];
 
   let classModalSelect = function() {
     new ModalSelection('Select Class', 'Confirm Class', classSelections, 'class', 'modal-select-class', 'modal-select-class-confirm-btn', g_featMap, g_character);
@@ -659,10 +663,14 @@ function stateLoad(isInitLoad=false){
   }
 
   if(isInitLoad){
-    // Open Level's Accordion //
-    $(`#level-${g_char_level}-body`).parent().find('.accord-header').trigger('click');
-    // Scroll down to Accordion
-    $(`#level-${g_char_level}-body`).parent()[0].scrollIntoView();
+    if(g_char_id == null){// If build creator, open first accord
+      $('#accord-container-init-stats').find('.accord-header').trigger('click');
+    } else {// Else, open last
+      // Open Level's Accordion //
+      $(`#level-${g_char_level}-body`).parent().find('.accord-header').trigger('click');
+      // Scroll down to Accordion
+      $(`#level-${g_char_level}-body`).parent()[0].scrollIntoView();
+    }
   } else {
     // If is reload, scroll back to previous location
     $('#creation-section').scrollTop(g_creationSectionScroll);

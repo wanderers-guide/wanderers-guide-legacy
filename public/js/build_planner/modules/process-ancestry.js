@@ -2,6 +2,13 @@
     By Aaron Cassar.
 */
 
+const ancestryTrait_srcStruct = {
+  sourceType: 'ancestry',
+  sourceLevel: 1,
+  sourceCode: 'defaultTag',
+  sourceCodeSNum: 'a',
+};
+
 function processAncestry() {
 
   const charAncestry = getCharAncestry();
@@ -114,6 +121,9 @@ function processAncestry() {
   
     }, PROCESS_ANCESTRY_STATS_TYPE.BOTH);
 
+    // Make sure there is the ancestry's trait (important for creating from build)
+    setData(DATA_SOURCE.CHAR_TRAIT, ancestryTrait_srcStruct, charAncestry.Ancestry.name);
+
     // Ancestry Heritage
     $(`#level-1-body`).append(`
 
@@ -197,6 +207,12 @@ function processAncestry() {
           let isUniversal = processAncestry_isUniversalHeritage();
           if(triggerSave == null || triggerSave) {
             
+            if(isUniversal){
+              g_character.uniHeritageID = heritageID;
+            } else {
+              g_character.heritageID = heritageID;
+            }
+
             if(g_char_id != null){
               socket.emit("requestHeritageChange",
                   g_char_id,
@@ -204,12 +220,6 @@ function processAncestry() {
                   isUniversal);
             } else {
               saveBuildInfo();
-            }
-
-            if(isUniversal){
-              g_character.uniHeritageID = heritageID;
-            } else {
-              g_character.heritageID = heritageID;
             }
 
             deleteDataBySourceCode('heritage');
@@ -227,6 +237,9 @@ function processAncestry() {
           let isUniversal = processAncestry_isUniversalHeritage();
           if(triggerSave == null || triggerSave) {
 
+            g_character.heritageID = null;
+            g_character.uniHeritageID = null;
+
             if(g_char_id != null){
               socket.emit("requestHeritageChange",
                 g_char_id,
@@ -235,9 +248,6 @@ function processAncestry() {
             } else {
               saveBuildInfo();
             }
-
-            g_character.heritageID = null;
-            g_character.uniHeritageID = null;
 
             deleteDataBySourceCode('heritage');
 
@@ -471,12 +481,7 @@ function setAncestry(ancestryID){
   g_character.ancestryID = ancestryID;
   const newAncestry = getCharAncestry();
   if(newAncestry != null){
-    setData(DATA_SOURCE.CHAR_TRAIT, {
-      sourceType: 'ancestry',
-      sourceLevel: 1,
-      sourceCode: 'defaultTag',
-      sourceCodeSNum: 'a',
-    }, newAncestry.Ancestry.name);
+    setData(DATA_SOURCE.CHAR_TRAIT, ancestryTrait_srcStruct, newAncestry.Ancestry.name);
   }
 
 }

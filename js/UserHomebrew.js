@@ -156,6 +156,25 @@ module.exports = class UserHomebrew {
     });
   }
 
+  static getHomebrewBundlesFromArray(userID, homebrewArrayIDs){
+    try {
+
+      let bundlePromises = [];
+      for(const homebrewID of homebrewArrayIDs) {
+        if(homebrewID == null) { continue; }
+        bundlePromises.push(UserHomebrew.getHomebrewBundle(userID, homebrewID));
+      }
+
+      return Promise.all(bundlePromises)
+      .then(function(hBundles) {
+        return hBundles;
+      });
+
+    } catch (err) {
+      return Promise.resolve(null);
+    }
+  }
+
   static hasHomebrewBundle(userID, homebrewID) {
     return UserHomebrewBundle.findOne({
       where: { userID: userID, homebrewID: homebrewID }

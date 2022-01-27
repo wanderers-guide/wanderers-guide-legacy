@@ -42,7 +42,7 @@ function initBuilderSteps(){
 
 // ~~~~~~~~~~~~~~ // Processings // ~~~~~~~~~~~~~~ //
 
-socket.on("returnCharacterDetails", function(character, clientsWithAccess, hBundles, progessBundles){
+socket.on("returnCharacterDetails", function(character, buildInfo, clientsWithAccess, hBundles, progessBundles){
     isBuilderInit = true;
 
     $('.builder-finalize-page-btn').click(function(){
@@ -83,7 +83,7 @@ socket.on("returnCharacterDetails", function(character, clientsWithAccess, hBund
     // When character level changes, save level
     $("#charLevel").change(function(){
       const newLevel = $(this).val();
-      if(newLevel < character.level){
+      if(parseInt(newLevel) < character.level){
         $("#charLevel").val(character.level);
         new ConfirmMessage('Decrease Level', 'Are you sure you want to decrease your character\'s level? Any selections you\'ve made at a higher level than the new level will be erased.', 'Change', 'modal-decrease-character-level', 'modal-decrease-character-level-btn');
         $('#modal-decrease-character-level-btn').click(function() {
@@ -101,6 +101,16 @@ socket.on("returnCharacterDetails", function(character, clientsWithAccess, hBund
       }
 
     });
+
+    // Display if using build
+    if(buildInfo != null){
+      $('#character-build').text(buildInfo.build.name);
+      $('#character-build').parent().removeClass('is-hidden');
+
+      $('#character-build').click(function(){
+        window.open('/builds/?view_id='+buildInfo.build.id, '_blank');
+      });
+    }
 
     // Set builder type
     if(character.builderByLevel === 1){

@@ -80,7 +80,34 @@ function setDataOnly(in_source, in_srcStruct, in_value){
 
 function getDataSingle(in_source, in_srcStruct){
   let new_srcStruct = parameterizeSrcStruct(in_source, in_srcStruct);
-  new_srcStruct.value = cloneObj(g_dataMap.get(JSON.stringify(new_srcStruct)));
+  let value = cloneObj(g_dataMap.get(JSON.stringify(new_srcStruct)));
+  
+  // If value isn't set, default to build data (if character has one)
+  if(value == null && g_buildInfo != null){
+    let buildSrcStruct = g_buildInfo.buildData.find(buildSrcStruct => {
+      // Check all srcStruct parts, including source
+      return (buildSrcStruct.source == new_srcStruct.source 
+        && buildSrcStruct.sourceType == new_srcStruct.sourceType 
+        && buildSrcStruct.sourceLevel == new_srcStruct.sourceLevel 
+        && buildSrcStruct.sourceCode == new_srcStruct.sourceCode
+        && buildSrcStruct.sourceCodeSNum == new_srcStruct.sourceCodeSNum);
+    });
+    if(buildSrcStruct != null){
+      value = buildSrcStruct.value;
+
+      if(buildSrcStruct.value != null){
+        g_dataMap.set(JSON.stringify(parameterizeSrcStruct(buildSrcStruct.source, buildSrcStruct)), buildSrcStruct.value);
+        socket.emit("requestMetaDataSetOnly",
+            g_char_id,
+            buildSrcStruct.source,
+            buildSrcStruct,
+            buildSrcStruct.value);
+      }
+
+    }
+  }
+
+  new_srcStruct.value = value;
   return new_srcStruct;
 }
 

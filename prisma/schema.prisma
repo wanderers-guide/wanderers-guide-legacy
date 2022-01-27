@@ -35,7 +35,7 @@ model ancestries {
   physicalFeatureOneID                                               Int?
   physicalFeatureTwoID                                               Int?
   tagID                                                              Int?
-  artworkURL                                                         String?           @db.VarChar(60)
+  artworkURL                                                         String?           @db.VarChar(200)
   isArchived                                                         Int?              @default(0)
   contentSrc                                                         String            @default("CRB") @db.VarChar(45)
   homebrewID                                                         Int?
@@ -1072,6 +1072,7 @@ model builds {
   contactInfo                       String?             @db.VarChar(120)
   isPublished                       Boolean             @default(false)
   authorName                        String              @default("Unknown") @db.VarChar(45)
+  artworkURL                        String?             @db.VarChar(200)
   finalStatsJSON                    String?             @db.Text
   ancestryID                        Int?
   heritageID                        Int?

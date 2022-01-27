@@ -5,33 +5,33 @@
 let socket = io();
 let isBuilderInit = false;
 
-let buildID = null;
+let g_build_id = null;
 
 // ~~~~~~~~~~~~~~ // General - Run On Load // ~~~~~~~~~~~~~~ //
 $(function () {
 
-    buildID = $('#char-builder-container').attr('data-build-id');
+    g_build_id = $('#char-builder-container').attr('data-build-id');
 
     // Change page
     $("#nextButton").click(function(){
       // Hardcoded redirect to page 2
-      window.location.href = '/builds/create/?build_id='+buildID+'&page=2';
+      window.location.href = '/builds/create/?build_id='+g_build_id+'&page=2';
     });
     initBuilderSteps();
     
     // On load get basic build info
     socket.emit("requestBuildInfo",
-        buildID);
+        g_build_id);
 
 });
 
 function initBuilderSteps(){
 
   $('.builder-basics-page-btn').click(function(){
-    window.location.href = '/builds/create/?build_id='+buildID+'&page=init';
+    window.location.href = '/builds/create/?build_id='+g_build_id+'&page=init';
   });
   $('.builder-creation-page-btn').click(function(){
-    window.location.href = '/builds/create/?build_id='+buildID+'&page=2';
+    window.location.href = '/builds/create/?build_id='+g_build_id+'&page=2';
   });
   // Publish btn is set in returnBuildInfo because it needs build object.
 
@@ -41,8 +41,6 @@ function initBuilderSteps(){
 
 socket.on("returnBuildInfo", function(build, hBundles, progessBundles){
     isBuilderInit = true;
-
-    console.log(build);
 
     $('.builder-finalize-page-btn').click(function(){
       console.log('Complete charater?');
@@ -58,7 +56,7 @@ socket.on("returnBuildInfo", function(build, hBundles, progessBundles){
 
             $("#charNameControlShell").addClass("is-medium is-loading");
             socket.emit("requestBuildNameChange",
-                buildID,
+                g_build_id,
                 $(this).val());
 
         } else {
@@ -66,6 +64,33 @@ socket.on("returnBuildInfo", function(build, hBundles, progessBundles){
             $("#charNameSideIcon").removeClass("is-hidden");
         }
 
+    });
+
+    $("#buildDescription").blur(function(){
+      if(build.description != $(this).val()) {
+        $('#buildDescription').parent().addClass("is-loading");
+        socket.emit("requestBuildDescriptionChange",
+            g_build_id,
+            $(this).val());
+      }
+    });
+
+    $("#buildContactInfo").blur(function(){
+      if(build.contactInfo != $(this).val()) {
+        $('#buildContactInfo').parent().addClass("is-loading");
+        socket.emit("requestBuildContactInfoChange",
+            g_build_id,
+            $(this).val());
+      }
+    });
+
+    $("#buildArtworkURL").blur(function(){
+      if(build.artworkURL != $(this).val()) {
+        $('#buildArtworkURL').parent().addClass("is-loading");
+        socket.emit("requestBuildArtworkURLChange",
+            g_build_id,
+            $(this).val());
+      }
     });
 
     handleBuildOptions(build, hBundles, progessBundles);
@@ -83,7 +108,7 @@ function handleBuildOptions(build, hBundles, progessBundles) {
 
     $("#contentSrc-CRB").change(function(){
         socket.emit("requestBuildSourceChange", 
-            buildID, 
+            g_build_id, 
             'CRB',
             this.checked);
     });
@@ -91,7 +116,7 @@ function handleBuildOptions(build, hBundles, progessBundles) {
 
     $("#contentSrc-ADV-PLAYER-GUIDE").change(function(){
         socket.emit("requestBuildSourceChange", 
-            buildID, 
+            g_build_id, 
             'ADV-PLAYER-GUIDE',
             this.checked);
     });
@@ -99,7 +124,7 @@ function handleBuildOptions(build, hBundles, progessBundles) {
 
     $("#contentSrc-GM-GUIDE").change(function(){
         socket.emit("requestBuildSourceChange", 
-            buildID, 
+            g_build_id, 
             'GM-GUIDE',
             this.checked);
     });
@@ -107,7 +132,7 @@ function handleBuildOptions(build, hBundles, progessBundles) {
 
     $("#contentSrc-SECRETS-OF-MAGIC").change(function(){
         socket.emit("requestBuildSourceChange", 
-            buildID, 
+            g_build_id, 
             'SECRETS-OF-MAGIC',
             this.checked);
     });
@@ -115,7 +140,7 @@ function handleBuildOptions(build, hBundles, progessBundles) {
 
     $("#contentSrc-GUNS-AND-GEARS").change(function(){
         socket.emit("requestBuildSourceChange", 
-            buildID, 
+            g_build_id, 
             'GUNS-AND-GEARS',
             this.checked);
     });
@@ -123,7 +148,7 @@ function handleBuildOptions(build, hBundles, progessBundles) {
 
     $("#contentSrc-DARK-ARCHIVE").change(function(){
       socket.emit("requestBuildSourceChange", 
-          buildID, 
+          g_build_id, 
           'DARK-ARCHIVE',
           this.checked);
     });
@@ -131,7 +156,7 @@ function handleBuildOptions(build, hBundles, progessBundles) {
 
     $("#contentSrc-LOST-ANCESTRY-GUIDE").change(function(){
       socket.emit("requestBuildSourceChange", 
-          buildID, 
+          g_build_id, 
           'LOST-ANCESTRY-GUIDE',
           this.checked);
     });
@@ -139,7 +164,7 @@ function handleBuildOptions(build, hBundles, progessBundles) {
     
     $("#contentSrc-LOST-CHAR-GUIDE").change(function(){
         socket.emit("requestBuildSourceChange", 
-            buildID, 
+            g_build_id, 
             'LOST-CHAR-GUIDE',
             this.checked);
     });
@@ -147,7 +172,7 @@ function handleBuildOptions(build, hBundles, progessBundles) {
 
     $("#contentSrc-LOST-CITY-ABSALOM").change(function(){
       socket.emit("requestBuildSourceChange", 
-          buildID, 
+          g_build_id, 
           'LOST-CITY-ABSALOM',
           this.checked);
     });
@@ -155,7 +180,7 @@ function handleBuildOptions(build, hBundles, progessBundles) {
 
     $("#contentSrc-LOST-GOD-MAGIC").change(function(){
         socket.emit("requestBuildSourceChange", 
-            buildID, 
+            g_build_id, 
             'LOST-GOD-MAGIC',
             this.checked);
     });
@@ -163,7 +188,7 @@ function handleBuildOptions(build, hBundles, progessBundles) {
 
     $("#contentSrc-LOST-GRAND-BAZAAR").change(function(){
       socket.emit("requestBuildSourceChange", 
-          buildID, 
+          g_build_id, 
           'LOST-GRAND-BAZAAR',
           this.checked);
     });
@@ -171,7 +196,7 @@ function handleBuildOptions(build, hBundles, progessBundles) {
 
     $("#contentSrc-LOST-LEGENDS").change(function(){
       socket.emit("requestBuildSourceChange", 
-          buildID, 
+          g_build_id, 
           'LOST-LEGENDS',
           this.checked);
     });
@@ -179,7 +204,7 @@ function handleBuildOptions(build, hBundles, progessBundles) {
 
     $("#contentSrc-LOST-MWANGI").change(function(){
       socket.emit("requestBuildSourceChange", 
-          buildID, 
+          g_build_id, 
           'LOST-MWANGI',
           this.checked);
     });
@@ -187,7 +212,7 @@ function handleBuildOptions(build, hBundles, progessBundles) {
 
     $("#contentSrc-LOST-MONSTERS-MYTH").change(function(){
       socket.emit("requestBuildSourceChange", 
-          buildID, 
+          g_build_id, 
           'LOST-MONSTERS-MYTH',
           this.checked);
     });
@@ -195,7 +220,7 @@ function handleBuildOptions(build, hBundles, progessBundles) {
 
     $("#contentSrc-LOST-SOCIETY-GUIDE").change(function(){
       socket.emit("requestBuildSourceChange", 
-          buildID, 
+          g_build_id, 
           'LOST-SOCIETY-GUIDE',
           this.checked);
     });
@@ -203,7 +228,7 @@ function handleBuildOptions(build, hBundles, progessBundles) {
 
     $("#contentSrc-LOST-WORLD-GUIDE").change(function(){
         socket.emit("requestBuildSourceChange", 
-            buildID, 
+            g_build_id, 
             'LOST-WORLD-GUIDE',
             this.checked);
     });
@@ -211,7 +236,7 @@ function handleBuildOptions(build, hBundles, progessBundles) {
 
     $("#contentSrc-ABOMINATION-VAULTS").change(function(){
       socket.emit("requestBuildSourceChange", 
-          buildID, 
+          g_build_id, 
           'ABOMINATION-VAULTS',
           this.checked);
     });
@@ -219,7 +244,7 @@ function handleBuildOptions(build, hBundles, progessBundles) {
     
     $("#contentSrc-AGENTS-OF-EDGEWATCH").change(function(){
       socket.emit("requestBuildSourceChange", 
-          buildID, 
+          g_build_id, 
           'AGENTS-OF-EDGEWATCH',
           this.checked);
     });
@@ -227,7 +252,7 @@ function handleBuildOptions(build, hBundles, progessBundles) {
     
     $("#contentSrc-AGE-OF-ASHES").change(function(){
         socket.emit("requestBuildSourceChange", 
-            buildID, 
+            g_build_id, 
             'AGE-OF-ASHES',
             this.checked);
     });
@@ -235,7 +260,7 @@ function handleBuildOptions(build, hBundles, progessBundles) {
 
     $("#contentSrc-EXTINCTION-CURSE").change(function(){
         socket.emit("requestBuildSourceChange", 
-            buildID, 
+            g_build_id, 
             'EXTINCTION-CURSE',
             this.checked);
     });
@@ -243,7 +268,7 @@ function handleBuildOptions(build, hBundles, progessBundles) {
 
     $("#contentSrc-FALL-OF-PLAGUE").change(function(){
         socket.emit("requestBuildSourceChange", 
-            buildID, 
+            g_build_id, 
             'FALL-OF-PLAGUE',
             this.checked);
     });
@@ -251,7 +276,7 @@ function handleBuildOptions(build, hBundles, progessBundles) {
 
     $("#contentSrc-FIST-PHOENIX").change(function(){
       socket.emit("requestBuildSourceChange", 
-          buildID, 
+          g_build_id, 
           'FIST-PHOENIX',
           this.checked);
     });
@@ -259,7 +284,7 @@ function handleBuildOptions(build, hBundles, progessBundles) {
 
     $("#contentSrc-MALEVOLENCE").change(function(){
       socket.emit("requestBuildSourceChange", 
-          buildID, 
+          g_build_id, 
           'MALEVOLENCE',
           this.checked);
     });
@@ -267,7 +292,7 @@ function handleBuildOptions(build, hBundles, progessBundles) {
 
     $("#contentSrc-NIGHT-GRAY-DEATH").change(function(){
       socket.emit("requestBuildSourceChange", 
-          buildID, 
+          g_build_id, 
           'NIGHT-GRAY-DEATH',
           this.checked);
     });
@@ -275,7 +300,7 @@ function handleBuildOptions(build, hBundles, progessBundles) {
 
     $("#contentSrc-QUEST-FROZEN-FLAME").change(function(){
       socket.emit("requestBuildSourceChange", 
-          buildID, 
+          g_build_id, 
           'QUEST-FROZEN-FLAME',
           this.checked);
     });
@@ -283,7 +308,7 @@ function handleBuildOptions(build, hBundles, progessBundles) {
 
     $("#contentSrc-SLITHERING").change(function(){
       socket.emit("requestBuildSourceChange", 
-          buildID, 
+          g_build_id, 
           'SLITHERING',
           this.checked);
     });
@@ -291,7 +316,7 @@ function handleBuildOptions(build, hBundles, progessBundles) {
 
     $("#contentSrc-STRENGTH-THOUSANDS").change(function(){
       socket.emit("requestBuildSourceChange", 
-          buildID, 
+          g_build_id, 
           'STRENGTH-THOUSANDS',
           this.checked);
     });
@@ -299,7 +324,7 @@ function handleBuildOptions(build, hBundles, progessBundles) {
 
     $("#contentSrc-TROUBLES-IN-OTARI").change(function(){
       socket.emit("requestBuildSourceChange", 
-          buildID, 
+          g_build_id, 
           'TROUBLES-IN-OTARI',
           this.checked);
     });
@@ -307,7 +332,7 @@ function handleBuildOptions(build, hBundles, progessBundles) {
 
     $("#contentSrc-THRESHOLD-KNOWLEDGE").change(function(){
       socket.emit("requestBuildSourceChange", 
-          buildID, 
+          g_build_id, 
           'THRESHOLD-KNOWLEDGE',
           this.checked);
     });
@@ -315,7 +340,7 @@ function handleBuildOptions(build, hBundles, progessBundles) {
 
     $("#contentSrc-PATH-SOCIETY").change(function(){
       socket.emit("requestBuildSourceChange", 
-          buildID, 
+          g_build_id, 
           'PATH-SOCIETY',
           this.checked);
     });
@@ -329,7 +354,7 @@ function handleBuildOptions(build, hBundles, progessBundles) {
         $(this).prop('checked', true);
       });
       socket.emit("requestBuildSetSources", 
-          buildID, 
+          g_build_id, 
           newContentSourceArray);
       $('#enableAllBooksBtn').blur();
     });
@@ -338,7 +363,7 @@ function handleBuildOptions(build, hBundles, progessBundles) {
     $("#variantAncestryParagon").change(function(){
       let optionTypeValue = (this.checked) ? 1 : 0;
       socket.emit("requestBuildOptionChange", 
-          buildID, 
+          g_build_id, 
           'variantAncestryParagon',
           optionTypeValue);
     });
@@ -347,7 +372,7 @@ function handleBuildOptions(build, hBundles, progessBundles) {
     $("#variantFreeArchetype").change(function(){
       let optionTypeValue = (this.checked) ? 1 : 0;
       socket.emit("requestBuildOptionChange", 
-          buildID, 
+          g_build_id, 
           'variantFreeArchetype',
           optionTypeValue);
     });
@@ -356,7 +381,7 @@ function handleBuildOptions(build, hBundles, progessBundles) {
     $("#variantGradualAbilityBoosts").change(function(){
       let optionTypeValue = (this.checked) ? 1 : 0;
       socket.emit("requestBuildOptionChange", 
-          buildID, 
+          g_build_id, 
           'variantGradualAbilityBoosts',
           optionTypeValue);
     });
@@ -365,11 +390,11 @@ function handleBuildOptions(build, hBundles, progessBundles) {
     $("#variantStamina").change(function(){
       let optionTypeValue = (this.checked) ? 1 : 0;
       socket.emit("requestBuildOptionChange", 
-          buildID, 
+          g_build_id, 
           'variantStamina',
           optionTypeValue);
       socket.emit("requestBuildSourceChange", 
-          buildID, 
+          g_build_id, 
           'STAMINA-VARIANT',
           this.checked);
     });
@@ -379,18 +404,18 @@ function handleBuildOptions(build, hBundles, progessBundles) {
     $("#optionClassArchetypes").change(function(){
       let optionTypeValue = (this.checked) ? 1 : 0;
       socket.emit("requestBuildOptionChange", 
-          buildID, 
+          g_build_id, 
           'optionClassArchetypes',
           optionTypeValue);
       socket.emit("requestBuildSourceChange", 
-          buildID, 
+          g_build_id, 
           'CLASS-ARCHETYPES-OPTION',
           this.checked);
     });
     $("#optionClassArchetypes").prop('checked', (build.optionClassArchetypes === 1));
     if(build.optionClassArchetypes === 1){
       socket.emit("requestBuildSourceChange", 
-          buildID, 
+          g_build_id, 
           'CLASS-ARCHETYPES-OPTION',
           true);
     }
@@ -405,7 +430,7 @@ function handleBuildOptions(build, hBundles, progessBundles) {
         $("#option-custom-code-block-container").addClass('is-hidden');
       }
       socket.emit("requestBuildOptionChange", 
-          buildID, 
+          g_build_id, 
           'optionCustomCodeBlock',
           optionTypeValue);
     });
@@ -419,7 +444,7 @@ function handleBuildOptions(build, hBundles, progessBundles) {
       if(build.customCode != newCode){
         build.customCode = newCode;
         $('#inputCustomCodeBlock').parent().addClass("is-loading");
-        socket.emit("requestBuildCustomCodeBlockChange", buildID, newCode);
+        socket.emit("requestBuildCustomCodeBlockChange", g_build_id, newCode);
       }
     });
 
@@ -429,7 +454,19 @@ function handleBuildOptions(build, hBundles, progessBundles) {
 // ~~~~~~~~~~~~~~ // Processings // ~~~~~~~~~~~~~~ //
 
 socket.on("returnBuildNameChange", function() {
-    $("#charNameControlShell").removeClass("is-medium is-loading");
+  $("#charNameControlShell").removeClass("is-medium is-loading");
+});
+
+socket.on("returnBuildDescriptionChange", function() {
+  $('#buildDescription').parent().removeClass("is-loading");
+});
+
+socket.on("returnBuildContactInfoChange", function() {
+  $('#buildContactInfo').parent().removeClass("is-loading");
+});
+
+socket.on("returnBuildArtworkURLChange", function() {
+  $('#buildArtworkURL').parent().removeClass("is-loading");
 });
 
 //
@@ -470,7 +507,7 @@ function displayHomebrewBundles(build, hBundles, progessBundles){
 
     $('#'+bundleSwitchID).change(function(){
       socket.emit('requestBuildHomebrewChange', 
-          buildID, 
+          g_build_id, 
           homebrewBundle.id,
           this.checked);
     });
@@ -491,7 +528,7 @@ function displayHomebrewBundles(build, hBundles, progessBundles){
 
     $('#'+bundleSwitchID).change(function(){
       socket.emit('requestBuildHomebrewChange', 
-          buildID, 
+          g_build_id, 
           homebrewBundle.id,
           this.checked);
     });

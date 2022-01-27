@@ -21,6 +21,8 @@ const CalculatedStat = require('../models/contentDB/CalculatedStat');
 const CharDataMapping = require('./CharDataMapping');
 const CharDataMappingExt = require('./CharDataMappingExt');
 
+const CharStateUtils = require('../js/CharStateUtils');
+
 const CharTags = require('./CharTags');
 
 function srcStructToCode(charID, source, srcStruct) {
@@ -56,6 +58,124 @@ module.exports = class CharSaving {
       }).then((result) => {
         return;
       });
+    }
+
+    ///
+
+    static createNewCharacter(user, build=null){
+
+      let defaultOptions;
+      if(build != null){
+        defaultOptions = {
+          buildID: build.id,
+
+          ancestryID: build.ancestryID,
+          heritageID: build.heritageID,
+          uniHeritageID: build.uniHeritageID,
+          backgroundID: build.backgroundID,
+          classID: build.classID,
+          classID_2: build.classID_2,
+
+          customCode: build.customCode,
+          optionCustomCodeBlock: build.optionCustomCodeBlock,
+          optionClassArchetypes: build.optionClassArchetypes,
+          variantFreeArchetype: build.variantFreeArchetype,
+          variantAncestryParagon: build.variantAncestryParagon,
+          variantStamina: build.variantStamina,
+          variantGradualAbilityBoosts: build.variantGradualAbilityBoosts,
+
+          enabledSources: build.enabledSources,
+          enabledHomebrew: build.enabledHomebrew,
+        };
+      } else {
+        defaultOptions = {
+          buildID: null,
+
+          ancestryID: null,
+          heritageID: null,
+          uniHeritageID: null,
+          backgroundID: null,
+          classID: null,
+          classID_2: null,
+
+          customCode: null,
+          optionCustomCodeBlock: 0,
+          optionClassArchetypes: 1,
+          variantFreeArchetype: 0,
+          variantAncestryParagon: 0,
+          variantStamina: 0,
+          variantGradualAbilityBoosts: 0,
+
+          enabledSources: '["CRB","ADV-PLAYER-GUIDE","GM-GUIDE"]',
+          enabledHomebrew: '[null]',
+        };
+      }
+
+      return Character.findAll({ where: { userID: user.id } })
+      .then((characters) => {
+
+        if(CharStateUtils.canMakeCharacter(user, characters)){
+
+            return Inventory.create({
+            }).then(inventory => { // -- Hardcoded Item IDs for Small Pouch and Silver
+                return CharSaving.addItemToInv(inventory.id, 84, 1) // Give Small Pouch
+                .then(pouchInvItem => {
+                    return CharSaving.saveInvItemCustomize(pouchInvItem.id, {
+                        name: 'Coin Pouch',
+                        price: 0,
+                        bulk: pouchInvItem.bulk,
+                        description: 'A small, simple pouch used to hold coins.',
+                        size: pouchInvItem.size,
+                        isShoddy: pouchInvItem.isShoddy,
+                        hitPoints: pouchInvItem.hitPoints,
+                        brokenThreshold: pouchInvItem.brokenThreshold,
+                        hardness: pouchInvItem.hardness,
+                        code: pouchInvItem.code,
+                    }).then(result => {
+                        return CharSaving.addItemToInv(inventory.id, 23, 150) // Give starting 150 silver
+                        .then(silverInvItem => {
+                            return CharSaving.saveInvItemToNewBag(silverInvItem.id, pouchInvItem.id, 0) // Put silver in pouch
+                            .then(result => {
+                                return Character.create({
+                                    name: "Unnamed Character",
+                                    level: 1,
+                                    userID: user.id,
+                                    inventoryID: inventory.id,
+
+
+                                    buildID: defaultOptions.buildID,
+
+                                    ancestryID: defaultOptions.ancestryID,
+                                    heritageID: defaultOptions.heritageID,
+                                    uniHeritageID: defaultOptions.uniHeritageID,
+                                    backgroundID: defaultOptions.backgroundID,
+                                    classID: defaultOptions.classID,
+                                    classID_2: defaultOptions.classID_2,
+
+                                    customCode: defaultOptions.customCode,
+                                    optionCustomCodeBlock: defaultOptions.optionCustomCodeBlock,
+                                    optionClassArchetypes: defaultOptions.optionClassArchetypes,
+                                    variantFreeArchetype: defaultOptions.variantFreeArchetype,
+                                    variantAncestryParagon: defaultOptions.variantAncestryParagon,
+                                    variantStamina: defaultOptions.variantStamina,
+                                    variantGradualAbilityBoosts: defaultOptions.variantGradualAbilityBoosts,
+
+                                    enabledSources: defaultOptions.enabledSources,
+                                    enabledHomebrew: defaultOptions.enabledHomebrew,
+
+                                }).then(character => {
+                                  return character;
+                                }).catch(err => console.error(err));
+                            });
+                        });
+                    });
+                });
+            });
+
+        }
+        return null;
+      });
+
     }
 
     ///
@@ -704,10 +824,10 @@ module.exports = class CharSaving {
     static saveAncestry(charID, ancestryID) {
 
         let srcStruct = {
-            sourceType: 'ancestry',
-            sourceLevel: 1,
-            sourceCode: 'defaultTag',
-            sourceCodeSNum: 'a',
+          sourceType: 'ancestry',
+          sourceLevel: 1,
+          sourceCode: 'defaultTag',
+          sourceCodeSNum: 'a',
         };
         let charUpVals = {
             ancestryID: ancestryID,
