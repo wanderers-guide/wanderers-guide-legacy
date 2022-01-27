@@ -37,7 +37,23 @@
 <div class="banner_w3lspvt-1">
 	<div class="w3ls_banner_txt">
 
-    <div class="columns">
+    <div id="home-mobile-layout" class="columns is-hidden">
+      <div class="column home-containers">
+        <h4 class="w3ls_pvt-title has-text-white text-center">Your Guide to Pathfinder 2e</h4>
+        <hr class="my-0 mx-2">
+
+        <p class="text-center pt-2">
+          <a href="/browse" style="max-width: 150px;" class="btn button-style m-1"><i class="fas fa-search"></i> Search Pf2e</a>
+          {{#if user}}
+            <a href="/profile/characters" style="max-width: 180px;" class="btn button-style m-1">Create Character</a>
+          {{else}}
+            <a href="/auth/login" style="max-width: 180px;" class="btn button-style m-1">Create Character</a>
+          {{/if}}
+        </p>
+      </div>
+    </div>
+
+    <div id="home-desktop-layout" class="columns">
       <div class="column home-containers">
         <h4 class="w3ls_pvt-title has-text-white text-center">Announcements</h4>
         <hr class="my-0 mx-2">

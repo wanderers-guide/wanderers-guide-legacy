@@ -10,6 +10,18 @@ function openBuildsBrowse(){
 
 socket.on("returnPublishedBuilds", function(builds){
 
+  builds = builds.sort(
+    function(a, b) {
+      let aRating = a.characters.length;
+      let bRating = b.characters.length;
+      if (aRating === bRating) {
+        // Name is only important when ratings are the same
+        return a.name > b.name ? 1 : -1;
+      }
+      return bRating - aRating;
+    }
+  );
+
   stopSpinnerSubLoader();
   $('#tabContent').html('');
   $('#tabContent').addClass('is-hidden');

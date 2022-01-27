@@ -49,6 +49,12 @@ $(function () {
         }
     });
 
+    // Switch main containers when in mobile
+    if(isMobileView()){
+      $('#home-desktop-layout').addClass('is-hidden');
+      $('#home-mobile-layout').removeClass('is-hidden');
+    }
+
     // Load Top Builds
     socket.emit("requestTopPublishedBuilds", 10);
 

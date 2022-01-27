@@ -432,8 +432,8 @@ body::-webkit-scrollbar-thumb {
 @media (hover: none) { /* @media screen and (max-width:768px){ */
   /* Touch Screen */
   .use-custom-scrollbar::-webkit-scrollbar {
-    width: 0.75em;
-    height: 0.75em;
+    width: 0.9em;
+    height: 0.9em;
   }
 }
 
@@ -495,11 +495,20 @@ select::-webkit-scrollbar-corner {
   margin-left: 4%;
   margin-right: 4%;
 }
+@media screen and (max-width:768px){
+  .w3ls_banner_txt {
+    margin-top: calc(45% + 40px)!important;
+  }
+}
 
 h3.w3ls_pvt-title {
   font-size: 2.2em;
   text-shadow: 2px 5px 3px rgba(0, 0, 0, 0.06);
   font-weight: bold;
+}
+
+.w3ls_pvt-title {
+  white-space: nowrap;
 }
 
 .w3ls_banner_txt h5 {
@@ -531,6 +540,7 @@ h3.w3ls_pvt-title {
   -ms-background-size: cover;
   width: 100%;
   height: 100vh;
+  min-height: 800px;
   overflow: hidden;
   position: relative;
 }
