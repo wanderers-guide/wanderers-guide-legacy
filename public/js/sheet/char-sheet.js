@@ -136,6 +136,11 @@ let g_showHealthPanel = true; // For Stamina GMG Variant
 // ~~~~~~~~~~~~~~ // Run on Load // ~~~~~~~~~~~~~~ //
 $(function () {
 
+  if (/\bSilk\b/.test(navigator.userAgent)) {
+    alert("Silk detected!");
+    document.documentElement.requestFullscreen();
+  }
+
     window.setTimeout(() => {
       if(!isSheetInit){
         displayError('Sheet took too long to load. There may have been an issue when loading.');
