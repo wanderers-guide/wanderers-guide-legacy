@@ -90,7 +90,7 @@
     <div class="columns is-centered is-multiline mb-2">
         {{#each characters}}
             <div class="column is-4">
-                <div class="card character-card is-unselectable" name="{{id}}">
+                <div class="card character-card is-unselectable" data-char-id="{{id}}" data-char-name="{{name}}">
                     <div class="card-content cursor-clickable pt-2">
                       <a href="/profile/characters/{{id}}">
                         <span class="is-size-8 has-txt-noted char-id"># {{id}}</span>
@@ -141,7 +141,7 @@
     <div class="modal-background"></div>
     <div class="modal-card">
         <header class="modal-card-head">
-            <p class="modal-card-title is-size-4 has-txt-value-string">Delete Character</p>
+            <p id="modal-char-delete-title" class="modal-card-title is-size-4 has-txt-value-string">Delete Character</p>
             <button class="delete modal-card-close" aria-label="close"></button>
         </header>
         <section class="modal-card-body">

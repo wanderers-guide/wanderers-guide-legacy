@@ -273,11 +273,15 @@ function preReqConfirmSkillProf(skillName, numUps){
   let customChecksResult = checkCustomSkillProfs(skillName, numUps);
   if(customChecksResult != null) { return customChecksResult; }
   const varName = profConversion_convertOldNameToVarName(skillName);
-  const skillNumUps = profToNumUp(variables_getFinalRank(varName));
-  if(skillNumUps != null){
-    return skillNumUps >= numUps ? 'TRUE' : 'FALSE';
+  if(varName != ''){
+    const skillNumUps = profToNumUp(variables_getFinalRank(varName));
+    if(skillNumUps != null){
+      return skillNumUps >= numUps ? 'TRUE' : 'FALSE';
+    } else {
+      if(skillName.endsWith(' LORE')){ return 'FALSE'; }
+      return 'UNKNOWN';
+    }
   } else {
-    if(skillName.endsWith(' LORE')){ return 'FALSE'; }
     return 'UNKNOWN';
   }
 }
@@ -297,9 +301,11 @@ function checkCustomSkillProfs(name, numUps){
   if(name === 'AT LEAST ONE SKILL'){
     for(const skillName of preReq_skillList()){
       const varName = profConversion_convertOldNameToVarName(skillName);
-      const skillNumUps = profToNumUp(variables_getFinalRank(varName));
-      if(skillNumUps >= numUps){
-        return 'TRUE';
+      if(varName != ''){
+        const skillNumUps = profToNumUp(variables_getFinalRank(varName));
+        if(skillNumUps >= numUps){
+          return 'TRUE';
+        }
       }
     }
     return 'FALSE';
@@ -308,17 +314,19 @@ function checkCustomSkillProfs(name, numUps){
   if(name === 'A SKILL WITH THE RECALL KNOWLEDGE ACTION' || name === 'AT LEAST ONE SKILL TO RECALL KNOWLEDGE' || name === 'A RECALL KNOWLEDGE SKILL'){
     for(const skillName of preReq_skillList()){
       const varName = profConversion_convertOldNameToVarName(skillName);
-      const skillNumUps = profToNumUp(variables_getFinalRank(varName));
-      if(skillNumUps >= numUps){
-        if(skillName.endsWith(' Lore') ||
-            skillName == 'Arcana' ||
-            skillName == 'Crafting' ||
-            skillName == 'Medicine' ||
-            skillName == 'Nature' ||
-            skillName == 'Occultism' ||
-            skillName == 'Religion' || 
-            skillName == 'Society'){
-          return 'TRUE';
+      if(varName != ''){
+        const skillNumUps = profToNumUp(variables_getFinalRank(varName));
+        if(skillNumUps >= numUps){
+          if(skillName.endsWith(' Lore') ||
+              skillName == 'Arcana' ||
+              skillName == 'Crafting' ||
+              skillName == 'Medicine' ||
+              skillName == 'Nature' ||
+              skillName == 'Occultism' ||
+              skillName == 'Religion' || 
+              skillName == 'Society'){
+            return 'TRUE';
+          }
         }
       }
     }
@@ -328,13 +336,15 @@ function checkCustomSkillProfs(name, numUps){
   if(name === 'A SKILL WITH THE DECIPHER WRITING ACTION' || name === 'AT LEAST ONE SKILL TO DECIPHER WRITING' || name === 'A DECIPHER WRITING SKILL'){
     for(const skillName of preReq_skillList()){
       const varName = profConversion_convertOldNameToVarName(skillName);
-      const skillNumUps = profToNumUp(variables_getFinalRank(varName));
-      if(skillNumUps >= numUps){
-        if(skillName == 'Arcana' ||
-            skillName == 'Occultism' ||
-            skillName == 'Religion' ||
-            skillName == 'Society'){
-          return 'TRUE';
+      if(varName != ''){
+        const skillNumUps = profToNumUp(variables_getFinalRank(varName));
+        if(skillNumUps >= numUps){
+          if(skillName == 'Arcana' ||
+              skillName == 'Occultism' ||
+              skillName == 'Religion' ||
+              skillName == 'Society'){
+            return 'TRUE';
+          }
         }
       }
     }

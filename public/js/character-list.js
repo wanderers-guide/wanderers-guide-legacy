@@ -3,6 +3,7 @@
 */
 
 let activeModalCharID = -1;
+let activeModalCharName = '';
 let socket = io();
 
 // ~~~~~~~~~~~~~~ // Run on Load // ~~~~~~~~~~~~~~ //
@@ -19,7 +20,8 @@ $(function () {
     let characterCards = $('.character-card');
     for(const characterCard of characterCards){
 
-        let characterID = $(characterCard).attr('name');
+        let characterID = $(characterCard).attr('data-char-id');
+        let characterName = $(characterCard).attr('data-char-name');
         let cardContent = $(characterCard).find('.card-content');
         let cardEdit = $(characterCard).find('.character-card-edit');
         let cardDelete = $(characterCard).find('.character-card-delete');
@@ -55,6 +57,8 @@ $(function () {
             $('.modal-char-delete').addClass('is-active');
             $('html').addClass('is-clipped');
             activeModalCharID = characterID;
+            activeModalCharName = characterName;
+            $('#modal-char-delete-title').text('Delete Character: '+activeModalCharName);
         });
 
         cardOptions.mouseenter(function(){
@@ -67,6 +71,7 @@ $(function () {
           $('.modal-char-options').addClass('is-active');
           $('html').addClass('is-clipped');
           activeModalCharID = characterID;
+          activeModalCharName = characterName;
         });
         
     }
@@ -75,11 +80,13 @@ $(function () {
       $('.modal').removeClass('is-active');
       $('html').removeClass('is-clipped');
       activeModalCharID = -1;
+      activeModalCharName = '';
     });
     $('.modal-background').click(function() {
       $('.modal').removeClass('is-active');
       $('html').removeClass('is-clipped');
       activeModalCharID = -1;
+      activeModalCharName = '';
     });
 
     $('#delete-confirmation-btn').click(function() {
