@@ -237,6 +237,5 @@ function getConditionalStatMap(statName){
 
 function hasConditionals(statName){
   statName = statName.replace(/\s/g, "_").toUpperCase();
-  let map = variables_getConditionalsMap(statName);
-  return map != null && map.size > 0;
+  return variables_hasConditionals(statName);
 }

@@ -697,30 +697,30 @@ function displayStats(){
   $('#hit-points-total').text(maxHealth+maxHealthPerLevel);
 
   // Class DC
-  $('#class-dc-total').text(variables_getTotal(VARIABLE.CLASS_DC)+10);
+  $('#class-dc-total').text((variables_hasConditionals(VARIABLE.CLASS_DC)) ? variables_getTotal(VARIABLE.CLASS_DC)+10+'<sup class="is-size-7 has-text-info">*</sup>' : variables_getTotal(VARIABLE.CLASS_DC)+10);
   $('#class-dc-rank').text(variables_getFinalRank(VARIABLE.CLASS_DC));
 
   // Perception
-  $('#perception-total').text(signNumber(variables_getTotal(VARIABLE.PERCEPTION)));
+  $('#perception-total').text((variables_hasConditionals(VARIABLE.PERCEPTION)) ? signNumber(variables_getTotal(VARIABLE.PERCEPTION))+'<sup class="is-size-7 has-text-info">*</sup>' : signNumber(variables_getTotal(VARIABLE.PERCEPTION)));
   $('#perception-rank').text(variables_getFinalRank(VARIABLE.PERCEPTION));
 
   // Saves
   let saves = [
     {
       Value1: 'Fortitude',
-      Value2: signNumber(variables_getTotal(VARIABLE.SAVE_FORT)),
+      Value2: (variables_hasConditionals(VARIABLE.SAVE_FORT)) ? signNumber(variables_getTotal(VARIABLE.SAVE_FORT))+'<sup class="is-size-7 has-text-info">*</sup>' : signNumber(variables_getTotal(VARIABLE.SAVE_FORT)),
       Value3: variables_getFinalRank(VARIABLE.SAVE_FORT),
       VarName: VARIABLE.SAVE_FORT,
     },
     {
       Value1: 'Reflex',
-      Value2: signNumber(variables_getTotal(VARIABLE.SAVE_REFLEX)),
+      Value2: (variables_hasConditionals(VARIABLE.SAVE_REFLEX)) ? signNumber(variables_getTotal(VARIABLE.SAVE_REFLEX))+'<sup class="is-size-7 has-text-info">*</sup>' : signNumber(variables_getTotal(VARIABLE.SAVE_REFLEX)),
       Value3: variables_getFinalRank(VARIABLE.SAVE_REFLEX),
       VarName: VARIABLE.SAVE_REFLEX,
     },
     {
       Value1: 'Will',
-      Value2: signNumber(variables_getTotal(VARIABLE.SAVE_WILL)),
+      Value2: (variables_hasConditionals(VARIABLE.SAVE_WILL)) ? signNumber(variables_getTotal(VARIABLE.SAVE_WILL))+'<sup class="is-size-7 has-text-info">*</sup>' : signNumber(variables_getTotal(VARIABLE.SAVE_WILL)),
       Value3: variables_getFinalRank(VARIABLE.SAVE_WILL),
       VarName: VARIABLE.SAVE_WILL,
     },
@@ -731,97 +731,97 @@ function displayStats(){
   let skills = [
     {
       Value1: 'Acrobatics',
-      Value2: signNumber(variables_getTotal(VARIABLE.SKILL_ACROBATICS)),
+      Value2: (variables_hasConditionals(VARIABLE.SKILL_ACROBATICS)) ? signNumber(variables_getTotal(VARIABLE.SKILL_ACROBATICS))+'<sup class="is-size-7 has-text-info">*</sup>' : signNumber(variables_getTotal(VARIABLE.SKILL_ACROBATICS)),
       Value3: variables_getFinalRank(VARIABLE.SKILL_ACROBATICS),
       VarName: VARIABLE.SKILL_ACROBATICS,
     },
     {
       Value1: 'Arcana',
-      Value2: signNumber(variables_getTotal(VARIABLE.SKILL_ARCANA)),
+      Value2: (variables_hasConditionals(VARIABLE.SKILL_ARCANA)) ? signNumber(variables_getTotal(VARIABLE.SKILL_ARCANA))+'<sup class="is-size-7 has-text-info">*</sup>' : signNumber(variables_getTotal(VARIABLE.SKILL_ARCANA)),
       Value3: variables_getFinalRank(VARIABLE.SKILL_ARCANA),
       VarName: VARIABLE.SKILL_ARCANA,
     },
     {
       Value1: 'Athletics',
-      Value2: signNumber(variables_getTotal(VARIABLE.SKILL_ATHLETICS)),
+      Value2: (variables_hasConditionals(VARIABLE.SKILL_ATHLETICS)) ? signNumber(variables_getTotal(VARIABLE.SKILL_ATHLETICS))+'<sup class="is-size-7 has-text-info">*</sup>' : signNumber(variables_getTotal(VARIABLE.SKILL_ATHLETICS)),
       Value3: variables_getFinalRank(VARIABLE.SKILL_ATHLETICS),
       VarName: VARIABLE.SKILL_ATHLETICS,
     },
     {
       Value1: 'Crafting',
-      Value2: signNumber(variables_getTotal(VARIABLE.SKILL_CRAFTING)),
+      Value2: (variables_hasConditionals(VARIABLE.SKILL_CRAFTING)) ? signNumber(variables_getTotal(VARIABLE.SKILL_CRAFTING))+'<sup class="is-size-7 has-text-info">*</sup>' : signNumber(variables_getTotal(VARIABLE.SKILL_CRAFTING)),
       Value3: variables_getFinalRank(VARIABLE.SKILL_CRAFTING),
       VarName: VARIABLE.SKILL_CRAFTING,
     },
     {
       Value1: 'Deception',
-      Value2: signNumber(variables_getTotal(VARIABLE.SKILL_DECEPTION)),
+      Value2: (variables_hasConditionals(VARIABLE.SKILL_DECEPTION)) ? signNumber(variables_getTotal(VARIABLE.SKILL_DECEPTION))+'<sup class="is-size-7 has-text-info">*</sup>' : signNumber(variables_getTotal(VARIABLE.SKILL_DECEPTION)),
       Value3: variables_getFinalRank(VARIABLE.SKILL_DECEPTION),
       VarName: VARIABLE.SKILL_DECEPTION,
     },
     {
       Value1: 'Diplomacy',
-      Value2: signNumber(variables_getTotal(VARIABLE.SKILL_DIPLOMACY)),
+      Value2: (variables_hasConditionals(VARIABLE.SKILL_DIPLOMACY)) ? signNumber(variables_getTotal(VARIABLE.SKILL_DIPLOMACY))+'<sup class="is-size-7 has-text-info">*</sup>' : signNumber(variables_getTotal(VARIABLE.SKILL_DIPLOMACY)),
       Value3: variables_getFinalRank(VARIABLE.SKILL_DIPLOMACY),
       VarName: VARIABLE.SKILL_DIPLOMACY,
     },
     {
       Value1: 'Intimidation',
-      Value2: signNumber(variables_getTotal(VARIABLE.SKILL_INTIMIDATION)),
+      Value2: (variables_hasConditionals(VARIABLE.SKILL_INTIMIDATION)) ? signNumber(variables_getTotal(VARIABLE.SKILL_INTIMIDATION))+'<sup class="is-size-7 has-text-info">*</sup>' : signNumber(variables_getTotal(VARIABLE.SKILL_INTIMIDATION)),
       Value3: variables_getFinalRank(VARIABLE.SKILL_INTIMIDATION),
       VarName: VARIABLE.SKILL_INTIMIDATION,
     },
     {
       Value1: 'Medicine',
-      Value2: signNumber(variables_getTotal(VARIABLE.SKILL_MEDICINE)),
+      Value2: (variables_hasConditionals(VARIABLE.SKILL_MEDICINE)) ? signNumber(variables_getTotal(VARIABLE.SKILL_MEDICINE))+'<sup class="is-size-7 has-text-info">*</sup>' : signNumber(variables_getTotal(VARIABLE.SKILL_MEDICINE)),
       Value3: variables_getFinalRank(VARIABLE.SKILL_MEDICINE),
       VarName: VARIABLE.SKILL_MEDICINE,
     },
     {
       Value1: 'Nature',
-      Value2: signNumber(variables_getTotal(VARIABLE.SKILL_NATURE)),
+      Value2: (variables_hasConditionals(VARIABLE.SKILL_NATURE)) ? signNumber(variables_getTotal(VARIABLE.SKILL_NATURE))+'<sup class="is-size-7 has-text-info">*</sup>' : signNumber(variables_getTotal(VARIABLE.SKILL_NATURE)),
       Value3: variables_getFinalRank(VARIABLE.SKILL_NATURE),
       VarName: VARIABLE.SKILL_NATURE,
     },
     {
       Value1: 'Occultism',
-      Value2: signNumber(variables_getTotal(VARIABLE.SKILL_OCCULTISM)),
+      Value2: (variables_hasConditionals(VARIABLE.SKILL_OCCULTISM)) ? signNumber(variables_getTotal(VARIABLE.SKILL_OCCULTISM))+'<sup class="is-size-7 has-text-info">*</sup>' : signNumber(variables_getTotal(VARIABLE.SKILL_OCCULTISM)),
       Value3: variables_getFinalRank(VARIABLE.SKILL_OCCULTISM),
       VarName: VARIABLE.SKILL_OCCULTISM,
     },
     {
       Value1: 'Performance',
-      Value2: signNumber(variables_getTotal(VARIABLE.SKILL_PERFORMANCE)),
+      Value2: (variables_hasConditionals(VARIABLE.SKILL_PERFORMANCE)) ? signNumber(variables_getTotal(VARIABLE.SKILL_PERFORMANCE))+'<sup class="is-size-7 has-text-info">*</sup>' : signNumber(variables_getTotal(VARIABLE.SKILL_PERFORMANCE)),
       Value3: variables_getFinalRank(VARIABLE.SKILL_PERFORMANCE),
       VarName: VARIABLE.SKILL_PERFORMANCE,
     },
     {
       Value1: 'Religion',
-      Value2: signNumber(variables_getTotal(VARIABLE.SKILL_RELIGION)),
+      Value2: (variables_hasConditionals(VARIABLE.SKILL_RELIGION)) ? signNumber(variables_getTotal(VARIABLE.SKILL_RELIGION))+'<sup class="is-size-7 has-text-info">*</sup>' : signNumber(variables_getTotal(VARIABLE.SKILL_RELIGION)),
       Value3: variables_getFinalRank(VARIABLE.SKILL_RELIGION),
       VarName: VARIABLE.SKILL_RELIGION,
     },
     {
       Value1: 'Society',
-      Value2: signNumber(variables_getTotal(VARIABLE.SKILL_SOCIETY)),
+      Value2: (variables_hasConditionals(VARIABLE.SKILL_SOCIETY)) ? signNumber(variables_getTotal(VARIABLE.SKILL_SOCIETY))+'<sup class="is-size-7 has-text-info">*</sup>' : signNumber(variables_getTotal(VARIABLE.SKILL_SOCIETY)),
       Value3: variables_getFinalRank(VARIABLE.SKILL_SOCIETY),
       VarName: VARIABLE.SKILL_SOCIETY,
     },
     {
       Value1: 'Stealth',
-      Value2: signNumber(variables_getTotal(VARIABLE.SKILL_STEALTH)),
+      Value2: (variables_hasConditionals(VARIABLE.SKILL_STEALTH)) ? signNumber(variables_getTotal(VARIABLE.SKILL_STEALTH))+'<sup class="is-size-7 has-text-info">*</sup>' : signNumber(variables_getTotal(VARIABLE.SKILL_STEALTH)),
       Value3: variables_getFinalRank(VARIABLE.SKILL_STEALTH),
       VarName: VARIABLE.SKILL_STEALTH,
     },
     {
       Value1: 'Survival',
-      Value2: signNumber(variables_getTotal(VARIABLE.SKILL_SURVIVAL)),
+      Value2: (variables_hasConditionals(VARIABLE.SKILL_SURVIVAL)) ? signNumber(variables_getTotal(VARIABLE.SKILL_SURVIVAL))+'<sup class="is-size-7 has-text-info">*</sup>' : signNumber(variables_getTotal(VARIABLE.SKILL_SURVIVAL)),
       Value3: variables_getFinalRank(VARIABLE.SKILL_SURVIVAL),
       VarName: VARIABLE.SKILL_SURVIVAL,
     },
     {
       Value1: 'Thievery',
-      Value2: signNumber(variables_getTotal(VARIABLE.SKILL_THIEVERY)),
+      Value2: (variables_hasConditionals(VARIABLE.SKILL_THIEVERY)) ? signNumber(variables_getTotal(VARIABLE.SKILL_THIEVERY))+'<sup class="is-size-7 has-text-info">*</sup>' : signNumber(variables_getTotal(VARIABLE.SKILL_THIEVERY)),
       Value3: variables_getFinalRank(VARIABLE.SKILL_THIEVERY),
       VarName: VARIABLE.SKILL_THIEVERY,
     },
@@ -833,9 +833,13 @@ function displayStats(){
     }
   );
   for(const loreData of sortedLoreDataArray){
+    let loreTotal = signNumber(variables_getTotal(`SKILL_${profConversion_convertOldName(loreData.value)}_LORE`));
+    if(variables_hasConditionals(`SKILL_${profConversion_convertOldName(loreData.value)}_LORE`)){
+      loreTotal += '<sup class="is-size-7 has-text-info">*</sup>';
+    }
     skills.push({
       Value1: capitalizeWords(loreData.value)+' Lore',
-      Value2: signNumber(variables_getTotal(`SKILL_${profConversion_convertOldName(loreData.value)}_LORE`)),
+      Value2: loreTotal,
       Value3: variables_getFinalRank(`SKILL_${profConversion_convertOldName(loreData.value)}_LORE`),
       VarName: `SKILL_${profConversion_convertOldName(loreData.value)}_LORE`,
     });

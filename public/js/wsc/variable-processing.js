@@ -785,10 +785,59 @@ function variables_getConditionalsMap(variableName){
     return;
   }
 
-  return conditionalsMap;
+  let findHighestMap = new Map();
+  for(const [conditional, source] of conditionalsMap.entries()){
+
+    let bonusMatch = conditional.match(/(\+|\-|)(\d+) (.+)/);
+    if(bonusMatch != null){
+
+      let mapEntry = findHighestMap.get(bonusMatch[1]+' '+bonusMatch[3]);
+      if(mapEntry != null){
+
+        if(bonusMatch[2] > mapEntry.amount){
+          findHighestMap.set(bonusMatch[1]+' '+bonusMatch[3], {
+            amount: bonusMatch[2],
+            conditional: conditional,
+            source: source,
+          });
+        } else {
+          // Don't insert it
+        }
+
+      } else {
+
+        findHighestMap.set(bonusMatch[1]+' '+bonusMatch[3], {
+          amount: bonusMatch[2],
+          conditional: conditional,
+          source: source,
+        });
+
+      }
+
+    } else {
+
+      findHighestMap.set(conditional, {
+        conditional: conditional,
+        source: source,
+      });
+
+    }
+
+  }
+
+  let finalConditionalsMap = new Map();
+  for(const [key, data] of findHighestMap.entries()){
+    finalConditionalsMap.set(data.conditional, data.source);
+  }
+
+  return finalConditionalsMap;
 
 }
 
+function variables_hasConditionals(variableName){
+  let map = variables_getConditionalsMap(variableName);
+  return map != null && map.size > 0;
+}
 
 
 ///////////////
