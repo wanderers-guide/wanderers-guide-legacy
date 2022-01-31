@@ -56,12 +56,12 @@ function giveLoreChoose(srcStruct, locationID, extraData, prof='T'){
 
             $(this).addClass("is-info");
             $(this).removeClass("is-danger");
-            $('#'+inputLoreControlShell).addClass("is-loading");
 
             deleteData(DATA_SOURCE.LORE, srcStruct);
             deleteData(DATA_SOURCE.PROFICIENCY, srcStruct);
 
             if(g_char_id != null){
+              $('#'+inputLoreControlShell).addClass("is-loading");
               socket.emit("requestLoreChange",
                   g_char_id,
                   srcStruct,
@@ -80,14 +80,13 @@ function giveLoreChoose(srcStruct, locationID, extraData, prof='T'){
                 $(this).removeClass("is-danger");
                 $(this).removeClass("is-info");
 
-                $('#'+inputLoreControlShell).addClass("is-loading");
-
                 let loreName = $(this).val().toUpperCase();
 
                 setData(DATA_SOURCE.LORE, srcStruct, loreName);
                 setDataProficiencies(srcStruct, 'Skill', loreName+'_LORE', prof, extraData.sourceName, false);
 
                 if(g_char_id != null){
+                  $('#'+inputLoreControlShell).addClass("is-loading");
                   socket.emit("requestLoreChange",
                       g_char_id,
                       srcStruct,
