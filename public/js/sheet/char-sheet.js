@@ -454,6 +454,13 @@ function loadCharSheet(){
     }
 
     let classDCData = getFinalProf(g_profMap.get("Class_DC"));
+
+    // If classDCData is null, the character builder didn't save profs correctly, abort sheet load
+    if(classDCData == null){
+      window.location.href = '/profile/characters/builder/?id='+getCharIDFromURL()+'&page=4';
+      return;
+    }
+
     if(g_classDetails.KeyAbility != null){
       initializeVariableProf(VARIABLE.CLASS_DC, 'SCORE_'+g_classDetails.KeyAbility, classDCData.NumUps, g_profMap.get("Class_DC"));
     } else {

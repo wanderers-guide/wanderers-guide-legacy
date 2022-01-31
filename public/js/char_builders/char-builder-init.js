@@ -584,6 +584,8 @@ function handleCharacterOptions(character, hBundles, progessBundles) {
       } else {
         $("#optionCustomCodeBlockInfo").addClass('is-hidden');
         $("#option-custom-code-block-container").addClass('is-hidden');
+        socket.emit("requestCustomCodeBlockDataClear",
+            getCharIDFromURL());
       }
       socket.emit("requestCharacterOptionChange", 
           getCharIDFromURL(), 
