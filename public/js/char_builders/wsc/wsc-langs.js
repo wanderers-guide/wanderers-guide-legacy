@@ -155,7 +155,7 @@ socket.on("returnLanguageChange", function(){
 
 function giveLangByName(srcStruct, langName, sourceName){
 
-    socket.emit("requestLanguageChangeByName",
+    socket.emit("requestLanguageChangeByName", // No longer a socket request
         getCharIDFromURL(),
         srcStruct,
         langName);

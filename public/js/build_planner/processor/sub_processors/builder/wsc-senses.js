@@ -21,23 +21,25 @@ function giveSense(srcStruct, senseName){
   if(senseName.trim() == ''){ return; }
 
   let sense = g_allSenses.find(sense => {
-    return sense.name == senseName;
+    return sense.name.toUpperCase() == senseName.toUpperCase();
   });
   if(sense != null){
-    setData(DATA_SOURCE.SENSE, srcStruct, sense.id);
+    setDataOnly(DATA_SOURCE.SENSE, srcStruct, sense.id);
   }
 
   if(g_char_id != null){
-    socket.emit("requestSensesChangeByName",
-        g_char_id,
-        srcStruct,
-        senseName);
+    if(sense != null){
+      socket.emit("requestSensesChangeByID",
+          g_char_id,
+          srcStruct,
+          sense.id);
+    } else {
+      console.error('Could not find sense: '+senseName);
+    }
   } else {
     saveBuildMetaData();
   }
 
-}
+  statementComplete('Sense - Add By ID');
 
-socket.on("returnSensesChangeByName", function(){
-  statementComplete('Sense - Add By Name');
-});
+}

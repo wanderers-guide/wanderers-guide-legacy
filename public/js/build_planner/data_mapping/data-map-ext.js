@@ -150,7 +150,7 @@ function getDataAllInnateSpell(){
 function setDataLanguage(srcStruct, langID){
 
   // Data-Map
-  setData(DATA_SOURCE.LANGUAGE, srcStruct, langID);
+  setDataOnly(DATA_SOURCE.LANGUAGE, srcStruct, langID);
 
   // Variable-Processing
   variables_addToExtras(VARIABLE.LANGUAGES, langID, JSON.stringify(parameterizeSrcStruct(DATA_SOURCE.LANGUAGE, srcStruct)), 'Metadata');

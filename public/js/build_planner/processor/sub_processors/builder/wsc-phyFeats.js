@@ -20,21 +20,25 @@ function processingPhysicalFeatures(wscStatement, srcStruct, locationID, extraDa
 function givePhysicalFeature(srcStruct, phyFeatName){
 
   let phyFeat = g_allPhyFeats.find(phyFeat => {
-    return phyFeat.name == phyFeatName;
+    return phyFeat.name.toUpperCase() == phyFeatName.toUpperCase();
   });
   if(phyFeat != null){
     setDataOnly(DATA_SOURCE.PHYSICAL_FEATURE, srcStruct, phyFeat.id);
   }
 
   if(g_char_id != null){
-    socket.emit("requestPhysicalFeaturesChangeByName",
-        g_char_id,
-        srcStruct,
-        phyFeatName);
+    if(phyFeat != null){
+      socket.emit("requestPhysicalFeaturesChangeByID",
+          g_char_id,
+          srcStruct,
+          phyFeat.id);
+    } else {
+      console.error('Could not find phyFeat: '+phyFeatName);
+    }
   } else {
     saveBuildMetaData();
   }
 
-  statementComplete('PhyFeat - Add By Name');
+  statementComplete('PhyFeat - Add By ID');
 
 }

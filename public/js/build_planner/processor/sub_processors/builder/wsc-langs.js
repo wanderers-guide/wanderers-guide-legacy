@@ -193,10 +193,14 @@ function giveLangByName(srcStruct, langName, extraData){
   }
 
   if(g_char_id != null){
-    socket.emit("requestLanguageChangeByName",
-        g_char_id,
-        srcStruct,
-        langName);
+    if(language != null){
+      socket.emit("requestLanguageChangeByID",
+          g_char_id,
+          srcStruct,
+          language.id);
+    } else {
+      console.error('Could not find language: '+langName);
+    }
   } else {
     saveBuildMetaData();
   }

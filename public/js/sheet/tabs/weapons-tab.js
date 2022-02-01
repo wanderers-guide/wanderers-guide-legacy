@@ -55,7 +55,7 @@ function openWeaponsTab(data) {
         }
 
         $('#weaponsTabContent').append(`
-          <div id="${weaponListEntryID}" class="columns is-mobile pt-1 is-marginless">
+          <div id="${weaponListEntryID}" class="columns is-mobile pt-1 is-marginless weaponEntry" data-item-id="${item.Item.id}">
             <div class="column is-paddingless is-4 border-bottom border-dark-lighter cursor-clickable">
               <p class="has-text-left has-txt-listing">${getItemIcon(item, invItem)+invItem.name+unarmedIcon}</p>
             </div>
@@ -230,5 +230,30 @@ function openWeaponsTab(data) {
             });
         }
     }
+
+
+
+
+    // Hide Duplicate Fists and Improvised Weapons
+    let searchFoundFist = false;
+    let searchFoundImproWeap = false;
+    $('.weaponEntry').each(function(){
+      const itemID = $(this).attr('data-item-id');
+      if(itemID == FIST_ITEM_ID){
+        if(searchFoundFist){
+          //$(this).remove();
+          // Custom Unarmed Attacks use the FIST_ITEM_ID
+        } else {
+          searchFoundFist = true;
+        }
+      } else if(itemID == IMPROVISED_ITEM_ID){
+        if(searchFoundImproWeap){
+          $(this).remove();
+        } else {
+          searchFoundImproWeap = true;
+        }
+      }
+    });
+
 
 }

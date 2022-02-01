@@ -19,7 +19,7 @@ function processingPhysicalFeatures(wscStatement, srcStruct, locationID, sourceN
 
 function givePhysicalFeature(srcStruct, phyFeatName){
 
-    socket.emit("requestPhysicalFeaturesChangeByName",
+    socket.emit("requestPhysicalFeaturesChangeByName", // No longer socket request
         getCharIDFromURL(),
         srcStruct,
         phyFeatName);

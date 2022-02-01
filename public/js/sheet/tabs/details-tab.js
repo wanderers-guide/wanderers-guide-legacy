@@ -90,10 +90,10 @@ function displayFeatContent(data){
 
     let selectedFeatFilter = $('#featsFilterByType').val();
     if(selectedFeatFilter === "All"){
-        displayClassFeats(data, featsSearchValue);
-        displayAncestryFeats(data, featsSearchValue);
-        displaySkillFeats(data, featsSearchValue);
-        displayOtherFeats(data, featsSearchValue);
+        displayClassFeats(data, featsSearchValue, false);
+        displayAncestryFeats(data, featsSearchValue, false);
+        displaySkillFeats(data, featsSearchValue, false);
+        displayOtherFeats(data, featsSearchValue, false);
     } else if(selectedFeatFilter === "Class"){
         displayClassFeats(data, featsSearchValue);
     } else if(selectedFeatFilter === "Ancestry"){
@@ -106,36 +106,61 @@ function displayFeatContent(data){
 
 }
 
-function displayClassFeats(data, featsSearchValue){
-    $('#featsContent').append('<p class="is-size-5 has-txt-listing has-text-weight-bold text-left pl-5">Class</p>');
-    $('#featsContent').append('<hr class="hr-light" style="margin-top:-0.5em; margin-bottom:0em;">');
-    featDisplayByType(data, [data.ClassDetails.Class.name], featsSearchValue);
+function displayClassFeats(data, featsSearchValue, displayIfNoResults=true){
+  $('#featsContent').append('<p id="featsContent-classFeats" class="is-size-5 has-txt-listing has-text-weight-bold text-left pl-5">Class</p>');
+  $('#featsContent').append('<hr id="featsContent-classFeats-hr" class="hr-light" style="margin-top:-0.5em; margin-bottom:0em;">');
+  let displayedFeat = featDisplayByType(data, [data.ClassDetails.Class.name], featsSearchValue);
+
+  if(!displayIfNoResults && !displayedFeat){
+    $('#featsContent-classFeats').addClass('is-hidden');
+    $('#featsContent-classFeats-hr').addClass('is-hidden');
+  }
+
 }
 
-function displayAncestryFeats(data, featsSearchValue){
-    $('#featsContent').append('<p class="is-size-5 has-txt-listing has-text-weight-bold text-left pl-5">Ancestry</p>');
-    $('#featsContent').append('<hr class="hr-light" style="margin-top:-0.5em; margin-bottom:0em;">');
-    let charTagsArray = [];
-    for(let dataTag of data.AncestryTagsArray){
-        charTagsArray.push(dataTag.value);
-    }
-    featDisplayByType(data, charTagsArray, featsSearchValue);
+function displayAncestryFeats(data, featsSearchValue, displayIfNoResults=true){
+  $('#featsContent').append('<p id="featsContent-ancestryFeats" class="is-size-5 has-txt-listing has-text-weight-bold text-left pl-5">Ancestry</p>');
+  $('#featsContent').append('<hr id="featsContent-ancestryFeats-hr" class="hr-light" style="margin-top:-0.5em; margin-bottom:0em;">');
+  let charTagsArray = [];
+  for(let dataTag of data.AncestryTagsArray){
+    charTagsArray.push(dataTag.value);
+  }
+  let displayedFeat = featDisplayByType(data, charTagsArray, featsSearchValue);
+
+  if(!displayIfNoResults && !displayedFeat){
+    $('#featsContent-ancestryFeats').addClass('is-hidden');
+    $('#featsContent-ancestryFeats-hr').addClass('is-hidden');
+  }
+
 }
 
-function displaySkillFeats(data, featsSearchValue){
-  $('#featsContent').append('<p class="is-size-5 has-txt-listing has-text-weight-bold text-left pl-5">Skill</p>');
-  $('#featsContent').append('<hr class="hr-light" style="margin-top:-0.5em; margin-bottom:0em;">');
-  featDisplayByType(data, ['Skill'], featsSearchValue);
+function displaySkillFeats(data, featsSearchValue, displayIfNoResults=true){
+  $('#featsContent').append('<p id="featsContent-skillFeats" class="is-size-5 has-txt-listing has-text-weight-bold text-left pl-5">Skill</p>');
+  $('#featsContent').append('<hr id="featsContent-skillFeats-hr" class="hr-light" style="margin-top:-0.5em; margin-bottom:0em;">');
+  let displayedFeat = featDisplayByType(data, ['Skill'], featsSearchValue);
+
+  if(!displayIfNoResults && !displayedFeat){
+    $('#featsContent-skillFeats').addClass('is-hidden');
+    $('#featsContent-skillFeats-hr').addClass('is-hidden');
+  }
+
 }
 
-function displayOtherFeats(data, featsSearchValue){
-    $('#featsContent').append('<p class="is-size-5 has-txt-listing has-text-weight-bold text-left pl-5">Other</p>');
-    $('#featsContent').append('<hr class="hr-light" style="margin-top:-0.5em; margin-bottom:0em;">');
-    featDisplayByType(data, null, featsSearchValue);
+function displayOtherFeats(data, featsSearchValue, displayIfNoResults=true){
+  $('#featsContent').append('<p id="featsContent-otherFeats" class="is-size-5 has-txt-listing has-text-weight-bold text-left pl-5">Other</p>');
+  $('#featsContent').append('<hr id="featsContent-otherFeats-hr" class="hr-light" style="margin-top:-0.5em; margin-bottom:0em;">');
+  let displayedFeat = featDisplayByType(data, null, featsSearchValue);
+
+  if(!displayIfNoResults && !displayedFeat){
+    $('#featsContent-otherFeats').addClass('is-hidden');
+    $('#featsContent-otherFeats-hr').addClass('is-hidden');
+  }
+
 }
 
 function featDisplayByType(data, sortingTagNameArray, featsSearchValue){
 
+    let displayedFeat = false;
     let featCount = 0;
     for(const feat of data.FeatChoiceArray){
         if(feat.value == null) { continue; }
@@ -143,6 +168,7 @@ function featDisplayByType(data, sortingTagNameArray, featsSearchValue){
         if(featData == null) { continue; }
         if(isFeatConcealed(feat.value.name)){ continue; }
         let featTags = featData.Tags;
+        let didDisplay = false;
         if(sortingTagNameArray == null){
             // Is Other, display if feat is NOT ancestry, class, or skill
             let sortingTagNameArray = [];
@@ -155,18 +181,23 @@ function featDisplayByType(data, sortingTagNameArray, featsSearchValue){
                 return sortingTagNameArray.includes(tag.name);
             });
             if(tag == null){
-                filterFeatsThroughSearch(feat, featTags, featCount, featsSearchValue);
+                didDisplay = filterFeatsThroughSearch(feat, featTags, featCount, featsSearchValue);
             }
         } else {
             let tag = featTags.find(tag => {
                 return sortingTagNameArray.includes(tag.name);
             });
             if(tag != null){
-                filterFeatsThroughSearch(feat, featTags, featCount, featsSearchValue);
+              didDisplay = filterFeatsThroughSearch(feat, featTags, featCount, featsSearchValue);
             }
+        }
+        if(didDisplay){
+          displayedFeat = true;
         }
         featCount++;
     }
+
+    return displayedFeat;
 
 }
 
@@ -187,6 +218,8 @@ function filterFeatsThroughSearch(featData, featTags, featCount, featsSearchValu
     if(willDisplay) {
         displayFeat(featData, featTags, featCount);
     }
+
+    return willDisplay;
 
 }
 
@@ -317,9 +350,9 @@ function displayAbilitiesContent(data){
 
     let selectedAbilityFilter = $('#abilitiesFilterByType').val();
     if(selectedAbilityFilter === "All"){
-        displayClassAbilities(data, abilitiesSearchValue);
-        displayAncestryAbilities(data, abilitiesSearchValue);
-        displayOtherAbilities(data, abilitiesSearchValue);
+        displayClassAbilities(data, abilitiesSearchValue, false);
+        displayAncestryAbilities(data, abilitiesSearchValue, false);
+        displayOtherAbilities(data, abilitiesSearchValue, false);
     } else if(selectedAbilityFilter === "Class"){
         displayClassAbilities(data, abilitiesSearchValue);
     } else if(selectedAbilityFilter === "Ancestry"){
@@ -330,10 +363,11 @@ function displayAbilitiesContent(data){
 
 }
 
-function displayClassAbilities(data, abilitiesSearchValue){
-    $('#abilitiesContent').append('<p class="is-size-5 has-txt-listing has-text-weight-bold text-left pl-5">Class</p>');
-    $('#abilitiesContent').append('<hr class="hr-light" style="margin-top:-0.5em; margin-bottom:0em;">');
+function displayClassAbilities(data, abilitiesSearchValue, displayIfNoResults=true){
+    $('#abilitiesContent').append('<p id="abilitiesContent-classAbilities" class="is-size-5 has-txt-listing has-text-weight-bold text-left pl-5">Class</p>');
+    $('#abilitiesContent').append('<hr id="abilitiesContent-classAbilities-hr" class="hr-light" style="margin-top:-0.5em; margin-bottom:0em;">');
 
+    let displayedAbility = false;
     let abilCount = 0;
     if(g_classArchetype != null){
       let archetypeAbil = {
@@ -341,22 +375,34 @@ function displayClassAbilities(data, abilitiesSearchValue){
         description: g_classArchetype.replacementCode.initial.archetypeText,
         level: 0,
       };
-      filterAbilitiesThroughSearch(archetypeAbil, 'Class'+abilCount, abilitiesSearchValue);
+      let didDisplay = filterAbilitiesThroughSearch(archetypeAbil, 'Class'+abilCount, abilitiesSearchValue);
+      if(didDisplay){
+        displayedAbility = true;
+      }
       abilCount++;
     }
 
     for(let classAbil of data.ClassDetails.Abilities){
         if(classAbil.displayInSheet === 0 || classAbil.selectType == 'SELECT_OPTION' || classAbil.level > g_character.level || classAbil.level == -1){ continue; }
-        filterAbilitiesThroughSearch(classAbil, 'Class'+abilCount, abilitiesSearchValue);
+        let didDisplay = filterAbilitiesThroughSearch(classAbil, 'Class'+abilCount, abilitiesSearchValue);
+        if(didDisplay){
+          displayedAbility = true;
+        }
         abilCount++;
+    }
+
+    if(!displayIfNoResults && !displayedAbility){
+      $('#abilitiesContent-classAbilities').addClass('is-hidden');
+      $('#abilitiesContent-classAbilities-hr').addClass('is-hidden');
     }
 
 }
 
-function displayAncestryAbilities(data, abilitiesSearchValue){
-    $('#abilitiesContent').append('<p class="is-size-5 has-txt-listing has-text-weight-bold text-left pl-5">Ancestry</p>');
-    $('#abilitiesContent').append('<hr class="hr-light" style="margin-top:-0.5em; margin-bottom:0em;">');
-    
+function displayAncestryAbilities(data, abilitiesSearchValue, displayIfNoResults=true){
+    $('#abilitiesContent').append('<p id="abilitiesContent-ancestryAbilities" class="is-size-5 has-txt-listing has-text-weight-bold text-left pl-5">Ancestry</p>');
+    $('#abilitiesContent').append('<hr id="abilitiesContent-ancestryAbilities-hr" class="hr-light" style="margin-top:-0.5em; margin-bottom:0em;">');
+   
+    let displayedAbility = false;
     let abilCount = 0;
     for(let phyFeat of data.PhyFeats){
         if(phyFeat.sourceType != 'ancestry'){ continue; }
@@ -366,29 +412,49 @@ function displayAncestryAbilities(data, abilitiesSearchValue){
             description: phyFeat.value.description,
             level: 1,
         };
-        filterAbilitiesThroughSearch(phyFeatAbil, 'AncestryPhyFeat'+abilCount, abilitiesSearchValue);
+        let didDisplay = filterAbilitiesThroughSearch(phyFeatAbil, 'AncestryPhyFeat'+abilCount, abilitiesSearchValue);
+        if(didDisplay){
+          displayedAbility = true;
+        }
         abilCount++;
+    }
+
+    if(!displayIfNoResults && !displayedAbility){
+      $('#abilitiesContent-ancestryAbilities').addClass('is-hidden');
+      $('#abilitiesContent-ancestryAbilities-hr').addClass('is-hidden');
     }
 
 }
 
-function displayOtherAbilities(data, abilitiesSearchValue){
-    $('#abilitiesContent').append('<p class="is-size-5 has-txt-listing has-text-weight-bold text-left pl-5">Other</p>');
-    $('#abilitiesContent').append('<hr class="hr-light" style="margin-top:-0.5em; margin-bottom:0em;">');
+function displayOtherAbilities(data, abilitiesSearchValue, displayIfNoResults=true){
+    $('#abilitiesContent').append('<p id="abilitiesContent-otherAbilities" class="is-size-5 has-txt-listing has-text-weight-bold text-left pl-5">Other</p>');
+    $('#abilitiesContent').append('<hr id="abilitiesContent-otherAbilities-hr" class="hr-light" style="margin-top:-0.5em; margin-bottom:0em;">');
     
+    let displayedAbility = false;
     let abilCount = 0;
     for(let extraClassAbil of g_extraClassAbilities){
       let srcStruct = cloneObj(extraClassAbil); srcStruct.value = null;
       extraClassAbil.value.srcStruct = srcStruct;
-      filterAbilitiesThroughSearch(extraClassAbil.value, 'ExtraClass'+abilCount, abilitiesSearchValue);
+      let didDisplay = filterAbilitiesThroughSearch(extraClassAbil.value, 'ExtraClass'+abilCount, abilitiesSearchValue);
+      if(didDisplay){
+        displayedAbility = true;
+      }
       abilCount++;
     }
     for(let heritageEffect of g_heritageEffects){
       let ability = cloneObj(heritageEffect.value);
       ability.level = heritageEffect.sourceLevel;
       ability.name = 'Heritage Benefits - '+ability.name;
-      filterAbilitiesThroughSearch(ability, 'ExtraClass'+abilCount, abilitiesSearchValue);
+      let didDisplay = filterAbilitiesThroughSearch(ability, 'ExtraClass'+abilCount, abilitiesSearchValue);
+      if(didDisplay){
+        displayedAbility = true;
+      }
       abilCount++;
+    }
+
+    if(!displayIfNoResults && !displayedAbility){
+      $('#abilitiesContent-otherAbilities').addClass('is-hidden');
+      $('#abilitiesContent-otherAbilities-hr').addClass('is-hidden');
     }
 
 }
@@ -410,6 +476,8 @@ function filterAbilitiesThroughSearch(ability, abilIdentifier, abilitiesSearchVa
     if(willDisplay) {
         displayAbility(ability, abilIdentifier);
     }
+
+    return willDisplay;
 
 }
 

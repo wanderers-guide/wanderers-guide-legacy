@@ -19,7 +19,7 @@ function processingSenses(wscStatement, srcStruct, locationID, sourceName){
 
 function giveSense(srcStruct, senseName){
 
-    socket.emit("requestSensesChangeByName",
+    socket.emit("requestSensesChangeByName", // No longer socket request
         getCharIDFromURL(),
         srcStruct,
         senseName);

@@ -353,21 +353,23 @@ function mainLoaded(plannerCoreStruct, choiceStruct){
       let newAncestryID = $('#modal-select-ancestry-confirm-btn').attr('data-selectedOptionID');
       if(newAncestryID == 'none'){ newAncestryID = null; }
 
-      window.setTimeout(()=>{
-        // Update ancestry in builder
-        deleteAncestry();
-        setAncestry(newAncestryID);
-        stateLoad();
+      // Update ancestry in builder
+      deleteAncestry();
+      setAncestry(newAncestryID);
 
-        // Update ancestry in db
-        if(g_char_id != null){
-          socket.emit("requestAncestryChange",
-            g_char_id,
-            newAncestryID);
-        } else {
-          saveBuildInfo();
-        }
-      }, 100);
+      // Update ancestry in db
+      if(g_char_id != null){
+        socket.emit("requestAncestryChange",
+          g_char_id,
+          newAncestryID);
+        socket.once("returnAncestryChange", function() {
+          animatedStateLoad();
+        });
+      } else {
+        saveBuildInfo();
+        animatedStateLoad();
+      }
+
     });
   };
 
@@ -394,21 +396,23 @@ function mainLoaded(plannerCoreStruct, choiceStruct){
       let newBackgroundID = $('#modal-select-background-confirm-btn').attr('data-selectedOptionID');
       if(newBackgroundID == 'none'){ newBackgroundID = null; }
 
-      window.setTimeout(()=>{
-        // Update background in builder
-        deleteBackground();
-        setBackground(newBackgroundID);
-        stateLoad();
+      // Update background in builder
+      deleteBackground();
+      setBackground(newBackgroundID);
 
-        // Update background in db
-        if(g_char_id != null){
-          socket.emit("requestBackgroundChange",
-            g_char_id,
-            newBackgroundID);
-        } else {
-          saveBuildInfo();
-        }
-      }, 100);
+      // Update background in db
+      if(g_char_id != null){
+        socket.emit("requestBackgroundChange",
+          g_char_id,
+          newBackgroundID);
+        socket.once("returnBackgroundChange", function() {
+          animatedStateLoad();
+        });
+      } else {
+        saveBuildInfo();
+        animatedStateLoad();
+      }
+
     });
   };
 
@@ -435,22 +439,24 @@ function mainLoaded(plannerCoreStruct, choiceStruct){
       let newClassID = $('#modal-select-class-confirm-btn').attr('data-selectedOptionID');
       if(newClassID == 'none'){ newClassID = null; }
 
-      window.setTimeout(()=>{
-        // Update class in builder
-        deleteClass();
-        setClass(newClassID);
-        stateLoad();
+      // Update class in builder
+      deleteClass();
+      setClass(newClassID);
 
-        // Update class in db
-        if(g_char_id != null){
-          socket.emit("requestClassChange",
-            g_char_id,
-            newClassID,
-            1);
-        } else {
-          saveBuildInfo();
-        }
-      }, 100);
+      // Update class in db
+      if(g_char_id != null){
+        socket.emit("requestClassChange",
+          g_char_id,
+          newClassID,
+          1);
+        socket.once("returnClassChange", function() {
+          animatedStateLoad();
+        });
+      } else {
+        saveBuildInfo();
+        animatedStateLoad();
+      }
+
     });
   };
 

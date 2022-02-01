@@ -531,7 +531,7 @@ function giveFeatByName(srcStruct, featName, locationID, optionalTags, extraData
     setDataOnly(DATA_SOURCE.FEAT_CHOICE, srcStruct, featEntry.Feat.id);
 
     if(g_char_id != null){
-      socket.emit("requestFeatChangeByName",
+      socket.emit("requestFeatChangeByID",
           g_char_id,
           {srcStruct, feat: featEntry, codeLocationID: featCodeSectionID});
     } else {

@@ -1536,17 +1536,17 @@ module.exports = class SocketConnections {
         });
       });
 
-      socket.on('requestFeatChangeByName', function(charID, featChangePacket){
+      socket.on('requestFeatChangeByID', function(charID, featChangePacket){
         AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
             if(featChangePacket.feat != null && featChangePacket.feat.Feat != null){
               let srcStruct = featChangePacket.srcStruct;
               CharDataMapping.setDataOnly(charID, 'chosenFeats', srcStruct, featChangePacket.feat.Feat.id)
               .then((result) => {
-                socket.emit('returnFeatChangeByName', featChangePacket);
+                socket.emit('returnFeatChangeByID', featChangePacket);
               });
             } else {
-              socket.emit('returnWSCStatementFailure', 'Cannot find feat passed to FeatChangeByName');
+              socket.emit('returnWSCStatementFailure', 'Cannot find feat passed to FeatChangeByID');
             }
           } else {
             socket.emit('returnWSCStatementFailure', 'Incorrect Auth');
@@ -1554,19 +1554,12 @@ module.exports = class SocketConnections {
         });
       });
 
-      socket.on('requestLanguageChangeByName', function(charID, srcStruct, langName){
+      socket.on('requestLanguageChangeByID', function(charID, srcStruct, langID){
         AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
-            CharGathering.getLanguageByName(userID, charID, langName)
-            .then((language) => {
-              if(language != null){
-                CharDataMapping.setData(charID, 'languages', srcStruct, language.id)
-                .then((result) => {
-                  socket.emit('returnLanguageChangeByName');
-                });
-              } else {
-                socket.emit('returnWSCStatementFailure', 'Cannot find language \"'+langName+'\"');
-              }
+            CharDataMapping.setDataOnly(charID, 'languages', srcStruct, langID)
+            .then((result) => {
+              socket.emit('returnLanguageChangeByID');
             });
           } else {
             socket.emit('returnWSCStatementFailure', 'Incorrect Auth');
@@ -1574,38 +1567,28 @@ module.exports = class SocketConnections {
         });
       });
 
-      socket.on('requestSensesChangeByName', function(charID, srcStruct, senseName){
+      socket.on('requestSensesChangeByID', function(charID, srcStruct, senseID){
         AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
-            CharGathering.getSenseTypeByName(userID, charID, senseName)
-            .then((senseType) => {
-              if(senseType != null){
-                CharDataMapping.setData(charID, 'senses', srcStruct, senseType.id)
-                .then((result) => {
-                  socket.emit('returnSensesChangeByName');
-                });
-              } else {
-                socket.emit('returnWSCStatementFailure', 'Cannot find sense \"'+senseName+'\"');
-              }
+            CharDataMapping.setDataOnly(charID, 'senses', srcStruct, senseID)
+            .then((result) => {
+              socket.emit('returnSensesChangeByID');
             });
+          } else {
+            socket.emit('returnWSCStatementFailure', 'Incorrect Auth');
           }
         });
       });
 
-      socket.on('requestPhysicalFeaturesChangeByName', function(charID, srcStruct, physicalFeatureName){
+      socket.on('requestPhysicalFeaturesChangeByID', function(charID, srcStruct, phyFeatID){
         AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
-            CharGathering.getPhyFeatByName(userID, charID, physicalFeatureName)
-            .then((physicalFeature) => {
-              if(physicalFeature != null){
-                CharDataMapping.setDataOnly(charID, 'phyFeats', srcStruct, physicalFeature.id)
-                .then((result) => {
-                  socket.emit('returnPhysicalFeaturesChangeByName');
-                });
-              } else {
-                socket.emit('returnWSCStatementFailure', 'Cannot find physical feature \"'+physicalFeatureName+'\"');
-              }
+            CharDataMapping.setDataOnly(charID, 'phyFeats', srcStruct, phyFeatID)
+            .then((result) => {
+              socket.emit('returnPhysicalFeaturesChangeByID');
             });
+          } else {
+            socket.emit('returnWSCStatementFailure', 'Incorrect Auth');
           }
         });
       });
