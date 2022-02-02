@@ -129,17 +129,22 @@ function addUnselectedData(srcStruct, unselectedData){
   }
 }
 
-function removeUnselectedData(srcStruct){
+function removeUnselectedData(srcStruct, deleteOnly=true){
   let existingData = getDataSingle(DATA_SOURCE.UNSELECTED_DATA, srcStruct);
   if(existingData != null && existingData.value != null){
 
-    deleteDataOnly(DATA_SOURCE.UNSELECTED_DATA, srcStruct);
+    if(deleteOnly){
+      deleteDataOnly(DATA_SOURCE.UNSELECTED_DATA, srcStruct);
+    } else {
+      deleteData(DATA_SOURCE.UNSELECTED_DATA, srcStruct);
+    }
 
     if(g_char_id != null){
       socket.emit("requestUnselectedDataChange",
           g_char_id,
           srcStruct,
-          null);
+          null,
+          deleteOnly);
     } else {
       saveBuildMetaData();
     }

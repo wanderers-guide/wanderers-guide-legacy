@@ -32,6 +32,7 @@ const { Prisma, MemCache } = require('./PrismaConnection');
 
 const HomeBackReport = require('../models/backgroundDB/HomeBackReport');
 const User = require('../models/contentDB/User');
+const { truncate } = require('lodash');
 
 function mapToObj(strMap) {
   let obj = Object.create(null);
@@ -1036,14 +1037,21 @@ module.exports = class SocketConnections {
         });
       });
 
-      socket.on('requestUnselectedDataChange', function(charID, srcStruct, unselectedData){
+      socket.on('requestUnselectedDataChange', function(charID, srcStruct, unselectedData, deleteOnly=true){
         AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
             if(unselectedData == null){
-              CharDataMapping.deleteDataOnly(charID, 'unselectedData', srcStruct)
-              .then((result) => {
-                socket.emit('returnUnselectedDataChange', unselectedData);
-              });
+              if(deleteOnly){
+                CharDataMapping.deleteDataOnly(charID, 'unselectedData', srcStruct)
+                .then((result) => {
+                  socket.emit('returnUnselectedDataChange', unselectedData);
+                });
+              } else {
+                CharDataMapping.deleteData(charID, 'unselectedData', srcStruct)
+                .then((result) => {
+                  socket.emit('returnUnselectedDataChange', unselectedData);
+                });
+              }
             } else {
               CharDataMapping.setDataOnly(charID, 'unselectedData', srcStruct, unselectedData)
               .then((result) => {

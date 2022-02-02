@@ -336,12 +336,12 @@ function replaceCodeFromClassArchetype(wscCode, srcStruct){
 
     if(!gOption_hasFreeArchetype){
       if(wscCode.trim() == 'GIVE-CLASS-FEAT=2' && srcStruct.sourceLevel == 2 && srcStruct.sourceType == 'class'){
-        removeUnselectedData(srcStruct);
+        removeUnselectedData(srcStruct, false);
         return `GIVE-FEAT-NAME=${g_classArchetypeChosenArchetype.dedicationFeatName}\nADD-TEXT=Because of your class archetype, you must select (feat: ${g_classArchetypeChosenArchetype.dedicationFeatName}) as your 2nd-level class feat.`;
       }
     } else {
       if(wscCode.trim() == 'GIVE-ARCHETYPE-FEAT=2' && srcStruct.sourceLevel == 2 && srcStruct.sourceType == 'class'){
-        removeUnselectedData(srcStruct);
+        removeUnselectedData(srcStruct, false);
         return `GIVE-FEAT-NAME=${g_classArchetypeChosenArchetype.dedicationFeatName}\nADD-TEXT=Because of your class archetype, you must select (feat: ${g_classArchetypeChosenArchetype.dedicationFeatName}) as your 2nd-level class feat.`;
       }
     }
