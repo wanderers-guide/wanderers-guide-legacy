@@ -703,11 +703,11 @@ function displayStats(){
   $('#hit-points-total').text(maxHealth+maxHealthPerLevel);
 
   // Class DC
-  $('#class-dc-total').text((variables_hasConditionals(VARIABLE.CLASS_DC)) ? variables_getTotal(VARIABLE.CLASS_DC)+10+'<sup class="is-size-7 has-text-info">*</sup>' : variables_getTotal(VARIABLE.CLASS_DC)+10);
+  $('#class-dc-total').html((variables_hasConditionals(VARIABLE.CLASS_DC)) ? variables_getTotal(VARIABLE.CLASS_DC)+10+'<sup class="is-size-7 has-text-info">*</sup>' : variables_getTotal(VARIABLE.CLASS_DC)+10);
   $('#class-dc-rank').text(variables_getFinalRank(VARIABLE.CLASS_DC));
 
   // Perception
-  $('#perception-total').text((variables_hasConditionals(VARIABLE.PERCEPTION)) ? signNumber(variables_getTotal(VARIABLE.PERCEPTION))+'<sup class="is-size-7 has-text-info">*</sup>' : signNumber(variables_getTotal(VARIABLE.PERCEPTION)));
+  $('#perception-total').html((variables_hasConditionals(VARIABLE.PERCEPTION)) ? signNumber(variables_getTotal(VARIABLE.PERCEPTION))+'<sup class="is-size-7 has-text-info">*</sup>' : signNumber(variables_getTotal(VARIABLE.PERCEPTION)));
   $('#perception-rank').text(variables_getFinalRank(VARIABLE.PERCEPTION));
 
   // Saves

@@ -908,9 +908,7 @@ module.exports = class SocketConnections {
         AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
             CharSaving.saveBackground(charID, backgroundID).then((result) => {
-              CharChoicesLoad(socket, charID).then((choiceStruct) => {
-                socket.emit('returnBackgroundChange', choiceStruct);
-              });
+              socket.emit('returnBackgroundChange');
             });
           }
         });
@@ -958,9 +956,7 @@ module.exports = class SocketConnections {
         AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
             CharSaving.saveClass(charID, classID, classNum).then((result) => {
-              CharChoicesLoad(socket, charID).then((choiceStruct) => {
-                socket.emit('returnClassChange', choiceStruct, classNum);
-              });
+              socket.emit('returnClassChange', classNum);
             });
           }
         });
