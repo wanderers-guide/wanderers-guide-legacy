@@ -1062,6 +1062,17 @@ module.exports = class SocketConnections {
         });
       });
 
+      socket.on('requestUnselectedDataClear', function(charID){
+        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
+          if(ownsChar){
+            CharDataMapping.deleteDataBySourceType(charID, 'unselectedData')
+            .then((result) => {
+              socket.emit('returnUnselectedDataClear');
+            });
+          }
+        });
+      });
+
       socket.on('requestAbilityBonusChange', function(charID, srcStruct, abilityBonusStruct){
         AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
@@ -2850,20 +2861,24 @@ module.exports = class SocketConnections {
       const userID = getUserID(socket);
 
       socket.on('requestPlannerCore', function(charID, buildID){
-        // Get CharID & BuildID from Builder (if in Character Builder or Builder Creator mode)
-        NewBuilderCoreLoad(socket, charID, buildID).then((plannerStruct) => {
-          
-          if(charID != null){
-            // Get Character to get the character's buildID (if it has one)
-            CharGathering.getCharacter(userID, charID).then((character) => {
-              BuildsGathering.getBuildInfo(character.buildID).then((buildInfo) => {
-                socket.emit('returnPlannerCore', plannerStruct, buildInfo);
+        // Repopulate unselectedData
+        CharDataMapping.deleteDataBySource(charID, 'unselectedData')
+        .then((result) => {
+          // Get CharID & BuildID from Builder (if in Character Builder or Builder Creator mode)
+          NewBuilderCoreLoad(socket, charID, buildID).then((plannerStruct) => {
+            
+            if(charID != null){
+              // Get Character to get the character's buildID (if it has one)
+              CharGathering.getCharacter(userID, charID).then((character) => {
+                BuildsGathering.getBuildInfo(character.buildID).then((buildInfo) => {
+                  socket.emit('returnPlannerCore', plannerStruct, buildInfo);
+                });
               });
-            });
-          } else {
-            socket.emit('returnPlannerCore', plannerStruct, null);
-          }
+            } else {
+              socket.emit('returnPlannerCore', plannerStruct, null);
+            }
 
+          });
         });
       });
 
