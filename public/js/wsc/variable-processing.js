@@ -794,7 +794,7 @@ function variables_getConditionalsMap(variableName){
       let mapEntry = findHighestMap.get(bonusMatch[1]+' '+bonusMatch[3]);
       if(mapEntry != null){
 
-        if(bonusMatch[2] > mapEntry.amount){
+        if(parseInt(bonusMatch[2]) > mapEntry.amount){
           findHighestMap.set(bonusMatch[1]+' '+bonusMatch[3], {
             amount: bonusMatch[2],
             conditional: conditional,

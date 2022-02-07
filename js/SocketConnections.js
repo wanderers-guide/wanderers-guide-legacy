@@ -2861,25 +2861,32 @@ module.exports = class SocketConnections {
       const userID = getUserID(socket);
 
       socket.on('requestPlannerCore', function(charID, buildID){
-        // Repopulate unselectedData
-        CharDataMapping.deleteDataBySource(charID, 'unselectedData')
-        .then((result) => {
-          // Get CharID & BuildID from Builder (if in Character Builder or Builder Creator mode)
-          NewBuilderCoreLoad(socket, charID, buildID).then((plannerStruct) => {
+
+        // If in Character Builder or Builder Creator mode
+        if(charID != null){
+
+          // Repopulate unselectedData
+          CharDataMapping.deleteDataBySource(charID, 'unselectedData')
+          .then((result) => {
             
-            if(charID != null){
+            NewBuilderCoreLoad(socket, charID, buildID).then((plannerStruct) => {
               // Get Character to get the character's buildID (if it has one)
               CharGathering.getCharacter(userID, charID).then((character) => {
                 BuildsGathering.getBuildInfo(character.buildID).then((buildInfo) => {
                   socket.emit('returnPlannerCore', plannerStruct, buildInfo);
                 });
               });
-            } else {
-              socket.emit('returnPlannerCore', plannerStruct, null);
-            }
+            });
 
           });
-        });
+
+        } else {
+
+          NewBuilderCoreLoad(socket, charID, buildID).then((plannerStruct) => {
+            socket.emit('returnPlannerCore', plannerStruct, null);
+          });
+
+        }
       });
 
       socket.on('requestCreateCharacterFromBuild', function(buildID){
