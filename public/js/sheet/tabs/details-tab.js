@@ -121,11 +121,7 @@ function displayClassFeats(data, featsSearchValue, displayIfNoResults=true){
 function displayAncestryFeats(data, featsSearchValue, displayIfNoResults=true){
   $('#featsContent').append('<p id="featsContent-ancestryFeats" class="is-size-5 has-txt-listing has-text-weight-bold text-left pl-5">Ancestry</p>');
   $('#featsContent').append('<hr id="featsContent-ancestryFeats-hr" class="hr-light" style="margin-top:-0.5em; margin-bottom:0em;">');
-  let charTagsArray = [];
-  for(let dataTag of data.AncestryTagsArray){
-    charTagsArray.push(dataTag.value);
-  }
-  let displayedFeat = featDisplayByType(data, charTagsArray, featsSearchValue);
+  let displayedFeat = featDisplayByType(data, cloneObj(g_charTagsArray), featsSearchValue);
 
   if(!displayIfNoResults && !displayedFeat){
     $('#featsContent-ancestryFeats').addClass('is-hidden');
@@ -171,10 +167,7 @@ function featDisplayByType(data, sortingTagNameArray, featsSearchValue){
         let didDisplay = false;
         if(sortingTagNameArray == null){
             // Is Other, display if feat is NOT ancestry, class, or skill
-            let sortingTagNameArray = [];
-            for(let dataTag of data.AncestryTagsArray){
-                sortingTagNameArray.push(dataTag.value);
-            }
+            let sortingTagNameArray = cloneObj(g_charTagsArray);
             sortingTagNameArray.push(data.ClassDetails.Class.name);
             sortingTagNameArray.push('Skill');
             let tag = featTags.find(tag => {

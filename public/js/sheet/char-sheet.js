@@ -265,7 +265,15 @@ socket.on("returnCharacterSheetInfo", function(charInfo, userPermissions, viewOn
 
     g_featMap = objToMap(charInfo.FeatObject);
     g_featMap = updateFeatMapWithMiscs(g_featMap);
-    g_featChoiceArray = charInfo.ChoiceStruct.FeatArray;
+
+    g_featChoiceArray = [];
+    for(const featChoice of charInfo.ChoiceStruct.FeatArray){
+      if(featChoice.sourceLevel > g_character.level) {
+        console.warn(`Has feat selection at level higher than character level (lvl: ${featChoice.sourceLevel}, name: ${featChoice.value.name})!\nRemoving feat from g_featChoiceArray.`);
+      } else {
+        g_featChoiceArray.push(featChoice);
+      }
+    }
     g_featChoiceArray = g_featChoiceArray.sort(
         function(a, b) {
             if(a.value == null || b.value == null){
@@ -325,8 +333,6 @@ socket.on("returnCharacterSheetInfo", function(charInfo, userPermissions, viewOn
         }
     );
 
-    g_charTagsArray = charInfo.ChoiceStruct.CharTagsArray;
-
     g_allTags = charInfo.AllTags;
     
     g_classDetails = charInfo.ChoiceStruct.ClassDetails;
@@ -335,6 +341,17 @@ socket.on("returnCharacterSheetInfo", function(charInfo, userPermissions, viewOn
     g_ancestry = charInfo.Ancestry;
     g_heritage = charInfo.Heritage;
     g_background = charInfo.Background;
+
+    g_charTagsArray = [];
+    for(let dataTag of charInfo.ChoiceStruct.CharTagsArray){
+      g_charTagsArray.push(dataTag.value);
+    }
+    // If has ancestry and didn't have the trait from it, add it. (For builds mainly)
+    if(g_ancestry != null && g_ancestry.name != null){
+      if(!g_charTagsArray.includes(g_ancestry.name)){
+        g_charTagsArray.push(g_ancestry.name);
+      }
+    }
 
     g_charSize = g_ancestry.size;
 
@@ -1592,7 +1609,6 @@ function displayInformation() {
             FeatMap : g_featMap,
             FeatChoiceArray : g_featChoiceArray,
             AbilityMap : g_abilMap,
-            AncestryTagsArray : g_charTagsArray,
             Character : g_character,
             Heritage : g_heritage,
             Background : g_background,

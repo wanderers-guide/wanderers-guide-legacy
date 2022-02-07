@@ -36,17 +36,17 @@ function openCharInfoQuickview(data) {
   ///         ///
 
   let charTags = cloneObj(g_charTagsArray);
-  charTags.push({value: 'Humanoid'});
+  charTags.push('Humanoid');
   charTags = charTags.sort(
       function(a, b) {
-          return a.value > b.value ? 1 : -1;
+          return a > b ? 1 : -1;
       }
   );
   let tagsInnerHTML = '';
   tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-1 mb-1 is-very-small is-link tagButton">'+capitalizeWord(g_charSize)+'</button>';
   for(const charTag of charTags){
-    if(charTag.value != null && charTag.value != ''){
-      tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-1 mb-1 is-very-small is-info tagButton">'+charTag.value+'</button>';
+    if(charTag != null && charTag != ''){
+      tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-1 mb-1 is-very-small is-info tagButton">'+charTag+'</button>';
     }
   }
   if(tagsInnerHTML != ''){

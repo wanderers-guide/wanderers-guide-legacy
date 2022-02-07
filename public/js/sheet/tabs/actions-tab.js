@@ -295,6 +295,8 @@ function filterActionArray(data, featStructArray, tabType){
 
     }
 
+    console.log(actionStructArray);
+
     // Add itemActionStructArray to actionStructArray
     if(g_selectedAction_ItemsEnabled && tabType == 'actionTabEncounter'){
       let itemActionStructArray = findItemActionsFromInvItems();
@@ -385,6 +387,13 @@ function filterActionArray(data, featStructArray, tabType){
 
     }
 
+    // Sort actions by name
+    actionStructArray = actionStructArray.sort(
+      function(a, b) {
+          return a.name > b.name ? 1 : -1;
+      }
+    );
+
     let actionCount = 0;
     for(const actionStruct of actionStructArray){
 
@@ -444,7 +453,8 @@ function filterActionArray(data, featStructArray, tabType){
           }
           */
          if(!g_selectedAction_SkillsEnabled){
-          if(actionStruct.skillID != null){
+           // If it's skill related and isn't a skill feat
+          if(actionStruct.skillID != null && actionStruct.genericType != 'SKILL-FEAT'){
             willDisplay = false;
           }
          }
