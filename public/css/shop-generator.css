@@ -1,0 +1,30 @@
+
+.chosen-container .chosen-choices {
+  max-height: 150px;
+  overflow: auto;
+}
+
+
+.irs--flat .irs-bar {
+  background-color: #3298dc!important;
+}
+.irs--flat .irs-from, .irs--flat .irs-to, .irs--flat .irs-single {
+  background-color: #3298dc!important;
+}
+.irs--flat .irs-handle>i:first-child {
+  background-color: #3298dc!important;
+}
+.irs--flat .irs-from:before, .irs--flat .irs-to:before, .irs--flat .irs-single:before {
+  border-top-color: #3298dc!important;
+}
+.irs--flat .irs-handle.state_hover>i:first-child, .irs--flat .irs-handle:hover>i:first-child {
+  background-color: #2c87c4!important;
+}
+
+#button-import-shop>input {
+  display: none;
+}
+#button-import-shop:hover {
+  color: var(--text-txt-value-color);
+}
+

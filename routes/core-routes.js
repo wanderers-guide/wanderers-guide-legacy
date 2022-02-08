@@ -4,6 +4,7 @@ const Sequelize = require('sequelize');
 
 const homebrewRoutes = require('./homebrew/homebrew-routes');
 const buildsRoutes = require('./builds/builds-routes');
+const gmToolsRoutes = require('./gm_tools/gm-tools-routes');
 
 // Home Route
 router.get('/', (req, res) => {
@@ -47,6 +48,9 @@ router.use('/builds', buildsRoutes);
 
 // Direct Homebrew Route
 router.use('/homebrew', homebrewRoutes);
+
+// Direct GM Tools Route
+router.use('/gm-tools', gmToolsRoutes);
 
 // License Route
 router.get('/license', (req, res) => {

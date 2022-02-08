@@ -11,7 +11,7 @@ function exportCharacter(charID){
 socket.on("returnCharExport", function(charExportData){
   stopSpinnerSubLoader();
   let charExportDataJSON = JSON.stringify(charExportData);
-  let fileName = charExportData.character.name.replaceAll('[^a-zA-Z]', '').replaceAll(' ', '_');
+  let fileName = charExportData.character.name.replaceAll(/[^a-zA-Z]/g, '').replaceAll(' ', '_');
   charExportDataFileDownload(fileName+'.guidechar', charExportDataJSON);
   $('.modal-card-close').trigger('click');
 });

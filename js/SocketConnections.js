@@ -2853,6 +2853,43 @@ module.exports = class SocketConnections {
     
   }
 
+  static gmTools(io){
+
+    // Socket.IO Connections
+    io.on('connection', function(socket){
+      const userID = getUserID(socket);
+
+      socket.on('requestShopGeneratorDetails', function(){
+        
+        // Get enabledHomebrew as all collected homebrew and enabledSources as all sources
+        CharContentHomebrew.getEnabledHomebrewForCollection(userID).then((enabledHomebrew) => {
+          CharContentSources.getEnabledSourcesForAllBooks(userID).then((enabledSources) => {
+
+            AuthCheck.isSupporter(userID).then((isSupporter) => {
+
+              // Non-supporters can't use homebrew in shop gen
+              if(!isSupporter) {
+                enabledHomebrew = '[null]';
+              }
+
+              CharGathering.getAllItems(userID, enabledSources, enabledHomebrew).then((itemMap) => {
+                CharGathering.getAllTags(userID, enabledHomebrew).then((traits) => {
+  
+                  socket.emit('returnShopGeneratorDetails', mapToObj(itemMap), traits, isSupporter);
+  
+                });
+              });
+
+            });
+
+          });
+        });
+
+      });
+
+    });
+
+  }
 
   static buildPlanner(io) {
 

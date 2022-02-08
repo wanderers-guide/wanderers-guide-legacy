@@ -1,11 +1,26 @@
 
 const Character = require('../models/contentDB/Character');
+const Book = require('../models/contentDB/Book');
 
 function getConstantSources(){ // HARDCODED - Constant Content Sources
   return ['BEST-1', 'BEST-2', 'BEST-3'];
 }
 
 module.exports = class CharContentSources {
+
+    static getEnabledSourcesForAllBooks(userID){
+      return Book.findAll()
+      .then((books) => {
+
+        let enabledSources = [];
+        for(const book of books){
+          enabledSources.push(book.codeName);
+        }
+
+        return JSON.stringify(enabledSources);
+
+      });
+    }
 
     static getSourceArray(enabledSources){
       let array = JSON.parse(enabledSources);

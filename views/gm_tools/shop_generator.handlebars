@@ -1,0 +1,437 @@
+
+{{#section 'header'}}
+
+    <link rel="stylesheet" href="/css/shop-generator.css">
+    <link rel="stylesheet" href="/css/homebrew-builders.css">
+
+    <script type="text/javascript" src="/js/shop_generator/presets.js"></script>
+    <script type="text/javascript" src="/js/shop_generator/shop.js"></script>
+    <script type="text/javascript" src="/js/shop_generator/item-profiles.js"></script>
+    <script type="text/javascript" src="/js/shop_generator/ui-handler.js"></script>
+
+    <script src="/js/libraries/confirm_message/confirm-message.js"></script>
+
+    <!-- Ion Range Slider -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ion-rangeslider/2.3.1/css/ion.rangeSlider.min.css"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ion-rangeslider/2.3.1/js/ion.rangeSlider.min.js"></script>
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+{{/section}}
+
+{{#section 'nav_home'}}
+    <li><a href="/">Home</a></li>
+{{/section}}
+
+{{#section 'nav_characters'}}
+    <li class="mx-lg-4 mx-md-3 my-md-0 my-2"><a href="/profile/characters">Characters</a></li>
+{{/section}}
+
+{{#section 'nav_builds'}}
+    <li><a href="/builds">Builds</a></li>
+{{/section}}
+
+{{#section 'nav_homebrew'}}
+    <li class="mx-lg-4 mx-md-3 my-md-0 my-2"><a href="/homebrew">Homebrew</a></li>
+{{/section}}
+
+{{#section 'nav_browse'}}
+    <li class="mr-lg-4 mr-md-3"><a href="/browse"><i class="fas fa-lg fa-search"></i></a></li>
+{{/section}}
+
+{{#section 'nav_login'}}
+    <li class="mr-4"><a href="/auth/login">Login <i class="fas fa-sign-in-alt"></i></a></li>
+{{/section}}
+
+
+
+{{#section 'banner_nav'}}
+    <div class="banner_w3lspvt-2"></div>
+{{/section}}
+
+<div class="pageloader is-hidden">
+    <div class="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+</div>
+<div class="subpageloader is-hidden"><div class="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div></div>
+
+<div class="container py-4 text-center">
+
+  <div class="box">
+
+    <!-- Choose a Shop Section -->
+    <div id="section-shop-choose" class="">
+
+      <h1 class="title is-2 has-txt-value-string">Shop Generator</h1>
+
+      <div class="columns is-mobile is-centered">
+
+        <div class="column is-narrow">
+          <div class="select is-info">
+            <select id="shop-type">
+            </select>
+          </div>
+        </div>
+
+        <div class="column is-narrow">
+          <p class="pt-2">or</p>
+        </div>
+        
+        <div class="column is-narrow">
+
+          <a id="button-import-shop" class="button is-info is-outlined">
+            <label for="input-import-shop" class="cursor-clickable m-0">
+              <span class="is-p">Import</span>
+              <span class="icon">
+                <i class="fas fa-upload"></i>
+              </span>
+            </label>
+            <input id="input-import-shop" type="file" accept=".guideshop"/>
+          </a>
+
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Generate a Shop Section -->
+    <div id="section-shop-generate" class="is-hidden">
+
+      <div class="pos-relative">
+        <h1 id="shop-name" class="title is-2 has-txt-value-string"></h1>
+        <span id="exit-shop-btn" class="pos-absolute pos-t-0 pos-r-0 is-size-4 has-text-danger cursor-clickable"><i class="fas fa-times"></i></span>
+      </div>
+
+      <div class="columns is-mobile is-centered">
+
+        <div class="column is-narrow">
+          <a id="customize-shop-btn" class="button is-info is-outlined">
+            <p>Customize</p>
+            <span class="icon"><i class="fas fa-cog"></i></span>
+          </a>
+        </div>
+        
+        <div class="column is-narrow">
+          <a id="export-shop-btn" class="button is-info is-outlined">
+            <p>Export</p>
+            <span class="icon"><i class="fas fa-download"></i></span>
+          </a>
+        </div>
+
+      </div>
+
+      <hr class="m-2">
+
+      <div class="columns is-centered">
+
+        <div class="column is-narrow has-text-left">
+          <label class="label">Books</label>
+          <select id="input-books" data-placeholder="Select Books" multiple>
+          </select>
+        </div>
+        
+        <div class="column is-narrow has-text-left">
+          <label class="label">Homebrew</label>
+          <select id="input-homebrew" data-placeholder="Select Bundles" multiple>
+          </select>
+        </div>
+
+      </div>
+
+      <div style="max-width: 400px; margin: auto;">
+        <label class="label my-1">Inventory Size</label>
+        <input type="text" id="inventory-size" value=""
+          data-min="0"
+          data-max="100"
+          data-from="25"
+          data-grid="true"
+        />
+      </div>
+
+      <div style="max-width: 400px; margin: auto;">
+        <label class="label mt-3 mb-0">Price Markup</label>
+        <input type="text" id="price-markup" value=""
+          data-min="-100"
+          data-max="500"
+          data-from="0"
+          data-postfix="%"
+          data-grid="true"
+          data-grid-num="6"
+        />
+      </div>
+
+      <div class="mt-5">
+        <button id="generate-shop-btn" class="button is-info is-rounded is-medium">
+          <span>Generate</span>
+        </button>
+      </div>
+
+    </div>
+
+    <!-- Customize Shop Section -->
+    <div id="section-shop-customize" class="is-hidden pos-relative">
+
+      <span id="customize-back-btn" class="pos-absolute pos-t-0 pos-l-0 icon is-large has-text-info cursor-clickable">
+        <i class="fas fa-2x fa-arrow-left"></i>
+      </span>
+
+      <div class="field has-addons has-addons-centered">
+        <div class="control has-icons-left" style="min-width: 40%;">
+          <input id="customize-shop-name" class="input is-medium" type="text" placeholder="Shop Name">
+          <span class="icon is-small is-left">
+            <i class="fas fa-store"></i>
+          </span>
+        </div>
+      </div>
+
+      <div style="min-width: 40%; max-width: 450px; margin: auto;">
+        <div id="profiles-chart" class="my-2"></div>
+      </div>
+
+      <div>
+        <p class="is-size-4">Item Profiles <span id="add-item-profile-btn" class="icon is-size-5 has-text-info cursor-clickable"><i class="fal fa-plus-circle"></i></span></p>
+
+        <div id="section-item-profiles"></div>
+
+        <div id="item-profile-layout" class="card mb-2 isLayout is-hidden">
+          <div class="card-header cursor-clickable">
+            <p class="card-header-title is-paddingless has-txt-value-number is-size-5">
+              <span class="card-header-name">New Item Profile</span>
+              <span class="card-header-weight pl-2 has-txt-partial-noted">(50%)</span>
+            </p>
+            <a class="card-header-icon is-paddingless mt-1 delete is-medium"></a>
+          </div>
+          <div class="card-content">
+
+            <div style="max-width: 400px; margin: auto;">
+              <label class="label is-size-4 mb-0">Profile Weight</label>
+              <input type="text" class="profile-weight" value=""
+                data-min="0"
+                data-max="100"
+                data-from="50"
+                data-postfix="%"
+              />
+            </div>
+
+            <hr class="m-3">
+
+            <div class="columns">
+              <div class="column">
+
+                <div class="control">
+                  <label class="label is-size-5 mb-2 text-center">Profile Name</label>
+                  <input class="profile-name input" type="text" placeholder="Item Profile Name" value="New Item Profile">
+                </div>
+
+              </div>
+              <div class="column">
+
+                <div>
+                  <label class="label is-size-5 mb-0">Level Range</label>
+                  <input type="text" class="profile-level-range" value=""
+                    data-type="double"
+                    data-min="0"
+                    data-max="30"
+                    data-from="0"
+                    data-to="10"
+                    data-grid="true"
+                    data-grid-num="6"
+                  />
+                </div>
+
+              </div>
+            </div>
+
+            <hr class="m-2">
+
+            <div class="columns">
+
+              <div class="column">
+                <div class="text-left pt-1">
+                  <label class="label is-size-4">Traits</label>
+                  <select class="profile-traits" data-placeholder="Select Traits" multiple>
+                  </select>
+                </div>
+              </div>
+              <div class="column">
+                <div class="profile-weights-traits pt-3 px-1 use-custom-scrollbar" style="max-height: 400px; overflow-y: auto; overflow-x: clip;">
+                </div>
+              </div>
+              <div class="column">
+                <div class="profile-chart-traits pt-3">
+                </div>
+              </div>
+
+            </div>
+
+            <hr class="m-2">
+
+            <div class="columns">
+
+              <div class="column">
+                <div class="text-left pt-1">
+                  <label class="label is-size-4">Categories</label>
+                  <select class="profile-categories" data-placeholder="Select Categories" multiple>
+                  </select>
+                </div>
+              </div>
+              <div class="column">
+                <div class="profile-weights-categories pt-3 px-1 use-custom-scrollbar" style="max-height: 400px; overflow-y: auto; overflow-x: clip;">
+                </div>
+              </div>
+              <div class="column">
+                <div class="profile-chart-categories pt-3">
+                </div>
+              </div>
+
+            </div>
+
+            <hr class="m-2">
+
+            <div class="columns">
+
+              <div class="column">
+                <div class="text-left pt-1">
+                  <label class="label is-size-4">Weapon Groups</label>
+                  <select class="profile-weapon_groups" data-placeholder="Select Weapon Groups" multiple>
+                  </select>
+                </div>
+              </div>
+              <div class="column">
+                <div class="profile-weights-weapon_groups pt-3 px-1 use-custom-scrollbar" style="max-height: 400px; overflow-y: auto; overflow-x: clip;">
+                </div>
+              </div>
+              <div class="column">
+                <div class="profile-chart-weapon_groups pt-3">
+                </div>
+              </div>
+
+            </div>
+
+            <hr class="m-2">
+
+            <div class="columns">
+
+              <div class="column is-5">
+                <div class="text-left pt-1">
+                  <label class="label is-size-4">Rarity</label>
+
+                  <div class="pt-0">
+                    <p class="text-center">Common</p>
+                    <input type="text" class="common-weight" value=""
+                      data-min="0"
+                      data-max="100"
+                      data-from="68"
+                      data-postfix="%"
+                    />
+                  </div>
+
+                  <div class="pt-2">
+                    <p class="text-center">Uncommon</p>
+                    <input type="text" class="uncommon-weight" value=""
+                      data-min="0"
+                      data-max="100"
+                      data-from="20"
+                      data-postfix="%"
+                    />
+                  </div>
+
+                  <div class="pt-2">
+                    <p class="text-center">Rare</p>
+                    <input type="text" class="rare-weight" value=""
+                      data-min="0"
+                      data-max="100"
+                      data-from="10"
+                      data-postfix="%"
+                    />
+                  </div>
+
+                  <div class="pt-2">
+                    <p class="text-center">Unique</p>
+                    <input type="text" class="unique-weight" value=""
+                      data-min="0"
+                      data-max="100"
+                      data-from="2"
+                      data-postfix="%"
+                    />
+                  </div>
+
+                </div>
+              </div>
+
+              <div class="column is-2"></div>
+
+              <div class="column is-5">
+                <div class="profile-chart-rarities pt-3">
+                </div>
+              </div>
+
+            </div>
+
+            <hr class="m-2">
+
+            <div class="text-left pt-1" style="max-width: 600px;">
+              <label class="label is-size-4">Quantity</label>
+
+              <div class="pt-0">
+                <p class="text-center">Permanent Items</p>
+                <input type="text" class="profile-qty-permanent-items" value=""
+                  data-type="double"
+                  data-min="1"
+                  data-max="100"
+                  data-from="1"
+                  data-to="10"
+                />
+              </div>
+
+              <div class="pt-2">
+                <p class="text-center">Consumable Items</p>
+                <input type="text" class="profile-qty-consumable-items" value=""
+                  data-type="double"
+                  data-min="1"
+                  data-max="300"
+                  data-from="1"
+                  data-to="30"
+                />
+              </div>
+
+              <div class="pt-2">
+                <p class="text-center">Rarity Adjustment</p>
+                <input type="text" class="profile-qty-rarity-adjustment" value=""
+                  data-min="0"
+                  data-max="100"
+                  data-from="50"
+                  data-postfix="%"
+                />
+                <p class="is-size-7 has-txt-noted is-italic">Adjusts store quantity based on the item's rarity. At 100%, uncommon items have 75% less quantity, and rare has 95% less. Unique items always have 1 quantity.</p>
+              </div>
+
+            </div>
+
+            <hr class="m-2">
+
+            <div class="text-left pt-1" style="max-width: 600px;">
+              <label class="label is-size-4">Formulas</label>
+
+              <div class="">
+                <input type="text" class="profile-formula-chance" value=""
+                  data-min="0"
+                  data-max="100"
+                  data-from="0"
+                  data-postfix="%"
+                />
+                <p class="is-size-7 has-txt-noted is-italic">The percent chance that any given item is a formula of that item instead of the item itself.</p>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

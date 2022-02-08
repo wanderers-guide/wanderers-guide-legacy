@@ -5,6 +5,24 @@ const UserHomebrew = require('./UserHomebrew');
 
 module.exports = class CharContentHomebrew {
 
+    static getEnabledHomebrewForCollection(userID){
+      return UserHomebrew.getCollectedHomebrewBundles(userID).then((hBundles) => {
+        return UserHomebrew.getIncompleteHomebrewBundles(userID).then((progessBundles) => {
+
+          let enabledHomebrew = [null];
+          for(const hBundle of hBundles){
+            enabledHomebrew.push(hBundle.homebrewBundle.id);
+          }
+          for(const progessBundle of progessBundles){
+            enabledHomebrew.push(progessBundle.id);
+          }
+
+          return JSON.stringify(enabledHomebrew);
+
+        });
+      });
+    }
+
     static getHomebrewArray(enabledHomebrew){
       return JSON.parse(enabledHomebrew);
     }
