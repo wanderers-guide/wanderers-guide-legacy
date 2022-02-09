@@ -4,6 +4,8 @@
 
 function openPageChoose(){
 
+  $('#section-generated-inventory').addClass('is-hidden');
+
   $('#section-shop-customize').addClass('is-hidden');
   $('#section-shop-generate').addClass('is-hidden');
   $('#section-shop-choose').removeClass('is-hidden');
@@ -31,6 +33,8 @@ function openPageChoose(){
 }
 
 function openPageGenerate(){
+
+  $('#section-generated-inventory').addClass('is-hidden');
 
   $('#section-shop-choose').addClass('is-hidden');
   $('#section-shop-customize').addClass('is-hidden');
@@ -66,26 +70,47 @@ function openPageGenerate(){
 
 
   // Books
+  $('#input-books').off();
   $('#input-books').html('');
   for(const bookSource of g_contentSources){
     $('#input-books').append(`<option value="${bookSource.CodeName}">${bookSource.TextName}</option>`);
   }
   $('#input-books').chosen();
+  $('#input-books').chosen().change(function(){
+    g_enabled_books = $(this).find('option:selected').toArray().map(option => option.value);
+  });
 
   // Homebrew Bundles
   $('#input-homebrew').html('');
   for(const bookSource of g_contentSources){
     $('#input-homebrew').append(`<option value="${bookSource.CodeName}">${bookSource.TextName}</option>`);
   }
+  $('#input-homebrew').off();
   $('#input-homebrew').chosen();
+  $('#input-homebrew').chosen().change(function(){
+    g_enabled_homebrew = $(this).find('option:selected').toArray().map(option => option.value);
+  });
 
 
   $('.chosen-container .chosen-choices').addClass('use-custom-scrollbar');
 
-  
-  $('#inventory-size').ionRangeSlider();
-  $('#price-markup').ionRangeSlider();
 
+  $('#inventory-size').off();
+  $('#inventory-size').ionRangeSlider();
+  $('#inventory-size').change(function() {
+    g_inv_size = parseInt($(this).val());
+  });
+
+  $('#price-markup').off();
+  $('#price-markup').ionRangeSlider();
+  $('#price-markup').change(function() {
+    g_price_markup = parseInt($(this).val());
+  });
+
+  $('#generate-shop-btn').off();
+  $('#generate-shop-btn').click(function() {
+    generateItems();
+  });
 
 }
 
@@ -94,6 +119,8 @@ function openPageCustomize(){
   startSpinnerSubLoader();
 
   setTimeout(() => {
+
+    $('#section-generated-inventory').addClass('is-hidden');
 
     $('#section-shop-choose').addClass('is-hidden');
     $('#section-shop-generate').addClass('is-hidden');

@@ -7,9 +7,18 @@
     <script type="text/javascript" src="/js/shop_generator/presets.js"></script>
     <script type="text/javascript" src="/js/shop_generator/shop.js"></script>
     <script type="text/javascript" src="/js/shop_generator/item-profiles.js"></script>
+    <script type="text/javascript" src="/js/shop_generator/generation.js"></script>
     <script type="text/javascript" src="/js/shop_generator/ui-handler.js"></script>
 
     <script src="/js/libraries/confirm_message/confirm-message.js"></script>
+
+    <!-- Quickview -->
+    <script src="/js/sheet/quickviews/_quickviews.js"></script>
+    <script src="/js/sheet/quickviews/item-view.js"></script>
+    <script src="/js/sheet/quickviews/tag-view.js"></script>
+    <script src="/js/sheet/utils/item-utils.js"></script>
+    <script src="/js/sheet/utils/material-utils.js"></script>
+    <script src="/js/wsc/text-processing.js"></script>
 
     <!-- Ion Range Slider -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ion-rangeslider/2.3.1/css/ion.rangeSlider.min.css"/>
@@ -206,7 +215,7 @@
             <div style="max-width: 400px; margin: auto;">
               <label class="label is-size-4 mb-0">Profile Weight</label>
               <input type="text" class="profile-weight" value=""
-                data-min="0"
+                data-min="1"
                 data-max="100"
                 data-from="50"
                 data-postfix="%"
@@ -434,4 +443,46 @@
 
   </div>
 
+  <div id="section-generated-inventory" class="box is-hidden">
+
+    <h1 class="title is-4 has-txt-value-string mb-1">Shop Inventory</h1>
+
+    <div class="columns is-marginless is-mobile">
+      <div class="column is-6 p-1 border-bottom border-dark-lighter has-bg-options-header-bold is-bold">
+        <span class="is-p">Name</span>
+      </div>
+      <div class="column is-2 p-1 border-bottom border-dark-lighter has-bg-options-header-bold is-bold">
+        <span class="is-p">Price</span>
+      </div>
+      <div class="column is-2 p-1 border-bottom border-dark-lighter has-bg-options-header-bold is-bold">
+        <span class="is-p">Level</span>
+      </div>
+      <div class="column is-2 p-1 border-bottom border-dark-lighter has-bg-options-header-bold is-bold">
+        <span class="is-p">Rarity</span>
+      </div>
+    </div>
+    <div id="container-generated-inventory">
+    </div>
+
+  </div>
+
 </div>
+
+
+
+{{#section 'overlay'}}
+    <!-- Right Quickview -->
+    <div id="quickviewDefault" class="quickview">
+        <div class="quickview-header">
+            <p id="quickViewTitle" class="title is-size-5 has-txt-value-number"></p>
+            <div class="is-inline-flex">
+                <p id="quickViewTitleRight"></p>
+                <p id="quickViewTitleClose"></p>
+            </div>
+        </div>
+        <div class="quickview-body use-custom-scrollbar">
+            <div id="quickViewContent" class="quickview-block pt-1 pb-3 px-3">
+            </div>
+        </div>
+    </div>
+{{/section}}

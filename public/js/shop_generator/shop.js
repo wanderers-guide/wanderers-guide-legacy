@@ -13,13 +13,13 @@ $(function () {
 });
 
 let g_itemMap = null;
-let g_traits = null;
+let g_allTags = null;
 let g_isSupporter = null;
 
 socket.on("returnShopGeneratorDetails", function(itemObj, traits, isSupporter){
 
   g_itemMap = objToMap(itemObj);
-  g_traits = traits;
+  g_allTags = traits;
   g_isSupporter = isSupporter;
 
   openPageChoose();

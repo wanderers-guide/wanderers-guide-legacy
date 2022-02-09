@@ -141,6 +141,7 @@ function loadItemProfiles() {
       $('#modal-delete-item-profile-btn-'+profileID).click(function() {
         g_shop.profiles.delete(profileID);
         $('#'+itemProfileID).remove();
+        generateProfilesChart();
       });
     });
 
@@ -264,7 +265,6 @@ function loadItemProfiles() {
   // Profiles Chart
   placeChart($('#profiles-chart'), 0, 'chart', false);
   if(g_shop.profiles.size > 0){
-    $('#profile-chart-0-chart').removeClass('is-hidden');
     generateProfilesChart();
   } else {
     $('#profile-chart-0-chart').addClass('is-hidden');
@@ -364,7 +364,7 @@ function generateFilterWeights(itemProfileID, profileID, type){
 
   // Populate multi-selectors with options
   if(type == 'traits'){
-    for(const trait of g_traits){
+    for(const trait of g_allTags){
       if(trait.isHidden == 1 || trait.isArchived == 1) { continue; }
       typeSelection.append(`<option value="${trait.id}">${trait.name}</option>`);
     }
@@ -419,7 +419,7 @@ function generateFilterWeights(itemProfileID, profileID, type){
         typeStruct = { name: 'Other '+capitalizeWords(type.replace(/_/g,' ')) };
       } else {
         if(type == 'traits'){
-          typeStruct = g_traits.find(trait => {
+          typeStruct = g_allTags.find(trait => {
             return trait.id == typeID;
           });
         } else {
@@ -508,7 +508,7 @@ function generateChart(profileID, type, bgColor=[
       typeStruct = { name: 'Other '+capitalizeWords(type.replace(/_/g,' ')) };
     } else {
       if(type == 'traits'){
-        typeStruct = g_traits.find(trait => {
+        typeStruct = g_allTags.find(trait => {
           return trait.id == typeID;
         });
       } else {
@@ -561,8 +561,13 @@ function generateProfilesChart(){
 
   let chartID = 'profile-chart-0-chart';
   let chartParent = $('#'+chartID).parent();
-  let chartIsHidden = $('#'+chartID).hasClass('is-hidden');
   $('#'+chartID).remove();
+
+  let chartIsHidden = false;
+  if(g_shop.profiles.size <= 0){
+    chartIsHidden = true;
+  }
+
   placeChart(chartParent, 0, 'chart', chartIsHidden);
 
 
