@@ -77,6 +77,9 @@ function loadItemProfiles() {
 
   $('#section-item-profiles').html('');
 
+  placeChart($('#profiles-chart'), 0, 'chart', false);
+  placeChart($('#projected-levels-chart'), 0, 'levels', false);
+
   let currentProfileCount = 0;
   $('#add-item-profile-btn').off();
   $('#add-item-profile-btn').click(function(event, populatedEntry){
@@ -120,8 +123,9 @@ function loadItemProfiles() {
         formula_chance: 0,
       });
 
-      // Update Profiles Chart
+      // Update Profiles & Projected Levels Chart
       generateProfilesChart();
+      generateProjectedLevelsChart();
     }
 
     // Minimize Profile
@@ -142,6 +146,7 @@ function loadItemProfiles() {
         g_shop.profiles.delete(profileID);
         $('#'+itemProfileID).remove();
         generateProfilesChart();
+        generateProjectedLevelsChart();
       });
     });
 
@@ -158,6 +163,7 @@ function loadItemProfiles() {
       g_shop.profiles.get(profileID).weight = parseInt($(this).val());
       $('#'+itemProfileID).find('.card-header-weight').text(`(${$(this).val()}%)`);
       generateProfilesChart();
+      generateProjectedLevelsChart();
     });
 
     // Adjust Level Range
@@ -165,6 +171,7 @@ function loadItemProfiles() {
     $('#'+itemProfileID).find('.profile-level-range').change(function() {
       g_shop.profiles.get(profileID).level_min = parseInt($(this).data('from'));
       g_shop.profiles.get(profileID).level_max = parseInt($(this).data('to'));
+      generateProjectedLevelsChart();
     });
 
     // Traits, Categories, and Weapon Groups
@@ -262,12 +269,13 @@ function loadItemProfiles() {
   }
 
 
-  // Profiles Chart
-  placeChart($('#profiles-chart'), 0, 'chart', false);
+  // Profiles Chart & Projected Levels Chart
   if(g_shop.profiles.size > 0){
     generateProfilesChart();
+    generateProjectedLevelsChart();
   } else {
     $('#profile-chart-0-chart').addClass('is-hidden');
+    $('#profile-chart-0-levels').addClass('is-hidden');
   }
 
 }
@@ -463,6 +471,7 @@ function placeChart(chartParent, profileID, type, hidden=true){
   `);
 }
 
+// Profile Chart
 function generateChart(profileID, type, bgColor=[
       'rgba(255, 99, 132, 0.2)',
       'rgba(54, 162, 235, 0.2)',
@@ -556,6 +565,137 @@ function generateChart(profileID, type, bgColor=[
 
 }
 
+// Shop Charts
+function generateProjectedLevelsChart(){
+
+  let chartID = 'profile-chart-0-levels';
+  let chartParent = $('#'+chartID).parent();
+  $('#'+chartID).remove();
+
+  let chartIsHidden = false;
+  if(g_shop.profiles.size <= 0){
+    chartIsHidden = true;
+  }
+
+  placeChart(chartParent, 0, 'levels', chartIsHidden);
+
+  // If chart is hidden, hide column as well
+  if(chartIsHidden){
+    $('#'+chartID).parent().parent().parent().addClass('is-hidden');
+  } else {
+    $('#'+chartID).parent().parent().parent().removeClass('is-hidden');
+  }
+
+
+  let dataLabels = [];
+  let dataSets = [];
+
+  for(let n = 0; n <= 30; n++){
+    dataLabels.push(n+'');
+  }
+
+  const backgroundColors = [
+    'rgba(255, 99, 132, 0.4)',
+    'rgba(54, 162, 235, 0.4)',
+    'rgba(255, 206, 86, 0.4)',
+    'rgba(75, 192, 192, 0.4)',
+    'rgba(153, 102, 255, 0.4)',
+    'rgba(255, 159, 64, 0.4)',
+    'rgba(27, 133, 62, 0.4)',
+    'rgba(201, 67, 193, 0.4)',
+    'rgba(48, 191, 188, 0.4)',
+    'rgba(80, 48, 191, 0.4)',
+    'rgba(201, 73, 29, 0.4)',
+    'rgba(122, 201, 29, 0.4)',
+  ];
+
+  const getValueFromArrayByProfile = function(profileID, array){
+    let profileIndex = Array.from(g_shop.profiles.keys()).indexOf(profileID);
+    let arrayIndex = profileIndex % (array.length-1);
+    return array[arrayIndex];
+  };
+
+  const getDataForLevelRange = function(min_level, max_level, chance){
+    let dataArray = [];
+    for(let n = 0; n <= 30; n++){
+      if(n >= min_level && n <= max_level){
+        dataArray.push(chance);
+      } else {
+        dataArray.push(0);
+      }
+    }
+    return dataArray;
+  };
+
+  let totalProfileWeight = 0;
+  for(const [profileID, profileData] of g_shop.profiles.entries()){
+    totalProfileWeight += profileData.weight;
+  }
+
+  for(const [profileID, profileData] of g_shop.profiles.entries()){
+    dataSets.push({
+      label: profileData.name,
+      data: getDataForLevelRange(profileData.level_min, profileData.level_max, profileData.weight/totalProfileWeight),
+      backgroundColor: getValueFromArrayByProfile(profileID, backgroundColors),
+      fill: true,
+      stepped: true,
+      spanGaps: true,
+    });
+  }
+
+  const ctx = document.getElementById(chartID);
+  const chart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: dataLabels,
+        datasets: dataSets,
+      },
+      options: {
+        responsive: true,
+        animation: false,
+        tension: false,
+        borderDash: [],
+        elements: {
+          point: {
+            radius: 0,
+          }
+        },
+        plugins: {
+          title: {
+            display: true,
+            text: 'Projected Item Levels'
+          },
+          tooltip: {
+            enabled: false,
+          },
+          legend: {
+            onClick: () => {},
+          },
+        },
+        interaction: {
+          mode: 'index',
+          intersect: false,
+        },
+        scales: {
+          x: {
+            display: true,
+            title: {
+              display: true,
+              text: 'Level'
+            }
+          },
+          y: {
+            display: true,
+            title: {
+              display: true,
+              text: 'Chance'
+            }
+          }
+        }
+      }
+  });
+
+}
 
 function generateProfilesChart(){
 
@@ -569,6 +709,13 @@ function generateProfilesChart(){
   }
 
   placeChart(chartParent, 0, 'chart', chartIsHidden);
+
+  // If chart is hidden, hide column as well
+  if(chartIsHidden){
+    $('#'+chartID).parent().parent().parent().addClass('is-hidden');
+  } else {
+    $('#'+chartID).parent().parent().parent().removeClass('is-hidden');
+  }
 
 
   let dataLabels = [];
@@ -629,6 +776,10 @@ function generateProfilesChart(){
         layout: {
         },
         plugins: {
+          title: {
+            display: true,
+            text: 'Projected Profile Spread'
+          },
           legend: {
             onClick: () => {},
             position: 'top',
