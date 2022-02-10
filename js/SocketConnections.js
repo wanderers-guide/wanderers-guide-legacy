@@ -2862,20 +2862,21 @@ module.exports = class SocketConnections {
       socket.on('requestShopGeneratorDetails', function(){
         
         // Get enabledHomebrew as all collected homebrew and enabledSources as all sources
-        CharContentHomebrew.getEnabledHomebrewForCollection(userID).then((enabledHomebrew) => {
-          CharContentSources.getEnabledSourcesForAllBooks(userID).then((enabledSources) => {
+        CharContentHomebrew.getEnabledHomebrewForCollection(userID).then((homebrewStruct) => {
+          CharContentSources.getEnabledSourcesForAllBooks(userID).then((sourcesStruct) => {
 
             AuthCheck.isSupporter(userID).then((isSupporter) => {
 
               // Non-supporters can't use homebrew in shop gen
               if(!isSupporter) {
-                enabledHomebrew = '[null]';
+                homebrewStruct.homebrewNames = ['None'];
+                homebrewStruct.enabledHomebrew = '[null]';
               }
 
-              CharGathering.getAllItems(userID, enabledSources, enabledHomebrew).then((itemMap) => {
-                CharGathering.getAllTags(userID, enabledHomebrew).then((traits) => {
+              CharGathering.getAllItems(userID, sourcesStruct.enabledSources, homebrewStruct.enabledHomebrew).then((itemMap) => {
+                CharGathering.getAllTags(userID, homebrewStruct.enabledHomebrew).then((traits) => {
   
-                  socket.emit('returnShopGeneratorDetails', mapToObj(itemMap), traits, isSupporter);
+                  socket.emit('returnShopGeneratorDetails', mapToObj(itemMap), traits, isSupporter, sourcesStruct, homebrewStruct);
   
                 });
               });

@@ -13,11 +13,13 @@ module.exports = class CharContentSources {
       .then((books) => {
 
         let enabledSources = [];
+        let sourceNames = [];
         for(const book of books){
           enabledSources.push(book.codeName);
+          sourceNames.push(book.name);
         }
 
-        return JSON.stringify(enabledSources);
+        return {enabledSources: JSON.stringify(enabledSources), sourceNames: sourceNames};
 
       });
     }

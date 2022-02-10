@@ -16,11 +16,31 @@ let g_itemMap = null;
 let g_allTags = null;
 let g_isSupporter = null;
 
-socket.on("returnShopGeneratorDetails", function(itemObj, traits, isSupporter){
+let g_all_books = null;
+let g_all_homebrew = null;
+
+let g_all_names_books = null;
+let g_all_names_homebrew = null;
+
+let g_enabled_books = null;
+let g_enabled_homebrew = null;
+
+socket.on("returnShopGeneratorDetails", function(itemObj, traits, isSupporter, sourcesStruct, homebrewStruct){
 
   g_itemMap = objToMap(itemObj);
   g_allTags = traits;
   g_isSupporter = isSupporter;
+
+  g_all_books = JSON.parse(sourcesStruct.enabledSources);
+  g_all_names_books = sourcesStruct.sourceNames;
+
+  g_all_homebrew = JSON.parse(homebrewStruct.enabledHomebrew);
+  g_all_homebrew.shift(); // Remove first element: null
+  g_all_names_homebrew = homebrewStruct.homebrewNames;
+  g_all_names_homebrew.shift(); // Remove first element: 'None'
+
+  g_enabled_books = ['CRB','ADV-PLAYER-GUIDE','GM-GUIDE','GUNS-AND-GEARS','SECRETS-OF-MAGIC'];
+  g_enabled_homebrew = [];
 
   openPageChoose();
 

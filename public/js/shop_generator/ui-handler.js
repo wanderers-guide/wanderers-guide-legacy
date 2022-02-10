@@ -70,11 +70,15 @@ function openPageGenerate(){
 
 
   // Books
-  $('#input-books').off();
   $('#input-books').html('');
-  for(const bookSource of g_contentSources){
-    $('#input-books').append(`<option value="${bookSource.CodeName}">${bookSource.TextName}</option>`);
+  for(const bookCodeName of g_all_books){
+    $('#input-books').append(`<option value="${bookCodeName}">${g_all_names_books[g_all_books.indexOf(bookCodeName)]}</option>`);
   }
+  for(const bookCodeName of g_enabled_books){
+    $('#input-books').find(`option[value=${bookCodeName}]`).attr('selected','selected');
+  }
+
+  $('#input-books').off();
   $('#input-books').chosen();
   $('#input-books').chosen().change(function(){
     g_enabled_books = $(this).find('option:selected').toArray().map(option => option.value);
@@ -82,9 +86,13 @@ function openPageGenerate(){
 
   // Homebrew Bundles
   $('#input-homebrew').html('');
-  for(const bookSource of g_contentSources){
-    $('#input-homebrew').append(`<option value="${bookSource.CodeName}">${bookSource.TextName}</option>`);
+  for(const homebrewID of g_all_homebrew){
+    $('#input-homebrew').append(`<option value="${homebrewID}">${g_all_names_homebrew[g_all_homebrew.indexOf(homebrewID)]}</option>`);
   }
+  for(const homebrewID of g_enabled_homebrew){
+    $('#input-homebrew').find(`option[value=${homebrewID}]`).attr('selected','selected');
+  }
+
   $('#input-homebrew').off();
   $('#input-homebrew').chosen();
   $('#input-homebrew').chosen().change(function(){

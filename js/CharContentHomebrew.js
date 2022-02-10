@@ -10,14 +10,17 @@ module.exports = class CharContentHomebrew {
         return UserHomebrew.getIncompleteHomebrewBundles(userID).then((progessBundles) => {
 
           let enabledHomebrew = [null];
+          let homebrewNames = ['None'];
           for(const hBundle of hBundles){
             enabledHomebrew.push(hBundle.homebrewBundle.id);
+            homebrewNames.push(hBundle.homebrewBundle.name);
           }
           for(const progessBundle of progessBundles){
             enabledHomebrew.push(progessBundle.id);
+            homebrewNames.push(progessBundle.name);
           }
 
-          return JSON.stringify(enabledHomebrew);
+          return {enabledHomebrew: JSON.stringify(enabledHomebrew), homebrewNames: homebrewNames};
 
         });
       });

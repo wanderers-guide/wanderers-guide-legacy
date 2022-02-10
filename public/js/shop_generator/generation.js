@@ -2,8 +2,6 @@
     By Aaron Cassar.
 */
 
-let g_enabled_books = [];
-let g_enabled_homebrew = [];
 let g_inv_size = 25;
 let g_price_markup = 0;
 
@@ -41,16 +39,18 @@ function generateItems(){
   /// Remove all items that aren't in the the enabled books or homebrew
 
   for(const [itemID, itemData] of mainItemMap.entries()){
-    if(!g_enabled_books.includes(itemData.Item.contentSrc)){
+
+    if(itemData.Item.homebrewID != null){
+      if(!g_enabled_homebrew.includes(itemData.Item.homebrewID+'')){
+        mainItemMap.delete(itemID);
+      } else {
+        // Include homebrew. The source is always CRB so it doesn't matter. Homebrew can't be archived or hidden so that doesn't matter either.
+      }
+    } else if(!g_enabled_books.includes(itemData.Item.contentSrc)){
       mainItemMap.delete(itemID);
-      continue;
-    } else if(g_isSupporter && itemData.Item.homebrewID != null && !g_enabled_homebrew.includes(itemData.Item.homebrewID)) {
-      mainItemMap.delete(itemID);
-      continue;
     } else {
       if(itemData.Item.isArchived == 1 || itemData.Item.hidden == 1){
         mainItemMap.delete(itemID);
-        continue;
       }
     }
   }

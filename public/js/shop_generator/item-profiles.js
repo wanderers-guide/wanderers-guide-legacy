@@ -611,7 +611,7 @@ function generateProjectedLevelsChart(){
 
   const getValueFromArrayByProfile = function(profileID, array){
     let profileIndex = Array.from(g_shop.profiles.keys()).indexOf(profileID);
-    let arrayIndex = profileIndex % (array.length-1);
+    let arrayIndex = profileIndex % array.length;
     return array[arrayIndex];
   };
 
