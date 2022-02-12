@@ -80,174 +80,190 @@ function loadItemProfiles() {
   placeChart($('#profiles-chart'), 0, 'chart', false);
   placeChart($('#projected-levels-chart'), 0, 'levels', false);
 
-  let currentProfileCount = 0;
   $('#add-item-profile-btn').off();
-  $('#add-item-profile-btn').click(function(event, populatedEntry){
-    currentProfileCount++;
-
-    const profileID = currentProfileCount+'';
-    const itemProfileID = 'item-profile-'+currentProfileCount;
-
+  $('#add-item-profile-btn').click(function(event, populatedEntry, input_profileID){
     if(populatedEntry == null) { populatedEntry = false; }
 
-    // Make copy of item profile from layout
-    let newItemProfile = $('#item-profile-layout').clone();
-    newItemProfile.attr('id', itemProfileID);
-    newItemProfile.removeClass('is-hidden');
-    newItemProfile.removeClass('isLayout');
-    newItemProfile.appendTo('#section-item-profiles');
+    let addItemProfile = function(){
+      const profileSeedID = (populatedEntry) ? input_profileID : Date.now();
 
-    if(!populatedEntry){
-      // Add new profile to g_shop
-      g_shop.profiles.set(profileID, {
-        name: 'New Item Profile',
-        weight: 50,
-        level_min: 0,
-        level_max: 10,
-        traits: new Map(),
-        categories: new Map(),
-        weapon_groups: new Map(),
-        rarities: new Map([
-          ['common', 68],
-          ['uncommon', 20],
-          ['rare', 10],
-          ['unique', 2],
-        ]),
-        quantity: {
-          permanent_min: 1,
-          permanent_max: 10,
-          consumable_min: 1,
-          consumable_max: 30,
-          rarity_adjustment: 50,
-        },
-        formula_chance: 0,
+      const profileID = profileSeedID+'';
+      const itemProfileID = 'item-profile-'+profileSeedID;
+
+      // Make copy of item profile from layout
+      let newItemProfile = $('#item-profile-layout').clone();
+      newItemProfile.attr('id', itemProfileID);
+      newItemProfile.removeClass('is-hidden');
+      newItemProfile.removeClass('isLayout');
+      newItemProfile.appendTo('#section-item-profiles');
+
+      if(!populatedEntry){
+        // Add new profile to g_shop
+        g_shop.profiles.set(profileID, {
+          name: 'New Item Profile',
+          weight: 50,
+          level_min: 0,
+          level_max: 10,
+          traits: new Map(),
+          categories: new Map(),
+          weapon_groups: new Map(),
+          rarities: new Map([
+            ['common', 81],
+            ['uncommon', 15],
+            ['rare', 3],
+            ['unique', 1],
+          ]),
+          quantity: {
+            permanent_min: 1,
+            permanent_max: 4,
+            consumable_min: 1,
+            consumable_max: 10,
+            rarity_adjustment: 50,
+          },
+          formula_chance: 0,
+        });
+
+        // Update Profiles & Projected Levels Chart
+        generateProfilesChart();
+        generateProjectedLevelsChart();
+      }
+
+      // Minimize Profile
+      let cardContent = $('#'+itemProfileID).find(".card-content");
+      $('#'+itemProfileID).find(".card-header").click(function(){
+        if(cardContent.is(":visible")) {
+          cardContent.addClass('is-hidden');
+        } else {
+          cardContent.removeClass('is-hidden');
+        }
+      });
+      
+      // Delete Profile
+      $('#'+itemProfileID).find(".card-header-icon").click(function(event){
+        event.stopImmediatePropagation();
+        new ConfirmMessage('Delete “'+g_shop.profiles.get(profileID).name+'”', '<p class="has-text-centered">Are you sure you want to delete this item profile?</p>', 'Delete', 'modal-delete-item-profile-'+profileID, 'modal-delete-item-profile-btn-'+profileID);
+        $('#modal-delete-item-profile-btn-'+profileID).click(function() {
+          g_shop.profiles.delete(profileID);
+          $('#'+itemProfileID).remove();
+          generateProfilesChart();
+          generateProjectedLevelsChart();
+        });
       });
 
-      // Update Profiles & Projected Levels Chart
-      generateProfilesChart();
-      generateProjectedLevelsChart();
-    }
-
-    // Minimize Profile
-    let cardContent = $('#'+itemProfileID).find(".card-content");
-    $('#'+itemProfileID).find(".card-header").click(function(){
-      if(cardContent.is(":visible")) {
-        cardContent.addClass('is-hidden');
-      } else {
-        cardContent.removeClass('is-hidden');
-      }
-    });
-    
-    // Delete Profile
-    $('#'+itemProfileID).find(".card-header-icon").click(function(event){
-      event.stopImmediatePropagation();
-      new ConfirmMessage('Delete “'+g_shop.profiles.get(profileID).name+'”', '<p class="has-text-centered">Are you sure you want to delete this item profile?</p>', 'Delete', 'modal-delete-item-profile-'+profileID, 'modal-delete-item-profile-btn-'+profileID);
-      $('#modal-delete-item-profile-btn-'+profileID).click(function() {
-        g_shop.profiles.delete(profileID);
-        $('#'+itemProfileID).remove();
+      // Edit Profile Name
+      $('#'+itemProfileID).find('.profile-name').on('input', function(){
+        g_shop.profiles.get(profileID).name = $(this).val();
+        $('#'+itemProfileID).find('.card-header-name').text($(this).val());
+      });
+      $('#'+itemProfileID).find('.profile-name').blur(function(){
         generateProfilesChart();
         generateProjectedLevelsChart();
       });
-    });
-
-    // Edit Profile Name
-    $('#'+itemProfileID).find('.profile-name').on('input', function(){
-      g_shop.profiles.get(profileID).name = $(this).val();
-      $('#'+itemProfileID).find('.card-header-name').text($(this).val());
-    });
 
 
-    // Adjust Profile Weight
-    $('#'+itemProfileID).find('.profile-weight').ionRangeSlider();
-    $('#'+itemProfileID).find('.profile-weight').change(function() {
-      g_shop.profiles.get(profileID).weight = parseInt($(this).val());
-      $('#'+itemProfileID).find('.card-header-weight').text(`(${$(this).val()}%)`);
-      generateProfilesChart();
-      generateProjectedLevelsChart();
-    });
+      // Adjust Profile Weight
+      $('#'+itemProfileID).find('.profile-weight').ionRangeSlider();
+      $('#'+itemProfileID).find('.profile-weight').change(function() {
+        g_shop.profiles.get(profileID).weight = parseInt($(this).val());
+        $('#'+itemProfileID).find('.card-header-weight').text(`(${$(this).val()}%)`);
+        generateProfilesChart();
+        generateProjectedLevelsChart();
+      });
 
-    // Adjust Level Range
-    $('#'+itemProfileID).find('.profile-level-range').ionRangeSlider();
-    $('#'+itemProfileID).find('.profile-level-range').change(function() {
-      g_shop.profiles.get(profileID).level_min = parseInt($(this).data('from'));
-      g_shop.profiles.get(profileID).level_max = parseInt($(this).data('to'));
-      generateProjectedLevelsChart();
-    });
+      // Adjust Level Range
+      $('#'+itemProfileID).find('.profile-level-range').ionRangeSlider();
+      $('#'+itemProfileID).find('.profile-level-range').change(function() {
+        g_shop.profiles.get(profileID).level_min = parseInt($(this).data('from'));
+        g_shop.profiles.get(profileID).level_max = parseInt($(this).data('to'));
+        generateProjectedLevelsChart();
+      });
 
-    // Traits, Categories, and Weapon Groups
-    generateFilterWeights(itemProfileID, profileID, 'traits');
-    generateFilterWeights(itemProfileID, profileID, 'categories');
-    generateFilterWeights(itemProfileID, profileID, 'weapon_groups');
+      // Traits, Categories, and Weapon Groups
+      generateFilterWeights(itemProfileID, profileID, 'traits');
+      generateFilterWeights(itemProfileID, profileID, 'categories');
+      generateFilterWeights(itemProfileID, profileID, 'weapon_groups');
 
-    // Rarities
-    $('#'+itemProfileID).find('.common-weight').ionRangeSlider();
-    $('#'+itemProfileID).find('.common-weight').change(function () {
-      g_shop.profiles.get(profileID).rarities.set('common', parseInt($(this).val()));
-      generateChart(profileID, 'rarities', 
-      ['rgba(173, 173, 173, 0.2)', 'rgba(34, 160, 112, 0.2)', 'rgba(48, 80, 166, 0.2)', 'rgba(119, 41, 153, 0.2)'],
-      ['rgba(173, 173, 173, 1)', 'rgba(34, 160, 112, 1)', 'rgba(48, 80, 166, 1)', 'rgba(119, 41, 153, 1)']);
-    });
+      // Rarities
+      $('#'+itemProfileID).find('.common-weight').ionRangeSlider();
+      $('#'+itemProfileID).find('.common-weight').change(function () {
+        g_shop.profiles.get(profileID).rarities.set('common', parseInt($(this).val()));
+        generateChart(profileID, 'rarities', 
+        ['rgba(173, 173, 173, 0.2)', 'rgba(34, 160, 112, 0.2)', 'rgba(48, 80, 166, 0.2)', 'rgba(119, 41, 153, 0.2)'],
+        ['rgba(173, 173, 173, 1)', 'rgba(34, 160, 112, 1)', 'rgba(48, 80, 166, 1)', 'rgba(119, 41, 153, 1)']);
+      });
 
-    $('#'+itemProfileID).find('.uncommon-weight').ionRangeSlider();
-    $('#'+itemProfileID).find('.uncommon-weight').change(function () {
-      g_shop.profiles.get(profileID).rarities.set('uncommon', parseInt($(this).val()));
+      $('#'+itemProfileID).find('.uncommon-weight').ionRangeSlider();
+      $('#'+itemProfileID).find('.uncommon-weight').change(function () {
+        g_shop.profiles.get(profileID).rarities.set('uncommon', parseInt($(this).val()));
+        generateChart(profileID, 'rarities',
+        ['rgba(173, 173, 173, 0.2)', 'rgba(34, 160, 112, 0.2)', 'rgba(48, 80, 166, 0.2)', 'rgba(119, 41, 153, 0.2)'],
+        ['rgba(173, 173, 173, 1)', 'rgba(34, 160, 112, 1)', 'rgba(48, 80, 166, 1)', 'rgba(119, 41, 153, 1)']);
+      });
+
+      $('#'+itemProfileID).find('.rare-weight').ionRangeSlider();
+      $('#'+itemProfileID).find('.rare-weight').change(function () {
+        g_shop.profiles.get(profileID).rarities.set('rare', parseInt($(this).val()));
+        generateChart(profileID, 'rarities',
+        ['rgba(173, 173, 173, 0.2)', 'rgba(34, 160, 112, 0.2)', 'rgba(48, 80, 166, 0.2)', 'rgba(119, 41, 153, 0.2)'],
+        ['rgba(173, 173, 173, 1)', 'rgba(34, 160, 112, 1)', 'rgba(48, 80, 166, 1)', 'rgba(119, 41, 153, 1)']);
+      });
+
+      $('#'+itemProfileID).find('.unique-weight').ionRangeSlider();
+      $('#'+itemProfileID).find('.unique-weight').change(function () {
+        g_shop.profiles.get(profileID).rarities.set('unique', parseInt($(this).val()));
+        generateChart(profileID, 'rarities',
+        ['rgba(173, 173, 173, 0.2)', 'rgba(34, 160, 112, 0.2)', 'rgba(48, 80, 166, 0.2)', 'rgba(119, 41, 153, 0.2)'],
+        ['rgba(173, 173, 173, 1)', 'rgba(34, 160, 112, 1)', 'rgba(48, 80, 166, 1)', 'rgba(119, 41, 153, 1)']);
+      });
+
+      placeChart($('#'+itemProfileID).find('.profile-chart-rarities'), profileID, 'rarities', false);
       generateChart(profileID, 'rarities',
       ['rgba(173, 173, 173, 0.2)', 'rgba(34, 160, 112, 0.2)', 'rgba(48, 80, 166, 0.2)', 'rgba(119, 41, 153, 0.2)'],
       ['rgba(173, 173, 173, 1)', 'rgba(34, 160, 112, 1)', 'rgba(48, 80, 166, 1)', 'rgba(119, 41, 153, 1)']);
-    });
-
-    $('#'+itemProfileID).find('.rare-weight').ionRangeSlider();
-    $('#'+itemProfileID).find('.rare-weight').change(function () {
-      g_shop.profiles.get(profileID).rarities.set('rare', parseInt($(this).val()));
-      generateChart(profileID, 'rarities',
-      ['rgba(173, 173, 173, 0.2)', 'rgba(34, 160, 112, 0.2)', 'rgba(48, 80, 166, 0.2)', 'rgba(119, 41, 153, 0.2)'],
-      ['rgba(173, 173, 173, 1)', 'rgba(34, 160, 112, 1)', 'rgba(48, 80, 166, 1)', 'rgba(119, 41, 153, 1)']);
-    });
-
-    $('#'+itemProfileID).find('.unique-weight').ionRangeSlider();
-    $('#'+itemProfileID).find('.unique-weight').change(function () {
-      g_shop.profiles.get(profileID).rarities.set('unique', parseInt($(this).val()));
-      generateChart(profileID, 'rarities',
-      ['rgba(173, 173, 173, 0.2)', 'rgba(34, 160, 112, 0.2)', 'rgba(48, 80, 166, 0.2)', 'rgba(119, 41, 153, 0.2)'],
-      ['rgba(173, 173, 173, 1)', 'rgba(34, 160, 112, 1)', 'rgba(48, 80, 166, 1)', 'rgba(119, 41, 153, 1)']);
-    });
-
-    placeChart($('#'+itemProfileID).find('.profile-chart-rarities'), profileID, 'rarities', false);
-    generateChart(profileID, 'rarities',
-    ['rgba(173, 173, 173, 0.2)', 'rgba(34, 160, 112, 0.2)', 'rgba(48, 80, 166, 0.2)', 'rgba(119, 41, 153, 0.2)'],
-    ['rgba(173, 173, 173, 1)', 'rgba(34, 160, 112, 1)', 'rgba(48, 80, 166, 1)', 'rgba(119, 41, 153, 1)']);
 
 
-    // Quantity
-    $('#'+itemProfileID).find('.profile-qty-permanent-items').ionRangeSlider();
-    $('#'+itemProfileID).find('.profile-qty-permanent-items').change(function() {
-      g_shop.profiles.get(profileID).quantity.permanent_min = parseInt($(this).data('from'));
-      g_shop.profiles.get(profileID).quantity.permanent_max = parseInt($(this).data('to'));
-    });
+      // Quantity
+      $('#'+itemProfileID).find('.profile-qty-permanent-items').ionRangeSlider();
+      $('#'+itemProfileID).find('.profile-qty-permanent-items').change(function() {
+        g_shop.profiles.get(profileID).quantity.permanent_min = parseInt($(this).data('from'));
+        g_shop.profiles.get(profileID).quantity.permanent_max = parseInt($(this).data('to'));
+      });
 
-    $('#'+itemProfileID).find('.profile-qty-consumable-items').ionRangeSlider();
-    $('#'+itemProfileID).find('.profile-qty-consumable-items').change(function() {
-      g_shop.profiles.get(profileID).quantity.consumable_min = parseInt($(this).data('from'));
-      g_shop.profiles.get(profileID).quantity.consumable_max = parseInt($(this).data('to'));
-    });
+      $('#'+itemProfileID).find('.profile-qty-consumable-items').ionRangeSlider();
+      $('#'+itemProfileID).find('.profile-qty-consumable-items').change(function() {
+        g_shop.profiles.get(profileID).quantity.consumable_min = parseInt($(this).data('from'));
+        g_shop.profiles.get(profileID).quantity.consumable_max = parseInt($(this).data('to'));
+      });
 
-    $('#'+itemProfileID).find('.profile-qty-rarity-adjustment').ionRangeSlider();
-    $('#'+itemProfileID).find('.profile-qty-rarity-adjustment').change(function() {
-      g_shop.profiles.get(profileID).quantity.rarity_adjustment = parseInt($(this).val());
-    });
+      $('#'+itemProfileID).find('.profile-qty-rarity-adjustment').ionRangeSlider();
+      $('#'+itemProfileID).find('.profile-qty-rarity-adjustment').change(function() {
+        g_shop.profiles.get(profileID).quantity.rarity_adjustment = parseInt($(this).val());
+      });
 
-    // Formula
-    $('#'+itemProfileID).find('.profile-formula-chance').ionRangeSlider();
-    $('#'+itemProfileID).find('.profile-formula-chance').change(function() {
-      g_shop.profiles.get(profileID).formula_chance = parseInt($(this).val());
-    });
+      // Formula
+      $('#'+itemProfileID).find('.profile-formula-chance').ionRangeSlider();
+      $('#'+itemProfileID).find('.profile-formula-chance').change(function() {
+        g_shop.profiles.get(profileID).formula_chance = parseInt($(this).val());
+      });
+
+    };
+
+    if(populatedEntry){
+      addItemProfile();
+    } else {
+      startSpinnerSubLoader();
+      setTimeout(() => {
+        addItemProfile();
+        stopSpinnerSubLoader();
+      }, 50);// After 0.05 second
+    }
 
   });
 
 
   // Populate profile entry for each profile
   for(const [profileID, profileData] of g_shop.profiles.entries()){
-    $('#add-item-profile-btn').trigger('click', [true]);
+    $('#add-item-profile-btn').trigger('click', [true, profileID]);
   }
   for(const [profileID, profileData] of g_shop.profiles.entries()){
     const itemProfileID = 'item-profile-'+profileID;
@@ -473,8 +489,8 @@ function placeChart(chartParent, profileID, type, hidden=true){
 
 // Profile Chart
 function generateChart(profileID, type, bgColor=[
-      'rgba(255, 99, 132, 0.2)',
       'rgba(54, 162, 235, 0.2)',
+      'rgba(255, 99, 132, 0.2)',
       'rgba(255, 206, 86, 0.2)',
       'rgba(75, 192, 192, 0.2)',
       'rgba(153, 102, 255, 0.2)',
@@ -486,8 +502,8 @@ function generateChart(profileID, type, bgColor=[
       'rgba(201, 73, 29, 0.2)',
       'rgba(122, 201, 29, 0.2)',
     ], borderColor=[
-      'rgba(255, 99, 132, 1)',
       'rgba(54, 162, 235, 1)',
+      'rgba(255, 99, 132, 1)',
       'rgba(255, 206, 86, 1)',
       'rgba(75, 192, 192, 1)',
       'rgba(153, 102, 255, 1)',
@@ -595,8 +611,8 @@ function generateProjectedLevelsChart(){
   }
 
   const backgroundColors = [
-    'rgba(255, 99, 132, 0.4)',
     'rgba(54, 162, 235, 0.4)',
+    'rgba(255, 99, 132, 0.4)',
     'rgba(255, 206, 86, 0.4)',
     'rgba(75, 192, 192, 0.4)',
     'rgba(153, 102, 255, 0.4)',
@@ -736,8 +752,8 @@ function generateProfilesChart(){
           data: dataValues,
           parsing: false,
           backgroundColor: [
-            'rgba(255, 99, 132, 0.2)',
             'rgba(54, 162, 235, 0.2)',
+            'rgba(255, 99, 132, 0.2)',
             'rgba(255, 206, 86, 0.2)',
             'rgba(75, 192, 192, 0.2)',
             'rgba(153, 102, 255, 0.2)',
@@ -750,8 +766,8 @@ function generateProfilesChart(){
             'rgba(122, 201, 29, 0.2)',
           ],
           borderColor: [
-            'rgba(255, 99, 132, 1)',
             'rgba(54, 162, 235, 1)',
+            'rgba(255, 99, 132, 1)',
             'rgba(255, 206, 86, 1)',
             'rgba(75, 192, 192, 1)',
             'rgba(153, 102, 255, 1)',

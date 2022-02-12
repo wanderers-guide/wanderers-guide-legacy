@@ -1,6 +1,7 @@
 
 const router = require('express').Router();
 
+const Character = require('../../models/contentDB/Character');
 const Item = require('../../models/contentDB/Item');
 const Spell = require('../../models/contentDB/Spell');
 const Feat = require('../../models/contentDB/Feat');
@@ -39,6 +40,21 @@ function getModelByNameOrID(ModelType, name, id){
     });
   }
 }
+
+router.get('/char', (req, res) => {
+  if(req.query.name != null || req.query.id != null){
+    getModelByNameOrID(Character, req.query.name, req.query.id).then((character) => {
+      if(character != null){
+        res.send({ id: character.id, name: character.name });
+      } else {
+        res.sendStatus(404);
+      }
+    });
+
+  } else {
+    res.sendStatus(400);
+  }
+});
 
 router.get('/item', (req, res) => {
   if(req.query.name != null || req.query.id != null){

@@ -11,14 +11,41 @@ function openPageChoose(){
   $('#section-shop-choose').removeClass('is-hidden');
 
 
+  $('#shop-gen-back-btn').off();
+  $('#shop-gen-back-btn').click(function() {
+    window.location.href = '/gm-tools';
+  });
+
+
   // Shop Presets
-  $('#shop-type').html('<option value="chooseDefault">Choose a Shop</option>');
+  $('#shop-type').chosen('destroy');
+  let shopTypeHTML = '<option value=""></option>';
+  let shopTypeInGroup = false;
   for(const [presetID, shopPreset] of g_shopPresets){
-    $('#shop-type').append(`<option value="${presetID}">${shopPreset.name}</option>`);
+    if(presetID > 0){
+      // Is normal option
+      shopTypeHTML += `<option value="${presetID}">${shopPreset.name}</option>`;
+    } else {
+      // Is group beginning
+      if(shopTypeInGroup){
+        // End and start new group
+        shopTypeHTML += `</optgroup><optgroup label="${shopPreset.name}">`;
+      } else {
+        // Start new group
+        shopTypeInGroup = true;
+        shopTypeHTML += `<optgroup label="${shopPreset.name}">`;
+      }
+    }
   }
+  if(shopTypeInGroup){
+    shopTypeHTML += `</optgroup>`;
+    shopTypeInGroup = false;
+  }
+  $('#shop-type').html(shopTypeHTML);
 
   $('#shop-type').off();
-  $('#shop-type').change(function(){
+  $('#shop-type').chosen();
+  $('#shop-type').chosen().change(function(){
     let presetID = $(this).val();
     if(presetID != 'chooseDefault'){
       
@@ -28,7 +55,11 @@ function openPageChoose(){
     }
   });
 
-  shopInitImport();
+  $('.chosen-container .chosen-results').addClass('use-custom-scrollbar');
+
+  if(g_isSupporter){
+    shopInitImport();
+  }
 
 }
 
@@ -58,16 +89,17 @@ function openPageGenerate(){
 
   });
 
-  $('#customize-shop-btn').off();
-  $('#customize-shop-btn').click(function(){
-    openPageCustomize();
-  });
-
-  $('#export-shop-btn').off();
-  $('#export-shop-btn').click(function() {
-    shopExport();
-  });
-
+  if(g_isSupporter){
+    $('#customize-shop-btn').off();
+    $('#customize-shop-btn').click(function(){
+      openPageCustomize();
+    });
+  
+    $('#export-shop-btn').off();
+    $('#export-shop-btn').click(function() {
+      shopExport();
+    });
+  }
 
   // Books
   $('#input-books').html('');
@@ -85,21 +117,24 @@ function openPageGenerate(){
   });
 
   // Homebrew Bundles
-  $('#input-homebrew').html('');
-  for(const homebrewID of g_all_homebrew){
-    $('#input-homebrew').append(`<option value="${homebrewID}">${g_all_names_homebrew[g_all_homebrew.indexOf(homebrewID)]}</option>`);
+  if(g_isSupporter){
+    $('#input-homebrew').html('');
+    for(const homebrewID of g_all_homebrew){
+      $('#input-homebrew').append(`<option value="${homebrewID}">${g_all_names_homebrew[g_all_homebrew.indexOf(homebrewID)]}</option>`);
+    }
+    for(const homebrewID of g_enabled_homebrew){
+      $('#input-homebrew').find(`option[value=${homebrewID}]`).attr('selected','selected');
+    }
+
+    $('#input-homebrew').off();
+    $('#input-homebrew').chosen();
+    $('#input-homebrew').chosen().change(function(){
+      g_enabled_homebrew = $(this).find('option:selected').toArray().map(option => option.value);
+    });
   }
-  for(const homebrewID of g_enabled_homebrew){
-    $('#input-homebrew').find(`option[value=${homebrewID}]`).attr('selected','selected');
-  }
-
-  $('#input-homebrew').off();
-  $('#input-homebrew').chosen();
-  $('#input-homebrew').chosen().change(function(){
-    g_enabled_homebrew = $(this).find('option:selected').toArray().map(option => option.value);
-  });
 
 
+  $('.chosen-container .chosen-results').addClass('use-custom-scrollbar');
   $('.chosen-container .chosen-choices').addClass('use-custom-scrollbar');
 
 

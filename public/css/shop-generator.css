@@ -4,6 +4,23 @@
   overflow: auto;
 }
 
+.chosen-container-single .chosen-single {
+  border-color: #3298dc;
+
+  height: 2.5em;
+  font-size: 15px;
+  padding-bottom: calc(0.5em - 1px);
+  padding-left: calc(1em + 8px);
+  padding-right: 1em;
+  padding-top: calc(0.5em - 1px);
+}
+.chosen-container-single .chosen-single div{
+  padding-top: calc(0.5em - 1px);
+}
+.chosen-container-single .chosen-drop {
+  text-align: left!important;
+}
+
 
 .irs--flat .irs-bar {
   background-color: #3298dc!important;
@@ -24,7 +41,7 @@
 #button-import-shop>input {
   display: none;
 }
-#button-import-shop:hover {
+#button-import-shop:hover:enabled {
   color: var(--text-txt-value-color);
 }
 

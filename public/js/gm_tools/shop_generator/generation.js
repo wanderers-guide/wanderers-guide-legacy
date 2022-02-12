@@ -149,8 +149,6 @@ function generateItems(){
 
   }
 
-  console.log(profileToItemMap);
-
 
 
 
@@ -234,8 +232,6 @@ function generateItems(){
       }
     }
 
-    console.log('Random trait: '+randTraitID);
-    console.log(pItemMap.size);
     if(pItemMap.size <= 0){
       continue;
     }
@@ -288,8 +284,6 @@ function generateItems(){
       }
     }
 
-    console.log('Random category: '+randCategoryID);
-    console.log(pItemMap.size);
     if(pItemMap.size <= 0){
       continue;
     }
@@ -356,8 +350,6 @@ function generateItems(){
       }
     }
 
-    console.log('Random weapon group (if any): '+randWeaponGroupID);
-    console.log(pItemMap.size);
     if(pItemMap.size <= 0){
       continue;
     }
@@ -392,8 +384,6 @@ function generateItems(){
       }
     }
 
-    console.log('Random rarity: '+randRarityID);
-    console.log(pItemMap.size);
     if(pItemMap.size <= 0){
       continue;
     }
@@ -411,8 +401,6 @@ function generateItems(){
     let indexRand = Math.floor(Math.random() * pItemMap.size);
     let randItem = cloneObj(Array.from(pItemMap.values())[indexRand]);
 
-    console.log(randItem);
-
     /// Determine quantity
 
     let randQuantity = null;
@@ -421,7 +409,6 @@ function generateItems(){
     } else {
       randQuantity = Math.floor(Math.random() * (profileData.quantity.permanent_max - profileData.quantity.permanent_min + 1) ) + profileData.quantity.permanent_min;
     }
-    console.log('Generated qty: '+randQuantity);
 
     let rarityAdjustment = (profileData.quantity.rarity_adjustment / 100);
 
@@ -435,12 +422,11 @@ function generateItems(){
     }
 
     randItem.Item.shop_quantity = randQuantity;
-    console.log('Final qty: '+randQuantity);
 
     /// Check if is formula
 
     let randItemID = null;
-    if(Math.floor(Math.random()*101) <= profileData.formula_chance){
+    if(randItem.Item.rarity != 'UNIQUE' && Math.floor(Math.random()*101) <= profileData.formula_chance){
       randItemID = randItem.Item.id+'_formula';
     } else {
       randItemID = randItem.Item.id+'';
@@ -527,6 +513,15 @@ function generateItems(){
 
   }
 
-  console.log(generatedItems);
+  // If didn't generate any items, display message
+  if(generatedItems.size <= 0){
+    $('#container-generated-inventory').append(`
+      <div class="columns is-marginless is-mobile has-bg-selectable">
+        <div class="column border-bottom border-dark-lighter p-2">
+          <span class="is-p">No items found. Try enabling some more books.</span>
+        </div>
+      </div>
+    `);
+  }
 
 }

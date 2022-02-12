@@ -1,0 +1,18 @@
+/* Copyright (C) 2021, Wanderer's Guide, all rights reserved.
+    By Aaron Cassar.
+*/
+
+$(function () {
+
+  $('.card-active').mouseenter(function(){
+    $(this).addClass('card-content-hover');
+  });
+  $('.card-active').mouseleave(function(){
+    $(this).removeClass('card-content-hover');
+  });
+
+  $('#card-shop-generator').click(function() {
+    window.location.href = '/gm-tools/shop-generator';
+  });
+
+});

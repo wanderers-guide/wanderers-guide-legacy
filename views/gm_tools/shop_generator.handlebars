@@ -4,11 +4,15 @@
     <link rel="stylesheet" href="/css/shop-generator.css">
     <link rel="stylesheet" href="/css/homebrew-builders.css">
 
-    <script type="text/javascript" src="/js/shop_generator/presets.js"></script>
-    <script type="text/javascript" src="/js/shop_generator/shop.js"></script>
-    <script type="text/javascript" src="/js/shop_generator/item-profiles.js"></script>
-    <script type="text/javascript" src="/js/shop_generator/generation.js"></script>
-    <script type="text/javascript" src="/js/shop_generator/ui-handler.js"></script>
+    <script type="text/javascript" src="/js/gm_tools/shop_generator/presets.js"></script>
+    <script type="text/javascript" src="/js/gm_tools/shop_generator/shop.js"></script>
+
+    {{#ifEqual user.isPatreonSupporter 1}}
+    <script type="text/javascript" src="/js/gm_tools/shop_generator/item-profiles.js"></script>
+    {{/ifEqual}}
+
+    <script type="text/javascript" src="/js/gm_tools/shop_generator/generation.js"></script>
+    <script type="text/javascript" src="/js/gm_tools/shop_generator/ui-handler.js"></script>
 
     <script src="/js/libraries/confirm_message/confirm-message.js"></script>
 
@@ -69,15 +73,19 @@
   <div class="box">
 
     <!-- Choose a Shop Section -->
-    <div id="section-shop-choose" class="">
+    <div id="section-shop-choose" class="pos-relative">
+
+      <span id="shop-gen-back-btn" class="pos-absolute pos-t-0 pos-l-0 icon is-large has-text-info cursor-clickable">
+        <i class="fas fa-2x fa-arrow-left"></i>
+      </span>
 
       <h1 class="title is-2 has-txt-value-string">Shop Generator</h1>
 
       <div class="columns is-mobile is-centered">
 
         <div class="column is-narrow">
-          <div class="select is-info">
-            <select id="shop-type">
+          <div class="">
+            <select id="shop-type" data-placeholder="Choose a Shop">
             </select>
           </div>
         </div>
@@ -86,16 +94,18 @@
           <p class="pt-2">or</p>
         </div>
         
-        <div class="column is-narrow">
+        <div class="column is-narrow {{#ifEqual user.isPatreonSupporter 0}}has-tooltip-bottom has-tooltip-multiline{{/ifEqual}}" {{#ifEqual user.isPatreonSupporter 0}}data-tooltip="Support us on Patreon to gain access to shop customization, importing / exporting, and homebrew integration!"{{/ifEqual}}>
 
-          <a id="button-import-shop" class="button is-info is-outlined">
+          <a id="button-import-shop" class="button is-info is-outlined" {{#ifEqual user.isPatreonSupporter 0}}disabled{{/ifEqual}}>
             <label for="input-import-shop" class="cursor-clickable m-0">
               <span class="is-p">Import</span>
               <span class="icon">
                 <i class="fas fa-upload"></i>
               </span>
             </label>
-            <input id="input-import-shop" type="file" accept=".guideshop"/>
+            {{#ifEqual user.isPatreonSupporter 1}}
+              <input id="input-import-shop" type="file" accept=".guideshop"/>
+            {{/ifEqual}}
           </a>
 
         </div>
@@ -113,18 +123,22 @@
 
       <div class="columns is-mobile is-centered">
 
-        <div class="column is-narrow">
-          <a id="customize-shop-btn" class="button is-info is-outlined">
+        <div class="column is-narrow {{#ifEqual user.isPatreonSupporter 0}}has-tooltip-bottom has-tooltip-multiline{{/ifEqual}}" {{#ifEqual user.isPatreonSupporter 0}}data-tooltip="Support us on Patreon to gain access to shop customization, importing / exporting, and homebrew integration!"{{/ifEqual}}>
+
+          <a id="customize-shop-btn" class="button is-info is-outlined" {{#ifEqual user.isPatreonSupporter 0}}disabled{{/ifEqual}}>
             <p>Customize</p>
             <span class="icon"><i class="fas fa-cog"></i></span>
           </a>
+
         </div>
         
-        <div class="column is-narrow">
-          <a id="export-shop-btn" class="button is-info is-outlined">
+        <div class="column is-narrow {{#ifEqual user.isPatreonSupporter 0}}has-tooltip-bottom has-tooltip-multiline{{/ifEqual}}" {{#ifEqual user.isPatreonSupporter 0}}data-tooltip="Support us on Patreon to gain access to shop customization, importing / exporting, and homebrew integration!"{{/ifEqual}}>
+
+          <a id="export-shop-btn" class="button is-info is-outlined" {{#ifEqual user.isPatreonSupporter 0}}disabled{{/ifEqual}}>
             <p>Export</p>
             <span class="icon"><i class="fas fa-download"></i></span>
           </a>
+
         </div>
 
       </div>
@@ -133,17 +147,19 @@
 
       <div class="columns is-centered">
 
-        <div class="column is-narrow has-text-left">
-          <label class="label">Books</label>
+        <div class="column is-narrow" style="text-align: left;">
+          <label class="label text-center">Books</label>
           <select id="input-books" data-placeholder="Select Books" multiple>
           </select>
         </div>
         
-        <div class="column is-narrow has-text-left">
-          <label class="label">Homebrew</label>
+        {{#ifEqual user.isPatreonSupporter 1}}
+        <div class="column is-narrow" style="text-align: left;">
+          <label class="label text-center">Homebrew</label>
           <select id="input-homebrew" data-placeholder="Select Bundles" multiple>
           </select>
         </div>
+        {{/ifEqual}}
 
       </div>
 
@@ -152,7 +168,7 @@
         <input type="text" id="inventory-size" value=""
           data-min="0"
           data-max="100"
-          data-from="25"
+          data-from="15"
           data-grid="true"
         />
       </div>
@@ -178,6 +194,7 @@
     </div>
 
     <!-- Customize Shop Section -->
+    {{#ifEqual user.isPatreonSupporter 1}}
     <div id="section-shop-customize" class="is-hidden pos-relative">
 
       <span id="customize-back-btn" class="pos-absolute pos-t-0 pos-l-0 icon is-large has-text-info cursor-clickable">
@@ -397,9 +414,9 @@
                 <input type="text" class="profile-qty-permanent-items" value=""
                   data-type="double"
                   data-min="1"
-                  data-max="100"
+                  data-max="50"
                   data-from="1"
-                  data-to="10"
+                  data-to="4"
                 />
               </div>
 
@@ -408,9 +425,9 @@
                 <input type="text" class="profile-qty-consumable-items" value=""
                   data-type="double"
                   data-min="1"
-                  data-max="300"
+                  data-max="100"
                   data-from="1"
-                  data-to="30"
+                  data-to="10"
                 />
               </div>
 
@@ -450,6 +467,7 @@
       </div>
 
     </div>
+    {{/ifEqual}}
 
   </div>
 
