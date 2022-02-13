@@ -1756,6 +1756,770 @@ g_shopPresets.set(7, {
   },
 });
 
+// Ammunition Shop
+g_shopPresets.set(-111, { name: 'Ammunition Shops'});
+g_shopPresets.set(50, {
+    name: 'Ammunition Shop (village, lvl 2)',
+    profiles: {
+        '1644486093903': {
+            name: 'Low-Level Consumables',
+            weight: 60,
+            level_min: 0,
+            level_max: 1,
+            traits: {},
+            categories: {
+                AMMUNITION: 50,
+                other: 0,
+            },
+            weapon_groups: {},
+            rarities: {
+                common: 81,
+                uncommon: 15,
+                rare: 3,
+                unique: 1,
+            },
+            quantity: {
+                permanent_min: 1,
+                permanent_max: 1,
+                consumable_min: 2,
+                consumable_max: 8,
+                rarity_adjustment: 100,
+            },
+            formula_chance: 25,
+        },
+        '1644486097846': {
+            name: 'High-Level Consumables',
+            weight: 36,
+            level_min: 2,
+            level_max: 2,
+            traits: {},
+            categories: {
+                AMMUNITION: 50,
+                other: 0,
+            },
+            weapon_groups: {},
+            rarities: {
+                common: 81,
+                uncommon: 15,
+                rare: 3,
+                unique: 1,
+            },
+            quantity: {
+                permanent_min: 1,
+                permanent_max: 1,
+                consumable_min: 1,
+                consumable_max: 4,
+                rarity_adjustment: 100,
+            },
+            formula_chance: 35,
+        },
+        '1644710934127': {
+            name: 'Ammo Weapons',
+            weight: 15,
+            level_min: 0,
+            level_max: 2,
+            traits: {
+                '41': 10,
+                other: 50,
+            },
+            categories: {
+                WEAPON: 50,
+                other: 0,
+            },
+            weapon_groups: {
+                BOW: 50,
+                CROSSBOW: 50,
+                DART: 26,
+                FIREARM: 50,
+                SLING: 24,
+                other: 0,
+            },
+            rarities: {
+                common: 81,
+                uncommon: 15,
+                rare: 3,
+                unique: 1,
+            },
+            quantity: {
+                permanent_min: 1,
+                permanent_max: 2,
+                consumable_min: 1,
+                consumable_max: 1,
+                rarity_adjustment: 50,
+            },
+            formula_chance: 0,
+        },
+    },
+});
+
+g_shopPresets.set(51, {
+    name: 'Ammunition Shop (town, lvl 4)',
+    profiles: {
+        '1644486093903': {
+            name: 'Low-Level Consumables',
+            weight: 60,
+            level_min: 0,
+            level_max: 2,
+            traits: {},
+            categories: {
+                AMMUNITION: 50,
+                other: 0,
+            },
+            weapon_groups: {},
+            rarities: {
+                common: 81,
+                uncommon: 15,
+                rare: 3,
+                unique: 1,
+            },
+            quantity: {
+                permanent_min: 1,
+                permanent_max: 1,
+                consumable_min: 4,
+                consumable_max: 15,
+                rarity_adjustment: 100,
+            },
+            formula_chance: 25,
+        },
+        '1644486097846': {
+            name: 'High-Level Consumables',
+            weight: 36,
+            level_min: 3,
+            level_max: 4,
+            traits: {},
+            categories: {
+                AMMUNITION: 50,
+                other: 0,
+            },
+            weapon_groups: {},
+            rarities: {
+                common: 81,
+                uncommon: 15,
+                rare: 3,
+                unique: 1,
+            },
+            quantity: {
+                permanent_min: 1,
+                permanent_max: 1,
+                consumable_min: 1,
+                consumable_max: 8,
+                rarity_adjustment: 100,
+            },
+            formula_chance: 35,
+        },
+        '1644710934127': {
+            name: 'Ammo Weapons',
+            weight: 15,
+            level_min: 0,
+            level_max: 4,
+            traits: {
+                '41': 10,
+                other: 50,
+            },
+            categories: {
+                WEAPON: 50,
+                other: 0,
+            },
+            weapon_groups: {
+                BOW: 50,
+                CROSSBOW: 50,
+                DART: 26,
+                FIREARM: 50,
+                SLING: 24,
+                other: 0,
+            },
+            rarities: {
+                common: 81,
+                uncommon: 15,
+                rare: 3,
+                unique: 1,
+            },
+            quantity: {
+                permanent_min: 1,
+                permanent_max: 2,
+                consumable_min: 1,
+                consumable_max: 1,
+                rarity_adjustment: 50,
+            },
+            formula_chance: 0,
+        },
+    },
+});
+
+g_shopPresets.set(52, {
+    name: 'Ammunition Shop (city, lvl 7)',
+    profiles: {
+        '1644486093903': {
+            name: 'Low-Level Consumables',
+            weight: 60,
+            level_min: 0,
+            level_max: 4,
+            traits: {},
+            categories: {
+                AMMUNITION: 50,
+                other: 0,
+            },
+            weapon_groups: {},
+            rarities: {
+                common: 81,
+                uncommon: 15,
+                rare: 3,
+                unique: 1,
+            },
+            quantity: {
+                permanent_min: 1,
+                permanent_max: 1,
+                consumable_min: 6,
+                consumable_max: 25,
+                rarity_adjustment: 100,
+            },
+            formula_chance: 25,
+        },
+        '1644486097846': {
+            name: 'High-Level Consumables',
+            weight: 36,
+            level_min: 5,
+            level_max: 7,
+            traits: {},
+            categories: {
+                AMMUNITION: 50,
+                other: 0,
+            },
+            weapon_groups: {},
+            rarities: {
+                common: 81,
+                uncommon: 15,
+                rare: 3,
+                unique: 1,
+            },
+            quantity: {
+                permanent_min: 1,
+                permanent_max: 1,
+                consumable_min: 1,
+                consumable_max: 12,
+                rarity_adjustment: 100,
+            },
+            formula_chance: 35,
+        },
+        '1644710934127': {
+            name: 'Ammo Weapons',
+            weight: 15,
+            level_min: 0,
+            level_max: 7,
+            traits: {
+                '41': 10,
+                other: 50,
+            },
+            categories: {
+                WEAPON: 50,
+                other: 0,
+            },
+            weapon_groups: {
+                BOW: 50,
+                CROSSBOW: 50,
+                DART: 26,
+                FIREARM: 50,
+                SLING: 24,
+                other: 0,
+            },
+            rarities: {
+                common: 81,
+                uncommon: 15,
+                rare: 3,
+                unique: 1,
+            },
+            quantity: {
+                permanent_min: 1,
+                permanent_max: 2,
+                consumable_min: 1,
+                consumable_max: 1,
+                rarity_adjustment: 50,
+            },
+            formula_chance: 0,
+        },
+    },
+});
+
+g_shopPresets.set(53, {
+    name: 'Ammunition Shop (metropolis, lvl 10)',
+    profiles: {
+        '1644486093903': {
+            name: 'Low-Level Consumables',
+            weight: 60,
+            level_min: 0,
+            level_max: 3,
+            traits: {},
+            categories: {
+                AMMUNITION: 50,
+                other: 0,
+            },
+            weapon_groups: {},
+            rarities: {
+                common: 81,
+                uncommon: 15,
+                rare: 3,
+                unique: 1,
+            },
+            quantity: {
+                permanent_min: 1,
+                permanent_max: 1,
+                consumable_min: 10,
+                consumable_max: 40,
+                rarity_adjustment: 100,
+            },
+            formula_chance: 25,
+        },
+        '1644486096631': {
+            name: 'Mid-Level Consumables',
+            weight: 36,
+            level_min: 4,
+            level_max: 7,
+            traits: {},
+            categories: {
+                AMMUNITION: 50,
+                other: 0,
+            },
+            weapon_groups: {},
+            rarities: {
+                common: 81,
+                uncommon: 15,
+                rare: 3,
+                unique: 1,
+            },
+            quantity: {
+                permanent_min: 1,
+                permanent_max: 1,
+                consumable_min: 6,
+                consumable_max: 24,
+                rarity_adjustment: 100,
+            },
+            formula_chance: 25,
+        },
+        '1644486097846': {
+            name: 'High-Level Consumables',
+            weight: 20,
+            level_min: 8,
+            level_max: 10,
+            traits: {},
+            categories: {
+                AMMUNITION: 50,
+                other: 0,
+            },
+            weapon_groups: {},
+            rarities: {
+                common: 81,
+                uncommon: 15,
+                rare: 3,
+                unique: 1,
+            },
+            quantity: {
+                permanent_min: 1,
+                permanent_max: 1,
+                consumable_min: 1,
+                consumable_max: 12,
+                rarity_adjustment: 100,
+            },
+            formula_chance: 35,
+        },
+        '1644710934127': {
+            name: 'Ammo Weapons',
+            weight: 15,
+            level_min: 0,
+            level_max: 10,
+            traits: {
+                '41': 10,
+                other: 50,
+            },
+            categories: {
+                WEAPON: 50,
+                other: 0,
+            },
+            weapon_groups: {
+                BOW: 50,
+                CROSSBOW: 50,
+                DART: 26,
+                FIREARM: 50,
+                SLING: 24,
+                other: 0,
+            },
+            rarities: {
+                common: 81,
+                uncommon: 15,
+                rare: 3,
+                unique: 1,
+            },
+            quantity: {
+                permanent_min: 1,
+                permanent_max: 2,
+                consumable_min: 1,
+                consumable_max: 1,
+                rarity_adjustment: 50,
+            },
+            formula_chance: 0,
+        },
+    },
+});
+
+g_shopPresets.set(54, {
+    name: 'Ammunition Shop (metropolis, lvl 13)',
+    profiles: {
+        '1644486093903': {
+            name: 'Low-Level Consumables',
+            weight: 60,
+            level_min: 0,
+            level_max: 4,
+            traits: {},
+            categories: {
+                AMMUNITION: 50,
+                other: 0,
+            },
+            weapon_groups: {},
+            rarities: {
+                common: 81,
+                uncommon: 15,
+                rare: 3,
+                unique: 1,
+            },
+            quantity: {
+                permanent_min: 1,
+                permanent_max: 1,
+                consumable_min: 15,
+                consumable_max: 50,
+                rarity_adjustment: 100,
+            },
+            formula_chance: 25,
+        },
+        '1644486096631': {
+            name: 'Mid-Level Consumables',
+            weight: 36,
+            level_min: 5,
+            level_max: 9,
+            traits: {},
+            categories: {
+                AMMUNITION: 50,
+                other: 0,
+            },
+            weapon_groups: {},
+            rarities: {
+                common: 81,
+                uncommon: 15,
+                rare: 3,
+                unique: 1,
+            },
+            quantity: {
+                permanent_min: 1,
+                permanent_max: 1,
+                consumable_min: 8,
+                consumable_max: 27,
+                rarity_adjustment: 100,
+            },
+            formula_chance: 25,
+        },
+        '1644486097846': {
+            name: 'High-Level Consumables',
+            weight: 20,
+            level_min: 10,
+            level_max: 13,
+            traits: {},
+            categories: {
+                AMMUNITION: 50,
+                other: 0,
+            },
+            weapon_groups: {},
+            rarities: {
+                common: 81,
+                uncommon: 15,
+                rare: 3,
+                unique: 1,
+            },
+            quantity: {
+                permanent_min: 1,
+                permanent_max: 1,
+                consumable_min: 1,
+                consumable_max: 12,
+                rarity_adjustment: 100,
+            },
+            formula_chance: 35,
+        },
+        '1644710934127': {
+            name: 'Ammo Weapons',
+            weight: 15,
+            level_min: 0,
+            level_max: 13,
+            traits: {
+                '41': 10,
+                other: 50,
+            },
+            categories: {
+                WEAPON: 50,
+                other: 0,
+            },
+            weapon_groups: {
+                BOW: 50,
+                CROSSBOW: 50,
+                DART: 26,
+                FIREARM: 50,
+                SLING: 24,
+                other: 0,
+            },
+            rarities: {
+                common: 81,
+                uncommon: 15,
+                rare: 3,
+                unique: 1,
+            },
+            quantity: {
+                permanent_min: 1,
+                permanent_max: 2,
+                consumable_min: 1,
+                consumable_max: 1,
+                rarity_adjustment: 50,
+            },
+            formula_chance: 0,
+        },
+    },
+});
+
+g_shopPresets.set(55, {
+    name: 'Ammunition Shop (metropolis, lvl 16)',
+    profiles: {
+        '1644486093903': {
+            name: 'Low-Level Consumables',
+            weight: 60,
+            level_min: 0,
+            level_max: 5,
+            traits: {},
+            categories: {
+                AMMUNITION: 50,
+                other: 0,
+            },
+            weapon_groups: {},
+            rarities: {
+                common: 81,
+                uncommon: 15,
+                rare: 3,
+                unique: 1,
+            },
+            quantity: {
+                permanent_min: 1,
+                permanent_max: 1,
+                consumable_min: 15,
+                consumable_max: 60,
+                rarity_adjustment: 100,
+            },
+            formula_chance: 25,
+        },
+        '1644486096631': {
+            name: 'Mid-Level Consumables',
+            weight: 36,
+            level_min: 6,
+            level_max: 11,
+            traits: {},
+            categories: {
+                AMMUNITION: 50,
+                other: 0,
+            },
+            weapon_groups: {},
+            rarities: {
+                common: 81,
+                uncommon: 15,
+                rare: 3,
+                unique: 1,
+            },
+            quantity: {
+                permanent_min: 1,
+                permanent_max: 1,
+                consumable_min: 10,
+                consumable_max: 30,
+                rarity_adjustment: 100,
+            },
+            formula_chance: 25,
+        },
+        '1644486097846': {
+            name: 'High-Level Consumables',
+            weight: 20,
+            level_min: 12,
+            level_max: 16,
+            traits: {},
+            categories: {
+                AMMUNITION: 50,
+                other: 0,
+            },
+            weapon_groups: {},
+            rarities: {
+                common: 81,
+                uncommon: 15,
+                rare: 3,
+                unique: 1,
+            },
+            quantity: {
+                permanent_min: 1,
+                permanent_max: 1,
+                consumable_min: 1,
+                consumable_max: 13,
+                rarity_adjustment: 100,
+            },
+            formula_chance: 35,
+        },
+        '1644710934127': {
+            name: 'Ammo Weapons',
+            weight: 15,
+            level_min: 0,
+            level_max: 16,
+            traits: {
+                '41': 10,
+                other: 50,
+            },
+            categories: {
+                WEAPON: 50,
+                other: 0,
+            },
+            weapon_groups: {
+                BOW: 50,
+                CROSSBOW: 50,
+                DART: 26,
+                FIREARM: 50,
+                SLING: 24,
+                other: 0,
+            },
+            rarities: {
+                common: 81,
+                uncommon: 15,
+                rare: 3,
+                unique: 1,
+            },
+            quantity: {
+                permanent_min: 1,
+                permanent_max: 2,
+                consumable_min: 1,
+                consumable_max: 1,
+                rarity_adjustment: 50,
+            },
+            formula_chance: 0,
+        },
+    },
+});
+
+g_shopPresets.set(56, {
+    name: 'Ammunition Shop (metropolis, lvl 20)',
+    profiles: {
+        '1644486093903': {
+            name: 'Low-Level Consumables',
+            weight: 60,
+            level_min: 0,
+            level_max: 7,
+            traits: {},
+            categories: {
+                AMMUNITION: 50,
+                other: 0,
+            },
+            weapon_groups: {},
+            rarities: {
+                common: 81,
+                uncommon: 15,
+                rare: 3,
+                unique: 1,
+            },
+            quantity: {
+                permanent_min: 1,
+                permanent_max: 1,
+                consumable_min: 15,
+                consumable_max: 70,
+                rarity_adjustment: 100,
+            },
+            formula_chance: 25,
+        },
+        '1644486096631': {
+            name: 'Mid-Level Consumables',
+            weight: 36,
+            level_min: 8,
+            level_max: 14,
+            traits: {},
+            categories: {
+                AMMUNITION: 50,
+                other: 0,
+            },
+            weapon_groups: {},
+            rarities: {
+                common: 81,
+                uncommon: 15,
+                rare: 3,
+                unique: 1,
+            },
+            quantity: {
+                permanent_min: 1,
+                permanent_max: 1,
+                consumable_min: 10,
+                consumable_max: 35,
+                rarity_adjustment: 100,
+            },
+            formula_chance: 25,
+        },
+        '1644486097846': {
+            name: 'High-Level Consumables',
+            weight: 20,
+            level_min: 15,
+            level_max: 20,
+            traits: {},
+            categories: {
+                AMMUNITION: 50,
+                other: 0,
+            },
+            weapon_groups: {},
+            rarities: {
+                common: 81,
+                uncommon: 15,
+                rare: 3,
+                unique: 1,
+            },
+            quantity: {
+                permanent_min: 1,
+                permanent_max: 1,
+                consumable_min: 1,
+                consumable_max: 15,
+                rarity_adjustment: 100,
+            },
+            formula_chance: 35,
+        },
+        '1644710934127': {
+            name: 'Ammo Weapons',
+            weight: 15,
+            level_min: 0,
+            level_max: 20,
+            traits: {
+                '41': 10,
+                other: 50,
+            },
+            categories: {
+                WEAPON: 50,
+                other: 0,
+            },
+            weapon_groups: {
+                BOW: 50,
+                CROSSBOW: 50,
+                DART: 26,
+                FIREARM: 50,
+                SLING: 24,
+                other: 0,
+            },
+            rarities: {
+                common: 81,
+                uncommon: 15,
+                rare: 3,
+                unique: 1,
+            },
+            quantity: {
+                permanent_min: 1,
+                permanent_max: 2,
+                consumable_min: 1,
+                consumable_max: 1,
+                rarity_adjustment: 50,
+            },
+            formula_chance: 0,
+        },
+    },
+});
+
 // Gadget Shop
 g_shopPresets.set(-101, { name: 'Gadget Shops'});
 g_shopPresets.set(8, {
@@ -2515,6 +3279,327 @@ g_shopPresets.set(15, {
 
 g_shopPresets.set(-109, { name: 'Miscellaneous'});
 
+// Jeweller
+g_shopPresets.set(46, {
+  name: 'Jeweller (town, lvl 4)',
+  profiles: {
+      '1644523135230': {
+          name: 'Low-Level Jewellery',
+          weight: 100,
+          level_min: 0,
+          level_max: 2,
+          traits: {
+              '2': 5,
+              '41': 48,
+              '265': 5,
+              '304': 5,
+              '500': 5,
+              other: 0,
+          },
+          categories: {
+              CIRCLET: 35,
+              EYEPIECE: 35,
+              NECKLACE: 50,
+              RING: 50,
+              SPELLHEART: 35,
+              other: 0,
+          },
+          weapon_groups: {},
+          rarities: {
+              common: 81,
+              uncommon: 15,
+              rare: 1,
+              unique: 1,
+          },
+          quantity: {
+              permanent_min: 1,
+              permanent_max: 3,
+              consumable_min: 1,
+              consumable_max: 1,
+              rarity_adjustment: 100,
+          },
+          formula_chance: 0,
+      },
+      '1644523784432': {
+          name: 'High-Level Jewellery',
+          weight: 50,
+          level_min: 3,
+          level_max: 4,
+          traits: {
+              '2': 5,
+              '41': 48,
+              '265': 5,
+              '304': 5,
+              '500': 5,
+              other: 0,
+          },
+          categories: {
+              CIRCLET: 35,
+              EYEPIECE: 35,
+              NECKLACE: 50,
+              RING: 50,
+              SPELLHEART: 35,
+              other: 0,
+          },
+          weapon_groups: {},
+          rarities: {
+              common: 81,
+              uncommon: 15,
+              rare: 1,
+              unique: 1,
+          },
+          quantity: {
+              permanent_min: 1,
+              permanent_max: 2,
+              consumable_min: 1,
+              consumable_max: 1,
+              rarity_adjustment: 100,
+          },
+          formula_chance: 0,
+      },
+  },
+});
+
+g_shopPresets.set(47, {
+  name: 'Jeweller (city, lvl 7)',
+  profiles: {
+      '1644523135230': {
+          name: 'Low-Level Jewellery',
+          weight: 100,
+          level_min: 0,
+          level_max: 4,
+          traits: {
+              '2': 5,
+              '41': 48,
+              '265': 5,
+              '304': 5,
+              '500': 5,
+              other: 0,
+          },
+          categories: {
+              CIRCLET: 35,
+              EYEPIECE: 35,
+              NECKLACE: 50,
+              RING: 50,
+              SPELLHEART: 35,
+              other: 0,
+          },
+          weapon_groups: {},
+          rarities: {
+              common: 81,
+              uncommon: 15,
+              rare: 1,
+              unique: 1,
+          },
+          quantity: {
+              permanent_min: 1,
+              permanent_max: 4,
+              consumable_min: 1,
+              consumable_max: 1,
+              rarity_adjustment: 100,
+          },
+          formula_chance: 0,
+      },
+      '1644523784432': {
+          name: 'High-Level Jewellery',
+          weight: 50,
+          level_min: 5,
+          level_max: 7,
+          traits: {
+              '2': 5,
+              '41': 48,
+              '265': 5,
+              '304': 5,
+              '500': 5,
+              other: 0,
+          },
+          categories: {
+              CIRCLET: 35,
+              EYEPIECE: 35,
+              NECKLACE: 50,
+              RING: 50,
+              SPELLHEART: 35,
+              other: 0,
+          },
+          weapon_groups: {},
+          rarities: {
+              common: 81,
+              uncommon: 15,
+              rare: 1,
+              unique: 1,
+          },
+          quantity: {
+              permanent_min: 1,
+              permanent_max: 2,
+              consumable_min: 1,
+              consumable_max: 1,
+              rarity_adjustment: 100,
+          },
+          formula_chance: 0,
+      },
+  },
+});
+
+g_shopPresets.set(48, {
+  name: 'Jeweller (metropolis, lvl 13)',
+  profiles: {
+      '1644523135230': {
+          name: 'Low-Level Jewellery',
+          weight: 100,
+          level_min: 0,
+          level_max: 7,
+          traits: {
+              '2': 5,
+              '41': 48,
+              '265': 5,
+              '304': 5,
+              '500': 5,
+              other: 0,
+          },
+          categories: {
+              CIRCLET: 35,
+              EYEPIECE: 35,
+              NECKLACE: 50,
+              RING: 50,
+              SPELLHEART: 35,
+              other: 0,
+          },
+          weapon_groups: {},
+          rarities: {
+              common: 81,
+              uncommon: 15,
+              rare: 1,
+              unique: 1,
+          },
+          quantity: {
+              permanent_min: 2,
+              permanent_max: 6,
+              consumable_min: 1,
+              consumable_max: 1,
+              rarity_adjustment: 100,
+          },
+          formula_chance: 0,
+      },
+      '1644523784432': {
+          name: 'High-Level Jewellery',
+          weight: 50,
+          level_min: 8,
+          level_max: 13,
+          traits: {
+              '2': 5,
+              '41': 48,
+              '265': 5,
+              '304': 5,
+              '500': 5,
+              other: 0,
+          },
+          categories: {
+              CIRCLET: 35,
+              EYEPIECE: 35,
+              NECKLACE: 50,
+              RING: 50,
+              SPELLHEART: 35,
+              other: 0,
+          },
+          weapon_groups: {},
+          rarities: {
+              common: 81,
+              uncommon: 15,
+              rare: 1,
+              unique: 1,
+          },
+          quantity: {
+              permanent_min: 1,
+              permanent_max: 3,
+              consumable_min: 1,
+              consumable_max: 1,
+              rarity_adjustment: 100,
+          },
+          formula_chance: 0,
+      },
+  },
+});
+
+g_shopPresets.set(49, {
+  name: 'Jeweller (metropolis, lvl 20)',
+  profiles: {
+      '1644523135230': {
+          name: 'Low-Level Jewellery',
+          weight: 100,
+          level_min: 0,
+          level_max: 10,
+          traits: {
+              '2': 5,
+              '41': 48,
+              '265': 5,
+              '304': 5,
+              '500': 5,
+              other: 0,
+          },
+          categories: {
+              CIRCLET: 35,
+              EYEPIECE: 35,
+              NECKLACE: 50,
+              RING: 50,
+              SPELLHEART: 35,
+              other: 0,
+          },
+          weapon_groups: {},
+          rarities: {
+              common: 81,
+              uncommon: 15,
+              rare: 1,
+              unique: 1,
+          },
+          quantity: {
+              permanent_min: 2,
+              permanent_max: 6,
+              consumable_min: 1,
+              consumable_max: 1,
+              rarity_adjustment: 100,
+          },
+          formula_chance: 0,
+      },
+      '1644523784432': {
+          name: 'High-Level Jewellery',
+          weight: 50,
+          level_min: 11,
+          level_max: 20,
+          traits: {
+              '2': 5,
+              '41': 48,
+              '265': 5,
+              '304': 5,
+              '500': 5,
+              other: 0,
+          },
+          categories: {
+              CIRCLET: 35,
+              EYEPIECE: 35,
+              NECKLACE: 50,
+              RING: 50,
+              SPELLHEART: 35,
+              other: 0,
+          },
+          weapon_groups: {},
+          rarities: {
+              common: 81,
+              uncommon: 15,
+              rare: 1,
+              unique: 1,
+          },
+          quantity: {
+              permanent_min: 1,
+              permanent_max: 3,
+              consumable_min: 1,
+              consumable_max: 1,
+              rarity_adjustment: 100,
+          },
+          formula_chance: 0,
+      },
+  },
+});
+
 // Lost Goods
 g_shopPresets.set(32, {
   name: 'Lost Goods (town, lvl 4)',
@@ -2909,82 +3994,381 @@ g_shopPresets.set(20, {
 });
 
 g_shopPresets.set(21, {
-    name: 'Magical Tailor (metropolis, lvl 20)',
-    profiles: {
-        '1644523135230': {
-            name: 'Low-Level Clothing',
-            weight: 100,
-            level_min: 1,
-            level_max: 10,
-            traits: {
-                '2': 5,
-                '41': 48,
-                '265': 5,
-                '304': 5,
-                '500': 5,
-                other: 0,
-            },
-            categories: {
-                BOOTS: 15,
-                CLOAK: 50,
-                GLOVES: 15,
-                BELT: 15,
-                HAT: 38,
-                other: 0,
-            },
-            weapon_groups: {},
-            rarities: {
-                common: 81,
-                uncommon: 15,
-                rare: 1,
-                unique: 1,
-            },
-            quantity: {
-                permanent_min: 2,
-                permanent_max: 6,
-                consumable_min: 1,
-                consumable_max: 10,
-                rarity_adjustment: 100,
-            },
-            formula_chance: 0,
-        },
-        '1644523784432': {
-            name: 'High-Level Clothing',
-            weight: 50,
-            level_min: 11,
-            level_max: 20,
-            traits: {
-                '2': 5,
-                '41': 48,
-                '265': 5,
-                '304': 5,
-                '500': 5,
-                other: 0,
-            },
-            categories: {
-                BOOTS: 15,
-                CLOAK: 50,
-                GLOVES: 15,
-                HAT: 38,
-                other: 0,
-            },
-            weapon_groups: {},
-            rarities: {
-                common: 81,
-                uncommon: 15,
-                rare: 1,
-                unique: 1,
-            },
-            quantity: {
-                permanent_min: 1,
-                permanent_max: 3,
-                consumable_min: 1,
-                consumable_max: 10,
-                rarity_adjustment: 100,
-            },
-            formula_chance: 0,
-        },
-    },
+  name: 'Magical Tailor (metropolis, lvl 20)',
+  profiles: {
+      '1644523135230': {
+          name: 'Low-Level Clothing',
+          weight: 100,
+          level_min: 1,
+          level_max: 10,
+          traits: {
+              '2': 5,
+              '41': 48,
+              '265': 5,
+              '304': 5,
+              '500': 5,
+              other: 0,
+          },
+          categories: {
+              BOOTS: 15,
+              CLOAK: 50,
+              GLOVES: 15,
+              BELT: 15,
+              HAT: 38,
+              other: 0,
+          },
+          weapon_groups: {},
+          rarities: {
+              common: 81,
+              uncommon: 15,
+              rare: 1,
+              unique: 1,
+          },
+          quantity: {
+              permanent_min: 2,
+              permanent_max: 6,
+              consumable_min: 1,
+              consumable_max: 10,
+              rarity_adjustment: 100,
+          },
+          formula_chance: 0,
+      },
+      '1644523784432': {
+          name: 'High-Level Clothing',
+          weight: 50,
+          level_min: 11,
+          level_max: 20,
+          traits: {
+              '2': 5,
+              '41': 48,
+              '265': 5,
+              '304': 5,
+              '500': 5,
+              other: 0,
+          },
+          categories: {
+              BOOTS: 15,
+              CLOAK: 50,
+              GLOVES: 15,
+              HAT: 38,
+              other: 0,
+          },
+          weapon_groups: {},
+          rarities: {
+              common: 81,
+              uncommon: 15,
+              rare: 1,
+              unique: 1,
+          },
+          quantity: {
+              permanent_min: 1,
+              permanent_max: 3,
+              consumable_min: 1,
+              consumable_max: 10,
+              rarity_adjustment: 100,
+          },
+          formula_chance: 0,
+      },
+  },
+});
+
+// Potion Shop
+g_shopPresets.set(42, {
+  name: 'Potion Shop (town, lvl 4)',
+  profiles: {
+      '1644523135230': {
+          name: 'Low-Level Items',
+          weight: 100,
+          level_min: 0,
+          level_max: 2,
+          traits: {
+              '2': 5,
+              '41': 48,
+              '265': 5,
+              '304': 5,
+              '500': 5,
+              other: 0,
+          },
+          categories: {
+              OIL: 20,
+              POTION: 50,
+              other: 0,
+          },
+          weapon_groups: {},
+          rarities: {
+              common: 81,
+              uncommon: 15,
+              rare: 3,
+              unique: 1,
+          },
+          quantity: {
+              permanent_min: 1,
+              permanent_max: 1,
+              consumable_min: 1,
+              consumable_max: 8,
+              rarity_adjustment: 100,
+          },
+          formula_chance: 15,
+      },
+      '1644523784432': {
+          name: 'High-Level Items',
+          weight: 50,
+          level_min: 3,
+          level_max: 4,
+          traits: {
+              '2': 5,
+              '41': 48,
+              '265': 5,
+              '304': 5,
+              '500': 5,
+              other: 0,
+          },
+          categories: {
+              OIL: 20,
+              POTION: 50,
+              other: 0,
+          },
+          weapon_groups: {},
+          rarities: {
+              common: 81,
+              uncommon: 15,
+              rare: 3,
+              unique: 1,
+          },
+          quantity: {
+              permanent_min: 1,
+              permanent_max: 1,
+              consumable_min: 1,
+              consumable_max: 4,
+              rarity_adjustment: 100,
+          },
+          formula_chance: 15,
+      },
+  },
+});
+
+g_shopPresets.set(43, {
+  name: 'Potion Shop (city, lvl 7)',
+  profiles: {
+      '1644523135230': {
+          name: 'Low-Level Items',
+          weight: 100,
+          level_min: 0,
+          level_max: 4,
+          traits: {
+              '2': 5,
+              '41': 48,
+              '265': 5,
+              '304': 5,
+              '500': 5,
+              other: 0,
+          },
+          categories: {
+              OIL: 20,
+              POTION: 50,
+              other: 0,
+          },
+          weapon_groups: {},
+          rarities: {
+              common: 81,
+              uncommon: 15,
+              rare: 3,
+              unique: 1,
+          },
+          quantity: {
+              permanent_min: 1,
+              permanent_max: 1,
+              consumable_min: 4,
+              consumable_max: 20,
+              rarity_adjustment: 100,
+          },
+          formula_chance: 15,
+      },
+      '1644523784432': {
+          name: 'High-Level Items',
+          weight: 50,
+          level_min: 5,
+          level_max: 7,
+          traits: {
+              '2': 5,
+              '41': 48,
+              '265': 5,
+              '304': 5,
+              '500': 5,
+              other: 0,
+          },
+          categories: {
+              OIL: 20,
+              POTION: 50,
+              other: 0,
+          },
+          weapon_groups: {},
+          rarities: {
+              common: 81,
+              uncommon: 15,
+              rare: 3,
+              unique: 1,
+          },
+          quantity: {
+              permanent_min: 1,
+              permanent_max: 1,
+              consumable_min: 1,
+              consumable_max: 6,
+              rarity_adjustment: 100,
+          },
+          formula_chance: 15,
+      },
+  },
+});
+
+g_shopPresets.set(44, {
+  name: 'Potion Shop (metropolis, lvl 13)',
+  profiles: {
+      '1644523135230': {
+          name: 'Low-Level Items',
+          weight: 100,
+          level_min: 0,
+          level_max: 7,
+          traits: {
+              '2': 5,
+              '41': 48,
+              '265': 5,
+              '304': 5,
+              '500': 5,
+              other: 0,
+          },
+          categories: {
+              OIL: 20,
+              POTION: 50,
+              other: 0,
+          },
+          weapon_groups: {},
+          rarities: {
+              common: 81,
+              uncommon: 15,
+              rare: 3,
+              unique: 1,
+          },
+          quantity: {
+              permanent_min: 1,
+              permanent_max: 1,
+              consumable_min: 6,
+              consumable_max: 35,
+              rarity_adjustment: 100,
+          },
+          formula_chance: 15,
+      },
+      '1644523784432': {
+          name: 'High-Level Items',
+          weight: 50,
+          level_min: 8,
+          level_max: 13,
+          traits: {
+              '2': 5,
+              '41': 48,
+              '265': 5,
+              '304': 5,
+              '500': 5,
+              other: 0,
+          },
+          categories: {
+              ELIXIR: 2,
+              OIL: 20,
+              POTION: 50,
+              other: 0,
+          },
+          weapon_groups: {},
+          rarities: {
+              common: 81,
+              uncommon: 15,
+              rare: 3,
+              unique: 1,
+          },
+          quantity: {
+              permanent_min: 1,
+              permanent_max: 1,
+              consumable_min: 1,
+              consumable_max: 12,
+              rarity_adjustment: 100,
+          },
+          formula_chance: 15,
+      },
+  },
+});
+
+g_shopPresets.set(45, {
+  name: 'Potion Shop (metropolis, lvl 20)',
+  profiles: {
+      '1644523135230': {
+          name: 'Low-Level Items',
+          weight: 100,
+          level_min: 0,
+          level_max: 10,
+          traits: {
+              '2': 5,
+              '41': 48,
+              '265': 5,
+              '304': 5,
+              '500': 5,
+              other: 0,
+          },
+          categories: {
+              OIL: 20,
+              POTION: 50,
+              other: 0,
+          },
+          weapon_groups: {},
+          rarities: {
+              common: 81,
+              uncommon: 15,
+              rare: 3,
+              unique: 1,
+          },
+          quantity: {
+              permanent_min: 1,
+              permanent_max: 1,
+              consumable_min: 10,
+              consumable_max: 50,
+              rarity_adjustment: 100,
+          },
+          formula_chance: 15,
+      },
+      '1644523784432': {
+          name: 'High-Level Items',
+          weight: 50,
+          level_min: 11,
+          level_max: 20,
+          traits: {
+              '2': 5,
+              '41': 48,
+              '265': 5,
+              '304': 5,
+              '500': 5,
+              other: 0,
+          },
+          categories: {
+              ELIXIR: 2,
+              OIL: 20,
+              POTION: 50,
+              other: 0,
+          },
+          weapon_groups: {},
+          rarities: {
+              common: 81,
+              uncommon: 15,
+              rare: 3,
+              unique: 1,
+          },
+          quantity: {
+              permanent_min: 1,
+              permanent_max: 1,
+              consumable_min: 1,
+              consumable_max: 15,
+              rarity_adjustment: 100,
+          },
+          formula_chance: 15,
+      },
+  },
 });
 
 // Raw Materials
@@ -3140,27 +4524,19 @@ g_shopPresets.set(31, {
     },
 });
 
-
-
 /*
 
-g_shopPresets.set(-111, { name: ''});
+g_shopPresets.set(57, );
 
-g_shopPresets.set(42, );
+g_shopPresets.set(58, );
 
-g_shopPresets.set(43, );
+g_shopPresets.set(59, );
 
-g_shopPresets.set(44, );
+g_shopPresets.set(60, );
 
-g_shopPresets.set(45, );
+g_shopPresets.set(61, );
 
-g_shopPresets.set(46, );
-
-g_shopPresets.set(47, );
-
-g_shopPresets.set(48, );
-
-g_shopPresets.set(49, );
-
-g_shopPresets.set(50, );
+g_shopPresets.set(62, );
 */
+
+// g_shopPresets.set(-112, { name: ''});

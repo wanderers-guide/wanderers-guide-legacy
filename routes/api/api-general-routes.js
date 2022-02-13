@@ -26,24 +26,38 @@ function mapToObj(strMap) {
   return obj;
 }
 
-function getModelByNameOrID(ModelType, name, id){
+function getModelByNameOrID(ModelType, name, id, hasHomebrewID=true){
   if(id != null){
-    return ModelType.findOne({ where: { id: id } })
-    .then((model) => {
-      return model;
-    });
+    if(hasHomebrewID){
+      return ModelType.findOne({ where: { id: id, homebrewID: null, } })
+      .then((model) => {
+        return model;
+      });
+    } else {
+      return ModelType.findOne({ where: { id: id, } })
+      .then((model) => {
+        return model;
+      });
+    }
   } else {
     name = name.replace(/’/g,"'");
-    return ModelType.findOne({ where: { name: name } })
-    .then((model) => {
-      return model;
-    });
+    if(hasHomebrewID){
+      return ModelType.findOne({ where: { name: name, homebrewID: null, } })
+      .then((model) => {
+        return model;
+      });
+    } else {
+      return ModelType.findOne({ where: { name: name, } })
+      .then((model) => {
+        return model;
+      });
+    }
   }
 }
 
 router.get('/char', (req, res) => {
   if(req.query.name != null || req.query.id != null){
-    getModelByNameOrID(Character, req.query.name, req.query.id).then((character) => {
+    getModelByNameOrID(Character, req.query.name, req.query.id, false).then((character) => {
       if(character != null){
         res.send({ id: character.id, name: character.name });
       } else {
@@ -278,7 +292,7 @@ router.get('/trait/all', (req, res) => {
 
 router.get('/condition', (req, res) => {
   if(req.query.name != null || req.query.id != null){    
-    getModelByNameOrID(Condition, req.query.name, req.query.id).then((condition) => {
+    getModelByNameOrID(Condition, req.query.name, req.query.id, false).then((condition) => {
       if(condition != null){
         GeneralGathering.getCondition(-1, condition.id).then((conditionData) => {
           res.send(conditionData);

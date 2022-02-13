@@ -22,8 +22,12 @@
     <li class="mx-lg-4 mx-md-3 my-md-0 my-2"><a href="/homebrew">Homebrew</a></li>
 {{/section}}
 
+{{#section 'nav_gm_tools'}}
+    <li><a href="/gm-tools" class="active">GM Tools</a></li>
+{{/section}}
+
 {{#section 'nav_browse'}}
-    <li class="mr-lg-4 mr-md-3"><a href="/browse"><i class="fas fa-lg fa-search"></i></a></li>
+    <li class="mx-lg-4 mx-md-3 my-md-0 my-2"><a href="/browse"><i class="fas fa-lg fa-search"></i></a></li>
 {{/section}}
 
 {{#section 'nav_login'}}
@@ -48,15 +52,42 @@
       
       
       <div class="columns is-centered is-multiline m-2">
+        
           <div id="card-shop-generator" class="column is-4 card is-unselectable card-active m-2 cursor-clickable">
             <div class="card-content pt-2">
               <a>
                 <p class="is-size-5 has-txt-value-number">Shop Generator</p>
-                <p class="is-size-7 pb-1">Choose from one of the 20+ shop presets and generate a shop inventory on the fly!</p>
+                <p class="is-size-7 pb-1">Choose from one of the 50+ shop presets and generate a shop inventory on the fly!</p>
                 <p class="is-size-7">Patrons also gain access to shop customization, importing / exporting, and homebrew integration.</p>
               </a>
             </div>
           </div>
+
+          <div id="card-discord-bot" class="column is-4 card m-2">
+            <div class="card-content pt-2">
+              <div>
+                <p class="is-size-5 has-txt-value-number">Discord Bot</p>
+                <p class="is-size-7">A bot for fetching content from Wanderer's Guide via API and properly displaying / formatting it within Discord.</p>
+
+                <div class="field is-grouped is-grouped-centered pt-3">
+                  <div class="control">
+                    <a class="button is-small is-info is-outlined is-rounded" href="https://discord.com/oauth2/authorize?client_id=354022489245876224&permissions=2147551296&scope=bot" target="_blank">
+                      <span>Invite</span>
+                      <span class="icon"><i class="fab fa-discord"></i></span>
+                    </a>
+                  </div>
+                  <div class="control">
+                    <a class="button is-small is-info is-outlined is-rounded" href="https://github.com/Quzzar/WG-Bot" target="_blank">
+                      <span>Github</span>
+                      <span class="icon"><i class="fab fa-github"></i></span>
+                    </a>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
           <div id="card-campaigns" class="column is-4 card is-unselectable m-2 cursor-clickable has-bg-selectable">
             <div class="card-content pt-2">
               <a>
@@ -66,6 +97,7 @@
               </a>
             </div>
           </div>
+
           <div id="card-encounter-builder" class="column is-4 card is-unselectable  m-2 cursor-clickable has-bg-selectable">
             <div class="card-content pt-2">
               <a>
@@ -75,6 +107,7 @@
               </a>
             </div>
           </div>
+
       </div>
 
 
