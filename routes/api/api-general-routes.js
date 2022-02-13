@@ -72,6 +72,9 @@ router.get('/char', (req, res) => {
 
 router.get('/item', (req, res) => {
   if(req.query.name != null || req.query.id != null){
+    if(req.query.name != null){
+      req.query.name = req.query.name.replace(/[\(\)]/g,'');
+    }
     getModelByNameOrID(Item, req.query.name, req.query.id).then((item) => {
       if(item != null){
         GeneralGathering.getItem(-1, item.id).then((itemData) => {

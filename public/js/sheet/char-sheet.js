@@ -147,7 +147,7 @@ $(function () {
         $('#sheet-container').addClass('is-hidden');
         stopDiceLoader();
       }
-    }, 60000); // 60 seconds
+    }, 90000); // 90 seconds
 
     // Remove Footer //
     $('#wanderers-guide-footer').addClass('is-hidden');
