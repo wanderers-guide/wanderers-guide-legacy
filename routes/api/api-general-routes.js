@@ -1,5 +1,6 @@
 
 const router = require('express').Router();
+const { Op } = require("sequelize");
 
 const Character = require('../../models/contentDB/Character');
 const Item = require('../../models/contentDB/Item');
@@ -26,7 +27,7 @@ function mapToObj(strMap) {
   return obj;
 }
 
-function getModelByNameOrID(ModelType, name, id, hasHomebrewID=true){
+function getModelByNameOrID(ModelType, name, id, hasHomebrewID=true, nameLike=false){
   if(id != null){
     if(hasHomebrewID){
       return ModelType.findOne({ where: { id: id, homebrewID: null, } })
@@ -42,15 +43,35 @@ function getModelByNameOrID(ModelType, name, id, hasHomebrewID=true){
   } else {
     name = name.replace(/’/g,"'");
     if(hasHomebrewID){
-      return ModelType.findOne({ where: { name: name, homebrewID: null, } })
-      .then((model) => {
-        return model;
-      });
+
+      if(nameLike){
+        name = `%${name.replace(/ /g, '% %').trim()}%`;
+        return ModelType.findOne({ where: { name: {[Op.like]: name}, homebrewID: null, } })
+        .then((model) => {
+          return model;
+        });
+      } else {
+        return ModelType.findOne({ where: { name: name, homebrewID: null, } })
+        .then((model) => {
+          return model;
+        });
+      }
+
     } else {
-      return ModelType.findOne({ where: { name: name, } })
-      .then((model) => {
-        return model;
-      });
+
+      if(nameLike){
+        name = `%${name.replace(/ /g, '% %').trim()}%`;
+        return ModelType.findOne({ where: { name: {[Op.like]: name} } })
+        .then((model) => {
+          return model;
+        });
+      } else {
+        return ModelType.findOne({ where: { name: name, } })
+        .then((model) => {
+          return model;
+        });
+      }
+      
     }
   }
 }
@@ -72,10 +93,7 @@ router.get('/char', (req, res) => {
 
 router.get('/item', (req, res) => {
   if(req.query.name != null || req.query.id != null){
-    if(req.query.name != null){
-      req.query.name = req.query.name.replace(/[\(\)]/g,'');
-    }
-    getModelByNameOrID(Item, req.query.name, req.query.id).then((item) => {
+    getModelByNameOrID(Item, req.query.name, req.query.id, true, true).then((item) => {
       if(item != null){
         GeneralGathering.getItem(-1, item.id).then((itemData) => {
           res.send(itemData);
