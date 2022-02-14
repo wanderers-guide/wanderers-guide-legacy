@@ -3,36 +3,30 @@ const router = require('express').Router();
 
 router.get('/', (req, res) => {
 
-  let user = null;
-  if(req.user == null){
-    user = {
-      isPatreonSupporter: 0,
-    };
-  } else {
-    user = req.user;
+  let isPatreonSupporter = 0;
+  if(req.user != null){
+    isPatreonSupporter = req.user.isPatreonSupporter;
   }
 
   res.render('gm_tools/gm_tools', {
     title: "GM Tools - Wanderer's Guide",
-    user: user,
+    user: req.user,
+    isPatreonSupporter,
   });
 
 });
 
 router.get('/shop-generator', (req, res) => {
 
-  let user = null;
-  if(req.user == null){
-    user = {
-      isPatreonSupporter: 0,
-    };
-  } else {
-    user = req.user;
+  let isPatreonSupporter = 0;
+  if(req.user != null){
+    isPatreonSupporter = req.user.isPatreonSupporter;
   }
 
   res.render('gm_tools/shop_generator', {
     title: "Shop Generator - Wanderer's Guide",
-    user: user,
+    user: req.user,
+    isPatreonSupporter,
   });
 
 });

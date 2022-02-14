@@ -7,7 +7,7 @@
     <script type="text/javascript" src="/js/gm_tools/shop_generator/presets.js"></script>
     <script type="text/javascript" src="/js/gm_tools/shop_generator/shop.js"></script>
 
-    {{#ifEqual user.isPatreonSupporter 1}}
+    {{#ifEqual isPatreonSupporter 1}}
     <script type="text/javascript" src="/js/gm_tools/shop_generator/item-profiles.js"></script>
     {{/ifEqual}}
 
@@ -98,16 +98,16 @@
           <p class="pt-2">or</p>
         </div>
         
-        <div class="column is-narrow {{#ifEqual user.isPatreonSupporter 0}}has-tooltip-bottom has-tooltip-multiline{{/ifEqual}}" {{#ifEqual user.isPatreonSupporter 0}}data-tooltip="Support us on Patreon to gain access to shop customization, importing / exporting, and homebrew integration!"{{/ifEqual}}>
+        <div class="column is-narrow {{#ifEqual isPatreonSupporter 0}}has-tooltip-bottom has-tooltip-multiline{{/ifEqual}}" {{#ifEqual isPatreonSupporter 0}}data-tooltip="Support us on Patreon to gain access to shop customization, importing / exporting, and homebrew integration!"{{/ifEqual}}>
 
-          <a id="button-import-shop" class="button is-info is-outlined" {{#ifEqual user.isPatreonSupporter 0}}disabled{{/ifEqual}}>
+          <a id="button-import-shop" class="button is-info is-outlined" {{#ifEqual isPatreonSupporter 0}}disabled{{/ifEqual}}>
             <label for="input-import-shop" class="cursor-clickable m-0">
               <span class="is-p">Import</span>
               <span class="icon">
                 <i class="fas fa-upload"></i>
               </span>
             </label>
-            {{#ifEqual user.isPatreonSupporter 1}}
+            {{#ifEqual isPatreonSupporter 1}}
               <input id="input-import-shop" type="file" accept=".guideshop"/>
             {{/ifEqual}}
           </a>
@@ -127,18 +127,18 @@
 
       <div class="columns is-mobile is-centered">
 
-        <div class="column is-narrow {{#ifEqual user.isPatreonSupporter 0}}has-tooltip-bottom has-tooltip-multiline{{/ifEqual}}" {{#ifEqual user.isPatreonSupporter 0}}data-tooltip="Support us on Patreon to gain access to shop customization, importing / exporting, and homebrew integration!"{{/ifEqual}}>
+        <div class="column is-narrow {{#ifEqual isPatreonSupporter 0}}has-tooltip-bottom has-tooltip-multiline{{/ifEqual}}" {{#ifEqual isPatreonSupporter 0}}data-tooltip="Support us on Patreon to gain access to shop customization, importing / exporting, and homebrew integration!"{{/ifEqual}}>
 
-          <a id="customize-shop-btn" class="button is-info is-outlined" {{#ifEqual user.isPatreonSupporter 0}}disabled{{/ifEqual}}>
+          <a id="customize-shop-btn" class="button is-info is-outlined" {{#ifEqual isPatreonSupporter 0}}disabled{{/ifEqual}}>
             <p>Customize</p>
             <span class="icon"><i class="fas fa-cog"></i></span>
           </a>
 
         </div>
         
-        <div class="column is-narrow {{#ifEqual user.isPatreonSupporter 0}}has-tooltip-bottom has-tooltip-multiline{{/ifEqual}}" {{#ifEqual user.isPatreonSupporter 0}}data-tooltip="Support us on Patreon to gain access to shop customization, importing / exporting, and homebrew integration!"{{/ifEqual}}>
+        <div class="column is-narrow {{#ifEqual isPatreonSupporter 0}}has-tooltip-bottom has-tooltip-multiline{{/ifEqual}}" {{#ifEqual isPatreonSupporter 0}}data-tooltip="Support us on Patreon to gain access to shop customization, importing / exporting, and homebrew integration!"{{/ifEqual}}>
 
-          <a id="export-shop-btn" class="button is-info is-outlined" {{#ifEqual user.isPatreonSupporter 0}}disabled{{/ifEqual}}>
+          <a id="export-shop-btn" class="button is-info is-outlined" {{#ifEqual isPatreonSupporter 0}}disabled{{/ifEqual}}>
             <p>Export</p>
             <span class="icon"><i class="fas fa-download"></i></span>
           </a>
@@ -157,7 +157,7 @@
           </select>
         </div>
         
-        {{#ifEqual user.isPatreonSupporter 1}}
+        {{#ifEqual isPatreonSupporter 1}}
         <div class="column is-narrow" style="text-align: left;">
           <label class="label text-center">Homebrew</label>
           <select id="input-homebrew" data-placeholder="Select Bundles" multiple>
@@ -198,7 +198,7 @@
     </div>
 
     <!-- Customize Shop Section -->
-    {{#ifEqual user.isPatreonSupporter 1}}
+    {{#ifEqual isPatreonSupporter 1}}
     <div id="section-shop-customize" class="is-hidden pos-relative">
 
       <span id="customize-back-btn" class="pos-absolute pos-t-0 pos-l-0 icon is-large has-text-info cursor-clickable">
