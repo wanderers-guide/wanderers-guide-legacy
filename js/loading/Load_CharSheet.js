@@ -147,6 +147,6 @@ module.exports = async function(socket, charID, character) {
 
   console.log('~ COMPLETE SHEET LOAD! ~');
 
-  return charInfo;
+  return JSON.stringify(charInfo);
 
 };

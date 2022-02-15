@@ -160,7 +160,11 @@ $(function () {
 });
 
 
-socket.on("returnCharacterSheetInfo", function(charInfo, userPermissions, viewOnly){
+socket.on("returnCharacterSheetInfo", function(charInfoJSON, userPermissions, viewOnly){
+    console.log('~ Loaded Char Sheet Info ~');
+
+    let charInfo = JSON.parse(charInfoJSON);
+
     isViewOnly = viewOnly;
     setDiceLoaderPercentage(85);
 

@@ -106,8 +106,8 @@ if (process.env.PRODUCTION == 'true'){
 
 // Socket IO
 const io = socket(server, {
-  maxHttpBufferSize: 10e8, // 10 mb
-  pingTimeout: 15000, // 15 sec
+  maxHttpBufferSize: 15e8, // 15 mb
+  pingTimeout: 60000, // 60 sec
 });
 
 io.use(function(socket, next) {
