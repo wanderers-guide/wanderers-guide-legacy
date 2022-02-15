@@ -82,14 +82,14 @@ module.exports = class SocketConnections {
         AuthCheck.getPermissions(userID).then((perms) => {
           AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
             if(ownsChar){
-              CharSheetLoad(socket, charID).then((charInfo) => {
-                socket.emit('returnCharacterSheetInfo', charInfo, perms, false);
+              CharSheetLoad(socket, charID).then((charInfoJSON) => {
+                socket.emit('returnCharacterSheetInfo', charInfoJSON, perms, false);
               });
             } else {
               CharGathering.getCharacter(userID, charID).then((character) => {
                 if(CharStateUtils.isPublic(character)){
-                  CharSheetLoad(socket, charID, character).then((charInfo) => {
-                    socket.emit('returnCharacterSheetInfo', charInfo, perms, true);
+                  CharSheetLoad(socket, charID, character).then((charInfoJSON) => {
+                    socket.emit('returnCharacterSheetInfo', charInfoJSON, perms, true);
                   });
                 } else {
                   socket.emit('returnErrorMessage', 'Incorrect Auth - No access to this character.');

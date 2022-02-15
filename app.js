@@ -107,7 +107,8 @@ if (process.env.PRODUCTION == 'true'){
 // Socket IO
 const io = socket(server, {
   maxHttpBufferSize: 15e8, // 15 mb
-  pingTimeout: 60000, // 60 sec
+  pingTimeout: 60000, // 60 sec (should be above 30k to fix disconnection issues on Safari)
+  upgradeTimeout: 30000, // 20k or more
 });
 
 io.use(function(socket, next) {
