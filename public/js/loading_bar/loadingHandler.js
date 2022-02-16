@@ -16,12 +16,16 @@ function startDiceLoader(){
 
   socket.off("updateLoadProgess");
   socket.on("updateLoadProgess", function(data){
-
-    $('.ldBar-message').text(data.message+'...');
-    setDiceLoaderPercentage(g_diceLoaderPercentage+data.upVal);
-
+    updateDiceLoader(data.message, data.upVal);
   });
 
+  simulateDiceLoading();
+
+}
+
+function updateDiceLoader(message, upVal){
+  $('.ldBar-message').text(message+'...');
+  setDiceLoaderPercentage(g_diceLoaderPercentage+upVal);
 }
 
 function setDiceLoaderPercentage(percentage){
@@ -35,6 +39,7 @@ function getDiceLoaderPercentage(){
 }
 
 function stopDiceLoader(){
+  updateDiceLoader('Finalizing', 100);
   $('.dice-pageloader').addClass("fadeout");
   $('html').removeClass('is-clipped');
 }
@@ -68,4 +73,69 @@ function stopSpinnerSubLoader(loaderClass=null){
       $('.subpageloader').addClass('is-hidden');
     }
   }, 500);// After 1/2 second
+}
+
+
+/* ------ Fake - Increase Diceloader Percentage Overtime ------ */
+// With switching away from sockets for large loads, it makes getting realtime load progress updates far more difficult. As a result, the loading state will now have to be fake updates for the time being :(
+function simulateDiceLoading(){
+
+  let randNum = function(min, max) {
+    return Math.random() * (max - min) + min;
+  };
+
+  updateDiceLoader('Opening Books', 2);
+
+  setTimeout(function(){
+    if(g_diceLoaderPercentage >= 100){ return; }
+    updateDiceLoader('Gathering Skills', 2);
+
+    setTimeout(function(){
+      if(g_diceLoaderPercentage >= 100){ return; }
+      updateDiceLoader('Indexing Traits', 5);
+
+      setTimeout(function(){
+        if(g_diceLoaderPercentage >= 100){ return; }
+        updateDiceLoader('Understanding Feats', 23);
+
+        setTimeout(function(){
+          if(g_diceLoaderPercentage >= 100){ return; }
+          updateDiceLoader('Bartering for Items', 20);
+
+          setTimeout(function(){
+            if(g_diceLoaderPercentage >= 100){ return; }
+            updateDiceLoader('Discovering Spells', 15);
+
+            setTimeout(function(){
+              if(g_diceLoaderPercentage >= 100){ return; }
+              updateDiceLoader('Determining Skills', 6);
+
+              setTimeout(function(){
+                if(g_diceLoaderPercentage >= 100){ return; }
+                updateDiceLoader('Finding Languages', 3);
+
+                setTimeout(function(){
+                  if(g_diceLoaderPercentage >= 100){ return; }
+                  updateDiceLoader('Finding Conditions', 14);
+  
+                  setTimeout(function(){
+                    updateDiceLoader('Finalizing', 100);
+                  }, 300*randNum(0.5, 2));
+  
+                }, 300*randNum(0.5, 2));
+
+              }, 300*randNum(0.5, 2));
+
+            }, 800*randNum(0.5, 2));
+
+          }, 800*randNum(0.5, 2));
+
+        }, 1000*randNum(0.5, 2));
+
+      }, 800*randNum(0.5, 2));
+
+    }, 100*randNum(0.5, 2));
+
+  }, 500*randNum(0.5, 2));
+
 }

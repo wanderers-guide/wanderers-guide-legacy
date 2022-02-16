@@ -118,7 +118,7 @@ const authCheck = (req, res, next) => {
       if(isValid){
         next();
       } else {
-        // For one reason or another, incorrect API requests will come back to this point.
+        // Incorrect API requests will come back to this point.
         // For that reason, we return 400 rather than 401 here.
         res.sendStatus(400);
       }

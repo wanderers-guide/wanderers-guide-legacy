@@ -21,6 +21,7 @@ const adminRoutes = require('./routes/admin-routes');
 const apiRoutes = require('./routes/api-routes');
 const browseRoutes = require('./routes/browse-routes');
 const profileRoutes = require('./routes/profile-routes');
+const mloadsRoutes = require('./routes/mloads/mloads-routes');
 const coreRoutes = require('./routes/core-routes');
 const errorRoutes = require('./routes/error-routes');
 
@@ -161,6 +162,7 @@ app.use('/profile', profileRoutes);
 app.use('/admin', adminRoutes);
 app.use('/api', apiRoutes);
 app.use('/browse', browseRoutes);
+app.use('/mloads', mloadsRoutes);
 app.use('/', coreRoutes);
 app.use('*', errorRoutes); // 404 Route
 

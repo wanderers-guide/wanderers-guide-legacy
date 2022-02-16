@@ -153,20 +153,19 @@ $(function () {
     $('#wanderers-guide-footer').addClass('is-hidden');
     $('#main-container').addClass('is-paddingless');
 
-    socket.emit("requestCharacterSheetInfo",
-        getCharIDFromURL());
+
+    $.get('/mloads/char-sheet/?char_id='+getCharIDFromURL()).done(function(data){
+      initCharSheet(data.charInfo, data.userPermissions, data.viewOnly);
+    });
 
     startDiceLoader();
 });
 
 
-socket.on("returnCharacterSheetInfo", function(charInfoJSON, userPermissions, viewOnly){
+function initCharSheet(charInfo, userPermissions, viewOnly){
     console.log('~ Loaded Char Sheet Info ~');
 
-    let charInfo = JSON.parse(charInfoJSON);
-
     isViewOnly = viewOnly;
-    setDiceLoaderPercentage(85);
 
     // View Only //
     if(isViewOnly){
@@ -413,7 +412,7 @@ socket.on("returnCharacterSheetInfo", function(charInfoJSON, userPermissions, vi
     // Turn off page loading
     stopDiceLoader();
     isSheetInit = true;
-});
+}
 
 function loadCharSheet(){
 

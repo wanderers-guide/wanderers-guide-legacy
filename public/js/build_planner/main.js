@@ -36,7 +36,11 @@ $(function () {
   }
 
   startDiceLoader();
-  socket.emit("requestPlannerCore", g_char_id, g_build_id);
+  $.get(`/mloads/char-builder/?char_id=${g_char_id}&build_id=${g_build_id}`).done(function(data){
+    stopDiceLoader();
+    g_buildInfo = data.buildInfo;
+    mainLoaded(data.coreStruct.plannerStruct, data.coreStruct.choiceStruct);
+  });
 
   // Create the container for each level
   $(`#creation-section`).html(`
@@ -79,12 +83,6 @@ $(function () {
     `);
   }
 
-});
-
-socket.on("returnPlannerCore", function(coreStruct, buildInfo) {
-  stopDiceLoader();
-  g_buildInfo = buildInfo;
-  mainLoaded(coreStruct.plannerStruct, coreStruct.choiceStruct);
 });
 
 

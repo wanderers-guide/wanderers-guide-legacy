@@ -22,68 +22,59 @@ function mapToObj(strMap) {
   return obj;
 }
 
-// Returns UserID or -1 if not logged in.
-function getUserID(socket){
-  if(socket.request.session.passport != null){
-      return socket.request.session.passport.user;
-  } else {
-      return -1;
-  }
-}
-
-module.exports = async function(socket) {
+module.exports = async function(userID) {
 
   console.log('~ STARTING PLANNER-CORE LOAD ~');
 
-  socket.emit('updateLoadProgess', { message: 'Gathering Skills', upVal: 5 }); // (5/100) //
-  const skillObject = await GeneralGathering.getAllSkills(getUserID(socket));
+  // socket.emit('updateLoadProgess', { message: 'Gathering Skills', upVal: 5 }); // (5/100) //
+  const skillObject = await GeneralGathering.getAllSkills(userID);
 
-  socket.emit('updateLoadProgess', { message: 'Understanding Feats', upVal: 20 }); // (25/100) //
-  const featsObject = await GeneralGathering.getAllFeats(getUserID(socket));
+  // socket.emit('updateLoadProgess', { message: 'Understanding Feats', upVal: 20 }); // (25/100) //
+  const featsObject = await GeneralGathering.getAllFeats(userID);
 
-  socket.emit('updateLoadProgess', { message: 'Bartering for Items', upVal: 10 }); // (35/100) //
-  const itemMap = await GeneralGathering.getAllItems(getUserID(socket));
+  // socket.emit('updateLoadProgess', { message: 'Bartering for Items', upVal: 10 }); // (35/100) //
+  const itemMap = await GeneralGathering.getAllItems(userID);
 
-  socket.emit('updateLoadProgess', { message: 'Discovering Spells', upVal: 10 }); // (45/100) //
-  const spellMap = await GeneralGathering.getAllSpells(getUserID(socket));
+  // socket.emit('updateLoadProgess', { message: 'Discovering Spells', upVal: 10 }); // (45/100) //
+  const spellMap = await GeneralGathering.getAllSpells(userID);
 
-  socket.emit('updateLoadProgess', { message: 'Finding Languages', upVal: 5 }); // (50/100) //
-  const allLanguages = await GeneralGathering.getAllLanguages(getUserID(socket));
+  // socket.emit('updateLoadProgess', { message: 'Finding Languages', upVal: 5 }); // (50/100) //
+  const allLanguages = await GeneralGathering.getAllLanguages(userID);
 
-  socket.emit('updateLoadProgess', { message: 'Finding Conditions', upVal: 5 }); // (55/100) //
-  const allConditions = await GeneralGathering.getAllConditions(getUserID(socket));
+  // socket.emit('updateLoadProgess', { message: 'Finding Conditions', upVal: 5 }); // (55/100) //
+  const allConditions = await GeneralGathering.getAllConditions(userID);
 
-  socket.emit('updateLoadProgess', { message: 'Indexing Traits', upVal: 5 }); // (60/100) //
-  const allTags = await GeneralGathering.getAllTags(getUserID(socket));
+  // socket.emit('updateLoadProgess', { message: 'Indexing Traits', upVal: 5 }); // (60/100) //
+  const allTags = await GeneralGathering.getAllTags(userID);
 
-  socket.emit('updateLoadProgess', { message: 'Loading Classes', upVal: 10 }); // (70/100) //
-  const classes = await GeneralGathering.getAllClasses(getUserID(socket));
+  // socket.emit('updateLoadProgess', { message: 'Loading Classes', upVal: 10 }); // (70/100) //
+  const classes = await GeneralGathering.getAllClasses(userID);
 
-  socket.emit('updateLoadProgess', { message: 'Loading Ancestries', upVal: 10 }); // (80/100) //
-  const ancestries = await GeneralGathering.getAllAncestries(getUserID(socket));
+  // socket.emit('updateLoadProgess', { message: 'Loading Ancestries', upVal: 10 }); // (80/100) //
+  const ancestries = await GeneralGathering.getAllAncestries(userID);
 
-  socket.emit('updateLoadProgess', { message: 'Loading Backgrounds', upVal: 5 }); // (85/100) //
-  const backgrounds = await GeneralGathering.getAllBackgrounds(getUserID(socket));
+  // socket.emit('updateLoadProgess', { message: 'Loading Backgrounds', upVal: 5 }); // (85/100) //
+  const backgrounds = await GeneralGathering.getAllBackgrounds(userID);
 
-  socket.emit('updateLoadProgess', { message: 'Loading Archetypes', upVal: 5 }); // (90/100) //
-  const archetypes = await GeneralGathering.getAllArchetypes(getUserID(socket));
+  // socket.emit('updateLoadProgess', { message: 'Loading Archetypes', upVal: 5 }); // (90/100) //
+  const archetypes = await GeneralGathering.getAllArchetypes(userID);
 
-  socket.emit('updateLoadProgess', { message: 'Loading Heritages', upVal: 5 }); // (95/100) //
-  const uniHeritages = await GeneralGathering.getAllUniHeritages(getUserID(socket));
+  // socket.emit('updateLoadProgess', { message: 'Loading Heritages', upVal: 5 }); // (95/100) //
+  const uniHeritages = await GeneralGathering.getAllUniHeritages(userID);
 
-  socket.emit('updateLoadProgess', { message: 'Loading Physical Features', upVal: 0 }); // (95/100) //
+  // socket.emit('updateLoadProgess', { message: 'Loading Physical Features', upVal: 0 }); // (95/100) //
   const allPhyFeats = await Prisma.physicalFeatures.findMany();
 
-  socket.emit('updateLoadProgess', { message: 'Loading Senses', upVal: 0 }); // (95/100) //
+  // socket.emit('updateLoadProgess', { message: 'Loading Senses', upVal: 0 }); // (95/100) //
   const allSenses = await Prisma.senseTypes.findMany();
 
-  //socket.emit('updateLoadProgess', { message: 'Discovering Domains', upVal: 0 }); // (95/100) //
-  //const allDomains = await CharGathering.getAllDomains(getUserID(socket), character.enabledSources, character.enabledHomebrew);
+  //// socket.emit('updateLoadProgess', { message: 'Discovering Domains', upVal: 0 }); // (95/100) //
+  //const allDomains = await CharGathering.getAllDomains(userID, character.enabledSources, character.enabledHomebrew);
   
-  //socket.emit('updateLoadProgess', { message: 'Finding Class Archetypes', upVal: 3 }); // (86/100) //
-  //const classArchetypes = await CharGathering.getAllClassArchetypes(getUserID(socket), character.enabledSources, character.enabledHomebrew);
+  //// socket.emit('updateLoadProgess', { message: 'Finding Class Archetypes', upVal: 3 }); // (86/100) //
+  //const classArchetypes = await CharGathering.getAllClassArchetypes(userID, character.enabledSources, character.enabledHomebrew);
 
-  socket.emit('updateLoadProgess', { message: 'Finalizing', upVal: 10 }); // (105/100) //
+  // socket.emit('updateLoadProgess', { message: 'Finalizing', upVal: 10 }); // (105/100) //
   const plannerStruct = {
     featsObject,
     skillObject,
@@ -104,17 +95,17 @@ module.exports = async function(socket) {
 
   console.log('Starting char data...');
   let charID = 60423;
-  return CharGathering.getCharacter(getUserID(socket), charID)
+  return CharGathering.getCharacter(userID, charID)
     .then((character) => {
       return Inventory.findOne({ where: { id: character.inventoryID} })
       .then((inventory) => {
         return InvItem.findAll({ where: { invID: inventory.id} })
         .then((invItems) => {
-          return CharGathering.getAllMetadata(getUserID(socket), charID)
+          return CharGathering.getAllMetadata(userID, charID)
           .then((charMetaData) => {
-            return CharGathering.getCharAnimalCompanions(getUserID(socket), charID)
+            return CharGathering.getCharAnimalCompanions(userID, charID)
             .then((charAnimalCompanions) => {
-              return CharGathering.getCharFamiliars(getUserID(socket), charID)
+              return CharGathering.getCharFamiliars(userID, charID)
               .then((charFamiliars) => {
                 return CharCondition.findAll({ where: { charID: charID} })
                 .then((charConditions) => {

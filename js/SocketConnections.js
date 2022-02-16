@@ -21,12 +21,13 @@ const UserHomebrew = require('./UserHomebrew');
 const BuildsGathering = require('./BuildsGathering');
 const BuildsSaving = require('./BuildsSaving');
 
-const CharSheetLoad = require('./loading/Load_CharSheet');
-const CharChoicesLoad = require('./loading/Load_CharChoices');
-const BuilderCoreLoad = require('./loading/Load_BuilderCore');
-const SearchLoad = require('./loading/Load_Search');
-const PlannerCoreLoad = require('./loading/Load_PlannerCore');
-const NewBuilderCoreLoad = require('./loading/Load_NewBuilderCore');
+/* Using MLoads instead */
+//const CharSheetLoad = require('./loading/Load_CharSheet');
+//const CharChoicesLoad = require('./loading/Load_CharChoices');
+//const BuilderCoreLoad = require('./loading/Load_BuilderCore');
+//const SearchLoad = require('./loading/Load_Search');
+//const PlannerCoreLoad = require('./loading/Load_PlannerCore');
+//const NewBuilderCoreLoad = require('./loading/Load_NewBuilderCore');
 
 const { Prisma, MemCache } = require('./PrismaConnection');
 
@@ -78,6 +79,7 @@ module.exports = class SocketConnections {
     io.on('connection', function(socket){
       const userID = getUserID(socket);
 
+      /* Using MLoads instead
       socket.on('requestCharacterSheetInfo', function(charID){
         AuthCheck.getPermissions(userID).then((perms) => {
           AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
@@ -99,6 +101,7 @@ module.exports = class SocketConnections {
           });
         });
       });
+      */
 
       socket.on('requestProfsAndSkills', function(charID){
         AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
@@ -1023,6 +1026,7 @@ module.exports = class SocketConnections {
     io.on('connection', function(socket){
       const userID = getUserID(socket);
 
+      /*
       socket.on('requestCharBuilderDetails', function(charID){
         AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
@@ -1036,6 +1040,7 @@ module.exports = class SocketConnections {
           }
         });
       });
+      */
 
       socket.on('requestUnselectedDataChange', function(charID, srcStruct, unselectedData, deleteOnly=true){
         AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
@@ -1921,6 +1926,7 @@ module.exports = class SocketConnections {
         });
       });
 
+      /*
       socket.on('requestWSCChoices', function(charID, wscCode, srcStruct, locationID){
         AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
@@ -1930,6 +1936,7 @@ module.exports = class SocketConnections {
           }
         });
       });
+      */
 
 
       socket.on('requestWSCMapsInit', function(charID){
@@ -2759,6 +2766,7 @@ module.exports = class SocketConnections {
     io.on('connection', function(socket){
       const userID = getUserID(socket);
 
+      /* Using MLoads instead
       socket.on('requestBrowse', function(){
         AuthCheck.isDeveloper(userID).then((isDeveloper) => {
           SearchLoad(socket).then((searchStruct) => {
@@ -2766,6 +2774,7 @@ module.exports = class SocketConnections {
           });
         });
       });
+      */
 
       /// General Gathering ///
 
@@ -2898,6 +2907,8 @@ module.exports = class SocketConnections {
     io.on('connection', function(socket){
       const userID = getUserID(socket);
 
+      /* Using MLoads instead
+        Security vulnerability with this code, use MLoads code instead
       socket.on('requestPlannerCore', function(charID, buildID){
 
         // If in Character Builder or Builder Creator mode
@@ -2926,6 +2937,7 @@ module.exports = class SocketConnections {
 
         }
       });
+      */
 
       socket.on('requestCreateCharacterFromBuild', function(buildID){
         User.findOne({ where: { id: userID } })

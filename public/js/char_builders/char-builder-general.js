@@ -37,7 +37,8 @@ let g_rawMetaData = null;
 $(function () {
 
   startDiceLoader();
-  socket.emit("requestCharBuilderDetails", getCharIDFromURL());
+  // Using an MLoad instead here
+  //socket.emit("requestCharBuilderDetails", getCharIDFromURL());
 
 });
 

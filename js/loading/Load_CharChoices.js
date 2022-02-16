@@ -24,37 +24,28 @@ function mapToObj(strMap) {
   return obj;
 }
 
-// Returns UserID or -1 if not logged in.
-function getUserID(socket){
-  if(socket.request.session.passport != null){
-      return socket.request.session.passport.user;
-  } else {
-      return -1;
-  }
-}
-
-module.exports = async function(socket, charID, character=null, background=null, ancestry=null, heritage=null, ancestries=null, charTagsArray=null, classDetails=null, featDataArray=null, bonusDataArray=null, choiceDataArray=null, profDataArray=null, innateSpellDataArray=null, langDataArray=null, senseDataArray=null, phyFeatDataArray=null, loreDataArray=null, scfsDataArray=null, focusPointDataArray=null, profMap=null, domains=null, domainDataArray=null, advancedDomainDataArray=null, extraClassFeatures=null, heritageEffectsArray=null) {
+module.exports = async function(userID, charID, character=null, background=null, ancestry=null, heritage=null, ancestries=null, charTagsArray=null, classDetails=null, featDataArray=null, bonusDataArray=null, choiceDataArray=null, profDataArray=null, innateSpellDataArray=null, langDataArray=null, senseDataArray=null, phyFeatDataArray=null, loreDataArray=null, scfsDataArray=null, focusPointDataArray=null, profMap=null, domains=null, domainDataArray=null, advancedDomainDataArray=null, extraClassFeatures=null, heritageEffectsArray=null) {
 
   console.log('~ STARTING CHAR-CHOICES LOAD ~');
 
   if(character==null){
-    character = await CharGathering.getCharacter(getUserID(socket), charID);
+    character = await CharGathering.getCharacter(userID, charID);
   }
 
   if(background==null){
-    background = await CharGathering.getBackground(getUserID(socket), charID, character);
+    background = await CharGathering.getBackground(userID, charID, character);
   }
 
   if(ancestry==null){
-    ancestry = await CharGathering.getAncestry(getUserID(socket), charID, character);
+    ancestry = await CharGathering.getAncestry(userID, charID, character);
   }
 
   if(heritage==null){
-    heritage = await CharGathering.getHeritage(getUserID(socket), charID, character);
+    heritage = await CharGathering.getHeritage(userID, charID, character);
   }
 
   if(ancestries==null){
-    ancestries = await CharGathering.getAllAncestriesBasic(getUserID(socket), character.enabledSources, character.enabledHomebrew);
+    ancestries = await CharGathering.getAllAncestriesBasic(userID, character.enabledSources, character.enabledHomebrew);
   }
 
   if(charTagsArray==null){
@@ -62,15 +53,15 @@ module.exports = async function(socket, charID, character=null, background=null,
   }
 
   if(classDetails==null){
-    classDetails = await CharGathering.getClass(getUserID(socket), charID, character.classID, character.enabledSources, character.enabledHomebrew);
+    classDetails = await CharGathering.getClass(userID, charID, character.classID, character.enabledSources, character.enabledHomebrew);
   }
 
   if(featDataArray==null){
-    featDataArray = await CharGathering.getChoicesFeats(getUserID(socket), charID);
+    featDataArray = await CharGathering.getChoicesFeats(userID, charID);
   }
 
   if(bonusDataArray==null){
-    bonusDataArray = await CharGathering.getChoicesAbilityBonus(getUserID(socket), charID);
+    bonusDataArray = await CharGathering.getChoicesAbilityBonus(userID, charID);
   }
 
   if(choiceDataArray==null){
@@ -110,15 +101,15 @@ module.exports = async function(socket, charID, character=null, background=null,
   }
 
   if(profMap==null){
-    profMap = await CharGathering.getProfs(getUserID(socket), charID);
+    profMap = await CharGathering.getProfs(userID, charID);
   }
 
   if(domains==null){
-    domains = await CharGathering.getAllDomains(getUserID(socket), character.enabledSources, character.enabledHomebrew);
+    domains = await CharGathering.getAllDomains(userID, character.enabledSources, character.enabledHomebrew);
   }
 
   if(domainDataArray==null){
-    domainDataArray = await CharGathering.getChoicesDomains(getUserID(socket), charID);
+    domainDataArray = await CharGathering.getChoicesDomains(userID, charID);
   }
 
   if(advancedDomainDataArray==null){
@@ -126,14 +117,14 @@ module.exports = async function(socket, charID, character=null, background=null,
   }
 
   if(extraClassFeatures==null){
-    extraClassFeatures = await CharGathering.getAllExtraClassFeatures(getUserID(socket), charID);
+    extraClassFeatures = await CharGathering.getAllExtraClassFeatures(userID, charID);
   }
 
   if(heritageEffectsArray==null){
     heritageEffectsArray = await CharDataMapping.getDataAll(charID,"heritageExtra",Heritage);
   }
 
-  const classArchetypeID = await CharGathering.getClassArchetypeID(getUserID(socket), charID);
+  const classArchetypeID = await CharGathering.getClassArchetypeID(userID, charID);
 
 
   let choiceStruct = {
