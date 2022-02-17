@@ -1,4 +1,4 @@
-![Wanderer's Guide](https://wanderersguide.app/images/logo.png "Wanderer's Guide logo")
+![[Wanderer's Guide](https://wanderersguide.app/)](https://wanderersguide.app/images/logo.png "Wanderer's Guide logo")
 
 ## Table of contents
 - [Table of contents](#table-of-contents)
