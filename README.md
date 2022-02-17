@@ -1,10 +1,10 @@
-![[Wanderer's Guide](https://wanderersguide.app/)](https://wanderersguide.app/images/logo.png "Wanderer's Guide logo")
+![Wanderer's Guide](https://wanderersguide.app/images/logo.png "Wanderer's Guide logo")
 
-## Table of contents
-- [Table of contents](#table-of-contents)
+## Table of Contents
+- [Table of Contents](#table-of-contents)
 - [Issues, bugs, and requests](#issues-bugs-and-requests)
 - [Setting WG up on your local environment](#setting-wg-up-on-your-local-environment)
-  - [Get the prerequisites](#get-the-prerequisites)
+  - [Get the Prerequisites](#get-the-prerequisites)
   - [Setup Guide](#setup-guide)
 
 
@@ -21,7 +21,7 @@ it's easiest to make changes using the GitHub UI.
 
 Since Wanderer's Guide is, structure-wise, effectively a platform, setting up WG on your own local machine can be a complex, multi-staged process. The following steps aren't the only way to set it up but they've been found to be the easiest recommended steps to deploying the site on your own machine.
 
-### Get the prerequisites
+### Get the Prerequisites
 You will need the following tools installed to run WG:
 
 - **nodeJS**, a JavaScript runtime environment. 
