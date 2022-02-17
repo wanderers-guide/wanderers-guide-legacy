@@ -1,8 +1,6 @@
 ![Wanderer's Guide](https://wanderersguide.app/images/logo.png "Wanderer's Guide logo")
 #
 
-[![Build Status][]][Repo on GitHub Actions]
-
 ## Table of contents
 - [Table of contents](#table-of-contents)
 - [Issues, bugs, and requests](#issues-bugs-and-requests)
