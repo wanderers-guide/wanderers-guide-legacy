@@ -1,5 +1,4 @@
 ![Wanderer's Guide](https://wanderersguide.app/images/logo.png "Wanderer's Guide logo")
-#
 
 ## Table of contents
 - [Table of contents](#table-of-contents)
@@ -18,7 +17,6 @@ or create a [pull request](https://github.com/Quzzar/Wanderers-Guide/pulls).
 For simple changes (such as tweaking some text), 
 it's easiest to make changes using the GitHub UI.
 
-#
 ## Setting WG up on your local environment
 
 Since Wanderer's Guide is, structure-wise, effectively a platform, setting up WG on your own local machine can be a complex, multi-staged process. The following steps aren't the only way to set it up but they've been found to be the easiest recommended steps to deploying the site on your own machine.
