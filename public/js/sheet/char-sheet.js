@@ -1734,8 +1734,9 @@ function initHealthAndTemp() {
     g_character.currentHealth = (g_character.currentHealth > maxHealthNum) ? maxHealthNum : g_character.currentHealth;
 
     let currentHealth = $('#char-current-health');
-    let bulmaTextColor = getBulmaTextColorFromCurrentHP(g_character.currentHealth, maxHealthNum);
-    currentHealth.html('<p class="is-size-5 is-unselectable text-center '+bulmaTextColor+'" style="width: 70px;">'+g_character.currentHealth+'</p>');
+    let animationDelay = getAnimationDelayFromCurrentHP(g_character.currentHealth, maxHealthNum);
+
+    currentHealth.html('<p class="is-size-5 is-unselectable text-center" style="width: 70px; animation-delay: '+animationDelay+'!important;">'+g_character.currentHealth+'</p>');
 
     $(currentHealth).off('click');
     $(currentHealth).click(function(){
@@ -1825,8 +1826,10 @@ function healthConfirm(maxHealthNum){
   }
 
   g_character.currentHealth = newCurrentHealth;
-  let bulmaTextColor = getBulmaTextColorFromCurrentHP(g_character.currentHealth, maxHealthNum);
-  $('#char-current-health').html('<p class="is-size-5 is-unselectable text-center '+bulmaTextColor+'" style="width: 70px;">'+g_character.currentHealth+'</p>');
+  let animationDelay = getAnimationDelayFromCurrentHP(g_character.currentHealth, maxHealthNum);
+
+  $('#char-current-health').html('<p class="is-size-5 is-unselectable text-center" style="width: 70px; animation-delay: '+animationDelay+'!important;">'+g_character.currentHealth+'</p>');
+  
   $('#char-current-health').removeClass('is-in-input-mode');
   socket.emit("requestCurrentHitPointsSave",
       getCharIDFromURL(),

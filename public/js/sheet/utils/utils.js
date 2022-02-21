@@ -22,6 +22,10 @@ function getBulmaTextColorFromCurrentHP(currentHP, maxHP) {
     return "has-text-danger";
   }
 }
+function getAnimationDelayFromCurrentHP(currentHP, maxHP) {
+  let value = currentHP*(100/maxHP);
+  return `-${Math.floor(value-0.0001)}s`;
+}
 
 function dieTypeToNum(dieType){
   switch(dieType) {

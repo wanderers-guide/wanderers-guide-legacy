@@ -111,6 +111,22 @@
 
 
 
+#char-current-health p {
+  animation-name: health-color;
+  animation-duration: 100s;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  animation-direction: normal;
+  animation-fill-mode: none;
+  animation-play-state: paused;
+  animation-delay: -1s;
+}
+@keyframes health-color {
+  100%{ color: #48c774; }
+  50%{ color: #ffdd57; }
+  0%{ color: #f14668; }
+}
+
 
 .sheet-box {
 
