@@ -228,6 +228,34 @@ socket.on("returnBundleContents", function(REQUEST_TYPE, userHasBundle, userOwns
 
       ///
 
+      $('#createAnimalCompanionBtn').click(function() {
+        createNewBundleContent('ANIMAL-COMPANION');
+      });
+
+      if(animalCompanions.length > 0){
+        $('#bundleContainerAnimalCompanions').html('');
+        for(const animalCompanion of animalCompanions){
+          let viewAnimalCompanionID = 'entry-view-animal-companion-'+animalCompanion.id;
+          let editAnimalCompanionID = 'entry-edit-animal-companion-'+animalCompanion.id;
+          let deleteAnimalCompanionID = 'entry-delete-animal-companion-'+animalCompanion.id;
+          $('#bundleContainerAncestries').append('<div class="columns is-mobile is-marginless mt-1 sub-section-box"><div class="column"><p class="is-size-5">'+animalCompanion.name+'</p></div><div class="column"><div class="is-pulled-right buttons are-small"><button id="'+viewAnimalCompanionID+'" class="button is-info is-outlined">View</button><button id="'+editAnimalCompanionID+'" class="button is-success is-outlined"><span>Edit</span><span class="icon is-small"><i class="far fa-edit"></i></span></button><button id="'+deleteAnimalCompanionID+'" class="button is-danger is-outlined"><span>Delete</span><span class="icon is-small"><i class="fas fa-times"></i></span></button></div></div></div>');
+          $('#'+viewAnimalCompanionID).click(function() {
+            new DisplayAnimalCompanion('tabContent', animalCompanion.id, featMap, g_activeBundle.id);
+          });
+          $('#'+editAnimalCompanionID).click(function() {
+            window.location.href = '/homebrew/edit/animal-companion/?id='+g_activeBundle.id+'&content_id='+animalCompanion.id;
+          });
+          $('#'+deleteAnimalCompanionID).click(function() {
+            new ConfirmMessage('Delete “'+animalCompanion.name+'”', '<p class="has-text-centered">Are you sure you want to delete this animal companion?</p>', 'Delete', 'modal-delete-content-animal-companion-'+animalCompanion.id, 'modal-delete-content-animal-companion-btn-'+animalCompanion.id);
+            $('#modal-delete-content-animal-companion-btn-'+animalCompanion.id).click(function() {
+              socket.emit('requestHomebrewRemoveAnimalCompanion', g_activeBundle.id, animalCompanion.id);
+            });
+          });
+        }
+      }
+
+      ///
+
       $('#createArchetypeBtn').click(function() {
         createNewBundleContent('ARCHETYPE');
       });

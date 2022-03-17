@@ -165,14 +165,14 @@
                 </a>
                 <div id="mobile-nav-menu-container"></div>
 
-								<ul class="nav-menu pt-1">
-									{{{_sections.nav_home}}}
+				<ul class="nav-menu pt-1">
+				  {{{_sections.nav_home}}}
 
-									{{#if user}}
-									  {{{_sections.nav_characters}}}
+				  {{#if user}}
+					{{{_sections.nav_characters}}}
                   {{else}}
-                    <li class="mx-lg-2 mx-md-2 my-md-0 my-2"></li>
-									{{/if}}
+					<span class="ml-lg-4 ml-md-3"></span>
+				  {{/if}}
 
                   {{{_sections.nav_builds}}}
 
@@ -180,7 +180,7 @@
 
                   {{{_sections.nav_gm_tools}}}
 
-									{{{_sections.nav_browse}}}
+				  {{{_sections.nav_browse}}}
 									
 									{{#if user}}
 										<li class="mr-4">
