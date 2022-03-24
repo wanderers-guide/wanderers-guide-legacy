@@ -12,6 +12,10 @@ function openBundleEditor(homebrewBundle){
 socket.on("returnBundleContents", function(REQUEST_TYPE, userHasBundle, userOwnsBundle, skillObject, allTags, classes, ancestries, archetypes, backgrounds, classFeatures, feats, heritages, uniheritages, items, spells, languages, toggleables){
   if(REQUEST_TYPE !== 'EDIT') {return;}
 
+  //Temp
+  let animalCompanions = [];
+  let familiars = [];
+
   textProcess_warningOnUnknown = true;
   g_skillMap = (skillObject != null) ? objToMap(skillObject) : null;
   g_allTags = allTags;
