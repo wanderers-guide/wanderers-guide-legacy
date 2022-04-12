@@ -492,7 +492,7 @@ model feats {
   isDefault         Int?               @default(0)
   skillID           Int?
   minProf           String?            @db.VarChar(3)
-  code              String?            @db.VarChar(3000)
+  code              String?            @db.VarChar(5000)
   isCore            Int?               @default(0)
   genericType       feats_genericType?
   genTypeName       String?            @db.VarChar(45)
