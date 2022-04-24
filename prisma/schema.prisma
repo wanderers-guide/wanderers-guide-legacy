@@ -556,7 +556,7 @@ model heritages {
   ancestryID        Int?
   rarity            heritages_rarity @default(COMMON)
   description       String?          @db.Text
-  code              String?          @db.VarChar(1000)
+  code              String?          @db.VarChar(5000)
   isArchived        Int?             @default(0)
   contentSrc        String           @default("CRB") @db.VarChar(45)
   indivAncestryName String?          @db.VarChar(45)
