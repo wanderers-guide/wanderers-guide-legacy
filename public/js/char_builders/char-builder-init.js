@@ -226,6 +226,14 @@ function handleCharacterOptions(character, hBundles, progessBundles) {
     });
     $("#contentSrc-GM-GUIDE").prop('checked', contentSourceArray.includes('GM-GUIDE'));
 
+    $("#contentSrc-BOOK-OF-DEAD").change(function(){
+      socket.emit("requestBuildSourceChange", 
+          g_build_id, 
+          'BOOK-OF-DEAD',
+          this.checked);
+    });
+    $("#contentSrc-BOOK-OF-DEAD").prop('checked', contentSourceArray.includes('BOOK-OF-DEAD'));
+
     $("#contentSrc-SECRETS-OF-MAGIC").change(function(){
         socket.emit("requestCharacterSourceChange", 
             getCharIDFromURL(), 
