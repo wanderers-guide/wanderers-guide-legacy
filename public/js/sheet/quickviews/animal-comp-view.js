@@ -130,6 +130,7 @@ function openAnimalCompQuickview(data) {
     qContent.append('<hr class="m-2">');
 
     let animalSize = getAnimalSize(animal, charAnimal);
+    animalSize = (animalSize == 'SMALL-MED') ? 'Small or Medium' : capitalizeWords(animalSize);
     animalSize = (animalSize == 'MED-LARGE') ? 'Medium or Large' : capitalizeWords(animalSize);
     qContent.append('<div class="px-3"><p class="negative-indent"><strong>Size</strong> '+animalSize+'</p></div>');
 

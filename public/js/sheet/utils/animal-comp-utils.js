@@ -246,7 +246,7 @@ function getAnimalSize(animal, charAnimal){
   let matureSize = function(size){
     if(size == 'TINY'){
       return 'SMALL';
-    } else if(size == 'SMALL'){
+    } else if(size == 'SMALL' || size == 'SMALL-MED'){
       return 'MEDIUM';
     } else if(size == 'MEDIUM' || size == 'MED-LARGE'){
       return 'LARGE';

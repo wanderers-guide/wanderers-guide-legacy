@@ -14,7 +14,7 @@ const AnimalCompanion = db.define('animalCompanions', {
   },
   size: {
     type: Sequelize.ENUM,
-    values: ['TINY', 'SMALL', 'MEDIUM', 'LARGE', 'MED-LARGE', 'HUGE', 'GARGANTUAN']
+    values: ['TINY', 'SMALL', 'SMALL-MED', 'MEDIUM', 'LARGE', 'MED-LARGE', 'HUGE', 'GARGANTUAN']
   },
 
   a1Name: {

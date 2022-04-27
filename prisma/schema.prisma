@@ -1162,6 +1162,7 @@ enum animalCompanions_rarity {
 enum animalCompanions_size {
   TINY
   SMALL
+  SMALL_MED   @map("SMALL-MED")
   MEDIUM
   LARGE
   MED_LARGE   @map("MED-LARGE")
