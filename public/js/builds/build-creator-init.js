@@ -306,6 +306,14 @@ function handleBuildOptions(build, hBundles, progessBundles) {
     });
     $("#contentSrc-NIGHT-GRAY-DEATH").prop('checked', contentSourceArray.includes('NIGHT-GRAY-DEATH'));
 
+    $("#contentSrc-OUTLAWS-ALKENSTAR").change(function(){
+      socket.emit("requestBuildSourceChange", 
+          g_build_id, 
+          'OUTLAWS-ALKENSTAR',
+          this.checked);
+    });
+    $("#contentSrc-OUTLAWS-ALKENSTAR").prop('checked', contentSourceArray.includes('OUTLAWS-ALKENSTAR'));
+
     $("#contentSrc-QUEST-FROZEN-FLAME").change(function(){
       socket.emit("requestBuildSourceChange", 
           g_build_id, 

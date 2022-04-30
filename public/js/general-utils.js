@@ -88,6 +88,7 @@ const g_contentSources = [
   {TextName: 'Fists of the Ruby Phoenix', CodeName: 'FIST-PHOENIX', Link: 'https://paizo.com/store/pathfinder/adventures/adventurePath/fistsOfTheRubyPhoenix'},
   {TextName: 'Malevolence', CodeName: 'MALEVOLENCE', Link: 'https://paizo.com/products/btq027qf?Pathfinder-Adventure-Malevolence'},
   {TextName: 'Night of the Gray Death', CodeName: 'NIGHT-GRAY-DEATH', Link: 'https://paizo.com/products/btq02alp?Pathfinder-Adventure-Night-of-the-Gray-Death'},
+  {TextName: 'Outlaws of Alkenstar', CodeName: 'OUTLAWS-ALKENSTAR', Link: 'https://paizo.com/store/pathfinder/adventures/adventurePath/outlawsOfAlkenstar'},
   {TextName: 'Quest for the Frozen Flame', CodeName: 'QUEST-FROZEN-FLAME', Link: 'https://paizo.com/store/pathfinder/adventures/adventurePath/questForTheFrozenFlame'},
   {TextName: 'The Slithering', CodeName: 'SLITHERING', Link: 'https://paizo.com/products/btq023hg?Pathfinder-Adventure-The-Slithering'},
   {TextName: 'Strength of Thousands', CodeName: 'STRENGTH-THOUSANDS', Link: 'https://paizo.com/store/pathfinder/adventures/adventurePath/strengthOfThousands'},
