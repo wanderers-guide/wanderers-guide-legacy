@@ -227,7 +227,7 @@ function handleCharacterOptions(character, hBundles, progessBundles) {
     $("#contentSrc-GM-GUIDE").prop('checked', contentSourceArray.includes('GM-GUIDE'));
 
     $("#contentSrc-BOOK-OF-DEAD").change(function(){
-      socket.emit("requestBuildSourceChange", 
+      socket.emit("requestCharacterSourceChange", 
           g_build_id, 
           'BOOK-OF-DEAD',
           this.checked);
@@ -403,7 +403,7 @@ function handleCharacterOptions(character, hBundles, progessBundles) {
     $("#contentSrc-NIGHT-GRAY-DEATH").prop('checked', contentSourceArray.includes('NIGHT-GRAY-DEATH'));
 
     $("#contentSrc-OUTLAWS-ALKENSTAR").change(function(){
-      socket.emit("requestBuildSourceChange", 
+      socket.emit("requestCharacterSourceChange", 
           g_build_id, 
           'OUTLAWS-ALKENSTAR',
           this.checked);
