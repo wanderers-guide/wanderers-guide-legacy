@@ -228,7 +228,7 @@ function handleCharacterOptions(character, hBundles, progessBundles) {
 
     $("#contentSrc-BOOK-OF-DEAD").change(function(){
       socket.emit("requestCharacterSourceChange", 
-          g_build_id, 
+          getCharIDFromURL(), 
           'BOOK-OF-DEAD',
           this.checked);
     });
@@ -404,7 +404,7 @@ function handleCharacterOptions(character, hBundles, progessBundles) {
 
     $("#contentSrc-OUTLAWS-ALKENSTAR").change(function(){
       socket.emit("requestCharacterSourceChange", 
-          g_build_id, 
+          getCharIDFromURL(), 
           'OUTLAWS-ALKENSTAR',
           this.checked);
     });
