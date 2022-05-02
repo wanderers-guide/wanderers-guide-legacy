@@ -171,11 +171,12 @@ module.exports = class CharImport {
 
                         // Conditions
                         let conditionPromises = [];
+                        /* TODO: Bug with parent condition IDs being linked to exported character conditions
                         for(let condition of charExportData.conditions) {
                           delete condition.id;
                           condition.charID = character.id;
                           conditionPromises.push(CharCondition.create(condition));
-                        }
+                        }*/
                         return Promise.all(conditionPromises)
                         .then(function(result) {
 
