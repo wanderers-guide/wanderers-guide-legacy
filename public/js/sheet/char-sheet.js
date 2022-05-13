@@ -2626,6 +2626,7 @@ function runAllFeatsAndAbilitiesCode() {
 
     let totalClassAbilities = cloneObj(g_classDetails.Abilities);
     for(let extraClassAbil of g_extraClassAbilities){
+      extraClassAbil.value.dontRunCode = extraClassAbil.dontRunCode;
       totalClassAbilities.push(extraClassAbil.value);
     }
     for(let heritageEffect of g_heritageEffects){
@@ -2637,13 +2638,19 @@ function runAllFeatsAndAbilitiesCode() {
 
     for(let classAbil of totalClassAbilities){
         if(classAbil.selectType != 'SELECT_OPTION' && classAbil.level <= g_character.level) {
-            processSheetCode(classAbil.code, {
-              source: 'ClassAbility',
-              sourceName: classAbil.name,
-              abilityID: classAbil.id,
-              abilityLevel: classAbil.level,
-              selectType: classAbil.selectType,
-            });
+
+            let dontRunCode = classAbil.dontRunCode;
+            if(dontRunCode == null) { dontRunCode = false; }
+
+            if(!dontRunCode){
+              processSheetCode(classAbil.code, {
+                source: 'ClassAbility',
+                sourceName: classAbil.name,
+                abilityID: classAbil.id,
+                abilityLevel: classAbil.level,
+                selectType: classAbil.selectType,
+              });
+            }
 
             if(classAbil.selectType == "SELECTOR"){
                 for(let classAbilChoice of g_classDetails.AbilityChoices){
@@ -2653,12 +2660,14 @@ function runAllFeatsAndAbilitiesCode() {
                             return ability.id == classAbilChoice.OptionID;
                         });
                         if(abilityOption != null){
+                          if(!dontRunCode){
                             processSheetCode(abilityOption.code, {
                               source: 'ClassAbilityOption',
                               sourceName: abilityOption.name,
                               abilityID: abilityOption.id,
                               abilityLevel: abilityOption.level,
                             });
+                          }
                         }
                         break;
 

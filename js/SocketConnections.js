@@ -1317,7 +1317,7 @@ module.exports = class SocketConnections {
               .then((classFeature) => {
                 if(classFeature != null){
 
-                  CharDataMapping.setData(charID, 'classAbilityExtra', srcStruct, classFeature.id)
+                  CharDataMapping.setData(charID, 'classAbilityExtra', srcStruct, classFeature.id+':::'+inputPacket.dontRunCode)
                   .then((result) => {
                     if(classFeature.selectType == 'SELECTOR'){
                       CharGathering.getCharacter(userID, charID).then((character) => {

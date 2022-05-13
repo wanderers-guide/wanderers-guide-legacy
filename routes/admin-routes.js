@@ -30,10 +30,10 @@ const UniHeritage = require('../models/contentDB/UniHeritage');
 const Extra = require('../models/contentDB/Extra');
 
 const adminAuthCheck = (req, res, next) => {
-    if(!req.user){
+    if (!req.user) {
         res.redirect('/auth/login');
     } else {
-        if(req.user.isAdmin === 1){
+        if (req.user.isAdmin === 1) {
             next();
         } else {
             res.status(404);
@@ -44,7 +44,7 @@ const adminAuthCheck = (req, res, next) => {
 
 router.get('/panel', adminAuthCheck, (req, res) => {
 
-    res.render('admin/admin_panel', {  title: "Admin Panel - Wanderer's Guide", user: req.user });
+    res.render('admin/admin_panel', { title: "Admin Panel - Wanderer's Guide", user: req.user });
 
 });
 
@@ -93,14 +93,14 @@ router.use('/edit/class', adminAuthCheck, editClassRoutes);
 router.get('/manage/class-feature', adminAuthCheck, (req, res) => {
 
     ClassAbility.findAll({
-      where: { homebrewID: null }
+        where: { homebrewID: null }
     }).then((classAbilities) => {
 
         let filteredClassAbils = [];
-        for(let ability of classAbilities){
-            if(ability.indivClassName != null){
-                if(ability.selectType == 'SELECT_OPTION'){
-                    if(ability.indivClassAbilName != null){
+        for (let ability of classAbilities) {
+            if (ability.indivClassName != null) {
+                if (ability.selectType == 'SELECT_OPTION') {
+                    if (ability.indivClassAbilName != null) {
                         filteredClassAbils.push(ability);
                     }
                 } else {
@@ -194,10 +194,10 @@ router.get('/create/ancestry', adminAuthCheck, (req, res) => {
             order: [['name', 'ASC'],]
         }).then((tags) => {
             SenseType.findAll({
-              order: [['name', 'ASC'],]
+                order: [['name', 'ASC'],]
             }).then((senseTypes) => {
                 PhysicalFeature.findAll({
-                  order: [['name', 'ASC'],]
+                    order: [['name', 'ASC'],]
                 }).then((physicalFeatures) => {
 
                     res.render('admin/admin_builder/builder_ancestry', {
@@ -269,7 +269,7 @@ router.get('/create/uni-heritage', adminAuthCheck, (req, res) => {
         where: { isArchived: 0, isHidden: 0, homebrewID: null },
         order: [['name', 'ASC'],]
     }).then((tags) => {
-        
+
         res.render('admin/admin_builder/builder_uni-heritage', {
             title: "Universal Heritage Builder - Wanderer's Guide",
             user: req.user,
@@ -345,7 +345,7 @@ router.get('/create/feat-action', adminAuthCheck, (req, res) => {
                 user: req.user,
                 skills,
                 tags
-            }); 
+            });
         });
     });
 
@@ -358,7 +358,7 @@ router.use('/edit/feat-action', adminAuthCheck, editFeatActionRoutes);
 router.get('/manage/item', adminAuthCheck, (req, res) => {
 
     Item.findAll({
-        order: [['level', 'ASC'],['name', 'ASC'],],
+        order: [['level', 'ASC'], ['name', 'ASC'],],
         where: { homebrewID: null }
     }).then((items) => {
 
@@ -382,7 +382,7 @@ router.get('/create/item', adminAuthCheck, (req, res) => {
             title: "Item Builder - Wanderer's Guide",
             user: req.user,
             tags
-        }); 
+        });
     });
 
 });
@@ -394,7 +394,7 @@ router.use('/edit/item', adminAuthCheck, editItemRoutes);
 router.get('/manage/spell', adminAuthCheck, (req, res) => {
 
     Spell.findAll({
-        order: [['level', 'ASC'],['name', 'ASC'],],
+        order: [['level', 'ASC'], ['name', 'ASC'],],
         where: { homebrewID: null }
     }).then((spells) => {
 
@@ -429,36 +429,49 @@ router.use('/edit/spell', adminAuthCheck, editSpellRoutes);
 // Extra Builder
 router.get('/manage/extra', adminAuthCheck, (req, res) => {
 
-  Extra.findAll({
-      order: [['type', 'ASC'],['level', 'ASC'],['name', 'ASC'],],
-      where: { homebrewID: null }
-  }).then((extras) => {
+    Extra.findAll({
+        order: [['type', 'ASC'], ['level', 'ASC'], ['name', 'ASC'],],
+        where: { homebrewID: null }
+    }).then((extras) => {
 
-      res.render('admin/admin_manager/manager_extra', {
-          title: "Extra Manager - Wanderer's Guide",
-          user: req.user,
-          extras
-      });
+        res.render('admin/admin_manager/manager_extra', {
+            title: "Extra Manager - Wanderer's Guide",
+            user: req.user,
+            extras
+        });
 
-  });
+    });
 
 });
 
 router.get('/create/extra', adminAuthCheck, (req, res) => {
 
-  Tag.findAll({
-      where: { isArchived: 0, isHidden: 0, homebrewID: null },
-      order: [['name', 'ASC'],]
-  }).then((tags) => {
-      res.render('admin/admin_builder/builder_extra', {
-          title: "Extra Builder - Wanderer's Guide",
-          user: req.user,
-          tags
-      });
-  });
+    Tag.findAll({
+        where: { isArchived: 0, isHidden: 0, homebrewID: null },
+        order: [['name', 'ASC'],]
+    }).then((tags) => {
+        res.render('admin/admin_builder/builder_extra', {
+            title: "Extra Builder - Wanderer's Guide",
+            user: req.user,
+            tags
+        });
+    });
 
 });
 
 router.use('/edit/extra', adminAuthCheck, editExtraRoutes);
+
+// Creature Builder
+router.get('/manage/creature', adminAuthCheck, (req, res) => {
+
+    res.render('admin/admin_manager/manager_creature', {
+        title: "Creature Manager - Wanderer's Guide",
+        user: req.user,
+        creatures: null
+    });
+
+});
+
+
 
 module.exports = router;

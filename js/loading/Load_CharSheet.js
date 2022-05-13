@@ -25,7 +25,7 @@ module.exports = async function(userID, charID, character) {
   }
 
   //socket.emit('updateLoadProgess', { message: 'Opening Books', upVal: 1 }); // (4/100) //
-  const sourcesArray = await CharGathering.getSourceBooks(userID, character.enabledSources, character.enabledHomebrew);
+  const sourcesArray = CharGathering.getSourceBooks(userID, character.enabledSources, character.enabledHomebrew);
   
   //socket.emit('updateLoadProgess', { message: 'Discovering Backstory', upVal: 2 }); // (6/100) //
   const background = await CharGathering.getBackground(userID, charID, character);
@@ -37,70 +37,74 @@ module.exports = async function(userID, charID, character) {
   const heritage = await CharGathering.getHeritage(userID, charID, character);
 
   //socket.emit('updateLoadProgess', { message: 'Finding Conditions', upVal: 3 }); // (15/100) //
-  const allConditions = await CharGathering.getAllConditions(userID);
+  const allConditions = CharGathering.getAllConditions(userID);
 
   //socket.emit('updateLoadProgess', { message: 'Finding Languages', upVal: 3 }); // (18/100) //
-  const allLanguages = await CharGathering.getAllLanguagesBasic(userID, character.enabledHomebrew);
+  const allLanguages = CharGathering.getAllLanguagesBasic(userID, character.enabledHomebrew);
 
   //socket.emit('updateLoadProgess', { message: 'Keeping Inventory', upVal: 8 }); // (26/100) //
-  const invStruct = await CharGathering.getInventory(userID, character.inventoryID);
+  const invStruct = CharGathering.getInventory(userID, character.inventoryID);
 
   //socket.emit('updateLoadProgess', { message: 'Indexing Traits', upVal: 5 }); // (31/100) //
   const tags = await CharGathering.getAllTags(userID, character.enabledHomebrew);
 
   //socket.emit('updateLoadProgess', { message: 'Discovering Spells', upVal: 5 }); // (36/100) //
-  const spellMap = await CharGathering.getAllSpells(userID, character.enabledSources, character.enabledHomebrew, spells=null, taggedSpells=null, tags);
+  const spellMap = CharGathering.getAllSpells(userID, character.enabledSources, character.enabledHomebrew, spells=null, taggedSpells=null, tags);
 
   //socket.emit('updateLoadProgess', { message: 'Bartering for Items', upVal: 15 }); // (51/100) //
-  const itemMap = await CharGathering.getAllItems(userID, character.enabledSources, character.enabledHomebrew, items=null, tags);
+  const itemMap = CharGathering.getAllItems(userID, character.enabledSources, character.enabledHomebrew, items=null, tags);
 
   //socket.emit('updateLoadProgess', { message: 'Understanding Feats', upVal: 15 }); // (66/100) //
-  const featObject = await CharGathering.getAllFeats(userID, character.enabledSources, character.enabledHomebrew, feats=null, tags);
+  const featObject = CharGathering.getAllFeats(userID, character.enabledSources, character.enabledHomebrew, feats=null, tags);
 
   //socket.emit('updateLoadProgess', { message: 'Analyzing Ability Scores', upVal: 3 }); // (69/100) //
-  const abilObject = await CharGathering.getAbilityScores(userID, charID, charAbilityScores=null, bonusDataArray=null);
+  const abilObject = CharGathering.getAbilityScores(userID, charID, charAbilityScores=null, bonusDataArray=null);
 
   //socket.emit('updateLoadProgess', { message: 'Determining Skills', upVal: 6 }); // (75/100) //
-  const skillObject = await CharGathering.getAllSkills(userID, charID, skills=null, profDataArray=null, loreDataArray=null);
+  const skillObject = CharGathering.getAllSkills(userID, charID, skills=null, profDataArray=null, loreDataArray=null);
 
   //socket.emit('updateLoadProgess', { message: 'Preparing Spellbook', upVal: 5 }); // (80/100) //
-  const spellDataStruct = await CharGathering.getSpellData(userID, charID);
+  const spellDataStruct = CharGathering.getSpellData(userID, charID);
 
   //socket.emit('updateLoadProgess', { message: 'Considering Character Choices', upVal: 5 }); // (85/100) //
-  const choiceStruct = await CharChoicesLoad(userID, charID, character, background, ancestry, heritage, ancestries=null, charTagsArray=null, classDetails=null, featDataArray=null, bonusDataArray=null, choiceDataArray=null, profDataArray=null, innateSpellDataArray=null, langDataArray=null, senseDataArray=null, phyFeatDataArray=null, loreDataArray=null, focusPointDataArray=null, profMap=null, domains=null, domainDataArray=null, advancedDomainDataArray=null, extraClassFeatures=null, heritageEffectsArray=null);
+  const choiceStruct = CharChoicesLoad(userID, charID, character, background, ancestry, heritage, ancestries=null, charTagsArray=null, classDetails=null, featDataArray=null, bonusDataArray=null, choiceDataArray=null, profDataArray=null, innateSpellDataArray=null, langDataArray=null, senseDataArray=null, phyFeatDataArray=null, loreDataArray=null, focusPointDataArray=null, profMap=null, domains=null, domainDataArray=null, advancedDomainDataArray=null, extraClassFeatures=null, heritageEffectsArray=null);
 
   //socket.emit('updateLoadProgess', { message: 'Gathering Character Conditions', upVal: 2 }); // (87/100) //
-  const conditionsObject = await CharGathering.getAllCharConditions(userID, charID, charConditions=null);
+  const conditionsObject = CharGathering.getAllCharConditions(userID, charID, charConditions=null);
 
   //socket.emit('updateLoadProgess', { message: 'Training Companions', upVal: 2 }); // (89/100) //
-  const companionData = await CharGathering.getCompanionData(userID, charID, character.enabledSources, character.enabledHomebrew);
+  const companionData = CharGathering.getCompanionData(userID, charID, character.enabledSources, character.enabledHomebrew);
 
   //socket.emit('updateLoadProgess', { message: 'Gathering Resistances and Weaknesses', upVal: 2 }); // (91/100) //
-  const resistAndVulnerStruct = await CharGathering.getResistancesAndVulnerabilities(userID, charID, resistancesDataArray=null, vulnerabilitiesDataArray=null);
+  const resistAndVulnerStruct = CharGathering.getResistancesAndVulnerabilities(userID, charID, resistancesDataArray=null, vulnerabilitiesDataArray=null);
 
   //socket.emit('updateLoadProgess', { message: 'Gathering Specializations', upVal: 1 }); // (93/100) //
-  const specializeStruct = await CharGathering.getSpecializations(userID, charID, weapSpecialsDataArray=null, weapCriticalsDataArray=null, armorSpecialDataArray=null);
+  const specializeStruct = CharGathering.getSpecializations(userID, charID, weapSpecialsDataArray=null, weapCriticalsDataArray=null, armorSpecialDataArray=null);
 
   //socket.emit('updateLoadProgess', { message: 'Finding Unselected Options', upVal: 1 }); // (94/100) //
-  const unselectedDataArray = await CharGathering.getAllUnselectedData(userID, charID);
+  const unselectedDataArray = CharGathering.getAllUnselectedData(userID, charID);
 
   //socket.emit('updateLoadProgess', { message: 'Searching for Notebook', upVal: 2 }); // (95/100) //
-  const notesDataArray = await CharGathering.getNoteFields(userID, charID);
+  const notesDataArray = CharGathering.getNoteFields(userID, charID);
 
   //socket.emit('updateLoadProgess', { message: 'Gathering Speeds', upVal: 1 }); // (96/100) //
-  const speedsDataArray = await CharGathering.getOtherSpeeds(userID, charID);
+  const speedsDataArray = CharGathering.getOtherSpeeds(userID, charID);
 
   //socket.emit('updateLoadProgess', { message: 'Gathering Sheet States', upVal: 1 }); // (97/100) //
-  const sheetStatesArray = await CharGathering.getSheetStates(userID, character.enabledSources, character.enabledHomebrew);
+  const sheetStatesArray = CharGathering.getSheetStates(userID, character.enabledSources, character.enabledHomebrew);
 
   //socket.emit('updateLoadProgess', { message: 'Gathering Weapon Familiarities', upVal: 2 }); // (99/100) //
-  const familiaritiesDataArray = await CharGathering.getWeaponFamiliarities(userID, charID);
+  const familiaritiesDataArray = CharGathering.getWeaponFamiliarities(userID, charID);
 
   //socket.emit('updateLoadProgess', { message: 'Locating Class Features', upVal: 1 }); // (100/100) //
-  const allClassFeatureOptions = await CharGathering.getAllClassFeatureOptions(userID, character.enabledSources, character.enabledHomebrew);
+  const allClassFeatureOptions = CharGathering.getAllClassFeatureOptions(userID, character.enabledSources, character.enabledHomebrew);
 
  // //socket.emit('updateLoadProgess', { message: 'Finding Class Archetypes', upVal: 3 }); // (86/100) //
-  const classArchetypeArray = await CharGathering.getAllClassArchetypes(userID, character.enabledSources, character.enabledHomebrew);
+  const classArchetypeArray = CharGathering.getAllClassArchetypes(userID, character.enabledSources, character.enabledHomebrew);
+
+
+  let promise = await Promise.all([abilObject,skillObject,featObject,spellMap,choiceStruct,spellDataStruct,invStruct,itemMap,conditionsObject,allConditions,allLanguages,sourcesArray,resistAndVulnerStruct,specializeStruct,familiaritiesDataArray,notesDataArray,speedsDataArray,companionData,allClassFeatureOptions,sheetStatesArray,classArchetypeArray,unselectedDataArray]);
+
 
   //socket.emit('updateLoadProgess', { message: 'Finalizing', upVal: 10 }); // (110/100) //
   let charInfo = {
@@ -108,29 +112,29 @@ module.exports = async function(userID, charID, character) {
     Background : background,
     Ancestry : ancestry,
     Heritage : heritage,
-    AbilObject : abilObject,
-    SkillObject : skillObject,
-    FeatObject : featObject,
-    SpellObject : mapToObj(spellMap),
-    ChoiceStruct : choiceStruct,
-    SpellDataStruct: spellDataStruct,
-    InvStruct : invStruct,
-    ItemObject : mapToObj(itemMap),
-    ConditionsObject : conditionsObject,
-    AllConditions : allConditions,
-    AllLanguages : allLanguages,
-    EnabledSources: sourcesArray,
-    ResistAndVulners : resistAndVulnerStruct,
-    SpecializeStruct : specializeStruct,
-    WeaponFamiliarities : familiaritiesDataArray,
-    NotesFields : notesDataArray,
-    OtherSpeeds : speedsDataArray,
+    AbilObject : promise[0],
+    SkillObject : promise[1],
+    FeatObject : promise[2],
+    SpellObject : mapToObj(promise[3]),
+    ChoiceStruct : promise[4],
+    SpellDataStruct: promise[5],
+    InvStruct : promise[6],
+    ItemObject : mapToObj(promise[7]),
+    ConditionsObject : promise[8],
+    AllConditions : promise[9],
+    AllLanguages : promise[10],
+    EnabledSources: promise[11],
+    ResistAndVulners : promise[12],
+    SpecializeStruct : promise[13],
+    WeaponFamiliarities : promise[14],
+    NotesFields : promise[15],
+    OtherSpeeds : promise[16],
     AllTags : tags,
-    CompanionData : companionData,
-    AllClassFeatureOptions: allClassFeatureOptions,
-    SheetStatesArray: sheetStatesArray,
-    ClassArchetypeArray: classArchetypeArray,
-    UnselectedDataArray: unselectedDataArray,
+    CompanionData : promise[17],
+    AllClassFeatureOptions: promise[18],
+    SheetStatesArray: promise[19],
+    ClassArchetypeArray: promise[20],
+    UnselectedDataArray: promise[21],
   };
 
   console.log('~ COMPLETE SHEET LOAD! ~');

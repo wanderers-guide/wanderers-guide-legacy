@@ -289,9 +289,37 @@ module.exports = class CharGathering {
     }
 
     static getAllExtraClassFeatures(userID, charID){
-      return CharDataMapping.getDataAll(charID, 'classAbilityExtra', ClassAbility)
-      .then((extraClassFeaturesArray) => {
-        return extraClassFeaturesArray;
+      return CharDataMapping.getDataAll(charID, 'classAbilityExtra', null)
+      .then((extraClassFeaturesDataArray) => {
+
+        let promises = [];
+        for(let data of extraClassFeaturesDataArray){
+          if(data == null || data.value == null) {continue;}
+          if(data.value.includes(':::')){
+            let parts = data.value.split(':::');
+            data.featureID = parts[0];
+            data.dontRunCode = (parts[1] == 'true') ? true : false;
+          } else {
+            data.featureID = data.value;
+            data.dontRunCode = false;
+          }
+
+          promises.push(Prisma.classAbilities.findUnique({ where: { id: parseInt(data.featureID) } }));
+        }
+
+        return Promise.all(promises)
+        .then(function(classFeatures) {
+
+          for(let data of extraClassFeaturesDataArray){
+            let classFeature = classFeatures.find(classFeature => {
+              return data.featureID == classFeature.id;
+            });
+            data.value = classFeature;
+          }
+  
+          return extraClassFeaturesDataArray;
+
+        });
       });
     }
 

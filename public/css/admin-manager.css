@@ -1,48 +1,67 @@
-
 .card {
     background-color: #222222;
-    box-shadow: 0 1px 1px rgba(0,0,0,0.5);
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.5);
 }
+
 .card-content {
     border-top-left-radius: 0.25rem;
     border-top-right-radius: 0.25rem;
     background-color: rgb(51, 51, 51);
 }
+
 .card-footer {
     background-color: rgb(43, 43, 43);
     border-top-color: #222222;
 }
+
 .card-footer-item {
-    border-right-color: #222222!important;
+    border-right-color: #222222 !important;
 }
 
 .card-content-hover {
     background-color: rgb(57, 57, 57);
 }
+
 .card-footer-hover {
     background-color: rgb(49, 49, 49);
 }
 
 
 .entryListing {
-    box-shadow: 0 1px 1px rgba(0,0,0,0.5);
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.5);
     background-color: rgb(37, 37, 37);
 }
+
 .entry-footer-hover {
     background-color: rgb(49, 49, 49);
 }
 
 
-.input, .select select, .textarea {
+.input,
+.select select,
+.textarea {
     background-color: hsl(0, 0%, 18%);
     border-color: hsl(0, 0%, 13%);
     color: hsl(0, 0%, 86%);
 }
 
-.input:hover, .select select:hover, .textarea:hover {
+.input:hover,
+.select select:hover,
+.textarea:hover {
     border-color: hsl(0, 0%, 10%);
 }
 
-.control.has-icons-left .icon, .control.has-icons-right .icon {
-    color:rgba(219,219,219,.4);
+.control.has-icons-left .icon,
+.control.has-icons-right .icon {
+    color: rgba(219, 219, 219, .4);
+}
+
+
+/*  Import buttons  */
+#button-import-manager>input {
+    display: none;
+}
+
+#button-import-manager:hover:enabled {
+    color: var(--text-txt-value-color);
 }

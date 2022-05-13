@@ -33,126 +33,127 @@ module.exports = async function(userID, charID, character=null, background=null,
   }
 
   if(background==null){
-    background = await CharGathering.getBackground(userID, charID, character);
+    background = CharGathering.getBackground(userID, charID, character);
   }
 
   if(ancestry==null){
-    ancestry = await CharGathering.getAncestry(userID, charID, character);
+    ancestry = CharGathering.getAncestry(userID, charID, character);
   }
 
   if(heritage==null){
-    heritage = await CharGathering.getHeritage(userID, charID, character);
+    heritage = CharGathering.getHeritage(userID, charID, character);
   }
 
   if(ancestries==null){
-    ancestries = await CharGathering.getAllAncestriesBasic(userID, character.enabledSources, character.enabledHomebrew);
+    ancestries = CharGathering.getAllAncestriesBasic(userID, character.enabledSources, character.enabledHomebrew);
   }
 
   if(charTagsArray==null){
-    charTagsArray = await CharTags.getTags(charID);
+    charTagsArray = CharTags.getTags(charID);
   }
 
   if(classDetails==null){
-    classDetails = await CharGathering.getClass(userID, charID, character.classID, character.enabledSources, character.enabledHomebrew);
+    classDetails = CharGathering.getClass(userID, charID, character.classID, character.enabledSources, character.enabledHomebrew);
   }
 
   if(featDataArray==null){
-    featDataArray = await CharGathering.getChoicesFeats(userID, charID);
+    featDataArray = CharGathering.getChoicesFeats(userID, charID);
   }
 
   if(bonusDataArray==null){
-    bonusDataArray = await CharGathering.getChoicesAbilityBonus(userID, charID);
+    bonusDataArray = CharGathering.getChoicesAbilityBonus(userID, charID);
   }
 
   if(choiceDataArray==null){
-    choiceDataArray = await CharDataMappingExt.getDataAllClassChoice(charID);
+    choiceDataArray = CharDataMappingExt.getDataAllClassChoice(charID);
   }
 
   if(profDataArray==null){
-    profDataArray = await CharDataMappingExt.getDataAllProficiencies(charID);
+    profDataArray = CharDataMappingExt.getDataAllProficiencies(charID);
   }
 
   if(innateSpellDataArray==null){
-    innateSpellDataArray = await CharDataMappingExt.getDataAllInnateSpell(charID);
+    innateSpellDataArray = CharDataMappingExt.getDataAllInnateSpell(charID);
   }
 
   if(langDataArray==null){
-    langDataArray = await CharDataMapping.getDataAll(charID,"languages",Language);
+    langDataArray = CharDataMapping.getDataAll(charID,"languages",Language);
   }
 
   if(senseDataArray==null){
-    senseDataArray = await CharDataMapping.getDataAll(charID,"senses",SenseType);
+    senseDataArray = CharDataMapping.getDataAll(charID,"senses",SenseType);
   }
 
   if(phyFeatDataArray==null){
-    phyFeatDataArray = await CharDataMapping.getDataAll(charID,"phyFeats",PhysicalFeature);
+    phyFeatDataArray = CharDataMapping.getDataAll(charID,"phyFeats",PhysicalFeature);
   }
 
   if(loreDataArray==null){
-    loreDataArray = await CharDataMapping.getDataAll(charID,"loreCategories",null);
+    loreDataArray = CharDataMapping.getDataAll(charID,"loreCategories",null);
   }
 
   if(scfsDataArray==null){
-    scfsDataArray = await CharDataMapping.getDataAll(charID,"scfs",null);
+    scfsDataArray = CharDataMapping.getDataAll(charID,"scfs",null);
   }
 
   if(focusPointDataArray==null){
-    focusPointDataArray = await CharSpells.getFocusPoints(charID);
+    focusPointDataArray = CharSpells.getFocusPoints(charID);
   }
 
   if(profMap==null){
-    profMap = await CharGathering.getProfs(userID, charID);
+    profMap = CharGathering.getProfs(userID, charID);
   }
 
   if(domains==null){
-    domains = await CharGathering.getAllDomains(userID, character.enabledSources, character.enabledHomebrew);
+    domains = CharGathering.getAllDomains(userID, character.enabledSources, character.enabledHomebrew);
   }
 
   if(domainDataArray==null){
-    domainDataArray = await CharGathering.getChoicesDomains(userID, charID);
+    domainDataArray = CharGathering.getChoicesDomains(userID, charID);
   }
 
   if(advancedDomainDataArray==null){
-    advancedDomainDataArray = await CharDataMapping.getDataAll(charID,"advancedDomains",Domain);
+    advancedDomainDataArray = CharDataMapping.getDataAll(charID,"advancedDomains",Domain);
   }
 
   if(extraClassFeatures==null){
-    extraClassFeatures = await CharGathering.getAllExtraClassFeatures(userID, charID);
+    extraClassFeaturesArray = CharGathering.getAllExtraClassFeatures(userID, charID);
   }
 
   if(heritageEffectsArray==null){
-    heritageEffectsArray = await CharDataMapping.getDataAll(charID,"heritageExtra",Heritage);
+    heritageEffectsArray = CharDataMapping.getDataAll(charID,"heritageExtra",Heritage);
   }
 
-  const classArchetypeID = await CharGathering.getClassArchetypeID(userID, charID);
+  const classArchetypeID = CharGathering.getClassArchetypeID(userID, charID);
 
+  let promise = await Promise.all([heritage,background,ancestry,classDetails,charTagsArray,featDataArray,bonusDataArray,choiceDataArray,profDataArray,langDataArray,senseDataArray,phyFeatDataArray,innateSpellDataArray,profMap,domains,ancestries,domainDataArray,advancedDomainDataArray,scfsDataArray,focusPointDataArray,loreDataArray,extraClassFeaturesArray,heritageEffectsArray,classArchetypeID]);
 
   let choiceStruct = {
     Character: character,
-    Heritage: heritage,
-    Background: background,
-    Ancestry: ancestry,
-    ClassDetails: classDetails,
-    CharTagsArray: charTagsArray,
-    FeatArray: featDataArray,
-    BonusArray: bonusDataArray,
-    ChoiceArray: choiceDataArray,
-    ProfArray: profDataArray,
-    LangArray: langDataArray,
-    SenseArray: senseDataArray,
-    PhyFeatArray: phyFeatDataArray,
-    InnateSpellArray: innateSpellDataArray,
-    ProfObject: mapToObj(profMap),
-    AllDomains: domains,
-    AllAncestries: ancestries,
-    DomainArray: domainDataArray,
-    AdvancedDomainArray: advancedDomainDataArray,
-    SCFSDataArray: scfsDataArray,
-    FocusPointArray: focusPointDataArray,
-    LoreArray: loreDataArray,
-    ExtraClassFeaturesArray: extraClassFeatures,
-    HeritageEffectsArray: heritageEffectsArray,
-    ClassArchetypeID: classArchetypeID,
+    Heritage: promise[0],
+    Background: promise[1],
+    Ancestry: promise[2],
+    ClassDetails: promise[3],
+    CharTagsArray: promise[4],
+    FeatArray: promise[5],
+    BonusArray: promise[6],
+    ChoiceArray: promise[7],
+    ProfArray: promise[8],
+    LangArray: promise[9],
+    SenseArray: promise[10],
+    PhyFeatArray: promise[11],
+    InnateSpellArray: promise[12],
+    ProfObject: mapToObj(promise[13]),
+    AllDomains: promise[14],
+    AllAncestries: promise[15],
+    DomainArray: promise[16],
+    AdvancedDomainArray: promise[17],
+    SCFSDataArray: promise[18],
+    FocusPointArray: promise[19],
+    LoreArray: promise[20],
+    ExtraClassFeaturesArray: promise[21],
+    HeritageEffectsArray: promise[22],
+    ClassArchetypeID: promise[23],
   };
 
   console.log('~ COMPLETE CHAR-CHOICES LOAD! ~');
