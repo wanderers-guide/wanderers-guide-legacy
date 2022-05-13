@@ -1,3 +1,5 @@
+
+/*
 const CharContentSources = require('./../CharContentSources');
 const CharContentHomebrew = require('./../CharContentHomebrew');
 
@@ -112,3 +114,5 @@ module.exports = async function(userID, charID, character=null, featObject=null,
   return bStruct;
 
 };
+
+*/

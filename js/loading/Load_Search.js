@@ -18,59 +18,62 @@ module.exports = async function(userID) {
   console.log('~ STARTING SEARCH LOAD ~');
 
   // socket.emit('updateLoadProgess', { message: 'Opening Books', upVal: 2 }); // (2/100) //
-  const sourceBooks = await GeneralGathering.getSourceBooks(userID);
+  const sourceBooks = GeneralGathering.getSourceBooks(userID);
 
   // socket.emit('updateLoadProgess', { message: 'Gathering Skills', upVal: 3 }); // (5/100) //
-  const skillObject = await GeneralGathering.getAllSkills(userID, null);
+  const skillObject = GeneralGathering.getAllSkills(userID, null);
 
   // socket.emit('updateLoadProgess', { message: 'Understanding Feats', upVal: 20 }); // (25/100) //
-  const featsObject = await GeneralGathering.getAllFeats(userID, null);
+  const featsObject = GeneralGathering.getAllFeats(userID, null);
 
   // socket.emit('updateLoadProgess', { message: 'Bartering for Items', upVal: 10 }); // (35/100) //
-  const itemMap = await GeneralGathering.getAllItems(userID, null);
+  const itemMap = GeneralGathering.getAllItems(userID, null);
 
   // socket.emit('updateLoadProgess', { message: 'Discovering Spells', upVal: 10 }); // (45/100) //
-  const spellMap = await GeneralGathering.getAllSpells(userID, null);
+  const spellMap = GeneralGathering.getAllSpells(userID, null);
 
   // socket.emit('updateLoadProgess', { message: 'Finding Languages', upVal: 5 }); // (50/100) //
-  const allLanguages = await GeneralGathering.getAllLanguages(userID, null);
+  const allLanguages = GeneralGathering.getAllLanguages(userID, null);
 
   // socket.emit('updateLoadProgess', { message: 'Finding Conditions', upVal: 5 }); // (55/100) //
-  const allConditions = await GeneralGathering.getAllConditions(userID, null);
+  const allConditions = GeneralGathering.getAllConditions(userID, null);
 
   // socket.emit('updateLoadProgess', { message: 'Indexing Traits', upVal: 5 }); // (60/100) //
-  const allTags = await GeneralGathering.getAllTags(userID, null);
+  const allTags = GeneralGathering.getAllTags(userID, null);
 
   // socket.emit('updateLoadProgess', { message: 'Loading Classes', upVal: 10 }); // (70/100) //
-  const classes = await GeneralGathering.getAllClassesBasic(userID, null);
+  const classes = GeneralGathering.getAllClassesBasic(userID, null);
 
   // socket.emit('updateLoadProgess', { message: 'Loading Ancestries', upVal: 10 }); // (80/100) //
-  const ancestries = await GeneralGathering.getAllAncestriesBasic(userID, null);
+  const ancestries = GeneralGathering.getAllAncestriesBasic(userID, null);
 
   // socket.emit('updateLoadProgess', { message: 'Loading Backgrounds', upVal: 5 }); // (85/100) //
-  const backgrounds = await GeneralGathering.getAllBackgrounds(userID, null);
+  const backgrounds = GeneralGathering.getAllBackgrounds(userID, null);
 
   // socket.emit('updateLoadProgess', { message: 'Loading Archetypes', upVal: 5 }); // (90/100) //
-  const archetypes = await GeneralGathering.getAllArchetypes(userID, null);
+  const archetypes = GeneralGathering.getAllArchetypes(userID, null);
 
   // socket.emit('updateLoadProgess', { message: 'Loading Heritages', upVal: 5 }); // (95/100) //
-  const uniHeritages = await GeneralGathering.getAllUniHeritages(userID, null);
+  const uniHeritages = GeneralGathering.getAllUniHeritages(userID, null);
+
+
+  let promise = await Promise.all([featsObject,skillObject,itemMap,spellMap,allLanguages,allConditions,allTags,classes,ancestries,archetypes,backgrounds,sourceBooks,uniHeritages]);
 
   // socket.emit('updateLoadProgess', { message: 'Finalizing', upVal: 10 }); // (105/100) //
   const searchStruct = {
-    featsObject,
-    skillObject,
-    itemObject: mapToObj(itemMap),
-    spellObject: mapToObj(spellMap),
-    allLanguages,
-    allConditions,
-    allTags,
-    classes,
-    ancestries,
-    archetypes,
-    backgrounds,
-    sourceBooks,
-    uniHeritages,
+    featsObject: promise[0],
+    skillObject: promise[1],
+    itemObject: mapToObj(promise[2]),
+    spellObject: mapToObj(promise[3]),
+    allLanguages: promise[4],
+    allConditions: promise[5],
+    allTags: promise[6],
+    classes: promise[7],
+    ancestries: promise[8],
+    archetypes: promise[9],
+    backgrounds: promise[10],
+    sourceBooks: promise[11],
+    uniHeritages: promise[12],
   };
 
   console.log('~ COMPLETE SEARCH LOAD! ~');
