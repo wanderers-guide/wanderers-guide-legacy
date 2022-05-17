@@ -75,6 +75,7 @@ const g_contentSources = [
   {TextName: 'Lost Omens: City of Absalom', CodeName: 'LOST-CITY-ABSALOM', Link: 'https://paizo.com/products/btq02ap2'},
   {TextName: 'Lost Omens: Gods & Magic', CodeName: 'LOST-GOD-MAGIC', Link: 'https://paizo.com/products/btq021wf?Pathfinder-Lost-Omens-Gods-Magic'},
   {TextName: 'Lost Omens: Grand Bazaar', CodeName: 'LOST-GRAND-BAZAAR', Link: 'https://paizo.com/products/btq029xo?Pathfinder-Lost-Omens-The-Grand-Bazaar'},
+  {TextName: 'Lost Omens: Knights of Lastwall', CodeName: 'LOST-KNIGHTS-WALL', Link: 'https://paizo.com/products/btq02ajm?Pathfinder-Lost-Omens-Knights-of-Lastwall'},
   {TextName: 'Lost Omens: Legends', CodeName: 'LOST-LEGENDS', Link: 'https://paizo.com/products/btq023gd?Pathfinder-Lost-Omens-Legends'},
   {TextName: 'Lost Omens: Monsters of Myth', CodeName: 'LOST-MONSTERS-MYTH', Link: 'https://paizo.com/products/btq02aoy'},
   {TextName: 'Lost Omens: The Mwangi Expanse', CodeName: 'LOST-MWANGI', Link: 'https://paizo.com/products/btq027ot?Pathfinder-Lost-Omens-The-Mwangi-Expanse'},
@@ -100,8 +101,8 @@ const g_contentSources = [
   {TextName: 'Pathfinder Society', CodeName: 'PATH-SOCIETY', Link: 'https://paizo.com/pathfindersociety'},
 ];
 
-const g_currentContentSource = 'BEST-1';
-const g_hiddenFromBrowseContentSources = [''];// TODO - Temp solution
+const g_currentContentSource = 'LOST-KNIGHTS-WALL';
+const g_hiddenFromBrowseContentSources = ['LOST-KNIGHTS-WALL'];// TODO - Temp solution
 
 function getContentSourceTextName(codeName){
   let contentSourceData = g_contentSources.find(contentSourceData => {

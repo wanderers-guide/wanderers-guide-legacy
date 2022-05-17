@@ -202,6 +202,14 @@ function handleBuildOptions(build, hBundles, progessBundles) {
     });
     $("#contentSrc-LOST-GRAND-BAZAAR").prop('checked', contentSourceArray.includes('LOST-GRAND-BAZAAR'));
 
+    $("#contentSrc-LOST-KNIGHTS-WALL").change(function(){
+      socket.emit("requestBuildSourceChange", 
+          g_build_id, 
+          'LOST-KNIGHTS-WALL',
+          this.checked);
+    });
+    $("#contentSrc-LOST-KNIGHTS-WALL").prop('checked', contentSourceArray.includes('LOST-KNIGHTS-WALL'));
+
     $("#contentSrc-LOST-LEGENDS").change(function(){
       socket.emit("requestBuildSourceChange", 
           g_build_id, 

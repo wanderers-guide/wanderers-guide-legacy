@@ -28,6 +28,7 @@ const Skill = require('../models/contentDB/Skill');
 const Archetype = require('../models/contentDB/Archetype');
 const UniHeritage = require('../models/contentDB/UniHeritage');
 const Extra = require('../models/contentDB/Extra');
+const Creature = require('../models/contentDB/Creature');
 
 const adminAuthCheck = (req, res, next) => {
     if (!req.user) {
@@ -464,10 +465,21 @@ router.use('/edit/extra', adminAuthCheck, editExtraRoutes);
 // Creature Builder
 router.get('/manage/creature', adminAuthCheck, (req, res) => {
 
-    res.render('admin/admin_manager/manager_creature', {
-        title: "Creature Manager - Wanderer's Guide",
-        user: req.user,
-        creatures: null
+    Creature.findAll({
+        order: [['level', 'ASC'], ['name', 'ASC'],],
+        where: { homebrewID: null }
+    }).then((creatures) => {
+        Tag.findAll({
+            where: { isArchived: 0, homebrewID: null },
+            order: [['name', 'ASC'],]
+        }).then((tags) => {
+            res.render('admin/admin_manager/manager_creature', {
+                title: "Creature Manager - Wanderer's Guide",
+                user: req.user,
+                creatures,
+                tags: JSON.stringify(tags),
+            });
+        });
     });
 
 });

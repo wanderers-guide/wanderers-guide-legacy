@@ -2698,6 +2698,18 @@ module.exports = class SocketConnections {
         });
       });
 
+      ///
+
+      socket.on('requestAdminAddCreature', function(data){
+        AuthCheck.isAdmin(userID).then((isAdmin) => {
+          if(isAdmin){
+            AdminCreation.upsertCreature(data).then((result) => {
+              socket.emit('returnAdminCompleteCreature');
+            });
+          }
+        });
+      });
+
     });
   }
 

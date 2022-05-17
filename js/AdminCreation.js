@@ -24,6 +24,7 @@ const Spell = require('../models/contentDB/Spell');
 const TaggedSpell = require('../models/contentDB/TaggedSpell');
 const Extra = require('../models/contentDB/Extra');
 const TaggedExtra = require('../models/contentDB/TaggedExtra');
+const Creature = require('../models/contentDB/Creature');
 
 const CharSaving = require('./CharSaving');
 
@@ -1613,5 +1614,56 @@ module.exports = class AdminCreation {
           return;
       });
     }
+
+
+
+
+    static upsertCreature(data) {
+        for(let d in data) { if(data[d] === ''){ data[d] = null; } }
+        if(data.id == null) { return Promise.resolve(); }
+        data.name = data.name.replace(/’/g,"'");
+        return Creature.upsert({
+            id: data.id,// In homebrew, make this randomly generated on the backend
+            name: trimVal(data.name),
+            level: data.level,
+            rarity: data.rarity,
+            alignment: data.alignment,
+            size: data.size,
+            traitsJSON: data.traitsJSON,
+            perceptionBonus: data.perceptionBonus,
+            senses: data.senses,
+            languagesJSON: data.languagesJSON,
+            languagesCustom: data.languagesCustom,
+            skillsJSON: data.skillsJSON,
+            itemsJSON: data.itemsJSON,
+            strMod: data.strMod,
+            dexMod: data.dexMod,
+            conMod: data.conMod,
+            intMod: data.intMod,
+            wisMod: data.wisMod,
+            chaMod: data.chaMod,
+            acValue: data.acValue,
+            fortBonus: data.fortBonus,
+            reflexBonus: data.reflexBonus,
+            willBonus: data.willBonus,
+            allSavesCustom: data.allSavesCustom,
+            hpMax: data.hpMax,
+            hpDetails: data.hpDetails,
+            immunitiesJSON: data.immunitiesJSON,
+            weaknessesJSON: data.weaknessesJSON,
+            resistancesJSON: data.resistancesJSON,
+            headerAbilitiesJSON: data.headerAbilitiesJSON,
+            speed: data.speed,
+            otherSpeedsJSON: data.otherSpeedsJSON,
+            attacksJSON: data.attacksJSON,
+            spellcastingJSON: data.spellcastingJSON,
+            abilitiesJSON: data.abilitiesJSON,
+            flavorText: data.flavorText,
+            contentSrc: data.contentSrc,
+            homebrewID: null,
+        }).then(creature => {
+            return creature;
+        });
+      }
 
 };

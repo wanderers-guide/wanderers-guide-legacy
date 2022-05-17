@@ -140,6 +140,8 @@ function openQuickView(type, data, noProtection=false) {
         openAbilityScoresBreakdownQuickview(data);
     } else if(type == 'warningsView'){
         openWarningsQuickview(data);
+    } else if(type == 'creatureView'){
+        openCreatureQuickview(data);
     }
 
 }

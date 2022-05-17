@@ -460,6 +460,58 @@ model classArchetypes {
   @@index([homebrewID], name: "classArchetype_homebrewID")
 }
 
+model creatures {
+  id                  String           @id @db.VarChar(45)
+  name                String?          @db.VarChar(120)
+  level               Int
+  rarity              creatures_rarity
+  alignment           String?          @db.VarChar(5)
+  size                creatures_size
+  traitsJSON          String?          @db.VarChar(450)
+  perceptionBonus     Int?
+  senses              String?          @db.VarChar(450)
+  languagesJSON       String?          @db.VarChar(450)
+  languagesCustom     String?          @db.VarChar(600)
+  skillsJSON          String?          @db.VarChar(900)
+  itemsJSON           String?          @db.VarChar(900)
+  strMod              Int              @default(0)
+  dexMod              Int              @default(0)
+  conMod              Int              @default(0)
+  intMod              Int              @default(0)
+  wisMod              Int              @default(0)
+  chaMod              Int              @default(0)
+  interactionAbilitiesJSON String?     @db.VarChar(3000)
+  acValue             Int              @default(10)
+  fortBonus           Int              @default(0)
+  reflexBonus         Int
+  willBonus           Int              @default(0)
+  allSavesCustom      String?          @db.VarChar(600)
+  hpMax               Int              @default(100)
+  hpDetails           String?          @db.VarChar(450)
+  immunitiesJSON      String?          @db.VarChar(600)
+  weaknessesJSON      String?          @db.VarChar(600)
+  resistancesJSON     String?          @db.VarChar(600)
+  defensiveAbilitiesJSON String?       @db.VarChar(3000)
+  speed               Int              @default(25)
+  otherSpeedsJSON     String?          @db.VarChar(450)
+  attacksJSON         String?          @db.VarChar(1600)
+  spellcastingJSON    String?          @db.VarChar(1600)
+  offensiveAbilitiesJSON String?      @db.VarChar(3000)
+  flavorText          String?          @db.Text
+  contentSrc          String           @default("CRB") @db.VarChar(45)
+  homebrewID          Int?
+  createdAt           DateTime?        @db.DateTime(0)
+  updatedAt           DateTime?        @db.DateTime(0)
+}
+
+model damagetypes {
+  id          Int       @id @default(autoincrement())
+  name        String?   @db.VarChar(45)
+  description String?   @db.TinyText
+  createdAt   DateTime? @db.DateTime(0)
+  updatedAt   DateTime? @db.DateTime(0)
+}
+
 model familiarAbilities {
   id              Int              @id @default(autoincrement())
   name            String?          @db.VarChar(45)
@@ -1318,6 +1370,24 @@ enum heritages_rarity {
   UNCOMMON
   RARE
   UNIQUE
+}
+
+enum creatures_rarity {
+  COMMON
+  UNCOMMON
+  RARE
+  UNIQUE
+}
+
+enum creatures_size {
+  TINY
+  SMALL
+  SMALL_MED @map("SMALL-MED")
+  MEDIUM
+  LARGE
+  MED_LARGE @map("MED-LARGE")
+  HUGE
+  GARGANTUAN
 }
 
 enum invItems_size {
