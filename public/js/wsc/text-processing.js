@@ -420,17 +420,17 @@ function handleTableCreation(match) {
 
 /////
 
-function handleFeatLink(match, linkName, limitation, limitValue, innerTextName) {
-    return handleFeatLinkExt(match, linkName, limitation, limitValue, innerTextName, innerTextName);
+function handleFeatLink(match, linkName, limitation, limitLvl, limitType, innerTextName) {
+    return handleFeatLinkExt(match, linkName, limitation, limitLvl, limitType, innerTextName, innerTextName);
 }
 
-function handleFeatLinkExt(match, linkName, limitation, limitValue, innerTextDisplay, innerTextName) {
+function handleFeatLinkExt(match, linkName, limitation, limitLvl, limitType, innerTextDisplay, innerTextName) {
 
     let isLevelLimit = limitation.toLowerCase().startsWith('lvl-');
     let isTypeLimit = limitation.toLowerCase().startsWith('type-');
     let requiredType = null;
     if(isTypeLimit){
-      switch(limitValue.toLowerCase()) {
+      switch(limitType.toLowerCase()) {
         case 'general': requiredType = 'GENERAL-FEAT'; break;
         case 'skill': requiredType = 'SKILL-FEAT'; break;
         case 'class': requiredType = 'CLASS-FEAT'; break;
@@ -451,7 +451,7 @@ function handleFeatLinkExt(match, linkName, limitation, limitValue, innerTextDis
     for(const [featID, featStruct] of g_featMap.entries()){
 
         if(isLevelLimit){
-          if(featStruct.Feat.level != limitValue) { continue; }
+          if(featStruct.Feat.level != limitLvl) { continue; }
         } else if(isTypeLimit){
           if(requiredType == 'IS-FEAT'){
             if(featStruct.Feat.genericType != null && !featStruct.Feat.genericType.endsWith('-FEAT')) { continue; }
