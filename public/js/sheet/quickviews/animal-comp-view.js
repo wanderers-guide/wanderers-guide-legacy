@@ -165,7 +165,7 @@ function openAnimalCompQuickview(data) {
     displayAnimalCompanionAttack(qContent, animal, charAnimal, 3);
 
     if(hasAnimalAdvancedManeuver(animal, charAnimal)){
-      qContent.append('<div class="px-2">'+processText('~ Advanced Maneuver: (action:lvl--1: '+capitalizeWords(animal.advancedManeuver)+')', true, true, 'MEDIUM')+'</div>');
+      qContent.append('<div class="px-2">'+processText('~ Advanced Maneuver: (action:type-companion: '+capitalizeWords(animal.advancedManeuver)+')', true, true, 'MEDIUM')+'</div>');
     }
 
     if(hasAnimalMagicalAttacks(animal, charAnimal)){

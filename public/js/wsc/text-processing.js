@@ -440,6 +440,9 @@ function handleFeatLinkExt(match, linkName, limitation, limitValue, innerTextDis
         case 'skillaction': requiredType = 'SKILL-ACTION'; break;
         case 'creature': requiredType = 'CREATURE-ACTION'; break;
         case 'companion': requiredType = 'COMPANION-ACTION'; break;
+
+        case 'feat': requiredType = 'IS-FEAT'; break;
+        case 'action': requiredType = 'IS-ACTION'; break;
         default: break;
       }
     }
@@ -450,7 +453,13 @@ function handleFeatLinkExt(match, linkName, limitation, limitValue, innerTextDis
         if(isLevelLimit){
           if(featStruct.Feat.level != limitValue) { continue; }
         } else if(isTypeLimit){
-          if(featStruct.Feat.genericType != requiredType) { continue; }
+          if(requiredType == 'IS-FEAT'){
+            if(featStruct.Feat.genericType != null && !featStruct.Feat.genericType.endsWith('-FEAT')) { continue; }
+          } else if(requiredType == 'IS-ACTION'){
+            if(featStruct.Feat.genericType == null || !featStruct.Feat.genericType.endsWith('-ACTION')) { continue; }
+          } else {
+            if(featStruct.Feat.genericType != requiredType) { continue; }
+          }
         }
 
         let featName = featStruct.Feat.name.toUpperCase();
