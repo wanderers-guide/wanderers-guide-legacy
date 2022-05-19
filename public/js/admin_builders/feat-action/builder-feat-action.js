@@ -135,6 +135,22 @@ socket.on("returnAdminFeatDetailsPlus", function(featsObject, classObject, ances
             $("#sectionClassOptions").addClass('is-hidden');
             $("#sectionAncestryOptions").addClass('is-hidden');
             $("#sectionArchetypeOptions").addClass('is-hidden');
+        } else if(builderType == "CREATURE-ACTION"){
+            $("#sectionSkill").addClass('is-hidden');
+            $("#sectionMinProf").addClass('is-hidden');
+            $("#sectionLevel").addClass('is-hidden');
+            $("#sectionSelectMultiple").addClass('is-hidden');
+            $("#sectionClassOptions").addClass('is-hidden');
+            $("#sectionAncestryOptions").addClass('is-hidden');
+            $("#sectionArchetypeOptions").addClass('is-hidden');
+        } else if(builderType == "COMPANION-ACTION"){
+            $("#sectionSkill").addClass('is-hidden');
+            $("#sectionMinProf").addClass('is-hidden');
+            $("#sectionLevel").addClass('is-hidden');
+            $("#sectionSelectMultiple").addClass('is-hidden');
+            $("#sectionClassOptions").addClass('is-hidden');
+            $("#sectionAncestryOptions").addClass('is-hidden');
+            $("#sectionArchetypeOptions").addClass('is-hidden');
         }
     });
     builderTypeSelection.trigger("change");

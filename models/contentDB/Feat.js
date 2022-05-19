@@ -57,7 +57,7 @@ const Feat = db.define('feats', {
   },
   genericType: {
     type: Sequelize.ENUM,
-    values: ['GENERAL-FEAT', 'SKILL-FEAT', 'CLASS-FEAT', 'ANCESTRY-FEAT', 'ARCHETYPE-FEAT', 'BASIC-ACTION', 'SKILL-ACTION']
+    values: ['GENERAL-FEAT', 'SKILL-FEAT', 'CLASS-FEAT', 'ANCESTRY-FEAT', 'ARCHETYPE-FEAT', 'BASIC-ACTION', 'SKILL-ACTION', 'CREATURE-ACTION', 'COMPANION-ACTION']
   },
   genTypeName: {
     type: Sequelize.STRING

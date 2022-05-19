@@ -22,8 +22,8 @@ function textProcess_canIndex(dataCollection){
    return (typeof dataCollection !== 'undefined' && dataCollection != null);
 }
 
-const regexFeatLinkExt = /\((Feat|Ability|Action|Activity):(lvl-([\-0-9]+):|)\s*([^(:]+?)\s*\|\s*(.+?)\s*\)/ig;
-const regexFeatLink = /\((Feat|Ability|Action|Activity):(lvl-([\-0-9]+):|)\s*([^(:]+?)\s*\)/ig;
+const regexFeatLinkExt = /\((Feat|Ability|Action|Activity):(lvl-([\-0-9]+):|type-([a-z]+):|)\s*([^(:]+?)\s*\|\s*(.+?)\s*\)/ig;
+const regexFeatLink = /\((Feat|Ability|Action|Activity):(lvl-([\-0-9]+):|type-([a-z]+):|)\s*([^(:]+?)\s*\)/ig;
 const regexItemLinkExt = /\((Item):\s*([^(:]+?)\s*\|\s*(.+?)\s*\)/ig;
 const regexItemLink = /\((Item):\s*([^(:]+?)\s*\)/ig;
 const regexSpellLinkExt = /\((Spell):\s*([^(:]+?)\s*\|\s*(.+?)\s*\)/ig;
@@ -86,7 +86,11 @@ function processText(text, isSheet, isJustified = false, size = 'MEDIUM', indexC
     text = text.replace(regexTableDetection, handleTableCreation);
 
     // Wrap in a paragraph
-    text = '<p class="p-1 pl-2 '+_j+_s+'">'+text+'</p>';
+    if(text.startsWith('<p') && text.endsWith('</p>')){
+      // Don't wrap if already wrapped
+    } else {
+      text = '<p class="p-1 pl-2 '+_j+_s+'">'+text+'</p>';
+    }
 
     // ---- - Makes horizontal divider
     text = text.replace(/\n\-\-\-\-/g, '<hr class="m-1">');
@@ -136,6 +140,9 @@ function processText(text, isSheet, isJustified = false, size = 'MEDIUM', indexC
     text = text.replace(regexSheetVariables, handleSheetVariablesAndTooltips);
 
     // (Feat: Striking | Strike)
+    // Optional (Feat:lvl-0: Quick Alchemies | Quick Alchemy)
+    // or
+    // Optional (Feat:type-companion: Quick Alchemies | Quick Alchemy)
     if(typeof g_featMap !== 'undefined' && g_featMap != null) {
         text = text.replace(regexFeatLinkExt, handleFeatLinkExt);
     } else {
@@ -144,6 +151,8 @@ function processText(text, isSheet, isJustified = false, size = 'MEDIUM', indexC
 
     // (Feat: Strike)
     // Optional (Feat:lvl-0: Quick Alchemy)
+    // or
+    // Optional (Feat:type-companion: Quick Alchemy)
     if(typeof g_featMap !== 'undefined' && g_featMap != null) {
         text = text.replace(regexFeatLink, handleFeatLink);
     } else {
@@ -264,11 +273,17 @@ function processTextRemoveIndexing(text) {
 
 
   // (Feat: Striking | Strike)
-  let regexFeatLinkExt = /\((Feat|Ability|Action|Activity):(lvl-([\-0-9]+):|)\s*([^(:]+?)\s*\|\s*(.+?)\s*\)/ig;
+  // Optional (Feat:lvl-0: Quick Alchemies | Quick Alchemy)
+  // or
+  // Optional (Feat:type-companion: Quick Alchemies | Quick Alchemy)
+  let regexFeatLinkExt = /\((Feat|Ability|Action|Activity):(lvl-([\-0-9]+):|type-([a-z]+):|)\s*([^(:]+?)\s*\|\s*(.+?)\s*\)/ig;
   text = text.replace(regexFeatLinkExt, '$4');
 
   // (Feat: Strike)
-  let regexFeatLink = /\((Feat|Ability|Action|Activity):(lvl-([\-0-9]+):|)\s*([^(:]+?)\s*\)/ig;
+  // Optional (Feat:lvl-0: Quick Alchemy)
+  // or
+  // Optional (Feat:type-companion: Quick Alchemy)
+  let regexFeatLink = /\((Feat|Ability|Action|Activity):(lvl-([\-0-9]+):|type-([a-z]+):|)\s*([^(:]+?)\s*\)/ig;
   text = text.replace(regexFeatLink, '$4');
 
   // (Item: Striking | Strike)
@@ -405,14 +420,39 @@ function handleTableCreation(match) {
 
 /////
 
-function handleFeatLink(match, linkName, lvlTest, lvlNum, innerTextName) {
-    return handleFeatLinkExt(match, linkName, lvlTest, lvlNum, innerTextName, innerTextName);
+function handleFeatLink(match, linkName, limitation, limitValue, innerTextName) {
+    return handleFeatLinkExt(match, linkName, limitation, limitValue, innerTextName, innerTextName);
 }
 
-function handleFeatLinkExt(match, linkName, lvlTest, lvlNum, innerTextDisplay, innerTextName) {
+function handleFeatLinkExt(match, linkName, limitation, limitValue, innerTextDisplay, innerTextName) {
+
+    let isLevelLimit = limitation.toLowerCase().startsWith('lvl-');
+    let isTypeLimit = limitation.toLowerCase().startsWith('type-');
+    let requiredType = null;
+    if(isTypeLimit){
+      switch(limitValue.toLowerCase()) {
+        case 'general': requiredType = 'GENERAL-FEAT'; break;
+        case 'skill': requiredType = 'SKILL-FEAT'; break;
+        case 'class': requiredType = 'CLASS-FEAT'; break;
+        case 'ancestry': requiredType = 'ANCESTRY-FEAT'; break;
+        case 'archetype': requiredType = 'ARCHETYPE-FEAT'; break;
+        case 'basic': requiredType = 'BASIC-ACTION'; break;
+        case 'skillaction': requiredType = 'SKILL-ACTION'; break;
+        case 'creature': requiredType = 'CREATURE-ACTION'; break;
+        case 'companion': requiredType = 'COMPANION-ACTION'; break;
+        default: break;
+      }
+    }
+
     let innerTextNameUpper = innerTextName.replace(/’/g,'\'').toUpperCase();
     for(const [featID, featStruct] of g_featMap.entries()){
-        if(lvlNum != null && featStruct.Feat.level != lvlNum) { continue; }
+
+        if(isLevelLimit){
+          if(featStruct.Feat.level != limitValue) { continue; }
+        } else if(isTypeLimit){
+          if(featStruct.Feat.genericType != requiredType) { continue; }
+        }
+
         let featName = featStruct.Feat.name.toUpperCase();
         if(innerTextNameUpper === featName && featStruct.Feat.isArchived == 0) {
             let featLinkClass = 'featTextLink'+featStruct.Feat.id;

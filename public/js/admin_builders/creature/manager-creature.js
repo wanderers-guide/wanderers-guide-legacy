@@ -87,20 +87,15 @@ function creatureInitImport() {
                 fileReader.onload = (function (capturedFile) {
                     return function (e) {
                         if (capturedFile.name.endsWith('.json')) {
-                            try {
-                                let importData = JSON.parse(e.target.result);
 
-                                if (importData.type == `npc`) {
-                                    parseCreatureData(importData);
-                                } else if (importData.type == `hazard`) {
-                                    //parseHazardData(importData);
-                                }
+                            let importData = JSON.parse(e.target.result);
 
-
-                            } catch (err) {
-                                console.error(err);
-                                console.warn('Failed to import "' + capturedFile.name + '"');
+                            if (importData.type == `npc`) {
+                                parseCreatureData(importData);
+                            } else if (importData.type == `hazard`) {
+                                //parseHazardData(importData);
                             }
+
                         }
                     };
                 })(file);
@@ -340,7 +335,7 @@ function parseCreatureData(importData) {
 
 
 
-function convertToWGRarity(rarity){
+function convertToWGRarity(rarity) {
     switch (rarity) {
         case 'common': return 'COMMON';
         case 'uncommon': return 'UNCOMMON';
@@ -350,7 +345,7 @@ function convertToWGRarity(rarity){
     }
 }
 
-function convertToWGSize(size){
+function convertToWGSize(size) {
     switch (size) {
         case 'tiny': return 'TINY';
         case 'sm': return 'SMALL';
@@ -362,26 +357,26 @@ function convertToWGSize(size){
     }
 }
 
-function convertToWGActions(actionType, actions){
-    if(actionType == 'passive'){
+function convertToWGActions(actionType, actions) {
+    if (actionType == 'passive') {
         return null;
-    } else if(actionType == 'reaction'){
+    } else if (actionType == 'reaction') {
         return 'REACTION';
-    } else if(actionType == 'free'){
-        return 'FREE_ACTION';
-    } else if(actionType == 'action'){
-        if(actions == 1){
-            return 'ACTION';
-        } else if(actions == 2){
-            return 'TWO_ACTIONS';
-        } else if(actions == 3){
-            return 'THREE_ACTIONS';
+    } else if (actionType == 'free') {
+        return 'FREE-ACTION';
+    } else if (actionType == 'action') {
+        if (actions == 1) {
+            return 'ONE-ACTION';
+        } else if (actions == 2) {
+            return 'TWO-ACTIONS';
+        } else if (actions == 3) {
+            return 'THREE-ACTIONS';
         }
     }
     return null;
 }
 
-function convertToWGSource(source){
+function convertToWGSource(source) {
     switch (source) {
         case 'Pathfinder Bestiary 3': return 'BEST-3';
         case 'Pathfinder Adventure: Malevolence': return 'MALEVOLENCE';

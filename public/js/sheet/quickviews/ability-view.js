@@ -57,7 +57,9 @@ function openAbilityQuickview(data) {
     }
 
     // Add Text Statements
-    processAddText(data.Ability.code, 'quickViewContent');
+    if(typeof processAddText === "function") {
+      processAddText(data.Ability.code, 'quickViewContent');
+    }
 
     // Note Field Statements
     let srcStruct = { // Hardcoded 'classAbility' sourceCode title name

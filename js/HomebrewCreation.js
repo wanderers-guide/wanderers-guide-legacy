@@ -886,6 +886,10 @@ module.exports = class HomebrewCreation {
             data.isDefault = 1;
         } else if(data.builderType == "SKILL-ACTION"){
             data.isDefault = 1;
+        } else if(data.builderType == "CREATURE-ACTION"){
+            //
+        } else if(data.builderType == "COMPANION-ACTION"){
+            //
         } else {
             console.error("Invalid BuilderType for Feat Creation: '"+data.builderType+"'!");
             return;

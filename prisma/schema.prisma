@@ -1363,6 +1363,8 @@ enum feats_genericType {
   ANCESTRY_FEAT   @map("ANCESTRY-FEAT")
   BASIC_ACTION    @map("BASIC-ACTION")
   SKILL_ACTION    @map("SKILL-ACTION")
+  CREATURE_ACTION    @map("CREATURE-ACTION")
+  COMPANION_ACTION    @map("COMPANION-ACTION")
 }
 
 enum heritages_rarity {
