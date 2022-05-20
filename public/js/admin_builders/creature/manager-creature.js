@@ -6,14 +6,8 @@ let socket = io();
 
 let activeModalCreatureID = -1;
 
-// TEMP
-let g_allTags = null;
-
 // ~~~~~~~~~~~~~~ // Run on Load // ~~~~~~~~~~~~~~ //
 $(function () {
-
-    // TEMP
-    g_allTags = JSON.parse($('#input-import-creature').attr('data-tags'));
 
     creatureInitImport();
 
@@ -75,6 +69,8 @@ socket.on("returnAdminRemoveCreature", function () {
 
 function creatureInitImport() {
 
+    startSpinnerLoader();
+
     const fileInput = document.querySelector('#input-import-creature');
     fileInput.onchange = () => {
         if (fileInput.files.length > 0) {
@@ -107,7 +103,24 @@ function creatureInitImport() {
         }
     };
 
+    socket.emit("requestAdminCreatureDetails");
+
 }
+
+let g_allConditions;
+let g_allTags;
+let g_featMap;
+let g_itemMap;
+let g_spellMap;
+socket.on("returnAdminCreatureDetails", function(allTags, featsObject, itemsObject, spellsObject, allConditions){
+    g_allConditions = allConditions;
+    g_allTags = allTags;
+    g_featMap = objToMap(featsObject);
+    g_itemMap = objToMap(itemsObject);
+    g_spellMap = objToMap(spellsObject);
+    stopSpinnerLoader();
+});
+
 
 function parseCreatureData(importData) {
 
@@ -158,13 +171,37 @@ function parseCreatureData(importData) {
     });
     let itemsDataArray = [];
     for (let item of inventory) {
+
+        let quantity = 1;
         if (item.type == `consumable`) {
-            console.log(`${item.name} x${item.data.quantity}`);
-            itemsDataArray.push({ name: item.name, quantity: item.data.quantity });
-        } else {
-            console.log(`${item.name}`);
-            itemsDataArray.push({ name: item.name, quantity: 1 });
+            quantity = item.data.quantity;
         }
+
+        let name = null;
+        let doIndex = true;
+        if(item.data.baseItem != null){
+            name = item.data.baseItem;
+        } else {
+            doIndex = false;
+        }
+
+        let shieldStats = null;
+        if(item.data.category == 'shield'){
+            shieldStats = {
+                armor: item.data.armor.value,
+                hardness: item.data.hardness,
+                hp: item.data.hp.max,
+                bt: item.data.hp.brokenThreshold,
+            };
+        }
+
+        itemsDataArray.push({
+            displayName: item.name,
+            quantity: quantity,
+            name: name,
+            doIndex: doIndex,
+            shieldStats: shieldStats,
+        });
     }
     data.itemsJSON = JSON.stringify(itemsDataArray);
 
@@ -252,6 +289,7 @@ function parseCreatureData(importData) {
         console.log(`${damageStr}`);
 
         attacksDataArray.push({
+            type: attack.data.weaponType.value,
             name: attack.name,
             bonus: attack.data.bonus.value,
             traits: attack.data.traits.value,
@@ -269,26 +307,54 @@ function parseCreatureData(importData) {
     let spellcastingDataArray = [];
     for (let spellcasting of spellcastings) {
 
-        let spells;
-        if (spellcasting.data.prepared.value == `ritual`) {
-            spells = importData.items.filter((item) => {
-                return item.type == `spell` && item.data.category.value == `ritual`;
-            });
-        } else if (spellcasting.data.prepared.value == `focus`) {
-            spells = importData.items.filter((item) => {
-                return item.type == `spell` && item.data.category.value == `focus`;
-            });
-        } else {
-            spells = importData.items.filter((item) => {
-                return item.type == `spell` && item.data.category.value == `spell`;
-            });
+        
+        let focusPoints = 0;
+        if (spellcasting.data.prepared.value == `focus`) {
+            focusPoints = importData.data.resources.focus.max;
         }
 
-        console.log(`${spellcasting.name}, DC ${spellcasting.data.spelldc.dc}, Attack ${spellcasting.data.spelldc.value}`);
+        let spells = importData.items.filter((item) => {
+            return item.type == `spell` && item.data.location.value == spellcasting._id;
+        });
+
         let spellsDataArray = [];
+        let constantSpellsDataArray = [];
         for (let spell of spells) {
-            console.log(`${spell.name} ${spell.data.level.value}`);
-            spellsDataArray.push({ name: spell.name, level: spell.data.level.value });
+
+            let level = spell.data.level.value;
+            if(spell.data.location.heightenedLevel != null){
+                level = spell.data.location.heightenedLevel;
+            }
+            if(spell.data.traits.value.includes('cantrip')){
+                level = 0;
+            }
+
+            let spellName = spell.name.toLowerCase();
+
+            if(spellName.includes(` (constant)`)){
+
+                spellName = spellName.replace(` (constant)`,``);
+                constantSpellsDataArray.push({
+                    name: spellName,
+                    level: level,
+                });
+
+            } else {
+
+                let isAtWill = false;
+                if(spellName.includes(` (at will)`)){
+                    spellName = spellName.replace(` (at will)`,``);
+                    isAtWill = true;
+                }
+
+                spellsDataArray.push({
+                    name: spellName,
+                    level: level,
+                    isAtWill: isAtWill,
+                });
+
+            }
+            
         }
 
         spellcastingDataArray.push({
@@ -296,6 +362,8 @@ function parseCreatureData(importData) {
             dc: spellcasting.data.spelldc.dc,
             attack: spellcasting.data.spelldc.value,
             spells: spellsDataArray,
+            constantSpells: constantSpellsDataArray,
+            focus: focusPoints,
         });
     }
     data.spellcastingJSON = JSON.stringify(spellcastingDataArray);

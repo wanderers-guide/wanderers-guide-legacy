@@ -54,7 +54,7 @@ function openCreatureQuickview(mainData) {
             break;
         case 'SMALL': traitsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-very-small is-link has-tooltip-bottom has-tooltip-multiline" data-tooltip="A Small creature takes up a 5-foot-by-5-foot space (1 square on the grid) and typically has a reach of 5 feet.">Small</button>';
             break;
-        case 'MEDIUM': traitsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-very-small is-link has-tooltip-bottom has-tooltip-multiline" data-tooltip="A Medium creature takes up a 5-foot-by-5-foot space (1 square on the grid) and typically has a reach of 5 feet.">Large</button>';
+        case 'MEDIUM': traitsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-very-small is-link has-tooltip-bottom has-tooltip-multiline" data-tooltip="A Medium creature takes up a 5-foot-by-5-foot space (1 square on the grid) and typically has a reach of 5 feet.">Medium</button>';
             break;
         case 'LARGE': traitsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-very-small is-link has-tooltip-bottom has-tooltip-multiline" data-tooltip="A Large creature takes up a 10-foot-by-10-foot space (4 squares on the grid). It typically has a reach of 10 feet if the creature is tall or 5 feet if the creature is long.">Large</button>';
             break;
@@ -77,7 +77,14 @@ function openCreatureQuickview(mainData) {
             return tag.name.toLowerCase() === traitName.toLowerCase();
         });
 
-        if (tag == null) { console.error('Unknown trait: ' + traitName); }
+        if (tag == null) {
+            console.error('Unknown trait: ' + traitName);
+            tag = {
+                name: traitName,
+                description: `Unknown trait!`,
+                isImportant: 0,
+            };
+        }
 
         let tagDescription = tag.description;
 
@@ -135,57 +142,96 @@ function openCreatureQuickview(mainData) {
     qContent.append(`
         <div class="pl-2 pr-1">
             <p class="negative-indent">
-                <span><strong>Perception </strong></span><span>${perception}; ${data.senses}</span>
+                <span><strong>Perception </strong></span><span>${signNumber(perception)}; ${data.senses}</span>
             </p>
         </div>
     `);
 
-    // Languages
+    // Languages //
     let langStr = '';
     for (let language of JSON.parse(data.languagesJSON)) {
         langStr += language + ', ';
     }
-    langStr += data.languagesCustom;
-    qContent.append(`
-        <div class="pl-2 pr-1">
-            <p class="negative-indent">
-                <span><strong>Languages </strong></span><span>${langStr}</span>
-            </p>
-        </div>
-    `);
+    langStr = langStr.slice(0, -2);// Trim off that last ', '
+    if (data.languagesCustom != ``) {
+        langStr += `; ${data.languagesCustom}`;
+    }
+    if (langStr != ``) {
+        qContent.append(`
+            <div class="pl-2 pr-1">
+                <p class="negative-indent">
+                    <span><strong>Languages </strong></span><span>${langStr}</span>
+                </p>
+            </div>
+        `);
+    }
 
     // Skills //
     let skillStr = '';
     for (let skill of skills) {
-        skillStr += `${skill.name} ${skill.bonus}, `;
+        skillStr += `${skill.name} ${signNumber(skill.bonus)}, `;
     }
-    qContent.append(`
-        <div class="pl-2 pr-1">
-            <p class="negative-indent">
-                <span><strong>Skills </strong></span><span>${skillStr}</span>
-            </p>
-        </div>
-    `);
+    skillStr = skillStr.slice(0, -2);// Trim off that last ', '
+    if (skillStr != ``) {
+        qContent.append(`
+            <div class="pl-2 pr-1">
+                <p class="negative-indent">
+                    <span><strong>Skills </strong></span><span>${skillStr}</span>
+                </p>
+            </div>
+        `);
+    }
 
     // Ability Mods //
     qContent.append(`
         <div class="pl-2 pr-1">
             <p class="negative-indent">
-                <span><strong>Str </strong></span><span>${abilityMods.str}, </span>
-                <span><strong>Dex </strong></span><span>${abilityMods.dex}, </span>
-                <span><strong>Con </strong></span><span>${abilityMods.con}, </span>
-                <span><strong>Int </strong></span><span>${abilityMods.int}, </span>
-                <span><strong>Wis </strong></span><span>${abilityMods.wis}, </span>
-                <span><strong>Cha </strong></span><span>${abilityMods.cha} </span>
+                <span><strong>Str </strong></span><span>${signNumber(abilityMods.str)}, </span>
+                <span><strong>Dex </strong></span><span>${signNumber(abilityMods.dex)}, </span>
+                <span><strong>Con </strong></span><span>${signNumber(abilityMods.con)}, </span>
+                <span><strong>Int </strong></span><span>${signNumber(abilityMods.int)}, </span>
+                <span><strong>Wis </strong></span><span>${signNumber(abilityMods.wis)}, </span>
+                <span><strong>Cha </strong></span><span>${signNumber(abilityMods.cha)} </span>
             </p>
         </div>
     `);
+
+    // Items //
+    let itemsStr = '';
+    for (let item of JSON.parse(data.itemsJSON)) {
+
+        if (item.quantity > 1) {
+            itemsStr += `${item.quantity}x `;
+        }
+
+        if (item.doIndex) {
+            itemsStr += item.displayName.replace(new RegExp(item.name, 'i'), `(item: ${item.name})`).toLowerCase();
+        } else {
+            itemsStr += item.displayName.toLowerCase();
+        }
+
+        if (item.shieldStats != null) {
+            itemsStr += ` __(${signNumber(item.shieldStats.armor)} to AC; Hardness ${item.shieldStats.hardness}, HP ${item.shieldStats.hp}, BT ${item.shieldStats.bt})__`;
+        }
+
+        itemsStr += `, `;
+
+    }
+    itemsStr = itemsStr.slice(0, -2);// Trim off that last ', '
+    if (itemsStr != ``) {
+        itemsStr = `~ Items: ${itemsStr}`;
+        qContent.append(`
+            <div class="">
+                ${processText(itemsStr, false, false, 'MEDIUM')}
+            </div>
+        `);
+    }
 
     // Interaction Abilities //
     let interactionAbilities = JSON.parse(data.interactionAbilitiesJSON);
     for (let ability of interactionAbilities) {
         // Remove Darkvision or other base machanics like that
-        if (ability.description.startsWith(`<p>@Localize[PF2E.NPC.Abilities.Glossary.`)) { continue; }
+        if (ability.description == `` || ability.description.startsWith(`<p>@Localize[PF2E.NPC.Abilities.Glossary.`)) { continue; }
         addAbility(qContent, ability);
     }
 
@@ -196,10 +242,10 @@ function openCreatureQuickview(mainData) {
         <div class="pl-2 pr-1">
             <p class="negative-indent">
                 <span><strong>AC </strong></span><span>${ac}; </span>
-                <span><strong>Fort </strong></span><span>${saves.fort}, </span>
-                <span><strong>Ref </strong></span><span>${saves.reflex}, </span>
-                <span><strong>Will </strong></span><span>${saves.will}</span>
-                <span>; ${data.allSavesCustom}</span>
+                <span><strong>Fort </strong></span><span>${signNumber(saves.fort)}, </span>
+                <span><strong>Ref </strong></span><span>${signNumber(saves.reflex)}, </span>
+                <span><strong>Will </strong></span><span>${signNumber(saves.will)}${(data.allSavesCustom != null && data.allSavesCustom != ``) ? `; ` : ``}</span>
+                ${(data.allSavesCustom != null && data.allSavesCustom != ``) ? `<span>${data.allSavesCustom}</span>` : ``}
             </p>
         </div>
     `);
@@ -234,11 +280,10 @@ function openCreatureQuickview(mainData) {
     qContent.append(`
         <div class="pl-2 pr-1">
             <p class="negative-indent">
-                <span><strong>HP </strong></span><span>${hpMax}, </span>
-                <span>${data.hpDetails}; </span>
-                <span><strong>Immunities </strong></span><span>${immunitiesStr}; </span>
-                <span><strong>Weaknesses </strong></span><span>${weaknessesStr}; </span>
-                <span><strong>Resistances </strong></span><span>${resistancesStr}</span>
+                <span><strong>HP </strong></span><span>${hpMax}${(data.hpDetails != ``) ? `, ${data.hpDetails}` : ``}; </span>
+                ${(immunitiesStr != ``) ? `<span><strong>Immunities </strong></span><span>${immunitiesStr}; </span>` : ``}
+                ${(weaknessesStr != ``) ? `<span><strong>Weaknesses </strong></span><span>${weaknessesStr}; </span>` : ``}
+                ${(resistancesStr != ``) ? `<span><strong>Resistances </strong></span><span>${resistancesStr}</span>` : ``}
             </p>
         </div>
     `);
@@ -246,6 +291,7 @@ function openCreatureQuickview(mainData) {
     // Defensive Abilities //
     let defensiveAbilities = JSON.parse(data.defensiveAbilitiesJSON);
     for (let ability of defensiveAbilities) {
+        if(ability.description == ``) { continue; }
         addAbility(qContent, ability);
     }
 
@@ -282,28 +328,129 @@ function openCreatureQuickview(mainData) {
         let damageStr = '';
         for (let damage of attack.damage) {
             let damageType = damage.damageType;
-            if (damageType.toLowerCase() == 'piercing') { damageType = 'P'; }
-            if (damageType.toLowerCase() == 'slashing') { damageType = 'S'; }
-            if (damageType.toLowerCase() == 'bludgeoning') { damageType = 'B'; }
+            //if (damageType.toLowerCase() == 'piercing') { damageType = 'P'; }
+            //if (damageType.toLowerCase() == 'slashing') { damageType = 'S'; }
+            //if (damageType.toLowerCase() == 'bludgeoning') { damageType = 'B'; }
 
             damageStr += `${damage.damage} ${damageType}, `;
         }
-        if (attack.effects != null) {
-            damageStr += attack.effects;
+        if (attack.effects != ``) {
+            damageStr += `plus ${attack.effects}`;
         } else {
             damageStr = damageStr.slice(0, -2);// Trim off that last ', '
         }
 
         qContent.append(`
             <div class="">
-                ${processText(`~ Melee: ONE-ACTION ${attack.name.toLowerCase()} ${attackBonusStr}${traitsStr}, **Damage** ${damageStr}`, false, false, 'MEDIUM')}
+                ${processText(`~ ${capitalizeWord(attack.type)}: ONE-ACTION ${attack.name.toLowerCase()} ${attackBonusStr}${traitsStr}, **Damage** ${damageStr}`, false, false, 'MEDIUM')}
             </div>
         `);
 
     }
 
     // Spellcasting //
-    // TODO
+    for (let spellcasting of JSON.parse(data.spellcastingJSON)) {
+
+        let indexSpells = (!spellcasting.name.includes(`Ritual`));
+
+        let spellsStr = ``;
+        if (spellcasting.focus != 0) {
+            spellsStr += `${spellcasting.focus} Focus Points`;
+        }
+        if (spellcasting.dc != 0) {
+            if (spellsStr != ``) { spellsStr += `, `; }
+            spellsStr += `DC ${spellcasting.dc}`;
+        }
+        if (spellcasting.attack != 0) {
+            if (spellsStr != ``) { spellsStr += `, `; }
+            spellsStr += `attack ${signNumber(spellcasting.attack)}`;
+        }
+        spellsStr += `; `;
+
+        // Spells
+        let spells = spellcasting.spells.sort(
+            function (a, b) {
+                if (a.level === b.level) {
+                    // Name is only important when levels are the same
+                    return a.name > b.name ? 1 : -1;
+                }
+                return b.level - a.level;
+            }
+        );
+        let spell_lastLevel = 999;
+        for(let spell of spells){
+            if(spell.level < spell_lastLevel){
+                if(spell_lastLevel != 999){
+                    spellsStr = spellsStr.slice(0, -2);// Trim off that last ', '
+                    spellsStr += `; `;
+                }
+                if(spell.level == 0){
+                    spellsStr += `**Cantrips (${rankLevel(spells[0].level)})** `;
+                } else {
+                    spellsStr += `**${rankLevel(spell.level)}** `;
+                }
+            }
+            if(indexSpells){
+                spellsStr += `(spell: ${spell.name.toLowerCase()})${spell.isAtWill ? ` (at will)` : ``}, `;
+            } else {
+                spellsStr += `${spell.name.toLowerCase()}${spell.isAtWill ? ` (at will)` : ``}, `;
+            }
+            spell_lastLevel = spell.level;
+        }
+        if(spells.length > 0){
+            spellsStr = spellsStr.slice(0, -2);// Trim off that last ', '
+        }
+        //
+
+        // Constant Spells
+        let constantSpells = spellcasting.constantSpells.sort(
+            function (a, b) {
+                if (a.level === b.level) {
+                    // Name is only important when levels are the same
+                    return a.name > b.name ? 1 : -1;
+                }
+                return b.level - a.level;
+            }
+        );
+        if(constantSpells.length > 0){
+            if(spells.length > 0){
+                spellsStr += `; `;
+            }
+            spellsStr += `**Constant** `;
+        }
+        let constant_lastLevel = 999;
+        for(let spell of constantSpells){
+            if(spell.level < constant_lastLevel){
+                if(constant_lastLevel != 999){
+                    spellsStr = spellsStr.slice(0, -2);// Trim off that last ', '
+                    spellsStr += `; `;
+                }
+                if(spell.level == 0){
+                    spellsStr += `**(Cantrips)** `;
+                } else {
+                    spellsStr += `**(${rankLevel(spell.level)})** `;
+                }
+            }
+            if(indexSpells){
+                spellsStr += `(spell: ${spell.name.toLowerCase()}), `;
+            } else {
+                spellsStr += `${spell.name.toLowerCase()}, `;
+            }
+            constant_lastLevel = spell.level;
+        }
+        if(constantSpells.length > 0){
+            spellsStr = spellsStr.slice(0, -2);// Trim off that last ', '
+        }
+        //
+        console.log(spellsStr);
+
+        qContent.append(`
+            <div class="">
+                ${processText(`~ ${spellcasting.name}: ${spellsStr}`, false, false, 'MEDIUM')}
+            </div>
+        `);
+
+    }
 
     // Offensive Abilities //
     let offensiveAbilities = JSON.parse(data.offensiveAbilitiesJSON);
@@ -315,8 +462,8 @@ function openCreatureQuickview(mainData) {
         qContent.append('<hr class="mb-2 mt-1">');
 
         qContent.append(`
-            <div class="pl-2 pr-2">
-                <p><a class="has-text-info is-bold is-italic creature-view-flavor-text">View Description</a></p>
+            <div class="pl-2 pr-2 pt-2">
+                <p class="text-center"><a class="has-text-info creature-view-flavor-text">[ View Description ]</a></p>
             </div>
         `);
 
@@ -347,9 +494,10 @@ function addAbility(qContent, ability) {
 
     if (ability.description.startsWith(`<p>@Localize[PF2E.NPC.Abilities.Glossary.`)) {
         // It's just the name of the ability and a link,
+
         qContent.append(`
             <div class="">
-                ${processText(`<span id="${abilityID}-header"><strong class="is-bold">(feat: ${ability.name})</strong></span> ${actions}${traitsStr}`, false, false, 'MEDIUM')}
+                ${processText(`<span id="${abilityID}-header" class=""><span class="icon is-small pr-1"><i class="fas fa-xs fa-chevron-right"></i></span><strong class="is-bold">(feat: ${ability.name})</strong></span> ${actions}${traitsStr}`, false, false, 'MEDIUM')}
             </div>
         `);
 
@@ -357,7 +505,7 @@ function addAbility(qContent, ability) {
 
         qContent.append(`
             <div class="">
-                ${processText(`<span id="${abilityID}-header" class="cursor-clickable"><span class="icon is-small pr-1"><i id="${abilityID}-chevron" class="fas fas fa-xs fa-chevron-right"></i></span><strong class="is-bold">${ability.name}</strong></span> ${actions}${traitsStr}`, false, false, 'MEDIUM')}
+                ${processText(`<span id="${abilityID}-header" class="cursor-clickable"><span class="icon is-small pr-1"><i id="${abilityID}-chevron" class="fas fa-xs fa-chevron-right"></i></span><strong class="is-bold">${ability.name}</strong></span> ${actions}${traitsStr}`, false, false, 'MEDIUM')}
                 <div id="${abilityID}-description" class="is-hidden pl-4">
                     ${processText(parseDescription(ability.description), false, false, 'MEDIUM')}
                 </div>
@@ -389,8 +537,14 @@ function stringifyTraits(traits, surroundWithParentheses = false) {
             let reachAmt = trait.toLowerCase().replace('reach-', '');
             traitsStr += `(trait: reach) ${reachAmt} feet, `;
 
+        } else if (trait.toLowerCase().startsWith('range-')) {
+
+            let rangeAmt = trait.toLowerCase().replace('range-', '');
+            rangeAmt = rangeAmt.replace('increment-', '');
+            traitsStr += `range ${rangeAmt} feet, `;
+
         } else {
-            traitsStr += `(trait: ${trait}), `;
+            traitsStr += `(trait: ${trait.replace(/-/g, ' ')}), `;
         }
 
     }
@@ -406,6 +560,7 @@ function parseDescription(text) {
     text = text.replace(/@Compendium\[(.+?)\]{(.*?)}/g, handleParse_Compendium);
     text = text.replace(/@Template\[(.+?)\]/g, handleParse_Template);
     text = text.replace(/@Check\[(.+?)\]/g, handleParse_Check);
+    text = text.replace(/@Localize\[PF2E\.NPC\.Abilities\.Glossary\.(.+?)\]/g, handleParse_Glossary);
 
     return text;
 }
@@ -416,6 +571,31 @@ function handleParse_DamageExt(match, innerText, displayText) {
 
 function handleParse_Damage(match, innerText) {
     return innerText.replace(/\W/g, ' ').trim();
+}
+
+function handleParse_Glossary(match, innerText) {
+
+    if (typeof g_featMap !== 'undefined' && g_featMap != null) {
+
+        for (const [featID, featStruct] of g_featMap.entries()) {
+            let reducedName = featStruct.Feat.name.replace(/ /g, '');
+            if (reducedName === innerText) {
+
+                if (featStruct.Feat.requirements != null && featStruct.Feat.requirements != '') {
+                    return `
+                        **Requirements** ${featStruct.Feat.requirements}
+                        ${featStruct.Feat.description}
+                    `;
+                } else {
+                    return featStruct.Feat.description;
+                }
+            }
+        }
+        return `Failed to find description of ${innerText}.`;
+    } else {
+        return `Description of ${innerText}.`;
+    }
+
 }
 
 function handleParse_Compendium(match, innerText, displayText) {

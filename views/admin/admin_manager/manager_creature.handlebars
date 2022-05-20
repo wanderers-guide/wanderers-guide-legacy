@@ -7,6 +7,13 @@
 <script src="/js/sheet/quickviews/ability-view.js"></script>
 <script src="/js/sheet/quickviews/tag-view.js"></script>
 
+<script src="/js/sheet/quickviews/feat-view.js"></script>
+<script src="/js/sheet/quickviews/spell-view.js"></script>
+<script src="/js/sheet/quickviews/item-view.js"></script>
+<script src="/js/sheet/quickviews/condition-view.js"></script>
+<script src="/js/sheet/utils/item-utils.js"></script>
+<script src="/js/sheet/utils/material-utils.js"></script>
+
 <script src="/js/wsc/text-processing.js"></script>
 
 {{/section}}
@@ -45,6 +52,10 @@
 <div class="banner_w3lspvt-2"></div>
 {{/section}}
 
+<div class="pageloader">
+    <div class="lds-roller" style="margin-bottom: 20%;"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+</div>
+
 <div class="container">
 
     <div class="columns is-mobile is-centered is-vcentered pt-3 is-marginless">
@@ -64,7 +75,7 @@
                         <i class="fas fa-upload"></i>
                     </span>
                 </label>
-                <input id="input-import-creature" data-tags="{{tags}}" type="file" accept=".json" multiple />
+                <input id="input-import-creature" type="file" accept=".json" multiple />
             </a>
         </div>
 

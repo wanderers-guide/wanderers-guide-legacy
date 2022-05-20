@@ -146,7 +146,7 @@ function processText(text, isSheet, isJustified = false, size = 'MEDIUM', indexC
     if(typeof g_featMap !== 'undefined' && g_featMap != null) {
         text = text.replace(regexFeatLinkExt, handleFeatLinkExt);
     } else {
-        text = text.replace(regexFeatLinkExt, '<span class="is-underlined-warning">$4</span>');
+        text = text.replace(regexFeatLinkExt, '<span class="is-underlined-warning">$5</span>');
     }
 
     // (Feat: Strike)
@@ -156,7 +156,7 @@ function processText(text, isSheet, isJustified = false, size = 'MEDIUM', indexC
     if(typeof g_featMap !== 'undefined' && g_featMap != null) {
         text = text.replace(regexFeatLink, handleFeatLink);
     } else {
-        text = text.replace(regexFeatLink, '<span class="is-underlined-warning">$4</span>');
+        text = text.replace(regexFeatLink, '<span class="is-underlined-warning">$5</span>');
     }
 
     // (Item: Striking | Strike)

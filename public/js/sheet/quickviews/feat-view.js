@@ -164,7 +164,9 @@ function openFeatQuickview(data) {
     qContent.append(featContentInnerHTML);
 
     // Add Text Statements
-    processAddText(data.Feat.code, 'quickViewContent');
+    if(typeof processAddText === "function") {
+      processAddText(data.Feat.code, 'quickViewContent');
+    }
 
     // Note Field Statements
     if(data.SrcStruct != null){

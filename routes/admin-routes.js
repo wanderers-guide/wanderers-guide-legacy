@@ -469,16 +469,10 @@ router.get('/manage/creature', adminAuthCheck, (req, res) => {
         order: [['level', 'ASC'], ['name', 'ASC'],],
         where: { homebrewID: null }
     }).then((creatures) => {
-        Tag.findAll({
-            where: { isArchived: 0, homebrewID: null },
-            order: [['name', 'ASC'],]
-        }).then((tags) => {
-            res.render('admin/admin_manager/manager_creature', {
-                title: "Creature Manager - Wanderer's Guide",
-                user: req.user,
-                creatures,
-                tags: JSON.stringify(tags),
-            });
+        res.render('admin/admin_manager/manager_creature', {
+            title: "Creature Manager - Wanderer's Guide",
+            user: req.user,
+            creatures,
         });
     });
 

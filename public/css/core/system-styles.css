@@ -95,6 +95,8 @@ li {
 hr {
   border-color: var(--hr-color);
   background-color: var(--hr-color);
+  margin-top: 0rem;
+  margin-bottom: 0rem;
 }
 
 
