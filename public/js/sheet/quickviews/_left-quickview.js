@@ -27,6 +27,10 @@ function openLeftQuickView(subtabName) {
 
 }
 
+function closeLeftQuickView(){
+  $('#quickviewLeftDefault').removeClass('is-active');
+}
+
 function setLeftQuickViewTab(subtabName){
 
   $('#quickViewLeftTitle').html('Sheet Tools - '+subtabName);
@@ -36,6 +40,8 @@ function setLeftQuickViewTab(subtabName){
   $('#quickViewLeftTab-DiceRoller').parent().removeClass("is-active");
   $('#quickViewLeftTab-Toggleables').parent().removeClass("is-active");
   $('#quickViewLeftTab-'+(subtabName.replace(/ /g,''))).parent().addClass("is-active");
+
+  $('#quickViewLeftOuterExtra').html('');
 
   if(subtabName == 'Toggleables'){
     leftQuickview_OpenToggleables();
@@ -135,6 +141,35 @@ function leftQuickview_OpenDiceRoller() {
 
   `);
 
+  // Enable Dice Integration Button //
+  if(gOption_hasDiceRoller){
+    $('#quickViewLeftOuterExtra').html(`
+      <div class="pos-absolute pos-b-15 pos-r-15">
+        <p class="is-size-7 has-txt-faded">Dice Integration Enabled</p>
+      </div>
+      <div class="pos-absolute pos-b-5 pos-r-15">
+        <p class="is-size-8 has-txt-faded is-italic">(disable in the builder under options)</p>
+      </div>
+    `);
+  } else {
+    $('#quickViewLeftOuterExtra').html(`
+      <div class="pos-absolute pos-b-15 pos-r-15">
+        <button id="quickViewLeftEnableDiceIntegrationBtn" class="button is-info is-outlined is-rounded is-tiny">Enable Dice Integration?</button>
+      </div>
+    `);
+    $('#quickViewLeftEnableDiceIntegrationBtn').click(function() {
+
+      socket.emit("requestCharacterOptionChange", 
+          getCharIDFromURL(), 
+          'optionDiceRoller',
+          1);
+
+      gOption_hasDiceRoller = true;
+      reloadCharSheet();
+      closeLeftQuickView();
+    });
+  }
+
   // Display Roll History
   if(g_rollHistory.length > 0){
     for (let i = 0; i < g_rollHistory.length; i++) {
@@ -190,7 +225,7 @@ function leftQuickview_OpenDiceRoller() {
   // Scroll to Bottom
   window.setTimeout(() => {
     $('#dice-roller-output-container').scrollTop($('#dice-roller-output-container')[0].scrollHeight);
-  }, 100);
+  }, 1);
 
   // Roll Btn Listener //
   $('#dice-roller-input-roll').click(function() {
