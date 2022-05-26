@@ -246,6 +246,19 @@ body {
 .input::-webkit-input-placeholder, .select select::-webkit-input-placeholder, .textarea::-webkit-input-placeholder{
   color:rgba(219,219,219,.4);
 }
+
+/* Adds placeholder text for Firefox */
+@-moz-document url-prefix() {
+  .input::placeholder {
+    color: rgba(219,219,219);
+    opacity: 0.4;
+  }
+  .textarea::placeholder {
+    color: rgba(219,219,219);
+    opacity: 0.4;
+  }
+}
+
 .button:hover {
   background-color: var(--selectors-hover-color);
 }

@@ -31,4 +31,19 @@ router.get('/shop-generator', (req, res) => {
 
 });
 
+router.get('/encounter-builder', (req, res) => {
+
+  let isPatreonSupporter = 0;
+  if(req.user != null){
+    isPatreonSupporter = req.user.isPatreonSupporter;
+  }
+
+  res.render('gm_tools/encounter_builder', {
+    title: "Encounter Builder - Wanderer's Guide",
+    user: req.user,
+    isPatreonSupporter,
+  });
+
+});
+
 module.exports = router;

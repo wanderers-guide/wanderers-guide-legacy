@@ -15,7 +15,7 @@ function openInventoryTab(data){
           <a id="invAddItems" class="button is-info is-rounded has-txt-value-string">Add Items</a>
         </div>
       </div>
-      <div class="tile is-ancestor is-vertical">
+      <div class="tile is-ancestor is-vertical is-marginless">
         <div class="tile is-parent mobile-apply-flex is-paddingless pt-1 px-2">
           <div class="tile is-child is-6">
             <p class="has-text-left pl-4"><strong class="has-txt-listing">Name</strong></p>

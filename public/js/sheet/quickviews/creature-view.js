@@ -2,17 +2,73 @@
     By Aaron Cassar.
 */
 
+let creatureQuickView_data = null;
+let creatureQuickView_stats = null;
+const g_conditionStringLengthMax = 450;
+
 function openCreatureQuickview(mainData) {
 
-    let data = mainData.data;
-    let tags = mainData.tags;
+    const data = applyEliteWeak(mainData.data, mainData.eliteWeak);
+    creatureQuickView_data = data;
+
+    // Get adjusted stats
+    const stats = calculateCreatureStats(data, mainData.conditions);
+    creatureQuickView_stats = stats;
+
+    // Fix null data
+    for(let d in data) { if(data[d] == null){ data[d] = ''; } }
+
+    // Fix data for JSON.parse
+    if(data.traitsJSON == ''){
+        data.traitsJSON = '[]'; 
+    }
+    if(data.languagesJSON == ''){
+        data.languagesJSON = '[]'; 
+    }
+    if(data.skillsJSON == ''){
+        data.skillsJSON = '[]'; 
+    }
+    if(data.itemsJSON == ''){
+        data.itemsJSON = '[]'; 
+    }
+    if(data.interactionAbilitiesJSON == ''){
+        data.interactionAbilitiesJSON = '[]'; 
+    }
+    if(data.immunitiesJSON == ''){
+        data.immunitiesJSON = '[]'; 
+    }
+    if(data.weaknessesJSON == ''){
+        data.weaknessesJSON = '[]'; 
+    }
+    if(data.resistancesJSON == ''){
+        data.resistancesJSON = '[]'; 
+    }
+    if(data.defensiveAbilitiesJSON == ''){
+        data.defensiveAbilitiesJSON = '[]'; 
+    }
+    if(data.otherSpeedsJSON == ''){
+        data.otherSpeedsJSON = '[]'; 
+    }
+    if(data.attacksJSON == ''){
+        data.attacksJSON = '[]'; 
+    }
+    if(data.spellcastingJSON == ''){
+        data.spellcastingJSON = '[]'; 
+    }
+    if(data.offensiveAbilitiesJSON == ''){
+        data.offensiveAbilitiesJSON = '[]'; 
+    }
 
 
-    $('#quickViewTitle').html(data.name);
+    let name = data.name;
+    if(mainData.eliteWeak == 'elite' || mainData.eliteWeak == 'weak'){
+        name = `<span class="has-txt-noted is-italic">${capitalizeWord(mainData.eliteWeak)}</span> ${name}`;
+    }
+    $('#quickViewTitle').html(name);
+
     $('#quickViewTitleRight').html(`Creature ${data.level}`);
 
     let qContent = $('#quickViewContent');
-
 
     // Traits //
     let traitsInnerHTML = '';
@@ -73,7 +129,7 @@ function openCreatureQuickview(mainData) {
 
     for (const traitName of traits) {
 
-        let tag = tags.find(tag => {
+        let tag = g_allTags.find(tag => {
             return tag.name.toLowerCase() === traitName.toLowerCase();
         });
 
@@ -95,7 +151,6 @@ function openCreatureQuickview(mainData) {
 
         traitsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-very-small is-info has-tooltip-bottom has-tooltip-multiline tagButton" data-tooltip="' + processTextRemoveIndexing(tagDescription) + '">' + tag.name + getImportantTraitIcon(tag) + '</button>';
     }
-
     if (traitsInnerHTML != '') {
         qContent.append('<div class="buttons is-marginless is-centered">' + traitsInnerHTML + '</div>');
         qContent.append('<hr class="mb-2 mt-1">');
@@ -109,40 +164,45 @@ function openCreatureQuickview(mainData) {
         }, $('#quickviewDefault').hasClass('is-active'));
     });
 
+    // Conditions //
+    let conditionsInnerHTML = '';
+    for(let condition of getAppliedConditions(mainData.conditions)){
+
+        let fullCondition = g_allConditions.find(fullCondition => {
+            return fullCondition.name.toLowerCase() === condition.name.toLowerCase();
+        });
+
+        let conditionDescription = fullCondition.description;
+
+        if (conditionDescription.length > g_conditionStringLengthMax) {
+            // Reduce to tag limit
+            conditionDescription = conditionDescription.substring(0, g_conditionStringLengthMax);
+            // Reduce to include up to last complete sentence.
+            conditionDescription = conditionDescription.substring(0, conditionDescription.lastIndexOf(".")+1);
+        }
+
+        conditionsInnerHTML += `<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-very-small is-danger has-tooltip-bottom has-tooltip-multiline tagButton" data-tooltip="${processTextRemoveIndexing(conditionDescription)}">${fullCondition.name} ${(condition.value != null ? condition.value : '')}</button>`;
+
+    }
+    if (conditionsInnerHTML != '') {
+        qContent.append('<div class="buttons is-marginless is-centered">' + conditionsInnerHTML + '</div>');
+    }
 
 
     // Recall Knowledge //
     // TODO
 
 
-
-    // Variables that conditions can change:
-    let perception = data.perceptionBonus;
-    let skills = JSON.parse(data.skillsJSON);
-    let abilityMods = {
-        str: data.strMod,
-        dex: data.dexMod,
-        con: data.conMod,
-        int: data.intMod,
-        wis: data.wisMod,
-        cha: data.chaMod,
-    };
-    let ac = data.acValue;
-    let saves = {
-        fort: data.fortBonus,
-        reflex: data.reflexBonus,
-        will: data.willBonus,
-    };
-    let hpMax = data.hpMax;
-
-
-
-
     // Perception //
+    let perceptionStr = signNumber(stats.perception);
+    if(stats.perception != data.perceptionBonus){
+        perceptionStr = wrapAdjust(perceptionStr, (stats.perception < data.perceptionBonus));
+    }
+
     qContent.append(`
         <div class="pl-2 pr-1">
             <p class="negative-indent">
-                <span><strong>Perception </strong></span><span>${signNumber(perception)}; ${data.senses}</span>
+                <span><strong>Perception </strong></span><span>${perceptionStr}${stats.perceptionConditionals}${(data.senses != ``) ? `; ${data.senses}` : ``}</span>
             </p>
         </div>
     `);
@@ -168,8 +228,18 @@ function openCreatureQuickview(mainData) {
 
     // Skills //
     let skillStr = '';
-    for (let skill of skills) {
-        skillStr += `${skill.name} ${signNumber(skill.bonus)}, `;
+    for (let skill of stats.skills) {
+        
+        let singleSkillStr = `${skill.name} ${signNumber(skill.bonus)}`;
+
+        let dSkill = data.skills.find(dSkill => {
+            return dSkill.name === skill.name;
+        });
+        if(dSkill != null && skill.bonus != dSkill.bonus){
+            singleSkillStr = wrapAdjust(singleSkillStr, (skill.bonus < dSkill.bonus));
+        }
+
+        skillStr += `${singleSkillStr}, `;
     }
     skillStr = skillStr.slice(0, -2);// Trim off that last ', '
     if (skillStr != ``) {
@@ -183,15 +253,41 @@ function openCreatureQuickview(mainData) {
     }
 
     // Ability Mods //
+    let strStr = signNumber(stats.abilityMods.str);
+    let dexStr = signNumber(stats.abilityMods.dex);
+    let conStr = signNumber(stats.abilityMods.con);
+    let intStr = signNumber(stats.abilityMods.int);
+    let wisStr = signNumber(stats.abilityMods.wis);
+    let chaStr = signNumber(stats.abilityMods.cha);
+
+    if(stats.abilityMods.str != data.strMod){
+        strStr = wrapAdjust(strStr, (stats.abilityMods.str < data.strMod));
+    }
+    if(stats.abilityMods.dex != data.dexMod){
+        dexStr = wrapAdjust(dexStr, (stats.abilityMods.dex < data.dexMod));
+    }
+    if(stats.abilityMods.con != data.conMod){
+        conStr = wrapAdjust(conStr, (stats.abilityMods.con < data.conMod));
+    }
+    if(stats.abilityMods.int != data.intMod){
+        intStr = wrapAdjust(intStr, (stats.abilityMods.int < data.intMod));
+    }
+    if(stats.abilityMods.wis != data.wisMod){
+        wisStr = wrapAdjust(wisStr, (stats.abilityMods.wis < data.wisMod));
+    }
+    if(stats.abilityMods.cha != data.chaMod){
+        chaStr = wrapAdjust(chaStr, (stats.abilityMods.cha < data.chaMod));
+    }
+
     qContent.append(`
         <div class="pl-2 pr-1">
             <p class="negative-indent">
-                <span><strong>Str </strong></span><span>${signNumber(abilityMods.str)}, </span>
-                <span><strong>Dex </strong></span><span>${signNumber(abilityMods.dex)}, </span>
-                <span><strong>Con </strong></span><span>${signNumber(abilityMods.con)}, </span>
-                <span><strong>Int </strong></span><span>${signNumber(abilityMods.int)}, </span>
-                <span><strong>Wis </strong></span><span>${signNumber(abilityMods.wis)}, </span>
-                <span><strong>Cha </strong></span><span>${signNumber(abilityMods.cha)} </span>
+                <span><strong>Str </strong></span><span>${strStr}, </span>
+                <span><strong>Dex </strong></span><span>${dexStr}, </span>
+                <span><strong>Con </strong></span><span>${conStr}, </span>
+                <span><strong>Int </strong></span><span>${intStr}, </span>
+                <span><strong>Wis </strong></span><span>${wisStr}, </span>
+                <span><strong>Cha </strong></span><span>${chaStr} </span>
             </p>
         </div>
     `);
@@ -238,13 +334,31 @@ function openCreatureQuickview(mainData) {
     qContent.append('<hr class="mb-2 mt-1">');
 
     // AC & Saves //
+    let acStr = stats.ac;
+    let fortStr = signNumber(stats.saves.fort);
+    let reflexStr = signNumber(stats.saves.reflex);
+    let willStr = signNumber(stats.saves.will);
+
+    if(stats.ac != data.acValue){
+        acStr = wrapAdjust(acStr, (stats.ac < data.acValue));
+    }
+    if(stats.saves.fort != data.fortBonus){
+        fortStr = wrapAdjust(fortStr, (stats.saves.fort < data.fortBonus));
+    }
+    if(stats.saves.reflex != data.reflexBonus){
+        reflexStr = wrapAdjust(reflexStr, (stats.saves.reflex < data.reflexBonus));
+    }
+    if(stats.saves.will != data.willBonus){
+        willStr = wrapAdjust(willStr, (stats.saves.will < data.willBonus));
+    }
+
     qContent.append(`
         <div class="pl-2 pr-1">
             <p class="negative-indent">
-                <span><strong>AC </strong></span><span>${ac}; </span>
-                <span><strong>Fort </strong></span><span>${signNumber(saves.fort)}, </span>
-                <span><strong>Ref </strong></span><span>${signNumber(saves.reflex)}, </span>
-                <span><strong>Will </strong></span><span>${signNumber(saves.will)}${(data.allSavesCustom != null && data.allSavesCustom != ``) ? `; ` : ``}</span>
+                <span><strong>AC </strong></span><span>${acStr}; </span>
+                <span><strong>Fort </strong></span><span>${fortStr}, </span>
+                <span><strong>Ref </strong></span><span>${reflexStr}, </span>
+                <span><strong>Will </strong></span><span>${willStr}${(data.allSavesCustom != null && data.allSavesCustom != ``) ? `; ` : ``}</span>
                 ${(data.allSavesCustom != null && data.allSavesCustom != ``) ? `<span>${data.allSavesCustom}</span>` : ``}
             </p>
         </div>
@@ -277,13 +391,15 @@ function openCreatureQuickview(mainData) {
     }
     resistancesStr = resistancesStr.slice(0, -2);// Trim off that last ', '
 
+    let hpMaxStr = stats.hpMax;
+    if(stats.hpMax != data.hpMax){
+        hpMaxStr = wrapAdjust(hpMaxStr, (stats.hpMax < data.hpMax));
+    }
+
     qContent.append(`
         <div class="pl-2 pr-1">
             <p class="negative-indent">
-                <span><strong>HP </strong></span><span>${hpMax}${(data.hpDetails != ``) ? `, ${data.hpDetails}` : ``}; </span>
-                ${(immunitiesStr != ``) ? `<span><strong>Immunities </strong></span><span>${immunitiesStr}; </span>` : ``}
-                ${(weaknessesStr != ``) ? `<span><strong>Weaknesses </strong></span><span>${weaknessesStr}; </span>` : ``}
-                ${(resistancesStr != ``) ? `<span><strong>Resistances </strong></span><span>${resistancesStr}</span>` : ``}
+                <strong>HP </strong>${hpMaxStr}${(data.hpDetails != ``) ? `, ${data.hpDetails}` : ``}${(immunitiesStr != ``) ? `; <strong>Immunities </strong>${immunitiesStr}` : ``}${(weaknessesStr != ``) ? `; <strong>Weaknesses </strong>${weaknessesStr}` : ``}${(resistancesStr != ``) ? `; <strong>Resistances </strong>${resistancesStr}` : ``}
             </p>
         </div>
     `);
@@ -300,12 +416,29 @@ function openCreatureQuickview(mainData) {
     // Speeds //
     let otherSpeedsStr = '';
     for (let otherSpeed of JSON.parse(data.otherSpeedsJSON)) {
-        otherSpeedsStr += `, ${otherSpeed.type} ${otherSpeed.value}`;
+        let speedValue = parseInt(otherSpeed.value) + stats.adj_speed;
+        if(speedValue < 5){ speedValue = 5; }
+        otherSpeedsStr += `, ${otherSpeed.type} ${speedValue} feet`;
     }
+    let speedStr;
+    if(data.speed == 0){
+        speedStr = ``;
+        otherSpeedsStr = otherSpeedsStr.slice(2); // Remove first ', '
+    } else {
+        let speedValue = parseInt(data.speed) + stats.adj_speed;
+        if(speedValue < 5){ speedValue = 5; }
+        speedStr = `${speedValue} feet`;
+    }
+
+    if(stats.adj_speed != 0){
+        speedStr = wrapAdjust(speedStr, (stats.adj_speed < 0));
+        otherSpeedsStr = wrapAdjust(otherSpeedsStr, (stats.adj_speed < 0));
+    }
+
     qContent.append(`
         <div class="pl-2 pr-1">
             <p class="negative-indent">
-                <span><strong>Speed </strong></span><span>${data.speed}${otherSpeedsStr} </span>
+                <span><strong>Speed </strong></span><span>${speedStr}${otherSpeedsStr} </span>
             </p>
         </div>
     `);
@@ -320,10 +453,20 @@ function openCreatureQuickview(mainData) {
         });
         let hasAgile = (agileTrait != null);
 
-        let attackBonus_1 = signNumber(attack.bonus);
-        let attackBonus_2 = signNumber(attack.bonus - (hasAgile ? 4 : 5));
-        let attackBonus_3 = signNumber(attack.bonus - (hasAgile ? 8 : 10));
+        const adj_attack = (attack.type.toLowerCase() == 'melee') ? stats.adj_meleeAttack : stats.adj_rangedAttack;
+        const adj_damage = (attack.type.toLowerCase() == 'melee') ? stats.adj_meleeDamage :  stats.adj_rangedDamage;
+
+        const data_adj_attack = (attack.type.toLowerCase() == 'melee') ? data.adj_meleeAttack : data.adj_rangedAttack;
+        const data_adj_damage = (attack.type.toLowerCase() == 'melee') ? data.adj_meleeDamage :  data.adj_rangedDamage;
+
+        let attackBonus_1 = signNumber(attack.bonus+adj_attack);
+        let attackBonus_2 = signNumber(attack.bonus+adj_attack - (hasAgile ? 4 : 5));
+        let attackBonus_3 = signNumber(attack.bonus+adj_attack - (hasAgile ? 8 : 10));
         let attackBonusStr = `${attackBonus_1} / ${attackBonus_2} / ${attackBonus_3}`;
+
+        if(adj_attack != data_adj_attack){
+            attackBonusStr = wrapAdjust(attackBonusStr, (adj_attack < data_adj_attack));
+        }
 
         let damageStr = '';
         for (let damage of attack.damage) {
@@ -332,7 +475,15 @@ function openCreatureQuickview(mainData) {
             //if (damageType.toLowerCase() == 'slashing') { damageType = 'S'; }
             //if (damageType.toLowerCase() == 'bludgeoning') { damageType = 'B'; }
 
-            damageStr += `${damage.damage} ${damageType}, `;
+            if(adj_damage != data_adj_damage){
+                damageStr += `${damage.damage+wrapAdjust(signNumber(adj_damage), (adj_damage < data_adj_damage))} ${damageType}, `;
+            } else {
+                if(adj_damage != 0){
+                    damageStr += `${damage.damage+signNumber(adj_damage)} ${damageType}, `;
+                } else {
+                    damageStr += `${damage.damage} ${damageType}, `;
+                }
+            }
         }
         if (attack.effects != ``) {
             damageStr += `plus ${attack.effects}`;
@@ -359,11 +510,24 @@ function openCreatureQuickview(mainData) {
         }
         if (spellcasting.dc != 0) {
             if (spellsStr != ``) { spellsStr += `, `; }
-            spellsStr += `DC ${spellcasting.dc}`;
+
+            let spellDCStr = `DC ${spellcasting.dc+stats.adj_spellDC}`;
+            if(stats.adj_spellDC != data.adj_spellDC){
+                spellDCStr = wrapAdjust(spellDCStr, (stats.adj_spellDC < data.adj_spellDC));
+            }
+
+            spellsStr += spellDCStr;
         }
         if (spellcasting.attack != 0) {
             if (spellsStr != ``) { spellsStr += `, `; }
-            spellsStr += `attack ${signNumber(spellcasting.attack)}`;
+
+            let spellAttackStr = `attack ${signNumber(spellcasting.attack+stats.adj_spellAttack)}`;
+            if(stats.adj_spellAttack != data.adj_spellAttack){
+                spellAttackStr = wrapAdjust(spellAttackStr, (stats.adj_spellAttack < data.adj_spellAttack));
+            }
+
+            spellsStr += spellAttackStr;
+
         }
         spellsStr += `; `;
 
@@ -458,7 +622,7 @@ function openCreatureQuickview(mainData) {
         addAbility(qContent, ability);
     }
 
-    if (data.flavorText != null) {
+    if (data.flavorText != null && data.flavorText != ``) {
         qContent.append('<hr class="mb-2 mt-1">');
 
         qContent.append(`
@@ -486,7 +650,7 @@ function addAbility(qContent, ability) {
 
     let traitsStr = stringifyTraits(ability.traits, true);
 
-    let abilityID = 'creature-ability-' + ability.name.replace(/\W/g, '_');
+    let abilityID = 'creature-ability-' + ability.name.replace(/\W/g, '-');
 
     let actions = ability.actions;
     if (actions == null) { actions = ''; }
@@ -528,6 +692,14 @@ function addAbility(qContent, ability) {
 
 }
 
+function wrapAdjust(value, isNegative){
+    if(isNegative){
+        return `<span class="has-text-danger">${value}</span>`;
+    } else {
+        return `<span class="has-text-success">${value}</span>`;
+    }
+}
+
 function stringifyTraits(traits, surroundWithParentheses = false) {
     let traitsStr = '';
     for (let trait of traits) {
@@ -543,6 +715,11 @@ function stringifyTraits(traits, surroundWithParentheses = false) {
             rangeAmt = rangeAmt.replace('increment-', '');
             traitsStr += `range ${rangeAmt} feet, `;
 
+        } else if (trait.toLowerCase().startsWith('reload-')) {
+
+            let reloadAmt = trait.toLowerCase().replace('reload-', '');
+            traitsStr += `reload ${reloadAmt}, `;
+
         } else {
             traitsStr += `(trait: ${trait.replace(/-/g, ' ')}), `;
         }
@@ -555,40 +732,74 @@ function stringifyTraits(traits, surroundWithParentheses = false) {
 
 function parseDescription(text) {
 
-    text = text.replace(/\[\[\/r (.*?)\]\]{(.*?)}/g, handleParse_DamageExt);
-    text = text.replace(/\[\[\/r (.*)\]\]/g, handleParse_Damage);
+    text = text.replace(/\[\[\/(r|br) (.*?)\]\]{(.*?)}/g, handleParse_DamageExt);
+    text = text.replace(/\[\[\/(r|br) (.*)\]\]/g, handleParse_Damage);
+    text = text.replace(/<hr \/>\n<p>@Compendium\[pf2e\.bestiary-effects\.Effect:(.+?)<\/p>/gi, '');
     text = text.replace(/@Compendium\[(.+?)\]{(.*?)}/g, handleParse_Compendium);
     text = text.replace(/@Template\[(.+?)\]/g, handleParse_Template);
     text = text.replace(/@Check\[(.+?)\]/g, handleParse_Check);
     text = text.replace(/@Localize\[PF2E\.NPC\.Abilities\.Glossary\.(.+?)\]/g, handleParse_Glossary);
 
+    // Adjustments
+    if(creatureQuickView_stats.adj_generalDamage != 0){
+        text = text.replace(/(^| )(\d+)+d(\d+)((\s*[+-]\s*\d+)*)($|\D)/g, function(match, startChar, diceNum, diceType, extraBonuses, lastBonus, endChar){
+
+            let generalDamageStr = signNumber(creatureQuickView_stats.adj_generalDamage);
+            if(creatureQuickView_stats.adj_generalDamage != creatureQuickView_data.adj_generalDamage){
+                generalDamageStr = wrapAdjust(generalDamageStr, (creatureQuickView_stats.adj_generalDamage < creatureQuickView_data.adj_generalDamage));
+            }
+
+            return `${startChar}${diceNum}d${diceType}${extraBonuses}${generalDamageStr}${endChar}`;
+        });
+    }
+    if(creatureQuickView_stats.adj_generalDC != 0){
+        text = text.replace(/(^| )DC (\d+)($|\D)/g, function(match, startChar, dcValue, endChar){
+
+            let generalDCStr = ''+(parseInt(dcValue) + creatureQuickView_stats.adj_generalDC);
+            if(creatureQuickView_stats.adj_generalDC != creatureQuickView_data.adj_generalDC){
+                generalDCStr = wrapAdjust(generalDCStr, (creatureQuickView_stats.adj_generalDC < creatureQuickView_data.adj_generalDC));
+            }
+
+            return `${startChar}DC ${generalDCStr}${endChar}`;
+        });
+    }
+
     return text;
 }
 
-function handleParse_DamageExt(match, innerText, displayText) {
+function handleParse_DamageExt(match, rBr, innerText, displayText) {
     return displayText;
 }
 
-function handleParse_Damage(match, innerText) {
+function handleParse_Damage(match, rBr, innerText) {
     return innerText.replace(/\W/g, ' ').trim();
 }
 
 function handleParse_Glossary(match, innerText) {
 
     if (typeof g_featMap !== 'undefined' && g_featMap != null) {
+        innerText = innerText.toLowerCase();
 
         for (const [featID, featStruct] of g_featMap.entries()) {
-            let reducedName = featStruct.Feat.name.replace(/ /g, '');
+            let reducedName = featStruct.Feat.name.replace(/ /g, '').toLowerCase();
             if (reducedName === innerText) {
 
-                if (featStruct.Feat.requirements != null && featStruct.Feat.requirements != '') {
-                    return `
-                        **Requirements** ${featStruct.Feat.requirements}
-                        ${featStruct.Feat.description}
-                    `;
-                } else {
-                    return featStruct.Feat.description;
+                let description = ``;
+
+                if (featStruct.Feat.frequency != null && featStruct.Feat.frequency != '') {
+                    description += `**Frequency** ${featStruct.Feat.frequency}\n`;
                 }
+                if (featStruct.Feat.cost != null && featStruct.Feat.cost != '') {
+                    description += `**Cost** ${featStruct.Feat.cost}\n`;
+                }
+                if (featStruct.Feat.trigger != null && featStruct.Feat.trigger != '') {
+                    description += `**Trigger** ${featStruct.Feat.trigger}\n`;
+                }
+                if (featStruct.Feat.requirements != null && featStruct.Feat.requirements != '') {
+                    description += `**Requirements** ${featStruct.Feat.requirements}\n`;
+                }
+
+                return description+featStruct.Feat.description;
             }
         }
         return `Failed to find description of ${innerText}.`;
@@ -624,7 +835,7 @@ function handleParse_Template(match, innerText) {
     }
 
     if (type != null && distance != null) {
-        return `${distance}-foot ${type}`;
+        return `${distance}-foot ${type} `;
     } else {
         return innerText;
     }
@@ -651,12 +862,13 @@ function handleParse_Check(match, innerText) {
             basic = value.replace('basic:', '');
         } else if (value.startsWith('name:')) {
             name = value.replace('name:', '');
-        } else if (value.startsWith('traits:')) { traits = value.replace('traits:', ''); }
+        } else if (value.startsWith('traits:')) {
+            traits = value.replace('traits:', '');
+        }
 
     }
 
     if (dc != null && type != null) {
-
         let basicStr = (basic != null && basic == 'true') ? 'basic ' : '';
         return `DC ${dc} ${basicStr}${capitalizeWords(type)}`;
     } else {

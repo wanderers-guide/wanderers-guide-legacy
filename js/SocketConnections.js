@@ -2710,24 +2710,6 @@ module.exports = class SocketConnections {
         });
       });
 
-      socket.on('requestAdminCreatureDetails', function(){
-        AuthCheck.isAdmin(userID).then((isAdmin) => {
-          if(isAdmin){
-            GeneralGathering.getAllTags(userID).then((allTags) => {
-              GeneralGathering.getAllFeats(userID).then((featsObject) => {
-                GeneralGathering.getAllItems(userID).then((itemMap) => {
-                  GeneralGathering.getAllSpells(userID).then((spellMap) => {
-                    GeneralGathering.getAllConditions(userID).then((allConditions) => {
-                      socket.emit('returnAdminCreatureDetails', allTags, featsObject, mapToObj(itemMap), mapToObj(spellMap), allConditions);
-                    });
-                  });
-                });
-              });
-            });
-          }
-        });
-      });
-
     });
   }
 
@@ -2922,6 +2904,24 @@ module.exports = class SocketConnections {
 
             });
 
+          });
+        });
+
+      });
+
+      socket.on('requestEncounterDetails', function(){
+        
+        GeneralGathering.getAllCreatures(userID).then((allCreatures) => {
+          GeneralGathering.getAllTags(userID).then((allTags) => {
+            GeneralGathering.getAllFeats(userID).then((featsObject) => {
+              GeneralGathering.getAllItems(userID).then((itemMap) => {
+                GeneralGathering.getAllSpells(userID).then((spellMap) => {
+                  GeneralGathering.getAllConditions(userID).then((allConditions) => {
+                    socket.emit('returnEncounterDetails', allCreatures, allTags, featsObject, mapToObj(itemMap), mapToObj(spellMap), allConditions);
+                  });
+                });
+              });
+            });
           });
         });
 

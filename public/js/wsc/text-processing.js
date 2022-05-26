@@ -250,7 +250,8 @@ function processText(text, isSheet, isJustified = false, size = 'MEDIUM', indexC
     text = text.replace(regexBestiary, '<a href="https://paizo.com/products/btq01zp4?Pathfinder-Bestiary" target="_blank" class="external-link">Bestiary $1</a>');
 
     // Clean up any random spaces that were created...
-    text = text.replace('<p class="p-1 pl-2 '+_j+_s+'"></p>', '');
+    text = text.replaceAll('<p class="p-1 pl-2 '+_j+_s+'"></p>', '');
+
     return text;
 
 }

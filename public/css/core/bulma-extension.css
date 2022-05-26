@@ -314,3 +314,17 @@ select .is-unique {
 .wsc-table-container {
   overflow-x: auto;
 }
+
+/* Progress Bar */
+.progress.is-orange::-webkit-progress-value{
+  background-color:#ff8c57;
+}
+.progress.is-orange::-moz-progress-bar{
+  background-color:#ff8c57;
+}
+.progress.is-orange::-ms-fill{
+  background-color:#ff8c57;
+}
+.progress.is-orange:indeterminate{
+  background-image:linear-gradient(to right,#ff8c57 30%,#ededed 30%);
+}

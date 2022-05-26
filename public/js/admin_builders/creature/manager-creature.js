@@ -103,7 +103,7 @@ function creatureInitImport() {
         }
     };
 
-    socket.emit("requestAdminCreatureDetails");
+    socket.emit("requestEncounterDetails");
 
 }
 
@@ -112,7 +112,7 @@ let g_allTags;
 let g_featMap;
 let g_itemMap;
 let g_spellMap;
-socket.on("returnAdminCreatureDetails", function(allTags, featsObject, itemsObject, spellsObject, allConditions){
+socket.on("returnEncounterDetails", function(allCreatures, allTags, featsObject, itemsObject, spellsObject, allConditions){
     g_allConditions = allConditions;
     g_allTags = allTags;
     g_featMap = objToMap(featsObject);
@@ -180,7 +180,12 @@ function parseCreatureData(importData) {
         let name = null;
         let doIndex = true;
         if(item.data.baseItem != null){
-            name = item.data.baseItem;
+            name = item.data.baseItem.replace(/-/g,' ');
+
+            if(name.includes(' armor')){
+                name = name.replace(' armor', '');
+            }
+
         } else {
             doIndex = false;
         }
@@ -281,12 +286,19 @@ function parseCreatureData(importData) {
     for (let attack of attacks) {
         console.log(`1- ${attack.name} ${attack.data.bonus.value} ${attack.data.traits.value}`);
 
-        let damageStr = ``;
-        for (let damage of Object.values(attack.data.damageRolls)) {
-            damageStr += `${damage.damage} ${damage.damageType}, `;
+        let damageEffects = ``;
+        
+        if(attack.data.description.value != null){
+            let match = /<p>@Localize\[PF2E\.PersistentDamage\.(\D+)(.+?)\.success]<\/p>/g.exec(attack.data.description.value);
+            if(match != null){
+                damageEffects += `${match[2]} persistent ${match[1].toLowerCase()}`;
+            }
         }
-        damageStr += attack.data.attackEffects.value;
-        console.log(`${damageStr}`);
+
+        if(damageEffects != ``){
+            damageEffects += `, `;
+        }
+        damageEffects += attack.data.attackEffects.value;
 
         attacksDataArray.push({
             type: attack.data.weaponType.value,
@@ -294,7 +306,7 @@ function parseCreatureData(importData) {
             bonus: attack.data.bonus.value,
             traits: attack.data.traits.value,
             damage: Object.values(attack.data.damageRolls),
-            effects: attack.data.attackEffects.value,
+            effects: damageEffects,
         });
 
     }
@@ -396,7 +408,8 @@ function parseCreatureData(importData) {
 
     openQuickView('creatureView', {
         data: data,
-        tags: g_allTags,
+        conditions: [{name: 'flat-footed', value: null}],
+        eliteWeak: 'weak',
     });
 
 }

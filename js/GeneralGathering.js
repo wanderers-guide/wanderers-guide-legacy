@@ -32,6 +32,7 @@ const ItemRune = require('../models/contentDB/ItemRune');
 const SheetState = require("../models/contentDB/SheetState");
 const Extra = require("../models/contentDB/Extra");
 const TaggedExtra = require("../models/contentDB/TaggedExtra");
+const Creature = require('../models/contentDB/Creature');
 
 const CharGathering = require('./CharGathering');
 const TempUnpublishedBooks = require('./TempUnpublishedBooks');
@@ -737,6 +738,20 @@ module.exports = class GeneralGathering {
       })
       .then((allLanguages) => {
         return allLanguages;
+      });
+    }
+
+    static getAllCreatures(userID, homebrewID=null) {
+      return Creature.findAll({
+        order: [['level', 'ASC'], ['name', 'ASC'],],
+        where: {
+          homebrewID: { [Op.or]: [null,homebrewID] },
+          [Op.not]: [
+            { contentSrc: { [Op.or]: TempUnpublishedBooks.getSourcesArray(userID) } },
+          ]
+        }
+      }).then((allCreatures) => {
+        return allCreatures;
       });
     }
 
