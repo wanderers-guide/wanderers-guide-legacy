@@ -314,7 +314,7 @@ function generateCreatureResults(resetMaxDisplay=true){
                             </div>
     
                             <div class="is-flex">
-                                <button id="${creatureAddViewBtn}" class="button is-info is-very-small is-outlined is-rounded mr-3">
+                                <button id="${creatureAddViewBtn}" class="button is-info is-very-small is-outlined is-rounded mr-3" style="margin-top: 0.15rem;">
                                     <span class="">
                                         View
                                     </span>

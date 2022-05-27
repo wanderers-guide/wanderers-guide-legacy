@@ -453,11 +453,69 @@ function openCreatureQuickview(mainData) {
         });
         let hasAgile = (agileTrait != null);
 
-        const adj_attack = (attack.type.toLowerCase() == 'melee') ? stats.adj_meleeAttack : stats.adj_rangedAttack;
-        const adj_damage = (attack.type.toLowerCase() == 'melee') ? stats.adj_meleeDamage :  stats.adj_rangedDamage;
+        let finesseTrait = attack.traits.find(trait => {
+            return trait == 'finesse';
+        });
+        let hasFinesse = (finesseTrait != null);
 
-        const data_adj_attack = (attack.type.toLowerCase() == 'melee') ? data.adj_meleeAttack : data.adj_rangedAttack;
-        const data_adj_damage = (attack.type.toLowerCase() == 'melee') ? data.adj_meleeDamage :  data.adj_rangedDamage;
+        let brutalTrait = attack.traits.find(trait => {
+            return trait == 'brutal';
+        });
+        let hasBrutal = (brutalTrait != null);
+
+        let thrownTrait = attack.traits.find(trait => {
+            return trait.startsWith('thrown');
+        });
+        let hasThrown = (thrownTrait != null);
+
+        let propulsiveTrait = attack.traits.find(trait => {
+            return trait == 'propulsive';
+        });
+        let hasPropulsive = (propulsiveTrait != null);
+
+        let adj_attack = (attack.type.toLowerCase() == 'melee') ? stats.adj_meleeAttack : stats.adj_rangedAttack;
+        let adj_damage = (attack.type.toLowerCase() == 'melee') ? stats.adj_meleeDamage :  stats.adj_rangedDamage;
+
+        let data_adj_attack = (attack.type.toLowerCase() == 'melee') ? data.adj_meleeAttack : data.adj_rangedAttack;
+        let data_adj_damage = (attack.type.toLowerCase() == 'melee') ? data.adj_meleeDamage :  data.adj_rangedDamage;
+
+        // Apply trait-based adjustments (by un-baking stats and re-adjusting)
+        if(hasFinesse){
+            let usesDex = (data.dexMod >= data.strMod);
+
+            let dex_adj_attack = stats.adj_rangedAttack+(usesDex ? 0 : (data.dexMod - data.strMod));
+            let dex_data_adj_attack = data.adj_rangedAttack+(usesDex ? 0 : (data.dexMod - data.strMod));
+
+            let str_adj_attack = stats.adj_meleeAttack+(usesDex ? (data.strMod - data.dexMod) : 0);
+            let str_data_adj_attack = data.adj_meleeAttack+(usesDex ? (data.strMod - data.dexMod) : 0);
+
+            if(dex_adj_attack > str_adj_attack){
+                adj_attack = dex_adj_attack;
+                data_adj_attack = dex_data_adj_attack;
+            } else {
+                adj_attack = str_adj_attack;
+                data_adj_attack = str_data_adj_attack;
+            }
+        }
+        if(hasBrutal){
+            adj_attack = stats.adj_meleeAttack;
+            data_adj_attack = data.adj_meleeAttack;
+        }
+        if(hasThrown){
+            let prevStrAdj = data.strMod;
+            adj_damage = stats.adj_rangedDamage + stats.abilityMods.str - prevStrAdj;
+            data_adj_damage = data.adj_rangedDamage + data.strMod - prevStrAdj;
+        }
+        if(hasPropulsive){
+            let prevStrAdj = (data.strMod > 0) ? Math.floor(data.strMod/2) : -1*data.strMod;
+            if(stats.abilityMods.str > 0){
+                adj_damage = stats.adj_rangedDamage + Math.floor((stats.abilityMods.str)/2) - prevStrAdj;
+                data_adj_damage = data.adj_rangedDamage + Math.floor((data.strMod)/2) - prevStrAdj;
+            } else {
+                adj_damage = stats.adj_rangedDamage + stats.abilityMods.str - prevStrAdj;
+                data_adj_damage = data.adj_rangedDamage + data.strMod - prevStrAdj;
+            }
+        }
 
         let attackBonus_1 = signNumber(attack.bonus+adj_attack);
         let attackBonus_2 = signNumber(attack.bonus+adj_attack - (hasAgile ? 4 : 5));
@@ -476,7 +534,20 @@ function openCreatureQuickview(mainData) {
             //if (damageType.toLowerCase() == 'bludgeoning') { damageType = 'B'; }
 
             if(adj_damage != data_adj_damage){
-                damageStr += `${damage.damage+wrapAdjust(signNumber(adj_damage), (adj_damage < data_adj_damage))} ${damageType}, `;
+
+                let finalDamage = damage.damage.replace(/(\s*)([+-])(\s*)(\d+)$/, function(match, space1, numSign, space2, bonus){
+
+                    let numBonus = parseInt(bonus);
+                    if(numSign == '-'){ numBonus = -1*numBonus; }
+
+                    let resultBonus = numBonus + adj_damage;
+                    let finalSign = (resultBonus >= 0 ? '+' : '-');
+                    let finalBonus = Math.abs(resultBonus);
+        
+                    return wrapAdjust(`${space1}${finalSign}${space2}${finalBonus}`, (adj_damage < data_adj_damage));
+                });
+
+                damageStr += `${finalDamage} ${damageType}, `;
             } else {
                 if(adj_damage != 0){
                     damageStr += `${damage.damage+signNumber(adj_damage)} ${damageType}, `;
