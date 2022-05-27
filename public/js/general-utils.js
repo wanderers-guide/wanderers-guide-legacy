@@ -4,6 +4,7 @@
 
 /* Constants */
 const g_tagStringLengthMax = 620; // Hardcoded - Tag String Length Max
+const g_conditionStringLengthMax = 450; // Hardcoded - Condition String Length Max
 
 /* Object Funcs */
 function objToMap(obj) {

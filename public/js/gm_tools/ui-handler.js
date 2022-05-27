@@ -11,6 +11,9 @@ $(function () {
     $(this).removeClass('card-content-hover');
   });
 
+  $('#card-encounter-builder').click(function() {
+    window.location.href = '/gm-tools/encounter-builder';
+  });
   $('#card-shop-generator').click(function() {
     window.location.href = '/gm-tools/shop-generator';
   });

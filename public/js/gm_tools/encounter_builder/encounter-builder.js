@@ -23,6 +23,8 @@ $(function () {
 });
 
 let g_creaturesMap;
+let g_extractedCreaturesMap;
+
 let g_allConditions;
 let g_allTags;
 let g_featMap;
@@ -33,6 +35,19 @@ socket.on("returnEncounterDetails", function (allCreatures, allTags, featsObject
   g_creaturesMap = new Map();
   for (let creature of allCreatures) {
     g_creaturesMap.set(creature.id, creature);
+  }
+  let extractDataToString = function(data){
+    let resultStr = ``;
+    for(let d in data) {
+        if(data[d] != '' && data[d] != null){
+            resultStr += ` ${JSON.stringify(data[d])} `;
+        }
+    }
+    return resultStr.replace(/\W/g, ' ').toLowerCase();
+  };
+  g_extractedCreaturesMap = new Map();
+  for (const [creatureID, data] of g_creaturesMap.entries()) {
+    g_extractedCreaturesMap.set(creatureID, extractDataToString(data));
   }
 
   g_allConditions = allConditions;
@@ -157,13 +172,14 @@ function initEncounterView() {
   });
 
 
+  $(`#encounter-roll-initiative-btn`).click(function () {
+    openRollInitiativeModal();
+  });
   $(`#encounter-add-creature-btn`).click(function () {
-    addMember(allEncounters[currentEncounterIndex], 'kZI5UjgXcJjrOIR8');
-    reloadEncounterMembers();
-    reloadBalanceResults();
+    openCreatureSelectQuickview();
   });
   $(`#encounter-add-custom-btn`).click(function () {
-    //Add member that isn't tied to a creature, no view. No max HP.
+    openCustomCreatureQuickview();
   });
 
 }
@@ -188,7 +204,7 @@ function addMember(encounter, creatureID, eliteWeak = null) {
   encounter.members.push({
     creatureID: creatureID,
     init: 0,
-    name: creature.name,
+    name: `${eliteWeak == 'elite' || eliteWeak == 'weak' ? `${capitalizeWord(eliteWeak)} - ` : ``}${creature.name}`,
     level: getCreatureLevel(creature.level, eliteWeak),
     currentHP: getCreatureMaxHP(creature.level, creature.hpMax, eliteWeak),
     maxHP: getCreatureMaxHP(creature.level, creature.hpMax, eliteWeak),
@@ -196,6 +212,25 @@ function addMember(encounter, creatureID, eliteWeak = null) {
     eliteWeak: eliteWeak,
     commentsOpen: false,
     comments: ``,
+    isCustom: false,
+    customData: null,
+  });
+}
+
+function addCustomMember(encounter, name, level, maxHP) {
+  encounter.members.push({
+    creatureID: null,
+    init: 0,
+    name: name,
+    level: level,
+    currentHP: maxHP,
+    maxHP: maxHP,
+    conditions: [],
+    eliteWeak: 'normal',
+    commentsOpen: false,
+    comments: ``,
+    isCustom: true,
+    customData: { name: name, level: level, hpMax: maxHP },
   });
 }
 
@@ -207,6 +242,14 @@ function removeMember(encounter, member) {
   reloadBalanceResults();
 }
 
+function getOriginalCreature(member){
+  if(member.isCustom){
+    return member.customData;
+  } else {
+    return g_creaturesMap.get(member.creatureID);
+  }
+}
+
 function addCondition(member, conditionName, conditionValue = null) {
   const condition = member.conditions.find(condition => {
     return condition.name == conditionName;
@@ -214,7 +257,7 @@ function addCondition(member, conditionName, conditionValue = null) {
   if (condition == null) {
     if (conditionName.toLowerCase() == 'drained') {
       member.currentHP -= (member.level > 1 ? member.level : 1) * conditionValue;
-      member.maxHP = getCreatureMaxHP(member.level, g_creaturesMap.get(member.creatureID).hpMax, member.eliteWeak) - (member.level > 1 ? member.level : 1) * conditionValue;
+      member.maxHP = getCreatureMaxHP(member.level, getOriginalCreature(member).hpMax, member.eliteWeak) - (member.level > 1 ? member.level : 1) * conditionValue;
     }
     if (conditionName.toLowerCase() == 'dying') {
       const woundedCondition = member.conditions.find(condition => {
@@ -236,7 +279,7 @@ function addCondition(member, conditionName, conditionValue = null) {
 function removeCondition(member, conditionName) {
 
   if (conditionName.toLowerCase() == 'drained') {
-    member.maxHP = getCreatureMaxHP(member.level, g_creaturesMap.get(member.creatureID).hpMax, member.eliteWeak);
+    member.maxHP = getCreatureMaxHP(member.level, getOriginalCreature(member).hpMax, member.eliteWeak);
   }
   if (conditionName.toLowerCase() == 'dying') {
     const woundedCondition = member.conditions.find(condition => {
@@ -265,7 +308,7 @@ function updateCondition(member, conditionName, newValue) {
       if (newValue > condition.value) {
         member.currentHP -= (member.level > 1 ? member.level : 1) * (newValue - condition.value);
       }
-      member.maxHP = getCreatureMaxHP(member.level, g_creaturesMap.get(member.creatureID).hpMax, member.eliteWeak) - (member.level > 1 ? member.level : 1) * newValue;
+      member.maxHP = getCreatureMaxHP(member.level, getOriginalCreature(member).hpMax, member.eliteWeak) - (member.level > 1 ? member.level : 1) * newValue;
     }
 
     condition.value = newValue;
@@ -318,12 +361,12 @@ function reloadEncounterMembers() {
       <div class="columns is-marginless is-mobile">
         <div class="column is-1 text-center is-paddingless">
             <div style="padding-left: 0.15rem; padding-right: 0.15rem; padding-top: 0.2rem; padding-bottom: 0.2rem;">
-                <input id="${input_memberInit}" class="input is-small text-center" type="number" min="0" max="100" value="${member.init}">
+                <input id="${input_memberInit}" class="input is-small text-center" type="number" min="0" max="100" autocomplete="off" value="${member.init}">
             </div>
         </div>
         <div class="column is-3 text-left is-paddingless">
             <div style="padding-left: 0.15rem; padding-right: 0.15rem; padding-top: 0.2rem; padding-bottom: 0.2rem;">
-                <input id="${input_memberName}" class="input is-small" type="text" value="${member.name}">
+                <input id="${input_memberName}" class="input is-small" type="text" autocomplete="off" value="${member.name}">
             </div>
         </div>
         <div class="column is-1 is-paddingless">
@@ -338,7 +381,7 @@ function reloadEncounterMembers() {
         <div class="column is-2 text-center is-paddingless">
             <div class="field has-addons has-addons-centered" style="padding-left: 0.15rem; padding-right: 0.15rem; padding-top: 0.2rem; padding-bottom: 0.2rem;">
                 <p class="control"><input id="${input_memberCurrentHP}" class="input is-small text-center" type="text"
-                        min="0" max="${member.maxHP}" value="${member.currentHP}"></p>
+                        min="0" max="${member.maxHP}" autocomplete="off" value="${member.currentHP}"></p>
                 <p class="control"><a class="button is-static is-small border-darker">/</a></p>
                 <p class="control"><a class="button is-static is-extra is-small border-darker">${member.maxHP}</a>
                 </p>
@@ -365,7 +408,7 @@ function reloadEncounterMembers() {
         </div>
       </div>
       <div id="${container_memberComments}" class="is-hidden" style="padding-left: 0.15rem; padding-right: 0.15rem; padding-top: 0.0rem; padding-bottom: 0.2rem;">
-        <textarea id="${input_memberComments}" class="textarea is-small use-custom-scrollbar" placeholder="Any comments or notes..." rows="2" maxlength="990">${member.comments}</textarea>
+        <textarea id="${input_memberComments}" class="textarea is-small use-custom-scrollbar" placeholder="Any comments or notes..." rows="2" maxlength="4990">${member.comments}</textarea>
       </div>
       <hr class="my-0">
     `);
@@ -393,13 +436,16 @@ function reloadEncounterMembers() {
 
     // View //
     $(`#${btn_memberView}`).click(function () {
-      let creatureData = g_creaturesMap.get(member.creatureID);
-      if (creatureData == null) { console.error(`Unknown creature ${member.creatureID}!`); return; }
-      openQuickView('creatureView', {
-        data: creatureData,
-        conditions: member.conditions,
-        eliteWeak: member.eliteWeak,
-      });
+      let creatureData = getOriginalCreature(member);
+      if(member.isCustom){
+        openQuickView('creatureCustomView', member);
+      } else {
+        openQuickView('creatureView', {
+          data: creatureData,
+          conditions: member.conditions,
+          eliteWeak: member.eliteWeak,
+        });
+      }
     });
 
     // HP //
@@ -494,28 +540,30 @@ function reloadEncounterMembers() {
 
 function reloadBalanceResults() {
 
-  let encounter = allEncounters[currentEncounterIndex];
-
-  if (encounter == null) { return; }
-
-  let results = getBalanceResults(encounter.partySize, encounter.partyLevel, encounter.members);
-
-  $(`#encounter-balance-display`).text(`${results.difficulty} (${results.xp} xp)`);
-
   $(`#encounter-balance-bar`).removeClass(`is-link`);
   $(`#encounter-balance-bar`).removeClass(`is-primary`);
   $(`#encounter-balance-bar`).removeClass(`is-success`);
   $(`#encounter-balance-bar`).removeClass(`is-orange`);
   $(`#encounter-balance-bar`).removeClass(`is-danger`);
+  $(`#encounter-balance-display`).text(``);
 
-  switch (results.difficulty) {
-    case 'Trivial': $(`#encounter-balance-bar`).addClass(`is-link`); break;
-    case 'Low': $(`#encounter-balance-bar`).addClass(`is-primary`); break;
-    case 'Moderate': $(`#encounter-balance-bar`).addClass(`is-success`); break;
-    case 'Severe': $(`#encounter-balance-bar`).addClass(`is-orange`); break;
-    case 'Extreme': $(`#encounter-balance-bar`).addClass(`is-danger`); break;
-    case 'IMPOSSIBLE': $(`#encounter-balance-bar`).addClass(`is-danger`); break;
-    default: break;
+  let encounter = allEncounters[currentEncounterIndex];
+
+  if (encounter == null) { return; }
+  if(encounter.members.length > 0){
+    let results = getBalanceResults(encounter.partySize, encounter.partyLevel, encounter.members);
+
+    $(`#encounter-balance-display`).text(`${results.difficulty} (${results.xp} xp)`);
+  
+    switch (results.difficulty) {
+      case 'Trivial': $(`#encounter-balance-bar`).addClass(`is-link`); break;
+      case 'Low': $(`#encounter-balance-bar`).addClass(`is-primary`); break;
+      case 'Moderate': $(`#encounter-balance-bar`).addClass(`is-success`); break;
+      case 'Severe': $(`#encounter-balance-bar`).addClass(`is-orange`); break;
+      case 'Extreme': $(`#encounter-balance-bar`).addClass(`is-danger`); break;
+      case 'IMPOSSIBLE': $(`#encounter-balance-bar`).addClass(`is-danger`); break;
+      default: break;
+    }
   }
 
 }

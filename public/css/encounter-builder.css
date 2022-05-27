@@ -2,3 +2,19 @@
 .hr-light {
     border-color: #5a5a5a!important;
 }
+
+/* Tabs */
+.category-tabs li {
+    color: #dbdbdb;
+}
+.category-tabs li:hover {
+    color: #3298dc;
+}
+.category-tabs a:hover {
+    border-bottom-color: #3298dc;
+}
+
+.tabs:not(.is-boxed) li.is-active a {
+    border-bottom-color: #3298dc;
+    color: #3298dc;
+}

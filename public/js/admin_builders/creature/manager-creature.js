@@ -128,31 +128,21 @@ function parseCreatureData(importData) {
 
     let data = {};
 
-    console.log(importData._id);
     data.id = importData._id;
 
-    console.log(importData.name);
-    console.log(importData.data.details.level.value);
     data.name = importData.name;
     data.level = importData.data.details.level.value;
 
-    console.log(importData.data.traits.rarity);
-    console.log(importData.data.details.alignment.value);
-    console.log(importData.data.traits.size.value);
-    console.log(importData.data.traits.traits.value);
     data.rarity = convertToWGRarity(importData.data.traits.rarity);
     data.alignment = importData.data.details.alignment.value;
     data.size = convertToWGSize(importData.data.traits.size.value);
     data.traitsJSON = JSON.stringify(importData.data.traits.traits.value);
+    data.familyType = importData.data.details.creatureType;
 
 
-    console.log(importData.data.attributes.perception.value);
-    console.log(importData.data.traits.senses.value);
     data.perceptionBonus = importData.data.attributes.perception.value;
     data.senses = importData.data.traits.senses.value;
 
-    console.log(importData.data.traits.languages.value);
-    console.log(importData.data.traits.languages.custom);
     data.languagesJSON = JSON.stringify(importData.data.traits.languages.value);
     data.languagesCustom = importData.data.traits.languages.custom;
 
@@ -161,7 +151,6 @@ function parseCreatureData(importData) {
     });
     let skillsDataArray = [];
     for (let skill of skills) {
-        console.log(`${skill.name}: ${skill.data.mod.value}`);
         skillsDataArray.push({ name: skill.name, bonus: skill.data.mod.value });
     }
     data.skillsJSON = JSON.stringify(skillsDataArray);
@@ -210,12 +199,6 @@ function parseCreatureData(importData) {
     }
     data.itemsJSON = JSON.stringify(itemsDataArray);
 
-    console.log(importData.data.abilities.str.mod);
-    console.log(importData.data.abilities.dex.mod);
-    console.log(importData.data.abilities.con.mod);
-    console.log(importData.data.abilities.int.mod);
-    console.log(importData.data.abilities.wis.mod);
-    console.log(importData.data.abilities.cha.mod);
     data.strMod = importData.data.abilities.str.mod;
     data.dexMod = importData.data.abilities.dex.mod;
     data.conMod = importData.data.abilities.con.mod;
@@ -228,7 +211,6 @@ function parseCreatureData(importData) {
     });
     let interactionAbilitiesDataArray = [];
     for (let ability of interactionAbilities) {
-        console.log(`${ability.name}`);
         interactionAbilitiesDataArray.push({
             name: ability.name,
             actions: convertToWGActions(ability.data.actionType.value, ability.data.actions.value),
@@ -238,21 +220,12 @@ function parseCreatureData(importData) {
     }
     data.interactionAbilitiesJSON = JSON.stringify(interactionAbilitiesDataArray);
 
-    console.log(importData.data.attributes.ac.value);
-    console.log(importData.data.saves.fortitude.value);
-    console.log(importData.data.saves.reflex.value);
-    console.log(importData.data.saves.will.value);
-    console.log(importData.data.attributes.allSaves.value);
     data.acValue = importData.data.attributes.ac.value;
     data.fortBonus = importData.data.saves.fortitude.value;
     data.reflexBonus = importData.data.saves.reflex.value;
     data.willBonus = importData.data.saves.will.value;
     data.allSavesCustom = importData.data.attributes.allSaves.value;
 
-    console.log(importData.data.attributes.hp.max);
-    console.log(importData.data.traits.di.value);
-    console.log(importData.data.traits.dv);
-    console.log(importData.data.traits.dr);
     data.hpMax = importData.data.attributes.hp.max;
     data.hpDetails = importData.data.attributes.hp.details;
     data.immunitiesJSON = JSON.stringify(importData.data.traits.di.value);
@@ -264,7 +237,6 @@ function parseCreatureData(importData) {
     });
     let defensiveAbilitiesDataArray = [];
     for (let ability of defensiveAbilities) {
-        console.log(`${ability.name}`);
         defensiveAbilitiesDataArray.push({
             name: ability.name,
             actions: convertToWGActions(ability.data.actionType.value, ability.data.actions.value),
@@ -274,8 +246,6 @@ function parseCreatureData(importData) {
     }
     data.defensiveAbilitiesJSON = JSON.stringify(defensiveAbilitiesDataArray);
 
-    console.log(importData.data.attributes.speed.value);
-    console.log(importData.data.attributes.speed.otherSpeeds);
     data.speed = importData.data.attributes.speed.value;
     data.otherSpeedsJSON = JSON.stringify(importData.data.attributes.speed.otherSpeeds);
 
@@ -284,7 +254,6 @@ function parseCreatureData(importData) {
     });
     let attacksDataArray = [];
     for (let attack of attacks) {
-        console.log(`1- ${attack.name} ${attack.data.bonus.value} ${attack.data.traits.value}`);
 
         let damageEffects = ``;
         
@@ -386,7 +355,6 @@ function parseCreatureData(importData) {
     });
     let offensiveAbilitiesDataArray = [];
     for (let ability of offensiveAbilities) {
-        console.log(`${ability.name} ${ability.data.actions.value} ${ability.data.traits.value}`);
         offensiveAbilitiesDataArray.push({
             name: ability.name,
             actions: convertToWGActions(ability.data.actionType.value, ability.data.actions.value),
@@ -396,12 +364,8 @@ function parseCreatureData(importData) {
     }
     data.offensiveAbilitiesJSON = JSON.stringify(offensiveAbilitiesDataArray);
 
-    console.log(importData.data.details.publicNotes);
-    console.log(importData.data.details.source);
     data.flavorText = importData.data.details.publicNotes;
     data.contentSrc = convertToWGSource(importData.data.details.source.value);
-
-    console.log(data);
 
     socket.emit('requestAdminAddCreature', data);
 
@@ -459,6 +423,8 @@ function convertToWGActions(actionType, actions) {
 
 function convertToWGSource(source) {
     switch (source) {
+        case 'Pathfinder Bestiary': return 'BEST-1';
+        case 'Pathfinder Bestiary 2': return 'BEST-2';
         case 'Pathfinder Bestiary 3': return 'BEST-3';
         case 'Pathfinder Adventure: Malevolence': return 'MALEVOLENCE';
         case 'Pathfinder #145: Hellknight Hill': return 'AGE-OF-ASHES';

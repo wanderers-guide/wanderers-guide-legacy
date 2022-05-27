@@ -142,6 +142,8 @@ function openQuickView(type, data, noProtection=false) {
         openWarningsQuickview(data);
     } else if(type == 'creatureView'){
         openCreatureQuickview(data);
+    } else if(type == 'creatureCustomView'){
+        openCreatureCustomQuickview(data);
     }
 
 }
@@ -198,7 +200,7 @@ function getContentSource(contentID, contentSrc, homebrewID){
 
 function addContentSource(contentID, contentSrc, homebrewID){
   if(contentSrc == null && homebrewID == null) {return;}
-  if(contentID == null) {return;}
+  //if(contentID == null) {return;}
 
   $('#quickViewContent').parent().css('position','relative');
   $('#quickViewContent').append(getContentSource(contentID, contentSrc, homebrewID));

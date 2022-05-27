@@ -276,9 +276,6 @@ function calculateCreatureStats(data, conditions){
     };
     let hpMax = data.hpMax + getTotalAdjustment('hp');
 
-    console.log(data.adj_meleeDamage);
-    console.log(getTotalAdjustment('melee_damage'));
-
     return {
         perception,
         skills: data.skills,

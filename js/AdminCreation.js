@@ -1634,6 +1634,7 @@ module.exports = class AdminCreation {
             alignment: data.alignment,
             size: data.size,
             traitsJSON: data.traitsJSON,
+            familyType: data.familyType,
             perceptionBonus: data.perceptionBonus,
             senses: data.senses,
             languagesJSON: data.languagesJSON,

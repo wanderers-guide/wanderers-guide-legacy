@@ -4,9 +4,9 @@
 
 let creatureQuickView_data = null;
 let creatureQuickView_stats = null;
-const g_conditionStringLengthMax = 450;
 
 function openCreatureQuickview(mainData) {
+    addContentSource(null, mainData.data.contentSrc, mainData.data.homebrewID);
 
     const data = applyEliteWeak(mainData.data, mainData.eliteWeak);
     creatureQuickView_data = data;
@@ -606,7 +606,6 @@ function openCreatureQuickview(mainData) {
             spellsStr = spellsStr.slice(0, -2);// Trim off that last ', '
         }
         //
-        console.log(spellsStr);
 
         qContent.append(`
             <div class="">
@@ -719,6 +718,11 @@ function stringifyTraits(traits, surroundWithParentheses = false) {
 
             let reloadAmt = trait.toLowerCase().replace('reload-', '');
             traitsStr += `reload ${reloadAmt}, `;
+
+        } else if (trait.toLowerCase().startsWith('thrown-')) {
+
+            let thrownAmt = trait.toLowerCase().replace('thrown-', '');
+            traitsStr += `(trait: thrown) ${thrownAmt} feet, `;
 
         } else {
             traitsStr += `(trait: ${trait.replace(/-/g, ' ')}), `;

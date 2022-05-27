@@ -22,6 +22,9 @@ const Creature = db.define('creatures', {
   traitsJSON: {
     type: Sequelize.STRING
   },
+  familyType: {
+    type: Sequelize.STRING
+  },
 
   perceptionBonus: {
     type: Sequelize.INTEGER
@@ -61,7 +64,7 @@ const Creature = db.define('creatures', {
     type: Sequelize.INTEGER
   },
   interactionAbilitiesJSON: {
-    type: Sequelize.STRING
+    type: Sequelize.TEXT
   },
 
   acValue: {
@@ -97,7 +100,7 @@ const Creature = db.define('creatures', {
   },
 
   defensiveAbilitiesJSON: {
-    type: Sequelize.STRING
+    type: Sequelize.TEXT
   },
   speed: {
     type: Sequelize.INTEGER
@@ -113,7 +116,7 @@ const Creature = db.define('creatures', {
     type: Sequelize.STRING
   },
   offensiveAbilitiesJSON: {
-    type: Sequelize.STRING
+    type: Sequelize.TEXT
   },
 
   flavorText: {

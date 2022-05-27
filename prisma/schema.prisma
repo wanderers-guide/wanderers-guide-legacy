@@ -468,19 +468,20 @@ model creatures {
   alignment           String?          @db.VarChar(5)
   size                creatures_size
   traitsJSON          String?          @db.VarChar(450)
+  familyType          String?          @db.VarChar(120)
   perceptionBonus     Int?
   senses              String?          @db.VarChar(450)
   languagesJSON       String?          @db.VarChar(450)
   languagesCustom     String?          @db.VarChar(600)
   skillsJSON          String?          @db.VarChar(900)
-  itemsJSON           String?          @db.VarChar(900)
+  itemsJSON           String?          @db.VarChar(3000)
   strMod              Int              @default(0)
   dexMod              Int              @default(0)
   conMod              Int              @default(0)
   intMod              Int              @default(0)
   wisMod              Int              @default(0)
   chaMod              Int              @default(0)
-  interactionAbilitiesJSON String?     @db.VarChar(3000)
+  interactionAbilitiesJSON String?     @db.Text
   acValue             Int              @default(10)
   fortBonus           Int              @default(0)
   reflexBonus         Int
@@ -491,12 +492,12 @@ model creatures {
   immunitiesJSON      String?          @db.VarChar(600)
   weaknessesJSON      String?          @db.VarChar(600)
   resistancesJSON     String?          @db.VarChar(600)
-  defensiveAbilitiesJSON String?       @db.VarChar(3000)
+  defensiveAbilitiesJSON String?       @db.Text
   speed               Int              @default(25)
   otherSpeedsJSON     String?          @db.VarChar(450)
   attacksJSON         String?          @db.VarChar(1600)
-  spellcastingJSON    String?          @db.VarChar(1600)
-  offensiveAbilitiesJSON String?      @db.VarChar(3000)
+  spellcastingJSON    String?          @db.VarChar(3000)
+  offensiveAbilitiesJSON String?       @db.Text
   flavorText          String?          @db.Text
   contentSrc          String           @default("CRB") @db.VarChar(45)
   homebrewID          Int?
