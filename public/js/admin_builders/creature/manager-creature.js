@@ -258,9 +258,14 @@ function parseCreatureData(importData) {
         let damageEffects = ``;
         
         if(attack.data.description.value != null){
-            let match = /<p>@Localize\[PF2E\.PersistentDamage\.(\D+)(.+?)\.success]<\/p>/g.exec(attack.data.description.value);
-            if(match != null){
-                damageEffects += `${match[2]} persistent ${match[1].toLowerCase()}`;
+            let matchP = /<p>@Localize\[PF2E\.PersistentDamage\.(\D+)(.+?)\.success]<\/p>/g.exec(attack.data.description.value);
+            if(matchP != null){
+                damageEffects += `${matchP[2]} persistent ${matchP[1].toLowerCase()}`;
+            } else {
+                let match = /@Localize\[PF2E\.PersistentDamage\.(\D+)(.+?)\.success]/g.exec(attack.data.description.value);
+                if(match != null){
+                    damageEffects += `${match[2]} persistent ${match[1].toLowerCase()}`;
+                }
             }
         }
 

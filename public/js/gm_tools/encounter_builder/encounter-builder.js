@@ -24,6 +24,9 @@ $(function () {
 
 let g_creaturesMap;
 let g_extractedCreaturesMap;
+let g_foundCreatureTraitsSet;
+let g_foundCreatureFamiliesSet;
+let g_foundCreatureBooksSet;
 
 let g_allConditions;
 let g_allTags;
@@ -46,9 +49,40 @@ socket.on("returnEncounterDetails", function (allCreatures, allTags, featsObject
     return resultStr.replace(/\W/g, ' ').toLowerCase();
   };
   g_extractedCreaturesMap = new Map();
+  g_foundCreatureTraitsSet = new Set();
+  g_foundCreatureFamiliesSet = new Set();
+  g_foundCreatureBooksSet = new Set();
   for (const [creatureID, data] of g_creaturesMap.entries()) {
     g_extractedCreaturesMap.set(creatureID, extractDataToString(data));
+
+    try {
+      let traits = JSON.parse(data.traitsJSON.toLowerCase());
+      for(let trait of traits){
+        g_foundCreatureTraitsSet.add(trait);
+      }
+    } catch (error) {}
+
+    let familyType = (data.familyType != null) ? data.familyType.toLowerCase() : 'other';
+    g_foundCreatureFamiliesSet.add(familyType);
+    g_foundCreatureBooksSet.add(data.contentSrc);
+
   }
+
+  g_foundCreatureTraitsSet = Array.from(g_foundCreatureTraitsSet).sort(
+    function(a, b) {
+      return a > b ? 1 : -1;
+    }
+  );
+  g_foundCreatureFamiliesSet = Array.from(g_foundCreatureFamiliesSet).sort(
+    function(a, b) {
+      return a > b ? 1 : -1;
+    }
+  );
+  g_foundCreatureBooksSet = Array.from(g_foundCreatureBooksSet).sort(
+    function(a, b) {
+      return a > b ? 1 : -1;
+    }
+  );
 
   g_allConditions = allConditions;
   g_allTags = allTags;

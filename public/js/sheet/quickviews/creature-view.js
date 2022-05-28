@@ -729,9 +729,24 @@ function addAbility(qContent, ability) {
     if (ability.description.startsWith(`<p>@Localize[PF2E.NPC.Abilities.Glossary.`)) {
         // It's just the name of the ability and a link,
 
+        let abilityName = ability.name;
+        let extraText = ``;
+
+        let matchFeet = ability.name.match(/ \d+ feet/);
+        if(matchFeet != null){
+            extraText = matchFeet[0];
+            abilityName = ability.name.replace(extraText, '');
+        } else {
+            let matchNum = ability.name.match(/ \d+/);
+            if(matchNum != null){
+                extraText = matchNum[0];
+                abilityName = ability.name.replace(extraText, '');
+            }
+        }
+
         qContent.append(`
             <div class="">
-                ${processText(`<span id="${abilityID}-header" class=""><span class="icon is-small pr-1"><i class="fas fa-xs fa-chevron-right"></i></span><strong class="is-bold">(feat: ${ability.name})</strong></span> ${actions}${traitsStr}`, false, false, 'MEDIUM')}
+                ${processText(`<span id="${abilityID}-header" class=""><span class="icon is-small pr-1"><i class="fas fa-xs fa-chevron-right"></i></span><strong class="is-bold">(feat: ${abilityName})${extraText}</strong></span> ${actions}${traitsStr}`, false, false, 'MEDIUM')}
             </div>
         `);
 
