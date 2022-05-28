@@ -642,7 +642,7 @@ function generateCreatureResults(advancedSearch, resetMaxDisplay=true){
             if(advancedSearch){
 
                 let foundTraits = traits.filter(trait => {
-                    return data.traitsJSON.toLowerCase().includes(trait);
+                    return data.traitsJSON.toLowerCase().includes(`"${trait}"`);
                 });
                 if(traits.length > 0 && foundTraits.length !== traits.length){
                     toDisplay = false;
