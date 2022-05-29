@@ -719,6 +719,13 @@ function generateCreatureResults(advancedSearch, resetMaxDisplay=true){
                         eliteWeak: eliteWeak,
                     }, true);
                 });
+
+                $(`#${creatureAddEliteWeak}`).change(function () {
+                    // Update the opened quickview
+                    if($('#quickviewDefault').hasClass('is-active')){
+                        $(`#${creatureAddViewBtn}`).click();
+                    }
+                });
     
                 $(`#${creatureAddBtn}`).click(function () {
     

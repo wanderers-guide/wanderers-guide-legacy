@@ -84,7 +84,11 @@ socket.on("returnEncounterDetails", function (allCreatures, allTags, featsObject
     }
   );
 
-  g_allConditions = allConditions;
+  g_allConditions = allConditions.sort(
+    function(a, b) {
+      return a.name > b.name ? 1 : -1;
+    }
+  );
   g_allTags = allTags;
   g_featMap = objToMap(featsObject);
   g_itemMap = objToMap(itemsObject);
@@ -436,7 +440,7 @@ function reloadEncounterMembers() {
             <span id="${btn_memberViewComments}" class="icon is-medium has-text-info mt-1 cursor-clickable">
               <i class="far fa-comment-alt-edit"></i>
             </span>
-            <span id="${btn_memberDelete}" class="icon is-medium has-text-danger mt-1 cursor-clickable">
+            <span id="${btn_memberDelete}" class="icon is-medium has-text-danger mt-1 ml-2 cursor-clickable">
                 <i class="fas fa-minus-circle"></i>
             </span>
         </div>

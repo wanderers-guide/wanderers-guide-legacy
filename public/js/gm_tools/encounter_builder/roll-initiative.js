@@ -64,7 +64,7 @@ function openRollInitiativeModal() {
                 adjustment = -2;
             }
 
-            selectOptionsHTML += `<option value="${creature.perceptionBonus+adjustment}">Perception (${signNumber(creature.perceptionBonus+adjustment)})</option>`;
+            selectOptionsHTML += `<option value="${creature.perceptionBonus+adjustment}" selected>Perception (${signNumber(creature.perceptionBonus+adjustment)})</option>`;
             for(let skill of skills){
                 selectOptionsHTML += `<option value="${skill.bonus+adjustment}">${skill.name} (${signNumber(skill.bonus+adjustment)})</option>`;
             }

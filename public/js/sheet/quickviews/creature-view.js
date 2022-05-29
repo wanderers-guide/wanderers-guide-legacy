@@ -732,12 +732,12 @@ function addAbility(qContent, ability) {
         let abilityName = ability.name;
         let extraText = ``;
 
-        let matchFeet = ability.name.match(/ \d+ feet/);
+        let matchFeet = ability.name.match(/ \d+ feet.*/);
         if(matchFeet != null){
             extraText = matchFeet[0];
             abilityName = ability.name.replace(extraText, '');
         } else {
-            let matchNum = ability.name.match(/ \d+/);
+            let matchNum = ability.name.match(/ \d+.*/);
             if(matchNum != null){
                 extraText = matchNum[0];
                 abilityName = ability.name.replace(extraText, '');
