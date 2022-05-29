@@ -131,6 +131,7 @@ function getAttackAndDamage(itemData, invItem){
         } else if(isWeaponPotencyFour(invItem.fundPotencyRuneID)){
           potencyRuneBonus = 4;
         }
+        if(gOption_hasAutoBonusProgression){ potencyRuneBonus = 0; }
         weapStruct.attack.parts.set('This is the item bonus granted by this weapon\'s potency rune.', potencyRuneBonus);
 
         // Shoddy Penalty //
@@ -327,6 +328,7 @@ function getAttackAndDamage(itemData, invItem){
       } else if(isWeaponPotencyFour(invItem.fundPotencyRuneID)){
         potencyRuneBonus = 4;
       }
+      if(gOption_hasAutoBonusProgression){ potencyRuneBonus = 0; }
       weapStruct.attack.parts.set('This is the item bonus granted by this weapon\'s potency rune.', potencyRuneBonus);
 
       // Shoddy Penalty //
