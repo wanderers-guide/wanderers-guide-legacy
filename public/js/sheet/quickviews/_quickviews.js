@@ -182,27 +182,27 @@ function addBackFunctionality(quickViewData){
 
 function getContentSource(contentID, contentSrc, homebrewID){
 
-  let sourceTextName, sourceLink;
-  if(homebrewID == null) {
-    sourceTextName = getContentSourceTextName(contentSrc);
-    sourceLink = getContentSourceLink(contentSrc);
-    if(sourceTextName == null) { sourceTextName = capitalizeWords(contentSrc); }
-    if(sourceLink == null) { sourceLink = ''; }
-  } else {
-    sourceTextName = 'Bundle #'+homebrewID;
-    sourceLink = '/homebrew/?view_id='+homebrewID;
-  }
+    if(contentID != null && contentSrc == null && homebrewID == null){
+        return '<div style="position: fixed; bottom: 5px; right: 12px;"><span class="is-size-7 has-txt-faded is-italic">#'+contentID+'</span></div>';
+    }
 
-  let contentIDStr = (contentID == null) ? '' : '<span class="is-size-7 has-txt-faded is-italic">, #'+contentID+'</span>';
-  return '<div style="position: fixed; bottom: 5px; right: 12px;"><a class="is-size-7 has-txt-noted is-italic" href="'+sourceLink+'" target="_blank">'+sourceTextName+'</a>'+contentIDStr+'</div>';
+    let sourceTextName, sourceLink;
+    if(homebrewID == null) {
+        sourceTextName = getContentSourceTextName(contentSrc);
+        sourceLink = getContentSourceLink(contentSrc);
+        if(sourceTextName == null) { sourceTextName = capitalizeWords(contentSrc); }
+        if(sourceLink == null) { sourceLink = ''; }
+    } else {
+        sourceTextName = 'Bundle #'+homebrewID;
+        sourceLink = '/homebrew/?view_id='+homebrewID;
+    }
+
+    let contentIDStr = (contentID == null) ? '' : '<span class="is-size-7 has-txt-faded is-italic">, #'+contentID+'</span>';
+    return '<div style="position: fixed; bottom: 5px; right: 12px;"><a class="is-size-7 has-txt-noted is-italic" href="'+sourceLink+'" target="_blank">'+sourceTextName+'</a>'+contentIDStr+'</div>';
 
 }
 
 function addContentSource(contentID, contentSrc, homebrewID){
-  if(contentSrc == null && homebrewID == null) {return;}
-  //if(contentID == null) {return;}
-
-  $('#quickViewContent').parent().css('position','relative');
-  $('#quickViewContent').append(getContentSource(contentID, contentSrc, homebrewID));
-
+    $('#quickViewContent').parent().css('position','relative');
+    $('#quickViewContent').append(getContentSource(contentID, contentSrc, homebrewID));
 }

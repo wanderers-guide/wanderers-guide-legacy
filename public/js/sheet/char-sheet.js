@@ -11,6 +11,8 @@ let gOption_hasAutoHeightenSpells;
 let gOption_hasProfWithoutLevel;
 let gOption_hasStamina;
 let gOption_hasDiceRoller;
+let gOption_hasAutoBonusProgression;
+let gOption_hasGradualAbilityBoosts;
 /* ~~~~~~~~~~~~~~~~~ */
 
 /* Internal Sheet-State Options */
@@ -214,6 +216,9 @@ function initCharSheet(charInfo, userPermissions, viewOnly){
     gOption_hasStamina = (g_character.variantStamina === 1);
     gOption_hasDiceRoller = (g_character.optionDiceRoller === 1);
     gOption_hasIgnoreBulk = (g_character.optionIgnoreBulk === 1);
+    gOption_hasAutoBonusProgression = (g_character.variantAutoBonusProgression === 1);
+    gOption_hasGradualAbilityBoosts = (g_character.variantGradualAbilityBoosts === 1);
+
 
     /* Class Archetype ID */
     if(charInfo.ChoiceStruct.ClassArchetypeID != null){
@@ -387,12 +392,12 @@ function initCharSheet(charInfo, userPermissions, viewOnly){
     });
 
     // Automatic Progression Bonus variant, if enabled...
-    if(g_character.variantAutoBonusProgression == 1){
+    if(gOption_hasAutoBonusProgression){
       g_classDetails = addAutoBonusProgressionVariant(g_classDetails);
     }
 
     // Add support for Gradual Ability Boosts Variant if enabled...
-    if(g_character.variantGradualAbilityBoosts == 1){
+    if(gOption_hasGradualAbilityBoosts){
       g_classDetails = addGradualAbilityBoostsVariant(g_classDetails);
     }
 

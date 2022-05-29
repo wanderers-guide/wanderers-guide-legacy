@@ -113,6 +113,8 @@ function displayRunesForItem(qContent, invItem, isWeapon){
             if(weaponRuneItem.RuneData.isFundamental == 1) {
     
                 let dontDisplay = false;
+                if(gOption_hasAutoBonusProgression){ dontDisplay = true; }
+
                 if(isWeaponPotencyRune(weaponRuneItem.RuneData.id)){
                   let hasPotency = isWeaponPotencyRune(invItem.fundPotencyRuneID);
                   if(hasPotency) {
@@ -140,6 +142,8 @@ function displayRunesForItem(qContent, invItem, isWeapon){
             if(armorRuneItem.RuneData.isFundamental == 1) {
     
                 let dontDisplay = false;
+                if(gOption_hasAutoBonusProgression){ dontDisplay = true; }
+
                 if(isArmorPotencyRune(armorRuneItem.RuneData.id)){
                   let hasPotency = isArmorPotencyRune(invItem.fundPotencyRuneID);
                   if(hasPotency) {
@@ -176,13 +180,74 @@ function displayRunesForItem(qContent, invItem, isWeapon){
         });
     }
 
-    displayRunesInQuickview(qContent, invItem, runeDataStruct);
+    displayRunesInQuickview(qContent, invItem, runeDataStruct, isWeapon);
 
 }
 
 
 
-function displayRunesInQuickview(qContent, invItem, runeDataStruct){
+function displayRunesInQuickview(qContent, invItem, runeDataStruct, isWeapon){
+
+    // If using AutoBonusProgression, remove all fundmental runes and just show potency rune slots at the correct levels.
+    if(gOption_hasAutoBonusProgression){
+
+      if(isWeapon) {
+
+        if(invItem.fundPotencyRuneID != null && isWeaponPotencyFour(invItem.fundPotencyRuneID)){
+
+          addPropertyRuneSelection(qContent, invItem, runeDataStruct.WeaponArray, 1);
+          addPropertyRuneSelection(qContent, invItem, runeDataStruct.WeaponArray, 2);
+          addPropertyRuneSelection(qContent, invItem, runeDataStruct.WeaponArray, 3);
+          addPropertyRuneSelection(qContent, invItem, runeDataStruct.WeaponArray, 4);
+  
+        } else if(g_character.level >= 16 || (invItem.fundPotencyRuneID != null && isWeaponPotencyThree(invItem.fundPotencyRuneID))){
+
+          addPropertyRuneSelection(qContent, invItem, runeDataStruct.WeaponArray, 1);
+          addPropertyRuneSelection(qContent, invItem, runeDataStruct.WeaponArray, 2);
+          addPropertyRuneSelection(qContent, invItem, runeDataStruct.WeaponArray, 3);
+  
+        } else if(g_character.level >= 10 || (invItem.fundPotencyRuneID != null && isWeaponPotencyTwo(invItem.fundPotencyRuneID))){
+  
+          addPropertyRuneSelection(qContent, invItem, runeDataStruct.WeaponArray, 1);
+          addPropertyRuneSelection(qContent, invItem, runeDataStruct.WeaponArray, 2);
+  
+        } else if(g_character.level >= 2 || (invItem.fundPotencyRuneID != null && isWeaponPotencyOne(invItem.fundPotencyRuneID))){
+  
+          addPropertyRuneSelection(qContent, invItem, runeDataStruct.WeaponArray, 1);
+  
+        }
+
+      } else {
+
+        if(invItem.fundPotencyRuneID != null && isArmorPotencyFour(invItem.fundPotencyRuneID)){
+
+          addPropertyRuneSelection(qContent, invItem, runeDataStruct.ArmorArray, 1);
+          addPropertyRuneSelection(qContent, invItem, runeDataStruct.ArmorArray, 2);
+          addPropertyRuneSelection(qContent, invItem, runeDataStruct.ArmorArray, 3);
+          addPropertyRuneSelection(qContent, invItem, runeDataStruct.ArmorArray, 4);
+  
+        } else if(g_character.level >= 18 || (invItem.fundPotencyRuneID != null && isArmorPotencyThree(invItem.fundPotencyRuneID))){
+
+          addPropertyRuneSelection(qContent, invItem, runeDataStruct.ArmorArray, 1);
+          addPropertyRuneSelection(qContent, invItem, runeDataStruct.ArmorArray, 2);
+          addPropertyRuneSelection(qContent, invItem, runeDataStruct.ArmorArray, 3);
+  
+        } else if(g_character.level >= 11 || (invItem.fundPotencyRuneID != null && isArmorPotencyTwo(invItem.fundPotencyRuneID))){
+  
+          addPropertyRuneSelection(qContent, invItem, runeDataStruct.ArmorArray, 1);
+          addPropertyRuneSelection(qContent, invItem, runeDataStruct.ArmorArray, 2);
+  
+        } else if(g_character.level >= 5 || (invItem.fundPotencyRuneID != null && isArmorPotencyOne(invItem.fundPotencyRuneID))){
+  
+          addPropertyRuneSelection(qContent, invItem, runeDataStruct.ArmorArray, 1);
+  
+        }
+
+      }
+
+      return;
+    }
+
     if(invItem.fundRuneID != null){
         let fundRuneID = invItem.fundRuneID;
         if(isStriking(fundRuneID)){
