@@ -9,7 +9,6 @@ $(function () {
   startSpinnerLoader();
   socket.emit("requestEncounterDetails");
 
-
   // Save every 1 minute
   window.setInterval(() => {
     saveData();
@@ -502,6 +501,9 @@ function reloadEncounterMembers() {
         member.currentHP = 0;
       }
       $(this).val(member.currentHP);
+    });
+    $(`#${input_memberCurrentHP}`).click(function (event) {
+      event.stopImmediatePropagation();
     });
 
     // Comments //

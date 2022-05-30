@@ -117,6 +117,7 @@ function openItemQuickview(data) {
 
     let price = getConvertedPriceForSize(itemDataStruct.Item.size, itemDataStruct.Item.price);
     price = getCoinToString(price);
+    if(price == '0 cp'){ price = '-'; }
     if(itemDataStruct.Item.quantity > 1){
         price += ' for '+itemDataStruct.Item.quantity;
     }
@@ -140,6 +141,7 @@ function openItemQuickview(data) {
         }
 
         let damage = itemDataStruct.WeaponData.diceNum+""+itemDataStruct.WeaponData.dieType+" "+itemDataStruct.WeaponData.damageType;
+        if(itemDataStruct.WeaponData.dieType == 'NONE'){ damage = '-'; }
 
         qContent.append('<div class="tile text-center is-flex"><div class="tile is-child"><strong>Damage</strong></div></div>');
         qContent.append('<div class="tile text-center is-flex"><div class="tile is-child"><p class="damage-roll-btn">'+damage+'</p></div></div>');
