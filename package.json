@@ -5,7 +5,7 @@
     "main": "app.js",
     "scripts": {
         "start": "node app.js",
-        "dev": "start redis-server.exe && nodemon app.js"
+        "dev": "start redis-server.exe && concurrently -k \"tsc -w\" \"nodemon app.js\""
     },
     "author": "Aaron Cassar",
     "license": "ISC",
@@ -49,6 +49,7 @@
         "socket.io": "^2.3.0"
     },
     "devDependencies": {
+        "concurrently": "^7.2.1",
         "handlebars": "4.5.3",
         "nodemon": "^2.0.2"
     }

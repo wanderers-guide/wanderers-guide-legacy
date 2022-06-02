@@ -20,6 +20,8 @@ const GeneralUtils = require('./GeneralUtils');
 const UserHomebrew = require('./UserHomebrew');
 const BuildsGathering = require('./BuildsGathering');
 const BuildsSaving = require('./BuildsSaving');
+const CampaignGathering = require('./CampaignGathering');
+const CampaignSaving = require('./CampaignSaving');
 
 /* Using MLoads instead */
 //const CharSheetLoad = require('./loading/Load_CharSheet');
@@ -2925,6 +2927,15 @@ module.exports = class SocketConnections {
           });
         });
 
+      });
+
+
+      socket.on('requestAddCampaign', function(){
+
+        CampaignSaving.addCampaign(userID).then((campaign) => {
+          socket.emit('returnAddCampaign', campaign);
+        });
+        
       });
 
     });

@@ -3,13 +3,13 @@ const db = require('../../config/databases/content-database');
 
 const AccessToken = db.define('accessTokens', {
   accessToken: {
-    type: Sequelize.INTEGER
+    type: Sequelize.STRING
   },
   clientID: {
     type: Sequelize.STRING
   },
   charID: {
-    type: Sequelize.STRING
+    type: Sequelize.INTEGER
   },
   accessRights: {
     type: Sequelize.ENUM,

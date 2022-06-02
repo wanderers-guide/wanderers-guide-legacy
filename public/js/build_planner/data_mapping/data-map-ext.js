@@ -230,6 +230,20 @@ function getDataAllOtherSpeed(){
   return dataArray;
 }
 
+//
+
+function getDataAllExtraClassFeature(){
+  let dataArray = getDataAll(DATA_SOURCE.EXTRA_CLASS_FEATURE);
+  for(let data of dataArray){
+    let vParts = data.value.split(getSeparator());
+    data.FeatureID = vParts[0];
+    data.DontRunCode = vParts[1];
+    if(data.DontRunCode == null) { data.DontRunCode = false; }
+  }
+  return dataArray;
+}
+
+//
 
 function getSeparator(){
   return ':::';

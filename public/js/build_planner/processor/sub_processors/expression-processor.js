@@ -184,7 +184,10 @@ function profConversion_convertOldName(profName){
 }
 
 let g_expr_hasInit = false;
-let g_expr_focusPoints, g_expr_senseArray, g_expr_classAbilityArray, g_expr_featDataMap, g_expr_featNameArray = null;
+let g_expr_focusPoints, g_expr_senseArray, g_expr_featDataMap, g_expr_featNameArray = null;
+
+let g_expr_baseClassAbilityArray = [];
+let g_expr_classAbilityCacheMap = new Map();
 
 function initExpressionProcessor(){
 
@@ -202,46 +205,33 @@ function initExpressionProcessor(){
       }
     }
 
+    // Fill class ability cache map
+    for(const [classID, classData] of g_classMap.entries()){
+      for(const classFeature of classData.Abilities){
+        g_expr_classAbilityCacheMap.set(classFeature.id+'', classFeature.name.toUpperCase().replace(/\(|\)/g,""));
+      }
+    }
+
     const charClass = getCharClass();
     if(charClass != null){
-        g_expr_classAbilityArray = [];
         if(charClass.Abilities != null){
+            g_expr_baseClassAbilityArray = [];
             for(let classAbility of charClass.Abilities){
                 if(classAbility.level == -1) {continue;}
                 if(classAbility.level <= g_char_level) {
                     if(classAbility.selectType != 'SELECT_OPTION'){
-                        g_expr_classAbilityArray.push(classAbility.name.toUpperCase().replace(/\(|\)/g,""));
+                      g_expr_baseClassAbilityArray.push(classAbility.id+'');
                     } else {
                         let choiceData = getDataAllClassChoice().find(choiceData => {
                             return classAbility.id == choiceData.OptionID;
                         });
                         if(choiceData != null){
-                            g_expr_classAbilityArray.push(classAbility.name.toUpperCase().replace(/\(|\)/g,""));
+                          g_expr_baseClassAbilityArray.push(classAbility.id+'');
                         }
                     }
                 }
             }
 
-
-            let findClassFeatureName = function(classFeatureID){
-              for(const [classID, classData] of g_classMap.entries()){
-                for(const classFeature of classData.Abilities){
-                  if(classFeature.id == classFeatureID){
-                    return classFeature.name;
-                  }
-                }
-              }
-              return null;
-            };
-
-            for(let classAbility of getDataAll(DATA_SOURCE.EXTRA_CLASS_FEATURE)){
-              if(classAbility.value != null){
-                let featureName = findClassFeatureName(classAbility.value);
-                if(featureName != null){
-                  g_expr_classAbilityArray.push(featureName.toUpperCase().replace(/\(|\)/g,""));
-                }
-              }
-            }
         }
     }
 
@@ -519,8 +509,9 @@ function expHasClassAbility(expression, statement, elseStatement){
     if(expression.includes('==')){
         let classAbilityName = expression.split('==')[1].toUpperCase();
         classAbilityName = classAbilityName.replace(/_/g," ");
-        if(g_expr_classAbilityArray == null){ return statement; }
-        if(g_expr_classAbilityArray.includes(classAbilityName)){
+        let classAbilityNameArray = getCurrentClassAbilityNameArray();
+        if(classAbilityNameArray == null){ return statement; }
+        if(classAbilityNameArray.includes(classAbilityName)){
             return statement;
         } else {
             return elseStatement;
@@ -528,8 +519,9 @@ function expHasClassAbility(expression, statement, elseStatement){
     } else if(expression.includes('!=')){
         let classAbilityName = expression.split('!=')[1].toUpperCase();
         classAbilityName = classAbilityName.replace(/_/g," ");
-        if(g_expr_classAbilityArray == null){ return elseStatement; }
-        if(!g_expr_classAbilityArray.includes(classAbilityName)){
+        let classAbilityNameArray = getCurrentClassAbilityNameArray();
+        if(classAbilityNameArray == null){ return elseStatement; }
+        if(!classAbilityNameArray.includes(classAbilityName)){
             return statement;
         } else {
             return elseStatement;
@@ -693,6 +685,33 @@ function cleanProfDataArrayOfStatementProfs(profDataArray, srcStruct){
   return newProfDataArray;
 }
 
+function getCurrentClassAbilityNameArray(){
+  let abilityNameArray = [];
+  for(let classFeatureID of g_expr_baseClassAbilityArray){
+    let featureName = g_expr_classAbilityCacheMap.get(classFeatureID+'');
+    if(featureName != null){
+      abilityNameArray.push(featureName);
+    }
+  }
+  for(let classAbility of getDataAllExtraClassFeature()){
+    if(classAbility.FeatureID != null){
+      let featureName = g_expr_classAbilityCacheMap.get(classAbility.FeatureID+'');
+      if(featureName != null){
+        abilityNameArray.push(featureName);
+      }
+
+      let choiceData = getDataAllClassChoice().find(choiceData => {
+        return classAbility.FeatureID == choiceData.SelectorID;
+      });
+      let choiceFeatureName = g_expr_classAbilityCacheMap.get(choiceData.OptionID+'');
+      if(choiceFeatureName != null){
+        abilityNameArray.push(choiceFeatureName);
+      }
+
+    }
+  }
+  return abilityNameArray;
+}
 
 /*~ Sheet-Only Expressions ~*/
 

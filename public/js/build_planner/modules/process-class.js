@@ -250,7 +250,7 @@ function processClass() {
               deleteDataBySourceStruct(classFeatureChoice_srcStruct);
 
               if(triggerSave == null || triggerSave) {
-                initExpressionProcessor();// Update g_expr_classAbilityArray
+                initExpressionProcessor();// Update getCurrentClassAbilityNameArray()
               }
               
             } else {
@@ -280,7 +280,7 @@ function processClass() {
                   saveBuildMetaData();
                 }
                 setDataClassChoice(classFeatureChoice_srcStruct, classFeature.id, chosenClassFeature.id);
-                initExpressionProcessor();// Update g_expr_classAbilityArray
+                initExpressionProcessor();// Update getCurrentClassAbilityNameArray()
               }
 
               // Run class feature option code

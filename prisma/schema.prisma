@@ -225,6 +225,34 @@ model calculatedStats {
   characters         characters @relation(fields: [charID], references: [id])
 }
 
+model campaignAccessTokens {
+  id            Int                       @id @default(autoincrement())
+  campaignID    Int
+  charID        Int                       @unique
+  createdAt     DateTime?                 @db.DateTime(0)
+  updatedAt     DateTime?                 @db.DateTime(0)
+  characters    characters                @relation(fields: [charID], references: [id])
+  campaigns     campaigns                 @relation(fields: [campaignID], references: [id])
+
+  @@index([charID], name: "charID_campacctoken")
+  @@index([campaignID], name: "campaignID_campacctoken")
+}
+
+model campaigns {
+  id           Int                        @id @default(autoincrement())
+  userID       Int
+  accessID     String                     @unique @db.VarChar(60)
+  name      String                        @db.VarChar(120)
+  description  String?                    @db.VarChar(1200)
+  iconURL      String?                    @db.VarChar(300)
+  createdAt    DateTime?                  @db.DateTime(0)
+  updatedAt    DateTime?                  @db.DateTime(0)
+  users        users                      @relation(fields: [userID], references: [id])
+  campaignAccessTokens campaignAccessTokens[]
+
+  @@index([userID], name: "userID_campaign")
+}
+
 model characters {
   id                          Int                    @id @default(autoincrement())
   userID                      Int?
@@ -282,6 +310,7 @@ model characters {
   charFamiliars               charFamiliars[]
   noteFields                  noteFields[]
   spellBookSpells             spellBookSpells[]
+  campaignAccessTokens        campaignAccessTokens[]
 
   @@index([ancestryID], name: "char_ancestryID_idx")
   @@index([backgroundID], name: "char_backgroundID_idx")
@@ -1077,6 +1106,7 @@ model users {
   homeBackReports     homeBackReports[]
   homebrewBundles     homebrewBundles[]
   userHomebrewBundles userHomebrewBundles[]
+  campaigns           campaigns[]
 
   @@unique([googleID, redditID], name: "platform_compIDs")
 }

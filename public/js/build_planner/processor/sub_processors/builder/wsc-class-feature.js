@@ -204,19 +204,7 @@ socket.on("returnAddClassFeature", function(srcStruct, classAbility, allClassAbi
       {source: 'Extra Class Feature', sourceName: classAbility.name});
   }
 
-  extraClassFeaturesUpdateRecords(classAbility, srcStruct);
+  setData(DATA_SOURCE.EXTRA_CLASS_FEATURE, srcStruct, classAbility.id+':::'+inputPacket.dontRunCode, false);
 
   statementComplete('ClassFeature - Add');
 });
-
-function extraClassFeaturesUpdateRecords(newClassFeature, srcStruct){
-  
-  let existingClassFeature = getDataAll(DATA_SOURCE.EXTRA_CLASS_FEATURE).find(classFeature => {
-    return classFeature.value.id == newClassFeature.id;
-  });
-  if(existingClassFeature == null){
-    setData(DATA_SOURCE.EXTRA_CLASS_FEATURE, srcStruct, newClassFeature.id, false);
-    g_expr_classAbilityArray.push(newClassFeature.name.toUpperCase().replace(/\(|\)/g,""));
-  }
-
-}

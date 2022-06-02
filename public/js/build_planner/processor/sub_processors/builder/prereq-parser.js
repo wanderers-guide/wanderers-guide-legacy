@@ -402,12 +402,13 @@ function preReqCheckFeats(prereq, normalPreReq){
 
 // Prereq Class Feature Checking //
 function preReqCheckClassAbilities(prereq, normalPreReq){
-  if(g_expr_classAbilityArray != null &&
+  let classAbilityNameArray = getCurrentClassAbilityNameArray();
+  if(classAbilityNameArray != null &&
         getCharClass() != null &&
         getCharClass().Abilities != null){
     if(prereq.toLowerCase() === normalPreReq){
 
-      for(let abilityName of g_expr_classAbilityArray){
+      for(let abilityName of classAbilityNameArray){
         let abilName = abilityName.toLowerCase();
         if(normalPreReq === abilName){ return 'TRUE'; }
 
@@ -479,12 +480,10 @@ function prereqFindClassAbility(abilityName){
       return ability;
     }
   }
-  for(let ability of getDataAll(DATA_SOURCE.EXTRA_CLASS_FEATURE)){
-    for(const [classID, classData] of g_classMap.entries()){
-      for(const classAbility of classData.Abilities){
-        if(abilityName === classAbility.name.toLowerCase()) {
-          return ability;
-        }
+  for(const [classID, classData] of g_classMap.entries()){
+    for(const classAbility of classData.Abilities){
+      if(abilityName === classAbility.name.toLowerCase()) {
+        return classAbility;
       }
     }
   }
