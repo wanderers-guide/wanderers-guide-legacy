@@ -102,8 +102,8 @@ const g_contentSources = [
   {TextName: 'Pathfinder Society', CodeName: 'PATH-SOCIETY', Link: 'https://paizo.com/pathfindersociety'},
 ];
 
-const g_currentContentSource = 'LOST-KNIGHTS-WALL';
-const g_hiddenFromBrowseContentSources = ['LOST-KNIGHTS-WALL'];// TODO - Temp solution
+const g_currentContentSource = 'BEST-1';
+const g_hiddenFromBrowseContentSources = [''];// TODO - Temp solution
 
 function getContentSourceTextName(codeName){
   let contentSourceData = g_contentSources.find(contentSourceData => {

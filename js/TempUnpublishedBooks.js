@@ -8,7 +8,7 @@ module.exports = class TempUnpublishedBooks {
     if(ADMIN_USER_IDS.includes(userID+'')){
       return [''];
     } else {
-      return ['LOST-KNIGHTS-WALL'];// Unpublished books
+      return [''];// Unpublished books
     }
   }
 
@@ -16,7 +16,7 @@ module.exports = class TempUnpublishedBooks {
     if(ADMIN_USER_IDS.includes(userID+'')){
       return [{contentSrc:''}];
     } else {
-      return [{contentSrc:'LOST-KNIGHTS-WALL'}];// Unpublished books
+      return [{contentSrc:''}];// Unpublished books
     }
   }
 
