@@ -123,7 +123,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // Set FavIcon
-app.use(favicon('./public/images/favicon.ico'));
+app.use(favicon('./public/images/favicon.svg'));
 
 // Databases
 //const backgroundDB = require('./config/databases/background-database');
