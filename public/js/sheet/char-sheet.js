@@ -2406,6 +2406,7 @@ function determineBulkAndCoins(invItems, itemMap){
     let droppedItemArray = [];
     for(const invItem of invItems){
         if(invItem.isDropped == 1) { droppedItemArray.push(invItem.id); continue; }
+        console.log(invItem);
 
         // Coins - Hardcoded IDs //
         let isCurrency = false;
@@ -2465,24 +2466,29 @@ function determineBulkAndCoins(invItems, itemMap){
 
             let includeSelf = true;
             let item = itemMap.get(invItem.itemID+"");
-            if(item != null && item.StorageData != null){
+
+            if(item != null){// Non-existent items don't calc toward bulk
+
+              if(item.StorageData != null){
                 if(item.StorageData.ignoreSelfBulkIfWearing == 1){
                     includeSelf = false;
                 }
-            }
+              }
 
-            if(includeSelf){
-                let invItemQuantity = (invItem.quantity == null) ? 1 : invItem.quantity;
-                let invItemBulk = determineItemBulk(g_charSize, invItem.size, invItem.bulk);
-                invItemBulk = getWornArmorBulkAdjustment(invItem, invItemBulk);
-                invItemBulk = (invItemBulk == 0.0) ? 0.001 : invItemBulk;
-                let invItemTotalBulk = invItemBulk * invItemQuantity;
+              if(includeSelf){
+                  let invItemQuantity = (invItem.quantity == null) ? 1 : invItem.quantity;
+                  let invItemBulk = determineItemBulk(g_charSize, invItem.size, invItem.bulk);
+                  invItemBulk = getWornArmorBulkAdjustment(invItem, invItemBulk);
+                  invItemBulk = (invItemBulk == 0.0) ? 0.001 : invItemBulk;
+                  let invItemTotalBulk = invItemBulk * invItemQuantity;
 
-                if(isCurrency){
-                  invItemTotalBulk = Math.floor(invItemQuantity / 1000);
-                }
+                  if(isCurrency){
+                    invItemTotalBulk = Math.floor(invItemQuantity / 1000);
+                  }
 
-                totalBulk += invItemTotalBulk;
+                  totalBulk += invItemTotalBulk;
+              }
+
             }
         }
     }

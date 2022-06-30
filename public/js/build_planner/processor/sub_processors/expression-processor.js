@@ -703,9 +703,11 @@ function getCurrentClassAbilityNameArray(){
       let choiceData = getDataAllClassChoice().find(choiceData => {
         return classAbility.FeatureID == choiceData.SelectorID;
       });
-      let choiceFeatureName = g_expr_classAbilityCacheMap.get(choiceData.OptionID+'');
-      if(choiceFeatureName != null){
-        abilityNameArray.push(choiceFeatureName);
+      if(choiceData != null){
+        let choiceFeatureName = g_expr_classAbilityCacheMap.get(choiceData.OptionID+'');
+        if(choiceFeatureName != null){
+          abilityNameArray.push(choiceFeatureName);
+        }
       }
 
     }
