@@ -410,6 +410,9 @@ function initCharSheet(charInfo, userPermissions, viewOnly){
     }
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 
+    // Check & Remove Invalid Items
+    removeInvalidItemsFromInventory();
+
     loadCharSheet();
 
     initDiceRoller();
@@ -2341,6 +2344,20 @@ function findEquippedShield() {
     return null;
 }
 
+function removeInvalidItemsFromInventory(){
+
+  for(const invItem of g_invStruct.InvItems){
+        
+    let item = g_itemMap.get(invItem.itemID+"");
+    if(item == null) {
+      console.warn("Removing invalid item from inventory: "+invItem.name);
+      socket.emit("requestRemoveItemFromInv", invItem.id);
+    }
+
+  }
+
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////// Rune Data Struct //////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -2406,7 +2423,6 @@ function determineBulkAndCoins(invItems, itemMap){
     let droppedItemArray = [];
     for(const invItem of invItems){
         if(invItem.isDropped == 1) { droppedItemArray.push(invItem.id); continue; }
-        console.log(invItem);
 
         // Coins - Hardcoded IDs //
         let isCurrency = false;
@@ -2467,7 +2483,7 @@ function determineBulkAndCoins(invItems, itemMap){
             let includeSelf = true;
             let item = itemMap.get(invItem.itemID+"");
 
-            if(item != null){// Non-existent items don't calc toward bulk
+            if(item != null){
 
               if(item.StorageData != null){
                 if(item.StorageData.ignoreSelfBulkIfWearing == 1){
