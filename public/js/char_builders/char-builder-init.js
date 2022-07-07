@@ -370,6 +370,14 @@ function handleCharacterOptions(character, hBundles, progessBundles) {
     });
     $("#contentSrc-AGE-OF-ASHES").prop('checked', contentSourceArray.includes('AGE-OF-ASHES'));
 
+    $("#contentSrc-BLOOD-LORDS").change(function(){
+      socket.emit("requestCharacterSourceChange", 
+          getCharIDFromURL(), 
+          'BLOOD-LORDS',
+          this.checked);
+    });
+    $("#contentSrc-BLOOD-LORDS").prop('checked', contentSourceArray.includes('BLOOD-LORDS'));
+
     $("#contentSrc-EXTINCTION-CURSE").change(function(){
         socket.emit("requestCharacterSourceChange", 
             getCharIDFromURL(), 

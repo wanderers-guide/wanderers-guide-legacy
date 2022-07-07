@@ -274,6 +274,14 @@ function handleBuildOptions(build, hBundles, progessBundles) {
     });
     $("#contentSrc-AGE-OF-ASHES").prop('checked', contentSourceArray.includes('AGE-OF-ASHES'));
 
+    $("#contentSrc-BLOOD-LORDS").change(function(){
+      socket.emit("requestBuildSourceChange", 
+          g_build_id, 
+          'BLOOD-LORDS',
+          this.checked);
+    });
+    $("#contentSrc-BLOOD-LORDS").prop('checked', contentSourceArray.includes('BLOOD-LORDS'));
+
     $("#contentSrc-EXTINCTION-CURSE").change(function(){
         socket.emit("requestBuildSourceChange", 
             g_build_id, 

@@ -85,6 +85,7 @@ const g_contentSources = [
   {TextName: 'Abomination Vaults', CodeName: 'ABOMINATION-VAULTS', Link: 'https://paizo.com/store/pathfinder/adventures/adventurePath/abominationVaults'},
   {TextName: 'Agents of Edgewatch', CodeName: 'AGENTS-OF-EDGEWATCH', Link: 'https://paizo.com/store/pathfinder/adventures/adventurePath/agentsOfEdgewatch'},
   {TextName: 'Age of Ashes', CodeName: 'AGE-OF-ASHES', Link: 'https://paizo.com/store/pathfinder/adventures/adventurePath/ageOfAshes'},
+  {TextName: 'Blood Lords', CodeName: 'BLOOD-LORDS', Link: 'https://paizo.com/store/pathfinder/adventures/adventurePath/bloodLords'},
   {TextName: 'Extinction Curse', CodeName: 'EXTINCTION-CURSE', Link: 'https://paizo.com/store/pathfinder/adventures/adventurePath/extinctioncurse'},
   {TextName: 'The Fall of Plaguestone', CodeName: 'FALL-OF-PLAGUE', Link: 'https://paizo.com/products/btq01zoh?Pathfinder-Adventure-The-Fall-of-Plaguestone'},
   {TextName: 'Fists of the Ruby Phoenix', CodeName: 'FIST-PHOENIX', Link: 'https://paizo.com/store/pathfinder/adventures/adventurePath/fistsOfTheRubyPhoenix'},
