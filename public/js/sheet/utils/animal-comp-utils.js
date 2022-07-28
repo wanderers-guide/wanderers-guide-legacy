@@ -53,6 +53,7 @@ function getAnimalModStr(animal, charAnimal){
     case 'NIMBLE': return modStr+2;
     case 'SAVAGE': return modStr+3;
     case 'INDOMITABLE': return modStr+2;
+    case 'UNSEEN': return modStr+2;
     default: return -1;
   }
 }
@@ -68,6 +69,7 @@ function getAnimalModDex(animal, charAnimal){
     case 'NIMBLE': return modDex+3;
     case 'SAVAGE': return modDex+2;
     case 'INDOMITABLE': return modDex+2;
+    case 'UNSEEN': return modDex+2;
     default: return -1;
   }
 }
@@ -81,6 +83,7 @@ function getAnimalModCon(animal, charAnimal){
     case 'NIMBLE': return modCon+2;
     case 'SAVAGE': return modCon+2;
     case 'INDOMITABLE': return modCon+3;
+    case 'UNSEEN': return modCon+2;
     default: return -1;
   }
 }
@@ -94,6 +97,7 @@ function getAnimalModInt(animal, charAnimal){
     case 'NIMBLE': return modInt;
     case 'SAVAGE': return modInt;
     case 'INDOMITABLE': return modInt;
+    case 'UNSEEN': return modInt;
     default: return -1;
   }
 }
@@ -107,6 +111,7 @@ function getAnimalModWis(animal, charAnimal){
     case 'NIMBLE': return modWis+2;
     case 'SAVAGE': return modWis+2;
     case 'INDOMITABLE': return modWis+2;
+    case 'UNSEEN': return modWis+3;
     default: return -1;
   }
 }
@@ -120,6 +125,7 @@ function getAnimalModCha(animal, charAnimal){
     case 'NIMBLE': return modCha;
     case 'SAVAGE': return modCha;
     case 'INDOMITABLE': return modCha;
+    case 'UNSEEN': return modCha;
     default: return -1;
   }
 }
@@ -136,6 +142,7 @@ function getAnimalDamageDieNumber(animal, charAnimal){
     case 'NIMBLE': return 2;
     case 'SAVAGE': return 2;
     case 'INDOMITABLE': return 2;
+    case 'UNSEEN': return 2;
     default: return -1;
   }
 }
@@ -153,6 +160,9 @@ function getAnimalAdditionalDamage(animal, charAnimal){
     case 'INDOMITABLE':
       if(animalHasAnySpecial()){ return 6; }
       return 3;
+    case 'UNSEEN':
+      if(animalHasAnySpecial()){ return 6; }
+      return 3;
     default: return -1;
   }
 }
@@ -166,6 +176,7 @@ function hasAnimalAdvancedManeuver(animal, charAnimal){
     case 'NIMBLE': return true;
     case 'SAVAGE': return true;
     case 'INDOMITABLE': return true;
+    case 'UNSEEN': return true;
     default: return false;
   }
 }
@@ -177,6 +188,7 @@ function hasAnimalMagicalAttacks(animal, charAnimal){
     case 'NIMBLE': return true;
     case 'SAVAGE': return true;
     case 'INDOMITABLE': return true;
+    case 'UNSEEN': return true;
     default: return false;
   }
 }
@@ -221,6 +233,7 @@ function getAnimalUnarmedAttacksNumUps(animal, charAnimal){
     case 'NIMBLE': return 1;
     case 'SAVAGE': return 1;
     case 'INDOMITABLE': return 1;
+    case 'UNSEEN': return 1;
     default: return -1;
   }
 }
@@ -236,6 +249,7 @@ function getAnimalUnarmoredDefenseNumUps(animal, charAnimal){
     case 'NIMBLE': return cNumUps+2;
     case 'SAVAGE': return cNumUps+1;
     case 'INDOMITABLE': return cNumUps+1;
+    case 'UNSEEN': return cNumUps+1;
     default: return -1;
   }
 }
@@ -259,6 +273,7 @@ function getAnimalSize(animal, charAnimal){
     case 'NIMBLE': return matureSize(animal.size);
     case 'SAVAGE': return matureSize(matureSize(animal.size));
     case 'INDOMITABLE': return matureSize(matureSize(animal.size));
+    case 'UNSEEN': return matureSize(animal.size);
     default: return null;
   }
 }
@@ -284,6 +299,7 @@ function getAnimalAcrobaticsNumUps(animal, charAnimal){
     case 'NIMBLE': return 2;
     case 'SAVAGE': return 1;
     case 'INDOMITABLE': return 1;
+    case 'UNSEEN': return 1;
     default: return -1;
   }
 }
@@ -298,6 +314,7 @@ function getAnimalAthleticsNumUps(animal, charAnimal){
     case 'NIMBLE': return cNumUps+1;
     case 'SAVAGE': return cNumUps+2;
     case 'INDOMITABLE': return cNumUps+2;
+    case 'UNSEEN': return cNumUps+1;
     default: return -1;
   }
 }
@@ -311,6 +328,7 @@ function getAnimalIntimidationNumUps(animal, charAnimal){
     case 'NIMBLE': return cNumUps+1;
     case 'SAVAGE': return cNumUps+1;
     case 'INDOMITABLE': return cNumUps+1;
+    case 'UNSEEN': return cNumUps+1;
     default: return -1;
   }
 }
@@ -324,6 +342,7 @@ function getAnimalStealthNumUps(animal, charAnimal){
     case 'NIMBLE': return cNumUps+1;
     case 'SAVAGE': return cNumUps+1;
     case 'INDOMITABLE': return cNumUps+1;
+    case 'UNSEEN': return cNumUps+2;
     default: return -1;
   }
 }
@@ -337,6 +356,7 @@ function getAnimalSurvivalNumUps(animal, charAnimal){
     case 'NIMBLE': return cNumUps+1;
     case 'SAVAGE': return cNumUps+1;
     case 'INDOMITABLE': return cNumUps+1;
+    case 'UNSEEN': return cNumUps+1;
     default: return -1;
   }
 }
@@ -353,6 +373,7 @@ function getAnimalPerceptionNumUps(animal, charAnimal){
     case 'NIMBLE': return 2;
     case 'SAVAGE': return 2;
     case 'INDOMITABLE': return 2;
+    case 'UNSEEN': return 2;
     default: return -1;
   }
 }
@@ -368,6 +389,7 @@ function getAnimalFortitudeNumUps(animal, charAnimal){
     case 'NIMBLE': return 2;
     case 'SAVAGE': return 2;
     case 'INDOMITABLE': return 2;
+    case 'UNSEEN': return 2;
     default: return -1;
   }
 }
@@ -382,6 +404,7 @@ function getAnimalReflexNumUps(animal, charAnimal){
     case 'NIMBLE': return 2;
     case 'SAVAGE': return 2;
     case 'INDOMITABLE': return 2;
+    case 'UNSEEN': return 2;
     default: return -1;
   }
 }
@@ -396,15 +419,20 @@ function getAnimalWillNumUps(animal, charAnimal){
     case 'NIMBLE': return 2;
     case 'SAVAGE': return 2;
     case 'INDOMITABLE': return 2;
+    case 'UNSEEN': return 2;
     default: return -1;
   }
 }
 
 //
 
-function getAnimalSpecializationExtraText(animal, charAnimal){
+function getAnimalExtraText(animal, charAnimal){
+  let extraText = '';
   if(animalHasSpecial('SHADE')){
-    return 'It gains darkvision, resistance 5 to all damage except force, and in areas of dim light or darkness, it can Step 10 feet instead of 5 feet.';
+    extraText += '<p>It gains darkvision, resistance 5 to all damage except force, and in areas of dim light or darkness, it can Step 10 feet instead of 5 feet.</p>';
   }
-  return '';
+  if(charAnimal.age == 'UNSEEN'){
+    extraText += '<p>It deals an extra 1d4 precision damage against flat-footed targets.</p>';
+  }
+  return extraText;
 }

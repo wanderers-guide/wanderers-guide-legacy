@@ -178,7 +178,7 @@ function openAnimalCompQuickview(data) {
 
     qContent.append('<hr class="m-2">');
 
-    if(charAnimal.age == 'NIMBLE' || charAnimal.age == 'SAVAGE' || charAnimal.age == 'INDOMITABLE'){
+    if(charAnimal.age == 'NIMBLE' || charAnimal.age == 'SAVAGE' || charAnimal.age == 'INDOMITABLE' || charAnimal.age == 'UNSEEN'){
       qContent.append(`
         <div class="columns is-centered is-marginless">
           <div class="field is-grouped is-grouped-right column is-4 px-0">
@@ -190,6 +190,7 @@ function openAnimalCompQuickview(data) {
                   <option value="NIMBLE">Nimble</option>
                   <option value="SAVAGE">Savage</option>
                   ${ hasEnabledSource('LOST-WORLD-GUIDE') ? '<option value="INDOMITABLE">Indomitable</option>' : '' }
+                  ${ hasEnabledSource('DARK-ARCHIVE') ? '<option value="UNSEEN">Unseen</option>' : '' }
                 </select>
               </div>
             </div>
@@ -221,6 +222,7 @@ function openAnimalCompQuickview(data) {
                 <option value="NIMBLE">Nimble</option>
                 <option value="SAVAGE">Savage</option>
                 ${ hasEnabledSource('LOST-WORLD-GUIDE') ? '<option value="INDOMITABLE">Indomitable</option>' : '' }
+                ${ hasEnabledSource('DARK-ARCHIVE') ? '<option value="UNSEEN">Unseen</option>' : '' }
               </select>
             </div>
           </div>
@@ -229,7 +231,7 @@ function openAnimalCompQuickview(data) {
       `);
     }
 
-    qContent.append('<div class="px-4 mx-2"><p class="is-size-6">'+getAnimalSpecializationExtraText(animal, charAnimal)+'</p></div>');
+    qContent.append('<div class="px-4 mx-2"><p class="is-size-6">'+getAnimalExtraText(animal, charAnimal)+'</p></div>');
 
     qContent.append('<hr class="m-2">');
 
@@ -259,7 +261,7 @@ function openAnimalCompQuickview(data) {
         }
     });
 
-    if($('#selectAnimalAge').val() == 'NIMBLE' || $('#selectAnimalAge').val() == 'SAVAGE' || $('#selectAnimalAge').val() == 'INDOMITABLE'){
+    if($('#selectAnimalAge').val() == 'NIMBLE' || $('#selectAnimalAge').val() == 'SAVAGE' || $('#selectAnimalAge').val() == 'INDOMITABLE' || $('#selectAnimalAge').val() == 'UNSEEN'){
       
       for(let specialization of g_animalSpecialArray) {
         $('#selectAnimalSpecialization option[value="'+specialization+'"]').attr('selected','selected');
