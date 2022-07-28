@@ -1266,7 +1266,7 @@ module.exports = class SocketConnections {
     io.on('connection', function(socket){
       const userID = getUserID(socket);
 
-      socket.on('requestLoreChange', function(charID, srcStruct, loreName, inputPacket, prof, sourceName){
+      socket.on('requestLoreChange', function(charID, srcStruct, loreName, inputPacket, prof, sourceName, altAbilityScore){
         AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
             let profChangePacket = {
@@ -1283,8 +1283,18 @@ module.exports = class SocketConnections {
                 });
               });
             } else {
+
+              // Append altAbilityScore to loreNameValue if altAbilityScore exists and is valid
+              let loreNameValue = loreName;
+              if(altAbilityScore != null) {
+                altAbilityScore = altAbilityScore.toUpperCase();
+                if(altAbilityScore === 'STR' || altAbilityScore === 'DEX' || altAbilityScore === 'CON' || altAbilityScore === 'INT' || altAbilityScore === 'WIS' || altAbilityScore === 'CHA'){
+                  loreNameValue += `[[${altAbilityScore}]]`;
+                }
+              }
+
               profChangePacket.profStruct = { For: 'Skill', To: loreName+'_LORE', Prof: prof, SourceName: sourceName };
-              CharDataMapping.setData(charID, 'loreCategories', srcStruct, loreName)
+              CharDataMapping.setData(charID, 'loreCategories', srcStruct, loreNameValue)
               .then((result) => {
                 CharDataMappingExt.setDataProficiencies(charID, srcStruct, 
                   profChangePacket.profStruct.For,

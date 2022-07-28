@@ -616,13 +616,27 @@ module.exports = class CharGathering {
             }
         }
 
-        let loreSkill = skills.find(skill => {
+        const loreSkill = skills.find(skill => {
             return skill.name === "Lore";
         });
 
         for(const loreData of loreDataArray) {
-            if(loreData.value != null){
-                skillArray.push({ SkillName : capitalizeWords(loreData.value)+" Lore", Skill : loreSkill });
+            let loreName = loreData.value;
+            if(loreName != null){
+
+              let loreSkillCopy = loreSkill;
+
+              // Remove [[CHA]] if present in lore name and change skill ability to alt ability
+              let match = loreName.match(/\[\[(.+?)\]\]/);
+              if(match != null){
+                loreName = loreName.replace(match[0], '');
+
+                loreSkillCopy = JSON.parse(JSON.stringify(loreSkillCopy));
+                loreSkillCopy.ability = match[1].toUpperCase();
+
+              }
+
+              skillArray.push({ SkillName : capitalizeWords(loreName)+" Lore", Skill : loreSkillCopy });
             }
         }
 

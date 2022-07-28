@@ -6,8 +6,10 @@
 function processingLore(wscStatement, srcStruct, locationID, extraData){
 
     if(wscStatement.includes("GIVE-LORE=")){ // GIVE-LORE=Sailing
-        let loreName = wscStatement.split('=')[1];
-        giveLore(srcStruct, loreName, extraData);
+        let data = wscStatement.split('=')[1];
+        let segments = data.split(':');
+
+        giveLore(srcStruct, segments[0], extraData, segments[1]);
     } else if(wscStatement.includes("GIVE-LORE-CHOOSE-INCREASING")){ // GIVE-LORE-CHOOSE-INCREASING
         giveLoreChooseIncreasing(srcStruct, locationID, extraData);
     } else if(wscStatement.includes("GIVE-LORE-CHOOSE")){ // GIVE-LORE-CHOOSE
@@ -118,7 +120,7 @@ function giveLoreChoose(srcStruct, locationID, extraData, prof='T'){
 
 //////////////////////////////// Give Lore ///////////////////////////////////
 
-function giveLore(srcStruct, loreName, extraData){
+function giveLore(srcStruct, loreName, extraData, altAbilityScore=null){
 
   setData(DATA_SOURCE.LORE, srcStruct,  loreName);
   setDataProficiencies(srcStruct, 'Skill', loreName+'_LORE', 'T', extraData.sourceName, false);
@@ -130,7 +132,8 @@ function giveLore(srcStruct, loreName, extraData){
         loreName,
         null,
         'T',
-        extraData.sourceName);
+        extraData.sourceName,
+        altAbilityScore);
   } else {
     saveBuildMetaData();
   }

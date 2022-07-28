@@ -143,7 +143,8 @@ function updateSkillMap(refreshLists){
   });
   for(const loreData of wscChoiceStruct.LoreArray) {
     if(loreData.value != null){
-      skillArray.push({ SkillName : capitalizeWords(loreData.value)+" Lore", Skill : loreSkill });
+      // Remove [[CHA]] if present in lore name
+      skillArray.push({ SkillName : capitalizeWords(loreData.value.replace(/\[\[(.+?)\]\]/g, ''))+" Lore", Skill : loreSkill });
     }
   }
 
