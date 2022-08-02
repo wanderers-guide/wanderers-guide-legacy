@@ -93,7 +93,7 @@ function processText(text, isSheet, isJustified = false, size = 'MEDIUM', indexC
     }
 
     // ---- - Makes horizontal divider
-    text = text.replace(/\n\-\-\-\-/g, '<hr class="m-1">');
+    text = text.replace(/\n\s*\-\-\-\-/g, '<hr class="m-1">');
 
     // ***word*** - Makes word bigger and bold
     text = text.replace(/\*\*\*(.+?)\*\*\*/g, '<strong class="is-bold-very'+_incS+'">$1</strong>');
