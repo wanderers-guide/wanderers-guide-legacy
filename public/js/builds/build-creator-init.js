@@ -162,6 +162,14 @@ function handleBuildOptions(build, hBundles, progessBundles) {
     });
     $("#contentSrc-DARK-ARCHIVE").prop('checked', contentSourceArray.includes('DARK-ARCHIVE'));
 
+    $("#contentSrc-RAGE-OF-ELEMENTS").change(function(){
+      socket.emit("requestBuildSourceChange", 
+          g_build_id, 
+          'RAGE-OF-ELEMENTS',
+          this.checked);
+    });
+    $("#contentSrc-RAGE-OF-ELEMENTS").prop('checked', contentSourceArray.includes('RAGE-OF-ELEMENTS'));
+
     $("#contentSrc-LOST-ANCESTRY-GUIDE").change(function(){
       socket.emit("requestBuildSourceChange", 
           g_build_id, 

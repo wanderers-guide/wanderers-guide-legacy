@@ -258,6 +258,14 @@ function handleCharacterOptions(character, hBundles, progessBundles) {
     });
     $("#contentSrc-DARK-ARCHIVE").prop('checked', contentSourceArray.includes('DARK-ARCHIVE'));
 
+    $("#contentSrc-RAGE-OF-ELEMENTS").change(function(){
+      socket.emit("requestCharacterSourceChange", 
+          getCharIDFromURL(), 
+          'RAGE-OF-ELEMENTS',
+          this.checked);
+    });
+    $("#contentSrc-RAGE-OF-ELEMENTS").prop('checked', contentSourceArray.includes('RAGE-OF-ELEMENTS'));
+
     $("#contentSrc-LOST-ANCESTRY-GUIDE").change(function(){
       socket.emit("requestCharacterSourceChange", 
           getCharIDFromURL(), 
