@@ -346,6 +346,14 @@ function handleCharacterOptions(character, hBundles, progessBundles) {
     });
     $("#contentSrc-LOST-SOCIETY-GUIDE").prop('checked', contentSourceArray.includes('LOST-SOCIETY-GUIDE'));
 
+    $("#contentSrc-LOST-TRAVEL-GUIDE").change(function(){
+        socket.emit("requestCharacterSourceChange", 
+            getCharIDFromURL(), 
+            'LOST-TRAVEL-GUIDE',
+            this.checked);
+    });
+    $("#contentSrc-LOST-TRAVEL-GUIDE").prop('checked', contentSourceArray.includes('LOST-TRAVEL-GUIDE'));
+
     $("#contentSrc-LOST-WORLD-GUIDE").change(function(){
         socket.emit("requestCharacterSourceChange", 
             getCharIDFromURL(), 

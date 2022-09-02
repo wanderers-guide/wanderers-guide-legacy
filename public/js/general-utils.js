@@ -82,6 +82,7 @@ const g_contentSources = [
   {TextName: 'Lost Omens: Monsters of Myth', CodeName: 'LOST-MONSTERS-MYTH', Link: 'https://paizo.com/products/btq02aoy'},
   {TextName: 'Lost Omens: The Mwangi Expanse', CodeName: 'LOST-MWANGI', Link: 'https://paizo.com/products/btq027ot?Pathfinder-Lost-Omens-The-Mwangi-Expanse'},
   {TextName: 'Lost Omens: Pathfinder Society Guide', CodeName: 'LOST-SOCIETY-GUIDE', Link: 'https://paizo.com/products/btq0233q?Pathfinder-Lost-Omens-Pathfinder-Society-Guide'},
+  {TextName: 'Lost Omens: Travel Guide', CodeName: 'LOST-TRAVEL-GUIDE', Link: 'https://paizo.com/products/btq02dv8'},
   {TextName: 'Lost Omens: World Guide', CodeName: 'LOST-WORLD-GUIDE', Link: 'https://paizo.com/products/btq01zoj?Pathfinder-Lost-Omens-World-Guide'},
   {TextName: 'Abomination Vaults', CodeName: 'ABOMINATION-VAULTS', Link: 'https://paizo.com/store/pathfinder/adventures/adventurePath/abominationVaults'},
   {TextName: 'Agents of Edgewatch', CodeName: 'AGENTS-OF-EDGEWATCH', Link: 'https://paizo.com/store/pathfinder/adventures/adventurePath/agentsOfEdgewatch'},
