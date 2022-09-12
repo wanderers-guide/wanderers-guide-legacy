@@ -70,6 +70,8 @@ router.post('/oauth2/token', (req, res) => {
 
   console.log(req.query.code);
   console.log(req.query.client_id);
+  console.log(req.query);
+  console.log(req.body);
   console.log(req.header('Authorization'));
 
   if(req.query.code != null && req.query.client_id != null && req.header('Authorization') != null){
