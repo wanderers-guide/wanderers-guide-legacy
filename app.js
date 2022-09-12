@@ -145,6 +145,7 @@ app.use(function(req, res, next) {
   res.header('X-Frame-Options', 'SAMEORIGIN');
   res.header('X-Content-Type-Options', 'nosniff');
   res.header('Referrer-Policy', 'no-referrer-when-downgrade');
+  res.header('Access-Control-Allow-Origin', '*');
   next();
 });
 
