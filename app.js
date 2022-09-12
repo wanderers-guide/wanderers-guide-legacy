@@ -145,14 +145,10 @@ app.use(function(req, res, next) {
   res.header('X-Frame-Options', 'SAMEORIGIN');
   res.header('X-Content-Type-Options', 'nosniff');
   res.header('Referrer-Policy', 'no-referrer-when-downgrade');
-
-  res.header('Access-Control-Allow-Origin', '*');// TODO - Remove
-  res.header('Access-Control-Allow-Methods', 'GET, POST, PATCH, PUT, DELETE, OPTIONS');// TODO - Remove
-  res.header('Access-Control-Allow-Headers', 'Authorization, Origin, Content-Type, X-Auth-Token');// TODO - Remove
   next();
 });
 
-app.options('/*', (_, res) => {// TODO - Remove
+app.options('/*', (_, res) => {
   res.sendStatus(200);
 });
 

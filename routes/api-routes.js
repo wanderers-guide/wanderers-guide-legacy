@@ -68,11 +68,9 @@ router.get('/oauth2/authorize/:id', charAuthCheck, (req, res) => {
 
 router.post('/oauth2/token', (req, res) => {
 
-  console.log(req.query.code);
-  console.log(req.query.client_id);
-  console.log(req.query);
-  console.log(req.body);
-  console.log(req.header('Authorization'));
+  res.header('Access-Control-Allow-Origin', '*');// TODO - Remove
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PATCH, PUT, DELETE, OPTIONS');// TODO - Remove
+  res.header('Access-Control-Allow-Headers', 'Authorization, Origin, Content-Type, X-Auth-Token');// TODO - Remove
 
   if(req.query.code != null && req.query.client_id != null && req.header('Authorization') != null){
 
