@@ -68,6 +68,10 @@ router.get('/oauth2/authorize/:id', charAuthCheck, (req, res) => {
 
 router.post('/oauth2/token', (req, res) => {
 
+  console.log(req.query.code);
+  console.log(req.query.client_id);
+  console.log(req.header('Authorization'));
+
   if(req.query.code != null && req.query.client_id != null && req.header('Authorization') != null){
 
     const code = req.query.code;
