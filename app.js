@@ -145,6 +145,11 @@ app.use(function(req, res, next) {
   res.header('X-Frame-Options', 'SAMEORIGIN');
   res.header('X-Content-Type-Options', 'nosniff');
   res.header('Referrer-Policy', 'no-referrer-when-downgrade');
+
+  res.header('Access-Control-Allow-Origin', '*');// TODO - Remove
+  res.header('Access-Control-Allow-Methods', 'POST, OPTIONS');// TODO - Remove
+  res.header('Access-Control-Allow-Headers', 'Authorization');// TODO - Remove
+
   next();
 });
 
@@ -166,12 +171,7 @@ app.use(function(req, res, next) {
 app.use('/auth', authRoutes);
 app.use('/profile', profileRoutes);
 app.use('/admin', adminRoutes);
-app.use('/api', (req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');// TODO - Remove
-  res.header('Access-Control-Allow-Methods', 'GET, POST, PATCH, PUT, DELETE, OPTIONS');// TODO - Remove
-  res.header('Access-Control-Allow-Headers', 'Authorization, Origin, Content-Type, X-Auth-Token');// TODO - Remove
-  next();
-}, apiRoutes);
+app.use('/api', apiRoutes);
 app.use('/browse', browseRoutes);
 app.use('/mloads', mloadsRoutes);
 app.use('/', coreRoutes);
