@@ -146,9 +146,9 @@ app.use(function(req, res, next) {
   res.header('X-Content-Type-Options', 'nosniff');
   res.header('Referrer-Policy', 'no-referrer-when-downgrade');
 
-  res.header('Access-Control-Allow-Origin', '*');// TODO - Remove
-  res.header('Access-Control-Allow-Methods', 'POST, PATCH, PUT, DELETE, OPTIONS');// TODO - Remove
-  res.header('Access-Control-Allow-Headers', 'Authorization, Origin, Content-Type, X-Auth-Token');// TODO - Remove
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'POST, PATCH, PUT, DELETE, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Authorization, Origin, Content-Type, X-Auth-Token');
 
   next();
 });
