@@ -147,9 +147,13 @@ app.use(function(req, res, next) {
   res.header('Referrer-Policy', 'no-referrer-when-downgrade');
 
   res.header('Access-Control-Allow-Origin', '*');// TODO - Remove
-  res.header('Access-Control-Allow-Methods', 'GET, POST, PATCH, PUT, DELETE, OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Origin, Content-Type, X-Auth-Token');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PATCH, PUT, DELETE, OPTIONS');// TODO - Remove
+  res.header('Access-Control-Allow-Headers', 'Origin, Content-Type, X-Auth-Token');// TODO - Remove
   next();
+});
+
+app.options('/*', (_, res) => {// TODO - Remove
+  res.sendStatus(200);
 });
 
 // Rate Limiter
