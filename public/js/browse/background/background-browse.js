@@ -5,6 +5,7 @@
 function filterBackgroundSearch(){
 
   let nameFilter = $('#filterNameInput').val();
+  let descFilter = $('#filterDescInput').val();
   let rarityFilter = $('#filterRarityInput').val();
   let sourceFilter = $('#filterSourceInput').val();
 
@@ -16,6 +17,16 @@ function filterBackgroundSearch(){
     let parts = nameFilter.toUpperCase().split(' ');
     for(const background of allBackgrounds){
       if(!textContainsWords(background.name, parts)){
+        allBackgrounds.delete(background);
+      }
+    }
+  }
+
+  if(descFilter != ''){
+    console.log('Filtering by Description...');
+    let parts = descFilter.toUpperCase().split(' ');
+    for(const background of allBackgrounds){
+      if(!textContainsWords(background.description, parts)){
         allBackgrounds.delete(background);
       }
     }

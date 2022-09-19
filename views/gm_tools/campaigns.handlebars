@@ -46,7 +46,7 @@
 
     <div class="columns is-mobile is-centered is-vcentered pt-3 is-marginless">
         <div class="column is-5 is-paddingless">
-            <h1 class="is-size-1 is-inline-block has-txt-value-string">Campaigns</h1>
+            <h1 class="is-size-2 is-inline-block has-txt-value-string title-font">Campaigns</h1>
         </div>
         <div class="column is-5 is-paddingless">
             <a id="campaign-create-btn" class="is-size-3 is-pulled-right"><span class="icon is-large has-text-info"><i class="fas fa-plus"></i></span></a>
@@ -55,13 +55,19 @@
     <hr>
 
 
-    <div class="columns is-centered is-multiline mb-2">
+    <div class="columns is-centered is-multiline is-marginless mb-2">
         {{#each campaigns}}
             <div class="column is-4">
-                <div class="card campaign-card" name="{{id}}">
-                    <div class="card-content pt-2 pb-2 text-center">
-                        <span class="is-size-4 has-txt-value-number">{{name}}</span>
+                <div class="card campaign-card is-unselectable" data-campaign-id="{{id}}">
+
+                    <div class="card-content cursor-clickable pt-2">
+                      <a href="/gm-tools/campaigns/{{id}}">
+                        <span class="is-size-8 has-txt-noted campaign-id"># {{id}}</span>
+                        <p class="is-size-4 has-txt-value-number text-center text-overflow-ellipsis">{{name}}</p>
+                        <p class="is-size-7 pl-4 text-overflow-ellipsis"> 4 Players </p>
+                      </a>
                     </div>
+
                     <div class="card-footer is-paddingless">
                         <a class="card-footer-item campaign-card-edit has-txt-listing">
                             <span class="is-size-6 pr-2">Update</span>

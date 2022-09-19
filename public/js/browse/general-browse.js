@@ -412,6 +412,7 @@ function openTab(tabName){
       break;
     case 'background':
       $('#filterNameSection').removeClass('is-hidden');
+      $('#filterDescSection').removeClass('is-hidden');
       $('#filterRaritySection').removeClass('is-hidden');
       $('#filterSourceSection').removeClass('is-hidden');
 
