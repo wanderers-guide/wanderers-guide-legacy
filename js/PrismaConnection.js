@@ -2,7 +2,7 @@ const { PrismaClient } = require('@prisma/client');
 const { find } = require('lodash');
 const NodeCache = require("node-cache");
 
-const memCache = new NodeCache({ stdTTL: 3600 /* 1 hour */ });
+const memCache = new NodeCache({ stdTTL: 3600*8 /* 8 hours */ });
 
 const prisma = new PrismaClient({
   log: [

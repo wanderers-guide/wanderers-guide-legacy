@@ -29,6 +29,16 @@ router.get('/metadata', (req, res) => { // Read
   }
 });
 
+router.get('/metadata-feats', (req, res) => { // Read
+  if(hasAccess(req.accessRights, 1)) {
+    CharGathering.getChoicesFeats(-1, req.charID).then((feats) => {
+      res.send(feats);
+    });
+  } else {
+    res.sendStatus(401);
+  }
+});
+
 // Current HP //
 router.get('/current-hp', (req, res) => { // Read
   if(hasAccess(req.accessRights, 1)) {

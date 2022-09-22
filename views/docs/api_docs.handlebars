@@ -577,6 +577,11 @@
                       <div class="column is-4"><p class="text-center">Array of all raw character metadata as JSON objects, this includes all feat choices and proficiencies</p></div>
                       <div class="column"><p class="text-center">Read</p></div>
                     </div>
+                    <div class="columns table-row-b is-mobile is-marginless">
+                      <div class="column is-6"><p class="negative-indent"><span class="is-bold">GET</span> /api/char/<span class="has-text-info">&lt;character ID&gt;</span>/metadata-feats</p></div>
+                      <div class="column is-4"><p class="text-center">Array of all the character's chosen feats metadata, processed to include feat details as well</p></div>
+                      <div class="column"><p class="text-center">Read</p></div>
+                    </div>
                     <div class="columns table-row-a is-mobile is-marginless">
                       <div class="column is-6"><p class="negative-indent"><span class="is-bold">GET</span> /api/char/<span class="has-text-info">&lt;character ID&gt;</span>/current-hp</p></div>
                       <div class="column is-4"><p class="text-center">Character's current HP (integer)</p></div>
@@ -713,7 +718,20 @@
             </div>
             <div id="char-req-spellcasting" class="mt-4 isHideable">
                 <h1 class="title is-size-4 is-marginless pl-3">Spellcasting Requests</h1>
-                <p class="is-size-5 pl-3">TO-DO</p>
+                <div class="columns is-centered mb-3">
+                  <div class="column">
+                    <div class="columns is-mobile is-marginless">
+                      <div class="column is-6 is-paddingless"><strong></strong></div>
+                      <div class="column is-4 is-paddingless text-center"><strong>Returns</strong></div>
+                      <div class="column is-paddingless text-center"><strong>Access Rights</strong></div>
+                    </div>
+                    <div class="columns table-row-a is-mobile is-marginless">
+                      <div class="column is-6"><p class="negative-indent"><span class="is-bold">GET</span> /api/char/<span class="has-text-info">&lt;character ID&gt;</span>/spell</p></div>
+                      <div class="column is-4"><p class="text-center">JSON of character's general spell data: spell slots, spell book, innate spells, focus spells, focus points</p></div>
+                      <div class="column"><p class="text-center">Read</p></div>
+                    </div>
+                  </div>
+                </div>
             </div>
             <div id="char-req-companion" class="mt-4 isHideable">
                 <h1 class="title is-size-4 is-marginless pl-3">Companion Requests</h1>

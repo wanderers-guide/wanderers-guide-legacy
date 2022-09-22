@@ -1143,6 +1143,33 @@ module.exports = class CharGathering {
         });
     }
 
+    /*
+    static getChoicesClassFeatures(userID, charID) {
+      return CharDataMappingExt.getDataAllClassChoice(charID)
+      .then(async (classFeaturesDataArray) => {
+        
+        let promise = await Promise.all([featsObject,skillObject,itemMap,spellMap,allLanguages,allConditions,allTags,classes,ancestries,archetypes,backgrounds,sourceBooks,uniHeritages]);
+
+        let 
+        for(let classFeaturesData of classFeaturesDataArray){
+
+          if(classFeaturesData.SelectorID != null){
+            classFeaturesData.Selector = Prisma.classAbilities.findUnique({ where: { id: classFeaturesData.SelectorID } });
+          } else {
+            classFeaturesData.Selector = null;
+          }
+
+          if(classFeaturesData.SelectorID != null){
+            classFeaturesData.Selector = Prisma.classAbilities.findUnique({ where: { id: classFeaturesData.SelectorID } });
+          } else {
+            classFeaturesData.Selector = null;
+          }
+
+        }
+
+      });
+    }*/
+
     static getChoicesDomains(userID, charID) {
         return CharDataMapping.getDataAll(charID, 'domains', Domain)
         .then((domainDataArray) => {
