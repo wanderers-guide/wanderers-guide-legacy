@@ -2738,7 +2738,27 @@ function runAllFeatsAndAbilitiesCode() {
       }
     }
 
-    for(const feat of g_featChoiceArray){
+    // Sort selected feats by what defines variables to execute first.
+    let sorted_featChoiceArray = g_featChoiceArray.sort(
+      function(a, b) {
+          if(a.value == null || b.value == null){
+            return b.value != null ? 1 : -1;
+          }
+
+          if(a.value.code == null || b.value.code == null){
+            return b.value.code != null ? 1 : -1;
+          }
+
+          let definesVarA = a.value.code.toUpperCase().includes('DEFINE-VARIABLE=');
+          let definesVarB = b.value.code.toUpperCase().includes('DEFINE-VARIABLE=');
+          if(definesVarA || definesVarB){
+            return definesVarB ? 1 : -1;
+          }
+
+          return a.value.level - b.value.level;
+      }
+    );
+    for(const feat of sorted_featChoiceArray){
       if(feat != null && feat.value != null){
           processSheetCode(feat.value.code, {
             source: 'Feat',
