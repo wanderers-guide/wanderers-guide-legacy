@@ -2187,6 +2187,15 @@ module.exports = class SocketConnections {
     io.on('connection', function(socket){
       const userID = getUserID(socket);
 
+      socket.on('requestAdminClearCache', function(data){
+        AuthCheck.isAdmin(userID).then((isAdmin) => {
+          if(isAdmin){
+            MemCache.flushAll();
+            socket.emit('returnAdminClearCache');
+          }
+        });
+      });
+
       socket.on('requestAdminAddAncestry', function(data){
         AuthCheck.isAdmin(userID).then((isAdmin) => {
           if(isAdmin){
