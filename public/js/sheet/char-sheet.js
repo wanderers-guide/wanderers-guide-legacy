@@ -449,6 +449,7 @@ function loadCharSheet(){
     // Init Calculated Stats
     g_calculatedStats = {
       maxHP: null,
+      maxStamina: null,
       totalClassDC: null,
       totalSpeed: null,
       totalAC: null,
@@ -1893,6 +1894,7 @@ function initStaminaAndResolve() {
   
   if(maxStaminaNum < 0){ maxStaminaNum = 0; }
   maxStamina.html(maxStaminaNum);
+  g_calculatedStats.maxStamina = maxStaminaNum;// Calculated Stat
 
   if(g_character.currentStamina == null){
       g_character.currentStamina = maxStaminaNum;
