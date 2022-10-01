@@ -88,6 +88,7 @@
                 <li class="pl-2"><a href="/wsc_docs/#code_misc_feats">- Misc. Feat</a></li>
                 <li class="pl-2"><a href="/wsc_docs/#code_notes_field">- Notes Field</a></li>
                 <li class="pl-2"><a href="/wsc_docs/#code_variables">- Variables</a></li>
+                <li class=""><a href="/wsc_docs/#code_removal_statements">Removal Statements</a></li>
             </ul>
         </aside>
     </div>
@@ -1565,21 +1566,16 @@
                     These universal statements have to do with feats and their management.
                 </p>
                 <div class="mt-4">
-                    <h1 class="small-title is-size-4 is-marginless mb-1 pl-3">Hide Feats</h1>
+                    <h1 class="small-title is-size-4 is-marginless mb-1 pl-3">Hide Feats - DEPRECATED</h1>
+                    <p class="is-italic">
+                      These statements are no longer being used. Use <a href="/wsc_docs/#code_removal_statements">Removal Statements</a> instead.
+                    </p>
                     <div class="py-2">
                         <div class="code-block">
                             HIDE-FEAT-NAME=Drain Bonded Item
                         </div>
                         <p class="pl-3">
                             - Hides all feats with the name 'Drain Bonded Item'. Feats with that name are essentially treated as though they don't exist.
-                        </p>
-                    </div>
-                    <div class="py-2">
-                        <div class="code-block">
-                            UNHIDE-FEAT-NAME=Drain Bonded Item
-                        </div>
-                        <p class="pl-3">
-                            - Makes a feat that was made hidden by <span class="code">HIDE-FEAT-NAME</span> no longer hidden.
                         </p>
                     </div>
                 </div>
@@ -2147,6 +2143,59 @@
                         </p>
                     </div>
                 </div>
+            </div>
+
+            <div id="code_removal_statements" class="mt-4 isHideable">
+                <h1 class="small-title is-size-4 is-marginless mb-1 pl-3">Removal Statements</h1>
+                <p class="pb-2">
+                    Removal statements are code statements that can only be processed in the "Runs on Load" code block. Therefore, they are executed before nearly everything else.
+                </p>
+                <p class="pb-2">
+                    These code statements are used to remove any content from other sources with the given name, treating that content essentially as though it doesn't exist.
+                </p>
+                <p class="pb-3 is-italic is-bold">
+                    Removal statements only removes content from OTHER books/homebrew bundles. Content from the current bundle is untouched. This is primarily in order to allow overrides and erratas of existing content. 
+                </p>
+                <p class="pb-3">
+                  <strong class="has-text-danger">Warning: </strong>Removing content without creating content with the same name to replace it can lead to breaking existing systems.
+                </p>
+
+                <div class="py-2">
+                    <div class="code-block">
+                        REMOVAL-FEAT-NAME=Drain Bonded Item
+                    </div>
+                    <p class="pl-3">
+                        - Removes all feats with the name 'Drain Bonded Item' from other sources.
+                    </p>
+                </div>
+
+                <div class="py-2">
+                    <div class="code-block">
+                        REMOVAL-ITEM-NAME=Backpack
+                    </div>
+                    <p class="pl-3">
+                        - Removes all items with the name 'Backpack from other sources.
+                    </p>
+                </div>
+
+                <div class="py-2">
+                    <div class="code-block">
+                        REMOVAL-SPELL-NAME=Fireball
+                    </div>
+                    <p class="pl-3">
+                        - Removes all spells with the name 'Fireball' from other sources.
+                    </p>
+                </div>
+
+                <div class="py-2">
+                    <div class="code-block">
+                        REMOVAL-CLASS-FEATURE-NAME=Elemental
+                    </div>
+                    <p class="pl-3">
+                        - Removes all class features with the name 'Elemental' from other sources.
+                    </p>
+                </div>
+
             </div>
 
         </div>

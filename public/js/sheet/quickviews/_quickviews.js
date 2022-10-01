@@ -193,8 +193,19 @@ function getContentSource(contentID, contentSrc, homebrewID){
         if(sourceTextName == null) { sourceTextName = capitalizeWords(contentSrc); }
         if(sourceLink == null) { sourceLink = ''; }
     } else {
-        sourceTextName = 'Bundle #'+homebrewID;
-        sourceLink = '/homebrew/?view_id='+homebrewID;
+
+      sourceTextName = 'Bundle #'+homebrewID;
+      sourceLink = '/homebrew/?view_id='+homebrewID;
+
+      if(typeof g_enabledSources !== 'undefined'){
+        let enabledSource = g_enabledSources.find(enabledSource => {
+          return enabledSource.bundleID && enabledSource.bundleID+'' === homebrewID+'';
+        });
+        if(enabledSource){
+          sourceTextName = enabledSource.name;
+        }
+      }
+
     }
 
     let contentIDStr = (contentID == null) ? '' : '<span class="is-size-7 has-txt-faded is-italic">, #'+contentID+'</span>';

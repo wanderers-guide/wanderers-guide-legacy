@@ -39,6 +39,8 @@ socket.on("returnAddClassFeature", function(srcStruct, classAbility, allClassAbi
   console.log(`Waited for 'returnAddClassFeature'.`);
   if(classAbility == null) { statementComplete('ClassFeature - Add Null'); return; }
 
+  // TODO; return if classAbility removal and remove class features in allClassAbilityOptions that have had removal
+
   let classAbilityID = inputPacket.locationID+"-wsc-cf-"+srcStruct.sourceCodeSNum+"-classAbility"+classAbility.id;
   let classAbilityHeaderID = inputPacket.locationID+"-wsc-cf-"+srcStruct.sourceCodeSNum+"-classAbilityHeader"+classAbility.id;
   let classAbilityContentID = inputPacket.locationID+"-wsc-cf-"+srcStruct.sourceCodeSNum+"-classAbilityContent"+classAbility.id;

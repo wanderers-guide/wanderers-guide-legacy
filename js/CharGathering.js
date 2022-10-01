@@ -174,7 +174,8 @@ module.exports = class CharGathering {
                 if(homebrewBundleArray.includes(hBundle.homebrewBundle.id)) {
                   books.push({
                     name: hBundle.homebrewBundle.name,
-                    code: hBundle.homebrewBundle.code
+                    code: hBundle.homebrewBundle.code,
+                    bundleID: hBundle.homebrewBundle.id,
                   });
                 }
               }
@@ -182,7 +183,8 @@ module.exports = class CharGathering {
                 if(homebrewBundleArray.includes(progressBundle.id)) {
                   books.push({
                     name: progressBundle.name,
-                    code: progressBundle.code
+                    code: progressBundle.code,
+                    bundleID: progressBundle.id,
                   });
                 }
               }

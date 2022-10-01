@@ -170,6 +170,11 @@ function runQueuedStatement(){
         let wscStatementUpper = wscStatement.toUpperCase();
         //
 
+        // If it's a removal statement, continue
+        if(wscStatementUpper.startsWith('REMOVAL-')){
+          return PROCESS_RETURN.NEXT;
+        }
+
         // MiscFeats is run even on tests, which is how the code is run for character builder.
         //  - Probably should change this to a better system in the future.
         const miscFeat_stateReturn = runMiscFeatStatements(wscStatement, wscStatementUpper);

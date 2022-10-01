@@ -38,9 +38,14 @@ function processSheetCode(wscCode, extraData=null, isTest=false){
         if(wscStatement == null) {continue;}
         //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
         let wscStatementUpper = wscStatement.toUpperCase();
+        
+        // If it's a removal statement, continue
+        if(wscStatementUpper.startsWith('REMOVAL-')){
+          continue;
+        }
 
         if(wscStatementUpper.startsWith("ADD-TEXT=")){
-            continue; // Ignore ADD-TEXT statements, they're processed separately
+          continue; // Ignore ADD-TEXT statements, they're processed separately
         }
 
         if(wscStatementUpper.startsWith("GIVE-CONDITION=")){ // GIVE-CONDITION=Clumsy:1 OR GIVE-CONDITION=Clumsy

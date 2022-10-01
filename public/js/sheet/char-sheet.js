@@ -387,6 +387,7 @@ function initCharSheet(charInfo, userPermissions, viewOnly){
     g_sheetStatesArray = charInfo.SheetStatesArray;
     initSheetStates();
 
+    // TODO; Update Legacy code - Could have bugs in using this
     initExpressionProcessor({
         ChoiceStruct : charInfo.ChoiceStruct,
     });
@@ -403,6 +404,10 @@ function initCharSheet(charInfo, userPermissions, viewOnly){
 
     // Run All SourceBook Code as Sheet Statements //
     for(let enabledSource of g_enabledSources){
+
+      // Run Removal Statements first
+      processRemovalStatements(enabledSource.code, enabledSource.codeName, enabledSource.bundleID);
+
       processSheetCode(enabledSource.code, {
         source: 'SourceBook',
         sourceName: enabledSource.name,

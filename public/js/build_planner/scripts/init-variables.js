@@ -121,6 +121,10 @@ function initVariables(){
   // Run All SourceBook Code //
   if(g_enabledSources != null){
     for(let enabledSource of g_enabledSources){
+
+      // Run Removal Statements first
+      processRemovalStatements(enabledSource.code, enabledSource.codeName, enabledSource.bundleID);
+
       processCode(
         enabledSource.code,
         {
