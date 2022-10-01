@@ -686,7 +686,7 @@ model homebrewBundles {
   name                String                @default("Homebrew Bundle") @db.VarChar(45)
   description         String?               @db.Text
   contactInfo         String?               @db.VarChar(120)
-  code                String?               @db.VarChar(1000)
+  code                String?               @db.VarChar(10000)
   hasKeys             Int?                  @default(0)
   isPublished         Int?                  @default(0)
   authorName          String                @default("Unknown") @db.VarChar(45)

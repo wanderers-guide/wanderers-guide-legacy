@@ -60,6 +60,7 @@ module.exports = class UserHomebrew {
               name: inUpdateValues.Name,
               description: inUpdateValues.Description,
               contactInfo: inUpdateValues.ContactInfo,
+              code: inUpdateValues.Code,
               hasKeys: inUpdateValues.HasKeys,
             };
             return HomebrewBundle.update(updateValues, {

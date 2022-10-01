@@ -36,7 +36,12 @@ module.exports = async function(userID, charID=null, buildID=null) {
   }
 
   // socket.emit('updateLoadProgess', { message: 'Opening Books', upVal: 2 }); // (2/100) //
-  let sourceBooks = GeneralGathering.getSourceBooks(userID);
+  let sourceBooks;
+  if(charID == null){
+    sourceBooks = await CharGathering.getSourceBooks(userID, build.enabledSources, build.enabledHomebrew);
+  } else {
+    sourceBooks = await CharGathering.getSourceBooks(userID, character.enabledSources, character.enabledHomebrew);
+  }
 
   // socket.emit('updateLoadProgess', { message: 'Gathering Skills', upVal: 3 }); // (5/100) //
   let skillObject = GeneralGathering.getAllSkills(userID);
