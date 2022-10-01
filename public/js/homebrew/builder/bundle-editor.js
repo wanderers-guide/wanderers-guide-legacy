@@ -644,13 +644,18 @@ socket.on("returnBundleContents", function (REQUEST_TYPE, userHasBundle, userOwn
 
       ////
 
+      $('#inputBundleCode').val(g_activeBundle.code);
+
       $('#inputBundleCode').blur(function () {
-        socket.emit("requestBundleUpdate",
-          g_activeBundle.id,
-          {
-            Code: $('#inputBundleCode').val(),
-          }
-        );
+        if (g_activeBundle.code != $(this).val()) {
+          $('#inputBundleCode').parent().addClass("is-loading");
+          socket.emit("requestBundleUpdate",
+            g_activeBundle.id,
+            {
+              Code: $(this).val()
+            }
+          );
+        }
       });
 
     }
@@ -672,6 +677,8 @@ socket.on("returnBundleUpdate", function (homebrewBundle) {
     $('#bundleDescription').val(g_activeBundle.description);
     $('#bundleContactInfo').parent().removeClass("is-loading");
     $('#bundleContactInfo').val(g_activeBundle.contactInfo);
+    $('#inputBundleCode').parent().removeClass("is-loading");
+    $('#inputBundleCode').val(g_activeBundle.code);
     $('#bundleRequireKeySwitch').blur();
   }
 });
