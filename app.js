@@ -65,6 +65,9 @@ app.engine('handlebars', exphbs({
             return options.inverse(this);
         }
       },
+      json: function (content) {
+        return JSON.stringify(content);
+      },
     }
 }));
 
@@ -177,7 +180,7 @@ app.use('/mloads', mloadsRoutes);
 app.use('/', coreRoutes);
 app.use('*', errorRoutes); // 404 Route
 
-io.setMaxListeners(23);
+io.setMaxListeners(24);
 SocketConnections.basicConnection(io);
 
 SocketConnections.sheetItems(io);
@@ -204,6 +207,7 @@ SocketConnections.charDataManagement(io);
 SocketConnections.homePage(io);
 SocketConnections.browse(io);
 SocketConnections.gmTools(io);
+SocketConnections.remoteUpdate(io);
 SocketConnections.buildPlanner(io);
 SocketConnections.adminPanel(io);
 SocketConnections.appAPI(io);

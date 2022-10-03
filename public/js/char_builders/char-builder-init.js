@@ -42,7 +42,7 @@ function initBuilderSteps(){
 
 // ~~~~~~~~~~~~~~ // Processings // ~~~~~~~~~~~~~~ //
 
-socket.on("returnCharacterDetails", function(character, buildInfo, clientsWithAccess, hBundles, progessBundles){
+socket.on("returnCharacterDetails", function(character, buildInfo, clientsWithAccess, campaign, hBundles, progessBundles){
     isBuilderInit = true;
 
     $('.builder-finalize-page-btn').click(function(){
@@ -139,6 +139,9 @@ socket.on("returnCharacterDetails", function(character, buildInfo, clientsWithAc
           'by-abc');
     });
 
+    // Handle campaign content
+    setupCampaignDetails(campaign);
+
     // When ability score changes, save them all
     $("#abilSTR").blur(function(){
         deployAbilityScoreChange();
@@ -165,6 +168,43 @@ socket.on("returnCharacterDetails", function(character, buildInfo, clientsWithAc
     stopSpinnerLoader();
 
 });
+
+function setupCampaignDetails(campaign){
+
+  let campaignName = (campaign) ? campaign.name : 'None';
+  $("#campaign-name").text(campaignName);
+  
+  $("#campaign-leave-btn").off("click");
+  $("#campaign-leave-btn").click(function(){
+    new ConfirmMessage('Leave Campaign', `Are you sure you want to leave "${campaignName}"? The GM will no longer have access to this character.`, 'Leave', 'modal-leave-campaign', 'modal-leave-campaign-btn');
+    $('#modal-leave-campaign-btn').click(function() {
+      socket.emit("requestLeaveCampaign", getCharIDFromURL());
+    });
+  });
+
+  $("#campaign-access-code-btn").off("click");
+  $("#campaign-access-code-btn").click(function(){
+    let accessCode = $('#campaign-access-code-input').val();
+    if(accessCode && accessCode.trim() != ''){
+
+      new ConfirmMessage('Join Campaign', `Are you sure you want to join a campaign? The GM will have viewing and editing access to this character.`, 'Join', 'modal-join-campaign', 'modal-join-campaign-btn', 'is-info');
+      $('#modal-join-campaign-btn').click(function() {
+        socket.emit("requestJoinCampaign", getCharIDFromURL(), accessCode.trim());
+        $('#campaign-access-code-input').val('');
+      });
+
+    }
+  });
+
+  if(campaign){
+    $('#campaign-container-join').addClass('is-hidden');
+    $('#campaign-container-leave').removeClass('is-hidden');
+  } else {
+    $('#campaign-container-join').removeClass('is-hidden');
+    $('#campaign-container-leave').addClass('is-hidden');
+  }
+
+}
 
 function deployAbilityScoreChange(){
 
@@ -677,6 +717,17 @@ socket.on("returnLevelChange", function() {
 });
 
 socket.on("returnAbilityScoreChange", function() {
+});
+
+socket.on("returnJoinCampaign", function(campaign) {
+  setupCampaignDetails(campaign);
+  if(!campaign){
+    new ConfirmMessage('Failed to Join Campaign', `We weren't able to add you to that campaign. Make sure your access code is correct!`, 'Okay', 'modal-failed-to-join-campaign', 'modal-failed-to-join-campaign-btn');
+  }
+});
+
+socket.on("returnLeaveCampaign", function() {
+  setupCampaignDetails(null);
 });
 
 //

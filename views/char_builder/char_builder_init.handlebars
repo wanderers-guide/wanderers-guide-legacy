@@ -120,6 +120,37 @@
 
         <div class="columns py-2 pos-relative">
 
+            <div class="pos-absolute pos-b-5 pos-l-5">
+              <h6>Campaign</h6>
+
+              <div id="campaign-container-join">
+                <div class="field has-addons has-addons-centered" style="width: 137px;">
+                  <div class="control">
+                    <input id="campaign-access-code-input" class="input is-info is-very-small" type="text" maxlength="15" spellcheck="false" autocomplete="off" placeholder="Access Code">
+                  </div>
+                  <div class="control">
+                    <button id="campaign-access-code-btn" type="submit" class="button is-very-small is-info is-rounded is-outlined">Join</button>
+                  </div>
+                </div>
+              </div>
+              <div id="campaign-container-leave" class="is-hidden">
+                <div class="field has-addons has-addons-centered" style="width: 137px;">
+                  <div class="control text-overflow-ellipsis" style="cursor: text;">
+                    <button id="campaign-name" class="button is-static is-very-small is-extra border-darker" style="user-select: text;">
+                    </button>
+                  </div>
+                  <div class="control">
+                    <button id="campaign-leave-btn" type="submit" class="button is-very-small is-danger is-rounded is-outlined">
+                      <span class="icon is-small">
+                        <i class="fas fa-times"></i>
+                      </span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
             <div class="pos-absolute pos-b-5 pos-r-5">
               <h6>Build</h6>
               <div class="control">

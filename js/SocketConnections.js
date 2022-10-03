@@ -35,6 +35,7 @@ const { Prisma, MemCache } = require('./PrismaConnection');
 
 const HomeBackReport = require('../models/backgroundDB/HomeBackReport');
 const User = require('../models/contentDB/User');
+const Character = require('../models/contentDB/Character');
 const { truncate } = require('lodash');
 
 function mapToObj(strMap) {
@@ -49,7 +50,7 @@ function mapToObj(strMap) {
 
 // Returns UserID or -1 if not logged in.
 function getUserID(socket){
-  if(socket.request.session.passport != null && socket.request.session.passport.user != null){
+  if(socket?.request?.session?.passport?.user){
       return socket.request.session.passport.user;
   } else {
       return -1;
@@ -61,15 +62,12 @@ module.exports = class SocketConnections {
   static basicConnection(io) {
 
     io.on('connection', function(socket){
-      //const userID = getUserID(socket);
+      const userID = getUserID(socket);
 
-      /*
-      socket.onAny((event, ...args) => {
-        if(!AuthCheck.isLoggedIn(userID)){
-          socket.emit('userNotLoggedIn', {});
-        }
-      });
-      */
+      if(userID && userID != -1){
+        socket.join(userID);
+      }
+      // socket.to(userID).emit('returnDeveloperStatusChange');
 
     });
 
@@ -688,9 +686,11 @@ module.exports = class SocketConnections {
             CharGathering.getCharacter(userID, charID).then((character) => {
               BuildsGathering.getBuildInfo(character.buildID).then((buildInfo) => {
                 ClientAPI.getClientsWhoAccess(charID).then((clientsWithAccess) => {
-                  UserHomebrew.getCollectedHomebrewBundles(userID).then((hBundles) => {
-                    UserHomebrew.getIncompleteHomebrewBundles(userID).then((progessBundles) => {
-                      socket.emit('returnCharacterDetails', character, buildInfo, clientsWithAccess, hBundles, progessBundles);
+                  CampaignGathering.getCampaign(charID).then((campaign) => {
+                    UserHomebrew.getCollectedHomebrewBundles(userID).then((hBundles) => {
+                      UserHomebrew.getIncompleteHomebrewBundles(userID).then((progessBundles) => {
+                        socket.emit('returnCharacterDetails', character, buildInfo, clientsWithAccess, campaign, hBundles, progessBundles);
+                      });
                     });
                   });
                 });
@@ -2147,7 +2147,7 @@ module.exports = class SocketConnections {
 
       socket.on('requestProfileNameChange', function(newName){
         if(GeneralUtils.validateProfileName(newName)) {
-          if(userID != null){
+          if(userID && userID != -1){
             let updateValues = { username: newName };
             User.update(updateValues, { where: { id: userID } })
             .then((result) => {
@@ -2158,7 +2158,7 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestDeveloperStatusChange', function(developer){
-        if(userID != null){
+        if(userID && userID != -1){
           let updateValues = { isDeveloper: ((developer) ? 1 : 0) };
           User.update(updateValues, { where: { id: userID } })
           .then((result) => {
@@ -2168,7 +2168,7 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestThemeStatusChange', function(lightMode){
-        if(userID != null){
+        if(userID && userID != -1){
           let updateValues = { enabledLightMode: ((lightMode) ? 1 : 0) };
           User.update(updateValues, { where: { id: userID } })
           .then((result) => {
@@ -2949,17 +2949,220 @@ module.exports = class SocketConnections {
       });
 
 
-      socket.on('requestAddCampaign', function(){
+      socket.on('requestCampaignDetails', function(campaignID){
+        AuthCheck.ownsCampaign(userID, campaignID).then((ownsCampaign) => {
+          if(ownsCampaign){
+            CampaignGathering.getCampaignDetails(campaignID).then((campaignDetails) => {
+              socket.emit('returnCampaignDetails', campaignDetails);
+            });
+          }
+        });
+      });
 
+      socket.on('requestAddCampaign', function(){
         CampaignSaving.addCampaign(userID).then((campaign) => {
           socket.emit('returnAddCampaign', campaign);
         });
-        
       });
+
+      socket.on('requestDeleteCampaign', function(campaignID){
+        AuthCheck.ownsCampaign(userID, campaignID).then((ownsCampaign) => {
+          if(ownsCampaign){
+            CampaignSaving.deleteCampaign(campaignID).then((result) => {
+              socket.emit('returnDeleteCampaign');
+            });
+          }
+        });
+      });
+
+      socket.on('requestEditCampaign', function(campaignID, updates){
+        AuthCheck.ownsCampaign(userID, campaignID).then((ownsCampaign) => {
+          if(ownsCampaign){
+            CampaignSaving.updateCampaign(campaignID, updates).then((result) => {
+              socket.emit('returnEditCampaign');
+            });
+          }
+        });
+      });
+
+
+      socket.on('requestJoinCampaign', function(charID, accessCode){
+        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
+          if(ownsChar){
+            CampaignSaving.joinCampaign(charID, accessCode).then((campaign) => {
+              socket.emit('returnJoinCampaign', campaign);
+            });
+          }
+        });
+      });
+
+      socket.on('requestLeaveCampaign', function(charID){
+        AuthCheck.canEditCharacter(userID, charID).then((canEditChar) => {
+          if(canEditChar){
+            CampaignSaving.leaveCampaign(charID).then((result) => {
+              socket.emit('returnLeaveCampaign');
+            });
+          }
+        });
+      });
+
 
     });
 
   }
+
+
+  static remoteUpdate(io) {
+
+    // Socket.IO Connections
+    io.on('connection', function(socket){
+      const userID = getUserID(socket);
+
+      socket.on('requestCharacterUpdate-Health', function(charID, newHP){
+        AuthCheck.canEditCharacter(userID, charID).then((canEditChar) => {
+          if(canEditChar){
+
+            CharSaving.saveCurrentHitPoints(charID, newHP).then((result) => {
+              // Return nothing
+            });
+
+            Character.findOne({ where: { id: charID } })
+            .then((character) => {
+              if(character){
+                socket.to(character.userID).emit('sendCharacterUpdate-Health', charID, newHP);
+              }
+            });
+
+          }
+        });
+      });
+
+      socket.on('requestCharacterUpdate-TempHealth', function(charID, newTempHP){
+        AuthCheck.canEditCharacter(userID, charID).then((canEditChar) => {
+          if(canEditChar){
+
+            CharSaving.saveTempHitPoints(charID, newTempHP).then((result) => {
+              // Return nothing
+            });
+
+            Character.findOne({ where: { id: charID } })
+            .then((character) => {
+              if(character){
+                socket.to(character.userID).emit('sendCharacterUpdate-TempHealth', charID, newTempHP);
+              }
+            });
+
+          }
+        });
+      });
+
+      socket.on('requestCharacterUpdate-Exp', function(charID, newExp){
+        AuthCheck.canEditCharacter(userID, charID).then((canEditChar) => {
+          if(canEditChar){
+
+            CharSaving.saveExp(charID, newExp).then((result) => {
+              // Return nothing
+            });
+
+            Character.findOne({ where: { id: charID } })
+            .then((character) => {
+              if(character){
+                socket.to(character.userID).emit('sendCharacterUpdate-Exp', charID, newExp);
+              }
+            });
+
+          }
+        });
+      });
+
+      socket.on('requestCharacterUpdate-Stamina', function(charID, newStamina){
+        AuthCheck.canEditCharacter(userID, charID).then((canEditChar) => {
+          if(canEditChar){
+
+            CharSaving.saveCurrentStaminaPoints(charID, newStamina).then((result) => {
+              // Return nothing
+            });
+
+            Character.findOne({ where: { id: charID } })
+            .then((character) => {
+              if(character){
+                socket.to(character.userID).emit('sendCharacterUpdate-Stamina', charID, newStamina);
+              }
+            });
+
+          }
+        });
+      });
+
+      socket.on('requestCharacterUpdate-Resolve', function(charID, newResolve){
+        AuthCheck.canEditCharacter(userID, charID).then((canEditChar) => {
+          if(canEditChar){
+
+            CharSaving.saveCurrentResolvePoints(charID, newResolve).then((result) => {
+              // Return nothing
+            });
+
+            Character.findOne({ where: { id: charID } })
+            .then((character) => {
+              if(character){
+                socket.to(character.userID).emit('sendCharacterUpdate-Resolve', charID, newResolve);
+              }
+            });
+
+          }
+        });
+      });
+
+      socket.on('requestCharacterUpdate-HeroPoints', function(charID, heroPoints){
+        AuthCheck.canEditCharacter(userID, charID).then((canEditChar) => {
+          if(canEditChar){
+
+            CharSaving.saveHeroPoints(charID, heroPoints).then((result) => {
+              // Return nothing
+            });
+
+            Character.findOne({ where: { id: charID } })
+            .then((character) => {
+              if(character){
+                socket.to(character.userID).emit('sendCharacterUpdate-HeroPoints', charID, heroPoints);
+              }
+            });
+
+          }
+        });
+      });
+
+      /*
+      socket.on('requestConditionChange', function(charID, conditionID, value, sourceText, parentID){
+        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
+          if(ownsChar){
+            CharSaving.replaceCondition(charID, conditionID, value, sourceText, parentID).then((result) => {
+              CharGathering.getAllCharConditions(userID, charID)
+              .then((conditionsObject) => {
+                socket.emit('returnUpdateConditionsMap', conditionsObject, true);
+              });
+            });
+          }
+        });
+      });
+
+      socket.on('requestConditionRemove', function(charID, conditionID){
+        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
+          if(ownsChar){
+            CharSaving.removeCondition(charID, conditionID).then((didRemove) => {
+              CharGathering.getAllCharConditions(userID, charID)
+              .then((conditionsObject) => {
+                socket.emit('returnUpdateConditionsMap', conditionsObject, didRemove);
+              });
+            });
+          }
+        });
+      });*/
+
+    });
+
+  }
+
 
   static buildPlanner(io) {
 

@@ -153,6 +153,14 @@ em {
   background-color: var(--button-static-bold-color);
 }
 
+/* Input Sizes */
+.input.is-very-small {
+  font-size: 0.6rem!important;
+}
+.input.is-tiny {
+  font-size: 0.5rem!important;
+}
+
 /* Border */
 .border-dark-ish {
   border-color: #262626!important;

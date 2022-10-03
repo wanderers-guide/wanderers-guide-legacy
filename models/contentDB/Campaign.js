@@ -14,7 +14,7 @@ const Campaign = db.define('campaigns', {
   description: {
     type: Sequelize.STRING
   },
-  iconURL: {
+  imageURL: {
     type: Sequelize.STRING
   },
 });
