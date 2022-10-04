@@ -289,7 +289,7 @@ function getOriginalCreature(member){
 
 function addCondition(member, conditionName, conditionValue = null) {
   const condition = member.conditions.find(condition => {
-    return condition.name == conditionName;
+    return condition.name.toLowerCase() == conditionName.toLowerCase();
   });
   if (condition == null) {
     if (conditionName.toLowerCase() == 'drained') {
@@ -298,7 +298,7 @@ function addCondition(member, conditionName, conditionValue = null) {
     }
     if (conditionName.toLowerCase() == 'dying') {
       const woundedCondition = member.conditions.find(condition => {
-        return condition.name == 'Wounded';
+        return condition.name.toLowerCase() == 'wounded';
       });
       if (woundedCondition != null) {
         conditionValue += woundedCondition.value;
@@ -308,38 +308,43 @@ function addCondition(member, conditionName, conditionValue = null) {
     member.conditions.push({
       name: conditionName,
       value: conditionValue,
+      parentSource: null,
     });
     reloadEncounterMembers();
   }
 }
 
 function removeCondition(member, conditionName) {
-
-  if (conditionName.toLowerCase() == 'drained') {
-    member.maxHP = getCreatureMaxHP(member.level, getOriginalCreature(member).hpMax, member.eliteWeak);
-  }
-  if (conditionName.toLowerCase() == 'dying') {
-    const woundedCondition = member.conditions.find(condition => {
-      return condition.name == 'Wounded';
-    });
-    if (woundedCondition != null) {
-      woundedCondition.value++;
-    } else {
-      addCondition(member, 'Wounded', 1);
-    }
-  }
-
-  member.conditions = member.conditions.filter((condition) => {
-    return condition.name != conditionName;
+  const condition = member.conditions.find(condition => {
+    return condition.name.toLowerCase() == conditionName.toLowerCase();
   });
-  reloadEncounterMembers();
+  if (condition != null) {
+    if (conditionName.toLowerCase() == 'drained') {
+      member.maxHP = getCreatureMaxHP(member.level, getOriginalCreature(member).hpMax, member.eliteWeak);
+    }
+    if (conditionName.toLowerCase() == 'dying') {
+      const woundedCondition = member.conditions.find(condition => {
+        return condition.name.toLowerCase() == 'wounded';
+      });
+      if (woundedCondition != null) {
+        woundedCondition.value++;
+      } else {
+        addCondition(member, 'Wounded', 1);
+      }
+    }
+
+    // Filter out all conditions with same name
+    member.conditions = member.conditions.filter((condition) => {
+      return condition.name.toLowerCase() != conditionName.toLowerCase();
+    });
+    reloadEncounterMembers();
+  }
 }
 
 function updateCondition(member, conditionName, newValue) {
   let condition = member.conditions.find(condition => {
-    return condition.name == conditionName;
+    return condition.name.toLowerCase() == conditionName.toLowerCase();
   });
-
   if (condition != null) {
     if (conditionName.toLowerCase() == 'drained') {
       if (newValue > condition.value) {
@@ -492,15 +497,29 @@ function reloadEncounterMembers() {
       }
     });
     $(`#${input_memberCurrentHP}`).blur(function () {
+      let newHP;
       try {
-        member.currentHP = parseInt(math.evaluate($(this).val()));
-        if (member.currentHP > 9999) { member.currentHP = 9999; }
-        if (member.currentHP < 0) { member.currentHP = 0; }
-        if (isNaN(member.currentHP)) { member.currentHP = 0; }
+        newHP = parseInt(math.evaluate($(this).val()));
+        if (newHP > 9999) { newHP = 9999; }
+        if (newHP < 0) { newHP = 0; }
+        if (isNaN(newHP)) { newHP = 0; }
       } catch (err) {
-        member.currentHP = 0;
+        newHP = 0;
       }
+
+      //
+
+      let currentIsZero = (member.currentHP == 0);
+
+      member.currentHP = newHP;
       $(this).val(member.currentHP);
+
+      if(currentIsZero && newHP > 0){
+        removeCondition(member, 'Dying');
+      } else if(newHP == 0){
+        addCondition(member, 'Dying', 1);
+      }
+
     });
     $(`#${input_memberCurrentHP}`).click(function (event) {
       event.stopImmediatePropagation();
@@ -536,29 +555,41 @@ function reloadEncounterMembers() {
     });
 
     // Conditions //
-    for (let condition of member.conditions) {
-      let conditionDisplayName = condition.name;
+    for (let condition of getAppliedConditions(member.conditions)) {
+      let conditionDisplayName = capitalizeWords(condition.name);
       if (condition.value != null) { conditionDisplayName += ` ${condition.value}`; }
 
       let btn_memberConditionView = `member-btn-condition-view-${i}-${condition.name.replace(/\W/g, '_')}`;
       let btn_memberConditionDelete = `member-btn-condition-delete-${i}-${condition.name.replace(/\W/g, '_')}`;
 
-      $(`#${container_memberConditions}`).append(`
-        <div class="field has-addons is-marginless" style="padding-right: 0.25rem;">
-          <p class="control">
-              <button id="${btn_memberConditionView}" class="button is-very-small is-danger is-outlined">
-                  <span>${conditionDisplayName}</span>
-              </button>
-          </p>
-          <p class="control">
-              <button id="${btn_memberConditionDelete}" class="button is-very-small is-danger is-outlined">
-                  <span class="icon is-small">
-                      <i class="fas fa-minus-circle"></i>
-                  </span>
-              </button>
-          </p>
-        </div>
-      `);
+      if(condition.parentSource) {
+        $(`#${container_memberConditions}`).append(`
+          <div class="field has-addons is-marginless" style="padding-right: 0.25rem;">
+            <p class="control">
+                <button id="${btn_memberConditionView}" class="button is-very-small is-danger is-outlined">
+                    <span>${conditionDisplayName}</span>
+                </button>
+            </p>
+          </div>
+        `);
+      } else {
+        $(`#${container_memberConditions}`).append(`
+          <div class="field has-addons is-marginless" style="padding-right: 0.25rem;">
+            <p class="control">
+                <button id="${btn_memberConditionView}" class="button is-very-small is-danger is-outlined">
+                    <span>${conditionDisplayName}</span>
+                </button>
+            </p>
+            <p class="control">
+                <button id="${btn_memberConditionDelete}" class="button is-very-small is-danger is-outlined">
+                    <span class="icon is-small">
+                        <i class="fas fa-minus-circle"></i>
+                    </span>
+                </button>
+            </p>
+          </div>
+        `);
+      }
 
       $(`#${btn_memberConditionView}`).click(function () {
         openConditionsModal(member, condition);

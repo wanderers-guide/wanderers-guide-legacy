@@ -49,7 +49,7 @@ $(function () {
 function openConditionsModal(member, conditionData){
 
     let condition = g_allConditions.find(condition => {
-        return condition.name == conditionData.name;
+        return condition.name.toLowerCase() == conditionData.name.toLowerCase();
     });
 
     if(conditionData.value != null){
@@ -66,15 +66,22 @@ function openConditionsModal(member, conditionData){
     }
 
 
-    $('#conditionsModalRemoveButton').removeClass('is-hidden');
-    $('#conditionsModalSourceSection').addClass('is-hidden');
-    $('#conditionsModalTitle').addClass('pl-5');
-
-    $('#conditionsModalRemoveButton').off('click');
-    $('#conditionsModalRemoveButton').click(function(){
+    if (conditionData.parentSource != null) {
+      $('#conditionsModalRemoveButton').addClass('is-hidden');
+      $('#conditionsModalTitle').removeClass('pl-5');
+      $('#conditionsModalSourceContent').html(conditionData.parentSource);
+      $('#conditionsModalSourceSection').removeClass('is-hidden');
+    } else {
+      $('#conditionsModalRemoveButton').removeClass('is-hidden');
+      $('#conditionsModalSourceSection').addClass('is-hidden');
+      $('#conditionsModalTitle').addClass('pl-5');
+  
+      $('#conditionsModalRemoveButton').off('click');
+      $('#conditionsModalRemoveButton').click(function(){
         removeCondition(member, conditionData.name);
         closeConditionsModal();
-    });
+      });
+    }
 
 
     $('#conditionsModalTitle').html(condition.name);
@@ -143,5 +150,52 @@ function closeSelectConditionsModal() {
 
     $('#conditionsSelectModalDefault').removeClass('is-active');
     $('html').removeClass('is-clipped');
+
+}
+
+
+function getAppliedConditions(conditions){
+
+  let appliedConditions = cloneObj(conditions);
+
+  // Apply Indirect Conditions
+  for(let condition of conditions){
+      if(condition.name.toLowerCase() == 'encumbered'){
+          appliedConditions.push({ name: 'clumsy', value: 1, parentSource: 'Encumbered' });
+
+      } else if(condition.name.toLowerCase() == 'confused'){
+          appliedConditions.push({ name: 'flat-footed', value: null, parentSource: 'Confused' });
+
+      } else if(condition.name.toLowerCase() == 'dying'){
+          appliedConditions.push({ name: 'unconscious', value: null, parentSource: 'Dying' });
+          // + conditions from unconscious
+          appliedConditions.push({ name: 'blinded', value: null, parentSource: 'Unconscious' });
+          appliedConditions.push({ name: 'flat-footed', value: null, parentSource: 'Unconscious' });
+
+      } else if(condition.name.toLowerCase() == 'grabbed'){
+          appliedConditions.push({ name: 'flat-footed', value: null, parentSource: 'Grabbed' });
+          appliedConditions.push({ name: 'immobilized', value: null, parentSource: 'Grabbed' });
+
+      } else if(condition.name.toLowerCase() == 'paralyzed'){
+          appliedConditions.push({ name: 'flat-footed', value: null, parentSource: 'Paralyzed' });
+
+      } else if(condition.name.toLowerCase() == 'prone'){
+          appliedConditions.push({ name: 'flat-footed', value: null, parentSource: 'Prone' });
+
+      } else if(condition.name.toLowerCase() == 'restrained'){
+          appliedConditions.push({ name: 'flat-footed', value: null, parentSource: 'Restrained' });
+          appliedConditions.push({ name: 'immobilized', value: null, parentSource: 'Restrained' });
+
+      } else if(condition.name.toLowerCase() == 'unconscious'){
+          appliedConditions.push({ name: 'blinded', value: null, parentSource: 'Unconscious' });
+          appliedConditions.push({ name: 'flat-footed', value: null, parentSource: 'Unconscious' });
+
+      } else if(condition.name.toLowerCase() == 'unnoticed'){
+          appliedConditions.push({ name: 'undetected', value: null, parentSource: 'Unnoticed' });
+
+      }
+  }
+
+  return appliedConditions;
 
 }

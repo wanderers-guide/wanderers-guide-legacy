@@ -2,52 +2,6 @@
     By Aaron Cassar.
 */
 
-function getAppliedConditions(conditions){
-
-    let appliedConditions = cloneObj(conditions);
-
-    // Apply Indirect Conditions
-    for(let condition of conditions){
-        if(condition.name.toLowerCase() == 'encumbered'){
-            appliedConditions.push({ name: 'clumsy', value: 1 });
-
-        } else if(condition.name.toLowerCase() == 'confused'){
-            appliedConditions.push({ name: 'flat-footed', value: null });
-
-        } else if(condition.name.toLowerCase() == 'dying'){
-            appliedConditions.push({ name: 'unconscious', value: null });
-            // + conditions from dying
-            appliedConditions.push({ name: 'blinded', value: null });
-            appliedConditions.push({ name: 'flat-footed', value: null });
-
-        } else if(condition.name.toLowerCase() == 'grabbed'){
-            appliedConditions.push({ name: 'flat-footed', value: null });
-            appliedConditions.push({ name: 'immobilized', value: null });
-
-        } else if(condition.name.toLowerCase() == 'paralyzed'){
-            appliedConditions.push({ name: 'flat-footed', value: null });
-
-        } else if(condition.name.toLowerCase() == 'prone'){
-            appliedConditions.push({ name: 'flat-footed', value: null });
-
-        } else if(condition.name.toLowerCase() == 'restrained'){
-            appliedConditions.push({ name: 'flat-footed', value: null });
-            appliedConditions.push({ name: 'immobilized', value: null });
-
-        } else if(condition.name.toLowerCase() == 'unconscious'){
-            appliedConditions.push({ name: 'blinded', value: null });
-            appliedConditions.push({ name: 'flat-footed', value: null });
-
-        } else if(condition.name.toLowerCase() == 'unnoticed'){
-            appliedConditions.push({ name: 'undetected', value: null });
-
-        }
-    }
-
-    return appliedConditions;
-
-}
-
 function applyEliteWeak(inputData, eliteWeak){
     let data = cloneObj(inputData);
 
