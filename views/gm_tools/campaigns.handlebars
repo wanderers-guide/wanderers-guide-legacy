@@ -6,13 +6,17 @@
 
 
 <script>
-  let rawCampaigns = {{{json campaigns}}};
+  let rawCampaigns = {{{ json campaigns }}};
 </script>
 <script type="text/javascript" src="/js/gm_tools/campaigns/ui-handler.js"></script>
 
 <script src="/js/wsc/text-processing.js"></script>
 <script src="/js/libraries/display_campaign/display-campaign.js"></script>
 <script src="/js/libraries/confirm_message/confirm-message.js"></script>
+
+<!-- Quickview -->
+<script src="/js/sheet/quickviews/_quickviews.js"></script>
+<script src="/js/sheet/quickviews/character-view.js"></script>
 
 {{/section}}
 
@@ -50,7 +54,18 @@
 <div class="banner_w3lspvt-2"></div>
 {{/section}}
 
-<div class="subpageloader is-hidden"><div class="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div></div>
+<div class="subpageloader is-hidden">
+  <div class="lds-roller">
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+  </div>
+</div>
 
 <div id="campaigns-container" class="container">
 
@@ -74,7 +89,8 @@
         <div class="card-content cursor-clickable pt-2">
           <a>
             <span class="is-size-8 has-txt-noted campaign-id"># {{id}}</span>
-            <p id="campaign-{{id}}-name" class="is-size-4 has-txt-value-number text-center text-overflow-ellipsis">{{name}}</p>
+            <p id="campaign-{{id}}-name" class="is-size-4 has-txt-value-number text-center text-overflow-ellipsis">
+              {{name}}</p>
             <p class="is-size-7 pl-4 text-overflow-ellipsis"> 4 Players </p>
           </a>
         </div>
@@ -107,6 +123,21 @@
 
 {{#section 'overlay'}}
 
+<!-- Right Quickview -->
+<div id="quickviewDefault" class="quickview">
+  <div class="quickview-header">
+    <p id="quickViewTitle" class="title is-size-5 has-txt-value-number"></p>
+    <div class="is-inline-flex">
+      <p id="quickViewTitleRight"></p>
+      <p id="quickViewTitleClose"></p>
+    </div>
+  </div>
+  <div class="quickview-body use-custom-scrollbar">
+    <div id="quickViewContent" class="quickview-block pt-1 pb-3 px-3">
+    </div>
+  </div>
+</div>
+
 <!-- Edit Modal -->
 <div id="editModalDefault" name="" class="modal" style="z-index:30;">
   <div id="editModalBackground" class="modal-background"></div>
@@ -120,13 +151,15 @@
 
       <div class="field">
         <div class="control">
-          <input id="inputCampaignName" class="input" type="text" placeholder="Name" maxlength="120" spellcheck="false" autocomplete="off">
+          <input id="inputCampaignName" class="input" type="text" placeholder="Name" maxlength="120" spellcheck="false"
+            autocomplete="off">
         </div>
       </div>
 
       <div class="field">
         <div class="control">
-          <textarea id="inputCampaignDescription" class="textarea use-custom-scrollbar" placeholder="Description" maxlength="3950" spellcheck="false" autocomplete="off"></textarea>
+          <textarea id="inputCampaignDescription" class="textarea use-custom-scrollbar" placeholder="Description"
+            maxlength="3950" spellcheck="false" autocomplete="off"></textarea>
         </div>
       </div>
 

@@ -455,6 +455,7 @@ function loadCharSheet(){
     g_calculatedStats = {
       maxHP: null,
       maxStamina: null,
+      maxResolve: null,
       totalClassDC: null,
       totalSpeed: null,
       totalAC: null,
@@ -463,6 +464,14 @@ function loadCharSheet(){
       totalSaves: [],
       totalAbilityScores: [],
       weapons: [],
+      conditions: [],
+      generalInfo: {
+        className: '',
+        heritageAncestryName: '',
+        backgroundName: '',
+        size: '',
+        traits: [],
+      },
     };
 
     // Init StatsManager (set to new Map) //
@@ -840,6 +849,21 @@ function displayInformation() {
     $('#character-type').html(heritageAndAncestryName+" "+g_classDetails.Class.name);
     $('#character-level').html("Lvl "+g_character.level);
 
+    // Calculated Stat
+    g_calculatedStats.generalInfo.className = g_classDetails.Class.name;
+    g_calculatedStats.generalInfo.heritageAncestryName = heritageAndAncestryName;
+    g_calculatedStats.generalInfo.backgroundName = g_background.name;
+    g_calculatedStats.generalInfo.size = capitalizeWord(g_charSize);
+
+    let charTraits = cloneObj(g_charTagsArray);
+    charTraits.push('Humanoid');
+    charTraits = charTraits.sort(
+        function(a, b) {
+            return a > b ? 1 : -1;
+        }
+    );
+    g_calculatedStats.generalInfo.traits = charTraits;
+    //
     
     $("#charInfoContent").click(function(){
         openQuickView('charInfoView', {
@@ -1937,6 +1961,7 @@ function initStaminaAndResolve() {
   
   if(maxResolveNum < 0){ maxResolveNum = 0; }
   maxResolve.html(maxResolveNum);
+  g_calculatedStats.maxResolve = maxResolveNum;// Calculated Stat
 
   if(g_character.currentResolve == null){
       g_character.currentResolve = maxResolveNum;

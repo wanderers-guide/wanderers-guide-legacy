@@ -15,36 +15,19 @@ function openCharInfoQuickview(data) {
   /// Basic Info ///
   $('#charInfoBasicInfoSection').append('<p class="is-size-4 has-text-centered has-txt-value-string text-overflow-ellipsis">'+g_character.name+'</p>');
 
-  $('#charInfoBasicInfoSection').append('<div class="field is-horizontal is-marginless"><div class="field-label"><label class="label">Class</label></div><div class="field-label"><p class="is-size-6 has-text-left has-txt-value-string">'+g_classDetails.Class.name+'</p></div></div>');
+  $('#charInfoBasicInfoSection').append('<div class="field is-horizontal is-marginless"><div class="field-label"><label class="label">Class</label></div><div class="field-label"><p class="is-size-6 has-text-left has-txt-value-string">'+g_calculatedStats.generalInfo.className+'</p></div></div>');
 
-  let heritageAndAncestryName = '';
-  if(g_heritage == null){
-    heritageAndAncestryName = g_ancestry.name;
-  } else {
-    if(g_heritage.tagID != null){
-      heritageAndAncestryName = g_heritage.name+' '+g_ancestry.name;
-    } else {
-      heritageAndAncestryName = g_heritage.name;
-    }
-  }
-  $('#charInfoBasicInfoSection').append('<div class="field is-horizontal is-marginless"><div class="field-label"><label class="label">Ancestry</label></div><div class="field-label"><p class="is-size-6 has-text-left has-txt-value-string">'+heritageAndAncestryName+'</p></div></div>');
+  $('#charInfoBasicInfoSection').append('<div class="field is-horizontal is-marginless"><div class="field-label"><label class="label">Ancestry</label></div><div class="field-label"><p class="is-size-6 has-text-left has-txt-value-string">'+g_calculatedStats.generalInfo.heritageAncestryName+'</p></div></div>');
 
-  $('#charInfoBasicInfoSection').append('<div class="field is-horizontal is-marginless"><div class="field-label"><label class="label">Background</label></div><div class="field-label"><p class="is-size-6 has-text-left has-txt-value-string">'+g_background.name+'</p></div></div>');
+  $('#charInfoBasicInfoSection').append('<div class="field is-horizontal is-marginless"><div class="field-label"><label class="label">Background</label></div><div class="field-label"><p class="is-size-6 has-text-left has-txt-value-string">'+g_calculatedStats.generalInfo.backgroundName+'</p></div></div>');
 
   $('#charInfoPictureSection').append('<figure class="image is-128x128 is-marginless"><img id="charInfoPicture" class="is-rounded character-icon" src=""></figure>');
 
   ///         ///
 
-  let charTags = cloneObj(g_charTagsArray);
-  charTags.push('Humanoid');
-  charTags = charTags.sort(
-      function(a, b) {
-          return a > b ? 1 : -1;
-      }
-  );
   let tagsInnerHTML = '';
-  tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-1 mb-1 is-very-small is-link tagButton">'+capitalizeWord(g_charSize)+'</button>';
-  for(const charTag of charTags){
+  tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-1 mb-1 is-very-small is-link tagButton">'+g_calculatedStats.generalInfo.size+'</button>';
+  for(const charTag of g_calculatedStats.generalInfo.traits){
     if(charTag != null && charTag != ''){
       tagsInnerHTML += '<button class="button is-paddingless px-2 is-marginless mr-1 mb-1 is-very-small is-info tagButton">'+charTag+'</button>';
     }

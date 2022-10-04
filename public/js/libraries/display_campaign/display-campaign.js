@@ -57,6 +57,31 @@ class DisplayCampaign {
 
           for (const accessToken of campaignStruct.accessTokens) {
 
+            // If has no calculatedStats, give temp details
+            if(!accessToken.calculatedStat){
+              accessToken.calculatedStat = {
+                maxHP: 9999,
+                maxStamina: 9999,
+                maxResolve: 99,
+              };
+            }
+            if(!accessToken.calculatedStat.generalInfo){
+              accessToken.calculatedStat.generalInfo = {
+                className: 'Unknown',
+                heritageAncestryName: 'Unknown',
+                backgroundName: 'Unknown',
+                size: null,
+                traits: [],
+              };
+            } else {
+              accessToken.calculatedStat.generalInfo = JSON.parse(accessToken.calculatedStat.generalInfo);
+            }
+            if(!accessToken.calculatedStat.conditions){
+              accessToken.calculatedStat.conditions = [];
+            } else {
+              accessToken.calculatedStat.conditions = JSON.parse(accessToken.calculatedStat.conditions);
+            }
+
             let input_characterCurrentHP = `character-input-hp-${accessToken.charID}`;
 
             let btn_characterAddCondition = `character-btn-condition-add-${accessToken.charID}`;
@@ -126,9 +151,7 @@ class DisplayCampaign {
 
             // View //
             $(`#${btn_characterView}`).click(function () {
-              openQuickView('characterView', {
-                data: accessToken,
-              });
+              openQuickView('characterView', accessToken);
             });
 
             // HP //
@@ -156,9 +179,12 @@ class DisplayCampaign {
 
             // Delete //
             $(`#${btn_characterDelete}`).click(function () {
-              removeMember(encounter, member);
+              new ConfirmMessage('Remove Character', `Are you sure you want to remove "${accessToken.character.name}" from the campaign?`, 'Remove', 'modal-char-leave-campaign', 'modal-char-leave-campaign-btn');
+              $('#modal-char-leave-campaign-btn').click(function() {
+                socket.emit("requestLeaveCampaign", accessToken.charID);
+              });
             });
-
+            
             // Conditions //
             for (let condition of member.conditions) {
               let conditionDisplayName = condition.name;

@@ -66,6 +66,7 @@ module.exports = class SocketConnections {
 
       if(userID && userID != -1){
         socket.join(userID);
+        console.log('connected');
       }
       // socket.to(userID).emit('returnDeveloperStatusChange');
 
@@ -2989,7 +2990,7 @@ module.exports = class SocketConnections {
       socket.on('requestJoinCampaign', function(charID, accessCode){
         AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
-            CampaignSaving.joinCampaign(charID, accessCode).then((campaign) => {
+            CampaignSaving.joinCampaign(userID, charID, accessCode).then((campaign) => {
               socket.emit('returnJoinCampaign', campaign);
             });
           }
@@ -3026,11 +3027,9 @@ module.exports = class SocketConnections {
               // Return nothing
             });
 
-            Character.findOne({ where: { id: charID } })
-            .then((character) => {
-              if(character){
-                socket.to(character.userID).emit('sendCharacterUpdate-Health', charID, newHP);
-              }
+            CampaignGathering.getUsersInCampaign(charID).then((userIDs) => {
+              console.log(userIDs);
+              socket.to(userIDs[0]).emit('sendCharacterUpdate-Health', charID, newHP);
             });
 
           }
@@ -3045,11 +3044,8 @@ module.exports = class SocketConnections {
               // Return nothing
             });
 
-            Character.findOne({ where: { id: charID } })
-            .then((character) => {
-              if(character){
-                socket.to(character.userID).emit('sendCharacterUpdate-TempHealth', charID, newTempHP);
-              }
+            CampaignGathering.getUsersInCampaign(charID).then((userIDs) => {
+              socket.to(userIDs).emit('sendCharacterUpdate-TempHealth', charID, newTempHP);
             });
 
           }
@@ -3064,11 +3060,8 @@ module.exports = class SocketConnections {
               // Return nothing
             });
 
-            Character.findOne({ where: { id: charID } })
-            .then((character) => {
-              if(character){
-                socket.to(character.userID).emit('sendCharacterUpdate-Exp', charID, newExp);
-              }
+            CampaignGathering.getUsersInCampaign(charID).then((userIDs) => {
+              socket.to(userIDs).emit('sendCharacterUpdate-Exp', charID, newExp);
             });
 
           }
@@ -3083,11 +3076,8 @@ module.exports = class SocketConnections {
               // Return nothing
             });
 
-            Character.findOne({ where: { id: charID } })
-            .then((character) => {
-              if(character){
-                socket.to(character.userID).emit('sendCharacterUpdate-Stamina', charID, newStamina);
-              }
+            CampaignGathering.getUsersInCampaign(charID).then((userIDs) => {
+              socket.to(userIDs).emit('sendCharacterUpdate-Stamina', charID, newStamina);
             });
 
           }
@@ -3102,11 +3092,8 @@ module.exports = class SocketConnections {
               // Return nothing
             });
 
-            Character.findOne({ where: { id: charID } })
-            .then((character) => {
-              if(character){
-                socket.to(character.userID).emit('sendCharacterUpdate-Resolve', charID, newResolve);
-              }
+            CampaignGathering.getUsersInCampaign(charID).then((userIDs) => {
+              socket.to(userIDs).emit('sendCharacterUpdate-Resolve', charID, newResolve);
             });
 
           }
@@ -3121,43 +3108,51 @@ module.exports = class SocketConnections {
               // Return nothing
             });
 
-            Character.findOne({ where: { id: charID } })
-            .then((character) => {
-              if(character){
-                socket.to(character.userID).emit('sendCharacterUpdate-HeroPoints', charID, heroPoints);
-              }
+            CampaignGathering.getUsersInCampaign(charID).then((userIDs) => {
+              socket.to(userIDs).emit('sendCharacterUpdate-HeroPoints', charID, heroPoints);
             });
 
           }
         });
       });
 
-      /*
-      socket.on('requestConditionChange', function(charID, conditionID, value, sourceText, parentID){
-        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
-          if(ownsChar){
+      socket.on('requestCharacterUpdate-ConditionChange', function(charID, conditionID, value, sourceText, parentID){
+        AuthCheck.canEditCharacter(userID, charID).then((canEditChar) => {
+          if(canEditChar){
+
             CharSaving.replaceCondition(charID, conditionID, value, sourceText, parentID).then((result) => {
-              CharGathering.getAllCharConditions(userID, charID)
+              CharGathering.getAllCharConditions(null, charID)
               .then((conditionsObject) => {
-                socket.emit('returnUpdateConditionsMap', conditionsObject, true);
+
+                CampaignGathering.getUsersInCampaign(charID).then((userIDs) => {
+                  socket.to(userIDs).emit('sendCharacterUpdate-Conditions', charID, conditionsObject, true);
+                });
+
               });
             });
+
           }
         });
       });
 
-      socket.on('requestConditionRemove', function(charID, conditionID){
-        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
-          if(ownsChar){
+      socket.on('requestCharacterUpdate-ConditionRemove', function(charID, conditionID){
+        AuthCheck.canEditCharacter(userID, charID).then((canEditChar) => {
+          if(canEditChar){
+
             CharSaving.removeCondition(charID, conditionID).then((didRemove) => {
-              CharGathering.getAllCharConditions(userID, charID)
+              CharGathering.getAllCharConditions(null, charID)
               .then((conditionsObject) => {
-                socket.emit('returnUpdateConditionsMap', conditionsObject, didRemove);
+
+                CampaignGathering.getUsersInCampaign(charID).then((userIDs) => {
+                  socket.to(userIDs).emit('sendCharacterUpdate-Conditions', charID, conditionsObject, didRemove);
+                });
+
               });
             });
+
           }
         });
-      });*/
+      });
 
     });
 

@@ -16,6 +16,23 @@ module.exports = class CampaignGathering {
 
   }
 
+  static getJoinedCampaigns(userID) {
+
+    return CampaignAccessToken.findAll({
+      where: { userID: userID },
+    }).then((tokens) => {
+      if (!tokens) { return []; }
+
+      let campaignIDs = new Set();
+      for(let token of tokens){
+        campaignIDs.add(token.campaignID);
+      }
+      return Array.from(campaignIDs);
+
+    });
+
+  }
+
   static getCampaign(charID) {
 
     return CampaignAccessToken.findOne({
@@ -64,6 +81,31 @@ module.exports = class CampaignGathering {
           campaign,
           accessTokens,
         };
+      });
+
+    });
+
+  }
+
+  static getUsersInCampaign(charID) {
+
+    return CampaignAccessToken.findOne({
+      where: { charID: charID },
+    }).then((charToken) => {
+      if (!charToken) { return []; }
+
+      return CampaignAccessToken.findAll({
+        where: {
+          campaignID: charToken.campaignID,
+        },
+      }).then((tokens) => {
+
+        let userIDs = new Set();
+        for(let token of tokens){
+          userIDs.add(token.userID);
+        }
+        return Array.from(userIDs);
+
       });
 
     });

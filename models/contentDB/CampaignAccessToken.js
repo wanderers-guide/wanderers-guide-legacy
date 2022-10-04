@@ -8,6 +8,9 @@ const CampaignAccessToken = db.define('campaignaccesstokens', {
   charID: {
     type: Sequelize.INTEGER
   },
+  userID: {
+    type: Sequelize.INTEGER
+  },
 });
 
 module.exports = CampaignAccessToken;

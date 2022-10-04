@@ -304,3 +304,13 @@ a.panel-block:hover, label.panel-block:hover {
   padding-left: 0.1rem;
   padding-top: 1rem;
 }
+
+/* Notyf Adjustments */
+@media (min-width: 481px) {
+  .notyf__toast {
+    max-width: 360px!important;
+  }
+  .notyf__ripple {
+    width: 420px!important;
+  }
+}

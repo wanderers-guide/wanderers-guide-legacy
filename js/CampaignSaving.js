@@ -71,7 +71,7 @@ module.exports = class CampaignSaving {
       });
   }
 
-  static joinCampaign(charID, accessID) {
+  static joinCampaign(userID, charID, accessID) {
 
     return Campaign.findOne({
       where: { accessID: accessID },
@@ -82,6 +82,7 @@ module.exports = class CampaignSaving {
         return CampaignAccessToken.create({
           campaignID: campaign.id,
           charID: charID,
+          userID: userID,
         }).then((token) => {
           return campaign;
         });

@@ -9,6 +9,12 @@ const CalculatedStat = db.define('calculatedStats', {
   maxHP: {
     type: Sequelize.INTEGER
   },
+  maxStamina: {
+    type: Sequelize.INTEGER
+  },
+  maxResolve: {
+    type: Sequelize.INTEGER
+  },
   totalClassDC: {
     type: Sequelize.INTEGER
   },
@@ -31,6 +37,12 @@ const CalculatedStat = db.define('calculatedStats', {
     type: Sequelize.STRING
   },
   weapons: {
+    type: Sequelize.STRING
+  },
+  conditions: {
+    type: Sequelize.STRING
+  },
+  generalInfo: {
     type: Sequelize.STRING
   },
 });

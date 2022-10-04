@@ -47,6 +47,8 @@ module.exports = class CharSaving {
       return CalculatedStat.upsert({
         charID: charID,
         maxHP: calcStatsStruct.maxHP,
+        maxStamina: calcStatsStruct.maxStamina,
+        maxResolve: calcStatsStruct.maxResolve,
         totalClassDC: calcStatsStruct.totalClassDC,
         totalSpeed: calcStatsStruct.totalSpeed,
         totalAC: calcStatsStruct.totalAC,
@@ -55,6 +57,8 @@ module.exports = class CharSaving {
         totalSaves: JSON.stringify(calcStatsStruct.totalSaves),
         totalAbilityScores: JSON.stringify(calcStatsStruct.totalAbilityScores),
         weapons: JSON.stringify(calcStatsStruct.weapons),
+        conditions: JSON.stringify(calcStatsStruct.conditions),
+        generalInfo: JSON.stringify(calcStatsStruct.generalInfo),
       }).then((result) => {
         return;
       });

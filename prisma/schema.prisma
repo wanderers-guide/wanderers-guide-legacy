@@ -214,6 +214,8 @@ model backgrounds {
 model calculatedStats {
   charID             Int        @id
   maxHP              Int?
+  maxStamina         Int?
+  maxResolve         Int?
   totalClassDC       Int?
   totalSpeed         Int?
   totalAC            Int?
@@ -222,6 +224,8 @@ model calculatedStats {
   totalSaves         String?    @db.VarChar(100)
   totalAbilityScores String?    @db.VarChar(250)
   weapons            String?    @db.VarChar(3000)
+  conditions         String?    @db.VarChar(1000)
+  generalInfo        String?    @db.VarChar(1000)
   characters         characters @relation(fields: [charID], references: [id])
 }
 
@@ -229,12 +233,15 @@ model campaignAccessTokens {
   id            Int                       @id @default(autoincrement())
   campaignID    Int
   charID        Int                       @unique
+  userID        Int                       
   createdAt     DateTime?                 @db.DateTime(0)
   updatedAt     DateTime?                 @db.DateTime(0)
   characters    characters                @relation(fields: [charID], references: [id])
+  users         users                     @relation(fields: [userID], references: [id])
   campaigns     campaigns                 @relation(fields: [campaignID], references: [id])
 
   @@index([charID], name: "charID_campacctoken")
+  @@index([userID], name: "userID_campacctoken")
   @@index([campaignID], name: "campaignID_campacctoken")
 }
 
@@ -1107,6 +1114,7 @@ model users {
   homebrewBundles     homebrewBundles[]
   userHomebrewBundles userHomebrewBundles[]
   campaigns           campaigns[]
+  campaignAccessTokens campaignAccessTokens[]
 
   @@unique([googleID, redditID], name: "platform_compIDs")
 }
