@@ -222,6 +222,11 @@ function getAppliedConditions(conditions){
   for(const [conditionName, condition] of conditionsMap.entries()){
     appliedConditions.push(condition);
   }
-  return appliedConditions;
+
+  return appliedConditions.sort(
+    function(a, b) {
+      return a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1;
+    }
+  );
 
 }

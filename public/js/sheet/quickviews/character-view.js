@@ -2,6 +2,9 @@
     By Aaron Cassar.
 */
 
+let g_characterViewOpenedTab_rollHistory = false;
+let g_characterViewOpenedTab_charInfo = false;
+
 function openCharacterQuickview(data) {
 
   let info = null;
@@ -76,8 +79,8 @@ function openCharacterQuickview(data) {
 
   // Conditions //
   let conditionsInnerHTML = '';
-  for (let condition of data.calculatedStat.conditions) {
-    conditionsInnerHTML += `<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-very-small is-danger tagButton">${condition.name} ${(condition.value != null ? condition.value : '')}</button>`;
+  for (let condition of getAppliedConditions(data.calculatedStat.conditions)) {
+    conditionsInnerHTML += `<button class="button is-paddingless px-2 is-marginless mr-2 mb-1 is-very-small is-danger tagButton">${capitalizeWords(condition.name)} ${(condition.value != null ? condition.value : '')}</button>`;
   }
   if (conditionsInnerHTML != '') {
     qContent.append('<div class="buttons is-marginless is-centered">' + conditionsInnerHTML + '</div>');
@@ -324,11 +327,13 @@ function openCharacterQuickview(data) {
       $("#charRollHistoryChevron").removeClass('fa-chevron-down');
       $("#charRollHistoryChevron").addClass('fa-chevron-up');
       $('#charRollHistoryBar').addClass('is-hidden');
+      g_characterViewOpenedTab_rollHistory = true;
     } else {
       $("#charRollHistorySection").addClass('is-hidden');
       $("#charRollHistoryChevron").removeClass('fa-chevron-up');
       $("#charRollHistoryChevron").addClass('fa-chevron-down');
       $('#charRollHistoryBar').removeClass('is-hidden');
+      g_characterViewOpenedTab_rollHistory = false;
     }
   });
 
@@ -388,9 +393,18 @@ function openCharacterQuickview(data) {
       $('#charRollHistorySection').html('<p class="is-size-5 is-italic">No roll history.</p>');
     }
 
+    // Scroll to Bottom
+    window.setTimeout(() => {
+      $('#charRollHistorySection').scrollTop($('#charRollHistorySection')[0].scrollHeight);
+    }, 1);
+
   }
 
   populateRollHistory(rollHistory);
+
+  if(g_characterViewOpenedTab_rollHistory){
+    $('#charRollHistoryName').click();
+  }
 
   ///         ///
 
@@ -502,13 +516,20 @@ function openCharacterQuickview(data) {
         $("#charInfoChevron").removeClass('fa-chevron-down');
         $("#charInfoChevron").addClass('fa-chevron-up');
         $('#charInfoBar-Bottom').addClass('is-hidden');
+        g_characterViewOpenedTab_charInfo = true;
       } else {
         $("#charInfoSection").addClass('is-hidden');
         $("#charInfoChevron").removeClass('fa-chevron-up');
         $("#charInfoChevron").addClass('fa-chevron-down');
         $('#charInfoBar-Bottom').removeClass('is-hidden');
+        g_characterViewOpenedTab_charInfo = false;
       }
     });
+
+    if(g_characterViewOpenedTab_charInfo){
+      $('#charInfoName').click();
+    }
+
   } else {
     $('#charInfoName').addClass('is-hidden');
     $('#charInfoSection').addClass('is-hidden');

@@ -84,9 +84,12 @@ function makeDiceRoll(diceNum, dieType, bonus, label, resultSuffix='', doubleRes
   g_rollHistory.push(rollStruct);
   openLeftQuickView('Dice Roller');
 
+  let rollHistoryJSON = JSON.stringify(g_rollHistory);
+
   socket.emit("requestRollHistorySave",
       getCharIDFromURL(),
-      JSON.stringify(g_rollHistory));
+      rollHistoryJSON);
+  sendOutUpdateToGM('roll-history', rollHistoryJSON);
 }
 
 //// Math Rands ////

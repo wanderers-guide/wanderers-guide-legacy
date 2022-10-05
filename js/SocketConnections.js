@@ -3034,6 +3034,20 @@ module.exports = class SocketConnections {
     io.on('connection', function(socket){
       const userID = getUserID(socket);
 
+      socket.on('requestCharacterUpdateToGM', function(charID, updates){
+        AuthCheck.canEditCharacter(userID, charID).then((canEditChar) => {
+          if(canEditChar){
+
+            CampaignGathering.getCampaign(charID).then((campaign) => {
+              if(campaign){
+                socket.to(campaign.userID).emit('sendCharacterUpdateToGM', charID, updates);
+              }
+            });
+
+          }
+        });
+      });
+
       socket.on('requestCharacterUpdate-Health', function(charID, newHP){
         AuthCheck.canEditCharacter(userID, charID).then((canEditChar) => {
           if(canEditChar){

@@ -164,9 +164,9 @@ function addQuickViewProtection() {
   $('#quickviewDefault').addClass('quickview-auto-close-protection');
 }
 
-function refreshQuickView() {
+function refreshQuickView(newData=g_QViewLastData) {
   if ($('#quickviewDefault').hasClass('is-active')) {
-    openQuickView(g_QViewLastType, g_QViewLastData, true);
+    openQuickView(g_QViewLastType, newData, true);
   }
 }
 

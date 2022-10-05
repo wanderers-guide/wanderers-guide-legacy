@@ -206,6 +206,7 @@ function saveCharInfo(){
   socket.emit("requestCharInfoSave",
       getCharIDFromURL(),
       charInfoJSON);
+  sendOutUpdateToGM('char-info', charInfoJSON);
 }
 
 socket.on("returnCharInfoSave", function(){

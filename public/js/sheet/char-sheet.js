@@ -42,6 +42,8 @@ let g_heritage = null;
 let g_background = null;
 let g_charTagsArray = null;
 
+let g_campaignDetails = null;
+
 let g_classArchetype = null;
 
 let g_charSize = null;
@@ -229,6 +231,8 @@ function initCharSheet(charInfo, userPermissions, viewOnly){
         g_classArchetype.replacementCode = JSON.parse(g_classArchetype.replacementCodeJSON);
       }
     }
+
+    g_campaignDetails = charInfo.CampaignDetails;
 
     g_otherSpeeds = charInfo.OtherSpeeds;
 
@@ -711,6 +715,7 @@ function loadCharSheet(){
     socket.emit("requestUpdateCalculatedStats",
         getCharIDFromURL(),
         g_calculatedStats);
+    sendOutUpdateToGM('calculated-stats', g_calculatedStats);
 }
 
 function displayAbilityScores() {
@@ -890,8 +895,9 @@ function displayInformation() {
             expInput.removeClass('is-danger');
             socket.emit("requestExperienceSave",
                 getCharIDFromURL(),
-                $(this).val());
+                experience);
             g_character.experience = parseInt(experience);
+            sendOutUpdateToGM('exp', { value: g_character.experience });
         }
     });
 
@@ -985,6 +991,7 @@ function displayInformation() {
             getCharIDFromURL(),
             $(this).val());
         g_character.heroPoints = parseInt($(this).val());
+        sendOutUpdateToGM('hero-points', { value: g_character.heroPoints });
     });
     $("#heroPointsTitle").click(function(){
         openQuickView('heroPointsView', {});
@@ -1872,6 +1879,7 @@ function healthConfirm(maxHealthNum){
   socket.emit("requestCurrentHitPointsSave",
       getCharIDFromURL(),
       g_character.currentHealth);
+  sendOutUpdateToGM('hp', { value: g_character.currentHealth });
 
   if(g_character.currentHealth === 0){
       let dyingValue = 1;
@@ -1908,6 +1916,7 @@ function tempHealthConfirm(){
   socket.emit("requestTempHitPointsSave",
       getCharIDFromURL(),
       g_character.tempHealth);
+  sendOutUpdateToGM('temp-hp', { value: g_character.tempHealth });
 }
 
 ///////
@@ -2015,6 +2024,7 @@ function staminaConfirm(maxStaminaNum){
   socket.emit("requestCurrentStaminaPointsSave",
       getCharIDFromURL(),
       g_character.currentStamina);
+  sendOutUpdateToGM('stamina', { value: g_character.currentStamina });
 }
 
 function resolveConfirm(maxResolveNum){
@@ -2037,6 +2047,7 @@ function resolveConfirm(maxResolveNum){
   socket.emit("requestCurrentResolvePointsSave",
       getCharIDFromURL(),
       g_character.currentResolve);
+  sendOutUpdateToGM('resolve', { value: g_character.currentResolve });
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -2874,6 +2885,7 @@ function takeRest(){
     socket.emit("requestCurrentHitPointsSave",
         getCharIDFromURL(),
         g_character.currentHealth);
+    sendOutUpdateToGM('hp', { value: g_character.currentHealth });
 
     // Regen Stamina and Resolve
     if(gOption_hasStamina){
@@ -2881,11 +2893,13 @@ function takeRest(){
       socket.emit("requestCurrentStaminaPointsSave",
           getCharIDFromURL(),
           g_character.currentStamina);
+      sendOutUpdateToGM('stamina', { value: g_character.currentStamina });
   
       g_character.currentResolve = getModOfValue(g_classDetails.KeyAbility);
       socket.emit("requestCurrentResolvePointsSave",
           getCharIDFromURL(),
           g_character.currentResolve);
+      sendOutUpdateToGM('resolve', { value: g_character.currentResolve });
     }
 
     // Reset Innate Spells

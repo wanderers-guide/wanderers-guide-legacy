@@ -60,6 +60,20 @@ module.exports = class CampaignGathering {
 
   }
 
+  static getCampaignDetailsFromChar(charID){
+
+    return CampaignAccessToken.findOne({
+      where: { charID: charID },
+    }).then((token) => {
+      if (!token) { return null; }
+      return CampaignGathering.getCampaignDetails(token.campaignID)
+      .then((details) => {
+        return details;
+      });
+    });
+
+  }
+
 
   static getCampaignDetails(campaignID) {
 

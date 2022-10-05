@@ -93,3 +93,38 @@ socket.on('sendCharacterUpdate-Conditions', function(charID, conditionsObject, r
   notyf.success('The GM updated your Conditions.');
 
 });
+
+/*~ Send out character updates to GM ~*/
+
+/* Data:
+  hp - { value }
+  temp-hp - { value }
+  exp - { value }
+  stamina - { value }
+  resolve - { value }
+  hero-points - { value }
+  calculated-stats - g_calculatedStats
+  char-info - charInfoJSON
+  roll-history - rollHistoryJSON
+*/
+
+let g_sendingUpdateToGM = false;
+let g_updatesToGM = [];
+
+function sendOutUpdateToGM(field, updateStruct){
+  if(!g_campaignDetails) { return; }
+
+  g_updatesToGM.push({ type: field, data: updateStruct });
+  if(!g_sendingUpdateToGM) {
+    setDelayToSendOutUpdateToGM();
+  }
+}
+
+function setDelayToSendOutUpdateToGM(){
+  g_sendingUpdateToGM = true;
+  setTimeout(() => {
+    socket.emit(`requestCharacterUpdateToGM`, getCharIDFromURL(), g_updatesToGM);
+    g_updatesToGM = [];
+    g_sendingUpdateToGM = false;
+  }, 500);
+}

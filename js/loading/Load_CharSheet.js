@@ -1,5 +1,6 @@
 
 const CharGathering = require('./../CharGathering');
+const CampaignGathering = require('./../CampaignGathering');
 
 const CharChoicesLoad = require('./Load_CharChoices');
 
@@ -27,6 +28,9 @@ module.exports = async function(userID, charID, character) {
   //socket.emit('updateLoadProgess', { message: 'Opening Books', upVal: 1 }); // (4/100) //
   const sourcesArray = CharGathering.getSourceBooks(userID, character.enabledSources, character.enabledHomebrew);
   
+  //
+  const campaignDetails = CampaignGathering.getCampaignDetailsFromChar(charID);
+
   //socket.emit('updateLoadProgess', { message: 'Discovering Backstory', upVal: 2 }); // (6/100) //
   const background = await CharGathering.getBackground(userID, charID, character);
 
@@ -103,7 +107,7 @@ module.exports = async function(userID, charID, character) {
   const classArchetypeArray = CharGathering.getAllClassArchetypes(userID, character.enabledSources, character.enabledHomebrew);
 
 
-  let promise = await Promise.all([abilObject,skillObject,featObject,spellMap,choiceStruct,spellDataStruct,invStruct,itemMap,conditionsObject,allConditions,allLanguages,sourcesArray,resistAndVulnerStruct,specializeStruct,familiaritiesDataArray,notesDataArray,speedsDataArray,companionData,allClassFeatureOptions,sheetStatesArray,classArchetypeArray,unselectedDataArray]);
+  let promise = await Promise.all([abilObject,skillObject,featObject,spellMap,choiceStruct,spellDataStruct,invStruct,itemMap,conditionsObject,allConditions,allLanguages,sourcesArray,resistAndVulnerStruct,specializeStruct,familiaritiesDataArray,notesDataArray,speedsDataArray,companionData,allClassFeatureOptions,sheetStatesArray,classArchetypeArray,unselectedDataArray,campaignDetails]);
 
 
   //socket.emit('updateLoadProgess', { message: 'Finalizing', upVal: 10 }); // (110/100) //
@@ -135,6 +139,7 @@ module.exports = async function(userID, charID, character) {
     SheetStatesArray: promise[19],
     ClassArchetypeArray: promise[20],
     UnselectedDataArray: promise[21],
+    CampaignDetails: promise[22],
   };
 
   console.log('~ COMPLETE SHEET LOAD! ~');

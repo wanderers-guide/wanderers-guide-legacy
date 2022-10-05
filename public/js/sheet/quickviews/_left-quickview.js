@@ -245,9 +245,12 @@ function leftQuickview_OpenDiceRoller() {
     g_rollHistory = [];
     openLeftQuickView('Dice Roller');
 
+    let rollHistoryJSON = JSON.stringify(g_rollHistory);
+
     socket.emit("requestRollHistorySave",
         getCharIDFromURL(),
-        JSON.stringify(g_rollHistory));
+        rollHistoryJSON);
+    sendOutUpdateToGM('roll-history', rollHistoryJSON);
   });
 
 }

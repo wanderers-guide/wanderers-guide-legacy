@@ -46,12 +46,14 @@ function addStatAndSrc(statName, type, value, source){
 
   // Don't add to map, just increase
   if(statName == 'HEALTH') {
+    console.log(type);
     if(type.includes('_BONUS')) { g_character.currentHealth += value; }
     if(type.includes('_PENALTY')) { g_character.currentHealth -= value; }
     if(!type.includes('_BONUS') && !type.includes('_PENALTY')) { g_character.currentHealth = value; }
     socket.emit("requestCurrentHitPointsSave",
         getCharIDFromURL(),
         g_character.currentHealth);
+    sendOutUpdateToGM('hp', { value: g_character.currentHealth });
     initHealthPointsAndMore();
     return;
   } else if(statName == 'TEMP_HEALTH'){
@@ -61,6 +63,7 @@ function addStatAndSrc(statName, type, value, source){
     socket.emit("requestTempHitPointsSave",
         getCharIDFromURL(),
         g_character.tempHealth);
+    sendOutUpdateToGM('temp-hp', { value: g_character.tempHealth });
     initHealthPointsAndMore();
     return;
   }
