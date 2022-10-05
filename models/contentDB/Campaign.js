@@ -17,6 +17,9 @@ const Campaign = db.define('campaigns', {
   imageURL: {
     type: Sequelize.STRING
   },
+  optionDisplayPlayerHealth: {
+    type: Sequelize.INTEGER
+  },
 });
 
 module.exports = Campaign;

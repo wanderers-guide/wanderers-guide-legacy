@@ -3040,6 +3040,14 @@ module.exports = class SocketConnections {
 
             CampaignGathering.getCampaign(charID).then((campaign) => {
               if(campaign){
+
+                // As long as campaign shares player health, send character update
+                if(campaign.optionDisplayPlayerHealth != 0){
+                  CampaignGathering.getUsersInCampaign(campaign.id).then((userIDs) => {
+                    socket.to(userIDs).emit('sendCharacterUpdateToGM', charID, updates);
+                  });
+                }
+
                 socket.to(campaign.userID).emit('sendCharacterUpdateToGM', charID, updates);
               }
             });
@@ -3056,9 +3064,8 @@ module.exports = class SocketConnections {
               // Return nothing
             });
 
-            CampaignGathering.getUsersInCampaign(charID).then((userIDs) => {
-              console.log(userIDs);
-              socket.to(userIDs[0]).emit('sendCharacterUpdate-Health', charID, newHP);
+            CampaignGathering.getUsersInCampaignFromChar(charID).then((userIDs) => {
+              socket.to(userIDs).emit('sendCharacterUpdate-Health', charID, newHP);
             });
 
           }
@@ -3073,7 +3080,7 @@ module.exports = class SocketConnections {
               // Return nothing
             });
 
-            CampaignGathering.getUsersInCampaign(charID).then((userIDs) => {
+            CampaignGathering.getUsersInCampaignFromChar(charID).then((userIDs) => {
               socket.to(userIDs).emit('sendCharacterUpdate-TempHealth', charID, newTempHP);
             });
 
@@ -3089,7 +3096,7 @@ module.exports = class SocketConnections {
               // Return nothing
             });
 
-            CampaignGathering.getUsersInCampaign(charID).then((userIDs) => {
+            CampaignGathering.getUsersInCampaignFromChar(charID).then((userIDs) => {
               socket.to(userIDs).emit('sendCharacterUpdate-Exp', charID, newExp);
             });
 
@@ -3105,7 +3112,7 @@ module.exports = class SocketConnections {
               // Return nothing
             });
 
-            CampaignGathering.getUsersInCampaign(charID).then((userIDs) => {
+            CampaignGathering.getUsersInCampaignFromChar(charID).then((userIDs) => {
               socket.to(userIDs).emit('sendCharacterUpdate-Stamina', charID, newStamina);
             });
 
@@ -3121,7 +3128,7 @@ module.exports = class SocketConnections {
               // Return nothing
             });
 
-            CampaignGathering.getUsersInCampaign(charID).then((userIDs) => {
+            CampaignGathering.getUsersInCampaignFromChar(charID).then((userIDs) => {
               socket.to(userIDs).emit('sendCharacterUpdate-Resolve', charID, newResolve);
             });
 
@@ -3137,7 +3144,7 @@ module.exports = class SocketConnections {
               // Return nothing
             });
 
-            CampaignGathering.getUsersInCampaign(charID).then((userIDs) => {
+            CampaignGathering.getUsersInCampaignFromChar(charID).then((userIDs) => {
               socket.to(userIDs).emit('sendCharacterUpdate-HeroPoints', charID, heroPoints);
             });
 
@@ -3172,7 +3179,7 @@ module.exports = class SocketConnections {
               CharGathering.getAllCharConditions(null, charID)
               .then((conditionsObject) => {
 
-                CampaignGathering.getUsersInCampaign(charID).then((userIDs) => {
+                CampaignGathering.getUsersInCampaignFromChar(charID).then((userIDs) => {
                   socket.to(userIDs).emit('sendCharacterUpdate-Conditions', charID, conditionsObject, true);
                 });
 
@@ -3196,7 +3203,7 @@ module.exports = class SocketConnections {
               CharGathering.getAllCharConditions(null, charID)
               .then((conditionsObject) => {
 
-                CampaignGathering.getUsersInCampaign(charID).then((userIDs) => {
+                CampaignGathering.getUsersInCampaignFromChar(charID).then((userIDs) => {
                   socket.to(userIDs).emit('sendCharacterUpdate-Conditions', charID, conditionsObject, true);
                 });
 
@@ -3220,7 +3227,7 @@ module.exports = class SocketConnections {
               CharGathering.getAllCharConditions(null, charID)
               .then((conditionsObject) => {
 
-                CampaignGathering.getUsersInCampaign(charID).then((userIDs) => {
+                CampaignGathering.getUsersInCampaignFromChar(charID).then((userIDs) => {
                   socket.to(userIDs).emit('sendCharacterUpdate-Conditions', charID, conditionsObject, didRemove);
                 });
 

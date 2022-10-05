@@ -97,7 +97,7 @@ function openCharacterQuickview(data) {
       <div class="field-body">
         <div class="field is-narrow has-addons has-addons-centered" style="padding-left: 0.15rem; padding-right: 0.15rem; padding-top: 0.2rem; padding-bottom: 0.2rem;">
           <p class="control"><input id="charUpdateInput-HP" class="input text-center" type="text"
-                  min="0" max="${data.calculatedStat.maxHP}" autocomplete="off" value="${data.character.currentHealth}"></p>
+                  min="0" max="${data.calculatedStat.maxHP}" autocomplete="off" value="${ (data.character.currentHealth === null) ? data.calculatedStat.maxHP : data.character.currentHealth }"></p>
           <p class="control"><a class="button is-static border-darker">/</a></p>
           <p class="control"><a class="button is-static is-extra border-darker">${data.calculatedStat.maxHP}</a>
           </p>

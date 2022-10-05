@@ -1781,7 +1781,7 @@ function initHealthAndTemp() {
     let currentHealth = $('#char-current-health');
     let animationDelay = getAnimationDelayFromCurrentHP(g_character.currentHealth, maxHealthNum);
 
-    currentHealth.html('<p class="is-size-5 is-unselectable text-center" style="width: 70px; animation-delay: '+animationDelay+'!important;">'+g_character.currentHealth+'</p>');
+    currentHealth.html('<p class="is-size-5 health-variable-color is-unselectable text-center" style="width: 70px; animation-delay: '+animationDelay+'!important;">'+g_character.currentHealth+'</p>');
 
     $(currentHealth).off('click');
     $(currentHealth).click(function(){
@@ -1873,7 +1873,7 @@ function healthConfirm(maxHealthNum){
   g_character.currentHealth = newCurrentHealth;
   let animationDelay = getAnimationDelayFromCurrentHP(g_character.currentHealth, maxHealthNum);
 
-  $('#char-current-health').html('<p class="is-size-5 is-unselectable text-center" style="width: 70px; animation-delay: '+animationDelay+'!important;">'+g_character.currentHealth+'</p>');
+  $('#char-current-health').html('<p class="is-size-5 health-variable-color is-unselectable text-center" style="width: 70px; animation-delay: '+animationDelay+'!important;">'+g_character.currentHealth+'</p>');
   
   $('#char-current-health').removeClass('is-in-input-mode');
   socket.emit("requestCurrentHitPointsSave",

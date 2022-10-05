@@ -60,21 +60,6 @@ module.exports = class CampaignGathering {
 
   }
 
-  static getCampaignDetailsFromChar(charID){
-
-    return CampaignAccessToken.findOne({
-      where: { charID: charID },
-    }).then((token) => {
-      if (!token) { return null; }
-      return CampaignGathering.getCampaignDetails(token.campaignID)
-      .then((details) => {
-        return details;
-      });
-    });
-
-  }
-
-
   static getCampaignDetails(campaignID) {
 
     return Campaign.findOne({
@@ -101,27 +86,49 @@ module.exports = class CampaignGathering {
 
   }
 
-  static getUsersInCampaign(charID) {
+  static getCampaignDetailsFromChar(charID){
 
     return CampaignAccessToken.findOne({
       where: { charID: charID },
-    }).then((charToken) => {
-      if (!charToken) { return []; }
-
-      return CampaignAccessToken.findAll({
-        where: {
-          campaignID: charToken.campaignID,
-        },
-      }).then((tokens) => {
-
-        let userIDs = new Set();
-        for(let token of tokens){
-          userIDs.add(token.userID);
-        }
-        return Array.from(userIDs);
-
+    }).then((token) => {
+      if (!token) { return null; }
+      return CampaignGathering.getCampaignDetails(token.campaignID)
+      .then((details) => {
+        return details;
       });
+    });
 
+  }
+
+
+  static getUsersInCampaign(campaignID) {
+
+    return CampaignAccessToken.findAll({
+      where: {
+        campaignID: campaignID,
+      },
+    }).then((tokens) => {
+
+      let userIDs = new Set();
+      for(let token of tokens){
+        userIDs.add(token.userID);
+      }
+      return Array.from(userIDs);
+
+    });
+
+  }
+
+  static getUsersInCampaignFromChar(charID) {
+
+    return CampaignAccessToken.findOne({
+      where: { charID: charID },
+    }).then((token) => {
+      if (!token) { return null; }
+      return CampaignGathering.getUsersInCampaign(token.campaignID)
+      .then((userIDs) => {
+        return userIDs;
+      });
     });
 
   }

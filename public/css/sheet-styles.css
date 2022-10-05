@@ -111,7 +111,7 @@
 
 
 
-#char-current-health p {
+.health-variable-color {
   animation-name: health-color;
   animation-duration: 100s;
   animation-timing-function: linear;

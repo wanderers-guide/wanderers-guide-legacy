@@ -42,11 +42,12 @@ module.exports = class CampaignSaving {
       name: updates.name,
       description: updates.description,
       imageURL: updates.imageURL,
+      optionDisplayPlayerHealth: updates.optionDisplayPlayerHealth,
     };
     return Campaign.update(updateValues, { where: { id: campaignID } })
-      .then((result) => {
-        return;
-      });
+    .then((result) => {
+      return;
+    });
   }
 
   static refreshCampaignAccessID(campaignID) {
@@ -54,21 +55,9 @@ module.exports = class CampaignSaving {
       accessID: getAccessTokenShort(),
     };
     return Campaign.update(updateValues, { where: { id: campaignID } })
-      .then((result) => {
-        return;
-      });
-  }
-
-  static updateCampaign(campaignID, updates) {
-    let updateValues = {
-      name: updates.name,
-      description: updates.description,
-      imageURL: updates.imageURL,
-    };
-    return Campaign.update(updateValues, { where: { id: campaignID } })
-      .then((result) => {
-        return;
-      });
+    .then((result) => {
+      return;
+    });
   }
 
   static joinCampaign(userID, charID, accessID) {

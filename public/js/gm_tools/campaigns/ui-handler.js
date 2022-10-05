@@ -79,6 +79,8 @@ socket.on('returnEditCampaign', () => {
   $('#inputCampaignName').parent().removeClass("is-loading");
   $('#inputCampaignDescription').parent().removeClass("is-loading");
   $('#inputCampaignImageURL').parent().removeClass("is-loading");
+
+  $('#selectCampaignOption-DisplayPlayerHealth').parent().removeClass("is-loading");
 });
 
 
@@ -90,21 +92,30 @@ function openEditCampaign(campaign) {
 
   activeModalCampaign = campaign;
 
+  console.log(campaign);
+
   $("#inputCampaignName").val(activeModalCampaign.name);
   $("#inputCampaignDescription").val(activeModalCampaign.description);
   $("#inputCampaignImageURL").val(activeModalCampaign.imageURL);
 
+  $(`#selectCampaignOption-DisplayPlayerHealth option[value="${activeModalCampaign.optionDisplayPlayerHealth}"]`).attr('selected', 'selected');
+
   $('#editModalDefault').addClass('is-active');
   $('html').addClass('is-clipped');
 
-  $("#inputCampaignName, #inputCampaignDescription, #inputCampaignImageURL").off('blur');
-  $("#inputCampaignName, #inputCampaignDescription, #inputCampaignImageURL").blur(function(){
+  $("#inputCampaignName, #inputCampaignDescription, #inputCampaignImageURL, #selectCampaignOption-DisplayPlayerHealth").off('blur');
+  $("#inputCampaignName, #inputCampaignDescription, #inputCampaignImageURL, #selectCampaignOption-DisplayPlayerHealth").blur(function(){
 
     let name = $('#inputCampaignName').val();
     let description = $('#inputCampaignDescription').val();
     let imageURL = $('#inputCampaignImageURL').val();
 
-    if(activeModalCampaign.name != name || activeModalCampaign.description != description || activeModalCampaign.imageURL != imageURL){
+    let optionDisplayPlayerHealth = parseInt($('#selectCampaignOption-DisplayPlayerHealth').val());
+
+    if(activeModalCampaign.name != name
+        || activeModalCampaign.description != description
+        || activeModalCampaign.imageURL != imageURL
+        || activeModalCampaign.optionDisplayPlayerHealth != optionDisplayPlayerHealth){
 
       $(this).parent().addClass("is-loading");
 
@@ -117,11 +128,14 @@ function openEditCampaign(campaign) {
         name: name,
         description: description,
         imageURL: imageURL,
+        optionDisplayPlayerHealth: optionDisplayPlayerHealth,
       });
 
       activeModalCampaign.name = name;
       activeModalCampaign.description = description;
       activeModalCampaign.imageURL = imageURL;
+
+      activeModalCampaign.optionDisplayPlayerHealth = optionDisplayPlayerHealth;
 
       $(`#campaign-${activeModalCampaign.id}-name`).text(activeModalCampaign.name);
 

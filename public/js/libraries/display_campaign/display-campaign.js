@@ -69,6 +69,7 @@ class DisplayCampaign {
             // If has no calculatedStats, give temp details
             if (!accessToken.calculatedStat) {
               accessToken.calculatedStat = {
+                fakeStats: true,
                 maxHP: 9999,
                 maxStamina: 9999,
                 maxResolve: 99,
@@ -217,7 +218,7 @@ function generateCharacterEntry(accessToken) {
       <div class="column is-2 text-center is-paddingless">
           <div class="field has-addons has-addons-centered" style="padding-left: 0.15rem; padding-right: 0.15rem; padding-top: 0.2rem; padding-bottom: 0.2rem;">
               <p class="control"><input id="${input_characterCurrentHP}" class="input is-small text-center" type="text"
-                      min="0" max="${accessToken.calculatedStat.maxHP}" autocomplete="off" value="${accessToken.character.currentHealth}"></p>
+                      min="0" max="${accessToken.calculatedStat.maxHP}" autocomplete="off" value="${ (accessToken.character.currentHealth === null) ? accessToken.calculatedStat.maxHP : accessToken.character.currentHealth }"></p>
               <p class="control"><a class="button is-static is-small border-darker">/</a></p>
               <p class="control"><a class="button is-static is-extra is-small border-darker">${accessToken.calculatedStat.maxHP}</a>
               </p>

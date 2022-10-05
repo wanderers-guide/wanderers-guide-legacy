@@ -7,46 +7,62 @@ function openLeftQuickView(subtabName) {
   $('#quickViewLeftTitle').html('Sheet Tools');
 
   $('#quickViewLeftTitleClose').html('<a id="quickViewLeftClose" class="delete"></a>');
-  $('#quickViewLeftClose').click(function(){
+  $('#quickViewLeftClose').click(function () {
     $('#quickviewLeftDefault').removeClass('is-active');
   });
 
   $('#quickviewLeftDefault').addClass('is-active');
 
   // Listeners to open tabs
-  $('#quickViewLeftTab-DiceRoller').click(function(){
+  $('#quickViewLeftTab-DiceRoller').off('click');
+  $('#quickViewLeftTab-DiceRoller').click(function () {
     setLeftQuickViewTab('Dice Roller');
   });
 
-  $('#quickViewLeftTab-Toggleables').click(function(){
+  $('#quickViewLeftTab-Toggleables').off('click');
+  $('#quickViewLeftTab-Toggleables').click(function () {
     setLeftQuickViewTab('Toggleables');
   });
+
+  if (g_campaignDetails) {
+
+    $('#quickViewLeftTab-Campaign').removeClass('is-hidden');
+
+    $('#quickViewLeftTab-Campaign').off('click');
+    $('#quickViewLeftTab-Campaign').click(function () {
+      setLeftQuickViewTab('Campaign');
+    });
+
+  }
 
   // Open tab 
   setLeftQuickViewTab(subtabName);
 
 }
 
-function closeLeftQuickView(){
+function closeLeftQuickView() {
   $('#quickviewLeftDefault').removeClass('is-active');
 }
 
-function setLeftQuickViewTab(subtabName){
+function setLeftQuickViewTab(subtabName) {
 
-  $('#quickViewLeftTitle').html('Sheet Tools - '+subtabName);
+  $('#quickViewLeftTitle').html('Sheet Tools - ' + subtabName);
   $('#quickViewLeftContent').html('');
   $('#quickViewLeftContent').scrollTop(0);
 
   $('#quickViewLeftTab-DiceRoller').parent().removeClass("is-active");
   $('#quickViewLeftTab-Toggleables').parent().removeClass("is-active");
-  $('#quickViewLeftTab-'+(subtabName.replace(/ /g,''))).parent().addClass("is-active");
+  $('#quickViewLeftTab-Campaign').parent().removeClass("is-active");
+  $('#quickViewLeftTab-' + (subtabName.replace(/ /g, ''))).parent().addClass("is-active");
 
   $('#quickViewLeftOuterExtra').html('');
 
-  if(subtabName == 'Toggleables'){
+  if (subtabName == 'Toggleables') {
     leftQuickview_OpenToggleables();
   } else if (subtabName == 'Dice Roller') {
     leftQuickview_OpenDiceRoller();
+  } else if (subtabName == 'Campaign') {
+    leftQuickview_OpenCampaign();
   }
 
 }
@@ -56,7 +72,7 @@ function setLeftQuickViewTab(subtabName){
 
 
 
-function leftQuickview_OpenToggleables(){
+function leftQuickview_OpenToggleables() {
 
   let qContent = $('#quickViewLeftContent');
 
@@ -65,19 +81,19 @@ function leftQuickview_OpenToggleables(){
       <p>The following are toggleable buttons that apply certain effects to the sheet when enabled. They can be useful for some abilities that tend to be either active or inactive.</p>
     </div>
   `);
-  
-  for(const sheetState of getSheetStates()){
 
-    let stateBtnID = 'sheetStateBtnID'+sheetState.id;
+  for (const sheetState of getSheetStates()) {
+
+    let stateBtnID = 'sheetStateBtnID' + sheetState.id;
     qContent.append(`<button id="${stateBtnID}" class="button is-info is-fullwidth is-outlined has-tooltip-bottom" style="margin-bottom: 0.8rem;"
             data-tooltip="${processTextRemoveIndexing(sheetState.description)}"
         >${sheetState.name}</button>`);
 
-    if(sheetState.isActive){
-      $('#'+stateBtnID).addClass('is-focused');
+    if (sheetState.isActive) {
+      $('#' + stateBtnID).addClass('is-focused');
     }
 
-    $('#'+stateBtnID).click(function() {
+    $('#' + stateBtnID).click(function () {
       setSheetStateActive(sheetState.id, !sheetState.isActive);
       openLeftQuickView('Toggleables');
       reloadCharSheet();
@@ -87,7 +103,6 @@ function leftQuickview_OpenToggleables(){
   }
 
 }
-
 
 
 function leftQuickview_OpenDiceRoller() {
@@ -142,7 +157,7 @@ function leftQuickview_OpenDiceRoller() {
   `);
 
   // Enable Dice Integration Button //
-  if(gOption_hasDiceRoller){
+  if (gOption_hasDiceRoller) {
     $('#quickViewLeftOuterExtra').html(`
       <div class="pos-absolute pos-b-15 pos-r-15">
         <p class="is-size-7 has-txt-faded">Dice Integration Enabled</p>
@@ -157,12 +172,12 @@ function leftQuickview_OpenDiceRoller() {
         <button id="quickViewLeftEnableDiceIntegrationBtn" class="button is-info is-outlined is-rounded is-tiny">Enable Dice Integration?</button>
       </div>
     `);
-    $('#quickViewLeftEnableDiceIntegrationBtn').click(function() {
+    $('#quickViewLeftEnableDiceIntegrationBtn').click(function () {
 
-      socket.emit("requestCharacterOptionChange", 
-          getCharIDFromURL(), 
-          'optionDiceRoller',
-          1);
+      socket.emit("requestCharacterOptionChange",
+        getCharIDFromURL(),
+        'optionDiceRoller',
+        1);
 
       gOption_hasDiceRoller = true;
       reloadCharSheet();
@@ -171,41 +186,41 @@ function leftQuickview_OpenDiceRoller() {
   }
 
   // Display Roll History
-  if(g_rollHistory.length > 0){
+  if (g_rollHistory.length > 0) {
     for (let i = 0; i < g_rollHistory.length; i++) {
       let rollStruct = g_rollHistory[i];
 
-      if(i == g_rollHistory.length-1 && g_rollHistory.length > 1){
+      if (i == g_rollHistory.length - 1 && g_rollHistory.length > 1) {
         $('#dice-roller-output-container').append('<hr class="m-2">');
       }
 
       // Display Roll //
-      let resultLine = '<span class="has-txt-listing">'+rollStruct.RollData.DiceNum+'</span><span class="has-txt-noted is-thin">d</span><span class="has-txt-listing">'+rollStruct.RollData.DieType+'</span>';
-      if(rollStruct.RollData.Bonus != 0){
-        resultLine += '<span class="has-txt-noted">+</span><span class="has-txt-listing">'+rollStruct.RollData.Bonus+'</span>';
+      let resultLine = '<span class="has-txt-listing">' + rollStruct.RollData.DiceNum + '</span><span class="has-txt-noted is-thin">d</span><span class="has-txt-listing">' + rollStruct.RollData.DieType + '</span>';
+      if (rollStruct.RollData.Bonus != 0) {
+        resultLine += '<span class="has-txt-noted">+</span><span class="has-txt-listing">' + rollStruct.RollData.Bonus + '</span>';
       }
 
-      if(rollStruct.RollData.DiceNum != 1 || rollStruct.RollData.Bonus != 0) {
+      if (rollStruct.RollData.DiceNum != 1 || rollStruct.RollData.Bonus != 0) {
         resultLine += '<i class="fas fa-caret-right has-txt-noted mx-2"></i>';
         let resultSubParts = '';
         let firstResult = true;
-        for(let result of rollStruct.ResultData){
-          if(firstResult) { firstResult = false; } else { resultSubParts += '<span class="has-txt-noted">+</span>'; }
-  
+        for (let result of rollStruct.ResultData) {
+          if (firstResult) { firstResult = false; } else { resultSubParts += '<span class="has-txt-noted">+</span>'; }
+
           let bulmaColor = 'has-txt-listing';
-          if(result == rollStruct.RollData.DieType) { bulmaColor = 'has-text-success'; }
+          if (result == rollStruct.RollData.DieType) { bulmaColor = 'has-text-success'; }
           else if (result == 1) { bulmaColor = 'has-text-danger'; }
-  
-          resultSubParts += '<span class="has-txt-noted">(</span><span class="'+bulmaColor+'">'+result+'</span><span class="has-txt-noted">)</span>';
+
+          resultSubParts += '<span class="has-txt-noted">(</span><span class="' + bulmaColor + '">' + result + '</span><span class="has-txt-noted">)</span>';
         }
-        if(rollStruct.RollData.Bonus != 0){
-          resultSubParts += '<span class="has-txt-noted">+</span><span class="has-txt-listing">'+rollStruct.RollData.Bonus+'</span>';
+        if (rollStruct.RollData.Bonus != 0) {
+          resultSubParts += '<span class="has-txt-noted">+</span><span class="has-txt-listing">' + rollStruct.RollData.Bonus + '</span>';
         }
-        resultLine += '<span class="is-size-5 is-thin">'+resultSubParts+'</span>';
+        resultLine += '<span class="is-size-5 is-thin">' + resultSubParts + '</span>';
       }
 
-      if(rollStruct.DoubleResult){
-        resultLine += `<span class="is-size-5 is-thin"><i class="fas fa-caret-right has-txt-noted mx-2"></i><span class="has-text-primary">2</span><span class="has-txt-noted">×</span><span class="has-txt-listing">${rollStruct.Total}</span></span><i class="fas fa-caret-right has-txt-noted mx-2"></i><span class="has-text-info is-bold">${(rollStruct.Total*2)}<span class="has-txt-partial-noted is-size-6 is-thin is-italic"> ${rollStruct.ResultSuffix}</span></span>`;
+      if (rollStruct.DoubleResult) {
+        resultLine += `<span class="is-size-5 is-thin"><i class="fas fa-caret-right has-txt-noted mx-2"></i><span class="has-text-primary">2</span><span class="has-txt-noted">×</span><span class="has-txt-listing">${rollStruct.Total}</span></span><i class="fas fa-caret-right has-txt-noted mx-2"></i><span class="has-text-info is-bold">${(rollStruct.Total * 2)}<span class="has-txt-partial-noted is-size-6 is-thin is-italic"> ${rollStruct.ResultSuffix}</span></span>`;
       } else {
         resultLine += `<i class="fas fa-caret-right has-txt-noted mx-2"></i><span class="has-text-info is-bold">${rollStruct.Total}<span class="has-txt-partial-noted is-size-6 is-thin is-italic"> ${rollStruct.ResultSuffix}</span></span>`;
       }
@@ -228,11 +243,11 @@ function leftQuickview_OpenDiceRoller() {
   }, 1);
 
   // Roll Btn Listener //
-  $('#dice-roller-input-roll').click(function() {
+  $('#dice-roller-input-roll').click(function () {
     let diceAmtStr = $('#dice-roller-input-dice-amt').val();
     let dieSizeStr = $('#dice-roller-input-die-size').val();
     let bonusStr = $('#dice-roller-input-bonus').val();
-    if(diceAmtStr != ''){
+    if (diceAmtStr != '') {
       let diceAmt = parseInt(diceAmtStr);
       let dieSize = parseInt(dieSizeStr);
       let bonus = (bonusStr != '') ? parseInt(bonusStr) : 0;
@@ -241,20 +256,143 @@ function leftQuickview_OpenDiceRoller() {
   });
 
   // Clear History Listener //
-  $('#dice-roller-clear-btn').click(function() {
+  $('#dice-roller-clear-btn').click(function () {
     g_rollHistory = [];
     openLeftQuickView('Dice Roller');
 
     let rollHistoryJSON = JSON.stringify(g_rollHistory);
 
     socket.emit("requestRollHistorySave",
-        getCharIDFromURL(),
-        rollHistoryJSON);
+      getCharIDFromURL(),
+      rollHistoryJSON);
     sendOutUpdateToGM('roll-history', rollHistoryJSON);
   });
 
 }
 
 
+function leftQuickview_OpenCampaign() {
 
+  let qContent = $('#quickViewLeftContent');
 
+  qContent.append(`
+    <p class="title is-size-5 has-txt-value-number text-center">${g_campaignDetails.campaign.name}</p>
+    <div class="">
+      <p>${g_campaignDetails.campaign.description}</p>
+    </div>
+    <hr class="m-2">
+  `);
+
+  for (const accessToken of g_campaignDetails.accessTokens) {
+
+    let charTitle = '';
+    if (accessToken?.calculatedStat?.generalInfo && !accessToken.calculatedStat.fakeStats) {
+      let generalInfo = accessToken.calculatedStat.generalInfo;
+      if (typeof generalInfo === 'string' || generalInfo instanceof String){
+        generalInfo = JSON.parse(generalInfo);
+      }
+      charTitle = ', ' + generalInfo.heritageAncestryName + ' ' + generalInfo.className;
+    } else {
+      charTitle = ', Unknown Traveler';
+    }
+
+    qContent.append(`
+
+      <p>
+        <span class="is-size-6 has-txt-value-string">${accessToken.character.name}</span><span class="is-size-6-5 is-italic">${charTitle}</span>
+      </p>
+      <div class="columns is-mobile is-marginless pl-2">
+        <div class="column is-4 is-paddingless">
+          <p id="campaign-character-health-${accessToken.charID}">
+          </p>
+        </div>
+        <div class="column is-8 is-paddingless">
+          <div id="campaign-character-conditions-${accessToken.charID}" class="is-flex" style="flex-wrap: wrap; padding-top: 0.3rem;">
+          </div>
+        </div>
+      </div>
+
+    `);
+
+    leftQuickview_setCharacterHealth(accessToken);
+    leftQuickview_setCharacterConditions(accessToken);
+
+  }
+
+}
+
+function leftQuickview_setCharacterHealth(accessToken) {
+  if(!$('#quickviewLeftDefault').hasClass('is-active')) { return; }
+
+  $(`#campaign-character-health-${accessToken.charID}`).html('');
+  if (g_campaignDetails.campaign.optionDisplayPlayerHealth == 0 || !accessToken.calculatedStat || accessToken.calculatedStat.fakeStats) { return; }
+
+  if(accessToken.character.currentHealth === null) {
+    accessToken.character.currentHealth = accessToken.calculatedStat.maxHP;
+  }
+
+  let animationDelay = getAnimationDelayFromCurrentHP(accessToken.character.currentHealth, accessToken.calculatedStat.maxHP);
+
+  if (g_campaignDetails.campaign.optionDisplayPlayerHealth == 1) {
+
+    // Determine Status
+    let statusMessage = '';
+    let percentage = accessToken.character.currentHealth / accessToken.calculatedStat.maxHP;
+    if(percentage >= 0.9){
+      statusMessage = 'Good';
+    } else if(percentage >= 0.7){
+      statusMessage = 'Fine';
+    } else if(percentage >= 0.4){
+      statusMessage = 'Adequate';
+    } else if(percentage >= 0.1){
+      statusMessage = 'Serious';
+    } else {
+      statusMessage = 'Critical';
+    }
+
+    $(`#campaign-character-health-${accessToken.charID}`).html(`
+      <p class="is-size-7-5 pt-1 pb-2">
+        Status: <span class="health-variable-color" style="animation-delay: ${animationDelay}!important;">${statusMessage}</span>
+      </p>`
+    );
+
+  } else if (g_campaignDetails.campaign.optionDisplayPlayerHealth == 2) {
+
+    $(`#campaign-character-health-${accessToken.charID}`).html(`
+      <p class="is-size-7-5 pt-1 pb-2">
+        Health: <span class="health-variable-color" style="animation-delay: ${animationDelay}!important;">${accessToken.character.currentHealth}</span> / ${accessToken.calculatedStat.maxHP}
+      </p>`
+    );
+
+  }
+
+}
+
+function leftQuickview_setCharacterConditions(accessToken) {
+  if(!$('#quickviewLeftDefault').hasClass('is-active')) { return; }
+
+  $(`#campaign-character-conditions-${accessToken.charID}`).html('');
+  if (g_campaignDetails.campaign.optionDisplayPlayerHealth == 0 || !accessToken.calculatedStat || accessToken.calculatedStat.fakeStats) { return; }
+  
+  let conditions = accessToken.calculatedStat.conditions;
+  if (typeof conditions === 'string' || conditions instanceof String){
+    conditions = JSON.parse(conditions);
+  }
+  for (let condition of conditions) {
+
+    let conditionDisplayName = capitalizeWords(condition.name);
+    if (condition.value != null) { conditionDisplayName += ` ${condition.value}`; }
+
+    $(`#campaign-character-conditions-${accessToken.charID}`).append(`
+      <div class="field has-addons is-marginless" style="padding-right: 0.25rem;">
+        <div class="control">
+          <button class="button is-tiny is-danger is-outlined">
+            <span>${conditionDisplayName}</span>
+          </button>
+        </div>
+      </div>
+    `);
+
+  }
+
+}

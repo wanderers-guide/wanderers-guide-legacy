@@ -18,6 +18,8 @@ var notyf = new Notyf({
 /*~ Updates to this character ~*/
 
 socket.on('sendCharacterUpdate-Health', function(charID, newHP){
+  updateCampaignCharacter(charID, null, 'hp', { value: newHP });
+
   if(getCharIDFromURL()+'' !== charID+'') { return; }
   
   $('#char-current-health').click();
@@ -82,6 +84,8 @@ socket.on('sendCharacterUpdate-HeroPoints', function(charID, heroPoints){
 });
 
 socket.on('sendCharacterUpdate-Conditions', function(charID, conditionsObject, reloadSheet){
+  updateCampaignCharacter(charID, null, 'conditions', conditionsObject);
+
   if(getCharIDFromURL()+'' !== charID+'') { return; }
 
   g_conditionsMap = objToMap(conditionsObject);
@@ -93,6 +97,61 @@ socket.on('sendCharacterUpdate-Conditions', function(charID, conditionsObject, r
   notyf.success('The GM updated your Conditions.');
 
 });
+
+/*~ Recieve updates from other character ~*/
+
+socket.on('sendCharacterUpdateToGM', function(charID, updates){
+  if(!g_campaignDetails) { return; }
+
+  let accessToken = g_campaignDetails.accessTokens.find(accessToken => {
+    return accessToken.charID == charID;
+  });
+
+  for(let update of updates){
+    updateCampaignCharacter(charID, accessToken, update.type, update.data);
+  }
+
+});
+
+function updateCampaignCharacter(charID, accessToken, type, data){
+
+  if(accessToken == null){
+    accessToken = g_campaignDetails.accessTokens.find(accessToken => {
+      return accessToken.charID == charID;
+    });
+  }
+
+  if (type == 'hp') {
+    accessToken.character.currentHealth = data.value;
+    leftQuickview_setCharacterHealth(accessToken);
+  } else if (type == 'calculated-stats') {
+    accessToken.calculatedStat = data;
+    leftQuickview_setCharacterConditions(accessToken);
+  } else if (type == 'char-info') {
+    accessToken.character.infoJSON = data;
+  } else if (type == 'conditions') {
+
+    if(!accessToken.calculatedStat){
+      accessToken.calculatedStat = {};
+    }
+    accessToken.calculatedStat.conditions = [];
+
+    for(const [conditionID, conditionData] of objToMap(data).entries()){
+      accessToken.calculatedStat.conditions.push({
+        conditionID: conditionData.Condition.id,
+        name: conditionData.Condition.name,
+        entryID: conditionData.EntryID,
+        parentEntryID: conditionData.ParentID,
+        sourceText: conditionData.SourceText,
+        value: conditionData.Value,
+      });
+    }
+
+    leftQuickview_setCharacterConditions(accessToken);
+
+  }
+
+}
 
 /*~ Send out character updates to GM ~*/
 
@@ -113,6 +172,9 @@ let g_updatesToGM = [];
 
 function sendOutUpdateToGM(field, updateStruct){
   if(!g_campaignDetails) { return; }
+
+  // Update your own campaign character
+  updateCampaignCharacter(getCharIDFromURL(), null, field, updateStruct);
 
   g_updatesToGM.push({ type: field, data: updateStruct });
   if(!g_sendingUpdateToGM) {
