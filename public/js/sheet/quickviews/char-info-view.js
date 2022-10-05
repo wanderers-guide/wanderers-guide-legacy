@@ -56,6 +56,8 @@ function openCharInfoQuickview(data) {
 
   qContent.append('<div class="field is-horizontal"><div class="field-label is-normal is-long"><label class="label">Pronouns</label></div><div class="field-body"><div class="field is-narrow"><div class="control"><input id="charInfoInput-Pronouns" class="input" type="text" maxlength="40" spellcheck="false" autocomplete="off" placeholder="Pronouns"></div></div></div></div>');
 
+  qContent.append('<div class="field is-horizontal"><div class="field-label is-normal is-long"><label class="label">Title</label></div><div class="field-body"><div class="field is-narrow"><div class="control"><input id="charInfoInput-Title" class="input" type="text" maxlength="40" spellcheck="false" autocomplete="off" placeholder="Title"></div></div></div></div>');
+
   qContent.append('<hr class="m-2">');
 
   qContent.append('<div class="field is-horizontal"><div class="field-label is-normal is-long"><label class="label">Faction</label></div><div class="field-body"><div class="field is-narrow"><div class="control"><input id="charInfoInput-Faction" class="input" type="text" maxlength="40" spellcheck="false" autocomplete="off" placeholder="Faction"></div></div></div></div>');
@@ -64,7 +66,7 @@ function openCharInfoQuickview(data) {
 
   qContent.append('<div class="field is-horizontal"><div class="field-label is-normal is-long"><label class="label">Nationality</label></div><div class="field-body"><div class="field is-narrow"><div class="control"><input id="charInfoInput-Nationality" class="input" type="text" maxlength="40" spellcheck="false" autocomplete="off" placeholder="Nationality"></div></div></div></div>');
 
-  qContent.append('<hr class="m-3">');
+  qContent.append('<hr class="m-2">');
 
   qContent.append('<div class="control"><input id="charInfoInput-ImageURL" class="input isURL" type="text" spellcheck="false" autocomplete="off" placeholder="Image URL"></div>');
 
@@ -80,6 +82,7 @@ function openCharInfoQuickview(data) {
     age:
     gender:
     pronouns:
+    title:
     faction:
     ethnicity:
     nationality:
@@ -101,6 +104,7 @@ function openCharInfoQuickview(data) {
   $('#charInfoInput-Age').val(g_charInfoData.age);
   $('#charInfoInput-Gender').val(g_charInfoData.gender);
   $('#charInfoInput-Pronouns').val(g_charInfoData.pronouns);
+  $('#charInfoInput-Title').val(g_charInfoData.title);
   $('#charInfoInput-Faction').val(g_charInfoData.faction);
   $('#charInfoInput-Ethnicity').val(g_charInfoData.ethnicity);
   $('#charInfoInput-Nationality').val(g_charInfoData.nationality);
@@ -155,6 +159,13 @@ function openCharInfoQuickview(data) {
   $('#charInfoInput-Pronouns').blur(function(){
     if($(this).val() != g_charInfoData.pronouns){
       g_charInfoData.pronouns = $(this).val();
+      saveCharInfo();
+    }
+  });
+
+  $('#charInfoInput-Title').blur(function(){
+    if($(this).val() != g_charInfoData.title){
+      g_charInfoData.title = $(this).val();
       saveCharInfo();
     }
   });

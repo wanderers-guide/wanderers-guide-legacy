@@ -291,15 +291,26 @@ function leftQuickview_OpenCampaign() {
       if (typeof generalInfo === 'string' || generalInfo instanceof String){
         generalInfo = JSON.parse(generalInfo);
       }
-      charTitle = ', ' + generalInfo.heritageAncestryName + ' ' + generalInfo.className;
+      charTitle = generalInfo.heritageAncestryName + ' ' + generalInfo.className;
     } else {
-      charTitle = ', Unknown Traveler';
+      charTitle = 'Unknown Traveler';
+    }
+
+    // Override with custom set title in char info
+    if(accessToken.character.infoJSON){
+      let charInfo = accessToken.character.infoJSON;
+      if (typeof charInfo === 'string' || charInfo instanceof String){
+        charInfo = JSON.parse(charInfo);
+      }
+      if(charInfo?.title && charInfo.title.trim() != ''){
+        charTitle = charInfo.title.trim();
+      }
     }
 
     qContent.append(`
 
       <p>
-        <span class="is-size-6 has-txt-value-string">${accessToken.character.name}</span><span class="is-size-6-5 is-italic">${charTitle}</span>
+        <span class="is-size-6 has-txt-value-string">${accessToken.character.name}</span><span class="is-size-6-5 is-italic">, ${charTitle}</span>
       </p>
       <div class="columns is-mobile is-marginless pl-2">
         <div class="column is-4 is-paddingless">

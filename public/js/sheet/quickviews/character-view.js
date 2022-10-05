@@ -420,13 +420,15 @@ function openCharacterQuickview(data) {
 
   $('#charInfoSection').append('<div id="charInfoContainer-Beliefs" class="field is-horizontal"><div class="field-label is-normal is-long"><label class="label">Beliefs</label></div><div class="field-body"><div class="field is-narrow"><div class="control"><input id="charInfoInput-Beliefs" class="input" type="text" maxlength="40" spellcheck="false" autocomplete="off" placeholder="Beliefs" readonly></div></div></div></div>');
 
-  $('#charInfoSection').append('<hr id="charInfoBar-AGP" class="m-2">');
+  $('#charInfoSection').append('<hr id="charInfoBar-AGPT" class="m-2">');
 
   $('#charInfoSection').append('<div id="charInfoContainer-Age" class="field is-horizontal"><div class="field-label is-normal is-long"><label class="label">Age</label></div><div class="field-body"><div class="field is-narrow"><div class="control"><input id="charInfoInput-Age" class="input" type="text" maxlength="40" spellcheck="false" autocomplete="off" placeholder="Age" readonly></div></div></div></div>');
 
   $('#charInfoSection').append('<div id="charInfoContainer-Gender" class="field is-horizontal"><div class="field-label is-normal is-long"><label class="label">Gender</label></div><div class="field-body"><div class="field is-narrow"><div class="control"><input id="charInfoInput-Gender" class="input" type="text" maxlength="40" spellcheck="false" autocomplete="off" placeholder="Gender" readonly></div></div></div></div>');
 
   $('#charInfoSection').append('<div id="charInfoContainer-Pronouns" class="field is-horizontal"><div class="field-label is-normal is-long"><label class="label">Pronouns</label></div><div class="field-body"><div class="field is-narrow"><div class="control"><input id="charInfoInput-Pronouns" class="input" type="text" maxlength="40" spellcheck="false" autocomplete="off" placeholder="Pronouns" readonly></div></div></div></div>');
+
+  $('#charInfoSection').append('<div id="charInfoContainer-Title" class="field is-horizontal"><div class="field-label is-normal is-long"><label class="label">Title</label></div><div class="field-body"><div class="field is-narrow"><div class="control"><input id="charInfoInput-Title" class="input" type="text" maxlength="40" spellcheck="false" autocomplete="off" placeholder="Title" readonly></div></div></div></div>');
 
   $('#charInfoSection').append('<hr id="charInfoBar-FEN" class="m-2">');
 
@@ -463,9 +465,9 @@ function openCharacterQuickview(data) {
     $('#charInfoContainer-Beliefs').addClass('is-hidden');
   }
 
-  if (info?.age || info?.gender || info?.pronouns) {
+  if (info?.age || info?.gender || info?.pronouns || info?.title) {
   } else {
-    $('#charInfoBar-AGP').addClass('is-hidden');
+    $('#charInfoBar-AGPT').addClass('is-hidden');
   }
 
   if (info?.age) {
@@ -484,6 +486,12 @@ function openCharacterQuickview(data) {
     $('#charInfoInput-Pronouns').val(info.pronouns);
   } else {
     $('#charInfoContainer-Pronouns').addClass('is-hidden');
+  }
+
+  if (info?.title) {
+    $('#charInfoInput-Title').val(info.title);
+  } else {
+    $('#charInfoContainer-Title').addClass('is-hidden');
   }
 
   if (info?.faction || info?.ethnicity || info?.nationality) {
@@ -509,7 +517,7 @@ function openCharacterQuickview(data) {
     $('#charInfoContainer-Nationality').addClass('is-hidden');
   }
 
-  if (info?.appearance || info?.personality || info?.alignment || info?.beliefs || info?.age || info?.gender || info?.pronouns || info?.faction || info?.ethnicity || info?.nationality) {
+  if (info?.appearance || info?.personality || info?.alignment || info?.beliefs || info?.age || info?.gender || info?.pronouns || info?.title || info?.faction || info?.ethnicity || info?.nationality) {
     $('#charInfoName').click(function () {
       if ($("#charInfoSection").hasClass("is-hidden")) {
         $("#charInfoSection").removeClass('is-hidden');

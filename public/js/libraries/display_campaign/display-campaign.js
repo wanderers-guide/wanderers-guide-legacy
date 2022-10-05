@@ -166,7 +166,10 @@ class DisplayCampaign {
 
             generateCharacterEntry(accessToken);
 
-            refreshQuickView(accessToken);
+            /* Note: Don't insert accessToken as a parameter because doing so causes a bug
+                with jumping to a new character every update.
+            */
+            refreshQuickView();
 
           });
 
