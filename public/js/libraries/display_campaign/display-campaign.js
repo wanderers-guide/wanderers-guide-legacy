@@ -1,7 +1,6 @@
-/* Copyright (C) 2021, Wanderer's Guide, all rights reserved.
+/* Copyright (C) 2022, Wanderer's Guide, all rights reserved.
     By Aaron Cassar.
 */
-
 class DisplayCampaign {
   constructor(containerID, campaignID, backButton = true, addToEncounterBtn = false) {
     startSpinnerSubLoader();
@@ -12,13 +11,19 @@ class DisplayCampaign {
 
     socket.emit('requestCampaignDetails', campaignID);
     socket.off('returnCampaignDetails');
-    socket.on("returnCampaignDetails", function (campaignStruct) {
+    socket.on("returnCampaignDetails", function (campaignStruct, allConditions) {
       $('#' + campaignDisplayContainerID).load("/templates/display-campaign.html");
       $.ajax({
         type: "GET",
         url: "/templates/display-campaign.html",
         success: function (text) {
           stopSpinnerSubLoader();
+
+          g_allConditions = allConditions.sort(
+            function (a, b) {
+              return a.name > b.name ? 1 : -1;
+            }
+          );
 
           if (backButton) {
             $('#campaign-back-btn').removeClass('is-hidden');
@@ -58,14 +63,14 @@ class DisplayCampaign {
           for (const accessToken of campaignStruct.accessTokens) {
 
             // If has no calculatedStats, give temp details
-            if(!accessToken.calculatedStat){
+            if (!accessToken.calculatedStat) {
               accessToken.calculatedStat = {
                 maxHP: 9999,
                 maxStamina: 9999,
                 maxResolve: 99,
               };
             }
-            if(!accessToken.calculatedStat.generalInfo){
+            if (!accessToken.calculatedStat.generalInfo) {
               accessToken.calculatedStat.generalInfo = {
                 className: 'Unknown',
                 heritageAncestryName: 'Unknown',
@@ -76,10 +81,30 @@ class DisplayCampaign {
             } else {
               accessToken.calculatedStat.generalInfo = JSON.parse(accessToken.calculatedStat.generalInfo);
             }
-            if(!accessToken.calculatedStat.conditions){
+            if (!accessToken.calculatedStat.conditions) {
               accessToken.calculatedStat.conditions = [];
             } else {
               accessToken.calculatedStat.conditions = JSON.parse(accessToken.calculatedStat.conditions);
+            }
+            if (!accessToken.calculatedStat.totalSkills) {
+              accessToken.calculatedStat.totalSkills = [];
+            } else {
+              accessToken.calculatedStat.totalSkills = JSON.parse(accessToken.calculatedStat.totalSkills);
+            }
+            if (!accessToken.calculatedStat.totalSaves) {
+              accessToken.calculatedStat.totalSaves = [];
+            } else {
+              accessToken.calculatedStat.totalSaves = JSON.parse(accessToken.calculatedStat.totalSaves);
+            }
+            if (!accessToken.calculatedStat.totalAbilityScores) {
+              accessToken.calculatedStat.totalAbilityScores = [];
+            } else {
+              accessToken.calculatedStat.totalAbilityScores = JSON.parse(accessToken.calculatedStat.totalAbilityScores);
+            }
+            if (!accessToken.calculatedStat.weapons) {
+              accessToken.calculatedStat.weapons = [];
+            } else {
+              accessToken.calculatedStat.weapons = JSON.parse(accessToken.calculatedStat.weapons);
             }
 
             let input_characterCurrentHP = `character-input-hp-${accessToken.charID}`;
@@ -161,7 +186,7 @@ class DisplayCampaign {
               }
             });
             $(`#${input_characterCurrentHP}`).blur(function () {
-              let newHP = 0;
+              let newHP;
               try {
                 newHP = parseInt(math.evaluate($(this).val()));
                 if (newHP > accessToken.calculatedStat.maxHP) { newHP = accessToken.calculatedStat.maxHP; }
@@ -180,50 +205,17 @@ class DisplayCampaign {
             // Delete //
             $(`#${btn_characterDelete}`).click(function () {
               new ConfirmMessage('Remove Character', `Are you sure you want to remove "${accessToken.character.name}" from the campaign?`, 'Remove', 'modal-char-leave-campaign', 'modal-char-leave-campaign-btn');
-              $('#modal-char-leave-campaign-btn').click(function() {
+              $('#modal-char-leave-campaign-btn').click(function () {
                 socket.emit("requestLeaveCampaign", accessToken.charID);
               });
             });
-            
+
             // Conditions //
-            for (let condition of member.conditions) {
-              let conditionDisplayName = condition.name;
-              if (condition.value != null) { conditionDisplayName += ` ${condition.value}`; }
+            populateConditions(accessToken);
 
-              let btn_memberConditionView = `member-btn-condition-view-${i}-${condition.name.replace(/\W/g, '_')}`;
-              let btn_memberConditionDelete = `member-btn-condition-delete-${i}-${condition.name.replace(/\W/g, '_')}`;
-
-              $(`#${container_memberConditions}`).append(`
-                <div class="field has-addons is-marginless" style="padding-right: 0.25rem;">
-                  <p class="control">
-                      <button id="${btn_memberConditionView}" class="button is-very-small is-danger is-outlined">
-                          <span>${conditionDisplayName}</span>
-                      </button>
-                  </p>
-                  <p class="control">
-                      <button id="${btn_memberConditionDelete}" class="button is-very-small is-danger is-outlined">
-                          <span class="icon is-small">
-                              <i class="fas fa-minus-circle"></i>
-                          </span>
-                      </button>
-                  </p>
-                </div>
-              `);
-
-              $(`#${btn_memberConditionView}`).click(function () {
-                openConditionsModal(member, condition);
-              });
-
-              $(`#${btn_memberConditionDelete}`).click(function () {
-                removeCondition(member, condition.name);
-              });
-
-            }
-
-            $(`#${btn_memberAddCondition}`).click(function () {
-              openSelectConditionsModal(member);
+            $(`#${btn_characterAddCondition}`).click(function () {
+              openSelectConditionsModal(accessToken);
             });
-
 
           }
 
@@ -232,4 +224,68 @@ class DisplayCampaign {
       });
     });
   }
+}
+
+function populateConditions(accessToken) {
+
+  let container_characterConditions = `character-container-conditions-${accessToken.charID}`;
+
+  $(`#${container_characterConditions}`).html('');
+
+  // Convert character conditions data to encounter conditions data format
+  let convertedConditions = [];
+  for (let condition of accessToken.calculatedStat.conditions) {
+    convertedConditions.push({
+      name: condition.name,
+      value: condition.value,
+      parentSource: condition.sourceText,
+    });
+  }
+
+  for (let condition of getAppliedConditions(convertedConditions)) {
+    let conditionDisplayName = capitalizeWords(condition.name);
+    if (condition.value != null) { conditionDisplayName += ` ${condition.value}`; }
+
+    let btn_characterConditionView = `character-btn-condition-view-${accessToken.charID}-${condition.name.replace(/\W/g, '_')}`;
+    let btn_characterConditionDelete = `character-btn-condition-delete-${accessToken.charID}-${condition.name.replace(/\W/g, '_')}`;
+
+    if (condition.parentSource) {
+      $(`#${container_characterConditions}`).append(`
+        <div class="field has-addons is-marginless" style="padding-right: 0.25rem;">
+          <p class="control">
+            <button id="${btn_characterConditionView}" class="button is-very-small is-danger is-outlined">
+              <span>${conditionDisplayName}</span>
+            </button>
+          </p>
+        </div>
+      `);
+    } else {
+      $(`#${container_characterConditions}`).append(`
+        <div class="field has-addons is-marginless" style="padding-right: 0.25rem;">
+          <p class="control">
+            <button id="${btn_characterConditionView}" class="button is-very-small is-danger is-outlined">
+              <span>${conditionDisplayName}</span>
+            </button>
+          </p>
+          <p class="control">
+            <button id="${btn_characterConditionDelete}" class="button is-very-small is-danger is-outlined">
+              <span class="icon is-small">
+                <i class="fas fa-minus-circle"></i>
+              </span>
+            </button>
+          </p>
+        </div>
+      `);
+    }
+
+    $(`#${btn_characterConditionView}`).click(function () {
+      openConditionsModal(accessToken, condition);
+    });
+
+    $(`#${btn_characterConditionDelete}`).click(function () {
+      removeCondition(accessToken, condition.name);
+    });
+
+  }
+
 }

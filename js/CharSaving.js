@@ -270,13 +270,29 @@ module.exports = class CharSaving {
         });
     }
 
-    static replaceCondition(charID, conditionID, value, sourceText, parentID) {
-        return CharCondition.upsert({
+    static addCondition(charID, conditionID, value, sourceText, parentID) {
+        return CharCondition.create({
             charID: charID,
             conditionID: conditionID,
             value: value,
-            sourceText : sourceText,
-            parentID : parentID,
+            sourceText: sourceText,
+            parentID: parentID,
+        }).then((condition) => {
+            return condition;
+        });
+    }
+
+    static updateCondition(charID, conditionID, value, sourceText, parentID) {
+        let updateValues = {
+          value: value,
+          sourceText: sourceText,
+          parentID: parentID,
+        };
+        return CharCondition.update(updateValues, {
+          where: {
+              charID: charID,
+              conditionID: conditionID
+          }
         }).then((result) => {
             return;
         });

@@ -8,10 +8,12 @@
 <script>
   let rawCampaigns = {{{ json campaigns }}};
 </script>
-<script type="text/javascript" src="/js/gm_tools/campaigns/ui-handler.js"></script>
+<script src="/js/gm_tools/campaigns/ui-handler.js"></script>
 
-<script src="/js/wsc/text-processing.js"></script>
+<script src="/js/gm_tools/campaigns/conditions-handler.js"></script>
 <script src="/js/libraries/display_campaign/display-campaign.js"></script>
+<script src="/js/wsc/text-processing.js"></script>
+<script src="/js/gm_tools/encounter_builder/conditions-ui.js"></script>
 <script src="/js/libraries/confirm_message/confirm-message.js"></script>
 
 <!-- Quickview -->
@@ -170,6 +172,56 @@
         </div>
       </div>
 
+    </section>
+    <div class="modal-card-foot">
+    </div>
+  </div>
+</div>
+
+<!-- Conditions Modal -->
+<div id="conditionsModalDefault" name="" class="modal" style="z-index:30;">
+  <div id="conditionsModalBackground" class="modal-background"></div>
+  <div class="modal-card">
+    <div class="modal-card-head">
+      <p id="conditionsModalTitle" class="modal-card-title has-text-centered is-size-4 has-txt-value-number"></p>
+      <a id="conditionsModalRemoveButton" class="is-pulled-right is-size-6"><span
+          class="icon is-medium has-text-danger"><i class="fal fa-minus-circle"></i></span></a>
+    </div>
+    <section class="modal-card-body py-2">
+      <p id="conditionsModalSourceSection" class="has-text-centered"><strong class="has-txt-listing">From: </strong><em
+          id="conditionsModalSourceContent"></em></p>
+      <p id="conditionsModalContent"></p>
+    </section>
+    <div id="conditionsModalFooter" class="modal-card-foot buttons is-centered">
+      <button id="conditionsModalSubtractButton" class="button is-very-small is-info is-rounded">
+        <span class="icon">
+          <i class="fas fa-heading fa-minus"></i>
+        </span>
+      </button>
+      <button id="conditionsModalValueButton" class="button is-static has-bg-selectable-hover border-dark">
+        <p id="conditionsModalValue" class="has-txt-value-number"></p>
+      </button>
+      <button id="conditionsModalAddButton" class="button is-very-small is-info is-rounded">
+        <span class="icon">
+          <i class="fas fa-heading fa-plus"></i>
+        </span>
+      </button>
+    </div>
+  </div>
+  <button id="conditionsModalCloseButton" class="modal-close is-large is-hidden-mobile" aria-label="close"></button>
+</div>
+
+<!-- Conditions Select Modal -->
+<div id="conditionsSelectModalDefault" name="" class="modal" style="z-index:30;">
+  <div id="conditionsSelectModalBackground" class="modal-background"></div>
+  <div class="modal-card">
+    <div class="modal-card-head">
+      <p id="conditionsSelectModalTitle" class="modal-card-title has-text-centered is-size-4 has-txt-value-number">
+        Choose a Condition</p>
+      <button id="conditionsSelectModalCloseButton" class="delete modal-card-close" aria-label="close"></button>
+    </div>
+    <section class="modal-card-body is-paddingless use-invisible-scrollbar p-2">
+      <div id="conditionsSelectModalContent" class="tile is-ancestor is-vertical"></div>
     </section>
     <div class="modal-card-foot">
     </div>

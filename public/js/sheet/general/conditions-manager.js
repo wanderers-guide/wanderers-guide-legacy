@@ -61,7 +61,7 @@ function addCondition(conditionID, value, sourceText, parentID = null) {
   if (existingCondition != null) {
     if ((existingCondition.SourceText == null && sourceText != null) || (existingCondition.Value != value)) {
       // Replace unsourced with sourced condition OR update condition value
-      socket.emit("requestConditionChange",
+      socket.emit("requestConditionUpdate",
         getCharIDFromURL(),
         conditionID,
         value,
@@ -71,7 +71,7 @@ function addCondition(conditionID, value, sourceText, parentID = null) {
       return;
     }
   } else {
-    socket.emit("requestConditionChange",
+    socket.emit("requestConditionAdd",
       getCharIDFromURL(),
       conditionID,
       value,
@@ -213,6 +213,7 @@ function openConditionsModal(conditionID) {
     $('#conditionsModalSubtractButton').addClass('is-hidden');
     $('#conditionsModalValueButton').addClass('is-hidden');
     $('#conditionsModalAddButton').addClass('is-hidden');
+    $('#conditionsModalValue').html('');
   }
 
   if (conditionData.SourceText != null) {
@@ -255,7 +256,7 @@ function closeConditionsModal() {
   if (conditionData != null && conditionData.Value != null) {
     let value = parseInt($('#conditionsModalValue').html());
     if (conditionData.Value != value) {
-      socket.emit("requestConditionChange",
+      socket.emit("requestConditionUpdate",
         getCharIDFromURL(),
         conditionID,
         value,

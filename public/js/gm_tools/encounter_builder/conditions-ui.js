@@ -63,6 +63,7 @@ function openConditionsModal(member, conditionData){
         $('#conditionsModalSubtractButton').addClass('is-hidden');
         $('#conditionsModalValueButton').addClass('is-hidden');
         $('#conditionsModalAddButton').addClass('is-hidden');
+        $('#conditionsModalValue').text('');
     }
 
 
@@ -156,46 +157,71 @@ function closeSelectConditionsModal() {
 
 function getAppliedConditions(conditions){
 
-  let appliedConditions = cloneObj(conditions);
+  let conditionsMap = new Map();
+  let addToMap = function(conditionName, condition){
+    conditionName = conditionName.toLowerCase();
+    let existingCondition = conditionsMap.get(conditionName);
+    if(existingCondition){
+
+      if(existingCondition.parentSource){
+        conditionsMap.set(conditionName, condition);
+      } else {
+        if(condition.value && existingCondition.value){
+          if(condition.value > existingCondition.value){
+            conditionsMap.set(conditionName, condition);
+          }
+        }
+      }
+      
+    } else {
+      conditionsMap.set(conditionName, condition);
+    }
+  };
 
   // Apply Indirect Conditions
   for(let condition of conditions){
+      addToMap(condition.name, condition);
+
       if(condition.name.toLowerCase() == 'encumbered'){
-          appliedConditions.push({ name: 'clumsy', value: 1, parentSource: 'Encumbered' });
+          addToMap('clumsy', { name: 'clumsy', value: 1, parentSource: 'Encumbered' });
 
       } else if(condition.name.toLowerCase() == 'confused'){
-          appliedConditions.push({ name: 'flat-footed', value: null, parentSource: 'Confused' });
+          addToMap('flat-footed', { name: 'flat-footed', value: null, parentSource: 'Confused' });
 
       } else if(condition.name.toLowerCase() == 'dying'){
-          appliedConditions.push({ name: 'unconscious', value: null, parentSource: 'Dying' });
+          addToMap('unconscious', { name: 'unconscious', value: null, parentSource: 'Dying' });
           // + conditions from unconscious
-          appliedConditions.push({ name: 'blinded', value: null, parentSource: 'Unconscious' });
-          appliedConditions.push({ name: 'flat-footed', value: null, parentSource: 'Unconscious' });
+          addToMap('blinded', { name: 'blinded', value: null, parentSource: 'Unconscious' });
+          addToMap('flat-footed', { name: 'flat-footed', value: null, parentSource: 'Unconscious' });
 
       } else if(condition.name.toLowerCase() == 'grabbed'){
-          appliedConditions.push({ name: 'flat-footed', value: null, parentSource: 'Grabbed' });
-          appliedConditions.push({ name: 'immobilized', value: null, parentSource: 'Grabbed' });
+          addToMap('flat-footed', { name: 'flat-footed', value: null, parentSource: 'Grabbed' });
+          addToMap('immobilized', { name: 'immobilized', value: null, parentSource: 'Grabbed' });
 
       } else if(condition.name.toLowerCase() == 'paralyzed'){
-          appliedConditions.push({ name: 'flat-footed', value: null, parentSource: 'Paralyzed' });
+          addToMap('flat-footed', { name: 'flat-footed', value: null, parentSource: 'Paralyzed' });
 
       } else if(condition.name.toLowerCase() == 'prone'){
-          appliedConditions.push({ name: 'flat-footed', value: null, parentSource: 'Prone' });
+          addToMap('flat-footed', { name: 'flat-footed', value: null, parentSource: 'Prone' });
 
       } else if(condition.name.toLowerCase() == 'restrained'){
-          appliedConditions.push({ name: 'flat-footed', value: null, parentSource: 'Restrained' });
-          appliedConditions.push({ name: 'immobilized', value: null, parentSource: 'Restrained' });
+          addToMap('flat-footed', { name: 'flat-footed', value: null, parentSource: 'Restrained' });
+          addToMap('immobilized', { name: 'immobilized', value: null, parentSource: 'Restrained' });
 
       } else if(condition.name.toLowerCase() == 'unconscious'){
-          appliedConditions.push({ name: 'blinded', value: null, parentSource: 'Unconscious' });
-          appliedConditions.push({ name: 'flat-footed', value: null, parentSource: 'Unconscious' });
+          addToMap('blinded', { name: 'blinded', value: null, parentSource: 'Unconscious' });
+          addToMap('flat-footed', { name: 'flat-footed', value: null, parentSource: 'Unconscious' });
 
       } else if(condition.name.toLowerCase() == 'unnoticed'){
-          appliedConditions.push({ name: 'undetected', value: null, parentSource: 'Unnoticed' });
+          addToMap('undetected', { name: 'undetected', value: null, parentSource: 'Unnoticed' });
 
       }
   }
 
+  let appliedConditions = [];
+  for(const [conditionName, condition] of conditionsMap.entries()){
+    appliedConditions.push(condition);
+  }
   return appliedConditions;
 
 }

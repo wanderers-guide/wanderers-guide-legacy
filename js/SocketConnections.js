@@ -462,10 +462,23 @@ module.exports = class SocketConnections {
     io.on('connection', function(socket){
       const userID = getUserID(socket);
 
-      socket.on('requestConditionChange', function(charID, conditionID, value, sourceText, parentID){
+      socket.on('requestConditionAdd', function(charID, conditionID, value, sourceText, parentID){
         AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
           if(ownsChar){
-            CharSaving.replaceCondition(charID, conditionID, value, sourceText, parentID).then((result) => {
+            CharSaving.addCondition(charID, conditionID, value, sourceText, parentID).then((condition) => {
+              CharGathering.getAllCharConditions(userID, charID)
+              .then((conditionsObject) => {
+                socket.emit('returnUpdateConditionsMap', conditionsObject, true);
+              });
+            });
+          }
+        });
+      });
+
+      socket.on('requestConditionUpdate', function(charID, conditionID, value, sourceText, parentID){
+        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
+          if(ownsChar){
+            CharSaving.updateCondition(charID, conditionID, value, sourceText, parentID).then((result) => {
               CharGathering.getAllCharConditions(userID, charID)
               .then((conditionsObject) => {
                 socket.emit('returnUpdateConditionsMap', conditionsObject, true);
@@ -2954,7 +2967,9 @@ module.exports = class SocketConnections {
         AuthCheck.ownsCampaign(userID, campaignID).then((ownsCampaign) => {
           if(ownsCampaign){
             CampaignGathering.getCampaignDetails(campaignID).then((campaignDetails) => {
-              socket.emit('returnCampaignDetails', campaignDetails);
+              GeneralGathering.getAllConditions(userID).then((allConditions) => {
+                socket.emit('returnCampaignDetails', campaignDetails, allConditions);
+              });
             });
           }
         });
@@ -3116,11 +3131,30 @@ module.exports = class SocketConnections {
         });
       });
 
-      socket.on('requestCharacterUpdate-ConditionChange', function(charID, conditionID, value, sourceText, parentID){
+      socket.on('requestCharacterUpdate-ConditionAdd', function(charID, conditionName, conditionID, value, sourceText, parentID, calculatedStats, callback=null){
         AuthCheck.canEditCharacter(userID, charID).then((canEditChar) => {
           if(canEditChar){
 
-            CharSaving.replaceCondition(charID, conditionID, value, sourceText, parentID).then((result) => {
+            CharSaving.addCondition(charID, conditionID, value, sourceText, parentID).then((condition) => {
+
+              calculatedStats.conditions.push({
+                conditionID: condition.conditionID,
+                name: conditionName,
+                entryID: condition.id,
+                parentEntryID: condition.parentID,
+                sourceText: condition.sourceText,
+                value: condition.value,
+              });
+
+              CharSaving.updateCalculatedStats(charID, calculatedStats).then((result) => {
+                // Return nothing
+
+                if(callback != null){
+                  callback(calculatedStats.conditions);
+                }
+
+              });
+
               CharGathering.getAllCharConditions(null, charID)
               .then((conditionsObject) => {
 
@@ -3135,11 +3169,40 @@ module.exports = class SocketConnections {
         });
       });
 
-      socket.on('requestCharacterUpdate-ConditionRemove', function(charID, conditionID){
+      socket.on('requestCharacterUpdate-ConditionUpdate', function(charID, conditionID, value, sourceText, parentID, calculatedStats){
+        AuthCheck.canEditCharacter(userID, charID).then((canEditChar) => {
+          if(canEditChar){
+
+            CharSaving.updateCondition(charID, conditionID, value, sourceText, parentID).then((result) => {
+
+              CharSaving.updateCalculatedStats(charID, calculatedStats).then((result) => {
+                // Return nothing
+              });
+
+              CharGathering.getAllCharConditions(null, charID)
+              .then((conditionsObject) => {
+
+                CampaignGathering.getUsersInCampaign(charID).then((userIDs) => {
+                  socket.to(userIDs).emit('sendCharacterUpdate-Conditions', charID, conditionsObject, true);
+                });
+
+              });
+            });
+
+          }
+        });
+      });
+
+      socket.on('requestCharacterUpdate-ConditionRemove', function(charID, conditionID, calculatedStats){
         AuthCheck.canEditCharacter(userID, charID).then((canEditChar) => {
           if(canEditChar){
 
             CharSaving.removeCondition(charID, conditionID).then((didRemove) => {
+
+              CharSaving.updateCalculatedStats(charID, calculatedStats).then((result) => {
+                // Return nothing
+              });
+
               CharGathering.getAllCharConditions(null, charID)
               .then((conditionsObject) => {
 
