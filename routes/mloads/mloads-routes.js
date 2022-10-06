@@ -18,8 +18,8 @@ router.get('/char-sheet', (req, res) => {
   if(charID == null){ res.sendStatus(401); return; }
 
   AuthCheck.getPermissions(userID).then((perms) => {
-    AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
-      if(ownsChar){
+    AuthCheck.canEditCharacter(userID, charID).then((canEditChar) => {
+      if(canEditChar){
         CharSheetLoad(userID, charID).then((charInfo) => {
           res.send({
             charInfo: charInfo,
@@ -56,8 +56,8 @@ router.get('/char-builder', (req, res) => {
   // If in Character Builder or Builder Creator mode
   if(charID != null){
 
-    AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
-      if(ownsChar){
+    AuthCheck.canEditCharacter(userID, charID).then((canEditChar) => {
+      if(canEditChar){
 
         // Repopulate unselectedData
         CharDataMapping.deleteDataBySource(charID, 'unselectedData')

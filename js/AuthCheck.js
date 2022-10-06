@@ -14,15 +14,6 @@ module.exports = class AuthCheck {
     return (userID != -1);
   }
 
-  static ownsCharacterAPI(userID, charID) {
-    return Character.findOne({ where: { id: charID, userID: userID } })
-      .then((character) => {
-        return (character != null);
-      }).catch((error) => {
-        return false;
-      });
-  }
-
   static ownsCharacter(userID, charID) {
     return Character.findOne({ where: { id: charID, userID: userID } })
       .then((character) => {
@@ -60,6 +51,8 @@ module.exports = class AuthCheck {
     return Character.findOne({ where: { id: charID } })
       .then((character) => {
 
+        if(!character){ return false; }
+        
         if(character.userID === userID){
           return true;
         }
@@ -77,19 +70,19 @@ module.exports = class AuthCheck {
       });
   }
 
-  static ownsInv(userID, invID) {
+  static canEditInv(userID, invID) {
     return Character.findOne({ where: { inventoryID: invID } })
       .then((character) => {
-        return AuthCheck.ownsCharacter(userID, character.id);
+        return AuthCheck.canEditCharacter(userID, character.id);
       }).catch((error) => {
         return false;
       });
   }
 
-  static ownsInvItem(userID, invItemID) {
+  static canEditInvItem(userID, invItemID) {
     return InvItem.findOne({ where: { id: invItemID } })
       .then((invItem) => {
-        return AuthCheck.ownsInv(userID, invItem.invID);
+        return AuthCheck.canEditInv(userID, invItem.invID);
       }).catch((error) => {
         return false;
       });

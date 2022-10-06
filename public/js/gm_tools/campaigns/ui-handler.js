@@ -25,7 +25,7 @@ $(function () {
       $(this).removeClass('card-content-hover');
     });
     cardContent.click(function () {
-      openViewCampaign(campaignMap.get(campaignID + ''));
+      openViewCampaign(campaignID+'');
     });
 
     cardEdit.mouseenter(function () {
@@ -65,6 +65,7 @@ $(function () {
     socket.emit(`requestAddCampaign`);
   });
 
+  handleCampaignForwardingFromURL();
 });
 
 socket.on('returnAddCampaign', (campaign) => {
@@ -84,15 +85,13 @@ socket.on('returnEditCampaign', () => {
 });
 
 
-function openViewCampaign(campaign) {
-  new DisplayCampaign('campaigns-container', campaign.id);
+function openViewCampaign(campaignID) {
+  new DisplayCampaign('campaigns-container', campaignID);
 }
 
 function openEditCampaign(campaign) {
 
   activeModalCampaign = campaign;
-
-  console.log(campaign);
 
   $("#inputCampaignName").val(activeModalCampaign.name);
   $("#inputCampaignDescription").val(activeModalCampaign.description);
@@ -141,5 +140,17 @@ function openEditCampaign(campaign) {
 
     }
   });
+
+}
+
+
+/* Handle campaign opening from URL id */
+function handleCampaignForwardingFromURL(){
+
+  let campaignID = parseInt(window.location.pathname.split("campaigns/")[1]);
+  console.log(campaignID);
+  if(!isNaN(campaignID)){
+    openViewCampaign(campaignID+'');
+  }
 
 }

@@ -49,6 +49,12 @@ router.get('/encounter-builder', (req, res) => {
 });
 
 router.get('/campaigns', (req, res) => {
+  handleCampaignRoute(req, res);
+});
+router.get('/campaigns/*', (req, res) => {
+  handleCampaignRoute(req, res);
+});
+function handleCampaignRoute(req, res) {
 
   let isPatreonSupporter = 0;
   if(req.user != null){
@@ -69,6 +75,6 @@ router.get('/campaigns', (req, res) => {
     res.redirect('/auth/login');
   }
 
-});
+}
 
 module.exports = router;

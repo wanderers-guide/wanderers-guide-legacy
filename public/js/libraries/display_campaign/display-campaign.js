@@ -37,8 +37,6 @@ class DisplayCampaign {
             });
           }
 
-          console.log(campaignStruct);
-
           $('#campaign-name').html(campaignStruct.campaign.name);
 
           textProcess_warningOnUnknown = true;
@@ -59,6 +57,12 @@ class DisplayCampaign {
           $('#campaign-access-code').html(campaignStruct.campaign.accessID);
 
           ///
+
+          campaignStruct.accessTokens = campaignStruct.accessTokens.sort(
+            function(a, b) {
+              return a.character.name > b.character.name ? 1 : -1;
+            }
+          );
 
           for (const accessToken of campaignStruct.accessTokens) {
 
@@ -114,6 +118,17 @@ class DisplayCampaign {
 
             generateCharacterEntry(accessToken);
 
+          }
+
+          // Display if no players are in campaign.
+          if(campaignStruct.accessTokens.length === 0){
+            $('#campaign-players').html(`
+              <div class="columns is-marginless is-tablet p-3">
+                <div class="column is-paddingless">
+                  <p class="has-text-centered is-italic is-size-7">Your campaign has no players. Characters can use the access code to join this campaign!</p>
+                </div>
+              </div>
+            `);
           }
 
           $('#' + campaignDisplayContainerID).removeClass('is-hidden');

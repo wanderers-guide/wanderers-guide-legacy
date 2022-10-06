@@ -283,6 +283,12 @@ function leftQuickview_OpenCampaign() {
     <hr class="m-2">
   `);
 
+  g_campaignDetails.accessTokens = g_campaignDetails.accessTokens.sort(
+    function(a, b) {
+      return a.character.name > b.character.name ? 1 : -1;
+    }
+  );
+
   for (const accessToken of g_campaignDetails.accessTokens) {
 
     let charTitle = '';
@@ -309,10 +315,10 @@ function leftQuickview_OpenCampaign() {
 
     qContent.append(`
 
-      <p>
-        <span class="is-size-6 has-txt-value-string">${accessToken.character.name}</span><span class="is-size-6-5 is-italic">, ${charTitle}</span>
+      <p class="pl-2">
+        <span class="is-size-5-5 has-txt-value-string">${accessToken.character.name}</span><span class="is-size-6 is-italic">, ${charTitle}</span>
       </p>
-      <div class="columns is-mobile is-marginless pl-2">
+      <div class="columns is-mobile is-marginless pl-3">
         <div class="column is-4 is-paddingless">
           <p id="campaign-character-health-${accessToken.charID}">
           </p>
@@ -322,6 +328,7 @@ function leftQuickview_OpenCampaign() {
           </div>
         </div>
       </div>
+      <hr class="m-2">
 
     `);
 
@@ -362,7 +369,7 @@ function leftQuickview_setCharacterHealth(accessToken) {
     }
 
     $(`#campaign-character-health-${accessToken.charID}`).html(`
-      <p class="is-size-7-5 pt-1 pb-2">
+      <p class="is-size-7 pt-1 pb-2">
         Status: <span class="health-variable-color" style="animation-delay: ${animationDelay}!important;">${statusMessage}</span>
       </p>`
     );
@@ -370,7 +377,7 @@ function leftQuickview_setCharacterHealth(accessToken) {
   } else if (g_campaignDetails.campaign.optionDisplayPlayerHealth == 2) {
 
     $(`#campaign-character-health-${accessToken.charID}`).html(`
-      <p class="is-size-7-5 pt-1 pb-2">
+      <p class="is-size-7 pt-1 pb-2">
         Health: <span class="health-variable-color" style="animation-delay: ${animationDelay}!important;">${accessToken.character.currentHealth}</span> / ${accessToken.calculatedStat.maxHP}
       </p>`
     );
@@ -395,9 +402,9 @@ function leftQuickview_setCharacterConditions(accessToken) {
     if (condition.value != null) { conditionDisplayName += ` ${condition.value}`; }
 
     $(`#campaign-character-conditions-${accessToken.charID}`).append(`
-      <div class="field has-addons is-marginless" style="padding-right: 0.25rem;">
+      <div class="field has-addons is-marginless" style="padding-right: 0.25rem; padding-bottom: 0.25rem;">
         <div class="control">
-          <button class="button is-tiny is-danger is-outlined">
+          <button class="button is-very-small is-danger is-outlined">
             <span>${conditionDisplayName}</span>
           </button>
         </div>

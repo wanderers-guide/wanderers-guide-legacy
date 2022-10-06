@@ -83,8 +83,8 @@ module.exports = class SocketConnections {
       /* Using MLoads instead
       socket.on('requestCharacterSheetInfo', function(charID){
         AuthCheck.getPermissions(userID).then((perms) => {
-          AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
-            if(ownsChar){
+          AuthCheck.canEditCharacter(userID, charID).then((canEditChar) => {
+            if(canEditChar){
               CharSheetLoad(socket, charID).then((charInfoJSON) => {
                 socket.emit('returnCharacterSheetInfo', charInfoJSON, perms, false);
               });
@@ -105,8 +105,8 @@ module.exports = class SocketConnections {
       */
 
       socket.on('requestProfsAndSkills', function(charID){
-        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
-          if(ownsChar){
+        AuthCheck.canEditCharacter(userID, charID).then((canEditChar) => {
+          if(canEditChar){
             CharGathering.getProfs(userID, charID).then((profMap) => {
               CharGathering.getAllSkills(userID, charID).then((skillObject) => {
                 socket.emit('returnProfsAndSkills', mapToObj(profMap), skillObject);
@@ -117,8 +117,8 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestUpdateCalculatedStats', function(charID, calcStatsStruct){
-        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
-          if(ownsChar){
+        AuthCheck.canEditCharacter(userID, charID).then((canEditChar) => {
+          if(canEditChar){
             CharSaving.updateCalculatedStats(charID, calcStatsStruct).then((result) => {
               socket.emit('returnUpdateCalculatedStats');
             });
@@ -127,8 +127,8 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestNotesSave', function(charID, notes){
-        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
-          if(ownsChar){
+        AuthCheck.canEditCharacter(userID, charID).then((canEditChar) => {
+          if(canEditChar){
             CharSaving.saveNotes(charID, notes).then((result) => {
               socket.emit('returnNotesSave');
             });
@@ -137,8 +137,8 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestCharInfoSave', function(charID, infoJSON){
-        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
-          if(ownsChar){
+        AuthCheck.canEditCharacter(userID, charID).then((canEditChar) => {
+          if(canEditChar){
             CharSaving.saveInfoJSON(charID, infoJSON).then((result) => {
               socket.emit('returnCharInfoSave');
             });
@@ -147,8 +147,8 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestDetailsSave', function(charID, details){
-        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
-          if(ownsChar){
+        AuthCheck.canEditCharacter(userID, charID).then((canEditChar) => {
+          if(canEditChar){
             CharSaving.saveDetails(charID, details).then((result) => {
               socket.emit('returnDetailsSave');
             });
@@ -157,8 +157,8 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestNotesFieldSave', function(charID, notesData, notesFieldControlShellID){
-        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
-          if(ownsChar){
+        AuthCheck.canEditCharacter(userID, charID).then((canEditChar) => {
+          if(canEditChar){
             CharSaving.saveNoteField(charID, notesData, notesData.placeholderText, notesData.text)
             .then((result) => {
               socket.emit('returnNotesFieldSave', notesFieldControlShellID);
@@ -168,8 +168,8 @@ module.exports = class SocketConnections {
       });
     
       socket.on('requestExperienceSave', function(charID, newExp){
-        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
-          if(ownsChar){
+        AuthCheck.canEditCharacter(userID, charID).then((canEditChar) => {
+          if(canEditChar){
             CharSaving.saveExp(charID, newExp).then((result) => {
               // Return nothing
             });
@@ -178,8 +178,8 @@ module.exports = class SocketConnections {
       });
     
       socket.on('requestCurrentHitPointsSave', function(charID, currentHealth){
-        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
-          if(ownsChar){
+        AuthCheck.canEditCharacter(userID, charID).then((canEditChar) => {
+          if(canEditChar){
             CharSaving.saveCurrentHitPoints(charID, currentHealth).then((result) => {
               // Return nothing
             });
@@ -187,8 +187,8 @@ module.exports = class SocketConnections {
         });
       });
       socket.on('requestTempHitPointsSave', function(charID, tempHealth){
-        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
-          if(ownsChar){
+        AuthCheck.canEditCharacter(userID, charID).then((canEditChar) => {
+          if(canEditChar){
             CharSaving.saveTempHitPoints(charID, tempHealth).then((result) => {
               // Return nothing
             });
@@ -197,8 +197,8 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestCurrentStaminaPointsSave', function(charID, currentStamina){
-        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
-          if(ownsChar){
+        AuthCheck.canEditCharacter(userID, charID).then((canEditChar) => {
+          if(canEditChar){
             CharSaving.saveCurrentStaminaPoints(charID, currentStamina).then((result) => {
               // Return nothing
             });
@@ -206,8 +206,8 @@ module.exports = class SocketConnections {
         });
       });
       socket.on('requestCurrentResolvePointsSave', function(charID, currentResolve){
-        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
-          if(ownsChar){
+        AuthCheck.canEditCharacter(userID, charID).then((canEditChar) => {
+          if(canEditChar){
             CharSaving.saveCurrentResolvePoints(charID, currentResolve).then((result) => {
               // Return nothing
             });
@@ -216,8 +216,8 @@ module.exports = class SocketConnections {
       });
     
       socket.on('requestHeroPointsSave', function(charID, heroPoints){
-        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
-          if(ownsChar){
+        AuthCheck.canEditCharacter(userID, charID).then((canEditChar) => {
+          if(canEditChar){
             CharSaving.saveHeroPoints(charID, heroPoints).then((result) => {
               socket.emit('returnHeroPointsSave');
             });
@@ -226,8 +226,8 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestRollHistorySave', function(charID, rollHistoryJSON){
-        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
-          if(ownsChar){
+        AuthCheck.canEditCharacter(userID, charID).then((canEditChar) => {
+          if(canEditChar){
             CharSaving.saveRollHistory(charID, rollHistoryJSON).then((result) => {
               socket.emit('returnRollHistorySave');
             });
@@ -246,8 +246,8 @@ module.exports = class SocketConnections {
       const userID = getUserID(socket);
 
       socket.on('requestInvUpdate', function(charID){
-        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
-          if(ownsChar){
+        AuthCheck.canEditCharacter(userID, charID).then((canEditChar) => {
+          if(canEditChar){
             CharGathering.getCharacter(userID, charID).then((character) => {
               CharGathering.getInventory(userID, character.inventoryID).then((invStruct) => {
                 socket.emit('returnInvUpdate', invStruct);
@@ -258,8 +258,8 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestAddPropertyRune', function(invItemID, propRuneID, propRuneSlot){
-        AuthCheck.ownsInvItem(userID, invItemID).then((ownsItem) => {
-          if(ownsItem){
+        AuthCheck.canEditInvItem(userID, invItemID).then((canEditItem) => {
+          if(canEditItem){
             CharGathering.getInvIDFromInvItemID(userID, invItemID).then((invID) => {
               CharSaving.addPropRune(invItemID, propRuneID, propRuneSlot).then(() => {
                 CharGathering.getInventory(userID, invID).then((invStruct) => {
@@ -272,8 +272,8 @@ module.exports = class SocketConnections {
       });
     
       socket.on('requestRemovePropertyRune', function(invItemID, propRuneSlot){
-        AuthCheck.ownsInvItem(userID, invItemID).then((ownsItem) => {
-          if(ownsItem){
+        AuthCheck.canEditInvItem(userID, invItemID).then((canEditItem) => {
+          if(canEditItem){
             CharGathering.getInvIDFromInvItemID(userID, invItemID).then((invID) => {
               CharSaving.removePropRune(invItemID, propRuneSlot).then(() => {
                 CharGathering.getInventory(userID, invID).then((invStruct) => {
@@ -286,8 +286,8 @@ module.exports = class SocketConnections {
       });
     
       socket.on('requestAddFundamentalRune', function(invItemID, fundRuneID){
-        AuthCheck.ownsInvItem(userID, invItemID).then((ownsItem) => {
-          if(ownsItem){
+        AuthCheck.canEditInvItem(userID, invItemID).then((canEditItem) => {
+          if(canEditItem){
             CharGathering.getInvIDFromInvItemID(userID, invItemID).then((invID) => {
               CharSaving.addFundRune(invItemID, fundRuneID).then(() => {
                 CharGathering.getInventory(userID, invID).then((invStruct) => {
@@ -300,8 +300,8 @@ module.exports = class SocketConnections {
       });
     
       socket.on('requestRemoveFundamentalRune', function(invItemID, fundRuneID){
-        AuthCheck.ownsInvItem(userID, invItemID).then((ownsItem) => {
-          if(ownsItem){
+        AuthCheck.canEditInvItem(userID, invItemID).then((canEditItem) => {
+          if(canEditItem){
             CharGathering.getInvIDFromInvItemID(userID, invItemID).then((invID) => {
               CharSaving.removeFundRune(invItemID, fundRuneID).then(() => {
                 CharGathering.getInventory(userID, invID).then((invStruct) => {
@@ -314,8 +314,8 @@ module.exports = class SocketConnections {
       });
     
       socket.on('requestUpdateInventory', function(invID, equippedArmorInvItemID, equippedShieldInvItemID, equippedArmorCategory){
-        AuthCheck.ownsInv(userID, invID).then((ownsInv) => {
-          if(ownsInv){
+        AuthCheck.canEditInv(userID, invID).then((canEditInv) => {
+          if(canEditInv){
             CharSaving.updateInventory(invID, equippedArmorInvItemID, equippedShieldInvItemID, equippedArmorCategory).then(() => {
               // Return nothing
             });
@@ -324,8 +324,8 @@ module.exports = class SocketConnections {
       });
     
       socket.on('requestAddItemToInv', function(charID, invID, itemID, quantity){
-        AuthCheck.ownsInv(userID, invID).then((ownsInv) => {
-          if(ownsInv){
+        AuthCheck.canEditInv(userID, invID).then((canEditInv) => {
+          if(canEditInv){
             CharSaving.addItemToInv(invID, itemID, quantity).then((invItem) => {
               CharGathering.getInventory(userID, invID).then((invStruct) => {
                 CharGathering.getItem(userID, charID, itemID).then((item) => {
@@ -338,8 +338,8 @@ module.exports = class SocketConnections {
       });
     
       socket.on('requestRemoveItemFromInv', function(invItemID){
-        AuthCheck.ownsInvItem(userID, invItemID).then((ownsItem) => {
-          if(ownsItem){
+        AuthCheck.canEditInvItem(userID, invItemID).then((canEditItem) => {
+          if(canEditItem){
             CharGathering.getInvIDFromInvItemID(userID, invItemID).then((invID) => {
               CharSaving.removeInvItemFromInv(invItemID).then(() => {
                 CharGathering.getInventory(userID, invID).then((invStruct) => {
@@ -352,8 +352,8 @@ module.exports = class SocketConnections {
       });
     
       socket.on('requestInvItemMoveBag', function(invItemID, bagInvItemID, isDropped){
-        AuthCheck.ownsInvItem(userID, invItemID).then((ownsItem) => {
-          if(ownsItem){
+        AuthCheck.canEditInvItem(userID, invItemID).then((canEditItem) => {
+          if(canEditItem){
             CharGathering.getInvIDFromInvItemID(userID, invItemID).then((invID) => {
               CharSaving.saveInvItemToNewBag(invItemID, bagInvItemID, isDropped).then(() => {
                 CharGathering.getInventory(userID, invID).then((invStruct) => {
@@ -366,8 +366,8 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestAddItemToBag', function(itemID, quantity, bagInvItemID){
-        AuthCheck.ownsInvItem(userID, bagInvItemID).then((ownsItem) => {
-          if(ownsItem){
+        AuthCheck.canEditInvItem(userID, bagInvItemID).then((canEditItem) => {
+          if(canEditItem){
             CharGathering.getInvIDFromInvItemID(userID, bagInvItemID).then((invID) => {
               CharSaving.addItemToInv(invID, itemID, quantity).then((invItem) => {
                 CharSaving.saveInvItemToNewBag(invItem.id, bagInvItemID, 0).then(() => {
@@ -380,8 +380,8 @@ module.exports = class SocketConnections {
       });
     
       socket.on('requestInvItemQtyChange', function(invItemID, newQty){
-        AuthCheck.ownsInvItem(userID, invItemID).then((ownsItem) => {
-          if(ownsItem){
+        AuthCheck.canEditInvItem(userID, invItemID).then((canEditItem) => {
+          if(canEditItem){
             CharGathering.getInvIDFromInvItemID(userID, invItemID).then((invID) => {
               CharSaving.saveInvItemQty(invItemID, newQty).then(() => {
                 CharGathering.getInventory(userID, invID).then((invStruct) => {
@@ -394,8 +394,8 @@ module.exports = class SocketConnections {
       });
     
       socket.on('requestInvItemHPChange', function(invItemID, newHP){
-        AuthCheck.ownsInvItem(userID, invItemID).then((ownsItem) => {
-          if(ownsItem){
+        AuthCheck.canEditInvItem(userID, invItemID).then((canEditItem) => {
+          if(canEditItem){
             CharGathering.getInvIDFromInvItemID(userID, invItemID).then((invID) => {
               CharSaving.saveInvItemHitPoints(invItemID, newHP).then(() => {
                 CharGathering.getInventory(userID, invID).then((invStruct) => {
@@ -408,8 +408,8 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestInvItemInvestChange', function(invItemID, isInvested){
-        AuthCheck.ownsInvItem(userID, invItemID).then((ownsItem) => {
-          if(ownsItem){
+        AuthCheck.canEditInvItem(userID, invItemID).then((canEditItem) => {
+          if(canEditItem){
             CharGathering.getInvIDFromInvItemID(userID, invItemID).then((invID) => {
               CharSaving.saveInvItemInvest(invItemID, isInvested).then(() => {
                 CharGathering.getInventory(userID, invID).then((invStruct) => {
@@ -422,8 +422,8 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestCustomizeInvItem', function(invItemID, updateValues){
-        AuthCheck.ownsInvItem(userID, invItemID).then((ownsItem) => {
-          if(ownsItem){
+        AuthCheck.canEditInvItem(userID, invItemID).then((canEditItem) => {
+          if(canEditItem){
             CharGathering.getInvIDFromInvItemID(userID, invItemID).then((invID) => {
               CharSaving.saveInvItemCustomize(invItemID, updateValues).then(() => {
                 CharGathering.getInventory(userID, invID).then((invStruct) => {
@@ -437,8 +437,8 @@ module.exports = class SocketConnections {
 
 
       socket.on('requestAddItemCustomizeToInv', function(charID, invID, itemID, updateValues){
-        AuthCheck.ownsInv(userID, invID).then((ownsInv) => {
-          if(ownsInv){
+        AuthCheck.canEditInv(userID, invID).then((canEditInv) => {
+          if(canEditInv){
             CharSaving.addItemToInv(invID, itemID, updateValues.quantity).then((invItem) => {
               CharSaving.saveInvItemCustomize(invItem.id, updateValues).then(() => {
                 CharGathering.getInventory(userID, invID).then((invStruct) => {
@@ -463,8 +463,8 @@ module.exports = class SocketConnections {
       const userID = getUserID(socket);
 
       socket.on('requestConditionAdd', function(charID, conditionID, value, sourceText, parentID){
-        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
-          if(ownsChar){
+        AuthCheck.canEditCharacter(userID, charID).then((canEditChar) => {
+          if(canEditChar){
             CharSaving.addCondition(charID, conditionID, value, sourceText, parentID).then((condition) => {
               CharGathering.getAllCharConditions(userID, charID)
               .then((conditionsObject) => {
@@ -476,8 +476,8 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestConditionUpdate', function(charID, conditionID, value, sourceText, parentID){
-        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
-          if(ownsChar){
+        AuthCheck.canEditCharacter(userID, charID).then((canEditChar) => {
+          if(canEditChar){
             CharSaving.updateCondition(charID, conditionID, value, sourceText, parentID).then((result) => {
               CharGathering.getAllCharConditions(userID, charID)
               .then((conditionsObject) => {
@@ -489,8 +489,8 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestConditionRemove', function(charID, conditionID){
-        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
-          if(ownsChar){
+        AuthCheck.canEditCharacter(userID, charID).then((canEditChar) => {
+          if(canEditChar){
             CharSaving.removeCondition(charID, conditionID).then((didRemove) => {
               CharGathering.getAllCharConditions(userID, charID)
               .then((conditionsObject) => {
@@ -513,8 +513,8 @@ module.exports = class SocketConnections {
       const userID = getUserID(socket);
 
       socket.on('requestSpellAddToSpellBook', function(charID, spellSRC, spellID, spellLevel, spellType){
-        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
-          if(ownsChar){
+        AuthCheck.canEditCharacter(userID, charID).then((canEditChar) => {
+          if(canEditChar){
             CharSpells.addToSpellBook(charID, spellSRC, spellID, spellLevel, spellType, true).then((result) => {
               CharSpells.getSpellBook(charID, spellSRC, false).then((spellBookStruct) => {
                 socket.emit('returnSpellBookUpdated', spellBookStruct);
@@ -525,8 +525,8 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestSpellRemoveFromSpellBook', function(charID, spellSRC, spellID, spellLevel){
-        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
-          if(ownsChar){
+        AuthCheck.canEditCharacter(userID, charID).then((canEditChar) => {
+          if(canEditChar){
             CharSpells.removeFromSpellBook(charID, spellSRC, spellID, spellLevel).then((result) => {
               CharSpells.getSpellBook(charID, spellSRC, false).then((spellBookStruct) => {
                 socket.emit('returnSpellBookUpdated', spellBookStruct);
@@ -537,8 +537,8 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestSpellBookUpdate', function(charID, spellSRC){
-        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
-          if(ownsChar){
+        AuthCheck.canEditCharacter(userID, charID).then((canEditChar) => {
+          if(canEditChar){
             CharSpells.getSpellBook(charID, spellSRC, false).then((spellBookStruct) => {
               socket.emit('returnSpellBookUpdated', spellBookStruct);
             });
@@ -547,8 +547,8 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestSpellTypeUpdate', function(charID, spellBookSpellID, spellType){
-        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
-          if(ownsChar){
+        AuthCheck.canEditCharacter(userID, charID).then((canEditChar) => {
+          if(canEditChar){
             CharSpells.changeSpellBookSpellType(charID, spellBookSpellID, spellType).then((result) => {
               socket.emit('returnSpellTypeUpdate');
             });
@@ -557,8 +557,8 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestSpellSlotUpdate', function(charID, updateSlotObject){
-        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
-          if(ownsChar){
+        AuthCheck.canEditCharacter(userID, charID).then((canEditChar) => {
+          if(canEditChar){
             CharSpells.changeSpellSlot(charID, updateSlotObject).then((result) => {
               socket.emit('returnSpellSlotUpdate');
             });
@@ -568,8 +568,8 @@ module.exports = class SocketConnections {
 
       socket.on('requestInnateSpellCastingUpdate', function(innateSpell, timesCast){
         if(innateSpell != null) {
-          AuthCheck.ownsCharacter(userID, innateSpell.charID).then((ownsChar) => {
-            if(ownsChar){
+          AuthCheck.canEditCharacter(userID, innateSpell.charID).then((canEditChar) => {
+            if(canEditChar){
               CharSaving.saveInnateSpellCastings(innateSpell, timesCast).then((result) => {
                 socket.emit('returnInnateSpellCastingUpdate');
               });
@@ -580,8 +580,8 @@ module.exports = class SocketConnections {
 
       
       socket.on('requestFocusSpellUpdate', function(charID, srcStruct, spellSRC, spellID){
-        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
-          if(ownsChar){
+        AuthCheck.canEditCharacter(userID, charID).then((canEditChar) => {
+          if(canEditChar){
             CharDataMapping.setData(charID, 'focusSpell', srcStruct, spellSRC+"="+spellID)
             .then((result) => {
               socket.emit('returnFocusSpellUpdate');
@@ -590,8 +590,8 @@ module.exports = class SocketConnections {
         });
       });
       socket.on('requestFocusPointUpdate', function(charID, srcStruct, unused){
-        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
-          if(ownsChar){
+        AuthCheck.canEditCharacter(userID, charID).then((canEditChar) => {
+          if(canEditChar){
             CharDataMapping.setData(charID, 'focusPoint', srcStruct, unused)
             .then((result) => {
               socket.emit('returnFocusPointUpdate');
@@ -612,8 +612,8 @@ module.exports = class SocketConnections {
       const userID = getUserID(socket);
 
       socket.on('requestAddAnimalCompanion', function(charID, animalCompID){
-        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
-          if(ownsChar){
+        AuthCheck.canEditCharacter(userID, charID).then((canEditChar) => {
+          if(canEditChar){
             CharSaving.addAnimalCompanion(charID, animalCompID).then((charAnimalComp) => {
               socket.emit('returnAddAnimalCompanion', charAnimalComp);
             });
@@ -622,8 +622,8 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestUpdateAnimalCompanion', function(charID, charAnimalCompID, updateValues){
-        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
-          if(ownsChar){
+        AuthCheck.canEditCharacter(userID, charID).then((canEditChar) => {
+          if(canEditChar){
             CharSaving.updateAnimalCompanion(charID, charAnimalCompID, updateValues).then(() => {
               socket.emit('returnUpdateAnimalCompanion');
             });
@@ -632,8 +632,8 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestRemoveAnimalCompanion', function(charID, charAnimalCompID){
-        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
-          if(ownsChar){
+        AuthCheck.canEditCharacter(userID, charID).then((canEditChar) => {
+          if(canEditChar){
             CharSaving.deleteAnimalCompanion(charID, charAnimalCompID).then(() => {
               socket.emit('returnRemoveAnimalCompanion', charAnimalCompID);
             });
@@ -644,8 +644,8 @@ module.exports = class SocketConnections {
 
 
       socket.on('requestAddFamiliar', function(charID){
-        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
-          if(ownsChar){
+        AuthCheck.canEditCharacter(userID, charID).then((canEditChar) => {
+          if(canEditChar){
             CharSaving.addFamiliar(charID).then((charFamiliar) => {
               socket.emit('returnAddFamiliar', charFamiliar);
             });
@@ -654,8 +654,8 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestAddSpecificFamiliar', function(charID, specificStruct){
-        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
-          if(ownsChar){
+        AuthCheck.canEditCharacter(userID, charID).then((canEditChar) => {
+          if(canEditChar){
             CharSaving.addSpecificFamiliar(charID, specificStruct).then((charFamiliar) => {
               socket.emit('returnAddFamiliar', charFamiliar);
             });
@@ -664,8 +664,8 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestUpdateFamiliar', function(charID, charFamiliarID, updateValues){
-        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
-          if(ownsChar){
+        AuthCheck.canEditCharacter(userID, charID).then((canEditChar) => {
+          if(canEditChar){
             CharSaving.updateFamiliar(charID, charFamiliarID, updateValues).then(() => {
               socket.emit('returnUpdateFamiliar');
             });
@@ -674,8 +674,8 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestRemoveFamiliar', function(charID, charFamiliarID){
-        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
-          if(ownsChar){
+        AuthCheck.canEditCharacter(userID, charID).then((canEditChar) => {
+          if(canEditChar){
             CharSaving.deleteFamiliar(charID, charFamiliarID).then(() => {
               socket.emit('returnRemoveFamiliar', charFamiliarID);
             });
@@ -695,8 +695,8 @@ module.exports = class SocketConnections {
       const userID = getUserID(socket);
 
       socket.on('requestCharacterDetails', function(charID){
-        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
-          if(ownsChar){
+        AuthCheck.canEditCharacter(userID, charID).then((canEditChar) => {
+          if(canEditChar){
             CharGathering.getCharacter(userID, charID).then((character) => {
               BuildsGathering.getBuildInfo(character.buildID).then((buildInfo) => {
                 ClientAPI.getClientsWhoAccess(charID).then((clientsWithAccess) => {
@@ -715,8 +715,8 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestCharacterRemoveClientAccess', function(charID, clientID){
-        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
-          if(ownsChar){
+        AuthCheck.canEditCharacter(userID, charID).then((canEditChar) => {
+          if(canEditChar){
             ClientAPI.removeAccessToken(charID, clientID).then((result) => {
               ClientAPI.getClientsWhoAccess(charID).then((clientsWithAccess) => {
                 socket.emit('returnCharacterRemoveClientAccess', clientsWithAccess);
@@ -727,8 +727,8 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestNameChange', function(charID, name){
-        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
-          if(ownsChar){
+        AuthCheck.canEditCharacter(userID, charID).then((canEditChar) => {
+          if(canEditChar){
             let validNameRegex = /^[^@#$%^*~=\/\\]+$/;
             if(validNameRegex.test(name)) {
               CharSaving.saveName(charID, name).then((result) => {
@@ -740,8 +740,8 @@ module.exports = class SocketConnections {
       });
     
       socket.on('requestLevelChange', function(charID, charLevel){
-        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
-          if(ownsChar){
+        AuthCheck.canEditCharacter(userID, charID).then((canEditChar) => {
+          if(canEditChar){
             CharSaving.saveLevel(charID, charLevel).then((result) => {
               socket.emit('returnLevelChange');
             });
@@ -750,8 +750,8 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestBuilderTypeChange', function(charID, builderType){
-        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
-          if(ownsChar){
+        AuthCheck.canEditCharacter(userID, charID).then((canEditChar) => {
+          if(canEditChar){
             CharSaving.saveBuilderType(charID, builderType).then((result) => {
               socket.emit('returnBuilderTypeChange');
             });
@@ -760,8 +760,8 @@ module.exports = class SocketConnections {
       });
     
       socket.on('requestAbilityScoreChange', function(charID, abilSTR, abilDEX, abilCON, abilINT, abilWIS, abilCHA){
-        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
-          if(ownsChar){
+        AuthCheck.canEditCharacter(userID, charID).then((canEditChar) => {
+          if(canEditChar){
             CharSaving.saveAbilityScores(charID, abilSTR, abilDEX, abilCON, abilINT, abilWIS, abilCHA)
             .then((result) => {
               socket.emit('returnAbilityScoreChange');
@@ -771,8 +771,8 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestCharacterOptionChange', function(charID, optionName, value){
-        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
-          if(ownsChar){
+        AuthCheck.canEditCharacter(userID, charID).then((canEditChar) => {
+          if(canEditChar){
             CharSaving.saveCharacterOption(charID, optionName, value).then((result) => {
 
               if(optionName == 'variantAncestryParagon') {
@@ -800,8 +800,8 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestCharacterSourceChange', function(charID, sourceName, isAdd){
-        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
-          if(ownsChar){
+        AuthCheck.canEditCharacter(userID, charID).then((canEditChar) => {
+          if(canEditChar){
             if(isAdd) {
               CharContentSources.addSource(charID, sourceName).then((result) => {
                 socket.emit('returnCharacterSourceChange');
@@ -816,8 +816,8 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestCharacterSetSources', function(charID, contentSourceArray){
-        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
-          if(ownsChar){
+        AuthCheck.canEditCharacter(userID, charID).then((canEditChar) => {
+          if(canEditChar){
             CharContentSources.setSources(charID, contentSourceArray).then((result) => {
               socket.emit('returnCharacterSetSources');
             });
@@ -826,8 +826,8 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestCharacterHomebrewChange', function(charID, homebrewID, isAdd){
-        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
-          if(ownsChar){
+        AuthCheck.canEditCharacter(userID, charID).then((canEditChar) => {
+          if(canEditChar){
             if(isAdd) {
               CharContentHomebrew.addHomebrewBundle(userID, charID, homebrewID).then((result) => {
                 socket.emit('returnCharacterHomebrewChange');
@@ -842,8 +842,8 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestCharacterCustomCodeBlockChange', function(charID, code){
-        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
-          if(ownsChar){
+        AuthCheck.canEditCharacter(userID, charID).then((canEditChar) => {
+          if(canEditChar){
             CharSaving.saveCustomCode(charID, code).then((result) => {
               socket.emit('returnCharacterCustomCodeBlockChange');
             });
@@ -862,8 +862,8 @@ module.exports = class SocketConnections {
       const userID = getUserID(socket);
 
       socket.on('requestBuilderPageAncestry', function(charID){
-        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
-          if(ownsChar){
+        AuthCheck.canEditCharacter(userID, charID).then((canEditChar) => {
+          if(canEditChar){
             CharGathering.getCharacter(userID, charID).then((character) => {
               CharGathering.getAllAncestries(userID, character.enabledSources, character.enabledHomebrew, false).then((ancestriesObject) => {
                 CharGathering.getAllUniHeritages(userID, charID).then((uniHeritageArray) => {
@@ -878,8 +878,8 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestAncestryChange', function(charID, ancestryID){
-        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
-          if(ownsChar){
+        AuthCheck.canEditCharacter(userID, charID).then((canEditChar) => {
+          if(canEditChar){
             CharSaving.saveAncestry(charID, ancestryID).then((result) => {
               socket.emit('returnAncestryChange');
             });
@@ -888,8 +888,8 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestHeritageChange', function(charID, heritageID, isUniversal){
-        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
-          if(ownsChar){
+        AuthCheck.canEditCharacter(userID, charID).then((canEditChar) => {
+          if(canEditChar){
             CharSaving.saveHeritage(charID, heritageID, isUniversal).then((result) => {
               return CharTags.getTags(charID)
               .then((charTagsArray) => {
@@ -911,8 +911,8 @@ module.exports = class SocketConnections {
       const userID = getUserID(socket);
 
       socket.on('requestBuilderPageBackground', function(charID){
-        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
-          if(ownsChar){
+        AuthCheck.canEditCharacter(userID, charID).then((canEditChar) => {
+          if(canEditChar){
             CharGathering.getCharacter(userID, charID).then((character) => {
               CharGathering.getAllBackgrounds(userID, character.enabledSources, character.enabledHomebrew).then((backgrounds) => {
                 socket.emit('returnBuilderPageBackground', backgrounds);
@@ -925,8 +925,8 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestBackgroundChange', function(charID, backgroundID){
-        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
-          if(ownsChar){
+        AuthCheck.canEditCharacter(userID, charID).then((canEditChar) => {
+          if(canEditChar){
             CharSaving.saveBackground(charID, backgroundID).then((result) => {
               socket.emit('returnBackgroundChange');
             });
@@ -945,8 +945,8 @@ module.exports = class SocketConnections {
       const userID = getUserID(socket);
 
       socket.on('requestBuilderPageClass', function(charID){
-        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
-          if(ownsChar){
+        AuthCheck.canEditCharacter(userID, charID).then((canEditChar) => {
+          if(canEditChar){
             CharGathering.getCharacter(userID, charID).then((character) => {
               CharGathering.getAllClasses(userID, character.enabledSources, character.enabledHomebrew).then((classObject) => {
                 socket.emit('returnBuilderPageClass', classObject);
@@ -959,8 +959,8 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestBuilderPageClass2', function(charID){
-        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
-          if(ownsChar){
+        AuthCheck.canEditCharacter(userID, charID).then((canEditChar) => {
+          if(canEditChar){
             CharGathering.getCharacter(userID, charID).then((character) => {
               CharGathering.getAllClasses(userID, character.enabledSources, character.enabledHomebrew).then((classObject) => {
                 socket.emit('returnBuilderPageClass2', classObject);
@@ -973,8 +973,8 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestClassChange', function(charID, classID, classNum){
-        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
-          if(ownsChar){
+        AuthCheck.canEditCharacter(userID, charID).then((canEditChar) => {
+          if(canEditChar){
             CharSaving.saveClass(charID, classID, classNum).then((result) => {
               socket.emit('returnClassChange', classNum);
             });
@@ -994,8 +994,8 @@ module.exports = class SocketConnections {
       const userID = getUserID(socket);
 
       socket.on('requestBuilderPageFinalize', function(charID){
-        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
-          if(ownsChar){
+        AuthCheck.canEditCharacter(userID, charID).then((canEditChar) => {
+          if(canEditChar){
             CharGathering.getCharacter(userID, charID).then((character) => {
               CharGathering.getAllUnselectedData(userID, charID).then((unselectedDataArray) => {
                 socket.emit('returnBuilderPageFinalize', character, unselectedDataArray);
@@ -1008,8 +1008,8 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestLangsAndTrainingsClear', function(charID, profSrcStruct, langSrcStruct, data){
-        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
-          if(ownsChar){
+        AuthCheck.canEditCharacter(userID, charID).then((canEditChar) => {
+          if(canEditChar){
             CharDataMapping.deleteData(charID, 'languages', langSrcStruct)
             .then((result) => {
               CharDataMapping.deleteData(charID, 'proficiencies', profSrcStruct)
@@ -1022,8 +1022,8 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestCustomCodeBlockDataClear', function(charID){
-        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
-          if(ownsChar){
+        AuthCheck.canEditCharacter(userID, charID).then((canEditChar) => {
+          if(canEditChar){
             CharDataMapping.deleteDataBySourceType(charID, 'custom-code')
             .then((result) => {
               socket.emit('returnCustomCodeBlockDataClear');
@@ -1044,8 +1044,8 @@ module.exports = class SocketConnections {
 
       /*
       socket.on('requestCharBuilderDetails', function(charID){
-        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
-          if(ownsChar){
+        AuthCheck.canEditCharacter(userID, charID).then((canEditChar) => {
+          if(canEditChar){
             CharGathering.getCharacter(userID, charID).then((character) => {
               BuilderCoreLoad(socket, charID, character).then((bStruct) => {
                 socket.emit('returnCharBuilderDetails', character, bStruct.builderCore, bStruct.choiceStruct);
@@ -1059,8 +1059,8 @@ module.exports = class SocketConnections {
       */
 
       socket.on('requestUnselectedDataChange', function(charID, srcStruct, unselectedData, deleteOnly=true){
-        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
-          if(ownsChar){
+        AuthCheck.canEditCharacter(userID, charID).then((canEditChar) => {
+          if(canEditChar){
             if(unselectedData == null){
               if(deleteOnly){
                 CharDataMapping.deleteDataOnly(charID, 'unselectedData', srcStruct)
@@ -1084,8 +1084,8 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestUnselectedDataClear', function(charID){
-        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
-          if(ownsChar){
+        AuthCheck.canEditCharacter(userID, charID).then((canEditChar) => {
+          if(canEditChar){
             CharDataMapping.deleteDataBySourceType(charID, 'unselectedData')
             .then((result) => {
               socket.emit('returnUnselectedDataClear');
@@ -1095,8 +1095,8 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestAbilityBonusChange', function(charID, srcStruct, abilityBonusStruct){
-        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
-          if(ownsChar){
+        AuthCheck.canEditCharacter(userID, charID).then((canEditChar) => {
+          if(canEditChar){
             if(abilityBonusStruct == null){
               CharDataMapping.deleteData(charID, 'abilityBonus', srcStruct)
               .then((result) => {
@@ -1113,8 +1113,8 @@ module.exports = class SocketConnections {
       });
     
       socket.on('requestClassChoiceChange', function(charID, srcStruct, classChoiceStruct, deleteSelfData=true){
-        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
-          if(ownsChar){
+        AuthCheck.canEditCharacter(userID, charID).then((canEditChar) => {
+          if(canEditChar){
             if(classChoiceStruct == null){
               CharDataMapping.deleteData(charID, 'classChoice', srcStruct)
               .then((result) => {
@@ -1131,8 +1131,8 @@ module.exports = class SocketConnections {
       });
     
       socket.on('requestProficiencyChange', function(charID, profChangePacket, profStruct){
-        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
-          if(ownsChar){
+        AuthCheck.canEditCharacter(userID, charID).then((canEditChar) => {
+          if(canEditChar){
             let srcStruct = profChangePacket.srcStruct;
             profChangePacket.profStruct = profStruct;
             if(profStruct == null){
@@ -1151,8 +1151,8 @@ module.exports = class SocketConnections {
       });
     
       socket.on('requestFeatChange', function(charID, featChangePacket){
-        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
-          if(ownsChar){
+        AuthCheck.canEditCharacter(userID, charID).then((canEditChar) => {
+          if(canEditChar){
             let srcStruct = featChangePacket.srcStruct;
             if(featChangePacket.featID == null){
               CharDataMapping.deleteData(charID, 'chosenFeats', srcStruct)
@@ -1173,8 +1173,8 @@ module.exports = class SocketConnections {
       });
     
       socket.on('requestLanguageChange', function(charID, srcStruct, langID, deleteSelfData=true){
-        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
-          if(ownsChar){
+        AuthCheck.canEditCharacter(userID, charID).then((canEditChar) => {
+          if(canEditChar){
             if(langID == null){
               CharDataMapping.deleteData(charID, 'languages', srcStruct)
               .then((result) => {
@@ -1191,8 +1191,8 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestSensesChange', function(charID, srcStruct, senseID, deleteSelfData=true){
-        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
-          if(ownsChar){
+        AuthCheck.canEditCharacter(userID, charID).then((canEditChar) => {
+          if(canEditChar){
             if(senseID == null){
               CharDataMapping.deleteData(charID, 'senses', srcStruct)
               .then((result) => {
@@ -1209,8 +1209,8 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestPhysicalFeaturesChange', function(charID, srcStruct, physicalFeatureID, deleteSelfData=true){
-        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
-          if(ownsChar){
+        AuthCheck.canEditCharacter(userID, charID).then((canEditChar) => {
+          if(canEditChar){
             if(physicalFeatureID == null){
               CharDataMapping.deleteData(charID, 'phyFeats', srcStruct)
               .then((result) => {
@@ -1227,8 +1227,8 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestDomainChange', function(charID, srcStruct, domain){
-        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
-          if(ownsChar){
+        AuthCheck.canEditCharacter(userID, charID).then((canEditChar) => {
+          if(canEditChar){
             if(domain == null || domain.Domain == null){
               CharDataMapping.deleteData(charID, 'domains', srcStruct)
               .then((result) => {
@@ -1249,8 +1249,8 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestDomainAdvancementChange', function(charID, srcStruct, domain){
-        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
-          if(ownsChar){
+        AuthCheck.canEditCharacter(userID, charID).then((canEditChar) => {
+          if(canEditChar){
             if(domain == null || domain.Domain == null){
               CharDataMapping.deleteData(charID, 'advancedDomains', srcStruct)
               .then((result) => {
@@ -1281,8 +1281,8 @@ module.exports = class SocketConnections {
       const userID = getUserID(socket);
 
       socket.on('requestLoreChange', function(charID, srcStruct, loreName, inputPacket, prof, sourceName, altAbilityScore){
-        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
-          if(ownsChar){
+        AuthCheck.canEditCharacter(userID, charID).then((canEditChar) => {
+          if(canEditChar){
             let profChangePacket = {
               srcStruct: srcStruct,
               profStruct: null,
@@ -1329,8 +1329,8 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestAddClassFeature', function(charID, srcStruct, featureName, inputPacket){
-        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
-          if(ownsChar){
+        AuthCheck.canEditCharacter(userID, charID).then((canEditChar) => {
+          if(canEditChar){
             if(featureName == null){
 
               CharDataMapping.deleteData(charID, 'classAbilityExtra', srcStruct)
@@ -1369,8 +1369,8 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestClassArchetypeChange', function(charID, srcStruct, classArchetypeID){
-        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
-          if(ownsChar){
+        AuthCheck.canEditCharacter(userID, charID).then((canEditChar) => {
+          if(canEditChar){
             if(classArchetypeID == null){
               CharDataMapping.deleteData(charID, 'classArchetypeChoice', srcStruct)
               .then((result) => {
@@ -1389,8 +1389,8 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestSCFSChange', function(charID, srcStruct, classFeatureID, inputPacket){
-        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
-          if(ownsChar){
+        AuthCheck.canEditCharacter(userID, charID).then((canEditChar) => {
+          if(canEditChar){
             if(classFeatureID == null){
               CharDataMapping.deleteData(charID, 'scfs', srcStruct)
               .then((result) => {
@@ -1409,8 +1409,8 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestFindClassFeatureForSCFS', function(charID, featureName, inputPacket){
-        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
-          if(ownsChar){
+        AuthCheck.canEditCharacter(userID, charID).then((canEditChar) => {
+          if(canEditChar){
 
             CharGathering.getClassFeatureByName(userID, charID, featureName)
             .then((classFeature) => {
@@ -1439,8 +1439,8 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestAddHeritageEffect', function(charID, srcStruct, heritageName, inputPacket){
-        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
-          if(ownsChar){
+        AuthCheck.canEditCharacter(userID, charID).then((canEditChar) => {
+          if(canEditChar){
             CharGathering.getHeritageByName(userID, charID, heritageName)
             .then((heritage) => {
               if(heritage != null){
@@ -1456,8 +1456,8 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestHeritageEffectsChange', function(charID, srcStruct, heritageID, deleteSelfData=true){
-        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
-          if(ownsChar){
+        AuthCheck.canEditCharacter(userID, charID).then((canEditChar) => {
+          if(canEditChar){
             if(heritageID == null){
               CharDataMapping.deleteData(charID, 'heritageExtra', srcStruct)
               .then((result) => {
@@ -1476,8 +1476,8 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestFindHeritagesFromAncestryName', function(charID, srcStruct, ancestryName, inputPacket){
-        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
-          if(ownsChar){
+        AuthCheck.canEditCharacter(userID, charID).then((canEditChar) => {
+          if(canEditChar){
             CharGathering.getHeritagesByAncestryName(userID, charID, ancestryName)
             .then((heritages) => {
               if(heritages != null){
@@ -1493,8 +1493,8 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestWeaponFamiliarityChange', function(charID, srcStruct, trait){
-        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
-          if(ownsChar){
+        AuthCheck.canEditCharacter(userID, charID).then((canEditChar) => {
+          if(canEditChar){
             CharDataMapping.setData(charID, 'weaponFamiliarity', srcStruct, trait)
             .then((result) => {
               socket.emit('returnWeaponFamiliarityChange');
@@ -1506,8 +1506,8 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestWeaponSpecializationChange', function(charID, srcStruct, type){
-        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
-          if(ownsChar){
+        AuthCheck.canEditCharacter(userID, charID).then((canEditChar) => {
+          if(canEditChar){
             if(type === 1 || type === 2 || type === 3) {
               CharDataMapping.setData(charID, 'weaponSpecialization', srcStruct, type)
               .then((result) => {
@@ -1523,8 +1523,8 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestArmorSpecializationChange', function(charID, srcStruct, armorName){
-        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
-          if(ownsChar){
+        AuthCheck.canEditCharacter(userID, charID).then((canEditChar) => {
+          if(canEditChar){
             CharDataMapping.setData(charID, 'armorSpecialization', srcStruct, armorName)
             .then((result) => {
               socket.emit('returnArmorSpecializationChange');
@@ -1536,8 +1536,8 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestWeaponCriticalSpecializationChange', function(charID, srcStruct, weapName){
-        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
-          if(ownsChar){
+        AuthCheck.canEditCharacter(userID, charID).then((canEditChar) => {
+          if(canEditChar){
             CharDataMapping.setData(charID, 'weaponCriticalSpecialization', srcStruct, weapName)
             .then((result) => {
               socket.emit('returnWeaponCriticalSpecializationChange');
@@ -1549,8 +1549,8 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestSpeedChange', function(charID, srcStruct, speedType, speedAmt){
-        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
-          if(ownsChar){
+        AuthCheck.canEditCharacter(userID, charID).then((canEditChar) => {
+          if(canEditChar){
             let amount = parseInt(speedAmt);
             if(!isNaN(amount) || speedAmt === 'LAND_SPEED') {
               CharDataMappingExt.setDataOtherSpeed(charID, srcStruct, speedType, speedAmt)
@@ -1567,8 +1567,8 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestCharTagChange', function(charID, srcStruct, charTag){
-        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
-          if(ownsChar){
+        AuthCheck.canEditCharacter(userID, charID).then((canEditChar) => {
+          if(canEditChar){
             CharTags.setTag(charID, srcStruct, charTag)
             .then((result) => {
               return CharTags.getTags(charID)
@@ -1583,8 +1583,8 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestFeatChangeByID', function(charID, featChangePacket){
-        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
-          if(ownsChar){
+        AuthCheck.canEditCharacter(userID, charID).then((canEditChar) => {
+          if(canEditChar){
             if(featChangePacket.feat != null && featChangePacket.feat.Feat != null){
               let srcStruct = featChangePacket.srcStruct;
               CharDataMapping.setDataOnly(charID, 'chosenFeats', srcStruct, featChangePacket.feat.Feat.id)
@@ -1601,8 +1601,8 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestLanguageChangeByID', function(charID, srcStruct, langID){
-        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
-          if(ownsChar){
+        AuthCheck.canEditCharacter(userID, charID).then((canEditChar) => {
+          if(canEditChar){
             CharDataMapping.setDataOnly(charID, 'languages', srcStruct, langID)
             .then((result) => {
               socket.emit('returnLanguageChangeByID');
@@ -1614,8 +1614,8 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestSensesChangeByID', function(charID, srcStruct, senseID){
-        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
-          if(ownsChar){
+        AuthCheck.canEditCharacter(userID, charID).then((canEditChar) => {
+          if(canEditChar){
             CharDataMapping.setDataOnly(charID, 'senses', srcStruct, senseID)
             .then((result) => {
               socket.emit('returnSensesChangeByID');
@@ -1627,8 +1627,8 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestPhysicalFeaturesChangeByID', function(charID, srcStruct, phyFeatID){
-        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
-          if(ownsChar){
+        AuthCheck.canEditCharacter(userID, charID).then((canEditChar) => {
+          if(canEditChar){
             CharDataMapping.setDataOnly(charID, 'phyFeats', srcStruct, phyFeatID)
             .then((result) => {
               socket.emit('returnPhysicalFeaturesChangeByID');
@@ -1641,8 +1641,8 @@ module.exports = class SocketConnections {
 
       // Give Spell Slots //
       socket.on('requestSpellCastingSlotChange', function(charID, srcStruct, spellSRC, spellcasting, reduceSlotsByOne=false){
-        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
-          if(ownsChar){
+        AuthCheck.canEditCharacter(userID, charID).then((canEditChar) => {
+          if(canEditChar){
             CharSpells.setSpellCasting(charID, srcStruct, spellSRC, spellcasting, reduceSlotsByOne)
             .then((spellSlots) => {
               if(spellSlots != null){
@@ -1658,8 +1658,8 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestSpellSlotChange', function(charID, srcStruct, spellSRC, spellLevel, slotType=''){
-        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
-          if(ownsChar){
+        AuthCheck.canEditCharacter(userID, charID).then((canEditChar) => {
+          if(canEditChar){
             if(spellLevel != null){
               CharSpells.setSpellSlot(charID, srcStruct, spellSRC, spellLevel, slotType)
               .then((spellSlot) => {
@@ -1683,8 +1683,8 @@ module.exports = class SocketConnections {
 
       // Set Key Ability for Spell SRC //
       socket.on('requestKeySpellAbilityChange', function(charID, srcStruct, spellSRC, abilityScore){
-        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
-          if(ownsChar){
+        AuthCheck.canEditCharacter(userID, charID).then((canEditChar) => {
+          if(canEditChar){
             CharDataMapping.setData(charID, 'spellKeyAbilities', srcStruct, spellSRC+"="+abilityScore)
             .then((result) => {
               socket.emit('returnKeySpellAbilityChange');
@@ -1697,8 +1697,8 @@ module.exports = class SocketConnections {
 
       // Set Spellcasting Type for Spell SRC //
       socket.on('requestSpellCastingTypeChange', function(charID, srcStruct, spellSRC, castingType){
-        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
-          if(ownsChar){
+        AuthCheck.canEditCharacter(userID, charID).then((canEditChar) => {
+          if(canEditChar){
             CharDataMapping.setData(charID, 'spellCastingType', srcStruct, spellSRC+"="+castingType)
             .then((result) => {
               socket.emit('returnSpellCastingTypeChange');
@@ -1711,8 +1711,8 @@ module.exports = class SocketConnections {
 
       // Set Tradition for Spell SRC //
       socket.on('requestSpellTraditionChange', function(charID, srcStruct, spellSRC, spellList){
-        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
-          if(ownsChar){
+        AuthCheck.canEditCharacter(userID, charID).then((canEditChar) => {
+          if(canEditChar){
             if(spellList == 'OCCULT' || spellList == 'ARCANE' || spellList == 'DIVINE' || spellList == 'PRIMAL') {
               CharDataMapping.setData(charID, 'spellLists', srcStruct, spellSRC+"="+spellList)
               .then((result) => {
@@ -1729,8 +1729,8 @@ module.exports = class SocketConnections {
 
       // Add Spell to Spellbook for Spell SRC //
       socket.on('requestBuilderSpellAddToSpellBook', function(charID, srcStruct, spellSRC, spellName, spellLevel, spellType=null){
-        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
-          if(ownsChar){
+        AuthCheck.canEditCharacter(userID, charID).then((canEditChar) => {
+          if(canEditChar){
             let sLevel = parseInt(spellLevel);
             if(!isNaN(sLevel)) {
               CharGathering.getSpellByName(userID, charID, spellName)
@@ -1759,8 +1759,8 @@ module.exports = class SocketConnections {
 
       // Innate Spell //
       socket.on('requestInnateSpellChange', function(charID, srcStruct, spellName, spellLevel, spellTradition, timesPerDay){
-        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
-          if(ownsChar){
+        AuthCheck.canEditCharacter(userID, charID).then((canEditChar) => {
+          if(canEditChar){
             if(spellTradition == 'OCCULT' || spellTradition == 'ARCANE' || spellTradition == 'DIVINE' || spellTradition == 'PRIMAL') {
               let tPd = parseInt(timesPerDay);
               let sLevel = parseInt(spellLevel);
@@ -1794,8 +1794,8 @@ module.exports = class SocketConnections {
 
       // Focus Spell //
       socket.on('requestFocusSpellChange', function(charID, srcStruct, spellSRC, spellName){
-        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
-          if(ownsChar){
+        AuthCheck.canEditCharacter(userID, charID).then((canEditChar) => {
+          if(canEditChar){
             CharGathering.getSpellByName(userID, charID, spellName)
             .then((spell) => {
               if(spell != null){
@@ -1818,8 +1818,8 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestFocusPointChange', function(charID, srcStruct){
-        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
-          if(ownsChar){
+        AuthCheck.canEditCharacter(userID, charID).then((canEditChar) => {
+          if(canEditChar){
             CharDataMapping.setData(charID, 'focusPoint', srcStruct, '1')
             .then((result) => {
               socket.emit('returnFocusPointChange');
@@ -1832,8 +1832,8 @@ module.exports = class SocketConnections {
 
       // Resistances //
       socket.on('requestResistanceChange', function(charID, srcStruct, resistType, resistAmount){
-        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
-          if(ownsChar){
+        AuthCheck.canEditCharacter(userID, charID).then((canEditChar) => {
+          if(canEditChar){
             if(resistType == null || resistAmount == null){
               CharDataMapping.deleteData(charID, 'resistance', srcStruct)
               .then((result) => {
@@ -1858,8 +1858,8 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestVulnerabilityChange', function(charID, srcStruct, vulnerType, vulnerAmount){
-        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
-          if(ownsChar){
+        AuthCheck.canEditCharacter(userID, charID).then((canEditChar) => {
+          if(canEditChar){
             if(vulnerType == null || vulnerAmount == null){
               CharDataMapping.deleteData(charID, 'vulnerability', srcStruct)
               .then((result) => {
@@ -1884,8 +1884,8 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestNotesFieldChange', function(charID, srcStruct, placeholderText, noteChangePacket){
-        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
-          if(ownsChar){
+        AuthCheck.canEditCharacter(userID, charID).then((canEditChar) => {
+          if(canEditChar){
             CharDataMapping.getDataSingle(charID, 'notesField', srcStruct)
             .then((notesData) => {
               if(notesData == null) {
@@ -1907,8 +1907,8 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestNotesFieldDelete', function(charID, srcStruct){
-        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
-          if(ownsChar){
+        AuthCheck.canEditCharacter(userID, charID).then((canEditChar) => {
+          if(canEditChar){
             CharDataMapping.deleteData(charID, 'notesField', srcStruct)
             .then((result) => {
               socket.emit('returnNotesFieldDelete', srcStruct);
@@ -1931,8 +1931,8 @@ module.exports = class SocketConnections {
       const userID = getUserID(socket);
 
       socket.on('requestDataClearAtSrcStruct', function(charID, srcStruct){
-        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
-          if(ownsChar){
+        AuthCheck.canEditCharacter(userID, charID).then((canEditChar) => {
+          if(canEditChar){
             CharDataMapping.deleteDataBySourceStruct(charID, srcStruct)
             .then((result) => {
               socket.emit('returnDataClearAtSrcStruct', srcStruct);
@@ -1942,8 +1942,8 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestMetaDataSetOnly', function(charID, source, srcStruct, value){
-        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
-          if(ownsChar){
+        AuthCheck.canEditCharacter(userID, charID).then((canEditChar) => {
+          if(canEditChar){
             CharDataMapping.setDataOnly(charID, source, srcStruct, value)
             .then((result) => {
               socket.emit('returnMetaDataSetOnly');
@@ -1954,8 +1954,8 @@ module.exports = class SocketConnections {
 
       /*
       socket.on('requestWSCChoices', function(charID, wscCode, srcStruct, locationID){
-        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
-          if(ownsChar){
+        AuthCheck.canEditCharacter(userID, charID).then((canEditChar) => {
+          if(canEditChar){
             CharChoicesLoad(socket, charID).then((choiceStruct) => {
               socket.emit('returnWSCChoices', wscCode, srcStruct, locationID, choiceStruct);
             });
@@ -1966,8 +1966,8 @@ module.exports = class SocketConnections {
 
 
       socket.on('requestWSCMapsInit', function(charID){
-        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
-          if(ownsChar){
+        AuthCheck.canEditCharacter(userID, charID).then((canEditChar) => {
+          if(canEditChar){
             CharGathering.getCharacter(userID, charID).then((character) => {
               CharGathering.getAllFeats(userID, character.enabledSources, character.enabledHomebrew).then((featsObject) => {
                 CharGathering.getAllLanguages(userID, charID).then((langsObject) => {
@@ -1988,8 +1988,8 @@ module.exports = class SocketConnections {
       });
     
       socket.on('requestWSCUpdateChoices', function(charID, updateType){
-        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
-          if(ownsChar){
+        AuthCheck.canEditCharacter(userID, charID).then((canEditChar) => {
+          if(canEditChar){
             if(updateType == 'ABILITY-BOOSTS'){
               CharGathering.getChoicesAbilityBonus(userID, charID).then((bonusDataArray) => {
                 socket.emit('returnWSCUpdateChoices', 'ABILITY-BOOSTS', bonusDataArray);
@@ -2010,8 +2010,8 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestWSCAbilityBonusChange', function(charID, srcStruct, abilityBonusStruct, selectBoostControlShellClass){
-        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
-          if(ownsChar){
+        AuthCheck.canEditCharacter(userID, charID).then((canEditChar) => {
+          if(canEditChar){
             if(abilityBonusStruct == null){
               CharDataMapping.deleteData(charID, 'abilityBonus', srcStruct)
               .then((result) => {
@@ -2028,8 +2028,8 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestWSCInnateSpellChange', function(charID, srcStruct, innateSpellStruct, selectControlShellClass){
-        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
-          if(ownsChar){
+        AuthCheck.canEditCharacter(userID, charID).then((canEditChar) => {
+          if(canEditChar){
             if(innateSpellStruct == null){
               CharDataMapping.deleteData(charID, 'innateSpell', srcStruct)
               .then((result) => {
@@ -2051,8 +2051,8 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestWSCCharTagChange', function(charID, srcStruct, charTag, selectControlShellClass, triggerReload){
-        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
-          if(ownsChar){
+        AuthCheck.canEditCharacter(userID, charID).then((canEditChar) => {
+          if(canEditChar){
             CharTags.setTag(charID, srcStruct, charTag)
             .then((result) => {
               return CharTags.getTags(charID)
@@ -2067,8 +2067,8 @@ module.exports = class SocketConnections {
       });
 
       socket.on('requestWSCSrcStructDataClear', function(charID, srcStruct){
-        AuthCheck.ownsCharacter(userID, charID).then((ownsChar) => {
-          if(ownsChar){
+        AuthCheck.canEditCharacter(userID, charID).then((canEditChar) => {
+          if(canEditChar){
             CharDataMapping.deleteDataSNumChildren(charID, srcStruct)
             .then((result) => {
               socket.emit('returnWSCSrcStructDataClear');

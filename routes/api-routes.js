@@ -14,7 +14,7 @@ const charAuthCheck = (req, res, next) => {
     res.status(401);
     res.redirect('/auth/login');
   } else {
-    AuthCheck.ownsCharacterAPI(req.user.id, req.params.id).then((ownsChar) => {
+    AuthCheck.ownsCharacter(req.user.id, req.params.id).then((ownsChar) => {
       if(ownsChar){
         req.charID = req.params.id;
         next();

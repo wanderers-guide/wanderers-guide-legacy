@@ -8,8 +8,12 @@ module.exports = class CampaignGathering {
 
   static getOwnedCampaigns(userID) {
 
+    Campaign.hasMany(CampaignAccessToken, { foreignKey: 'campaignID' });
+    CampaignAccessToken.belongsTo(Campaign, { foreignKey: 'campaignID' });
+
     return Campaign.findAll({
       where: { userID: userID },
+      include: [CampaignAccessToken]
     }).then(campaigns => {
       return campaigns;
     });
@@ -45,18 +49,6 @@ module.exports = class CampaignGathering {
         return campaign;
       });
     });
-
-    /*
-    Campaign.hasMany(CampaignAccessToken, {foreignKey: 'campaignID'});
-    CampaignAccessToken.belongsTo(Campaign, {foreignKey: 'campaignID'});
-    return Campaign.findAll({
-        order: [['name', 'ASC'],],
-        where: { charID: charID },
-        include: [CampaignAccessToken]
-    }).then((campaigns) => {
-        return campaigns;
-    });
-    */
 
   }
 

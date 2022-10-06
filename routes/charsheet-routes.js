@@ -1,7 +1,10 @@
 
 const router = require('express').Router();
+
 const Character = require('../models/contentDB/Character');
+
 const CharStateUtils = require('../js/CharStateUtils');
+const AuthCheck = require('../js/AuthCheck');
 
 const PATH = '/profile/characters/'; // <- Change this if routes are ever changed //
 router.get('*', (req, res) => {
@@ -15,21 +18,25 @@ router.get('*', (req, res) => {
     .then((character) => {
         if(character != null){
 
-            let isPublicSheet = CharStateUtils.isPublic(character);
-            let isRestrictedView = (isPublicSheet && (req.user == null || character.userID != req.user.id));
+          AuthCheck.canViewCharacter(req.user.id, character.id).then((canViewChar) => {
+            if(canViewChar){
 
-            if(isPublicSheet || (req.user != null && character.userID === req.user.id)){
+              AuthCheck.canEditCharacter(req.user.id, character.id).then((canEditChar) => {
 
                 if(CharStateUtils.isPlayable(character)) {
-                    goToCharSheet(character, req, res, isRestrictedView, sheetType);
+                  goToCharSheet(character, req, res, !canEditChar, sheetType);
                 } else {
-                    res.redirect('/profile/characters/builder/basics/?id='+character.id);
+                  res.redirect('/profile/characters/builder/basics/?id='+character.id);
                 }
-    
+
+              });
+
             } else {
-                res.status(403); // 403 - Forbidden
-                res.render('error/private_character_error', { title: "Private Character Error - Wanderer's Guide", user: req.user });
+              res.status(403); // 403 - Forbidden
+              res.render('error/private_character_error', { title: "Private Character Error - Wanderer's Guide", user: req.user });
             }
+          });
+
         } else {
             res.status(403); // 403 - Forbidden, really a 404 - Not Found
             res.render('error/private_character_error', { title: "Private Character Error - Wanderer's Guide", user: req.user });

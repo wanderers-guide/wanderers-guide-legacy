@@ -4,25 +4,30 @@ const Character = require('../models/contentDB/Character');
 
 const CharStateUtils = require('../js/CharStateUtils');
 const CharGathering = require('../js/CharGathering');
+const AuthCheck = require('../js/AuthCheck');
 
 router.get('/basics', (req, res) => {
 
   let charID = parseInt(req.query.id); if(isNaN(charID)){charID=null;}
 
-  Character.findOne({ where: { id: charID, userID: req.user.id } })
-  .then((character) => {
-    if(character != null){
+  AuthCheck.canEditCharacter(req.user.id, charID).then((canEditChar) => {
+    if(canEditChar){
 
-      CharGathering.getBaseAbilityScores(req.user.id, character.id)
-      .then((charAbilityScores) => {
-        let isPlayable = CharStateUtils.isPlayable(character);
+      Character.findOne({ where: { id: charID } })
+      .then((character) => {
 
-        res.render('char_builder/char_builder_init', {
-            title: "Character Builder - Wanderer's Guide",
-            user: req.user,
-            character: character,
-            charAbilities: charAbilityScores,
-            isPlayable: isPlayable,
+        CharGathering.getBaseAbilityScores(req.user.id, character.id)
+        .then((charAbilityScores) => {
+          let isPlayable = CharStateUtils.isPlayable(character);
+
+          res.render('char_builder/char_builder_init', {
+              title: "Character Builder - Wanderer's Guide",
+              user: req.user,
+              character: character,
+              charAbilities: charAbilityScores,
+              isPlayable: isPlayable,
+          });
+
         });
 
       });
@@ -43,25 +48,29 @@ router.get('/', (req, res) => {
   let charID = parseInt(req.query.id); if(isNaN(charID)){charID=null;}
   let pageNum = parseInt(req.query.page); if(isNaN(pageNum)){pageNum=null;}
 
-  Character.findOne({ where: { id: charID, userID: req.user.id } })
-  .then((character) => {
-    if(character != null){
+  AuthCheck.canEditCharacter(req.user.id, charID).then((canEditChar) => {
+    if(canEditChar){
+      
+      Character.findOne({ where: { id: charID } })
+      .then((character) => {
 
-      let isPlayable = CharStateUtils.isPlayable(character);
+        let isPlayable = CharStateUtils.isPlayable(character);
 
-      let builderPageRender = '';
-      if(character.builderByLevel === 1) {
-        builderPageRender = 'builder/build_planner_level';
-      } else {
-        builderPageRender = 'builder/build_planner_abc';
-      }
+        let builderPageRender = '';
+        if(character.builderByLevel === 1) {
+          builderPageRender = 'builder/build_planner_level';
+        } else {
+          builderPageRender = 'builder/build_planner_abc';
+        }
 
-      res.render(builderPageRender, { // char_builder/char_builder
-        title: "Character Builder - Wanderer's Guide",
-        user: req.user,
-        character: character,
-        isPlayable: isPlayable,
-        pageNum: pageNum,
+        res.render(builderPageRender, { // char_builder/char_builder
+          title: "Character Builder - Wanderer's Guide",
+          user: req.user,
+          character: character,
+          isPlayable: isPlayable,
+          pageNum: pageNum,
+        });
+
       });
 
     } else {
