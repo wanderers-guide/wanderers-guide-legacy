@@ -86,6 +86,7 @@ socket.on('returnEditCampaign', () => {
 
 
 function openViewCampaign(campaignID) {
+  window.history.pushState({}, null, '/gm-tools/campaigns/'+campaignID);
   new DisplayCampaign('campaigns-container', campaignID);
 }
 
@@ -148,7 +149,6 @@ function openEditCampaign(campaign) {
 function handleCampaignForwardingFromURL(){
 
   let campaignID = parseInt(window.location.pathname.split("campaigns/")[1]);
-  console.log(campaignID);
   if(!isNaN(campaignID) && campaignMap.get(campaignID+'') != null){
     openViewCampaign(campaignID+'');
   }

@@ -431,6 +431,8 @@ function convertToWGSource(source) {
         case 'Pathfinder Bestiary': return 'BEST-1';
         case 'Pathfinder Bestiary 2': return 'BEST-2';
         case 'Pathfinder Bestiary 3': return 'BEST-3';
+        case 'Pathfinder Gamemastery Guide': return 'GM-GUIDE';
+        case 'Pathfinder Lost Omens: The Mwangi Expanse': return 'LOST-MWANGI';
         case 'Pathfinder Adventure: Malevolence': return 'MALEVOLENCE';
         case 'Pathfinder #145: Hellknight Hill': return 'AGE-OF-ASHES';
         default: return source;

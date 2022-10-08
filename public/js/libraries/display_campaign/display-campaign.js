@@ -27,13 +27,10 @@ class DisplayCampaign {
 
           if (backButton) {
             $('#campaign-back-btn').removeClass('is-hidden');
-            $('#campaign-back-btn').click(function () {
+            $('#campaign-back-btn, .category-tabs li').click(function () {
               $('#' + campaignDisplayContainerID).remove();
               $('#' + containerID).removeClass('is-hidden');
-            });
-            $('.category-tabs li').click(function () {
-              $('#' + campaignDisplayContainerID).remove();
-              $('#' + containerID).removeClass('is-hidden');
+              window.history.pushState({}, null, '/gm-tools/campaigns');
             });
           }
 
