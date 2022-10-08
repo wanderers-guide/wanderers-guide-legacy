@@ -4,7 +4,17 @@ const CampaignAccessToken = require("../models/contentDB/CampaignAccessToken");
 const Character = require("../models/contentDB/Character");
 const CalculatedStat = require("../models/contentDB/CalculatedStat");
 
+function getUserCampaignLimit(){ return 1; }
 module.exports = class CampaignGathering {
+
+  static canMakeCampaign(user, campaigns) {
+    return user.isPatreonMember === 1 || campaigns.length < getUserCampaignLimit();
+  }
+
+  static getUserCampaignLimit(){
+    return getUserCampaignLimit();
+  }
+  
 
   static getOwnedCampaigns(userID) {
 

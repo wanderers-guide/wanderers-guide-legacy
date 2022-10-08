@@ -149,7 +149,7 @@ function handleCampaignForwardingFromURL(){
 
   let campaignID = parseInt(window.location.pathname.split("campaigns/")[1]);
   console.log(campaignID);
-  if(!isNaN(campaignID)){
+  if(!isNaN(campaignID) && campaignMap.get(campaignID+'') != null){
     openViewCampaign(campaignID+'');
   }
 

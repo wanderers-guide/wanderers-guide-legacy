@@ -28,3 +28,7 @@
 .card-footer-hover {
   background-color: var(--character-card-footer-hover-color);
 }
+
+.hr-light {
+  border-color: #5a5a5a!important;
+}

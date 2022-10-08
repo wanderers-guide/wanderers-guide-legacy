@@ -12,7 +12,9 @@ $(function () {
     if ($('#quickviewDefault').hasClass('quickview-auto-close-protection')) {
       $('#quickviewDefault').removeClass('quickview-auto-close-protection');
     } else {
-      closeQuickView();
+      if(!$('#quickviewDefault').hasClass('quickview-prevent-auto-close')){
+        closeQuickView();
+      }
     }
   });
 
@@ -162,6 +164,13 @@ function closeQuickView() {
 
 function addQuickViewProtection() {
   $('#quickviewDefault').addClass('quickview-auto-close-protection');
+}
+
+function enablePreventQuickViewAutoClose(){
+  $('#quickviewDefault').addClass('quickview-prevent-auto-close');
+}
+function disablePreventQuickViewAutoClose(){
+  $('#quickviewDefault').removeClass('quickview-prevent-auto-close');
 }
 
 function refreshQuickView(newData=g_QViewLastData) {

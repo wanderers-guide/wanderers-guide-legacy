@@ -243,6 +243,9 @@ body {
 .input:hover, .select select:hover, .textarea:hover, .button:hover {
   border-color: hsl(0, 0%, 10%);
 }
+.input:focus, .select select:focus, .textarea:focus, .button:focus {
+  border-color: hsl(0, 0%, 10%);
+}
 .input::-webkit-input-placeholder, .select select::-webkit-input-placeholder, .textarea::-webkit-input-placeholder{
   color:rgba(219,219,219,.4);
 }

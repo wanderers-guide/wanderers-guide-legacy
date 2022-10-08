@@ -18,7 +18,7 @@ function openCharacterQuickview(data) {
   }
 
   $('#quickViewTitle').html(data.character.name);
-  $('#quickViewTitleRight').html(`Lvl ${data.character.level}`);
+  $('#quickViewTitleRight').html(`Level ${data.character.level}`);
 
   let qContent = $('#quickViewContent');
 
@@ -173,7 +173,13 @@ function openCharacterQuickview(data) {
       newHP = 0;
     }
     $(this).val(newHP);
+    data.character.currentHealth = newHP;
     socket.emit(`requestCharacterUpdate-Health`, data.charID, newHP);
+
+    // For encounter builder
+    if(typeof reloadEncounterMembers !== 'undefined'){
+      reloadEncounterMembers();
+    }
   });
   $(`#charUpdateInput-HP`).click(function (event) {
     event.stopImmediatePropagation();
@@ -195,6 +201,7 @@ function openCharacterQuickview(data) {
       newTempHP = 0;
     }
     $(this).val(newTempHP);
+    data.character.tempHealth = newTempHP;
     socket.emit(`requestCharacterUpdate-TempHealth`, data.charID, newTempHP);
   });
   $(`#charUpdateInput-TempHP`).click(function (event) {
@@ -217,6 +224,7 @@ function openCharacterQuickview(data) {
       newExperience = 0;
     }
     $(this).val(newExperience);
+    data.character.experience = newExperience;
     socket.emit(`requestCharacterUpdate-Exp`, data.charID, newExperience);
   });
   $(`#charUpdateInput-Experience`).click(function (event) {
@@ -227,7 +235,9 @@ function openCharacterQuickview(data) {
   $(`#charUpdateSelect-HeroPoints option[value="${data.character.heroPoints}"]`).attr('selected', 'selected');
 
   $(`#charUpdateSelect-HeroPoints`).change(function () {
-    socket.emit(`requestCharacterUpdate-HeroPoints`, data.charID, $(this).val());
+    let newHeroPoints = $(this).val();
+    data.character.heroPoints = newHeroPoints;
+    socket.emit(`requestCharacterUpdate-HeroPoints`, data.charID, newHeroPoints);
   });
 
   ///         ///
@@ -283,6 +293,7 @@ function openCharacterQuickview(data) {
         newStamina = 0;
       }
       $(this).val(newStamina);
+      data.character.currentStamina = newStamina;
       socket.emit(`requestCharacterUpdate-Stamina`, data.charID, newStamina);
     });
     $(`#charUpdateInput-Stamina`).click(function (event) {
@@ -306,6 +317,7 @@ function openCharacterQuickview(data) {
         newResolve = 0;
       }
       $(this).val(newResolve);
+      data.character.currentResolve = newResolve;
       socket.emit(`requestCharacterUpdate-Resolve`, data.charID, newResolve);
     });
     $(`#charUpdateInput-Resolve`).click(function (event) {
@@ -328,6 +340,9 @@ function openCharacterQuickview(data) {
       $("#charRollHistoryChevron").addClass('fa-chevron-up');
       $('#charRollHistoryBar').addClass('is-hidden');
       g_characterViewOpenedTab_rollHistory = true;
+
+      // Scroll to bottom
+      $('#charRollHistorySection').scrollTop($('#charRollHistorySection')[0].scrollHeight);
     } else {
       $("#charRollHistorySection").addClass('is-hidden');
       $("#charRollHistoryChevron").removeClass('fa-chevron-up');

@@ -74,10 +74,23 @@
   <div class="columns is-mobile is-centered is-vcentered pt-3 is-marginless">
     <div class="column is-5 is-paddingless">
       <h1 class="is-size-2 is-inline-block has-txt-value-string title-font">Campaigns</h1>
+      {{#ifEqual user.isPatreonMember 0}}
+        <span class="is-size-5 ml-3 has-tooltip-bottom has-tooltip-multiline has-txt-listing" data-tooltip="You can only have one campaign at a time. To get unlimited campaigns, support us and what we're doing on Patreon!">({{campaigns.length}}/{{campaignLimit}})</span>
+      {{/ifEqual}}
     </div>
     <div class="column is-5 is-paddingless">
-      <a id="campaign-create-btn" class="is-size-3 is-pulled-right"><span class="icon is-large has-text-info"><i
-            class="fas fa-plus"></i></span></a>
+      {{#if canMakeCampaign}}
+        <a id="campaign-create-btn" class="is-size-3 is-pulled-right"><span class="icon is-large has-text-info has-tooltip-bottom" data-tooltip="Create Campaign"><i class="fas fa-plus"></i></span></a>
+      {{else}}
+        <a class="is-size-3 is-pulled-right"><span class="icon is-large has-text-danger has-tooltip-bottom" data-tooltip="You have reached your campaign limit."><i class="fas fa-plus"></i></span></a>
+
+        <a href="https://www.patreon.com/bePatron?u=32932027" target="_blank" class="button is-rounded is-small is-hidden-mobile mt-2 mx-3 is-pulled-right" style="background-color: rgb(255, 66, 77);color: white;">
+          <span class="icon is-small">
+            <i class="fab fa-patreon"></i>
+          </span>
+          <span>Become a patron</span>
+        </a>
+      {{/if}}
     </div>
   </div>
   <hr>

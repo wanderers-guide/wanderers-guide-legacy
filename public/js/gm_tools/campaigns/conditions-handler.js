@@ -14,7 +14,7 @@ function addCondition(accessToken, conditionName, conditionValue = null) {
     socket.emit(`requestCharacterUpdate-ConditionAdd`, accessToken.charID, condition.name, condition.id, conditionValue, null, null, accessToken.calculatedStat, (calcConditions) => {
       // Callback function
       accessToken.calculatedStat.conditions = calcConditions;
-      populateConditions(accessToken);
+      populateConditions(accessToken, `character-container-conditions-${accessToken.charID}`, false);
     });
 
   }
@@ -51,7 +51,7 @@ function removeCondition(accessToken, conditionName) {
     }
     accessToken.calculatedStat.conditions = newConditions;
 
-    populateConditions(accessToken);
+    populateConditions(accessToken, `character-container-conditions-${accessToken.charID}`, false);
 
     socket.emit(`requestCharacterUpdate-ConditionRemove`, accessToken.charID, condition.conditionID, accessToken.calculatedStat);
   }
@@ -66,7 +66,7 @@ function updateCondition(accessToken, conditionName, newValue) {
   if(condition){
 
     condition.value = newValue;
-    populateConditions(accessToken);
+    populateConditions(accessToken, `character-container-conditions-${accessToken.charID}`, false);
 
     socket.emit(`requestCharacterUpdate-ConditionUpdate`, accessToken.charID, condition.conditionID, newValue, condition.sourceText, condition.parentEntryID, accessToken.calculatedStat);
 

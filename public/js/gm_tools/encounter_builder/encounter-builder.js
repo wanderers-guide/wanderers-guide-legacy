@@ -32,7 +32,10 @@ let g_allTags;
 let g_featMap;
 let g_itemMap;
 let g_spellMap;
-socket.on("returnEncounterDetails", function (allCreatures, allTags, featsObject, itemsObject, spellsObject, allConditions) {
+
+let g_campaigns;
+
+socket.on("returnEncounterDetails", function (allCreatures, allTags, featsObject, itemsObject, spellsObject, allConditions, campaigns) {
 
   g_creaturesMap = new Map();
   for (let creature of allCreatures) {
@@ -92,6 +95,8 @@ socket.on("returnEncounterDetails", function (allCreatures, allTags, featsObject
   g_featMap = objToMap(featsObject);
   g_itemMap = objToMap(itemsObject);
   g_spellMap = objToMap(spellsObject);
+
+  g_campaigns = campaigns;
 
   loadData();
 
@@ -169,6 +174,20 @@ function displayEncounter(encounterIndex) {
   $(`#encounter-party-size-input`).val(allEncounters[currentEncounterIndex].partySize);
   $(`#encounter-party-level-input`).val(allEncounters[currentEncounterIndex].partyLevel);
 
+  if(allEncounters[currentEncounterIndex].campaignID == null){
+    $('#encounter-set-campaign-btn').addClass('is-outlined');
+    $('#encounter-set-campaign-title').text('Set Campaign');
+
+    $(`#encounter-section-party-size`).show();
+    $(`#encounter-section-party-level`).show();
+  } else {
+    $('#encounter-set-campaign-btn').removeClass('is-outlined');
+    $('#encounter-set-campaign-title').text('View Campaign');
+
+    $(`#encounter-section-party-size`).hide();
+    $(`#encounter-section-party-level`).hide();
+  }
+
   $(`.encounterViewBtn`).removeClass('is-hovered');
   $(`#encounter-btn-view-${currentEncounterIndex}`).addClass('is-hovered');
 
@@ -210,13 +229,34 @@ function initEncounterView() {
 
 
   $(`#encounter-roll-initiative-btn`).click(function () {
+    $('#quickviewLeftDefault').removeClass('is-active');
+    $('#quickviewDefault').removeClass('is-active');
+
     openRollInitiativeModal();
   });
   $(`#encounter-add-creature-btn`).click(function () {
+    $('#quickviewLeftDefault').removeClass('is-active');
+    $('#quickviewDefault').removeClass('is-active');
+    
     openCreatureSelectQuickview();
   });
   $(`#encounter-add-custom-btn`).click(function () {
+    $('#quickviewLeftDefault').removeClass('is-active');
+    $('#quickviewDefault').removeClass('is-active');
+
     openCustomCreatureQuickview();
+  });
+
+  $(`#encounter-set-campaign-btn`).click(function () {
+    $('#quickviewLeftDefault').removeClass('is-active');
+    $('#quickviewDefault').removeClass('is-active');
+
+    let campaignID = allEncounters[currentEncounterIndex].campaignID;
+    if(campaignID == null){
+      openSelectCampaignModal();
+    } else {
+      openCampaignView(campaignID);
+    }
   });
 
 }
@@ -227,6 +267,7 @@ function addEncounter() {
     partySize: 4,
     partyLevel: 1,
     members: [],
+    campaignID: null,
   });
 }
 
@@ -251,6 +292,8 @@ function addMember(encounter, creatureID, eliteWeak = null) {
     comments: ``,
     isCustom: false,
     customData: null,
+    isCharacter: false,
+    characterData: null,
   });
 }
 
@@ -268,6 +311,8 @@ function addCustomMember(encounter, name, level, maxHP) {
     comments: ``,
     isCustom: true,
     customData: { name: name, level: level, hpMax: maxHP },
+    isCharacter: false,
+    characterData: null,
   });
 }
 
@@ -280,7 +325,9 @@ function removeMember(encounter, member) {
 }
 
 function getOriginalCreature(member){
-  if(member.isCustom){
+  if(member.isCharacter){
+    return member.characterData;
+  } else if(member.isCustom){
     return member.customData;
   } else {
     return g_creaturesMap.get(member.creatureID);
@@ -288,6 +335,12 @@ function getOriginalCreature(member){
 }
 
 function addCondition(member, conditionName, conditionValue = null) {
+
+  if(member.isCharacter){
+    processCharacter_addCondition(member.characterData, conditionName, conditionValue);
+    return;
+  }
+
   const condition = member.conditions.find(condition => {
     return condition.name.toLowerCase() == conditionName.toLowerCase();
   });
@@ -315,6 +368,12 @@ function addCondition(member, conditionName, conditionValue = null) {
 }
 
 function removeCondition(member, conditionName) {
+
+  if(member.isCharacter){
+    processCharacter_removeCondition(member.characterData, conditionName);
+    return;
+  }
+
   const condition = member.conditions.find(condition => {
     return condition.name.toLowerCase() == conditionName.toLowerCase();
   });
@@ -342,6 +401,12 @@ function removeCondition(member, conditionName) {
 }
 
 function updateCondition(member, conditionName, newValue) {
+
+  if(member.isCharacter){
+    processCharacter_updateCondition(member.characterData, conditionName, newValue);
+    return;
+  }
+
   let condition = member.conditions.find(condition => {
     return condition.name.toLowerCase() == conditionName.toLowerCase();
   });
@@ -399,6 +464,9 @@ function reloadEncounterMembers() {
     let container_memberConditions = `member-container-conditions-${i}`;
     let container_memberComments = `member-container-comments-${i}`;
 
+    let currentHP = (member.isCharacter) ? member.characterData.character.currentHealth : member.currentHP;
+    let maxHP = (member.isCharacter) ? member.characterData.calculatedStat.maxHP : member.maxHP;
+
     $(`#encounter-members-view`).append(`
       <div class="columns is-marginless is-mobile">
         <div class="column is-1 text-center is-paddingless">
@@ -423,14 +491,14 @@ function reloadEncounterMembers() {
         <div class="column is-2 text-center is-paddingless">
             <div class="field has-addons has-addons-centered" style="padding-left: 0.15rem; padding-right: 0.15rem; padding-top: 0.2rem; padding-bottom: 0.2rem;">
                 <p class="control"><input id="${input_memberCurrentHP}" class="input is-small text-center" type="text"
-                        min="0" max="${member.maxHP}" autocomplete="off" value="${member.currentHP}"></p>
+                        min="0" max="${maxHP}" autocomplete="off" value="${currentHP}"></p>
                 <p class="control"><a class="button is-static is-small border-darker">/</a></p>
-                <p class="control"><a class="button is-static is-extra is-small border-darker">${member.maxHP}</a>
+                <p class="control"><a class="button is-static is-extra is-small border-darker">${maxHP}</a>
                 </p>
             </div>
         </div>
         <div class="column is-4 text-left is-paddingless">
-            <div class="is-inline-flex" style="padding-left: 0.15rem; padding-right: 0.15rem; padding-top: 0.07rem; padding-bottom: 0.07rem;">
+            <div class="is-inline-flex" style="padding-left: 0.15rem; padding-right: 0.15rem; padding-top: 0.07rem; padding-bottom: 0.01rem;">
               <div>
                 <span id="${btn_memberAddCondition}" class="icon is-small has-text-info cursor-clickable my-2 ml-3 mr-2">
                   <i class="fal fa-plus-circle"></i>
@@ -467,19 +535,28 @@ function reloadEncounterMembers() {
     });
 
     // Name //
-    $(`#${input_memberName}`).on('keypress', function (e) {
-      if (e.which == 13) {
-        $(`#${input_memberName}`).blur();
-      }
-    });
-    $(`#${input_memberName}`).blur(function () {
-      member.name = $(this).val();
-    });
+    if(member.isCharacter){
+      $(`#${input_memberName}`).prop('readonly', true);
+      $(`#${input_memberName}`).addClass('is-bold');
+    } else {
+      $(`#${input_memberName}`).on('keypress', function (e) {
+        if (e.which == 13) {
+          $(`#${input_memberName}`).blur();
+        }
+      });
+      $(`#${input_memberName}`).blur(function () {
+        member.name = $(this).val();
+      });
+    }
 
     // View //
     $(`#${btn_memberView}`).click(function () {
       let creatureData = getOriginalCreature(member);
-      if(member.isCustom){
+      if(member.isCharacter){
+        g_characterViewOpenedTab_rollHistory = false;
+        g_characterViewOpenedTab_charInfo = false;
+        openQuickView('characterView', creatureData);
+      } else if(member.isCustom){
         openQuickView('creatureCustomView', member);
       } else {
         openQuickView('creatureView', {
@@ -509,15 +586,24 @@ function reloadEncounterMembers() {
 
       //
 
+      if(member.isCharacter){
+        if (newHP > member.characterData.calculatedStat.maxHP) { newHP = member.characterData.calculatedStat.maxHP; }
+        socket.emit(`requestCharacterUpdate-Health`, member.characterData.charID, newHP);
+        member.characterData.character.currentHealth = newHP;
+        refreshQuickView();
+      }
+
       let currentIsZero = (member.currentHP == 0);
 
       member.currentHP = newHP;
       $(this).val(member.currentHP);
 
-      if(currentIsZero && newHP > 0){
-        removeCondition(member, 'Dying');
-      } else if(newHP == 0){
-        addCondition(member, 'Dying', 1);
+      if(!member.isCharacter){
+        if(currentIsZero && newHP > 0){
+          removeCondition(member, 'Dying');
+        } else if(newHP == 0){
+          addCondition(member, 'Dying', 1);
+        }
       }
 
     });
@@ -555,49 +641,57 @@ function reloadEncounterMembers() {
     });
 
     // Conditions //
-    for (let condition of getAppliedConditions(member.conditions)) {
-      let conditionDisplayName = capitalizeWords(condition.name);
-      if (condition.value != null) { conditionDisplayName += ` ${condition.value}`; }
+    if(member.isCharacter){
 
-      let btn_memberConditionView = `member-btn-condition-view-${i}-${condition.name.replace(/\W/g, '_')}`;
-      let btn_memberConditionDelete = `member-btn-condition-delete-${i}-${condition.name.replace(/\W/g, '_')}`;
+      populateConditions(member.characterData, container_memberConditions, true);
 
-      if(condition.parentSource) {
-        $(`#${container_memberConditions}`).append(`
-          <div class="field has-addons is-marginless" style="padding-right: 0.25rem;">
-            <p class="control">
-                <button id="${btn_memberConditionView}" class="button is-very-small is-danger is-outlined">
-                    <span>${conditionDisplayName}</span>
-                </button>
-            </p>
-          </div>
-        `);
-      } else {
-        $(`#${container_memberConditions}`).append(`
-          <div class="field has-addons is-marginless" style="padding-right: 0.25rem;">
-            <p class="control">
-                <button id="${btn_memberConditionView}" class="button is-very-small is-danger is-outlined">
-                    <span>${conditionDisplayName}</span>
-                </button>
-            </p>
-            <p class="control">
-                <button id="${btn_memberConditionDelete}" class="button is-very-small is-danger is-outlined">
-                    <span class="icon is-small">
-                        <i class="fas fa-minus-circle"></i>
-                    </span>
-                </button>
-            </p>
-          </div>
-        `);
+    } else {
+
+      for (let condition of getAppliedConditions(member.conditions)) {
+        let conditionDisplayName = capitalizeWords(condition.name);
+        if (condition.value != null) { conditionDisplayName += ` ${condition.value}`; }
+  
+        let btn_memberConditionView = `member-btn-condition-view-${i}-${condition.name.replace(/\W/g, '_')}`;
+        let btn_memberConditionDelete = `member-btn-condition-delete-${i}-${condition.name.replace(/\W/g, '_')}`;
+  
+        if(condition.parentSource) {
+          $(`#${container_memberConditions}`).append(`
+            <div class="field has-addons is-marginless" style="padding-right: 0.25rem;">
+              <p class="control">
+                  <button id="${btn_memberConditionView}" class="button is-very-small is-danger is-outlined">
+                      <span>${conditionDisplayName}</span>
+                  </button>
+              </p>
+            </div>
+          `);
+        } else {
+          $(`#${container_memberConditions}`).append(`
+            <div class="field has-addons is-marginless" style="padding-right: 0.25rem;">
+              <p class="control">
+                  <button id="${btn_memberConditionView}" class="button is-very-small is-danger is-outlined">
+                      <span>${conditionDisplayName}</span>
+                  </button>
+              </p>
+              <p class="control">
+                  <button id="${btn_memberConditionDelete}" class="button is-very-small is-danger is-outlined">
+                      <span class="icon is-small">
+                          <i class="fas fa-minus-circle"></i>
+                      </span>
+                  </button>
+              </p>
+            </div>
+          `);
+        }
+  
+        $(`#${btn_memberConditionView}`).click(function () {
+          openConditionsModal(member, condition);
+        });
+  
+        $(`#${btn_memberConditionDelete}`).click(function () {
+          removeCondition(member, condition.name);
+        });
+  
       }
-
-      $(`#${btn_memberConditionView}`).click(function () {
-        openConditionsModal(member, condition);
-      });
-
-      $(`#${btn_memberConditionDelete}`).click(function () {
-        removeCondition(member, condition.name);
-      });
 
     }
 
@@ -621,8 +715,9 @@ function reloadBalanceResults() {
   let encounter = allEncounters[currentEncounterIndex];
 
   if (encounter == null) { return; }
-  if(encounter.members.length > 0){
-    let results = getBalanceResults(encounter.partySize, encounter.partyLevel, encounter.members);
+
+  if(showBalanceResults(encounter)){
+    let results = getBalanceResults(encounter);
 
     $(`#encounter-balance-display`).text(`${results.difficulty} (${results.xp} xp)`);
   

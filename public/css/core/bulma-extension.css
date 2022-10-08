@@ -153,6 +153,12 @@ em {
   background-color: var(--button-static-bold-color);
 }
 
+.button.is-info-offcolor, .button.is-info-offcolor.is-hovered, .button.is-info-offcolor:hover {
+  background-color: #3384ba;
+  border-color: transparent;
+  color: #fff;
+}
+
 /* Input Sizes */
 .input.is-very-small {
   font-size: 0.6rem!important;

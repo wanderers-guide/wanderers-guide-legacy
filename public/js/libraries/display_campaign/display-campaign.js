@@ -77,6 +77,7 @@ class DisplayCampaign {
                 maxHP: 9999,
                 maxStamina: 9999,
                 maxResolve: 99,
+                totalPerception: 0,
               };
             }
             if (!accessToken.calculatedStat.generalInfo) {
@@ -116,7 +117,7 @@ class DisplayCampaign {
               accessToken.calculatedStat.weapons = JSON.parse(accessToken.calculatedStat.weapons);
             }
 
-            generateCharacterEntry(accessToken);
+            generateCharacterEntry(accessToken, addToEncounterBtn);
 
           }
 
@@ -179,7 +180,7 @@ class DisplayCampaign {
 
             }
 
-            generateCharacterEntry(accessToken);
+            generateCharacterEntry(accessToken, addToEncounterBtn);
 
             /* Note: Don't insert accessToken as a parameter because doing so causes a bug
                 with jumping to a new character every update.
@@ -194,20 +195,23 @@ class DisplayCampaign {
   }
 }
 
-function generateCharacterEntry(accessToken) {
+function generateCharacterEntry(accessToken, addToEncounterBtn) {
 
   let input_characterCurrentHP = `character-input-hp-${accessToken.charID}`;
 
   let btn_characterAddCondition = `character-btn-condition-add-${accessToken.charID}`;
   let btn_characterView = `character-btn-view-${accessToken.charID}`;
   let btn_characterSheet = `character-btn-sheet-${accessToken.charID}`;
-  let btn_characterDelete = `character-btn-delete-${accessToken.charID}`;
+
+  let container_characterStartspace = `character-container-startspace-${accessToken.charID}`;
+  let container_characterHealth = `character-container-health-${accessToken.charID}`;
+  let container_characterEndspace = `character-container-endspace-${accessToken.charID}`;
 
   let container_characterConditions = `character-container-conditions-${accessToken.charID}`;
 
   $(`#campaign-player-entry-${accessToken.charID}`).html(`
-    <div class="columns is-marginless is-tablet p-2">
-      <div class="column is-1 is-paddingless">
+    <div class="columns is-marginless is-mobile p-2">
+      <div id="${container_characterStartspace}" class="column is-paddingless">
         <div class="" style="padding-left: 0.15rem; padding-right: 0.15rem; padding-top: 0.35rem; padding-bottom: 0.35rem;">
           <a href="/profile/characters/${accessToken.charID}" target="_blank" id="${btn_characterSheet}" class="button is-info is-very-small is-fullwidth is-outlined">
               <span class="">
@@ -224,7 +228,7 @@ function generateCharacterEntry(accessToken) {
               <p class="pl-2">${accessToken.character.name}</p>
           </div>
       </div>
-      <div class="column is-1 is-paddingless">
+      <div class="column is-paddingless">
           <div class="" style="padding-left: 0.15rem; padding-right: 0.15rem; padding-top: 0.35rem; padding-bottom: 0.35rem;">
               <button id="${btn_characterView}" class="button is-info is-very-small is-fullwidth">
                   <span class="">
@@ -233,7 +237,7 @@ function generateCharacterEntry(accessToken) {
               </button>
           </div>
       </div>
-      <div class="column is-2 text-center is-paddingless">
+      <div id="${container_characterHealth}" class="column is-2 text-center is-paddingless">
           <div class="field has-addons has-addons-centered" style="padding-left: 0.15rem; padding-right: 0.15rem; padding-top: 0.2rem; padding-bottom: 0.2rem;">
               <p class="control"><input id="${input_characterCurrentHP}" class="input is-small text-center" type="text"
                       min="0" max="${accessToken.calculatedStat.maxHP}" autocomplete="off" value="${ (accessToken.character.currentHealth === null) ? accessToken.calculatedStat.maxHP : accessToken.character.currentHealth }"></p>
@@ -243,7 +247,7 @@ function generateCharacterEntry(accessToken) {
           </div>
       </div>
       <div class="column is-4 text-left is-paddingless">
-          <div class="is-inline-flex" style="padding-left: 0.15rem; padding-right: 0.15rem; padding-top: 0.07rem; padding-bottom: 0.07rem;">
+          <div class="is-inline-flex" style="padding-left: 0.15rem; padding-right: 0.15rem; padding-top: 0.07rem; padding-bottom: 0.01rem;">
             <div>
               <span id="${btn_characterAddCondition}" class="icon is-small has-text-info cursor-clickable my-2 ml-3 mr-2">
                 <i class="fal fa-plus-circle"></i>
@@ -253,15 +257,54 @@ function generateCharacterEntry(accessToken) {
             </div>
           </div>
       </div>
-      <div class="column is-1 is-paddingless">
-          <span id="${btn_characterDelete}" class="is-pulled-right icon is-medium has-text-danger mt-1 ml-2 cursor-clickable">
-              <i class="fas fa-minus-circle"></i>
-          </span>
+      <div id="${container_characterEndspace}" class="column is-paddingless">
       </div>
     </div>
     <hr class="my-0">
   `);
 
+  let btn_characterDelete = `character-btn-delete-${accessToken.charID}`;
+  let btn_characterAddToEncounter = `character-btn-add-to-encounter-${accessToken.charID}`;
+
+  if(addToEncounterBtn){
+    $(`#${container_characterStartspace}`).hide();
+    $(`#campaign-listing-startspace`).hide();
+
+    let isOutlined = 'is-outlined';
+    let btnText = 'Add to Encounter';
+
+    let existingMember = allEncounters[currentEncounterIndex].members.find(member => {
+      return member.isCharacter && member.characterData.charID == accessToken.charID;
+    });
+    if(existingMember) {
+      isOutlined = '';
+      btnText = 'Added';
+    }
+
+    $(`#${container_characterEndspace}`).html(`
+      <div style="padding-left: 0.15rem; padding-right: 0.15rem; padding-top: 0.35rem; padding-bottom: 0.35rem;">
+        <button id="${btn_characterAddToEncounter}" class="button is-info is-very-small is-fullwidth is-rounded ${isOutlined}">
+          <span id="${btn_characterAddToEncounter}-text" class="">
+            ${btnText}
+          </span>
+        </button>
+      </div>
+    `);
+  } else {
+    $(`#${container_characterEndspace}`).html(`
+      <span id="${btn_characterDelete}" class="is-pulled-right icon is-medium has-text-danger mt-1 ml-2 cursor-clickable">
+        <i class="fas fa-minus-circle"></i>
+      </span>
+    `);
+  }
+
+  // Handle removing on smaller sizes
+  setTimeout(() => {
+    if ($(`#campaign-player-entry-${accessToken.charID}`).width() < 768) {
+      $(`#${container_characterHealth}`).hide();
+      $(`#campaign-listing-health`).hide();
+    }
+  }, 1);
 
   // View //
   $(`#${btn_characterView}`).click(function () {
@@ -302,20 +345,27 @@ function generateCharacterEntry(accessToken) {
     });
   });
 
+  // Add to Encounter //
+  $(`#${btn_characterAddToEncounter}`).click(function () {
+    addCharacterToEncounter(accessToken);
+
+    $(`#${btn_characterAddToEncounter}`).removeClass('is-outlined');
+    $(`#${btn_characterAddToEncounter}-text`).text('Added');
+  });
+
   // Conditions //
-  populateConditions(accessToken);
+  populateConditions(accessToken, container_characterConditions, addToEncounterBtn);
 
   $(`#${btn_characterAddCondition}`).click(function () {
-    openSelectConditionsModal(accessToken);
+    let member = (addToEncounterBtn) ? { isCharacter: true, characterData: accessToken } : accessToken;
+    openSelectConditionsModal(member);
   });
 
 }
 
-function populateConditions(accessToken) {
+function populateConditions(accessToken, containerID, isEncounterBuilder) {
 
-  let container_characterConditions = `character-container-conditions-${accessToken.charID}`;
-
-  $(`#${container_characterConditions}`).html('');
+  $(`#${containerID}`).html('');
 
   // Convert character conditions data to encounter conditions data format
   let convertedConditions = [];
@@ -335,7 +385,7 @@ function populateConditions(accessToken) {
     let btn_characterConditionDelete = `character-btn-condition-delete-${accessToken.charID}-${condition.name.replace(/\W/g, '_')}`;
 
     if (condition.parentSource) {
-      $(`#${container_characterConditions}`).append(`
+      $(`#${containerID}`).append(`
         <div class="field has-addons is-marginless" style="padding-right: 0.25rem;">
           <p class="control">
             <button id="${btn_characterConditionView}" class="button is-very-small is-danger is-outlined">
@@ -345,7 +395,7 @@ function populateConditions(accessToken) {
         </div>
       `);
     } else {
-      $(`#${container_characterConditions}`).append(`
+      $(`#${containerID}`).append(`
         <div class="field has-addons is-marginless" style="padding-right: 0.25rem;">
           <p class="control">
             <button id="${btn_characterConditionView}" class="button is-very-small is-danger is-outlined">
@@ -364,11 +414,13 @@ function populateConditions(accessToken) {
     }
 
     $(`#${btn_characterConditionView}`).click(function () {
-      openConditionsModal(accessToken, condition);
+      let member = (isEncounterBuilder) ? { isCharacter: true, characterData: accessToken } : accessToken;
+      openConditionsModal(member, condition);
     });
 
     $(`#${btn_characterConditionDelete}`).click(function () {
-      removeCondition(accessToken, condition.name);
+      let member = (isEncounterBuilder) ? { isCharacter: true, characterData: accessToken } : accessToken;
+      removeCondition(member, condition.name);
     });
 
   }

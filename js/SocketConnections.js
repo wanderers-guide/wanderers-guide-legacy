@@ -2952,7 +2952,9 @@ module.exports = class SocketConnections {
               GeneralGathering.getAllItems(userID).then((itemMap) => {
                 GeneralGathering.getAllSpells(userID).then((spellMap) => {
                   GeneralGathering.getAllConditions(userID).then((allConditions) => {
-                    socket.emit('returnEncounterDetails', allCreatures, allTags, featsObject, mapToObj(itemMap), mapToObj(spellMap), allConditions);
+                    CampaignGathering.getOwnedCampaigns(userID).then((campaigns) => {
+                      socket.emit('returnEncounterDetails', allCreatures, allTags, featsObject, mapToObj(itemMap), mapToObj(spellMap), allConditions, campaigns);
+                    });
                   });
                 });
               });

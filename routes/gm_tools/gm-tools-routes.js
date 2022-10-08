@@ -56,17 +56,19 @@ router.get('/campaigns/*', (req, res) => {
 });
 function handleCampaignRoute(req, res) {
 
-  let isPatreonSupporter = 0;
   if(req.user != null){
-    isPatreonSupporter = req.user.isPatreonSupporter;
 
     CampaignGathering.getOwnedCampaigns(req.user.id).then((campaigns) => {
+
+      let canMakeCampaign = CampaignGathering.canMakeCampaign(req.user, campaigns);
+      let campaignLimit = CampaignGathering.getUserCampaignLimit();
 
       res.render('gm_tools/campaigns', {
         title: "Campaigns - Wanderer's Guide",
         user: req.user,
-        isPatreonSupporter,
         campaigns,
+        campaignLimit,
+        canMakeCampaign,
       });
 
     });

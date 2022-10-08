@@ -47,13 +47,59 @@ function openRollInitiativeModal() {
         let selectOptionsHTML = `
             <option value="chooseDefault">Don't roll</option>
         `;
-        let creature = g_creaturesMap.get(member.creatureID);
-        if(creature != null){
-            let skills = [];
-            try {
-                skills = JSON.parse(creature.skillsJSON);
-            } catch (error) {}
 
+        let rollStruct = null;
+        if(member.isCharacter){
+          rollStruct = {
+            perceptionBonus: member.characterData.calculatedStat.totalPerception,
+            skills: [],
+          };
+          for(let skill of member.characterData.calculatedStat.totalSkills){
+            rollStruct.skills.push({
+              name: skill.Name,
+              bonus: skill.Bonus,
+            });
+          }
+        } else {
+          let creature = g_creaturesMap.get(member.creatureID);
+          if(creature != null){
+            rollStruct = {
+              perceptionBonus: creature.perceptionBonus,
+              skills: [],
+            };
+            try {
+              rollStruct.skills = JSON.parse(creature.skillsJSON);
+            } catch (error) {}
+          } else if(member.isCustom && member.comments?.length > 0) {
+
+            rollStruct = {
+              perceptionBonus: null,
+              skills: [],
+            };
+
+            let percepMatch = member.comments.match(/(\n|^)(\W*)perception(\W+)((\+|\-)(\d+))/mi);
+            if(percepMatch != null){
+              rollStruct.perceptionBonus = parseInt(percepMatch[4]);
+            }
+
+            let match = member.comments.match(/(\n|^)(\W*)skills(\W+)(.+)(\n|$)/mi);
+            if(match != null){
+              let skills = match[4].split(',');
+              for(let skill of skills){
+                let skillMatch = skill.match(/(.+) ((\+|\-)(\d+))/mi);
+                if(skillMatch != null){
+                  rollStruct.skills.push({
+                    name: capitalizeWords(skillMatch[1].trim()),
+                    bonus: parseInt(skillMatch[2]),
+                  });
+                }
+              }
+            }
+
+          }
+        }
+
+        if(rollStruct != null){
             selectOptionsHTML += `<optgroup label="──────────"></optgroup>`;
 
             let adjustment = 0;
@@ -64,8 +110,12 @@ function openRollInitiativeModal() {
                 adjustment = -2;
             }
 
-            selectOptionsHTML += `<option value="${creature.perceptionBonus+adjustment}" selected>Perception (${signNumber(creature.perceptionBonus+adjustment)})</option>`;
-            for(let skill of skills){
+            if(rollStruct.perceptionBonus != null){
+              let selected = (member.init === 0) ? 'selected' : '';
+              selectOptionsHTML += `<option value="${rollStruct.perceptionBonus+adjustment}" ${selected}>Perception (${signNumber(rollStruct.perceptionBonus+adjustment)})</option>`;
+            }
+
+            for(let skill of rollStruct.skills){
                 selectOptionsHTML += `<option value="${skill.bonus+adjustment}">${skill.name} (${signNumber(skill.bonus+adjustment)})</option>`;
             }
         }
@@ -74,7 +124,7 @@ function openRollInitiativeModal() {
         if(memberName.trim() == ``){ memberName = `Unnamed Entry`; }
         $('#rollInitiativeModalContent').append(`
             <div class="tile is-parent is-paddingless">
-                <div class="tile is-child border-bottom border-dark">
+                <div class="tile is-child pb-1 border-bottom border-dark">
                     <div class="columns is-marginless">
                         <div class="column is-paddingless">
                             <p class="has-text-right is-size-6 mt-1 mr-1">${memberName}</p>
@@ -91,6 +141,12 @@ function openRollInitiativeModal() {
             </div>
         `);
 
+    }
+
+    if(encounter.members.length == 0){
+      $('#rollInitiativeModalContent').html(`
+        <p class="has-text-centered is-italic pt-2 pb-3">This encounter has no combatant.</p>
+      `);
     }
 
     $('#rollInitiativeModalDefault').addClass('is-active');
