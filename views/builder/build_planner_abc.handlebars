@@ -2,106 +2,106 @@
 {{#section 'header'}}
     <link rel="stylesheet" href="/css/build-planner.css">
 
-    <script src="/js/build_planner/main.js"></script>
-    <script src="/js/build_planner/ui-handler.js"></script>
+    <script defer src="/js/build_planner/main.js"></script>
+    <script defer src="/js/build_planner/ui-handler.js"></script>
 
-    <script src="/js/build_planner/processor/core-processor.js"></script>
+    <script defer src="/js/build_planner/processor/core-processor.js"></script>
 
-    <script src="/js/build_planner/processor/sub_processors/builder-statements.js"></script>
-    <script src="/js/build_planner/processor/sub_processors/sheet-statements.js"></script>
+    <script defer src="/js/build_planner/processor/sub_processors/builder-statements.js"></script>
+    <script defer src="/js/build_planner/processor/sub_processors/sheet-statements.js"></script>
 
-    <script src="/js/build_planner/scripts/init-variables.js"></script>
-    <script src="/js/build_planner/scripts/process-ancestry-stats.js"></script>
-    <script src="/js/build_planner/scripts/process-class-stats.js"></script>
-    <script src="/js/build_planner/scripts/unselected-options.js"></script>
-    <script src="/js/build_planner/scripts/extra-skills-and-langs.js"></script>
+    <script defer src="/js/build_planner/scripts/init-variables.js"></script>
+    <script defer src="/js/build_planner/scripts/process-ancestry-stats.js"></script>
+    <script defer src="/js/build_planner/scripts/process-class-stats.js"></script>
+    <script defer src="/js/build_planner/scripts/unselected-options.js"></script>
+    <script defer src="/js/build_planner/scripts/extra-skills-and-langs.js"></script>
 
-    <script src="/js/build_planner/libraries/selector.js"></script>
+    <script defer src="/js/build_planner/libraries/selector.js"></script>
 
-    <script src="/js/build_planner/data_mapping/data-map.js"></script>
-    <script src="/js/build_planner/data_mapping/data-map-ext.js"></script>
-    <script src="/js/build_planner/data_mapping/retrieval.js"></script>
+    <script defer src="/js/build_planner/data_mapping/data-map.js"></script>
+    <script defer src="/js/build_planner/data_mapping/data-map-ext.js"></script>
+    <script defer src="/js/build_planner/data_mapping/retrieval.js"></script>
 
-    <script src="/js/build_planner/modules/process-ancestry.js"></script>
-    <script src="/js/build_planner/modules/process-background.js"></script>
-    <script src="/js/build_planner/modules/process-class.js"></script>
+    <script defer src="/js/build_planner/modules/process-ancestry.js"></script>
+    <script defer src="/js/build_planner/modules/process-background.js"></script>
+    <script defer src="/js/build_planner/modules/process-class.js"></script>
     
-    <script src="/js/build_planner/modules/process-custom-code.js"></script>
+    <script defer src="/js/build_planner/modules/process-custom-code.js"></script>
 
-    <script src="/js/build_planner/scripts/variants/auto-bonus-progression.js"></script>
-    <script src="/js/build_planner/scripts/variants/class-archetypes.js"></script>
-    <script src="/js/build_planner/scripts/variants/free-archetype.js"></script>
-    <script src="/js/build_planner/scripts/variants/gradual-ability-boosts.js"></script>
+    <script defer src="/js/build_planner/scripts/variants/auto-bonus-progression.js"></script>
+    <script defer src="/js/build_planner/scripts/variants/class-archetypes.js"></script>
+    <script defer src="/js/build_planner/scripts/variants/free-archetype.js"></script>
+    <script defer src="/js/build_planner/scripts/variants/gradual-ability-boosts.js"></script>
 
     <!-- Dependencies -->
-    <script src="/js/wsc/text-processing.js"></script>
-    <script src="/js/wsc/add-text-processing.js"></script>
-    <script src="/js/wsc/misc-feat-processing.js"></script>
-    <script src="/js/wsc/removal-processing.js"></script>
-    <script src="/js/wsc/variable-processing.js"></script>
-    <script src="/js/sheet/general/stat-manager.js"></script>
-    <script src="/js/sheet/general/sheet-states.js"></script>
+    <script defer src="/js/wsc/text-processing.js"></script>
+    <script defer src="/js/wsc/add-text-processing.js"></script>
+    <script defer src="/js/wsc/misc-feat-processing.js"></script>
+    <script defer src="/js/wsc/removal-processing.js"></script>
+    <script defer src="/js/wsc/variable-processing.js"></script>
+    <script defer src="/js/sheet/general/stat-manager.js"></script>
+    <script defer src="/js/sheet/general/sheet-states.js"></script>
 
-    <script src="/js/wsc/errorHandling.js"></script>
-
-
-    <script src="/js/libraries/modal_selection/modal-selection.js"></script>
-
-    <script src="/js/libraries/display_class/display-class.js"></script>
-    <script src="/js/libraries/display_ancestry/display-ancestry.js"></script>
-    <script src="/js/libraries/display_archetype/display-archetype.js"></script>
-    <script src="/js/libraries/display_background/display-background.js"></script>
-    <script src="/js/libraries/display_uni_heritage/display-uni-heritage.js"></script>
-    <script src="/js/libraries/confirm_message/confirm-message.js"></script>
+    <script defer src="/js/wsc/errorHandling.js"></script>
 
 
-    <script src="/js/build_planner/processor/sub_processors/builder/wsc-boosts.js"></script>
-    <script src="/js/build_planner/processor/sub_processors/builder/wsc-feats.js"></script>
-    <script src="/js/build_planner/processor/sub_processors/builder/wsc-class-feature.js"></script>
-    <script src="/js/build_planner/processor/sub_processors/builder/wsc-heritage.js"></script>
-    <script src="/js/build_planner/processor/sub_processors/builder/wsc-langs.js"></script>
-    <script src="/js/build_planner/processor/sub_processors/builder/wsc-lore.js"></script>
-    <script src="/js/build_planner/processor/sub_processors/builder/wsc-skills.js"></script>
-    <script src="/js/build_planner/processor/sub_processors/builder/wsc-profs.js"></script>
-    <script src="/js/build_planner/processor/sub_processors/builder/wsc-spells.js"></script>
-    <script src="/js/build_planner/processor/sub_processors/builder/wsc-spells-innate.js"></script>
-    <script src="/js/build_planner/processor/sub_processors/builder/wsc-spells-focus.js"></script>
-    <script src="/js/build_planner/processor/sub_processors/builder/wsc-resistances.js"></script>
-    <script src="/js/build_planner/processor/sub_processors/builder/wsc-domains.js"></script>
-    <script src="/js/build_planner/processor/sub_processors/builder/wsc-specializations.js"></script>
-    <script src="/js/build_planner/processor/sub_processors/builder/wsc-notes.js"></script>
-    <script src="/js/build_planner/processor/sub_processors/builder/wsc-charTags.js"></script>
-    <script src="/js/build_planner/processor/sub_processors/builder/wsc-phyFeats.js"></script>
-    <script src="/js/build_planner/processor/sub_processors/builder/wsc-senses.js"></script>
-    <script src="/js/build_planner/processor/sub_processors/builder/wsc-speeds.js"></script>
-    <script src="/js/build_planner/processor/sub_processors/builder/wsc-familiarity.js"></script>
-    <script src="/js/build_planner/processor/sub_processors/builder/wsc-keyAbility.js"></script>
-    <script src="/js/build_planner/processor/sub_processors/builder/wsc-scfs.js"></script>
+    <script defer src="/js/libraries/modal_selection/modal-selection.js"></script>
 
-    <script src="/js/build_planner/processor/sub_processors/builder/display-structs.js"></script>
-    <script src="/js/build_planner/processor/sub_processors/builder/feats-selection.js"></script>
-    <script src="/js/build_planner/processor/sub_processors/builder/prereq-parser.js"></script>
+    <script defer src="/js/libraries/display_class/display-class.js"></script>
+    <script defer src="/js/libraries/display_ancestry/display-ancestry.js"></script>
+    <script defer src="/js/libraries/display_archetype/display-archetype.js"></script>
+    <script defer src="/js/libraries/display_background/display-background.js"></script>
+    <script defer src="/js/libraries/display_uni_heritage/display-uni-heritage.js"></script>
+    <script defer src="/js/libraries/confirm_message/confirm-message.js"></script>
 
-    <script src="/js/build_planner/processor/sub_processors/expression-processor.js"></script>
-    <script src="/js/build_planner/processor/sub_processors/expression-utils.js"></script>
+
+    <script defer src="/js/build_planner/processor/sub_processors/builder/wsc-boosts.js"></script>
+    <script defer src="/js/build_planner/processor/sub_processors/builder/wsc-feats.js"></script>
+    <script defer src="/js/build_planner/processor/sub_processors/builder/wsc-class-feature.js"></script>
+    <script defer src="/js/build_planner/processor/sub_processors/builder/wsc-heritage.js"></script>
+    <script defer src="/js/build_planner/processor/sub_processors/builder/wsc-langs.js"></script>
+    <script defer src="/js/build_planner/processor/sub_processors/builder/wsc-lore.js"></script>
+    <script defer src="/js/build_planner/processor/sub_processors/builder/wsc-skills.js"></script>
+    <script defer src="/js/build_planner/processor/sub_processors/builder/wsc-profs.js"></script>
+    <script defer src="/js/build_planner/processor/sub_processors/builder/wsc-spells.js"></script>
+    <script defer src="/js/build_planner/processor/sub_processors/builder/wsc-spells-innate.js"></script>
+    <script defer src="/js/build_planner/processor/sub_processors/builder/wsc-spells-focus.js"></script>
+    <script defer src="/js/build_planner/processor/sub_processors/builder/wsc-resistances.js"></script>
+    <script defer src="/js/build_planner/processor/sub_processors/builder/wsc-domains.js"></script>
+    <script defer src="/js/build_planner/processor/sub_processors/builder/wsc-specializations.js"></script>
+    <script defer src="/js/build_planner/processor/sub_processors/builder/wsc-notes.js"></script>
+    <script defer src="/js/build_planner/processor/sub_processors/builder/wsc-charTags.js"></script>
+    <script defer src="/js/build_planner/processor/sub_processors/builder/wsc-phyFeats.js"></script>
+    <script defer src="/js/build_planner/processor/sub_processors/builder/wsc-senses.js"></script>
+    <script defer src="/js/build_planner/processor/sub_processors/builder/wsc-speeds.js"></script>
+    <script defer src="/js/build_planner/processor/sub_processors/builder/wsc-familiarity.js"></script>
+    <script defer src="/js/build_planner/processor/sub_processors/builder/wsc-keyAbility.js"></script>
+    <script defer src="/js/build_planner/processor/sub_processors/builder/wsc-scfs.js"></script>
+
+    <script defer src="/js/build_planner/processor/sub_processors/builder/display-structs.js"></script>
+    <script defer src="/js/build_planner/processor/sub_processors/builder/feats-selection.js"></script>
+    <script defer src="/js/build_planner/processor/sub_processors/builder/prereq-parser.js"></script>
+
+    <script defer src="/js/build_planner/processor/sub_processors/expression-processor.js"></script>
+    <script defer src="/js/build_planner/processor/sub_processors/expression-utils.js"></script>
 
     <!-- Quickview -->
-    <script type="text/javascript" src="/js/char_builders/wsc/quickview-left.js"></script>
-    <script src="/js/sheet/quickviews/_quickviews.js"></script>
-    <script src="/js/sheet/quickviews/feat-view.js"></script>
-    <script src="/js/sheet/quickviews/language-view.js"></script>
-    <script src="/js/sheet/quickviews/spell-view.js"></script>
-    <script src="/js/sheet/quickviews/item-view.js"></script>
-    <script src="/js/sheet/quickviews/tag-view.js"></script>
-    <script src="/js/sheet/quickviews/ability-view.js"></script>
-    <script src="/js/sheet/quickviews/condition-view.js"></script>
-    <script src="/js/sheet/quickviews/general-breakdown-view.js"></script>
-    <script src="/js/sheet/quickviews/hit-points-breakdown-view.js"></script>
-    <script src="/js/sheet/quickviews/ability-scores-breakdown-view.js"></script>
-    <script src="/js/sheet/quickviews/resist-view.js"></script>
+    <script defer src="/js/char_builders/wsc/quickview-left.js"></script>
+    <script defer src="/js/sheet/quickviews/_quickviews.js"></script>
+    <script defer src="/js/sheet/quickviews/feat-view.js"></script>
+    <script defer src="/js/sheet/quickviews/language-view.js"></script>
+    <script defer src="/js/sheet/quickviews/spell-view.js"></script>
+    <script defer src="/js/sheet/quickviews/item-view.js"></script>
+    <script defer src="/js/sheet/quickviews/tag-view.js"></script>
+    <script defer src="/js/sheet/quickviews/ability-view.js"></script>
+    <script defer src="/js/sheet/quickviews/condition-view.js"></script>
+    <script defer src="/js/sheet/quickviews/general-breakdown-view.js"></script>
+    <script defer src="/js/sheet/quickviews/hit-points-breakdown-view.js"></script>
+    <script defer src="/js/sheet/quickviews/ability-scores-breakdown-view.js"></script>
+    <script defer src="/js/sheet/quickviews/resist-view.js"></script>
 
-    <script src="/js/sheet/general/prof-history-display.js"></script>
-    <script src="/js/sheet/utils/item-utils.js"></script>
+    <script defer src="/js/sheet/general/prof-history-display.js"></script>
+    <script defer src="/js/sheet/utils/item-utils.js"></script>
 
 {{/section}}
 

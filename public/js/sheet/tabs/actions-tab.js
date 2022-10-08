@@ -295,8 +295,6 @@ function filterActionArray(data, featStructArray, tabType){
 
     }
 
-    console.log(actionStructArray);
-
     // Add itemActionStructArray to actionStructArray
     if(g_selectedAction_ItemsEnabled && tabType == 'actionTabEncounter'){
       let itemActionStructArray = findItemActionsFromInvItems();

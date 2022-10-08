@@ -17,5 +17,8 @@ $(function () {
   $('#card-shop-generator').click(function() {
     window.location.href = '/gm-tools/shop-generator';
   });
+  $('#card-campaigns').click(function() {
+    window.location.href = '/gm-tools/campaigns';
+  });
 
 });
