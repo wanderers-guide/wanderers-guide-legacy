@@ -278,7 +278,7 @@ function leftQuickview_OpenCampaign() {
   qContent.append(`
     <p class="title is-size-5 has-txt-value-number text-center">${g_campaignDetails.campaign.name}</p>
     <div class="">
-      <p>${g_campaignDetails.campaign.description}</p>
+      <p>${processText(g_campaignDetails.campaign.description, false, false, 'MEDIUM', false)}</p>
     </div>
     <hr class="m-2">
   `);
