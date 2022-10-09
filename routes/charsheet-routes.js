@@ -18,10 +18,12 @@ router.get('*', (req, res) => {
     .then((character) => {
         if(character != null){
 
-          AuthCheck.canViewCharacter(req.user.id, character.id).then((canViewChar) => {
+          let userID = (req.user?.id) ? req.user.id : -1;
+
+          AuthCheck.canViewCharacter(userID, character.id).then((canViewChar) => {
             if(canViewChar){
 
-              AuthCheck.canEditCharacter(req.user.id, character.id).then((canEditChar) => {
+              AuthCheck.canEditCharacter(userID, character.id).then((canEditChar) => {
 
                 if(CharStateUtils.isPlayable(character)) {
                   goToCharSheet(character, req, res, !canEditChar, sheetType);
