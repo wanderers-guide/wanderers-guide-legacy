@@ -18,3 +18,10 @@
     border-bottom-color: #3298dc;
     color: #3298dc;
 }
+
+/* Character Icon */
+.character-icon {
+  width: 128px!important;
+  height: 128px!important;
+  object-fit: cover!important;
+}

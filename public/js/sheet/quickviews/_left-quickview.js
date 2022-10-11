@@ -302,6 +302,8 @@ function leftQuickview_OpenCampaign() {
       charTitle = 'Unknown Traveler';
     }
 
+    let imageURL = '';
+
     // Override with custom set title in char info
     if(accessToken.character.infoJSON){
       let charInfo = accessToken.character.infoJSON;
@@ -311,26 +313,43 @@ function leftQuickview_OpenCampaign() {
       if(charInfo?.title && charInfo.title.trim() != ''){
         charTitle = charInfo.title.trim();
       }
+
+      if (charInfo?.imageURL && charInfo.imageURL.match(/\.(jpeg|jpg|gif|png|webp)$/) != null) {
+        imageURL = charInfo.imageURL;
+      }
     }
 
     qContent.append(`
 
-      <p class="pl-2">
-        <span class="is-size-5-5 has-txt-value-string">${accessToken.character.name}</span><span class="is-size-6 is-italic">, ${charTitle}</span>
-      </p>
-      <div class="columns is-mobile is-marginless pl-3">
-        <div class="column is-4 is-paddingless">
-          <p id="campaign-character-health-${accessToken.charID}">
+      <div class="columns is-mobile is-marginless">
+        <div class="column is-paddingless">
+        
+          <p class="pl-2">
+            <span class="is-size-5-5 has-txt-value-string">${accessToken.character.name.trim()}</span><span class="is-size-6 is-italic">, ${charTitle}</span>
           </p>
-        </div>
-        <div class="column is-8 is-paddingless">
-          <div id="campaign-character-conditions-${accessToken.charID}" class="is-flex" style="flex-wrap: wrap; padding-top: 0.3rem;">
+          <div class="columns is-mobile is-marginless pl-3">
+            <div class="column is-4 is-paddingless">
+              <p id="campaign-character-health-${accessToken.charID}">
+              </p>
+            </div>
+            <div class="column is-8 is-paddingless">
+              <div id="campaign-character-conditions-${accessToken.charID}" class="is-flex" style="flex-wrap: wrap; padding-top: 0.3rem;">
+              </div>
+            </div>
           </div>
+        
+        </div>
+        <div class="column is-2 is-paddingless">
+          <figure class="image is-64x64 is-marginless"><img id="campaign-character-image-${accessToken.charID}" class="is-rounded character-icon-smaller is-hidden" src="${imageURL}"></figure>
         </div>
       </div>
       <hr class="m-2">
 
     `);
+
+    if(imageURL.length > 0){
+      $(`#campaign-character-image-${accessToken.charID}`).removeClass('is-hidden');
+    }
 
     leftQuickview_setCharacterHealth(accessToken);
     leftQuickview_setCharacterConditions(accessToken);

@@ -13,7 +13,7 @@ function openCompanionTab(data) {
     let charAnimalCompEntryID = 'charAnimalComp'+charAnimalComp.id;
 
     let imageURL = charAnimalComp.imageURL;
-    if(imageURL.match(/\.(jpeg|jpg|gif|png)$/) == null){
+    if(imageURL.match(/\.(jpeg|jpg|gif|png|webp)$/) == null){
         imageURL = '/images/paw_icon.png';
     }
 
@@ -48,7 +48,7 @@ function openCompanionTab(data) {
     processFamiliarAbilities(charFamiliar);
 
     let imageURL = charFamiliar.imageURL;
-    if(imageURL.match(/\.(jpeg|jpg|gif|png)$/) == null){
+    if(imageURL.match(/\.(jpeg|jpg|gif|png|webp)$/) == null){
         imageURL = '/images/paw_icon.png';
     }
 

@@ -32,3 +32,10 @@
 .hr-light {
   border-color: #5a5a5a!important;
 }
+
+/* Character Icon */
+.character-icon {
+  width: 128px!important;
+  height: 128px!important;
+  object-fit: cover!important;
+}

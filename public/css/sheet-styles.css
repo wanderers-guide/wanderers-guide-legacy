@@ -267,6 +267,12 @@
   object-fit: cover!important;
 }
 
+.character-icon-smaller {
+  width: 64px!important;
+  height: 64px!important;
+  object-fit: cover!important;
+}
+
 /* Skills */
 a.panel-block:hover, label.panel-block:hover {
   background-color: var(--selectable-hover);

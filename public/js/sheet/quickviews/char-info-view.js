@@ -203,7 +203,7 @@ function openCharInfoQuickview(data) {
 }
 
 function updateCharInfoPicture(){
-  if(g_charInfoData.imageURL != null && g_charInfoData.imageURL.match(/\.(jpeg|jpg|gif|png)$/) != null){
+  if(g_charInfoData.imageURL != null && g_charInfoData.imageURL.match(/\.(jpeg|jpg|gif|png|webp)$/) != null){
     $('#charInfoPicture').attr('src', g_charInfoData.imageURL);
   } else {
     $('#charInfoPicture').attr('src', '/images/fb_profile_pic.png');

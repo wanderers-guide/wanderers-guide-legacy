@@ -48,7 +48,7 @@ function openCharacterQuickview(data) {
 
   $('#charInfoPictureSection').append('<figure class="image is-128x128 is-marginless"><img id="charInfoPicture" class="is-rounded character-icon" src=""></figure>');
 
-  if (info?.imageURL && info.imageURL.match(/\.(jpeg|jpg|gif|png)$/) != null) {
+  if (info?.imageURL && info.imageURL.match(/\.(jpeg|jpg|gif|png|webp)$/) != null) {
     $('#charInfoPicture').attr('src', info.imageURL);
   } else {
     $('#charInfoPicture').attr('src', '/images/fb_profile_pic.png');
