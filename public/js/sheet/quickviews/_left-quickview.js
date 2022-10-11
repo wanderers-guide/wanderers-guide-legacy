@@ -26,7 +26,7 @@ function openLeftQuickView(subtabName) {
 
   if (g_campaignDetails) {
 
-    $('#quickViewLeftTab-Campaign').removeClass('is-hidden');
+    $('#quickViewLeftTab-Campaign').parent().removeClass('is-hidden');
 
     $('#quickViewLeftTab-Campaign').off('click');
     $('#quickViewLeftTab-Campaign').click(function () {
@@ -395,6 +395,9 @@ function leftQuickview_setCharacterConditions(accessToken) {
   let conditions = accessToken.calculatedStat.conditions;
   if (typeof conditions === 'string' || conditions instanceof String){
     conditions = JSON.parse(conditions);
+  }
+  if(conditions == null){
+    conditions = [];
   }
   for (let condition of conditions) {
 
