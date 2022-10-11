@@ -431,3 +431,30 @@ function getSheetProcNumber(strNum, sourceName){
     return 0;
   }
 }
+
+/* Conditions Functions (from conditions-manager.js) */
+function getConditionFromName(name) {
+  for (const condition of g_allConditions) {
+    if (condition.name.toLowerCase() == name.toLowerCase()) {
+      return condition;
+    }
+  }
+  return null;
+}
+
+function getCurrentConditionIDFromName(name) {
+  for (const condition of g_allConditions) {
+    if (condition.name.toLowerCase() == name.toLowerCase()) {
+      return condition.id; // might not be returning the correct ID (needs EntryID)
+    }
+  }
+  return null;
+}
+
+function addCondition(conditionID, value, sourceText, parentID = null) {
+
+}
+
+function removeCondition(conditionID, onlyWithSourceText = null) {
+
+}
