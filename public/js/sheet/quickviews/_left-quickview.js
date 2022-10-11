@@ -276,7 +276,7 @@ function leftQuickview_OpenCampaign() {
   let qContent = $('#quickViewLeftContent');
 
   qContent.append(`
-    <p class="title is-size-5 has-txt-value-number text-center">${g_campaignDetails.campaign.name}</p>
+    <p class="title is-size-5 has-txt-value-number text-center mb-1">${g_campaignDetails.campaign.name}</p>
     <div class="">
       <p>${processText(g_campaignDetails.campaign.description, false, false, 'MEDIUM', false)}</p>
     </div>
