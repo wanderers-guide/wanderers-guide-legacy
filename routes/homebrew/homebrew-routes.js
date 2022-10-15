@@ -558,4 +558,33 @@ router.get('/edit/toggleable', bundleAuthCheck, (req, res) => {
 
 });
 
+
+//// Creature ////
+
+router.get('/create/creature', bundleAuthCheck, (req, res) => {
+
+  let bundleID = parseInt(req.query.id); if(isNaN(bundleID)){bundleID=null;}
+
+  res.render('homebrew/builder_creature', {
+    title: "Creature Builder - Wanderer's Guide",
+    user: req.user,
+    bundleID: bundleID,
+  });
+
+});
+
+router.get('/edit/creature', bundleAuthCheck, (req, res) => {
+
+  let bundleID = parseInt(req.query.id); if(isNaN(bundleID)){bundleID=null;}
+  let creatureID = parseInt(req.query.content_id); if(isNaN(creatureID)){creatureID=null;}
+
+  res.render('homebrew/builder_creature', {
+    title: "Creature Builder - Wanderer's Guide",
+    user: req.user,
+    bundleID: bundleID,
+    creatureID: creatureID,
+  });
+
+});
+
 module.exports = router;

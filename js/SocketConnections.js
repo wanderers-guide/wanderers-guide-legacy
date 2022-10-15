@@ -4337,6 +4337,52 @@ module.exports = class SocketConnections {
         });
       });
 
+      ////
+
+      socket.on('requestHomebrewAddCreature', function(homebrewID, data){
+        UserHomebrew.canEditHomebrew(userID, homebrewID).then((canEdit) => {
+          if(canEdit){
+            HomebrewCreation.addCreature(homebrewID, data).then((result) => {
+              socket.emit('returnHomebrewCompleteCreature');
+            });
+          }
+        });
+      });
+  
+      socket.on('requestHomebrewUpdateCreature', function(homebrewID, data){
+        UserHomebrew.canEditHomebrew(userID, homebrewID).then((canEdit) => {
+          if(canEdit){
+            if(data != null && data.creatureID != null) {
+              HomebrewCreation.deleteCreature(homebrewID, data.creatureID).then((result) => {
+                HomebrewCreation.addCreature(homebrewID, data).then((result) => {
+                  socket.emit('returnHomebrewCompleteCreature');
+                });
+              });
+            }
+          }
+        });
+      });
+    
+      socket.on('requestHomebrewRemoveCreature', function(homebrewID, creatureID){
+        UserHomebrew.canEditHomebrew(userID, homebrewID).then((canEdit) => {
+          if(canEdit){
+            HomebrewCreation.deleteCreature(homebrewID, creatureID).then((result) => {
+              socket.emit('returnHomebrewRemoveContent');
+            });
+          }
+        });
+      });
+  
+      socket.on('requestHomebrewCreatureDetails', function(homebrewID){
+        UserHomebrew.canEditHomebrew(userID, homebrewID).then((canEdit) => {
+          if(canEdit){
+            GeneralGathering.getAllCreatures(userID, homebrewID).then((creatures) => {
+              socket.emit('returnHomebrewCreatureDetails', creatures);
+            });
+          }
+        });
+      });
+
     });
 
   }

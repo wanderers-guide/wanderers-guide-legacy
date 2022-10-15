@@ -106,6 +106,61 @@ module.exports = class HomebrewCreation {
 
 
 
+
+    static addCreature(homebrewID, data) {
+      /* Data:
+        creatureID,
+        name,
+        level,
+        rarity,
+        alignment,
+        size,
+        tagsArray,
+        familyType,
+        perceptionBonus,
+        senses,
+        langsArray,
+        languagesCustom,
+
+        skillsArray,
+        itemsArray,
+
+        strMod,
+        dexMod,
+        conMod,
+        intMod,
+        wisMod,
+        chaMod,
+
+        acValue,
+        fortValue,
+        reflexValue,
+        willValue,
+        allSavesCustom,
+
+        hpMax,
+        hpDetails,
+        speed,
+        description,
+      */
+      for(let d in data) { if(data[d] === ''){ data[d] = null; } }
+      if(data.name == null) { data.name = 'Unnamed Creature'; }
+      data.name = data.name.replace(/’/g,"'");
+      if(data.description == null){ data.description = '__No Description__'; }
+
+      console.log(data);
+
+    }
+
+    static deleteCreature(homebrewID, creatureID){
+        if(creatureID == null || homebrewID == null) {return;}
+        console.log(`Deleting creating: ${creatureID}`);
+
+    }
+
+
+
+
     static addLanguage(homebrewID, data) {
       /* Data:
           languageID,

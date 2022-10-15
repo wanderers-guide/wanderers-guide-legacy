@@ -58,13 +58,13 @@
 
 <div id="builder-container" data-user-id="{{user.id}}" data-bundle-id="{{bundleID}}" data-creature-id="{{creatureID}}"
   class="columns is-mobile is-centered mt-2 mb-3">
-  <div class="column is-8 tile is-ancestor is-vertical">
+  <div class="column is-10 is-vertical">
 
-    <div class="tile">
+    <div class="">
 
-      <div class="tile is-parent is-vertical box is-6 is-marginless mr-2">
+      <div class="is-vertical box is-6 is-marginless mr-2">
 
-        <div class="tile is-child field">
+        <div class="field">
           <label class="label">Name</label>
           <div class="control">
             <input id="inputName" class="input" type="text" autocomplete="off">
@@ -72,7 +72,7 @@
         </div>
 
 
-        <div class="tile is-child columns">
+        <div class="columns">
 
           <div class="column field">
             <label class="label">Level</label>
@@ -167,7 +167,7 @@
 
         </div>
 
-        <div class="tile is-child">
+        <div class="  ">
           <label class="label">Traits</label>
           <select id="inputTags" data-placeholder="Select Traits" multiple>
             {{#each tags}}
@@ -176,7 +176,7 @@
           </select>
         </div>
 
-        <div class="tile is-child field">
+        <div class="field">
           <label class="label">Family Group</label>
           <div class="control">
             <input class="input" id="inputFamilyType" type="text" maxlength="120" placeholder="eg. Humanoid">
@@ -185,21 +185,21 @@
 
         <hr class="m-2">
 
-        <div class="tile is-child field">
+        <div class="field">
           <label class="label">Perception Bonus</label>
           <div class="control">
             <input id="inputPerceptionBonus" class="input" type="number" value="5">
           </div>
         </div>
 
-        <div class="tile is-child field">
+        <div class="field">
           <label class="label">Senses</label>
           <div class="control">
             <input class="input" id="inputSenses" type="text" maxlength="450" placeholder="eg. darkvision">
           </div>
         </div>
 
-        <div class="tile is-child">
+        <div class="  ">
           <label class="label">Languages</label>
           <select id="inputLanguages" data-placeholder="Select Languages" multiple>
             {{#each languages}}
@@ -208,18 +208,83 @@
           </select>
         </div>
 
-        <div class="tile is-child field">
+        <div class="field">
           <label class="label">Extra Languages</label>
           <div class="control">
             <input class="input" id="inputLanguagesCustom" type="text" maxlength="600" placeholder="eg. Tongues">
           </div>
         </div>
 
+        <hr class="m-2">
+
         <!-- Skills entry -->
+
+        <div class="">
+          <button id="addSkillButton" class="button is-link">Add Skill</button>
+        </div>
+
+        <div id="skillContent" class="m-2">
+
+          <div id="skillLayout" class="card mb-2 creatureSkill is-hidden">
+            <div class="card-header cursor-clickable">
+              <p class="card-header-title is-paddingless has-txt-value-number is-size-5">Skill</p>
+              <a class="card-header-icon is-paddingless mt-1 delete is-medium"></a>
+            </div>
+            <div class="card-content columns is-marginless">
+              <div class="field column is-paddingless">
+                <label class="label">Name</label>
+                <div class="control">
+                  <input class="input inputSkillName" type="text" placeholder="e.g. Arcana">
+                </div>
+              </div>
+              <div class="field column is-paddingless pl-2">
+                <label class="label">Bonus</label>
+                <div class="control">
+                  <input class="input inputSkillBonus" type="number" value="0">
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <hr class="m-2">
 
         <!-- Items entry -->
 
-        <div class="tile is-child columns">
+        <div class="">
+          <button id="addItemButton" class="button is-link">Add Item</button>
+        </div>
+
+        <div id="itemContent" class="m-2">
+
+          <div id="itemLayout" class="card mb-2 creatureItem is-hidden">
+            <div class="card-header cursor-clickable">
+              <p class="card-header-title is-paddingless has-txt-value-number is-size-5">Item</p>
+              <a class="card-header-icon is-paddingless mt-1 delete is-medium"></a>
+            </div>
+            <div class="card-content columns is-marginless">
+              <div class="field column is-paddingless">
+                <label class="label">Name</label>
+                <div class="control">
+                  <input class="input inputItemDisplayName" type="text" placeholder="e.g. Greatsword">
+                </div>
+              </div>
+              <div class="field column is-paddingless pl-2">
+                <label class="label">Quantity</label>
+                <div class="control">
+                  <input class="input inputItemQuantity" type="number" value="1">
+                </div>
+              </div>
+              <!-- TODO: Add name, doIndex, and shieldStats -->
+            </div>
+          </div>
+
+        </div>
+
+        <hr class="m-2">
+
+        <div class="columns">
           <div class="column field">
             <label class="label">Str</label>
             <div class="control">
@@ -258,9 +323,13 @@
           </div>
         </div>
 
+        <hr class="m-2">
+
         <!-- interactionAbilitiesJSON entries -->
 
-        <div class="tile is-child columns">
+        <hr class="m-2">
+
+        <div class="columns is-marginless">
           <div class="column field">
             <label class="label">AC</label>
             <div class="control">
@@ -287,7 +356,7 @@
           </div>
         </div>
 
-        <div class="tile is-child field">
+        <div class="field">
           <label class="label">Extra Saves Bonus</label>
           <div class="control">
             <input class="input" id="inputAllSavesCustom" type="text" maxlength="600"
@@ -295,7 +364,9 @@
           </div>
         </div>
 
-        <div class="tile is-child columns">
+        <hr class="m-2">
+
+        <div class="columns">
           <div class="column field">
             <label class="label">HP</label>
             <div class="control">
@@ -310,15 +381,21 @@
           </div>
         </div>
 
+        <hr class="m-2">
+
         <!-- immunitiesJSON entries -->
 
         <!-- weaknessesJSON entries -->
 
         <!-- resistancesJSON entries -->
 
+        <hr class="m-2">
+
         <!-- defensiveAbilitiesJSON entries -->
 
-        <div class="tile is-child field">
+        <hr class="m-2">
+
+        <div class="field">
           <label class="label">Speed</label>
           <div class="control">
             <input class="input" id="inputSpeed" type="number" value="25">
@@ -327,6 +404,7 @@
 
         <!-- otherSpeedsJSON entries -->
 
+        <hr class="m-2">
 
         <!-- attacksJSON entries -->
 
@@ -334,10 +412,11 @@
 
         <!-- offensiveAbilitiesJSON entries -->
 
+        <hr class="m-2">
 
-        <div class="tile is-child field">
+        <div class="field">
           <label class="label">
-            Description
+            Flavor Text
             <a href="/wsc_docs/#description_fields" target="_blank"><span
                 class="icon is-small has-text-info has-tooltip-top" data-tooltip="WSC Docs"><i
                   class="fas fa-book"></i></span></a>
@@ -358,11 +437,11 @@
 <div class="field is-grouped is-grouped-centered pb-2">
   <div class="control">
     <!--<a class="button is-info is-rounded is-small has-text-white">
-          <span class="icon is-small">
-            <i class="fas fa-arrow-left"></i>
-          </span>
-          <span>Back</span>
-        </a>-->
+    <span class="icon is-small">
+   <i class="fas fa-arrow-left"></i>
+    </span>
+    <span>Back</span>
+  </a>-->
     {{#if creatureID}}
     <button id="updateButton" onClick="canLeavePage()" onClick="canLeavePage()"
       class="button is-rounded is-success">Save</button>
