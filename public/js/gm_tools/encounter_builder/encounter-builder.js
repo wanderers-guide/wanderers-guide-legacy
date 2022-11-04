@@ -32,10 +32,11 @@ let g_allTags;
 let g_featMap;
 let g_itemMap;
 let g_spellMap;
+let g_skillMap;
 
 let g_campaigns;
 
-socket.on("returnEncounterDetails", function (allCreatures, allTags, featsObject, itemsObject, spellsObject, allConditions, campaigns) {
+socket.on("returnEncounterDetails", function (allCreatures, allTags, featsObject, itemsObject, spellsObject, allConditions, skillObject, campaigns) {
 
   g_creaturesMap = new Map();
   for (let creature of allCreatures) {
@@ -95,6 +96,7 @@ socket.on("returnEncounterDetails", function (allCreatures, allTags, featsObject
   g_featMap = objToMap(featsObject);
   g_itemMap = objToMap(itemsObject);
   g_spellMap = objToMap(spellsObject);
+  g_skillMap = objToMap(skillObject);
 
   g_campaigns = campaigns;
 
@@ -588,9 +590,11 @@ function reloadEncounterMembers() {
 
       if(member.isCharacter){
         if (newHP > member.characterData.calculatedStat.maxHP) { newHP = member.characterData.calculatedStat.maxHP; }
-        socket.emit(`requestCharacterUpdate-Health`, member.characterData.charID, newHP);
-        member.characterData.character.currentHealth = newHP;
-        refreshQuickView();
+        if(member.characterData.character.currentHealth !== newHP){
+          socket.emit(`requestCharacterUpdate-Health`, member.characterData.charID, newHP);
+          member.characterData.character.currentHealth = newHP;
+          refreshQuickView();
+        }
       }
 
       let currentIsZero = (member.currentHP == 0);

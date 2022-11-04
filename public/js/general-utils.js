@@ -91,6 +91,7 @@ const g_contentSources = [
   {TextName: 'Extinction Curse', CodeName: 'EXTINCTION-CURSE', Link: 'https://paizo.com/store/pathfinder/adventures/adventurePath/extinctioncurse'},
   {TextName: 'The Fall of Plaguestone', CodeName: 'FALL-OF-PLAGUE', Link: 'https://paizo.com/products/btq01zoh?Pathfinder-Adventure-The-Fall-of-Plaguestone'},
   {TextName: 'Fists of the Ruby Phoenix', CodeName: 'FIST-PHOENIX', Link: 'https://paizo.com/store/pathfinder/adventures/adventurePath/fistsOfTheRubyPhoenix'},
+  {TextName: 'Kingmaker', CodeName: 'KINGMAKER', Link: 'https://paizo.com/products/btq02e0d?Pathfinder-Kingmaker-Adventure-Path'},
   {TextName: 'Malevolence', CodeName: 'MALEVOLENCE', Link: 'https://paizo.com/products/btq027qf?Pathfinder-Adventure-Malevolence'},
   {TextName: 'Night of the Gray Death', CodeName: 'NIGHT-GRAY-DEATH', Link: 'https://paizo.com/products/btq02alp?Pathfinder-Adventure-Night-of-the-Gray-Death'},
   {TextName: 'Outlaws of Alkenstar', CodeName: 'OUTLAWS-ALKENSTAR', Link: 'https://paizo.com/store/pathfinder/adventures/adventurePath/outlawsOfAlkenstar'},

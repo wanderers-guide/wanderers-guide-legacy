@@ -322,6 +322,14 @@ function handleBuildOptions(build, hBundles, progessBundles) {
     });
     $("#contentSrc-FIST-PHOENIX").prop('checked', contentSourceArray.includes('FIST-PHOENIX'));
 
+    $("#contentSrc-KINGMAKER").change(function(){
+      socket.emit("requestBuildSourceChange", 
+          g_build_id, 
+          'KINGMAKER',
+          this.checked);
+    });
+    $("#contentSrc-KINGMAKER").prop('checked', contentSourceArray.includes('KINGMAKER'));
+
     $("#contentSrc-MALEVOLENCE").change(function(){
       socket.emit("requestBuildSourceChange", 
           g_build_id, 

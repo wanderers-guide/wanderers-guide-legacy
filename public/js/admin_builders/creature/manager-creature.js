@@ -131,27 +131,27 @@ function parseCreatureData(importData) {
     data.id = importData._id;
 
     data.name = importData.name;
-    data.level = importData.data.details.level.value;
+    data.level = importData.system.details.level.value;
 
-    data.rarity = convertToWGRarity(importData.data.traits.rarity);
-    data.alignment = importData.data.details.alignment.value;
-    data.size = convertToWGSize(importData.data.traits.size.value);
-    data.traitsJSON = JSON.stringify(importData.data.traits.traits.value);
-    data.familyType = importData.data.details.creatureType;
+    data.rarity = convertToWGRarity(importData.system.traits.rarity);
+    data.alignment = importData.system.details.alignment.value;
+    data.size = convertToWGSize(importData.system.traits.size.value);
+    data.traitsJSON = JSON.stringify(importData.system.traits.value);
+    data.familyType = importData.system.details.creatureType;
 
 
-    data.perceptionBonus = importData.data.attributes.perception.value;
-    data.senses = importData.data.traits.senses.value;
+    data.perceptionBonus = importData.system.attributes.perception.value;
+    data.senses = importData.system.traits.senses.value;
 
-    data.languagesJSON = JSON.stringify(importData.data.traits.languages.value);
-    data.languagesCustom = importData.data.traits.languages.custom;
+    data.languagesJSON = JSON.stringify(importData.system.traits.languages.value);
+    data.languagesCustom = importData.system.traits.languages.custom;
 
     let skills = importData.items.filter((item) => {
         return item.type == `lore`;
     });
     let skillsDataArray = [];
     for (let skill of skills) {
-        skillsDataArray.push({ name: skill.name, bonus: skill.data.mod.value });
+        skillsDataArray.push({ name: skill.name, bonus: skill.system.mod.value });
     }
     data.skillsJSON = JSON.stringify(skillsDataArray);
 
@@ -163,13 +163,13 @@ function parseCreatureData(importData) {
 
         let quantity = 1;
         if (item.type == `consumable`) {
-            quantity = item.data.quantity;
+            quantity = item.system.quantity;
         }
 
         let name = null;
         let doIndex = true;
-        if(item.data.baseItem != null){
-            name = item.data.baseItem.replace(/-/g,' ');
+        if(item.system.baseItem != null){
+            name = item.system.baseItem.replace(/-/g,' ');
 
             if(name.includes(' armor')){
                 name = name.replace(' armor', '');
@@ -180,12 +180,12 @@ function parseCreatureData(importData) {
         }
 
         let shieldStats = null;
-        if(item.data.category == 'shield'){
+        if(item.system.category == 'shield'){
             shieldStats = {
-                armor: item.data.armor.value,
-                hardness: item.data.hardness,
-                hp: item.data.hp.max,
-                bt: item.data.hp.brokenThreshold,
+                armor: item.system.armor.value,
+                hardness: item.system.hardness,
+                hp: item.system.hp.max,
+                bt: item.system.hp.brokenThreshold,
             };
         }
 
@@ -199,55 +199,55 @@ function parseCreatureData(importData) {
     }
     data.itemsJSON = JSON.stringify(itemsDataArray);
 
-    data.strMod = importData.data.abilities.str.mod;
-    data.dexMod = importData.data.abilities.dex.mod;
-    data.conMod = importData.data.abilities.con.mod;
-    data.intMod = importData.data.abilities.int.mod;
-    data.wisMod = importData.data.abilities.wis.mod;
-    data.chaMod = importData.data.abilities.cha.mod;
+    data.strMod = importData.system.abilities.str.mod;
+    data.dexMod = importData.system.abilities.dex.mod;
+    data.conMod = importData.system.abilities.con.mod;
+    data.intMod = importData.system.abilities.int.mod;
+    data.wisMod = importData.system.abilities.wis.mod;
+    data.chaMod = importData.system.abilities.cha.mod;
 
     let interactionAbilities = importData.items.filter((item) => {
-        return item.type == `action` && item.data.actionCategory.value == `interaction`;
+        return item.type == `action` && item.system.actionCategory.value == `interaction`;
     });
     let interactionAbilitiesDataArray = [];
     for (let ability of interactionAbilities) {
         interactionAbilitiesDataArray.push({
             name: ability.name,
-            actions: convertToWGActions(ability.data.actionType.value, ability.data.actions.value),
-            traits: ability.data.traits.value,
-            description: ability.data.description.value,
+            actions: convertToWGActions(ability.system.actionType.value, ability.system.actions.value),
+            traits: ability.system.traits.value,
+            description: ability.system.description.value,
         });
     }
     data.interactionAbilitiesJSON = JSON.stringify(interactionAbilitiesDataArray);
 
-    data.acValue = importData.data.attributes.ac.value;
-    data.fortBonus = importData.data.saves.fortitude.value;
-    data.reflexBonus = importData.data.saves.reflex.value;
-    data.willBonus = importData.data.saves.will.value;
-    data.allSavesCustom = importData.data.attributes.allSaves.value;
+    data.acValue = importData.system.attributes.ac.value;
+    data.fortBonus = importData.system.saves.fortitude.value;
+    data.reflexBonus = importData.system.saves.reflex.value;
+    data.willBonus = importData.system.saves.will.value;
+    data.allSavesCustom = importData.system.attributes.allSaves.value;
 
-    data.hpMax = importData.data.attributes.hp.max;
-    data.hpDetails = importData.data.attributes.hp.details;
-    data.immunitiesJSON = JSON.stringify(importData.data.traits.di.value);
-    data.weaknessesJSON = JSON.stringify(importData.data.traits.dv);
-    data.resistancesJSON = JSON.stringify(importData.data.traits.dr);
+    data.hpMax = importData.system.attributes.hp.max;
+    data.hpDetails = importData.system.attributes.hp.details;
+    data.immunitiesJSON = JSON.stringify(importData.system.traits.di.value);
+    data.weaknessesJSON = JSON.stringify(importData.system.traits.dv);
+    data.resistancesJSON = JSON.stringify(importData.system.traits.dr);
 
     let defensiveAbilities = importData.items.filter((item) => {
-        return item.type == `action` && item.data.actionCategory.value == `defensive`;
+        return item.type == `action` && item.system.actionCategory.value == `defensive`;
     });
     let defensiveAbilitiesDataArray = [];
     for (let ability of defensiveAbilities) {
         defensiveAbilitiesDataArray.push({
             name: ability.name,
-            actions: convertToWGActions(ability.data.actionType.value, ability.data.actions.value),
-            traits: ability.data.traits.value,
-            description: ability.data.description.value,
+            actions: convertToWGActions(ability.system.actionType.value, ability.system.actions.value),
+            traits: ability.system.traits.value,
+            description: ability.system.description.value,
         });
     }
     data.defensiveAbilitiesJSON = JSON.stringify(defensiveAbilitiesDataArray);
 
-    data.speed = importData.data.attributes.speed.value;
-    data.otherSpeedsJSON = JSON.stringify(importData.data.attributes.speed.otherSpeeds);
+    data.speed = importData.system.attributes.speed.value;
+    data.otherSpeedsJSON = JSON.stringify(importData.system.attributes.speed.otherSpeeds);
 
     let attacks = importData.items.filter((item) => {
         return item.type == `melee`;
@@ -257,12 +257,12 @@ function parseCreatureData(importData) {
 
         let damageEffects = ``;
         
-        if(attack.data.description.value != null){
-            let matchP = /<p>@Localize\[PF2E\.PersistentDamage\.(\D+)(.+?)\.success]<\/p>/g.exec(attack.data.description.value);
+        if(attack.system.description.value != null){
+            let matchP = /<p>@Localize\[PF2E\.PersistentDamage\.(\D+)(.+?)\.success]<\/p>/g.exec(attack.system.description.value);
             if(matchP != null){
                 damageEffects += `${matchP[2]} persistent ${matchP[1].toLowerCase()}`;
             } else {
-                let match = /@Localize\[PF2E\.PersistentDamage\.(\D+)(.+?)\.success]/g.exec(attack.data.description.value);
+                let match = /@Localize\[PF2E\.PersistentDamage\.(\D+)(.+?)\.success]/g.exec(attack.system.description.value);
                 if(match != null){
                     damageEffects += `${match[2]} persistent ${match[1].toLowerCase()}`;
                 }
@@ -272,14 +272,14 @@ function parseCreatureData(importData) {
         if(damageEffects != ``){
             damageEffects += `, `;
         }
-        damageEffects += attack.data.attackEffects.value;
+        damageEffects += attack.system.attackEffects.value;
 
         attacksDataArray.push({
-            type: attack.data.weaponType.value,
+            type: attack.system.weaponType.value,
             name: attack.name,
-            bonus: attack.data.bonus.value,
-            traits: attack.data.traits.value,
-            damage: Object.values(attack.data.damageRolls),
+            bonus: attack.system.bonus.value,
+            traits: attack.system.traits.value,
+            damage: Object.values(attack.system.damageRolls),
             effects: damageEffects,
         });
 
@@ -295,23 +295,23 @@ function parseCreatureData(importData) {
 
         
         let focusPoints = 0;
-        if (spellcasting.data.prepared.value == `focus`) {
-            focusPoints = importData.data.resources.focus.max;
+        if (spellcasting.system.prepared.value == `focus`) {
+            focusPoints = importData.system.resources.focus.max;
         }
 
         let spells = importData.items.filter((item) => {
-            return item.type == `spell` && item.data.location.value == spellcasting._id;
+            return item.type == `spell` && item.system.location.value == spellcasting._id;
         });
 
         let spellsDataArray = [];
         let constantSpellsDataArray = [];
         for (let spell of spells) {
 
-            let level = spell.data.level.value;
-            if(spell.data.location.heightenedLevel != null){
-                level = spell.data.location.heightenedLevel;
+            let level = spell.system.level.value;
+            if(spell.system.location.heightenedLevel != null){
+                level = spell.system.location.heightenedLevel;
             }
-            if(spell.data.traits.value.includes('cantrip')){
+            if(spell.system.traits.value.includes('cantrip')){
                 level = 0;
             }
 
@@ -345,8 +345,8 @@ function parseCreatureData(importData) {
 
         spellcastingDataArray.push({
             name: spellcasting.name,
-            dc: spellcasting.data.spelldc.dc,
-            attack: spellcasting.data.spelldc.value,
+            dc: spellcasting.system.spelldc.dc,
+            attack: spellcasting.system.spelldc.value,
             spells: spellsDataArray,
             constantSpells: constantSpellsDataArray,
             focus: focusPoints,
@@ -356,21 +356,21 @@ function parseCreatureData(importData) {
 
 
     let offensiveAbilities = importData.items.filter((item) => {
-        return item.type == `action` && item.data.actionCategory.value == `offensive`;
+        return item.type == `action` && item.system.actionCategory.value == `offensive`;
     });
     let offensiveAbilitiesDataArray = [];
     for (let ability of offensiveAbilities) {
         offensiveAbilitiesDataArray.push({
             name: ability.name,
-            actions: convertToWGActions(ability.data.actionType.value, ability.data.actions.value),
-            traits: ability.data.traits.value,
-            description: ability.data.description.value,
+            actions: convertToWGActions(ability.system.actionType.value, ability.system.actions.value),
+            traits: ability.system.traits.value,
+            description: ability.system.description.value,
         });
     }
     data.offensiveAbilitiesJSON = JSON.stringify(offensiveAbilitiesDataArray);
 
-    data.flavorText = importData.data.details.publicNotes;
-    data.contentSrc = convertToWGSource(importData.data.details.source.value);
+    data.flavorText = importData.system.details.publicNotes;
+    data.contentSrc = convertToWGSource(importData.system.details.source.value);
 
     socket.emit('requestAdminAddCreature', data);
 
@@ -435,6 +435,7 @@ function convertToWGSource(source) {
         case 'Pathfinder Lost Omens: The Mwangi Expanse': return 'LOST-MWANGI';
         case 'Pathfinder Adventure: Malevolence': return 'MALEVOLENCE';
         case 'Pathfinder #145: Hellknight Hill': return 'AGE-OF-ASHES';
+        case 'Pathfinder Kingmaker': return 'KINGMAKER'
         default: return source;
     }
 }

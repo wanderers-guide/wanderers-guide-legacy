@@ -36,6 +36,7 @@ function openSelectCampaignModal() {
       allEncounters[currentEncounterIndex].campaignID = campaign.id;
       displayEncounter(currentEncounterIndex);
       closeSelectCampaignModal();
+      openCampaignView(allEncounters[currentEncounterIndex].campaignID);
     });
 
   }

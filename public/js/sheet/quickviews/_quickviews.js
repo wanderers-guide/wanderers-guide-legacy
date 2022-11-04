@@ -175,7 +175,11 @@ function disablePreventQuickViewAutoClose(){
 
 function refreshQuickView(newData=g_QViewLastData) {
   if ($('#quickviewDefault').hasClass('is-active')) {
+    let scrollAmt = $('#quickViewContent').parent().scrollTop();
+
     openQuickView(g_QViewLastType, newData, true);
+    
+    $('#quickViewContent').parent().scrollTop(scrollAmt);
   }
 }
 
