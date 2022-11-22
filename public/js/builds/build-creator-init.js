@@ -210,6 +210,14 @@ function handleBuildOptions(build, hBundles, progessBundles) {
     });
     $("#contentSrc-LOST-GRAND-BAZAAR").prop('checked', contentSourceArray.includes('LOST-GRAND-BAZAAR'));
 
+    $("#contentSrc-LOST-IMPOSSIBLE-LANDS").change(function(){
+      socket.emit("requestBuildSourceChange", 
+          g_build_id, 
+          'LOST-IMPOSSIBLE-LANDS',
+          this.checked);
+    });
+    $("#contentSrc-LOST-IMPOSSIBLE-LANDS").prop('checked', contentSourceArray.includes('LOST-IMPOSSIBLE-LANDS'));
+
     $("#contentSrc-LOST-KNIGHTS-WALL").change(function(){
       socket.emit("requestBuildSourceChange", 
           g_build_id, 
@@ -297,6 +305,14 @@ function handleBuildOptions(build, hBundles, progessBundles) {
           this.checked);
     });
     $("#contentSrc-BLOOD-LORDS").prop('checked', contentSourceArray.includes('BLOOD-LORDS'));
+
+    $("#contentSrc-CROWN-OF-KOBOLD-KING").change(function(){
+      socket.emit("requestBuildSourceChange", 
+          g_build_id, 
+          'CROWN-OF-KOBOLD-KING',
+          this.checked);
+    });
+    $("#contentSrc-CROWN-OF-KOBOLD-KING").prop('checked', contentSourceArray.includes('CROWN-OF-KOBOLD-KING'));
 
     $("#contentSrc-EXTINCTION-CURSE").change(function(){
         socket.emit("requestBuildSourceChange", 
