@@ -1730,6 +1730,12 @@ function displayInformation() {
 
 function initHealthPointsAndMore() {
 
+  // TODO - Rework this
+  // Sets the g_calculatedStats for both health and stamina
+  initHealthAndTemp();
+  initStaminaAndResolve();
+  //
+
   if(gOption_hasStamina){
     
     if(g_showHealthPanel){
