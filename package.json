@@ -4,7 +4,7 @@
     "description": "Pathfinder 2e Character Manager",
     "main": "app.js",
     "scripts": {
-        "start": "SET NODE_ENV=production & node app.js",
+        "start": "node app.js",
         "dev": "SET NODE_ENV=development & nodemon app.js",
         "build": "npx prisma generate"
     },
