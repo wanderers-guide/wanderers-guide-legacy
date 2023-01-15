@@ -49,6 +49,8 @@ const http = require('http');
 
 const app = express();
 
+const port = process.env.PORT || 80;
+
 // Rate Limiter
 const rateLimiterFlexible = require('rate-limiter-flexible');
 const rateOptions = {
@@ -138,16 +140,16 @@ if (process.env.NODE_ENV === 'production'){
   server = https.createServer(options, app).listen(443);
   */
 
-  server = app.listen(80, () => {
-    console.log(`<< Wanderer's Guide >> Running on port 80`);
+  server = app.listen(port, () => {
+    console.log(`<< Wanderer's Guide >> Running on port ${port}`);
   });
 
 } else {
 
   //server = http.createServer(app).listen(80);
 
-  server = app.listen(80, () => {
-    console.log(`<< Wanderer's Guide >> Running on port 80`);
+  server = app.listen(port, () => {
+    console.log(`<< Wanderer's Guide >> Running on port ${port}`);
   });
 
 }
