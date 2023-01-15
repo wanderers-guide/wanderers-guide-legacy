@@ -17,6 +17,9 @@ function processError(message){
 console.error = (message) => {
   processError(message);
 }
+window.onerror = function(e, url, line) {
+  processError(`${e} (${url}:${line})`);
+};
 
 function clearErrorMessages() {
   errorMessages = [];

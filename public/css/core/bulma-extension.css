@@ -1,4 +1,10 @@
 
+/* Error Display */
+#errorDisplay {
+  z-index: 1000;
+  position: relative;
+}
+
 /* Typography */
 .has-text-left {
   text-align-last: left!important;
