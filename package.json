@@ -4,8 +4,8 @@
     "description": "Pathfinder 2e Character Manager",
     "main": "app.js",
     "scripts": {
-        "start": "node app.js",
-        "dev": "SET NODE_ENV=development & nodemon app.js",
+        "start": "NODE_ENV=development node app.js",
+        "dev": "NODE_ENV=development nodemon app.js",
         "build": "npx prisma generate"
     },
     "author": "Aaron Cassar",

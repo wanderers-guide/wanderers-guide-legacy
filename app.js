@@ -49,11 +49,6 @@ const http = require('http');
 
 const app = express();
 
-if(!process.env.NODE_ENV){
-  console.error('No NODE_ENV provided! ', process.env.NODE_ENV);
-  return;
-}
-
 const port = process.env.PORT || 80;
 
 // Rate Limiter
