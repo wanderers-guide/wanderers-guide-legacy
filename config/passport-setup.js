@@ -20,8 +20,7 @@ passport.use(
         // Options for Google Strategy
         clientID: keys.google.clientID,
         clientSecret: keys.google.clientSecret,
-        callbackURL: '/auth/google/redirect',
-        userProfileURL: 'https://www.googleapis.com/oauth2/v3/userinfo'
+        callbackURL: `http://${(process.env.NODE_ENV === 'production') ? 'wanderersguide.app' : 'localhost'}/auth/google/redirect`,
     }, (accessToken, refreshToken, profile, done) => {
         // Check if user exists in database
         User.findOne({where:{ googleID: profile.id} }).then((currentUser) => {
@@ -80,7 +79,7 @@ passport.use(
     new RedditStrategy({
         clientID: (process.env.NODE_ENV === 'production') ? keys.reddit.clientID : keys.reddit_dev.clientID,
         clientSecret: (process.env.NODE_ENV === 'production') ? keys.reddit.clientSecret : keys.reddit_dev.clientSecret,
-        callbackURL: '/auth/reddit/redirect'
+        callbackURL: `http://${(process.env.NODE_ENV === 'production') ? 'wanderersguide.app' : 'localhost'}/auth/reddit/redirect`,
     }, (accessToken, refreshToken, profile, done) => {
         // Check if user exists in database
         User.findOne({where:{ redditID: profile.id} }).then((currentUser) => {
