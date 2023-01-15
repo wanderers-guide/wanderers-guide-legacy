@@ -9,7 +9,7 @@
         "build": ""
     },
     "author": "Aaron Cassar",
-    "license": "ISC",
+    "license": "GNU",
     "dependencies": {
         "@creativebulma/bulma-collapsible": "^1.0.4",
         "@prisma/client": "^4.5.0",
