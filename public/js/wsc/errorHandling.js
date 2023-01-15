@@ -2,14 +2,20 @@
     By Aaron Cassar.
 */
 
-const IS_DEBUG = true;
-
 let errorMessages = [];
 
 function displayError(message){
-  console.error('Error: '+message);
+  console.warn('Traced Error: '+message);
+  console.error('Traced Error: '+message);
+}
+
+function processError(message){
   errorMessages.push(message);
   reloadErrorMessages();
+}
+
+console.error = (message) => {
+  processError(message);
 }
 
 function clearErrorMessages() {
