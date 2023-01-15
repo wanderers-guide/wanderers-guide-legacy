@@ -249,17 +249,21 @@ function initEncounterView() {
     openCustomCreatureQuickview();
   });
 
-  $(`#encounter-set-campaign-btn`).click(function () {
-    $('#quickviewLeftDefault').removeClass('is-active');
-    $('#quickviewDefault').removeClass('is-active');
-
-    let campaignID = allEncounters[currentEncounterIndex].campaignID;
-    if(campaignID == null){
-      openSelectCampaignModal();
-    } else {
-      openCampaignView(campaignID);
-    }
-  });
+  if(g_campaigns.length === 0){
+    $(`#encounter-set-campaign-btn`).prop('disabled', true);
+  } else {
+    $(`#encounter-set-campaign-btn`).click(function () {
+      $('#quickviewLeftDefault').removeClass('is-active');
+      $('#quickviewDefault').removeClass('is-active');
+  
+      let campaignID = allEncounters[currentEncounterIndex].campaignID;
+      if(campaignID == null){
+        openSelectCampaignModal();
+      } else {
+        openCampaignView(campaignID);
+      }
+    });
+  }
 
 }
 
