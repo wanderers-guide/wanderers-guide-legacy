@@ -4,8 +4,8 @@
     "description": "Pathfinder 2e Character Manager",
     "main": "app.js",
     "scripts": {
-        "start": "node app.js",
-        "dev": "start redis-server.exe && concurrently -k \"tsc -w\" \"nodemon app.js\""
+        "start": "NODE_ENV=production node app.js",
+        "dev": "NODE_ENV=development nodemon app.js"
     },
     "author": "Aaron Cassar",
     "license": "ISC",
@@ -24,13 +24,13 @@
         "bulma-switch": "^2.0.0",
         "bulma-tagsinput": "^2.0.0",
         "bulma-tooltip": "^3.0.2",
-        "connect-redis": "^5.1.0",
+        "cookie-parser": "^1.4.6",
+        "cookie-session": "^2.0.0",
         "cool-checkboxes-for-bulma.io": "^1.1.0",
         "crypto": "^1.0.1",
         "dotenv": "^8.2.0",
         "express": "^4.17.1",
         "express-handlebars": "^3.0.0",
-        "express-session": "^1.17.1",
         "jshint": "^2.11.0",
         "jsonapi-datastore": "^0.4.0-beta",
         "lodash": "^4.17.21",
@@ -43,7 +43,6 @@
         "patreon": "^0.4.1",
         "prisma": "^4.5.0",
         "rate-limiter-flexible": "^2.1.10",
-        "redis": "^3.1.1",
         "sequelize": "^5.21.6",
         "serve-favicon": "^2.5.0",
         "socket.io": "^2.3.0"

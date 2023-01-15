@@ -78,8 +78,8 @@ passport.use(
 
 passport.use(
     new RedditStrategy({
-        clientID: (process.env.PRODUCTION == 'true') ? keys.reddit.clientID : keys.reddit_dev.clientID,
-        clientSecret: (process.env.PRODUCTION == 'true') ? keys.reddit.clientSecret : keys.reddit_dev.clientSecret,
+        clientID: (process.env.NODE_ENV === 'production') ? keys.reddit.clientID : keys.reddit_dev.clientID,
+        clientSecret: (process.env.NODE_ENV === 'production') ? keys.reddit.clientSecret : keys.reddit_dev.clientSecret,
         callbackURL: '/auth/reddit/redirect'
     }, (accessToken, refreshToken, profile, done) => {
         // Check if user exists in database

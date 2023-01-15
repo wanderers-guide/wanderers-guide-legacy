@@ -2,15 +2,24 @@ require('dotenv').config();
 
 const express = require('express');
 const socket = require('socket.io');
+
+/*
+TODO - Could use again in the future, or delete
+- Remove redis-server.exe with it
+
 const expressSession = require('express-session');
 
 let RedisStore = null;
 let redisClient = null;
-if(process.env.PRODUCTION == 'false'){
+if(process.env.NODE_ENV !== 'production'){
   const redis = require('redis');
   RedisStore = require('connect-redis')(expressSession);
   redisClient = redis.createClient();
 }
+*/
+
+const cookieSession = require('cookie-session');
+const cookieParser = require('cookie-parser');
 
 const exphbs = require('express-handlebars');
 const bodyParser = require('body-parser');
@@ -84,23 +93,42 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.urlencoded({ extended: false }));
 
 // Setup Express Session
+/*
+TODO - Could use again in the future, or delete
+
 let sessionMiddleware = expressSession({
   // In production use default MemoryStore, in development use RedisStore
-  store: (process.env.PRODUCTION == 'true') ? undefined : new RedisStore({ client: redisClient }),
+  store: (process.env.NODE_ENV === 'production') ? undefined : new RedisStore({ client: redisClient }),
   secret: keys.session.expressSecret,
   resave: false,
   saveUninitialized: false,
   cookie: {
-    secure: (process.env.PRODUCTION == 'true') ? true : false,
+    secure: (process.env.NODE_ENV === 'production') ? true : false,
     maxAge: 30 * 24 * 60 * 60 * 1000 // 30 days
   }
 });
 app.use(sessionMiddleware);
+*/
+
+let sessionMiddleware = cookieSession({
+  name: 'session',
+  keys: [keys.session.expressSecret],
+
+  // Cookie Options
+  maxAge: 30 * 24 * 60 * 60 * 1000 // 30 days
+});
+
+app.use(
+  cookieParser(keys.session.expressSecret, {}),
+  sessionMiddleware
+);
 
 // Server Setup
 let server = null;
-if (process.env.PRODUCTION == 'true'){
+
+if (process.env.NODE_ENV === 'production'){
   
+  /*
   const options = {
     key: fs.readFileSync('/etc/letsencrypt/live/wanderersguide.app/privkey.pem', 'utf8'),
     cert: fs.readFileSync('/etc/letsencrypt/live/wanderersguide.app/cert.pem', 'utf8'),
@@ -108,10 +136,19 @@ if (process.env.PRODUCTION == 'true'){
   };
 
   server = https.createServer(options, app).listen(443);
+  */
+
+  server = app.listen(80, () => {
+    console.log(`<< Wanderer's Guide >> Running on port 80`);
+  });
 
 } else {
 
-  server = http.createServer(app).listen(80);
+  //server = http.createServer(app).listen(80);
+
+  server = app.listen(80, () => {
+    console.log(`<< Wanderer's Guide >> Running on port 80`);
+  });
 
 }
 

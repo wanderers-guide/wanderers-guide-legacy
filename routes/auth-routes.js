@@ -128,7 +128,7 @@ const legendTierID = '6299276';
 
 let patreonOAuthClient = patreonOAuth(process.env.PATREON_CLIENT_ID, process.env.PATREON_CLIENT_SECRET);
 let redirectURL;
-if (process.env.PRODUCTION == 'true'){
+if (process.env.NODE_ENV === 'production'){
     redirectURL = 'https://wanderersguide.app/auth/patreon/redirect';
 } else {
     redirectURL = 'http://localhost/auth/patreon/redirect';
