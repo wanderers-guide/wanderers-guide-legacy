@@ -1,2 +1,8 @@
 {
+  "appService.zipIgnorePattern": [
+    "node_modules{,/**}",
+    ".vscode{,/**}"
+  ],
+  "appService.defaultWebAppToDeploy": "/subscriptions/0c606119-1194-4d98-8a0c-9848c6c39a9b/AppServices/subscriptions/0c606119-1194-4d98-8a0c-9848c6c39a9b/resourceGroups/WG/providers/Microsoft.Web/sites/wg-website",
+  "appService.deploySubpath": "."
 }

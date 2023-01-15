@@ -4,9 +4,13 @@ const express = require('express');
 const socket = require('socket.io');
 const expressSession = require('express-session');
 
-const redis = require('redis');
-let RedisStore = require('connect-redis')(expressSession);
-let redisClient = redis.createClient();
+let RedisStore = null;
+let redisClient = null;
+if(process.env.PRODUCTION == 'false'){
+  const redis = require('redis');
+  RedisStore = require('connect-redis')(expressSession);
+  redisClient = redis.createClient();
+}
 
 const exphbs = require('express-handlebars');
 const bodyParser = require('body-parser');
@@ -81,7 +85,8 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 // Setup Express Session
 let sessionMiddleware = expressSession({
-  store: new RedisStore({ client: redisClient }),
+  // In production use default MemoryStore, in development use RedisStore
+  store: (process.env.PRODUCTION == 'true') ? undefined : new RedisStore({ client: redisClient }),
   secret: keys.session.expressSecret,
   resave: false,
   saveUninitialized: false,
