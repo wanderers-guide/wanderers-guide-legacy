@@ -1,0 +1,24 @@
+{
+  "theme_color": "#1c1c1c",
+  "background_color": "#1c1c1c",
+  "display": "standalone",
+  "scope": "/",
+  "start_url": "/",
+  "app_name": "Wanderer's Guide",
+  "short_name": "Wanderer's Guide",
+  "description": "A character manager for Pathfinder Second Edition.",
+  "icons": [
+    {
+      "src": "/images/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/images/old_favicon.png",
+      "sizes": "256x256",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}
