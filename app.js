@@ -54,7 +54,7 @@ const port = process.env.PORT || 80;
 // Rate Limiter
 const rateLimiterFlexible = require('rate-limiter-flexible');
 const rateOptions = {
-  points: 15, // 15 points
+  points: 20, // 15 points
   duration: 5, // Per 5 second
   execEvenly: true,
   clearExpiredByTimeout: true,
