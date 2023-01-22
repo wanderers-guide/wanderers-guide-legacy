@@ -6,7 +6,7 @@
     "scripts": {
         "start": "NODE_ENV=production node app.js",
         "dev": "NODE_ENV=development nodemon app.js",
-        "build": "npx prisma generate"
+        "build": "npx prisma generate && node esbuild.mjs"
     },
     "author": "Aaron Cassar",
     "license": "GNU",
@@ -30,6 +30,7 @@
         "cool-checkboxes-for-bulma.io": "^1.1.0",
         "crypto": "^1.0.1",
         "dotenv": "^8.2.0",
+        "esbuild": "0.17.3",
         "express": "^4.17.1",
         "express-handlebars": "^3.0.0",
         "jshint": "^2.11.0",
