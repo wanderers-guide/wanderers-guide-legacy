@@ -99,7 +99,7 @@ $(function () {
     }
     
     initCharacterExport();
-    old_initCharacterExportToPDF(); // <- PDF
+    initCharacterExportToPDF(); // <- PDF
 
 });
 

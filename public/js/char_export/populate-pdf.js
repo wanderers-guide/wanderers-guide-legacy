@@ -13,9 +13,10 @@ function getNumZeroIfNull(number) {
   return (number != null) ? number : 0;
 }
 
-function old_initCharacterExportToPDF(){
+function initCharacterExportToPDF(){
 
   $('#btn-export-to-pdf').click(function() {
+    startSpinnerSubLoader();
     socket.emit("requestCharExportPDFInfo", activeModalCharID);
   });
 
@@ -707,20 +708,20 @@ async function charExportGeneratePDF(charInfo, extraData) {
 
   let extraInfo = JSON.parse(charInfo.character.infoJSON);
 
-  if(extraInfo.ethnicity != null) {
+  if(extraInfo?.ethnicity) {
     form.getTextField('ETHNICITY').setText(extraInfo.ethnicity);
   }
-  if(extraInfo.nationality != null) {
+  if(extraInfo?.nationality) {
     form.getTextField('NATIONALITY').setText(extraInfo.nationality);
   }
-  if(extraInfo.age != null) {
+  if(extraInfo?.age) {
     form.getTextField('AGE').setText(extraInfo.age);
   }
   let genderPronouns = '';
-  if(extraInfo.gender != null) {
+  if(extraInfo?.gender) {
     genderPronouns += extraInfo.gender;
   }
-  if(extraInfo.pronouns != null) {
+  if(extraInfo?.pronouns) {
     if(genderPronouns == ''){
       genderPronouns += extraInfo.pronouns;
     } else {
@@ -729,17 +730,15 @@ async function charExportGeneratePDF(charInfo, extraData) {
   }
   form.getTextField('GENDER PRONOUNS').setText(genderPronouns);
 
-  if(extraInfo.appearance != null) {
+  if(extraInfo?.appearance) {
     form.getTextField('APPEARANCE').setText(extraInfo.appearance);
   }
-  if(extraInfo.personality != null) {
+  if(extraInfo?.personality) {
     form.getTextField('ATTITUDE').setText(extraInfo.personality);
   }
-  if(extraInfo.beliefs != null) {
+  if(extraInfo?.beliefs) {
     form.getTextField('BELIEFS').setText(extraInfo.beliefs);
   }
-
-
 
   const pdfBytes = await pdfDoc.save();
 
@@ -747,7 +746,7 @@ async function charExportGeneratePDF(charInfo, extraData) {
   download(pdfBytes, charInfo.character.name+" - Character Sheet.pdf", "application/pdf");
   
   $('.modal-card-close').trigger('click');
-
+  stopSpinnerSubLoader();
 }
 
 function setProfCheckBox(prof, trainedBox, expertBox, masterBox, legendaryBox){
