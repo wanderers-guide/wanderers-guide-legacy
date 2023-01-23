@@ -31,7 +31,7 @@ Since Wanderer's Guide is, structure-wise, effectively a platform, it used to be
 
 ### Get the Prerequisites
 
-Here is the base stuff you need to work in this repo
+Here is the base stuff you need to work in this repo.
 
 #### 1. Software Installs
 
