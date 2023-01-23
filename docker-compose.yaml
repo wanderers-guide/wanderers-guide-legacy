@@ -1,0 +1,35 @@
+version: '3'
+services:
+  mysql:
+    build: 
+      context: .
+      dockerfile: Dockerfile-mysql
+    volumes:
+      - /WG-dev-db-1-20-23.sql
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_DATABASE=wandeide_main
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=password
+    expose:
+      - 3306:3306
+    ports:
+      - 3306:3306
+    healthcheck:
+        test: ["CMD", "curl", "-f", "http://localhost:3306"]
+        interval: 30s
+        timeout: 10s
+        retries: 5
+  app:
+    build: 
+      context: .
+      dockerfile: Dockerfile-dev
+    links:
+      - mysql
+    env_file:
+      - dev.env
+    depends_on:
+      mysql:
+        condition: service_healthy
+    ports:
+      - 3000:3000

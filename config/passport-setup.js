@@ -4,6 +4,11 @@ const RedditStrategy = require('passport-reddit').Strategy;
 //const AppleStrategy = require('passport-apple');
 const keys = require('./keys');
 const User = require('../models/contentDB/User');
+let callbackURL = `https://wanderersguide.app/auth/google/redirect`;
+if (process.env.NODE_ENV !== 'production') {
+    callbackURL = `http://localhost:${process.env.PORT}/auth/google/redirect`
+}
+
 
 passport.serializeUser((user, done) => {
     done(null, user.id);
@@ -20,7 +25,7 @@ passport.use(
         // Options for Google Strategy
         clientID: keys.google.clientID,
         clientSecret: keys.google.clientSecret,
-        callbackURL: `https://${(process.env.NODE_ENV === 'production') ? 'wanderersguide.app' : 'localhost'}/auth/google/redirect`,
+        callbackURL,
     }, (accessToken, refreshToken, profile, done) => {
         // Check if user exists in database
         User.findOne({where:{ googleID: profile.id} }).then((currentUser) => {
