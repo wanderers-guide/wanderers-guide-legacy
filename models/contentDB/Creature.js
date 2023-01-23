@@ -1,132 +1,132 @@
-const Sequelize = require('sequelize');
-const db = require('../../config/databases/content-database');
+const Sequelize = require("sequelize");
+const db = require("../../config/databases/content-database");
 
-const Creature = db.define('creatures', {
+const Creature = db.define("creatures", {
   name: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   level: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   rarity: {
     type: Sequelize.ENUM,
-    values: ['COMMON', 'UNCOMMON', 'RARE', 'UNIQUE']
+    values: ["COMMON", "UNCOMMON", "RARE", "UNIQUE"],
   },
   alignment: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   size: {
     type: Sequelize.ENUM,
-    values: ['TINY', 'SMALL', 'MEDIUM', 'LARGE', 'HUGE', 'GARGANTUAN']
+    values: ["TINY", "SMALL", "MEDIUM", "LARGE", "HUGE", "GARGANTUAN"],
   },
   traitsJSON: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   familyType: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
 
   perceptionBonus: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   senses: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   languagesJSON: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   languagesCustom: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   skillsJSON: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   itemsJSON: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
 
   strMod: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   dexMod: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   conMod: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   intMod: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   wisMod: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   chaMod: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   interactionAbilitiesJSON: {
-    type: Sequelize.TEXT
+    type: Sequelize.TEXT,
   },
 
   acValue: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   fortBonus: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   reflexBonus: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   willBonus: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   allSavesCustom: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
 
   hpMax: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   hpDetails: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   immunitiesJSON: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   weaknessesJSON: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   resistancesJSON: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
 
   defensiveAbilitiesJSON: {
-    type: Sequelize.TEXT
+    type: Sequelize.TEXT,
   },
   speed: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   otherSpeedsJSON: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
 
   attacksJSON: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   spellcastingJSON: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   offensiveAbilitiesJSON: {
-    type: Sequelize.TEXT
+    type: Sequelize.TEXT,
   },
 
   flavorText: {
-    type: Sequelize.TEXT
+    type: Sequelize.TEXT,
   },
   contentSrc: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   homebrewID: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
 });
 

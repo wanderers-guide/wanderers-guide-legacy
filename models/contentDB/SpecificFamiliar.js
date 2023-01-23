@@ -1,40 +1,40 @@
-const Sequelize = require('sequelize');
-const db = require('../../config/databases/content-database');
+const Sequelize = require("sequelize");
+const db = require("../../config/databases/content-database");
 
-const SpecificFamiliar = db.define('specificFamiliars', {
+const SpecificFamiliar = db.define("specificFamiliars", {
   specificType: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   name: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   alignment: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   tagsJSON: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   description: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   numAbils: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   abilsJSON: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   extraAbils: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   isArchived: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   contentSrc: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   homebrewID: {
-    type: Sequelize.INTEGER
-  }
+    type: Sequelize.INTEGER,
+  },
 });
 
 module.exports = SpecificFamiliar;

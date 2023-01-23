@@ -1,24 +1,24 @@
-const Sequelize = require('sequelize');
-const db = require('../../config/databases/content-database');
+const Sequelize = require("sequelize");
+const db = require("../../config/databases/content-database");
 
-const Campaign = db.define('campaigns', {
+const Campaign = db.define("campaigns", {
   userID: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   accessID: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   name: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   description: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   imageURL: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   optionDisplayPlayerHealth: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
 });
 

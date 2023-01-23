@@ -1,25 +1,25 @@
-const Sequelize = require('sequelize');
-const db = require('../../config/databases/content-database');
+const Sequelize = require("sequelize");
+const db = require("../../config/databases/content-database");
 
-const ClassArchetype = db.define('classArchetypes', {
+const ClassArchetype = db.define("classArchetypes", {
   name: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   description: {
-    type: Sequelize.TEXT
+    type: Sequelize.TEXT,
   },
   replacementCodeJSON: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   dedicationFeatName: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   contentSrc: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   homebrewID: {
-    type: Sequelize.INTEGER
-  }
+    type: Sequelize.INTEGER,
+  },
 });
 
 module.exports = ClassArchetype;

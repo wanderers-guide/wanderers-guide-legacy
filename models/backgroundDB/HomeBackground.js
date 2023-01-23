@@ -1,16 +1,16 @@
-const Sequelize = require('sequelize');
-const db = require('../../config/databases/content-database');
+const Sequelize = require("sequelize");
+const db = require("../../config/databases/content-database");
 
-const HomeBackground = db.define('homeBackgrounds', {
+const HomeBackground = db.define("homeBackgrounds", {
   name: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   artworkURL: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   artistPage: {
-    type: Sequelize.STRING
-  }
+    type: Sequelize.STRING,
+  },
 });
 
 module.exports = HomeBackground;

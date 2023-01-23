@@ -1,15 +1,15 @@
-const { PrismaClient } = require('@prisma/client');
-const { find } = require('lodash');
+const { PrismaClient } = require("@prisma/client");
+const { find } = require("lodash");
 const NodeCache = require("node-cache");
 
-const memCache = new NodeCache({ stdTTL: 3600*8 /* 8 hours */ });
+const memCache = new NodeCache({ stdTTL: 3600 * 8 /* 8 hours */ });
 
 const prisma = new PrismaClient({
   log: [
     //{ emit: 'stdout', level: 'query', },
-    { emit: 'stdout', level: 'error', },
+    { emit: "stdout", level: "error" },
     //{ emit: 'stdout', level: 'info', },
-    { emit: 'stdout', level: 'warn', },
+    { emit: "stdout", level: "warn" },
   ],
 });
 
@@ -29,26 +29,23 @@ prisma.$use(async (params, next) => {
 */
 
 prisma.$use(async (params, next) => {
-
   let strParams = JSON.stringify(params);
 
   let cached_result = memCache.get(strParams);
-  if(cached_result == null){
-
+  if (cached_result == null) {
     const result = await next(params);
-    if(!strParams.includes('"NOT":{"id":-1}}')){// Don't cache query is it contains NOT: id:-1
+    if (!strParams.includes('"NOT":{"id":-1}}')) {
+      // Don't cache query is it contains NOT: id:-1
       let success = memCache.set(strParams, result); // TODO: Give a TTL
-      console.log('Caching Result... '+success);
+      console.log("Caching Result... " + success);
     } else {
-      console.log('Not Caching Result');
+      console.log("Not Caching Result");
     }
 
     return result;
-
   } else {
     return cached_result;
   }
-
 });
 
 module.exports.Prisma = prisma;

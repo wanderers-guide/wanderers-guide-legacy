@@ -1,11 +1,10 @@
+const GeneralGathering = require("./../GeneralGathering");
 
-const GeneralGathering = require('./../GeneralGathering');
-
-const { Prisma } = require('./../PrismaConnection');
+const { Prisma } = require("./../PrismaConnection");
 
 function mapToObj(strMap) {
   let obj = Object.create(null);
-  for (let [k,v] of strMap) {
+  for (let [k, v] of strMap) {
     // We don’t escape the key '__proto__'
     // which can cause problems on older engines
     obj[k] = v;
@@ -13,9 +12,8 @@ function mapToObj(strMap) {
   return obj;
 }
 
-module.exports = async function(userID) {
-
-  console.log('~ STARTING SEARCH LOAD ~');
+module.exports = async function (userID) {
+  console.log("~ STARTING SEARCH LOAD ~");
 
   // socket.emit('updateLoadProgess', { message: 'Opening Books', upVal: 2 }); // (2/100) //
   const sourceBooks = GeneralGathering.getSourceBooks(userID);
@@ -56,8 +54,21 @@ module.exports = async function(userID) {
   // socket.emit('updateLoadProgess', { message: 'Loading Heritages', upVal: 5 }); // (95/100) //
   const uniHeritages = GeneralGathering.getAllUniHeritages(userID, null);
 
-
-  let promise = await Promise.all([featsObject,skillObject,itemMap,spellMap,allLanguages,allConditions,allTags,classes,ancestries,archetypes,backgrounds,sourceBooks,uniHeritages]);
+  let promise = await Promise.all([
+    featsObject,
+    skillObject,
+    itemMap,
+    spellMap,
+    allLanguages,
+    allConditions,
+    allTags,
+    classes,
+    ancestries,
+    archetypes,
+    backgrounds,
+    sourceBooks,
+    uniHeritages,
+  ]);
 
   // socket.emit('updateLoadProgess', { message: 'Finalizing', upVal: 10 }); // (105/100) //
   const searchStruct = {
@@ -76,8 +87,7 @@ module.exports = async function(userID) {
     uniHeritages: promise[12],
   };
 
-  console.log('~ COMPLETE SEARCH LOAD! ~');
+  console.log("~ COMPLETE SEARCH LOAD! ~");
 
   return searchStruct;
-
 };

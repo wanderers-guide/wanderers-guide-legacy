@@ -1,19 +1,19 @@
-const Sequelize = require('sequelize');
-const db = require('../../config/databases/content-database');
+const Sequelize = require("sequelize");
+const db = require("../../config/databases/content-database");
 
-const SenseType = db.define('senseTypes', {
+const SenseType = db.define("senseTypes", {
   name: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   description: {
-    type: Sequelize.TEXT
+    type: Sequelize.TEXT,
   },
   isVisionType: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   visionPrecedence: {
-    type: Sequelize.INTEGER
-  }
+    type: Sequelize.INTEGER,
+  },
 });
 
 module.exports = SenseType;

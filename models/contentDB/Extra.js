@@ -1,47 +1,47 @@
-const Sequelize = require('sequelize');
-const db = require('../../config/databases/content-database');
+const Sequelize = require("sequelize");
+const db = require("../../config/databases/content-database");
 
-const Extra = db.define('extras', {
+const Extra = db.define("extras", {
   name: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   price: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   level: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   rarity: {
     type: Sequelize.ENUM,
-    values: ['COMMON', 'UNCOMMON', 'RARE', 'UNIQUE']
+    values: ["COMMON", "UNCOMMON", "RARE", "UNIQUE"],
   },
   size: {
     type: Sequelize.ENUM,
-    values: ['TINY', 'SMALL', 'MEDIUM', 'LARGE', 'HUGE', 'GARGANTUAN']
+    values: ["TINY", "SMALL", "MEDIUM", "LARGE", "HUGE", "GARGANTUAN"],
   },
   description: {
-    type: Sequelize.TEXT
+    type: Sequelize.TEXT,
   },
   hitPoints: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   brokenThreshold: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   hardness: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   type: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   contentSrc: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   homebrewID: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   isArchived: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
 });
 

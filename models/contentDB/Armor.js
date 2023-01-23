@@ -1,36 +1,36 @@
-const Sequelize = require('sequelize');
-const db = require('../../config/databases/content-database');
+const Sequelize = require("sequelize");
+const db = require("../../config/databases/content-database");
 
-const Armor = db.define('armors', {
+const Armor = db.define("armors", {
   itemID: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   profName: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   acBonus: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   dexCap: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   checkPenalty: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   speedPenalty: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   minStrength: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   armorType: {
     type: Sequelize.ENUM,
-    values: ['N/A', 'CLOTH', 'LEATHER', 'COMPOSITE', 'CHAIN', 'PLATE']
+    values: ["N/A", "CLOTH", "LEATHER", "COMPOSITE", "CHAIN", "PLATE"],
   },
   category: {
     type: Sequelize.ENUM,
-    values: ['UNARMORED', 'LIGHT', 'MEDIUM', 'HEAVY']
-  }
+    values: ["UNARMORED", "LIGHT", "MEDIUM", "HEAVY"],
+  },
 });
 
 module.exports = Armor;

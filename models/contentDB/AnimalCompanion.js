@@ -1,141 +1,171 @@
-const Sequelize = require('sequelize');
-const db = require('../../config/databases/content-database');
+const Sequelize = require("sequelize");
+const db = require("../../config/databases/content-database");
 
-const AnimalCompanion = db.define('animalCompanions', {
+const AnimalCompanion = db.define("animalCompanions", {
   name: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   rarity: {
     type: Sequelize.ENUM,
-    values: ['COMMON', 'UNCOMMON', 'RARE', 'UNIQUE']
+    values: ["COMMON", "UNCOMMON", "RARE", "UNIQUE"],
   },
   description: {
-    type: Sequelize.TEXT
+    type: Sequelize.TEXT,
   },
   size: {
     type: Sequelize.ENUM,
-    values: ['TINY', 'SMALL', 'SMALL-MED', 'MEDIUM', 'LARGE', 'MED-LARGE', 'HUGE', 'GARGANTUAN']
+    values: [
+      "TINY",
+      "SMALL",
+      "SMALL-MED",
+      "MEDIUM",
+      "LARGE",
+      "MED-LARGE",
+      "HUGE",
+      "GARGANTUAN",
+    ],
   },
 
   a1Name: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   a1Type: {
     type: Sequelize.ENUM,
-    values: ['MELEE', 'RANGED']
+    values: ["MELEE", "RANGED"],
   },
   a1Actions: {
     type: Sequelize.ENUM,
-    values: ['NONE', 'FREE_ACTION', 'REACTION', 'ACTION', 'TWO_ACTIONS', 'THREE_ACTIONS']
+    values: [
+      "NONE",
+      "FREE_ACTION",
+      "REACTION",
+      "ACTION",
+      "TWO_ACTIONS",
+      "THREE_ACTIONS",
+    ],
   },
   a1Tags: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   a1DmgDie: {
     type: Sequelize.ENUM,
-    values: ['', 'd2', 'd4', 'd6', 'd8', 'd10', 'd12', 'd20']
+    values: ["", "d2", "d4", "d6", "d8", "d10", "d12", "d20"],
   },
   a1DmgType: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
 
   a2Name: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   a2Type: {
     type: Sequelize.ENUM,
-    values: ['MELEE', 'RANGED']
+    values: ["MELEE", "RANGED"],
   },
   a2Actions: {
     type: Sequelize.ENUM,
-    values: ['NONE', 'FREE_ACTION', 'REACTION', 'ACTION', 'TWO_ACTIONS', 'THREE_ACTIONS']
+    values: [
+      "NONE",
+      "FREE_ACTION",
+      "REACTION",
+      "ACTION",
+      "TWO_ACTIONS",
+      "THREE_ACTIONS",
+    ],
   },
   a2Tags: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   a2DmgDie: {
     type: Sequelize.ENUM,
-    values: ['', 'd2', 'd4', 'd6', 'd8', 'd10', 'd12', 'd20']
+    values: ["", "d2", "d4", "d6", "d8", "d10", "d12", "d20"],
   },
   a2DmgType: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
 
   a3Name: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   a3Type: {
     type: Sequelize.ENUM,
-    values: ['MELEE', 'RANGED']
+    values: ["MELEE", "RANGED"],
   },
   a3Actions: {
     type: Sequelize.ENUM,
-    values: ['NONE', 'FREE_ACTION', 'REACTION', 'ACTION', 'TWO_ACTIONS', 'THREE_ACTIONS']
+    values: [
+      "NONE",
+      "FREE_ACTION",
+      "REACTION",
+      "ACTION",
+      "TWO_ACTIONS",
+      "THREE_ACTIONS",
+    ],
   },
   a3Tags: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   a3DmgDie: {
     type: Sequelize.ENUM,
-    values: ['', 'd2', 'd4', 'd6', 'd8', 'd10', 'd12', 'd20']
+    values: ["", "d2", "d4", "d6", "d8", "d10", "d12", "d20"],
   },
   a3DmgType: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
 
   modStr: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   modDex: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   modCon: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   modInt: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   modWis: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   modCha: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
 
   hitPoints: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   skills: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   senses: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   speeds: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   special: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   supportBenefit: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   advancedManeuver: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
 
   isArchived: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   contentSrc: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   homebrewID: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   version: {
-    type: Sequelize.STRING
-  }
+    type: Sequelize.STRING,
+  },
 });
 
 module.exports = AnimalCompanion;
