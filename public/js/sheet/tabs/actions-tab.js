@@ -520,7 +520,9 @@ function displayAction(actionStruct, actionCount, skillMap) {
                 break;
             }
         }
-        actionTagsInnerHTML += '<button class="button is-marginless mr-2 my-1 is-very-small is-info">'+skill.name+'</button>';
+        if(skill){
+          actionTagsInnerHTML += '<button class="button is-marginless mr-2 my-1 is-very-small is-info">'+skill.name+'</button>';
+        }
     }
 
     actionStruct.Tags = actionStruct.Tags.sort(
