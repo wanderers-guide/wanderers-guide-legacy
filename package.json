@@ -1,6 +1,6 @@
 {
     "name": "wanderers-guide",
-    "version": "1.9.2",
+    "version": "1.9.3",
     "description": "Pathfinder 2e Character Manager",
     "main": "app.js",
     "scripts": {
