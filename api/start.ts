@@ -10,7 +10,6 @@ const api = createApi({ prisma, resources: [feats] });
 const app = express();
 app.use(express.json());
 app.use('/api/v2/', (req, res) => {
-  console.log("here!");
   try {
     api.handleRequest(req, req, res);
   } catch (error) {

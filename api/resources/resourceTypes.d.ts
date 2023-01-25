@@ -1,4 +1,4 @@
-import { Pisma, Prisma } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 
 export type Feats = {
   name: "feats";

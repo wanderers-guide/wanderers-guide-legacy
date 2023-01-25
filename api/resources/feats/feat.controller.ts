@@ -12,7 +12,7 @@ export class FeatController extends Controller<Feats, FeatService> {
   }
 
   public async findByName(c: Context, req: Request, res): Promise<any> {
-    const name = c.request.body.name;
+    const name = c.request.query.name.toString();
     const page = Number(c.request.query.page || 0);
     const pageSize = Number(c.request.query.pageSize || 100);
 
