@@ -18,7 +18,7 @@ export abstract class Schema<T extends Resource> {
     this.resourceDefinition = _.cloneDeep(parseableJsonSchema[resourceName]);
     const propertiesWithoutReadOnlyValues = _.omit(
       this.resourceDefinition.properties,
-      ["id"]
+      ["id"],
     );
     // we could also split this into an update type and an insert type
     // an update type has no restrictions on inputs, like this will.

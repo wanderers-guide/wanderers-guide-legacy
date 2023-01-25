@@ -1,4 +1,4 @@
-import _, { result } from "lodash";
+import _ from "lodash";
 import OpenAPIBackend, { Handler, Request } from "openapi-backend";
 import { OpenAPIV3_1 } from "openapi-types";
 import { prisma as prismaType } from "./config";
