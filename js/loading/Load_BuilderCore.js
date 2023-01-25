@@ -1,4 +1,3 @@
-
 /*
 const CharContentSources = require('./../CharContentSources');
 const CharContentHomebrew = require('./../CharContentHomebrew');

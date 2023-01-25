@@ -1,128 +1,128 @@
-const Sequelize = require('sequelize');
-const db = require('../../config/databases/content-database');
+const Sequelize = require("sequelize");
+const db = require("../../config/databases/content-database");
 
-const Character = db.define('characters', {
+const Character = db.define("characters", {
   userID: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   buildID: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   name: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   level: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   experience: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   currentHealth: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   tempHealth: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   heroPoints: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   ancestryID: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   heritageID: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   uniHeritageID: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   backgroundID: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   classID: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   classID_2: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   inventoryID: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   notes: {
-    type: Sequelize.TEXT
+    type: Sequelize.TEXT,
   },
   infoJSON: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   rollHistoryJSON: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   details: {
-    type: Sequelize.TEXT
+    type: Sequelize.TEXT,
   },
   customCode: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   dataID: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   currentStamina: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   currentResolve: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   builderByLevel: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   // Character Options //
   optionAutoDetectPreReqs: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   optionAutoHeightenSpells: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   optionPublicCharacter: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   optionCustomCodeBlock: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   optionDiceRoller: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   optionClassArchetypes: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   optionIgnoreBulk: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   // Character Variants //
   variantProfWithoutLevel: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   variantFreeArchetype: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   variantAncestryParagon: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   variantStamina: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   variantAutoBonusProgression: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   variantGradualAbilityBoosts: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   // Character Enabled Sources //
   enabledSources: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   // Character Enabled Homebrew //
   enabledHomebrew: {
-    type: Sequelize.STRING
-  }
+    type: Sequelize.STRING,
+  },
 });
 
 module.exports = Character;

@@ -1,34 +1,34 @@
-const Sequelize = require('sequelize');
-const db = require('../../config/databases/content-database');
+const Sequelize = require("sequelize");
+const db = require("../../config/databases/content-database");
 
-const APIClientApp = db.define('apiClientApps', {
+const APIClientApp = db.define("apiClientApps", {
   userID: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   clientID: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   apiKey: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   appName: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   redirectURI: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   companyName: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   description: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   iconURL: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   accessRights: {
     type: Sequelize.ENUM,
-    values: ['READ-ONLY', 'READ-UPDATE', 'READ-UPDATE-ADD-DELETE']
+    values: ["READ-ONLY", "READ-UPDATE", "READ-UPDATE-ADD-DELETE"],
   },
 });
 

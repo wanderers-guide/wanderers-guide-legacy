@@ -1,49 +1,49 @@
-const Sequelize = require('sequelize');
-const db = require('../../config/databases/content-database');
+const Sequelize = require("sequelize");
+const db = require("../../config/databases/content-database");
 
-const CalculatedStat = db.define('calculatedStats', {
+const CalculatedStat = db.define("calculatedStats", {
   charID: {
     type: Sequelize.INTEGER,
-    primaryKey: true
+    primaryKey: true,
   },
   maxHP: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   maxStamina: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   maxResolve: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   totalClassDC: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   totalSpeed: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   totalAC: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   totalPerception: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   totalSkills: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   totalSaves: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   totalAbilityScores: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   weapons: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   conditions: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   generalInfo: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
 });
 

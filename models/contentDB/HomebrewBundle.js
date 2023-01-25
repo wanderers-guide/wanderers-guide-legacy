@@ -1,30 +1,30 @@
-const Sequelize = require('sequelize');
-const db = require('../../config/databases/content-database');
+const Sequelize = require("sequelize");
+const db = require("../../config/databases/content-database");
 
-const HomebrewBundle = db.define('homebrewBundles', {
+const HomebrewBundle = db.define("homebrewBundles", {
   userID: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   name: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   description: {
-    type: Sequelize.TEXT
+    type: Sequelize.TEXT,
   },
   contactInfo: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   code: {
-    type: Sequelize.TEXT
+    type: Sequelize.TEXT,
   },
   hasKeys: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   isPublished: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   authorName: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
 });
 

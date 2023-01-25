@@ -1,28 +1,28 @@
-const Sequelize = require('sequelize');
-const db = require('../../config/databases/content-database');
+const Sequelize = require("sequelize");
+const db = require("../../config/databases/content-database");
 
-const CharFamiliar = db.define('charFamiliars', {
+const CharFamiliar = db.define("charFamiliars", {
   charID: {
     type: Sequelize.INTEGER,
   },
   name: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   description: {
-    type: Sequelize.TEXT
+    type: Sequelize.TEXT,
   },
   imageURL: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   currentHP: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   abilitiesJSON: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   specificType: {
-    type: Sequelize.STRING
-  }
+    type: Sequelize.STRING,
+  },
 });
 
 module.exports = CharFamiliar;

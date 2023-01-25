@@ -1,93 +1,100 @@
-const Sequelize = require('sequelize');
-const db = require('../../config/databases/content-database');
+const Sequelize = require("sequelize");
+const db = require("../../config/databases/content-database");
 
-const Spell = db.define('spells', {
+const Spell = db.define("spells", {
   name: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   level: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   traditions: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   cast: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   castingComponents: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   cost: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   trigger: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   requirements: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   range: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   area: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   targets: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   savingThrow: {
     type: Sequelize.ENUM,
-    values: ['WILL', 'BASIC_WILL', 'FORT', 'BASIC_FORT', 'REFLEX', 'BASIC_REFLEX']
+    values: [
+      "WILL",
+      "BASIC_WILL",
+      "FORT",
+      "BASIC_FORT",
+      "REFLEX",
+      "BASIC_REFLEX",
+    ],
   },
   duration: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   rarity: {
     type: Sequelize.ENUM,
-    values: ['COMMON', 'UNCOMMON', 'RARE', 'UNIQUE']
+    values: ["COMMON", "UNCOMMON", "RARE", "UNIQUE"],
   },
   description: {
-    type: Sequelize.TEXT
+    type: Sequelize.TEXT,
   },
   heightenedOneVal: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   heightenedOneText: {
-    type: Sequelize.TEXT
+    type: Sequelize.TEXT,
   },
   heightenedTwoVal: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   heightenedTwoText: {
-    type: Sequelize.TEXT
+    type: Sequelize.TEXT,
   },
   heightenedThreeVal: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   heightenedThreeText: {
-    type: Sequelize.TEXT
+    type: Sequelize.TEXT,
   },
   heightenedFourVal: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   heightenedFourText: {
-    type: Sequelize.TEXT
+    type: Sequelize.TEXT,
   },
   isFocusSpell: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   isArchived: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   contentSrc: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   homebrewID: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   version: {
-    type: Sequelize.STRING
-  }
+    type: Sequelize.STRING,
+  },
 });
 
 module.exports = Spell;

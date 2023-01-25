@@ -1,38 +1,38 @@
-const Sequelize = require('sequelize');
-const db = require('../../config/databases/content-database');
+const Sequelize = require("sequelize");
+const db = require("../../config/databases/content-database");
 
-const UniHeritage = db.define('uniHeritages', {
+const UniHeritage = db.define("uniHeritages", {
   name: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   rarity: {
     type: Sequelize.ENUM,
-    values: ['COMMON', 'UNCOMMON', 'RARE', 'UNIQUE']
+    values: ["COMMON", "UNCOMMON", "RARE", "UNIQUE"],
   },
   description: {
-    type: Sequelize.TEXT
+    type: Sequelize.TEXT,
   },
   tagID: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   code: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   artworkURL: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   isArchived: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   contentSrc: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   homebrewID: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   version: {
-    type: Sequelize.STRING
-  }
+    type: Sequelize.STRING,
+  },
 });
 
 module.exports = UniHeritage;

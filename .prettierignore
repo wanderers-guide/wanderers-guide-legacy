@@ -1,0 +1,14 @@
+# Add this for now to ease transition
+*.handlebars
+
+# Dont format raw assets
+public
+
+# reflect .gitignore
+node_modules
+dist
+.jshintrc
+.env
+
+# Dont mess with package stuff
+package*.json

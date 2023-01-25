@@ -1,19 +1,19 @@
-const Sequelize = require('sequelize');
-const db = require('../../config/databases/content-database');
+const Sequelize = require("sequelize");
+const db = require("../../config/databases/content-database");
 
-const Storage = db.define('storages', {
+const Storage = db.define("storages", {
   itemID: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   maxBulkStorage: {
-    type: Sequelize.DOUBLE
+    type: Sequelize.DOUBLE,
   },
   bulkIgnored: {
-    type: Sequelize.DOUBLE
+    type: Sequelize.DOUBLE,
   },
   ignoreSelfBulkIfWearing: {
-    type: Sequelize.INTEGER
-  }
+    type: Sequelize.INTEGER,
+  },
 });
 
 module.exports = Storage;

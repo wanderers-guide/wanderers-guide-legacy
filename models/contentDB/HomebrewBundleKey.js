@@ -1,17 +1,17 @@
-const Sequelize = require('sequelize');
-const db = require('../../config/databases/content-database');
+const Sequelize = require("sequelize");
+const db = require("../../config/databases/content-database");
 
-const HomebrewBundleKey = db.define('homebrewBundleKeys', {
+const HomebrewBundleKey = db.define("homebrewBundleKeys", {
   homebrewID: {
     type: Sequelize.INTEGER,
-    primaryKey: true
+    primaryKey: true,
   },
   keyCode: {
     type: Sequelize.STRING,
-    primaryKey: true
+    primaryKey: true,
   },
   isOneTimeUse: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
 });
 

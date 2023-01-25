@@ -1,74 +1,75 @@
-const Sequelize = require('sequelize');
-const db = require('../../config/databases/content-database');
+const Sequelize = require("sequelize");
+const db = require("../../config/databases/content-database");
 
-const Class = db.define('classes', {
+const Class = db.define("classes", {
   name: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   rarity: {
     type: Sequelize.ENUM,
-    values: ['COMMON', 'UNCOMMON', 'RARE', 'UNIQUE']
+    values: ["COMMON", "UNCOMMON", "RARE", "UNIQUE"],
   },
   description: {
-    type: Sequelize.TEXT
+    type: Sequelize.TEXT,
   },
   keyAbility: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   hitPoints: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   tPerception: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   tFortitude: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   tReflex: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   tWill: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   tClassDC: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   tSkills: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   tSkillsMore: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   tWeapons: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   weaponsExtra: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   tArmor: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   tagID: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   artworkURL: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
-  code: { // Not used currently
-    type: Sequelize.STRING
+  code: {
+    // Not used currently
+    type: Sequelize.STRING,
   },
   isArchived: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   contentSrc: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   homebrewID: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   version: {
-    type: Sequelize.STRING
-  }
+    type: Sequelize.STRING,
+  },
 });
 
 module.exports = Class;

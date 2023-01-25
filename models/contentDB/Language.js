@@ -1,7 +1,7 @@
-const Sequelize = require('sequelize');
-const db = require('../../config/databases/content-database');
+const Sequelize = require("sequelize");
+const db = require("../../config/databases/content-database");
 
-const Language = db.define('languages', {
+const Language = db.define("languages", {
   name: {
     type: Sequelize.STRING,
   },

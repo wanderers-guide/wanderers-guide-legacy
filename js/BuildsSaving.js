@@ -2,9 +2,9 @@ const Build = require("../models/contentDB/Build");
 const BuildDataMapping = require("../models/contentDB/BuildDataMapping");
 const User = require("../models/contentDB/User");
 
-const UserHomebrew = require('./UserHomebrew');
-const CharContentSources = require('./CharContentSources');
-const CharContentHomebrew = require('./CharContentHomebrew');
+const UserHomebrew = require("./UserHomebrew");
+const CharContentSources = require("./CharContentSources");
+const CharContentHomebrew = require("./CharContentHomebrew");
 
 function objToMap(obj) {
   let strMap = new Map();
@@ -15,208 +15,206 @@ function objToMap(obj) {
 }
 
 module.exports = class BuildsSaving {
-
-  static saveName(buildID, name){
-    let buildUpVals = {name: name };
-    return Build.update(buildUpVals, { where: { id: buildID } })
-    .then((result) => {
+  static saveName(buildID, name) {
+    let buildUpVals = { name: name };
+    return Build.update(buildUpVals, { where: { id: buildID } }).then(
+      (result) => {
         return;
-    });
+      },
+    );
   }
 
-  static saveDescription(buildID, description){
-    let buildUpVals = {description: description };
-    return Build.update(buildUpVals, { where: { id: buildID } })
-    .then((result) => {
+  static saveDescription(buildID, description) {
+    let buildUpVals = { description: description };
+    return Build.update(buildUpVals, { where: { id: buildID } }).then(
+      (result) => {
         return;
-    });
+      },
+    );
   }
 
-  static saveContactInfo(buildID, contactInfo){
-    let buildUpVals = {contactInfo: contactInfo };
-    return Build.update(buildUpVals, { where: { id: buildID } })
-    .then((result) => {
+  static saveContactInfo(buildID, contactInfo) {
+    let buildUpVals = { contactInfo: contactInfo };
+    return Build.update(buildUpVals, { where: { id: buildID } }).then(
+      (result) => {
         return;
-    });
+      },
+    );
   }
 
-  static saveArtworkURL(buildID, artworkURL){
-    let buildUpVals = {artworkURL: artworkURL };
-    return Build.update(buildUpVals, { where: { id: buildID } })
-    .then((result) => {
+  static saveArtworkURL(buildID, artworkURL) {
+    let buildUpVals = { artworkURL: artworkURL };
+    return Build.update(buildUpVals, { where: { id: buildID } }).then(
+      (result) => {
         return;
-    });
+      },
+    );
   }
 
   static saveCustomCode(buildID, code) {
     let buildUpVals = { customCode: code };
-    return Build.update(buildUpVals, { where: { id: buildID } })
-    .then((result) => {
+    return Build.update(buildUpVals, { where: { id: buildID } }).then(
+      (result) => {
         return;
-    });
+      },
+    );
   }
 
-  
   static saveOption(buildID, optionName, value) {
-
     let buildUpVals = null;
-    if(optionName === 'optionCustomCodeBlock'){
+    if (optionName === "optionCustomCodeBlock") {
       buildUpVals = {
-        optionCustomCodeBlock: value
+        optionCustomCodeBlock: value,
       };
-    } else if(optionName === 'optionClassArchetypes'){
+    } else if (optionName === "optionClassArchetypes") {
       buildUpVals = {
-        optionClassArchetypes: value
+        optionClassArchetypes: value,
       };
-    } else if(optionName === 'variantFreeArchetype'){
+    } else if (optionName === "variantFreeArchetype") {
       buildUpVals = {
-        variantFreeArchetype: value
+        variantFreeArchetype: value,
       };
-    } else if(optionName === 'variantGradualAbilityBoosts'){
+    } else if (optionName === "variantGradualAbilityBoosts") {
       buildUpVals = {
-        variantGradualAbilityBoosts: value
+        variantGradualAbilityBoosts: value,
       };
-    } else if(optionName === 'variantAncestryParagon'){
+    } else if (optionName === "variantAncestryParagon") {
       buildUpVals = {
-        variantAncestryParagon: value
+        variantAncestryParagon: value,
       };
-    } else if(optionName === 'variantStamina'){
+    } else if (optionName === "variantStamina") {
       buildUpVals = {
-        variantStamina: value
+        variantStamina: value,
       };
     }
 
-    if(buildUpVals != null){
-        return Build.update(buildUpVals, { where: { id: buildID } })
-        .then((result) => {
-            return;
-        });
+    if (buildUpVals != null) {
+      return Build.update(buildUpVals, { where: { id: buildID } }).then(
+        (result) => {
+          return;
+        },
+      );
     } else {
-        return Promise.resolve();
+      return Promise.resolve();
     }
-
   }
 
   static clearMetaData(buildID) {
-
     return BuildDataMapping.destroy({
-      where: { buildID: buildID }
+      where: { buildID: buildID },
     }).then((result) => {
       return;
     });
-
   }
 
-
-  static addSource(buildID, sourceName){
-    return Build.findOne({ where: { id: buildID} })
-    .then((build) => {
-        let sourceArray = CharContentSources.getSourceArray(build.enabledSources);
-        sourceArray.push(sourceName);
-        let buildUpVals = {enabledSources: JSON.stringify(sourceArray) };
-        return Build.update(buildUpVals, { where: { id: build.id } })
-        .then((result) => {
-            return;
-        });
+  static addSource(buildID, sourceName) {
+    return Build.findOne({ where: { id: buildID } }).then((build) => {
+      let sourceArray = CharContentSources.getSourceArray(build.enabledSources);
+      sourceArray.push(sourceName);
+      let buildUpVals = { enabledSources: JSON.stringify(sourceArray) };
+      return Build.update(buildUpVals, { where: { id: build.id } }).then(
+        (result) => {
+          return;
+        },
+      );
     });
   }
 
-  static removeSource(buildID, sourceName){
-    return Build.findOne({ where: { id: buildID} })
-    .then((build) => {
-        let sourceArray = CharContentSources.getSourceArray(build.enabledSources);
-        let sourceIndex = sourceArray.indexOf(sourceName);
-        if (sourceIndex > -1) {
-            sourceArray.splice(sourceIndex, 1);
-        }
-        let buildUpVals = {enabledSources: JSON.stringify(sourceArray) };
-        return Build.update(buildUpVals, { where: { id: build.id } })
-        .then((result) => {
-            return;
-        });
-    });
-  }
-
-  static setSources(buildID, inputSourceArray){
-    return Build.findOne({ where: { id: buildID} })
-    .then((build) => {
-      let sourceArray = [];
-      try{
-        for(let source of inputSourceArray){
-          sourceArray.push(source+'');
-        }
-      } catch (err){}
-      let buildUpVals = {enabledSources: JSON.stringify(sourceArray) };
-      return Build.update(buildUpVals, { where: { id: build.id } })
-      .then((result) => {
-        return;
-      });
-    });
-  }
-
-
-  static addHomebrewBundle(userID, buildID, homebrewID){
-    return UserHomebrew.canAccessHomebrewBundle(userID, homebrewID)
-    .then((canAccess) => {
-      if(canAccess){
-        return Build.findOne({ where: { id: buildID } })
-        .then((build) => {
-            let homebrewArray = CharContentHomebrew.getHomebrewArray(build.enabledHomebrew);
-            homebrewArray.push(homebrewID);
-            let buildUpVals = {enabledHomebrew: JSON.stringify(homebrewArray) };
-            return Build.update(buildUpVals, { where: { id: build.id } })
-            .then((result) => {
-                return;
-            });
-        });
+  static removeSource(buildID, sourceName) {
+    return Build.findOne({ where: { id: buildID } }).then((build) => {
+      let sourceArray = CharContentSources.getSourceArray(build.enabledSources);
+      let sourceIndex = sourceArray.indexOf(sourceName);
+      if (sourceIndex > -1) {
+        sourceArray.splice(sourceIndex, 1);
       }
+      let buildUpVals = { enabledSources: JSON.stringify(sourceArray) };
+      return Build.update(buildUpVals, { where: { id: build.id } }).then(
+        (result) => {
+          return;
+        },
+      );
     });
   }
 
-  static removeHomebrewBundle(buildID, homebrewID){
-    return Build.findOne({ where: { id: buildID } })
-      .then((build) => {
-          let homebrewArray = CharContentHomebrew.getHomebrewArray(build.enabledHomebrew);
-          let bundleIndex = homebrewArray.indexOf(homebrewID);
-          if (bundleIndex > -1) {
-            homebrewArray.splice(bundleIndex, 1);
-          }
-          let buildUpVals = {enabledHomebrew: JSON.stringify(homebrewArray) };
-          return Build.update(buildUpVals, { where: { id: build.id } })
-          .then((result) => {
-              return;
+  static setSources(buildID, inputSourceArray) {
+    return Build.findOne({ where: { id: buildID } }).then((build) => {
+      let sourceArray = [];
+      try {
+        for (let source of inputSourceArray) {
+          sourceArray.push(source + "");
+        }
+      } catch (err) {}
+      let buildUpVals = { enabledSources: JSON.stringify(sourceArray) };
+      return Build.update(buildUpVals, { where: { id: build.id } }).then(
+        (result) => {
+          return;
+        },
+      );
+    });
+  }
+
+  static addHomebrewBundle(userID, buildID, homebrewID) {
+    return UserHomebrew.canAccessHomebrewBundle(userID, homebrewID).then(
+      (canAccess) => {
+        if (canAccess) {
+          return Build.findOne({ where: { id: buildID } }).then((build) => {
+            let homebrewArray = CharContentHomebrew.getHomebrewArray(
+              build.enabledHomebrew,
+            );
+            homebrewArray.push(homebrewID);
+            let buildUpVals = {
+              enabledHomebrew: JSON.stringify(homebrewArray),
+            };
+            return Build.update(buildUpVals, { where: { id: build.id } }).then(
+              (result) => {
+                return;
+              },
+            );
           });
-      });
+        }
+      },
+    );
+  }
+
+  static removeHomebrewBundle(buildID, homebrewID) {
+    return Build.findOne({ where: { id: buildID } }).then((build) => {
+      let homebrewArray = CharContentHomebrew.getHomebrewArray(
+        build.enabledHomebrew,
+      );
+      let bundleIndex = homebrewArray.indexOf(homebrewID);
+      if (bundleIndex > -1) {
+        homebrewArray.splice(bundleIndex, 1);
+      }
+      let buildUpVals = { enabledHomebrew: JSON.stringify(homebrewArray) };
+      return Build.update(buildUpVals, { where: { id: build.id } }).then(
+        (result) => {
+          return;
+        },
+      );
+    });
   }
 
   static createNewBuild(userID) {
-
-    return User.findOne({ where: { id: userID } })
-    .then((user) => {
+    return User.findOne({ where: { id: userID } }).then((user) => {
       return Build.create({
         userID: userID,
-        name: 'New Build',
+        name: "New Build",
         isPublished: 0,
         authorName: user.username,
       }).then((build) => {
         return build;
       });
     });
-
   }
 
-
   static updateMetaData(buildID, metaDataObject) {
-
-    return BuildsSaving.clearMetaData(buildID)
-    .then(() => {
-
+    return BuildsSaving.clearMetaData(buildID).then(() => {
       let metaDataMap = objToMap(metaDataObject);
 
       let entryPromises = [];
-      for(const [JSON_srcStruct, value] of metaDataMap.entries()){
+      for (const [JSON_srcStruct, value] of metaDataMap.entries()) {
         let srcStruct = JSON.parse(JSON_srcStruct);
-        
+
         let newPromise = BuildDataMapping.upsert({
           buildID,
           source: srcStruct.source,
@@ -229,17 +227,13 @@ module.exports = class BuildsSaving {
         entryPromises.push(newPromise);
       }
 
-      return Promise.all(entryPromises)
-      .then(function(result) {
+      return Promise.all(entryPromises).then(function (result) {
         return;
       });
-
     });
-
   }
 
-  static updateInfo(buildID, buildInfo){
-
+  static updateInfo(buildID, buildInfo) {
     let updateValues = {
       ancestryID: buildInfo.ancestryID,
       heritageID: buildInfo.heritageID,
@@ -248,52 +242,46 @@ module.exports = class BuildsSaving {
       classID: buildInfo.classID,
     };
 
-    return Build.update(updateValues, { where: { id: buildID } })
-    .then((result) => {
+    return Build.update(updateValues, { where: { id: buildID } }).then(
+      (result) => {
         return;
-    });
-
+      },
+    );
   }
 
-  static updateFinalStats(buildID, finalStatistics){
-
+  static updateFinalStats(buildID, finalStatistics) {
     let updateValues = {
       finalStatsJSON: JSON.stringify(finalStatistics),
     };
 
-    return Build.update(updateValues, { where: { id: buildID } })
-    .then((result) => {
+    return Build.update(updateValues, { where: { id: buildID } }).then(
+      (result) => {
         return;
-    });
-
+      },
+    );
   }
 
-  static publishBuild(buildID){
-
-    return Build.update({ isPublished: 1 }, { where: { id: buildID } })
-    .then((result) => {
+  static publishBuild(buildID) {
+    return Build.update({ isPublished: 1 }, { where: { id: buildID } }).then(
+      (result) => {
         return;
-    });
-
+      },
+    );
   }
 
-  static updateBuild(buildID){
-
-    return Build.update({ isPublished: 0 }, { where: { id: buildID } })
-    .then((result) => {
+  static updateBuild(buildID) {
+    return Build.update({ isPublished: 0 }, { where: { id: buildID } }).then(
+      (result) => {
         return;
-    });
-
+      },
+    );
   }
 
-  static deleteBuild(buildID){
-
+  static deleteBuild(buildID) {
     return Build.destroy({
-      where: { id: buildID }
+      where: { id: buildID },
     }).then((result) => {
       return;
     });
-
   }
-
 };

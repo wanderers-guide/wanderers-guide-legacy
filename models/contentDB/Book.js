@@ -1,22 +1,22 @@
-const Sequelize = require('sequelize');
-const db = require('../../config/databases/content-database');
+const Sequelize = require("sequelize");
+const db = require("../../config/databases/content-database");
 
-const Book = db.define('books', {
+const Book = db.define("books", {
   codeName: {
     type: Sequelize.STRING,
-    primaryKey: true
+    primaryKey: true,
   },
   name: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   url: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   description: {
-    type: Sequelize.TEXT
+    type: Sequelize.TEXT,
   },
   code: {
-    type: Sequelize.TEXT
+    type: Sequelize.TEXT,
   },
 });
 

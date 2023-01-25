@@ -1,20 +1,18 @@
+const GeneralGathering = require("../GeneralGathering");
+const CharGathering = require("../CharGathering");
 
-const GeneralGathering = require('../GeneralGathering');
-const CharGathering = require('../CharGathering');
+const Inventory = require("./../../models/contentDB/Inventory");
+const InvItem = require("./../../models/contentDB/InvItem");
+const CharCondition = require("./../../models/contentDB/CharCondition");
+const NoteField = require("./../../models/contentDB/NoteField");
+const SpellBookSpell = require("./../../models/contentDB/SpellBookSpell");
+const PhysicalFeature = require("./../../models/contentDB/PhysicalFeature");
 
-const Inventory = require('./../../models/contentDB/Inventory');
-const InvItem = require('./../../models/contentDB/InvItem');
-const CharCondition = require('./../../models/contentDB/CharCondition');
-const NoteField = require('./../../models/contentDB/NoteField');
-const SpellBookSpell = require('./../../models/contentDB/SpellBookSpell');
-const PhysicalFeature = require('./../../models/contentDB/PhysicalFeature');
-
-
-const { Prisma } = require('../PrismaConnection');
+const { Prisma } = require("../PrismaConnection");
 
 function mapToObj(strMap) {
   let obj = Object.create(null);
-  for (let [k,v] of strMap) {
+  for (let [k, v] of strMap) {
     // We don’t escape the key '__proto__'
     // which can cause problems on older engines
     obj[k] = v;
@@ -22,9 +20,8 @@ function mapToObj(strMap) {
   return obj;
 }
 
-module.exports = async function(userID) {
-
-  console.log('~ STARTING PLANNER-CORE LOAD ~');
+module.exports = async function (userID) {
+  console.log("~ STARTING PLANNER-CORE LOAD ~");
 
   // socket.emit('updateLoadProgess', { message: 'Gathering Skills', upVal: 5 }); // (5/100) //
   const skillObject = GeneralGathering.getAllSkills(userID);
@@ -70,11 +67,26 @@ module.exports = async function(userID) {
 
   //// socket.emit('updateLoadProgess', { message: 'Discovering Domains', upVal: 0 }); // (95/100) //
   //const allDomains = await CharGathering.getAllDomains(userID, character.enabledSources, character.enabledHomebrew);
-  
+
   //// socket.emit('updateLoadProgess', { message: 'Finding Class Archetypes', upVal: 3 }); // (86/100) //
   //const classArchetypes = await CharGathering.getAllClassArchetypes(userID, character.enabledSources, character.enabledHomebrew);
 
-  let promise = await Promise.all([featsObject,skillObject,itemMap,spellMap,allLanguages,allConditions,allTags,classes,ancestries,archetypes,backgrounds,uniHeritages,allPhyFeats,allSenses]);
+  let promise = await Promise.all([
+    featsObject,
+    skillObject,
+    itemMap,
+    spellMap,
+    allLanguages,
+    allConditions,
+    allTags,
+    classes,
+    ancestries,
+    archetypes,
+    backgrounds,
+    uniHeritages,
+    allPhyFeats,
+    allSenses,
+  ]);
 
   // socket.emit('updateLoadProgess', { message: 'Finalizing', upVal: 10 }); // (105/100) //
   const plannerStruct = {
@@ -95,51 +107,56 @@ module.exports = async function(userID) {
     //classArchetypes,
   };
 
-  console.log('Starting char data...');
+  console.log("Starting char data...");
   let charID = 60423;
-  return CharGathering.getCharacter(userID, charID)
-    .then((character) => {
-      return Inventory.findOne({ where: { id: character.inventoryID} })
-      .then((inventory) => {
-        return InvItem.findAll({ where: { invID: inventory.id} })
-        .then((invItems) => {
-          return CharGathering.getAllMetadata(userID, charID)
-          .then((charMetaData) => {
-            return CharGathering.getCharAnimalCompanions(userID, charID)
-            .then((charAnimalCompanions) => {
-              return CharGathering.getCharFamiliars(userID, charID)
-              .then((charFamiliars) => {
-                return CharCondition.findAll({ where: { charID: charID} })
-                .then((charConditions) => {
-                  return NoteField.findAll({ where: { charID: charID } })
-                  .then(function(noteFields) {
-                    return SpellBookSpell.findAll({ where: { charID: charID } })
-                    .then(function(spellBookSpells) {
+  return CharGathering.getCharacter(userID, charID).then((character) => {
+    return Inventory.findOne({ where: { id: character.inventoryID } }).then(
+      (inventory) => {
+        return InvItem.findAll({ where: { invID: inventory.id } }).then(
+          (invItems) => {
+            return CharGathering.getAllMetadata(userID, charID).then(
+              (charMetaData) => {
+                return CharGathering.getCharAnimalCompanions(
+                  userID,
+                  charID,
+                ).then((charAnimalCompanions) => {
+                  return CharGathering.getCharFamiliars(userID, charID).then(
+                    (charFamiliars) => {
+                      return CharCondition.findAll({
+                        where: { charID: charID },
+                      }).then((charConditions) => {
+                        return NoteField.findAll({
+                          where: { charID: charID },
+                        }).then(function (noteFields) {
+                          return SpellBookSpell.findAll({
+                            where: { charID: charID },
+                          }).then(function (spellBookSpells) {
+                            const choiceStruct = {
+                              character,
+                              inventory,
+                              invItems,
+                              charMetaData,
+                              charAnimalCompanions,
+                              charFamiliars,
+                              charConditions,
+                              noteFields,
+                              spellBookSpells,
+                            };
 
-                      const choiceStruct = {
-                        character,
-                        inventory,
-                        invItems,
-                        charMetaData,
-                        charAnimalCompanions,
-                        charFamiliars,
-                        charConditions,
-                        noteFields,
-                        spellBookSpells,
-                      };
-                    
-                      console.log('~ COMPLETE PLANNER-CORE LOAD! ~');
-                    
-                      return {plannerStruct, choiceStruct};
+                            console.log("~ COMPLETE PLANNER-CORE LOAD! ~");
 
-                    });
-                  });
+                            return { plannerStruct, choiceStruct };
+                          });
+                        });
+                      });
+                    },
+                  );
                 });
-              });
-            });
-          });
-        });
-      });
-    });
-
+              },
+            );
+          },
+        );
+      },
+    );
+  });
 };

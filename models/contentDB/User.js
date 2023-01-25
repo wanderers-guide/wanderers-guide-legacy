@@ -1,7 +1,7 @@
-const Sequelize = require('sequelize');
-const db = require('../../config/databases/content-database');
+const Sequelize = require("sequelize");
+const db = require("../../config/databases/content-database");
 
-const User = db.define('users', {
+const User = db.define("users", {
   googleID: {
     type: Sequelize.STRING,
   },
@@ -9,44 +9,44 @@ const User = db.define('users', {
     type: Sequelize.STRING,
   },
   username: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   thumbnail: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   isPatreonSupporter: {
-    type: Sequelize.TINYINT
+    type: Sequelize.TINYINT,
   },
   isPatreonMember: {
-    type: Sequelize.TINYINT
+    type: Sequelize.TINYINT,
   },
   isPatreonLegend: {
-    type: Sequelize.TINYINT
+    type: Sequelize.TINYINT,
   },
   isAdmin: {
-    type: Sequelize.TINYINT
+    type: Sequelize.TINYINT,
   },
   isDeveloper: {
-    type: Sequelize.TINYINT
+    type: Sequelize.TINYINT,
   },
   patreonUserID: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   patreonFullName: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   patreonEmail: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   patreonAccessToken: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   patreonRefreshToken: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   enabledLightMode: {
-    type: Sequelize.TINYINT
-  }
+    type: Sequelize.TINYINT,
+  },
 });
 
 module.exports = User;

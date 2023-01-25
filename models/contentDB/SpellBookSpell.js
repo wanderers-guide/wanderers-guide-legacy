@@ -1,25 +1,25 @@
-const Sequelize = require('sequelize');
-const db = require('../../config/databases/content-database');
+const Sequelize = require("sequelize");
+const db = require("../../config/databases/content-database");
 
-const SpellBookSpell = db.define('spellBookSpells', {
+const SpellBookSpell = db.define("spellBookSpells", {
   spellSRC: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   charID: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   spellID: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   spellLevel: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   spellType: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   srcStructHashed: {
-    type: Sequelize.INTEGER
-  }
+    type: Sequelize.INTEGER,
+  },
 });
 
 module.exports = SpellBookSpell;

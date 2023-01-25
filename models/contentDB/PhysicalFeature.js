@@ -1,22 +1,22 @@
-const Sequelize = require('sequelize');
-const db = require('../../config/databases/content-database');
+const Sequelize = require("sequelize");
+const db = require("../../config/databases/content-database");
 
-const PhysicalFeature = db.define('physicalFeatures', {
+const PhysicalFeature = db.define("physicalFeatures", {
   name: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   description: {
-    type: Sequelize.TEXT
+    type: Sequelize.TEXT,
   },
   code: {
-    type: Sequelize.TEXT
+    type: Sequelize.TEXT,
   },
   itemWeaponID: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   overrides: {
-    type: Sequelize.INTEGER
-  }
+    type: Sequelize.INTEGER,
+  },
 });
 
 module.exports = PhysicalFeature;

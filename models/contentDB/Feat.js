@@ -1,79 +1,99 @@
-const Sequelize = require('sequelize');
-const db = require('../../config/databases/content-database');
+const Sequelize = require("sequelize");
+const db = require("../../config/databases/content-database");
 
-const Feat = db.define('feats', {
+const Feat = db.define("feats", {
   name: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   actions: {
     type: Sequelize.ENUM,
-    values: ['NONE', 'FREE_ACTION', 'REACTION', 'ACTION', 'TWO_ACTIONS', 'THREE_ACTIONS']
+    values: [
+      "NONE",
+      "FREE_ACTION",
+      "REACTION",
+      "ACTION",
+      "TWO_ACTIONS",
+      "THREE_ACTIONS",
+    ],
   },
   level: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   rarity: {
     type: Sequelize.ENUM,
-    values: ['COMMON', 'UNCOMMON', 'RARE', 'UNIQUE']
+    values: ["COMMON", "UNCOMMON", "RARE", "UNIQUE"],
   },
   prerequisites: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   frequency: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   cost: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   trigger: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   requirements: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   description: {
-    type: Sequelize.TEXT
+    type: Sequelize.TEXT,
   },
   special: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   canSelectMultiple: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
-  isDefault: { // If the action is given by default or not. Ex: Strike is default, AoO is not
-    type: Sequelize.INTEGER
+  isDefault: {
+    // If the action is given by default or not. Ex: Strike is default, AoO is not
+    type: Sequelize.INTEGER,
   },
-  skillID: { // If it is a skill action, what skill the action is for.
-    type: Sequelize.INTEGER
+  skillID: {
+    // If it is a skill action, what skill the action is for.
+    type: Sequelize.INTEGER,
   },
-  minProf: { // Used for default actions that require a min prof to use: NULL, 'U', 'T', 'E', 'M', 'L'
-    type: Sequelize.STRING
+  minProf: {
+    // Used for default actions that require a min prof to use: NULL, 'U', 'T', 'E', 'M', 'L'
+    type: Sequelize.STRING,
   },
   code: {
-    type: Sequelize.TEXT
+    type: Sequelize.TEXT,
   },
   isCore: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   genericType: {
     type: Sequelize.ENUM,
-    values: ['GENERAL-FEAT', 'SKILL-FEAT', 'CLASS-FEAT', 'ANCESTRY-FEAT', 'ARCHETYPE-FEAT', 'BASIC-ACTION', 'SKILL-ACTION', 'CREATURE-ACTION', 'COMPANION-ACTION']
+    values: [
+      "GENERAL-FEAT",
+      "SKILL-FEAT",
+      "CLASS-FEAT",
+      "ANCESTRY-FEAT",
+      "ARCHETYPE-FEAT",
+      "BASIC-ACTION",
+      "SKILL-ACTION",
+      "CREATURE-ACTION",
+      "COMPANION-ACTION",
+    ],
   },
   genTypeName: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   isArchived: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   contentSrc: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   homebrewID: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   version: {
-    type: Sequelize.STRING
-  }
+    type: Sequelize.STRING,
+  },
 });
 
 module.exports = Feat;

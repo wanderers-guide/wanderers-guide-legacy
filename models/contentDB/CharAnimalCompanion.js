@@ -1,7 +1,7 @@
-const Sequelize = require('sequelize');
-const db = require('../../config/databases/content-database');
+const Sequelize = require("sequelize");
+const db = require("../../config/databases/content-database");
 
-const CharAnimalCompanion = db.define('charAnimalCompanions', {
+const CharAnimalCompanion = db.define("charAnimalCompanions", {
   charID: {
     type: Sequelize.INTEGER,
   },
@@ -9,23 +9,23 @@ const CharAnimalCompanion = db.define('charAnimalCompanions', {
     type: Sequelize.INTEGER,
   },
   age: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   specialization: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   name: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   description: {
-    type: Sequelize.TEXT
+    type: Sequelize.TEXT,
   },
   imageURL: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   currentHP: {
-    type: Sequelize.INTEGER
-  }
+    type: Sequelize.INTEGER,
+  },
 });
 
 module.exports = CharAnimalCompanion;

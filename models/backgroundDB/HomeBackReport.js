@@ -1,19 +1,19 @@
-const Sequelize = require('sequelize');
-const db = require('../../config/databases/content-database');
+const Sequelize = require("sequelize");
+const db = require("../../config/databases/content-database");
 
-const HomeBackReport = db.define('homeBackReports', {
+const HomeBackReport = db.define("homeBackReports", {
   userID: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   backgroundID: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   email: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   message: {
-    type: Sequelize.STRING
-  }
+    type: Sequelize.STRING,
+  },
 });
 
 module.exports = HomeBackReport;
