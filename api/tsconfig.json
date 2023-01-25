@@ -1,0 +1,29 @@
+{
+	"compilerOptions": {
+		"target": "es2021",
+		"module": "CommonJS",
+		"moduleResolution": "Node",
+		"lib": ["es2021"],
+		"declaration": true,
+		"sourceMap": true,
+		"outDir": "./dist",
+		"rootDir": "./",
+		"strict": false,
+		"resolveJsonModule": true,
+		"esModuleInterop": true,
+		"experimentalDecorators": true,
+		"emitDecoratorMetadata": true,
+		"skipLibCheck": true,
+		"forceConsistentCasingInFileNames": true,
+		"disableSizeLimit": true
+	},
+	"include": ["**/*.ts", "**/*.json", "**/types.d.ts"],
+	"exclude": [
+		"dist",
+		"migrations",
+		"node_modules",
+		"tests",
+		"jest.config.ts",
+		"jest.setup.ts",
+	]
+}
