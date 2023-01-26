@@ -5,7 +5,7 @@ import { Service } from "./service";
 
 export abstract class Controller<
   T extends Resource,
-  S extends InstanceType<typeof Service<T>>
+  S extends InstanceType<typeof Service<T>>,
 > {
   service: S;
   resourceName: T["name"];
@@ -33,7 +33,6 @@ export abstract class Controller<
   public async get(c: Context, req: Request, res): Promise<any> {
     const page = Number(c.request.query.page || 0);
     const pageSize = Number(c.request.query.pageSize || 100);
-    
 
     const offset = page * pageSize;
 
@@ -53,9 +52,13 @@ export abstract class Controller<
     const id = Number(c.request.params.id);
 
     const data = await this.service.getById({ id });
-    res.status(200).json({
-      data,
-    });
+    if (data) {
+      res.status(200).json({
+        data,
+      });
+    } else {
+      res.status(404).json("Not Found!");
+    }
   }
 
   public async create(c: Context, req: Request, res): Promise<any> {
@@ -71,19 +74,27 @@ export abstract class Controller<
     const id = Number(c.request.params.id);
     const updateParams = c.request.body;
 
-    const data = await this.service.patch({
-      id,
-      resourcePartial: updateParams,
-    });
-    res.status(200).json({
-      data,
-    });
+    try {
+      const data = await this.service.patch({
+        id,
+        resourcePartial: updateParams,
+      });
+      res.status(200).json({
+        data,
+      });
+    } catch (err) {
+      res.status(404).json("Not Found!");
+    }
   }
 
   public async delete(c: Context, req: Request, res): Promise<any> {
     const id = Number(c.request.params.id);
-
-    await this.service.delete({ id });
-    res.status(200);
+    console.log("deleting id");
+    try {
+      await this.service.delete({ id });
+      res.status(200).json("ok!");
+    } catch (err) {
+      res.status(404).json("Not Found!");
+    }
   }
 }
