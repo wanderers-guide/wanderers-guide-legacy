@@ -481,7 +481,7 @@ function handleFeatLinkExt(match, linkName, limitation, limitLvl, limitType, inn
             return featLinkText;
         }
     }
-    if(typeof isFeatHidden === "function" && isFeatHidden(innerTextNameUpper)){
+    if(typeof isFeatConcealed === "function" && isFeatConcealed(innerTextNameUpper)){
         return innerTextName;
     } else {
         if(textProcess_warningOnUnknown) {

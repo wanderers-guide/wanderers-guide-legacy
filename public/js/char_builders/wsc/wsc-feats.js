@@ -511,7 +511,7 @@ function giveFeatByName(srcStruct, featName, locationID, optionalTags, sourceNam
         }
     });
     if(featEntry == null){
-        if(!isFeatHidden(featName)){
+        if(!isFeatConcealed(featName)){
           if(optionalTags != null) {
             displayError("Cannot find feat with the given traits: \'"+featName+" ["+optionalTags+"]\'");
           } else {
