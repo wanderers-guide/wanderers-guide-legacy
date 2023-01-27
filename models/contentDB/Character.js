@@ -96,6 +96,9 @@ const Character = db.define("characters", {
   optionIgnoreBulk: {
     type: Sequelize.INTEGER,
   },
+  optionAltAbilityBoosts: {
+    type: Sequelize.INTEGER,
+  },
   // Character Variants //
   variantProfWithoutLevel: {
     type: Sequelize.INTEGER,

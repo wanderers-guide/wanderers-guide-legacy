@@ -294,6 +294,7 @@ model characters {
   optionDiceRoller            Int?                   @default(0)
   optionClassArchetypes       Int?                   @default(1)
   optionIgnoreBulk            Int?                   @default(0)
+  optionAltAbilityBoosts      Int?                   @default(0)
   variantProfWithoutLevel     Int?                   @default(0)
   variantFreeArchetype        Int?                   @default(0)
   variantAncestryParagon      Int?                   @default(0)

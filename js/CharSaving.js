@@ -791,6 +791,10 @@ module.exports = class CharSaving {
       charUpVals = {
         optionIgnoreBulk: value,
       };
+    } else if (optionName === "optionAltAbilityBoosts") {
+      charUpVals = {
+        optionAltAbilityBoosts: value,
+      };
     } else if (optionName === "variantProfWithoutLevel") {
       charUpVals = {
         variantProfWithoutLevel: value,

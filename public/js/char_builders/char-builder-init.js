@@ -727,6 +727,15 @@ function handleCharacterOptions(character, hBundles, progessBundles) {
     });
     $("#optionIgnoreBulk").prop('checked', (character.optionIgnoreBulk === 1));
 
+    $("#optionAltAbilityBoosts").change(function(){
+      let optionTypeValue = (this.checked) ? 1 : 0;
+      socket.emit("requestCharacterOptionChange", 
+          getCharIDFromURL(), 
+          'optionAltAbilityBoosts',
+          optionTypeValue);
+    });
+    $("#optionAltAbilityBoosts").prop('checked', (character.optionAltAbilityBoosts === 1));
+
 }
 
 

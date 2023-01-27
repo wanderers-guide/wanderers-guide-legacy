@@ -44,7 +44,15 @@ function getCharClass(){
   return classStruct;
 }
 function getCharAncestry(){
-  return cloneObj(g_ancestryMap.get(g_character.ancestryID+''));
+  let ancestry = cloneObj(g_ancestryMap.get(g_character.ancestryID+''));
+
+  // If enabled, the character has just two free ability boosts instead
+  if(ancestry && g_character.optionAltAbilityBoosts == 1){
+    ancestry.Boosts = ['Anything', 'Anything'];
+    ancestry.Flaws = [];
+  }
+
+  return ancestry;
 }
 function getCharHeritage(){
   if(g_character.heritageID != null){
