@@ -1085,7 +1085,7 @@ module.exports = class SocketConnections {
       socket.on('requestUnselectedDataClear', function(charID){
         AuthCheck.canEditCharacter(userID, charID).then((canEditChar) => {
           if(canEditChar){
-            CharDataMapping.deleteDataBySourceType(charID, 'unselectedData')
+            CharDataMapping.deleteDataBySource(charID, 'unselectedData')
             .then((result) => {
               socket.emit('returnUnselectedDataClear');
             });

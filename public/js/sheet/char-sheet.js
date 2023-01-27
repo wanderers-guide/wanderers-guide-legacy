@@ -670,6 +670,17 @@ function loadCharSheet(){
     // Display All Other Info //
     displayInformation();
 
+    // Display Warnings //
+    if(g_unselectedDataArray.length > 0){
+      $('#warnings-icon').removeClass('is-hidden');
+      $('#warnings-icon').off('click');
+      $('#warnings-icon').click(function() {
+        openQuickView('warningsView', {});
+      });
+    } else {
+      $('#warnings-icon').addClass('is-hidden');
+    }
+
     // Hide Spells Tab //
     if(g_spellSlotsMap.size === 0 && g_focusSpellMap.size === 0 && g_innateSpellArray.length === 0){
       $('#spellsTab').addClass('is-hidden');
@@ -1027,16 +1038,6 @@ function displayInformation() {
     $('#exportCharButton').click(function() {
       exportCharacter(getCharIDFromURL());
     });
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    /////////////////////////////////////// Unselected Data ////////////////////////////////////////
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    if(g_unselectedDataArray.length > 0){
-      $('#warnings-icon').removeClass('is-hidden');
-      $('#warnings-icon').click(function() {
-        openQuickView('warningsView', {});
-      });
-    }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //////////////////////////////////////////// Saves /////////////////////////////////////////////
