@@ -1,14 +1,14 @@
-const Sequelize = require('sequelize');
-const db = require('../../config/databases/content-database');
+const Sequelize = require("sequelize");
+const db = require("../../config/databases/content-database");
 
-const InnateSpellCasting = db.define('innateSpellCastings', {
+const InnateSpellCasting = db.define("innateSpellCastings", {
   innateSpellID: {
     type: Sequelize.STRING,
-    primaryKey: true
+    primaryKey: true,
   },
   timesCast: {
-    type: Sequelize.INTEGER
-  }
+    type: Sequelize.INTEGER,
+  },
 });
 
 module.exports = InnateSpellCasting;

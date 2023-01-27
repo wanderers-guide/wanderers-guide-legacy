@@ -1,46 +1,46 @@
-const Sequelize = require('sequelize');
-const db = require('../../config/databases/content-database');
+const Sequelize = require("sequelize");
+const db = require("../../config/databases/content-database");
 
-const ClassAbility = db.define('classAbilities', {
+const ClassAbility = db.define("classAbilities", {
   classID: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   name: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   level: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   description: {
-    type: Sequelize.TEXT
+    type: Sequelize.TEXT,
   },
   code: {
-    type: Sequelize.TEXT
+    type: Sequelize.TEXT,
   },
   selectType: {
     type: Sequelize.ENUM,
-    values: ['NONE', 'SELECTOR', 'SELECT_OPTION']
+    values: ["NONE", "SELECTOR", "SELECT_OPTION"],
   },
   selectOptionFor: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   displayInSheet: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   indivClassName: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   indivClassAbilName: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   isArchived: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   contentSrc: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   homebrewID: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
 });
 

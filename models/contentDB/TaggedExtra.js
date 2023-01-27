@@ -1,15 +1,15 @@
-const Sequelize = require('sequelize');
-const db = require('../../config/databases/content-database');
+const Sequelize = require("sequelize");
+const db = require("../../config/databases/content-database");
 
-const TaggedExtra = db.define('taggedExtras', {
+const TaggedExtra = db.define("taggedExtras", {
   extraID: {
     type: Sequelize.INTEGER,
-    primaryKey: true
+    primaryKey: true,
   },
   tagID: {
     type: Sequelize.INTEGER,
-    primaryKey: true
-  }
+    primaryKey: true,
+  },
 });
 
 module.exports = TaggedExtra;

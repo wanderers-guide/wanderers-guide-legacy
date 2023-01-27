@@ -1,25 +1,25 @@
-const Sequelize = require('sequelize');
-const db = require('../../config/databases/content-database');
+const Sequelize = require("sequelize");
+const db = require("../../config/databases/content-database");
 
-const Tag = db.define('tags', {
+const Tag = db.define("tags", {
   name: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   description: {
-    type: Sequelize.TEXT
+    type: Sequelize.TEXT,
   },
   isImportant: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   isHidden: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   isArchived: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   homebrewID: {
-    type: Sequelize.INTEGER
-  }
+    type: Sequelize.INTEGER,
+  },
 });
 
 module.exports = Tag;

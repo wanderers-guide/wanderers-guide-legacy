@@ -1,80 +1,80 @@
-const Sequelize = require('sequelize');
-const db = require('../../config/databases/content-database');
+const Sequelize = require("sequelize");
+const db = require("../../config/databases/content-database");
 
-const Build = db.define('builds', {
+const Build = db.define("builds", {
   userID: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   name: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   description: {
-    type: Sequelize.TEXT
+    type: Sequelize.TEXT,
   },
   contactInfo: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   isPublished: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   authorName: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   artworkURL: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   finalStatsJSON: {
-    type: Sequelize.TEXT
+    type: Sequelize.TEXT,
   },
   ancestryID: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   heritageID: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   uniHeritageID: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   backgroundID: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   classID: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   classID_2: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   customCode: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   // Character Options //
   optionCustomCodeBlock: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   optionClassArchetypes: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   // Character Variants //
   variantFreeArchetype: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   variantAncestryParagon: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   variantStamina: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   variantGradualAbilityBoosts: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   // Build Enabled Sources //
   enabledSources: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   // Build Enabled Homebrew //
   enabledHomebrew: {
-    type: Sequelize.STRING
-  }
+    type: Sequelize.STRING,
+  },
 });
 
 module.exports = Build;

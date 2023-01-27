@@ -1,7 +1,7 @@
-const Sequelize = require('sequelize');
-const db = require('../../config/databases/content-database');
+const Sequelize = require("sequelize");
+const db = require("../../config/databases/content-database");
 
-const CharCondition = db.define('charConditions', {
+const CharCondition = db.define("charConditions", {
   charID: {
     type: Sequelize.INTEGER,
   },
@@ -9,13 +9,13 @@ const CharCondition = db.define('charConditions', {
     type: Sequelize.INTEGER,
   },
   value: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   sourceText: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   parentID: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
 });
 
