@@ -1,0 +1,2226 @@
+{
+  "definitions": {
+    "accessTokens": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "integer" },
+        "accessToken": { "type": "string" },
+        "accessRights": {
+          "type": "string",
+          "default": "READ_ONLY",
+          "enum": ["READ_ONLY", "READ_UPDATE", "READ_UPDATE_ADD_DELETE"]
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "nullable": true
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "nullable": true
+        },
+        "characters": { "$ref": "#/definitions/characters" },
+        "apiClientApps": { "$ref": "#/definitions/apiClientApps" }
+      }
+    },
+    "ancestries": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "integer" },
+        "name": { "type": "string", "nullable": true },
+        "rarity": {
+          "type": "string",
+          "default": "COMMON",
+          "enum": ["COMMON", "UNCOMMON", "RARE", "UNIQUE"]
+        },
+        "hitPoints": { "type": "integer", "nullable": true },
+        "size": {
+          "type": "string",
+          "default": "MEDIUM",
+          "enum": ["TINY", "SMALL", "MEDIUM", "LARGE", "HUGE", "GARGANTUAN"],
+          "nullable": true
+        },
+        "speed": { "type": "integer", "nullable": true },
+        "description": { "type": "string", "nullable": true },
+        "artworkURL": { "type": "string", "nullable": true },
+        "isArchived": { "type": "integer", "default": 0, "nullable": true },
+        "contentSrc": { "type": "string", "default": "CRB" },
+        "version": { "type": "string", "nullable": true },
+        "senseTypes_ancestries_additionalSenseIDTosenseTypes": {
+          "anyOf": [
+            { "$ref": "#/definitions/senseTypes" },
+            { "nullable": true }
+          ]
+        },
+        "homebrewBundles": {
+          "anyOf": [
+            { "$ref": "#/definitions/homebrewBundles" },
+            { "nullable": true }
+          ]
+        },
+        "physicalFeatures_ancestries_physicalFeatureOneIDTophysicalFeatures": {
+          "anyOf": [
+            { "$ref": "#/definitions/physicalFeatures" },
+            { "nullable": true }
+          ]
+        },
+        "physicalFeatures_ancestries_physicalFeatureTwoIDTophysicalFeatures": {
+          "anyOf": [
+            { "$ref": "#/definitions/physicalFeatures" },
+            { "nullable": true }
+          ]
+        },
+        "tags": {
+          "anyOf": [{ "$ref": "#/definitions/tags" }, { "nullable": true }]
+        },
+        "senseTypes_ancestries_visionSenseIDTosenseTypes": {
+          "anyOf": [
+            { "$ref": "#/definitions/senseTypes" },
+            { "nullable": true }
+          ]
+        },
+        "characters": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/characters" }
+        },
+        "builds": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/builds" }
+        }
+      }
+    },
+    "ancestryBoosts": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "integer" },
+        "ancestryID": { "type": "integer", "nullable": true },
+        "boostedAbility": {
+          "type": "string",
+          "enum": [
+            "Anything",
+            "Strength",
+            "Dexterity",
+            "Constitution",
+            "Intelligence",
+            "Wisdom",
+            "Charisma"
+          ],
+          "nullable": true
+        },
+        "homebrewBundles": {
+          "anyOf": [
+            { "$ref": "#/definitions/homebrewBundles" },
+            { "nullable": true }
+          ]
+        }
+      }
+    },
+    "ancestryFlaws": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "integer" },
+        "ancestryID": { "type": "integer", "nullable": true },
+        "flawedAbility": {
+          "type": "string",
+          "enum": [
+            "Anything",
+            "Strength",
+            "Dexterity",
+            "Constitution",
+            "Intelligence",
+            "Wisdom",
+            "Charisma"
+          ],
+          "nullable": true
+        },
+        "homebrewBundles": {
+          "anyOf": [
+            { "$ref": "#/definitions/homebrewBundles" },
+            { "nullable": true }
+          ]
+        }
+      }
+    },
+    "ancestryLanguages": {
+      "type": "object",
+      "properties": {
+        "ancestryID": { "type": "integer" },
+        "isBonus": { "type": "integer", "default": 0, "nullable": true },
+        "homebrewBundles": {
+          "anyOf": [
+            { "$ref": "#/definitions/homebrewBundles" },
+            { "nullable": true }
+          ]
+        },
+        "languages": { "$ref": "#/definitions/languages" }
+      }
+    },
+    "animalCompanions": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "integer" },
+        "name": { "type": "string" },
+        "rarity": {
+          "type": "string",
+          "default": "COMMON",
+          "enum": ["COMMON", "UNCOMMON", "RARE", "UNIQUE"]
+        },
+        "description": { "type": "string", "nullable": true },
+        "size": {
+          "type": "string",
+          "default": "SMALL",
+          "enum": [
+            "TINY",
+            "SMALL",
+            "SMALL_MED",
+            "MEDIUM",
+            "LARGE",
+            "MED_LARGE",
+            "HUGE",
+            "GARGANTUAN"
+          ]
+        },
+        "a1Name": { "type": "string", "nullable": true },
+        "a1Type": {
+          "type": "string",
+          "enum": ["MELEE", "RANGED"],
+          "nullable": true
+        },
+        "a1Actions": {
+          "type": "string",
+          "enum": [
+            "NONE",
+            "FREE_ACTION",
+            "REACTION",
+            "ACTION",
+            "TWO_ACTIONS",
+            "THREE_ACTIONS"
+          ],
+          "nullable": true
+        },
+        "a1Tags": { "type": "string", "nullable": true },
+        "a1DmgDie": {
+          "type": "string",
+          "enum": [
+            "EMPTY_ENUM_VALUE",
+            "d2",
+            "d4",
+            "d6",
+            "d8",
+            "d10",
+            "d12",
+            "d20"
+          ],
+          "nullable": true
+        },
+        "a1DmgType": { "type": "string", "nullable": true },
+        "a2Name": { "type": "string", "nullable": true },
+        "a2Type": {
+          "type": "string",
+          "enum": ["MELEE", "RANGED"],
+          "nullable": true
+        },
+        "a2Actions": {
+          "type": "string",
+          "enum": [
+            "NONE",
+            "FREE_ACTION",
+            "REACTION",
+            "ACTION",
+            "TWO_ACTIONS",
+            "THREE_ACTIONS"
+          ],
+          "nullable": true
+        },
+        "a2Tags": { "type": "string", "nullable": true },
+        "a2DmgDie": {
+          "type": "string",
+          "enum": [
+            "EMPTY_ENUM_VALUE",
+            "d2",
+            "d4",
+            "d6",
+            "d8",
+            "d10",
+            "d12",
+            "d20"
+          ],
+          "nullable": true
+        },
+        "a2DmgType": { "type": "string", "nullable": true },
+        "a3Name": { "type": "string", "nullable": true },
+        "a3Type": {
+          "type": "string",
+          "enum": ["MELEE", "RANGED"],
+          "nullable": true
+        },
+        "a3Actions": {
+          "type": "string",
+          "enum": [
+            "NONE",
+            "FREE_ACTION",
+            "REACTION",
+            "ACTION",
+            "TWO_ACTIONS",
+            "THREE_ACTIONS"
+          ],
+          "nullable": true
+        },
+        "a3Tags": { "type": "string", "nullable": true },
+        "a3DmgDie": {
+          "type": "string",
+          "enum": [
+            "EMPTY_ENUM_VALUE",
+            "d2",
+            "d4",
+            "d6",
+            "d8",
+            "d10",
+            "d12",
+            "d20"
+          ],
+          "nullable": true
+        },
+        "a3DmgType": { "type": "string", "nullable": true },
+        "modStr": { "type": "integer" },
+        "modDex": { "type": "integer" },
+        "modCon": { "type": "integer" },
+        "modInt": { "type": "integer" },
+        "modWis": { "type": "integer" },
+        "modCha": { "type": "integer" },
+        "hitPoints": { "type": "integer" },
+        "skills": { "type": "string", "nullable": true },
+        "senses": { "type": "string", "nullable": true },
+        "speeds": { "type": "string", "nullable": true },
+        "special": { "type": "string", "nullable": true },
+        "supportBenefit": { "type": "string", "nullable": true },
+        "advancedManeuver": { "type": "string", "nullable": true },
+        "isArchived": { "type": "integer", "default": 0, "nullable": true },
+        "contentSrc": { "type": "string", "default": "CRB" },
+        "version": { "type": "string", "nullable": true },
+        "homebrewBundles": {
+          "anyOf": [
+            { "$ref": "#/definitions/homebrewBundles" },
+            { "nullable": true }
+          ]
+        },
+        "charAnimalCompanions": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/charAnimalCompanions" }
+        }
+      }
+    },
+    "apiClientApps": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "integer" },
+        "clientID": { "type": "string" },
+        "apiKey": { "type": "string" },
+        "appName": { "type": "string" },
+        "redirectURI": { "type": "string" },
+        "companyName": { "type": "string", "nullable": true },
+        "description": { "type": "string", "nullable": true },
+        "iconURL": { "type": "string", "nullable": true },
+        "accessRights": {
+          "type": "string",
+          "default": "READ_ONLY",
+          "enum": ["READ_ONLY", "READ_UPDATE", "READ_UPDATE_ADD_DELETE"]
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "nullable": true
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "nullable": true
+        },
+        "users": { "$ref": "#/definitions/users" },
+        "accessTokens": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/accessTokens" }
+        }
+      }
+    },
+    "archetypes": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "integer" },
+        "name": { "type": "string", "nullable": true },
+        "description": { "type": "string", "nullable": true },
+        "isMulticlass": { "type": "integer", "nullable": true },
+        "isArchived": { "type": "integer", "default": 0, "nullable": true },
+        "contentSrc": { "type": "string", "default": "CRB" },
+        "version": { "type": "string", "nullable": true },
+        "feats": {
+          "anyOf": [{ "$ref": "#/definitions/feats" }, { "nullable": true }]
+        },
+        "homebrewBundles": {
+          "anyOf": [
+            { "$ref": "#/definitions/homebrewBundles" },
+            { "nullable": true }
+          ]
+        },
+        "tags": {
+          "anyOf": [{ "$ref": "#/definitions/tags" }, { "nullable": true }]
+        }
+      }
+    },
+    "armors": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "integer" },
+        "profName": { "type": "string", "nullable": true },
+        "acBonus": { "type": "integer", "nullable": true },
+        "dexCap": { "type": "integer", "nullable": true },
+        "checkPenalty": { "type": "integer", "nullable": true },
+        "speedPenalty": { "type": "integer", "nullable": true },
+        "minStrength": { "type": "integer", "nullable": true },
+        "armorType": {
+          "type": "string",
+          "enum": ["N_A", "CLOTH", "LEATHER", "COMPOSITE", "CHAIN", "PLATE"],
+          "nullable": true
+        },
+        "category": {
+          "type": "string",
+          "enum": ["UNARMORED", "LIGHT", "MEDIUM", "HEAVY"],
+          "nullable": true
+        },
+        "items": {
+          "anyOf": [{ "$ref": "#/definitions/items" }, { "nullable": true }]
+        }
+      }
+    },
+    "backgrounds": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "integer" },
+        "name": { "type": "string", "nullable": true },
+        "rarity": {
+          "type": "string",
+          "default": "COMMON",
+          "enum": ["COMMON", "UNCOMMON", "RARE", "UNIQUE"]
+        },
+        "description": { "type": "string", "nullable": true },
+        "boostOne": { "type": "string", "nullable": true },
+        "boostTwo": { "type": "string", "nullable": true },
+        "code": { "type": "string", "nullable": true },
+        "isArchived": { "type": "integer", "default": 0, "nullable": true },
+        "contentSrc": { "type": "string", "default": "CRB" },
+        "version": { "type": "string", "nullable": true },
+        "homebrewBundles": {
+          "anyOf": [
+            { "$ref": "#/definitions/homebrewBundles" },
+            { "nullable": true }
+          ]
+        },
+        "characters": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/characters" }
+        },
+        "builds": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/builds" }
+        }
+      }
+    },
+    "calculatedStats": {
+      "type": "object",
+      "properties": {
+        "maxHP": { "type": "integer", "nullable": true },
+        "maxStamina": { "type": "integer", "nullable": true },
+        "maxResolve": { "type": "integer", "nullable": true },
+        "totalClassDC": { "type": "integer", "nullable": true },
+        "totalSpeed": { "type": "integer", "nullable": true },
+        "totalAC": { "type": "integer", "nullable": true },
+        "totalPerception": { "type": "integer", "nullable": true },
+        "totalSkills": { "type": "string", "nullable": true },
+        "totalSaves": { "type": "string", "nullable": true },
+        "totalAbilityScores": { "type": "string", "nullable": true },
+        "weapons": { "type": "string", "nullable": true },
+        "conditions": { "type": "string", "nullable": true },
+        "generalInfo": { "type": "string", "nullable": true },
+        "characters": { "$ref": "#/definitions/characters" }
+      }
+    },
+    "campaignAccessTokens": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "integer" },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "nullable": true
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "nullable": true
+        },
+        "characters": { "$ref": "#/definitions/characters" },
+        "users": { "$ref": "#/definitions/users" },
+        "campaigns": { "$ref": "#/definitions/campaigns" }
+      }
+    },
+    "campaigns": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "integer" },
+        "accessID": { "type": "string" },
+        "name": { "type": "string" },
+        "description": { "type": "string", "nullable": true },
+        "imageURL": { "type": "string", "nullable": true },
+        "optionDisplayPlayerHealth": { "type": "integer", "default": 1 },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "nullable": true
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "nullable": true
+        },
+        "users": { "$ref": "#/definitions/users" },
+        "campaignAccessTokens": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/campaignAccessTokens" }
+        }
+      }
+    },
+    "characters": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "integer" },
+        "name": { "type": "string", "nullable": true },
+        "level": { "type": "integer", "default": 1 },
+        "experience": { "type": "integer", "default": 0 },
+        "currentHealth": { "type": "integer", "nullable": true },
+        "tempHealth": { "type": "integer", "nullable": true },
+        "heroPoints": { "type": "integer", "default": 1, "nullable": true },
+        "currentStamina": { "type": "integer", "nullable": true },
+        "currentResolve": { "type": "integer", "nullable": true },
+        "dataID": { "type": "integer", "nullable": true },
+        "classID_2": { "type": "integer", "nullable": true },
+        "notes": { "type": "string", "nullable": true },
+        "infoJSON": { "type": "string", "nullable": true },
+        "rollHistoryJSON": { "type": "string", "nullable": true },
+        "details": { "type": "string", "nullable": true },
+        "customCode": { "type": "string", "nullable": true },
+        "builderByLevel": { "type": "integer", "default": 0, "nullable": true },
+        "optionAutoDetectPreReqs": {
+          "type": "integer",
+          "default": 1,
+          "nullable": true
+        },
+        "optionAutoHeightenSpells": {
+          "type": "integer",
+          "default": 0,
+          "nullable": true
+        },
+        "optionPublicCharacter": {
+          "type": "integer",
+          "default": 0,
+          "nullable": true
+        },
+        "optionCustomCodeBlock": {
+          "type": "integer",
+          "default": 0,
+          "nullable": true
+        },
+        "optionDiceRoller": {
+          "type": "integer",
+          "default": 0,
+          "nullable": true
+        },
+        "optionClassArchetypes": {
+          "type": "integer",
+          "default": 1,
+          "nullable": true
+        },
+        "optionIgnoreBulk": {
+          "type": "integer",
+          "default": 0,
+          "nullable": true
+        },
+        "variantProfWithoutLevel": {
+          "type": "integer",
+          "default": 0,
+          "nullable": true
+        },
+        "variantFreeArchetype": {
+          "type": "integer",
+          "default": 0,
+          "nullable": true
+        },
+        "variantAncestryParagon": {
+          "type": "integer",
+          "default": 0,
+          "nullable": true
+        },
+        "variantStamina": { "type": "integer", "default": 0, "nullable": true },
+        "variantAutoBonusProgression": {
+          "type": "integer",
+          "default": 0,
+          "nullable": true
+        },
+        "variantGradualAbilityBoosts": {
+          "type": "integer",
+          "default": 0,
+          "nullable": true
+        },
+        "enabledSources": {
+          "type": "string",
+          "default": "[\"CRB\",\"ADV-PLAYER-GUIDE\",\"GM-GUIDE\"]"
+        },
+        "enabledHomebrew": { "type": "string", "default": "[null]" },
+        "ancestries": {
+          "anyOf": [
+            { "$ref": "#/definitions/ancestries" },
+            { "nullable": true }
+          ]
+        },
+        "backgrounds": {
+          "anyOf": [
+            { "$ref": "#/definitions/backgrounds" },
+            { "nullable": true }
+          ]
+        },
+        "classes": {
+          "anyOf": [{ "$ref": "#/definitions/classes" }, { "nullable": true }]
+        },
+        "heritages": {
+          "anyOf": [{ "$ref": "#/definitions/heritages" }, { "nullable": true }]
+        },
+        "inventories": {
+          "anyOf": [
+            { "$ref": "#/definitions/inventories" },
+            { "nullable": true }
+          ]
+        },
+        "uniHeritages": {
+          "anyOf": [
+            { "$ref": "#/definitions/uniHeritages" },
+            { "nullable": true }
+          ]
+        },
+        "users": {
+          "anyOf": [{ "$ref": "#/definitions/users" }, { "nullable": true }]
+        },
+        "builds": {
+          "anyOf": [{ "$ref": "#/definitions/builds" }, { "nullable": true }]
+        },
+        "accessTokens": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/accessTokens" }
+        },
+        "calculatedStats": {
+          "anyOf": [
+            { "$ref": "#/definitions/calculatedStats" },
+            { "nullable": true }
+          ]
+        },
+        "charAnimalCompanions": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/charAnimalCompanions" }
+        },
+        "charConditions": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/charConditions" }
+        },
+        "charDataMappings": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/charDataMappings" }
+        },
+        "charFamiliars": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/charFamiliars" }
+        },
+        "noteFields": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/noteFields" }
+        },
+        "spellBookSpells": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/spellBookSpells" }
+        },
+        "campaignAccessTokens": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/campaignAccessTokens" }
+        }
+      }
+    },
+    "charAnimalCompanions": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "integer" },
+        "age": { "type": "string", "default": "YOUNG" },
+        "specialization": { "type": "string", "default": "NONE" },
+        "name": { "type": "string", "default": "" },
+        "description": { "type": "string" },
+        "imageURL": { "type": "string", "default": "" },
+        "currentHP": { "type": "integer", "default": 0 },
+        "animalCompanions": { "$ref": "#/definitions/animalCompanions" },
+        "characters": { "$ref": "#/definitions/characters" }
+      }
+    },
+    "charConditions": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "integer" },
+        "value": { "type": "integer", "nullable": true },
+        "sourceText": { "type": "string", "nullable": true },
+        "characters": {
+          "anyOf": [
+            { "$ref": "#/definitions/characters" },
+            { "nullable": true }
+          ]
+        },
+        "conditions": {
+          "anyOf": [
+            { "$ref": "#/definitions/conditions" },
+            { "nullable": true }
+          ]
+        },
+        "charConditions": {
+          "anyOf": [
+            { "$ref": "#/definitions/charConditions" },
+            { "nullable": true }
+          ]
+        },
+        "other_charConditions": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/charConditions" }
+        }
+      }
+    },
+    "charDataMappings": {
+      "type": "object",
+      "properties": {
+        "source": { "type": "string" },
+        "sourceType": { "type": "string" },
+        "sourceLevel": { "type": "integer" },
+        "sourceCode": { "type": "string" },
+        "sourceCodeSNum": { "type": "string" },
+        "value": { "type": "string", "nullable": true },
+        "characters": { "$ref": "#/definitions/characters" }
+      }
+    },
+    "charFamiliars": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "integer" },
+        "name": { "type": "string" },
+        "description": { "type": "string" },
+        "imageURL": { "type": "string" },
+        "currentHP": { "type": "integer" },
+        "abilitiesJSON": { "type": "string", "default": "[]" },
+        "specificType": { "type": "string", "nullable": true },
+        "characters": { "$ref": "#/definitions/characters" }
+      }
+    },
+    "classAbilities": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "integer" },
+        "name": { "type": "string", "nullable": true },
+        "level": { "type": "integer", "nullable": true },
+        "description": { "type": "string", "nullable": true },
+        "code": { "type": "string", "nullable": true },
+        "selectType": {
+          "type": "string",
+          "default": "NONE",
+          "enum": ["NONE", "SELECTOR", "SELECT_OPTION"],
+          "nullable": true
+        },
+        "displayInSheet": { "type": "integer", "default": 0, "nullable": true },
+        "indivClassName": { "type": "string", "nullable": true },
+        "indivClassAbilName": { "type": "string", "nullable": true },
+        "isArchived": { "type": "integer", "default": 0, "nullable": true },
+        "contentSrc": { "type": "string", "default": "CRB" },
+        "classes": {
+          "anyOf": [{ "$ref": "#/definitions/classes" }, { "nullable": true }]
+        },
+        "homebrewBundles": {
+          "anyOf": [
+            { "$ref": "#/definitions/homebrewBundles" },
+            { "nullable": true }
+          ]
+        },
+        "classAbilities": {
+          "anyOf": [
+            { "$ref": "#/definitions/classAbilities" },
+            { "nullable": true }
+          ]
+        },
+        "other_classAbilities": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/classAbilities" }
+        }
+      }
+    },
+    "classes": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "integer" },
+        "name": { "type": "string", "nullable": true },
+        "rarity": {
+          "type": "string",
+          "default": "COMMON",
+          "enum": ["COMMON", "UNCOMMON", "RARE", "UNIQUE"]
+        },
+        "description": { "type": "string", "nullable": true },
+        "keyAbility": { "type": "string", "nullable": true },
+        "hitPoints": { "type": "integer", "nullable": true },
+        "tPerception": { "type": "string", "default": "T" },
+        "tFortitude": { "type": "string", "default": "T" },
+        "tReflex": { "type": "string", "default": "T" },
+        "tWill": { "type": "string", "default": "T" },
+        "tClassDC": { "type": "string", "default": "T" },
+        "tSkills": { "type": "string", "nullable": true },
+        "tSkillsMore": { "type": "integer", "nullable": true },
+        "tWeapons": { "type": "string", "nullable": true },
+        "weaponsExtra": { "type": "string", "nullable": true },
+        "tArmor": { "type": "string", "nullable": true },
+        "artworkURL": { "type": "string", "nullable": true },
+        "code": { "type": "string", "nullable": true },
+        "isArchived": { "type": "integer", "default": 0, "nullable": true },
+        "contentSrc": { "type": "string", "default": "CRB" },
+        "version": { "type": "string", "nullable": true },
+        "homebrewBundles": {
+          "anyOf": [
+            { "$ref": "#/definitions/homebrewBundles" },
+            { "nullable": true }
+          ]
+        },
+        "tags": {
+          "anyOf": [{ "$ref": "#/definitions/tags" }, { "nullable": true }]
+        },
+        "builds_builds_classIDToclasses": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/builds" }
+        },
+        "builds_builds_classID_2Toclasses": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/builds" }
+        },
+        "characters": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/characters" }
+        },
+        "classAbilities": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/classAbilities" }
+        }
+      }
+    },
+    "conditions": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "integer" },
+        "name": { "type": "string", "nullable": true },
+        "description": { "type": "string", "nullable": true },
+        "hasValue": { "type": "integer", "default": 0, "nullable": true },
+        "code": { "type": "string", "nullable": true },
+        "charConditions": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/charConditions" }
+        }
+      }
+    },
+    "damageTypes": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "integer" },
+        "name": { "type": "string", "nullable": true },
+        "description": { "type": "string", "nullable": true }
+      }
+    },
+    "domains": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "integer" },
+        "name": { "type": "string", "nullable": true },
+        "description": { "type": "string", "nullable": true },
+        "contentSrc": { "type": "string", "default": "CRB" },
+        "spells_domains_advancedSpellIDTospells": {
+          "anyOf": [{ "$ref": "#/definitions/spells" }, { "nullable": true }]
+        },
+        "homebrewBundles": {
+          "anyOf": [
+            { "$ref": "#/definitions/homebrewBundles" },
+            { "nullable": true }
+          ]
+        },
+        "spells_domains_initialSpellIDTospells": {
+          "anyOf": [{ "$ref": "#/definitions/spells" }, { "nullable": true }]
+        }
+      }
+    },
+    "classArchetypes": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "integer" },
+        "name": { "type": "string", "nullable": true },
+        "description": { "type": "string", "nullable": true },
+        "replacementCodeJSON": { "type": "string", "nullable": true },
+        "dedicationFeatName": { "type": "string", "nullable": true },
+        "contentSrc": { "type": "string", "default": "CRB" },
+        "homebrewBundles": {
+          "anyOf": [
+            { "$ref": "#/definitions/homebrewBundles" },
+            { "nullable": true }
+          ]
+        }
+      }
+    },
+    "creatures": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string", "nullable": true },
+        "level": { "type": "integer" },
+        "rarity": {
+          "type": "string",
+          "enum": ["COMMON", "UNCOMMON", "RARE", "UNIQUE"]
+        },
+        "alignment": { "type": "string", "nullable": true },
+        "size": {
+          "type": "string",
+          "enum": [
+            "TINY",
+            "SMALL",
+            "SMALL_MED",
+            "MEDIUM",
+            "LARGE",
+            "MED_LARGE",
+            "HUGE",
+            "GARGANTUAN"
+          ]
+        },
+        "traitsJSON": { "type": "string", "nullable": true },
+        "familyType": { "type": "string", "nullable": true },
+        "perceptionBonus": { "type": "integer", "nullable": true },
+        "senses": { "type": "string", "nullable": true },
+        "languagesJSON": { "type": "string", "nullable": true },
+        "languagesCustom": { "type": "string", "nullable": true },
+        "skillsJSON": { "type": "string", "nullable": true },
+        "itemsJSON": { "type": "string", "nullable": true },
+        "strMod": { "type": "integer", "default": 0 },
+        "dexMod": { "type": "integer", "default": 0 },
+        "conMod": { "type": "integer", "default": 0 },
+        "intMod": { "type": "integer", "default": 0 },
+        "wisMod": { "type": "integer", "default": 0 },
+        "chaMod": { "type": "integer", "default": 0 },
+        "interactionAbilitiesJSON": { "type": "string", "nullable": true },
+        "acValue": { "type": "integer", "default": 10 },
+        "fortBonus": { "type": "integer", "default": 0 },
+        "reflexBonus": { "type": "integer" },
+        "willBonus": { "type": "integer", "default": 0 },
+        "allSavesCustom": { "type": "string", "nullable": true },
+        "hpMax": { "type": "integer", "default": 100 },
+        "hpDetails": { "type": "string", "nullable": true },
+        "immunitiesJSON": { "type": "string", "nullable": true },
+        "weaknessesJSON": { "type": "string", "nullable": true },
+        "resistancesJSON": { "type": "string", "nullable": true },
+        "defensiveAbilitiesJSON": { "type": "string", "nullable": true },
+        "speed": { "type": "integer", "default": 25 },
+        "otherSpeedsJSON": { "type": "string", "nullable": true },
+        "attacksJSON": { "type": "string", "nullable": true },
+        "spellcastingJSON": { "type": "string", "nullable": true },
+        "offensiveAbilitiesJSON": { "type": "string", "nullable": true },
+        "flavorText": { "type": "string", "nullable": true },
+        "contentSrc": { "type": "string", "default": "CRB" },
+        "homebrewID": { "type": "integer", "nullable": true },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "nullable": true
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "nullable": true
+        }
+      }
+    },
+    "damagetypes": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "integer" },
+        "name": { "type": "string", "nullable": true },
+        "description": { "type": "string", "nullable": true },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "nullable": true
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "nullable": true
+        }
+      }
+    },
+    "familiarAbilities": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "integer" },
+        "name": { "type": "string", "nullable": true },
+        "prerequisites": { "type": "string", "nullable": true },
+        "requirements": { "type": "string", "nullable": true },
+        "description": { "type": "string", "nullable": true },
+        "code": { "type": "string", "nullable": true },
+        "isMaster": { "type": "integer", "default": 0, "nullable": true },
+        "contentSrc": { "type": "string", "default": "CRB" },
+        "homebrewBundles": {
+          "anyOf": [
+            { "$ref": "#/definitions/homebrewBundles" },
+            { "nullable": true }
+          ]
+        }
+      }
+    },
+    "feats": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "integer" },
+        "name": {
+          "type": "string",
+          "default": "Unnamed Feat",
+          "nullable": true
+        },
+        "actions": {
+          "type": "string",
+          "default": "NONE",
+          "enum": [
+            "NONE",
+            "FREE_ACTION",
+            "REACTION",
+            "ACTION",
+            "TWO_ACTIONS",
+            "THREE_ACTIONS"
+          ],
+          "nullable": true
+        },
+        "level": { "type": "integer" },
+        "rarity": {
+          "type": "string",
+          "default": "COMMON",
+          "enum": ["COMMON", "UNCOMMON", "RARE", "UNIQUE"]
+        },
+        "prerequisites": { "type": "string", "nullable": true },
+        "frequency": { "type": "string", "nullable": true },
+        "cost": { "type": "string", "nullable": true },
+        "trigger": { "type": "string", "nullable": true },
+        "requirements": { "type": "string", "nullable": true },
+        "description": { "type": "string", "nullable": true },
+        "special": { "type": "string", "nullable": true },
+        "canSelectMultiple": {
+          "type": "integer",
+          "default": 0,
+          "nullable": true
+        },
+        "isDefault": { "type": "integer", "default": 0, "nullable": true },
+        "minProf": { "type": "string", "nullable": true },
+        "code": { "type": "string", "nullable": true },
+        "isCore": { "type": "integer", "default": 0, "nullable": true },
+        "genericType": {
+          "type": "string",
+          "enum": [
+            "GENERAL_FEAT",
+            "SKILL_FEAT",
+            "CLASS_FEAT",
+            "ARCHETYPE_FEAT",
+            "ANCESTRY_FEAT",
+            "BASIC_ACTION",
+            "SKILL_ACTION",
+            "CREATURE_ACTION",
+            "COMPANION_ACTION"
+          ],
+          "nullable": true
+        },
+        "genTypeName": { "type": "string", "nullable": true },
+        "isArchived": { "type": "integer", "default": 0, "nullable": true },
+        "contentSrc": { "type": "string", "default": "CRB" },
+        "version": { "type": "string", "nullable": true },
+        "homebrewBundles": {
+          "anyOf": [
+            { "$ref": "#/definitions/homebrewBundles" },
+            { "nullable": true }
+          ]
+        },
+        "skills": {
+          "anyOf": [{ "$ref": "#/definitions/skills" }, { "nullable": true }]
+        },
+        "archetypes": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/archetypes" }
+        },
+        "featTags": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/featTags" }
+        }
+      }
+    },
+    "featTags": {
+      "type": "object",
+      "properties": {
+        "feats": { "$ref": "#/definitions/feats" },
+        "tags": { "$ref": "#/definitions/tags" }
+      }
+    },
+    "extras": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "integer" },
+        "name": {
+          "type": "string",
+          "default": "Unnamed Extra",
+          "nullable": true
+        },
+        "level": { "type": "integer" },
+        "rarity": {
+          "type": "string",
+          "default": "COMMON",
+          "enum": ["COMMON", "UNCOMMON", "RARE", "UNIQUE"]
+        },
+        "size": {
+          "type": "string",
+          "default": "MEDIUM",
+          "enum": ["TINY", "SMALL", "MEDIUM", "LARGE", "HUGE", "GARGANTUAN"]
+        },
+        "price": { "type": "integer", "nullable": true },
+        "description": { "type": "string", "nullable": true },
+        "hitPoints": { "type": "integer", "nullable": true },
+        "brokenThreshold": { "type": "integer", "nullable": true },
+        "hardness": { "type": "integer", "nullable": true },
+        "type": { "type": "string", "nullable": true },
+        "isArchived": { "type": "integer", "default": 0, "nullable": true },
+        "contentSrc": { "type": "string", "default": "CRB" },
+        "homebrewBundles": {
+          "anyOf": [
+            { "$ref": "#/definitions/homebrewBundles" },
+            { "nullable": true }
+          ]
+        },
+        "taggedExtras": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/taggedExtras" }
+        }
+      }
+    },
+    "taggedExtras": {
+      "type": "object",
+      "properties": {
+        "extras": { "$ref": "#/definitions/extras" },
+        "tags": { "$ref": "#/definitions/tags" }
+      }
+    },
+    "heritages": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "integer" },
+        "name": { "type": "string", "nullable": true },
+        "ancestryID": { "type": "integer", "nullable": true },
+        "rarity": {
+          "type": "string",
+          "default": "COMMON",
+          "enum": ["COMMON", "UNCOMMON", "RARE", "UNIQUE"]
+        },
+        "description": { "type": "string", "nullable": true },
+        "code": { "type": "string", "nullable": true },
+        "isArchived": { "type": "integer", "default": 0, "nullable": true },
+        "contentSrc": { "type": "string", "default": "CRB" },
+        "indivAncestryName": { "type": "string", "nullable": true },
+        "homebrewBundles": {
+          "anyOf": [
+            { "$ref": "#/definitions/homebrewBundles" },
+            { "nullable": true }
+          ]
+        },
+        "characters": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/characters" }
+        },
+        "builds": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/builds" }
+        }
+      }
+    },
+    "homeBackgrounds": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "integer" },
+        "name": { "type": "string", "nullable": true },
+        "artworkURL": { "type": "string", "nullable": true },
+        "artistPage": { "type": "string", "nullable": true },
+        "homeBackReports": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/homeBackReports" }
+        }
+      }
+    },
+    "homeBackReports": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "integer" },
+        "email": { "type": "string", "nullable": true },
+        "message": { "type": "string" },
+        "homeBackgrounds": { "$ref": "#/definitions/homeBackgrounds" },
+        "users": {
+          "anyOf": [{ "$ref": "#/definitions/users" }, { "nullable": true }]
+        }
+      }
+    },
+    "homebrewBundleKeys": {
+      "type": "object",
+      "properties": {
+        "keyCode": { "type": "string" },
+        "isOneTimeUse": { "type": "integer", "default": 0, "nullable": true },
+        "homebrewBundles": { "$ref": "#/definitions/homebrewBundles" }
+      }
+    },
+    "homebrewBundles": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "integer" },
+        "name": { "type": "string", "default": "Homebrew Bundle" },
+        "description": { "type": "string", "nullable": true },
+        "contactInfo": { "type": "string", "nullable": true },
+        "code": { "type": "string", "nullable": true },
+        "hasKeys": { "type": "integer", "default": 0, "nullable": true },
+        "isPublished": { "type": "integer", "default": 0, "nullable": true },
+        "authorName": { "type": "string", "default": "Unknown" },
+        "users": { "$ref": "#/definitions/users" },
+        "ancestries": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/ancestries" }
+        },
+        "ancestryBoosts": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/ancestryBoosts" }
+        },
+        "ancestryFlaws": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/ancestryFlaws" }
+        },
+        "ancestryLanguages": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/ancestryLanguages" }
+        },
+        "animalCompanions": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/animalCompanions" }
+        },
+        "archetypes": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/archetypes" }
+        },
+        "backgrounds": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/backgrounds" }
+        },
+        "classAbilities": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/classAbilities" }
+        },
+        "classes": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/classes" }
+        },
+        "domains": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/domains" }
+        },
+        "extras": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/extras" }
+        },
+        "familiarAbilities": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/familiarAbilities" }
+        },
+        "feats": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/feats" }
+        },
+        "heritages": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/heritages" }
+        },
+        "homebrewBundleKeys": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/homebrewBundleKeys" }
+        },
+        "items": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/items" }
+        },
+        "languages": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/languages" }
+        },
+        "sheetStates": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/sheetStates" }
+        },
+        "specificFamiliars": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/specificFamiliars" }
+        },
+        "spells": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/spells" }
+        },
+        "tags": { "type": "array", "items": { "$ref": "#/definitions/tags" } },
+        "uniHeritages": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/uniHeritages" }
+        },
+        "userHomebrewBundles": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/userHomebrewBundles" }
+        },
+        "classArchetypes": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/classArchetypes" }
+        }
+      }
+    },
+    "innateSpellCastings": {
+      "type": "object",
+      "properties": {
+        "innateSpellID": { "type": "string" },
+        "timesCast": { "type": "integer", "nullable": true }
+      }
+    },
+    "inventories": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "integer" },
+        "equippedArmorCategory": {
+          "type": "string",
+          "enum": ["UNARMORED", "LIGHT", "MEDIUM", "HEAVY"],
+          "nullable": true
+        },
+        "invItems_invItemsToinventories_equippedArmorInvItemID": {
+          "anyOf": [{ "$ref": "#/definitions/invItems" }, { "nullable": true }]
+        },
+        "invItems_invItemsToinventories_equippedShieldInvItemID": {
+          "anyOf": [{ "$ref": "#/definitions/invItems" }, { "nullable": true }]
+        },
+        "characters": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/characters" }
+        },
+        "invItems_invItems_invIDToinventories": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/invItems" }
+        }
+      }
+    },
+    "invItems": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "integer" },
+        "name": { "type": "string", "nullable": true },
+        "price": { "type": "integer", "nullable": true },
+        "bulk": { "type": "number", "nullable": true },
+        "description": { "type": "string", "nullable": true },
+        "size": {
+          "type": "string",
+          "enum": ["TINY", "SMALL", "MEDIUM", "LARGE", "HUGE", "GARGANTUAN"],
+          "nullable": true
+        },
+        "quantity": { "type": "integer", "nullable": true },
+        "isShoddy": { "type": "integer", "default": 0, "nullable": true },
+        "isDropped": { "type": "integer", "default": 0, "nullable": true },
+        "currentHitPoints": { "type": "integer", "nullable": true },
+        "hitPoints": { "type": "integer", "nullable": true },
+        "materialType": { "type": "string", "nullable": true },
+        "brokenThreshold": { "type": "integer", "nullable": true },
+        "hardness": { "type": "integer", "nullable": true },
+        "code": { "type": "string", "nullable": true },
+        "itemTags": { "type": "string", "nullable": true },
+        "isInvested": { "type": "integer", "default": 0, "nullable": true },
+        "itemIsWeapon": { "type": "integer", "default": 0, "nullable": true },
+        "itemWeaponDieType": {
+          "type": "string",
+          "enum": [
+            "EMPTY_ENUM_VALUE",
+            "d2",
+            "d4",
+            "d6",
+            "d8",
+            "d10",
+            "d12",
+            "d20",
+            "NONE"
+          ],
+          "nullable": true
+        },
+        "itemWeaponDamageType": { "type": "string", "nullable": true },
+        "itemWeaponRange": {
+          "type": "integer",
+          "default": 0,
+          "nullable": true
+        },
+        "itemWeaponReload": {
+          "type": "integer",
+          "default": 0,
+          "nullable": true
+        },
+        "itemWeaponAtkBonus": {
+          "type": "integer",
+          "default": 0,
+          "nullable": true
+        },
+        "itemWeaponDmgBonus": {
+          "type": "integer",
+          "default": 0,
+          "nullable": true
+        },
+        "itemIsStorage": { "type": "integer", "default": 0, "nullable": true },
+        "itemStorageMaxBulk": { "type": "number", "nullable": true },
+        "fundRuneID": { "type": "integer", "nullable": true },
+        "fundPotencyRuneID": { "type": "integer", "nullable": true },
+        "propRune1ID": { "type": "integer", "nullable": true },
+        "propRune2ID": { "type": "integer", "nullable": true },
+        "propRune3ID": { "type": "integer", "nullable": true },
+        "propRune4ID": { "type": "integer", "nullable": true },
+        "invItems": {
+          "anyOf": [{ "$ref": "#/definitions/invItems" }, { "nullable": true }]
+        },
+        "inventories_invItems_invIDToinventories": {
+          "anyOf": [
+            { "$ref": "#/definitions/inventories" },
+            { "nullable": true }
+          ]
+        },
+        "items": {
+          "anyOf": [{ "$ref": "#/definitions/items" }, { "nullable": true }]
+        },
+        "inventories_invItemsToinventories_equippedArmorInvItemID": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/inventories" }
+        },
+        "inventories_invItemsToinventories_equippedShieldInvItemID": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/inventories" }
+        },
+        "other_invItems": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/invItems" }
+        }
+      }
+    },
+    "itemRunes": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "integer" },
+        "isFundamental": { "type": "integer", "default": 0, "nullable": true },
+        "etchedType": {
+          "type": "string",
+          "enum": ["WEAPON", "ARMOR"],
+          "nullable": true
+        },
+        "items": {
+          "anyOf": [{ "$ref": "#/definitions/items" }, { "nullable": true }]
+        }
+      }
+    },
+    "items": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "integer" },
+        "name": { "type": "string", "nullable": true },
+        "price": { "type": "integer", "nullable": true },
+        "bulk": { "type": "number", "nullable": true },
+        "level": { "type": "integer", "default": 0, "nullable": true },
+        "rarity": {
+          "type": "string",
+          "default": "COMMON",
+          "enum": ["COMMON", "UNCOMMON", "RARE", "UNIQUE"],
+          "nullable": true
+        },
+        "description": { "type": "string", "nullable": true },
+        "itemType": {
+          "type": "string",
+          "enum": [
+            "POTION",
+            "DRUG",
+            "TATTOO",
+            "FULU",
+            "CATALYST",
+            "SPELLHEART",
+            "ADJUSTMENT",
+            "GRIMOIRE",
+            "ARTIFACT",
+            "BOMB",
+            "EYEPIECE",
+            "CIRCLET",
+            "HAT",
+            "BOOTS",
+            "NECKLACE",
+            "GIFT",
+            "BRACERS",
+            "CLOAK",
+            "RING",
+            "MASK",
+            "GLOVES",
+            "BELT",
+            "ROD",
+            "ELIXIR",
+            "BOOK",
+            "POISON",
+            "COMPANION",
+            "ARMOR",
+            "STORAGE",
+            "TOOL",
+            "AMMUNITION",
+            "OIL",
+            "SCROLL",
+            "STAFF",
+            "STRUCTURE",
+            "TALISMAN",
+            "SNARE",
+            "GADGET",
+            "SIEGE",
+            "KIT",
+            "INGREDIENT",
+            "INSTRUMENT",
+            "OTHER",
+            "WEAPON",
+            "SHIELD",
+            "RUNE",
+            "WAND",
+            "CURRENCY"
+          ],
+          "nullable": true
+        },
+        "hands": {
+          "type": "string",
+          "default": "NONE",
+          "enum": ["NONE", "ONE", "ONE_PLUS", "TWO"]
+        },
+        "size": {
+          "type": "string",
+          "default": "MEDIUM",
+          "enum": ["TINY", "SMALL", "MEDIUM", "LARGE", "HUGE", "GARGANTUAN"]
+        },
+        "craftRequirements": { "type": "string", "nullable": true },
+        "usage": { "type": "string", "nullable": true },
+        "isShoddy": { "type": "integer", "default": 0, "nullable": true },
+        "hasQuantity": { "type": "integer", "default": 0, "nullable": true },
+        "quantity": { "type": "integer", "default": 1 },
+        "materialType": { "type": "string", "nullable": true },
+        "hitPoints": { "type": "integer", "nullable": true },
+        "brokenThreshold": { "type": "integer", "nullable": true },
+        "hardness": { "type": "integer", "nullable": true },
+        "hidden": { "type": "integer", "default": 0, "nullable": true },
+        "code": { "type": "string", "nullable": true },
+        "itemStructType": {
+          "type": "string",
+          "default": "GENERAL",
+          "enum": ["GENERAL", "WEAPON", "ARMOR", "SHIELD", "STORAGE", "RUNE"]
+        },
+        "isArchived": { "type": "integer", "default": 0, "nullable": true },
+        "contentSrc": { "type": "string", "default": "CRB" },
+        "version": { "type": "string", "nullable": true },
+        "homebrewBundles": {
+          "anyOf": [
+            { "$ref": "#/definitions/homebrewBundles" },
+            { "nullable": true }
+          ]
+        },
+        "armors": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/armors" }
+        },
+        "invItems": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/invItems" }
+        },
+        "itemRunes": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/itemRunes" }
+        },
+        "physicalFeatures": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/physicalFeatures" }
+        },
+        "shields": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/shields" }
+        },
+        "storages": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/storages" }
+        },
+        "taggedItems": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/taggedItems" }
+        },
+        "weapons": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/weapons" }
+        }
+      }
+    },
+    "languages": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "integer" },
+        "name": { "type": "string", "nullable": true },
+        "speakers": { "type": "string", "nullable": true },
+        "script": { "type": "string", "nullable": true },
+        "description": { "type": "string", "nullable": true },
+        "contentSrc": { "type": "string", "default": "CRB" },
+        "homebrewBundles": {
+          "anyOf": [
+            { "$ref": "#/definitions/homebrewBundles" },
+            { "nullable": true }
+          ]
+        },
+        "ancestryLanguages": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/ancestryLanguages" }
+        }
+      }
+    },
+    "noteFields": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "integer" },
+        "placeholderText": {
+          "type": "string",
+          "default": "",
+          "nullable": true
+        },
+        "text": { "type": "string", "default": "", "nullable": true },
+        "characters": { "$ref": "#/definitions/characters" }
+      }
+    },
+    "physicalFeatures": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "integer" },
+        "name": { "type": "string", "nullable": true },
+        "description": { "type": "string", "nullable": true },
+        "code": { "type": "string", "nullable": true },
+        "overrides": { "type": "integer", "nullable": true },
+        "items": {
+          "anyOf": [{ "$ref": "#/definitions/items" }, { "nullable": true }]
+        },
+        "ancestries_ancestries_physicalFeatureOneIDTophysicalFeatures": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/ancestries" }
+        },
+        "ancestries_ancestries_physicalFeatureTwoIDTophysicalFeatures": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/ancestries" }
+        }
+      }
+    },
+    "senseTypes": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "integer" },
+        "name": { "type": "string", "nullable": true },
+        "description": { "type": "string", "nullable": true },
+        "isVisionType": { "type": "integer", "default": 0, "nullable": true },
+        "visionPrecedence": { "type": "integer", "nullable": true },
+        "ancestries_ancestries_additionalSenseIDTosenseTypes": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/ancestries" }
+        },
+        "ancestries_ancestries_visionSenseIDTosenseTypes": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/ancestries" }
+        }
+      }
+    },
+    "sheetStates": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "integer" },
+        "name": { "type": "string", "nullable": true },
+        "description": { "type": "string", "nullable": true },
+        "code": { "type": "string", "nullable": true },
+        "contentSrc": { "type": "string", "default": "CRB" },
+        "homebrewBundles": {
+          "anyOf": [
+            { "$ref": "#/definitions/homebrewBundles" },
+            { "nullable": true }
+          ]
+        }
+      }
+    },
+    "shields": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "integer" },
+        "profName": { "type": "string", "nullable": true },
+        "acBonus": { "type": "integer", "nullable": true },
+        "speedPenalty": { "type": "integer", "nullable": true },
+        "items": {
+          "anyOf": [{ "$ref": "#/definitions/items" }, { "nullable": true }]
+        }
+      }
+    },
+    "skills": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "integer" },
+        "name": { "type": "string", "nullable": true },
+        "ability": {
+          "type": "string",
+          "default": "INT",
+          "enum": ["STR", "DEX", "CON", "INT", "WIS", "CHA"],
+          "nullable": true
+        },
+        "description": { "type": "string", "nullable": true },
+        "feats": { "type": "array", "items": { "$ref": "#/definitions/feats" } }
+      }
+    },
+    "books": {
+      "type": "object",
+      "properties": {
+        "codeName": { "type": "string" },
+        "name": { "type": "string", "nullable": true },
+        "url": { "type": "string", "nullable": true },
+        "description": { "type": "string", "nullable": true },
+        "code": { "type": "string", "nullable": true }
+      }
+    },
+    "specificFamiliars": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "integer" },
+        "specificType": { "type": "string" },
+        "name": { "type": "string" },
+        "alignment": { "type": "string", "nullable": true },
+        "tagsJSON": { "type": "string", "default": "[]" },
+        "description": { "type": "string", "nullable": true },
+        "numAbils": { "type": "integer", "default": 0 },
+        "abilsJSON": { "type": "string", "default": "[]" },
+        "extraAbils": { "type": "string", "nullable": true },
+        "isArchived": { "type": "integer", "default": 0, "nullable": true },
+        "contentSrc": { "type": "string", "default": "CRB" },
+        "homebrewBundles": {
+          "anyOf": [
+            { "$ref": "#/definitions/homebrewBundles" },
+            { "nullable": true }
+          ]
+        }
+      }
+    },
+    "spellBookSpells": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "integer" },
+        "spellSRC": { "type": "string", "nullable": true },
+        "spellLevel": { "type": "integer", "nullable": true },
+        "spellType": { "type": "string", "nullable": true },
+        "srcStructHashed": { "type": "integer", "nullable": true },
+        "characters": {
+          "anyOf": [
+            { "$ref": "#/definitions/characters" },
+            { "nullable": true }
+          ]
+        },
+        "spells": {
+          "anyOf": [{ "$ref": "#/definitions/spells" }, { "nullable": true }]
+        }
+      }
+    },
+    "spells": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "integer" },
+        "name": { "type": "string", "nullable": true },
+        "level": { "type": "integer", "nullable": true },
+        "traditions": { "type": "string", "nullable": true },
+        "cast": { "type": "string", "nullable": true },
+        "castingComponents": { "type": "string", "nullable": true },
+        "cost": { "type": "string", "nullable": true },
+        "trigger": { "type": "string", "nullable": true },
+        "requirements": { "type": "string", "nullable": true },
+        "range": { "type": "string", "nullable": true },
+        "area": { "type": "string", "nullable": true },
+        "targets": { "type": "string", "nullable": true },
+        "savingThrow": {
+          "type": "string",
+          "enum": [
+            "WILL",
+            "BASIC_WILL",
+            "FORT",
+            "BASIC_FORT",
+            "REFLEX",
+            "BASIC_REFLEX"
+          ],
+          "nullable": true
+        },
+        "duration": { "type": "string", "nullable": true },
+        "rarity": {
+          "type": "string",
+          "enum": ["COMMON", "UNCOMMON", "RARE", "UNIQUE"],
+          "nullable": true
+        },
+        "description": { "type": "string", "nullable": true },
+        "heightenedOneVal": { "type": "string", "nullable": true },
+        "heightenedOneText": { "type": "string", "nullable": true },
+        "heightenedTwoVal": { "type": "string", "nullable": true },
+        "heightenedTwoText": { "type": "string", "nullable": true },
+        "heightenedThreeVal": { "type": "string", "nullable": true },
+        "heightenedThreeText": { "type": "string", "nullable": true },
+        "heightenedFourVal": { "type": "string", "nullable": true },
+        "heightenedFourText": { "type": "string", "nullable": true },
+        "isFocusSpell": { "type": "integer", "default": 0, "nullable": true },
+        "isArchived": { "type": "integer", "default": 0, "nullable": true },
+        "contentSrc": { "type": "string", "default": "CRB" },
+        "version": { "type": "string", "nullable": true },
+        "homebrewBundles": {
+          "anyOf": [
+            { "$ref": "#/definitions/homebrewBundles" },
+            { "nullable": true }
+          ]
+        },
+        "domains_domains_advancedSpellIDTospells": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/domains" }
+        },
+        "domains_domains_initialSpellIDTospells": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/domains" }
+        },
+        "spellBookSpells": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/spellBookSpells" }
+        },
+        "taggedSpells": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/taggedSpells" }
+        }
+      }
+    },
+    "storages": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "integer" },
+        "maxBulkStorage": { "type": "number", "nullable": true },
+        "bulkIgnored": { "type": "number", "nullable": true },
+        "ignoreSelfBulkIfWearing": {
+          "type": "integer",
+          "default": 0,
+          "nullable": true
+        },
+        "items": {
+          "anyOf": [{ "$ref": "#/definitions/items" }, { "nullable": true }]
+        }
+      }
+    },
+    "taggedItems": {
+      "type": "object",
+      "properties": {
+        "items": { "$ref": "#/definitions/items" },
+        "tags": { "$ref": "#/definitions/tags" }
+      }
+    },
+    "taggedSpells": {
+      "type": "object",
+      "properties": {
+        "spells": { "$ref": "#/definitions/spells" },
+        "tags": { "$ref": "#/definitions/tags" }
+      }
+    },
+    "tags": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "integer" },
+        "name": { "type": "string", "nullable": true },
+        "description": { "type": "string", "nullable": true },
+        "isImportant": { "type": "integer", "default": 0, "nullable": true },
+        "isHidden": { "type": "integer", "default": 0, "nullable": true },
+        "isArchived": { "type": "integer", "default": 0, "nullable": true },
+        "homebrewBundles": {
+          "anyOf": [
+            { "$ref": "#/definitions/homebrewBundles" },
+            { "nullable": true }
+          ]
+        },
+        "ancestries": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/ancestries" }
+        },
+        "archetypes": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/archetypes" }
+        },
+        "classes": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/classes" }
+        },
+        "featTags": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/featTags" }
+        },
+        "taggedItems": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/taggedItems" }
+        },
+        "taggedSpells": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/taggedSpells" }
+        },
+        "taggedExtras": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/taggedExtras" }
+        },
+        "uniHeritages": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/uniHeritages" }
+        }
+      }
+    },
+    "uniHeritages": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "integer" },
+        "name": { "type": "string", "nullable": true },
+        "rarity": {
+          "type": "string",
+          "default": "COMMON",
+          "enum": ["COMMON", "UNCOMMON", "RARE", "UNIQUE"]
+        },
+        "description": { "type": "string", "nullable": true },
+        "code": { "type": "string", "nullable": true },
+        "artworkURL": { "type": "string", "nullable": true },
+        "isArchived": { "type": "integer", "default": 0, "nullable": true },
+        "contentSrc": { "type": "string", "default": "CRB" },
+        "version": { "type": "string", "nullable": true },
+        "homebrewBundles": {
+          "anyOf": [
+            { "$ref": "#/definitions/homebrewBundles" },
+            { "nullable": true }
+          ]
+        },
+        "tags": {
+          "anyOf": [{ "$ref": "#/definitions/tags" }, { "nullable": true }]
+        },
+        "characters": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/characters" }
+        },
+        "builds": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/builds" }
+        }
+      }
+    },
+    "userHomebrewBundles": {
+      "type": "object",
+      "properties": {
+        "homebrewBundles": { "$ref": "#/definitions/homebrewBundles" },
+        "users": { "$ref": "#/definitions/users" }
+      }
+    },
+    "users": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "integer" },
+        "googleID": { "type": "string" },
+        "redditID": { "type": "string" },
+        "username": { "type": "string" },
+        "thumbnail": { "type": "string", "nullable": true },
+        "isPatreonSupporter": {
+          "type": "integer",
+          "default": 0,
+          "nullable": true
+        },
+        "isPatreonMember": {
+          "type": "integer",
+          "default": 0,
+          "nullable": true
+        },
+        "isPatreonLegend": {
+          "type": "integer",
+          "default": 0,
+          "nullable": true
+        },
+        "isAdmin": { "type": "integer", "default": 0, "nullable": true },
+        "isDeveloper": { "type": "integer", "default": 0, "nullable": true },
+        "patreonUserID": { "type": "integer", "nullable": true },
+        "patreonFullName": { "type": "string", "nullable": true },
+        "patreonEmail": { "type": "string", "nullable": true },
+        "patreonAccessToken": { "type": "string", "nullable": true },
+        "patreonRefreshToken": { "type": "string", "nullable": true },
+        "enabledLightMode": {
+          "type": "integer",
+          "default": 0,
+          "nullable": true
+        },
+        "apiClientApps": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/apiClientApps" }
+        },
+        "characters": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/characters" }
+        },
+        "builds": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/builds" }
+        },
+        "homeBackReports": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/homeBackReports" }
+        },
+        "homebrewBundles": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/homebrewBundles" }
+        },
+        "userHomebrewBundles": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/userHomebrewBundles" }
+        },
+        "campaigns": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/campaigns" }
+        },
+        "campaignAccessTokens": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/campaignAccessTokens" }
+        }
+      }
+    },
+    "weapons": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "integer" },
+        "profName": { "type": "string", "nullable": true },
+        "diceNum": { "type": "integer", "nullable": true },
+        "dieType": {
+          "type": "string",
+          "enum": [
+            "EMPTY_ENUM_VALUE",
+            "d2",
+            "d4",
+            "d6",
+            "d8",
+            "d10",
+            "d12",
+            "d20",
+            "NONE"
+          ]
+        },
+        "damageType": { "type": "string", "nullable": true },
+        "category": {
+          "type": "string",
+          "enum": ["UNARMED", "SIMPLE", "MARTIAL", "ADVANCED"]
+        },
+        "isMelee": { "type": "integer", "nullable": true },
+        "meleeWeaponType": {
+          "type": "string",
+          "enum": [
+            "SWORD",
+            "AXE",
+            "CLUB",
+            "FLAIL",
+            "PICK",
+            "POLEARM",
+            "KNIFE",
+            "SHIELD",
+            "HAMMER",
+            "SPEAR",
+            "BRAWLING"
+          ],
+          "nullable": true
+        },
+        "isRanged": { "type": "integer", "nullable": true },
+        "rangedWeaponType": {
+          "type": "string",
+          "enum": [
+            "DART",
+            "BOW",
+            "CROSSBOW",
+            "FIREARM",
+            "SLING",
+            "BOMB",
+            "KNIFE"
+          ],
+          "nullable": true
+        },
+        "rangedRange": { "type": "integer", "nullable": true },
+        "rangedReload": { "type": "integer", "nullable": true },
+        "items": {
+          "anyOf": [{ "$ref": "#/definitions/items" }, { "nullable": true }]
+        }
+      }
+    },
+    "buildDataMappings": {
+      "type": "object",
+      "properties": {
+        "source": { "type": "string" },
+        "sourceType": { "type": "string" },
+        "sourceLevel": { "type": "integer" },
+        "sourceCode": { "type": "string" },
+        "sourceCodeSNum": { "type": "string" },
+        "value": { "type": "string", "nullable": true },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "nullable": true
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "nullable": true
+        },
+        "builds": { "$ref": "#/definitions/builds" }
+      }
+    },
+    "builds": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "integer" },
+        "name": { "type": "string", "nullable": true },
+        "description": { "type": "string", "nullable": true },
+        "contactInfo": { "type": "string", "nullable": true },
+        "isPublished": { "type": "boolean", "default": false },
+        "authorName": { "type": "string", "default": "Unknown" },
+        "artworkURL": { "type": "string", "nullable": true },
+        "finalStatsJSON": { "type": "string", "nullable": true },
+        "customCode": { "type": "string", "nullable": true },
+        "optionCustomCodeBlock": { "type": "boolean", "default": false },
+        "optionClassArchetypes": { "type": "boolean", "default": true },
+        "variantFreeArchetype": { "type": "boolean", "default": false },
+        "variantAncestryParagon": { "type": "boolean", "default": false },
+        "variantStamina": { "type": "boolean", "default": false },
+        "variantGradualAbilityBoosts": { "type": "boolean", "default": false },
+        "enabledSources": {
+          "type": "string",
+          "default": "[\"CRB\",\"ADV-PLAYER-GUIDE\",\"GM-GUIDE\"]"
+        },
+        "enabledHomebrew": { "type": "string", "default": "[null]" },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "nullable": true
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "nullable": true
+        },
+        "ancestries": {
+          "anyOf": [
+            { "$ref": "#/definitions/ancestries" },
+            { "nullable": true }
+          ]
+        },
+        "backgrounds": {
+          "anyOf": [
+            { "$ref": "#/definitions/backgrounds" },
+            { "nullable": true }
+          ]
+        },
+        "classes_builds_classIDToclasses": {
+          "anyOf": [{ "$ref": "#/definitions/classes" }, { "nullable": true }]
+        },
+        "classes_builds_classID_2Toclasses": {
+          "anyOf": [{ "$ref": "#/definitions/classes" }, { "nullable": true }]
+        },
+        "heritages": {
+          "anyOf": [{ "$ref": "#/definitions/heritages" }, { "nullable": true }]
+        },
+        "uniHeritages": {
+          "anyOf": [
+            { "$ref": "#/definitions/uniHeritages" },
+            { "nullable": true }
+          ]
+        },
+        "users": {
+          "anyOf": [{ "$ref": "#/definitions/users" }, { "nullable": true }]
+        },
+        "buildDataMappings": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/buildDataMappings" }
+        },
+        "characters": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/characters" }
+        }
+      }
+    }
+  },
+  "type": "object",
+  "properties": {
+    "accessTokens": { "$ref": "#/definitions/accessTokens" },
+    "ancestries": { "$ref": "#/definitions/ancestries" },
+    "ancestryBoosts": { "$ref": "#/definitions/ancestryBoosts" },
+    "ancestryFlaws": { "$ref": "#/definitions/ancestryFlaws" },
+    "ancestryLanguages": { "$ref": "#/definitions/ancestryLanguages" },
+    "animalCompanions": { "$ref": "#/definitions/animalCompanions" },
+    "apiClientApps": { "$ref": "#/definitions/apiClientApps" },
+    "archetypes": { "$ref": "#/definitions/archetypes" },
+    "armors": { "$ref": "#/definitions/armors" },
+    "backgrounds": { "$ref": "#/definitions/backgrounds" },
+    "calculatedStats": { "$ref": "#/definitions/calculatedStats" },
+    "campaignAccessTokens": { "$ref": "#/definitions/campaignAccessTokens" },
+    "campaigns": { "$ref": "#/definitions/campaigns" },
+    "characters": { "$ref": "#/definitions/characters" },
+    "charAnimalCompanions": { "$ref": "#/definitions/charAnimalCompanions" },
+    "charConditions": { "$ref": "#/definitions/charConditions" },
+    "charDataMappings": { "$ref": "#/definitions/charDataMappings" },
+    "charFamiliars": { "$ref": "#/definitions/charFamiliars" },
+    "classAbilities": { "$ref": "#/definitions/classAbilities" },
+    "classes": { "$ref": "#/definitions/classes" },
+    "conditions": { "$ref": "#/definitions/conditions" },
+    "damageTypes": { "$ref": "#/definitions/damageTypes" },
+    "domains": { "$ref": "#/definitions/domains" },
+    "classArchetypes": { "$ref": "#/definitions/classArchetypes" },
+    "creatures": { "$ref": "#/definitions/creatures" },
+    "damagetypes": { "$ref": "#/definitions/damagetypes" },
+    "familiarAbilities": { "$ref": "#/definitions/familiarAbilities" },
+    "feats": { "$ref": "#/definitions/feats" },
+    "featTags": { "$ref": "#/definitions/featTags" },
+    "extras": { "$ref": "#/definitions/extras" },
+    "taggedExtras": { "$ref": "#/definitions/taggedExtras" },
+    "heritages": { "$ref": "#/definitions/heritages" },
+    "homeBackgrounds": { "$ref": "#/definitions/homeBackgrounds" },
+    "homeBackReports": { "$ref": "#/definitions/homeBackReports" },
+    "homebrewBundleKeys": { "$ref": "#/definitions/homebrewBundleKeys" },
+    "homebrewBundles": { "$ref": "#/definitions/homebrewBundles" },
+    "innateSpellCastings": { "$ref": "#/definitions/innateSpellCastings" },
+    "inventories": { "$ref": "#/definitions/inventories" },
+    "invItems": { "$ref": "#/definitions/invItems" },
+    "itemRunes": { "$ref": "#/definitions/itemRunes" },
+    "items": { "$ref": "#/definitions/items" },
+    "languages": { "$ref": "#/definitions/languages" },
+    "noteFields": { "$ref": "#/definitions/noteFields" },
+    "physicalFeatures": { "$ref": "#/definitions/physicalFeatures" },
+    "senseTypes": { "$ref": "#/definitions/senseTypes" },
+    "sheetStates": { "$ref": "#/definitions/sheetStates" },
+    "shields": { "$ref": "#/definitions/shields" },
+    "skills": { "$ref": "#/definitions/skills" },
+    "books": { "$ref": "#/definitions/books" },
+    "specificFamiliars": { "$ref": "#/definitions/specificFamiliars" },
+    "spellBookSpells": { "$ref": "#/definitions/spellBookSpells" },
+    "spells": { "$ref": "#/definitions/spells" },
+    "storages": { "$ref": "#/definitions/storages" },
+    "taggedItems": { "$ref": "#/definitions/taggedItems" },
+    "taggedSpells": { "$ref": "#/definitions/taggedSpells" },
+    "tags": { "$ref": "#/definitions/tags" },
+    "uniHeritages": { "$ref": "#/definitions/uniHeritages" },
+    "userHomebrewBundles": { "$ref": "#/definitions/userHomebrewBundles" },
+    "users": { "$ref": "#/definitions/users" },
+    "weapons": { "$ref": "#/definitions/weapons" },
+    "buildDataMappings": { "$ref": "#/definitions/buildDataMappings" },
+    "builds": { "$ref": "#/definitions/builds" }
+  }
+}

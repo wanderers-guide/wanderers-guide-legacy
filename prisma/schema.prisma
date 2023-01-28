@@ -1632,3 +1632,9 @@ enum weapons_rangedWeaponType {
   BOMB
   KNIFE
 }
+
+
+generator jsonSchema {
+  provider = "prisma-json-schema-generator"
+  output = "./../api/schema"
+}

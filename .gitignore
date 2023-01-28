@@ -2,6 +2,7 @@ node_modules
 dist
 .jshintrc
 .env
+dev.env
 app.yaml
 TO-DO.txt
 redis-server.exe
