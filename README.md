@@ -39,7 +39,7 @@ You will need the following installed on your systems
 
 - [Node JS](https://nodejs.org/en/)
 - [Docker](https://www.docker.com/)
-- [sql data 1/20/23](https://drive.google.com/file/d/1mh3W1CKmnuuLso30gG8y9-f0PQrrqg0N/view)
+- [sql data 1/28/23](https://drive.google.com/file/d/1gLQsQc193FxbT_hOiBXdup3Jbl4L1PCN/view?usp=sharing)
 - NVM `npm i -g nvm` this is optional but lets you use a particular npm version with ease.
 - Update the .env file with socials or the dev.env file with socials (don't commit me)
 
