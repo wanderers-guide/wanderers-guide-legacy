@@ -239,7 +239,7 @@ router.get("/patreon/redirect", (req, res) => {
           isPatreonMember: 0,
           isPatreonLegend: 0,
           patreonUserID: patreonUserID,
-          patreonFullName: patreonName,
+          patreonFullName: Buffer.from(patreonName, 'utf-8').toString(),
           patreonEmail: patreonEmail,
           patreonAccessToken: token,
           patreonRefreshToken: refreshToken,
