@@ -1,10 +1,11 @@
 /* Copyright (C) 2021, Wanderer's Guide, all rights reserved.
     By Aaron Cassar.
 */
+let socket = io();
 
 const { PDFDocument } = PDFLib;
 
-export function setup(socket) {
+export function setup() {
   socket.on("returnCharExportPDFInfo", function (charInfo, extraData) {
     try {
       charExportGeneratePDF(charInfo, extraData);
@@ -24,11 +25,9 @@ export function getNumZeroIfNull(number) {
   return number != null ? number : 0;
 }
 
-export function initCharacterExportToPDF() {
-  $("#btn-export-to-pdf").click(function () {
-    startSpinnerSubLoader();
-    socket.emit("requestCharExportPDFInfo", activeModalCharID);
-  });
+export function initCharacterExportToPDF(activeModalCharID) {
+  startSpinnerSubLoader();
+  socket.emit("requestCharExportPDFInfo", activeModalCharID);
 }
 
 let g_featMap = null;
@@ -40,8 +39,6 @@ let g_featMap = null;
 async function charExportGeneratePDF(charInfo, extraData) {
   g_featMap = objToMap(extraData.featsObject);
 
-  console.log(charInfo);
-
   const formUrl = "/pdf/character_sheet.pdf";
   const formPdfBytes = await fetch(formUrl).then((res) => res.arrayBuffer());
 
@@ -50,8 +47,6 @@ async function charExportGeneratePDF(charInfo, extraData) {
   const form = pdfDoc.getForm();
 
   const profMap = objToMap(charInfo.profs);
-
-  console.log(profMap);
 
   const nameField = form.getTextField("Character Name");
   const playerNameField = form.getTextField("Player Name");
@@ -328,7 +323,6 @@ async function charExportGeneratePDF(charInfo, extraData) {
   const weap6SpeField = form.getTextField("undefined_3");
 
   let weapons = JSON.parse(charInfo.stats.weapons);
-  console.log(weapons);
   if (weapons.length >= 1) {
     weap1NameField.setText(weapons[0].Name);
     weap1HitBonusField.setText(weapons[0].Bonus);

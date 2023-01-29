@@ -442,12 +442,12 @@
 </template>
 
 <script setup lang="ts">
-import { onBeforeMount, onBeforeUnmount } from "vue";
+import { onMounted, onBeforeUnmount } from "vue";
 import { useCharacters } from "../../../stores/characters";
 import { useUser } from "../../../stores/user";
 import { setup, teardown } from "./../../../legacy-js/character-list.js";
 
-onBeforeMount(() => {
+onMounted(() => {
   setup();
 });
 

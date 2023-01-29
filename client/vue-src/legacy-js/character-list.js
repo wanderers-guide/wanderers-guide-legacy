@@ -7,6 +7,7 @@ import {
   initCharacterExportToPDF,
   setup as setupPopulatePdf,
 } from "./char_export/populate-pdf";
+import { exportCharacter, copyCharacter } from "./char_export/export-handler";
 
 let activeModalCharID = -1;
 let activeModalCharName = "";
@@ -108,7 +109,9 @@ export function setup() {
   }
 
   initCharacterExport();
-  initCharacterExportToPDF(); // <- PDF
+  $("#btn-export-to-pdf").click(function () {
+    initCharacterExportToPDF(activeModalCharID); // <- PDF
+  });
 }
 export function teardown() {
   //once we implement actual pages, this will need to be run to clean the state of this file
