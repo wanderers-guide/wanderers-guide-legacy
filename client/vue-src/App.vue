@@ -1,5 +1,5 @@
 <template>
-  <character-list></character-list>
+  <RouterView></RouterView>
 </template>
 
 <script setup lang="ts">

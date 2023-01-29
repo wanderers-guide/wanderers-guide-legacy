@@ -33,7 +33,7 @@
 
                   <div v-if="user" class="nav_characters">
                     <li class="mx-lg-4 mx-md-3 my-md-0 my-2">
-                      <a href="/profile/characters" class="active"
+                      <a href="/v/profile/characters" class="active"
                         >Characters</a
                       >
                     </li>
@@ -64,7 +64,7 @@
                     <a href="#" id="nav-profile-picture">
                       <object
                         class="profile-header-icon"
-                        data="user?.thumbnail"
+                        :data="user.thumbnail"
                         type="image/png"
                       >
                         <img
@@ -152,7 +152,7 @@
               Characters
             </h1>
             <span
-              v-if="!user.isPatreonMember"
+              v-if="!user?.isPatreonMember"
               class="is-size-5 ml-3 has-tooltip-bottom has-tooltip-multiline has-txt-listing"
               data-tooltip="You can only have up to six characters at once. To get unlimited characters, support us and what we're doing on Patreon!"
               >({{ characters.length }}/{{ characterLimit }})</span
@@ -223,11 +223,11 @@
             <div class="column is-4">
               <div
                 class="card character-card is-unselectable"
-                data-char-id="{{id}}"
-                data-char-name="{{name}}"
+                :data-char-id="character.id"
+                :data-char-name="character.name"
               >
                 <div class="card-content cursor-clickable pt-2">
-                  <a href="/profile/characters/{{id}}">
+                  <a :href="`/profile/characters/${character.id}`">
                     <span class="is-size-8 has-txt-noted char-id"
                       ># {{ character.id }}</span
                     >
@@ -440,8 +440,11 @@
     <span class="pf-icon"></span>
   </div>
 </template>
+
 <script setup lang="ts">
 import { onBeforeMount, onBeforeUnmount } from "vue";
+import { useCharacters } from "../../../stores/characters";
+import { useUser } from "../../../stores/user";
 import { setup, teardown } from "./../../../legacy-js/character-list.js";
 
 onBeforeMount(() => {
@@ -452,10 +455,15 @@ onBeforeUnmount(() => {
   teardown();
 });
 
+const userStore = useUser();
+const characterStore = useCharacters();
+
+const user = userStore.user;
+const characters = characterStore.characters;
+
 //data that we need to expose from the API:
-const user = { isPatreonMember: 0, isAdmin: false };
-const characterLimit = user.isPatreonMember ? Infinity : 6;
-const characters: any[] = [];
+const characterLimit = user?.isPatreonMember ? Infinity : 6;
 const canMakeCharacter = characters.length < characterLimit;
 </script>
+
 <style></style>

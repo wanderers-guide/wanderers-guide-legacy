@@ -5,6 +5,10 @@ const Sequelize = require("sequelize");
 const homebrewRoutes = require("./homebrew/homebrew-routes");
 const buildsRoutes = require("./builds/builds-routes");
 const gmToolsRoutes = require("./gm_tools/gm-tools-routes");
+const vueDataRoutes = require("./vue-data-routes");
+
+// Vue Data Route
+router.use("/vue-data", vueDataRoutes);
 
 // Home Route
 router.get("/", (req, res) => {
