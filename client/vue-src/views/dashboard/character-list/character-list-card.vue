@@ -48,10 +48,11 @@
           </span>
         </a>
         <a
-          class="card-footer-item character-card-delete has-txt-listing"
+          class="card-footer-item has-txt-listing"
+          @click="deleteModalOpen = true"
           style="overflow: hidden"
         >
-          <span class="character-card-delete-text is-size-6 pr-1">Delete</span>
+          <span class="is-size-6 pr-1">Delete</span>
           <span class="icon is-small">
             <i class="fas fa-sm fa-trash"></i>
           </span>
@@ -65,9 +66,26 @@
     :can-make-character="canMakeCharacter"
     v-model="characterOptionsModalOpen"
   ></character-list-options-modal>
+
+  <!-- Character Delete Modal -->
+  <w-g-modal v-model="deleteModalOpen" title="Delete Character">
+    <template #header>Delete Character</template>
+    <template #body>
+      <p class="has-txt-value-string has-text-centered">
+        Are you sure you want to delete this character?
+      </p>
+    </template>
+    <template #footer>
+      <a :href="`/profile/characters/delete/${character.id}`">
+        <w-g-button icon-class="fa-sm fa-trash">Delete</w-g-button>
+      </a>
+    </template>
+  </w-g-modal>
 </template>
 <script setup lang="ts">
 import characterListOptionsModal from "./character-list-options-modal.vue";
+import WGModal from "../../../components/WGModal.vue";
+import WGButton from "../../../components/WGButton.vue";
 import type { character } from "../../../stores/characters";
 import { ref } from "vue";
 
@@ -78,5 +96,6 @@ const props = defineProps<{
 }>();
 
 let characterOptionsModalOpen = ref(false);
+let deleteModalOpen = ref(false);
 </script>
 <style></style>

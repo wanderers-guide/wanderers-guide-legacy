@@ -155,7 +155,9 @@
               v-if="!user?.isPatreonMember"
               class="is-size-5 ml-3 has-tooltip-bottom has-tooltip-multiline has-txt-listing"
               data-tooltip="You can only have up to six characters at once. To get unlimited characters, support us and what we're doing on Patreon!"
-              >({{ characterStore.characters.length }}/{{ characterLimit }})</span
+              >({{ characterStore.characters.length }}/{{
+                characterLimit
+              }})</span
             >
           </div>
           <div class="column is-5 is-paddingless">
@@ -230,36 +232,6 @@
             <p class="has-text-centered is-italic">You have no characters.</p>
           </div>
         </div>
-      </div>
-    </div>
-
-    <!-- Character Delete Modal -->
-    <div class="modal modal-char-delete">
-      <div class="modal-background"></div>
-      <div class="modal-card">
-        <header class="modal-card-head">
-          <p
-            id="modal-char-delete-title"
-            class="modal-card-title is-size-4 has-txt-value-string"
-          >
-            Delete Character
-          </p>
-          <button class="delete modal-card-close" aria-label="close"></button>
-        </header>
-        <section class="modal-card-body">
-          <p class="has-txt-value-string has-text-centered">
-            Are you sure you want to delete this character?
-          </p>
-        </section>
-        <footer
-          class="modal-card-foot is-paddingless p-3 field is-grouped is-grouped-centered"
-        >
-          <p class="control">
-            <a class="button is-danger is-outlined" id="delete-confirmation-btn"
-              >Delete</a
-            >
-          </p>
-        </footer>
       </div>
     </div>
 
@@ -346,6 +318,7 @@ import { useCharacters } from "../../../stores/characters";
 import { useUser } from "../../../stores/user";
 import { setup, teardown } from "./../../../legacy-js/character-list.js";
 import characterListCard from "./character-list-card.vue";
+import WGModal from "../../../components/WGModal.vue";
 
 onMounted(() => {
   setup();
