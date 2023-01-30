@@ -155,7 +155,7 @@
               v-if="!user?.isPatreonMember"
               class="is-size-5 ml-3 has-tooltip-bottom has-tooltip-multiline has-txt-listing"
               data-tooltip="You can only have up to six characters at once. To get unlimited characters, support us and what we're doing on Patreon!"
-              >({{ characters.length }}/{{ characterLimit }})</span
+              >({{ characterStore.characters.length }}/{{ characterLimit }})</span
             >
           </div>
           <div class="column is-5 is-paddingless">
@@ -219,76 +219,14 @@
         <hr />
 
         <div class="columns is-centered is-multiline is-marginless mb-2">
-          <template v-for="character of characters">
-            <div class="column is-4">
-              <div
-                class="card character-card is-unselectable"
-                :data-char-id="character.id"
-                :data-char-name="character.name"
-              >
-                <div class="card-content cursor-clickable pt-2">
-                  <a :href="`/profile/characters/${character.id}`">
-                    <span class="is-size-8 has-txt-noted char-id"
-                      ># {{ character.id }}</span
-                    >
-                    <p
-                      class="is-size-5 has-txt-value-number text-overflow-ellipsis"
-                    >
-                      {{ character.name }}
-                    </p>
-                    <p class="is-size-7 pl-4 text-overflow-ellipsis">
-                      Lvl {{ character.level }} | {{ character.heritageName }}
-                      {{ character.className }}
-                    </p>
-                  </a>
-                </div>
-                <div class="card-footer is-paddingless">
-                  <a
-                    class="card-footer-item character-card-edit has-txt-listing"
-                  >
-                    <template v-if="character.isPlayable">
-                      <span class="character-card-edit-text is-size-6 pr-1"
-                        >Edit</span
-                      >
-                      <span class="icon is-small">
-                        <i class="fas fa-sm fa-edit"></i>
-                      </span>
-                    </template>
-                    <template v-else>
-                      <span class="character-card-edit-text is-size-6 pr-1"
-                        >Continue</span
-                      >
-                      <span class="icon is-small">
-                        <i class="fas fa-sm fa-wrench"></i>
-                      </span>
-                    </template>
-                  </a>
-                  <a
-                    class="card-footer-item character-card-options has-txt-listing"
-                  >
-                    <span class="character-card-options-text is-size-6 pr-1"
-                      >Options</span
-                    >
-                    <span class="icon is-small">
-                      <i class="fas fa-sm fa-ellipsis-h"></i>
-                    </span>
-                  </a>
-                  <a
-                    class="card-footer-item character-card-delete has-txt-listing"
-                    style="overflow: hidden"
-                  >
-                    <span class="character-card-delete-text is-size-6 pr-1"
-                      >Delete</span
-                    >
-                    <span class="icon is-small">
-                      <i class="fas fa-sm fa-trash"></i>
-                    </span>
-                  </a>
-                </div>
-              </div>
-            </div>
+          <template v-for="character in characterStore.characters">
+            <character-list-card
+              :character="character"
+              :can-make-character="canMakeCharacter"
+              :character-limit="characterLimit"
+            />
           </template>
-          <div v-if="characters.length === 0" class="column">
+          <div v-if="characterStore.characters.length === 0" class="column">
             <p class="has-text-centered is-italic">You have no characters.</p>
           </div>
         </div>
@@ -322,45 +260,6 @@
             >
           </p>
         </footer>
-      </div>
-    </div>
-
-    <!-- Character Options Modal -->
-    <div class="modal modal-char-options">
-      <div class="modal-background"></div>
-      <div class="modal-card">
-        <header class="modal-card-head">
-          <p class="modal-card-title is-size-4 has-txt-value-number">
-            Character Options
-          </p>
-          <button class="delete modal-card-close" aria-label="close"></button>
-        </header>
-        <section class="modal-card-body pb-3">
-          <div class="buttons is-centered">
-            <template></template>
-            <button
-              v-if="canMakeCharacter"
-              id="btn-duplicate-character"
-              class="button is-info"
-            >
-              <span>Create Copy</span
-              ><span class="icon"><i class="fas fa-user-friends"></i></span>
-            </button>
-            <button v-else class="button is-danger">
-              <span>Create Copy</span
-              ><span class="icon"><i class="fas fa-user-friends"></i></span>
-            </button>
-            <button id="btn-export-character" class="button is-info">
-              <span>Export</span
-              ><span class="icon"><i class="fas fa-download"></i></span>
-            </button>
-            <button id="btn-export-to-pdf" class="button is-info">
-              <span>Export to PDF</span
-              ><span class="icon"><i class="fas fa-file-pdf"></i></span>
-            </button>
-          </div>
-        </section>
-        <footer class="modal-card-foot"></footer>
       </div>
     </div>
 
@@ -442,10 +341,11 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, onBeforeUnmount } from "vue";
+import { onMounted, onBeforeUnmount, reactive } from "vue";
 import { useCharacters } from "../../../stores/characters";
 import { useUser } from "../../../stores/user";
 import { setup, teardown } from "./../../../legacy-js/character-list.js";
+import characterListCard from "./character-list-card.vue";
 
 onMounted(() => {
   setup();
@@ -459,11 +359,9 @@ const userStore = useUser();
 const characterStore = useCharacters();
 
 const user = userStore.user;
-const characters = characterStore.characters;
 
-//data that we need to expose from the API:
 const characterLimit = user?.isPatreonMember ? Infinity : 6;
-const canMakeCharacter = characters.length < characterLimit;
+const canMakeCharacter = characterStore.characters.length < characterLimit;
 </script>
 
 <style></style>

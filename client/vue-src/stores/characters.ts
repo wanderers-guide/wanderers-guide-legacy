@@ -1,7 +1,8 @@
 import axios from "axios";
 import { defineStore } from "pinia";
+import { reactive } from "vue";
 
-interface character {
+export interface character {
   id?: number;
   userID?: number;
   buildID?: null | number;
@@ -56,7 +57,7 @@ export const useCharacters = defineStore("characters", {
     characters: character[];
     isLoaded: boolean;
   } => ({
-    characters: [],
+    characters: reactive([]),
     isLoaded: false,
   }),
   actions: {
@@ -66,6 +67,14 @@ export const useCharacters = defineStore("characters", {
         this.characters = characterData.data?.characters;
         this.isLoaded = true;
       }
+    },
+    async reload() {
+      this.isLoaded = false;
+      await this.load();
+    },
+    async copy(character: character) {
+      await axios.post(`/vue-data/characters/${character.id}/copy`);
+      this.reload();
     },
   },
 });

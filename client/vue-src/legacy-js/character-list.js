@@ -4,7 +4,7 @@
 import "./build_planner/ui-handler";
 import { isTabletView } from "./general-utils";
 import {
-  initCharacterExportToPDF,
+  initCharacterExportToPDF as initCharacterExportToPDFInternal,
   setup as setupPopulatePdf,
 } from "./char_export/populate-pdf";
 import { exportCharacter, copyCharacter } from "./char_export/export-handler";
@@ -98,19 +98,17 @@ export function setup() {
     activeModalCharName = "";
   });
 
-  $("#delete-confirmation-btn").click(function () {
-    window.location.href = "/profile/characters/delete/" + activeModalCharID;
-  });
-
   if ($("#icon-character-import").length) {
     // If icon-character-import exists, AKA has permissions
     initCharacterImport();
     initCharacterCopy();
   }
 
-  initCharacterExport();
   $("#btn-export-to-pdf").click(function () {
     initCharacterExportToPDF(activeModalCharID); // <- PDF
+  });
+  $("#btn-export-character").click(function () {
+    initCharacterExport(activeModalCharID); // <- PDF
   });
 }
 export function teardown() {
@@ -152,10 +150,11 @@ socket.on("returnCharImport", function () {
 });
 
 // ~~~~~ Character Export ~~~~~ //
-function initCharacterExport() {
-  $("#btn-export-character").click(function () {
-    exportCharacter(activeModalCharID);
-  });
+export function initCharacterExport(charID) {
+  exportCharacter(charID ?? activeModalCharIDactiveModalCharID);
+}
+export function initCharacterExportToPDF(charID) {
+  initCharacterExportToPDFInternal(charID ?? activeModalCharID);
 }
 
 // ~~~~~ Character Copy ~~~~~ //

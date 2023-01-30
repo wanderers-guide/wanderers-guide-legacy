@@ -7,6 +7,7 @@ const { PDFDocument } = PDFLib;
 
 export function setup() {
   socket.on("returnCharExportPDFInfo", function (charInfo, extraData) {
+    console.log(charInfo, extraData);
     try {
       charExportGeneratePDF(charInfo, extraData);
     } catch (err) {

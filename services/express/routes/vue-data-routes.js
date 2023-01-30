@@ -7,6 +7,9 @@ const Class = require("../models/contentDB/Class");
 const Ancestry = require("../models/contentDB/Ancestry");
 const Heritage = require("../models/contentDB/Heritage");
 const UniHeritage = require("../models/contentDB/UniHeritage");
+const User = require("../models/contentDB/User");
+const CharExport = require("./../js/CharExport");
+const CharImport = require("./../js/CharImport");
 
 router.get("/user", async (req, res) => {
   try {
@@ -84,6 +87,34 @@ router.get("/characters", async (req, res) => {
       title: "500 Server Error - Wanderer's Guide",
       user: req.user,
     });
+  }
+});
+router.post("/characters/:charID/copy", async function (req, res) {
+  const charID = Number(req.params.charID);
+  if (isNaN(charID)) {
+    return res.status(400).send("Invalid Request!");
+  }
+  const userID = req.user.id;
+  if (!userID || userID < 0) {
+    return res.status(401).send("Unauthorized");
+  }
+
+  const charExportData = await CharExport.getExportData(userID, charID);
+
+  const user = await User.findOne({ where: { id: userID } });
+  const characters = await Character.findAll({
+    where: { userID: userID, id: charID },
+  });
+
+  if (characters.length && CharStateUtils.canMakeCharacter(user, characters)) {
+    CharImport.processImport(
+      user.id,
+      JSON.parse(JSON.stringify(charExportData)),
+    ).then((result) => {
+      res.status(200).send("Ok!");
+    });
+  } else {
+    return res.status(401).send("Unauthorized");
   }
 });
 module.exports = router;

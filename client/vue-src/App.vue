@@ -1,4 +1,5 @@
 <template>
+  <div id="modal-root"></div>
   <RouterView></RouterView>
 </template>
 
@@ -7,4 +8,8 @@ import CharacterList from "./views/dashboard/character-list/character-list.vue";
 </script>
 
 <style scoped>
+#modal-root {
+  width: 0;
+  height: 0;
+}
 </style>
