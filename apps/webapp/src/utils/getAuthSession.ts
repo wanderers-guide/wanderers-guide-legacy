@@ -1,11 +1,9 @@
-import { getSession } from "@auth/solid-start";
-import { createServerData$ } from "solid-start/server";
-import { authOpts } from "~/routes/api/auth/[...solidAuth]";
+import { createRouteData } from "solid-start";
 
 export const getAuthSession = () => {
-  return createServerData$(
-    async (_, { request }) => {
-      return await getSession(request, authOpts);
+  return createRouteData(
+    async (_, {}) => {
+      return { user: { name: "Ben Chidlow" } };
     },
     { key: () => ["auth_user"] },
   );

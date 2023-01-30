@@ -37,6 +37,7 @@ const profileRoutes = require("./routes/profile-routes");
 const mloadsRoutes = require("./routes/mloads/mloads-routes");
 const coreRoutes = require("./routes/core-routes");
 const errorRoutes = require("./routes/error-routes");
+const profileCharacterAPI = require("./routes/api/profile/characters");
 
 const SocketConnections = require("./js/SocketConnections");
 
@@ -225,6 +226,7 @@ app.use(function (req, res, next) {
 });
 
 // Set up Routes
+app.use("/api/profile/characters", profileCharacterAPI);
 app.use("/auth", authRoutes);
 app.use("/profile", profileRoutes);
 app.use("/admin", adminRoutes);

@@ -15,12 +15,11 @@
     "vite": "^3.2.5"
   },
   "dependencies": {
-    "@auth/core": "^0.3.0",
-    "@auth/solid-start": "^0.1.0",
     "@solidjs/meta": "^0.28.2",
     "@solidjs/router": "^0.7.0",
     "solid-js": "^1.6.9",
     "solid-start": "^0.2.15",
+    "solid-start-static": "^0.2.17",
     "undici": "^5.15.1"
   },
   "engines": {

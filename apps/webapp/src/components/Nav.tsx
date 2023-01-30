@@ -1,4 +1,3 @@
-import { signIn, signOut } from "@auth/solid-start/client";
 import { A } from "solid-start";
 import { getAuthSession } from "~/utils/getAuthSession";
 
@@ -12,30 +11,28 @@ export default function Nav() {
 
       <ul class="flex-1 container flex items-center gap-4">
         <li>
-          <A href="/" class="text-zinc-400 hover:text-white">
+          <a href="/" class="text-zinc-400 hover:text-white">
             Home
-          </A>
+          </a>
         </li>
 
         {user() ? (
           <>
             <li>
-              <A href="/characters" class="text-zinc-400 hover:text-white">
+              <A
+                href="/profile/characters"
+                class="text-zinc-400 hover:text-white"
+              >
                 My Charaters
               </A>
             </li>
             <li>
-              <A href="/gm-tools" class="text-zinc-400 hover:text-white">
+              <a href="/gm-tools" class="text-zinc-400 hover:text-white">
                 GM Tools
-              </A>
+              </a>
             </li>
             <li class="ml-auto">
-              <button
-                class="text-zinc-400 hover:text-white"
-                onClick={() => {
-                  signOut();
-                }}
-              >
+              <button class="text-zinc-400 hover:text-white" onClick={() => {}}>
                 Logout
               </button>
             </li>
@@ -43,12 +40,7 @@ export default function Nav() {
         ) : (
           <>
             <li class="ml-auto">
-              <button
-                class="text-zinc-400 hover:text-white"
-                onClick={() => {
-                  signIn();
-                }}
-              >
+              <button class="text-zinc-400 hover:text-white" onClick={() => {}}>
                 Login
               </button>
             </li>

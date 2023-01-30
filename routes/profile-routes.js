@@ -30,6 +30,6 @@ router.get("/", authCheck, (req, res) => {
   });
 });
 
-router.use("/characters", authCheck, charRoutes);
+router.use("/characters", charRoutes);
 
 module.exports = router;

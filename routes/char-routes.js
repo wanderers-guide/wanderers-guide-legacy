@@ -1,87 +1,20 @@
 const router = require("express").Router();
+const express = require("express");
 const charbuilderRoutes = require("./charbuilder-routes");
 const chardeleteRoutes = require("./chardelete-routes");
 const charsheetRoutes = require("./charsheet-routes");
 
-const Character = require("../models/contentDB/Character");
-
 const CharSaving = require("../js/CharSaving");
-const CharStateUtils = require("../js/CharStateUtils");
+const path = require("path");
 
-const Class = require("../models/contentDB/Class");
-const Ancestry = require("../models/contentDB/Ancestry");
-const Heritage = require("../models/contentDB/Heritage");
-const UniHeritage = require("../models/contentDB/UniHeritage");
+const solidPath = path.join(__dirname, "../apps/webapp/dist/public");
 
 router.get("/", (req, res) => {
-  Character.findAll({ where: { userID: req.user.id } })
-    .then((characters) => {
-      Class.findAll().then((classes) => {
-        Heritage.findAll().then((heritages) => {
-          UniHeritage.findAll().then((uniHeritages) => {
-            Ancestry.findAll().then((ancestries) => {
-              for (let character of characters) {
-                let cClass = classes.find((cClass) => {
-                  return cClass.id == character.classID;
-                });
-                character.className = cClass != null ? cClass.name : "";
-
-                if (character.heritageID != null) {
-                  let heritage = heritages.find((heritage) => {
-                    return heritage.id == character.heritageID;
-                  });
-                  if (heritage != null) {
-                    character.heritageName = heritage.name;
-                  }
-                } else if (character.uniHeritageID != null) {
-                  let heritageName = "";
-                  let uniHeritage = uniHeritages.find((uniHeritage) => {
-                    return uniHeritage.id == character.uniHeritageID;
-                  });
-                  if (uniHeritage != null) {
-                    heritageName = uniHeritage.name;
-                  }
-
-                  let ancestry = ancestries.find((ancestry) => {
-                    return ancestry.id == character.ancestryID;
-                  });
-                  heritageName += ancestry != null ? " " + ancestry.name : "";
-                  character.heritageName = heritageName;
-                } else {
-                  let ancestry = ancestries.find((ancestry) => {
-                    return ancestry.id == character.ancestryID;
-                  });
-                  character.heritageName =
-                    ancestry != null ? ancestry.name : "";
-                }
-
-                character.isPlayable = CharStateUtils.isPlayable(character);
-              }
-
-              res.render("pages/character_list", {
-                title: "Your Characters - Wanderer's Guide",
-                user: req.user,
-                characters,
-                canMakeCharacter: CharStateUtils.canMakeCharacter(
-                  req.user,
-                  characters,
-                ),
-                characterLimit: CharStateUtils.getUserCharacterLimit(),
-              });
-            });
-          });
-        });
-      });
-    })
-    .catch((error) => {
-      console.error(error);
-      res.status(500);
-      res.render("error/500_error", {
-        title: "500 Server Error - Wanderer's Guide",
-        user: req.user,
-      });
-    });
+  res.setHeader("Content-Type", "text/html");
+  res.sendFile(path.join(solidPath, "index.html"));
 });
+
+router.use("/assets", express.static(path.join(solidPath, "assets")));
 
 router.get("/add", (req, res) => {
   CharSaving.createNewCharacter(req.user).then((character) => {
