@@ -106,7 +106,8 @@ function handlePatreonAccess(req, res) {
               res.render("error/patreon_link_error", {
                 title: "Account Linking Error - Wanderer's Guide",
                 user: req.user,
-                error: 'Patreon - Invalid Access Token - ISSUE - No RefreshToken',
+                error:
+                  "Patreon - Invalid Access Token - ISSUE - No RefreshToken",
               });
             },
           );
@@ -239,7 +240,7 @@ router.get("/patreon/redirect", (req, res) => {
           isPatreonMember: 0,
           isPatreonLegend: 0,
           patreonUserID: patreonUserID,
-          patreonFullName: Buffer.from(patreonName, 'utf-8').toString(),
+          patreonFullName: Buffer.from(patreonName, "utf-8").toString(),
           patreonEmail: patreonEmail,
           patreonAccessToken: token,
           patreonRefreshToken: refreshToken,
@@ -328,7 +329,7 @@ function attemptAccessTokenRefresh(res, userID, refreshToken) {
         res.render("error/patreon_link_error", {
           title: "Account Linking Error - Wanderer's Guide",
           user: req.user,
-          error: 'Patreon - Invalid Access Token - ISSUE - Failed to Refresh',
+          error: "Patreon - Invalid Access Token - ISSUE - Failed to Refresh",
         });
       });
     });

@@ -9,6 +9,3 @@ node_modules
 dist
 .jshintrc
 .env
-
-# Dont mess with package stuff
-package*.json

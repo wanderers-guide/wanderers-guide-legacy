@@ -1485,12 +1485,11 @@ module.exports = class SocketConnections {
       socket.on("requestUnselectedDataClear", function (charID) {
         AuthCheck.canEditCharacter(userID, charID).then((canEditChar) => {
           if (canEditChar) {
-            CharDataMapping.deleteDataBySource(
-              charID,
-              "unselectedData",
-            ).then((result) => {
-              socket.emit("returnUnselectedDataClear");
-            });
+            CharDataMapping.deleteDataBySource(charID, "unselectedData").then(
+              (result) => {
+                socket.emit("returnUnselectedDataClear");
+              },
+            );
           }
         });
       });
