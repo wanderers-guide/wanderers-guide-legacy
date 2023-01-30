@@ -27,7 +27,7 @@ services:
     links:
       - mysql
     env_file:
-      - dev.env
+      - .env
     depends_on:
       mysql:
         condition: service_healthy
