@@ -3,7 +3,7 @@ import { createRouteData } from "solid-start";
 export const getAuthSession = () => {
   return createRouteData(
     async (_, {}) => {
-      return { user: { name: "Ben Chidlow" } };
+      return { user: { name: "fez" } };
     },
     { key: () => ["auth_user"] },
   );

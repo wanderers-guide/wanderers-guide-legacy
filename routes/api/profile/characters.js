@@ -9,7 +9,16 @@ const CharStateUtils = require("../../../js/CharStateUtils");
 
 const router = express.Router();
 
-router.get("/", async (req, res) => {
+const authCheck = (req, res, next) => {
+  let rSheetPageMatch = req.originalUrl.match(/\/profile\/characters\/\d+$/);
+  if (!req.user && rSheetPageMatch == null) {
+    res.redirect("/auth/login");
+  } else {
+    next();
+  }
+};
+
+router.get("/", authCheck, async (req, res) => {
   let [charactersRaw, classes, heritages, uniHeritages, ancestries] =
     await Promise.all([
       Character.findAll({
@@ -21,8 +30,8 @@ router.get("/", async (req, res) => {
       Ancestry.findAll(),
     ]);
 
-  let characters = charactersRaw.map((raw) => {
-    let character = raw.dataValues;
+  const characters = charactersRaw.map((raw) => {
+    const character = raw.dataValues;
 
     let cClass = classes.find((cClass) => {
       return cClass.id == character.classID;

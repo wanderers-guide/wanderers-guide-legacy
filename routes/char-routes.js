@@ -14,8 +14,6 @@ router.get("/", (req, res) => {
   res.sendFile(path.join(solidPath, "index.html"));
 });
 
-router.use("/assets", express.static(path.join(solidPath, "assets")));
-
 router.get("/add", (req, res) => {
   CharSaving.createNewCharacter(req.user).then((character) => {
     if (character != null) {

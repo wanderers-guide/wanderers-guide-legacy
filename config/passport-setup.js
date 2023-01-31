@@ -98,10 +98,11 @@ passport.use(
         process.env.NODE_ENV === "production"
           ? keys.reddit.clientSecret
           : keys.reddit_dev.clientSecret,
-      callbackURL: `${process.env.NODE_ENV === "production"
-        ? "https://wanderersguide.app"
-        : "http://localhost:3000"
-        }/auth/reddit/redirect`,
+      callbackURL: `${
+        process.env.NODE_ENV === "production"
+          ? "https://wanderersguide.app"
+          : `http://localhost:${process.env.PORT}`
+      }/auth/reddit/redirect`,
     },
     (accessToken, refreshToken, profile, done) => {
       // Check if user exists in database

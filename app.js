@@ -225,7 +225,10 @@ app.use(function (req, res, next) {
     });
 });
 
+const solidPath = path.join(__dirname, "./apps/webapp/dist/public");
+
 // Set up Routes
+app.use("/assets", express.static(path.join(solidPath, "assets")));
 app.use("/api/profile/characters", profileCharacterAPI);
 app.use("/auth", authRoutes);
 app.use("/profile", profileRoutes);
