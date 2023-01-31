@@ -7,7 +7,7 @@ const charsheetRoutes = require("./charsheet-routes");
 const CharSaving = require("../js/CharSaving");
 const path = require("path");
 
-const solidPath = path.join(__dirname, "../apps/webapp/dist/public");
+const solidPath = path.join(__dirname, "../dist/public");
 
 router.get("/", (req, res) => {
   res.setHeader("Content-Type", "text/html");

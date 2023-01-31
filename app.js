@@ -225,7 +225,7 @@ app.use(function (req, res, next) {
     });
 });
 
-const solidPath = path.join(__dirname, "./apps/webapp/dist/public");
+const solidPath = path.join(__dirname, "./dist/public");
 
 // Set up Routes
 app.use("/assets", express.static(path.join(solidPath, "assets")));

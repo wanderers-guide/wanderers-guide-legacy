@@ -7,7 +7,10 @@
     "start": "NODE_ENV=production node app.js",
     "dev": "NODE_ENV=development nodemon app.js",
     "build": "npx prisma generate",
-    "format": "npx prettier --write ."
+    "format": "npx prettier --write .",
+    "solid:dev": "solid-start dev",
+    "solid:build": "solid-start build",
+    "solid:start": "solid-start start"
   },
   "author": "Aaron Cassar",
   "license": "GNU",
@@ -48,7 +51,13 @@
     "rate-limiter-flexible": "^2.1.10",
     "sequelize": "^5.21.6",
     "serve-favicon": "^2.5.0",
-    "socket.io": "^2.3.0"
+    "socket.io": "^2.3.0",
+    "@solidjs/meta": "^0.28.2",
+    "@solidjs/router": "^0.7.0",
+    "solid-js": "^1.6.9",
+    "solid-start": "^0.2.15",
+    "solid-start-static": "^0.2.17",
+    "undici": "^5.15.1"
   },
   "devDependencies": {
     "concurrently": "^7.2.1",
@@ -56,11 +65,15 @@
     "handlebars": "4.5.3",
     "ncp": "^2.0.0",
     "nodemon": "^2.0.2",
-    "prettier": "2.8.3"
+    "prettier": "2.8.3",
+    "autoprefixer": "^10.4.13",
+    "postcss": "^8.4.21",
+    "solid-start-node": "^0.2.15",
+    "tailwindcss": "^3.2.4",
+    "typescript": "^4.9.4",
+    "vite": "^3.2.5"
   },
-  "workspaces": {
-    "packages": [
-      "apps"
-    ]
+  "engines": {
+    "node": ">=16"
   }
 }
