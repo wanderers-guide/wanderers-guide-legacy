@@ -28,7 +28,7 @@ router.get("/user", async (req, res) => {
 router.get("/characters", async (req, res) => {
   // this is essentially the characters_list endpoint below, but just delivering data instead of a handlebars templateCharacter.findAll({ where: { userID: req.user.id } })
   try {
-    const [characters, classes, heritages, uniheritages, ancestries] =
+    const [characters, classes, heritages, uniHeritages, ancestries] =
       await Promise.all([
         Character.findAll({ where: { userID: req.user.id }, raw: true }),
         Class.findAll({ raw: true }),
