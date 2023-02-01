@@ -228,9 +228,24 @@ function parseCreatureData(importData) {
 
     data.hpMax = importData.system.attributes.hp.max;
     data.hpDetails = importData.system.attributes.hp.details;
-    data.immunitiesJSON = JSON.stringify(importData.system.traits.di.value);
-    data.weaknessesJSON = JSON.stringify(importData.system.traits.dv);
-    data.resistancesJSON = JSON.stringify(importData.system.traits.dr);
+
+    if(importData.system.attributes.immunities){
+      data.immunitiesJSON = JSON.stringify(importData.system.attributes.immunities.map((i) => {
+        return i.type;
+      }));
+    } else {
+      data.immunitiesJSON = JSON.stringify([]);
+    }
+    if(importData.system.attributes.weaknesses){
+      data.weaknessesJSON = JSON.stringify(importData.system.attributes.weaknesses);
+    } else {
+      data.weaknessesJSON = JSON.stringify([]);
+    }
+    if(importData.system.attributes.resistances){
+      data.resistancesJSON = JSON.stringify(importData.system.attributes.resistances);
+    } else {
+      data.resistancesJSON = JSON.stringify([]);
+    }
 
     let defensiveAbilities = importData.items.filter((item) => {
         return item.type == `action` && item.system.actionCategory.value == `defensive`;
