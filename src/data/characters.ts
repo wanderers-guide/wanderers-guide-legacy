@@ -1,6 +1,6 @@
 import { createRouteData } from "solid-start";
 
-interface Character {
+export interface Character {
   id: number;
   userId: number;
   name: string;
@@ -10,7 +10,7 @@ interface Character {
   className: string;
 }
 
-export const charactersData = () => {
+export const getCharactersData = () => {
   return createRouteData(async () => {
     const result = await fetch("/api/profile/characters");
     const data = await result.json();
