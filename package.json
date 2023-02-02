@@ -7,7 +7,8 @@
         "start": "NODE_ENV=production node app.js",
         "dev": "NODE_ENV=development nodemon app.js",
         "build": "npx prisma generate",
-        "format": "npx prettier --write ."
+        "format": "npx prettier --write .",
+        "docker:mysql": "docker-compose up --build mysql"
     },
     "author": "Aaron Cassar",
     "license": "GNU",
@@ -26,6 +27,7 @@
         "bulma-switch": "^2.0.0",
         "bulma-tagsinput": "^2.0.0",
         "bulma-tooltip": "^3.0.2",
+        "compression": "^1.7.4",
         "cookie-parser": "^1.4.6",
         "cookie-session": "^2.0.0",
         "cool-checkboxes-for-bulma.io": "^1.1.0",
