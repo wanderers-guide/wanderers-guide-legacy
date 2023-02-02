@@ -1,42 +1,59 @@
-{{#section 'header'}}
-<link rel="stylesheet" href="/css/homebrew-builders.css">
-<script type="text/javascript" src="/js/confirm-page-leave.js"></script>
-<script type="text/javascript" src="/js/homebrew/builder/creature/builder-creature.js"></script>
-{{#if creatureID}}
-<script type="text/javascript" src="/js/homebrew/builder/creature/editor-creature.js"></script>
-{{/if}}
+{{#section "styles"}}
+  <link rel="stylesheet" href="/css/homebrew-builders.css" />
 {{/section}}
 
-{{#section 'nav_home'}}
-<li><a href="/">Home</a></li>
+{{#section "header"}}
+  <script type="text/javascript" src="/js/confirm-page-leave.js"></script>
+  <script
+    type="text/javascript"
+    src="/js/homebrew/builder/creature/builder-creature.js"
+  ></script>
+  {{#if creatureID}}
+    <script
+      type="text/javascript"
+      src="/js/homebrew/builder/creature/editor-creature.js"
+    ></script>
+  {{/if}}
 {{/section}}
 
-{{#section 'nav_characters'}}
-<li class="mx-lg-4 mx-md-3 my-md-0 my-2"><a href="/profile/characters">Characters</a></li>
+{{#section "nav_home"}}
+  <li><a href="/">Home</a></li>
 {{/section}}
 
-{{#section 'nav_builds'}}
-<li><a href="/builds">Builds</a></li>
+{{#section "nav_characters"}}
+  <li class="mx-lg-4 mx-md-3 my-md-0 my-2"><a
+      href="/profile/characters"
+    >Characters</a></li>
 {{/section}}
 
-{{#section 'nav_homebrew'}}
-<li class="mx-lg-4 mx-md-3 my-md-0 my-2"><a href="/homebrew" class="active">Homebrew</a></li>
+{{#section "nav_builds"}}
+  <li><a href="/builds">Builds</a></li>
 {{/section}}
 
-{{#section 'nav_gm_tools'}}
-<li><a href="/gm-tools">GM Tools</a></li>
+{{#section "nav_homebrew"}}
+  <li class="mx-lg-4 mx-md-3 my-md-0 my-2"><a
+      href="/homebrew"
+      class="active"
+    >Homebrew</a></li>
 {{/section}}
 
-{{#section 'nav_browse'}}
-<li class="mx-lg-4 mx-md-3 my-md-0 my-2"><a href="/browse"><i class="fas fa-lg fa-search"></i></a></li>
+{{#section "nav_gm_tools"}}
+  <li><a href="/gm-tools">GM Tools</a></li>
 {{/section}}
 
-{{#section 'nav_login'}}
-<li class="mr-4"><a href="/auth/login">Login <i class="fas fa-sign-in-alt"></i></a></li>
+{{#section "nav_browse"}}
+  <li class="mx-lg-4 mx-md-3 my-md-0 my-2"><a href="/browse"><i
+        class="fas fa-lg fa-search"
+      ></i></a></li>
 {{/section}}
 
-{{#section 'banner_nav'}}
-<div class="banner_w3lspvt-2"></div>
+{{#section "nav_login"}}
+  <li class="mr-4"><a href="/auth/login">Login
+      <i class="fas fa-sign-in-alt"></i></a></li>
+{{/section}}
+
+{{#section "banner_nav"}}
+  <div class="banner_w3lspvt-2"></div>
 {{/section}}
 
 <div class="pageloader">
@@ -56,8 +73,13 @@
   <h1 class="title is-2 has-txt-value-number has-text-centered">Creature Builder</h1>
 </div>
 
-<div id="builder-container" data-user-id="{{user.id}}" data-bundle-id="{{bundleID}}" data-creature-id="{{creatureID}}"
-  class="columns is-mobile is-centered mt-2 mb-3">
+<div
+  id="builder-container"
+  data-user-id="{{user.id}}"
+  data-bundle-id="{{bundleID}}"
+  data-creature-id="{{creatureID}}"
+  class="columns is-mobile is-centered mt-2 mb-3"
+>
   <div class="column is-10 is-vertical">
 
     <div class="">
@@ -67,10 +89,14 @@
         <div class="field">
           <label class="label">Name</label>
           <div class="control">
-            <input id="inputName" class="input" type="text" autocomplete="off">
+            <input
+              id="inputName"
+              class="input"
+              type="text"
+              autocomplete="off"
+            />
           </div>
         </div>
-
 
         <div class="columns">
 
@@ -167,11 +193,11 @@
 
         </div>
 
-        <div class="  ">
+        <div class="">
           <label class="label">Traits</label>
           <select id="inputTags" data-placeholder="Select Traits" multiple>
             {{#each tags}}
-            <option value="{{id}}">{{name}}</option>
+              <option value="{{id}}">{{name}}</option>
             {{/each}}
           </select>
         </div>
@@ -179,31 +205,52 @@
         <div class="field">
           <label class="label">Family Group</label>
           <div class="control">
-            <input class="input" id="inputFamilyType" type="text" maxlength="120" placeholder="eg. Humanoid">
+            <input
+              class="input"
+              id="inputFamilyType"
+              type="text"
+              maxlength="120"
+              placeholder="eg. Humanoid"
+            />
           </div>
         </div>
 
-        <hr class="m-2">
+        <hr class="m-2" />
 
         <div class="field">
           <label class="label">Perception Bonus</label>
           <div class="control">
-            <input id="inputPerceptionBonus" class="input" type="number" value="5">
+            <input
+              id="inputPerceptionBonus"
+              class="input"
+              type="number"
+              value="5"
+            />
           </div>
         </div>
 
         <div class="field">
           <label class="label">Senses</label>
           <div class="control">
-            <input class="input" id="inputSenses" type="text" maxlength="450" placeholder="eg. darkvision">
+            <input
+              class="input"
+              id="inputSenses"
+              type="text"
+              maxlength="450"
+              placeholder="eg. darkvision"
+            />
           </div>
         </div>
 
-        <div class="  ">
+        <div class="">
           <label class="label">Languages</label>
-          <select id="inputLanguages" data-placeholder="Select Languages" multiple>
+          <select
+            id="inputLanguages"
+            data-placeholder="Select Languages"
+            multiple
+          >
             {{#each languages}}
-            <option value="{{id}}">{{name}}</option>
+              <option value="{{id}}">{{name}}</option>
             {{/each}}
           </select>
         </div>
@@ -211,11 +258,17 @@
         <div class="field">
           <label class="label">Extra Languages</label>
           <div class="control">
-            <input class="input" id="inputLanguagesCustom" type="text" maxlength="600" placeholder="eg. Tongues">
+            <input
+              class="input"
+              id="inputLanguagesCustom"
+              type="text"
+              maxlength="600"
+              placeholder="eg. Tongues"
+            />
           </div>
         </div>
 
-        <hr class="m-2">
+        <hr class="m-2" />
 
         <!-- Skills entry -->
 
@@ -227,20 +280,32 @@
 
           <div id="skillLayout" class="card mb-2 creatureSkill is-hidden">
             <div class="card-header cursor-clickable">
-              <p class="card-header-title is-paddingless has-txt-value-number is-size-5">Skill</p>
-              <a class="card-header-icon is-paddingless mt-1 delete is-medium"></a>
+              <p
+                class="card-header-title is-paddingless has-txt-value-number is-size-5"
+              >Skill</p>
+              <a
+                class="card-header-icon is-paddingless mt-1 delete is-medium"
+              ></a>
             </div>
             <div class="card-content columns is-marginless">
               <div class="field column is-paddingless">
                 <label class="label">Name</label>
                 <div class="control">
-                  <input class="input inputSkillName" type="text" placeholder="e.g. Arcana">
+                  <input
+                    class="input inputSkillName"
+                    type="text"
+                    placeholder="e.g. Arcana"
+                  />
                 </div>
               </div>
               <div class="field column is-paddingless pl-2">
                 <label class="label">Bonus</label>
                 <div class="control">
-                  <input class="input inputSkillBonus" type="number" value="0">
+                  <input
+                    class="input inputSkillBonus"
+                    type="number"
+                    value="0"
+                  />
                 </div>
               </div>
             </div>
@@ -248,7 +313,7 @@
 
         </div>
 
-        <hr class="m-2">
+        <hr class="m-2" />
 
         <!-- Items entry -->
 
@@ -260,20 +325,32 @@
 
           <div id="itemLayout" class="card mb-2 creatureItem is-hidden">
             <div class="card-header cursor-clickable">
-              <p class="card-header-title is-paddingless has-txt-value-number is-size-5">Item</p>
-              <a class="card-header-icon is-paddingless mt-1 delete is-medium"></a>
+              <p
+                class="card-header-title is-paddingless has-txt-value-number is-size-5"
+              >Item</p>
+              <a
+                class="card-header-icon is-paddingless mt-1 delete is-medium"
+              ></a>
             </div>
             <div class="card-content columns is-marginless">
               <div class="field column is-paddingless">
                 <label class="label">Name</label>
                 <div class="control">
-                  <input class="input inputItemDisplayName" type="text" placeholder="e.g. Greatsword">
+                  <input
+                    class="input inputItemDisplayName"
+                    type="text"
+                    placeholder="e.g. Greatsword"
+                  />
                 </div>
               </div>
               <div class="field column is-paddingless pl-2">
                 <label class="label">Quantity</label>
                 <div class="control">
-                  <input class="input inputItemQuantity" type="number" value="1">
+                  <input
+                    class="input inputItemQuantity"
+                    type="number"
+                    value="1"
+                  />
                 </div>
               </div>
               <!-- TODO: Add name, doIndex, and shieldStats -->
@@ -282,76 +359,91 @@
 
         </div>
 
-        <hr class="m-2">
+        <hr class="m-2" />
 
         <div class="columns">
           <div class="column field">
             <label class="label">Str</label>
             <div class="control">
-              <input id="inputStrMod" class="input" type="number" value="2">
+              <input id="inputStrMod" class="input" type="number" value="2" />
             </div>
           </div>
           <div class="column field">
             <label class="label">Dex</label>
             <div class="control">
-              <input id="inputDexMod" class="input" type="number" value="2">
+              <input id="inputDexMod" class="input" type="number" value="2" />
             </div>
           </div>
           <div class="column field">
             <label class="label">Con</label>
             <div class="control">
-              <input id="inputConMod" class="input" type="number" value="2">
+              <input id="inputConMod" class="input" type="number" value="2" />
             </div>
           </div>
           <div class="column field">
             <label class="label">Int</label>
             <div class="control">
-              <input id="inputIntMod" class="input" type="number" value="2">
+              <input id="inputIntMod" class="input" type="number" value="2" />
             </div>
           </div>
           <div class="column field">
             <label class="label">Wis</label>
             <div class="control">
-              <input id="inputWisMod" class="input" type="number" value="2">
+              <input id="inputWisMod" class="input" type="number" value="2" />
             </div>
           </div>
           <div class="column field">
             <label class="label">Cha</label>
             <div class="control">
-              <input id="inputChaMod" class="input" type="number" value="2">
+              <input id="inputChaMod" class="input" type="number" value="2" />
             </div>
           </div>
         </div>
 
-        <hr class="m-2">
+        <hr class="m-2" />
 
         <!-- interactionAbilitiesJSON entries -->
 
-        <hr class="m-2">
+        <hr class="m-2" />
 
         <div class="columns is-marginless">
           <div class="column field">
             <label class="label">AC</label>
             <div class="control">
-              <input id="inputACValue" class="input" type="number" value="15">
+              <input id="inputACValue" class="input" type="number" value="15" />
             </div>
           </div>
           <div class="column field">
             <label class="label">Fort</label>
             <div class="control">
-              <input id="inputFortValue" class="input" type="number" value="5">
+              <input
+                id="inputFortValue"
+                class="input"
+                type="number"
+                value="5"
+              />
             </div>
           </div>
           <div class="column field">
             <label class="label">Reflex</label>
             <div class="control">
-              <input id="inputReflexValue" class="input" type="number" value="5">
+              <input
+                id="inputReflexValue"
+                class="input"
+                type="number"
+                value="5"
+              />
             </div>
           </div>
           <div class="column field">
             <label class="label">Will</label>
             <div class="control">
-              <input id="inputWillValue" class="input" type="number" value="5">
+              <input
+                id="inputWillValue"
+                class="input"
+                type="number"
+                value="5"
+              />
             </div>
           </div>
         </div>
@@ -359,29 +451,40 @@
         <div class="field">
           <label class="label">Extra Saves Bonus</label>
           <div class="control">
-            <input class="input" id="inputAllSavesCustom" type="text" maxlength="600"
-              placeholder="eg. +1 status to all saves vs. magic">
+            <input
+              class="input"
+              id="inputAllSavesCustom"
+              type="text"
+              maxlength="600"
+              placeholder="eg. +1 status to all saves vs. magic"
+            />
           </div>
         </div>
 
-        <hr class="m-2">
+        <hr class="m-2" />
 
         <div class="columns">
           <div class="column field">
             <label class="label">HP</label>
             <div class="control">
-              <input id="inputHPMax" class="input" type="number" value="30">
+              <input id="inputHPMax" class="input" type="number" value="30" />
             </div>
           </div>
           <div class="column field">
             <label class="label">Extra HP Details</label>
             <div class="control">
-              <input class="input" id="inputHPDetails" type="text" maxlength="450" placeholder="eg. negative healing">
+              <input
+                class="input"
+                id="inputHPDetails"
+                type="text"
+                maxlength="450"
+                placeholder="eg. negative healing"
+              />
             </div>
           </div>
         </div>
 
-        <hr class="m-2">
+        <hr class="m-2" />
 
         <!-- immunitiesJSON entries -->
 
@@ -389,22 +492,22 @@
 
         <!-- resistancesJSON entries -->
 
-        <hr class="m-2">
+        <hr class="m-2" />
 
         <!-- defensiveAbilitiesJSON entries -->
 
-        <hr class="m-2">
+        <hr class="m-2" />
 
         <div class="field">
           <label class="label">Speed</label>
           <div class="control">
-            <input class="input" id="inputSpeed" type="number" value="25">
+            <input class="input" id="inputSpeed" type="number" value="25" />
           </div>
         </div>
 
         <!-- otherSpeedsJSON entries -->
 
-        <hr class="m-2">
+        <hr class="m-2" />
 
         <!-- attacksJSON entries -->
 
@@ -412,20 +515,23 @@
 
         <!-- offensiveAbilitiesJSON entries -->
 
-        <hr class="m-2">
+        <hr class="m-2" />
 
         <div class="field">
           <label class="label">
             Flavor Text
             <a href="/wsc_docs/#description_fields" target="_blank"><span
-                class="icon is-small has-text-info has-tooltip-top" data-tooltip="WSC Docs"><i
-                  class="fas fa-book"></i></span></a>
+                class="icon is-small has-text-info has-tooltip-top"
+                data-tooltip="WSC Docs"
+              ><i class="fas fa-book"></i></span></a>
           </label>
           <div class="control">
-            <textarea id="inputDescription" class="textarea use-custom-scrollbar"></textarea>
+            <textarea
+              id="inputDescription"
+              class="textarea use-custom-scrollbar"
+            ></textarea>
           </div>
         </div>
-
 
       </div>
 
@@ -443,11 +549,19 @@
     <span>Back</span>
   </a>-->
     {{#if creatureID}}
-    <button id="updateButton" onClick="canLeavePage()" onClick="canLeavePage()"
-      class="button is-rounded is-success">Save</button>
+      <button
+        id="updateButton"
+        onClick="canLeavePage()"
+        onClick="canLeavePage()"
+        class="button is-rounded is-success"
+      >Save</button>
     {{else}}
-    <button id="createButton" onClick="canLeavePage()" onClick="canLeavePage()"
-      class="button is-rounded is-success">Save</button>
+      <button
+        id="createButton"
+        onClick="canLeavePage()"
+        onClick="canLeavePage()"
+        class="button is-rounded is-success"
+      >Save</button>
     {{/if}}
   </div>
 </div>

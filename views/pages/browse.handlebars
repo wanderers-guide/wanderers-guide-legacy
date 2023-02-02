@@ -1,78 +1,84 @@
-
-{{#section 'header'}}
-    <link rel="stylesheet" href="/css/browse.css">
-    <script src="/js/browse/general-browse.js"></script>
-    <script src="/js/browse/query-params.js"></script>
-    <script src="/js/browse/browse-utils.js"></script>
-
-    <script src="/js/libraries/display_class/display-class.js"></script>
-    <script src="/js/libraries/display_ancestry/display-ancestry.js"></script>
-    <script src="/js/libraries/display_archetype/display-archetype.js"></script>
-    <script src="/js/libraries/display_background/display-background.js"></script>
-    <script src="/js/libraries/display_uni_heritage/display-uni-heritage.js"></script>
-
-    <script src="/js/browse/feat/feat-browse.js"></script>
-    <script src="/js/browse/item/item-browse.js"></script>
-    <script src="/js/browse/spell/spell-browse.js"></script>
-    <script src="/js/browse/cClass/class-browse.js"></script>
-    <script src="/js/browse/ancestry/ancestry-browse.js"></script>
-    <script src="/js/browse/archetype/archetype-browse.js"></script>
-    <script src="/js/browse/background/background-browse.js"></script>
-    <script src="/js/browse/uni_heritage/uni-heritage-browse.js"></script>
-
-    <!-- Quickview -->
-    <script src="/js/sheet/quickviews/_quickviews.js"></script>
-    <script src="/js/sheet/quickviews/feat-view.js"></script>
-    <script src="/js/sheet/quickviews/language-view.js"></script>
-    <script src="/js/sheet/quickviews/spell-view.js"></script>
-    <script src="/js/sheet/quickviews/item-view.js"></script>
-    <script src="/js/sheet/quickviews/tag-view.js"></script>
-    <script src="/js/sheet/quickviews/ability-view.js"></script>
-    <script src="/js/sheet/quickviews/condition-view.js"></script>
-    <script src="/js/sheet/utils/item-utils.js"></script>
-    <script src="/js/sheet/utils/material-utils.js"></script>
-
-    <script src="/js/wsc/text-processing.js"></script>
-    <script src="/js/wsc/add-text-processing.js"></script>
-    <script src="/js/wsc/variable-processing.js"></script>
-    <script src="/js/wsc/expression-processing.js"></script>
-    <script src="/js/wsc/expression-utils.js"></script>
-    <script src="/js/wsc/errorHandling.js"></script>
-
+{{#section "styles"}}
+  <link rel="stylesheet" href="/css/browse.css" />
 {{/section}}
 
-{{#section 'nav_home'}}
-    <li><a href="/">Home</a></li>
+{{#section "header"}}
+  <script src="/js/browse/general-browse.js"></script>
+  <script src="/js/browse/query-params.js"></script>
+  <script src="/js/browse/browse-utils.js"></script>
+
+  <script src="/js/libraries/display_class/display-class.js"></script>
+  <script src="/js/libraries/display_ancestry/display-ancestry.js"></script>
+  <script src="/js/libraries/display_archetype/display-archetype.js"></script>
+  <script src="/js/libraries/display_background/display-background.js"></script>
+  <script
+    src="/js/libraries/display_uni_heritage/display-uni-heritage.js"
+  ></script>
+
+  <script src="/js/browse/feat/feat-browse.js"></script>
+  <script src="/js/browse/item/item-browse.js"></script>
+  <script src="/js/browse/spell/spell-browse.js"></script>
+  <script src="/js/browse/cClass/class-browse.js"></script>
+  <script src="/js/browse/ancestry/ancestry-browse.js"></script>
+  <script src="/js/browse/archetype/archetype-browse.js"></script>
+  <script src="/js/browse/background/background-browse.js"></script>
+  <script src="/js/browse/uni_heritage/uni-heritage-browse.js"></script>
+
+  <!-- Quickview -->
+  <script src="/js/sheet/quickviews/_quickviews.js"></script>
+  <script src="/js/sheet/quickviews/feat-view.js"></script>
+  <script src="/js/sheet/quickviews/language-view.js"></script>
+  <script src="/js/sheet/quickviews/spell-view.js"></script>
+  <script src="/js/sheet/quickviews/item-view.js"></script>
+  <script src="/js/sheet/quickviews/tag-view.js"></script>
+  <script src="/js/sheet/quickviews/ability-view.js"></script>
+  <script src="/js/sheet/quickviews/condition-view.js"></script>
+  <script src="/js/sheet/utils/item-utils.js"></script>
+  <script src="/js/sheet/utils/material-utils.js"></script>
+
+  <script src="/js/wsc/text-processing.js"></script>
+  <script src="/js/wsc/add-text-processing.js"></script>
+  <script src="/js/wsc/variable-processing.js"></script>
+  <script src="/js/wsc/expression-processing.js"></script>
+  <script src="/js/wsc/expression-utils.js"></script>
+  <script src="/js/wsc/errorHandling.js"></script>
 {{/section}}
 
-{{#section 'nav_characters'}}
-    <li class="mx-lg-4 mx-md-3 my-md-0 my-2"><a href="/profile/characters">Characters</a></li>
+{{#section "nav_home"}}
+  <li><a href="/">Home</a></li>
 {{/section}}
 
-{{#section 'nav_builds'}}
-    <li><a href="/builds">Builds</a></li>
+{{#section "nav_characters"}}
+  <li class="mx-lg-4 mx-md-3 my-md-0 my-2"><a
+      href="/profile/characters"
+    >Characters</a></li>
 {{/section}}
 
-{{#section 'nav_homebrew'}}
-    <li class="mx-lg-4 mx-md-3 my-md-0 my-2"><a href="/homebrew">Homebrew</a></li>
+{{#section "nav_builds"}}
+  <li><a href="/builds">Builds</a></li>
 {{/section}}
 
-{{#section 'nav_gm_tools'}}
-    <li><a href="/gm-tools">GM Tools</a></li>
+{{#section "nav_homebrew"}}
+  <li class="mx-lg-4 mx-md-3 my-md-0 my-2"><a href="/homebrew">Homebrew</a></li>
 {{/section}}
 
-{{#section 'nav_browse'}}
-    <li class="mx-lg-4 mx-md-3 my-md-0 my-2"><a href="/browse" class="active"><i class="fas fa-lg fa-search"></i></a></li>
+{{#section "nav_gm_tools"}}
+  <li><a href="/gm-tools">GM Tools</a></li>
 {{/section}}
 
-{{#section 'nav_login'}}
-    <li class="mr-4"><a href="/auth/login">Login <i class="fas fa-sign-in-alt"></i></a></li>
+{{#section "nav_browse"}}
+  <li class="mx-lg-4 mx-md-3 my-md-0 my-2"><a href="/browse" class="active"><i
+        class="fas fa-lg fa-search"
+      ></i></a></li>
 {{/section}}
 
+{{#section "nav_login"}}
+  <li class="mr-4"><a href="/auth/login">Login
+      <i class="fas fa-sign-in-alt"></i></a></li>
+{{/section}}
 
-
-{{#section 'banner_nav'}}
-    <div class="banner_w3lspvt-2"></div>
+{{#section "banner_nav"}}
+  <div class="banner_w3lspvt-2"></div>
 {{/section}}
 
 <div class="">
@@ -92,79 +98,197 @@
   </div>
 </div>
 
-<div class="subpageloader is-hidden"><div class="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div></div>
+<div class="subpageloader is-hidden"><div class="lds-roller"><div></div><div
+    ></div><div></div><div></div><div></div><div></div><div></div><div
+    ></div></div></div>
 
 <div class="container browse-container pb-4">
 
   <div class="tabs is-centered is-boxed use-custom-scrollbar">
     <ul class="category-tabs">
-      <li><a id="ancestriesSearchTab" class="searchTab" data-tab-name="ancestry">Ancestries</a></li>
-      <li><a id="archetypesSearchTab" class="searchTab" data-tab-name="archetype">Archetypes</a></li>
-      <li><a id="backgroundsSearchTab" class="searchTab" data-tab-name="background">Backgrounds</a></li>
-      <li><a id="classesSearchTab" class="searchTab" data-tab-name="class">Classes</a></li>
-      <li><a id="featsSearchTab" class="searchTab" data-tab-name="feat">Feats</a></li>
-      <li><a id="itemsSearchTab" class="searchTab" data-tab-name="item">Items</a></li>
-      <li><a id="spellsSearchTab" class="searchTab" data-tab-name="spell">Spells</a></li>
-      <li><a id="vHeritagesSearchTab" class="searchTab" data-tab-name="v-heritage">Versatile Heritages</a></li>
+      <li><a
+          id="ancestriesSearchTab"
+          class="searchTab"
+          data-tab-name="ancestry"
+        >Ancestries</a></li>
+      <li><a
+          id="archetypesSearchTab"
+          class="searchTab"
+          data-tab-name="archetype"
+        >Archetypes</a></li>
+      <li><a
+          id="backgroundsSearchTab"
+          class="searchTab"
+          data-tab-name="background"
+        >Backgrounds</a></li>
+      <li><a
+          id="classesSearchTab"
+          class="searchTab"
+          data-tab-name="class"
+        >Classes</a></li>
+      <li><a
+          id="featsSearchTab"
+          class="searchTab"
+          data-tab-name="feat"
+        >Feats</a></li>
+      <li><a
+          id="itemsSearchTab"
+          class="searchTab"
+          data-tab-name="item"
+        >Items</a></li>
+      <li><a
+          id="spellsSearchTab"
+          class="searchTab"
+          data-tab-name="spell"
+        >Spells</a></li>
+      <li><a
+          id="vHeritagesSearchTab"
+          class="searchTab"
+          data-tab-name="v-heritage"
+        >Versatile Heritages</a></li>
     </ul>
   </div>
-  <div id="tabContent" class="mx-3 mb-3" data-content-filter="{{contentFilter}}" data-content-section="{{contentSection}}" data-content-id="{{contentID}}">
+  <div
+    id="tabContent"
+    class="mx-3 mb-3"
+    data-content-filter="{{contentFilter}}"
+    data-content-section="{{contentSection}}"
+    data-content-id="{{contentID}}"
+  >
 
     <div class="columns">
-      <div id="searchFilterSection" class="column is-4 m-1 is-paddingless " style="">
+      <div
+        id="searchFilterSection"
+        class="column is-4 m-1 is-paddingless"
+        style=""
+      >
         <div class="section-box" style="position: relative;">
-          <p id="browsingFilter" class="is-size-6 text-center"><strong class="has-txt-value-number">Search Filters</strong></p>
+          <p id="browsingFilter" class="is-size-6 text-center"><strong
+              class="has-txt-value-number"
+            >Search Filters</strong></p>
 
-          <div class="use-custom-scrollbar" style="max-height: 550px; overflow-y: auto;">
+          <div
+            class="use-custom-scrollbar"
+            style="max-height: 550px; overflow-y: auto;"
+          >
 
-            <div id="filterNameSection" class="is-hidden filterFieldSection field">
+            <div
+              id="filterNameSection"
+              class="is-hidden filterFieldSection field"
+            >
               <div class="control">
-                <input class="input" id="filterNameInput" type="text" placeholder="Name" autocomplete="off">
+                <input
+                  class="input"
+                  id="filterNameInput"
+                  type="text"
+                  placeholder="Name"
+                  autocomplete="off"
+                />
               </div>
             </div>
 
-            <div id="filterTagsSection" class="is-hidden filterFieldSection field">
+            <div
+              id="filterTagsSection"
+              class="is-hidden filterFieldSection field"
+            >
               <select id="filterTagsInput" data-placeholder="Traits" multiple>
               </select>
             </div>
 
-            <div id="filterFeatPrereqSection" class="is-hidden filterFieldSection field">
+            <div
+              id="filterFeatPrereqSection"
+              class="is-hidden filterFieldSection field"
+            >
               <div class="control">
-                <input class="input" id="filterFeatPrereqInput" type="text" placeholder="Prerequisites" autocomplete="off">
+                <input
+                  class="input"
+                  id="filterFeatPrereqInput"
+                  type="text"
+                  placeholder="Prerequisites"
+                  autocomplete="off"
+                />
               </div>
             </div>
 
-            <div id="filterItemUsageSection" class="is-hidden filterFieldSection field">
+            <div
+              id="filterItemUsageSection"
+              class="is-hidden filterFieldSection field"
+            >
               <div class="control">
-                <input class="input" id="filterItemUsageInput" type="text" placeholder="Usage" autocomplete="off">
+                <input
+                  class="input"
+                  id="filterItemUsageInput"
+                  type="text"
+                  placeholder="Usage"
+                  autocomplete="off"
+                />
               </div>
             </div>
 
-            <div id="filterAreaSection" class="is-hidden filterFieldSection field">
+            <div
+              id="filterAreaSection"
+              class="is-hidden filterFieldSection field"
+            >
               <div class="control">
-                <input class="input" id="filterAreaInput" type="text" placeholder="Area" autocomplete="off">
+                <input
+                  class="input"
+                  id="filterAreaInput"
+                  type="text"
+                  placeholder="Area"
+                  autocomplete="off"
+                />
               </div>
             </div>
 
-            <div id="filterRangeSection" class="is-hidden filterFieldSection field">
+            <div
+              id="filterRangeSection"
+              class="is-hidden filterFieldSection field"
+            >
               <div class="control">
-                <input class="input" id="filterRangeInput" type="text" placeholder="Range" autocomplete="off">
+                <input
+                  class="input"
+                  id="filterRangeInput"
+                  type="text"
+                  placeholder="Range"
+                  autocomplete="off"
+                />
               </div>
             </div>
 
-            <div id="filterTargetsSection" class="is-hidden filterFieldSection field">
+            <div
+              id="filterTargetsSection"
+              class="is-hidden filterFieldSection field"
+            >
               <div class="control">
-                <input class="input" id="filterTargetsInput" type="text" placeholder="Targets" autocomplete="off">
+                <input
+                  class="input"
+                  id="filterTargetsInput"
+                  type="text"
+                  placeholder="Targets"
+                  autocomplete="off"
+                />
               </div>
             </div>
 
-            <div id="filterDescSection" class="is-hidden filterFieldSection field">
+            <div
+              id="filterDescSection"
+              class="is-hidden filterFieldSection field"
+            >
               <div class="control">
-                <input class="input" id="filterDescInput" type="text" placeholder="Description" autocomplete="off">
+                <input
+                  class="input"
+                  id="filterDescInput"
+                  type="text"
+                  placeholder="Description"
+                  autocomplete="off"
+                />
               </div>
             </div>
 
-            <div id="filterSpellTraditionSection" class="is-hidden filterFieldSection field is-horizontal">
+            <div
+              id="filterSpellTraditionSection"
+              class="is-hidden filterFieldSection field is-horizontal"
+            >
               <div class="field-label is-normal ml-2">
                 <label class="label">Tradition</label>
               </div>
@@ -185,7 +309,10 @@
               </div>
             </div>
 
-            <div id="filterActionsSection" class="is-hidden filterFieldSection field is-horizontal">
+            <div
+              id="filterActionsSection"
+              class="is-hidden filterFieldSection field is-horizontal"
+            >
               <div class="field-label is-normal ml-2">
                 <label class="label">Actions</label>
               </div>
@@ -208,7 +335,10 @@
               </div>
             </div>
 
-            <div id="filterCastTimeSection" class="is-hidden filterFieldSection field is-horizontal">
+            <div
+              id="filterCastTimeSection"
+              class="is-hidden filterFieldSection field is-horizontal"
+            >
               <div class="field-label is-normal ml-2">
                 <label class="label" style="white-space: nowrap;">Cast Time</label>
               </div>
@@ -223,13 +353,20 @@
                         <option value="THREE_ACTIONS">[three-actions]</option>
                         <option value="FREE_ACTION">[free-action]</option>
                         <option value="REACTION">[reaction]</option>
-                        <option value="ONE_TO_THREE_ACTIONS">[one-action] to [three-actions]</option>
-                        <option value="ONE_TO_TWO_ACTIONS">[one-action] to [two-actions]</option>
-                        <option value="TWO_TO_THREE_ACTIONS">[two-actions] to [three-actions]</option>
-                        <option value="TWO_TO_TWO_ROUNDS">[two-actions] to 2 rounds</option>
-                        <option value="TWO_TO_THREE_ROUNDS">[two-actions] to 3 rounds</option>
-                        <option value="THREE_TO_TWO_ROUNDS">[three-actions] to 2 rounds</option>
-                        <option value="THREE_TO_THREE_ROUNDS">[three-actions] to 3 rounds</option>
+                        <option value="ONE_TO_THREE_ACTIONS">[one-action] to
+                          [three-actions]</option>
+                        <option value="ONE_TO_TWO_ACTIONS">[one-action] to
+                          [two-actions]</option>
+                        <option value="TWO_TO_THREE_ACTIONS">[two-actions] to
+                          [three-actions]</option>
+                        <option value="TWO_TO_TWO_ROUNDS">[two-actions] to 2
+                          rounds</option>
+                        <option value="TWO_TO_THREE_ROUNDS">[two-actions] to 3
+                          rounds</option>
+                        <option value="THREE_TO_TWO_ROUNDS">[three-actions] to 2
+                          rounds</option>
+                        <option value="THREE_TO_THREE_ROUNDS">[three-actions] to
+                          3 rounds</option>
                         <option value="TWO_ROUNDS">2 rounds</option>
                         <option value="THREE_ROUNDS">3 rounds</option>
                         <option value="ONE_MINUTE">1 minute</option>
@@ -246,7 +383,10 @@
               </div>
             </div>
 
-            <div id="filterComponentsSection" class="is-hidden filterFieldSection field is-horizontal">
+            <div
+              id="filterComponentsSection"
+              class="is-hidden filterFieldSection field is-horizontal"
+            >
               <div class="field-label is-normal ml-2">
                 <label class="label">Components</label>
               </div>
@@ -267,7 +407,10 @@
               </div>
             </div>
 
-            <div id="filterLevelSection" class="is-hidden filterFieldSection field is-horizontal">
+            <div
+              id="filterLevelSection"
+              class="is-hidden filterFieldSection field is-horizontal"
+            >
               <div class="field-label is-normal ml-2">
                 <label class="label">Level</label>
               </div>
@@ -286,13 +429,22 @@
                     </span>
                   </p>
                   <p class="control">
-                    <input class="input" id="filterLevelInput" type="number" placeholder="Lvl" autocomplete="off">
+                    <input
+                      class="input"
+                      id="filterLevelInput"
+                      type="number"
+                      placeholder="Lvl"
+                      autocomplete="off"
+                    />
                   </p>
                 </div>
               </div>
             </div>
 
-            <div id="filterSpellSavingThrowSection" class="is-hidden filterFieldSection field is-horizontal">
+            <div
+              id="filterSpellSavingThrowSection"
+              class="is-hidden filterFieldSection field is-horizontal"
+            >
               <div class="field-label is-normal ml-2">
                 <label class="label">Saving Throw</label>
               </div>
@@ -315,7 +467,10 @@
               </div>
             </div>
 
-            <div id="filterSpellHeightenSection" class="is-hidden filterFieldSection field is-horizontal">
+            <div
+              id="filterSpellHeightenSection"
+              class="is-hidden filterFieldSection field is-horizontal"
+            >
               <div class="field-label is-normal ml-2">
                 <label class="label">Heighten</label>
               </div>
@@ -347,7 +502,10 @@
               </div>
             </div>
 
-            <div id="filterSpellFocusSection" class="is-hidden filterFieldSection field is-horizontal">
+            <div
+              id="filterSpellFocusSection"
+              class="is-hidden filterFieldSection field is-horizontal"
+            >
               <div class="field-label is-normal ml-2">
                 <label class="label">Focus</label>
               </div>
@@ -366,7 +524,10 @@
               </div>
             </div>
 
-            <div id="filterItemPriceSection" class="is-hidden filterFieldSection field is-horizontal">
+            <div
+              id="filterItemPriceSection"
+              class="is-hidden filterFieldSection field is-horizontal"
+            >
               <div class="field-label is-normal ml-2">
                 <label class="label">Price</label>
               </div>
@@ -385,13 +546,24 @@
                     </span>
                   </p>
                   <p class="control">
-                    <input class="input" id="filterItemPriceInput" type="number" placeholder="Price (in cp)" min="0" max="99999999" autocomplete="off">
+                    <input
+                      class="input"
+                      id="filterItemPriceInput"
+                      type="number"
+                      placeholder="Price (in cp)"
+                      min="0"
+                      max="99999999"
+                      autocomplete="off"
+                    />
                   </p>
                 </div>
               </div>
             </div>
 
-            <div id="filterItemBulkSection" class="is-hidden filterFieldSection field is-horizontal">
+            <div
+              id="filterItemBulkSection"
+              class="is-hidden filterFieldSection field is-horizontal"
+            >
               <div class="field-label is-normal ml-2">
                 <label class="label">Bulk</label>
               </div>
@@ -410,13 +582,25 @@
                     </span>
                   </p>
                   <p class="control">
-                    <input class="input" id="filterItemBulkInput" type="number" placeholder="Bulk" min="0" max="999" step="0.1" autocomplete="off">
+                    <input
+                      class="input"
+                      id="filterItemBulkInput"
+                      type="number"
+                      placeholder="Bulk"
+                      min="0"
+                      max="999"
+                      step="0.1"
+                      autocomplete="off"
+                    />
                   </p>
                 </div>
               </div>
             </div>
 
-            <div id="filterRaritySection" class="is-hidden filterFieldSection field is-horizontal">
+            <div
+              id="filterRaritySection"
+              class="is-hidden filterFieldSection field is-horizontal"
+            >
               <div class="field-label is-normal ml-2">
                 <label class="label">Rarity</label>
               </div>
@@ -437,7 +621,10 @@
               </div>
             </div>
 
-            <div id="filterFeatSkillSection" class="is-hidden filterFieldSection field is-horizontal">
+            <div
+              id="filterFeatSkillSection"
+              class="is-hidden filterFieldSection field is-horizontal"
+            >
               <div class="field-label is-normal ml-2">
                 <label class="label">Skill</label>
               </div>
@@ -453,7 +640,10 @@
               </div>
             </div>
 
-            <div id="filterItemCategorySection" class="is-hidden filterFieldSection field is-horizontal">
+            <div
+              id="filterItemCategorySection"
+              class="is-hidden filterFieldSection field is-horizontal"
+            >
               <div class="field-label is-normal ml-2">
                 <label class="label">Category</label>
               </div>
@@ -517,7 +707,10 @@
               </div>
             </div>
 
-            <div id="filterSourceSection" class="is-hidden filterFieldSection field is-horizontal">
+            <div
+              id="filterSourceSection"
+              class="is-hidden filterFieldSection field is-horizontal"
+            >
               <div class="field-label is-normal ml-2">
                 <label class="label">Source</label>
               </div>
@@ -535,42 +728,49 @@
 
           </div>
 
-          <hr class="mt-0 mb-2 mx-2">
+          <hr class="mt-0 mb-2 mx-2" />
 
           <div class="field is-grouped is-grouped-centered pb-2">
             <div class="control">
-              <button id="updateFilterButton" class="button is-info is-rounded ">Search</button>
+              <button
+                id="updateFilterButton"
+                class="button is-info is-rounded"
+              >Search</button>
             </div>
           </div>
 
-          <div id="searchResultCountContainer" style="position: absolute; bottom: -30px; right: 5px;"></div>
+          <div
+            id="searchResultCountContainer"
+            style="position: absolute; bottom: -30px; right: 5px;"
+          ></div>
         </div>
       </div>
-      <div id="browsingList" class="column section-box m-1 use-custom-scrollbar" style="height: 650px; max-height: 650px;overflow-y: auto;">
-
-
+      <div
+        id="browsingList"
+        class="column section-box m-1 use-custom-scrollbar"
+        style="height: 650px; max-height: 650px;overflow-y: auto;"
+      >
 
       </div>
     </div>
 
   </div>
-  
 
 </div>
 
-{{#section 'overlay'}}
-    <!-- Right Quickview -->
-    <div id="quickviewDefault" class="quickview">
-        <div class="quickview-header">
-            <p id="quickViewTitle" class="title is-size-5 has-txt-value-number"></p>
-            <div class="is-inline-flex">
-                <p id="quickViewTitleRight"></p>
-                <p id="quickViewTitleClose"></p>
-            </div>
-        </div>
-        <div class="quickview-body use-custom-scrollbar">
-            <div id="quickViewContent" class="quickview-block pt-1 pb-3 px-3">
-            </div>
-        </div>
+{{#section "overlay"}}
+  <!-- Right Quickview -->
+  <div id="quickviewDefault" class="quickview">
+    <div class="quickview-header">
+      <p id="quickViewTitle" class="title is-size-5 has-txt-value-number"></p>
+      <div class="is-inline-flex">
+        <p id="quickViewTitleRight"></p>
+        <p id="quickViewTitleClose"></p>
+      </div>
     </div>
+    <div class="quickview-body use-custom-scrollbar">
+      <div id="quickViewContent" class="quickview-block pt-1 pb-3 px-3">
+      </div>
+    </div>
+  </div>
 {{/section}}
