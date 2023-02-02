@@ -2,6 +2,7 @@ require("dotenv").config();
 
 const express = require("express");
 const socket = require("socket.io");
+const compression = require("compression");
 
 /*
 TODO - Could use again in the future, or delete
@@ -48,6 +49,8 @@ const https = require("https");
 const http = require("http");
 
 const app = express();
+
+app.use(compression());
 
 const port = process.env.PORT || 80;
 
