@@ -1,5 +1,5 @@
 # Add this for now to ease transition
-*.handlebars
+# *.handlebars
 
 # Dont format raw assets
 public

@@ -1,251 +1,443 @@
-<!DOCTYPE html>
 <!--
 	Copyright (C) 2021, Wanderer's Guide, all rights reserved.
     By Aaron Cassar.
 -->
 <html lang="en-US">
 
-<head>
-	<title>{{title}}</title>
-	<meta charset="UTF-8">
-	
-  <link rel="shortcut icon" href="/images/favicon.svg">
-  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon.svg">
-  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.svg">
-  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.svg">
+  <head>
+    <title>{{title}}</title>
+    <meta charset="UTF-8" />
 
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="shortcut icon" href="/images/favicon.svg" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon.svg" />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="/images/favicon.svg"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="/images/favicon.svg"
+    />
 
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
-  <meta name="HandheldFriendly" content="True">
-  <meta name="MobileOptimized" content="320">
-  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 
-  <meta property="og:title" content="Wanderer's Guide" />
-  <meta property="og:url" content="https://wanderersguide.app/" />
-  <meta data-n-head="ssr" data-hid="og:image" name="og:image" property="og:image" content="/images/favicon.svg">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="upgrade-insecure-requests"
+    />
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="MobileOptimized" content="320" />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"
+    />
 
-  <meta name="apple-mobile-web-app-title" content="Wanderer's Guide">
-  <meta name="application-name" content="Wanderer's Guide">
-  <meta name="theme-color" content="#000000">
-  <meta name="author" content="Quzzar">
+    <meta property="og:title" content="Wanderer's Guide" />
+    <meta property="og:url" content="https://wanderersguide.app/" />
+    <meta
+      data-n-head="ssr"
+      data-hid="og:image"
+      name="og:image"
+      property="og:image"
+      content="/images/favicon.svg"
+    />
 
-  <link rel="manifest" href="/manifest.json">
+    <meta name="apple-mobile-web-app-title" content="Wanderer's Guide" />
+    <meta name="application-name" content="Wanderer's Guide" />
+    <meta name="theme-color" content="#000000" />
+    <meta name="author" content="Quzzar" />
 
-  <link rel="canonical" href="https://wanderersguide.app/">
-  <link rel="shortcut icon" href="/images/favicon.svg">
-  <link data-n-head="ssr" data-hid="apple-touch-icon" rel="apple-touch-icon" href="/images/favicon.svg" sizes="180x180">
-  <link rel="icon" type="image/png" href="/images/favicon.svg" sizes="32x32">
-  <link rel="icon" type="image/png" href="/images/favicon.svg" sizes="16x16">
-  <meta property="og:image" content="/images/favicon.svg">
-  <link rel="mask-icon" href="/images/favicon.svg" color="#000000">
+    <link rel="manifest" href="/manifest.json" />
 
-  <!-- OGP -->
-  <meta property="og:site_name" content="Wanderer's Guide">
-  <meta property="og:locale" content="en_US">
-  <meta property="og:url" content="https://wanderersguide.app/">
-  <meta property="og:title" content="Wanderer's Guide">
-  <meta property="og:description" content="Semi-automated character manager for Pathfinder 2e">
-  <meta property="og:type" content="website">
-  <meta property="og:image:width" content="600">
-  <meta property="og:image:height" content="400">
+    <link rel="canonical" href="https://wanderersguide.app/" />
+    <link rel="shortcut icon" href="/images/favicon.svg" />
+    <link
+      data-n-head="ssr"
+      data-hid="apple-touch-icon"
+      rel="apple-touch-icon"
+      href="/images/favicon.svg"
+      sizes="180x180"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      href="/images/favicon.svg"
+      sizes="32x32"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      href="/images/favicon.svg"
+      sizes="16x16"
+    />
+    <meta property="og:image" content="/images/favicon.svg" />
+    <link rel="mask-icon" href="/images/favicon.svg" color="#000000" />
 
-  <!-- Keywords -->
-	<meta name="keywords" content="wanderer's guide,wanderers guide,wanderers,wanderer's,guide,pathfinder second edition,pathfinder 2e,character manager,character builder,pf2e,pf 2e" />
+    <!-- OGP -->
+    <meta property="og:site_name" content="Wanderer's Guide" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:url" content="https://wanderersguide.app/" />
+    <meta property="og:title" content="Wanderer's Guide" />
+    <meta
+      property="og:description"
+      content="Semi-automated character manager for Pathfinder 2e"
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:image:width" content="600" />
+    <meta property="og:image:height" content="400" />
 
-	<!-- Bulma -->
-	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
-	<link rel="stylesheet" href="/css/bulma/bulma-steps.min.css">
-	<script src="/js/bulma/bulma-steps.min.js"></script>
-	<link rel="stylesheet" href="/css/bulma/bulma-tooltip.min.css">
-	<link rel="stylesheet" href="/css/bulma/bulma-accordion.min.css">
-	<script src="/js/bulma/bulma-accordion.min.js"></script>
-	<link rel="stylesheet" href="/css/bulma/bulma-divider.min.css">
-	<link rel="stylesheet" href="/css/bulma/bulma-quickview.min.css">
-	<script src="/js/bulma/bulma-quickview.min.js"></script>
-	<link rel="stylesheet" href="/css/bulma/bulma-checkradio.min.css">
-	<link rel="stylesheet" href="/css/bulma/bulma-badge.min.css">
-	<link rel="stylesheet" href="/css/bulma/bulma-switch.min.css">
-	<link rel="stylesheet" href="/css/bulma/bulma-radio-checkbox.min.css">
-	<link rel="stylesheet" href="/css/bulma/bulma-tagsinput.min.css">
-	<script src="/js/bulma/bulma-tagsinput.min.js"></script>
+    <!-- Keywords -->
+    <meta
+      name="keywords"
+      content="wanderer's guide,wanderers guide,wanderers,wanderer's,guide,pathfinder second edition,pathfinder 2e,character manager,character builder,pf2e,pf 2e"
+    />
 
-	<!-- Bootstrap-Core -->
-	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
-	<link rel="stylesheet" href="/css/bootstrap-4-utilities.min.css">
-	
-	<!-- Font-Awesome-Icons -->
-  <script defer src="https://pro.fontawesome.com/releases/v5.12.1/js/all.js"></script>
+    <!-- Bulma -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css"
+    />
+    <link rel="stylesheet" href="/css/bulma/bulma-steps.min.css" />
+    <script src="/js/bulma/bulma-steps.min.js"></script>
+    <link rel="stylesheet" href="/css/bulma/bulma-tooltip.min.css" />
+    <link rel="stylesheet" href="/css/bulma/bulma-accordion.min.css" />
+    <script src="/js/bulma/bulma-accordion.min.js"></script>
+    <link rel="stylesheet" href="/css/bulma/bulma-divider.min.css" />
+    <link rel="stylesheet" href="/css/bulma/bulma-quickview.min.css" />
+    <script src="/js/bulma/bulma-quickview.min.js"></script>
+    <link rel="stylesheet" href="/css/bulma/bulma-checkradio.min.css" />
+    <link rel="stylesheet" href="/css/bulma/bulma-badge.min.css" />
+    <link rel="stylesheet" href="/css/bulma/bulma-switch.min.css" />
+    <link rel="stylesheet" href="/css/bulma/bulma-radio-checkbox.min.css" />
+    <link rel="stylesheet" href="/css/bulma/bulma-tagsinput.min.css" />
+    <script src="/js/bulma/bulma-tagsinput.min.js"></script>
 
-	<!-- General Styles -->
-  {{#ifEqual user.enabledLightMode 1}}
-    <link rel="stylesheet" href="/css/core/site-themes-light.css" type="text/css" media="all" />
-  {{else}}
-    <link rel="stylesheet" href="/css/core/site-themes-dark.css" type="text/css" media="all" />
-  {{/ifEqual}}
+    <!-- Bootstrap-Core -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
+      integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="/css/bootstrap-4-utilities.min.css" />
 
-	<link rel="stylesheet" href="/css/core/system-styles.css" type="text/css" media="all" />
-	<link rel="stylesheet" href="/css/pageloader.css" type="text/css" media="all" />
-  <link rel="stylesheet" href="/css/chosen/chosen.css" type="text/css" media="all" />
+    <!-- General Styles -->
+    {{#ifEqual user.enabledLightMode 1}}
+      <link
+        rel="stylesheet"
+        href="/css/core/site-themes-light.css"
+        type="text/css"
+        media="all"
+      />
+    {{else}}
+      <link
+        rel="stylesheet"
+        href="/css/core/site-themes-dark.css"
+        type="text/css"
+        media="all"
+      />
+    {{/ifEqual}}
 
-	<link rel="stylesheet" href="/css/core/bulma-extension.css" type="text/css" media="all" />
-	<link rel="stylesheet" href="/css/core/fonts.css" type="text/css" media="all" />
-	<link rel="stylesheet" href="/css/core/modals.css" type="text/css" media="all" />
-	<link rel="stylesheet" href="/css/core/quickviews.css" type="text/css" media="all" />
+    <link
+      rel="stylesheet"
+      href="/css/core/system-styles.css"
+      type="text/css"
+      media="all"
+    />
+    <link
+      rel="stylesheet"
+      href="/css/pageloader.css"
+      type="text/css"
+      media="all"
+    />
+    <link
+      rel="stylesheet"
+      href="/css/chosen/chosen.css"
+      type="text/css"
+      media="all"
+    />
 
-	<!-- General Utils -->
-	<script type="text/javascript" src="/js/general-utils.js"></script>
-  <script type="text/javascript" src="/js/cache-storing.js"></script>
-  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/9.3.0/math.js"></script>
+    <link
+      rel="stylesheet"
+      href="/css/core/bulma-extension.css"
+      type="text/css"
+      media="all"
+    />
+    <link
+      rel="stylesheet"
+      href="/css/core/fonts.css"
+      type="text/css"
+      media="all"
+    />
+    <link
+      rel="stylesheet"
+      href="/css/core/modals.css"
+      type="text/css"
+      media="all"
+    />
+    <link
+      rel="stylesheet"
+      href="/css/core/quickviews.css"
+      type="text/css"
+      media="all"
+    />
 
-  <!-- Loading Bars/Spinners -->
-  <link rel="stylesheet" href="/css/loading-bar.css">
-  <script src="/js/loading_bar/loadingHandler.js"></script>
-  <script src="/js/loading_bar/loading-bar.js"></script>
+    <!-- Loading Bars/Spinners -->
+    <link rel="stylesheet" href="/css/loading-bar.css" />
 
-  <!-- Quill JS -->
-  <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
-  <link href="/css/quill.css" rel="stylesheet">
-  <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+    <!-- Quill JS -->
+    <link
+      href="https://cdn.quilljs.com/1.3.6/quill.snow.css"
+      rel="stylesheet"
+    />
+    <link href="/css/quill.css" rel="stylesheet" />
 
-	<!-- Web-Fonts -->
-	<link rel="preconnect" href="https://fonts.googleapis.com">
-	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Web-Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
-	<link href="https://fonts.googleapis.com/css?family=Nunito+Sans:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i&amp;subset=latin-ext,vietnamese"
-	 rel="stylesheet">
-	<link href="https://fonts.googleapis.com/css?family=Roboto+Condensed:300,300i,400,400i,700,700i&amp;subset=cyrillic,cyrillic-ext,greek,greek-ext,latin-ext,vietnamese"
-	 rel="stylesheet">
-	 <link href="https://fonts.googleapis.com/css?family=Noto+Sans&display=swap" rel="stylesheet">
-	 <link href="https://fonts.googleapis.com/css?family=Bebas+Neue&display=swap" rel="stylesheet">
-	 <link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic+Coding&display=swap" rel="stylesheet">
+    <link
+      href="https://fonts.googleapis.com/css?family=Nunito+Sans:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i&amp;subset=latin-ext,vietnamese"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css?family=Roboto+Condensed:300,300i,400,400i,700,700i&amp;subset=cyrillic,cyrillic-ext,greek,greek-ext,latin-ext,vietnamese"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css?family=Noto+Sans&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css?family=Bebas+Neue&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Nanum+Gothic+Coding&display=swap"
+      rel="stylesheet"
+    />
 
-   <link href="https://fonts.googleapis.com/css2?family=Proza+Libre&display=swap" rel="stylesheet">
-   <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
+    <link
+      href="https://fonts.googleapis.com/css2?family=Proza+Libre&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap"
+      rel="stylesheet"
+    />
 
-	<!-- Socket IO -->
-  <script src="/socket.io/socket.io.js"></script>
+  </head>
 
-  <!-- jQuery -->
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
-	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
-	<script src="/js/jQuery/jquery.ui.touch-punch.min.js"></script>
-  <script src="/js/jQuery/chosen.jquery.min.js"></script>
+  <body>
 
-	<!-- Mobile View Message -->
-	<script type="text/javascript" src="/js/mobile-view.js"></script>
+    <div id="main-container">
 
-  <!-- Misc Scripts -->
-	<script type="text/javascript" src="/js/back-to-top.js"></script>
-  <script type="text/javascript" src="/js/show-more.js"></script>
+      <div id="main-top">
+        <header>
+          <div class="container-fluid pl-0">
+            <div
+              class="header d-md-flex justify-content-between align-items-center pt-1 pl-1 pr-5"
+            >
+              <div>
+                <a href="/"><img
+                    src="/images/logo.png"
+                    style="height:50px;"
+                    alt="Wanderer's Guide"
+                  /></a>
+                <sup
+                  class="is-inline has-txt-value-number is-size-6-5 font-bebas-neue text-overflow-none is-hidden-mobile"
+                >Beta 1.9.3</sup>
+              </div>
 
-	{{{_sections.header}}}
+              <div>
+                <nav>
 
-</head>
+                  <a class="icon is-medium nav-menu-toggle">
+                    <i class="fa fa-2x fa-bars"></i>
+                  </a>
+                  <div id="mobile-nav-menu-container"></div>
 
-<body>
+                  <ul class="nav-menu pt-1">
+                    {{{_sections.nav_home}}}
 
-	<div id="main-container">
+                    {{#if user}}
+                      {{{_sections.nav_characters}}}
+                    {{else}}
+                      <span class="ml-lg-4 ml-md-3"></span>
+                    {{/if}}
 
-		<div id="main-top">
-			<header>
-				<div class="container-fluid pl-0">
-					<div class="header d-md-flex justify-content-between align-items-center pt-1 pl-1 pr-5">
-						<div>
-							<a href="/"><img src="/images/logo.png" style="height:50px;" alt="Wanderer's Guide"></a>
-							<sup class="is-inline has-txt-value-number is-size-6-5 font-bebas-neue text-overflow-none is-hidden-mobile">Beta 1.9.3</sup>
-						</div>
+                    {{{_sections.nav_builds}}}
 
-						<div>
-							<nav>
+                    {{{_sections.nav_homebrew}}}
 
-                <a class="icon is-medium nav-menu-toggle">
-                  <i class="fa fa-2x fa-bars"></i>
-                </a>
-                <div id="mobile-nav-menu-container"></div>
+                    {{{_sections.nav_gm_tools}}}
 
-				<ul class="nav-menu pt-1">
-				  {{{_sections.nav_home}}}
+                    {{{_sections.nav_browse}}}
 
-				  {{#if user}}
-					{{{_sections.nav_characters}}}
-                  {{else}}
-					<span class="ml-lg-4 ml-md-3"></span>
-				  {{/if}}
+                    {{#if user}}
+                      <li class="mr-4">
+                        <a href="#" id="nav-profile-picture">
+                          <object
+                            class="profile-header-icon"
+                            data="{{user.thumbnail}}"
+                            type="image/png"
+                          >
+                            <img
+                              class="profile-header-icon"
+                              src="/images/fb_profile_pic.png"
+                              alt="Profile Image"
+                            />
+                          </object>
+                        </a>
+                        <ul>
+                          <li><a href="/profile" class="drop-text"><i
+                                class="fas fa-user-circle"
+                              ></i>
+                              Account
+                            </a></li>
+                          {{#ifEqual user.isAdmin 1}}
+                            <li><a href="/admin/panel" class="drop-text"><i
+                                  class="fas fa-tools"
+                                ></i>
+                                Admin Panel
+                              </a></li>
+                          {{/ifEqual}}
+                          <li><a
+                              href="https://discord.gg/kxCpa6G"
+                              target="_blank"
+                              class="drop-text"
+                            ><i class="fab fa-discord"></i>
+                              Discord<sup class="icon is-small"><i
+                                  class="fas fa-xs fa-external-link-alt"
+                                ></i></sup></a></li>
+                          <li><a
+                              href="https://www.patreon.com/wanderersguide"
+                              target="_blank"
+                              class="drop-text"
+                            ><i class="fab fa-patreon"></i>
+                              Patreon<sup class="icon is-small"><i
+                                  class="fas fa-xs fa-external-link-alt"
+                                ></i></sup></a></li>
+                          <li><a href="/api_docs" class="drop-text"><i
+                                class="fas fa-cog"
+                              ></i>
+                              API Docs
+                            </a></li>
+                          <li><a href="/license" class="drop-text"><i
+                                class="fas fa-scroll"
+                              ></i>
+                              License
+                            </a></li>
+                          <li><a href="/auth/logout" class="drop-text"><i
+                                class="fas fa-sign-out-alt"
+                              ></i>
+                              Logout
+                            </a></li>
+                        </ul>
+                      </li>
+                    {{else}}
+                      {{{_sections.nav_login}}}
+                    {{/if}}
+                  </ul>
+                </nav>
+              </div>
+            </div>
+          </div>
+        </header>
 
-                  {{{_sections.nav_builds}}}
+        {{{_sections.banner_nav}}}
 
-                  {{{_sections.nav_homebrew}}}
+      </div>
 
-                  {{{_sections.nav_gm_tools}}}
+      <div class="top-border"></div>
 
-				  {{{_sections.nav_browse}}}
-									
-									{{#if user}}
-										<li class="mr-4">
-											<a href="#" id="nav-profile-picture">
-												<object class="profile-header-icon" data="{{user.thumbnail}}" type="image/png">
-													<img class="profile-header-icon" src="/images/fb_profile_pic.png" alt="Profile Image">
-												</object>
-											</a>
-											<ul>
-												<li><a href="/profile" class="drop-text"><i class="fas fa-user-circle"></i> Account </a></li>
-												{{#ifEqual user.isAdmin 1}}
-													<li><a href="/admin/panel" class="drop-text"><i class="fas fa-tools"></i> Admin Panel </a></li>
-												{{/ifEqual}}
-                        <li><a href="https://discord.gg/kxCpa6G" target="_blank" class="drop-text"><i class="fab fa-discord"></i> Discord<sup class="icon is-small"><i class="fas fa-xs fa-external-link-alt"></i></sup></a></li>
-												<li><a href="https://www.patreon.com/wanderersguide" target="_blank" class="drop-text"><i class="fab fa-patreon"></i> Patreon<sup class="icon is-small"><i class="fas fa-xs fa-external-link-alt"></i></sup></a></li>
-                        <li><a href="/api_docs" class="drop-text"><i class="fas fa-cog"></i> API Docs </a></li>
-												<li><a href="/license" class="drop-text"><i class="fas fa-scroll"></i> License </a></li>
-												<li><a href="/auth/logout" class="drop-text"><i class="fas fa-sign-out-alt"></i> Logout </a></li>
-											</ul>
-										</li>
-									{{else}}
-										{{{_sections.nav_login}}}
-									{{/if}}
-								</ul>
-							</nav>
-						</div>
-					</div>
-				</div>
-			</header>
+      <div id="center-body">
+        {{{body}}}
+      </div>
 
-			{{{_sections.banner_nav}}}
-			
-		</div>
+      {{{_sections.overlay}}}
 
-		<div class="top-border"></div>
-    
-		<div id="center-body">
-			{{{body}}}
-		</div>
+      <!-- Pre-Load Fonts -->
+      <div class="font_preload" style="opacity: 0">
+        <span class="pf-icon"></span>
+      </div>
 
-		{{{_sections.overlay}}}
+      <footer id="wanderers-guide-footer">
+        <div class="cpy-right text-center py-3">
+          <p class="text-center is-size-7">
+            Wanderer's Guide<sup class="icon is-small"><i
+                class="fas fa-xs fa-trademark"
+              ></i></sup>
+            <span class="has-txt-faded"> | </span>
+            <a href="/license" target="_blank">Licenses and Policies</a>
+            <span class="has-txt-faded"> | </span>
+            <a
+              class="has-tooltip-top"
+              data-tooltip="wanderersguide2e@gmail.com"
+            ><sub class="icon is-small"><i
+                  class="far fa-lg fa-envelope"
+                ></i></sub></a>
+            <span class="has-txt-faded"> | </span>
+            <a href="https://discord.gg/kxCpa6G" target="_blank"><sub
+                class="icon is-small"
+              ><i class="fab fa-lg fa-discord"></i></sub></a>
+            <span class="has-txt-faded"> | </span>
+            <a
+              href="https://www.patreon.com/wanderersguide"
+              target="_blank"
+            ><sub class="icon is-small"><i
+                  class="fab fa-lg fa-patreon"
+                ></i></sub></a>
+          </p>
+        </div>
+      </footer>
 
-		<!-- Pre-Load Fonts -->
-		<div class="font_preload" style="opacity: 0">
-			<span class="pf-icon"></span>
-		</div>
-		
-		<footer id="wanderers-guide-footer">
-			<div class="cpy-right text-center py-3">
-				<p class="text-center is-size-7">
-					Wanderer's Guide<sup class="icon is-small"><i class="fas fa-xs fa-trademark"></i></sup>
-					<span class="has-txt-faded"> | </span>
-					<a href="/license" target="_blank">Licenses and Policies</a>
-					<span class="has-txt-faded"> | </span>
-					<a class="has-tooltip-top" data-tooltip="wanderersguide2e@gmail.com"><sub class="icon is-small"><i class="far fa-lg fa-envelope"></i></sub></a>
-					<span class="has-txt-faded"> | </span>
-					<a href="https://discord.gg/kxCpa6G" target="_blank"><sub class="icon is-small"><i class="fab fa-lg fa-discord"></i></sub></a>
-					<span class="has-txt-faded"> | </span>
-					<a href="https://www.patreon.com/wanderersguide" target="_blank"><sub class="icon is-small"><i class="fab fa-lg fa-patreon"></i></sub></a>
-				</p>
-			</div>
-		</footer>
+    </div>
 
-	</div>
+    <!-- jQuery -->
+    <script
+      src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"
+    ></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
 
-</body>
+    <!-- General Utils -->
+    <script type="text/javascript" src="/js/general-utils.js"></script>
+    <script type="text/javascript" src="/js/cache-storing.js"></script>
 
+    <script src="/js/jQuery/jquery.ui.touch-punch.min.js"></script>
+    <script src="/js/jQuery/chosen.jquery.min.js"></script>
+
+    <script src="/js/loading_bar/loadingHandler.js"></script>
+    <script src="/js/loading_bar/loading-bar.js"></script>
+    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+
+    <!-- Font-Awesome-Icons -->
+    <script
+      defer
+      src="https://pro.fontawesome.com/releases/v5.12.1/js/all.js"
+    ></script>
+
+    <script
+      type="text/javascript"
+      src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/9.3.0/math.js"
+    ></script>
+
+    <!-- Mobile View Message -->
+    <script type="text/javascript" src="/js/mobile-view.js"></script>
+
+    <!-- Misc Scripts -->
+    <script type="text/javascript" src="/js/back-to-top.js"></script>
+    <script type="text/javascript" src="/js/show-more.js"></script>
+
+    <!-- Socket IO -->
+    <script src="/socket.io/socket.io.js"></script>
+
+    {{{_sections.header}}}
+
+  </body>
 </html>
