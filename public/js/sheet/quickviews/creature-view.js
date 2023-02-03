@@ -188,11 +188,6 @@ function openCreatureQuickview(mainData) {
         qContent.append('<div class="buttons is-marginless is-centered">' + conditionsInnerHTML + '</div>');
     }
 
-
-    // Recall Knowledge //
-    // TODO
-
-
     // Perception //
     let perceptionStr = signNumber(stats.perception);
     if(stats.perception != data.perceptionBonus){
@@ -691,6 +686,16 @@ function openCreatureQuickview(mainData) {
     for (let ability of offensiveAbilities) {
         addAbility(qContent, ability);
     }
+
+    // Recall Knowledge //
+    qContent.append('<hr class="mb-2 mt-1">');
+    qContent.append(`
+        <div class="pl-2 pr-1">
+            <p class="negative-indent">
+                <span><strong>Recall Knowledge DC </strong></span><span>${getRecallKnowledgeDC(data.level, data.rarity, traits)}</span>
+            </p>
+        </div>
+    `);
 
     if (data.flavorText != null && data.flavorText != ``) {
         qContent.append('<hr class="mb-2 mt-1">');
