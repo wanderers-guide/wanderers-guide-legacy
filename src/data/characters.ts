@@ -9,6 +9,7 @@ export interface CharacterListDetails {
   background: string | null;
   className: string | null;
   level: number | null;
+  imageUrl: string | null;
 }
 
 export const getUserCharList$ = () => {
@@ -23,6 +24,7 @@ export const getUserCharList$ = () => {
           ancestries: { select: { name: true } },
           heritages: { select: { name: true } },
           backgrounds: { select: { name: true } },
+          infoJSON: true,
           classes: {
             select: {
               name: true,
@@ -32,15 +34,29 @@ export const getUserCharList$ = () => {
       });
 
       return characters.map(
-        ({ id, name, ancestries, heritages, backgrounds, classes, level }) => ({
+        ({
           id,
           name,
-          ancestry: ancestries?.name ?? null,
-          heratige: heritages?.name ?? null,
-          background: backgrounds?.name ?? null,
+          ancestries,
+          heritages,
+          backgrounds,
+          classes,
           level,
-          className: classes?.name ?? null,
-        }),
+          infoJSON,
+        }) => {
+          const { imageURL } = JSON.parse(infoJSON ?? "{}");
+
+          return {
+            id,
+            name,
+            ancestry: ancestries?.name ?? null,
+            heratige: heritages?.name ?? null,
+            background: backgrounds?.name ?? null,
+            level,
+            className: classes?.name ?? null,
+            imageUrl: imageURL,
+          };
+        },
       );
     },
   );

@@ -30,7 +30,7 @@ const NavButton: Component<{
 
 export default function SolidNav() {
   return (
-    <header class="fixed bottom-0 left-0 right-0 bg-zinc-900 md:top-0 md:bottom-auto">
+    <header class="fixed bottom-0 left-0 right-0 z-50 bg-zinc-900 md:top-0 md:bottom-auto">
       <div class="mx-auto flex max-w-7xl flex-row flex-nowrap items-center justify-between px-4 py-3 text-white sm:gap-8 lg:px-8">
         <div>
           <a href="/" class="flex flex-row flex-nowrap items-center gap-3">
