@@ -31,6 +31,7 @@
     "bulma-switch": "^2.0.0",
     "bulma-tagsinput": "^2.0.0",
     "bulma-tooltip": "^3.0.2",
+    "classnames": "^2.3.2",
     "cookie-parser": "^1.4.6",
     "cookie-session": "^2.0.0",
     "cool-checkboxes-for-bulma.io": "^1.1.0",
