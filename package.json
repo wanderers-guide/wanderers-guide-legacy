@@ -16,7 +16,7 @@
   "license": "GNU",
   "dependencies": {
     "@creativebulma/bulma-collapsible": "^1.0.4",
-    "@prisma/client": "^4.5.0",
+    "@prisma/client": "^4.9.0",
     "@solidjs/meta": "^0.28.2",
     "@solidjs/router": "^0.7.0",
     "body-parser": "^1.19.0",

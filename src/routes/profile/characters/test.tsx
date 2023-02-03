@@ -1,9 +1,9 @@
 import { createRouteData, Stylesheet, useRouteData } from "solid-start";
 import CharactersList from "~/components/CharactersList";
-import { getCharactersData } from "~/data/characters";
+import { getUserCharList$ } from "~/data/characters";
 
 export const routeData = () => {
-  const characters = getCharactersData();
+  const characters = getUserCharList$();
 
   const user = createRouteData(
     async () => {

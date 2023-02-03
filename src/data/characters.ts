@@ -1,20 +1,47 @@
-import { createRouteData } from "solid-start";
+import { createServerData$ } from "solid-start/server";
+import { prismaClient } from "~/components/clients/prisma";
 
-export interface Character {
+export interface CharacterListDetails {
   id: number;
-  userId: number;
-  name: string;
-  level: number;
-  isPlayable: boolean;
-  heritageName: string;
-  className: string;
+  name: string | null;
+  ancestry: string | null;
+  heratige: string | null;
+  background: string | null;
+  className: string | null;
+  level: number | null;
 }
 
-export const getCharactersData = () => {
-  return createRouteData(async () => {
-    const result = await fetch("/api/profile/characters");
-    const data = await result.json();
+export const getUserCharList$ = () => {
+  return createServerData$(
+    async (_, { request }): Promise<CharacterListDetails[]> => {
+      const characters = await prismaClient.characters.findMany({
+        where: { userID: 1 },
+        select: {
+          id: true,
+          name: true,
+          level: true,
+          ancestries: { select: { name: true } },
+          heritages: { select: { name: true } },
+          backgrounds: { select: { name: true } },
+          classes: {
+            select: {
+              name: true,
+            },
+          },
+        },
+      });
 
-    return data as Character[];
-  });
+      return characters.map(
+        ({ id, name, ancestries, heritages, backgrounds, classes, level }) => ({
+          id,
+          name,
+          ancestry: ancestries?.name ?? null,
+          heratige: heritages?.name ?? null,
+          background: backgrounds?.name ?? null,
+          level,
+          className: classes?.name ?? null,
+        }),
+      );
+    },
+  );
 };
