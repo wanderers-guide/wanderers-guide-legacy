@@ -36,7 +36,7 @@ export const getUserCharList$ = () => {
     ): Promise<{
       isPatreonMember: boolean;
       characters: CharacterListDetails[];
-      characterLimit: number;
+      characterLimit: number | null;
     }> => {
       const user = await prismaClient.users.findUnique({
         where: { id: 1 },
@@ -67,7 +67,7 @@ export const getUserCharList$ = () => {
 
       return {
         isPatreonMember: !!user?.isPatreonMember,
-        characterLimit: user?.isPatreonMember ? 6 : Infinity,
+        characterLimit: user?.isPatreonMember ? 6 : null,
         characters:
           user?.characters?.map((char) => {
             const { imageURL } = JSON.parse(char.infoJSON ?? "{}");

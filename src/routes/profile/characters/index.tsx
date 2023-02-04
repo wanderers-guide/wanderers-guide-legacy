@@ -8,7 +8,7 @@ export const routeData = () => {
 };
 
 export default function CharacterNew() {
-  let characterList = useRouteData<typeof routeData>();
+  const characterList = useRouteData<typeof routeData>();
 
   return (
     <main class="mx-auto mb-32 max-w-7xl md:mt-20">
@@ -17,7 +17,7 @@ export default function CharacterNew() {
           <h1 class="text-xl">Characters</h1>
           <span class="ml-auto text-xl">
             {characterList()?.characters.length} /{" "}
-            {characterList()?.characterLimit === Infinity
+            {characterList()?.characterLimit === null
               ? "∞"
               : characterList()?.characterLimit}
           </span>
@@ -50,8 +50,9 @@ const CharacterCard: Component<CharacterListDetails> = (props) => {
             optionsButtonRef,
             openLinkRef,
           ].includes(e.target)
-        )
+        ) {
           return;
+        }
 
         navigate(
           props.isPlayable
@@ -64,7 +65,7 @@ const CharacterCard: Component<CharacterListDetails> = (props) => {
         <img
           class={classname(
             "h-24 w-24 overflow-hidden rounded-full bg-zinc-700 object-cover ring-4 ring-zinc-700 ring-offset-4 ring-offset-zinc-800 group-hover:ring-sky-400",
-            { grayscale: !props.imageUrl && !props.isPlayable },
+            { grayscale: !props.isPlayable },
           )}
           src={props.imageUrl ?? "/images/fb_profile_pic.png"}
           width={96}
@@ -74,8 +75,10 @@ const CharacterCard: Component<CharacterListDetails> = (props) => {
           <span class="text-sm">{props.level}</span>
         </div>
       </div>
-      <div class="col-start-1 col-end-4 row-span-1 row-start-2 ml-12 rounded-md bg-zinc-700 py-2 pr-4 pl-16 transition-all group-hover:pl-20">
-        <h2 class="text-lg">{props.name}</h2>
+      <div class="col-start-1 col-end-4 row-span-1 row-start-2 ml-14 rounded-md bg-zinc-700 py-2 pr-4 pl-16">
+        <h2 class="overflow-hidden text-ellipsis whitespace-nowrap text-lg">
+          {props.name} ajsdnas asjhdbas uajsbdashjkdb
+        </h2>
         <h3 class="text-sm text-zinc-300">
           {(props.heratige || props.ancestry) ?? (
             <span class="italic">Ancestry</span>
