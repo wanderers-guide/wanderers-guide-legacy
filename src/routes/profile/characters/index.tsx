@@ -1,6 +1,6 @@
 import classname from "classnames";
 import { Component, For } from "solid-js";
-import { createRouteData, useNavigate, useRouteData } from "solid-start";
+import { createRouteData, useRouteData } from "solid-start";
 import { type CharacterListDetails } from "~/data/characters";
 
 export const routeData = () => {
