@@ -1,10 +1,18 @@
 import classname from "classnames";
 import { Component, For } from "solid-js";
-import { useNavigate, useRouteData } from "solid-start";
-import { getUserCharList$, type CharacterListDetails } from "~/data/characters";
+import { createRouteData, useNavigate, useRouteData } from "solid-start";
+import { type CharacterListDetails } from "~/data/characters";
 
 export const routeData = () => {
-  return getUserCharList$();
+  return createRouteData(async () => {
+    const result = await fetch("/api/profile/characters");
+    const data = await result.json();
+    return data as {
+      isPatreonMember: boolean;
+      characters: CharacterListDetails[];
+      characterLimit: number | null;
+    };
+  }, {});
 };
 
 export default function CharacterNew() {
@@ -32,12 +40,10 @@ export default function CharacterNew() {
 }
 
 const CharacterCard: Component<CharacterListDetails> = (props) => {
-  const navigate = useNavigate();
-
-  let continueLinkRef: Element | undefined = undefined;
-  let editLinkRef: Element | undefined = undefined;
+  let continueLinkRef: HTMLLinkElement | undefined = undefined;
+  let editLinkRef: HTMLLinkElement | undefined = undefined;
   let optionsButtonRef: Element | undefined = undefined;
-  let openLinkRef: Element | undefined = undefined;
+  let openLinkRef: HTMLLinkElement | undefined = undefined;
 
   return (
     <li
@@ -54,11 +60,7 @@ const CharacterCard: Component<CharacterListDetails> = (props) => {
           return;
         }
 
-        navigate(
-          props.isPlayable
-            ? `/profile/characters/${props.id}`
-            : `/profile/characters/builder/basics/?id=${props.id}`,
-        );
+        props.isPlayable ? openLinkRef?.click() : continueLinkRef?.click();
       }}
     >
       <div class="relative z-10 col-span-1 col-start-1 row-span-3 row-start-1 transition-all group-hover:scale-110">
@@ -77,7 +79,7 @@ const CharacterCard: Component<CharacterListDetails> = (props) => {
       </div>
       <div class="col-start-1 col-end-4 row-span-1 row-start-2 ml-14 rounded-md bg-zinc-700 py-2 pr-4 pl-16">
         <h2 class="overflow-hidden text-ellipsis whitespace-nowrap text-lg">
-          {props.name} ajsdnas asjhdbas uajsbdashjkdb
+          {props.name}
         </h2>
         <h3 class="text-sm text-zinc-300">
           {(props.heratige || props.ancestry) ?? (

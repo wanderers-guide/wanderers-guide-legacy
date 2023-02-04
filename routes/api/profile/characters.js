@@ -1,10 +1,5 @@
 const express = require("express");
-
-const Character = require("../../../models/contentDB/Character");
-const Class = require("../../../models/contentDB/Class");
-const Ancestry = require("../../../models/contentDB/Ancestry");
-const Heritage = require("../../../models/contentDB/Heritage");
-const UniHeritage = require("../../../models/contentDB/UniHeritage");
+const { Prisma } = require("../../../js/PrismaConnection");
 const CharStateUtils = require("../../../js/CharStateUtils");
 
 const router = express.Router();
@@ -19,62 +14,55 @@ const authCheck = (req, res, next) => {
 };
 
 router.get("/", authCheck, async (req, res) => {
-  let [charactersRaw, classes, heritages, uniHeritages, ancestries] =
-    await Promise.all([
-      Character.findAll({
-        where: { userID: req.user.id },
-      }),
-      Class.findAll(),
-      Heritage.findAll(),
-      UniHeritage.findAll(),
-      Ancestry.findAll(),
-    ]);
-
-  const characters = charactersRaw.map((raw) => {
-    const character = raw.dataValues;
-
-    let cClass = classes.find((cClass) => {
-      return cClass.id == character.classID;
-    });
-
-    character.className = cClass != null ? cClass.name : "";
-
-    if (character.heritageID != null) {
-      let heritage = heritages.find((heritage) => {
-        return heritage.id == character.heritageID;
-      });
-      if (heritage != null) {
-        character.heritageName = heritage.name;
-      }
-    } else if (character.uniHeritageID != null) {
-      let heritageName = "";
-      let uniHeritage = uniHeritages.find((uniHeritage) => {
-        return uniHeritage.id == character.uniHeritageID;
-      });
-
-      if (uniHeritage != null) {
-        heritageName = uniHeritage.name;
-      }
-
-      let ancestry = ancestries.find((ancestry) => {
-        return ancestry.id == character.ancestryID;
-      });
-
-      heritageName += ancestry != null ? " " + ancestry.name : "";
-      character.heritageName = heritageName;
-    } else {
-      let ancestry = ancestries.find((ancestry) => {
-        return ancestry.id == character.ancestryID;
-      });
-      character.heritageName = ancestry != null ? ancestry.name : "";
-    }
-
-    character.isPlayable = CharStateUtils.isPlayable(character);
-
-    return character;
+  const user = await Prisma.users.findUnique({
+    where: { id: req.user.id },
+    select: {
+      id: true,
+      isPatreonMember: true,
+      characters: {
+        select: {
+          id: true,
+          name: true,
+          level: true,
+          ancestryID: true,
+          backgroundID: true,
+          classID: true,
+          ancestries: { select: { name: true } },
+          heritages: { select: { name: true } },
+          backgrounds: { select: { name: true } },
+          infoJSON: true,
+          classes: {
+            select: {
+              name: true,
+            },
+          },
+        },
+      },
+    },
   });
 
-  res.json(characters);
+  const result = {
+    isPatreonMember: !!user?.isPatreonMember,
+    characterLimit: user?.isPatreonMember ? 6 : null,
+    characters:
+      user?.characters?.map((char) => {
+        const { imageURL } = JSON.parse(char.infoJSON ?? "{}");
+
+        return {
+          id: char.id,
+          name: char.name,
+          ancestry: char.ancestries?.name ?? null,
+          heratige: char.heritages?.name ?? null,
+          background: char.backgrounds?.name ?? null,
+          level: char.level,
+          className: char.classes?.name ?? null,
+          imageUrl: imageURL,
+          isPlayable: CharStateUtils.isPlayable(char),
+        };
+      }) ?? [],
+  };
+  res.json(result);
+  return;
 });
 
 module.exports = router;
