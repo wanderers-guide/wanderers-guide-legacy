@@ -1,0 +1,12 @@
+node_modules
+dist
+.jshintrc
+.env
+app.yaml
+TO-DO.txt
+redis-server.exe
+redis.windows.conf
+dump.rdb
+*.sql
+*.log
+*.rdb
