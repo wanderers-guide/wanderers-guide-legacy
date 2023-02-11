@@ -2,7 +2,13 @@ import { StackContext, StaticSite, Api } from "sst/constructs";
 
 export function Frontend({ stack }: StackContext) {
   const api = new Api(stack, "Api", {
-    defaults: {},
+    defaults: {
+      function: {
+        nodejs: {
+          minify: true,
+        },
+      },
+    },
     routes: {
       "GET /": "services/functions/src/lambda.handler",
     },
