@@ -1,4 +1,3 @@
-node_modules
 dist
 .jshintrc
 .env
@@ -10,3 +9,16 @@ dump.rdb
 *.sql
 *.log
 *.rdb
+
+# dependencies
+node_modules
+
+# sst
+.sst
+.build
+
+# misc
+.DS_Store
+
+# local env files
+.env*.local
