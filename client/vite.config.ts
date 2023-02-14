@@ -6,7 +6,6 @@ export default defineConfig({
   plugins: [vue()],
   server: {
     proxy: {
-
       // There's probably a better way to do this, but I don't know my way around proxies well enough!
       "/vue-data": {
         target: "http://localhost:3000",

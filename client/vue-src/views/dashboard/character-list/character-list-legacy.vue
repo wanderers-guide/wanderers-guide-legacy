@@ -6,17 +6,20 @@
           <div
             class="header d-md-flex justify-content-between align-items-center pt-1 pl-1 pr-5"
           >
-            <div>
+            <!-- just threw in inline styles for the sake of speed. This needs to be refactored along with the header still -->
+            <div style="display: flex; align-self: start">
               <a href="/"
                 ><img
                   src="/images/logo.png"
-                  style="height: 50px"
+                  style="height: 50px; align-self: top"
                   alt="Wanderer's Guide"
               /></a>
-              <sup
+              <div
+                style="padding-top: 8px"
                 class="is-inline has-txt-value-number is-size-6-5 font-bebas-neue text-overflow-none is-hidden-mobile"
-                >&nbsp&nbspBeta 1.9.3</sup
               >
+                &nbsp&nbspBeta 1.9.3
+              </div>
             </div>
 
             <div>

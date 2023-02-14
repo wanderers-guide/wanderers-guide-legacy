@@ -7,7 +7,7 @@
 import CharacterList from "./views/dashboard/character-list/character-list.vue";
 </script>
 
-<style scoped>
+<style>
 #modal-root {
   width: 0;
   height: 0;
