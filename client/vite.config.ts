@@ -7,7 +7,7 @@ export default defineConfig({
   build: {
     rollupOptions: {
       input: {
-        app: "./index-vue.html", // default
+        app: "./index-vue.html", 
       },
     },
   },
@@ -28,5 +28,6 @@ export default defineConfig({
         ws: true,
       },
     },
+    open: "./index-vue.html",
   },
 });
