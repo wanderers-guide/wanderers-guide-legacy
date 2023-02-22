@@ -538,6 +538,14 @@ function handleCharacterOptions(character, hBundles, progessBundles) {
     });
     $("#contentSrc-TROUBLES-IN-OTARI").prop('checked', contentSourceArray.includes('TROUBLES-IN-OTARI'));
 
+    $("#contentSrc-TREASURE-VAULT").change(function(){
+      socket.emit("requestCharacterSourceChange", 
+          getCharIDFromURL(), 
+          'TREASURE-VAULT',
+          this.checked);
+    });
+    $("#contentSrc-TREASURE-VAULT").prop('checked', contentSourceArray.includes('TREASURE-VAULT'));
+    
     $("#contentSrc-THRESHOLD-KNOWLEDGE").change(function(){
       socket.emit("requestCharacterSourceChange", 
           getCharIDFromURL(), 

@@ -402,6 +402,14 @@ function handleBuildOptions(build, hBundles, progessBundles) {
     });
     $("#contentSrc-TROUBLES-IN-OTARI").prop('checked', contentSourceArray.includes('TROUBLES-IN-OTARI'));
 
+    $("#contentSrc-TREASURE-VAULT").change(function(){
+      socket.emit("requestBuildSourceChange", 
+          g_build_id, 
+          'TREASURE-VAULT',
+          this.checked);
+    });
+    $("#contentSrc-TREASURE-VAULT").prop('checked', contentSourceArray.includes('TREASURE-VAULT'));
+
     $("#contentSrc-THRESHOLD-KNOWLEDGE").change(function(){
       socket.emit("requestBuildSourceChange", 
           g_build_id, 

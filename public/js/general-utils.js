@@ -100,6 +100,7 @@ const g_contentSources = [
   {TextName: 'Quest for the Frozen Flame', CodeName: 'QUEST-FROZEN-FLAME', Link: 'https://paizo.com/store/pathfinder/adventures/adventurePath/questForTheFrozenFlame'},
   {TextName: 'The Slithering', CodeName: 'SLITHERING', Link: 'https://paizo.com/products/btq023hg?Pathfinder-Adventure-The-Slithering'},
   {TextName: 'Strength of Thousands', CodeName: 'STRENGTH-THOUSANDS', Link: 'https://paizo.com/store/pathfinder/adventures/adventurePath/strengthOfThousands'},
+  {TextName: 'Treasure Vault', CodeName: 'TREASURE-VAULT', Link: 'https://paizo.com/products/btq02dvy'},
   {TextName: 'Threshold of Knowledge', CodeName: 'THRESHOLD-KNOWLEDGE', Link: 'https://paizo.com/products/btq02apx?Pathfinder-Adventure-Threshold-of-Knowledge'},
   {TextName: 'Troubles in Otari', CodeName: 'TROUBLES-IN-OTARI', Link: 'https://paizo.com/products/btq026k1?Pathfinder-Adventure-Troubles-in-Otari'},
   {TextName: 'Bestiary', CodeName: 'BEST-1', Link: 'https://paizo.com/products/btq01zp4?Pathfinder-Bestiary'},
