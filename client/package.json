@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vue-tsc && vite build",
+    "build": "vue-tsc && vite build && npm run clean-dist-index",
+    "clean-dist-index": "cp dist/index.html dist/index-vue.html && rm dist/index.html",
     "preview": "vite preview"
   },
   "dependencies": {
