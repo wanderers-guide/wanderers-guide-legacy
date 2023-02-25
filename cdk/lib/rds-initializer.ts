@@ -35,7 +35,7 @@ export class CdkResourceInitializer extends Construct {
     })
 
     const fn = new DockerImageFunction(this, 'ResourceInitializerFn', {
-      memorySize: props.fnMemorySize || 128,
+      memorySize: props.fnMemorySize || 128,
       functionName: `${id}-ResInit${stack.stackName}`,
       code: props.fnCode,
       vpcSubnets: props.vpc.selectSubnets(props.subnetsSelection),
@@ -68,7 +68,7 @@ export class CdkResourceInitializer extends Construct {
     // because it is intended to be re-used, make sure it has permissions to invoke multiple "resource initializer functions" within the same stack and it's timeout is sufficient.
     // @see: https://github.com/aws/aws-cdk/blob/cafe8257b777c2c6f6143553b147873d640c6745/packages/%40aws-cdk/custom-resources/lib/aws-custom-resource/aws-custom-resource.ts#L360
     const customResourceFnRole = new Role(this, 'AwsCustomResourceRole', {
-      assumedBy: new ServicePrincipal('amazonaws.com')
+      assumedBy: new ServicePrincipal('lambda.amazonaws.com')
     })
     customResourceFnRole.addToPolicy(
       new PolicyStatement({

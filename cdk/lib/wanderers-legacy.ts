@@ -1,7 +1,6 @@
-import { CfnOutput, Duration, RemovalPolicy, Stack, StackProps, Token } from "aws-cdk-lib";
+import { aws_iam, aws_secretsmanager, CfnOutput, Duration, RemovalPolicy, Stack, StackProps, Token } from "aws-cdk-lib";
 import { AmazonLinuxGeneration, InstanceType, SecurityGroup, SubnetType, Vpc } from "aws-cdk-lib/aws-ec2";
-import { Role, ServicePrincipal, PolicyStatement } from "aws-cdk-lib/aws-iam";
-import { Bucket } from "aws-cdk-lib/aws-s3";
+import { Effect, PolicyStatement, Role, ServicePrincipal } from "aws-cdk-lib/aws-iam";
 import { AmazonLinuxImage, Instance, InstanceClass, InstanceSize, Peer, Port } from "aws-cdk-lib/aws-ec2";
 import * as fs from "fs";
 import * as path from "path";
@@ -79,7 +78,6 @@ export class WanderersLegacyStack extends Stack {
       },
       instanceIdentifier,
       credentials: Credentials.fromSecret(creds),
-      databaseName: 'wanderers-legacy',
       securityGroups: [rdsSecurityGroup],
       deletionProtection: false, // set to true to enable deletion protection
       autoMinorVersionUpgrade: true,
@@ -88,34 +86,34 @@ export class WanderersLegacyStack extends Stack {
       removalPolicy: RemovalPolicy.DESTROY
     });
 
-    const rdsInitializer = new CdkResourceInitializer(this, 'WanderersLegacyInitializer', {
-      config: {
-        credsSecretName
-      },
-      fnLogRetention: RetentionDays.FIVE_MONTHS,
-      fnCode: DockerImageCode.fromImageAsset(`${__dirname}/init-rds-function`, {}),
-      fnTimeout: Duration.minutes(2),
-      fnSecurityGroups: [],
-      vpc: wanderersLegacyVPC,
-      subnetsSelection: wanderersLegacyVPC.selectSubnets({
-        subnetType: SubnetType.PRIVATE_ISOLATED
-      })
-    })
+    // const rdsInitializer = new CdkResourceInitializer(this, 'WanderersLegacyInitializer', {
+    //   config: {
+    //     credsSecretName
+    //   },
+    //   fnLogRetention: RetentionDays.FIVE_MONTHS,
+    //   fnCode: DockerImageCode.fromImageAsset(`${__dirname}/init-rds-function`, {}),
+    //   fnTimeout: Duration.minutes(2),
+    //   fnSecurityGroups: [],
+    //   vpc: wanderersLegacyVPC,
+    //   subnetsSelection: wanderersLegacyVPC.selectSubnets({
+    //     subnetType: SubnetType.PRIVATE_ISOLATED
+    //   })
+    // })
 
     // manage resources dependency
-    rdsInitializer.customResource.node.addDependency(wanderersLegacyRDS)
+    // rdsInitializer.customResource.node.addDependency(wanderersLegacyRDS)
 
     // allow the initializer function to connect to the RDS instance
-    wanderersLegacyRDS.connections.allowFrom(rdsInitializer.function, Port.tcp(3306))
+    // wanderersLegacyRDS.connections.allowFrom(rdsInitializer.function, Port.tcp(3306))
 
     // allow initializer function to read RDS instance creds secret
-    creds.grantRead(rdsInitializer.function)
+    // creds.grantRead(rdsInitializer.function)
 
-    /* eslint no-new: 0 */
-    new CfnOutput(this, 'RdsInitFnResponse', {
-      value: Token.asString(rdsInitializer.response)
-    })
-    
+    // /* eslint no-new: 0 */
+    // new CfnOutput(this, 'RdsInitFnResponse', {
+    //   value: Token.asString(rdsInitializer.response)
+    // })
+
     // Create a new EC2 instance
     const wanderersLegacySiteEc2 = new Instance(this, "WanderersLegacySite", {
       vpc: wanderersLegacyVPC,
@@ -129,7 +127,18 @@ export class WanderersLegacyStack extends Stack {
       securityGroup: wgSecurityGroup,
       role,
     });
+    
+    const ssmPolicy = new PolicyStatement({
+      effect: Effect.ALLOW,
+      actions: [
+        'secretsmanager:GetSecretValue',
+      ],
+      resources: [
+        `arn:aws:secretsmanager:${this.region}:${this.account}:secret:dev/wanderersdev`,
+      ],
+    });
 
+    wanderersLegacySiteEc2.addToRolePolicy(ssmPolicy)
     wanderersLegacyRDS.grantConnect(wanderersLegacySiteEc2)
 
     // Retrieve the branch name from the context object
