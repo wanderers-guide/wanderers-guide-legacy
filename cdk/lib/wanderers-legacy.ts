@@ -119,7 +119,7 @@ export class WanderersLegacyStack extends Stack {
     );
     
     // Clone the app and change directory to the folder
-    wanderersLegacySiteEc2.addUserData(`git clone -b ${branchName} https://github.com/HeatherFlux/wanderers-guide.git && cd wanderers-guide/services/express`);
+    wanderersLegacySiteEc2.addUserData(`git clone -b ${branchName} https://github.com/wanderers-guide/wanderers-guide.git && cd wanderers-guide/services/express`);
     
     // Add db data
     wanderersLegacySiteEc2.addUserData(
