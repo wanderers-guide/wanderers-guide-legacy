@@ -125,8 +125,6 @@ export class WanderersLegacyStack extends Stack {
     wanderersLegacySiteEc2.addUserData(
       `export DB_HOST=${wanderersLegacyRDS.dbInstanceEndpointAddress}`,
       `export DB_PORT=${wanderersLegacyRDS.dbInstanceEndpointPort}`,
-      `CLOUD_SQL_USERNAME=${creds.secretValue.toJSON().username}`,
-      `CLOUD_SQL_PASSWORD=${creds.secretValue.toJSON().password}`
     )
     
     // Start the app

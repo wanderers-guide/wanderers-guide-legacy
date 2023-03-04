@@ -10,8 +10,10 @@
     "build": "npx prisma generate",
     "format": "npx prettier --write .",
     "docker:mysql": "docker-compose up --build mysql",
+    "set-env-dev": "AWS_SDK_LOAD_CONFIG=1 aws-dotenv set",
     "pull-env-dev": "AWS_SDK_LOAD_CONFIG=1 aws-dotenv pull",
-    "pull-env-prod": "AWS_SDK_LOAD_CONFIG=1 aws-dotenv pull prod"
+    "set-env-prod": "aws-dotenv set prod",
+    "pull-env-prod": "aws-dotenv pull prod"
   },
   "author": "Aaron Cassar",
   "license": "GNU",
