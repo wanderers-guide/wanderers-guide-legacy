@@ -6,6 +6,7 @@ import * as fs from "fs";
 import * as path from "path";
 import { Construct } from "constructs";
 import { Credentials, DatabaseInstance, DatabaseInstanceEngine, DatabaseSecret, MysqlEngineVersion } from "aws-cdk-lib/aws-rds";
+import { Secret } from "aws-cdk-lib/aws-secretsmanager";
 
 export class WanderersLegacyStack extends Stack {
   url: string
@@ -97,17 +98,11 @@ export class WanderersLegacyStack extends Stack {
       role,
     });
     
-    const ssmPolicy = new PolicyStatement({
-      effect: Effect.ALLOW,
-      actions: [
-        'secretsmanager:GetSecretValue',
-      ],
-      resources: [
-        `arn:aws:secretsmanager:${this.region}:${this.account}:secret:dev/wanderersdev`,
-      ],
-    });
+    const wgSecrets = Secret.fromSecretNameV2(this, 'WGSecret', 'wanderers-guide-dev')
 
-    wanderersLegacySiteEc2.addToRolePolicy(ssmPolicy)
+    creds.grantRead(wanderersLegacySiteEc2)
+    wgSecrets.grantRead(wanderersLegacySiteEc2)
+    
     wanderersLegacyRDS.grantConnect(wanderersLegacySiteEc2)
 
     // Retrieve the branch name from the context object
