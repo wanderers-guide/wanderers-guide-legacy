@@ -1,14 +1,11 @@
-import { aws_iam, aws_secretsmanager, CfnOutput, Duration, RemovalPolicy, Stack, StackProps, Token } from "aws-cdk-lib";
+import { CfnOutput, Duration, RemovalPolicy, Stack, StackProps } from "aws-cdk-lib";
 import { AmazonLinuxGeneration, InstanceType, SecurityGroup, SubnetType, Vpc } from "aws-cdk-lib/aws-ec2";
 import { Effect, PolicyStatement, Role, ServicePrincipal } from "aws-cdk-lib/aws-iam";
 import { AmazonLinuxImage, Instance, InstanceClass, InstanceSize, Peer, Port } from "aws-cdk-lib/aws-ec2";
 import * as fs from "fs";
 import * as path from "path";
 import { Construct } from "constructs";
-import { Credentials, DatabaseInstance, DatabaseInstanceEngine, DatabaseSecret, MysqlEngineVersion, StorageType } from "aws-cdk-lib/aws-rds";
-import { CdkResourceInitializer } from "./rds-initializer";
-import { RetentionDays } from "aws-cdk-lib/aws-logs";
-import { DockerImageCode } from "aws-cdk-lib/aws-lambda";
+import { Credentials, DatabaseInstance, DatabaseInstanceEngine, DatabaseSecret, MysqlEngineVersion } from "aws-cdk-lib/aws-rds";
 
 export class WanderersLegacyStack extends Stack {
   url: string
@@ -85,34 +82,6 @@ export class WanderersLegacyStack extends Stack {
       preferredBackupWindow: '07:00-09:00',
       removalPolicy: RemovalPolicy.DESTROY
     });
-
-    // const rdsInitializer = new CdkResourceInitializer(this, 'WanderersLegacyInitializer', {
-    //   config: {
-    //     credsSecretName
-    //   },
-    //   fnLogRetention: RetentionDays.FIVE_MONTHS,
-    //   fnCode: DockerImageCode.fromImageAsset(`${__dirname}/init-rds-function`, {}),
-    //   fnTimeout: Duration.minutes(2),
-    //   fnSecurityGroups: [],
-    //   vpc: wanderersLegacyVPC,
-    //   subnetsSelection: wanderersLegacyVPC.selectSubnets({
-    //     subnetType: SubnetType.PRIVATE_ISOLATED
-    //   })
-    // })
-
-    // manage resources dependency
-    // rdsInitializer.customResource.node.addDependency(wanderersLegacyRDS)
-
-    // allow the initializer function to connect to the RDS instance
-    // wanderersLegacyRDS.connections.allowFrom(rdsInitializer.function, Port.tcp(3306))
-
-    // allow initializer function to read RDS instance creds secret
-    // creds.grantRead(rdsInitializer.function)
-
-    // /* eslint no-new: 0 */
-    // new CfnOutput(this, 'RdsInitFnResponse', {
-    //   value: Token.asString(rdsInitializer.response)
-    // })
 
     // Create a new EC2 instance
     const wanderersLegacySiteEc2 = new Instance(this, "WanderersLegacySite", {
