@@ -1,6 +1,6 @@
 import { CfnOutput, Duration, RemovalPolicy, Stack, StackProps } from "aws-cdk-lib";
 import { AmazonLinuxGeneration, InstanceType, SecurityGroup, SubnetType, Vpc } from "aws-cdk-lib/aws-ec2";
-import { Effect, PolicyStatement, Role, ServicePrincipal } from "aws-cdk-lib/aws-iam";
+import { Role, ServicePrincipal } from "aws-cdk-lib/aws-iam";
 import { AmazonLinuxImage, Instance, InstanceClass, InstanceSize, Peer, Port } from "aws-cdk-lib/aws-ec2";
 import * as fs from "fs";
 import * as path from "path";
