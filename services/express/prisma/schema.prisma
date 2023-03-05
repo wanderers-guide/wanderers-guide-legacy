@@ -157,7 +157,7 @@ model characters {
   classes_characters_classID_2Toclasses classes?               @relation("characters_classID_2Toclasses", fields: [classID_2], references: [id], onUpdate: SetNull, map: "char_classID_2")
   heritages                             heritages?             @relation(fields: [heritageID], references: [id], onUpdate: SetNull, map: "char_heritageID")
   inventories                           inventories?           @relation(fields: [inventoryID], references: [id], onDelete: Cascade, map: "char_inventoryID")
-  uniHeritages                          uniheritages?          @relation(fields: [uniHeritageID], references: [id], onUpdate: SetNull, map: "char_uniHeritageID")
+  uniHeritages                          uniHeritages?          @relation(fields: [uniHeritageID], references: [id], onUpdate: SetNull, map: "char_uniHeritageID")
   users                                 users?                 @relation(fields: [userID], references: [id], onDelete: Cascade, map: "char_userID")
   noteFields                            noteFields[]
   spellbookSpells                       spellbookSpells[]
@@ -316,7 +316,7 @@ model feats {
   version           String?            @db.VarChar(90)
   createdAt         DateTime?          @db.DateTime(0)
   updatedAt         DateTime?          @db.DateTime(0)
-  archeTypes        archeTypes[]
+  archetypes        archetypes[]
   featTags          featTags[]
   homebrewBundles   homebrewBundles?   @relation(fields: [homebrewID], references: [id], onDelete: Cascade, map: "feats_homebrewID")
   skills            skills?            @relation(fields: [skillID], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "feats_skillID")
@@ -540,14 +540,14 @@ model tags {
   createdAt       DateTime?        @db.DateTime(0)
   updatedAt       DateTime?        @db.DateTime(0)
   ancestries      ancestries[]
-  archeTypes      archeTypes[]
+  archetypes      archetypes[]
   classes         classes[]
   featTags        featTags[]
   taggedExtras    taggedExtras[]
   taggedItems     taggedItems[]
   taggedSpells    taggedSpells[]
   homebrewBundles homebrewBundles? @relation(fields: [homebrewID], references: [id], onDelete: Cascade, map: "tag_homebrewID")
-  uniheritages    uniheritages[]
+  uniHeritages    uniHeritages[]
 
   @@index([homebrewID], map: "tag_homebrewID")
 }
@@ -637,7 +637,7 @@ model builds {
   classes_builds_classIDToclasses   classes?            @relation("builds_classIDToclasses", fields: [classID], references: [id], onUpdate: SetNull, map: "buildClassID")
   classes_builds_classID_2Toclasses classes?            @relation("builds_classID_2Toclasses", fields: [classID_2], references: [id], onUpdate: SetNull, map: "buildClassID_2")
   heritages                         heritages?          @relation(fields: [heritageID], references: [id], onUpdate: SetNull, map: "buildHeritageID")
-  uniHeritages                      uniheritages?       @relation(fields: [uniHeritageID], references: [id], onUpdate: SetNull, map: "buildUniHeritageID")
+  uniHeritages                      uniHeritages?       @relation(fields: [uniHeritageID], references: [id], onUpdate: SetNull, map: "buildUniHeritageID")
   users                             users?              @relation(fields: [userID], references: [id], onDelete: Cascade, map: "buildUserID")
   characters                        characters[]
 
@@ -648,29 +648,6 @@ model builds {
   @@index([heritageID], map: "buildHeritageID_idx")
   @@index([uniHeritageID], map: "buildUniHeritageID_idx")
   @@index([userID], map: "buildUserID_idx")
-}
-
-model uniheritages {
-  id              Int                 @id @default(autoincrement())
-  name            String?             @db.VarChar(45)
-  rarity          uniheritages_rarity @default(COMMON)
-  description     String?             @db.Text
-  tagID           Int?
-  code            String?             @db.VarChar(1000)
-  artworkURL      String?             @db.VarChar(200)
-  isArchived      Boolean             @default(false)
-  contentSrc      String              @default("CRB") @db.VarChar(45)
-  homebrewID      Int?
-  version         String?             @db.VarChar(90)
-  createdAt       DateTime?           @db.DateTime(0)
-  updatedAt       DateTime?           @db.DateTime(0)
-  builds          builds[]
-  characters      characters[]
-  homebrewbundles homebrewBundles?    @relation(fields: [homebrewID], references: [id], onDelete: Cascade, map: "uniHeritage_homebrewID")
-  tags            tags?               @relation(fields: [tagID], references: [id], onUpdate: SetNull, map: "uniHeritage_tagID")
-
-  @@index([homebrewID], map: "uniHeritage_homebrewID_idx")
-  @@index([tagID], map: "uniHeritage_tagID_idx")
 }
 
 model accessTokens {
@@ -793,28 +770,6 @@ model apiClientApps {
   users        users                      @relation(fields: [userID], references: [id], onDelete: Cascade, map: "userID_appAPIAccess")
 
   @@index([userID], map: "userID_appAPIAccess")
-}
-
-model archeTypes {
-  id               Int              @id @default(autoincrement())
-  name             String?          @db.VarChar(45)
-  description      String?          @db.Text
-  dedicationFeatID Int?
-  isMulticlass     Boolean
-  tagID            Int?
-  isArchived       Boolean          @default(false)
-  contentSrc       String           @default("CRB") @db.VarChar(45)
-  homebrewID       Int?
-  version          String?          @db.VarChar(90)
-  createdAt        DateTime?        @db.DateTime(0)
-  updatedAt        DateTime?        @db.DateTime(0)
-  feats            feats?           @relation(fields: [dedicationFeatID], references: [id], onUpdate: SetNull, map: "archeTypes_dedicationFeatID")
-  homebrewBundles  homebrewBundles? @relation(fields: [homebrewID], references: [id], onDelete: Cascade, map: "archeTypes_homebrewID")
-  tags             tags?            @relation(fields: [tagID], references: [id], onUpdate: SetNull, map: "archeTypes_tagID")
-
-  @@index([dedicationFeatID])
-  @@index([homebrewID])
-  @@index([tagID])
 }
 
 model buildDataMappings {
@@ -966,21 +921,6 @@ model classAbilities {
   @@index([selectOptionFor], map: "classAbil_optionFor_idx")
 }
 
-model classArcheTypes {
-  id                  Int              @id @default(autoincrement())
-  name                String?          @db.VarChar(45)
-  description         String?          @db.Text
-  replacementCodeJSON String?          @db.VarChar(20000)
-  dedicationFeatName  String?          @db.VarChar(60)
-  contentSrc          String           @default("CRB") @db.VarChar(45)
-  homebrewID          Int?
-  createdAt           DateTime?        @db.DateTime(0)
-  updatedAt           DateTime?        @db.DateTime(0)
-  homebrewBundles     homebrewBundles? @relation(fields: [homebrewID], references: [id], onDelete: Cascade, map: "classArchetype_homebrewID")
-
-  @@index([homebrewID], map: "classArchetype_homebrewID_idx")
-}
-
 model damageTypes {
   id          Int       @id @default(autoincrement())
   name        String?   @db.VarChar(45)
@@ -1048,10 +988,10 @@ model homebrewBundles {
   ancestryFlaws       ancestryFlaws[]
   ancestryLanguages   ancestryLanguages[]
   animalCompanions    animalCompanions[]
-  archeTypes          archeTypes[]
+  archetypes          archetypes[]
   backgrounds         backgrounds[]
   classAbilities      classAbilities[]
-  classArcheTypes     classArcheTypes[]
+  classArchetypes     classArchetypes[]
   classes             classes[]
   creatures           creatures[]
   domains             domains[]
@@ -1067,7 +1007,7 @@ model homebrewBundles {
   specificFamiliars   specificFamiliars[]
   spells              spells[]
   tags                tags[]
-  uniheritages        uniheritages[]
+  uniHeritages        uniHeritages[]
   userHomebrewBundles userHomebrewBundles[]
 
   @@index([userID], map: "homebrewBundleUserID")
@@ -1241,8 +1181,8 @@ model spellbookSpells {
   spells          spells?     @relation(fields: [spellID], references: [id], onDelete: Cascade, map: "spellBookSpells_spellID")
 
   @@unique([spellSRC, charID, spellID, spellLevel], map: "scs_unique_three")
-  @@index([charID], map: "spellBookSpells_charID_idx")
-  @@index([spellID], map: "spellBookSpells_spellID_idx")
+  @@index([charID])
+  @@index([spellID])
 }
 
 model taggedExtras {
@@ -1307,6 +1247,66 @@ model featTags {
 
   @@id([featID, tagID])
   @@index([tagID], map: "featTag.tagID_idx")
+}
+
+model archetypes {
+  id               Int              @id @default(autoincrement())
+  name             String?          @db.VarChar(45)
+  description      String?          @db.Text
+  dedicationFeatID Int?
+  isMulticlass     Boolean
+  tagID            Int?
+  isArchived       Boolean          @default(false)
+  contentSrc       String           @default("CRB") @db.VarChar(45)
+  homebrewID       Int?
+  version          String?          @db.VarChar(90)
+  createdAt        DateTime?        @db.DateTime(0)
+  updatedAt        DateTime?        @db.DateTime(0)
+  feats            feats?           @relation(fields: [dedicationFeatID], references: [id], onUpdate: SetNull, map: "archetypes_dedicationFeatID")
+  homebrewBundles  homebrewBundles? @relation(fields: [homebrewID], references: [id], onDelete: Cascade, map: "archetypes_homebrewID")
+  tags             tags?            @relation(fields: [tagID], references: [id], onUpdate: SetNull, map: "archetypes_tagID")
+
+  @@index([dedicationFeatID])
+  @@index([homebrewID])
+  @@index([tagID])
+}
+
+model classArchetypes {
+  id                  Int              @id @default(autoincrement())
+  name                String?          @db.VarChar(45)
+  description         String?          @db.Text
+  replacementCodeJSON String?          @db.VarChar(20000)
+  dedicationFeatName  String?          @db.VarChar(60)
+  contentSrc          String           @default("CRB") @db.VarChar(45)
+  homebrewID          Int?
+  createdAt           DateTime?        @db.DateTime(0)
+  updatedAt           DateTime?        @db.DateTime(0)
+  homebrewBundles     homebrewBundles? @relation(fields: [homebrewID], references: [id], onDelete: Cascade, map: "classArchetype_homebrewID")
+
+  @@index([homebrewID], map: "classArchetype_homebrewID_idx")
+}
+
+model uniHeritages {
+  id              Int                 @id @default(autoincrement())
+  name            String?             @db.VarChar(45)
+  rarity          uniHeritages_rarity @default(COMMON)
+  description     String?             @db.Text
+  tagID           Int?
+  code            String?             @db.VarChar(1000)
+  artworkURL      String?             @db.VarChar(200)
+  isArchived      Boolean             @default(false)
+  contentSrc      String              @default("CRB") @db.VarChar(45)
+  homebrewID      Int?
+  version         String?             @db.VarChar(90)
+  createdAt       DateTime?           @db.DateTime(0)
+  updatedAt       DateTime?           @db.DateTime(0)
+  builds          builds[]
+  characters      characters[]
+  homebrewBundles homebrewBundles?    @relation(fields: [homebrewID], references: [id], onDelete: Cascade, map: "uniHeritage_homebrewID")
+  tags            tags?               @relation(fields: [tagID], references: [id], onUpdate: SetNull, map: "uniHeritage_tagID")
+
+  @@index([homebrewID], map: "uniHeritage_homebrewID_idx")
+  @@index([tagID], map: "uniHeritage_tagID_idx")
 }
 
 enum ancestries_rarity {
@@ -1512,13 +1512,6 @@ enum weapons_meleeWeaponType {
   HAMMER
   SPEAR
   BRAWLING
-}
-
-enum uniheritages_rarity {
-  COMMON
-  UNCOMMON
-  RARE
-  UNIQUE
 }
 
 enum items_itemType {
@@ -1737,4 +1730,11 @@ enum invItems_itemWeaponDieType {
   d12
   d20
   NONE
+}
+
+enum uniHeritages_rarity {
+  COMMON
+  UNCOMMON
+  RARE
+  UNIQUE
 }
