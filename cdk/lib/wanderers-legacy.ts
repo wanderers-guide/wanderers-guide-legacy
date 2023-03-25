@@ -1,5 +1,5 @@
 import { CfnOutput, Duration, RemovalPolicy, Stack, StackProps } from "aws-cdk-lib";
-import { AmazonLinuxGeneration, InstanceType, SecurityGroup, SubnetType, Vpc } from "aws-cdk-lib/aws-ec2";
+import { AmazonLinuxGeneration, CfnEIP, CfnEIPAssociation, InstanceType, SecurityGroup, SubnetType, Vpc } from "aws-cdk-lib/aws-ec2";
 import { Role, ServicePrincipal } from "aws-cdk-lib/aws-iam";
 import { AmazonLinuxImage, Instance, InstanceClass, InstanceSize, Peer, Port } from "aws-cdk-lib/aws-ec2";
 import * as fs from "fs";
@@ -36,6 +36,7 @@ export class WanderersLegacyStack extends Stack {
     // Create a new security group for the site
     const wgSecurityGroup = new SecurityGroup(this, "WanderersLegacySiteSecurityGroup", {
       vpc: wanderersLegacyVPC,
+      allowAllOutbound: true,
     });
 
     // Allow console access, as well as traffic 
@@ -97,13 +98,20 @@ export class WanderersLegacyStack extends Stack {
       securityGroup: wgSecurityGroup,
       role,
     });
-    
+    wanderersLegacySiteEc2.connections.allowFromAnyIpv4(Port.tcp(80), 'Allow HTTP access from Internet');
+    const eipAllocationId = new CfnEIP(this, 'ElasticipAllocation', {});
+    new CfnEIPAssociation(this, 'ElasticipAssociation', {
+      instanceId: wanderersLegacySiteEc2.instanceId,
+      allocationId: eipAllocationId.ref,
+    });
     const wgSecrets = Secret.fromSecretNameV2(this, 'WGSecret', 'wanderers-guide-dev')
 
     creds.grantRead(wanderersLegacySiteEc2)
     wgSecrets.grantRead(wanderersLegacySiteEc2)
     
     wanderersLegacyRDS.grantConnect(wanderersLegacySiteEc2)
+
+
 
     // Retrieve the branch name from the context object
     const branchName = this.node.tryGetContext('branchName') || 'main';
