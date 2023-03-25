@@ -6,3 +6,13 @@ yum install -y nodejs
 
 # Install Git
 yum install -y git
+
+sudo amazon-linux-extras install docker
+sudo service docker start
+sudo usermod -a -G docker ec2-user
+# Download and install
+sudo curl -L https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
+# Fix permissions
+sudo chmod +x /usr/local/bin/docker-compose
+cd sample-app
+docker-compose up -d

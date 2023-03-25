@@ -107,14 +107,15 @@ export class WanderersLegacyStack extends Stack {
 
     // Retrieve the branch name from the context object
     const branchName = this.node.tryGetContext('branchName') || 'main';
-
+    
+    // Clone the app and change directory to the folder
+    wanderersLegacySiteEc2.addUserData('yum install -y git');
+    wanderersLegacySiteEc2.addUserData(`git clone -b ${branchName} https://github.com/wanderers-guide/wanderers-guide.git && cd wanderers-guide/services/express`);
+    
     // Install Node.js and other dependencies on the EC2 instance
     wanderersLegacySiteEc2.addUserData(
       fs.readFileSync(path.join(__dirname, "bootstrap.sh"), "utf-8")
     );
-    
-    // Clone the app and change directory to the folder
-    wanderersLegacySiteEc2.addUserData(`git clone -b ${branchName} https://github.com/wanderers-guide/wanderers-guide.git && cd wanderers-guide/services/express`);
     
     // Add db data
     wanderersLegacySiteEc2.addUserData(
@@ -123,7 +124,7 @@ export class WanderersLegacyStack extends Stack {
     )
     
     // Start the app
-    wanderersLegacySiteEc2.addUserData("npm install && npm run build && npm run server");
+    wanderersLegacySiteEc2.addUserData("docker-compose up -d");
 
     // Output the EC2 instance public IP
     new CfnOutput(this, "InstancePublicIp", { value: `https://${wanderersLegacySiteEc2.instancePublicIp}` });
