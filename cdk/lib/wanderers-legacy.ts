@@ -124,7 +124,8 @@ export class WanderersLegacyStack extends Stack {
     )
     
     // Start the app
-    wanderersLegacySiteEc2.addUserData("docker-compose up -d");
+    wanderersLegacySiteEc2.addUserData("sudo npm run pull-env-dev");
+    wanderersLegacySiteEc2.addUserData("sudo /usr/local/bin/docker-compose up -d");
 
     // Output the EC2 instance public IP
     new CfnOutput(this, "InstancePublicIp", { value: `https://${wanderersLegacySiteEc2.instancePublicIp}` });
