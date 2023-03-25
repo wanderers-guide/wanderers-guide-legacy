@@ -10,7 +10,9 @@
     "deploy": "sst deploy",
     "remove": "sst remove",
     "console": "sst console",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "cdk:branch": "cd cdk && cdk --context branchName=$(git rev-parse --abbrev-ref HEAD) deploy",
+    "cdk:main": "cd cdk && cdk --context branchName=main deploy"
   },
   "workspaces": [
     "services/*",
