@@ -44,6 +44,7 @@ export class WanderersLegacyStack extends Stack {
     wgSecurityGroup.addIngressRule(Peer.anyIpv4(), Port.tcp(80));
     wgSecurityGroup.addIngressRule(Peer.anyIpv4(), Port.tcp(443));
     wgSecurityGroup.addIngressRule(Peer.anyIpv4(), Port.tcp(3030));
+    wgSecurityGroup.addIngressRule(Peer.anyIpv4(), Port.tcp(3000));
 
     // Create a new IAM role for the EC2 instance
     const role = new Role(this, "WanderersLegacySiteEC2InstanceRole", {
@@ -99,11 +100,7 @@ export class WanderersLegacyStack extends Stack {
       role,
     });
     wanderersLegacySiteEc2.connections.allowFromAnyIpv4(Port.tcp(80), 'Allow HTTP access from Internet');
-    const eipAllocationId = new CfnEIP(this, 'ElasticipAllocation', {});
-    new CfnEIPAssociation(this, 'ElasticipAssociation', {
-      instanceId: wanderersLegacySiteEc2.instanceId,
-      allocationId: eipAllocationId.ref,
-    });
+
     const wgSecrets = Secret.fromSecretNameV2(this, 'WGSecret', 'wanderers-guide-dev')
 
     creds.grantRead(wanderersLegacySiteEc2)
@@ -133,7 +130,8 @@ export class WanderersLegacyStack extends Stack {
     
     // Start the app
     wanderersLegacySiteEc2.addUserData("sudo npm run pull-env-dev");
-    wanderersLegacySiteEc2.addUserData("sudo /usr/local/bin/docker-compose up -d");
+    wanderersLegacySiteEc2.addUserData("sudo service docker start");
+    wanderersLegacySiteEc2.addUserData("sudo /usr/local/bin/docker-compose up");
 
     // Output the EC2 instance public IP
     new CfnOutput(this, "InstancePublicIp", { value: `https://${wanderersLegacySiteEc2.instancePublicIp}` });
