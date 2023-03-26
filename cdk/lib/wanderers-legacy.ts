@@ -130,11 +130,11 @@ export class WanderersLegacyStack extends Stack {
     
     // Start the app
     wanderersLegacySiteEc2.addUserData("sudo npm run pull-env-dev");
-    wanderersLegacySiteEc2.addUserData("sudo service docker start");
+    wanderersLegacySiteEc2.addUserData("sudo /bin/systemctl start docker.service");
     wanderersLegacySiteEc2.addUserData("sudo /usr/local/bin/docker-compose up");
 
     // Output the EC2 instance public IP
-    new CfnOutput(this, "InstancePublicIp", { value: `https://${wanderersLegacySiteEc2.instancePublicIp}` });
+    new CfnOutput(this, "InstancePublicIp", { value: `http://${wanderersLegacySiteEc2.instancePublicIp}:3000` });
     this.url = wanderersLegacySiteEc2.instancePublicIp;
   }
 }
