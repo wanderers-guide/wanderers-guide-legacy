@@ -1,0 +1,12 @@
+{
+  "extends": "@tsconfig/node18/tsconfig.json",
+  "compilerOptions": {
+    "module": "esnext",
+    "baseUrl": ".",
+    "paths": {
+      "@wg-remake/core/*": [
+        "../core/src/*"
+      ]
+    }
+  }
+}
