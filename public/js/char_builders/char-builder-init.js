@@ -330,6 +330,14 @@ function handleCharacterOptions(character, hBundles, progessBundles) {
     });
     $("#contentSrc-LOST-CITY-ABSALOM").prop('checked', contentSourceArray.includes('LOST-CITY-ABSALOM'));
 
+    $("#contentSrc-LOST-FIREBRANDS").change(function(){
+      socket.emit("requestCharacterSourceChange", 
+          getCharIDFromURL(), 
+          'LOST-FIREBRANDS',
+          this.checked);
+    });
+    $("#contentSrc-LOST-FIREBRANDS").prop('checked', contentSourceArray.includes('LOST-FIREBRANDS'));
+
     $("#contentSrc-LOST-GOD-MAGIC").change(function(){
         socket.emit("requestCharacterSourceChange", 
             getCharIDFromURL(), 
@@ -473,6 +481,14 @@ function handleCharacterOptions(character, hBundles, progessBundles) {
           this.checked);
     });
     $("#contentSrc-FIST-PHOENIX").prop('checked', contentSourceArray.includes('FIST-PHOENIX'));
+
+    $("#contentSrc-GATEWALKERS").change(function(){
+      socket.emit("requestCharacterSourceChange", 
+          getCharIDFromURL(), 
+          'GATEWALKERS',
+          this.checked);
+    });
+    $("#contentSrc-GATEWALKERS").prop('checked', contentSourceArray.includes('GATEWALKERS'));
 
     $("#contentSrc-KINGMAKER").change(function(){
       socket.emit("requestCharacterSourceChange", 
