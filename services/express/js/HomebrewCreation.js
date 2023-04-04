@@ -62,7 +62,7 @@ module.exports = class HomebrewCreation {
     return Tag.create({
       // Create Trait
       name: trimVal(data.traitName),
-      description: data.traitDescription,
+      description: Buffer.from(data.traitDescription, 'utf-8').toString(),
       homebrewID: homebrewID,
     }).then((trait) => {
       return trait;
@@ -103,7 +103,7 @@ module.exports = class HomebrewCreation {
     return SheetState.create({
       // Create Toggleable
       name: trimVal(data.toggleableName),
-      description: data.toggleableDescription,
+      description: Buffer.from(data.toggleableDescription, 'utf-8').toString(),
       code: data.toggleableCode,
       homebrewID: homebrewID,
     }).then((toggleable) => {
@@ -207,7 +207,7 @@ module.exports = class HomebrewCreation {
       name: trimVal(data.languageName),
       speakers: data.languageSpeakers,
       script: data.languageScript,
-      description: data.languageDescription,
+      description: Buffer.from(data.languageDescription, 'utf-8').toString(),
       homebrewID: homebrewID,
     }).then((language) => {
       return language;
@@ -253,7 +253,7 @@ module.exports = class HomebrewCreation {
       name: trimVal(data.backgroundName),
       version: null,
       rarity: data.backgroundRarity,
-      description: data.backgroundDescription,
+      description: Buffer.from(data.backgroundDescription, 'utf-8').toString(),
       boostOne: data.backgroundBoosts,
       boostTwo: "ALL",
       code: data.backgroundCode,
@@ -316,7 +316,7 @@ module.exports = class HomebrewCreation {
     return Tag.create({
       // Create Class Tag
       name: trimVal(data.className),
-      description: tagDesc,
+      description: Buffer.from(tagDesc, 'utf-8').toString(),
       isHidden: 1,
       homebrewID: homebrewID,
     }).then((classTag) => {
@@ -326,7 +326,7 @@ module.exports = class HomebrewCreation {
         version: null,
         hitPoints: data.classHitPoints,
         keyAbility: data.classKeyAbility,
-        description: data.classDescription,
+        description: Buffer.from(data.classDescription, 'utf-8').toString(),
         artworkURL: data.classImageURL,
         tPerception: data.classPerception,
         tFortitude: data.classFortitude,
@@ -393,7 +393,7 @@ module.exports = class HomebrewCreation {
       classID: classID,
       name: trimVal(classAbility.name),
       level: classAbility.level,
-      description: classAbility.description,
+      description: Buffer.from(classAbility.description, 'utf-8').toString(),
       code: classAbility.code,
       selectType: selectType,
       selectOptionFor: null,
@@ -409,7 +409,7 @@ module.exports = class HomebrewCreation {
             classID: classID,
             name: classAbilityOption.name,
             level: null,
-            description: classAbilityOption.description,
+            description: Buffer.from(classAbilityOption.description, 'utf-8').toString(),
             code: classAbilityOption.code,
             selectType: "SELECT_OPTION",
             selectOptionFor: classAbilityModel.id,
@@ -504,7 +504,7 @@ module.exports = class HomebrewCreation {
       classID: null,
       name: trimVal(classAbility.name),
       level: null,
-      description: classAbility.description,
+      description: Buffer.from(classAbility.description, 'utf-8').toString(),
       code: classAbility.code,
       selectType: "SELECT_OPTION",
       selectOptionFor: null,
@@ -558,7 +558,7 @@ module.exports = class HomebrewCreation {
     return Tag.create({
       // Create Archetype Tag
       name: data.archetypeName + " Archetype",
-      description: tagDesc,
+      description: Buffer.from(tagDesc, 'utf-8').toString(),
       isHidden: 1,
       homebrewID: homebrewID,
     }).then((archetypeTag) => {
@@ -583,7 +583,7 @@ module.exports = class HomebrewCreation {
           // Create Archetype
           name: trimVal(data.archetypeName),
           version: null,
-          description: data.archetypeDescription,
+          description: Buffer.from(data.archetypeDescription, 'utf-8').toString(),
           dedicationFeatID: dedicationFeat.id,
           isMulticlass: data.archetypeIsMulticlass,
           tagID: archetypeTag.id,
@@ -704,7 +704,7 @@ module.exports = class HomebrewCreation {
     return Tag.create({
       // Create Ancestry Tag
       name: trimVal(data.ancestryName),
-      description: tagDesc,
+      description: Buffer.from(tagDesc, 'utf-8').toString(),
       isHidden: 1,
       homebrewID: homebrewID,
     }).then((ancestryTag) => {
@@ -716,7 +716,7 @@ module.exports = class HomebrewCreation {
         hitPoints: data.ancestryHitPoints,
         size: data.ancestrySize,
         speed: data.ancestrySpeed,
-        description: data.ancestryDescription,
+        description: Buffer.from(data.ancestryDescription, 'utf-8').toString(),
         artworkURL: data.ancestryImageURL,
         visionSenseID: data.ancestryVisionSenseID,
         additionalSenseID: data.ancestryAdditionalSenseID,
@@ -911,7 +911,7 @@ module.exports = class HomebrewCreation {
       name: trimVal(data.name),
       ancestryID: ancestryID,
       rarity: data.rarity,
-      description: data.description,
+      description: Buffer.from(data.description, 'utf-8').toString(),
       code: data.code,
       contentSrc: "CRB",
       indivAncestryName: data.indivAncestryName,
@@ -961,7 +961,7 @@ module.exports = class HomebrewCreation {
     return Tag.create({
       // Create Heritage Tag
       name: trimVal(data.heritageName),
-      description: tagDesc,
+      description: Buffer.from(tagDesc, 'utf-8').toString(),
       isHidden: 1,
       homebrewID: homebrewID,
     }).then((heritageTag) => {
@@ -970,7 +970,7 @@ module.exports = class HomebrewCreation {
         name: trimVal(data.heritageName),
         version: null,
         rarity: data.heritageRarity,
-        description: data.heritageDescription,
+        description: Buffer.from(data.heritageDescription, 'utf-8').toString(),
         artworkURL: data.heritageImageURL,
         tagID: heritageTag.id,
         contentSrc: "CRB",
@@ -1111,7 +1111,7 @@ module.exports = class HomebrewCreation {
       frequency: data.featFreq,
       trigger: data.featTrigger,
       requirements: data.featReq,
-      description: data.featDesc,
+      description: Buffer.from(data.featDesc, 'utf-8').toString(),
       special: data.featSpecial,
       canSelectMultiple: data.featSelectMultiple,
       isDefault: data.isDefault,
@@ -1177,7 +1177,7 @@ module.exports = class HomebrewCreation {
       frequency: data.frequency,
       trigger: data.trigger,
       requirements: data.requirements,
-      description: data.description,
+      description: Buffer.from(data.description, 'utf-8').toString(),
       special: data.special,
       canSelectMultiple: data.canSelectMultiple,
       isDefault: data.isDefault,
@@ -1422,7 +1422,7 @@ module.exports = class HomebrewCreation {
       bulk: data.itemBulk,
       level: data.itemLevel,
       rarity: data.itemRarity,
-      description: data.itemDesc,
+      description: Buffer.from(data.itemDesc, 'utf-8').toString(),
       itemType: data.itemCategory,
       hands: data.itemHands,
       materialType: data.itemMaterial,
@@ -1605,7 +1605,7 @@ module.exports = class HomebrewCreation {
       version: null,
       level: data.spellLevel,
       rarity: data.spellRarity,
-      description: data.spellDesc,
+      description: Buffer.from(data.spellDesc, 'utf-8').toString(),
       traditions: JSON.stringify(data.spellTraditions),
       cast: data.spellCasting,
       castingComponents: JSON.stringify(data.spellComponents),
