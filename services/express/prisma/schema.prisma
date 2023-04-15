@@ -217,15 +217,33 @@ model calculatedStats {
   maxStamina         Int?
   maxResolve         Int?
   totalClassDC       Int?
+  classDCProfMod     Int?
   totalSpeed         Int?
   totalAC            Int?
   totalPerception    Int?
-  totalSkills        String?    @db.VarChar(1000)
-  totalSaves         String?    @db.VarChar(100)
-  totalAbilityScores String?    @db.VarChar(250)
-  weapons            String?    @db.VarChar(3000)
-  conditions         String?    @db.VarChar(1000)
-  generalInfo        String?    @db.VarChar(1000)
+  perceptionProfMod  Int?
+  arcaneSpellProfMod Int?
+  arcaneSpellAttack  Int?
+  arcaneSpellDC      Int?
+  divineSpellProfMod Int?
+  divineSpellAttack  Int?
+  divineSpellDC      Int?
+  occultSpellProfMod Int?
+  occultSpellAttack  Int?
+  occultSpellDC      Int?
+  primalSpellProfMod Int?
+  primalSpellAttack  Int?
+  primalSpellDC      Int?
+  unarmedProfMod     Int?
+  simpleWeaponProfMod   Int?
+  martialWeaponProfMod  Int?
+  advancedWeaponProfMod Int?
+  totalSkills        String?    @db.Text
+  totalSaves         String?    @db.Text
+  totalAbilityScores String?    @db.Text
+  weapons            String?    @db.Text
+  conditions         String?    @db.Text
+  generalInfo        String?    @db.Text
   characters         characters @relation(fields: [charID], references: [id])
 }
 

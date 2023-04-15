@@ -18,6 +18,9 @@ const CalculatedStat = db.define("calculatedStats", {
   totalClassDC: {
     type: Sequelize.INTEGER,
   },
+  classDCProfMod: {
+    type: Sequelize.INTEGER,
+  },
   totalSpeed: {
     type: Sequelize.INTEGER,
   },
@@ -27,23 +30,74 @@ const CalculatedStat = db.define("calculatedStats", {
   totalPerception: {
     type: Sequelize.INTEGER,
   },
+  perceptionProfMod: {
+    type: Sequelize.INTEGER,
+  },
+  arcaneSpellProfMod: {
+    type: Sequelize.INTEGER,
+  },
+  arcaneSpellAttack: {
+    type: Sequelize.INTEGER,
+  },
+  arcaneSpellDC: {
+    type: Sequelize.INTEGER,
+  },
+  divineSpellProfMod: {
+    type: Sequelize.INTEGER,
+  },
+  divineSpellAttack: {
+    type: Sequelize.INTEGER,
+  },
+  divineSpellDC: {
+    type: Sequelize.INTEGER,
+  },
+  occultSpellProfMod: {
+    type: Sequelize.INTEGER,
+  },
+  occultSpellAttack: {
+    type: Sequelize.INTEGER,
+  },
+  occultSpellDC: {
+    type: Sequelize.INTEGER,
+  },
+  primalSpellProfMod: {
+    type: Sequelize.INTEGER,
+  },
+  primalSpellAttack: {
+    type: Sequelize.INTEGER,
+  },
+  primalSpellDC: {
+    type: Sequelize.INTEGER,
+  },
+  unarmedProfMod: {
+    type: Sequelize.INTEGER,
+  },
+  simpleWeaponProfMod: {
+    type: Sequelize.INTEGER,
+  },
+  martialWeaponProfMod: {
+    type: Sequelize.INTEGER,
+  },
+  advancedWeaponProfMod: {
+    type: Sequelize.INTEGER,
+  },
   totalSkills: {
-    type: Sequelize.STRING,
+    type: Sequelize.TEXT,
   },
   totalSaves: {
-    type: Sequelize.STRING,
+    type: Sequelize.TEXT,
   },
   totalAbilityScores: {
-    type: Sequelize.STRING,
+    type: Sequelize.TEXT,
   },
   weapons: {
-    type: Sequelize.STRING,
+    type: Sequelize.TEXT,
   },
   conditions: {
-    type: Sequelize.STRING,
+    type: Sequelize.TEXT,
   },
   generalInfo: {
-    type: Sequelize.STRING,
+    type: Sequelize.TEXT,
   },
 });
 
