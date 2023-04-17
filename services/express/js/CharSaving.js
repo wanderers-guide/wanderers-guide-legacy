@@ -71,6 +71,7 @@ module.exports = class CharSaving {
   ///
 
   static updateCalculatedStats(charID, calcStatsStruct) {
+    console.log(calcStatsStruct);
     return CalculatedStat.upsert({
       charID: charID,
       maxHP: calcStatsStruct.maxHP,
@@ -84,12 +85,16 @@ module.exports = class CharSaving {
       perceptionProfMod: calcStatsStruct.perceptionProfMod,
       arcaneSpellAttack: calcStatsStruct.arcaneSpellAttack,
       arcaneSpellDC: calcStatsStruct.arcaneSpellDC,
+      arcaneSpellProfMod: calcStatsStruct.arcaneSpellProfMod,
       divineSpellAttack: calcStatsStruct.divineSpellAttack,
       divineSpellDC: calcStatsStruct.divineSpellDC,
+      divineSpellProfMod: calcStatsStruct.divineSpellProfMod,
       occultSpellAttack: calcStatsStruct.occultSpellAttack,
       occultSpellDC: calcStatsStruct.occultSpellDC,
+      occultSpellProfMod: calcStatsStruct.occultSpellProfMod,
       primalSpellAttack: calcStatsStruct.primalSpellAttack,
       primalSpellDC: calcStatsStruct.primalSpellDC,
+      primalSpellProfMod: calcStatsStruct.primalSpellProfMod,
       unarmedProfMod: calcStatsStruct.unarmedProfMod,
       simpleWeaponProfMod: calcStatsStruct.simpleWeaponProfMod,
       martialWeaponProfMod: calcStatsStruct.martialWeaponProfMod,
