@@ -461,9 +461,23 @@ function loadCharSheet(){
       maxStamina: null,
       maxResolve: null,
       totalClassDC: null,
+      classDCProfMod: null,
       totalSpeed: null,
       totalAC: null,
       totalPerception: null,
+      perceptionProfMod: null,
+      arcaneSpellAttack: null,
+      arcaneSpellDC: null,
+      divineSpellAttack: null,
+      divineSpellDC: null,
+      occultSpellAttack: null,
+      occultSpellDC: null,
+      primalSpellAttack: null,
+      primalSpellDC: null,
+      unarmedProfMod: null,
+      simpleWeaponProfMod: null,
+      martialWeaponProfMod: null,
+      advancedWeaponProfMod: null,
       totalSkills: [],
       totalSaves: [],
       totalAbilityScores: [],
@@ -974,6 +988,7 @@ function displayInformation() {
     g_calculatedStats.totalClassDC = classDC;// Calculated Stat
 
     let classDCData = getFinalProf(g_profMap.get("Class_DC"));
+    g_calculatedStats.classDCProfMod =  (classDCData.NumUps ?? 0) * 2
     let classDCProfNum = getProfNumber(classDCData.NumUps, g_character.level);
     $("#classDCSection").click(function(){
         openQuickView('classDCView', {
@@ -1047,10 +1062,11 @@ function displayInformation() {
     let fortBonusContent = $("#fortSave");
     let fortBonusDisplayed = (hasConditionals(VARIABLE.SAVE_FORT)) ? signNumber(fortBonus)+'<sup class="is-size-6 has-text-info">*</sup>' : signNumber(fortBonus);
     fortBonusContent.html(fortBonusDisplayed);
-    g_calculatedStats.totalSaves.push({Name: 'Fortitude', Bonus: fortBonus});// Calculated Stat
 
     let fortData = getFinalProf(g_profMap.get("Fortitude"));
     let fortProfNum = getProfNumber(fortData.NumUps, g_character.level);
+    g_calculatedStats.totalSaves.push({Name: 'Fortitude', Bonus: fortBonus, ProficiencyMod: (fortData.NumUps??0)*2});// Calculated Stat
+
     $("#fortSection").click(function(){
         openQuickView('savingThrowView', {
             ProfSrcData : {For:'Save',To:'Fortitude'},
@@ -1075,10 +1091,11 @@ function displayInformation() {
     let reflexBonusContent = $("#reflexSave");
     let reflexBonusDisplayed = (hasConditionals(VARIABLE.SAVE_REFLEX)) ? signNumber(reflexBonus)+'<sup class="is-size-6 has-text-info">*</sup>' : signNumber(reflexBonus);
     reflexBonusContent.html(reflexBonusDisplayed);
-    g_calculatedStats.totalSaves.push({Name: 'Reflex', Bonus: reflexBonus});// Calculated Stat
 
     let reflexData = getFinalProf(g_profMap.get("Reflex"));
     let reflexProfNum = getProfNumber(reflexData.NumUps, g_character.level);
+    g_calculatedStats.totalSaves.push({Name: 'Reflex', Bonus: reflexBonus, ProficiencyMod: (reflexData.NumUps??0)*2});// Calculated Stat
+
     $("#reflexSection").click(function(){
         openQuickView('savingThrowView', {
             ProfSrcData : {For:'Save',To:'Reflex'},
@@ -1103,10 +1120,11 @@ function displayInformation() {
     let willBonusContent = $("#willSave");
     let willBonusDisplayed = (hasConditionals(VARIABLE.SAVE_WILL)) ? signNumber(willBonus)+'<sup class="is-size-6 has-text-info">*</sup>' : signNumber(willBonus);
     willBonusContent.html(willBonusDisplayed);
-    g_calculatedStats.totalSaves.push({Name: 'Will', Bonus: willBonus});// Calculated Stat
 
     let willData = getFinalProf(g_profMap.get("Will"));
     let willProfNum = getProfNumber(willData.NumUps, g_character.level);
+    g_calculatedStats.totalSaves.push({Name: 'Will', Bonus: willBonus, ProficiencyMod: (willData.NumUps??0)*2});// Calculated Stat
+
     $("#willSection").click(function(){
         openQuickView('savingThrowView', {
             ProfSrcData : {For:'Save',To:'Will'},
@@ -1193,6 +1211,7 @@ function displayInformation() {
 
     let perceptionData = getFinalProf(g_profMap.get("Perception"));
     let perceptionProfNum = getProfNumber(perceptionData.NumUps, g_character.level);
+    g_calculatedStats.perceptionProfMod = (perceptionData.NumUps ?? 0)*2;// Calculated Stat
     $("#perceptionBonusSection").click(function(){
         openQuickView('perceptionView', {
             ProfData : perceptionData,
@@ -1273,6 +1292,11 @@ function displayInformation() {
         otherProfsNum++;
         otherProfBuild(attacks, profWord, 'Unarmed Attacks', otherProfsNum, profUnarmedAttacks, {For:'Attack',To:'Unarmed_Attacks'}, VARIABLE.UNARMED_ATTACKS);
     }
+    g_calculatedStats.simpleWeaponProfMod = (profSimpleWeapons?.NumUps ?? 0)*2;// Calculated Stat
+    g_calculatedStats.martialWeaponProfMod = (profMartialWeapons?.NumUps ?? 0)*2;// Calculated Stat
+    g_calculatedStats.advancedWeaponProfMod = (profAdvancedWeapons?.NumUps ?? 0)*2;// Calculated Stat
+    g_calculatedStats.unarmedProfMod = (profUnarmedAttacks?.NumUps ?? 0)*2;// Calculated Stat
+
     for(const [profName, profDataArray] of g_profMap.entries()){
         const finalProfData = getFinalProf(profDataArray);
         if(finalProfData.For == "Attack" && profName != "Simple_Weapons" && profName != "Martial_Weapons" && profName != "Advanced_Weapons" && profName != "Unarmed_Attacks"){
@@ -1388,6 +1412,28 @@ function displayInformation() {
     let spells = $("#spellsContent");
     spells.html('');
 
+    function calculateStatsForSpellTradition(traditionName){
+        let spellBook = g_spellBookArray.find(book => {
+          return (book.SpellList == traditionName)});
+        let spellKeyAbility = spellBook?.SpellKeyAbility;
+        console.log(spellBook?.SpellKeyAbility, spellBook)
+        if(!spellKeyAbility){
+          for(const innateSpell of g_innateSpellArray){
+            if(innateSpell.SpellTradition.toLocaleLowerCase() === traditionName.toLocaleLowerCase()){
+              spellKeyAbility = innateSpell.KeyAbility;
+              break;
+            }
+          }
+        }
+        let prof = getFinalProf(g_profMap.get(`${traditionName[0].toUpperCase() + traditionName.slice(1).toLocaleLowerCase()}SpellAttacks`));
+        let spellAttack = getStatTotal(`${traditionName}_SPELL_ATTACK`);
+        let spellDC = getStatTotal(`${traditionName}_SPELL_DC`);
+        let abilityMod = getModOfValue(spellKeyAbility);
+        g_calculatedStats[`${traditionName.toLocaleLowerCase()}SpellProfMod`] = (prof?.NumUps ?? 0)*2;
+        g_calculatedStats[`${traditionName.toLocaleLowerCase()}SpellAttack`] = spellAttack + abilityMod;
+        g_calculatedStats[`${traditionName.toLocaleLowerCase()}SpellDC`] = 10 + spellDC + abilityMod;
+    }
+
     let arcaneSpellAttack = getFinalProf(g_profMap.get("ArcaneSpellAttacks"));
     if(arcaneSpellAttack != null){
         let profWord = getProfNameFromNumUps(arcaneSpellAttack.NumUps);
@@ -1401,6 +1447,7 @@ function displayInformation() {
         otherProfsNum++;
         otherProfBuild(spells, profWord, 'Arcane DCs', otherProfsNum, arcaneSpellDC, {For:'SpellDC',To:'ArcaneSpellDCs'}, VARIABLE.ARCANE_SPELL_DC, { SpellTradition: 'ARCANE', SpellPart: 'DC' });
     }
+    calculateStatsForSpellTradition('ARCANE');
 
     let divineSpellAttack = getFinalProf(g_profMap.get("DivineSpellAttacks"));
     if(divineSpellAttack != null){
@@ -1415,6 +1462,7 @@ function displayInformation() {
         otherProfsNum++;
         otherProfBuild(spells, profWord, 'Divine DCs', otherProfsNum, divineSpellDC, {For:'SpellDC',To:'DivineSpellDCs'}, VARIABLE.DIVINE_SPELL_DC, { SpellTradition: 'DIVINE', SpellPart: 'DC' });
     }
+    calculateStatsForSpellTradition('DIVINE');
 
     let occultSpellAttack = getFinalProf(g_profMap.get("OccultSpellAttacks"));
     if(occultSpellAttack != null){
@@ -1429,6 +1477,7 @@ function displayInformation() {
         otherProfsNum++;
         otherProfBuild(spells, profWord, 'Occult DCs', otherProfsNum, occultSpellDC, {For:'SpellDC',To:'OccultSpellDCs'}, VARIABLE.OCCULT_SPELL_DC, { SpellTradition: 'OCCULT', SpellPart: 'DC' });
     }
+    calculateStatsForSpellTradition('OCCULT');
 
     let primalSpellAttack = getFinalProf(g_profMap.get("PrimalSpellAttacks"));
     if(primalSpellAttack != null){
@@ -1443,6 +1492,7 @@ function displayInformation() {
         otherProfsNum++;
         otherProfBuild(spells, profWord, 'Primal DCs', otherProfsNum, primalSpellDC, {For:'SpellDC',To:'PrimalSpellDCs'}, VARIABLE.PRIMAL_SPELL_DC, { SpellTradition: 'PRIMAL', SpellPart: 'DC' });
     }
+    calculateStatsForSpellTradition('PRIMAL');
 
     if(spells.html() == ''){
         $('#spellsContentSection').addClass('is-hidden');
@@ -1518,7 +1568,7 @@ function displayInformation() {
             <span class="pos-absolute pos-t-5 pos-r-5 is-italic has-txt-noted is-size-7-5">${getProfLetterFromNumUps(profData.NumUps)}</span>
           </a>
         `);
-        g_calculatedStats.totalSkills.push({Name: skillName, Bonus: totalBonus});// Calculated Stat
+        g_calculatedStats.totalSkills.push({Name: skillName, Bonus: totalBonus, ProficiencyMod: (profData.NumUps??0)*2});// Calculated Stat
 
         $('#'+skillButtonID).click(function(){
             openQuickView('skillView', {
