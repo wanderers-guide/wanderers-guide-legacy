@@ -83,7 +83,7 @@ export class WanderersLegacyStack extends Stack {
       autoMinorVersionUpgrade: true,
       backupRetention: Duration.days(7),
       preferredBackupWindow: '07:00-09:00',
-      removalPolicy: RemovalPolicy.DESTROY
+      removalPolicy: RemovalPolicy.DESTROY,
     });
 
     // Create a new EC2 instance
