@@ -59,9 +59,12 @@ function processSheetCode(wscCode, extraData=null, isTest=false){
               conditionValue = parseInt(conditionNameData[1]);
           }
 
-          let conditionID = getConditionFromName(conditionName).id;
-          let conditionParentID = getCurrentConditionIDFromName(extraData.sourceName);
-          addCondition(conditionID+'', conditionValue, extraData.sourceName, conditionParentID);
+          let condition = getConditionFromName(conditionName);
+          if (condition) {
+            let conditionID = condition.id;
+            let conditionParentID = getCurrentConditionIDFromName(extraData.sourceName);
+            addCondition(conditionID+'', conditionValue, extraData.sourceName, conditionParentID);
+          }
 
           continue;
         }
@@ -71,8 +74,10 @@ function processSheetCode(wscCode, extraData=null, isTest=false){
 
           let conditionName = wscStatement.split('=')[1];
 
-          let conditionID = getConditionFromName(conditionName).id;
-          removeCondition(conditionID);
+          let condition = getConditionFromName(conditionName);
+          if (condition) {
+            removeCondition(condition.id);
+          }
 
           continue;
         }

@@ -21,6 +21,10 @@ module.exports = new Sequelize(
       min: 0,
       idle: 10000,
     },
+    define: {
+      "charset": "utf8mb4",
+      "collate": "utf8mb4_unicode_ci"
+    }
   },
 );
 
