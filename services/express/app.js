@@ -51,6 +51,7 @@ const http = require("http");
 const app = express();
 
 app.use(compression());
+app.use(express.json());
 
 const port = process.env.PORT || 80;
 

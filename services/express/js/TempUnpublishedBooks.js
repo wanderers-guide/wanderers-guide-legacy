@@ -1,11 +1,11 @@
-const ADMIN_USER_IDS = ["1", "11"];
+const ADMIN_USER_IDS = ["1"];
 
 module.exports = class TempUnpublishedBooks {
   static getSourcesArray(userID) {
     if (ADMIN_USER_IDS.includes(userID + "")) {
       return [""];
     } else {
-      return [""]; // Unpublished books
+      return ["RAGE-OF-ELEMENTS"]; // Unpublished books
     }
   }
 
@@ -13,7 +13,7 @@ module.exports = class TempUnpublishedBooks {
     if (ADMIN_USER_IDS.includes(userID + "")) {
       return [{ contentSrc: "" }];
     } else {
-      return [{ contentSrc: "" }]; // Unpublished books
+      return [{ contentSrc: "RAGE-OF-ELEMENTS" }]; // Unpublished books
     }
   }
 };

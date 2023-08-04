@@ -1,5 +1,6 @@
 const router = require("express").Router();
 const apiCharRoutes = require("./api/api-char-routes");
+const apiAdminRoutes = require("./api/api-admin-routes");
 const apiGeneralRoutes = require("./api/api-general-routes");
 
 const APIClientApp = require("../models/contentDB/APIClientApp");
@@ -111,6 +112,26 @@ const charCheck = (req, res, next) => {
 };
 
 router.use("/char/:id", charCheck, apiCharRoutes);
+
+///////////////
+
+const adminAuthCheck = (req, res, next) => {
+  if (req.header("Authorization") != null) {
+    const apiKey = req.header("Authorization").replace("Bearer ", "");
+    // Temp solution, will be replaced with a database lookup
+    if (apiKey === process.env.ADMIN_API_ACCESS_KEY) {
+      next();
+    } else {
+      // Incorrect API requests will come back to this point.
+      // For that reason, we return 400 rather than 401 here.
+      res.sendStatus(400);
+    }
+  } else {
+    res.sendStatus(400);
+  }
+};
+
+router.use("/admin/", adminAuthCheck, apiAdminRoutes);
 
 ///////////////
 

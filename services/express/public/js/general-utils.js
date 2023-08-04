@@ -71,7 +71,7 @@ const g_contentSources = [
   {TextName: 'Guns & Gears', CodeName: 'GUNS-AND-GEARS', Link: 'https://paizo.com/products/btq026mw?Pathfinder-Guns-Gears'},
   {TextName: 'Dark Archive', CodeName: 'DARK-ARCHIVE', Link: 'https://paizo.com/products/btq02d8j'},
   {TextName: 'Book of the Dead', CodeName: 'BOOK-OF-DEAD', Link: 'https://paizo.com/products/btq02c0j'},
-  {TextName: 'Rage of Elements', CodeName: 'RAGE-OF-ELEMENTS', Link: 'https://downloads.paizo.com/PZO2113_KineticistClassPlaytest.pdf'},
+  {TextName: 'Rage of Elements', CodeName: 'RAGE-OF-ELEMENTS', Link: 'https://paizo.com/products/btq02eju'},
   {TextName: 'Lost Omens: Ancestry Guide', CodeName: 'LOST-ANCESTRY-GUIDE', Link: 'https://paizo.com/products/btq026k5?Pathfinder-Lost-Omens-Ancestry-Guide' },
   {TextName: 'Lost Omens: Character Guide', CodeName: 'LOST-CHAR-GUIDE', Link: 'https://paizo.com/products/btq01zt4?Pathfinder-Lost-Omens-Character-Guide'},
   {TextName: 'Lost Omens: City of Absalom', CodeName: 'LOST-CITY-ABSALOM', Link: 'https://paizo.com/products/btq02ap2'},
