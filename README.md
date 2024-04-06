@@ -4,9 +4,9 @@
 
 ## Quick links
 
-- [Legacy App][legacy-app]
-- [Future Web App](./services/webapp)
-- [Serverless API](./services/functions)
+- [Current App][legacy-app]
+- [Future App Idea](./services/webapp)
+- [Future Serverless API](./services/functions)
 
 ## Description
 
